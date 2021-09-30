@@ -13,7 +13,6 @@ module.exports = [["info", function (session, callback) {
         return await axios.get(`${apiHost}`)
             .then(resp => resp.data)
             .then(({types}) => {
-                
                 sendMessage(session, callback.message.chat.id, `${dictionary[session.language.text].info.category}`, {
                     reply_markup: {
                         inline_keyboard: [
