@@ -1,7 +1,9 @@
-const artifacts = require('./artifacts');
+const categoryItem = require('./categoryItem');
+const category = require('./category');
 const categories = require('./categorites');
 
 module.exports = [
-    ...artifacts,
+    ...categoryItem,
+    ...category,
     ...categories
 ];
