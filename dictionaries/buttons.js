@@ -1,5 +1,5 @@
 module.exports = {
-    "ru" : {
+    "ru": {
         language: "Язык",
         artifacts: "Артефакты",
         characters: "Персонажи",
@@ -11,7 +11,10 @@ module.exports = {
         nations: "Нации",
         weapons: "Оружие",
         close: "Закрыть",
-        categories: "Категории"
+        categories: "Категории",
+        menu: "Меню",
+        info: "Информация о группе",
+        personal_info: "Информация о себе",
     },
     "en": {
         language: "Language",

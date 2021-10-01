@@ -3,34 +3,30 @@ const bot = require('./bot');
 const dictionary = require('./dictionaries/main');
 const buttonsDictionary = require('./dictionaries/buttons');
 const sendMessage = require('./functions/sendMessage');
-let {sessions, users, chatId} = require('./data');
+const {sessions} = require('./data');
 const fs = require('fs');
-const userTemplate = require('userTemplate');
-
-try {
-    let sessionsJson = fs.readFileSync("./sessions.json");
-    sessions = JSON.parse(sessionsJson);
-} catch (e) {
-    sessions = {};
-}
+const userTemplate = require('./userTemplate');
 
 bot.onText(/\/start/, (msg) => {
 
-    sessions[msg.chat.id] = {
-        messages: []
+    sessions[msg.from.id] = {
+        messages: [],
+        user: userTemplate
     };
 
-    users[msg.from.id] = userTemplate;
-
-    let session = sessions[msg.chat.id];
+    let session = sessions[msg.from.id];
 
     sendMessage(session, msg.chat.id, `${dictionary["ru"].index}`, {
+        disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
-                text: buttonsDictionary[session.language.buttons].info,
+                text: buttonsDictionary["ru"].info,
                 callback_data: "info"
             }], [{
-                text: buttonsDictionary[session.language.buttons].menu,
+                text: buttonsDictionary["ru"].personal_info,
+                callback_data: "personal_info"
+            }], [{
+                text: buttonsDictionary["ru"].menu,
                 callback_data: "menu"
             }]]
         }
@@ -38,7 +34,7 @@ bot.onText(/\/start/, (msg) => {
 });
 
 bot.on('message', (msg) => {
-    let session = sessions[msg.chat.id];
+    let session = sessions[msg.from.id];
 
     if (!session) {
         return;
@@ -47,16 +43,12 @@ bot.on('message', (msg) => {
     session.messages.push(msg.message_id);
 
     bot.getChatMember(msg.chat.id, msg.from.id)
-        .then(user => users[msg.from.id] = {
-            ...user,
-            is_show_message_to_all: users[msg.from.id].is_show_message_to_all || false,
-            session: session
-        });
-    console.log(session);
+        .then((user) => session.userChatData = {...user})
+        .catch(e => console.error(e));
 });
 
 bot.on("callback_query", (callback) => {
-    let session = sessions[callback.message.chat.id];
+    let session = sessions[callback.from.id];
     let results = [];
 
     for (let [key, value] of callbacks) {
@@ -74,12 +66,12 @@ bot.on("callback_query", (callback) => {
 bot.on('polling_error', (error) => {
     console.error(error);
 });
-//
-// function shutdown() {
-//     fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
-//     bot.stopPolling();
-// }
-//
-// process.on('SIGTERM', shutdown);
-//
-// process.on('SIGINT', shutdown);
+
+function shutdown() {
+    fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
+    bot.stopPolling();
+}
+
+process.on('SIGTERM', shutdown);
+
+process.on('SIGINT', shutdown);

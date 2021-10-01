@@ -1,5 +1,15 @@
+const fs = require('fs');
+
+let sessions;
+
+try {
+    let sessionsJson = fs.readFileSync("./sessions.json");
+    sessions = JSON.parse(sessionsJson);
+} catch (e) {
+    sessions = {};
+}
+
 module.exports = {
-    users: {},
-    sessions: [],
-    chatId: null
+    chatId: null,
+    sessions
 };
