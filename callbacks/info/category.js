@@ -11,22 +11,32 @@ module.exports = [[/^info\.[^.]+$/, function (session, callback) {
 
     fetchCategoryByType(type)
         .then(resp => resp.data)
-        .then(items =>
+        .then(items => {
+            function buttonsTemplate() {
+                let buttons = [];
+                let tempArray = null;
+                if (items) {
+                    for (let i = 0; i < items.length; i++) {
+                        if (i % 3 === 0) {
+                            tempArray = [];
+                            buttons.push(tempArray);
+                        }
+                        tempArray.push({text: items[i].toUpperCase(), callback_data: `info.${type}.${items[i]}`});
+                    }
+                }
+                return buttons;
+            }
+
+            let buttons = buttonsTemplate();
+            let buttonClose = [{
+                text: buttonsDictionary[session.language.buttons].close,
+                callback_data: "info.close"
+            }];
             sendMessage(session, callback.message.chat.id, `${dictionary[session.language.text].info.type}`, {
                 reply_markup: {
-                    inline_keyboard: [
-                        items.map(item => ({
-                            text: item.toUpperCase(),
-                            callback_data: `info.${type}.${item}`
-                        })),
-                        [{
-                            text: buttonsDictionary[session.language.buttons].close,
-                            callback_data: "category.close"
-                        }]]
+                    inline_keyboard: [...buttons, buttonClose]
                 }
-            }))
+            })
+        })
         .catch(e => console.error(e));
-
-}], ["info.artifacts.close", function (session, callback) {
-    deleteMessage(callback.message.chat.id, session.messages, session.anchorMessageId);
 }]];

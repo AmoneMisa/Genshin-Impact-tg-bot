@@ -13,15 +13,30 @@ module.exports = [["info", function (session, callback) {
         return await axios.get(`${apiHost}`)
             .then(resp => resp.data)
             .then(({types}) => {
+                function buttonsTemplate() {
+                    let buttons = [];
+                    let tempArray = null;
+                    if (types) {
+                        for (let i = 0; i < types.length; i++) {
+                            if (i % 3 === 0) {
+                                tempArray = [];
+                                buttons.push(tempArray);
+                            }
+                            tempArray.push({text: types[i].toUpperCase(), callback_data: `info.${types[i]}`});
+                        }
+                    }
+                    return buttons;
+                }
+
+                let buttons = buttonsTemplate();
+                let buttonClose = [{
+                    text: buttonsDictionary[session.language.buttons].close,
+                    callback_data: "info.close"
+                }];
+
                 sendMessage(session, callback.message.chat.id, `${dictionary[session.language.text].info.category}`, {
                     reply_markup: {
-                        inline_keyboard: [
-                            types.map(type => ({
-                            text: type.toUpperCase(), callback_data: `info.${type}`
-                        })), [{
-                            text: buttonsDictionary[session.language.buttons].close,
-                            callback_data: "info.close"
-                        }]]
+                        inline_keyboard: [...buttons, buttonClose]
                     }
                 })
             })
