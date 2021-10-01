@@ -3,18 +3,19 @@ const bot = require('./bot');
 const dictionary = require('./dictionaries/main');
 const buttonsDictionary = require('./dictionaries/buttons');
 const sendMessage = require('./functions/sendMessage');
+const deleteMessage = require('./functions/deleteMessage');
 const {sessions} = require('./data');
 const fs = require('fs');
 const userTemplate = require('./userTemplate');
 
 bot.onText(/\/start/, (msg) => {
-
     sessions[msg.from.id] = {
         messages: [],
         user: userTemplate
     };
-
     let session = sessions[msg.from.id];
+    deleteMessage(msg.chat.id, session.messages, msg.message_id);
+    session.anchorMessageId = msg.message_id;
 
     sendMessage(session, msg.chat.id, `${dictionary["ru"].index}`, {
         disable_notification: true,
@@ -28,6 +29,9 @@ bot.onText(/\/start/, (msg) => {
             }], [{
                 text: buttonsDictionary["ru"].menu,
                 callback_data: "menu"
+            }], [{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
             }]]
         }
     });

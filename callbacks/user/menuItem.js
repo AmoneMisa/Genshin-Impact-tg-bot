@@ -4,15 +4,13 @@ const translation = require('../../dictionaries/translate');
 const bot = require('../../bot');
 
 module.exports = [[/^menu\.[^.]+$/, function (session, callback) {
-    const [, item] = callback.data.match(/^menu\.([^.]+)$/);
-
     deleteMessage(callback.message.chat.id, session.messages, callback.message.message_id);
     session.anchorMessageId = callback.message.message_id;
-    session.anchorMenuMessageId = callback.message.message_id;
+    const [, item] = callback.data.match(/^menu\.([^.]+)$/);
 
     if (!item || !translation[item]) {
         deleteMessage(callback.message.chat.id, session.messages, callback.message.message_id);
-        return ;
+        return;
     }
 
     return sendMessage(session, callback.message.chat.id, `Твой(-я) ${translation[item].toLowerCase()}?`, {
