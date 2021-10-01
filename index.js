@@ -1,11 +1,11 @@
 const callbacks = require('./callbacks');
 const bot = require('./bot');
-const languageByChatId = require('./languageByChatId');
 const dictionary = require('./dictionaries/main');
 const buttonsDictionary = require('./dictionaries/buttons');
 const sendMessage = require('./functions/sendMessage');
 let {sessions, users, chatId} = require('./data');
 const fs = require('fs');
+const userTemplate = require('userTemplate');
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -15,28 +15,23 @@ try {
 }
 
 bot.onText(/\/start/, (msg) => {
-    languageByChatId[msg.chat.id] = languageByChatId[msg.chat.id] || "ru";
 
     sessions[msg.chat.id] = {
-        messages: [],
-        language: {
-            text: languageByChatId[msg.chat.id],
-            buttons: languageByChatId[msg.chat.id]
-        }
+        messages: []
     };
 
-    users[msg.from.id] = {};
+    users[msg.from.id] = userTemplate;
 
     let session = sessions[msg.chat.id];
 
-    sendMessage(session, msg.chat.id, `${dictionary[session.language.text].index}`, {
+    sendMessage(session, msg.chat.id, `${dictionary["ru"].index}`, {
         reply_markup: {
             inline_keyboard: [[{
-                text: buttonsDictionary[session.language.buttons].language,
-                callback_data: "language"
-            }], [{
-                text: buttonsDictionary[session.language.buttons].categories,
+                text: buttonsDictionary[session.language.buttons].info,
                 callback_data: "info"
+            }], [{
+                text: buttonsDictionary[session.language.buttons].menu,
+                callback_data: "menu"
             }]]
         }
     });

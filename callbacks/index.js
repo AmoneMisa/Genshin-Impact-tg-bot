@@ -1,7 +1,5 @@
-const monstersCallbacks = require('./info');
-const languageCallback = require('./language');
+const userCallbacks = require('./user');
 
 module.exports = [
-    ...monstersCallbacks,
-    ...languageCallback
+    ...userCallbacks,
 ];

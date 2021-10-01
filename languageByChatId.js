@@ -1,1 +1,0 @@
-module.exports = {text: null, buttons: null};
