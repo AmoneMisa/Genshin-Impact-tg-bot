@@ -1,5 +1,5 @@
-const deleteMessage = require('../functions/deleteMessage');
+const bot = require('../bot');
 
 module.exports = [["close", function (session, callback) {
-    deleteMessage(callback.message.chat.id, session.messages, session.anchorMessageId);
+    bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
 }]];

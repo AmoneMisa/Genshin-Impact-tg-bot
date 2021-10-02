@@ -1,13 +1,12 @@
 const dictionary = require('../../dictionaries/main');
 const buttonsDictionary = require('../../dictionaries/buttons');
-const deleteMessage = require('../../functions/deleteMessage');
 const sendMessage = require('../../functions/sendMessage');
 const userTemplate = require('../../userTemplate');
 const translation = require('../../dictionaries/translate');
 
 module.exports = [["menu", function (session, callback) {
     deleteMessage(callback.message.chat.id, session.messages, callback.message.message_id);
-    session.anchorMessageId = callback.message.message_id;
+
 
     function buttonsTemplate() {
         let buttons = [];
@@ -29,7 +28,7 @@ module.exports = [["menu", function (session, callback) {
     let buttons = buttonsTemplate();
 
     console.log(session);
-    return sendMessage(session, callback.message.chat.id, `@${session.userChatData.user.username}, ${dictionary["ru"].menu}`, {
+    return sendMessage( callback.message.chat.id, `@${session.userChatData.user.username}, ${dictionary["ru"].menu}`, {
         disable_notification: true,
         selective: true,
         reply_markup: {
