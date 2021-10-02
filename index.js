@@ -16,7 +16,7 @@ const log = intel.getLogger("genshin");
 bot.onText(/(?:^|\s)\/start/, (msg) => {
     sessions[msg.from.id] = {
         userChatData: (sessions[msg.from.id] && sessions[msg.from.id].userChatData) || {},
-        user: (sessions[msg.from.id] && sessions[msg.from.id].user) || userTemplate
+        user: (sessions[msg.from.id] && sessions[msg.from.id].user) || {...userTemplate}
     };
     let session = sessions[msg.from.id];
     bot.deleteMessage(msg.chat.id, msg.message_id);
@@ -48,7 +48,7 @@ bot.onText(/(?:^|\s)\/menu/, (msg) => {
 
     let session = sessions[msg.from.id];
     session.userChatData = session.userChatData || {};
-    session.user = session.user || userTemplate;
+    session.user = session.user || {...userTemplate};
 
     function setButtons() {
         let buttons = [];
@@ -109,7 +109,7 @@ bot.onText(/(?:^|\s)\/set(.*?)\b/, (msg, regResult) => {
 
     let session = sessions[msg.from.id];
     session.userChatData = session.userChatData || {};
-    session.user = session.user || userTemplate;
+    session.user = session.user || {...userTemplate};
 
     log.info(session);
     bot.deleteMessage(session.keyboardMessage.chat.id, session.keyboardMessage.message_id);
