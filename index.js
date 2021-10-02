@@ -9,35 +9,42 @@ const fs = require('fs');
 const userTemplate = require('./userTemplate');
 
 bot.onText(/\/start/, (msg) => {
+    console.log("start", msg);
     sessions[msg.from.id] = {
         messages: [],
+        userChatData: {},
         user: userTemplate
     };
     let session = sessions[msg.from.id];
-    deleteMessage(msg.chat.id, session.messages, msg.message_id);
-    session.anchorMessageId = msg.message_id;
-
-    sendMessage(session, msg.chat.id, `${dictionary["ru"].index}`, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: buttonsDictionary["ru"].info,
-                callback_data: "info"
-            }], [{
-                text: buttonsDictionary["ru"].personal_info,
-                callback_data: "personal_info"
-            }], [{
-                text: buttonsDictionary["ru"].menu,
-                callback_data: "menu"
-            }], [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+    bot.getChatMember(msg.chat.id, msg.from.id)
+        .then((user) => {
+            session.userChatData = user;
+            sendMessage(session, msg.chat.id, `@${msg.from.username}, ${dictionary["ru"].index}`, {
+                disable_notification: true,
+                reply_markup: {
+                    selective: true,
+                    inline_keyboard: [[{
+                        text: buttonsDictionary["ru"].info,
+                        callback_data: "info"
+                    }], [{
+                        text: buttonsDictionary["ru"].personal_info,
+                        callback_data: "personal_info"
+                    }], [{
+                        text: buttonsDictionary["ru"].menu,
+                        callback_data: "menu"
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            });
+        })
+        .catch(e => console.error(e));
 });
 
 bot.on('message', (msg) => {
+    console.log("message", msg);
     let session = sessions[msg.from.id];
 
     if (!session) {
@@ -45,13 +52,10 @@ bot.on('message', (msg) => {
     }
 
     session.messages.push(msg.message_id);
-
-    bot.getChatMember(msg.chat.id, msg.from.id)
-        .then((user) => session.userChatData = {...user})
-        .catch(e => console.error(e));
 });
 
 bot.on("callback_query", (callback) => {
+    console.log("callback_query", callback);
     let session = sessions[callback.from.id];
     let results = [];
 

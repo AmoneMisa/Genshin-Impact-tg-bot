@@ -25,6 +25,7 @@ module.exports = [["personal_info", function (session, callback) {
 
     return sendMessage(session, callback.message.chat.id, `${formatMessage()}`, {
         disable_notification: true,
+        selective: true,
         reply_markup: {
             inline_keyboard: [[{
                 text: buttonsDictionary["ru"].close,

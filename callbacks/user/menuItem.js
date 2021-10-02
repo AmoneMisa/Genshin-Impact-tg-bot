@@ -13,8 +13,9 @@ module.exports = [[/^menu\.[^.]+$/, function (session, callback) {
         return;
     }
 
-    return sendMessage(session, callback.message.chat.id, `Твой(-я) ${translation[item].toLowerCase()}?`, {
+    return sendMessage(session, callback.message.chat.id, `Твой(-я) ${translation[item].toLowerCase()}, @${session.userChatData.user.username}?`, {
         disable_notification: true,
+        selective: true,
         reply_markup: {
             force_reply: true
         }

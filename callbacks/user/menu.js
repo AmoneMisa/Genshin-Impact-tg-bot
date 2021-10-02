@@ -28,8 +28,10 @@ module.exports = [["menu", function (session, callback) {
 
     let buttons = buttonsTemplate();
 
-    return sendMessage(session, callback.message.chat.id, `${dictionary["ru"].menu}`, {
+    console.log(session);
+    return sendMessage(session, callback.message.chat.id, `@${session.userChatData.user.username}, ${dictionary["ru"].menu}`, {
         disable_notification: true,
+        selective: true,
         reply_markup: {
             inline_keyboard: [
                 ...buttons,

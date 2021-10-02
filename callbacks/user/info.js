@@ -15,6 +15,7 @@ module.exports = [["info", function (session, callback) {
             if (!session.userChatData) {
                continue;
             }
+
             if (session.userChatData.user.username) {
                 str += `${session.userChatData.user.username}\n`;
             } else {
@@ -36,6 +37,7 @@ module.exports = [["info", function (session, callback) {
 
     return sendMessage(session, callback.message.chat.id, `${formatMessage()}`, {
         disable_notification: true,
+        selective: true,
         reply_markup: {
             inline_keyboard: [[{
                 text: buttonsDictionary["ru"].close,
