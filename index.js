@@ -226,7 +226,7 @@ bot.onText(/(?:^|\s)\/titles/, (msg) => {
         let str = "";
 
         for (let title of Object.values(titles)) {
-            str += `${title.user}: ${title.title}`;
+            str += `${title.user}: ${title.title}\n`;
         }
 
         return str;
