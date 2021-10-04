@@ -14,7 +14,7 @@ module.exports = [["personal_info", function (session, callback) {
         str += "\n\n";
 
         if (!str.trim().length) {
-            str += "Ещё нет никакой информации о тебе. Заполни её через бота командой /start"
+            str += "Ещё нет никакой информации о тебе. Заполни её через бота командой /menu"
         }
         return str;
     }

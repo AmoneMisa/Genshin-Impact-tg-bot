@@ -4,12 +4,13 @@ const dictionary = require('./dictionaries/main');
 const translation = require('./dictionaries/translate');
 const buttonsDictionary = require('./dictionaries/buttons');
 const sendMessage = require('./functions/sendMessage');
-const {sessions} = require('./data');
+const {sessions, titles} = require('./data');
 const fs = require('fs');
 const userTemplate = require('./userTemplate');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
 const commands = ["nickName", "gameId", "rank", "bestCharacter", "favoriteCharacter", "inGameExp", "lvlOfWorld", "favoriteElement", "favoriteLocation", "mostWishesCharacter"];
+const titlesArray = require('./dictionaries/titles');
 
 const log = intel.getLogger("genshin");
 
@@ -99,7 +100,6 @@ bot.onText(/(?:^|\s)\/menu/, (msg) => {
             })
         }).then(msg => {
             session.keyboardMessage = msg;
-            log.info(session);
         })
     }
 });
@@ -111,7 +111,6 @@ bot.onText(/(?:^|\s)\/set(.*?)\b/, (msg, regResult) => {
     session.userChatData = session.userChatData || {};
     session.user = session.user || {...userTemplate};
 
-    log.info(session);
     bot.deleteMessage(session.keyboardMessage.chat.id, session.keyboardMessage.message_id);
     bot.deleteMessage(msg.chat.id, msg.message_id);
 
@@ -148,6 +147,102 @@ bot.onText(/(?:^|\s)\/set(.*?)\b/, (msg, regResult) => {
     }
 });
 
+let timerTitleCallback;
+
+bot.onText(/(?:^|\s)\/title\b/, (msg) => {
+    let session = sessions[msg.from.id];
+    session.userChatData = session.userChatData || {};
+    session.user = session.user || {...userTemplate};
+
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    if (!session.userChatData) {
+        bot.getChatMember(msg.chat.id, msg.from.id)
+            .then((user) => {
+                session.userChatData = user;
+            })
+            .catch(e => console.error(e));
+    }
+
+    function getTitle() {
+        function getRandomIndex(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        let title = titlesArray[getRandomIndex(0, titlesArray.length - 1)];
+
+        titles.unshift({title: title, user: session.userChatData.user.username});
+
+        while (titles.length > 10) {
+            titles.pop();
+        }
+
+        return title;
+    }
+
+    function titleMessage() {
+        let newDate = Math.round(new Date().getTime() / 1000);
+        if (!timerTitleCallback || (newDate - timerTitleCallback) >= 0) {
+            timerTitleCallback = Math.round(new Date().getTime() / 1000 + 70);
+            return `Сегодня ты, @${session.userChatData.user.username}, ${getTitle()}!`;
+        } else {
+            if ((timerTitleCallback - newDate) < 60) {
+                return `Команду можно вызывать раз в 10 минут. Осталось: ${(timerTitleCallback - newDate)} сек`;
+            } else if ((timerTitleCallback - newDate) > 60) {
+                return `Команду можно вызывать раз в 10 минут. Осталось: ${Math.round((timerTitleCallback - newDate) / 60)} мин`;
+            }
+        }
+    }
+
+    sendMessage(msg.chat.id, titleMessage(), {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
+});
+
+bot.onText(/(?:^|\s)\/titles/, (msg) => {
+    let session = sessions[msg.from.id];
+    session.userChatData = session.userChatData || {};
+    session.user = session.user || {...userTemplate};
+
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    if (!session.userChatData) {
+        bot.getChatMember(msg.chat.id, msg.from.id)
+            .then((user) => {
+                session.userChatData = user;
+            })
+            .catch(e => console.error(e));
+    }
+
+    function titlesMessage() {
+        let str = "";
+
+        for (let title of Object.values(titles)) {
+            str += `${title.user}: ${title.title}`;
+        }
+
+        return str;
+    }
+
+    sendMessage(msg.chat.id, titlesMessage(), {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
+});
+
 bot.on("callback_query", (callback) => {
     let session = sessions[callback.from.id];
     let results = [];
@@ -170,6 +265,7 @@ bot.on('polling_error', (error) => {
 
 function shutdown() {
     fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
+    fs.writeFileSync("./titles.json", JSON.stringify(titles));
     bot.stopPolling();
 }
 
