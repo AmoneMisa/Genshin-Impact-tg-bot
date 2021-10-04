@@ -185,13 +185,13 @@ bot.onText(/(?:^|\s)\/title\b/, (msg) => {
     function titleMessage() {
         let newDate = Math.round(new Date().getTime() / 1000);
         if (!timerTitleCallback || (newDate - timerTitleCallback) >= 0) {
-            timerTitleCallback = Math.round(new Date().getTime() / 1000 + 70);
+            timerTitleCallback = Math.round(new Date().getTime() / 1000 + 300);
             return `Сегодня ты, @${session.userChatData.user.username}, ${getTitle()}!`;
         } else {
             if ((timerTitleCallback - newDate) < 60) {
-                return `Команду можно вызывать раз в 10 минут. Осталось: ${(timerTitleCallback - newDate)} сек`;
+                return `Команду можно вызывать раз в 5 минут. Осталось: ${(timerTitleCallback - newDate)} сек`;
             } else if ((timerTitleCallback - newDate) > 60) {
-                return `Команду можно вызывать раз в 10 минут. Осталось: ${Math.round((timerTitleCallback - newDate) / 60)} мин`;
+                return `Команду можно вызывать раз в 5 минут. Осталось: ${Math.round((timerTitleCallback - newDate) / 60)} мин`;
             }
         }
     }
