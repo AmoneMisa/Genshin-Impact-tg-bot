@@ -25,7 +25,6 @@ module.exports = [["info", function (session, callback) {
 
     return sendMessage(callback.message.chat.id, `Выбери интересующего тебя участника`, {
         disable_notification: true,
-        selective: true,
         reply_markup: {
             inline_keyboard: [
                 ...buttons,

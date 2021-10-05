@@ -1,1 +1,1 @@
-module.exports = ["nickName", "gameId", "rank", "bestCharacter", "favoriteCharacter", "inGameExp", "lvlOfWorld", "favoriteElement", "favoriteLocation", "mostWishesCharacter"];
+module.exports = ["nickName", "gameId", "rank", "bestCharacter", "favoriteCharacter", "inGameExp", "lvlOfWorld", "favoriteElement", "favoriteLocation", "mostWishesCharacter", "age", "gender", "mostHatedCharacter", "achievementsCount"];

@@ -1,5 +1,9 @@
 module.exports = {
   nickName: null,
+  name: null,
+  age: null,
+  gender: null,
+  mostHatedCharacter: null,
   gameId: null,
   rank: null,
   bestCharacter: null,
@@ -8,5 +12,6 @@ module.exports = {
   lvlOfWorld: null,
   favoriteElement: null,
   favoriteLocation: null,
-  mostWishesCharacter: null
+  mostWishesCharacter: null,
+  achievementsCount: null
 };

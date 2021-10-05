@@ -1,5 +1,8 @@
-const titlesArray = require('../../dictionaries/titles');
+const titlesMale = require('../../dictionaries/titles_male');
+const titlesFemale = require('../../dictionaries/titles_female');
 const {titles} = require('../../data');
+
+const isFemale = require('../menu/isFemale');
 
 module.exports = function (session) {
     function getRandomIndex(min, max) {
@@ -7,9 +10,14 @@ module.exports = function (session) {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+    let title;
 
-    let title = titlesArray[getRandomIndex(0, titlesArray.length - 1)];
-    console.log(titles);
+    if (session.user.gender && isFemale(session.user.gender)) {
+        title = titlesFemale[getRandomIndex(0, titlesFemale.length - 1)];
+    } else {
+        title = titlesMale[getRandomIndex(0, titlesMale.length - 1)];
+    }
+
     titles.unshift({title: title, user: session.userChatData.user.username});
 
     while (titles.length > 10) {

@@ -1,6 +1,9 @@
 module.exports = {
     "nickName": "Ник",
     "name": "Имя",
+    "age": "Возвраст",
+    "gender": "Пол",
+    "mostHatedCharacter": "Самый ненавистный персонаж",
     "gameId": "Игровой айди",
     "bestCharacter": "Сильнейший персонаж",
     "rank": "Ранг",
@@ -9,5 +12,6 @@ module.exports = {
     "mostWishesCharacter": "Самый желаемый персонаж",
     "inGameExp": "Опыт в игре (дней, лет)",
     "favoriteElement": "Любимая стихия",
-    "favoriteLocation": "Любимая локация"
+    "favoriteLocation": "Любимая локация",
+    "achievementsCount": "Количество достижений"
 };

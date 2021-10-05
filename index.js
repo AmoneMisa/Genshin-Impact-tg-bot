@@ -19,8 +19,8 @@ const sendMessage = require('./functions/sendMessage');
 
 const log = intel.getLogger("genshin");
 
-bot.onText(/(?:^|\s)\/start/, (msg) => {
-    getSession(sessions, msg.chat.id, msg.from.id);
+bot.onText(/(?:^|\s)\/start/, async (msg) => {
+    await getSession(sessions, msg.chat.id, msg.from.id);
 
     bot.deleteMessage(msg.chat.id, msg.message_id);
     sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
@@ -41,10 +41,10 @@ bot.onText(/(?:^|\s)\/start/, (msg) => {
     });
 });
 
-bot.onText(/(?:^|\s)\/menu/, (msg) => {
+bot.onText(/(?:^|\s)\/menu/, async (msg) => {
     bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    let session = getSession(sessions, msg.chat.id, msg.from.id);
+    let session = await getSession(sessions, msg.chat.id, msg.from.id);
     let buttons = setButtons(commands);
 
     sendMessage(msg.chat.id, `@${session.userChatData.user.username}, ${dictionary["ru"].index}`, {
@@ -59,9 +59,9 @@ bot.onText(/(?:^|\s)\/menu/, (msg) => {
     })
 });
 
-bot.onText(/(?:^|\s)\/set(.*?)\b/, (msg, regResult) => {
+bot.onText(/(?:^|\s)\/set(.*?)\b/, async (msg, regResult) => {
     let regResultStr = regResult[1];
-    let session = getSession(sessions, msg.chat.id, msg.from.id);
+    let session = await getSession(sessions, msg.chat.id, msg.from.id);
 
     bot.deleteMessage(session.keyboardMessage.chat.id, session.keyboardMessage.message_id);
     bot.deleteMessage(msg.chat.id, msg.message_id);
@@ -84,15 +84,14 @@ bot.onText(/(?:^|\s)\/set(.*?)\b/, (msg, regResult) => {
                 bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
                 bot.deleteMessage(msg.chat.id, msg.message_id);
             });
-
         }).catch(e => {
             console.error(e);
         });
     }
 });
 
-bot.onText(/(?:^|\s)\/title\b/, (msg) => {
-    let session = getSession(sessions, msg.chat.id, msg.from.id);
+bot.onText(/(?:^|\s)\/title\b/, async (msg) => {
+    let session = await getSession(sessions, msg.chat.id, msg.from.id);
     bot.deleteMessage(msg.chat.id, msg.message_id);
 
     sendMessage(msg.chat.id, titleMessage(session), {
@@ -106,8 +105,8 @@ bot.onText(/(?:^|\s)\/title\b/, (msg) => {
     });
 });
 
-bot.onText(/(?:^|\s)\/titles/, (msg) => {
-    getSession(sessions, msg.chat.id, msg.from.id);
+bot.onText(/(?:^|\s)\/titles/, async (msg) => {
+    await getSession(sessions, msg.chat.id, msg.from.id);
     bot.deleteMessage(msg.chat.id, msg.message_id);
 
     sendMessage(msg.chat.id, titlesMessage(titles), {
@@ -121,8 +120,8 @@ bot.onText(/(?:^|\s)\/titles/, (msg) => {
     });
 });
 
-bot.on("callback_query", (callback) => {
-    let session = sessions[callback.from.id];
+bot.on("callback_query", async (callback) => {
+    let session = await getSession(sessions, callback.message.chat.id, callback.from.id);
     let results = [];
 
     for (let [key, value] of callbacks) {
