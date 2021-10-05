@@ -5,9 +5,6 @@ const userTemplate = require('../../userTemplate');
 const translation = require('../../dictionaries/translate');
 
 module.exports = [["menu", function (session, callback) {
-    deleteMessage(callback.message.chat.id, session.messages, callback.message.message_id);
-
-
     function buttonsTemplate() {
         let buttons = [];
         let tempArray = null;
