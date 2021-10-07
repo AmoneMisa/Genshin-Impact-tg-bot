@@ -2,6 +2,7 @@ const fs = require('fs');
 
 let sessions;
 let titles;
+let customButtons;
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -17,8 +18,16 @@ try {
     titles = [];
 }
 
+try {
+    let customButtonsJson = fs.readFileSync("./customButtons");
+    customButtons = JSON.parse(customButtonsJson);
+} catch (e) {
+    customButtons = [];
+}
+
 module.exports = {
     chatId: null,
     sessions,
-    titles
+    titles,
+    customButtons
 };
