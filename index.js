@@ -22,12 +22,12 @@ const swordsMessage = require('./functions/sword/swordsMessage');
 const log = intel.getLogger("genshin");
 
 bot.setMyCommands([
-    {command: "start", description: "Нажми, чтобы увидеть инфо о группе"},
-    {command: "menu", description: "Нажми, чтобы заполнить анкету о себе"},
-    {command: "title", description: "Нажми, чтобы получить случайный титул"},
-    {command: "titles", description: "Нажми, чтобы получить список титулов группы"},
-    {command: "sword", description: "Нажми, чтобы увеличить свой меч"},
-    {command: "all_swords", description: "Нажми, чтобы увидеть список мечей всей группы"}
+    {command: "start", description: "Инфо о группе"},
+    {command: "menu", description: "Заполнить анкету о себе"},
+    {command: "title", description: "Получить случайный титул"},
+    {command: "titles", description: "Список титулов группы"},
+    {command: "sword", description: "Увеличить свой меч"},
+    {command: "all_swords", description: "Список мечей всей группы"}
 ], {
     // scope: {type: "chat", chat_id: -585920926}
     scope: {type: "chat", chat_id: -1001526751940}
@@ -134,8 +134,8 @@ bot.setMyCommands([
 }).catch(e => console.error(e));
 
 bot.setMyCommands([
-    {command: "sword", description: "Нажми, чтобы увеличить свой меч"},
-    {command: "all_swords", description: "Нажми, чтобы увидеть список мечей всей группы"},
+    {command: "sword", description: "Увеличить свой меч"},
+    {command: "all_swords", description: "Список мечей всей группы"}
 ], {
     scope: {type: "default"}
 }).then(() => {
