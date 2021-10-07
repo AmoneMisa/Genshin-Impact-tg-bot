@@ -8,9 +8,10 @@ module.exports = async function (sessions, chatId, userId) {
 
     if (!sessions[chatId][userId]) {
         sessions[chatId][userId] = {
-            userChatData: (sessions[chatId][userId] && sessions[chatId][userId].userChatData) || await bot.getChatMember(chatId, userId),
-            user: (sessions[chatId][userId] && sessions[chatId][userId].user) || {...userTemplate}
+            userChatData: await bot.getChatMember(chatId, userId),
+            user: {...userTemplate}
         };
     }
+
     return sessions[chatId][userId];
 };

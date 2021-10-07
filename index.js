@@ -26,7 +26,10 @@ bot.setMyCommands([
     {command: "menu", description: "Нажми, чтобы заполнить анкету о себе"},
     {command: "title", description: "Нажми, чтобы получить случайный титул"},
     {command: "titles", description: "Нажми, чтобы получить список титулов группы"},
+    {command: "sword", description: "Нажми, чтобы увеличить свой меч"},
+    {command: "all_swords", description: "Нажми, чтобы увидеть список мечей всей группы"}
 ], {
+    // scope: {type: "chat", chat_id: -585920926}
     scope: {type: "chat", chat_id: -1001526751940}
 }).then(() => {
     bot.onText(/(?:^|\s)\/start/, async (msg) => {
@@ -134,7 +137,7 @@ bot.setMyCommands([
     {command: "sword", description: "Нажми, чтобы увеличить свой меч"},
     {command: "all_swords", description: "Нажми, чтобы увидеть список мечей всей группы"},
 ], {
-    scope: {type: "all_group_chats"}
+    scope: {type: "default"}
 }).then(() => {
     bot.onText(/(?:^|\s)\/sword\b/, async (msg) => {
         let session = await getSession(sessions, msg.chat.id, msg.from.id);
