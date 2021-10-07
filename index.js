@@ -6,7 +6,7 @@ const translation = require('./dictionaries/translate');
 const buttonsDictionary = require('./dictionaries/buttons');
 const commands = require('./dictionaries/commands');
 
-const {sessions, titles, customButtons} = require('./data');
+const {sessions, titles} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
@@ -175,8 +175,6 @@ bot.on('polling_error', (error) => {
 function shutdown() {
     fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
     fs.writeFileSync("./titles.json", JSON.stringify(titles));
-    fs.writeFileSync("./customButtons.json", JSON.stringify(titles));
-    fs.writeFileSync("./allUsers.json", JSON.stringify(allUsers));
     bot.stopPolling();
 }
 
