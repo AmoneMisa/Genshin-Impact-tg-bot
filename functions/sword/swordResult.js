@@ -41,9 +41,9 @@ module.exports = function (session) {
     let int = getRandomInt(-10, 15);
     session.sword += int;
     if (int > 0) {
-        result = `@${session.userChatData.user.username}, увеличился на ${int} см. Сейчас он равен: ${session.sword} мм`;
+        result = `@${session.userChatData.user.username}, твой меч увеличился на ${int} см. Сейчас он равен: ${session.sword} мм`;
     } else {
-        result = `@${session.userChatData.user.username}, укоротился на ${int} см. Сейчас он равен: ${session.sword} мм`;
+        result = `@${session.userChatData.user.username}, твой меч укоротился на ${int} см. Сейчас он равен: ${session.sword} мм`;
     }
 
     return result;
