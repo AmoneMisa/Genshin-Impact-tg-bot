@@ -18,16 +18,8 @@ try {
     titles = [];
 }
 
-try {
-    let customButtonsJson = fs.readFileSync("./customButtons");
-    customButtons = JSON.parse(customButtonsJson);
-} catch (e) {
-    customButtons = [];
-}
-
 module.exports = {
     chatId: null,
     sessions,
-    titles,
-    customButtons
+    titles
 };
