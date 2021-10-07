@@ -27,8 +27,7 @@ module.exports = [["info", function (session, callback) {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...buttons,
-                [{
+                ...buttons, [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
                 }]

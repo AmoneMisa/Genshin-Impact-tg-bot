@@ -1,5 +1,4 @@
 const getTitle = require('./getTitle');
-// const {allUsers} = require('../../data');
 
 module.exports = function (session) {
     let newDate = Math.round(new Date().getTime() / 1000);

@@ -16,6 +16,8 @@ const titleMessage = require('./functions/titles/titleMessage');
 const getSession = require('./functions/getSession');
 const setButtons = require('./functions/menu/setButtons');
 const sendMessage = require('./functions/sendMessage');
+const swordResult = require('./functions/sword/swordResult');
+const swordsMessage = require('./functions/sword/swordsMessage');
 
 const log = intel.getLogger("genshin");
 
@@ -26,7 +28,6 @@ bot.onText(/(?:^|\s)\/start/, async (msg) => {
     sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
         disable_notification: true,
         reply_markup: {
-            selective: true,
             inline_keyboard: [[{
                 text: buttonsDictionary["ru"].info,
                 callback_data: "info"
@@ -133,6 +134,36 @@ bot.on("callback_query", async (callback) => {
     Promise.all(results).then(() => {
         bot.answerCallbackQuery(callback.id);
         log.info('%:2j', session);
+    });
+});
+
+bot.onText(/(?:^|\s)\/sword\b/, async (msg) => {
+    let session = await getSession(sessions, msg.chat.id, msg.from.id);
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    sendMessage(msg.chat.id,`${swordResult(session)}`, {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
+});
+
+bot.onText(/(?:^|\s)\/allSwords\b/, async (msg) => {
+    await getSession(sessions, msg.chat.id, msg.from.id);
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    sendMessage(msg.chat.id,`${swordsMessage(sessions)}`, {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
     });
 });
 
