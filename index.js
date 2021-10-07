@@ -121,22 +121,6 @@ bot.onText(/(?:^|\s)\/titles/, async (msg) => {
     });
 });
 
-bot.on("callback_query", async (callback) => {
-    let session = await getSession(sessions, callback.message.chat.id, callback.from.id);
-    let results = [];
-
-    for (let [key, value] of callbacks) {
-        if ((key instanceof RegExp && key.test(callback.data)) || callback.data === key) {
-            results.push(value(session, callback) || Promise.resolve());
-        }
-    }
-
-    Promise.all(results).then(() => {
-        bot.answerCallbackQuery(callback.id);
-        log.info('%:2j', session);
-    });
-});
-
 bot.onText(/(?:^|\s)\/sword\b/, async (msg) => {
     let session = await getSession(sessions, msg.chat.id, msg.from.id);
     bot.deleteMessage(msg.chat.id, msg.message_id);
@@ -164,6 +148,23 @@ bot.onText(/(?:^|\s)\/allSwords\b/, async (msg) => {
                 callback_data: "close"
             }]]
         }
+    });
+});
+
+
+bot.on("callback_query", async (callback) => {
+    let session = await getSession(sessions, callback.message.chat.id, callback.from.id);
+    let results = [];
+
+    for (let [key, value] of callbacks) {
+        if ((key instanceof RegExp && key.test(callback.data)) || callback.data === key) {
+            results.push(value(session, callback) || Promise.resolve());
+        }
+    }
+
+    Promise.all(results).then(() => {
+        bot.answerCallbackQuery(callback.id);
+        log.info('%:2j', session);
     });
 });
 
