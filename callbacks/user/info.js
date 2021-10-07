@@ -10,14 +10,15 @@ module.exports = [["info", function (session, callback) {
         let tempArray = null;
         let i = 0;
 
-        for (let key of Object.keys(sessions)) {
+        for (let key of Object.keys(sessions[callback.message.chat.id])) {
             if (i % 3 === 0) {
                 tempArray = [];
                 buttons.push(tempArray);
             }
-            tempArray.push({text: sessions[key].userChatData.user.first_name, callback_data: `info.${key}`});
+            tempArray.push({text: sessions[callback.message.chat.id][key].userChatData.user.first_name, callback_data: `info.${key}`});
             i++;
         }
+
         return buttons;
     }
 
@@ -61,7 +62,7 @@ module.exports = [["info", function (session, callback) {
     }
 
     let currentUser;
-    for (let [key, value] of Object.entries(sessions)) {
+    for (let [key, value] of Object.entries(sessions[callback.message.chat.id])) {
         if (key === userId) {
             currentUser = value;
         }

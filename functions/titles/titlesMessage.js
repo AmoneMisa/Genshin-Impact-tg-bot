@@ -1,11 +1,11 @@
 module.exports =  function (titles) {
-    if (!Object.values(titles).length) {
+    if (!titles || !titles.length) {
         return "В группе ещё нет ни одного титула. Чтобы получить титул используйте команду /title"
     }
 
     let str = "";
 
-    for (let title of Object.values(titles)) {
+    for (let title of titles) {
         str += `${title.user}: ${title.title}\n`;
     }
 

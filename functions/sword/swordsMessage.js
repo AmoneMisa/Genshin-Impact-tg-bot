@@ -9,7 +9,9 @@ module.exports = function (sessions) {
     arrSessions.sort((a, b) => b.sword - a.sword);
 
     for (let session of arrSessions) {
-        message += `${session.userChatData.user.first_name}: ${session.sword} мм.\n`;
+        if (session.sword) {
+            message += `${session.userChatData.user.first_name}: ${session.sword} мм.\n`;
+        }
     }
 
     return message;

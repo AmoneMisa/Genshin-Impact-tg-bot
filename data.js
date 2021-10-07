@@ -2,7 +2,6 @@ const fs = require('fs');
 
 let sessions;
 let titles;
-let customButtons;
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -15,7 +14,7 @@ try {
     let titlesJson = fs.readFileSync("./titles.json");
     titles = JSON.parse(titlesJson);
 } catch (e) {
-    titles = [];
+    titles = {};
 }
 
 module.exports = {
