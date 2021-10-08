@@ -6,7 +6,8 @@ module.exports = function (sessions) {
     }
 
     let message = "Мечи группы \n\n";
-    arrSessions.filter(item => item.sword !== undefined).sort((a, b) => b.sword - a.sword);
+    arrSessions = arrSessions.filter(item => item.sword !== undefined);
+    arrSessions.sort((a, b) => b.sword - a.sword);
 
     for (let session of arrSessions) {
         message += `${session.userChatData.user.first_name}: ${session.sword} мм.\n`;
