@@ -7,8 +7,14 @@ function getTime(datetime) {
     return [remain, remainHours, remainMinutes % 60, remainSeconds % 60];
 }
 
-function getOffset(seconds) {
-    return new Date().getTime() + seconds * 1000;
+function getOffset() {
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return new Date().getTime() + date.getTime();
 }
 
 module.exports = function (session) {
@@ -16,11 +22,11 @@ module.exports = function (session) {
 
     if (remain > 0) {
         if (hours > 0) {
-            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`;
+            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`;
         } else if (minutes > 0) {
-            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Осталось: ${minutes} мин ${seconds} сек`;
+            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`;
         } else {
-            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Осталось: ${seconds} сек`;
+            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`;
         }
     }
 
