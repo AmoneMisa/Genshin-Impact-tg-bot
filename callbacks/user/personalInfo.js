@@ -1,6 +1,6 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
 const sendMessage = require('../../functions/sendMessage');
-const userTemplate = require('../../userTemplate');
+const userTemplate = require('../../templates/userTemplate');
 const translation = require('../../dictionaries/translate');
 
 module.exports = [["personal_info", function (session, callback) {

@@ -6,7 +6,7 @@ const translation = require('./dictionaries/translate');
 const buttonsDictionary = require('./dictionaries/buttons');
 const commands = require('./dictionaries/commands');
 
-const {sessions, titles} = require('./data');
+const {sessions, titles, bosses} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
@@ -18,6 +18,11 @@ const setButtons = require('./functions/menu/setButtons');
 const sendMessage = require('./functions/sendMessage');
 const swordResult = require('./functions/sword/swordResult');
 const swordsMessage = require('./functions/sword/swordsMessage');
+const bossHP = require('./functions/boss/bossHP');
+const bossUsersDamage = require('./functions/boss/bossUsersDamage');
+const bossUserSetDamage = require('./functions/boss/bossUserSetDamage');
+const bossGetStats = require('./functions/boss/bossGetStats');
+const bossGetLoot = require('./functions/boss/bossGetLoot');
 
 const log = intel.getLogger("genshin");
 
@@ -34,10 +39,14 @@ bot.setMyCommands([
     {command: "title", description: "Получить случайный титул"},
     {command: "titles", description: "Список титулов группы"},
     {command: "sword", description: "Увеличить свой меч"},
-    {command: "all_swords", description: "Список мечей всей группы"}
+    {command: "all_swords", description: "Список мечей всей группы"},
+    {command: "summon_boss", description: "Призвать босса"},
+    {command: "boss_show_hp", description: "Показать Хп босса"},
+    {command: "damage_the_boss", description: "Нанести урон боссу"},
+    {command: "boss_my_stats", description: "Моя статистика"},
 ], {
-    // scope: {type: "chat", chat_id: -585920926}
-    scope: {type: "chat", chat_id: -1001526751940}
+    scope: {type: "chat", chat_id: -585920926}
+    // scope: {type: "chat", chat_id: -1001526751940}
 });
 bot.onText(/(?:^|\s)\/start/, async (msg) => {
     await getSession(sessions, msg.chat.id, msg.from.id);
@@ -169,6 +178,71 @@ bot.onText(/(?:^|\s)\/all_swords\b/, async (msg) => {
     });
 });
 
+bot.onText(/(?:^|\s)\/summon_boss\b/, async (msg) => {
+    await getSession(sessions, msg.chat.id, msg.from.id);
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    sendMessage(msg.chat.id, `${await bossHP(msg.chat.id, bosses)}`, {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
+});
+
+bot.onText(/(?:^|\s)\/damage_the_boss\b/, async (msg) => {
+    let session = await getSession(sessions, msg.chat.id, msg.from.id);
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    let callbackSendMessage = (message) => sendMessage(msg.chat.id, message, {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
+
+    let boss = bosses[msg.chat.id];
+
+    if (bossUserSetDamage(session, boss, callbackSendMessage)) {
+        bossGetLoot(boss, sessions[msg.chat.id], callbackSendMessage);
+    }
+});
+
+bot.onText(/(?:^|\s)\/boss_show_hp\b/, async (msg) => {
+    await getSession(sessions, msg.chat.id, msg.from.id);
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    sendMessage(msg.chat.id, `${bossUsersDamage(bosses[msg.chat.id], sessions[msg.chat.id])}`, {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
+});
+
+bot.onText(/(?:^|\s)\/boss_my_stats\b/, async (msg) => {
+    let session = await getSession(sessions, msg.chat.id, msg.from.id);
+    bot.deleteMessage(msg.chat.id, msg.message_id);
+
+    sendMessage(msg.chat.id, `${bossGetStats(session)}`, {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
+});
 
 bot.on("callback_query", async (callback) => {
     let session = await getSession(sessions, callback.message.chat.id, callback.from.id);
@@ -193,6 +267,7 @@ bot.on('polling_error', (error) => {
 function shutdown() {
     fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
     fs.writeFileSync("./titles.json", JSON.stringify(titles));
+    fs.writeFileSync("./bosses.json", JSON.stringify(bosses));
     bot.stopPolling();
 }
 

@@ -2,7 +2,7 @@ const buttonsDictionary = require('../../dictionaries/buttons');
 const sendMessage = require('../../functions/sendMessage');
 let {sessions} = require('../../data');
 const translation = require('../../dictionaries/translate');
-const userTemplate = require('../../userTemplate');
+const userTemplate = require('../../templates/userTemplate');
 
 module.exports = [["info", function (session, callback) {
     function buttonsTemplate() {

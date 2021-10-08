@@ -1,4 +1,4 @@
-const userTemplate = require('../userTemplate');
+const userTemplate = require('../templates/userTemplate');
 const bot = require('../bot');
 
 module.exports = async function (sessions, chatId, userId) {

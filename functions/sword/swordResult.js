@@ -1,11 +1,5 @@
-function getTime(datetime) {
-    let remain = (datetime || 0) - new Date().getTime();
-    let remainSeconds = Math.floor(remain / 1000);
-    let remainMinutes = Math.floor(remainSeconds / 60);
-    let remainHours = Math.floor(remainMinutes / 60);
-
-    return [remain, remainHours, remainMinutes % 60, remainSeconds % 60];
-}
+const getTime = require('../getTime');
+const getRandom = require('../getRandom');
 
 function getOffset() {
     let date = new Date();
@@ -38,13 +32,8 @@ module.exports = function (session) {
 
     let result;
 
-    function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
 
-    let int = getRandomInt(-10, 15);
+    let int = getRandom(-10, 15);
     session.sword += int;
     if (int > 0) {
         result = `@${session.userChatData.user.username}, твой меч увеличился на ${int} мм. Сейчас он равен: ${session.sword} мм`;

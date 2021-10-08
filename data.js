@@ -17,8 +17,16 @@ try {
     titles = {};
 }
 
+try {
+    let bossesJson = fs.readFileSync("./bosses.json");
+    bosses = JSON.parse(bossesJson);
+} catch (e) {
+    bosses = {};
+}
+
 module.exports = {
     chatId: null,
     sessions,
-    titles
+    titles,
+    bosses
 };

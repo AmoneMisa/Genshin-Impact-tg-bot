@@ -3,4 +3,7 @@
 config.js
 sessions.json
 titles.json
-customButtons.json
+bosses.json
+
+#on hold
+/templates/shopTemplate.js
