@@ -45,8 +45,8 @@ bot.setMyCommands([
     {command: "damage_the_boss", description: "Нанести урон боссу"},
     {command: "boss_my_stats", description: "Моя статистика"},
 ], {
-    scope: {type: "chat", chat_id: -585920926}
-    // scope: {type: "chat", chat_id: -1001526751940}
+    // scope: {type: "chat", chat_id: -585920926}
+    scope: {type: "chat", chat_id: -1001526751940}
 });
 bot.onText(/(?:^|\s)\/start/, async (msg) => {
     await getSession(sessions, msg.chat.id, msg.from.id);
