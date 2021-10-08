@@ -1,5 +1,6 @@
 module.exports = function (sessions) {
     let arrSessions = Object.values(sessions);
+    console.log("before sort", arrSessions);
 
     if (arrSessions.length === 0) {
         return "Ещё никто не отрастил свой меч. Сделать это можно командой /sword";
@@ -7,6 +8,7 @@ module.exports = function (sessions) {
 
     let message = "Мечи группы \n\n";
     arrSessions.sort((a, b) => b.sword - a.sword);
+    console.log("after sort", arrSessions);
 
     for (let session of arrSessions) {
         if (session.sword) {
