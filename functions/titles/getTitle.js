@@ -23,7 +23,7 @@ module.exports = function (chatId, session) {
 
     titles[chatId].unshift({title: title, user: session.userChatData.user.username});
 
-    while (titles.length > 10) {
+    while (titles[chatId].length > 10) {
         titles.pop();
     }
 
