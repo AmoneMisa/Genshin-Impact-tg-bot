@@ -232,6 +232,7 @@ bot.onText(/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
         await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
         await resetSwordTimer(sessions);
+        sendMessage(myId, "Сессии сброшены.");
 
     } catch (e) {
         sendMessage(myId, e);
