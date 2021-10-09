@@ -1,15 +1,6 @@
 const getTime = require('../getTime');
 const getRandom = require('../getRandom');
-
-function getOffset() {
-    let date = new Date();
-    date.setDate(date.getDate() + 1);
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-    return date.getTime();
-}
+const getOffset = require('../getOffset');
 
 module.exports = function (session) {
     let [remain, hours, minutes, seconds] = getTime(session.timerSwordCallback);

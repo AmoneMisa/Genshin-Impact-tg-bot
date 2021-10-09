@@ -1,6 +1,6 @@
 const callbacks = require('./callbacks');
 const bot = require('./bot');
-const {chat, myId} = require('config');
+const {chat, myId} = require('./config');
 
 const dictionary = require('./dictionaries/main');
 const translation = require('./dictionaries/translate');
@@ -231,16 +231,8 @@ bot.onText(/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
     try {
         await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
+        await resetSwordTimer(sessions);
 
-        sendMessage(msg.chat.id, `${swordsMessage(sessions[msg.chat.id])}`, {
-            disable_notification: true,
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        });
     } catch (e) {
         sendMessage(myId, e);
     }

@@ -1,8 +1,7 @@
 const getTime = require('../getTime');
 
 function getOffset() {
-    // return new Date().getTime() + 4 * 60 * 60 * 1000;
-    return new Date().getTime() + 60;
+    return new Date().getTime() + 4 * 60 * 60 * 1000;
 }
 
 module.exports = function (session, boss, sendMessage) {
