@@ -1,5 +1,6 @@
 const bossTemplate = require('../../templates/bossTemplate');
 const levelsTemplate = require('../../templates/levelsTemplate');
+const getRandom = require('../getRandom');
 
 module.exports = function (boss, sessions, sendMessage) {
     if (boss.damagedHp < boss.hp) {
@@ -7,9 +8,6 @@ module.exports = function (boss, sessions, sendMessage) {
     }
 
     let message = `Лут группы после убийства босса\n\n`;
-    // if (!session.game.inventory) {
-    //     session.game.inventory = {};
-    // }
     let arrSessions = Object.values(sessions);
     arrSessions = arrSessions.filter(item => item?.game?.boss?.damage !== undefined);
     arrSessions.sort((a, b) => b.game.boss.damage - a.game.boss.damage);
@@ -33,10 +31,21 @@ module.exports = function (boss, sessions, sendMessage) {
             session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[1];
         } else if (i === 3) {
             expAmount = bossTemplate.lvls[0].loot.experience[2];
-            session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[2];
+            session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[2];;
         } else {
             expAmount = bossTemplate.lvls[0].loot.experience[3];
             session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[3];
+        }
+
+        let gotGold = 0;
+
+        for (let gold of bossTemplate.lvls[0].loot.gold) {
+            let chance = getRandom(1, 100);
+
+            if (chance <= gold.chance) {
+                gotGold = getRandom(gold.minAmount, gold.maxAmount);
+                session.game.inventory.gold += gotGold;
+            }
         }
 
         for (let level of levelsTemplate) {
@@ -44,13 +53,14 @@ module.exports = function (boss, sessions, sendMessage) {
                 if (session.game.stats.currentExp >= level.needExp) {
                     session.game.stats.currentExp -= level.needExp;
                     session.game.stats.lvl++;
+                    session.game.inventory.gold += ( 1000 * session.game.stats.lvl * 0.33);
                     continue;
                 }
 
                 session.game.stats.needExp = level.needExp - session.game.stats.currentExp;
             }
         }
-        message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\n`;
+        message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}`;
         i++;
     }
 

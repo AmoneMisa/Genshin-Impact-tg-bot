@@ -7,6 +7,7 @@ const translation = require('./dictionaries/translate');
 const buttonsDictionary = require('./dictionaries/buttons');
 const commands = require('./dictionaries/commands');
 
+// const {sessions, titles, bosses} = require('./data');
 const {sessions, titles} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
@@ -25,14 +26,12 @@ const resetSwordTimer = require('./functions/sword/resetSwordTimer');
 // const bossUserSetDamage = require('./functions/boss/bossUserSetDamage');
 // const bossGetStats = require('./functions/boss/bossGetStats');
 // const bossGetLoot = require('./functions/boss/bossGetLoot');
+// const bossShop = require('./functions/boss/bossShop');
+// const bossShopSellItem = require('./functions/boss/bossShopSellItem');
 
 const log = intel.getLogger("genshin");
 
 bot.setMyCommands([
-    {command: "start", description: "Инфо о группе"},
-    {command: "menu", description: "Заполнить анкету о себе"},
-    {command: "title", description: "Получить случайный титул"},
-    {command: "titles", description: "Список титулов группы"},
     {command: "sword", description: "Увеличить свой меч"},
     {command: "all_swords", description: "Список мечей всей группы"},
 ], {
@@ -51,22 +50,22 @@ bot.setMyCommands([
     scope: {type: "chat_member", chat_id: chat, user_id: myId}
 });
 
-
-// bot.setMyCommands([
-//     {command: "start", description: "Инфо о группе"},
-//     {command: "menu", description: "Заполнить анкету о себе"},
-//     {command: "title", description: "Получить случайный титул"},
-//     {command: "titles", description: "Список титулов группы"},
-//     {command: "sword", description: "Увеличить свой меч"},
-//     {command: "all_swords", description: "Список мечей всей группы"},
-//     // {command: "summon_boss", description: "Призвать босса"},
-//     // {command: "boss_show_hp", description: "Показать Хп босса"},
-//     // {command: "damage_the_boss", description: "Нанести урон боссу"},
-//     // {command: "boss_my_stats", description: "Моя статистика"},
-// ], {
-//     // scope: {type: "chat", chat_id: -585920926}
-//     scope: {type: "chat", chat_id: chat }
-// });
+bot.setMyCommands([
+    {command: "start", description: "Инфо о группе"},
+    {command: "menu", description: "Заполнить анкету о себе"},
+    {command: "title", description: "Получить случайный титул"},
+    {command: "titles", description: "Список титулов группы"},
+    {command: "sword", description: "Увеличить свой меч"},
+    {command: "all_swords", description: "Список мечей всей группы"},
+    // {command: "summon_boss", description: "Призвать босса"},
+    // {command: "boss_show_hp", description: "Показать Хп босса"},
+    // {command: "damage_the_boss", description: "Нанести урон боссу"},
+    // {command: "boss_my_stats", description: "Моя статистика"},
+    // {command: "boss_shop", description: "Магазин"},
+], {
+    // scope: {type: "chat", chat_id: -585920926}
+    scope: {type: "chat", chat_id: chat }
+});
 
 bot.onText(/(?:^|\s)\/start/, async (msg) => {
     try {
@@ -90,7 +89,7 @@ bot.onText(/(?:^|\s)\/start/, async (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /start\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 
@@ -112,7 +111,7 @@ bot.onText(/(?:^|\s)\/menu/, async (msg) => {
             session.keyboardMessage = msg;
         })
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /menu\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 
@@ -147,7 +146,7 @@ bot.onText(/(?:^|\s)\/set(.*?)\b/, async (msg, regResult) => {
             });
         }
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /set${regResult[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 
@@ -166,7 +165,7 @@ bot.onText(/(?:^|\s)\/title\b/, async (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /title\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 
@@ -185,7 +184,7 @@ bot.onText(/(?:^|\s)\/titles/, async (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /titles\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 
@@ -204,7 +203,7 @@ bot.onText(/(?:^|\s)\/sword\b/, async (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /sword\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 
@@ -223,86 +222,137 @@ bot.onText(/(?:^|\s)\/all_swords\b/, async (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /all_swords\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 
 bot.onText(/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
     try {
+        if (msg.from.id !== myId) {
+            return ;
+        }
         await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
         await resetSwordTimer(sessions);
         sendMessage(myId, "Сессии сброшены.");
 
     } catch (e) {
-        sendMessage(myId, e);
+        sendMessage(myId, `Command: /reset_sword_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 //
 // bot.onText(/(?:^|\s)\/summon_boss\b/, async (msg) => {
-//     await getSession(sessions, msg.chat.id, msg.from.id);
-//     bot.deleteMessage(msg.chat.id, msg.message_id);
+//     try {
+//         await getSession(sessions, msg.chat.id, msg.from.id);
+//         bot.deleteMessage(msg.chat.id, msg.message_id);
 //
-//     sendMessage(msg.chat.id, `${await bossHP(msg.chat.id, bosses)}`, {
-//         disable_notification: true,
-//         reply_markup: {
-//             inline_keyboard: [[{
-//                 text: buttonsDictionary["ru"].close,
-//                 callback_data: "close"
-//             }]]
-//         }
-//     });
+//         sendMessage(msg.chat.id, `${await bossHP(msg.chat.id, bosses, sessions[msg.chat.id])}`, {
+//             disable_notification: true,
+//             reply_markup: {
+//                 inline_keyboard: [[{
+//                     text: buttonsDictionary["ru"].close,
+//                     callback_data: "close"
+//                 }]]
+//             }
+//         });
+//     } catch (e) {
+//         sendMessage(myId, `In: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+//     }
 // });
 //
 // bot.onText(/(?:^|\s)\/damage_the_boss\b/, async (msg) => {
-//     let session = await getSession(sessions, msg.chat.id, msg.from.id);
-//     bot.deleteMessage(msg.chat.id, msg.message_id);
+//     try {
+//         let session = await getSession(sessions, msg.chat.id, msg.from.id);
+//         bot.deleteMessage(msg.chat.id, msg.message_id);
 //
-//     let callbackSendMessage = (message) => sendMessage(msg.chat.id, message, {
-//         disable_notification: true,
-//         reply_markup: {
-//             inline_keyboard: [[{
-//                 text: buttonsDictionary["ru"].close,
-//                 callback_data: "close"
-//             }]]
+//         let callbackSendMessage = (message) => sendMessage(msg.chat.id, message, {
+//             disable_notification: true,
+//             reply_markup: {
+//                 inline_keyboard: [[{
+//                     text: buttonsDictionary["ru"].close,
+//                     callback_data: "close"
+//                 }]]
+//             }
+//         });
+//
+//         let boss = bosses[msg.chat.id];
+//
+//         if (bossUserSetDamage(session, boss, callbackSendMessage)) {
+//             bossGetLoot(boss, sessions[msg.chat.id], callbackSendMessage);
 //         }
-//     });
-//
-//     let boss = bosses[msg.chat.id];
-//
-//     if (bossUserSetDamage(session, boss, callbackSendMessage)) {
-//         bossGetLoot(boss, sessions[msg.chat.id], callbackSendMessage);
+//     } catch (e) {
+//         sendMessage(myId, `In: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
 //     }
 // });
 //
 // bot.onText(/(?:^|\s)\/boss_show_hp\b/, async (msg) => {
-//     await getSession(sessions, msg.chat.id, msg.from.id);
-//     bot.deleteMessage(msg.chat.id, msg.message_id);
+//     try {
+//         await getSession(sessions, msg.chat.id, msg.from.id);
+//         bot.deleteMessage(msg.chat.id, msg.message_id);
 //
-//     sendMessage(msg.chat.id, `${bossUsersDamage(bosses[msg.chat.id], sessions[msg.chat.id])}`, {
-//         disable_notification: true,
-//         reply_markup: {
-//             inline_keyboard: [[{
-//                 text: buttonsDictionary["ru"].close,
-//                 callback_data: "close"
-//             }]]
-//         }
-//     });
+//         sendMessage(msg.chat.id, `${bossUsersDamage(bosses[msg.chat.id], sessions[msg.chat.id])}`, {
+//             disable_notification: true,
+//             reply_markup: {
+//                 inline_keyboard: [[{
+//                     text: buttonsDictionary["ru"].close,
+//                     callback_data: "close"
+//                 }]]
+//             }
+//         });
+//     } catch (e) {
+//         sendMessage(myId, `In: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+//     }
 // });
 //
 // bot.onText(/(?:^|\s)\/boss_my_stats\b/, async (msg) => {
-//     let session = await getSession(sessions, msg.chat.id, msg.from.id);
-//     bot.deleteMessage(msg.chat.id, msg.message_id);
+//     try {
+//         let session = await getSession(sessions, msg.chat.id, msg.from.id);
+//         bot.deleteMessage(msg.chat.id, msg.message_id);
 //
-//     sendMessage(msg.chat.id, `${bossGetStats(session)}`, {
-//         disable_notification: true,
-//         reply_markup: {
-//             inline_keyboard: [[{
-//                 text: buttonsDictionary["ru"].close,
-//                 callback_data: "close"
-//             }]]
-//         }
-//     });
+//         sendMessage(msg.chat.id, `${bossGetStats(session)}`, {
+//             disable_notification: true,
+//             reply_markup: {
+//                 inline_keyboard: [[{
+//                     text: buttonsDictionary["ru"].close,
+//                     callback_data: "close"
+//                 }]]
+//             }
+//         });
+//     } catch (e) {
+//         sendMessage(myId, `In: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+//     }
+// });
+//
+// bot.onText(/(?:^|\s)\/boss_shop\b/, async (msg) => {
+//     try {
+//         let session = await getSession(sessions, msg.chat.id, msg.from.id);
+//         bot.deleteMessage(msg.chat.id, msg.message_id);
+//         bossShop(msg.chat.id, session);
+//     } catch (e) {
+//         sendMessage(myId, `In: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+//     }
+// });
+//
+// bot.onText(/(?:^|\s)\/buy_(.*?)\b/, async (msg, regResult) => {
+//     try {
+//         let regResultStr = regResult[1];
+//         console.log(regResultStr);
+//         let session = await getSession(sessions, msg.chat.id, msg.from.id);
+//         bot.deleteMessage(msg.chat.id, msg.message_id);
+//         sendMessage(msg.chat.id, bossShopSellItem(session, regResultStr), {
+//             disable_notification: true,
+//             reply_markup: {
+//                 inline_keyboard: [[{
+//                         text: buttonsDictionary["ru"].close,
+//                         callback_data: "close"
+//                     }]
+//                 ]
+//             }
+//         });
+//
+//     } catch (e) {
+//         sendMessage(myId, `In: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+//     }
 // });
 
 bot.on("callback_query", async (callback) => {

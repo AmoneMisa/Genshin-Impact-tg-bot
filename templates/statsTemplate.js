@@ -1,0 +1,1 @@
+module.exports = [{damage: 1-3, hp: 300}];

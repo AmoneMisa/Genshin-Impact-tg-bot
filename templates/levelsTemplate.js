@@ -1,19 +1,16 @@
-function getLvlExpAmount() {
-    let step = 1.15;
-    let currentExpCount = 1000;
-    let countLvls = 20;
+let step = 1.35;
+let currentExpCount = 1500;
+let countLvls = 40;
 
-    let lvls = [];
+let lvls = [];
 
-    for (let i = 1; i < countLvls; i++) {
-        if (i !== 1) {
-            currentExpCount = currentExpCount * step;
-            lvls.push({lvl: i, needExp: currentExpCount});
-        } else {
-            lvls.push({lvl: i, needExp: currentExpCount});
-        }
+for (let i = 1; i < countLvls; i++) {
+    if (i !== 1) {
+        currentExpCount = Math.floor(currentExpCount * step);
+        lvls.push({lvl: i, needExp: currentExpCount});
+    } else {
+        lvls.push({lvl: i, needExp: currentExpCount});
     }
-    return lvls;
 }
 
-module.exports = getLvlExpAmount();
+module.exports = lvls;
