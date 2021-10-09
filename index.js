@@ -32,14 +32,20 @@ const resetSwordTimer = require('./functions/sword/resetSwordTimer');
 const log = intel.getLogger("genshin");
 
 bot.setMyCommands([
+    {command: "start", description: "Инфо о группе"},
+    {command: "menu", description: "Заполнить анкету о себе"},
+    {command: "title", description: "Получить случайный титул"},
+    {command: "titles", description: "Список титулов группы"},
     {command: "sword", description: "Увеличить свой меч"},
-    {command: "all_swords", description: "Список мечей всей группы"},
+    {command: "all_swords", description: "Список мечей всей группы"}
 ], {
     scope: {type: "default"}
 });
 
 bot.setMyCommands([
     {command: "reset_sword_timer", description: "Сбросить таймер меча"},
+    {command: "get_chat_data", description: "Получить данные чата"},
+    {command: "get_user_data", description: "Получить данные пользователя"},
     {command: "start", description: "Инфо о группе"},
     {command: "menu", description: "Заполнить анкету о себе"},
     {command: "title", description: "Получить случайный титул"},
@@ -50,28 +56,26 @@ bot.setMyCommands([
     scope: {type: "chat_member", chat_id: chat, user_id: myId}
 });
 
-bot.setMyCommands([
-    {command: "start", description: "Инфо о группе"},
-    {command: "menu", description: "Заполнить анкету о себе"},
-    {command: "title", description: "Получить случайный титул"},
-    {command: "titles", description: "Список титулов группы"},
-    {command: "sword", description: "Увеличить свой меч"},
-    {command: "all_swords", description: "Список мечей всей группы"},
+// bot.setMyCommands([
+//     {command: "start", description: "Инфо о группе"},
+//     {command: "menu", description: "Заполнить анкету о себе"},
+//     {command: "title", description: "Получить случайный титул"},
+//     {command: "titles", description: "Список титулов группы"},
+//     {command: "sword", description: "Увеличить свой меч"},
+//     {command: "all_swords", description: "Список мечей всей группы"},
     // {command: "summon_boss", description: "Призвать босса"},
     // {command: "boss_show_hp", description: "Показать Хп босса"},
     // {command: "damage_the_boss", description: "Нанести урон боссу"},
     // {command: "boss_my_stats", description: "Моя статистика"},
     // {command: "boss_shop", description: "Магазин"},
-], {
-    // scope: {type: "chat", chat_id: -585920926}
-    scope: {type: "chat", chat_id: chat }
-});
+// ], {
+//     // scope: {type: "chat", chat_id: -585920926}
+//     scope: {type: "chat", chat_id: chat }
+// });
 
 bot.onText(/(?:^|\s)\/start/, async (msg) => {
     try {
         await getSession(sessions, msg.chat.id, msg.from.id);
-        log.info(msg.chat.id);
-        log.info(msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
         sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
             disable_notification: true,
@@ -238,6 +242,35 @@ bot.onText(/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
 
     } catch (e) {
         sendMessage(myId, `Command: /reset_sword_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+    }
+});
+
+bot.onText(/(?:^|\s)\/get_chat_data\b/, async (msg) => {
+    try {
+        if (msg.from.id !== myId) {
+            return;
+        }
+
+        bot.deleteMessage(msg.chat.id, msg.message_id);
+        sendMessage(myId, `Данные из чата: ${msg.chat.id} - ${msg.chat.title};\n\nmsg: ${msg}\n\n${await bot.getChat(msg.chat.id)}`);
+
+    } catch (e) {
+        sendMessage(myId, `Command: /get_chat_data\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+    }
+});
+
+
+bot.onText(/(?:^|\s)\/get_user_data(.*?)\b/, async (msg, regResult) => {
+    try {
+        if (msg.from.id !== myId) {
+            return;
+        }
+
+        bot.deleteMessage(msg.chat.id, msg.message_id);
+        sendMessage(myId, `Данные из чата: ${msg.chat.id} - ${msg.chat.title};\n\nmsg: ${msg}\n\n${await bot.getChatMember(msg.chat.id, regResult[1])}`);
+
+    } catch (e) {
+        sendMessage(myId, `Command: /get_chat_data\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 //
