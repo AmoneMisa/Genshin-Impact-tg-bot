@@ -32,17 +32,6 @@ const resetSwordTimer = require('./functions/sword/resetSwordTimer');
 const log = intel.getLogger("genshin");
 
 bot.setMyCommands([
-    {command: "start", description: "Инфо о группе"},
-    {command: "menu", description: "Заполнить анкету о себе"},
-    {command: "title", description: "Получить случайный титул"},
-    {command: "titles", description: "Список титулов группы"},
-    {command: "sword", description: "Увеличить свой меч"},
-    {command: "all_swords", description: "Список мечей всей группы"}
-], {
-    scope: {type: "default"}
-});
-
-bot.setMyCommands([
     {command: "reset_sword_timer", description: "Сбросить таймер меча"},
     {command: "get_chat_data", description: "Получить данные чата"},
     {command: "get_user_data", description: "Получить данные пользователя"},
@@ -54,6 +43,17 @@ bot.setMyCommands([
     {command: "all_swords", description: "Список мечей всей группы"}
 ], {
     scope: {type: "chat_member", chat_id: chat, user_id: myId}
+});
+
+bot.setMyCommands([
+    {command: "start", description: "Инфо о группе"},
+    {command: "menu", description: "Заполнить анкету о себе"},
+    {command: "title", description: "Получить случайный титул"},
+    {command: "titles", description: "Список титулов группы"},
+    {command: "sword", description: "Увеличить свой меч"},
+    {command: "all_swords", description: "Список мечей всей группы"}
+], {
+    scope: {type: "default"}
 });
 
 // bot.setMyCommands([
@@ -252,7 +252,7 @@ bot.onText(/(?:^|\s)\/get_chat_data\b/, async (msg) => {
         }
 
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        sendMessage(myId, `Данные из чата: ${msg.chat.id} - ${msg.chat.title};\n\nmsg: ${msg}\n\n${await bot.getChat(msg.chat.id)}`);
+        sendMessage(myId, `Данные из чата: ${msg.chat.id} - ${msg.chat.title};\n\nmsg: ${JSON.stringify(msg)}\n\n${JSON.stringify(await bot.getChat(msg.chat.id))}`);
 
     } catch (e) {
         sendMessage(myId, `Command: /get_chat_data\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
@@ -260,17 +260,17 @@ bot.onText(/(?:^|\s)\/get_chat_data\b/, async (msg) => {
 });
 
 
-bot.onText(/(?:^|\s)\/get_user_data(.*?)\b/, async (msg, regResult) => {
+bot.onText(/(?:^|\s)\/get_user_data (.*?)\b/, async (msg, regResult) => {
     try {
         if (msg.from.id !== myId) {
             return;
         }
 
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        sendMessage(myId, `Данные из чата: ${msg.chat.id} - ${msg.chat.title};\n\nmsg: ${msg}\n\n${await bot.getChatMember(msg.chat.id, regResult[1])}`);
+        sendMessage(myId, `Данные из чата: ${msg.chat.id} - ${msg.chat.title};\n\nmsg: ${JSON.stringify(msg)}\n\n${JSON.stringify(await bot.getChatMember(msg.chat.id, regResult[1]))}`);
 
     } catch (e) {
-        sendMessage(myId, `Command: /get_chat_data\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        sendMessage(myId, `Command: /get_user_data\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 });
 //
