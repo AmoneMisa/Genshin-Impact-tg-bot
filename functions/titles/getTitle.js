@@ -1,6 +1,6 @@
 const titlesActions = require('../../dictionaries/titlesActions');
 const titlesActionsFemale = require('../../dictionaries/titlesActions_female');
-const titlesWhat = require('../../dictionaries/titlesWtah');
+const titlesWhat = require('../../dictionaries/titlesWhat');
 const titlesWith = require('../../dictionaries/titlesWith');
 const titlesWhere = require('../../dictionaries/titlesWhere');
 const titlesWhereFemale = require('../../dictionaries/titlesWhere_female');

@@ -1,5 +1,6 @@
 const callbacks = require('./callbacks');
 const bot = require('./bot');
+const {chat, myId} = require('config');
 
 const dictionary = require('./dictionaries/main');
 const translation = require('./dictionaries/translate');
@@ -18,6 +19,7 @@ const setButtons = require('./functions/menu/setButtons');
 const sendMessage = require('./functions/sendMessage');
 const swordResult = require('./functions/sword/swordResult');
 const swordsMessage = require('./functions/sword/swordsMessage');
+const resetSwordTimer = require('./functions/sword/resetSwordTimer');
 // const bossHP = require('./functions/boss/bossHP');
 // const bossUsersDamage = require('./functions/boss/bossUsersDamage');
 // const bossUserSetDamage = require('./functions/boss/bossUserSetDamage');
@@ -37,6 +39,19 @@ bot.setMyCommands([
     scope: {type: "default"}
 });
 
+bot.setMyCommands([
+    {command: "reset_sword_timer", description: "Сбросить таймер меча"},
+    {command: "start", description: "Инфо о группе"},
+    {command: "menu", description: "Заполнить анкету о себе"},
+    {command: "title", description: "Получить случайный титул"},
+    {command: "titles", description: "Список титулов группы"},
+    {command: "sword", description: "Увеличить свой меч"},
+    {command: "all_swords", description: "Список мечей всей группы"}
+], {
+    scope: {type: "chat_member", chat_id: chat, user_id: myId}
+});
+
+
 // bot.setMyCommands([
 //     {command: "start", description: "Инфо о группе"},
 //     {command: "menu", description: "Заполнить анкету о себе"},
@@ -50,137 +65,185 @@ bot.setMyCommands([
 //     // {command: "boss_my_stats", description: "Моя статистика"},
 // ], {
 //     // scope: {type: "chat", chat_id: -585920926}
-//     scope: {type: "chat", chat_id: -1001526751940 }
+//     scope: {type: "chat", chat_id: chat }
 // });
 
 bot.onText(/(?:^|\s)\/start/, async (msg) => {
-    await getSession(sessions, msg.chat.id, msg.from.id);
-
-    bot.deleteMessage(msg.chat.id, msg.message_id);
-    sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: buttonsDictionary["ru"].info,
-                callback_data: "info"
-            }], [{
-                text: buttonsDictionary["ru"].personal_info,
-                callback_data: "personal_info"
-            }], [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+    try {
+        await getSession(sessions, msg.chat.id, msg.from.id);
+        log.info(msg.chat.id);
+        log.info(msg.from.id);
+        bot.deleteMessage(msg.chat.id, msg.message_id);
+        sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].info,
+                    callback_data: "info"
+                }], [{
+                    text: buttonsDictionary["ru"].personal_info,
+                    callback_data: "personal_info"
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } catch (e) {
+        sendMessage(myId, e);
+    }
 });
 
 bot.onText(/(?:^|\s)\/menu/, async (msg) => {
-    bot.deleteMessage(msg.chat.id, msg.message_id);
+    try {
+        bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    let session = await getSession(sessions, msg.chat.id, msg.from.id);
-    let buttons = setButtons(commands);
+        let session = await getSession(sessions, msg.chat.id, msg.from.id);
+        let buttons = setButtons(commands);
 
-    sendMessage(msg.chat.id, `@${session.userChatData.user.username}, ${dictionary["ru"].index}`, {
-        disable_notification: true,
-        reply_markup: JSON.stringify({
-            selective: true,
-            keyboard: buttons,
-            one_time_keyboard: true
+        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, ${dictionary["ru"].index}`, {
+            disable_notification: true,
+            reply_markup: JSON.stringify({
+                selective: true,
+                keyboard: buttons,
+                one_time_keyboard: true
+            })
+        }).then(msg => {
+            session.keyboardMessage = msg;
         })
-    }).then(msg => {
-        session.keyboardMessage = msg;
-    })
+    } catch (e) {
+        sendMessage(myId, e);
+    }
 });
 
 bot.onText(/(?:^|\s)\/set(.*?)\b/, async (msg, regResult) => {
-    let regResultStr = regResult[1];
-    let session = await getSession(sessions, msg.chat.id, msg.from.id);
+    try {
+        let regResultStr = regResult[1];
+        let session = await getSession(sessions, msg.chat.id, msg.from.id);
 
-    bot.deleteMessage(session.keyboardMessage.chat.id, session.keyboardMessage.message_id);
-    bot.deleteMessage(msg.chat.id, msg.message_id);
+        bot.deleteMessage(session.keyboardMessage.chat.id, session.keyboardMessage.message_id);
+        bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    for (let command of commands) {
-        if (!command.toLowerCase().includes(regResultStr.toLowerCase())) {
-            continue;
-        }
-
-        sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${session.userChatData.user.username}?`, {
-            disable_notification: true,
-            reply_markup: {
-                selective: true,
-                force_reply: true
+        for (let command of commands) {
+            if (!command.toLowerCase().includes(regResultStr.toLowerCase())) {
+                continue;
             }
-        }).then((msg) => {
-            let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
-                bot.removeReplyListener(id);
-                session.user[command] = replyMsg.text;
-                bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-                bot.deleteMessage(msg.chat.id, msg.message_id);
+
+            sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${session.userChatData.user.username}?`, {
+                disable_notification: true,
+                reply_markup: {
+                    selective: true,
+                    force_reply: true
+                }
+            }).then((msg) => {
+                let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+                    bot.removeReplyListener(id);
+                    session.user[command] = replyMsg.text;
+                    bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+                    bot.deleteMessage(msg.chat.id, msg.message_id);
+                });
+            }).catch(e => {
+                console.error(e);
             });
-        }).catch(e => {
-            console.error(e);
-        });
+        }
+    } catch (e) {
+        sendMessage(myId, e);
     }
 });
 
 bot.onText(/(?:^|\s)\/title\b/, async (msg) => {
-    let session = await getSession(sessions, msg.chat.id, msg.from.id);
-    bot.deleteMessage(msg.chat.id, msg.message_id);
+    try {
+        let session = await getSession(sessions, msg.chat.id, msg.from.id);
+        bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    sendMessage(msg.chat.id, titleMessage(msg.chat.id, session), {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+        sendMessage(msg.chat.id, titleMessage(msg.chat.id, session), {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } catch (e) {
+        sendMessage(myId, e);
+    }
 });
 
 bot.onText(/(?:^|\s)\/titles/, async (msg) => {
-    await getSession(sessions, msg.chat.id, msg.from.id);
-    bot.deleteMessage(msg.chat.id, msg.message_id);
+    try {
+        await getSession(sessions, msg.chat.id, msg.from.id);
+        bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    sendMessage(msg.chat.id, titlesMessage(titles[msg.chat.id]), {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+        sendMessage(msg.chat.id, titlesMessage(titles[msg.chat.id]), {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } catch (e) {
+        sendMessage(myId, e);
+    }
 });
 
 bot.onText(/(?:^|\s)\/sword\b/, async (msg) => {
-    let session = await getSession(sessions, msg.chat.id, msg.from.id);
-    bot.deleteMessage(msg.chat.id, msg.message_id);
+    try {
+        let session = await getSession(sessions, msg.chat.id, msg.from.id);
+        bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    sendMessage(msg.chat.id, `${swordResult(session)}`, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+        sendMessage(msg.chat.id, `${swordResult(session)}`, {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } catch (e) {
+        sendMessage(myId, e);
+    }
 });
 
 bot.onText(/(?:^|\s)\/all_swords\b/, async (msg) => {
-    await getSession(sessions, msg.chat.id, msg.from.id);
-    bot.deleteMessage(msg.chat.id, msg.message_id);
+    try {
+        await getSession(sessions, msg.chat.id, msg.from.id);
+        bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    sendMessage(msg.chat.id, `${swordsMessage(sessions[msg.chat.id])}`, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+        sendMessage(msg.chat.id, `${swordsMessage(sessions[msg.chat.id])}`, {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } catch (e) {
+        sendMessage(myId, e);
+    }
+});
+
+bot.onText(/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
+    try {
+        await getSession(sessions, msg.chat.id, msg.from.id);
+        bot.deleteMessage(msg.chat.id, msg.message_id);
+
+        sendMessage(msg.chat.id, `${swordsMessage(sessions[msg.chat.id])}`, {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } catch (e) {
+        sendMessage(myId, e);
+    }
 });
 //
 // bot.onText(/(?:^|\s)\/summon_boss\b/, async (msg) => {
