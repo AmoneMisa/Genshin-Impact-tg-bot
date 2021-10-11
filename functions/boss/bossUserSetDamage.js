@@ -1,9 +1,9 @@
 const getTime = require('../getTime');
 const getRandom = require('../getRandom');
+const bossSetDamage = require('./bossSetDamage');
 
 function getOffset() {
-    // return new Date().getTime() + 4 * 60 * 60 * 1000;
-    return new Date().getTime() + 60;
+    return new Date().getTime() + 4 * 60 * 60 * 1000;
 }
 
 module.exports = function (session, boss, sendMessage) {
@@ -13,7 +13,7 @@ module.exports = function (session, boss, sendMessage) {
     }
 
     if (boss.hp <= boss.damagedHp) {
-        sendMessage(`Лежачих не бьют.`);
+        sendMessage(`Лежачих не бьют. Призвать можно командой /summon_boss`);
         return false;
     }
 
@@ -34,11 +34,26 @@ module.exports = function (session, boss, sendMessage) {
     session.timerBossCallback = getOffset();
 
     if (!session.game) {
-        session.game = {};
-        session.game.inventory = {};
-        session.game.inventory.gold = 0;
-        session.game.boss = {};
-        session.game.boss.bonus = {};
+        session.game = {
+            shopTimers: {
+                swordImmune: 0,
+                swordAddMM: 0,
+                addBossDmg: 0,
+                addBossCritChance: 0,
+                addBossCritDmg: 0,
+                swordAdditionalTry: 0
+            },
+            inventory: {
+                gold: 0,
+                hp_1000: null,
+                hp_3000: null
+            },
+            boss: {
+                hp: 1000,
+                damagedHp: 0,
+                bonus: {}
+            }
+        };
     }
 
     let criticalChance = 15;
@@ -55,10 +70,10 @@ module.exports = function (session, boss, sendMessage) {
     }
 
     if (!session.game.boss || !session.game.boss.bonus || !session.game.boss.bonus.damage) {
-        dmg = getRandom(150, 400);
+        dmg = getRandom(150, 300);
     } else {
         delete session.game.boss.bonus.damage;
-        dmg = Math.floor(getRandom(150, 400) / 0.75);
+        dmg = Math.floor(getRandom(150, 300) / 0.75);
     }
 
     if (!session.game.boss || !session.game.boss.bonus || !session.game.boss.bonus.criticalChance) {
@@ -84,6 +99,7 @@ module.exports = function (session, boss, sendMessage) {
 
     boss.damagedHp += dmg;
     session.game.boss.damage += dmg;
+    bossSetDamage(session, boss, dmg);
 
     if (boss.hp <= boss.damagedHp) {
         sendMessage(`Ты нанёс боссу смертельный удар на ${dmg}!`);

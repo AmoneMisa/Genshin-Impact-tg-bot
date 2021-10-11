@@ -3,46 +3,6 @@ module.exports = {
     nameCall: "Киваху",
     lvls: [{
         loot: {
-            // weapons: {
-            //     swords: [{
-            //         name: "Железный меч [**]",
-            //         damage: "2-5 урона",
-            //         chance: "60%",
-            //         bonus: null
-            //     }, {
-            //         name: "Медный меч [*]",
-            //         damage: "1-3 урона",
-            //         chance: "80%",
-            //         bonus: null
-            //     }, {
-            //         name: "Классический меч [***]",
-            //         damage: "5-15 урона",
-            //         change: "5%",
-            //         bonus: {
-            //             gold: true,
-            //             amount: 5
-            //         }
-            //     }],
-            //     bows: [{
-            //         name: "Коряга [*]",
-            //         damage: "2-4 урона",
-            //         chance: "80%",
-            //         bonus: null
-            //     }, {
-            //         name: "Деревянный прочный лук [**]",
-            //         damage: "6-8 урона",
-            //         chance: "30%",
-            //         bonus: null
-            //     }, {
-            //         name: "Крепкий лук [***]",
-            //         damage: "10-18 урона",
-            //         chance: "5%",
-            //         bonus: {
-            //             experience: true,
-            //             amount: 15
-            //         }
-            //     }]
-            // },
             gold: [{
                 maxAmount: 10000,
                 minAmount: 2500,
@@ -62,7 +22,22 @@ module.exports = {
             }],
             experience: [1000, 750, 500, 400],
             title: "Гроза всемогущего Кивахи"
-        }
+        },
+        skills: [{
+            name: "Зеркало",
+            description: "Отражает 30% урона",
+            effect: "reflect"
+        },
+        //     {
+        //     name: "Регенерация",
+        //     description: "Каждый час восстанавливает себе определённое хп.",
+        //     effect: "hp_regen"
+        // }, {
+        //     name: "Ярость",
+        //     description: "Каждые два часа увеличивает свой урон на 10%. Стакается до 10 раз.",
+        //     effect: "rage"
+        // }
+        ],
     },
         // {
         //     loot: {

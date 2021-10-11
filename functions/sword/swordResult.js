@@ -22,9 +22,14 @@ module.exports = function (session) {
     }
 
     let result;
+    let int;
 
+    if (session.swordImmune) {
+        int = getRandom(0, 15);
+    } else {
+        int = getRandom(-10, 15);
+    }
 
-    let int = getRandom(-10, 15);
     session.sword += int;
     if (int > 0) {
         result = `@${session.userChatData.user.username}, твой меч увеличился на ${int} мм. Сейчас он равен: ${session.sword} мм`;

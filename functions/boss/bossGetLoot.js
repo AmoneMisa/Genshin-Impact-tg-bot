@@ -1,6 +1,6 @@
 const bossTemplate = require('../../templates/bossTemplate');
-const levelsTemplate = require('../../templates/levelsTemplate');
 const getRandom = require('../getRandom');
+const setLevel = require('../boss/setLevel');
 
 module.exports = function (boss, sessions, sendMessage) {
     if (boss.damagedHp < boss.hp) {
@@ -48,19 +48,9 @@ module.exports = function (boss, sessions, sendMessage) {
             }
         }
 
-        for (let level of levelsTemplate) {
-            if (level.lvl === session.game.stats.lvl) {
-                if (session.game.stats.currentExp >= level.needExp) {
-                    session.game.stats.currentExp -= level.needExp;
-                    session.game.stats.lvl++;
-                    session.game.inventory.gold += ( 1000 * session.game.stats.lvl * 0.33);
-                    continue;
-                }
+        setLevel(session);
 
-                session.game.stats.needExp = level.needExp - session.game.stats.currentExp;
-            }
-        }
-        message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}`;
+        message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\n`;
         i++;
     }
 

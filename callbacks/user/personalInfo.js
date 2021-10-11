@@ -14,15 +14,15 @@ module.exports = [["personal_info", function (session, callback) {
         str += "\n\n";
 
         if (!str.trim().length) {
-            str += "Ещё нет никакой информации о тебе. Заполни её через бота командой /menu"
+            str = `@${session.userChatData.user.username}, ещё нет никакой информации о тебе. Заполни её через бота командой /menu`
         }
         return str;
     }
 
     return sendMessage( callback.message.chat.id, `${formatMessage()}`, {
         disable_notification: true,
-        selective: true,
         reply_markup: {
+            selective: true,
             inline_keyboard: [[{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
