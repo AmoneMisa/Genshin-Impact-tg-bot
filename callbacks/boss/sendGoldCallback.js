@@ -3,6 +3,10 @@ const {sessions} = require('../../data');
 const bot = require('../../bot');
 
 module.exports = [[/^send_gold_recipient\.[^.]+$/, function (session, callback) {
+    if (callback.from.id !== session.userChatData.user.id) {
+        return;
+    }
+
     const [, userId] = callback.data.match(/^send_gold_recipient\.([^.]+)$/);
 
     sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, сколько хочешь передать? Можно вводить только цифры и целочисленные значения.`, {
@@ -21,30 +25,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, function (session, callback) 
             }
 
             if (session.game.inventory.gold >= gold) {
-                if (!sessions[callback.message.chat.id][userId].game) {
-                    sessions[callback.message.chat.id][userId].game = {
-                        shopTimers: {
-                            swordImmune: 0,
-                            swordAddMM: 0,
-                            addBossDmg: 0,
-                            addBossCritChance: 0,
-                            addBossCritDmg: 0,
-                            swordAdditionalTry: 0
-                        },
-                        inventory: {
-                            gold: gold,
-                            hp_1000: null,
-                            hp_3000: null
-                        },
-                        boss: {
-                            hp: 1000,
-                            damagedHp: 0,
-                            bonus: {}
-                        }
-                    };
-                } else {
-                    sessions[callback.message.chat.id][userId].game.inventory.gold += gold;
-                }
+                sessions[callback.message.chat.id][userId].game.inventory.gold += gold;
                 session.game.inventory.gold -= gold;
             }
             bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);

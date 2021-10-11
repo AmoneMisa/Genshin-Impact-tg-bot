@@ -24,22 +24,22 @@ module.exports = function (boss, sessions, sendMessage) {
         let expAmount;
 
         if (i === 1) {
-            expAmount = bossTemplate.lvls[0].loot.experience[0];
-            session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[0];
+            expAmount = bossTemplate.loot.experience[0];
+            session.game.stats.currentExp += bossTemplate.loot.experience[0];
         } else if (i === 2) {
-            expAmount = bossTemplate.lvls[0].loot.experience[1];
-            session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[1];
+            expAmount = bossTemplate.loot.experience[1];
+            session.game.stats.currentExp += bossTemplate.loot.experience[1];
         } else if (i === 3) {
-            expAmount = bossTemplate.lvls[0].loot.experience[2];
-            session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[2];;
+            expAmount = bossTemplate.loot.experience[2];
+            session.game.stats.currentExp += bossTemplate.loot.experience[2];
         } else {
-            expAmount = bossTemplate.lvls[0].loot.experience[3];
-            session.game.stats.currentExp += bossTemplate.lvls[0].loot.experience[3];
+            expAmount = bossTemplate.loot.experience[3];
+            session.game.stats.currentExp += bossTemplate.loot.experience[3];
         }
 
         let gotGold = 0;
 
-        for (let gold of bossTemplate.lvls[0].loot.gold) {
+        for (let gold of bossTemplate.loot.gold) {
             let chance = getRandom(1, 100);
 
             if (chance <= gold.chance) {

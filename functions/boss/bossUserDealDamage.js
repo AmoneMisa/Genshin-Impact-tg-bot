@@ -1,12 +1,12 @@
 const getTime = require('../getTime');
 const getRandom = require('../getRandom');
-const bossSetDamage = require('./bossSetDamage');
+const bossDealDamage = require('./bossDealDamage');
 
 function getOffset() {
     return new Date().getTime() + 4 * 60 * 60 * 1000;
 }
 
-module.exports = function (session, boss, sendMessage) {
+module.exports = async function (session, boss, sendMessage) {
     if (!boss) {
         sendMessage(`Группа ещё не призвала босса. Призвать можно командой /summon_boss`);
         return false;
@@ -16,6 +16,13 @@ module.exports = function (session, boss, sendMessage) {
         sendMessage(`Лежачих не бьют. Призвать можно командой /summon_boss`);
         return false;
     }
+
+    if (session.game.boss.hp <= session.game.boss.damagedHp) {
+        sendMessage(`Ты немножко труп. Надо было пить хиллки. Жди следующего призыва босса`);
+        return false;
+    }
+
+    session.game.boss.attackCounter = session.game.boss.attackCounter || 0;
 
     let [remain, hours, minutes, seconds] = getTime(session.timerBossCallback);
 
@@ -33,64 +40,43 @@ module.exports = function (session, boss, sendMessage) {
 
     session.timerBossCallback = getOffset();
 
-    if (!session.game) {
-        session.game = {
-            shopTimers: {
-                swordImmune: 0,
-                swordAddMM: 0,
-                addBossDmg: 0,
-                addBossCritChance: 0,
-                addBossCritDmg: 0,
-                swordAdditionalTry: 0
-            },
-            inventory: {
-                gold: 0,
-                hp_1000: null,
-                hp_3000: null
-            },
-            boss: {
-                hp: 1000,
-                damagedHp: 0,
-                bonus: {}
-            }
-        };
-    }
-
     let criticalChance = 15;
 
     let isHasCritical = false;
     let dmg;
     let criticalDamageInc;
 
-    if (!session.game.boss || !session.game.boss.bonus || !session.game.boss.bonus.criticalDamage) {
+    if (!session.game.boss.bonus.criticalDamage) {
         criticalDamageInc = 1.5;
     } else {
-        criticalDamageInc = session.game.boss.bonus.criticalDamage + 1.5;
-        delete session.game.boss.bonus.criticalDamage;
+        criticalDamageInc = 1.5 + 1.5;
+        if (session.game.boss.attackCounter === 10) {
+            delete session.game.boss.bonus.criticalDamage;
+        }
     }
 
-    if (!session.game.boss || !session.game.boss.bonus || !session.game.boss.bonus.damage) {
+    if (!session.game.boss.bonus.damage) {
         dmg = getRandom(150, 300);
     } else {
-        delete session.game.boss.bonus.damage;
+        if (session.game.boss.attackCounter === 10) {
+            delete session.game.boss.bonus.damage;
+        }
         dmg = Math.floor(getRandom(150, 300) / 0.75);
     }
 
-    if (!session.game.boss || !session.game.boss.bonus || !session.game.boss.bonus.criticalChance) {
+    if (!session.game.boss.bonus.criticalChance) {
         if (getRandom(1, 100) <= criticalChance) {
             isHasCritical = true;
             dmg *= criticalDamageInc;
         }
     } else {
-        if (getRandom(1, 100) <= criticalChance + session.game.boss.bonus.criticalChance) {
+        if (getRandom(1, 100) <= criticalChance + 50) {
             isHasCritical = true;
             dmg *= criticalDamageInc;
-            delete session.game.boss.bonus.criticalChance;
+            if (session.game.boss.attackCounter === 10) {
+                delete session.game.boss.bonus.criticalChance;
+            }
         }
-    }
-
-    if (!session.game.boss.damage) {
-        session.game.boss.damage = 0;
     }
 
     if (!boss.damagedHp) {
@@ -99,15 +85,17 @@ module.exports = function (session, boss, sendMessage) {
 
     boss.damagedHp += dmg;
     session.game.boss.damage += dmg;
-    bossSetDamage(session, boss, dmg);
+    let message = await bossDealDamage(session, boss, dmg);
 
     if (boss.hp <= boss.damagedHp) {
-        sendMessage(`Ты нанёс боссу смертельный удар на ${dmg}!`);
+        sendMessage(`${session.userChatData.user.username}, ты нанёс боссу смертельный удар на ${dmg}!\n${message}`);
     } else if (isHasCritical) {
-        sendMessage(`Ты нанёс боссу ${dmg} критического урона!`);
+        sendMessage(`${session.userChatData.user.username}, ты нанёс боссу ${dmg} критического урона!\n${message}`);
     } else {
-        sendMessage(`Ты нанёс боссу ${dmg} урона.`);
+        sendMessage(`${session.userChatData.user.username}, ты нанёс боссу ${dmg} урона.\n${message}`);
     }
+
+    session.game.boss.attackCounter++;
 
     return true;
 };

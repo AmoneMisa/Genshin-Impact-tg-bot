@@ -58,28 +58,6 @@ module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
     }];
     let randomPrize = getRandom(0, prizes.length - 1);
 
-    if (!session.game) {
-        session.game = {
-            shopTimers: {
-                swordImmune: 0,
-                swordAddMM: 0,
-                addBossDmg: 0,
-                addBossCritChance: 0,
-                addBossCritDmg: 0,
-                swordAdditionalTry: 0
-            },
-            inventory: {
-                gold: 0,
-                potions: [{name: "hp_1000", count: 0}, {name: "hp_3000", count: 0}]
-            },
-            boss: {
-                hp: 1000,
-                damagedHp: 0,
-                bonus: {}
-            }
-        };
-    }
-
     if (prizes[randomPrize].name === "nothing") {
         let stickers = [
             "CAACAgIAAxkBAAIWs2Cqh-6VK5pR1ZkghaFcl-KrMqVoAAKZBwACGELuCKCi80XCwWuZHwQ",

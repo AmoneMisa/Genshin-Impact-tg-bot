@@ -1,22 +1,33 @@
 const shopTemplate = require('../../templates/shopTemplate');
 const getOffset = require('../getOffsetToDay');
 
-function check(session, command, item, userProperty, isDeepUserProperty, userPropertyValue, shopTimer, operation = "=") {
+let commandsArray = ["sword_immune", "sword_add_mm", "boss_add_dmg", "boss_add_cr_chance", "boss_add_cr_dmg", "sword_add_try", "potion_hp_1000", "potion_hp_3000"];
+
+function check(session, command, item, shopTimer) {
     try {
         if (session.game.shopTimers[shopTimer] >= getOffset()) {
             return `${session.userChatData.user.username}, уже была совершена покупка на этой неделе. Попытка обновится в понедельник в 00.00`
         }
 
         if (session.game.inventory.gold >= item.cost) {
-            if (isDeepUserProperty) {
-                userProperty = userPropertyValue;
+            if (command.includes("sword_immune")) {
+                session.swordImmune = true;
+            } else if (command.includes("sword_add_mm")) {
+                session.sword += 25;
+            } else if (command.includes("boss_add_dmg")) {
+                session.game.boss.bonus.damage = true;
+            } else if (command.includes("boss_add_cr_chance")) {
+                session.game.boss.bonus.criticalChance = true;
+            } else if (command.includes("boss_add_cr_dmg")) {
+                session.game.boss.bonus.criticalDamage = true;
+            } else if (command.includes("sword_add_try")) {
+                session.timerSwordCallback = 0;
+            } else if (command.includes("potion_hp_1000")) {
+                session.game.inventory.potions[0].count++;
+            } else if (command.includes("potion_hp_3000")) {
+                session.game.inventory.potions[1].count++;
             }
 
-            if (operation === "+") {
-                session[userProperty] += userPropertyValue;
-            } else {
-                session[userProperty] = userPropertyValue;
-            }
             session.game.inventory.gold -= item.cost;
             session.game.shopTimers[shopTimer] = getOffset();
             return `${session.userChatData.user.username}, ${item.message}`;
@@ -26,8 +37,6 @@ function check(session, command, item, userProperty, isDeepUserProperty, userPro
         console.error(e);
     }
 }
-
-let commandsArray = ["sword_immune", "sword_add_mm", "boss_add_dmg", "boss_add_cr_chance", "boss_add_cr_dmg", "sword_add_try", "potion_hp_1000", "potion_hp_3000"];
 
 module.exports = function (session, command) {
     if (!session.game) {
@@ -40,35 +49,35 @@ module.exports = function (session, command) {
 
     for (let item of shopTemplate) {
         if ((command.includes(item.command)) && item.command.includes("sword_immune")) {
-            return check(session, command, item, "swordImmune", false, true, "swordImmune");
+            return check(session, command, item, "swordImmune");
         }
 
         if ((command.includes(item.command)) && item.command.includes("sword_add_mm")) {
-            return check(session, command, item, "sword", false, 25, "swordAddMM", "+");
+            return check(session, command, item, "swordAddMM");
         }
 
         if ((command.includes(item.command)) && item.command.includes("boss_add_dmg")) {
-            return check(session, command, item, session.game.boss.bonus.damage, true, 75, "addBossDmg");
+            return check(session, command, item, "addBossDmg");
         }
 
         if ((command.includes(item.command)) && item.command.includes("boss_add_cr_chance")) {
-            return check(session, command, item, session.game.boss.bonus.criticalChance, true, 50, "addBossCritChance");
+            return check(session, command, item, "addBossCritChance");
         }
 
         if ((command.includes(item.command)) && item.command.includes("boss_add_cr_dmg")) {
-            return check(session, command, item, session.game.boss.bonus.criticalDamage, true, 50, "addBossCritDmg");
+            return check(session, command, item, "addBossCritDmg");
         }
 
         if ((command.includes(item.command)) && item.command.includes("sword_add_try")) {
-            return check(session, command, item, "timerSwordCallback", false, 0, "swordAdditionalTry");
+            return check(session, command, item, "swordAdditionalTry");
         }
 
         if ((command.includes(item.command)) && item.command.includes("potion_hp_1000")) {
-            return check(session, command, item, session.game.inventory.potions[0], true, {name: "Зелье восстановления хп (1000 единиц)", amount: 1000, count: 1}, "hpPotion1000");
+            return check(session, command, item, "hpPotion1000");
         }
 
         if ((command.includes(item.command)) && item.command.includes("potion_hp_3000")) {
-            return check(session, command, item, session.game.inventory.potions[1], true, {name: "Зелье восстановления хп (1000 единиц)", amount: 3000, count: 1}, "hpPotion3000");
+            return check(session, command, item, "hpPotion3000");
         }
     }
 };
