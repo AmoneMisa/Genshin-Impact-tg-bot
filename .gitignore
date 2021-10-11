@@ -4,7 +4,6 @@ config.js
 sessions.json
 titles.json
 bosses.json
-users.json
 
 #on hold
 /templates/shopTemplate.js

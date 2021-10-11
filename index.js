@@ -247,6 +247,8 @@ bot.onText(/(?:^|\s)\/set_user_sword_timer\b/, (msg) => {
         let tempArray = null;
         let i = 0;
 
+        sendMessage(myId, JSON.stringify(chatSession));
+
         for (let key of Object.keys(chatSession)) {
             if (i % 3 === 0) {
                 tempArray = [];
