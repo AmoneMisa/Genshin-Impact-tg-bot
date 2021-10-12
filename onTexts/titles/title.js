@@ -5,6 +5,7 @@ const sendMessage = require('../../functions/sendMessage');
 const getSession = require('../../functions/getSession');
 const titleMessage = require('../../functions/titles/titleMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
+const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
 
 module.exports = [[/(?:^|\s)\/title\b/, async (msg) => {
     try {
@@ -19,7 +20,7 @@ module.exports = [[/(?:^|\s)\/title\b/, async (msg) => {
                     callback_data: "close"
                 }]]
             }
-        });
+        }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 15000));
     } catch (e) {
         sendMessage(myId, `Command: /title\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }

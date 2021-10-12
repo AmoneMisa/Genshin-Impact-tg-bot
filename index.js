@@ -12,34 +12,47 @@ const getSession = require('./functions/getSession');
 const log = intel.getLogger("genshin");
 
 bot.setMyCommands([
-    {command: "start", description: "Инфо о группе"},
-    {command: "menu", description: "Заполнить анкету о себе"},
-    {command: "title", description: "Получить случайный титул"},
-    {command: "titles", description: "Список титулов группы"},
-    {command: "sword", description: "Увеличить свой меч"},
-    {command: "all_swords", description: "Список мечей всей группы"}
-], {
-    scope: {type: "default"}
-});
-
-bot.setMyCommands([
-    {command: "start", description: "Инфо о группе"},
+    {command: "start", description: "Список всех основных команд"},
+    {command: "info", description: "Инфо о группе"},
+    {command: "help", description: "Помощь (много буков)"},
     {command: "menu", description: "Заполнить анкету о себе"},
     {command: "title", description: "Получить случайный титул"},
     {command: "titles", description: "Список титулов группы"},
     {command: "sword", description: "Увеличить свой меч"},
     {command: "all_swords", description: "Список мечей всей группы"},
-    // {command: "summon_boss", description: "Призвать босса"},
-    // {command: "boss_show_hp", description: "Показать Хп босса"},
-    // {command: "damage_the_boss", description: "Нанести урон боссу"},
-    // {command: "boss_my_stats", description: "Моя статистика"},
-    // {command: "boss_shop", description: "Магазин"},
-    // {command: "send_gold", description: "Перевести золото"},
-    // {command: "chest", description: "Открыть сундук"},
+    {command: "summon_boss", description: "Призвать босса"},
+    {command: "boss_show_hp", description: "Показать Хп босса"},
+    {command: "damage_the_boss", description: "Нанести урон боссу"},
+    {command: "heal_yourself", description: "Похиллить себя"},
+    {command: "boss_my_stats", description: "Моя статистика"},
+    {command: "boss_shop", description: "Магазин"},
+    {command: "send_gold", description: "Перевести золото"},
+    {command: "chest", description: "Открыть сундук"},
 ], {
-    // scope: {type: "chat", chat_id: -585920926}
-    scope: {type: "chat", chat_id: chat}
+    scope: {type: "default"}
 });
+
+// bot.setMyCommands([
+//     {command: "start", description: "Список всех основных команд"},
+//     {command: "info", description: "Инфо о группе"},
+//     {command: "help", description: "Помощь (много буков)"},
+//     {command: "menu", description: "Заполнить анкету о себе"},
+//     {command: "title", description: "Получить случайный титул"},
+//     {command: "titles", description: "Список титулов группы"},
+//     {command: "sword", description: "Увеличить свой меч"},
+//     {command: "all_swords", description: "Список мечей всей группы"},
+//     {command: "summon_boss", description: "Призвать босса"},
+//     {command: "boss_show_hp", description: "Показать Хп босса"},
+//     {command: "damage_the_boss", description: "Нанести урон боссу"},
+//     {command: "heal_yourself", description: "Похиллить себя"},
+//     {command: "boss_my_stats", description: "Моя статистика"},
+//     {command: "boss_shop", description: "Магазин"},
+//     {command: "send_gold", description: "Перевести золото"},
+//     {command: "chest", description: "Открыть сундук"},
+// ], {
+    // scope: {type: "chat", chat_id: -585920926}
+    // scope: {type: "chat", chat_id: chat}
+// });
 
 for (let [key, value] of onTexts) {
     bot.onText(key, value);

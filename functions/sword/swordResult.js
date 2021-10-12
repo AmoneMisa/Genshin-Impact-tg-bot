@@ -15,7 +15,7 @@ module.exports = function (session) {
         }
     }
 
-    session.timerSwordCallback = getOffset(24 * 60 * 60);
+    session.timerSwordCallback = getOffset();
 
     if (!session.sword) {
         session.sword = 0;
