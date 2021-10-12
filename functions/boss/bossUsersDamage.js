@@ -16,7 +16,7 @@ module.exports = function (boss, sessions) {
 
     let message = `Всего нанесено урона: ${boss.damagedHp}.\nОставшееся хп: [ ${boss.hp - boss.damagedHp} ]\n\n`;
 
-    arrSessions = arrSessions.filter(item => item.game.boss.damage !== undefined);
+    arrSessions = arrSessions.filter(item => item.game?.boss?.damage !== undefined);
     arrSessions.sort((a, b) => b.game.boss.damage - a.game.boss.damage);
 
     for (let session of arrSessions) {

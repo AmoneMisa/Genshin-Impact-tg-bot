@@ -1,6 +1,7 @@
 const bot = require('../../bot');
 const bossTemplate = require('../../templates/bossTemplate');
 const getRandom = require('../getRandom');
+const getSession = require('../getSession');
 
 module.exports = async function (chatId, bosses, sessions) {
     if (!bosses[chatId]) {
@@ -19,6 +20,10 @@ module.exports = async function (chatId, bosses, sessions) {
         boss.skill = bossTemplate.skill;
 
         for (let session of Object.values(sessions)) {
+            if (!session.game || !session.game.boss) {
+               await getSession(sessions, chatId, session.userChatData.user.id);
+            }
+
             if (session.game.boss.damage > 0) {
                 session.game.boss.damage = 0;
             }

@@ -1,9 +1,8 @@
 const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const bot = require('./bot');
-const {chat} = require('./config');
+// const {chat} = require('./config');
 const {sessions, titles, bosses} = require('./data');
-// const {sessions, titles} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
