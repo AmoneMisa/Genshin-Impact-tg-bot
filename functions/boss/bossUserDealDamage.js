@@ -13,7 +13,7 @@ module.exports = async function (session, boss, sendMessage) {
     }
 
     if (boss.hp <= boss.damagedHp) {
-        sendMessage(`Лежачих не бьют. Призвать можно командой /summon_boss`);
+        sendMessage(`Лежачих не бьют. Призвать можно командой /summon_boss`).then();
         return false;
     }
 

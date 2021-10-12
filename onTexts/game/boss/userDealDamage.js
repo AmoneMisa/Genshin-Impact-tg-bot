@@ -6,6 +6,7 @@ const {sessions, bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const getSession = require('../../../functions/getSession');
+const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 
 module.exports = [[/(?:^|\s)\/damage_the_boss\b/, async (msg) => {
     try {
@@ -20,7 +21,7 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, async (msg) => {
                     callback_data: "close"
                 }]]
             }
-        });
+        }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5000));
 
         let boss = bosses[msg.chat.id];
 
