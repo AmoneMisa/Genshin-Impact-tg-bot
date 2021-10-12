@@ -5,6 +5,7 @@ const getTime = require('../../functions/getTime');
 const setLevel = require('../../functions/boss/setLevel');
 const getRandomChest = require('../../functions/chest/getRandomChest');
 const bot = require('../../bot');
+const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
 
 let prizes = [{
     name: "experience",
@@ -57,7 +58,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                         callback_data: "close"
                     }]]
                 }
-            });
+            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
         } else if (minutes > 0) {
             return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`, {
                 disable_notification: true,
@@ -67,7 +68,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                         callback_data: "close"
                     }]]
                 }
-            });
+            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
         } else {
             return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`, {
                 disable_notification: true,
@@ -77,7 +78,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                         callback_data: "close"
                     }]]
                 }
-            });
+            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
         }
     }
 
@@ -103,7 +104,8 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
             message_id: callback.message.message_id
         });
         if (!isSticker) {
-            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты получил(-а) ${item} ${message}`);
+            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты получил(-а) ${item} ${message}`)
+                .then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
         }
     }
 
@@ -134,7 +136,8 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                     ];
                     let index = Math.floor(Math.random() * stickers.length);
                     await editChest("💩", buttonsArray, button, true);
-                    return bot.sendSticker(callback.message.chat.id, stickers[index]);
+                    return bot.sendSticker(callback.message.chat.id, stickers[index])
+                        .then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 5000));
                 }
             }
         }
