@@ -23,5 +23,6 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
     } catch (e) {
         debugMessage(`Command: /summon_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];
