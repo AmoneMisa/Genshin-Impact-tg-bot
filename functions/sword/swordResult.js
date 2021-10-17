@@ -26,6 +26,8 @@ module.exports = function (session) {
 
     if (session.swordImmune) {
         int = getRandom(0, 15);
+    } else if (session.immuneToUpSword){
+        int = getRandom(-10, -1);
     } else {
         int = getRandom(-10, 15);
     }

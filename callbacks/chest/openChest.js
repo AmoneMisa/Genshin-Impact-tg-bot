@@ -22,13 +22,23 @@ let prizes = [{
 }, {
     name: "nothing",
     from: 56,
-    chance: 34
+    chance: 30
 }, {
     name: "sword",
     minAmount: 1,
     maxAmount: 5,
-    from: 90,
-    chance: 10
+    from: 87,
+    chance: 5
+}, {
+    name: "brokenSword",
+    minAmount: -1,
+    maxAmount: -5,
+    from: 93,
+    chance: 5
+}, {
+    name: "immuneToUpSword",
+    from: 99,
+    chance: 2
 }];
 
 module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
@@ -150,6 +160,17 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                     let sword = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
                     session.sword += sword;
                     await editChest("🗡", buttonsArray, button, false, sword, "мм меча");
+                }
+
+                if (randomPrize.name === "brokenSword") {
+                    let sword = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
+                    session.sword += sword;
+                    await editChest("🪠", buttonsArray, button, false, sword, "мм меча");
+                }
+
+                if (randomPrize.name === "immuneToUpSword") {
+                    session.immuneToUpSword = true;
+                    await editChest("⤵", buttonsArray, button, false, "", "иммунитет к увеличению меча");
                 }
             }
         }

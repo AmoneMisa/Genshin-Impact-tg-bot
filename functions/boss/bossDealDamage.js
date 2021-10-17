@@ -29,16 +29,7 @@ module.exports = async function (session, boss, dmg, chatId) {
     }
 
     if (boss.skill.effect.includes("hp_regen")) {
-        if (boss.damagedHp <= 0) {
-            return ;
-        }
-
-        function bossRegenHp () {
-            boss.damagedHp -= 500;
-            sendMessage(chatId, `Босс восстановил себе 500хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
-        }
-        setInterval(() => bossRegenHp(), 2 * 60 * 60 * 1000);
-        return ;
+       return "";
     }
 
     if (boss.skill.effect.includes("rage")) {
