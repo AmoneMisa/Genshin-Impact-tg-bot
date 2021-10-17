@@ -44,7 +44,7 @@ module.exports = function (gameSession) {
         let goldStr = '';
 
         if (diffGold !== 0) {
-            members[id].game.inventory += diffGold;
+            members[id].game.inventory.gold += diffGold;
             goldStr = `${diffGold} золота`;
         }
 
