@@ -2,6 +2,7 @@ const fs = require('fs');
 
 let sessions;
 let titles;
+let bosses;
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -20,13 +21,6 @@ try {
 try {
     let bossesJson = fs.readFileSync("./bosses.json");
     bosses = JSON.parse(bossesJson);
-} catch (e) {
-    bosses = {};
-}
-
-try {
-    let pointsJson = fs.readFileSync("./points.json");
-    points = JSON.parse(pointsJson);
 } catch (e) {
     bosses = {};
 }

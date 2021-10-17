@@ -3,7 +3,6 @@ const sendMessage = require('../../functions/sendMessage');
 const translation = require('../../dictionaries/translate');
 const userTemplate = require('../../templates/userTemplate');
 const getMembers = require('../../functions/getMembers');
-const debugMessage = require('../../functions/debugMessage');
 
 module.exports = [["info", function (session, callback) {
     function buttonsTemplate() {
@@ -11,8 +10,6 @@ module.exports = [["info", function (session, callback) {
         let tempArray = null;
         let i = 0;
         let members = getMembers(callback.message.chat.id);
-        debugMessage(callback.message.chat.id);
-        debugMessage(members);
 
         for (let key of Object.keys(members)) {
             let member = members[key];
