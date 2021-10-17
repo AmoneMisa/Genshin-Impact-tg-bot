@@ -1,6 +1,7 @@
 const getOffset = require('../getOffset');
+const {sessions} = require('../../data');
 
-module.exports = function (sessions) {
+module.exports = function () {
     let sessionsArray = Object.values(sessions);
 
     for (let chatSessions of sessionsArray) {

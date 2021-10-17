@@ -3,7 +3,7 @@ const getRandom = require('../getRandom');
 const bossDealDamage = require('./bossDealDamage');
 
 function getOffset() {
-    return new Date().getTime() + 4 * 60 * 60 * 1000;
+    return new Date().getTime() + 60 * 60 * 1000;
 }
 
 module.exports = async function (session, boss, sendMessage) {
@@ -28,11 +28,11 @@ module.exports = async function (session, boss, sendMessage) {
 
     if (remain > 0) {
         if (hours > 0) {
-            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в 4 часа. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`);
+            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`);
         } else if (minutes > 0) {
-            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в 4 часа. Осталось: ${minutes} мин ${seconds} сек`);
+            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${minutes} мин ${seconds} сек`);
         } else {
-            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в 4 часа. Осталось: ${seconds} сек`);
+            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${seconds} сек`);
         }
 
         return false;
@@ -52,16 +52,17 @@ module.exports = async function (session, boss, sendMessage) {
         criticalDamageInc = 1.5 + 1.5;
         if (session.game.boss.attackCounter === 10) {
             delete session.game.boss.bonus.criticalDamage;
+            session.game.boss.attackCounter = 0;
         }
     }
 
     if (!session.game.boss.bonus.damage) {
-        dmg = getRandom(150, 300);
+        dmg = getRandom(200, 350);
     } else {
         if (session.game.boss.attackCounter === 10) {
             delete session.game.boss.bonus.damage;
         }
-        dmg = Math.floor(getRandom(150, 300) / 0.75);
+        dmg = Math.floor(getRandom(200, 350) / 0.75);
     }
 
     if (!session.game.boss.bonus.criticalChance) {
@@ -75,6 +76,7 @@ module.exports = async function (session, boss, sendMessage) {
             dmg *= criticalDamageInc;
             if (session.game.boss.attackCounter === 10) {
                 delete session.game.boss.bonus.criticalChance;
+                session.game.boss.attackCounter = 0;
             }
         }
     }

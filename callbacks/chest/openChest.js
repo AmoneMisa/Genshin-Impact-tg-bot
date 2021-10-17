@@ -12,17 +12,23 @@ let prizes = [{
     minAmount: 100,
     maxAmount: 650,
     from: 0,
-    chance: 25
+    chance: 20
 }, {
     name: "gold",
     minAmount: 100,
     maxAmount: 1500,
-    from: 26,
-    chance: 40
+    from: 21,
+    chance: 34
 }, {
     name: "nothing",
-    from: 66,
+    from: 56,
     chance: 34
+}, {
+    name: "sword",
+    minAmount: 1,
+    maxAmount: 5,
+    from: 90,
+    chance: 10
 }];
 
 module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
@@ -30,7 +36,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
     session.chestCounter = session.chestCounter || 0;
     session.chosenChests = session.chosenChests || [];
 
-    if (session.userChatData.user.id !== callback.from.id) {
+    if (!callback.message.text.includes(session.userChatData.user.username)) {
         return;
     }
 
@@ -38,7 +44,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
         return;
     }
 
-    if (session.chestCounter === 3) {
+    if (session.chestCounter > 2) {
         session.timerOpenChestCallback = getOffset();
         session.chestCounter = 0;
         session.chosenChests = [];
@@ -58,7 +64,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                         callback_data: "close"
                     }]]
                 }
-            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
+            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 6000));
         } else if (minutes > 0) {
             return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`, {
                 disable_notification: true,
@@ -68,7 +74,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                         callback_data: "close"
                     }]]
                 }
-            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
+            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 6000));
         } else {
             return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`, {
                 disable_notification: true,
@@ -78,7 +84,7 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                         callback_data: "close"
                     }]]
                 }
-            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
+            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 6000));
         }
     }
 
@@ -138,6 +144,12 @@ module.exports = [[/^chest_([0-9]+)$/, async function (session, callback) {
                     await editChest("💩", buttonsArray, button, true);
                     return bot.sendSticker(callback.message.chat.id, stickers[index])
                         .then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 5000));
+                }
+
+                if (randomPrize.name === "sword") {
+                    let sword = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
+                    session.sword += sword;
+                    await editChest("🗡", buttonsArray, button, false, sword, "мм меча");
                 }
             }
         }

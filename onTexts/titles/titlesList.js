@@ -1,14 +1,12 @@
 const bot = require('../../bot');
 const {myId} = require('../../config');
-const {sessions, titles} = require('../../data');
+const {titles} = require('../../data');
 const sendMessage = require('../../functions/sendMessage');
-const getSession = require('../../functions/getSession');
 const titlesMessage = require('../../functions/titles/titlesMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 
-module.exports = [[/(?:^|\s)\/titles/, async (msg) => {
+module.exports = [[/(?:^|\s)\/titles/, (msg) => {
     try {
-        await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
         sendMessage(msg.chat.id, titlesMessage(titles[msg.chat.id]), {

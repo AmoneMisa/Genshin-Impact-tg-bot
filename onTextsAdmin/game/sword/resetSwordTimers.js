@@ -1,6 +1,5 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const {sessions} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const getSession = require('../../../functions/getSession');
 const resetSwordTimer = require('../../../functions/sword/resetSwordTimer');
@@ -10,9 +9,9 @@ module.exports = [[/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
         if (msg.from.id !== myId) {
             return;
         }
-        await getSession(sessions, msg.chat.id, msg.from.id);
+        await getSession(msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        await resetSwordTimer(sessions);
+        await resetSwordTimer();
         sendMessage(myId, "Сессии сброшены.");
 
     } catch (e) {

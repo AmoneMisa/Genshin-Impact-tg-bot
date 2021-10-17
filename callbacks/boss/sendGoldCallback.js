@@ -1,14 +1,15 @@
 const sendMessage = require('../../functions/sendMessage');
-const {sessions} = require('../../data');
 const bot = require('../../bot');
 const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
+const getSession = require('../../functions/getSession');
 
-module.exports = [[/^send_gold_recipient\.[^.]+$/, function (session, callback) {
+module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, callback) {
     if (callback.from.id !== session.userChatData.user.id) {
         return;
     }
 
     const [, userId] = callback.data.match(/^send_gold_recipient\.([^.]+)$/);
+    const recepient = await getSession(callback.message.chat.id, userId);
 
     sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, сколько хочешь передать? Можно вводить только цифры и целочисленные значения.`, {
         disable_notification: true,
@@ -27,7 +28,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, function (session, callback) 
             }
 
             if (session.game.inventory.gold >= gold) {
-                sessions[callback.message.chat.id][userId].game.inventory.gold += gold;
+                recepient.game.inventory.gold += gold;
                 session.game.inventory.gold -= gold;
             }
             bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);

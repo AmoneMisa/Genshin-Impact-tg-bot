@@ -24,6 +24,13 @@ try {
     bosses = {};
 }
 
+try {
+    let pointsJson = fs.readFileSync("./points.json");
+    points = JSON.parse(pointsJson);
+} catch (e) {
+    bosses = {};
+}
+
 module.exports = {
     chatId: null,
     sessions,

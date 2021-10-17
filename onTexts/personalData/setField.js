@@ -1,15 +1,12 @@
 const bot = require('../../bot');
 const {myId} = require('../../config');
-const {sessions} = require('../../data');
 const sendMessage = require('../../functions/sendMessage');
-const getSession = require('../../functions/getSession');
 const commands = require('../../dictionaries/commands');
 const translation = require('../../dictionaries/translate');
 
-module.exports = [[/(?:^|\s)\/set(.*?)\b/, async (msg, regResult) => {
+module.exports = [[/(?:^|\s)\/set(.*?)\b/, async (msg, regResult, session) => {
     try {
         let regResultStr = regResult[1];
-        let session = await getSession(sessions, msg.chat.id, msg.from.id);
 
         bot.deleteMessage(session.keyboardMessage.chat.id, session.keyboardMessage.message_id);
         bot.deleteMessage(msg.chat.id, msg.message_id);

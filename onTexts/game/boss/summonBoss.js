@@ -1,18 +1,18 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const {sessions, bosses} = require('../../../data');
+const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const getSession = require('../../../functions/getSession');
+const getMembers = require('../../../functions/getMembers');
 const summonBoss = require('../../../functions/boss/summonBoss');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 
 module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
     try {
-        await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
+        let members = getMembers(msg.chat.id);
 
-        sendMessage(msg.chat.id, `${await summonBoss(msg.chat.id, bosses, sessions[msg.chat.id])}`, {
+        sendMessage(msg.chat.id, `${await summonBoss(msg.chat.id, bosses, members)}`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{

@@ -13,15 +13,18 @@ module.exports = async function (chatId, bosses, sessions) {
     if (!boss.hp || boss.hp < boss.damagedHp) {
         boss.damagedHp = 0;
         let countChatMembers = await bot.getChatMembersCount(chatId);
-        let maxHp = countChatMembers * 1500;
+        let maxHp = countChatMembers * 1000;
         boss.hp = getRandom(maxHp * 0.33, maxHp);
 
-        // let skill = getRandom(0, bossTemplate.skills.length - 1);
-        boss.skill = bossTemplate.skill;
+        boss.skill = getRandom(0, bossTemplate.skills.length - 1);
+
+        if (boss.skill.effect.includes("rage")) {
+            boss.hp = boss.hp / 2;
+        }
 
         for (let session of Object.values(sessions)) {
             if (!session.game || !session.game.boss) {
-               await getSession(sessions, chatId, session.userChatData.user.id);
+               await getSession(chatId, session.userChatData.user.id);
             }
 
             if (session.game.boss.damage > 0) {

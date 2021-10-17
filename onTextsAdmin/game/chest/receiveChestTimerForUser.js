@@ -1,30 +1,30 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
-const {sessions} = require('../../../data');
+const {myId, friendId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
+const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 
 module.exports = [[/(?:^|\s)\/set_user_sword_timer\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
-        if (msg.from.id !== myId && msg.from.id !== 247412171) {
+        if (msg.from.id !== myId && msg.from.id !== friendId) {
             return;
         }
 
-        let chatSession = sessions[msg.chat.id];
+        let members = getMembers(msg.chat.id);
 
         let buttons = [];
         let tempArray = null;
         let i = 0;
 
-        for (let key of Object.keys(chatSession)) {
+        for (let key of Object.keys(members)) {
             if (i % 3 === 0) {
                 tempArray = [];
                 buttons.push(tempArray);
             }
             tempArray.push({
-                text: chatSession[key].userChatData.user.first_name,
+                text: members[key].userChatData.user.first_name,
                 callback_data: `set_timer.${msg.chat.id}.${key}`
             });
             i++;

@@ -2,15 +2,14 @@ const bossUserSetDamage = require('../../../functions/boss/bossUserDealDamage');
 const bossGetLoot = require('../../../functions/boss/bossGetLoot');
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const {sessions, bosses} = require('../../../data');
+const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const getSession = require('../../../functions/getSession');
+const getMembers = require('../../../functions/getMembers');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 
-module.exports = [[/(?:^|\s)\/damage_the_boss\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
     try {
-        let session = await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
         let callbackSendMessage = (message) => sendMessage(msg.chat.id, message, {
@@ -24,9 +23,10 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, async (msg) => {
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5000));
 
         let boss = bosses[msg.chat.id];
+        let members = getMembers(msg.chat.id);
 
         if (bossUserSetDamage(session, boss, callbackSendMessage)) {
-            bossGetLoot(boss, sessions[msg.chat.id], callbackSendMessage);
+            bossGetLoot(boss, members, callbackSendMessage);
         }
     } catch (e) {
         sendMessage(myId, `Command: /damage_the_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);

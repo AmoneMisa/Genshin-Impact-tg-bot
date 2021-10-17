@@ -1,21 +1,23 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
 const sendMessage = require('../../functions/sendMessage');
-let {sessions} = require('../../data');
 const translation = require('../../dictionaries/translate');
 const userTemplate = require('../../templates/userTemplate');
+const getMembers = require('../../functions/getMembers');
 
 module.exports = [["info", function (session, callback) {
     function buttonsTemplate() {
         let buttons = [];
         let tempArray = null;
         let i = 0;
+        let members = getMembers(callback.message.chat.id);
 
-        for (let key of Object.keys(sessions[callback.message.chat.id])) {
+        for (let key of Object.keys(members)) {
+            let member = members[key];
             if (i % 3 === 0) {
                 tempArray = [];
                 buttons.push(tempArray);
             }
-            tempArray.push({text: sessions[callback.message.chat.id][key].userChatData.user.first_name, callback_data: `info.${key}`});
+            tempArray.push({text: member.userChatData.user.first_name, callback_data: `info.${key}`});
             i++;
         }
 
@@ -62,7 +64,9 @@ module.exports = [["info", function (session, callback) {
     }
 
     let currentUser;
-    for (let [key, value] of Object.entries(sessions[callback.message.chat.id])) {
+    let members = getMembers(callback.message.chat.id);
+
+    for (let [key, value] of Object.entries(members)) {
         if (key === userId) {
             currentUser = value;
         }

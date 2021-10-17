@@ -2,13 +2,10 @@ const bot = require('../bot');
 const {myId} = require('../config');
 const dictionary = require('../dictionaries/main');
 const buttonsDictionary = require('../dictionaries/buttons');
-const {sessions} = require('../data');
 const sendMessage = require('../functions/sendMessage');
-const getSession = require('../functions/getSession');
 
 module.exports = [[/(?:^|\s)\/info/, async (msg) => {
     try {
-        await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
         sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
             disable_notification: true,

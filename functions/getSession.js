@@ -1,20 +1,19 @@
 const userTemplate = require('../templates/userTemplate');
 const bot = require('../bot');
+const getMembers = require('./getMembers');
 
-module.exports = async function (sessions, chatId, userId) {
-    if (!sessions[chatId]) {
-        sessions[chatId] = {};
-    }
+module.exports = async function (chatId, userId) {
+    let members = getMembers(chatId);
 
-    if (!sessions[chatId][userId]) {
-        sessions[chatId][userId] = {
+    if (!members[userId]) {
+        members[userId] = {
             userChatData: await bot.getChatMember(chatId, userId),
             user: {...userTemplate}
         };
     }
 
-    if (!sessions[chatId][userId].game) {
-        sessions[chatId][userId].game = {
+    if (!members[userId].game) {
+        members[userId].game = {
             stats: {
                 currentExp: 0,
                 needExp: 1500,
@@ -41,5 +40,5 @@ module.exports = async function (sessions, chatId, userId) {
         };
     }
 
-    return sessions[chatId][userId];
+    return members[userId];
 };

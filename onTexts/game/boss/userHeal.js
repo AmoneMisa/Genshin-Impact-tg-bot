@@ -1,12 +1,9 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const {sessions} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
-const getSession = require('../../../functions/getSession');
 
-module.exports = [[/(?:^|\s)\/heal_yourself\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/heal_yourself\b/, (msg, session) => {
     try {
-        let session = await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
         if (session.game.inventory.potions[0].count === 0 && session.game.inventory.potions[1].count === 0) {

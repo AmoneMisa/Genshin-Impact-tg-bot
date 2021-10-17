@@ -1,19 +1,14 @@
 const bot = require('../../bot');
 const {myId} = require('../../config');
-const {sessions} = require('../../data');
 const sendMessage = require('../../functions/sendMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
-const getSession = require('../../functions/getSession');
+const getMembers = require('../../functions/getMembers');
 
-module.exports = [[/(?:^|\s)\/send_gold\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        if (!sessions[msg.chat.id]) {
-            return;
-        }
+        let usersList = getMembers(msg.chat.id);
 
-        let session = await getSession(sessions, msg.chat.id, msg.from.id);
-        let usersList = sessions[msg.chat.id];
         usersList = Object.values(usersList).filter(item => !item.userChatData.user.is_bot && (item.userChatData.user.id !== msg.from.id));
 
         if (!usersList.length) {

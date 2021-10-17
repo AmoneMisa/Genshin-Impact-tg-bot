@@ -1,14 +1,11 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const {sessions} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const getSession = require('../../../functions/getSession');
 
-module.exports = [[/(?:^|\s)\/potion_([0-9]+)\b/, async (msg, regExp) => {
+module.exports = [[/(?:^|\s)\/potion_([0-9]+)\b/, async (msg, regExp, session) => {
     try {
         const potion = regExp[1];
-        let session = await getSession(sessions, msg.chat.id, msg.from.id);
         bot.deleteMessage(msg.chat.id, msg.message_id);
         for (let item of session.game.inventory.potions) {
             if (item.name.includes(potion) && session.game.inventory.potions[0].count > 0) {
