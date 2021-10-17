@@ -50,6 +50,12 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                 }, {
                     text: "Ставка (х2)",
                     callback_data: "points_double_bet"
+                }], [{
+                    text: "Ставка (+1000)",
+                    callback_data: "points_thousand_bet"
+                }, {
+                    text: "Ставка (х5)",
+                    callback_data: "points_xfive_bet"
                 }]]
             }
         }).then(message => id = message.message_id);
@@ -85,7 +91,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         }
 
         // setTimeout(() => startGame(), 90 * 1000);
-        setTimeout(() => startGame(), 10 * 1000);
+        setTimeout(() => startGame(), 40 * 1000);
 
     } catch (e) {
         console.error(e);
