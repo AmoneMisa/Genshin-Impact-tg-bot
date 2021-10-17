@@ -1,11 +1,11 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
 const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const getMembers = require('../../../functions/getMembers');
 const summonBoss = require('../../../functions/boss/summonBoss');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
+const debugMessage = require('../../../functions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
     try {
@@ -22,6 +22,6 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
             }
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
     } catch (e) {
-        sendMessage(myId, `Command: /summon_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /summon_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 }]];
