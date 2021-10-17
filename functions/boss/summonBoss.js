@@ -16,7 +16,7 @@ module.exports = async function (chatId, bosses, sessions) {
         let maxHp = countChatMembers * 1000;
         boss.hp = getRandom(maxHp * 0.33, maxHp);
 
-        boss.skill = getRandom(0, bossTemplate.skills.length - 1);
+        boss.skill = bossTemplate.skills[getRandom(0, bossTemplate.skills.length - 1)];
 
         if (boss.skill.effect.includes("rage")) {
             boss.hp = boss.hp / 2;
