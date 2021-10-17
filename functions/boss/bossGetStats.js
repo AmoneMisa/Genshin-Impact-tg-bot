@@ -17,13 +17,12 @@ module.exports = function (session) {
     }
 
     if (session.game.boss.bonus) {
-        message +=  "Твой бонус: ";
+        message += "Твой бонус: ";
         if (session.game.boss.bonus.criticalChance) {
             message += "увеличение шанса критического удара на 50% на 10 ударов.\n"
         }
         if (session.game.boss.bonus.criticalDamage) {
-            message +="увеличение критического урона на 150% на 10 ударов.\n"
-
+            message += "увеличение критического урона на 150% на 10 ударов.\n"
         }
         if (session.game.boss.bonus.damage) {
             message += "увеличение урона на 75% на 10 ударов.\n"

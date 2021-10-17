@@ -9,7 +9,7 @@ module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let buttons = getRandomChest();
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери один из сундучков!`, {
+        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери три сундучка!`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,
