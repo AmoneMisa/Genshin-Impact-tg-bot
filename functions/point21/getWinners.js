@@ -52,13 +52,13 @@ module.exports = function (gameSession) {
 
         if (isWining) {
             if (goldStr) {
-                str += `Выигрышь: ${goldStr}`;
+                str += `Выигрыш: ${goldStr}`;
             } else {
                 str += `Победитель!`;
             }
         } else {
             if (goldStr) {
-                str += `Проигрышь: ${goldStr}`;
+                str += `Проигрыш: ${goldStr}`;
             } else {
                 str += `Лууузер!`;
             }

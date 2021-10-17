@@ -60,8 +60,8 @@ module.exports = [[/^points_([^.pas]+)$/, (session, callback) => {
                 return sendMessage(chatId, `${session.userChatData.user.username}, у тебя нет столько золота.`)
                     .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
             }
-            chatSession.pointPlayers[userId].bet += 1000;
 
+            chatSession.pointPlayers[userId].bet += 1000;
         } else if (betType === "xfive_bet") {
             if (gold < bet * 5) {
                 return sendMessage(chatId, `${session.userChatData.user.username}, у тебя нет столько золота.`)
