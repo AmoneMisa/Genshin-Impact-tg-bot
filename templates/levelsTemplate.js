@@ -6,7 +6,7 @@ let lvls = [];
 
 for (let i = 1; i < countLvls; i++) {
     if (i !== 1) {
-        currentExpCount = Math.floor(currentExpCount * step);
+        currentExpCount = Math.ceil(currentExpCount * step);
         lvls.push({lvl: i, needExp: currentExpCount});
     } else {
         lvls.push({lvl: i, needExp: currentExpCount});

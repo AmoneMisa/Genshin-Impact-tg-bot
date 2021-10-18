@@ -1,7 +1,7 @@
 const bot = require('../../bot');
 const {myId} = require('../../config');
 const sendMessage = require('../../functions/sendMessage');
-const titleMessage = require('../../functions/titles/titleMessage');
+const titleMessage = require('../../functions/game/titles/titleMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
 

@@ -2,7 +2,7 @@ const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
 const getSession = require('../../../functions/getSession');
-const resetSwordTimer = require('../../../functions/sword/resetSwordTimer');
+const resetSwordTimer = require('../../../functions/game/sword/resetSwordTimer');
 
 module.exports = [[/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
     try {

@@ -1,7 +1,7 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
-const bossShopSellItem = require('../../../functions/boss/bossShopSellItem');
+const bossShopSellItem = require('../../../functions/game/boss/bossShopSellItem');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 
 module.exports = [[/(?:^|\s)\/buy_(.*?)\b/, async (msg, regResult, session) => {

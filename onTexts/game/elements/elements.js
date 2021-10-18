@@ -1,15 +1,11 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
+const buttonsDictionary = require('../../../dictionaries/buttons');
 const sendMessage = require('../../../functions/sendMessage');
+const getRandomElement = require('../../../functions/game/elements/getRandomElement');
 const getChatSession = require('../../../functions/getChatSession');
-const getMembers = require('../../../functions/getMembers');
-const pointMessage = require('../../../functions/game/point21/pointMessage');
-const betMessage = require('../../../functions/game/point21/betMessage');
-const getCard = require('../../../functions/game/point21/getCard');
-const botThink = require('../../../functions/game/point21/botThink');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 
-module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
+module.exports = [[/(?:^|\s)\/elements\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let chatSession = getChatSession(msg.chat.id);
@@ -20,8 +16,8 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         if (chatSession.pointIsStart) {
             return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
                 .then(message => {
-                deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
-            });
+                    deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
+                });
         }
 
         chatSession.pointPlayers = {
@@ -79,11 +75,8 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                         message_id: id,
                         reply_markup: {
                             inline_keyboard: [[{
-                                text: "Взять карту",
+                                text: "Получить элемент",
                                 callback_data: "points_card"
-                            }, {
-                                text: "Пас",
-                                callback_data: "points_pass"
                             }]]
                         }
                     });
@@ -92,7 +85,6 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
 
         setTimeout(() => startGame(), 40 * 1000);
     } catch (e) {
-        console.error(e);
-        sendMessage(myId, `Command: /point\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        sendMessage(myId, `Command: /elements\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
     }
 }]];

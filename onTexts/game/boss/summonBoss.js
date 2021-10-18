@@ -3,7 +3,7 @@ const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const getMembers = require('../../../functions/getMembers');
-const summonBoss = require('../../../functions/boss/summonBoss');
+const summonBoss = require('../../../functions/game/boss/summonBoss');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
 

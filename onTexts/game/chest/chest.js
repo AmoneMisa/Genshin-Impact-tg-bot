@@ -2,7 +2,7 @@ const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const sendMessage = require('../../../functions/sendMessage');
-const getRandomChest = require('../../../functions/chest/getRandomChest');
+const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 
 module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
     try {

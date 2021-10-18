@@ -2,7 +2,7 @@ const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const swordResult = require('../../../functions/sword/swordResult');
+const swordResult = require('../../../functions/game/sword/swordResult');
 
 module.exports = [[/(?:^|\s)\/sword\b/, async (msg, session) => {
     try {

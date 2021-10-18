@@ -1,7 +1,7 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
-const bossShop = require('../../../functions/boss/bossShop');
+const bossShop = require('../../../functions/game/boss/bossShop');
 
 module.exports = [[/(?:^|\s)\/boss_shop\b/, async (msg, session) => {
     try {

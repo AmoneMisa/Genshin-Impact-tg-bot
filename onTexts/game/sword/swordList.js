@@ -3,7 +3,7 @@ const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
 const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const swordsMessage = require('../../../functions/sword/swordsMessage');
+const swordsMessage = require('../../../functions/game/sword/swordsMessage');
 
 module.exports = [[/(?:^|\s)\/all_swords\b/, async (msg) => {
     try {

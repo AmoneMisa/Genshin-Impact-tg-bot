@@ -2,7 +2,7 @@ const bot = require('../../bot');
 const {myId} = require('../../config');
 const {titles} = require('../../data');
 const sendMessage = require('../../functions/sendMessage');
-const titlesMessage = require('../../functions/titles/titlesMessage');
+const titlesMessage = require('../../functions/game/titles/titlesMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 
 module.exports = [[/(?:^|\s)\/titles/, (msg) => {

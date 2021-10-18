@@ -1,5 +1,5 @@
-const bossUserSetDamage = require('../../../functions/boss/bossUserDealDamage');
-const bossGetLoot = require('../../../functions/boss/bossGetLoot');
+const bossUserSetDamage = require('../../../functions/game/boss/bossUserDealDamage');
+const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const {bosses} = require('../../../data');

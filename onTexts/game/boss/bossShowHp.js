@@ -3,7 +3,7 @@ const {myId} = require('../../../config');
 const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const bossUsersDamage = require('../../../functions/boss/bossUsersDamage');
+const bossUsersDamage = require('../../../functions/game/boss/bossUsersDamage');
 const getMembers = require('../../../functions/getMembers');
 
 module.exports = [[/(?:^|\s)\/boss_show_hp\b/, async (msg) => {
