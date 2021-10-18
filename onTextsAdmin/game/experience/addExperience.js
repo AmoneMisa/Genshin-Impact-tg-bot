@@ -5,7 +5,7 @@ const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const debugMessage = require('../../../functions/debugMessage');
 
-module.exports = [[/(?:^|\s)\/add_gold\b/, (msg) => {
+module.exports = [[/(?:^|\s)\/add_experience\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
@@ -26,12 +26,12 @@ module.exports = [[/(?:^|\s)\/add_gold\b/, (msg) => {
             }
             tempArray.push({
                 text: members[key].userChatData.user.first_name,
-                callback_data: `/add_gold.${msg.chat.id}.${key}`
+                callback_data: `/add_experience.${msg.chat.id}.${key}`
             });
             i++;
         }
 
-        sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить золота", {
+        sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить опыта", {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [
@@ -42,7 +42,7 @@ module.exports = [[/(?:^|\s)\/add_gold\b/, (msg) => {
             }
         });
     } catch (e) {
-        debugMessage(`Command: /add_gold\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /add_experience\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];
