@@ -26,7 +26,7 @@ module.exports = [[/(?:^|\s)\/add_experience\b/, (msg) => {
             }
             tempArray.push({
                 text: members[key].userChatData.user.first_name,
-                callback_data: `/add_experience.${msg.chat.id}.${key}`
+                callback_data: `add_experience.${msg.chat.id}.${key}`
             });
             i++;
         }
