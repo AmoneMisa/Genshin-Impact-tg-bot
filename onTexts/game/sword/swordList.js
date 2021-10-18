@@ -1,5 +1,5 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
+const debugMessage = require('../../../functions/debugMessage');
 const sendMessage = require('../../../functions/sendMessage');
 const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
@@ -20,7 +20,7 @@ module.exports = [[/(?:^|\s)\/all_swords\b/, async (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, `Command: /all_swords\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /all_swords\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

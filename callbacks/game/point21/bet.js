@@ -1,10 +1,10 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const getChatSession = require('../../../functions/getChatSession');
 const getMembers = require('../../../functions/getMembers');
 const betMessage = require('../../../functions/game/point21/betMessage');
+const debugMessage = require('../../../functions/debugMessage');
 
 let maxCount = 5;
 
@@ -99,7 +99,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (sessio
         })
 
     } catch (e) {
-        sendMessage(myId, `Command: points_bet\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: points_bet\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

@@ -1,9 +1,9 @@
 const bossUserSetDamage = require('../../../functions/game/boss/bossUserDealDamage');
 const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
 const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
+const debugMessage = require('../../../functions/debugMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const getMembers = require('../../../functions/getMembers');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
@@ -29,7 +29,7 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
             bossGetLoot(boss, members, callbackSendMessage);
         }
     } catch (e) {
-        sendMessage(myId, `Command: /damage_the_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /damage_the_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

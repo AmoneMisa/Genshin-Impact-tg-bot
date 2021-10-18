@@ -1,6 +1,6 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
+const debugMessage = require('../../../functions/debugMessage');
 const bossShopSellItem = require('../../../functions/game/boss/bossShopSellItem');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 
@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/buy_(.*?)\b/, async (msg, regResult, session) => {
         });
 
     } catch (e) {
-        sendMessage(myId, `Command: /buy_${regResult[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /buy_${regResult[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

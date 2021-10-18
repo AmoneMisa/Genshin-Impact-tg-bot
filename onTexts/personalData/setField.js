@@ -1,5 +1,5 @@
 const bot = require('../../bot');
-const {myId} = require('../../config');
+const debugMessage = require('../../functions/debugMessage');
 const sendMessage = require('../../functions/sendMessage');
 const commands = require('../../dictionaries/commands');
 const translation = require('../../dictionaries/translate');
@@ -34,7 +34,7 @@ module.exports = [[/(?:^|\s)\/set(.*?)\b/, async (msg, regResult, session) => {
             });
         }
     } catch (e) {
-        sendMessage(myId, `Command: /set${regResult[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /set${regResult[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }

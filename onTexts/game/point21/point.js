@@ -1,5 +1,4 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
 const getChatSession = require('../../../functions/getChatSession');
 const getMembers = require('../../../functions/getMembers');
@@ -8,6 +7,7 @@ const betMessage = require('../../../functions/game/point21/betMessage');
 const getCard = require('../../../functions/game/point21/getCard');
 const botThink = require('../../../functions/game/point21/botThink');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
+const debugMessage = require('../../../functions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
     try {
@@ -92,7 +92,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
 
         setTimeout(() => startGame(), 40 * 1000);
     } catch (e) {
-        sendMessage(myId, `Command: /point\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /point\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

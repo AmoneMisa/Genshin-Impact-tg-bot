@@ -1,6 +1,6 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
+const debugMessage = require('../../../functions/debugMessage');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const getChatSession = require('../../../functions/getChatSession');
 const validatePointSession = require('../../../functions/game/point21/validatePointSession');
@@ -34,7 +34,7 @@ module.exports = [["points_pass", async (session, callback) => {
             });
 
     } catch (e) {
-        sendMessage(myId, `Command: points_pass\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: points_pass\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

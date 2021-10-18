@@ -4,6 +4,7 @@ const buttonsDictionary = require('../../../dictionaries/buttons');
 const sendMessage = require('../../../functions/sendMessage');
 const getRandomElement = require('../../../functions/game/elements/getRandomElement');
 const getChatSession = require('../../../functions/getChatSession');
+const debugMessage = require('../../../functions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/elements\b/, async (msg) => {
     try {

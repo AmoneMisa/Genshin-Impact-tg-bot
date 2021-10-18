@@ -3,6 +3,7 @@ const {myId, friendId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
 const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
+const debugMessage = require('../../../functions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/set_user_chest_timer\b/, (msg) => {
     try {
@@ -41,7 +42,7 @@ module.exports = [[/(?:^|\s)\/set_user_chest_timer\b/, (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, `Command: /set_user_chest_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /set_user_chest_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

@@ -1,5 +1,5 @@
 const bot = require('../../../bot');
-const {myId} = require('../../../config');
+const debugMessage = require('../../../functions/debugMessage');
 const sendMessage = require('../../../functions/sendMessage');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 
@@ -30,7 +30,7 @@ module.exports = [[/(?:^|\s)\/potion_([0-9]+)\b/, async (msg, regExp, session) =
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5000));
 
     } catch (e) {
-        sendMessage(myId, `Command: /potion_${regExp[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /potion_${regExp[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

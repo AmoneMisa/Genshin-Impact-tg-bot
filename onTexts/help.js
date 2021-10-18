@@ -1,5 +1,5 @@
 const bot = require('../bot');
-const {myId} = require('../config');
+const debugMessage = require('../functions/debugMessage');
 const dictionary = require('../dictionaries/main');
 const buttonsDictionary = require('../dictionaries/buttons');
 const sendMessage = require('../functions/sendMessage');
@@ -17,7 +17,7 @@ module.exports = [[/(?:^|\s)\/help/, async (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, `Command: /help\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /help\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

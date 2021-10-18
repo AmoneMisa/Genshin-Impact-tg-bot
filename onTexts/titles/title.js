@@ -1,5 +1,5 @@
 const bot = require('../../bot');
-const {myId} = require('../../config');
+const debugMessage = require('../../functions/debugMessage');
 const sendMessage = require('../../functions/sendMessage');
 const titleMessage = require('../../functions/game/titles/titleMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/title\b/, (msg, session) => {
             }
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 15000));
     } catch (e) {
-        sendMessage(myId, `Command: /title\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /title\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

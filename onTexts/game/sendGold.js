@@ -1,5 +1,5 @@
 const bot = require('../../bot');
-const {myId} = require('../../config');
+const debugMessage = require('../../functions/debugMessage');
 const sendMessage = require('../../functions/sendMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 const getMembers = require('../../functions/getMembers');
@@ -59,7 +59,7 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
             }
         })
     } catch (e) {
-        sendMessage(myId, `Command: /send_gold\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /send_gold\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

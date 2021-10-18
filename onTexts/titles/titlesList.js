@@ -1,5 +1,5 @@
 const bot = require('../../bot');
-const {myId} = require('../../config');
+const debugMessage = require('../../functions/debugMessage');
 const {titles} = require('../../data');
 const sendMessage = require('../../functions/sendMessage');
 const titlesMessage = require('../../functions/game/titles/titlesMessage');
@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/titles/, (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, `Command: /titles\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /titles\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

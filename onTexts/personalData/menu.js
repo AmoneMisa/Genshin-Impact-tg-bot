@@ -1,5 +1,5 @@
 const bot = require('../../bot');
-const {myId} = require('../../config');
+const debugMessage = require('../../functions/debugMessage');
 const dictionary = require('../../dictionaries/main');
 const sendMessage = require('../../functions/sendMessage');
 const setButtons = require('../../functions/menu/setButtons');
@@ -21,7 +21,7 @@ module.exports = [[/(?:^|\s)\/menu/, async (msg, session) => {
             session.keyboardMessage = message;
         })
     } catch (e) {
-        sendMessage(myId, `Command: /menu\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /menu\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];
