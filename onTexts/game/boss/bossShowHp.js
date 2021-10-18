@@ -22,5 +22,6 @@ module.exports = [[/(?:^|\s)\/boss_show_hp\b/, async (msg) => {
         });
     } catch (e) {
         sendMessage(myId, `Command: /boss_show_hp\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

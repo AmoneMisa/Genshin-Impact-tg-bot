@@ -86,5 +86,6 @@ module.exports = [[/(?:^|\s)\/elements\b/, async (msg) => {
         setTimeout(() => startGame(), 40 * 1000);
     } catch (e) {
         sendMessage(myId, `Command: /elements\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

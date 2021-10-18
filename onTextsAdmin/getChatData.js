@@ -13,6 +13,7 @@ module.exports = [[/(?:^|\s)\/get_chat_data\b/, async (msg) => {
 
         } catch (e) {
             sendMessage(myId, `Command: /get_chat_data\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+            throw e;
         }
     }
 ]];

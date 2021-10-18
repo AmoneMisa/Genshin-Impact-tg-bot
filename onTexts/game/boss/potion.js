@@ -31,5 +31,6 @@ module.exports = [[/(?:^|\s)\/potion_([0-9]+)\b/, async (msg, regExp, session) =
 
     } catch (e) {
         sendMessage(myId, `Command: /potion_${regExp[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

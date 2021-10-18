@@ -58,8 +58,8 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
                     }]]
             }
         })
-    } catch
-        (e) {
+    } catch (e) {
         sendMessage(myId, `Command: /send_gold\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

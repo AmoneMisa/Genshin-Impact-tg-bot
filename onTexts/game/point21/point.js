@@ -92,7 +92,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
 
         setTimeout(() => startGame(), 40 * 1000);
     } catch (e) {
-        console.error(e);
         sendMessage(myId, `Command: /point\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

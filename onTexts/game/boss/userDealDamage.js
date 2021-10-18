@@ -30,5 +30,6 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
         }
     } catch (e) {
         sendMessage(myId, `Command: /damage_the_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

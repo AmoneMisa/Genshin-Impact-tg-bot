@@ -16,5 +16,6 @@ module.exports = [[/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
 
     } catch (e) {
         sendMessage(myId, `Command: /reset_sword_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

@@ -4,7 +4,7 @@ const sendMessage = require('../../../functions/sendMessage');
 const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 
-module.exports = [[/(?:^|\s)\/set_user_sword_timer\b/, (msg) => {
+module.exports = [[/(?:^|\s)\/add_gold\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
@@ -25,12 +25,12 @@ module.exports = [[/(?:^|\s)\/set_user_sword_timer\b/, (msg) => {
             }
             tempArray.push({
                 text: members[key].userChatData.user.first_name,
-                callback_data: `set_timer.${msg.chat.id}.${key}`
+                callback_data: `/add_gold.${msg.chat.id}.${key}`
             });
             i++;
         }
 
-        sendMessage(msg.from.id, "Выбери, кому ты хочешь обнулить таймер", {
+        sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить золота", {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [
@@ -41,7 +41,7 @@ module.exports = [[/(?:^|\s)\/set_user_sword_timer\b/, (msg) => {
             }
         });
     } catch (e) {
-        sendMessage(myId, `Command: /set_user_sword_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        sendMessage(myId, `Command: /add_gold\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

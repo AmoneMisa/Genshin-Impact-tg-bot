@@ -7,7 +7,7 @@ const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
 const getSession = require('./functions/getSession');
-
+const debugMessage = require('./functions/debugMessage');
 const log = intel.getLogger("genshin");
 
 bot.setMyCommands([
@@ -63,14 +63,22 @@ bot.on("callback_query", async (callback) => {
     });
 });
 
+let setIntervalId = setInterval(() => {
+    fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
+    fs.writeFileSync("./titles.json", JSON.stringify(titles));
+    fs.writeFileSync("./bosses.json", JSON.stringify(bosses));
+}, 30000);
+
 bot.on('polling_error', (error) => {
     console.error(error);
 });
 
 function shutdown() {
+    clearInterval(setIntervalId);
     fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
     fs.writeFileSync("./titles.json", JSON.stringify(titles));
     fs.writeFileSync("./bosses.json", JSON.stringify(bosses));
+    debugMessage("Я отключился");
     bot.stopPolling();
 }
 

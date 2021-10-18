@@ -20,5 +20,6 @@ module.exports = [[/(?:^|\s)\/titles/, (msg) => {
         });
     } catch (e) {
         sendMessage(myId, `Command: /titles\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

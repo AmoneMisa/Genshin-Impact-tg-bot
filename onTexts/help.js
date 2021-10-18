@@ -18,5 +18,6 @@ module.exports = [[/(?:^|\s)\/help/, async (msg) => {
         });
     } catch (e) {
         sendMessage(myId, `Command: /help\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

@@ -35,6 +35,7 @@ module.exports = [[/(?:^|\s)\/set(.*?)\b/, async (msg, regResult, session) => {
         }
     } catch (e) {
         sendMessage(myId, `Command: /set${regResult[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }
 

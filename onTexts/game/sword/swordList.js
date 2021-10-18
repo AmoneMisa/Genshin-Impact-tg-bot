@@ -21,5 +21,6 @@ module.exports = [[/(?:^|\s)\/all_swords\b/, async (msg) => {
         });
     } catch (e) {
         sendMessage(myId, `Command: /all_swords\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

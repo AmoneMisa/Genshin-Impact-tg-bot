@@ -99,7 +99,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (sessio
         })
 
     } catch (e) {
-        console.error(e);
         sendMessage(myId, `Command: points_bet\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

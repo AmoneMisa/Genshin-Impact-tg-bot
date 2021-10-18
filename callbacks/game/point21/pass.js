@@ -34,7 +34,7 @@ module.exports = [["points_pass", async (session, callback) => {
             });
 
     } catch (e) {
-        console.error(e);
         sendMessage(myId, `Command: points_pass\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

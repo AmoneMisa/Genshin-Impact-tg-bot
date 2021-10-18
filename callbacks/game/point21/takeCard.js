@@ -52,7 +52,7 @@ module.exports = [["points_card", function (session, callback) {
             }
         });
     } catch (e) {
-        console.error(e);
         sendMessage(myId, `Command: points_card\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

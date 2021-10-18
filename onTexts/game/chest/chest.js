@@ -23,5 +23,6 @@ module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
 
     } catch (e) {
         sendMessage(myId, `Command: /chest\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

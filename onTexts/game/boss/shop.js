@@ -9,5 +9,6 @@ module.exports = [[/(?:^|\s)\/boss_shop\b/, async (msg, session) => {
         bossShop(msg.chat.id, session);
     } catch (e) {
         sendMessage(myId, `Command: /boss_shop\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

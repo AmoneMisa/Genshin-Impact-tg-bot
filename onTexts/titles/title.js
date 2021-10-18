@@ -20,5 +20,6 @@ module.exports = [[/(?:^|\s)\/title\b/, (msg, session) => {
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 15000));
     } catch (e) {
         sendMessage(myId, `Command: /title\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

@@ -20,5 +20,6 @@ module.exports = [[/(?:^|\s)\/buy_(.*?)\b/, async (msg, regResult, session) => {
 
     } catch (e) {
         sendMessage(myId, `Command: /buy_${regResult[1]}\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

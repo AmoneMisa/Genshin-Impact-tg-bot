@@ -42,6 +42,6 @@ module.exports = [[/(?:^|\s)\/set_user_chest_timer\b/, (msg) => {
         });
     } catch (e) {
         sendMessage(myId, `Command: /set_user_chest_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
-        console.error(e);
+        throw e;
     }
 }]];

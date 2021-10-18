@@ -22,5 +22,6 @@ module.exports = [[/(?:^|\s)\/menu/, async (msg, session) => {
         })
     } catch (e) {
         sendMessage(myId, `Command: /menu\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];

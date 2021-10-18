@@ -23,5 +23,6 @@ module.exports = [[/(?:^|\s)\/heal_yourself\b/, (msg, session) => {
         });
     } catch (e) {
         sendMessage(myId, `Command: /heal_yourself\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
     }
 }]];
