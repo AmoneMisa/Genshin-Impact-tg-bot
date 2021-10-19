@@ -9,7 +9,7 @@ module.exports = function (boss, sessions, sendMessage) {
 
     let message = `Лут группы после убийства босса\n\n`;
     let arrSessions = Object.values(sessions);
-    arrSessions = arrSessions.filter(item => item?.game?.boss?.damage !== undefined);
+    arrSessions = arrSessions.filter(item => item?.game?.boss?.damage !== undefined && item?.game?.boss?.damage > 0);
     arrSessions.sort((a, b) => b.game.boss.damage - a.game.boss.damage);
 
     let i = 1;
