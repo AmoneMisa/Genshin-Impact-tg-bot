@@ -20,7 +20,7 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
                     callback_data: "close"
                 }]]
             }
-        }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5000));
+        }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 60000));
 
         let boss = bosses[msg.chat.id];
         let members = getMembers(msg.chat.id);
