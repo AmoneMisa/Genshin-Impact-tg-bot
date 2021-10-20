@@ -4,11 +4,8 @@ const getSession = require("../../../functions/getSession");
 const setLevel = require('../../../functions/game/boss/setLevel');
 
 module.exports = [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
-    console.log(1);
     try {
-        console.log(callback);
         const [, chatId, userId] = callback.data.match(/^add_experience\.([\-0-9]+)\.([0-9]+)$/);
-        console.log(chatId, userId);
         let targetSession = await getSession(chatId, userId);
         targetSession.game.stats.currentExp += 1000;
         setLevel(targetSession);
