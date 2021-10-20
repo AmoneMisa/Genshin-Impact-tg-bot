@@ -13,7 +13,7 @@ module.exports = async function (chatId, bosses, sessions) {
     if (!boss.hp || boss.hp < boss.damagedHp) {
         boss.damagedHp = 0;
         let countChatMembers = await bot.getChatMembersCount(chatId);
-        let maxHp = countChatMembers * 1000;
+        let maxHp = countChatMembers * 1200;
         boss.hp = getRandom(maxHp * 0.33, maxHp);
 
         boss.skill = bossTemplate.skills[getRandom(0, bossTemplate.skills.length - 1)];

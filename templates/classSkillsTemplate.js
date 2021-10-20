@@ -1,3 +1,7 @@
+//1 power == 5% dmg. if power == 5, then damage will be 100% + 25%)
+//cost values is in crystals
+//cooltime is times attack to boss
+
 module.exports = {
     warrior: [{
         slot: 1,
@@ -20,9 +24,9 @@ module.exports = {
         isSelf: false,
         isDealDamage: true,
         isBuff: false,
-        power: 5,
-        needLvl: 5,
-        cost: 500
+        power: 8,
+        needLvl: 9,
+        cost: 25
     }, {
         slot: 3,
         name: "Вожделение паладина",
@@ -32,9 +36,9 @@ module.exports = {
         isSelf: false,
         isDealDamage: true,
         isBuff: false,
-        power: 1,
-        needLvl: 7,
-        cost: 1500
+        power: 50,
+        needLvl: 15,
+        cost: 70
     }],
     mage: [{
         slot: 1,
@@ -57,9 +61,9 @@ module.exports = {
         isSelf: false,
         isDealDamage: true,
         isBuff: false,
-        power: 8,
-        needLvl: 5,
-        cost: 5000
+        power: 100,
+        needLvl: 10,
+        cost: 50
     }, {
         slot: 3,
         name: "Лунная тень",
@@ -69,9 +73,9 @@ module.exports = {
         isSelf: true,
         isDealDamage: false,
         isBuff: true,
-        power: 1,
-        needLvl: 8,
-        cost: 1200
+        power: 0,
+        needLvl: 15,
+        cost: 120
     }],
     priest: [{
         slot: 1,
@@ -94,21 +98,21 @@ module.exports = {
         isSelf: true,
         isDealDamage: false,
         isBuff: false,
-        power: 1,
-        needLvl: 3,
-        cost: 300
+        power: 0,
+        needLvl: 8,
+        cost: 30
     }, {
         slot: 3,
         name: "Казнь святых",
-        description: "Меч из чистой энергии света поражает твоего врага, нанося ему 200% урона и создавая на тебе щит, который поглощает 75% урона",
+        description: "Меч из чистой энергии света поражает твоего врага, нанося ему 200% урона и создавая на тебе щит, который поглощает 75% урона от твоего хп",
         effect: "magic_holy",
         cooltime: 6,
         isSelf: false,
         isDealDamage: true,
         isBuff: true,
-        power: 8,
-        needLvl: 6,
-        cost: 2000
+        power: 20,
+        needLvl: 15,
+        cost: 200
     }],
     archer: [{
         slot: 1,
@@ -131,9 +135,9 @@ module.exports = {
         isSelf: false,
         isDealDamage: true,
         isBuff: false,
-        power: 8,
-        needlvl: 7,
-        cost: 3500
+        power: 40,
+        needlvl: 12,
+        cost: 350
     }, {
         slot: 3,
         name: "Уверенность в себе",
@@ -143,8 +147,8 @@ module.exports = {
         isSelf: true,
         isDealDamage: false,
         isBuff: true,
-        power: 1,
-        needlvl: 10,
-        cost: 800
+        power: 0,
+        needlvl: 15,
+        cost: 80
     }]
 };

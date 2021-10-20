@@ -1,6 +1,13 @@
 module.exports = {
     name: "Киваха",
     nameCall: "Киваху",
+    stats: {
+        attack: 10,
+        defence: 15,
+        lvl: 1,
+        currentSummons: 0,
+        needSummons: 3
+    },
     loot: {
         gold: [{
             maxAmount: 10000,
@@ -20,6 +27,23 @@ module.exports = {
             chance: 60
         }],
         experience: [1000, 750, 500, 400],
+        crystals: [{
+            maxAmount: 10,
+            minAmount: 8,
+            chance: 1
+        }, {
+            maxAmount: 8,
+            minAmount: 5,
+            chance: 4
+        }, {
+            maxAmount: 6,
+            minAmount: 3,
+            chance: 30
+        }, {
+            maxAmount: 5,
+            minAmount: 1,
+            chance: 65
+        }],
         title: "Гроза всемогущего Кивахи"
     },
     skills: [{
@@ -34,6 +58,14 @@ module.exports = {
         name: "Ярость",
         description: "На половину меньше хп, но рефлект составляет 50% урона.",
         effect: "rage"
+    }, {
+        name: "Стойкость",
+        description: "На 100% больше защиты, но на 40% меньше атаки.",
+        effect: "resistance"
+    }, {
+        name: "Живучесть",
+        description: "На треть больше хп и защиты",
+        effect: "life"
     }]
 };
 
