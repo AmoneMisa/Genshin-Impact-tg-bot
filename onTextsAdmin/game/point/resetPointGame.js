@@ -12,6 +12,7 @@ module.exports = [[/(?:^|\s)\/reset_point_game\b/, (msg) => {
 
     let chatSession = getChatSession(msg.chat.id);
     chatSession.pointIsStart = false;
+    chatSession.pointGameSessionIsStart = false;
     chatSession.pointPlayers = {};
     chatSession.pointUsedCards = [];
 
