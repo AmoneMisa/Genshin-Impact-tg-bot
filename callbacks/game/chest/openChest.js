@@ -1,6 +1,4 @@
 const getRandom = require('../../../functions/getRandom');
-const sendMessage = require('../../../functions/sendMessage');
-const getTime = require('../../../functions/getTime');
 const setLevel = require('../../../functions/game/boss/setLevel');
 const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 const endChestSession = require('../../../functions/game/chest/endChestSession');
@@ -54,42 +52,6 @@ module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
 
     if (session.chosenChests.includes(chest)) {
         return;
-    }
-
-    let [remain, hours, minutes, seconds] = getTime(session.timerOpenChestCallback);
-
-    if (remain > 0) {
-        if (hours > 0) {
-            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
-                disable_notification: true,
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Закрыть",
-                        callback_data: "close"
-                    }]]
-                }
-            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 6000));
-        } else if (minutes > 0) {
-            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`, {
-                disable_notification: true,
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Закрыть",
-                        callback_data: "close"
-                    }]]
-                }
-            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 6000));
-        } else {
-            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`, {
-                disable_notification: true,
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Закрыть",
-                        callback_data: "close"
-                    }]]
-                }
-            }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 6000));
-        }
     }
 
     if (!session.chestButtons || !session.chestButtons.length) {
