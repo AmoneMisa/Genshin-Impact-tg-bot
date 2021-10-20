@@ -30,7 +30,7 @@ module.exports = [["points_card", function (session, callback) {
 
         if (checkAllPlayersPassed(chatSession)) {
             chatSession.pointIsStart = false;
-            chatSession.pointGameSessinIsStart = false;
+            chatSession.pointGameSessionIsStart = false;
             bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
             sendMessage(callback.message.chat.id, getWinners(chatSession))
                 .then(message => {
