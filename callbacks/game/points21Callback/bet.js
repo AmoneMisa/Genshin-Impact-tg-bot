@@ -5,11 +5,22 @@ const getChatSession = require('../../../functions/getChatSession');
 const getMembers = require('../../../functions/getMembers');
 const betMessage = require('../../../functions/game/point21/betMessage');
 const debugMessage = require('../../../functions/debugMessage');
+const getTime = require('../../../functions/getTime');
+
+function getOffset() {
+    return new Date().getTime() + 2 * 1000;
+}
 
 let maxCount = 5;
 
 module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (session, callback) => {
     try {
+        let [remain] = getTime(session.pointPressButtonTimer);
+
+        if (remain > 0) {
+            return;
+        }
+
         const [, betType] = callback.data.match(/^points_(bet|double_bet|xfive_bet|thousand_bet)$/);
         let userId = callback.from.id;
         let chatId = callback.message.chat.id;
@@ -96,7 +107,9 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (sessio
                     callback_data: "points_xfive_bet"
                 }]]
             }
-        })
+        });
+
+        session.pointPressButtonTimer = getOffset();
 
     } catch (e) {
         debugMessage(`Command: points_bet\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);

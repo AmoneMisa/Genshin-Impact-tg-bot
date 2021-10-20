@@ -17,12 +17,14 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         let userId = session.userChatData.user.id;
         let id;
 
-        if (chatSession.pointIsStart) {
+        if (chatSession.pointGameSessionIsStart) {
             return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
                 .then(message => {
                 deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
             });
         }
+
+        chatSession.pointGameSessionIsStart = true;
 
         chatSession.pointPlayers = {
             bot: {
