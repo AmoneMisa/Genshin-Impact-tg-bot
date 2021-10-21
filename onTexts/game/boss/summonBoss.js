@@ -39,7 +39,7 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
 
         let boss = bosses[msg.chat.id];
         if (boss.skill.effect === "hp_regen" && !boss.setIntervalId) {
-            boss.setIntervalId = setInterval(() => bossRegenHp(boss, msg.chat.id), 60 * 60 * 1000);
+            boss.setIntervalId = +setInterval(() => bossRegenHp(boss, msg.chat.id), 60 * 60 * 1000);
         }
 
     } catch (e) {
