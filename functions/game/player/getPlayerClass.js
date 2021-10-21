@@ -1,8 +1,5 @@
-const skills = require('../../../templates/classSkillsTemplate');
-const stats = require('../../../templates/classStatsTemplate');
-
-module.exports = function (playerClass) {
-    if (playerClass.hasOwnProperty(playerClass)) {
-        return {skills: skills[playerClass], stats: stats[playerClass], name: playerClass};
+module.exports = function (session) {
+    if (session.game.hasOwnProperty("gameClass")) {
+        return {skills: session.game.gameClass.skills, stats: session.game.gameClass.stats, name: session.game.gameClass.name};
     }
 };

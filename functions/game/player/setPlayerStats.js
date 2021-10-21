@@ -1,4 +1,4 @@
-const getPlayerClass = require('./getPlayerClass');
+const getPlayerClass = require('./getGameClass');
 const classStatsTemplate = require('../../../templates/classStatsTemplate');
 
 function increaseStat(statName, stat, lvl, gameClassName) {

@@ -1,11 +1,9 @@
 const getRandom = require('../../getRandom');
 const bossDealDamage = require('./bossDealDamage');
+const getPlayerClass = require('../../../functions/game/player/getPlayerClass');
 
 module.exports = async function (session, boss, sendMessage) {
-    let playerClass;
-    if (session.game.hasOwnProperty("gameClass")) {
-        player = session.game.gameClass;
-    }
+    let {skills, stats} = getPlayerClass(session);
 
     session.game.boss.attackCounter = session.game.boss.attackCounter || 0;
 
@@ -18,12 +16,15 @@ module.exports = async function (session, boss, sendMessage) {
     if (!session.game.boss.bonus.criticalDamage) {
         criticalDamageInc = 1.5;
     } else {
-        if ()
         criticalDamageInc = 1.5 + 1.5;
         if (session.game.boss.attackCounter === 10) {
             delete session.game.boss.bonus.criticalDamage;
             session.game.boss.attackCounter = 0;
         }
+    }
+
+    if (stats.criticalDamage > 0) {
+        criticalDamageInc += stats.criticalDamage;
     }
 
     if (!session.game.boss.bonus.damage) {
@@ -33,6 +34,10 @@ module.exports = async function (session, boss, sendMessage) {
             delete session.game.boss.bonus.damage;
         }
         dmg = Math.ceil(getRandom(200, 350) * 1.75);
+    }
+
+    if (stats.criticalChance > 0) {
+        criticalChance += stats.criticalChance;
     }
 
     if (!session.game.boss.bonus.criticalChance) {
@@ -45,6 +50,7 @@ module.exports = async function (session, boss, sendMessage) {
             isHasCritical = true;
             dmg *= criticalDamageInc;
             if (session.game.boss.attackCounter === 10) {
+                console.log("delete");
                 delete session.game.boss.bonus.criticalChance;
                 session.game.boss.attackCounter = 0;
             }

@@ -34,19 +34,23 @@ module.exports = {
         crystals: [{
             maxAmount: 10,
             minAmount: 8,
+            from: 0,
             chance: 1
         }, {
             maxAmount: 8,
             minAmount: 5,
+            from: 2,
             chance: 4
         }, {
             maxAmount: 6,
             minAmount: 3,
+            from: 7,
             chance: 30
         }, {
             maxAmount: 5,
             minAmount: 1,
-            chance: 65
+            from: 38,
+            chance: 62
         }],
         title: "Гроза всемогущего Кивахи"
     },

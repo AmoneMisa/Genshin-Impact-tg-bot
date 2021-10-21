@@ -10,7 +10,8 @@ const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const getTime = require('../../../functions/getTime');
 
 function getOffset() {
-    return new Date().getTime() + 60 * 60 * 1000;
+    // return new Date().getTime() + 60 * 60 * 1000;
+    return new Date().getTime() + 60 * 1000;
 }
 
 module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
