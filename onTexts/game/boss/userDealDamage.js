@@ -63,8 +63,13 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
 
         if (userDealDamage(session, boss, callbackSendMessage)) {
             bossGetLoot(boss, members, callbackSendMessage);
-            clearInterval(boss.setIntervalId);
-            delete boss.setIntervalId;
+
+            if (boss.hasOwnProperty("setIntervalId")) {
+                clearInterval(boss.setIntervalId);
+                delete boss.setIntervalId;
+            }
+            clearInterval(boss.setAttackIntervalId);
+            delete boss.setAttackIntervalId;
         }
 
     } catch (e) {

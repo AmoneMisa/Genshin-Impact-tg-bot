@@ -4,6 +4,14 @@ module.exports = function (session) {
     message += `Текущее к-во опыта: ${session.game.stats.currentExp}\n`;
     message += `Требуемое к-во опыта до следующего уровня: ${session.game.stats.needExp}\n`;
     message += `Золото: ${session.game.inventory.gold}\n`;
+
+    if (session.game.hasOwnProperty("gameClass")) {
+        message += `Класс: ${session.game.gameClass.stats.translateName}\n`;
+        message += `Атака: ${session.game.gameClass.stats.attack}\n`;
+        message += `Защита: ${session.game.gameClass.stats.deffence}\n`;
+        message += `Доп. крит. шанс: ${session.game.gameClass.stats.criticalChance}\n`;
+        message += `Доп. крит. урон: ${session.game.gameClass.stats.criticalDamage}\n`;
+    }
     message += `Хп всего: ${session.game.boss.hp}.\n`;
     message += `Получено урона: ${session.game.boss.damagedHp}.\n`;
     message += `Осталось хп: ${session.game.boss.hp - session.game.boss.damagedHp}\n`;

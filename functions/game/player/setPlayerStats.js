@@ -1,4 +1,3 @@
-const getPlayerClass = require('./getGameClass');
 const classStatsTemplate = require('../../../templates/classStatsTemplate');
 
 function increaseStat(statName, stat, lvl, gameClassName) {
@@ -13,18 +12,19 @@ function increaseStat(statName, stat, lvl, gameClassName) {
         step = 1.5;
     }
 
-    for (let i of lvl) {
+    for (let i = 0; i < lvl; i++) {
         stat += step;
     }
 }
 
 module.exports = function (session) {
-    let gameClass = getPlayerClass(session.game.gameClass);
+    let gameClass = session.game.gameClass;
     let lvl = session.game.stats.lvl;
+    console.log(lvl);
 
     for (let [key, value] of Object.entries(gameClass.stats)) {
         if (key === "attack" || key !== "deffence") {
-            increaseStat(key, value, lvl, session.game.gameClass.name);
+            increaseStat(key, value, lvl, session.game.gameClass.stats.name);
         }
     }
 };

@@ -1,5 +1,6 @@
 const getRandom = require('../../../functions/getRandom');
 const setLevel = require('../../../functions/game/boss/setLevel');
+const setPlayerStats = require('../../../functions/game/player/setPlayerStats');
 const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 const endChestSession = require('../../../functions/game/chest/endChestSession');
 const sendPrizeMessage = require('../../../functions/game/chest/sendPrizeMessage');
@@ -81,6 +82,7 @@ module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
                     let experience = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
                     session.game.stats.currentExp += experience;
                     setLevel(session);
+                    setPlayerStats(session);
                     editChest("📖", buttonsArray, button, session, callback);
                     endChestSession(session, callback);
                     sendPrizeMessage(callback, session, experience, "опыта");
