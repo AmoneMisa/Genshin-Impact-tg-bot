@@ -4,6 +4,10 @@ module.exports = {
     stats: {
         attack: 10,
         defence: 15,
+        minDamage: 250,
+        maxDamage: 320,
+        criticalChance: 35,
+        criticalDamage: 125,
         lvl: 1,
         currentSummons: 0,
         needSummons: 3

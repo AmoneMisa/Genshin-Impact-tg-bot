@@ -1,5 +1,5 @@
 const getRandom = require('../../getRandom');
-const bossDealDamage = require('./bossDealDamage');
+const bossDealDamage = require('./bossReflectDamage');
 const getPlayerClass = require('../../../functions/game/player/getPlayerClass');
 
 module.exports = async function (session, boss, sendMessage) {
