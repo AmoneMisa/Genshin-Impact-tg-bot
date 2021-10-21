@@ -64,6 +64,7 @@ bot.on("callback_query", async (callback) => {
 });
 
 let setIntervalId = setInterval(() => {
+    console.log(bosses);
     fs.writeFileSync("./sessions.json", JSON.stringify(sessions));
     fs.writeFileSync("./titles.json", JSON.stringify(titles));
     fs.writeFileSync("./bosses.json", JSON.stringify(bosses));
