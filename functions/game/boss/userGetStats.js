@@ -12,6 +12,7 @@ module.exports = function (session) {
         message += `Доп. крит. шанс: ${session.game.gameClass.stats.criticalChance}\n`;
         message += `Доп. крит. урон: ${session.game.gameClass.stats.criticalDamage}\n`;
     }
+
     message += `Хп всего: ${session.game.boss.hp}.\n`;
     message += `Получено урона: ${session.game.boss.damagedHp}.\n`;
     message += `Осталось хп: ${session.game.boss.hp - session.game.boss.damagedHp}\n`;
