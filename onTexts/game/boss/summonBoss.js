@@ -29,7 +29,7 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
 
         if (boss.skill.effect === "hp_regen") {
-            boss.setIntervalId = setInterval(() => bossRegenHp(boss, msg.chat.id), 2 * 60 * 60 * 1000);
+            boss.setIntervalId = setInterval(() => bossRegenHp(boss, msg.chat.id), 60 * 60 * 1000);
         }
 
     } catch (e) {
