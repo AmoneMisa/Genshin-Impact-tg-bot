@@ -8,6 +8,7 @@ const getChatSession = require('../../functions/getChatSession');
 module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
     try {
         let chatSession = getChatSession(msg.chat.id);
+
         if (chatSession.pointPlayers && chatSession.pointPlayers[session.userChatData.user.id]) {
             sendMessage(msg.chat.id, "Ты не можешь переводить золото, играя в игру.");
             return;

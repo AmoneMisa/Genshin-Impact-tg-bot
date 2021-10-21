@@ -16,7 +16,7 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let members = getMembers(msg.chat.id);
-        let boss = bosses[msg.chat.id];
+
 
         sendMessage(msg.chat.id, `${await summonBoss(msg.chat.id, bosses, members)}`, {
             disable_notification: true,
@@ -28,7 +28,8 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
             }
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
 
-        if (boss.skill.effect === "hp_regen") {
+        let boss = bosses[msg.chat.id];
+        if (boss.skill.effect === "hp_regen" && !boss.setIntervalId) {
             boss.setIntervalId = setInterval(() => bossRegenHp(boss, msg.chat.id), 60 * 60 * 1000);
         }
 

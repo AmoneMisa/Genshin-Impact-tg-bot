@@ -5,18 +5,22 @@ module.exports = {
         gold: [{
             maxAmount: 10000,
             minAmount: 2500,
+            from: 0,
             chance: 3
         }, {
             maxAmount: 5000,
             minAmount: 1000,
+            from: 4,
             chance: 10
         }, {
             maxAmount: 2500,
             minAmount: 400,
+            from: 11,
             chance: 27
         }, {
             maxAmount: 1000,
             minAmount: 150,
+            from: 28,
             chance: 60
         }],
         experience: [1000, 750, 500, 400],
