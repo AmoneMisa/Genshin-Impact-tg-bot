@@ -28,6 +28,11 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
         if (bossUserSetDamage(session, boss, callbackSendMessage)) {
             bossGetLoot(boss, members, callbackSendMessage);
         }
+
+        if (boss.hp <= boss.damagedHp) {
+            clearInterval(boss.setIntervalId);
+        }
+
     } catch (e) {
         debugMessage(`Command: /damage_the_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;

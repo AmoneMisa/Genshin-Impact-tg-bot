@@ -12,8 +12,8 @@ function getOffset() {
 }
 
 function bossRegenHp (boss, chatId) {
-    boss.damagedHp -= 500;
-    sendMessage(chatId, `Босс восстановил себе 500хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
+    boss.damagedHp -= boss.hp * 0.05;
+    sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
     boss.hpRegenTimeout = getOffset();
 }
 
@@ -35,9 +35,8 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
 
         if (boss.skill.effect === "hp_regen" && (!boss.hpRegenTimeout || boss.hpRegenTimeout === 0)) {
-            setTimeout(() => bossRegenHp(), 2 * 60 * 60 * 1000);
-        } else if (boss.hpRegenTimeout < currentTime) {
-            boss.hpRegenTimeout = 0;
+            // setTimeout(() => bossRegenHp(boss, msg.chat.id), 2 * 60 * 60 * 1000);
+          boss.setIntervalId = setInterval(() => bossRegenHp(boss, msg.chat.id), 5 * 1000);
         }
 
     } catch (e) {
