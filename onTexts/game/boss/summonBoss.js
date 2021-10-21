@@ -7,22 +7,16 @@ const summonBoss = require('../../../functions/game/boss/summonBoss');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
 
-function getOffset() {
-    return new Date().getTime() + 2 * 60 * 60 * 1000;
-}
-
-function bossRegenHp (boss, chatId) {
-    boss.damagedHp -= 500;
-    sendMessage(chatId, `Босс восстановил себе 500хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
-    boss.hpRegenTimeout = getOffset();
+function bossRegenHp(boss, chatId) {
+    boss.damagedHp -= Math.ceil(boss.hp * 0.08);
+    sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
 }
 
 module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
     try {
-        let currentTime = new Date().getTime();
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let members = getMembers(msg.chat.id);
-        let boss = bosses[msg.chat.id];
+
 
         sendMessage(msg.chat.id, `${await summonBoss(msg.chat.id, bosses, members)}`, {
             disable_notification: true,
@@ -34,10 +28,9 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
             }
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
 
-        if (boss.skill.effect === "hp_regen" && (!boss.hpRegenTimeout || boss.hpRegenTimeout === 0)) {
-            setTimeout(() => bossRegenHp(), 2 * 60 * 60 * 1000);
-        } else if (boss.hpRegenTimeout < currentTime) {
-            boss.hpRegenTimeout = 0;
+        let boss = bosses[msg.chat.id];
+        if (boss.skill.effect === "hp_regen" && !boss.setIntervalId) {
+            boss.setIntervalId = setInterval(() => bossRegenHp(boss, msg.chat.id), 60 * 60 * 1000);
         }
 
     } catch (e) {

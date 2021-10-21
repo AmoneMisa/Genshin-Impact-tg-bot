@@ -42,7 +42,7 @@ module.exports = function (boss, sessions, sendMessage) {
         for (let gold of bossTemplate.loot.gold) {
             let chance = getRandom(1, 100);
 
-            if (chance <= gold.chance) {
+            if (chance <= gold.chance && gold >= gold.from) {
                 gotGold = getRandom(gold.minAmount, gold.maxAmount);
                 session.game.inventory.gold += gotGold;
             }
@@ -50,7 +50,7 @@ module.exports = function (boss, sessions, sendMessage) {
 
         setLevel(session);
 
-        message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\n`;
+        message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\n\n`;
         i++;
     }
 

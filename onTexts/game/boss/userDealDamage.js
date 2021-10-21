@@ -58,11 +58,17 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
                     callback_data: "close"
                 }]]
             }
-        }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 60000));
+        }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10 * 60 * 1000));
 
         if (bossUserSetDamage(session, boss, callbackSendMessage)) {
             bossGetLoot(boss, members, callbackSendMessage);
         }
+
+        if (boss.hp <= boss.damagedHp) {
+            clearInterval(boss.setIntervalId);
+            delete boss.setIntervalId;
+        }
+
     } catch (e) {
         debugMessage(`Command: /damage_the_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
