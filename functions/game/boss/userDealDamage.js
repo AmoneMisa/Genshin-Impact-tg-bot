@@ -1,44 +1,13 @@
-const getTime = require('../../getTime');
 const getRandom = require('../../getRandom');
 const bossDealDamage = require('./bossDealDamage');
 
-function getOffset() {
-    return new Date().getTime() + 60 * 60 * 1000;
-}
-
 module.exports = async function (session, boss, sendMessage) {
-    if (!boss) {
-        sendMessage(`Группа ещё не призвала босса. Призвать можно командой /summon_boss`);
-        return false;
-    }
-
-    if (boss.hp <= boss.damagedHp) {
-        sendMessage(`Лежачих не бьют. Призвать можно командой /summon_boss`);
-        return false;
-    }
-
-    if (session.game.boss.hp <= session.game.boss.damagedHp) {
-        sendMessage(`Ты немножко труп. Надо было пить хиллки. Жди следующего призыва босса`);
-        return false;
+    let playerClass;
+    if (session.game.hasOwnProperty("gameClass")) {
+        player = session.game.gameClass;
     }
 
     session.game.boss.attackCounter = session.game.boss.attackCounter || 0;
-
-    let [remain, hours, minutes, seconds] = getTime(session.timerBossCallback);
-
-    if (remain > 0) {
-        if (hours > 0) {
-            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`);
-        } else if (minutes > 0) {
-            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${minutes} мин ${seconds} сек`);
-        } else {
-            sendMessage(`@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${seconds} сек`);
-        }
-
-        return false;
-    }
-
-    session.timerBossCallback = getOffset();
 
     let criticalChance = 15;
 
@@ -49,6 +18,7 @@ module.exports = async function (session, boss, sendMessage) {
     if (!session.game.boss.bonus.criticalDamage) {
         criticalDamageInc = 1.5;
     } else {
+        if ()
         criticalDamageInc = 1.5 + 1.5;
         if (session.game.boss.attackCounter === 10) {
             delete session.game.boss.bonus.criticalDamage;
