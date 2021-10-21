@@ -66,15 +66,17 @@ module.exports = {
         name: "Ярость",
         description: "На половину меньше хп, но рефлект составляет 50% урона.",
         effect: "rage"
-    }, {
-        name: "Стойкость",
-        description: "На 100% больше защиты, но на 40% меньше атаки.",
-        effect: "resistance"
-    }, {
-        name: "Живучесть",
-        description: "На треть больше хп и защиты",
-        effect: "life"
-    }]
+    },
+    //     {
+    //     name: "Стойкость",
+    //     description: "На 100% больше защиты, но на 40% меньше атаки.",
+    //     effect: "resistance"
+    // }, {
+    //     name: "Живучесть",
+    //     description: "На треть больше хп и защиты",
+    //     effect: "life"
+    // }
+    ]
 };
 
 // ,

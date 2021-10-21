@@ -1,4 +1,5 @@
 const sendGold = require('./sendGold');
+const setPlayerClass = require('./setPlayerClass');
 const boss = require('./boss');
 const sword = require('./sword');
 const chest = require('./chest');
@@ -9,5 +10,6 @@ module.exports = [
     ...sword,
     ...boss,
     ...chest,
-    ...point21
+    ...point21,
+    ...setPlayerClass
 ];

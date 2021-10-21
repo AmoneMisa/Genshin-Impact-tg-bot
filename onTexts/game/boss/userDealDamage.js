@@ -1,4 +1,4 @@
-const bossUserSetDamage = require('../../../functions/game/boss/userDealDamage');
+const userDealDamage = require('../../../functions/game/boss/userDealDamage');
 const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
 const bot = require('../../../bot');
 const {bosses} = require('../../../data');
@@ -61,11 +61,8 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
             }
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10 * 60 * 1000));
 
-        if (bossUserSetDamage(session, boss, callbackSendMessage)) {
+        if (userDealDamage(session, boss, callbackSendMessage)) {
             bossGetLoot(boss, members, callbackSendMessage);
-        }
-
-        if (boss.hp <= boss.damagedHp) {
             clearInterval(boss.setIntervalId);
             delete boss.setIntervalId;
         }
