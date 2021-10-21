@@ -31,13 +31,16 @@ module.exports = [["points_card", function (session, callback) {
         if (checkAllPlayersPassed(chatSession)) {
             chatSession.pointIsStart = false;
             chatSession.pointGameSessionIsStart = false;
-            chatSession.pointPlayers = {};
-            chatSession.pointUsedCards = [];
+
             bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
+
             sendMessage(callback.message.chat.id, getWinners(chatSession))
                 .then(message => {
                     deleteMessageTimeout(callback.message.chat.id, message.message_id, 15 * 1000);
                 });
+
+            chatSession.pointPlayers = {};
+            chatSession.pointUsedCards = [];
             return;
         }
 
