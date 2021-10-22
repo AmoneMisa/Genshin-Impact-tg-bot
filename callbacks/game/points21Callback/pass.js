@@ -1,11 +1,10 @@
-const bot = require('../../../bot');
 const sendMessage = require('../../../functions/sendMessage');
 const debugMessage = require('../../../functions/debugMessage');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const getChatSession = require('../../../functions/getChatSession');
 const validatePointSession = require('../../../functions/game/point21/validatePointSession');
-const getWinners = require('../../../functions/game/point21/getWinners');
 const checkAllPlayersPassed = require('../../../functions/game/point21/checkAllPlayersPassed');
+const endGame = require('../../../functions/game/point21/endGame');
 
 module.exports = [["points_pass", async (session, callback) => {
     try {
@@ -19,18 +18,7 @@ module.exports = [["points_pass", async (session, callback) => {
         chatSession.pointPlayers[userId].isPass = true;
 
         if (checkAllPlayersPassed(chatSession)) {
-            chatSession.pointIsStart = false;
-            chatSession.pointGameSessionIsStart = false;
-
-            bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
-
-            sendMessage(callback.message.chat.id, getWinners(chatSession))
-                .then(message => {
-                    deleteMessageTimeout(callback.message.chat.id, message.message_id, 15 * 1000);
-                });
-
-            chatSession.pointPlayers = {};
-            chatSession.pointUsedCards = [];
+            endGame(chatSession, callback);
             return;
         }
 

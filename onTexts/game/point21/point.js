@@ -5,7 +5,6 @@ const getMembers = require('../../../functions/getMembers');
 const pointMessage = require('../../../functions/game/point21/pointMessage');
 const betMessage = require('../../../functions/game/point21/betMessage');
 const getCard = require('../../../functions/game/point21/getCard');
-const botThink = require('../../../functions/game/point21/botThink');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
 
@@ -68,7 +67,6 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                 getCard(chatSession, playerId);
             }
 
-            botThink(chatSession);
             chatSession.pointIsStart = true;
 
             return sendMessage(msg.chat.id, `Игра началась. Ставки больше не принимаются.`)

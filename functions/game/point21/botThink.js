@@ -5,7 +5,7 @@ module.exports = function (chatSession) {
     while (true) {
        let points = getPoints(chatSession.pointPlayers["bot"]);
 
-       if (points >= 18) {
+       if (points >= 17) {
            chatSession.pointPlayers['bot'].isPass = true;
            break;
        }
