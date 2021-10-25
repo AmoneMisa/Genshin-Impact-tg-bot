@@ -10,17 +10,17 @@ module.exports = {
         }, {
             maxAmount: 5000,
             minAmount: 1000,
-            from: 4,
+            from: 3,
             chance: 10
         }, {
             maxAmount: 2500,
             minAmount: 400,
-            from: 11,
+            from: 13,
             chance: 27
         }, {
             maxAmount: 1000,
             minAmount: 150,
-            from: 28,
+            from: 40,
             chance: 60
         }],
         experience: [1000, 750, 500, 400],
