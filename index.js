@@ -59,7 +59,7 @@ bot.on("callback_query", async (callback) => {
 
     Promise.all(results).then(() => {
         bot.answerCallbackQuery(callback.id);
-        // log.info('%:2j', session);
+        log.info('%:2j', session);
     });
 });
 
