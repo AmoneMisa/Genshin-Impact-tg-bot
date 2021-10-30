@@ -22,6 +22,16 @@ module.exports = async function (chatId, bosses, sessions) {
             boss.hp = boss.hp / 2;
         }
 
+        if (boss.skill.effect.includes("resistance")) {
+            boss.stats.attack *= 0.4;
+            boss.stats.defence *= 2;
+        }
+
+        if (boss.skill.effect.includes("life")) {
+            boss.stats.attack *= 2;
+            boss.stats.defence *= 2;
+        }
+
         for (let session of Object.values(sessions)) {
             if (!session.game || !session.game.boss) {
                await getSession(chatId, session.userChatData.user.id);

@@ -76,7 +76,7 @@ module.exports = {
         effect: "resistance"
     }, {
         name: "Живучесть",
-        description: "На треть больше хп и защиты",
+        description: "На 200% больше атаки и защиты",
         effect: "life"
     }]
 };

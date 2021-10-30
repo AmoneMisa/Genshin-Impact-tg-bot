@@ -13,10 +13,6 @@ module.exports = function (session, boss, dmg, chatId) {
         return `Босс нанёс тебе ${finalDmg} урона рефлектом. Твоё оставшееся хп: ${player.hp - player.damagedHp}`;
     }
 
-    if (boss.skill.effect.includes("hp_regen")) {
-        return "";
-    }
-
     if (boss.skill.effect.includes("rage")) {
         finalDmg = Math.ceil(finalDmg * 0.5);
         if (player.damagedHp < player.hp) {

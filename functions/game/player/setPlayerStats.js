@@ -20,7 +20,6 @@ function increaseStat(statName, stat, lvl, gameClassName) {
 module.exports = function (session) {
     let gameClass = session.game.gameClass;
     let lvl = session.game.stats.lvl;
-    console.log(lvl);
 
     for (let [key, value] of Object.entries(gameClass.stats)) {
         if (key === "attack" || key !== "deffence") {

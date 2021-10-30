@@ -43,7 +43,7 @@ module.exports = function (boss, sessions, sendMessage) {
             for (let gold of bossTemplate.loot.gold) {
                 let chance = getRandom(1, 100);
 
-                if (chance <= gold.chance && gold >= gold.from) {
+                if (gold.from > chance && chance < gold.from + gold.chance) {
                     gotGold = getRandom(gold.minAmount, gold.maxAmount);
                     session.game.inventory.gold += gotGold;
                 }

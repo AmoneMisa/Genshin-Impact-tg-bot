@@ -2,7 +2,6 @@ const mathBossDamage = require('../../game/boss/mathBossDamage');
 const bot = require('../../../bot');
 const sendMessage = require('../../sendMessage');
 
-
 module.exports = function (members, boss, chatId) {
     for (let member of Object.values(members)) {
         member.game.boss.damagedHp -= mathBossDamage(boss, member);
