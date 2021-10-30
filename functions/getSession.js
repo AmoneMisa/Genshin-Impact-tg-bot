@@ -19,6 +19,27 @@ module.exports = async function (chatId, userId) {
                 needExp: 1500,
                 lvl: 1,
             },
+            gameClass: {
+              stats: {
+                  attack: 1,
+                  deffence: 1,
+                  criticalDamage: 0,
+                  criticalChance: 0
+              },
+                skills: [{
+                    slot: 0,
+                    name: "Тык палкой",
+                    description: "Тыкнуть палкой в босса.",
+                    effect: "common_attack",
+                    damageModificator: 1,
+                    cooltime: 0,
+                    isSelf: false,
+                    isDealDamage: true,
+                    isBuff: false,
+                    needlvl: 0,
+                    cost: 0
+                }]
+            },
             shopTimers: {
                 swordImmune: 0,
                 swordAddMM: 0,

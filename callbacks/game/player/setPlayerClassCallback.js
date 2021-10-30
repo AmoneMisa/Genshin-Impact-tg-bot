@@ -12,6 +12,6 @@ module.exports = [[/^set_class\.[^.]+$/, function (session, callback) {
 
     changePlayerClass(session, _class);
     let {stats} = getPlayerClass(session);
-    sendMessage(callback.message.chat.id, `${session.userChatData.user.username}, ты успешно сменил класс на ${stats.name}`)
+    sendMessage(callback.message.chat.id, `${session.userChatData.user.username}, ты успешно сменил класс на ${stats.translateName}`)
         .then((message) => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10000));
 }]];

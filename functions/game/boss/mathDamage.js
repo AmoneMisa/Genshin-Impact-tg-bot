@@ -1,8 +1,9 @@
 const getRandom = require('../../getRandom');
 
-module.exports = function (session) {
+module.exports = function (session, skill) {
     let stats = session.game.gameClass.stats;
     let dmg;
+    let modificator = skill.damageModificator || 1;
 
     let criticalChance = 15;
 
@@ -24,12 +25,12 @@ module.exports = function (session) {
     }
 
     if (!session.game.boss.bonus.damage) {
-        dmg = Math.ceil(getRandom(200, 350) * (Math.pow(1.05, stats.attack) / Math.pow(1.03, stats.deffence)));
+        dmg = Math.ceil(getRandom(200, 350) * (Math.pow(1.05, stats.attack) / Math.pow(1.03, stats.deffence)) * modificator);
     } else {
         if (session.game.boss.attackCounter === 10) {
             delete session.game.boss.bonus.damage;
         }
-        dmg = Math.ceil(getRandom(200, 350) * 1.75) * (Math.pow(1.05, stats.attack) / Math.pow(1.03, stats.deffence));
+        dmg = Math.ceil(getRandom(200, 350) * 1.75) * (Math.pow(1.05, stats.attack) / Math.pow(1.03, stats.deffence) * modificator);
     }
 
     if (stats.criticalChance > 0) {
@@ -52,5 +53,5 @@ module.exports = function (session) {
         }
     }
 
-    return  {dmg, isHasCritical};
+    return {dmg, isHasCritical};
 };

@@ -6,7 +6,7 @@ const getTime = require('../../../functions/getTime');
 
 function getOffset() {
     // return new Date().getTime() + 60 * 60 * 1000;
-    return new Date().getTime() + 60 * 1000;
+    return new Date().getTime() + 10 * 1000;
 }
 
 module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
@@ -40,14 +40,14 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
         }
 
         if (session.game.boss.hp <= session.game.boss.damagedHp) {
-            sendMessage(msg.chat.id,`Ты немножко труп. Надо было пить хиллки. Жди следующего призыва босса`);
+            sendMessage(msg.chat.id,`Ты немножко труп. Жди следующего призыва босса`);
             return false;
         }
 
         function buildKeyboard() {
             let buttonsSkills = [];
             for (let skill of session.game.gameClass.skills) {
-                buttonsSkills.push([{text: skill.name, callback_data: `skill.${skill.slot}.${session.userChatData.user.id}`}]);
+                buttonsSkills.push([{text: skill.name, callback_data: `skill.${skill.slot}`}]);
             }
 
             return buttonsSkills;
