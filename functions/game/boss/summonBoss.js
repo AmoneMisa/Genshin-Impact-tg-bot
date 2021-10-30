@@ -5,10 +5,23 @@ const getSession = require('../../getSession');
 
 module.exports = async function (chatId, bosses, sessions) {
     if (!bosses[chatId]) {
-        bosses[chatId] = {};
+        bosses[chatId] = {
+            stats: bossTemplate.stats
+        };
     }
 
     let boss = bosses[chatId];
+
+    if (!boss.hasOwnProperty("stats")) {
+        boss.stats = bossTemplate.stats;
+    }
+
+    if (boss.stats.currentSummons >= boss.stats.needSummons) {
+        boss.stats.currentSummons = 0;
+        boss.stats.needSummons += 4;
+        boss.stats.attack += 4;
+        boss.stats.defence += 2;
+    }
 
     if (!boss.hp || boss.hp < boss.damagedHp) {
         boss.damagedHp = 0;
@@ -45,6 +58,7 @@ module.exports = async function (chatId, bosses, sessions) {
                 session.game.boss.damagedHp = 0;
             }
         }
+        boss.stats.currentSummons++;
 
         return `Группа призвала босса ${bossTemplate.nameCall}! Его хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /damage_the_boss`;
     }
