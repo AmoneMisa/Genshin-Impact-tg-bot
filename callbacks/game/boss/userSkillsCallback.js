@@ -5,6 +5,7 @@ const userDealDamage = require('../../../functions/game/boss/userDealDamage');
 const userHealSkill = require('../../../functions/game/boss/userHealSkill');
 const userShieldSkill = require('../../../functions/game/boss/userShieldSkill');
 const userBuffSkill = require('../../../functions/game/boss/userBuffSkill');
+const setSkillCooltime = require('../../../functions/game/boss/setSkillCooltime');
 const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
 const getMembers = require('../../../functions/getMembers');
 const {bosses} = require('../../../data');
@@ -27,39 +28,58 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
     }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10 * 60 * 1000));
 
     if (skill.isDealDamage) {
-        if (userDealDamage(session, boss, callbackSendMessage, skill)) {
-            bossGetLoot(boss, members, callbackSendMessage);
+        if (setSkillCooltime(skill)) {
+            if (userDealDamage(session, boss, callbackSendMessage, skill)) {
+                bossGetLoot(boss, members, callbackSendMessage);
 
-            // if (boss.hasOwnProperty("setIntervalId")) {
-            //     clearInterval(boss.setIntervalId);
-            //     delete boss.setIntervalId;
-            // }
-            //
-            // clearInterval(boss.setAttackIntervalId);
-            // delete boss.setAttackIntervalId;
+                // if (boss.hasOwnProperty("setIntervalId")) {
+                //     clearInterval(boss.setIntervalId);
+                //     delete boss.setIntervalId;
+                // }
+                //
+                // clearInterval(boss.setAttackIntervalId);
+                // delete boss.setAttackIntervalId;
+            }
+        } else {
+            sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
         }
     } else if (skill.effect.includes("heal")) {
-        let heal = userHealSkill(session, skill);
-        session.game.boss.damagedHp -= heal;
+        if (setSkillCooltime(skill)) {
+            let heal = userHealSkill(session, skill);
+            session.game.boss.damagedHp -= heal;
 
-        if (session.game.boss.damagedHp <= session.game.boss.damagedHp && session.game.boss.damagedHp < 0) {
-            session.game.boss.damagedHp = 0;
+            if (session.game.boss.damagedHp <= session.game.boss.damagedHp && session.game.boss.damagedHp < 0) {
+                session.game.boss.damagedHp = 0;
+            }
+            sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.boss.hp - session.game.boss.damagedHp}`);
+        } else {
+            sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
         }
-
-        sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.boss.hp - session.game.boss.damagedHp}`);
     } else if (skill.effect.includes("shield")) {
-        let shield = userShieldSkill(session, skill);
-        session.game.boss.shield = shield;
+        if (setSkillCooltime(skill)) {
 
-        sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`);
-    } else if (skill.isBuff) {
-        let {buffType, amount} = userBuffSkill(session, skill);
-        session.game.gameClass.stats[buffType] += amount;
+            let shield = userShieldSkill(session, skill);
+            session.game.boss.shield = shield;
+            session.game.boss.skillTimers = {name: skill.name, cooltime: skill.cooltime};
 
-        if (session.game.gameClass.stats.criticalChance > 100) {
-            session.game.gameClass.stats.criticalChance = 100;
+            sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`);
+        } else {
+            sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
         }
-        sendMessage(callback.message.chat.id, `Ты наложил на себя бафф ${skill.name} - ${skill.description}. Время действия: ${skill.time} ход(-а|-ов)`);
-    }
+    } else if (skill.isBuff) {
+        if (setSkillCooltime(skill)) {
 
+            let {buffType, amount} = userBuffSkill(session, skill);
+            session.game.gameClass.stats[buffType] += amount;
+
+            if (session.game.gameClass.stats.criticalChance > 100) {
+                session.game.gameClass.stats.criticalChance = 100;
+            }
+
+            setSkillCooltime(skill);
+            sendMessage(callback.message.chat.id, `Ты наложил на себя бафф ${skill.name} - ${skill.description}. Время действия: ${skill.time} ход(-а|-ов)`);
+        }
+    } else {
+        sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
+    }
 }]];
