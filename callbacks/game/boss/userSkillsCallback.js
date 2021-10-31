@@ -4,16 +4,10 @@ const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const userDealDamage = require('../../../functions/game/boss/userDealDamage');
 const userHealSkill = require('../../../functions/game/boss/userHealSkill');
 const userShieldSkill = require('../../../functions/game/boss/userShieldSkill');
-const userBuffSkill = require('../../../functions/game/boss/userBuffSkill');
 const isPlayerCanUseSkill = require('../../../functions/game/boss/isPlayerCanUseSkill');
 const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
 const getMembers = require('../../../functions/getMembers');
 const {bosses} = require('../../../data');
-const getTime = require('../../../functions/getTime');
-
-function getOffset(time) {
-    return new Date().getTime() + time;
-}
 
 module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
     bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
@@ -38,7 +32,8 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
                 bossGetLoot(boss, members, callbackSendMessage);
             }
         } else {
-            sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
+            let {message} = isPlayerCanUseSkill(session, skill);
+            sendMessage(callback.message.chat.id, message);
         }
     } else if (skill.effect.includes("heal")) {
         if (isPlayerCanUseSkill(session, skill)) {
@@ -50,47 +45,18 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
             }
             sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.boss.hp - session.game.boss.damagedHp}`);
         } else {
-            sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
+            let {message} = isPlayerCanUseSkill(session, skill);
+            sendMessage(callback.message.chat.id, message);
         }
     } else if (skill.effect.includes("shield")) {
         if (isPlayerCanUseSkill(session, skill)) {
-
             let shield = userShieldSkill(session, skill);
             session.game.boss.shield = shield;
 
             sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`);
         } else {
-            sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
+            let {message} = isPlayerCanUseSkill(session, skill);
+            sendMessage(callback.message.chat.id, message);
         }
-    } else if (skill.isBuff) {
-        if (isPlayerCanUseSkill(session, skill)) {
-            let {buffType, amount} = userBuffSkill(session, skill);
-            skill.timeReceive = skill.timeReceive || 0;
-            let [remain, hours, minutes, seconds] = getTime(skill.timeReceive);
-
-            if (remain > 0) {
-                if (hours > 0) {
-                    sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты уже наложил на себя бафф ${skill.name} - ${skill.description}. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`);
-                } else if (minutes > 0) {
-                    sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты уже наложил на себя бафф ${skill.name} - ${skill.description}. Осталось: ${minutes} мин ${seconds} сек`);
-                } else {
-                    sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты уже наложил на себя бафф ${skill.name} - ${skill.description}. Осталось: ${seconds} сек`);
-                }
-                return;
-            }
-
-            session.game.gameClass.stats[buffType] += amount;
-
-            if (session.game.gameClass.stats.criticalChance > 100) {
-                session.game.gameClass.stats.criticalChance = 100;
-            }
-
-            setTimeout(() => session.game.gameClass.stats[buffType] -= amount, getOffset(skill.time));
-            skill.timeReceive = getOffset(skill.time);
-
-            sendMessage(callback.message.chat.id, `Ты наложил на себя бафф ${skill.name} - ${skill.description}. Время действия: ${skill.time} час(-а|-ов)`);
-        }
-    } else {
-        sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
     }
 }]];

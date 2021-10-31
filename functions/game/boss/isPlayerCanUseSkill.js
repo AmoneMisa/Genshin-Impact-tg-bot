@@ -9,7 +9,10 @@ module.exports = function (session, skill) {
     if (setSkillCooltime(skill)) {
         if (skillUsageCost(session, skill)) {
             return true;
+        } else {
+            return {isCanBeUsed: false, message: "Недостаточно средств для использования скилла."};
         }
+    } else {
+        return {isCanBeUsed: false, message: "Скилл в кд."};
     }
-    return false;
 };

@@ -35,8 +35,7 @@ module.exports = async function (chatId, userId) {
                     cooltime: 0,
                     isSelf: false,
                     isDealDamage: true,
-                    isBuff: false,
-                    needlvl: 0,
+            needlvl: 0,
                     crystalCost: 0,
                     cost: 0
                 }]

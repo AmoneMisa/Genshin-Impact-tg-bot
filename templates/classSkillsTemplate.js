@@ -11,7 +11,6 @@ module.exports = {
         cooltime: 0,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 1,
         cost: 0,
         crystalCost: 0
@@ -25,7 +24,6 @@ module.exports = {
         cooltime: 2 * 60 * 60 * 1000,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 9,
         crystalCost: 25,
         cost: 800
@@ -38,7 +36,6 @@ module.exports = {
         cooltime: 3 * 60 * 60 * 1000,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 15,
         crystalCost: 70,
         cost: 2000
@@ -51,7 +48,6 @@ module.exports = {
         cooltime: 0,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 1,
         crystalCost: 0,
         cost: 0
@@ -64,7 +60,6 @@ module.exports = {
         cooltime: 4 * 60 * 60 * 1000,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 10,
         crystalCost: 50,
         cost: 5000
@@ -90,7 +85,6 @@ module.exports = {
         cooltime: 0,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 1,
         crystalCost: 0,
         cost: 0
@@ -103,7 +97,6 @@ module.exports = {
         cooltime: 2 * 60 * 60 * 1000,
         isSelf: true,
         isDealDamage: false,
-        isBuff: false,
         needLvl: 8,
         crystalCost: 30,
         cost: 1800
@@ -116,7 +109,6 @@ module.exports = {
         cooltime: 6 * 60 * 60 * 1000,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 15,
         crystalCost: 60,
         cost: 3000
@@ -129,7 +121,6 @@ module.exports = {
         cooltime: 0,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needLvl: 1,
         crystalCost: 0,
         cost: 0
@@ -142,23 +133,20 @@ module.exports = {
         cooltime: 2 * 60 * 60 * 1000,
         isSelf: false,
         isDealDamage: true,
-        isBuff: false,
         needlvl: 12,
         crystalCost: 80,
         cost: 4500
     }, {
         slot: 2,
-        name: "Уверенность в себе",
-        description: "Увеличивает шанс критического удара на 50%. Действует 3 часа.",
-        effect: "criticalChance",
-        buffPower: 50,
-        time: 3 * 60 * 60 * 1000,
-        cooltime: 6 * 60 * 60 * 1000,
-        isSelf: true,
-        isDealDamage: false,
-        isBuff: true,
+        name: "Элементальная стрела",
+        description: "Мощный выстрел трёх стрел трёх разных стихий. Наносит 1000% урона.",
+        effect: "magic_attack",
+        damageModificator: 10,
+        cooltime: 12 * 60 * 60 * 1000,
+        isSelf: false,
+        isDealDamage: true,
         needlvl: 15,
         crystalCost: 80,
-        cost: 4600
+        cost: 6600
     }]
 };
