@@ -3,14 +3,9 @@ function getOffset(time) {
 }
 
 module.exports = function (skill) {
-    if (!skill.hasOwnProperty("cooltimeReceive")) {
+    if (!skill.hasOwnProperty("cooltimeReceive") || skill.cooltimeReceive >= new Date().getTime()) {
         skill.cooltimeReceive = getOffset(skill.cooltime);
         return true;
-    }
-
-    if (skill.cooltimeReceive >= new Date().getTime()) {
-        skill.cooltimeReceive = getOffset(skill.cooltime);
-        return true
     }
     return false;
 };
