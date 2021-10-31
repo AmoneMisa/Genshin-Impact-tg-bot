@@ -3,7 +3,7 @@ const debugMessage = require('../../functions/debugMessage');
 const sendMessage = require('../../functions/sendMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 
-module.exports = [[/(?:^|\s)\/my_class\b/, (msg, session) => {
+module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
@@ -30,7 +30,7 @@ module.exports = [[/(?:^|\s)\/my_class\b/, (msg, session) => {
             }
         })
     } catch (e) {
-        debugMessage(`Command: /my_class\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /change_class\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

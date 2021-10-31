@@ -1,6 +1,7 @@
 module.exports = function (session, skill) {
-    if (skill.cost >= session.game.inventory.gold) {
-        skill.cooltimeReceive = getOffset(skill.cooltime);
+    if (session.game.inventory.gold <= skill.cost && skill.crystalCost <= session.game.inventory.crystals) {
+        session.game.inventory.gold -= skill.cost;
+        session.game.inventory.crystals -= session.game.inventory.crystals;
         return true
     }
     return false;

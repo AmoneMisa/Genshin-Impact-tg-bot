@@ -5,10 +5,15 @@ const userDealDamage = require('../../../functions/game/boss/userDealDamage');
 const userHealSkill = require('../../../functions/game/boss/userHealSkill');
 const userShieldSkill = require('../../../functions/game/boss/userShieldSkill');
 const userBuffSkill = require('../../../functions/game/boss/userBuffSkill');
-const setSkillCooltime = require('../../../functions/game/boss/setSkillCooltime');
+const isPlayerCanUseSkill = require('../../../functions/game/boss/isPlayerCanUseSkill');
 const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
 const getMembers = require('../../../functions/getMembers');
 const {bosses} = require('../../../data');
+const getTime = require('../../../functions/getTime');
+
+function getOffset(time) {
+    return new Date().getTime() + time;
+}
 
 module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
     bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
@@ -28,23 +33,15 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
     }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10 * 60 * 1000));
 
     if (skill.isDealDamage) {
-        if (setSkillCooltime(skill)) {
+        if (isPlayerCanUseSkill(skill)) {
             if (userDealDamage(session, boss, callbackSendMessage, skill)) {
                 bossGetLoot(boss, members, callbackSendMessage);
-
-                // if (boss.hasOwnProperty("setIntervalId")) {
-                //     clearInterval(boss.setIntervalId);
-                //     delete boss.setIntervalId;
-                // }
-                //
-                // clearInterval(boss.setAttackIntervalId);
-                // delete boss.setAttackIntervalId;
             }
         } else {
             sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
         }
     } else if (skill.effect.includes("heal")) {
-        if (setSkillCooltime(skill)) {
+        if (isPlayerCanUseSkill(skill)) {
             let heal = userHealSkill(session, skill);
             session.game.boss.damagedHp -= heal;
 
@@ -56,7 +53,7 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
             sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
         }
     } else if (skill.effect.includes("shield")) {
-        if (setSkillCooltime(skill)) {
+        if (isPlayerCanUseSkill(skill)) {
 
             let shield = userShieldSkill(session, skill);
             session.game.boss.shield = shield;
@@ -66,19 +63,35 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
             sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
         }
     } else if (skill.isBuff) {
-        if (setSkillCooltime(skill)) {
-
+        if (isPlayerCanUseSkill(skill)) {
             let {buffType, amount} = userBuffSkill(session, skill);
+            skill.timeReceive = skill.timeReceive || getOffset(skill.time);
+            let [remain, hours, minutes, seconds] = getTime(skill.timeReceive);
+
+            if (remain > 0) {
+                if (hours > 0) {
+                    sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты уже наложил на себя бафф ${skill.name} - ${skill.description}. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`);
+                } else if (minutes > 0) {
+                    sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты уже наложил на себя бафф ${skill.name} - ${skill.description}. Осталось: ${minutes} мин ${seconds} сек`);
+                } else {
+                    sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты уже наложил на себя бафф ${skill.name} - ${skill.description}. Осталось: ${seconds} сек`);
+                }
+                return;
+            }
+
             session.game.gameClass.stats[buffType] += amount;
 
             if (session.game.gameClass.stats.criticalChance > 100) {
                 session.game.gameClass.stats.criticalChance = 100;
             }
 
-            setSkillCooltime(skill);
-            sendMessage(callback.message.chat.id, `Ты наложил на себя бафф ${skill.name} - ${skill.description}. Время действия: ${skill.time} ход(-а|-ов)`);
+            setTimeout(() => session.game.gameClass.stats[buffType] -= amount, getOffset(skill.time));
+
+            sendMessage(callback.message.chat.id, `Ты наложил на себя бафф ${skill.name} - ${skill.description}. Время действия: ${skill.time} час(-а|-ов)`);
         }
     } else {
         sendMessage(callback.message.chat.id, `Данный скилл в кд.`);
     }
+
+
 }]];

@@ -152,7 +152,7 @@ module.exports = {
         description: "Увеличивает шанс критического удара на 50%. Действует 3 часа.",
         effect: "criticalChance",
         buffPower: 50,
-        time: 3,
+        time: 3 * 60 * 60 * 1000,
         cooltime: 6 * 60 * 60 * 1000,
         isSelf: true,
         isDealDamage: false,
