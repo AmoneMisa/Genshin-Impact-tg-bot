@@ -13,7 +13,8 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 1,
-        cost: 0
+        cost: 0,
+        crystalCost: 0
     }, {
         slot: 1,
         name: "Ярость вампира",
@@ -26,7 +27,8 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 9,
-        cost: 25
+        crystalCost: 25,
+        cost: 800
     }, {
         slot: 2,
         name: "Вожделение паладина",
@@ -38,7 +40,8 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 15,
-        cost: 70
+        crystalCost: 70,
+        cost: 2000
     }],
     mage: [{
         slot: 0,
@@ -50,6 +53,7 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 1,
+        crystalCost: 0,
         cost: 0
     }, {
         slot: 1,
@@ -62,7 +66,8 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 10,
-        cost: 50
+        crystalCost: 50,
+        cost: 5000
     }, {
         slot: 2,
         name: "Лунная тень",
@@ -74,7 +79,8 @@ module.exports = {
         isDealDamage: false,
         isBuff: true,
         needLvl: 15,
-        cost: 120
+        crystalCost: 120,
+        cost: 3750
     }],
     priest: [{
         slot: 0,
@@ -86,6 +92,7 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 1,
+        crystalCost: 0,
         cost: 0
     }, {
         slot: 1,
@@ -98,7 +105,8 @@ module.exports = {
         isDealDamage: false,
         isBuff: false,
         needLvl: 8,
-        cost: 30
+        crystalCost: 30,
+        cost: 1800
     }, {
         slot: 2,
         name: "Казнь святых",
@@ -110,7 +118,8 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 15,
-        cost: 200
+        crystalCost: 60,
+        cost: 3000
     }],
     archer: [{
         slot: 0,
@@ -122,6 +131,7 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needLvl: 1,
+        crystalCost: 0,
         cost: 0
     }, {
         slot: 1,
@@ -134,11 +144,12 @@ module.exports = {
         isDealDamage: true,
         isBuff: false,
         needlvl: 12,
-        cost: 350
+        crystalCost: 80,
+        cost: 4500
     }, {
         slot: 2,
         name: "Уверенность в себе",
-        description: "Увеличивает шанс критического удара на 50%. Действует 3 удара.",
+        description: "Увеличивает шанс критического удара на 50%. Действует 3 часа.",
         effect: "criticalChance",
         buffPower: 50,
         time: 3,
@@ -147,6 +158,7 @@ module.exports = {
         isDealDamage: false,
         isBuff: true,
         needlvl: 15,
-        cost: 80
+        crystalCost: 80,
+        cost: 4600
     }]
 };

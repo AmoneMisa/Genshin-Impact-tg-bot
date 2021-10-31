@@ -60,7 +60,6 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
 
             let shield = userShieldSkill(session, skill);
             session.game.boss.shield = shield;
-            session.game.boss.skillTimers = {name: skill.name, cooltime: skill.cooltime};
 
             sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`);
         } else {

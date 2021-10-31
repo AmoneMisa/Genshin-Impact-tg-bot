@@ -13,6 +13,7 @@ module.exports = function (boss, sessions) {
     }
 
     let arrSessions = Object.values(sessions);
+    arrSessions = arrSessions.filter(player => player.game.boss.damage > 0);
 
     let message = `Всего нанесено урона: ${boss.damagedHp}.\nОставшееся хп: [ ${boss.hp - boss.damagedHp} ]\n\n`;
 

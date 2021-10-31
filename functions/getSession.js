@@ -37,6 +37,7 @@ module.exports = async function (chatId, userId) {
                     isDealDamage: true,
                     isBuff: false,
                     needlvl: 0,
+                    crystalCost: 0,
                     cost: 0
                 }]
             },
@@ -50,6 +51,7 @@ module.exports = async function (chatId, userId) {
             },
             inventory: {
                 gold: 0,
+                crystals: 0,
                 potions: [{name: "hp_1000", count: 0}, {name: "hp_3000", count: 0}]
             },
             boss: {

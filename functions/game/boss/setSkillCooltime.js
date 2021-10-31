@@ -12,4 +12,5 @@ module.exports = function (skill) {
         skill.cooltimeReceive = getOffset(skill.cooltime);
         return true
     }
+    return false;
 };
