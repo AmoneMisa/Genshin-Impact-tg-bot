@@ -55,8 +55,7 @@ module.exports = {
             minAmount: 3,
             from: 38,
             chance: 62
-        }],
-        title: "Гроза всемогущего Кивахи"
+        }]
     },
     skills: [{
         name: "Зеркало",

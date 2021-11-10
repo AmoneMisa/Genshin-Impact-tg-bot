@@ -23,7 +23,7 @@ module.exports = async function (chatId, userId) {
             gameClass: {
                 stats: {
                     attack: 1,
-                    deffence: 1,
+                    defence: 1,
                     criticalDamage: 0,
                     criticalChance: 0
                 },

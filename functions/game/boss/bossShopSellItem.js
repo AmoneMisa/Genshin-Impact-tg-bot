@@ -29,10 +29,10 @@ function check(session, command, item, shopTimer, isDaily) {
                 session.game.effects.push({name: "add_damage", amount: 75, count: 10});
                 session.game.shopTimers[shopTimer] = getOffsetToDay();
             } else if (command.includes("boss_add_cr_chance")) {
-                session.game.boss.bonus.criticalChance = true;
+                session.game.effects.push({name: "add_crit_chance", amount: 50, count: 10});
                 session.game.shopTimers[shopTimer] = getOffsetToDay();
             } else if (command.includes("boss_add_cr_dmg")) {
-                session.game.boss.bonus.criticalDamage = true;
+                session.game.effects.push({name: "add_crit_damage", amount: 150, count: 10});
                 session.game.shopTimers[shopTimer] = getOffsetToDay();
             } else if (command.includes("sword_add_try")) {
                 session.timerSwordCallback = 0;

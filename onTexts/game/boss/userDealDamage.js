@@ -5,7 +5,7 @@ const debugMessage = require('../../../functions/debugMessage');
 const getTime = require('../../../functions/getTime');
 
 
-module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
+module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
@@ -66,7 +66,7 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
         });
 
     } catch (e) {
-        debugMessage(`Command: /damage_the_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /deal_damage\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

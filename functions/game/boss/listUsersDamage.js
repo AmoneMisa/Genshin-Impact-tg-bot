@@ -5,7 +5,7 @@ module.exports = function (boss, sessions) {
 
     if (!boss.damagedHp) {
         boss.damagedHp = 0;
-        return `Ещё никто не нанёс урона боссу. Его хп: ${boss.hp} Нанести урон можно командой /damage_the_boss.`;
+        return `Ещё никто не нанёс урона боссу. Его хп: ${boss.hp} Нанести урон можно командой /deal_damage.`;
     }
 
     if (boss.hp < boss.damagedHp) {

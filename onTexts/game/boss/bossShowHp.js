@@ -6,7 +6,7 @@ const buttonsDictionary = require('../../../dictionaries/buttons');
 const bossUsersDamage = require('../../../functions/game/boss/listUsersDamage');
 const getMembers = require('../../../functions/getMembers');
 
-module.exports = [[/(?:^|\s)\/boss_show_hp\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/boss_hp\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let members = getMembers(msg.chat.id);
@@ -21,7 +21,7 @@ module.exports = [[/(?:^|\s)\/boss_show_hp\b/, async (msg) => {
             }
         });
     } catch (e) {
-        debugMessage(`Command: /boss_show_hp\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /boss_hp\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

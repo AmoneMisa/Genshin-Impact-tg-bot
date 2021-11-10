@@ -7,7 +7,7 @@ module.exports = [[/(?:^|\s)\/heal_yourself\b/, (msg, session) => {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
         if (session.game.inventory.potions[0].count === 0 && session.game.inventory.potions[1].count === 0) {
-            return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, у тебя нет зелий восстановления хп. Их можно купить в магазине /boss_shop.`, {
+            return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, у тебя нет зелий восстановления хп. Их можно купить в магазине /shop.`, {
                 disable_notification: true,
                 reply_markup: {
                     selective: true

@@ -15,9 +15,9 @@ module.exports = function (session) {
     if (session.game.hasOwnProperty("gameClass")) {
         message += `Класс: ${session.game.gameClass.stats.translateName}\n`;
         message += `Атака: ${getAttack(session)}\n`;
-        message += `Защита: ${session.game.gameClass.stats.deffence}\n`;
-        message += `Доп. крит. шанс: ${session.game.gameClass.stats.criticalChance}\n`;
-        message += `Доп. крит. урон: ${session.game.gameClass.stats.criticalDamage}\n`;
+        message += `Защита: ${session.game.gameClass.stats.defence}\n`;
+        message += `Крит. шанс: ${session.game.gameClass.stats.criticalChance}\n`;
+        message += `Крит. урон: ${session.game.gameClass.stats.criticalDamage}\n`;
         message += `Множитель урона x${getDamageMultiplier(session)}\n`;
     }
 
@@ -31,19 +31,6 @@ module.exports = function (session) {
 
     if (session.game.inventory.potions[1].count > 0) {
         message += `Зелий хп (3000): ${session.game.inventory.potions[1].count}\n`;
-    }
-
-    if (session.game.boss.bonus) {
-        message += "Твой бонус: ";
-        if (session.game.boss.bonus.criticalChance) {
-            message += "увеличение шанса критического удара на 50% на 10 ударов.\n"
-        }
-        if (session.game.boss.bonus.criticalDamage) {
-            message += "увеличение критического урона на 150% на 10 ударов.\n"
-        }
-        if (session.game.boss.bonus.damage) {
-            message += "увеличение урона на 75% на 10 ударов.\n"
-        }
     }
 
     if (session.swordImmune) {

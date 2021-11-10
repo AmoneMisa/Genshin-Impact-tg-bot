@@ -3,6 +3,7 @@ const bossTemplate = require('../../../templates/bossTemplate');
 const getRandom = require('../../getRandom');
 const getSession = require('../../getSession');
 const getBossStats = require('../../game/boss/getBossStats');
+const bossUpdateLoot = require('../../game/boss/bossUpdateLoot');
 
 module.exports = async function (chatId, bosses, sessions) {
     if (!bosses[chatId]) {
@@ -18,6 +19,7 @@ module.exports = async function (chatId, bosses, sessions) {
     }
 
     getBossStats(boss);
+    bossUpdateLoot(boss);
 
     if (!boss.hp || boss.hp < boss.damagedHp) {
         boss.damagedHp = 0;
@@ -56,8 +58,8 @@ module.exports = async function (chatId, bosses, sessions) {
         }
         boss.stats.currentSummons++;
 
-        return `Группа призвала босса ${bossTemplate.nameCall}! Его уровень:${boss.stats.lvl} \n Его хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /damage_the_boss`;
+        return `Группа призвала босса ${bossTemplate.nameCall}! Его уровень:${boss.stats.lvl} \n Его хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /deal_damage`;
     }
 
-    return `Группа уже призвала босса ${bossTemplate.nameCall}. Посмотреть хп босса: /boss_show_hp.\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /damage_the_boss`;
+    return `Группа уже призвала босса ${bossTemplate.nameCall}. Посмотреть хп босса: /boss_hp.\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /deal_damage`;
 };

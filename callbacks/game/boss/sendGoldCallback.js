@@ -23,7 +23,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
             let gold = parseInt(replyMsg.text);
 
             if (session.game.inventory.gold < gold) {
-                return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, у тебя столько нет. Посмотреть количество золота можно командой /boss_my_stats`)
+                return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, у тебя столько нет. Посмотреть количество золота можно командой /whoami`)
                     .then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
             }
 
@@ -34,7 +34,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
 
             bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             bot.deleteMessage(msg.chat.id, msg.message_id);
-            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /boss_my_stats`, {
+            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /whoami`, {
                 disable_notification: true
             }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
         });

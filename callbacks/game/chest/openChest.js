@@ -12,33 +12,39 @@ let prizes = [{
     minAmount: 100,
     maxAmount: 650,
     from: 0,
-    chance: 20
+    chance: 15
 }, {
     name: "gold",
     minAmount: 100,
     maxAmount: 1500,
-    from: 21,
-    chance: 34
+    from: 15,
+    chance: 20
+}, {
+    name: "crystal",
+    minAmount: 10,
+    maxAmount: 150,
+    from: 35,
+    chance: 10
 }, {
     name: "nothing",
-    from: 56,
+    from: 45,
     chance: 30
 }, {
     name: "sword",
     minAmount: 1,
     maxAmount: 5,
-    from: 87,
-    chance: 5
+    from: 75,
+    chance: 10
 }, {
     name: "brokenSword",
     minAmount: -1,
     maxAmount: -5,
-    from: 93,
+    from: 85,
     chance: 5
 }, {
     name: "immuneToUpSword",
-    from: 99,
-    chance: 2
+    from: 90,
+    chance: 10
 }];
 
 module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
@@ -59,9 +65,9 @@ module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
     }
 
     let randomPrize;
-    let randomInt = getRandom(0, 100);
+    let randomInt = getRandom(0, 99);
     for (let prize of prizes) {
-        if (randomInt >= prize.from && randomInt <= prize.from + prize.chance) {
+        if (prize.from <= randomInt && randomInt < prize.from + prize.chance) {
             randomPrize = prize;
         }
     }
@@ -75,6 +81,14 @@ module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
                     editChest("💸", buttonsArray, button, session, callback);
                     endChestSession(session, callback);
                     sendPrizeMessage(callback, session, gold, "золота");
+                }
+
+                if (randomPrize.name === "crystal") {
+                    let crystal = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
+                    session.game.inventory.crystals += crystal;
+                    editChest("💎", buttonsArray, button, session, callback);
+                    endChestSession(session, callback);
+                    sendPrizeMessage(callback, session, crystal, "кристаллов");
                 }
 
                 if (randomPrize.name === "experience") {

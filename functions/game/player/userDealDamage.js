@@ -11,7 +11,7 @@ module.exports = async function (session, boss, sendMessage, skill) {
             boss.damagedHp = 0;
         }
 
-        let {dmg, isHasCritical} = mathDamage(session, skill);
+        let {dmg, isHasCritical} = mathDamage(session, skill, boss.stats.defence);
 
         if (skill.effect.includes("vampire")) {
             let vampire = userVampireSkill(skill, dmg);

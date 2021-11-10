@@ -41,7 +41,7 @@ module.exports = function (boss, sessions, sendMessage) {
             let gotGold = 0;
 
             for (let gold of bossTemplate.loot.gold) {
-                let chance = getRandom(1, 100);
+                let chance = getRandom(0, 99);
 
                 if (gold.from <= chance && chance < gold.from + gold.chance) {
                     gotGold = getRandom(gold.minAmount, gold.maxAmount);
@@ -49,20 +49,20 @@ module.exports = function (boss, sessions, sendMessage) {
                 }
             }
 
-            let gotcrystals = 0;
+            let gotCrystals = 0;
 
             for (let crystals of bossTemplate.loot.crystals) {
-                let chance = getRandom(1, 100);
+                let chance = getRandom(0, 99);
 
                 if (crystals.from <= chance && chance < crystals.from + crystals.chance) {
-                    gotcrystals = getRandom(crystals.minAmount, crystals.maxAmount);
-                    session.game.inventory.crystals += gotcrystals;
+                    gotCrystals = getRandom(crystals.minAmount, crystals.maxAmount);
+                    session.game.inventory.crystals += gotCrystals;
                 }
             }
 
             setLevel(session);
 
-            message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\nПолучил кристаллов: ${gotcrystals}, всего кристаллов: ${session.game.inventory.crystals}\n\n`;
+            message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\nПолучил кристаллов: ${gotCrystals}, всего кристаллов: ${session.game.inventory.crystals}\n\n`;
             i++;
         }
 
