@@ -1,6 +1,6 @@
 const bossTemplate = require('../../../templates/bossTemplate');
 const getRandom = require('../../getRandom');
-const setLevel = require('./setLevel');
+const setLevel = require('../player/setLevel');
 
 module.exports = function (boss, sessions, sendMessage) {
     try {
@@ -49,20 +49,20 @@ module.exports = function (boss, sessions, sendMessage) {
                 }
             }
 
-            let gotCrystalls = 0;
+            let gotcrystals = 0;
 
             for (let crystals of bossTemplate.loot.crystals) {
                 let chance = getRandom(1, 100);
 
                 if (crystals.from <= chance && chance < crystals.from + crystals.chance) {
-                    gotCrystalls = getRandom(crystals.minAmount, crystals.maxAmount);
-                    session.game.inventory.crystals += gotCrystalls;
+                    gotcrystals = getRandom(crystals.minAmount, crystals.maxAmount);
+                    session.game.inventory.crystals += gotcrystals;
                 }
             }
 
             setLevel(session);
 
-            message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\nПолучил кристаллов: ${gotCrystalls}, всего кристаллов: ${session.game.inventory.crystals}\n\n`;
+            message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\nПолучил кристаллов: ${gotcrystals}, всего кристаллов: ${session.game.inventory.crystals}\n\n`;
             i++;
         }
 

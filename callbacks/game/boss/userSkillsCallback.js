@@ -1,13 +1,18 @@
 const sendMessage = require('../../../functions/sendMessage');
 const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const userDealDamage = require('../../../functions/game/boss/userDealDamage');
-const userHealSkill = require('../../../functions/game/boss/userHealSkill');
-const userShieldSkill = require('../../../functions/game/boss/userShieldSkill');
-const isPlayerCanUseSkill = require('../../../functions/game/boss/isPlayerCanUseSkill');
+const userDealDamage = require('../../../functions/game/player/userDealDamage');
+const userHealSkill = require('../../../functions/game/player/userHealSkill');
+const userShieldSkill = require('../../../functions/game/player/userShieldSkill');
+const isPlayerCanUseSkill = require('../../../functions/game/player/isPlayerCanUseSkill');
 const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
 const getMembers = require('../../../functions/getMembers');
 const {bosses} = require('../../../data');
+
+function getOffset() {
+    // return new Date().getTime() + 60 * 60 * 1000;
+    return new Date().getTime() + 10 * 1000;
+}
 
 module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
     bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
@@ -26,37 +31,35 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
         disable_notification: true
     }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10 * 60 * 1000));
 
-    if (skill.isDealDamage) {
-        if (isPlayerCanUseSkill(session, skill)) {
+    let {isCanBeUsed, message} = isPlayerCanUseSkill(session, skill);
+
+    if (isCanBeUsed) {
+        if (skill.isDealDamage) {
             if (userDealDamage(session, boss, callbackSendMessage, skill)) {
                 bossGetLoot(boss, members, callbackSendMessage);
             }
-        } else {
-            let {message} = isPlayerCanUseSkill(session, skill);
-            sendMessage(callback.message.chat.id, message);
-        }
-    } else if (skill.effect.includes("heal")) {
-        if (isPlayerCanUseSkill(session, skill)) {
+        } else if (skill.isHeal) {
             let heal = userHealSkill(session, skill);
             session.game.boss.damagedHp -= heal;
 
             if (session.game.boss.damagedHp <= session.game.boss.damagedHp && session.game.boss.damagedHp < 0) {
                 session.game.boss.damagedHp = 0;
             }
+
             sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.boss.hp - session.game.boss.damagedHp}`);
-        } else {
-            let {message} = isPlayerCanUseSkill(session, skill);
-            sendMessage(callback.message.chat.id, message);
-        }
-    } else if (skill.effect.includes("shield")) {
-        if (isPlayerCanUseSkill(session, skill)) {
+        } else if (skill.isShield) {
             let shield = userShieldSkill(session, skill);
             session.game.boss.shield = shield;
 
             sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`);
-        } else {
-            let {message} = isPlayerCanUseSkill(session, skill);
-            sendMessage(callback.message.chat.id, message);
         }
+        session.timerBossCallback = getOffset();
+
+        for (let skill of session.game.gameClass.skills) {
+            skill.cooltimeReceive--;
+        }
+
+    } else {
+        sendMessage(callback.message.chat.id, message);
     }
 }]];

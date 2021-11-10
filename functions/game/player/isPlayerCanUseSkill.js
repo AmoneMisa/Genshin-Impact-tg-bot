@@ -3,12 +3,12 @@ const skillUsageCost = require('./skillUsageCost');
 
 module.exports = function (session, skill) {
     if (skill.slot === 0) {
-        return true;
+        return {isCanBeUsed: true};
     }
 
     if (setSkillCooltime(skill)) {
         if (skillUsageCost(session, skill)) {
-            return true;
+            return {isCanBeUsed: true};
         } else {
             return {isCanBeUsed: false, message: "Недостаточно средств для использования скилла."};
         }

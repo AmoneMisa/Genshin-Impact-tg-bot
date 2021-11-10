@@ -1,5 +1,5 @@
 const levelsTemplate = require('../../../templates/levelsTemplate');
-const setPlayerStats = require('../../game/player/setPlayerStats');
+const setPlayerStats = require('./setPlayerStats');
 
 module.exports = function (session) {
     for (let level of levelsTemplate) {

@@ -1,6 +1,6 @@
-const bossReflectDamage = require('./bossReflectDamage');
-const mathDamage = require('../../../functions/game/boss/mathDamage');
-const userVampireSkill = require('../../../functions/game/boss/userVampireSkill');
+const bossReflectDamage = require('../boss/bossReflectDamage');
+const mathDamage = require('../boss/mathDamage');
+const userVampireSkill = require('./userVampireSkill');
 
 module.exports = async function (session, boss, sendMessage, skill) {
     try {

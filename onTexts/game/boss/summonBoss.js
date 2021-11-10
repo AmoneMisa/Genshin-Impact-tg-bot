@@ -43,7 +43,7 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
         }
 
         boss.setAttackIntervalId = +setInterval(() => bossDealDamage(members, boss, msg.chat.id), 60 * 60 * 1000);
-
+        boss.currentSummons++;
     } catch (e) {
         debugMessage(`Command: /summon_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;

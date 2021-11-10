@@ -1,5 +1,5 @@
 const getRandom = require('../../../functions/getRandom');
-const setLevel = require('../../../functions/game/boss/setLevel');
+const setLevel = require('../../../functions/game/player/setLevel');
 const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 const endChestSession = require('../../../functions/game/chest/endChestSession');
 const sendPrizeMessage = require('../../../functions/game/chest/sendPrizeMessage');

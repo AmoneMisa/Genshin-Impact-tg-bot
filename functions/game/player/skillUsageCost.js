@@ -3,6 +3,7 @@ module.exports = function (session, skill) {
         session.game.inventory.gold -= skill.cost;
         session.game.inventory.crystals -= skill.crystalCost;
         return true
+    } else {
+        return false;
     }
-    return false;
 };

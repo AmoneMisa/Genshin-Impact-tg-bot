@@ -1,3 +1,6 @@
+const getAttack = require("./getAttack");
+const getDamageMultiplier = require("./getDamageMultiplier");
+
 module.exports = function (session) {
     let message = `Статистика @${session.userChatData.user.username}:\n`;
     message += `Уровень: ${session.game.stats.lvl}\n`;
@@ -5,12 +8,17 @@ module.exports = function (session) {
     message += `Требуемое к-во опыта до следующего уровня: ${session.game.stats.needExp}\n`;
     message += `Золото: ${session.game.inventory.gold}\n`;
 
+    if (session.game.inventory.hasOwnProperty("crystals")) {
+        message += `Кристаллы: ${session.game.inventory.crystals}\n`;
+    }
+
     if (session.game.hasOwnProperty("gameClass")) {
         message += `Класс: ${session.game.gameClass.stats.translateName}\n`;
-        message += `Атака: ${session.game.gameClass.stats.attack}\n`;
+        message += `Атака: ${getAttack(session)}\n`;
         message += `Защита: ${session.game.gameClass.stats.deffence}\n`;
         message += `Доп. крит. шанс: ${session.game.gameClass.stats.criticalChance}\n`;
         message += `Доп. крит. урон: ${session.game.gameClass.stats.criticalDamage}\n`;
+        message += `Множитель урона x${getDamageMultiplier(session)}\n`;
     }
 
     message += `Хп всего: ${session.game.boss.hp}.\n`;

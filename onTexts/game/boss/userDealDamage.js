@@ -4,14 +4,15 @@ const sendMessage = require('../../../functions/sendMessage');
 const debugMessage = require('../../../functions/debugMessage');
 const getTime = require('../../../functions/getTime');
 
-function getOffset() {
-    // return new Date().getTime() + 60 * 60 * 1000;
-    return new Date().getTime() + 10 * 1000;
-}
 
 module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
+
+        if (!session.timerBossCallback) {
+            session.timerBossCallback = 0;
+        }
+
         let [remain, hours, minutes, seconds] = getTime(session.timerBossCallback);
 
         if (remain > 0) {
@@ -24,8 +25,6 @@ module.exports = [[/(?:^|\s)\/damage_the_boss\b/, (msg, session) => {
             }
             return;
         }
-
-        session.timerBossCallback = getOffset();
 
         let boss = bosses[msg.chat.id];
 

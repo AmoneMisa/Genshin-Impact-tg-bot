@@ -1,4 +1,6 @@
 const getRandom = require('../../getRandom');
+const getAttack = require('../../game/player/getAttack');
+const getDamageMultiplier = require('../../game/player/getDamageMultiplier');
 
 module.exports = function (session, skill) {
     let stats = session.game.gameClass.stats;
@@ -24,14 +26,19 @@ module.exports = function (session, skill) {
         criticalDamageInc += stats.criticalDamage;
     }
 
-    if (!session.game.boss.bonus.damage) {
-        dmg = Math.ceil(getRandom(200, 350) * (Math.pow(1.05, stats.attack) / Math.pow(1.03, stats.deffence)) * modificator);
-    } else {
-        if (session.game.boss.attackCounter === 10) {
-            delete session.game.boss.bonus.damage;
+    let attack = getAttack(session);
+    let damageMultiplier = getDamageMultiplier(session);
+
+    for (let effect of session.game.effects) {
+        if (effect.count) {
+            effect.count--;
         }
-        dmg = Math.ceil(getRandom(200, 350) * 1.75) * (Math.pow(1.05, stats.attack) / Math.pow(1.03, stats.deffence) * modificator);
     }
+
+    session.game.effects = session.game.effects.filter(effect => !effect.hasOwnProperty("count") || effect.count > 0);
+
+    dmg = Math.ceil(getRandom(200, 350) * (Math.pow(1.05, attack) / Math.pow(1.03, stats.deffence)) * modificator);
+    dmg *= damageMultiplier;
 
     if (stats.criticalChance > 0) {
         criticalChance += stats.criticalChance;

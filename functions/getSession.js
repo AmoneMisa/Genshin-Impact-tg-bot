@@ -19,13 +19,14 @@ module.exports = async function (chatId, userId) {
                 needExp: 1500,
                 lvl: 1,
             },
+            effects: [],
             gameClass: {
-              stats: {
-                  attack: 1,
-                  deffence: 1,
-                  criticalDamage: 0,
-                  criticalChance: 0
-              },
+                stats: {
+                    attack: 1,
+                    deffence: 1,
+                    criticalDamage: 0,
+                    criticalChance: 0
+                },
                 skills: [{
                     slot: 0,
                     name: "Тык палкой",
@@ -35,9 +36,13 @@ module.exports = async function (chatId, userId) {
                     cooltime: 0,
                     isSelf: false,
                     isDealDamage: true,
-            needlvl: 0,
+                    isHeal: false,
+                    isShield: false,
+                    isBuff: false,
+                    needlvl: 0,
                     crystalCost: 0,
-                    cost: 0
+                    cost: 0,
+                    cooltimeReceive: 0
                 }]
             },
             shopTimers: {
@@ -60,6 +65,10 @@ module.exports = async function (chatId, userId) {
                 bonus: {}
             }
         };
+    }
+
+    if (!members[userId].game.hasOwnProperty("effects")) {
+        members[userId].game.effects = [];
     }
 
     return members[userId];

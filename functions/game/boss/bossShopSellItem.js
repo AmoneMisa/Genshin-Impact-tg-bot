@@ -26,7 +26,7 @@ function check(session, command, item, shopTimer, isDaily) {
                 session.sword += 25;
                 session.game.shopTimers[shopTimer] = getOffsetToDay();
             } else if (command.includes("boss_add_dmg")) {
-                session.game.boss.bonus.damage = true;
+                session.game.effects.push({name: "add_damage", amount: 75, count: 10});
                 session.game.shopTimers[shopTimer] = getOffsetToDay();
             } else if (command.includes("boss_add_cr_chance")) {
                 session.game.boss.bonus.criticalChance = true;

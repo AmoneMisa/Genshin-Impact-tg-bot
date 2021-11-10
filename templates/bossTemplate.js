@@ -36,23 +36,23 @@ module.exports = {
         }],
         experience: [1000, 750, 500, 400],
         crystals: [{
-            maxAmount: 10,
-            minAmount: 8,
+            maxAmount: 100,
+            minAmount: 70,
             from: 0,
             chance: 1
         }, {
-            maxAmount: 8,
-            minAmount: 5,
+            maxAmount: 45,
+            minAmount: 30,
             from: 2,
             chance: 4
         }, {
-            maxAmount: 6,
-            minAmount: 3,
+            maxAmount: 30,
+            minAmount: 15,
             from: 7,
             chance: 30
         }, {
-            maxAmount: 5,
-            minAmount: 1,
+            maxAmount: 15,
+            minAmount: 3,
             from: 38,
             chance: 62
         }],

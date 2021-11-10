@@ -2,7 +2,7 @@ const bot = require('../../../bot');
 const debugMessage = require('../../../functions/debugMessage');
 const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const bossGetStats = require('../../../functions/game/boss/userGetStats');
+const bossGetStats = require('../../../functions/game/player/userGetStats');
 
 module.exports = [[/(?:^|\s)\/boss_my_stats\b/, async (msg, session) => {
     try {
