@@ -15,5 +15,7 @@ module.exports = function (commands) {
         i++;
     }
 
+    buttons.push(["/remove_keyboard"]);
+
     return buttons;
 };

@@ -4,7 +4,7 @@ const dictionary = require('../dictionaries/main');
 const buttonsDictionary = require('../dictionaries/buttons');
 const sendMessage = require('../functions/sendMessage');
 
-module.exports = [[/(?:^|\s)\/help/, async (msg) => {
+module.exports = [[/(?:^|\s)\/help\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         sendMessage(msg.chat.id, `${dictionary["ru"].help}`, {
