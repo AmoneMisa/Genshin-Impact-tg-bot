@@ -71,5 +71,38 @@ module.exports = async function (chatId, userId) {
         members[userId].game.effects = [];
     }
 
+    if (!members[userId].game.inventory.hasOwnProperty("crystals")) {
+        members[userId].game.inventory.crystals = 0;
+    }
+
+    if (!members[userId].game.hasOwnProperty("gameClass")) {
+        members[userId].game.gameClass = {
+            stats: {
+                translateName: "Бродяжка",
+                attack: 1,
+                defence: 1,
+                criticalDamage: 1,
+                criticalChance: 1
+            },
+            skills: [{
+                slot: 0,
+                name: "Тык палкой",
+                description: "Тыкнуть палкой в босса.",
+                effect: "common_attack",
+                damageModificator: 1,
+                cooltime: 0,
+                isSelf: false,
+                isDealDamage: true,
+                isHeal: false,
+                isShield: false,
+                isBuff: false,
+                needlvl: 0,
+                crystalCost: 0,
+                cost: 0,
+                cooltimeReceive: 0
+            }]
+        };
+    }
+
     return members[userId];
 };
