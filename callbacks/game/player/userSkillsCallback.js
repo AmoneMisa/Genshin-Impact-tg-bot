@@ -10,8 +10,7 @@ const getMembers = require('../../../functions/getMembers');
 const {bosses} = require('../../../data');
 
 function getOffset() {
-    // return new Date().getTime() + 60 * 60 * 1000;
-    return new Date().getTime() + 10 * 1000;
+    return new Date().getTime() + 60 * 60 * 1000;
 }
 
 module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
@@ -37,17 +36,16 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
         if (skill.isDealDamage) {
             if (userDealDamage(session, boss, callbackSendMessage, skill)) {
                 bossGetLoot(boss, members, callbackSendMessage);
-                clearInterval(boss.timerBossCallback);
+                clearInterval(session.timerBossCallback);
                 clearInterval(boss.attackIntervalId);
                 session.timerBossCallback = null;
                 boss.attackIntervalId = null;
-                boss.isDead = true;
             }
         } else if (skill.isHeal) {
             let heal = userHealSkill(session, skill);
             session.game.boss.damagedHp -= heal;
 
-            if (session.game.boss.damagedHp <= session.game.boss.damagedHp && session.game.boss.damagedHp < 0) {
+            if (session.game.boss.hp <= session.game.boss.damagedHp && session.game.boss.damagedHp < 0) {
                 session.game.boss.damagedHp = 0;
             }
 

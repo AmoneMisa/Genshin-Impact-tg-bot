@@ -41,7 +41,8 @@ module.exports = function (members, boss, chatId) {
 
         if (player.hp <= player.damagedHp && !player.isDead) {
             player.isDead = true;
-            sendMessage(chatId, `${member.userChatData.user.username}, ты был повержен(-а) боссом.`, {
+            player.damagedHp = 0;
+            sendMessage(chatId, `@${member.userChatData.user.username}, ты был повержен(-а) боссом.`, {
                 disable_notification: true
             });
         }

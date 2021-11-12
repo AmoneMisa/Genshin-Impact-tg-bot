@@ -23,5 +23,5 @@ module.exports = function (chatId, recovery) {
             .then(message => setInterval(() => bot.deleteMessage(chatId, message.message_id), 10 * 1000));
     }
 
-    boss.attackIntervalId = +setInterval(() => dealDamage(), 10 * 1000);
+    boss.attackIntervalId = +setInterval(() => dealDamage(), 60 * 60 * 1000);
 };
