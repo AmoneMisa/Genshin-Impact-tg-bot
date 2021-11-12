@@ -40,21 +40,19 @@ module.exports = function (boss, sessions, sendMessage) {
 
             let gotGold = 0;
 
+            let goldChance = getRandom(0, 99);
             for (let gold of bossTemplate.loot.gold) {
-                let chance = getRandom(0, 99);
-
-                if (gold.from <= chance && chance < gold.from + gold.chance) {
+                if (gold.from <= goldChance && goldChance < gold.from + gold.chance) {
                     gotGold = getRandom(gold.minAmount, gold.maxAmount);
                     session.game.inventory.gold += gotGold;
                 }
             }
 
             let gotCrystals = 0;
+            let crystalChance = getRandom(0, 99);
 
             for (let crystals of bossTemplate.loot.crystals) {
-                let chance = getRandom(0, 99);
-
-                if (crystals.from <= chance && chance < crystals.from + crystals.chance) {
+                if (crystals.from <= crystalChance && crystalChance < crystals.from + crystals.chance) {
                     gotCrystals = getRandom(crystals.minAmount, crystals.maxAmount);
                     session.game.inventory.crystals += gotCrystals;
                 }
