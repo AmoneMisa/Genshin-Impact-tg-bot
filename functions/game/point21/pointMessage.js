@@ -5,7 +5,7 @@ module.exports = function (gameSession) {
 
     for (let [playerId, player] of Object.entries(gameSession.pointPlayers)) {
         let member = gameSession.members[playerId];
-        str += `${playerId === "bot" ? "Всемогущий" : member.userChatData.user.first_name}: `;
+        str += `${playerId === "bot" ? "Всемогущий" : `@${member.userChatData.user.username || member.userChatData.user.id}`}: `;
         let points = getPoints(player);
         str += player.cards.map(card => `${card}`).join(', ') + "; ";
         str += `Всего очков: ${points}\n`;

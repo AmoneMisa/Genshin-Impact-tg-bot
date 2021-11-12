@@ -10,7 +10,9 @@ module.exports = [[/(?:^|\s)\/menu/, async (msg, session) => {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let buttons = setButtons(commands);
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, ${dictionary["ru"].index}`, {
+        let name = session.userChatData.user.username !== undefined ? session.userChatData.user.username : session.userChatData.user.first_name;
+
+        sendMessage(msg.chat.id, `@${name}, ${dictionary["ru"].index}`, {
             disable_notification: true,
             reply_markup: JSON.stringify({
                 selective: true,
