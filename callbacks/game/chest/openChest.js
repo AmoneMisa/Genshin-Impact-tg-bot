@@ -107,7 +107,10 @@ module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
                         "CAACAgIAAxkBAAIWtGCqiCJx92Cc4WgxJS5XZfwiYG8rAALYBwACGELuCBU4big7eueWHwQ",
                         "CAACAgIAAxkBAAIWtWCqiDbWkYllDpPvosBy_UkfbXk2AAK7AAPO2OgLq5hxIyJkXq0fBA",
                         "CAACAgIAAxkBAAIWtmCqiEL0qpcfkBGxMTx_gR9mBN1jAALBAAMQIQIQYS0Ksj-QAu8fBA",
-                        "CAACAgIAAxkBAAIWt2CqiFLkxcfmAyw5gmtSEFHg5XGGAALTAAPO2OgLL5Ep2erx6UQfBA"
+                        "CAACAgIAAxkBAAIWt2CqiFLkxcfmAyw5gmtSEFHg5XGGAALTAAPO2OgLL5Ep2erx6UQfBA",
+                        "CAACAgIAAxkBAAEDRS9hjsHSVLxi9YK0bwq44_whmlLmoQACGxAAAjIQsUr3DQ8CIHFgGiIE",
+                        "CAACAgIAAxkBAAEDRTFhjsH3kjPYETk4ghh851nYH9OzTAAC8ysAAlOx9wNV_XxK9TD4GCIE",
+                        "CAACAgIAAxkBAAEDRTNhjsJAmazsmI08L4sEeJJHsNcPzgACdQUAAulVBRhI1uk4EWXk1yIE"
                     ];
                     let index = Math.floor(Math.random() * stickers.length);
                     editChest("💩", buttonsArray, button, session, callback);
