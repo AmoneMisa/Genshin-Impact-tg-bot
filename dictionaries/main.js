@@ -35,7 +35,7 @@ module.exports = {
             "12. /setGender - пол (влияет на вывод титулов в Ж или М роде)\n" +
             "13. /setMostHatedCharacter - наиболее ненавистный персонаж\n" +
             "14. /setAchievementsCount - количество ачивок\n" +
-            "15. /removeKeyboard - убрать клавиатуру\n",
+            "15. /remove_keyboard - убрать клавиатуру\n",
     }, "en": {
         index: "Pick menu",
         info: {
