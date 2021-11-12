@@ -2,7 +2,7 @@ const bot = require('../../../bot');
 const sendMessage = require('../../../functions/sendMessage');
 const debugMessage = require('../../../functions/debugMessage');
 
-module.exports = [[/(?:^|\s)\/heal_yourself\b/, (msg, session) => {
+module.exports = [[/(?:^|\s)\/heal\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
@@ -22,7 +22,7 @@ module.exports = [[/(?:^|\s)\/heal_yourself\b/, (msg, session) => {
             }
         });
     } catch (e) {
-        debugMessage(`Command: /heal_yourself\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /heal\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

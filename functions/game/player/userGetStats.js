@@ -17,7 +17,7 @@ module.exports = function (session) {
         message += `Атака: ${getAttack(session)}\n`;
         message += `Защита: ${session.game.gameClass.stats.defence}\n`;
         message += `Крит. шанс: ${session.game.gameClass.stats.criticalChance}\n`;
-        message += `Крит. урон: ${session.game.gameClass.stats.criticalDamage}\n`;
+        message += `Крит. урон x${session.game.gameClass.stats.criticalDamage}\n`;
         message += `Множитель урона x${getDamageMultiplier(session)}\n`;
     }
 

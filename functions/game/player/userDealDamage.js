@@ -1,17 +1,16 @@
 const bossReflectDamage = require('../boss/bossReflectDamage');
-const mathDamage = require('../boss/mathDamage');
+const calcDamage = require('../boss/calcDamage');
 const userVampireSkill = require('./userVampireSkill');
 
 module.exports = async function (session, boss, sendMessage, skill) {
     try {
-        session.game.boss.attackCounter = session.game.boss.attackCounter || 0;
         let message = "";
 
         if (!boss.damagedHp) {
             boss.damagedHp = 0;
         }
 
-        let {dmg, isHasCritical} = mathDamage(session, skill, boss.stats.defence);
+        let {dmg, isHasCritical} = calcDamage(session, skill, boss);
 
         if (skill.effect.includes("vampire")) {
             let vampire = userVampireSkill(skill, dmg);
@@ -36,9 +35,6 @@ module.exports = async function (session, boss, sendMessage, skill) {
         } else {
             sendMessage(`${session.userChatData.user.username}, ты нанёс боссу ${dmg} урона.\n${message}`);
         }
-
-        session.game.boss.attackCounter++;
-
         return true;
     } catch (e) {
         console.error(e);

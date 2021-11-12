@@ -3,12 +3,17 @@ const sendMessage = require('../../../functions/sendMessage');
 const changePlayerClass = require('../../../functions/game/player/changePlayerClass');
 const getPlayerClass = require('../../../functions/game/player/getPlayerClass');
 
+function getOffset() {
+    return new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
+}
+
 module.exports = [[/^set_class\.[^.]+$/, function (session, callback) {
-    const [ , _class] = callback.data.match(/^set_class\.([^.]+)$/);
+    const [, _class] = callback.data.match(/^set_class\.([^.]+)$/);
 
     if (!callback.message.text.includes(session.userChatData.user.username)) {
         return;
     }
+    session.changeClassTimer = getOffset();
 
     changePlayerClass(session, _class);
     let {stats} = getPlayerClass(session);

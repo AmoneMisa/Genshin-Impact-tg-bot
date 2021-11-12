@@ -4,23 +4,10 @@ const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const getMembers = require('../../../functions/getMembers');
 const summonBoss = require('../../../functions/game/boss/summonBoss');
-const bossDealDamage = require('../../../functions/game/boss/bossDealDamage');
+const initBossDealDamage = require('../../../functions/game/boss/initBossDealDamage');
+const initHpRegen = require('../../../functions/game/boss/initHpRegen');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
-
-function bossRegenHp(boss, chatId) {
-    if (boss.damagedHp === 0) {
-        return;
-    }
-
-    boss.damagedHp -= Math.ceil(boss.hp * 0.08);
-
-    if (boss.damagedHp < 0) {
-        boss.damagedHp = 0;
-    }
-
-    sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
-}
 
 module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
     try {
@@ -38,11 +25,10 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
         }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
 
         let boss = bosses[msg.chat.id];
-        if (boss.skill.effect === "hp_regen" && !boss.setIntervalId) {
-            boss.setIntervalId = +setInterval(() => bossRegenHp(boss, msg.chat.id), 60 * 60 * 1000);
-        }
 
-        boss.setAttackIntervalId = +setInterval(() => bossDealDamage(members, boss, msg.chat.id), 60 * 60 * 1000);
+
+        initBossDealDamage(msg.chat.id);
+        initHpRegen(msg.chat.id);
         boss.currentSummons++;
     } catch (e) {
         debugMessage(`Command: /summon_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);

@@ -1,9 +1,9 @@
 module.exports = function (skill) {
-    if (!skill.hasOwnProperty("cooltimeReceive") || skill.cooltimeReceive === 0) {
-        skill.cooltimeReceive = skill.cooltime;
-
-        return true;
+    if (skill.cooltimeReceive > 0) {
+        return false;
     }
 
-    return false;
+    skill.cooltimeReceive = skill.cooltime;
+
+    return true;
 };

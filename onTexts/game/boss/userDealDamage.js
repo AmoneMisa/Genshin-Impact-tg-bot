@@ -4,13 +4,16 @@ const sendMessage = require('../../../functions/sendMessage');
 const debugMessage = require('../../../functions/debugMessage');
 const getTime = require('../../../functions/getTime');
 
-
 module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
         if (!session.timerBossCallback) {
             session.timerBossCallback = 0;
+        }
+
+        if (session.game.boss.isDead) {
+            return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, ты мёртв.`);
         }
 
         let [remain, hours, minutes, seconds] = getTime(session.timerBossCallback);

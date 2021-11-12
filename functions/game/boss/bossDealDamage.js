@@ -1,22 +1,51 @@
-const mathBossDamage = require('./mathBossDamage');
-const bossPunishPlayer = require('./bossPunishPlayer');
+const calcBossDamage = require('./calcBossDamage');
+const sendMessage = require('../../sendMessage');
 
 module.exports = function (members, boss, chatId) {
+    let message = `Босс нанёс урон всей группе:\n\n`;
+
+    members = Object.values(members).filter(member => !member.game.boss.isDead);
+
+    if (!members.length) {
+        if (boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
+            boss.hpRegenIntervalId = null;
+        }
+
+        boss.skill = null;
+        clearInterval(boss.attackIntervalId);
+        boss.attackIntervalId = null;
+        boss.damagedHp = 0;
+        boss.hp = 0;
+
+        return;
+    }
+
     for (let member of Object.values(members)) {
-        let dmg = mathBossDamage(boss, member);
+        let player = member.game.boss;
+        let dmg = calcBossDamage(boss, member);
+        message += `${member.userChatData.user.username} - ${dmg} урона`;
 
         if (member.game.boss.hasOwnProperty("shield")) {
-            if (member.game.boss.shield > 0) {
-                if (dmg > member.game.boss.shield) {
-                    member.game.boss.shield = 0;
-                    dmg = member.game.boss.shield;
+            if (player.shield > 0) {
+                if (dmg > player.shield) {
+                    player.shield = 0;
+                    dmg = dmg - player.shield;
+
+                } else {
+                    player.shield -= dmg;
                 }
-                member.game.boss.shield -= dmg;
             }
         }
 
-        member.game.boss.damagedHp -= dmg;
+        player.damagedHp += dmg;
 
-        bossPunishPlayer(member.game.boss, chatId, member);
+        if (player.hp <= player.damagedHp && !player.isDead) {
+            player.isDead = true;
+            sendMessage(chatId, `${member.userChatData.user.username}, ты был повержен(-а) боссом.`, {
+                disable_notification: true
+            });
+        }
     }
+
+    return message;
 };

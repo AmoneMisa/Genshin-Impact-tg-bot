@@ -22,10 +22,11 @@ module.exports = async function (chatId, userId) {
             effects: [],
             gameClass: {
                 stats: {
+                    translateName: "Бродяжка",
                     attack: 1,
                     defence: 1,
-                    criticalDamage: 0,
-                    criticalChance: 0
+                    criticalDamage: 1,
+                    criticalChance: 1
                 },
                 skills: [{
                     slot: 0,
@@ -61,8 +62,7 @@ module.exports = async function (chatId, userId) {
             boss: {
                 hp: 1000,
                 damagedHp: 0,
-                damage: 0,
-                bonus: {}
+                damage: 0
             }
         };
     }

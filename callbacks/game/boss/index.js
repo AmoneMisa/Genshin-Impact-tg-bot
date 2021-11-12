@@ -1,5 +1,5 @@
 const sendGoldCallback = require('./sendGoldCallback');
-const userSkillsCallback = require('./userSkillsCallback');
+const userSkillsCallback = require('../player/userSkillsCallback');
 
 module.exports = [
     ...sendGoldCallback,

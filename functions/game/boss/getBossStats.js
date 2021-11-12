@@ -4,8 +4,8 @@ module.exports = function (boss) {
     let lvl = getBossLevel(boss) - 1;
 
     return {
-        attack: 10 + 5 * lvl,
-        defence: 15 + 6 * lvl,
+        attack: 10 + 3 * lvl,
+        defence: 15 + 4 * lvl,
         minDamage: 250,
         maxDamage: 320,
         criticalChance: 35,

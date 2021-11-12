@@ -9,21 +9,25 @@ intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
 const getSession = require('./functions/getSession');
 const debugMessage = require('./functions/debugMessage');
 const log = intel.getLogger("genshin");
+const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
+const initHpRegen = require('./functions/game/boss/initHpRegen');
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
     {command: "info", description: "Инфо о группе"},
     {command: "help", description: "Помощь (много буков)"},
+    {command: "help_menu", description: "Помощь по анкете (команда /menu)"},
     {command: "menu", description: "Заполнить анкету о себе"},
     {command: "title", description: "Получить случайный титул"},
     {command: "titles", description: "Список титулов группы"},
     {command: "sword", description: "Увеличить свой меч"},
-    {command: "all_swords", description: "Список мечей всей группы"},
+    {command: "swords", description: "Список мечей всей группы"},
     {command: "summon_boss", description: "Призвать босса"},
     {command: "boss_hp", description: "Показать Хп босса"},
     {command: "deal_damage", description: "Нанести урон боссу"},
-    {command: "heal_yourself", description: "Похиллить себя"},
+    {command: "heal", description: "Похиллить себя"},
     {command: "whoami", description: "Моя статистика"},
+    {command: "change_class", description: "Изменить класс"},
     {command: "shop", description: "Магазин"},
     {command: "send_gold", description: "Перевести золото"},
     {command: "chest", description: "Открыть сундук"},
@@ -43,6 +47,11 @@ for (let [key, value] of onTexts) {
     });
 }
 
+for (let id of Object.keys(bosses)) {
+    initBossDealDamage(id, true);
+    initHpRegen(id, true);
+}
+
 for (let [key, value] of onTextsAdmin) {
     bot.onText(key, value);
 }
@@ -59,7 +68,7 @@ bot.on("callback_query", async (callback) => {
 
     Promise.all(results).then(() => {
         bot.answerCallbackQuery(callback.id);
-        // log.info('%:2j', session);
+        log.info('%:2j', session);
     });
 });
 

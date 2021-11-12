@@ -5,7 +5,7 @@ const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const swordsMessage = require('../../../functions/game/sword/swordsMessage');
 
-module.exports = [[/(?:^|\s)\/all_swords\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/swords\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let members = getMembers(msg.chat.id);
@@ -20,7 +20,7 @@ module.exports = [[/(?:^|\s)\/all_swords\b/, async (msg) => {
             }
         });
     } catch (e) {
-        debugMessage(`Command: /all_swords\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /swords\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

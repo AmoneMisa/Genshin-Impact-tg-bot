@@ -37,6 +37,11 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
         if (skill.isDealDamage) {
             if (userDealDamage(session, boss, callbackSendMessage, skill)) {
                 bossGetLoot(boss, members, callbackSendMessage);
+                clearInterval(boss.timerBossCallback);
+                clearInterval(boss.attackIntervalId);
+                session.timerBossCallback = null;
+                boss.attackIntervalId = null;
+                boss.isDead = true;
             }
         } else if (skill.isHeal) {
             let heal = userHealSkill(session, skill);
@@ -56,7 +61,9 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
         session.timerBossCallback = getOffset();
 
         for (let skill of session.game.gameClass.skills) {
-            skill.cooltimeReceive--;
+            if (skill.cooltimeReceive > 0) {
+                skill.cooltimeReceive--;
+            }
         }
 
     } else {

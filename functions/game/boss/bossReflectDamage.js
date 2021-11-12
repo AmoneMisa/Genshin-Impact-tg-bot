@@ -1,5 +1,3 @@
-const bossPunishPlayer = require('./bossPunishPlayer');
-
 module.exports = function (session, boss, dmg, chatId) {
     let player = session.game.boss;
     let finalDmg = dmg;
@@ -8,8 +6,10 @@ module.exports = function (session, boss, dmg, chatId) {
         finalDmg = Math.ceil(finalDmg * 0.3);
         if (player.damagedHp < player.hp) {
             player.damagedHp += finalDmg;
+        } else {
+            player.isDead = true;
         }
-        bossPunishPlayer(player, chatId, session);
+
         return `Босс нанёс тебе ${finalDmg} урона рефлектом. Твоё оставшееся хп: ${player.hp - player.damagedHp}`;
     }
 
@@ -17,8 +17,9 @@ module.exports = function (session, boss, dmg, chatId) {
         finalDmg = Math.ceil(finalDmg * 0.5);
         if (player.damagedHp < player.hp) {
             player.damagedHp += finalDmg;
+        } else {
+            player.isDead = true;
         }
-        bossPunishPlayer(player, chatId, session);
         return `Босс нанёс тебе ${finalDmg} урона рефлектом. Твоё оставшееся хп: ${player.hp - player.damagedHp}`;
     }
 

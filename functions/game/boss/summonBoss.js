@@ -45,20 +45,16 @@ module.exports = async function (chatId, bosses, sessions) {
 
         for (let session of Object.values(sessions)) {
             if (!session.game || !session.game.boss) {
-               await getSession(chatId, session.userChatData.user.id);
+                await getSession(chatId, session.userChatData.user.id);
             }
-
-            if (session.game.boss.damage > 0) {
-                session.game.boss.damage = 0;
-            }
-
-            if (session.game.boss.damagedHp > 0) {
-                session.game.boss.damagedHp = 0;
-            }
+            session.game.boss.isDead = false;
+            session.game.boss.damage = 0;
+            session.game.boss.damagedHp = 0;
         }
-        boss.stats.currentSummons++;
 
-        return `Группа призвала босса ${bossTemplate.nameCall}! Его уровень:${boss.stats.lvl} \n Его хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /deal_damage`;
+        boss.stats.currentSummons = boss.stats.currentSummons++ || 1;
+
+        return `Группа призвала босса ${bossTemplate.nameCall}! Уровень: ${boss.stats.lvl}\nЕго хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /deal_damage`;
     }
 
     return `Группа уже призвала босса ${bossTemplate.nameCall}. Посмотреть хп босса: /boss_hp.\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /deal_damage`;
