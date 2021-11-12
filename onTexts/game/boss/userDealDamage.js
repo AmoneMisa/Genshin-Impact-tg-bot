@@ -1,6 +1,7 @@
 const bot = require('../../../bot');
 const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/sendMessage');
+const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
 const getTime = require('../../../functions/getTime');
 
@@ -12,19 +13,21 @@ module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
             session.timerBossCallback = 0;
         }
 
-        if (session.game.boss.isDead) {
-            return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, ты мёртв.`);
-        }
-
         let [remain, hours, minutes, seconds] = getTime(session.timerBossCallback);
 
         if (remain > 0) {
             if (hours > 0) {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`);
+                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
+                    disable_notification: true,
+                }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             } else if (minutes > 0) {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${minutes} мин ${seconds} сек`);
+                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${minutes} мин ${seconds} сек`, {
+                    disable_notification: true,
+                }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             } else {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${seconds} сек`);
+                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${seconds} сек`, {
+                    disable_notification: true,
+                }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             }
             return;
         }
@@ -41,7 +44,7 @@ module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
             return false;
         }
 
-        if (session.game.boss.hp <= session.game.boss.damagedHp) {
+        if (session.game.boss.hp <= session.game.boss.damagedHp || session.game.boss.isDead) {
             sendMessage(msg.chat.id, `Ты немножко труп. Жди следующего призыва босса`);
             return false;
         }
