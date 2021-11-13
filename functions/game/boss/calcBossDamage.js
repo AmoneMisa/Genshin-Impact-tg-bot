@@ -1,5 +1,5 @@
 const getRandom = require('../../getRandom');
-const getPlayerDefence = require('../player/getPlayerDefence');
+const getPlayerDefence = require('../player/getDefence');
 const getBossAttack = require('./getBossAttack');
 
 module.exports = function (boss, player) {

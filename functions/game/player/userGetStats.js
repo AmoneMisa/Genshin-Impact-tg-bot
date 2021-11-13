@@ -1,4 +1,5 @@
 const getAttack = require("./getAttack");
+const getDefence = require("./getDefence");
 const getDamageMultiplier = require("./getDamageMultiplier");
 
 module.exports = function (session) {
@@ -15,7 +16,7 @@ module.exports = function (session) {
     if (session.game.hasOwnProperty("gameClass")) {
         message += `Класс: ${session.game.gameClass.stats.translateName}\n`;
         message += `Атака: ${getAttack(session)}\n`;
-        message += `Защита: ${session.game.gameClass.stats.defence}\n`;
+        message += `Защита: ${getDefence(session)}\n`;
         message += `Крит. шанс: ${session.game.gameClass.stats.criticalChance}\n`;
         message += `Крит. урон x${session.game.gameClass.stats.criticalDamage}\n`;
         message += `Множитель урона x${getDamageMultiplier(session)}\n`;
