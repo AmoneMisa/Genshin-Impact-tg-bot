@@ -2,7 +2,9 @@ const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const sendMessage = require('../../../functions/sendMessage');
 
 module.exports = [[/^crystal_buy\.([\-0-9]+)+$/, function (session, callback) {
-    const [, amount] = callback.data.match(/^crystal_buy\.([\-0-9]+)$/);
+    let [, amount] = callback.data.match(/^crystal_buy\.([\-0-9]+)$/);
+
+    amount = parseInt(amount);
 
     if (!callback.message.text.includes(session.userChatData.user.username)) {
         return;
