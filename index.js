@@ -29,6 +29,7 @@ bot.setMyCommands([
     {command: "whoami", description: "Моя статистика"},
     {command: "change_class", description: "Изменить класс"},
     {command: "shop", description: "Магазин"},
+    {command: "exchange", description: "Обменник кристаллов"},
     {command: "send_gold", description: "Перевести золото"},
     {command: "chest", description: "Открыть сундук"},
     {command: "point", description: "Игра в 21 очко"},

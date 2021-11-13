@@ -4,6 +4,7 @@ const boss = require('./boss');
 const sword = require('./sword');
 const chest = require('./chest');
 const point21 = require('./point21');
+const player = require('./player');
 
 module.exports = [
     ...sendGold,
@@ -11,5 +12,6 @@ module.exports = [
     ...boss,
     ...chest,
     ...point21,
-    ...setPlayerClass
+    ...setPlayerClass,
+    ...player
 ];
