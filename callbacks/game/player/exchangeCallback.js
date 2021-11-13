@@ -16,6 +16,11 @@ module.exports = [[/^crystal_buy\.([\-0-9]+)+$/, function (session, callback) {
     }
 
     session.game.inventory.gold -= amount * 1500;
+
+    if (typeof session.game.inventory.crystals === "string") {
+        session.game.inventory.crystals = parseInt(session.game.inventory.crystals);
+    }
+
     session.game.inventory.crystals += amount;
 
     sendMessage(callback.message.chat.id, `${session.userChatData.user.username}, ты успешно купил ${amount} кристаллов`)
