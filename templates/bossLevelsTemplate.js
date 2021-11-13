@@ -8,7 +8,7 @@ let lvls = [{lvl: 1, needSummons: 0}];
 
 for (let i = 2; i < countLvls; i++) {
     if (i !== 2) {
-        needSummons = Math.ceil(needSummons * step);
+        needSummons += Math.ceil(needSummons * step);
     }
 
     lvls.push({lvl: i, needSummons: needSummons});

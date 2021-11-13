@@ -26,7 +26,6 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
 
         let boss = bosses[msg.chat.id];
 
-
         initBossDealDamage(msg.chat.id);
         initHpRegen(msg.chat.id);
         boss.currentSummons++;

@@ -3,6 +3,8 @@ const bossTemplate = require('../../../templates/bossTemplate');
 const getRandom = require('../../getRandom');
 const getSession = require('../../getSession');
 const getBossStats = require('../../game/boss/getBossStats');
+const getBossLevelTemplate = require('../../game/boss/getBossLevelTemplate');
+const getBossLevel = require('../../game/boss/getBossLevel');
 const bossUpdateLoot = require('../../game/boss/bossUpdateLoot');
 
 module.exports = async function (chatId, bosses, sessions) {
@@ -20,6 +22,8 @@ module.exports = async function (chatId, bosses, sessions) {
 
     getBossStats(boss);
     bossUpdateLoot(boss);
+    let lvl = getBossLevel(boss);
+    let nextLvl = getBossLevelTemplate(lvl + 1);
 
     if (!boss.hp || boss.hp < boss.damagedHp) {
         boss.damagedHp = 0;
@@ -47,14 +51,16 @@ module.exports = async function (chatId, bosses, sessions) {
             if (!session.game || !session.game.boss) {
                 await getSession(chatId, session.userChatData.user.id);
             }
+
             session.game.boss.isDead = false;
             session.game.boss.damage = 0;
             session.game.boss.damagedHp = 0;
+            session.timerDealDamageCallback = 0;
         }
 
-        boss.stats.currentSummons = boss.stats.currentSummons++ || 1;
+        boss.stats.currentSummons = boss.stats.currentSummons + 1 || 1;
 
-        return `Группа призвала босса ${bossTemplate.nameCall}! Уровень: ${boss.stats.lvl}\nЕго хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /deal_damage`;
+        return `Группа призвала босса ${bossTemplate.nameCall}! Уровень: ${lvl}\nЕго хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nКоличество призывов: ${boss.stats.currentSummons}\nКоличество призывов до следующего уровня: ${nextLvl.needSummons - boss.stats.currentSummons}\nНанести урон: /deal_damage`;
     }
 
     return `Группа уже призвала босса ${bossTemplate.nameCall}. Посмотреть хп босса: /boss_hp.\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nНанести урон: /deal_damage`;

@@ -28,7 +28,7 @@ module.exports = function (session, skill, boss) {
     let damageMultiplier = getDamageMultiplier(session);
     let bossDefence = getBossDefence(boss);
 
-    dmg = Math.ceil(getRandom(250, 370) * (Math.pow(1.05, attack) / Math.pow(1.03, bossDefence)) * modificator);
+    dmg = Math.ceil(getRandom(270, 400) * (Math.pow(1.05, attack) / Math.pow(1.03, bossDefence)) * modificator);
     dmg *= damageMultiplier;
 
     if (getRandom(1, 100) <= criticalChance) {

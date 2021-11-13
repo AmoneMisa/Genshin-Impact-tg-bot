@@ -1,3 +1,3 @@
-const receiveChestTimer = require('./receiveChestTimerForUser');
+const receiveChestTimerForUser = require('./receiveChestTimerForUser');
 
-module.exports = [...receiveChestTimer];
+module.exports = [...receiveChestTimerForUser];

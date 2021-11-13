@@ -9,11 +9,11 @@ module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
-        if (!session.timerBossCallback) {
-            session.timerBossCallback = 0;
+        if (!session.timerDealDamageCallback) {
+            session.timerDealDamageCallback = 0;
         }
 
-        let [remain, hours, minutes, seconds] = getTime(session.timerBossCallback);
+        let [remain, hours, minutes, seconds] = getTime(session.timerDealDamageCallback);
 
         if (remain > 0) {
             if (hours > 0) {

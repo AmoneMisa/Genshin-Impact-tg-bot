@@ -36,9 +36,9 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
         if (skill.isDealDamage) {
             if (userDealDamage(session, boss, callbackSendMessage, skill)) {
                 bossGetLoot(boss, members, callbackSendMessage);
-                clearInterval(session.timerBossCallback);
+                clearInterval(session.timerDealDamageCallback);
                 clearInterval(boss.attackIntervalId);
-                session.timerBossCallback = null;
+                session.timerDealDamageCallback = null;
                 boss.attackIntervalId = null;
             }
         } else if (skill.isHeal) {
@@ -56,7 +56,7 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
 
             sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`);
         }
-        session.timerBossCallback = getOffset();
+        session.timerDealDamageCallback = getOffset();
 
         for (let skill of session.game.gameClass.skills) {
             if (skill.cooltimeReceive > 0) {
