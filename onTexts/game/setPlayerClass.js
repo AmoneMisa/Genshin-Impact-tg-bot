@@ -3,6 +3,7 @@ const debugMessage = require('../../functions/debugMessage');
 const sendMessage = require('../../functions/sendMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 const getTime = require('../../functions/getTime');
+let classes = require('../../templates/classStatsTemplate');
 
 module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
     try {
@@ -30,7 +31,13 @@ module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
             }
         }
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери, свой класс.`, {
+        let info = "";
+
+        for (let _class of Object.values(classes)) {
+            info += `${_class.translateName}:\nАтака: ${_class.attack}\nЗащита: ${_class.defence}\nКрит. урон x${_class.criticalDamage}\nКрит. шанс: ${_class.criticalChance}%\n\n`;
+        }
+
+        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери, свой класс.\n\n${info}`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,
