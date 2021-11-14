@@ -28,7 +28,7 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
 
         initBossDealDamage(msg.chat.id);
         initHpRegen(msg.chat.id);
-        boss.currentSummons++;
+        boss.stats.currentSummons++;
     } catch (e) {
         debugMessage(`Command: /summon_boss\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
