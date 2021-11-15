@@ -6,13 +6,15 @@ module.exports = function (session, skill) {
         return {isCanBeUsed: true};
     }
 
-    if (setSkillCooltime(skill)) {
+    let cooltime = setSkillCooltime(skill);
+
+    if (cooltime === 0) {
         if (skillUsageCost(session, skill)) {
             return {isCanBeUsed: true};
         } else {
             return {isCanBeUsed: false, message: "Недостаточно средств для использования скилла."};
         }
     } else {
-        return {isCanBeUsed: false, message: "Скилл в кд."};
+        return {isCanBeUsed: false, message: `Скилл в кд. Осталось ${cooltime} ударов.`};
     }
 };

@@ -1,9 +1,9 @@
 module.exports = function (skill) {
     if (skill.cooltimeReceive > 0) {
-        return false;
+        return skill.cooltimeReceive;
     }
 
     skill.cooltimeReceive = skill.cooltime;
 
-    return true;
+    return 0;
 };

@@ -4,6 +4,7 @@ const getRandom = require('../../getRandom');
 const getSession = require('../../getSession');
 const getBossStats = require('../../game/boss/getBossStats');
 const getBossLevelTemplate = require('../../game/boss/getBossLevelTemplate');
+const initBossDealDamage = require('../../game/boss/initBossDealDamage');
 const getBossLevel = require('../../game/boss/getBossLevel');
 const bossUpdateLoot = require('../../game/boss/bossUpdateLoot');
 
@@ -20,7 +21,8 @@ module.exports = async function (chatId, bosses, sessions) {
         boss.stats = bossTemplate.stats;
     }
 
-    getBossStats(boss);
+    let {attack, defence} = getBossStats(boss);
+
     bossUpdateLoot(boss);
     let lvl = getBossLevel(boss);
     let nextLvl = getBossLevelTemplate(lvl + 1);
@@ -38,14 +40,17 @@ module.exports = async function (chatId, bosses, sessions) {
         }
 
         if (boss.skill.effect.includes("resistance")) {
-            boss.stats.attack *= 0.4;
-            boss.stats.defence *= 2;
+            attack *= 0.4;
+            defence *= 2;
         }
 
         if (boss.skill.effect.includes("life")) {
-            boss.stats.attack *= 2;
-            boss.stats.defence *= 2;
+            attack *= 2;
+            defence *= 2;
         }
+
+        boss.stats.defence = defence;
+        boss.stats.attack = attack;
 
         for (let session of Object.values(sessions)) {
             if (!session.game || !session.game.boss) {
@@ -59,6 +64,7 @@ module.exports = async function (chatId, bosses, sessions) {
         }
 
         boss.stats.currentSummons = boss.stats.currentSummons + 1 || 1;
+        initBossDealDamage(chatId);
 
         return `Группа призвала босса ${bossTemplate.nameCall}! Уровень: ${lvl}\nЕго хп: ${boss.hp}\nЕго скилл: ${boss.skill.name} - ${boss.skill.description}\nКоличество призывов: ${boss.stats.currentSummons}\nКоличество призывов до следующего уровня: ${nextLvl.needSummons - boss.stats.currentSummons}\nНанести урон: /deal_damage`;
     }

@@ -25,6 +25,7 @@ module.exports = [[/(?:^|\s)\/kill\b/, (msg) => {
 
         boss.skill = null;
         clearInterval(boss.attackIntervalId);
+        debugMessage("kill", boss.attackIntervalId);
         boss.attackIntervalId = null;
         boss.damagedHp = 0;
         boss.hp = 0;

@@ -38,6 +38,7 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
                 bossGetLoot(boss, members, callbackSendMessage);
                 clearInterval(session.timerDealDamageCallback);
                 clearInterval(boss.attackIntervalId);
+                debugMessage("deal damage", boss.attackIntervalId);
                 session.timerDealDamageCallback = null;
                 boss.attackIntervalId = null;
             }

@@ -13,11 +13,12 @@ module.exports = function (members, boss, chatId) {
 
         boss.skill = null;
         clearInterval(boss.attackIntervalId);
+        debugMessage("all members dead", boss.attackIntervalId);
         boss.attackIntervalId = null;
         boss.damagedHp = 0;
         boss.hp = 0;
 
-        return;
+        return false;
     }
 
     for (let member of Object.values(members)) {

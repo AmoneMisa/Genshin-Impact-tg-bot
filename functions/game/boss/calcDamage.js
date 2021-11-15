@@ -44,5 +44,7 @@ module.exports = function (session, skill, boss) {
         }
     }
 
+    dmg = Math.ceil(dmg);
+
     return {dmg, isHasCritical};
 };

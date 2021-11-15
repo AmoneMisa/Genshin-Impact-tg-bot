@@ -4,7 +4,6 @@ const sendMessage = require('../../../functions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const getMembers = require('../../../functions/getMembers');
 const summonBoss = require('../../../functions/game/boss/summonBoss');
-const initBossDealDamage = require('../../../functions/game/boss/initBossDealDamage');
 const initHpRegen = require('../../../functions/game/boss/initHpRegen');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
@@ -26,7 +25,6 @@ module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
 
         let boss = bosses[msg.chat.id];
 
-        initBossDealDamage(msg.chat.id);
         initHpRegen(msg.chat.id);
         boss.stats.currentSummons++;
     } catch (e) {
