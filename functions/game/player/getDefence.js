@@ -5,6 +5,6 @@ module.exports = function (session) {
     let defence = stats.defence;
     let lvl = session.game.stats.lvl;
 
-    defence += Math.ceil((lvl - 1) * 1.2);
-    return defence;
+    defence += (lvl - 1) * 1.2;
+    return Math.ceil(defence);
 };

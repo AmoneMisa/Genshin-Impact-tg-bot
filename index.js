@@ -2,7 +2,7 @@ const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
 const bot = require('./bot');
-const trustedChats = require('./trustedChats');
+const trustedChats = require('./trustedChats.json');
 const {sessions, titles, bosses} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
@@ -40,7 +40,9 @@ bot.setMyCommands([
     scope: {type: "default"}
 });
 
+console.log(trustedChats);
 function isTrusted(chatId) {
+    chatId = chatId + "";
     return trustedChats.includes(chatId);
 }
 

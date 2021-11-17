@@ -42,7 +42,7 @@ module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
             reply_markup: {
                 selective: true,
                 inline_keyboard: [[{
-                    text: "Воин",
+                    text: "Палладин",
                     callback_data: "set_class.warrior"
                 }, {
                     text: "Маг",
