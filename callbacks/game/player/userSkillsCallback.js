@@ -29,9 +29,10 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
 
     let callbackSendMessage = (message) => sendMessage(callback.message.chat.id, message, {
         disable_notification: true
-    }).then(message => deleteMessageTimeout(callback.message.chat.id, message.message_id, 10 * 60 * 1000));
+    }).then(message => messageId = message.message_id);
 
     let {isCanBeUsed, message} = isPlayerCanUseSkill(session, skill);
+    let messageId = null;
 
     if (isCanBeUsed) {
         if (skill.isDealDamage) {
@@ -39,7 +40,7 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
                 bossGetLoot(boss, members, callbackSendMessage);
                 clearInterval(session.timerDealDamageCallback);
                 clearInterval(boss.attackIntervalId);
-                debugMessage("deal damage", boss.attackIntervalId);
+                debugMessage(`deal damage: ${boss.attackIntervalId}`);
                 session.timerDealDamageCallback = null;
                 boss.attackIntervalId = null;
             }
@@ -51,12 +52,14 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
                 session.game.boss.damagedHp = 0;
             }
 
-            sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.boss.hp - session.game.boss.damagedHp}`);
+            sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.boss.hp - session.game.boss.damagedHp}`)
+                .then(message => messageId = message.message_id);
         } else if (skill.isShield) {
             let shield = userShieldSkill(session, skill);
             session.game.boss.shield = shield;
 
-            sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`);
+            sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`)
+                .then(message => messageId = message.message_id);
         }
         session.timerDealDamageCallback = getOffset();
 
@@ -67,6 +70,9 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
         }
 
     } else {
-        sendMessage(callback.message.chat.id, message);
+        sendMessage(callback.message.chat.id, message)
+            .then(message => messageId = message.message_id);
     }
+
+    deleteMessageTimeout(callback.message.chat.id, messageId, 60 * 1000);
 }]];

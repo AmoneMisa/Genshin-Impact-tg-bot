@@ -1,4 +1,4 @@
-module.exports = function (session, boss, dmg, chatId) {
+module.exports = function (session, boss, dmg) {
     let player = session.game.boss;
     let finalDmg = dmg;
 

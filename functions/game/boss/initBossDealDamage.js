@@ -7,9 +7,8 @@ const debugMessage = require('../../debugMessage');
 
 module.exports = function (chatId, recovery) {
     let boss = bosses[chatId];
-    debugMessage("1");
+
     if (recovery && !(boss.hasOwnProperty("attackIntervalId") && boss.attackIntervalId !== null)) {
-        console.log("2");
         return;
     }
 
@@ -27,5 +26,5 @@ module.exports = function (chatId, recovery) {
 
     boss.attackIntervalId = +setInterval(() => dealDamage(), 60 * 60 * 1000);
     // boss.attackIntervalId = +setInterval(() => dealDamage(), 10 * 1000);
-    debugMessage(boss.attackIntervalId);
+    debugMessage(`${chatId} - ${boss.attackIntervalId}`);
 };
