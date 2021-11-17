@@ -1,4 +1,5 @@
 const sendMessage = require('../../../functions/sendMessage');
+const debugMessage = require('../../../functions/debugMessage');
 const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const userDealDamage = require('../../../functions/game/player/userDealDamage');
