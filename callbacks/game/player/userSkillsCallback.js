@@ -7,6 +7,7 @@ const userHealSkill = require('../../../functions/game/player/userHealSkill');
 const userShieldSkill = require('../../../functions/game/player/userShieldSkill');
 const isPlayerCanUseSkill = require('../../../functions/game/player/isPlayerCanUseSkill');
 const bossGetLoot = require('../../../functions/game/boss/bossGetLoot');
+const isBossDead = require('../../../functions/game/boss/isBossDead');
 const getMembers = require('../../../functions/getMembers');
 const {bosses} = require('../../../data');
 
@@ -37,12 +38,13 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
     if (isCanBeUsed) {
         if (skill.isDealDamage) {
             if (userDealDamage(session, boss, callbackSendMessage, skill)) {
-                bossGetLoot(boss, members, callbackSendMessage);
-                clearInterval(session.timerDealDamageCallback);
-                clearInterval(boss.attackIntervalId);
-                debugMessage(`deal damage: ${boss.attackIntervalId}`);
-                session.timerDealDamageCallback = null;
-                boss.attackIntervalId = null;
+                if (isBossDead(boss)) {
+                    bossGetLoot(boss, members, callbackSendMessage);
+                    clearInterval(session.timerDealDamageCallback);
+                    clearInterval(boss.attackIntervalId);
+                    session.timerDealDamageCallback = null;
+                    boss.attackIntervalId = null;
+                }
             }
         } else if (skill.isHeal) {
             let heal = userHealSkill(session, skill);

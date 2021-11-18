@@ -1,5 +1,6 @@
 const bossReflectDamage = require('../boss/bossReflectDamage');
 const calcDamage = require('../boss/calcDamage');
+const isBossDead = require('../boss/isBossDead');
 const userVampireSkill = require('./userVampireSkill');
 
 module.exports = async function (session, boss, sendMessage, skill) {
@@ -28,7 +29,7 @@ module.exports = async function (session, boss, sendMessage, skill) {
             message += await bossReflectDamage(session, boss, dmg);
         }
 
-        if (boss.hp <= boss.damagedHp) {
+        if (isBossDead(boss)) {
             sendMessage(`${session.userChatData.user.username}, ты нанёс боссу смертельный удар на ${dmg}!\n${message}`);
         } else if (isHasCritical) {
             sendMessage(`${session.userChatData.user.username}, ты нанёс боссу ${dmg} критического урона!\n${message}`);

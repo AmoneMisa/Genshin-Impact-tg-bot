@@ -4,6 +4,7 @@ const sendMessage = require('../../../functions/sendMessage');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
 const getTime = require('../../../functions/getTime');
+const isBossDead = require('../../../functions/game/boss/isBossDead');
 
 module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
     try {
@@ -39,7 +40,7 @@ module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
             return false;
         }
 
-        if (boss.hp <= boss.damagedHp) {
+        if (isBossDead(boss)) {
             sendMessage(msg.chat.id, `Лежачих не бьют. Призвать можно командой /summon_boss`);
             return false;
         }
