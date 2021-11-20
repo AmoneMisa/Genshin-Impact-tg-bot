@@ -1,5 +1,4 @@
 const sendMessage = require('../../../functions/sendMessage');
-const debugMessage = require('../../../functions/debugMessage');
 const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const userDealDamage = require('../../../functions/game/player/userDealDamage');
@@ -50,7 +49,7 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
             let heal = userHealSkill(session, skill);
             session.game.boss.damagedHp -= heal;
 
-            if (session.game.boss.hp <= session.game.boss.damagedHp && session.game.boss.damagedHp < 0) {
+            if (session.game.boss.damagedHp < 0) {
                 session.game.boss.damagedHp = 0;
             }
 

@@ -40,7 +40,6 @@ bot.setMyCommands([
     scope: {type: "default"}
 });
 
-console.log(trustedChats);
 function isTrusted(chatId) {
     chatId = chatId + "";
     return trustedChats.includes(chatId);
