@@ -24,7 +24,8 @@ module.exports = [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
         } else {
             sendMessage(msg.chat.id, `@${session.userChatData.user.username}, админу нельзя замутаться.`, {
                 disable_notification: true
-            })
+            });
+            debugMessage(`${session.userChatData.user.username},\n\n${session.userChatData},\n\nsuccess - ${success}`);
         }
     } catch (e) {
         debugMessage(`Command: /self_mute\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
