@@ -5,6 +5,7 @@ const helpMenu = require('./helpMenu');
 const personalData = require('./personalData');
 const titles = require('./titles');
 const game = require('./game');
+const mute = require('./mute');
 
 module.exports = [
     ...start,
@@ -13,5 +14,6 @@ module.exports = [
     ...helpMenu,
     ...personalData,
     ...titles,
-    ...game
+    ...game,
+    ...mute
 ];
