@@ -12,8 +12,6 @@ module.exports = [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
                 can_send_media_messages: false,
                 can_send_polls: false,
                 can_send_other_messages: false,
-                can_add_web_page_previews: false,
-                can_change_info: false,
                 can_pin_messages: false
             },
             until_date: Math.round(new Date().getTime() / 1000.0) + (2 * 60)
