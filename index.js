@@ -36,6 +36,7 @@ bot.setMyCommands([
     {command: "send_gold", description: "Перевести золото"},
     {command: "chest", description: "Открыть сундук"},
     {command: "point", description: "Игра в 21 очко"},
+    {command: "self_mute", description: "Уйти в себя на две минуты"},
 ], {
     scope: {type: "default"}
 });
