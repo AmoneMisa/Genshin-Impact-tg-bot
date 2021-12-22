@@ -11,9 +11,9 @@ function getOffset() {
     return new Date().getTime() + 2 * 1000;
 }
 
-let maxCount = 5;
+let maxCount = 1;
 
-module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (session, callback) => {
+module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/, (session, callback) => {
     try {
         let [remain] = getTime(session.pointPressButtonTimer);
 
@@ -21,7 +21,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (sessio
             return;
         }
 
-        const [, betType] = callback.data.match(/^points_(bet|double_bet|xfive_bet|thousand_bet)$/);
+        const [, betType] = callback.data.match(/^points_(bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/);
         let userId = callback.from.id;
         let chatId = callback.message.chat.id;
         let gold = session.game.inventory.gold;
@@ -36,57 +36,69 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (sessio
             };
         }
 
+        let messageId = null;
+
         let bet = chatSession.pointPlayers[userId].bet;
-        if (Object.values(chatSession.pointPlayers).length === maxCount) {
+        console.log(chatSession.pointPlayers.hasOwnProperty(userId), callback.message.chat.id);
+        if (Object.values(chatSession.pointPlayers).length >= maxCount) {
             if (!chatSession.pointPlayers.hasOwnProperty(userId)) {
                 return sendMessage(callback.message.chat.id, `В игре уже максимальное количество участников.`)
-                    .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                    .then((message) => messageId = message.message_id);
             }
         }
 
         if (chatSession.pointIsStart) {
             return sendMessage(callback.message.chat.id, `Игра уже началась. Делать ставки нельзя`)
-                .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                .then((message) => messageId = message.message_id);
         }
 
         if (betType === "bet") {
             if (gold < bet + 100) {
                 return sendMessage(chatId, `${session.userChatData.user.username}, у тебя нет столько золота.`)
-                    .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                    .then((message) => messageId = message.message_id);
             } else {
                 chatSession.pointPlayers[userId].bet += 100;
             }
         } else if (betType === "double_bet") {
             if (gold < bet * 2) {
                 return sendMessage(chatId, `${session.userChatData.user.username}, у тебя нет столько золота.`)
-                    .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                    .then((message) => messageId = message.message_id);
             } else {
                 if (bet === 0) {
                     return sendMessage(chatId, `${session.userChatData.user.username}, ты не можешь умножить ставку, которая равна нулю.`)
-                        .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                        .then((message) => messageId = message.message_id);
                 }
 
                 chatSession.pointPlayers[userId].bet *= 2;
             }
+        } else if (betType === "10t_bet") {
+            if (gold < bet + 10000) {
+                return sendMessage(chatId, `${session.userChatData.user.username}, у тебя нет столько золота.`)
+                    .then((message) => messageId = message.message_id);
+            }
+
+            chatSession.pointPlayers[userId].bet += 10000;
         } else if (betType === "thousand_bet") {
             if (gold < bet + 1000) {
                 return sendMessage(chatId, `${session.userChatData.user.username}, у тебя нет столько золота.`)
-                    .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                    .then((message) => messageId = message.message_id);
             }
 
             chatSession.pointPlayers[userId].bet += 1000;
         } else if (betType === "xfive_bet") {
             if (gold < bet * 5) {
                 return sendMessage(chatId, `${session.userChatData.user.username}, у тебя нет столько золота.`)
-                    .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                    .then((message) => messageId = message.message_id);
             } else {
                 if (bet === 0) {
                     return sendMessage(chatId, `${session.userChatData.user.username}, ты не можешь умножить ставку, которая равна нулю.`)
-                        .then((message) => deleteMessageTimeout(chatId, message.message_id, 5000));
+                        .then((message) => messageId = message.message_id);
                 }
 
                 chatSession.pointPlayers[userId].bet *= 5;
             }
+
+            deleteMessageTimeout(chatId, messageId, 5000);
         }
 
         bot.editMessageText(`${betMessage(chatSession, members)}`, {
@@ -105,6 +117,9 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|thousand_bet)$/, (sessio
                 }, {
                     text: "Ставка (х5)",
                     callback_data: "points_xfive_bet"
+                }], [{
+                    text: "Ставка (+10000)",
+                    callback_data: "points_10t_bet"
                 }]]
             }
         });
