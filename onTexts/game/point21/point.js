@@ -57,6 +57,9 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                 }, {
                     text: "Ставка (х5)",
                     callback_data: "points_xfive_bet"
+                }], [{
+                    text: "Ставка (+10000)",
+                    callback_data: "points_10t_bet"
                 }]]
             }
         }).then(message => id = message.message_id);
