@@ -39,7 +39,6 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/,
         let messageId = null;
 
         let bet = chatSession.pointPlayers[userId].bet;
-        console.log(chatSession.pointPlayers.hasOwnProperty(userId), callback.message.chat.id);
         if (Object.values(chatSession.pointPlayers).length >= maxCount) {
             if (!chatSession.pointPlayers.hasOwnProperty(userId)) {
                 return sendMessage(callback.message.chat.id, `В игре уже максимальное количество участников.`)
