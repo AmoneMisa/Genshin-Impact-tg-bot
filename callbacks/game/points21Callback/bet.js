@@ -11,7 +11,7 @@ function getOffset() {
     return new Date().getTime() + 2 * 1000;
 }
 
-let maxCount = 1;
+let maxCount = 5;
 
 module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/, (session, callback) => {
     try {
