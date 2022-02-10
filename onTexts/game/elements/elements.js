@@ -53,6 +53,12 @@ module.exports = [[/(?:^|\s)\/elements\b/, async (msg) => {
                 }, {
                     text: "Ставка (х5)",
                     callback_data: "points_xfive_bet"
+                }], [{
+                    text: "Ставка All-in",
+                    callback_data: "points_allin_bet"
+                }, {
+                    text: "Ставка (+10000)",
+                    callback_data: "points_10t_bet"
                 }]]
             }
         }).then(message => id = message.message_id);

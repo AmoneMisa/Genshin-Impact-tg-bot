@@ -15,6 +15,13 @@ let maxCount = 4;
 
 module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/, (session, callback) => {
     try {
+        let chatSession = getChatSession(callback.message.chat.id);
+        let userId = callback.from.id;
+
+        if (!chatSession.pointPlayers[userId]) {
+            return ;
+        }
+
         let [remain] = getTime(session.pointPressButtonTimer);
 
         if (remain > 0) {
@@ -22,20 +29,10 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/,
         }
 
         const [, betType] = callback.data.match(/^points_(bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/);
-        let userId = callback.from.id;
+
+        let members = getMembers(callback.message.chat.id);
         let chatId = callback.message.chat.id;
         let gold = session.game.inventory.gold;
-        let chatSession = getChatSession(callback.message.chat.id);
-        let members = getMembers(callback.message.chat.id);
-
-        if (!chatSession.pointPlayers[userId]) {
-            chatSession.pointPlayers[userId] = {
-                bet: 0,
-                cards: [],
-                isPass: false
-            };
-        }
-
         let messageId = null;
 
         let bet = chatSession.pointPlayers[userId].bet;
@@ -102,7 +99,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet)$/,
 
         bot.editMessageText(`${betMessage(chatSession, members)}`, {
             chat_id: chatId,
-            message_id: callback.message.message_id,
+            message_id: chatSession.pointMessageId,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Ставка (+100)",

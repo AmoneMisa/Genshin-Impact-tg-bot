@@ -1,5 +1,5 @@
 const bot = require('../../../bot');
-const {myId, friendId} = require('../../../config');
+const getMembers = require('../../../functions/getMembers');
 const sendMessage = require('../../../functions/sendMessage');
 const {bosses} = require('../../../data');
 const debugMessage = require('../../../functions/debugMessage');
@@ -9,7 +9,8 @@ module.exports = [[/(?:^|\s)\/kill\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
-        if (msg.from.id !== myId && msg.from.id !== friendId) {
+        let members = getMembers(msg.chat.id);
+        if (members[msg.from.id].userChatData.status !== "administrator" && members[msg.from.id].userChatData.status !== "creator") {
             return;
         }
 

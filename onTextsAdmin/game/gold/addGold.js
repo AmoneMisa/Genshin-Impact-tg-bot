@@ -1,5 +1,4 @@
 const bot = require('../../../bot');
-const {myId, friendId} = require('../../../config');
 const sendMessage = require('../../../functions/sendMessage');
 const getMembers = require('../../../functions/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
@@ -9,11 +8,10 @@ module.exports = [[/(?:^|\s)\/add_gold\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
-        if (msg.from.id !== myId && msg.from.id !== friendId) {
+        let members = getMembers(msg.chat.id);
+        if (members[msg.from.id].userChatData.status !== "administrator" && members[msg.from.id].userChatData.status !== "creator") {
             return;
         }
-
-        let members = getMembers(msg.chat.id);
 
         let buttons = [];
         let tempArray = null;

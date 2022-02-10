@@ -37,6 +37,7 @@ bot.setMyCommands([
     {command: "chest", description: "Открыть сундук"},
     {command: "point", description: "Игра в 21 очко"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
+    {command: "admin_commands", description: "Список админ команд"},
 ], {
     scope: {type: "default"}
 });
