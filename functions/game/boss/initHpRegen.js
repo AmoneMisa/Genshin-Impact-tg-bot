@@ -22,7 +22,7 @@ module.exports = function (chatId, recovery) {
         sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
     }
 
-    if (boss.skill.effect === "hp_regen" && !boss.hpRegenIntervalId) {
+    if (boss.skill.effect === "hp_regen") {
         boss.hpRegenIntervalId = +setInterval(() => bossRegenHp(boss, chatId), 60 * 60 * 1000);
     }
 };
