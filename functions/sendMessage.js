@@ -1,8 +1,5 @@
-const bot = require('../bot');
+const retryBotRequest = require("./retryBotRequest");
 
 module.exports = function (chatId, text, form) {
-    return bot.sendMessage(chatId, text, form)
-        .then(msg => {
-            return msg;
-        });
+    return retryBotRequest(bot => bot.sendMessage(chatId, text, form));
 };

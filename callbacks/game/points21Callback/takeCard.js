@@ -18,6 +18,7 @@ module.exports = [["points_card", function (session, callback) {
         }
 
         getCard(chatSession, userId);
+        chatSession.pointGameSessionLastUpdateAt = new Date().getTime();
 
         let player = chatSession.pointPlayers[userId];
         let points = getPoints(player);

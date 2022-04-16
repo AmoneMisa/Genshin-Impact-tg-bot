@@ -24,7 +24,7 @@ module.exports = [["points_leave", async (session, callback) => {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
-                    text: "Учавствовать",
+                    text: "Участвовать",
                     callback_data: "points_enter"
                 }], [{
                     text: "Покинуть игру",

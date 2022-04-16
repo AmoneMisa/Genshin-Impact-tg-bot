@@ -18,13 +18,16 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         let id;
 
         if (chatSession.pointGameSessionIsStart) {
-            return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
-                .then(message => {
-                    deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
-                });
+            if (new Date().getTime() - chatSession.pointGameSessionLastUpdateAt <= 2 * 60 * 1000) {
+                return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
+                    .then(message => {
+                        deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
+                    });
+            }
         }
 
         chatSession.pointGameSessionIsStart = true;
+        chatSession.pointGameSessionLastUpdateAt = new Date().getTime();
 
         chatSession.pointPlayers = {
             bot: {
@@ -47,7 +50,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
-                    text: "Учавствовать",
+                    text: "Участвовать",
                     callback_data: "points_enter"
                 }], [{
                     text: "Покинуть игру",
