@@ -1,9 +1,5 @@
-const bot = require('../../../bot');
 const debugMessage = require('../../../functions/debugMessage');
 const sendMessage = require('../../../functions/sendMessage');
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const intel = require("intel");
-const log = intel.getLogger("slots");
 const retryBotRequest = require("../../../functions/retryBotRequest");
 const sendMessageWithDelete = require("../../../functions/sendMessageWithDelete");
 
@@ -42,6 +38,18 @@ module.exports = [[/(?:^|\s)\/slots\b/, async (msg, session) => {
                 }], [{
                     text: "Ставка (+10000)",
                     callback_data: "slots_10t_bet"
+                }, {
+                    text: "Ставка (x10)",
+                    callback_data: "slots_xten_bet"
+                }], [{
+                    text: "Ставка (x20)",
+                    callback_data: "slots_x20_bet"
+                }, {
+                    text: "Ставка (x50)",
+                    callback_data: "slots_x50_bet"
+                }], [{
+                    text: "Всё или ничего",
+                    callback_data: "slots_allin_bet"
                 }]]
             }
         });

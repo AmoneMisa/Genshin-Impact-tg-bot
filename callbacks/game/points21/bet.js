@@ -24,7 +24,7 @@ function errorMessage(chatId, errorCode = 0, messageId, username) {
 
 let maxCount = 4;
 
-module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xten_bet|allin_bet)$/, (session, callback) => {
+module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xten_bet|allin_bet|x20_bet|x50_bet)$/, (session, callback) => {
     try {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = callback.from.id;
@@ -39,7 +39,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xte
             return;
         }
 
-        const [, betType] = callback.data.match(/^points_(bet|double_bet|xfive_bet|10t_bet|thousand_bet|xten_bet|allin_bet)$/);
+        const [, betType] = callback.data.match(/^points_(bet|double_bet|xfive_bet|10t_bet|thousand_bet|xten_bet|allin_bet|x20_bet|x50_bet)$/);
 
         let members = getMembers(callback.message.chat.id);
         let chatId = callback.message.chat.id;
@@ -50,7 +50,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xte
         let bet = chatSession.pointPlayers[userId].bet;
         if (Object.values(chatSession.pointPlayers).length >= maxCount) {
             if (!chatSession.pointPlayers.hasOwnProperty(userId)) {
-                errorMessage(chatId, 3);
+               return errorMessage(chatId, 3);
             }
         }
 
@@ -106,6 +106,26 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xte
 
                 chatSession.pointPlayers[userId].bet *= 10;
             }
+        } else if (betType === "x20_bet") {
+            if (gold < bet * 20) {
+                return errorMessage(chatId, 0, messageId, username);
+            } else {
+                if (bet === 0) {
+                    return errorMessage(chatId, 1, messageId, username);
+                }
+
+                chatSession.pointPlayers[userId].bet *= 20;
+            }
+        } else if (betType === "x50_bet") {
+            if (gold < bet * 50) {
+                return errorMessage(chatId, 0, messageId, username);
+            } else {
+                if (bet === 0) {
+                    return errorMessage(chatId, 1, messageId, username);
+                }
+
+                chatSession.pointPlayers[userId].bet *= 50;
+            }
         } else if (betType === "allin_bet") {
             chatSession.pointPlayers[userId].bet = gold;
         }
@@ -133,6 +153,12 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xte
                 }, {
                     text: "Ставка (x10)",
                     callback_data: "points_xten_bet"
+                }],[{
+                    text: "Ставка (x20)",
+                    callback_data: "points_x20_bet"
+                }, {
+                    text: "Ставка (x50)",
+                    callback_data: "points_x50_bet"
                 }], [{
                     text: "Всё или ничего",
                     callback_data: "points_allin_bet"

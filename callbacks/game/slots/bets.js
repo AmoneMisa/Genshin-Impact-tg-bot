@@ -50,6 +50,18 @@ async function updateMessage(session, callback) {
             }], [{
                 text: "Ставка (+10000)",
                 callback_data: "slots_10t_bet"
+            }, {
+                text: "Ставка (x10)",
+                callback_data: "slots_xten_bet"
+            }], [{
+                text: "Ставка (x20)",
+                callback_data: "slots_x20_bet"
+            }, {
+                text: "Ставка (x50)",
+                callback_data: "slots_x50_bet"
+            }], [{
+                text: "Всё или ничего",
+                callback_data: "slots_allin_bet"
             }]]
         }
     }));
@@ -70,5 +82,17 @@ module.exports = [
     }],
     [/^slots_10t_bet$/, async function (session, callback) {
         await bet(session, callback, (oldBet) => oldBet + 10000);
+    }],
+    [/^slots_xten_bet$/, async function (session, callback) {
+        await bet(session, callback, (oldBet) => oldBet * 10);
+    }],
+    [/^slots_x20_bet$/, async function (session, callback) {
+        await bet(session, callback, (oldBet) => oldBet * 20);
+    }],
+    [/^slots_x50_bet$/, async function (session, callback) {
+        await bet(session, callback, (oldBet) => oldBet * 50);
+    }],
+    [/^slots_allin_bet$/, async function (session, callback) {
+        await bet(session, callback, (oldBet) => oldBet = session.game.inventory.gold);
     }],
 ];

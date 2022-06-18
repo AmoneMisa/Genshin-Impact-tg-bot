@@ -113,10 +113,16 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                             }], [{
                                 text: "Ставка (+10000)",
                                 callback_data: "points_10t_bet"
-                            },{
+                            }, {
                                 text: "Ставка (x10)",
                                 callback_data: "points_xten_bet"
                             }],[{
+                                text: "Ставка (x20)",
+                                callback_data: "points_x20_bet"
+                            }, {
+                                text: "Ставка (x50)",
+                                callback_data: "points_x50_bet"
+                            }], [{
                                 text: "Всё или ничего",
                                 callback_data: "points_allin_bet"
                             }]]
