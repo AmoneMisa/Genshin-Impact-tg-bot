@@ -1,9 +1,5 @@
-const intel = require("intel");
-const sendMessage = require('../../../functions/sendMessage');
 const retryBotRequest = require("../../../functions/retryBotRequest");
 const sendMessageWithDelete = require("../../../functions/sendMessageWithDelete");
-
-const log = intel.getLogger("slots.bets");
 
 async function bet(session, callback, calcFunc) {
     if (session.userChatData.user.username !== callback.from.username) {
