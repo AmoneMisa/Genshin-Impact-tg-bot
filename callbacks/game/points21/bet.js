@@ -111,7 +111,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xte
         }
         deleteMessageTimeout(chatId, messageId, 5000);
 
-        bot.editMessageText(`${betMessage(chatSession, members)}`, {
+        bot.editMessageText(`${betMessage(chatSession, members, 'pointPlayers')}`, {
             chat_id: chatId,
             message_id: chatSession.pointMessageId,
             reply_markup: {

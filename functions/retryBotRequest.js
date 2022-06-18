@@ -27,7 +27,9 @@ module.exports = async function retryBotRequest(request) {
             log.info(`Try: %s`, i);
             let retryAfter = getRetryAfter(e);
             log.info('Retry after: %s', retryAfter);
-            log.info('Body: %:2j', e.response.body);
+            if (e.response) {
+                log.info('Body: %:2j', e.response.body);
+            }
             await sleep(retryAfter * 1000);
         }
     }

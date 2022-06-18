@@ -5,6 +5,8 @@ const getChatSession = require('../../../functions/getChatSession');
 const validatePointSession = require('../../../functions/game/point21/validatePointSession');
 const checkAllPlayersPassed = require('../../../functions/game/point21/checkAllPlayersPassed');
 const endGame = require('../../../functions/game/point21/endGame');
+const endGameMessage = require('../../../functions/game/point21/endGameMessage');
+const endGameTimer = require('../../../functions/game/point21/endGameTimer');
 
 module.exports = [["points_pass", async (session, callback) => {
     try {
