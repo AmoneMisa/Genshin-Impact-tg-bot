@@ -17,10 +17,12 @@ module.exports = [["points_pass", async (session, callback) => {
             return;
         }
 
+        endGameTimer(chatSession, 20 * 1000, callback.message.chat.id);
+
         chatSession.pointPlayers[userId].isPass = true;
 
         if (checkAllPlayersPassed(chatSession)) {
-            endGame(chatSession, callback);
+            endGame(chatSession, callback.message.chat.id, callback.message.message_id);
             return;
         }
 

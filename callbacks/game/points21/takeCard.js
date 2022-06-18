@@ -19,6 +19,8 @@ module.exports = [["points_card", function (session, callback) {
             return;
         }
 
+        endGameTimer(chatSession, 20 * 1000, callback.message.chat.id);
+
         getCard(chatSession, userId);
         chatSession.pointGameSessionLastUpdateAt = new Date().getTime();
 
@@ -30,7 +32,7 @@ module.exports = [["points_card", function (session, callback) {
         }
 
         if (checkAllPlayersPassed(chatSession)) {
-            endGame(chatSession, callback);
+            endGame(chatSession, callback.message.chat.id, callback.message.message_id);
             return;
         }
 

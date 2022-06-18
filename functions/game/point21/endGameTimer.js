@@ -1,5 +1,4 @@
 const endGame = require('./endGame');
-const endGameMessage = require('./endGameMessage');
 
 let timeoutId;
 module.exports = function (chatSession, timer, chatId) {
@@ -8,8 +7,7 @@ module.exports = function (chatSession, timer, chatId) {
     }
 
     function callEndGame() {
-        endGame(chatSession);
-        endGameMessage(chatSession, chatId, null, false);
+        endGame(chatSession, chatId, null, false);
     }
 
     timeoutId = setTimeout(() => callEndGame(), timer);

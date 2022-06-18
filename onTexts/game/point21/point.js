@@ -6,6 +6,7 @@ const pointMessage = require('../../../functions/game/point21/pointMessage');
 const betMessage = require('../../../functions/game/point21/betMessage');
 const gameStatusMessage = require('../../../functions/game/point21/gameStatusMessage');
 const getCard = require('../../../functions/game/point21/getCard');
+const endGameTimer = require('../../../functions/game/point21/endGameTimer');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/debugMessage');
 
@@ -15,7 +16,6 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         let chatSession = getChatSession(msg.chat.id);
         let members = getMembers(msg.chat.id);
         let userId = session.userChatData.user.id;
-        let id;
 
         if (chatSession.pointGameSessionIsStart) {
             if (new Date().getTime() - chatSession.pointGameSessionLastUpdateAt <= 2 * 60 * 1000) {
@@ -66,6 +66,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
             }
 
             chatSession.pointIsStart = true;
+            endGameTimer(chatSession, 20 * 1000, msg.chat.id);
 
             return sendMessage(msg.chat.id, `Игра началась. Ставки больше не принимаются.`)
                 .then(message => {
@@ -93,7 +94,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                 .then(message => {
                     deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
                 }).then(() => {
-                    bot.editMessageText(betMessage(chatSession, members), {
+                    bot.editMessageText(betMessage(chatSession, members, 'pointPlayers'), {
                         chat_id: msg.chat.id,
                         message_id: chatSession.pointMessageId,
                         reply_markup: {
