@@ -3,6 +3,7 @@ const fs = require('fs');
 let sessions;
 let titles;
 let bosses;
+let trustedChats;
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -25,9 +26,29 @@ try {
     bosses = {};
 }
 
+try {
+    let trustedChatsJson = fs.readFileSync("./trustedChats.json");
+    trustedChats = JSON.parse(trustedChatsJson);
+} catch (e) {
+    trustedChats = [];
+}
+
+function updTrustedChats() {
+    let _trustedChats;
+    try {
+        let trustedChatsJson = fs.readFileSync("./trustedChats.json");
+        _trustedChats = JSON.parse(trustedChatsJson);
+    } catch (e) {
+        _trustedChats = [];
+    }
+    trustedChats.splice(0, trustedChats.length, ..._trustedChats);
+}
+
 module.exports = {
     chatId: null,
     sessions,
     titles,
-    bosses
+    bosses,
+    trustedChats,
+    updTrustedChats
 };

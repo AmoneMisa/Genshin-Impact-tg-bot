@@ -1,10 +1,6 @@
-const intel = require("intel");
 const sendMessage = require('../../../functions/sendMessage');
-const bot = require("../../../bot");
 const retryBotRequest = require("../../../functions/retryBotRequest");
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-
-const log = intel.getLogger("slots.startGame");
 
 module.exports = [
     [/^slots_start_game$/, async function (session, callback) {

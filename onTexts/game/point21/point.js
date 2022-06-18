@@ -88,7 +88,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         }
 
         function startBet() {
-            setTimeout(() => startGame(), 40 * 1000);
+            setTimeout(() => startGame(), 25 * 1000);
             return sendMessage(msg.chat.id, `Делайте ставки.`)
                 .then(message => {
                     deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
@@ -112,13 +112,19 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                             }], [{
                                 text: "Ставка (+10000)",
                                 callback_data: "points_10t_bet"
+                            },{
+                                text: "Ставка (x10)",
+                                callback_data: "points_xten_bet"
+                            }],[{
+                                text: "Всё или ничего",
+                                callback_data: "points_allin_bet"
                             }]]
                         }
                     });
                 });
         }
 
-        setTimeout(() => startBet(), 20 * 1000);
+        setTimeout(() => startBet(), 15 * 1000);
     } catch (e) {
         debugMessage(`Command: /point\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;

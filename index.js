@@ -2,8 +2,7 @@ const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
 const bot = require('./bot');
-const trustedChats = require('./trustedChats');
-const {sessions, titles, bosses} = require('./data');
+const {sessions, titles, bosses, trustedChats} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
@@ -36,6 +35,7 @@ bot.setMyCommands([
     {command: "send_gold", description: "Перевести золото"},
     {command: "chest", description: "Открыть сундук"},
     {command: "point", description: "Игра в 21 очко"},
+    {command: "slots", description: "Слоты"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
 ], {
