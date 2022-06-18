@@ -55,53 +55,53 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xte
         }
 
         if (chatSession.pointIsStart) {
-            errorMessage(chatId, 2);
+            return errorMessage(chatId, 2);
         }
 
         if (betType === "bet") {
             if (gold < bet + 100) {
-                errorMessage(chatId, 0, messageId, username);
+                return errorMessage(chatId, 0, messageId, username);
             } else {
                 chatSession.pointPlayers[userId].bet += 100;
             }
         } else if (betType === "double_bet") {
             if (gold < bet * 2) {
-                errorMessage(chatId, 0, messageId, username);
+                return errorMessage(chatId, 0, messageId, username);
             } else {
                 if (bet === 0) {
-                    errorMessage(chatId, 1, messageId, username);
+                    return errorMessage(chatId, 1, messageId, username);
                 }
 
                 chatSession.pointPlayers[userId].bet *= 2;
             }
         } else if (betType === "10t_bet") {
             if (gold < bet + 10000) {
-                errorMessage(chatId, 0, messageId, username);
+                return errorMessage(chatId, 0, messageId, username);
             }
 
             chatSession.pointPlayers[userId].bet += 10000;
         } else if (betType === "thousand_bet") {
             if (gold < bet + 1000) {
-                errorMessage(chatId, 0, messageId, username);
+                return errorMessage(chatId, 0, messageId, username);
             }
 
             chatSession.pointPlayers[userId].bet += 1000;
         } else if (betType === "xfive_bet") {
             if (gold < bet * 5) {
-                errorMessage(chatId, 0, messageId, username);
+                return errorMessage(chatId, 0, messageId, username);
             } else {
                 if (bet === 0) {
-                    errorMessage(chatId, 1, messageId, username);
+                    return errorMessage(chatId, 1, messageId, username);
                 }
 
                 chatSession.pointPlayers[userId].bet *= 5;
             }
         } else if (betType === "xten_bet") {
             if (gold < bet * 10) {
-                errorMessage(chatId, 0, messageId, username);
+                return errorMessage(chatId, 0, messageId, username);
             } else {
                 if (bet === 0) {
-                    errorMessage(chatId, 1, messageId, username);
+                    return errorMessage(chatId, 1, messageId, username);
                 }
 
                 chatSession.pointPlayers[userId].bet *= 10;
