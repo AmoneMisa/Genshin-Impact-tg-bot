@@ -14,6 +14,12 @@ module.exports = async function (chatId, userId) {
 
     if (!members[userId].game) {
         members[userId].game = {
+            dice: {
+                isStart: false,
+                bet: 0,
+                dice: 0,
+                counter: 0
+            },
             stats: {
                 currentExp: 0,
                 needExp: 1500,

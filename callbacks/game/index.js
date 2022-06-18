@@ -7,6 +7,7 @@ const points21 = require('./points21');
 const swordCallback = require('./sword');
 const player = require('./player');
 const slots = require('./slots');
+const dice = require('./dice');
 
 module.exports = [
     ...bossCallback,
@@ -18,4 +19,5 @@ module.exports = [
     ...points21,
     ...player,
     ...slots,
+    ...dice,
 ];
