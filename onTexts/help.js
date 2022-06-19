@@ -7,10 +7,28 @@ const sendMessage = require('../functions/sendMessage');
 module.exports = [[/(?:^|\s)\/help\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        sendMessage(msg.chat.id, `${dictionary["ru"].help}`, {
+        sendMessage(msg.chat.id, `${dictionary["ru"].help.main}`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
+                    text: "Миниигры",
+                    callback_data: "help_minigames"
+                }, {
+                    text: "Босс",
+                    callback_data: "help_boss"
+                }], [{
+                    text: "Команда mute",
+                    callback_data: "help_mute"
+                }, {
+                    text: "Команда menu",
+                    callback_data: "help_menu"
+                }], [{
+                    text: "Админ команды",
+                    callback_data: "help_admin"
+                }, {
+                    text: "Связь с разработчиком",
+                    callback_data: "help_contact"
+                }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
                 }]]
