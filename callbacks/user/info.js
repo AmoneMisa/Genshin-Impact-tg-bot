@@ -15,7 +15,7 @@ module.exports = [["info", function (session, callback) {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons("info_", buttons, 1)
+                ...controlButtons("info", buttons, 1)
             ]
         }
     });

@@ -14,7 +14,7 @@ module.exports = function (name, buttonRows, page) {
     if (currentPage !== firstPage) {
         controlButtons.push({
             text: buttonsDictionary["ru"].prev,
-            callback_data: `${name}${currentPage - 1}`,
+            callback_data: `${name}_${currentPage - 1}`,
         });
     }
 
