@@ -26,7 +26,7 @@ module.exports = [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons(`receive_chest_timer.${callback.message.chat.id}`, buttons, page)
+                ...controlButtons("receive_chest_timer", buttons, page)
             ]
         }
     });

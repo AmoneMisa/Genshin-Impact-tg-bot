@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/add_experience\b/, (msg) => {
         sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить опыта", {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons(`add_experience.${msg.chat.id}`, buttons, 1)
+                inline_keyboard: controlButtons("add_experience", buttons, 1)
             }
         });
     } catch (e) {

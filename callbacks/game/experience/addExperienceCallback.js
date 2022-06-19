@@ -38,7 +38,7 @@ module.exports = [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (ses
     let [, page] = callback.data.match(/^add_experience_([^.]+)$/);
     page = parseInt(page);
 
-    let buttons = buildKeyboard(callback.message.chat.id, 'add_experience');
+    let buttons = buildKeyboard(callback.message.chat.id, `add_experience.${callback.message.chat.id}`);
 
     return bot.editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,

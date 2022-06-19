@@ -17,7 +17,7 @@ module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function
     let [, page] = callback.data.match(/^receive_sword_timer_([^.]+)$/);
     page = parseInt(page);
 
-    let buttons = buildKeyboard(callback.message.chat.id, 'receive_sword_timer');
+    let buttons = buildKeyboard(callback.message.chat.id, `receive_sword_timer.${callback.message.chat.id}`);
 
     return bot.editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,

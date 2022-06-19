@@ -36,7 +36,7 @@ module.exports = [[/^add_crystals\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
     let [, page] = callback.data.match(/^add_crystals_([^.]+)$/);
     page = parseInt(page);
 
-    let buttons = buildKeyboard(callback.message.chat.id, 'add_crystals');
+    let buttons = buildKeyboard(callback.message.chat.id, `add_crystals.${callback.message.chat.id}`);
 
     return bot.editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,

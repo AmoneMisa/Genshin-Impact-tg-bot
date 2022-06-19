@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/receive_user_chest_timer\b/, (msg) => {
         sendMessage(msg.from.id, "Выбери, кому ты хочешь обнулить таймер сундука", {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons(`receive_chest_timer.${msg.chat.id}`, buttons, 1)
+                inline_keyboard: controlButtons("receive_chest_timer", buttons, 1)
             }
         });
     } catch (e) {

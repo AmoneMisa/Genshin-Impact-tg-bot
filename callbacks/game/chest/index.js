@@ -1,5 +1,5 @@
 const openChest = require('./openChest');
-const setUserChestTimer = require('./setUserChestTimer');
+const setUserChestTimer = require('./receiveUserChestTimer');
 
 module.exports = [
     ...openChest,

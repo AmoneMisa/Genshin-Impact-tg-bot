@@ -1,3 +1,3 @@
-const setUserSwordTimer = require('./setUserSwordTimer');
+const setUserSwordTimer = require('./receiveUserSwordTimer');
 
 module.exports = [...setUserSwordTimer];
