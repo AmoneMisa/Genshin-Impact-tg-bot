@@ -30,7 +30,7 @@ module.exports = [[/^dice_pull$/, async function (session, callback) {
             let modifier = 1.2;
             sendPrize(session, modifier);
             bot.deleteMessage(chatId, callback.message.message_id);
-            sendMessageWithDelete(chatId, `@${session.userChatData.user.username}, ты выиграл!\nСтавка: ${session.game.dice.bet}\nВыигрышь: ${Math.round(session.game.dice.bet * modifier)}\nВыигрышное число: ${session.game.dice.dice}`, {}, 7000);
+            sendMessageWithDelete(chatId, `@${session.userChatData.user.username}, ты выиграл!\nСтавка: ${session.game.dice.bet}\nВыигрыш: ${Math.round(session.game.dice.bet * modifier)}\nВыигрышное число: ${session.game.dice.dice}`, {}, 7000);
         } else {
             bot.deleteMessage(chatId, callback.message.message_id);
             sendMessageWithDelete(chatId, `@${session.userChatData.user.username}, ты проиграл. Твоя сумма кубиков: ${session.game.dice.dice}. Ставка: ${session.game.dice.bet}`, {}, 7000);
