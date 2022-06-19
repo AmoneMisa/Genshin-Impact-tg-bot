@@ -21,7 +21,7 @@ module.exports = [[/(?:^|\s)\/help\b/, async (msg) => {
                     callback_data: "help_mute"
                 }, {
                     text: "Команда menu",
-                    callback_data: "help_menu"
+                    callback_data: "help_form"
                 }], [{
                     text: "Админ команды",
                     callback_data: "help_admin"

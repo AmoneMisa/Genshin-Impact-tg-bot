@@ -16,10 +16,9 @@ const initHpRegen = require('./functions/game/boss/initHpRegen');
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
-    {command: "info", description: "Инфо о группе"},
-    {command: "help", description: "Помощь (много буков)"},
-    {command: "help_menu", description: "Помощь по анкете (команда /menu)"},
-    {command: "menu", description: "Заполнить анкету о себе"},
+    {command: "info", description: "Анкеты группы"},
+    {command: "help", description: "Помощь"},
+    {command: "form", description: "Заполнить анкету о себе"},
     {command: "title", description: "Получить случайный титул"},
     {command: "titles", description: "Список титулов группы"},
     {command: "sword", description: "Увеличить свой меч"},
@@ -36,6 +35,7 @@ bot.setMyCommands([
     {command: "chest", description: "Открыть сундук"},
     {command: "point", description: "Игра в 21 очко"},
     {command: "slots", description: "Слоты"},
+    {command: "dice", description: "Кубики"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
 ], {

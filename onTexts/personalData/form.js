@@ -6,7 +6,7 @@ const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
 const setButtons = require('../../functions/menu/setButtons');
 const commands = require('../../dictionaries/commands');
 
-module.exports = [[/(?:^|\s)\/menu/, async (msg, session) => {
+module.exports = [[/(?:^|\s)\/form/, async (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let buttons = setButtons(commands);
@@ -25,7 +25,7 @@ module.exports = [[/(?:^|\s)\/menu/, async (msg, session) => {
             deleteMessageTimeout(msg.chat.id, message.message_id, 10000);
         })
     } catch (e) {
-        debugMessage(`Command: /menu\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /form\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

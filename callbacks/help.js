@@ -18,7 +18,7 @@ module.exports = [["help", function (session, callback) {
                 callback_data: "help_mute"
             }, {
                 text: "Команда menu",
-                callback_data: "help_menu"
+                callback_data: "help_form"
             }], [{
                 text: "Админ команды",
                 callback_data: "help_admin"
@@ -109,14 +109,14 @@ module.exports = [["help", function (session, callback) {
             }]]
         }
     });
-}], ["help_menu", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.menu}`, {
+}], ["help_form", function (session, callback) {
+    bot.editMessageText(`${dictionary.ru.help.form}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
             inline_keyboard: [[{
                 text: "Команды анкеты",
-                callback_data: "help_menu_deep"
+                callback_data: "help_form_deep"
             }], [{
                 text: "Назад",
                 callback_data: "help"
@@ -126,14 +126,14 @@ module.exports = [["help", function (session, callback) {
             }]]
         }
     });
-}], ["help_menu_deep", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.helpMenu}`, {
+}], ["help_form_deep", function (session, callback) {
+    bot.editMessageText(`${dictionary.ru.help.helpForm}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
             inline_keyboard: [[{
                 text: "Назад",
-                callback_data: "help_menu"
+                callback_data: "help_form"
             }], [{
                 text: "Закрыть",
                 callback_data: "close"
