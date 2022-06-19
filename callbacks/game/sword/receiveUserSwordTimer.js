@@ -13,11 +13,11 @@ module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function
     } catch (e) {
         console.error(e);
     }
-}], [/^receive_sword_timer_[^.]+$/, function (session, callback) {
-    let [, page] = callback.data.match(/^receive_sword_timer_([^.]+)$/);
+}], [/^receive_sword_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
+    let [, chatId, page] = callback.data.match(/^receive_sword_timer\.([\-0-9]+)_([^.]+)$/);
     page = parseInt(page);
 
-    let buttons = buildKeyboard(callback.message.chat.id, `receive_sword_timer.${callback.message.chat.id}`);
+    let buttons = buildKeyboard(chatId, `receive_sword_timer.${chatId}`);
 
     return bot.editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,
@@ -25,7 +25,7 @@ module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons("receive_sword_timer", buttons, page)
+                ...controlButtons(`receive_sword_timer.${chatId}`, buttons, page)
             ]
         }
     });

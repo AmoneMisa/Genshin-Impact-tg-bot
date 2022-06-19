@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/receive_user_sword_timer\b/, (msg) => {
         sendMessage(msg.from.id, "Выбери, кому ты хочешь обнулить таймер меча", {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons("receive_sword_timer", buttons, 1)
+                inline_keyboard: controlButtons(`receive_sword_timer.${msg.chat.id}`, buttons, 1)
             }
         });
     } catch (e) {

@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/add_crystals\b/, (msg) => {
         sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить кристаллов", {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons("add_crystals", buttons, 1)
+                inline_keyboard: controlButtons(`add_crystals.${msg.chat.id}`, buttons, 1)
             }
         });
     } catch (e) {

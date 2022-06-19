@@ -14,11 +14,11 @@ module.exports = [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function
     } catch (e) {
         console.error(e);
     }
-}], [/^receive_chest_timer_[^.]+$/, function (session, callback) {
-    let [, page] = callback.data.match(/^receive_chest_timer_([^.]+)$/);
+}], [/^receive_chest_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
+    let [, chatId, page] = callback.data.match(/^receive_chest_timer\.([\-0-9]+)_([^.]+)$/);
     page = parseInt(page);
 
-    let buttons = buildKeyboard(callback.message.chat.id, `receive_chest_timer.${callback.message.chat.id}`);
+    let buttons = buildKeyboard(chatId, `receive_chest_timer.${chatId}`);
 
     return bot.editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,
@@ -26,7 +26,7 @@ module.exports = [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons("receive_chest_timer", buttons, page)
+                ...controlButtons(`receive_chest_timer.${chatId}`, buttons, page)
             ]
         }
     });
