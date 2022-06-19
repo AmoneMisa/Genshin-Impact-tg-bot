@@ -1,6 +1,8 @@
 const sendMessage = require("../../../functions/sendMessage");
 const getSession = require("../../../functions/getSession");
 const bot = require('../../../bot');
+const controlButtons = require('../../../functions/controlButtons');
+const buildKeyboard = require('../../../functions/buildKeyboard');
 
 module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     try {

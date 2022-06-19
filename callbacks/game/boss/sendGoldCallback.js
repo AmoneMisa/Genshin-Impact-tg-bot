@@ -1,4 +1,6 @@
 const sendMessage = require('../../../functions/sendMessage');
+const buildKeyboard = require('../../../functions/buildKeyboard');
+const controlButtons = require('../../../functions/controlButtons');
 const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
 const getSession = require('../../../functions/getSession');

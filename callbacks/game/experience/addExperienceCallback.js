@@ -3,6 +3,8 @@ const debugMessage = require("../../../functions/debugMessage");
 const getSession = require("../../../functions/getSession");
 const setLevel = require('../../../functions/game/player/setLevel');
 const bot = require('../../../bot');
+const controlButtons = require('../../../functions/controlButtons');
+const buildKeyboard = require('../../../functions/buildKeyboard');
 
 module.exports = [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     try {
