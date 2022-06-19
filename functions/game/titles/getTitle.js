@@ -5,7 +5,7 @@ const titlesWith = require('../../../dictionaries/titlesWith');
 const titlesWhere = require('../../../dictionaries/titlesWhere');
 const titlesWhereFemale = require('../../../dictionaries/titlesWhere_female');
 const {titles} = require('../../../data');
-const isFemale = require('../../menu/isFemale');
+const isFemale = require('../../form/isFemale');
 const getRandom = require('../../getRandom');
 
 module.exports = function (chatId, session) {

@@ -4,12 +4,14 @@ const sendMessage = require('../../functions/sendMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 const getMembers = require('../../functions/getMembers');
 const getChatSession = require('../../functions/getChatSession');
+const buildKeyboard = require('../../functions/buildKeyboard');
+const controlButtons = require('../../functions/controlButtons');
 
 module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
     try {
         let chatSession = getChatSession(msg.chat.id);
 
-        if (chatSession.pointPlayers && chatSession.pointPlayers[session.userChatData.user.id]) {
+        if (chatSession.pointPlayers && chatSession.pointPlayers[session.userChatData.user.id] || session.game.dice.isStart || session.game.slots.state === 'bets') {
             sendMessage(msg.chat.id, "Ты не можешь переводить золото, играя в игру.");
             return;
         }
@@ -33,37 +35,13 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
             return;
         }
 
-        function buildButtons() {
-            let buttons = [];
-            let tempArray = [];
-            let button = {};
-            let i = 0;
-            for (let _user of Object.values(usersList)) {
-
-                if (i % 3 === 0) {
-                    tempArray = [];
-                    buttons.push(tempArray);
-                }
-                button.text = `${_user.userChatData.user.first_name}`;
-                button.callback_data = `send_gold_recipient.${_user.userChatData.user.id}`;
-
-                tempArray.push(button);
-                button = {};
-                i++;
-            }
-
-            return buttons;
-        }
+        let buttons = buildKeyboard(msg.chat.id, "send_gold_recipient");
 
         sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери, кому хочешь перевести золото.`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,
-                inline_keyboard: [
-                    ...buildButtons(), [{
-                        text: buttonsDictionary["ru"].close,
-                        callback_data: "close"
-                    }]]
+                inline_keyboard: controlButtons("send_gold_recipient", buttons, 1)
             }
         })
     } catch (e) {

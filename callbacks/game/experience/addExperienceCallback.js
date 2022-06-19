@@ -32,4 +32,20 @@ module.exports = [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (ses
         debugMessage(`Command: add_experience - callback\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
         throw e;
     }
+}], [/^add_experience_[^.]+$/, function (session, callback) {
+    let [, page] = callback.data.match(/^add_experience_([^.]+)$/);
+    page = parseInt(page);
+
+    let buttons = buildKeyboard(callback.message.chat.id, 'add_experience');
+
+    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [
+                ...controlButtons("add_experience", buttons, page)
+            ]
+        }
+    });
 }]];

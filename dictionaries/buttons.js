@@ -15,6 +15,8 @@ module.exports = {
         menu: "Меню",
         info: "Информация о группе",
         personal_info: "Информация о себе",
+        prev: "Пред.",
+        next: "След."
     },
     "en": {
         language: "Language",

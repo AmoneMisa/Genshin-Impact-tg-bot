@@ -30,4 +30,20 @@ module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, 
     } catch (e) {
         console.error(e);
     }
+}], [/^add_gold_[^.]+$/, function (session, callback) {
+    let [, page] = callback.data.match(/^add_gold_([^.]+)$/);
+    page = parseInt(page);
+
+    let buttons = buildKeyboard(callback.message.chat.id, 'add_gold');
+
+    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [
+                ...controlButtons("add_gold", buttons, page)
+            ]
+        }
+    });
 }]];

@@ -55,9 +55,9 @@ module.exports = {
             adminCommands: "У админов есть свои комманды, чтобы как-то влиять на игроков.\nОдни дают ресурсы, другие перезапускают игры.\nУвидеть весь список команд можно командой /admin_commands"
             }
     }, "en": {
-        index: "Pick menu",
+        index: "Pick form",
         info: {
-            category: "Pick the menu item that interested you"
+            category: "Pick the form item that interested you"
         }
     }
 };

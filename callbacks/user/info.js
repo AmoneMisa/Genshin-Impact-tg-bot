@@ -1,39 +1,21 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
-const sendMessage = require('../../functions/sendMessage');
+const buildKeyboard = require('../../functions/buildKeyboard');
+const controlButtons = require('../../functions/controlButtons');
 const translation = require('../../dictionaries/translate');
 const userTemplate = require('../../templates/userTemplate');
 const getMembers = require('../../functions/getMembers');
+const bot = require('../../bot');
 
 module.exports = [["info", function (session, callback) {
-    function buttonsTemplate() {
-        let buttons = [];
-        let tempArray = null;
-        let i = 0;
-        let members = getMembers(callback.message.chat.id);
+    let buttons = buildKeyboard(callback.message.chat.id, 'info');
 
-        for (let key of Object.keys(members)) {
-            let member = members[key];
-            if (i % 3 === 0) {
-                tempArray = [];
-                buttons.push(tempArray);
-            }
-            tempArray.push({text: member.userChatData.user.first_name, callback_data: `info.${key}`});
-            i++;
-        }
-
-        return buttons;
-    }
-
-    let buttons = buttonsTemplate();
-
-    return sendMessage(callback.message.chat.id, `Выбери интересующего тебя участника`, {
+    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...buttons, [{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]
+                ...controlButtons("info_", buttons, 1)
             ]
         }
     });
@@ -58,7 +40,7 @@ module.exports = [["info", function (session, callback) {
         str += "\n\n";
 
         if (!str.trim().length) {
-            str += "Ещё нет никакой информации об этом пользователе. Он может заполнить её через бота командой /menu"
+            str += "Ещё нет никакой информации об этом пользователе. Он может заполнить её через бота командой /form"
         }
         return str;
     }
@@ -72,13 +54,34 @@ module.exports = [["info", function (session, callback) {
         }
     }
 
-    sendMessage(callback.message.chat.id, formatMessage(currentUser), {
+    bot.editMessageText(formatMessage(currentUser), {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "info"
+            }, {
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]
+        }
+    });
+}], [/^info_[^.]+$/, function (session, callback) {
+    let [, page] = callback.data.match(/^info_([^.]+)$/);
+    page = parseInt(page);
+
+    let buttons = buildKeyboard(callback.message.chat.id, 'info');
+
+    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [
+                ...controlButtons("info", buttons, page)
+            ]
         }
     });
 }]];

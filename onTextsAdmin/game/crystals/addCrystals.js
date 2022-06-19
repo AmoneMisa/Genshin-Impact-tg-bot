@@ -1,8 +1,9 @@
 const bot = require('../../../bot');
 const sendMessage = require('../../../functions/sendMessage');
 const getMembers = require('../../../functions/getMembers');
-const buttonsDictionary = require('../../../dictionaries/buttons');
 const debugMessage = require('../../../functions/debugMessage');
+const buildKeyboard = require('../../../functions/buildKeyboard');
+const controlButtons = require('../../../functions/controlButtons');
 
 module.exports = [[/(?:^|\s)\/add_crystals\b/, (msg) => {
     try {
@@ -13,30 +14,12 @@ module.exports = [[/(?:^|\s)\/add_crystals\b/, (msg) => {
             return;
         }
 
-        let buttons = [];
-        let tempArray = null;
-        let i = 0;
-
-        for (let key of Object.keys(members)) {
-            if (i % 3 === 0) {
-                tempArray = [];
-                buttons.push(tempArray);
-            }
-            tempArray.push({
-                text: members[key].userChatData.user.first_name,
-                callback_data: `add_crystals.${msg.chat.id}.${key}`
-            });
-            i++;
-        }
+        let buttons = buildKeyboard(msg.chat.id, `add_crystals.${msg.chat.id}`);
 
         sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить кристаллов", {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: [
-                    ...buttons, [{
-                        text: buttonsDictionary["ru"].close,
-                        callback_data: "close"
-                    }]]
+                inline_keyboard: controlButtons(`add_crystals.${msg.chat.id}`, buttons, 1)
             }
         });
     } catch (e) {

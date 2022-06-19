@@ -14,7 +14,7 @@ module.exports = [["personal_info", function (session, callback) {
         str += "\n\n";
 
         if (!str.trim().length) {
-            str = `@${session.userChatData.user.username}, ещё нет никакой информации о тебе. Заполни её через бота командой /menu`
+            str = `@${session.userChatData.user.username}, ещё нет никакой информации о тебе. Заполни её через бота командой /form`
         }
         return str;
     }

@@ -30,4 +30,20 @@ module.exports = [[/^add_crystals\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
     } catch (e) {
         console.error(e);
     }
+}], [/^add_crystals_[^.]+$/, function (session, callback) {
+    let [, page] = callback.data.match(/^add_crystals_([^.]+)$/);
+    page = parseInt(page);
+
+    let buttons = buildKeyboard(callback.message.chat.id, 'add_crystals');
+
+    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [
+                ...controlButtons("add_crystals", buttons, page)
+            ]
+        }
+    });
 }]];

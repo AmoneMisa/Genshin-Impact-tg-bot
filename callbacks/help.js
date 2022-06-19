@@ -17,7 +17,7 @@ module.exports = [["help", function (session, callback) {
                 text: "Команда mute",
                 callback_data: "help_mute"
             }, {
-                text: "Команда menu",
+                text: "Команда form",
                 callback_data: "help_form"
             }], [{
                 text: "Админ команды",

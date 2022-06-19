@@ -1,10 +1,11 @@
 const bot = require('../../../bot');
 const sendMessage = require('../../../functions/sendMessage');
 const getMembers = require('../../../functions/getMembers');
-const buttonsDictionary = require('../../../dictionaries/buttons');
 const debugMessage = require('../../../functions/debugMessage');
+const buildKeyboard = require('../../../functions/buildKeyboard');
+const controlButtons = require('../../../functions/controlButtons');
 
-module.exports = [[/(?:^|\s)\/set_user_sword_timer\b/, (msg) => {
+module.exports = [[/(?:^|\s)\/receive_user_sword_timer\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
@@ -13,34 +14,16 @@ module.exports = [[/(?:^|\s)\/set_user_sword_timer\b/, (msg) => {
             return;
         }
 
-        let buttons = [];
-        let tempArray = null;
-        let i = 0;
+        let buttons = buildKeyboard(msg.chat.id, `receive_sword_timer.${msg.chat.id}`);
 
-        for (let key of Object.keys(members)) {
-            if (i % 3 === 0) {
-                tempArray = [];
-                buttons.push(tempArray);
-            }
-            tempArray.push({
-                text: members[key].userChatData.user.first_name,
-                callback_data: `set_timer.${msg.chat.id}.${key}`
-            });
-            i++;
-        }
-
-        sendMessage(msg.from.id, "Выбери, кому ты хочешь обнулить таймер", {
+        sendMessage(msg.from.id, "Выбери, кому ты хочешь обнулить таймер меча", {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: [
-                    ...buttons, [{
-                        text: buttonsDictionary["ru"].close,
-                        callback_data: "close"
-                    }]]
+                inline_keyboard: controlButtons(`receive_sword_timer.${msg.chat.id}`, buttons, 1)
             }
         });
     } catch (e) {
-        debugMessage(`Command: /set_user_sword_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: /receive_user_sword_timer\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

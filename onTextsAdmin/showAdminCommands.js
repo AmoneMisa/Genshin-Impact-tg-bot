@@ -12,12 +12,12 @@ module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
 
             bot.deleteMessage(msg.chat.id, msg.message_id);
             sendMessage(msg.from.id, "/kill - Убить босса\n" +
-                "/set_user_chest_timer - Сбросить таймер сундучка для пользователя\n" +
+                "/receive_user_chest_timer - Сбросить таймер сундучка для пользователя\n" +
                 "/add_crystals - Добавить кристаллов пользователю\n" +
                 "/add_experience - Добавить опыт пользователю\n" +
                 "/add_gold - Добавить золота пользователю\n" +
                 "/reset_point_game - Сбросить игру в очко\n" +
-                "/set_user_sword_timer - Сбросить таймер меча для пользователя\n"
+                "/receive_user_sword_timer - Сбросить таймер меча для пользователя"
             );
 
         } catch (e) {

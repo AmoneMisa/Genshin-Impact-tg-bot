@@ -3,7 +3,7 @@ const debugMessage = require('../../functions/debugMessage');
 const dictionary = require('../../dictionaries/main');
 const sendMessage = require('../../functions/sendMessage');
 const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
-const setButtons = require('../../functions/menu/setButtons');
+const setButtons = require('../../functions/form/setButtons');
 const commands = require('../../dictionaries/commands');
 
 module.exports = [[/(?:^|\s)\/form/, async (msg, session) => {

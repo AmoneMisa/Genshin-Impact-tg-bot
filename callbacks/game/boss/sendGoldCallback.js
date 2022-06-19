@@ -42,4 +42,20 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
     }).catch(e => {
         console.error(e);
     });
+}], [/^send_gold_recipient_[^.]+$/, function (session, callback) {
+    let [, page] = callback.data.match(/^send_gold_recipient_([^.]+)$/);
+    page = parseInt(page);
+
+    let buttons = buildKeyboard(callback.message.chat.id, 'send_gold_recipient');
+
+    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [
+                ...controlButtons("send_gold_recipient", buttons, page)
+            ]
+        }
+    });
 }]];
