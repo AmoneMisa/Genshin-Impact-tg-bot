@@ -12,7 +12,7 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
         let chatSession = getChatSession(msg.chat.id);
 
         if (chatSession.pointPlayers && chatSession.pointPlayers[session.userChatData.user.id] ||
-            session.game.dice.isStart ||
+            (session.game.hasOwnProperty('dice') && session.game.dice.hasOwnProperty('isStart') && session.game.dice.isStart) ||
             (session.game.hasOwnProperty("slots") && session.game.slots.hasOwnProperty("state") && session.game.slots.state === 'bets')) {
             sendMessage(msg.chat.id, "Ты не можешь переводить золото, играя в игру.");
             return;
