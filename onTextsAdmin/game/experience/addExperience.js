@@ -1,16 +1,15 @@
 const bot = require('../../../bot');
 const sendMessage = require('../../../functions/sendMessage');
-const getMembers = require('../../../functions/getMembers');
 const debugMessage = require('../../../functions/debugMessage');
 const buildKeyboard = require('../../../functions/buildKeyboard');
 const controlButtons = require('../../../functions/controlButtons');
+const getMemberStatus = require("../../../functions/getMemberStatus");
 
 module.exports = [[/(?:^|\s)\/add_experience\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
-        let members = getMembers(msg.chat.id);
-        if (members[msg.from.id].userChatData.status !== "administrator" && members[msg.from.id].userChatData.status !== "creator") {
+        if (!getMemberStatus(msg.chat.id, msg.from.id)) {
             return;
         }
 

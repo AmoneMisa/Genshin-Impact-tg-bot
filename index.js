@@ -16,26 +16,10 @@ const initHpRegen = require('./functions/game/boss/initHpRegen');
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
-    {command: "info", description: "Анкеты группы"},
     {command: "help", description: "Помощь"},
-    {command: "form", description: "Заполнить анкету о себе"},
-    {command: "title", description: "Получить случайный титул"},
-    {command: "titles", description: "Список титулов группы"},
-    {command: "sword", description: "Увеличить свой меч"},
-    {command: "swords", description: "Список мечей всей группы"},
-    {command: "summon_boss", description: "Призвать босса"},
-    {command: "boss_hp", description: "Показать Хп босса"},
-    {command: "deal_damage", description: "Нанести урон боссу"},
-    {command: "heal", description: "Похиллить себя"},
-    {command: "whoami", description: "Моя статистика"},
-    {command: "change_class", description: "Изменить класс"},
-    {command: "shop", description: "Магазин"},
-    {command: "exchange", description: "Обменник кристаллов"},
-    {command: "send_gold", description: "Перевести золото"},
-    {command: "chest", description: "Открыть сундук"},
-    {command: "point", description: "Игра в 21 очко"},
-    {command: "slots", description: "Слоты"},
-    {command: "dice", description: "Кубики"},
+    {command: "games", description: "Список игр"},
+    {command: "games_boss", description: "Команды для босса"},
+    {command: "games_form", description: "Команды для анкет"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
 ], {
@@ -98,7 +82,7 @@ bot.on("callback_query", async (callback) => {
 
     Promise.all(results).then(() => {
         bot.answerCallbackQuery(callback.id);
-        // log.info('%:2j', session);
+        log.info('%:2j', session);
     });
 });
 

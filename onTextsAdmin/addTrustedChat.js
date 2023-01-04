@@ -12,8 +12,10 @@ module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
         }
 
         sendMessage(myId, "Введи id чата, чтобы добавить его в доверенные.", {
-            force_reply: true,
-            selective: true,
+            reply_markup: {
+                selective: true,
+                force_reply: true
+            }
         }).then(msg => {
             bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
                 const trustedChats = fs.readFileSync('trustedChats.json');

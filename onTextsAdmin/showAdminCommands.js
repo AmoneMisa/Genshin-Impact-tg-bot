@@ -1,12 +1,11 @@
 const sendMessage = require('../functions/sendMessage');
 const bot = require('../bot');
 const debugMessage = require('../functions/debugMessage');
-const getMembers = require('../functions/getMembers');
+const getMemberStatus = require("../functions/getMemberStatus");
 
 module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         try {
-            let members = getMembers(msg.chat.id);
-            if (members[msg.from.id].userChatData.status !== "administrator" && members[msg.from.id].userChatData.status !== "creator") {
+            if (getMemberStatus(msg.chat.id, msg.from.id)) {
                 return;
             }
 

@@ -1,13 +1,12 @@
 const bot = require('../../../bot');
-const getMembers = require('../../../functions/getMembers');
 const sendMessage = require('../../../functions/sendMessage');
 const getChatSession = require('../../../functions/getChatSession');
+const getMemberStatus = require("../../../functions/getMemberStatus");
 
 module.exports = [[/(?:^|\s)\/reset_point_game\b/, (msg) => {
     bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    let members = getMembers(msg.chat.id);
-    if (members[msg.from.id].userChatData.status !== "administrator" && members[msg.from.id].userChatData.status !== "creator") {
+    if (getMemberStatus(msg.chat.id, msg.from.id)) {
         return;
     }
 

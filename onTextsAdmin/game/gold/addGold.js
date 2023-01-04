@@ -1,6 +1,6 @@
 const bot = require('../../../bot');
 const sendMessage = require('../../../functions/sendMessage');
-const getMembers = require('../../../functions/getMembers');
+const getMemberStatus = require('../../../functions/getMemberStatus');
 const debugMessage = require('../../../functions/debugMessage');
 const buildKeyboard = require('../../../functions/buildKeyboard');
 const controlButtons = require('../../../functions/controlButtons');
@@ -8,14 +8,11 @@ const controlButtons = require('../../../functions/controlButtons');
 module.exports = [[/(?:^|\s)\/add_gold\b/, (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
-
-        let members = getMembers(msg.chat.id);
-        if (members[msg.from.id].userChatData.status !== "administrator" && members[msg.from.id].userChatData.status !== "creator") {
+        if (!getMemberStatus(msg.chat.id, msg.from.id)) {
             return;
         }
 
         let buttons = buildKeyboard(msg.chat.id, `add_gold.${msg.chat.id}`);
-        console.log(controlButtons("add_gold", buttons, 1));
 
         sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить золота", {
             disable_notification: true,
