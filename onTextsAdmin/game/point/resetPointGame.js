@@ -6,7 +6,7 @@ const getMemberStatus = require("../../../functions/getMemberStatus");
 module.exports = [[/(?:^|\s)\/reset_point_game\b/, (msg) => {
     bot.deleteMessage(msg.chat.id, msg.message_id);
 
-    if (getMemberStatus(msg.chat.id, msg.from.id)) {
+    if (!getMemberStatus(msg.chat.id, msg.from.id)) {
         return;
     }
 

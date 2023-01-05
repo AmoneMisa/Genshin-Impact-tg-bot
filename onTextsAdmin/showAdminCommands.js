@@ -5,7 +5,7 @@ const getMemberStatus = require("../functions/getMemberStatus");
 
 module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         try {
-            if (getMemberStatus(msg.chat.id, msg.from.id)) {
+            if (!getMemberStatus(msg.chat.id, msg.from.id)) {
                 return;
             }
 

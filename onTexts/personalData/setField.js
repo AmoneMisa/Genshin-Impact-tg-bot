@@ -4,7 +4,7 @@ const sendMessage = require('../../functions/sendMessage');
 const commands = require('../../dictionaries/commands');
 const translation = require('../../dictionaries/translate');
 
-module.exports = [[/(?:^|\s)\/set(.*?)\b/, async (msg, regResult, session) => {
+module.exports = [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) => {
     try {
         let regResultStr = regResult[1];
 
