@@ -53,7 +53,7 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
         for (const buttonLine of buttons) {
             for (const button of buttonLine) {
                 let flag = settings[button.callback_data.replace(/^settings\./, '')];
-                button.callback_data += `.${flag}`;
+                button.callback_data += `.${flag === 1 ? 0 : 1}`;
                 button.text += flag === 1 ? " | (Вкл)" : " | (Выкл)";
             }
         }
@@ -61,7 +61,7 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
         chatSession.settingsButtons = buttons;
 
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        sendMessage(msg.chat.id, "Нажми на кнопку, чтобы включить или отключить ту или иную функцию.", {
+        sendMessage(msg.chat.id, "Нажми на кнопку, чтобы включить или отключить функцию.", {
                 reply_markup: {
                     inline_keyboard: [...controlButtons("settings", chatSession.settingsButtons, 1)]
                 }

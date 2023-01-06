@@ -7,12 +7,14 @@ const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
 const getSession = require('./functions/getSession');
+const getChatSessionSettings = require('./functions/getChatSessionSettings');
 const debugMessage = require('./functions/debugMessage');
 const sendMessage = require('./functions/sendMessage');
 const log = intel.getLogger("genshin");
 
 const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');
+const buttonsDictionary = require("./dictionaries/buttons");
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
@@ -41,10 +43,24 @@ function isTrusted(chatId) {
 
 for (let [key, value] of onTexts) {
     bot.onText(key, async function (msg, regExp) {
-
         if (!isTrusted(msg.chat.id)) {
             debugMessage(`${msg.chat.id} - попытка обратиться к боту.`);
             return sendMessage(msg.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.");
+        }
+
+        let command = regExp[0].replace(/^\//, '');
+        let settings = getChatSessionSettings(msg.chat.id);
+
+        if (settings[command] === 0) {
+            return sendMessage(msg.chat.id, `Команда /${command} отключена. Чтобы её включить используйте /settings`, {
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            });
         }
 
         let session = await getSession(msg.chat.id, msg.from.id);
