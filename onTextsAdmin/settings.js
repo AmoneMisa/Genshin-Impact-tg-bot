@@ -11,6 +11,7 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
         if (!getMemberStatus(msg.chat.id, msg.from.id)) {
             return;
         }
+
         let chatSession = getChatSession(msg.chat.id);
         chatSession.settingsMessageId = msg.from.id;
 
@@ -37,7 +38,7 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
             callback_data: "settings.swords"
         }, {
             text: "Сундуки",
-            callback_data: "settings.chests"
+            callback_data: "settings.chest"
         }, {
             text: "Само-мут",
             callback_data: "settings.mute"

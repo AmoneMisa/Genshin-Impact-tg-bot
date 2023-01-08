@@ -41,6 +41,30 @@ function isTrusted(chatId) {
     }
 })();
 
+const commandMap = {
+    "summon_boss": "boss",
+    "shop": "boss",
+    "exchange": "boss",
+    "boss_hp": "boss",
+    "buy_(.*?)": "boss",
+    "change_class": "boss",
+    "potion_([0-9]+)": "boss",
+    "deal_damage": "boss",
+    "heal": "boss",
+    "whoami": "whoami",
+    "send_gold": "sendGold",
+    "sword": "swords",
+    "swords": "swords",
+    "mute": "mute",
+    "slots": "slots",
+    "point": "points",
+    "dice": "dice",
+    "chest": "chests",
+    "title": "titles",
+    "titles": "titles",
+    "info": "form"
+};
+
 for (let [key, value] of onTexts) {
     bot.onText(key, async function (msg, regExp) {
         if (!isTrusted(msg.chat.id)) {
@@ -50,8 +74,11 @@ for (let [key, value] of onTexts) {
 
         let command = regExp[0].replace(/^\//, '');
         let settings = getChatSessionSettings(msg.chat.id);
+        let settingKey = commandMap[command];
+        let commandStatus = settings[settingKey];
 
-        if (settings[command] === 0) {
+        if (!commandStatus) {
+            await bot.deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(msg.chat.id, `Команда /${command} отключена. Чтобы её включить используйте /settings`, {
                 disable_notification: true,
                 reply_markup: {
