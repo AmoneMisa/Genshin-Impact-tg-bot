@@ -34,7 +34,6 @@ module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, 
     }
 }], [/^add_gold\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
     let [, chatId, page] = callback.data.match(/^add_gold\.([\-0-9]+)_([^.]+)$/);
-    console.log(chatId, page);
     page = parseInt(page);
 
     let buttons = buildKeyboard(chatId, `add_gold.${chatId}`);

@@ -74,10 +74,23 @@ for (let [key, value] of onTexts) {
 
         let command = regExp[0].replace(/^\//, '');
         let settings = getChatSessionSettings(msg.chat.id);
-        let settingKey = commandMap[command];
-        let commandStatus = settings[settingKey];
+        let foundSettingKey = null;
 
-        if (!commandStatus) {
+        log.info('%:2j', command);
+        for (let [commandRegexp, settingKey] of Object.entries(commandMap)){
+            log.info('%:2j', commandRegexp);
+            commandRegexp = new RegExp(`^${commandRegexp}$`);
+            log.info('%:2j', commandRegexp.test(command));
+            if (commandRegexp.test(command)) {
+                foundSettingKey = settingKey;
+                break;
+            }
+        }
+
+        log.info('%:2j', foundSettingKey);
+        let commandStatus = foundSettingKey !== null ? settings[foundSettingKey] : null;
+
+        if (commandStatus !== null && !commandStatus) {
             await bot.deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(msg.chat.id, `Команда /${command} отключена. Чтобы её включить используйте /settings`, {
                 disable_notification: true,
