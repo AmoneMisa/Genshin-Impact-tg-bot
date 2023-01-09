@@ -6,6 +6,7 @@ const titles = require('./titles');
 const game = require('./game');
 const mute = require('./mute');
 const commands = require('./commands');
+const reddit = require('./reddit');
 
 module.exports = [
     ...start,
@@ -15,5 +16,6 @@ module.exports = [
     ...titles,
     ...game,
     ...mute,
-    ...commands
+    ...commands,
+    ...reddit
 ];

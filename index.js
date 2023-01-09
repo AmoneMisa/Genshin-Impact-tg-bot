@@ -22,6 +22,7 @@ bot.setMyCommands([
     {command: "games", description: "Список игр"},
     {command: "games_boss", description: "Команды для босса"},
     {command: "games_form", description: "Команды для анкет"},
+    {command: "reddit", description: "Команды для Reddit"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
 ], {
@@ -76,18 +77,14 @@ for (let [key, value] of onTexts) {
         let settings = getChatSessionSettings(msg.chat.id);
         let foundSettingKey = null;
 
-        log.info('%:2j', command);
         for (let [commandRegexp, settingKey] of Object.entries(commandMap)){
-            log.info('%:2j', commandRegexp);
             commandRegexp = new RegExp(`^${commandRegexp}$`);
-            log.info('%:2j', commandRegexp.test(command));
             if (commandRegexp.test(command)) {
                 foundSettingKey = settingKey;
                 break;
             }
         }
 
-        log.info('%:2j', foundSettingKey);
         let commandStatus = foundSettingKey !== null ? settings[foundSettingKey] : null;
 
         if (commandStatus !== null && !commandStatus) {

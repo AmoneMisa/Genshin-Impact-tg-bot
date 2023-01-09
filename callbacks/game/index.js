@@ -8,6 +8,7 @@ const swordCallback = require('./sword');
 const player = require('./player');
 const slots = require('./slots');
 const dice = require('./dice');
+const reddit = require('./reddit');
 
 module.exports = [
     ...bossCallback,
@@ -20,4 +21,5 @@ module.exports = [
     ...player,
     ...slots,
     ...dice,
+    ...reddit
 ];
