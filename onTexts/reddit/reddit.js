@@ -7,9 +7,6 @@ const buttons = [[{
     "text": "Подписаться на группу",
     "callback_data": "reddit.subscribe"
 }], [{
-    "text": "Информация о группе",
-    "callback_data": "reddit.subredditInfo"
-}], [{
     "text": "Отписаться от группы",
     "callback_data": "reddit.unsubscribe"
 }], [{
@@ -21,6 +18,12 @@ const buttons = [[{
 }], [{
     "text": "Поиск",
     "callback_data": "reddit.search"
+}], [{
+    "text": "К-во постов в поиске",
+    "callback_data": "reddit.countPosts"
+}], [{
+    "text": "Мои подписки",
+    "callback_data": "reddit.getSubscribes"
 }]];
 
 module.exports = [[/(?:^|\s)\/reddit\b/, (msg, session) => {
