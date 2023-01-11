@@ -1,11 +1,12 @@
-const sendMessage = require('../../../functions/sendMessage');
-const debugMessage = require('../../../functions/debugMessage');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const getChatSession = require('../../../functions/getChatSession');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const getChatSession = require('../../../functions/getters/getChatSession');
 const validatePointSession = require('../../../functions/game/point21/validatePointSession');
 const checkAllPlayersPassed = require('../../../functions/game/point21/checkAllPlayersPassed');
 const endGame = require('../../../functions/game/point21/endGame');
 const endGameTimer = require('../../../functions/game/point21/endGameTimer');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [["points_pass", async (session, callback) => {
     try {
@@ -25,7 +26,7 @@ module.exports = [["points_pass", async (session, callback) => {
             return;
         }
 
-        sendMessage(callback.message.chat.id, `${session.userChatData.user.username}, ты спасовал. Больше брать карты и повышать ставку нельзя`)
+        sendMessage(callback.message.chat.id, `${getUserName(session, "nickname")}, ты спасовал. Больше брать карты и повышать ставку нельзя`)
             .then(message => {
                 deleteMessageTimeout(callback.message.chat.id, message.message_id, 7000);
             });

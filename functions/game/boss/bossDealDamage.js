@@ -1,5 +1,6 @@
 const calcBossDamage = require('./calcBossDamage');
-const sendMessage = require('../../sendMessage');
+const sendMessage = require('../../tgBotFunctions/sendMessage');
+const debugMessage = require('../../tgBotFunctions/debugMessage');
 
 module.exports = function (members, boss, chatId) {
     let message = `Босс нанёс урон всей группе:\n\n`;

@@ -1,6 +1,7 @@
-const sendMessage = require("../../../functions/sendMessage");
-const getSession = require("../../../functions/getSession");
+const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const getSession = require("../../../functions/getters/getSession");
 const bot = require('../../../bot');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     try {
@@ -10,7 +11,7 @@ module.exports = [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function
         targetSession.chosenChests = [];
         targetSession.chestButtons = [];
         targetSession.timerOpenChestCallback = 0;
-        sendMessage(callback.message.chat.id, `Таймер сундука для ${targetSession.userChatData.user.first_name} обнулён.`);
+        sendMessage(callback.message.chat.id, `Таймер сундука для ${getUserName(targetSession, "name")} обнулён.`);
     } catch (e) {
         console.error(e);
     }

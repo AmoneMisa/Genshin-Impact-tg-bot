@@ -2,6 +2,7 @@ const bossReflectDamage = require('../boss/bossReflectDamage');
 const calcDamage = require('../boss/calcDamage');
 const isBossDead = require('../boss/isBossDead');
 const userVampireSkill = require('./userVampireSkill');
+const getUserName = require('../../getters/getUserName');
 
 module.exports = async function (session, boss, sendMessage, skill) {
     try {
@@ -30,11 +31,11 @@ module.exports = async function (session, boss, sendMessage, skill) {
         }
 
         if (isBossDead(boss)) {
-            sendMessage(`${session.userChatData.user.username}, ты нанёс боссу смертельный удар на ${dmg}!\n${message}`);
+            sendMessage(`${getUserName(session, "nickname")}, ты нанёс боссу смертельный удар на ${dmg}!\n${message}`);
         } else if (isHasCritical) {
-            sendMessage(`${session.userChatData.user.username}, ты нанёс боссу ${dmg} критического урона!\n${message}`);
+            sendMessage(`${getUserName(session, "nickname")}, ты нанёс боссу ${dmg} критического урона!\n${message}`);
         } else {
-            sendMessage(`${session.userChatData.user.username}, ты нанёс боссу ${dmg} урона.\n${message}`);
+            sendMessage(`${getUserName(session, "nickname")}, ты нанёс боссу ${dmg} урона.\n${message}`);
         }
         return true;
     } catch (e) {

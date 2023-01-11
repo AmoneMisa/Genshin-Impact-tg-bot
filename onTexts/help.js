@@ -1,8 +1,8 @@
 const bot = require('../bot');
-const debugMessage = require('../functions/debugMessage');
+const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const dictionary = require('../dictionaries/main');
 const buttonsDictionary = require('../dictionaries/buttons');
-const sendMessage = require('../functions/sendMessage');
+const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 
 module.exports = [[/(?:^|\s)\/help\b/, async (msg) => {
     try {

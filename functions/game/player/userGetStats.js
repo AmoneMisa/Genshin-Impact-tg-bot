@@ -1,9 +1,10 @@
 const getAttack = require("./getAttack");
 const getDefence = require("./getDefence");
 const getDamageMultiplier = require("./getDamageMultiplier");
+const getUserName = require('../../getters/getUserName');
 
 module.exports = function (session) {
-    let message = `Статистика @${session.userChatData.user.username}:\n`;
+    let message = `Статистика @${getUserName(session, "nickname")}:\n`;
     message += `Уровень: ${session.game.stats.lvl}\n`;
     message += `Текущее к-во опыта: ${session.game.stats.currentExp}\n`;
     message += `Требуемое к-во опыта до следующего уровня: ${session.game.stats.needExp}\n`;

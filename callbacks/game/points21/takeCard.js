@@ -1,13 +1,12 @@
 const bot = require('../../../bot');
-const debugMessage = require('../../../functions/debugMessage');
-const getChatSession = require('../../../functions/getChatSession');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const getChatSession = require('../../../functions/getters/getChatSession');
 const pointMessage = require('../../../functions/game/point21/pointMessage');
 const validatePointSession = require('../../../functions/game/point21/validatePointSession');
 const checkAllPlayersPassed = require('../../../functions/game/point21/checkAllPlayersPassed');
 const getCard = require('../../../functions/game/point21/getCard');
 const getPoints = require('../../../functions/game/point21/getPoints');
 const endGame = require('../../../functions/game/point21/endGame');
-const endGameMessage = require('../../../functions/game/point21/endGameMessage');
 const endGameTimer = require('../../../functions/game/point21/endGameTimer');
 
 module.exports = [["points_card", function (session, callback) {

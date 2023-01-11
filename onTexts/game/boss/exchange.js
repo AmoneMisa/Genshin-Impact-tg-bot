@@ -1,12 +1,13 @@
 const bot = require('../../../bot');
-const sendMessage = require('../../../functions/sendMessage');
-const debugMessage = require('../../../functions/debugMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/exchange\b/, async (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери, сколько кристаллов ты хочешь купить. Обмен 1 кристалл х 1500 голды.`, {
+        sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери, сколько кристаллов ты хочешь купить. Обмен 1 кристалл х 1500 голды.`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{

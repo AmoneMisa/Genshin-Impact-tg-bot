@@ -1,11 +1,12 @@
-const getRandom = require('../../../functions/getRandom');
+const getRandom = require('../../../functions/getters/getRandom');
 const setLevel = require('../../../functions/game/player/setLevel');
 const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 const endChestSession = require('../../../functions/game/chest/endChestSession');
 const sendPrizeMessage = require('../../../functions/game/chest/sendPrizeMessage');
 const editChest = require('../../../functions/game/chest/editChest');
 const bot = require('../../../bot');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const getUserName = require('../../../functions/getters/getUserName');
 
 let prizes = [{
     name: "experience",
@@ -52,7 +53,7 @@ module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
     session.chestCounter = session.chestCounter || 0;
     session.chosenChests = session.chosenChests || [];
 
-    if (!callback.message.text.includes(session.userChatData.user.username)) {
+    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
 

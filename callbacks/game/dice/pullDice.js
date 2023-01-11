@@ -1,13 +1,14 @@
-const sendMessageWithDelete = require('../../../functions/sendMessageWithDelete');
+const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const isWinDices = require('../../../functions/game/dice/isWinDices');
 const sendPrize = require('../../../functions/game/dice/sendPrize');
 const endGame = require('../../../functions/game/dice/endGame');
 const bot = require('../../../bot');
+const getUserName = require('../../../functions/getters/getUserName');
 
 let maxPulls = 3;
 
 module.exports = [[/^dice_pull$/, async function (session, callback) {
-    if (session.userChatData.user.username !== callback.from.username) {
+    if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
 
@@ -30,10 +31,10 @@ module.exports = [[/^dice_pull$/, async function (session, callback) {
             let modifier = 1.2;
             sendPrize(session, modifier);
             bot.deleteMessage(chatId, callback.message.message_id);
-            sendMessageWithDelete(chatId, `@${session.userChatData.user.username}, ты выиграл!\nСтавка: ${session.game.dice.bet}\nВыигрыш: ${Math.round(session.game.dice.bet * modifier)}\nВыигрышное число: ${session.game.dice.dice}`, {}, 7000);
+            sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.dice.bet}\nВыигрыш: ${Math.round(session.game.dice.bet * modifier)}\nВыигрышное число: ${session.game.dice.dice}`, {}, 7000);
         } else {
             bot.deleteMessage(chatId, callback.message.message_id);
-            sendMessageWithDelete(chatId, `@${session.userChatData.user.username}, ты проиграл. Твоя сумма кубиков: ${session.game.dice.dice}. Ставка: ${session.game.dice.bet}`, {}, 7000);
+            sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма кубиков: ${session.game.dice.dice}. Ставка: ${session.game.dice.bet}`, {}, 7000);
         }
 
         return endGame(session);

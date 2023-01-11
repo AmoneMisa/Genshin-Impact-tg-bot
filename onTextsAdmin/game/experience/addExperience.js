@@ -1,9 +1,9 @@
 const bot = require('../../../bot');
-const sendMessage = require('../../../functions/sendMessage');
-const debugMessage = require('../../../functions/debugMessage');
-const buildKeyboard = require('../../../functions/buildKeyboard');
-const controlButtons = require('../../../functions/controlButtons');
-const getMemberStatus = require("../../../functions/getMemberStatus");
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
+const controlButtons = require('../../../functions/keyboard/controlButtons');
+const getMemberStatus = require("../../../functions/getters/getMemberStatus");
 
 module.exports = [[/(?:^|\s)\/add_experience\b/, (msg) => {
     try {

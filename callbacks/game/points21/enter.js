@@ -1,6 +1,6 @@
-const debugMessage = require('../../../functions/debugMessage');
-const getChatSession = require('../../../functions/getChatSession');
-const getMembers = require('../../../functions/getMembers');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const getChatSession = require('../../../functions/getters/getChatSession');
+const getMembers = require('../../../functions/getters/getMembers');
 const gameStatusMessage = require('../../../functions/game/point21/gameStatusMessage');
 const bot = require('../../../bot');
 

@@ -1,19 +1,20 @@
-const sendMessage = require('../../../functions/sendMessage');
-const buildKeyboard = require('../../../functions/buildKeyboard');
-const controlButtons = require('../../../functions/controlButtons');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
+const controlButtons = require('../../../functions/keyboard/controlButtons');
 const bot = require('../../../bot');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const getSession = require('../../../functions/getSession');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const getSession = require('../../../functions/getters/getSession');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, callback) {
-    if (!callback.message.text.includes(session.userChatData.user.username)) {
+    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
 
     const [, userId] = callback.data.match(/^send_gold_recipient\.([^.]+)$/);
     const recipient = await getSession(callback.message.chat.id, userId);
 
-    sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, сколько хочешь передать? Можно вводить только цифры и целочисленные значения.`, {
+    sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, сколько хочешь передать? Можно вводить только цифры и целочисленные значения.`, {
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -25,7 +26,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
             let gold = parseInt(replyMsg.text);
 
             if (session.game.inventory.gold < gold) {
-                return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, у тебя столько нет. Посмотреть количество золота можно командой /whoami`)
+                return sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, у тебя столько нет. Посмотреть количество золота можно командой /whoami`)
                     .then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
             }
 
@@ -36,7 +37,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
 
             bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             bot.deleteMessage(msg.chat.id, msg.message_id);
-            return sendMessage(callback.message.chat.id, `@${session.userChatData.user.username}, ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /whoami`, {
+            return sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /whoami`, {
                 disable_notification: true
             }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
         });

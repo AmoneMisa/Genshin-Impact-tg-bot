@@ -1,10 +1,11 @@
 const bot = require('../../../bot');
 const {bosses} = require('../../../data');
-const sendMessage = require('../../../functions/sendMessage');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const debugMessage = require('../../../functions/debugMessage');
-const getTime = require('../../../functions/getTime');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const getTime = require('../../../functions/getters/getTime');
 const isBossDead = require('../../../functions/game/boss/isBossDead');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
     try {
@@ -18,15 +19,15 @@ module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
 
         if (remain > 0) {
             if (hours > 0) {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
+                sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в час. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
                     disable_notification: true,
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             } else if (minutes > 0) {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${minutes} мин ${seconds} сек`, {
+                sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в час. Осталось: ${minutes} мин ${seconds} сек`, {
                     disable_notification: true,
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             } else {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в час. Осталось: ${seconds} сек`, {
+                sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в час. Осталось: ${seconds} сек`, {
                     disable_notification: true,
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             }
@@ -65,7 +66,7 @@ module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
             message += `${skill.name} - ${skill.description} Стоимость использования: ${skill.cost} золота, ${skill.crystalCost} кристаллов.\n\n`;
         }
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери скилл:\n${message}`, {
+        sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери скилл:\n${message}`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: buildKeyboard()

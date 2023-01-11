@@ -1,7 +1,7 @@
 const bot = require('../../../bot');
-const debugMessage = require('../../../functions/debugMessage');
-const sendMessage = require('../../../functions/sendMessage');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 
 module.exports = [[/(?:^|\s)\/potion_([0-9]+)\b/, async (msg, regExp, session) => {
     try {

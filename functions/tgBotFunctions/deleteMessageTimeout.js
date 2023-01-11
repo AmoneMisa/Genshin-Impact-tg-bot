@@ -1,4 +1,4 @@
-const bot = require('../bot');
+const bot = require('../../bot');
 
 module.exports = function (chatId, msg, milliseconds) {
     if (!msg) {

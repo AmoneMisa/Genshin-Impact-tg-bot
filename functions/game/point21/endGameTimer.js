@@ -1,5 +1,5 @@
 const endGame = require('./endGame');
-const sendMessageWithDelete = require('../../sendMessageWithDelete');
+const sendMessageWithDelete = require('../../tgBotFunctions/sendMessageWithDelete');
 const bot = require('../../../bot');
 
 let timeoutId;

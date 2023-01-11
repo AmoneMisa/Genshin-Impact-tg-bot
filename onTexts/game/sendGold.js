@@ -1,11 +1,12 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
-const sendMessage = require('../../functions/sendMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
-const getMembers = require('../../functions/getMembers');
-const getChatSession = require('../../functions/getChatSession');
-const buildKeyboard = require('../../functions/buildKeyboard');
-const controlButtons = require('../../functions/controlButtons');
+const getMembers = require('../../functions/getters/getMembers');
+const getChatSession = require('../../functions/getters/getChatSession');
+const buildKeyboard = require('../../functions/keyboard/buildKeyboard');
+const controlButtons = require('../../functions/keyboard/controlButtons');
+const getUserName = require('../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
     try {
@@ -39,7 +40,7 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
 
         let buttons = buildKeyboard(msg.chat.id, "send_gold_recipient");
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери, кому хочешь перевести золото.`, {
+        sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери, кому хочешь перевести золото.`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,

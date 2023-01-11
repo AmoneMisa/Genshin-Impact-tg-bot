@@ -1,6 +1,6 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
-const sendMessage = require('../../functions/sendMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 
 module.exports = [[/(?:^|\s)\/remove_keyboard/, async (msg) => {
     try {

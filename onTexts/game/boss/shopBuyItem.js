@@ -1,6 +1,6 @@
 const bot = require('../../../bot');
-const sendMessage = require('../../../functions/sendMessage');
-const debugMessage = require('../../../functions/debugMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const bossShopSellItem = require('../../../functions/game/boss/bossShopSellItem');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 

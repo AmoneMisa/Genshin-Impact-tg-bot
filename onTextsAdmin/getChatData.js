@@ -1,7 +1,7 @@
-const sendMessage = require('../functions/sendMessage');
+const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 const bot = require('../bot');
 const {myId} = require('../config');
-const debugMessage = require('../functions/debugMessage');
+const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/get_chat_data\b/, async (msg) => {
         try {

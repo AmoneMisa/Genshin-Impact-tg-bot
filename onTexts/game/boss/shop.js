@@ -1,5 +1,5 @@
 const bot = require('../../../bot');
-const debugMessage = require('../../../functions/debugMessage');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 
 const bossShop = require('../../../functions/game/boss/bossShop');
 

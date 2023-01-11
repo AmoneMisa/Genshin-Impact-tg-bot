@@ -1,7 +1,8 @@
-const debugMessage = require('../../../functions/debugMessage');
-const sendMessage = require('../../../functions/sendMessage');
-const retryBotRequest = require("../../../functions/retryBotRequest");
-const sendMessageWithDelete = require("../../../functions/sendMessageWithDelete");
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
+const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/slots\b/, async (msg, session) => {
     try {
@@ -9,7 +10,7 @@ module.exports = [[/(?:^|\s)\/slots\b/, async (msg, session) => {
 
         if (session.game.hasOwnProperty('slots')) {
             if (new Date().getTime() - session.game.slots.startedAt <= 2 * 60 * 1000) {
-                await sendMessageWithDelete(msg.chat.id, `Игра в слоты уже идёт, @${session.userChatData.user.username}`, {}, 20 * 1000);
+                await sendMessageWithDelete(msg.chat.id, `Игра в слоты уже идёт, @${getUserName(session, "nickname")}`, {}, 20 * 1000);
                 return;
             }
         }

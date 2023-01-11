@@ -6,7 +6,8 @@ const titlesWhere = require('../../../dictionaries/titlesWhere');
 const titlesWhereFemale = require('../../../dictionaries/titlesWhere_female');
 const {titles} = require('../../../data');
 const isFemale = require('../../form/isFemale');
-const getRandom = require('../../getRandom');
+const getRandom = require('../../getters/getRandom');
+const getUserName = require('../../getters/getUserName');
 
 module.exports = function (chatId, session) {
     if (!titles[chatId]) {
@@ -21,7 +22,7 @@ module.exports = function (chatId, session) {
         title = `${titlesActions[getRandom(0, titlesActions.length - 1)]} ${titlesWhat[getRandom(0, titlesWhat.length - 1)]} ${titlesWith[getRandom(0, titlesWith.length - 1)]} ${titlesWhere[getRandom(0, titlesWhere.length - 1)]}`;
     }
 
-    titles[chatId].unshift({title: title, user: session.userChatData.user.username});
+    titles[chatId].unshift({title: title, user: getUserName(session, "nickname")});
 
     while (titles[chatId].length > 10) {
         titles[chatId].pop();

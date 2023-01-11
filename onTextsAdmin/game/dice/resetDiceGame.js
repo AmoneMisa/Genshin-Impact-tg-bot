@@ -1,6 +1,6 @@
 const bot = require('../../../bot');
-const sendMessageWithDelete = require('../../../functions/sendMessageWithDelete');
-const getSession = require('../../../functions/getSession');
+const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
+const getSession = require('../../../functions/getters/getSession');
 const endGame = require('../../../functions/game/dice/endGame');
 
 module.exports = [[/(?:^|\s)\/reset_dice_game\b/, async (msg) => {

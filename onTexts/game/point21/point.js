@@ -1,14 +1,14 @@
 const bot = require('../../../bot');
-const sendMessage = require('../../../functions/sendMessage');
-const getChatSession = require('../../../functions/getChatSession');
-const getMembers = require('../../../functions/getMembers');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const getChatSession = require('../../../functions/getters/getChatSession');
+const getMembers = require('../../../functions/getters/getMembers');
 const pointMessage = require('../../../functions/game/point21/pointMessage');
 const betMessage = require('../../../functions/game/point21/betMessage');
 const gameStatusMessage = require('../../../functions/game/point21/gameStatusMessage');
 const getCard = require('../../../functions/game/point21/getCard');
 const endGameTimer = require('../../../functions/game/point21/endGameTimer');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const debugMessage = require('../../../functions/debugMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
     try {

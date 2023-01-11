@@ -1,8 +1,9 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const sendMessage = require('../../../functions/sendMessage');
-const getSession = require('../../../functions/getSession');
-const sendMessageWithDelete = require('../../../functions/sendMessageWithDelete');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const getSession = require('../../../functions/getters/getSession');
+const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/dice\b/, async (msg) => {
     try {
@@ -23,7 +24,7 @@ module.exports = [[/(?:^|\s)\/dice\b/, async (msg) => {
             return await sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {} , 7000)
         }
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, твоя ставка: 0`, {
+        sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, твоя ставка: 0`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{

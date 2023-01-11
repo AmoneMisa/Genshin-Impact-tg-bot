@@ -1,9 +1,8 @@
-const getMembers = require("../../getMembers");
+const getMembers = require("../../getters/getMembers");
 const bossDealDamage = require("../../game/boss/bossDealDamage");
 const {bosses} = require("../../../data");
 const bot = require('../../../bot');
-const sendMessage = require('../../sendMessage');
-const debugMessage = require('../../debugMessage');
+const sendMessage = require('../../tgBotFunctions/sendMessage');
 
 module.exports = function (chatId, recovery) {
     let boss = bosses[chatId];

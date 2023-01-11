@@ -1,4 +1,4 @@
-const getRandom = require('../../getRandom');
+const getRandom = require('../../getters/getRandom');
 const getAttack = require('../../game/player/getAttack');
 const getBossDefence = require('../../game/boss/getBossDefence');
 const getDamageMultiplier = require('../../game/player/getDamageMultiplier');

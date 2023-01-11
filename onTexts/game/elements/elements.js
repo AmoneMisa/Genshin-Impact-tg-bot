@@ -1,10 +1,10 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const sendMessage = require('../../../functions/sendMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getRandomElement = require('../../../functions/game/elements/getRandomElement');
-const getChatSession = require('../../../functions/getChatSession');
-const debugMessage = require('../../../functions/debugMessage');
+const getChatSession = require('../../../functions/getters/getChatSession');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/elements\b/, async (msg) => {
     try {

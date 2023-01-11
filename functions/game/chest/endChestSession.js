@@ -1,4 +1,4 @@
-const getOffset = require('../../../functions/getOffset');
+const getOffset = require('../../getters/getOffset');
 const bot = require('../../../bot');
 
 module.exports = function (session, callback) {

@@ -1,6 +1,7 @@
 const shopTemplate = require('../../../templates/shopTemplate');
-const getOffsetToDay = require('../../getOffsetToDay');
-const getOffset = require('../../getOffset');
+const getOffsetToDay = require('../../getters/getOffsetToDay');
+const getOffset = require('../../getters/getOffset');
+const getUserName = require('../../getters/getUserName');
 
 let commandsArray = ["sword_immune", "sword_add_mm", "boss_add_dmg", "boss_add_cr_chance", "boss_add_cr_dmg",
     "sword_add_try", "potion_hp_1000", "potion_hp_3000", "chest_add_try"];
@@ -10,11 +11,11 @@ function check(session, command, item, shopTimer, isDaily) {
 
         if (!isDaily) {
             if (session.game.shopTimers[shopTimer] >= getOffsetToDay()) {
-                return `${session.userChatData.user.username}, уже была совершена покупка на этой неделе. Попытка обновится в понедельник в 00.00`;
+                return `${getUserName(session, "nickname")}, уже была совершена покупка на этой неделе. Попытка обновится в понедельник в 00.00`;
             }
         } else {
             if (session.game.shopTimers[shopTimer] >= getOffset()) {
-                return `${session.userChatData.user.username}, уже была совершена покупка на этой неделе. Попытка обновится в 00.00`;
+                return `${getUserName(session, "nickname")}, уже была совершена покупка на этой неделе. Попытка обновится в 00.00`;
             }
         }
 
@@ -52,9 +53,9 @@ function check(session, command, item, shopTimer, isDaily) {
             }
 
             session.game.inventory.gold -= item.cost;
-            return `${session.userChatData.user.username}, ${item.message}`;
+            return `${getUserName(session, "nickname")}, ${item.message}`;
         }
-        return `${session.userChatData.user.username}, сначала нужно обзавестись золотишком, чтобы что-то купить.`
+        return `${getUserName(session, "nickname")}, сначала нужно обзавестись золотишком, чтобы что-то купить.`
     } catch (e) {
         console.error(e);
     }
@@ -62,11 +63,11 @@ function check(session, command, item, shopTimer, isDaily) {
 
 module.exports = function (session, command) {
     if (!session.game) {
-        return `${session.userChatData.user.username}, сначала нужно обзавестись золотишком, чтобы что-то купить.`
+        return `${getUserName(session, "nickname")}, сначала нужно обзавестись золотишком, чтобы что-то купить.`
     }
 
     if (!commandsArray.includes(command)) {
-        return `${session.userChatData.user.username}, такой команды не существует. Попробуй ещё раз`;
+        return `${getUserName(session, "nickname")}, такой команды не существует. Попробуй ещё раз`;
     }
 
     for (let item of shopTemplate) {

@@ -1,3 +1,5 @@
+const getUserName = require('../../getters/getUserName');
+
 module.exports = function (boss, sessions) {
     if (!boss) {
         return `Группа ещё не призвала босса. Призвать можно командой /summon_boss`;
@@ -21,7 +23,7 @@ module.exports = function (boss, sessions) {
     arrSessions.sort((a, b) => b.game.boss.damage - a.game.boss.damage);
 
     for (let session of arrSessions) {
-        message += `${session.userChatData.user.username}: ${session.game.boss.damage}\n`;
+        message += `${getUserName(session, "nickname")}: ${session.game.boss.damage}\n`;
     }
 
     return message;

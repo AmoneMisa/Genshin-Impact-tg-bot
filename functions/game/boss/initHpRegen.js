@@ -1,5 +1,5 @@
 const {bosses} = require("../../../data");
-const sendMessage = require('../../sendMessage');
+const sendMessage = require('../../tgBotFunctions/sendMessage');
 
 module.exports = function (chatId, recovery) {
     let boss = bosses[chatId];

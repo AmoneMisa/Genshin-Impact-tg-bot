@@ -1,4 +1,4 @@
-const buttonsDictionary = require('../dictionaries/buttons');
+const buttonsDictionary = require('../../dictionaries/buttons');
 
 module.exports = function (name, buttonRows, page) {
     let pageSize = 3;

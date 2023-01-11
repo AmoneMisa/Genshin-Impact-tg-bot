@@ -1,7 +1,7 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const {titles} = require('../../data');
-const sendMessage = require('../../functions/sendMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const titlesMessage = require('../../functions/game/titles/titlesMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 

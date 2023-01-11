@@ -1,9 +1,9 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const sendMessage = require('../../../functions/sendMessage');
-const getSession = require('../../../functions/getSession');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const getSession = require('../../../functions/getters/getSession');
 const resetSwordTimer = require('../../../functions/game/sword/resetSwordTimer');
-const debugMessage = require('../../../functions/debugMessage');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
     try {

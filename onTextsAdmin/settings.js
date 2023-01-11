@@ -1,10 +1,10 @@
-const sendMessage = require('../functions/sendMessage');
+const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 const bot = require('../bot');
-const debugMessage = require('../functions/debugMessage');
-const getMemberStatus = require("../functions/getMemberStatus");
-const getChatSession = require("../functions/getChatSession");
-const getChatSessionSettings = require("../functions/getChatSessionSettings");
-const controlButtons = require("../functions/controlButtons");
+const debugMessage = require('../functions/tgBotFunctions/debugMessage');
+const getMemberStatus = require("../functions/getters/getMemberStatus");
+const getChatSession = require("../functions/getters/getChatSession");
+const getChatSessionSettings = require("../functions/getters/getChatSessionSettings");
+const controlButtons = require("../functions/keyboard/controlButtons");
 
 module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
     try {

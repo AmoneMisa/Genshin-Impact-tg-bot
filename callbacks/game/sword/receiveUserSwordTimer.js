@@ -1,15 +1,16 @@
-const sendMessage = require("../../../functions/sendMessage");
-const getSession = require("../../../functions/getSession");
+const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const getSession = require("../../../functions/getters/getSession");
 const bot = require('../../../bot');
-const controlButtons = require('../../../functions/controlButtons');
-const buildKeyboard = require('../../../functions/buildKeyboard');
+const controlButtons = require('../../../functions/keyboard/controlButtons');
+const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     try {
         const [, chatId, userId] = callback.data.match(/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/);
         let targetSession = await getSession(chatId, userId);
         targetSession.timerSwordCallback = 0;
-        sendMessage(callback.message.chat.id, `Таймер меча для ${targetSession.userChatData.user.first_name} обнулён.`);
+        sendMessage(callback.message.chat.id, `Таймер меча для ${getUserName(targetSession, "name")} обнулён.`);
     } catch (e) {
         console.error(e);
     }

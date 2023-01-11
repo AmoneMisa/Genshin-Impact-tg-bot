@@ -1,17 +1,18 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const dictionary = require('../../dictionaries/main');
-const sendMessage = require('../../functions/sendMessage');
-const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
+const deleteMessageTimeout = require('../../functions/tgBotFunctions/deleteMessageTimeout');
 const setButtons = require('../../functions/form/setButtons');
 const commands = require('../../dictionaries/commands');
+const getUserName = require('../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/form/, async (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let buttons = setButtons(commands);
 
-        let name = session.userChatData.user.username !== undefined ? session.userChatData.user.username : session.userChatData.user.first_name;
+        let name = getUserName(session, "nickname") !== undefined ? getUserName(session, "nickname") : getUserName(session, "name");
 
         sendMessage(msg.chat.id, `@${name}, ${dictionary["ru"].index}`, {
             disable_notification: true,

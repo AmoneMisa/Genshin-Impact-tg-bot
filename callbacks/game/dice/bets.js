@@ -1,8 +1,9 @@
-const retryBotRequest = require("../../../functions/retryBotRequest");
-const sendMessageWithDelete = require("../../../functions/sendMessageWithDelete");
+const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
+const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
+const getUserName = require('../../../functions/getters/getUserName');
 
 async function bet(session, callback, calcFunc) {
-    if (session.userChatData.user.username !== callback.from.username) {
+    if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
 
@@ -27,7 +28,7 @@ async function bet(session, callback, calcFunc) {
 }
 
 async function updateMessage(session, callback) {
-    return await retryBotRequest(bot => bot.editMessageText(`@${session.userChatData.user.username}, твоя ставка: ${session.game.dice.bet}`, {
+    return await retryBotRequest(bot => bot.editMessageText(`@${getUserName(session, "nickname")}, твоя ставка: ${session.game.dice.bet}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

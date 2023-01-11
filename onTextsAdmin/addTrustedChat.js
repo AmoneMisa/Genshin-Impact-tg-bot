@@ -1,8 +1,8 @@
-const sendMessage = require('../functions/sendMessage');
+const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 const bot = require('../bot');
 const {myId} = require('../config');
 const {updTrustedChats} = require('../data');
-const debugMessage = require('../functions/debugMessage');
+const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const fs = require('fs');
 
 module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {

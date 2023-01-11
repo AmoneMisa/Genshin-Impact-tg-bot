@@ -1,4 +1,4 @@
-const getOffset = require('../../getOffset');
+const getOffset = require('../../getters/getOffset');
 const {sessions} = require('../../../data');
 
 module.exports = function () {

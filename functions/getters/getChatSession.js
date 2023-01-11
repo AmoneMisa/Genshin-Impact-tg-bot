@@ -1,4 +1,4 @@
-const {sessions} = require('../data');
+const {sessions} = require('../../data');
 
 module.exports = function (chatId) {
     if (!sessions[chatId]) {

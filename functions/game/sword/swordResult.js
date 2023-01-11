@@ -1,17 +1,18 @@
-const getTime = require('../../getTime');
-const getRandom = require('../../getRandom');
-const getOffset = require('../../getOffset');
+const getTime = require('../../getters/getTime');
+const getRandom = require('../../getters/getRandom');
+const getOffset = require('../../getters/getOffset');
+const getUserName = require('../../getters/getUserName');
 
 module.exports = function (session) {
     let [remain, hours, minutes, seconds] = getTime(session.timerSwordCallback);
 
     if (remain > 0) {
         if (hours > 0) {
-            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`;
+            return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`;
         } else if (minutes > 0) {
-            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`;
+            return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`;
         } else {
-            return `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`;
+            return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`;
         }
     }
 
@@ -36,9 +37,9 @@ module.exports = function (session) {
 
     session.sword += int;
     if (int > 0) {
-        result = `@${session.userChatData.user.username}, твой меч увеличился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
+        result = `@${getUserName(session, "nickname")}, твой меч увеличился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
     } else {
-        result = `@${session.userChatData.user.username}, твой меч укоротился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
+        result = `@${getUserName(session, "nickname")}, твой меч укоротился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
     }
 
     return result;

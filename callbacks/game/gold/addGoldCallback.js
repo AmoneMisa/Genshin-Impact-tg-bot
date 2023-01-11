@@ -1,14 +1,15 @@
-const sendMessage = require("../../../functions/sendMessage");
-const getSession = require("../../../functions/getSession");
+const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const getSession = require("../../../functions/getters/getSession");
 const bot = require('../../../bot');
-const controlButtons = require('../../../functions/controlButtons');
-const buildKeyboard = require('../../../functions/buildKeyboard');
+const controlButtons = require('../../../functions/keyboard/controlButtons');
+const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     try {
         const [, chatId, userId] = callback.data.match(/^add_gold\.([\-0-9]+)\.([0-9]+)$/);
         let targetSession = await getSession(chatId, userId);
-        sendMessage(callback.message.chat.id, `Сколько золота добавить для ${targetSession.userChatData.user.first_name}?`, {
+        sendMessage(callback.message.chat.id, `Сколько золота добавить для ${getUserName(targetSession, "name")}?`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,
@@ -22,7 +23,7 @@ module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, 
 
                 bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
                 bot.deleteMessage(msg.chat.id, msg.message_id);
-                return sendMessage(callback.message.chat.id, `Ты добавил ${gold} золота для ${targetSession.userChatData.user.first_name}.`, {
+                return sendMessage(callback.message.chat.id, `Ты добавил ${gold} золота для ${getUserName(targetSession, "name")}.`, {
                     disable_notification: true
                 });
             });

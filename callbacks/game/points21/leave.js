@@ -1,16 +1,15 @@
-const debugMessage = require('../../../functions/debugMessage');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const getChatSession = require('../../../functions/getChatSession');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const getChatSession = require('../../../functions/getters/getChatSession');
 const gameStatusMessage = require('../../../functions/game/point21/gameStatusMessage');
 const bot = require('../../../bot');
-const getMembers = require('../../../functions/getMembers');
+const getMembers = require('../../../functions/getters/getMembers');
 
 module.exports = [["points_leave", async (session, callback) => {
     try {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = callback.from.id;
 
-        if ( chatSession.pointPlayers[userId]) {
+        if (chatSession.pointPlayers[userId]) {
             delete chatSession.pointPlayers[userId];
         } else {
             return ;

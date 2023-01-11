@@ -1,9 +1,9 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
-const buildKeyboard = require('../../functions/buildKeyboard');
-const controlButtons = require('../../functions/controlButtons');
+const buildKeyboard = require('../../functions/keyboard/buildKeyboard');
+const controlButtons = require('../../functions/keyboard/controlButtons');
 const translation = require('../../dictionaries/translate');
 const userTemplate = require('../../templates/userTemplate');
-const getMembers = require('../../functions/getMembers');
+const getMembers = require('../../functions/getters/getMembers');
 const bot = require('../../bot');
 
 module.exports = [["info", function (session, callback) {

@@ -1,7 +1,8 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
-const sendMessage = require('../../functions/sendMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const userTemplate = require('../../templates/userTemplate');
 const translation = require('../../dictionaries/translate');
+const getUserName = require('../../functions/getters/getUserName');
 
 module.exports = [["personal_info", function (session, callback) {
     function formatMessage() {
@@ -14,7 +15,7 @@ module.exports = [["personal_info", function (session, callback) {
         str += "\n\n";
 
         if (!str.trim().length) {
-            str = `@${session.userChatData.user.username}, ещё нет никакой информации о тебе. Заполни её через бота командой /form`
+            str = `@${getUserName(session, "nickname")}, ещё нет никакой информации о тебе. Заполни её через бота командой /form`
         }
         return str;
     }

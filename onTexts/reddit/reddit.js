@@ -1,7 +1,7 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
-const sendMessage = require('../../functions/sendMessage');
-const controlButtons = require('../../functions/controlButtons');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
+const controlButtons = require('../../functions/keyboard/controlButtons');
 
 const buttons = [[{
     "text": "Подписаться на группу",

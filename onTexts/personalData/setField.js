@@ -1,8 +1,9 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
-const sendMessage = require('../../functions/sendMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const commands = require('../../dictionaries/commands');
 const translation = require('../../dictionaries/translate');
+const getUserName = require('../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) => {
     try {
@@ -16,7 +17,7 @@ module.exports = [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session)
                 continue;
             }
 
-            sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${session.userChatData.user.username}?`, {
+            sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${getUserName(session, "nickname")}?`, {
                 disable_notification: true,
                 reply_markup: {
                     selective: true,

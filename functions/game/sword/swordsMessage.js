@@ -1,3 +1,5 @@
+const getUserName = require('../../getters/getUserName');
+
 module.exports = function (sessions) {
     let arrSessions = Object.values(sessions);
 
@@ -10,7 +12,7 @@ module.exports = function (sessions) {
     arrSessions.sort((a, b) => b.sword - a.sword);
 
     for (let session of arrSessions) {
-        message += `${session.userChatData.user.first_name}: ${session.sword} мм.\n`;
+        message += `${getUserName(session, "name")}: ${session.sword} мм.\n`;
     }
 
     return message;

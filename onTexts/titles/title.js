@@ -1,9 +1,9 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
-const sendMessage = require('../../functions/sendMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const titleMessage = require('../../functions/game/titles/titleMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
-const deleteMessageTimeout = require('../../functions/deleteMessageTimeout');
+const deleteMessageTimeout = require('../../functions/tgBotFunctions/deleteMessageTimeout');
 
 module.exports = [[/(?:^|\s)\/title\b/, (msg, session) => {
     try {

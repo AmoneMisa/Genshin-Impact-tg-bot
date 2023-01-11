@@ -1,5 +1,5 @@
-const bot = require("../bot");
-const sleep = require("../functions/sleep");
+const bot = require("../../bot");
+const sleep = require("./sleep");
 const intel = require("intel");
 
 const log = intel.getLogger("retryBotRequest");

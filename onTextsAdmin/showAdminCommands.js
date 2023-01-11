@@ -1,7 +1,7 @@
-const sendMessage = require('../functions/sendMessage');
+const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 const bot = require('../bot');
-const debugMessage = require('../functions/debugMessage');
-const getMemberStatus = require("../functions/getMemberStatus");
+const debugMessage = require('../functions/tgBotFunctions/debugMessage');
+const getMemberStatus = require("../functions/getters/getMemberStatus");
 
 module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         try {

@@ -1,4 +1,4 @@
-const getMembers = require('./getMembers');
+const getMembers = require('../getters/getMembers');
 
 module.exports = function (chatId, name) {
     let buttons = [];

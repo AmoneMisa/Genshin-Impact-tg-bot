@@ -1,11 +1,12 @@
 const bot = require('../../../bot');
-const sendMessage = require('../../../functions/sendMessage');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const getChatSession = require('../../../functions/getChatSession');
-const getMembers = require('../../../functions/getMembers');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const getChatSession = require('../../../functions/getters/getChatSession');
+const getMembers = require('../../../functions/getters/getMembers');
 const betMessage = require('../../../functions/game/point21/betMessage');
-const debugMessage = require('../../../functions/debugMessage');
-const getTime = require('../../../functions/getTime');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const getTime = require('../../../functions/getters/getTime');
+const getUserName = require('../../../functions/getters/getUserName');
 
 function getOffset() {
     return new Date().getTime() + 2 * 1000;
@@ -44,7 +45,7 @@ module.exports = [[/^points_(?:bet|double_bet|xfive_bet|10t_bet|thousand_bet|xte
         let members = getMembers(callback.message.chat.id);
         let chatId = callback.message.chat.id;
         let gold = session.game.inventory.gold;
-        let username = session.userChatData.user.username || session.userChatData.user.id;
+        let username = getUserName(session, "nickname") || session.userChatData.user.id;
         let messageId = null;
 
         let bet = chatSession.pointPlayers[userId].bet;

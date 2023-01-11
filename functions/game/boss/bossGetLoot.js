@@ -1,6 +1,7 @@
 const bossTemplate = require('../../../templates/bossTemplate');
-const getRandom = require('../../getRandom');
+const getRandom = require('../../getters/getRandom');
 const setLevel = require('../player/setLevel');
+const getUserName = require('../../getters/getUserName');
 
 module.exports = function (boss, sessions, sendMessage) {
     try {
@@ -60,7 +61,7 @@ module.exports = function (boss, sessions, sendMessage) {
 
             setLevel(session);
 
-            message += `${session.userChatData.user.first_name} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\nПолучил кристаллов: ${gotCrystals}, всего кристаллов: ${session.game.inventory.crystals}\n\n`;
+            message += `${getUserName(session, "name")} - получил к-во опыта: ${expAmount}, текущий уровень: ${session.game.stats.lvl}, нужно до следующего уровня: ${session.game.stats.needExp}\nПолучил к-во золота: ${gotGold}, всего золота: ${session.game.inventory.gold}\nПолучил кристаллов: ${gotCrystals}, всего кристаллов: ${session.game.inventory.crystals}\n\n`;
             i++;
         }
 

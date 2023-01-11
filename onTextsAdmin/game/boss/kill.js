@@ -1,9 +1,9 @@
 const bot = require('../../../bot');
-const sendMessage = require('../../../functions/sendMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const {bosses} = require('../../../data');
-const debugMessage = require('../../../functions/debugMessage');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const getMemberStatus = require("../../../functions/getMemberStatus");
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const getMemberStatus = require("../../../functions/getters/getMemberStatus");
 
 module.exports = [[/(?:^|\s)\/kill\b/, (msg) => {
     try {

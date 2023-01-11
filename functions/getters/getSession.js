@@ -1,5 +1,5 @@
-const userTemplate = require('../templates/userTemplate');
-const bot = require('../bot');
+const userTemplate = require('../../templates/userTemplate');
+const bot = require('../../bot');
 const getMembers = require('./getMembers');
 
 module.exports = async function (chatId, userId) {
@@ -16,7 +16,11 @@ module.exports = async function (chatId, userId) {
         members[userId].reddit = {
             subscribes: [],
             countPosts: 3,
-            postType: "hot"
+            postType: "hot",
+            timer: {
+                hour: 2,
+                minute: 0
+            }
         };
     }
 

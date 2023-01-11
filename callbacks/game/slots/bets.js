@@ -1,8 +1,9 @@
-const retryBotRequest = require("../../../functions/retryBotRequest");
-const sendMessageWithDelete = require("../../../functions/sendMessageWithDelete");
+const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
+const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
+const getUserName = require('../../../functions/getters/getUserName');
 
 async function bet(session, callback, calcFunc) {
-    if (session.userChatData.user.username !== callback.from.username) {
+    if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
 

@@ -1,6 +1,7 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
-const sendMessage = require('../../functions/sendMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
+const getUserName = require('../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
     try {
@@ -16,14 +17,14 @@ module.exports = [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
             until_date: Math.round(new Date().getTime() / 1000.0) + (2 * 60)
         }).then(res => {
             if (res) {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, получил мут на 2 минуты.`, {
+                sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, получил мут на 2 минуты.`, {
                     disable_notification: true
                 })
             } else {
-                sendMessage(msg.chat.id, `@${session.userChatData.user.username}, админу нельзя замутаться.`, {
+                sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, админу нельзя замутаться.`, {
                     disable_notification: true
                 });
-                debugMessage(`${session.userChatData.user.username},\n\n${JSON.stringify(session.userChatData)},\n\nsuccess - ${success}`);
+                debugMessage(`${getUserName(session, "nickname")},\n\n${JSON.stringify(session.userChatData)},\n\nsuccess - ${success}`);
             }
         });
 

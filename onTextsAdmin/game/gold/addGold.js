@@ -1,9 +1,9 @@
 const bot = require('../../../bot');
-const sendMessage = require('../../../functions/sendMessage');
-const getMemberStatus = require('../../../functions/getMemberStatus');
-const debugMessage = require('../../../functions/debugMessage');
-const buildKeyboard = require('../../../functions/buildKeyboard');
-const controlButtons = require('../../../functions/controlButtons');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const getMemberStatus = require('../../../functions/getters/getMemberStatus');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
+const controlButtons = require('../../../functions/keyboard/controlButtons');
 
 module.exports = [[/(?:^|\s)\/add_gold\b/, (msg) => {
     try {

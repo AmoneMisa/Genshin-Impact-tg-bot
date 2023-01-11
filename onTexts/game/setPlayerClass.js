@@ -1,9 +1,10 @@
 const bot = require('../../bot');
-const debugMessage = require('../../functions/debugMessage');
-const sendMessage = require('../../functions/sendMessage');
+const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
-const getTime = require('../../functions/getTime');
+const getTime = require('../../functions/getters/getTime');
 let classes = require('../../templates/classStatsTemplate');
+const getUserName = require('../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
     try {
@@ -17,15 +18,15 @@ module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
 
         if (remain > 0) {
             if (hours > 0) {
-                return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в неделю. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
+                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
                     disable_notification: true
                 });
             } else if (minutes > 0) {
-                return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в неделю. Осталось: ${minutes} мин ${seconds} сек`, {
+                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${minutes} мин ${seconds} сек`, {
                     disable_notification: true
                 });
             } else {
-                return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в неделю. Осталось: ${seconds} сек`, {
+                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${seconds} сек`, {
                     disable_notification: true
                 });
             }
@@ -37,7 +38,7 @@ module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
             info += `${_class.translateName}:\nАтака: ${_class.attack}\nЗащита: ${_class.defence}\nКрит. урон x${_class.criticalDamage}\nКрит. шанс: ${_class.criticalChance}%\n\n`;
         }
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери, свой класс.\n\n${info}`, {
+        sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери, свой класс.\n\n${info}`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,

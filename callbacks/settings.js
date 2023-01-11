@@ -1,17 +1,10 @@
 const bot = require('../bot');
-const getMemberStatus = require("../functions/getMemberStatus");
-const getChatSessionSettings = require("../functions/getChatSessionSettings");
-const getChatSession = require("../functions/getChatSession");
-const controlButtons = require("../functions/controlButtons");
-
-function invertButtonCallbackData(callback) {
-    let [, currentFlag] = callback.match(/([0-1])$/);
-    return currentFlag === "1" ? callback.replace(/(1)$/, "0") : callback.replace(/(0)$/, "1");
-}
-
-function setButtonText(text, flag) {
-    return flag === "1" ? text.replace(/\|[^.]+$/, "| (Вкл)") : text.replace(/\|[^.]+$/, "| (Выкл)");
-}
+const getMemberStatus = require("../functions/getters/getMemberStatus");
+const getChatSessionSettings = require("../functions/getters/getChatSessionSettings");
+const getChatSession = require("../functions/getters/getChatSession");
+const invertButtonCallbackData = require("../functions/keyboard/invertButtonCallbackData");
+const setButtonText = require("../functions/keyboard/setButtonText");
+const controlButtons = require("../functions/keyboard/controlButtons");
 
 module.exports = [[/^settings\.[^.]+\.[0-1]+$/, function (session, callback) {
     const [, setting, flag] = callback.data.match(/^settings\.([^.]+)\.([0-1]+)$/);

@@ -1,12 +1,12 @@
 const bot = require('../../../bot');
 const {bosses} = require('../../../data');
-const sendMessage = require('../../../functions/sendMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const getMembers = require('../../../functions/getMembers');
+const getMembers = require('../../../functions/getters/getMembers');
 const summonBoss = require('../../../functions/game/boss/summonBoss');
 const initHpRegen = require('../../../functions/game/boss/initHpRegen');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
-const debugMessage = require('../../../functions/debugMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 
 module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
     try {

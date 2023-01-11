@@ -1,4 +1,4 @@
-const getRandom = require('../../getRandom');
+const getRandom = require('../../getters/getRandom');
 const cardsDictionary = require('../../../dictionaries/pointCards');
 
 function getCard(gameSession) {

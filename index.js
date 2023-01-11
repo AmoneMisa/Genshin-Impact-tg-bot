@@ -6,10 +6,10 @@ const {sessions, titles, bosses, trustedChats} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
-const getSession = require('./functions/getSession');
-const getChatSessionSettings = require('./functions/getChatSessionSettings');
-const debugMessage = require('./functions/debugMessage');
-const sendMessage = require('./functions/sendMessage');
+const getSession = require('./functions/getters/getSession');
+const getChatSessionSettings = require('./functions/getters/getChatSessionSettings');
+const debugMessage = require('./functions/tgBotFunctions/debugMessage');
+const sendMessage = require('./functions/tgBotFunctions/sendMessage');
 const log = intel.getLogger("genshin");
 
 const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');

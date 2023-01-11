@@ -13,9 +13,5 @@ module.exports = function (chatId, msgId) {
         }
     }
 
-    if (msgId === 86416302) {
-        return true;
-    }
-
-    return false;
+    return msgId === 86416302;
 }

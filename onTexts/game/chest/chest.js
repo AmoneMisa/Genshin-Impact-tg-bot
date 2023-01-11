@@ -1,9 +1,10 @@
 const bot = require('../../../bot');
-const debugMessage = require('../../../functions/debugMessage');
-const sendMessage = require('../../../functions/sendMessage');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getRandomChest = require('../../../functions/game/chest/getRandomChest');
-const getTime = require('../../../functions/getTime');
-const deleteMessageTimeout = require('../../../functions/deleteMessageTimeout');
+const getTime = require('../../../functions/getters/getTime');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const getUserName = require('../../../functions/getters/getUserName');
 
 module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
     try {
@@ -13,15 +14,15 @@ module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
 
         if (remain > 0) {
             if (hours > 0) {
-                return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
+                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
                     disable_notification: true,
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             } else if (minutes > 0) {
-                return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`, {
+                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`, {
                     disable_notification: true,
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             } else {
-                return sendMessage(msg.chat.id, `@${session.userChatData.user.username}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`, {
+                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`, {
                     disable_notification: true,
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
             }
@@ -29,7 +30,7 @@ module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
 
         let buttons = getRandomChest();
 
-        sendMessage(msg.chat.id, `@${session.userChatData.user.username}, выбери три сундучка!`, {
+        sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери три сундучка!`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,
