@@ -76,6 +76,8 @@ for (let [key, value] of onTexts) {
         let command = regExp[0].replace(/^\//, '');
         let settings = getChatSessionSettings(msg.chat.id);
         let foundSettingKey = null;
+        log.info('Command:%s', command);
+        log.info('Settings:%s', settings);
 
         for (let [commandRegexp, settingKey] of Object.entries(commandMap)){
             commandRegexp = new RegExp(`^${commandRegexp}$`);
@@ -85,7 +87,10 @@ for (let [key, value] of onTexts) {
             }
         }
 
+        log.info('Found settings key:%s', foundSettingKey);
+
         let commandStatus = foundSettingKey !== null ? settings[foundSettingKey] : null;
+        log.info('command status:%s', commandStatus);
 
         if (commandStatus !== null && !commandStatus) {
             await bot.deleteMessage(msg.chat.id, msg.message_id);
