@@ -22,7 +22,7 @@ bot.setMyCommands([
     {command: "games", description: "Список игр"},
     {command: "games_boss", description: "Команды для босса"},
     {command: "games_form", description: "Команды для анкет"},
-    {command: "reddit", description: "Команды для Reddit"},
+    // {command: "reddit", description: "Команды для Reddit"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
 ], {
