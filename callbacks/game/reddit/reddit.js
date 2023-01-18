@@ -14,7 +14,7 @@ module.exports = [["reddit.search", async function (session, callback) {
         return;
     }
 
-    let rule = /^([-_ a-zA-Z0-9]{4,})+$/mg;
+    let rule = /^([-_ a-zA-ZА-Яа-я0-9]{4,})+$/mg;
 
     sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, выдача постов по названию реддита`, {
         disable_notification: true,
@@ -88,18 +88,25 @@ module.exports = [["reddit.search", async function (session, callback) {
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let searchText = replyMsg.text;
             // symbols: -, _, small and big literals,any digits, min length 4 symbols
-            let rule = /^([-_ a-zA-Z0-9]{4,})+$/mg;
+            let rule = /^([-_ a-zA-ZА-Яа-я0-9]{4,})+$/mg;
             if (!rule.test(searchText)) {
                 return sendMessage(msg.chat.id, "Некорректный ввод. Правила для поиска:\n1) От 4 символов (Знаки препинания не входят).\n2) Любые буквы, числа, пробел, тире (-), нижнее подчёркивание (_)");
             }
 
-            if (subscribe(searchText, session, msg.chat.id)) {
+            let result = await subscribe(searchText, session, msg.chat.id)
+
+            if (typeof result !== "boolean") {
+                return sendMessageWithDelete(msg.chat.id, `Произошла ошибка при поиске. Попробуйте ещё раз, изменив параметры ввода. ${result}`, {}, 10000);
+            }
+
+            if (result) {
                 return sendMessageWithDelete(msg.chat.id, `Ты подписался на реддит: ${searchText}`, {}, 5000);
             }
+
             return sendMessageWithDelete(msg.chat.id, "Ты уже подписан на этот реддит", {}, 5000);
         });
     }).catch(e => {
@@ -138,7 +145,7 @@ module.exports = [["reddit.search", async function (session, callback) {
     }
 
     let text = "";
-    for (const textElement of session.reddit.subscribes) {
+    for (const textElement of Object.keys(session.reddit.subscribes)) {
         text += `${textElement} \n`;
     }
 

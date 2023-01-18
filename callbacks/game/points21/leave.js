@@ -9,6 +9,11 @@ module.exports = [["points_leave", async (session, callback) => {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = callback.from.id;
 
+        if (!chatSession.hasOwnProperty("pointPlayers")) {
+            chatSession.pointPlayers = {};
+            return;
+        }
+
         if (chatSession.pointPlayers[userId]) {
             delete chatSession.pointPlayers[userId];
         } else {
