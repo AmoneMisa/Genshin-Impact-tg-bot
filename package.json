@@ -1,7 +1,7 @@
 {
   "name": "tg-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "The bot created by WhitesLove and Baros",
   "main": "index.js",
   "scripts": {
     "run": "node index.js",
