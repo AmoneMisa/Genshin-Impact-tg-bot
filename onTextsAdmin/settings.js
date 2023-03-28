@@ -23,7 +23,7 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
             callback_data: "settings.boss"
         }, {
             text: "Кубики",
-            callback_data: "settings.dices"
+            callback_data: "settings.dice"
         }], [{
             text: "21 очко",
             callback_data: "settings.points"
