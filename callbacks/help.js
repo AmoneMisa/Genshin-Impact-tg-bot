@@ -56,24 +56,27 @@ module.exports = [["help", function (session, callback) {
             }, {
                 text: "21 очко",
                 callback_data: "help_minigames_point"
-            }],[{
+            }], [{
                 text: "Сундучки",
                 callback_data: "help_minigames_chest"
             }, {
                 text: "Увеличить меч",
                 callback_data: "help_minigames_sword"
-            }],[{
+            }], [{
                 text: "Титулы",
                 callback_data: "help_minigames_titles"
             }, {
                 text: "Слоты",
                 callback_data: "help_minigames_slots"
-            }],[{
-                text: "Ресурсы (кристаллы)",
-                callback_data: "help_minigames_crystals"
-            }, {
+            }], [{
                 text: "Боулинг",
                 callback_data: "help_minigames_bowling"
+            }, {
+                text: "Дартс",
+                callback_data: "help_minigames_darts"
+            }], [{
+                text: "Ресурсы (кристаллы)",
+                callback_data: "help_minigames_crystals"
             }], [{
                 text: "Назад",
                 callback_data: "help"
@@ -94,16 +97,16 @@ module.exports = [["help", function (session, callback) {
             }, {
                 text: "Нанести урон",
                 callback_data: "help_boss_dealDamage"
-            }],[{
+            }], [{
                 text: "Классы",
                 callback_data: "help_boss_class"
             }, {
                 text: "Статы",
                 callback_data: "help_boss_stats"
-            }],[{
+            }], [{
                 text: "Перевести золото",
                 callback_data: "help_boss_sendGold"
-            }],[{
+            }], [{
                 text: "Назад",
                 callback_data: "help"
             }], [{
@@ -341,6 +344,20 @@ module.exports = [["help", function (session, callback) {
     });
 }], ["help_minigames_bowling", function (session, callback) {
     bot.editMessageText(`${dictionary.ru.help.bowling}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_darts", function (session, callback) {
+    bot.editMessageText(`${dictionary.ru.help.darts}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {

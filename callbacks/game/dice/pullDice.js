@@ -1,6 +1,6 @@
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const isWinDices = require('../../../functions/game/dice/isWinDices');
-const sendPrize = require('../../../functions/game/dice/sendPrize');
+const isWinPoints = require('../../../functions/game/general/isWinByPoints');
+const sendPrize = require('../../../functions/game/general/sendPrize');
 const endGame = require('../../../functions/game/dice/endGame');
 const bot = require('../../../bot');
 const getUserName = require('../../../functions/getters/getUserName');
@@ -26,7 +26,7 @@ module.exports = [[/^dice_pull$/, async function (session, callback) {
     session.game.dice.counter++;
 
     if (session.game.dice.counter === maxPulls) {
-        let result = isWinDices(session.game.dice.dice, 12, 18);
+        let result = isWinPoints(session.game.dice.dice, 12, 18);
         if (result) {
             let modifier = 1.2;
             sendPrize(session, modifier);

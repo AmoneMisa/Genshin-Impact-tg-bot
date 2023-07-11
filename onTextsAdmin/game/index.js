@@ -7,6 +7,7 @@ const experience = require('./experience');
 const boss = require('./boss');
 const dice = require('./dice');
 const bowling = require('./bowling');
+const darts = require('./darts');
 
 module.exports = [
     ...sword,
@@ -17,5 +18,6 @@ module.exports = [
     ...dice,
     ...boss,
     ...crystals,
-    ...bowling
+    ...bowling,
+    ...darts
 ];

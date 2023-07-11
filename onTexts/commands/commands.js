@@ -15,7 +15,8 @@ const gamesCommands = [
     {command: "point", description: "Игра в 21 очко"},
     {command: "slots", description: "Слоты"},
     {command: "dice", description: "Кубики"},
-    {command: "bowling", description: "Боулинг"}
+    {command: "bowling", description: "Боулинг"},
+    {command: "darts", description: "Дартс"}
 ];
 
 const formsCommands = [
@@ -30,8 +31,14 @@ const bossCommands = [
     {command: "heal", description: "Похиллить себя"},
     {command: "whoami", description: "Моя статистика"},
     {command: "change_class", description: "Изменить класс"},
-    {command: "exchange", description: "Обменник кристаллов"},
+    {command: "exchange", description: "Обменник кристаллов"}
 ];
+
+const resetGamesCommands = [
+    {command: "reset_darts_game", description: "Сбросить игру в дартс"},
+    {command: "reset_dice_game", description: "Сбросить игру в кубики"},
+    {command: "reset_bowling_game", description: "Сбросить игру в боулинг"}
+]
 
 module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     try {
@@ -95,6 +102,28 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
         });
     } catch (e) {
         debugMessage(`Command: /games_form\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        throw e;
+    }
+}], [/(?:^|\s)\/reset_games_timers\b/, async (msg) => {
+    try {
+        bot.deleteMessage(msg.chat.id, msg.message_id);
+        let message = `Список команд анкет по Геншину:\n\n`;
+
+        for (let command of resetGamesCommands) {
+            message += `/${command.command} - ${command.description}\n`;
+        }
+
+        sendMessage(msg.chat.id, message, {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } catch (e) {
+        debugMessage(`Command: /reset_games_timers\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

@@ -10,6 +10,7 @@ const slots = require('./slots');
 const dice = require('./dice');
 const reddit = require('./reddit');
 const bowling = require('./bowling');
+const darts = require('./darts');
 
 module.exports = [
     ...bossCallback,
@@ -23,5 +24,6 @@ module.exports = [
     ...slots,
     ...dice,
     ...reddit,
-    ...bowling
+    ...bowling,
+    ...darts
 ];

@@ -16,12 +16,15 @@ const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');
 const buttonsDictionary = require("./dictionaries/buttons");
 
+debugMessage("Я включился");
+
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
     {command: "help", description: "Помощь"},
     {command: "games", description: "Список игр"},
     {command: "games_boss", description: "Команды для босса"},
     {command: "games_form", description: "Команды для анкет"},
+    {command: "reset_games_timers", description: "Сбросить таймеры для персональных игр"},
     // {command: "reddit", description: "Команды для Reddit"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
@@ -60,6 +63,8 @@ const commandMap = {
     "slots": "slots",
     "point": "points",
     "dice": "dice",
+    "darts": "darts",
+    "bowling": "bowling",
     "chest": "chests",
     "title": "titles",
     "titles": "titles",
