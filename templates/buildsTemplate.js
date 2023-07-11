@@ -14,10 +14,16 @@ module.exports = {
         startLvl: 1,
         updateCostGold: 300,
         updateCostCrystal: 20,
-        timeForUpdate: 10,
+        upgradeTime: 15,
         maxLvl: 30,
         perHour: 1000,
-        available: true
+        available: true,
+        upgradeCosts: {
+            level: 2,
+            gold: 320,
+            crystal: 22,
+            ironOre: 10
+        }
     },
     crystalLake: {
         name: "Озеро кристаллов",

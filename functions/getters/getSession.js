@@ -12,25 +12,57 @@ module.exports = async function (chatId, userId) {
         };
     }
 
-    if (!members[userId].hasOwnProperty("reddit")) {
-        members[userId].reddit = {
-            subscribes: [],
-            countPosts: 3,
-            postType: "hot",
-            timer: {
-                hour: 2,
-                minute: 0
-            }
-        };
-    }
+    // if (!members[userId].hasOwnProperty("reddit")) {
+    //     members[userId].reddit = {
+    //         subscribes: [],
+    //         countPosts: 3,
+    //         postType: "hot",
+    //         timer: {
+    //             hour: 2,
+    //             minute: 0
+    //         }
+    //     };
+    // }
 
     if (!members[userId].game) {
         members[userId].game = {
+            builds: {
+              palace: {
+                  name: "Дворец"
+              },
+              goldMine: {
+                  name: "Золотая шахта"
+              }
+            },
             dice: {
                 isStart: false,
                 bet: 0,
                 dice: 0,
                 counter: 0
+            },
+            basketball: {
+                bet: 0,
+                ball: 0,
+                counter: 0,
+                isStart: false
+            },
+            football: {
+                bet: 0,
+                ball: 0,
+                counter: 0,
+                isStart: false
+            },
+            bowling: {
+                bet: 0,
+                skittles: 0,
+                counter: 0,
+                isStart: false
+            },
+            darts: {
+                bet: 0,
+                dart: 0,
+                counter: 0,
+                isStart: false
             },
             stats: {
                 currentExp: 0,

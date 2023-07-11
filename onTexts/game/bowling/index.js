@@ -1,3 +1,3 @@
-const dice = require('./bowling');
+const bowling = require('./bowling');
 
-module.exports = [...dice];
+module.exports = [...bowling];

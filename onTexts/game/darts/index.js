@@ -1,3 +1,3 @@
-const dice = require('./darts');
+const darts = require('./darts');
 
-module.exports = [...dice];
+module.exports = [...darts];

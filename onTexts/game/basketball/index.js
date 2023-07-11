@@ -1,3 +1,3 @@
-const dice = require('./basketball');
+const basketball = require('./basketball');
 
-module.exports = [...dice];
+module.exports = [...basketball];
