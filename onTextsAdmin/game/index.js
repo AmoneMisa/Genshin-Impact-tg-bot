@@ -8,6 +8,8 @@ const boss = require('./boss');
 const dice = require('./dice');
 const bowling = require('./bowling');
 const darts = require('./darts');
+const basketball = require('./basketball');
+const football = require('./football');
 
 module.exports = [
     ...sword,
@@ -19,5 +21,7 @@ module.exports = [
     ...boss,
     ...crystals,
     ...bowling,
-    ...darts
+    ...darts,
+    ...basketball,
+    ...football
 ];

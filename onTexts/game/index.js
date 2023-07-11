@@ -9,6 +9,8 @@ const slots = require('./slots');
 const dice = require('./dice');
 const bowling = require('./bowling');
 const darts = require('./darts');
+const basketball = require('./basketball');
+const football = require('./football');
 
 module.exports = [
     ...sendGold,
@@ -21,5 +23,7 @@ module.exports = [
     ...slots,
     ...dice,
     ...bowling,
-    ...darts
+    ...darts,
+    ...basketball,
+    ...football
 ];

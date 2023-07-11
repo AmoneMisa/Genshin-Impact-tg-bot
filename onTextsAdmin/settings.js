@@ -54,6 +54,12 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
         },{
             text: "Дартс",
             callback_data: "settings.darts"
+        },{
+            text: "Баскетбол",
+            callback_data: "settings.basketball"
+        }], [{
+            text: "Футбол",
+            callback_data: "settings.football"
         }]];
 
         let settings = getChatSessionSettings(msg.chat.id);

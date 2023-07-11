@@ -16,7 +16,9 @@ const gamesCommands = [
     {command: "slots", description: "Слоты"},
     {command: "dice", description: "Кубики"},
     {command: "bowling", description: "Боулинг"},
-    {command: "darts", description: "Дартс"}
+    {command: "darts", description: "Дартс"},
+    {command: "basketball", description: "Баскетбол"},
+    {command: "football", description: "Футбол"}
 ];
 
 const formsCommands = [
@@ -37,7 +39,9 @@ const bossCommands = [
 const resetGamesCommands = [
     {command: "reset_darts_game", description: "Сбросить игру в дартс"},
     {command: "reset_dice_game", description: "Сбросить игру в кубики"},
-    {command: "reset_bowling_game", description: "Сбросить игру в боулинг"}
+    {command: "reset_bowling_game", description: "Сбросить игру в боулинг"},
+    {command: "reset_basketball_game", description: "Сбросить игру в баскетбол"},
+    {command: "reset_football_game", description: "Сбросить игру в футбол"}
 ]
 
 module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
@@ -107,7 +111,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
 }], [/(?:^|\s)\/reset_games_timers\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
-        let message = `Список команд анкет по Геншину:\n\n`;
+        let message = `Список команд для сброса таймера персональных игр:\n\n`;
 
         for (let command of resetGamesCommands) {
             message += `/${command.command} - ${command.description}\n`;

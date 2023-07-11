@@ -5,22 +5,22 @@ const getSession = require('../../../functions/getters/getSession');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getUserName = require('../../../functions/getters/getUserName');
 
-module.exports = [[/(?:^|\s)\/darts\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/football\b/, async (msg) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let session = await getSession(msg.chat.id, msg.from.id);
         let id;
 
-        if (!session.game.hasOwnProperty('darts')) {
-            session.game.darts = {
+        if (!session.game.hasOwnProperty('football')) {
+            session.game.football = {
                 bet: 0,
-                dart: 0,
+                ball: 0,
                 counter: 0,
                 isStart: false
             };
         }
 
-        if (session.game.darts.isStart) {
+        if (session.game.football.isStart) {
             return await sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {} , 7000)
         }
 
@@ -29,45 +29,45 @@ module.exports = [[/(?:^|\s)\/darts\b/, async (msg) => {
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Ставка (+100)",
-                    callback_data: "darts_bet"
+                    callback_data: "football_bet"
                 }, {
                     text: "Ставка (х2)",
-                    callback_data: "darts_double_bet"
+                    callback_data: "football_double_bet"
                 }], [{
                     text: "Ставка (+1000)",
-                    callback_data: "darts_thousand_bet"
+                    callback_data: "football_thousand_bet"
                 }, {
                     text: "Ставка (х5)",
-                    callback_data: "darts_xfive_bet"
+                    callback_data: "football_xfive_bet"
                 }], [{
                     text: "Ставка (+10000)",
-                    callback_data: "darts_10t_bet"
+                    callback_data: "football_10t_bet"
                 }, {
                     text: "Ставка (x10)",
-                    callback_data: "darts_xten_bet"
+                    callback_data: "football_xten_bet"
                 }], [{
                     text: "Ставка (x20)",
-                    callback_data: "darts_x20_bet"
+                    callback_data: "football_x20_bet"
                 }, {
                     text: "Ставка (x50)",
-                    callback_data: "darts_x50_bet"
+                    callback_data: "football_x50_bet"
                 }], [{
                     text: "Всё или ничего",
-                    callback_data: "darts_allin_bet"
+                    callback_data: "football_allin_bet"
                 }]]
             }
         }).then(message => id = message.message_id);
 
         function startGame() {
-            session.game.darts.isStart = true;
-            bot.editMessageText('Делай бросок. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 13. При трёх "яблочках", твоя ставка удвоится.', {
+            session.game.football.isStart = true;
+            bot.editMessageText('Бей. Ты выиграешь, если суммарное количество очков за 3 удара будет больше 12.', {
                 message_id: id,
                 chat_id: msg.chat.id,
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{
-                        text: "Сделать бросок",
-                        callback_data: "darts_pull"
+                        text: "Ударить по мячу",
+                        callback_data: "football_pull"
                     }]]
                 }
             });
@@ -75,7 +75,7 @@ module.exports = [[/(?:^|\s)\/darts\b/, async (msg) => {
 
         setTimeout(() => startGame(), 20 * 1000);
     } catch (e) {
-        sendMessage(myId, `Command: /darts\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
+        sendMessage(myId, `Command: /football\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];
