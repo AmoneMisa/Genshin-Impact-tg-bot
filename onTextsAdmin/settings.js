@@ -48,6 +48,9 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
         }, {
             text: "Перевод золота",
             callback_data: "settings.sendGold"
+        }], [{
+            text: "Боулинг",
+            callback_data: "settings.bowling"
         }]];
 
         let settings = getChatSessionSettings(msg.chat.id);

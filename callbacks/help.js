@@ -71,6 +71,9 @@ module.exports = [["help", function (session, callback) {
             }],[{
                 text: "Ресурсы (кристаллы)",
                 callback_data: "help_minigames_crystals"
+            }, {
+                text: "Боулинг",
+                callback_data: "help_minigames_bowling"
             }], [{
                 text: "Назад",
                 callback_data: "help"
@@ -324,6 +327,20 @@ module.exports = [["help", function (session, callback) {
     });
 }], ["help_minigames_crystals", function (session, callback) {
     bot.editMessageText(`${dictionary.ru.help.crystals}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_bowling", function (session, callback) {
+    bot.editMessageText(`${dictionary.ru.help.bowling}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
