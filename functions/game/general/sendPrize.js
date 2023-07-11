@@ -1,3 +1,3 @@
-module.exports = function (session, modifier) {
-    session.game.inventory.gold += Math.round(session.game.dice.bet * modifier);
+module.exports = function (session, modifier, gameName) {
+    session.game.inventory.gold += Math.round(session.game[gameName].bet * modifier);
 };

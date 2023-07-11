@@ -40,7 +40,7 @@ module.exports = [[/^bowling_pull$/, async function (session, callback) {
             modifier = 1.2;
         }
         
-        sendPrize(session, modifier);
+        sendPrize(session, modifier, 'bowling');
         bot.deleteMessage(chatId, callback.message.message_id);
         sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.bowling.bet}\nВыигрыш: ${Math.round(session.game.bowling.bet * modifier)}\nСбитое число кеглей: ${session.game.bowling.skittles}`, {}, 7000);
 

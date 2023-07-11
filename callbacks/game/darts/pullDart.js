@@ -41,7 +41,7 @@ module.exports = [[/^darts_pull$/, async function (session, callback) {
             modifier = 1.4;
         }
         
-        sendPrize(session, modifier);
+        sendPrize(session, modifier, 'darts');
         bot.deleteMessage(chatId, callback.message.message_id);
         sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.darts.bet}\nВыигрыш: ${Math.round(session.game.darts.bet * modifier)}\nСумма очков: ${session.game.darts.dart}`, {}, 7000);
 

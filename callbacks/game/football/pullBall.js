@@ -41,7 +41,7 @@ module.exports = [[/^football_pull$/, async function (session, callback) {
             modifier = 1.25;
         }
         
-        sendPrize(session, modifier);
+        sendPrize(session, modifier, 'football');
         bot.deleteMessage(chatId, callback.message.message_id);
         sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.football.bet}\nВыигрыш: ${Math.round(session.game.football.bet * modifier)}\nСумма очков: ${session.game.football.ball}`, {}, 7000);
 

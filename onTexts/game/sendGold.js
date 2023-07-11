@@ -8,12 +8,20 @@ const buildKeyboard = require('../../functions/keyboard/buildKeyboard');
 const controlButtons = require('../../functions/keyboard/controlButtons');
 const getUserName = require('../../functions/getters/getUserName');
 
+function isGameStarted(session, gameName) {
+   return session.game.hasOwnProperty(gameName) && session.game.dice.hasOwnProperty('isStart') && session.game[gameName].isStart;
+}
+
 module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
     try {
         let chatSession = getChatSession(msg.chat.id);
 
         if (chatSession.pointPlayers && chatSession.pointPlayers[session.userChatData.user.id] ||
-            (session.game.hasOwnProperty('dice') && session.game.dice.hasOwnProperty('isStart') && session.game.dice.isStart) ||
+            isGameStarted(session, 'dice') ||
+            isGameStarted(session, 'bowling') ||
+            isGameStarted(session, 'darts') ||
+            isGameStarted(session, 'basketball') ||
+            isGameStarted(session, 'football') ||
             (session.game.hasOwnProperty("slots") && session.game.slots.hasOwnProperty("state") && session.game.slots.state === 'bets')) {
             sendMessage(msg.chat.id, "Ты не можешь переводить золото, играя в игру.");
             return;
