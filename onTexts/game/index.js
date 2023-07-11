@@ -7,6 +7,7 @@ const point21 = require('./point21');
 const player = require('./player');
 const slots = require('./slots');
 const dice = require('./dice');
+const bowling = require('./bowling');
 
 module.exports = [
     ...sendGold,
@@ -18,4 +19,5 @@ module.exports = [
     ...player,
     ...slots,
     ...dice,
+    ...bowling
 ];

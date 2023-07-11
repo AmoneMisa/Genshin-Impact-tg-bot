@@ -14,7 +14,8 @@ const gamesCommands = [
     {command: "chest", description: "Открыть сундук"},
     {command: "point", description: "Игра в 21 очко"},
     {command: "slots", description: "Слоты"},
-    {command: "dice", description: "Кубики"}
+    {command: "dice", description: "Кубики"},
+    {command: "bowling", description: "Боулинг"}
 ];
 
 const formsCommands = [
