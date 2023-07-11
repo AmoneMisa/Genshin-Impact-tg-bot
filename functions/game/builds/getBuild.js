@@ -1,7 +1,5 @@
-import getSession from '../../getters/getSession';
+const getBuildList = require('./getBuildList');
 
 module.exports = async function (chatId, userId, buildName) {
-    const session = await getSession(chatId, userId);
-
-    return session.game.builds[buildName];
+    return (await getBuildList(chatId, userId))[buildName];
 };

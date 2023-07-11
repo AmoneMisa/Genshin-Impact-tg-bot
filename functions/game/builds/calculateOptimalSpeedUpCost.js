@@ -4,7 +4,7 @@ function calculateOptimalSpeedUpCost(buildTime) {
         return 0; // Ускорение бесплатно, если осталось 15 минут или меньше
     } else {
         const hoursLeft = Math.ceil(buildTime / 60);
-        const cost = hoursLeft * 60; // Предполагаемая стоимость ускорения в кристаллах
+        const cost = hoursLeft * 30; // Предполагаемая стоимость ускорения в кристаллах
         return cost;
     }
 }

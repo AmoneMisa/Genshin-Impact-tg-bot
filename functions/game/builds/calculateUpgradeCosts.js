@@ -5,7 +5,7 @@ function calculateUpgradeCosts(building, level) {
     while (upgradeCosts.length < level) {
         const previousLevel = upgradeCosts.length + 1;
         const previousCost = upgradeCosts[previousLevel - 2]; // Получаем стоимость предыдущего уровня
-        const costIncreaseFactor = 1.1; // Фактор увеличения стоимости (примерное значение, можно настроить по необходимости)
+        const costIncreaseFactor = 1.178; // Фактор увеличения стоимости (примерное значение, можно настроить по необходимости)
 
         // Рассчитываем стоимость для текущего уровня
         const currentCost = {

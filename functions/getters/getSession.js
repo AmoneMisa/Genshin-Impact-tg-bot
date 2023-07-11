@@ -1,6 +1,7 @@
 const userTemplate = require('../../templates/userTemplate');
 const bot = require('../../bot');
 const getMembers = require('./getMembers');
+const getBuildFromTemplate = require('../game/builds/getBuildFromTemplate');
 
 module.exports = async function (chatId, userId) {
     let members = getMembers(chatId);
@@ -26,14 +27,6 @@ module.exports = async function (chatId, userId) {
 
     if (!members[userId].game) {
         members[userId].game = {
-            builds: {
-              palace: {
-                  name: "Дворец"
-              },
-              goldMine: {
-                  name: "Золотая шахта"
-              }
-            },
             dice: {
                 isStart: false,
                 bet: 0,
@@ -119,6 +112,10 @@ module.exports = async function (chatId, userId) {
 
     if (!members[userId].game.hasOwnProperty("effects")) {
         members[userId].game.effects = [];
+    }
+
+    if (!members[userId].game.hasOwnProperty("builds")) {
+        members[userId].game.builds = getBuildFromTemplate();
     }
 
     if (!members[userId].game.inventory.hasOwnProperty("crystals")) {

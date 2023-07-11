@@ -13,6 +13,7 @@ const bowling = require('./bowling');
 const darts = require('./darts');
 const basketball = require('./basketball');
 const football = require('./football');
+const builds = require('./builds');
 
 module.exports = [
     ...bossCallback,
@@ -29,5 +30,6 @@ module.exports = [
     ...bowling,
     ...darts,
     ...basketball,
-    ...football
+    ...football,
+    ...builds
 ];
