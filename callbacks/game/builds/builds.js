@@ -14,8 +14,9 @@ function getCaption(name, action, build) {
         case "home": return `${buildTemplate.name} - ${buildTemplate.description}`;
         case "upgrade": return `${buildTemplate.name} - улучшение здания.\n\nТекущий уровень: ${build.currentLvl}\nСтоимость улучшения на следующий уровень: `;
         case "status": return `${buildTemplate.name} - статус здания.\n\nТекущий уровень: ${build.currentLvl}\nТекущие характеристики:` ;
-        case "collect": return `${buildTemplate.name} - собрать прибыль.\n\nПроизведено: .\nОсталось времени непрерывного производства: `;
-        case "changeType": return `${buildTemplate.name} - Изменить внешний вид\n\nПо умолчанию, Вам доступен только стандартный вид, для получения двугих внешних видов, необходимо зайти в магазин через команду /shop.`;
+        case "collect.0": return `${buildTemplate.name} - собрать прибыль.\n\nПроизведено: .\nОсталось времени непрерывного производства: `;
+        case "collect.1": return `${buildTemplate.name} - невозможно собрать прибыль.\n\nЕщё ничего не произведено.\nОсталось времени непрерывного производства: `;
+        case "changeType": return `${buildTemplate.name} - Изменить внешний вид\n\nПо умолчанию, Вам доступен только стандартный вид, для получения других внешних видов, необходимо зайти в магазин через команду /shop.`;
         case "changeName": return `${buildTemplate.name} - Изменить название дворца`;
         case "guarded": return `${buildTemplate.name} - статус казны.\n\nНа данный момент под защитой: золота, руды, кристаллов.`;
         default: return `${buildTemplate.name} - ${buildTemplate.description}`;
@@ -336,7 +337,8 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
 
     if (Object.entries(types).length) {
         for (let [key, type] of Object.entries(types)) {
-            if (build.type === type) {
+
+            if (build.type === key) {
                 continue;
             }
 
@@ -406,15 +408,11 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
 
     try {
         let imageStream = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
+        await bot.deleteMessage(chatId, messageId);
 
         if (imageStream) {
-            await bot.editMessageMedia({
-                type: "photo",
-                media: imageStream,
-                caption: getCaption(buildName, "home", build)
-            }, {
-                chat_id: chatId,
-                message_id: messageId,
+            await sendPhoto(chatId, imageStream,{
+                caption: getCaption(buildName, "home", build),
                 reply_markup: {
                     inline_keyboard: [[{
                         text: "Назад",
@@ -428,5 +426,48 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
         }
     } catch (e) {
         debugMessage(`${chatId} - builds.${buildName}.changeType.${typeName}.0 - ошибка редактирования изображения`);
+    }
+}], [/^builds\.[^.]+\.collect$/, async function (session, callback) {
+    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.collect$/);
+    let messageId = callback.message.message_id;
+    let chatId = callback.message.chat.id;
+
+    let build = await getBuild(chatId, callback.from.id, buildName);
+    let resourcesCount = build.resources;
+
+    let keyboard;
+    if (resourcesCount > 0) {
+        keyboard = [[{
+            text: "",
+            callback_data: `builds.${buildName}.collect.0`
+        }], [{
+            text: "Назад",
+            callback_data: `builds.${buildName}.back`
+        }], [{
+            text: buttonsDictionary["ru"].close,
+            callback_data: "close"
+        }]];
+    } else {
+        keyboard = [[{
+            text: "Назад",
+            callback_data: `builds.${buildName}.back`
+        }], [{
+            text: buttonsDictionary["ru"].close,
+            callback_data: "close"
+        }]];
+    }
+    // условие: если достаточно ресурсов для улучшения, показывать кнопку "улучшить", если нет - не показывать.
+    // Если улучшение уже в процессе - добавить кнопку "ускорить улучшение" и изменить заголовок на "Вы уверены?" и цену улучшения
+
+    try {
+        await bot.editMessageCaption(getCaption(buildName, `collect.${resourcesCount > 0 ? 0 : 1}`, build), {
+            chat_id: chatId,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: keyboard
+            }
+        });
+    } catch (e) {
+        debugMessage(`${chatId} - builds.${build}.upgrade - ошибка редактирования заголовка`);
     }
 }]];
