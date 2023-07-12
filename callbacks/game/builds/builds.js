@@ -1,4 +1,5 @@
 const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getUserName = require('../../../functions/getters/getUserName');
 const getBuild = require('../../../functions/game/builds/getBuild');
 const getCaption = require('../../../functions/game/builds/getCaption');
@@ -82,6 +83,30 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                     }]]
                 }
             });
+        } else {
+            await sendMessage(chatId, getCaption('palace', "home", build), {
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Изменить тип",
+                        callback_data: "builds.palace.changeType",
+                    },{
+                        text: "Статус",
+                        callback_data: "builds.palace.status",
+                    }],[{
+                        text: "Улучшить",
+                        callback_data: "builds.palace.upgrade",
+                    },{
+                        text: "Статус казны",
+                        callback_data: "builds.palace.guarded",
+                    }],[{
+                        text: "Изменить название",
+                        callback_data: "builds.palace.changeName",
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
         }
     }
 }], [/^builds\.goldMine(?:\.back)?$/, async function (session, callback) {
@@ -123,23 +148,43 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
     } else {
         let imageStream = getLocalImageByPath(build.currentLvl, 'builds/goldMine');
 
-        await sendPhoto(chatId, imageStream, {
-            caption: getCaption('goldMine', "home", build), reply_markup: {
-                inline_keyboard: [[{
-                    text: "Статус",
-                    callback_data: "builds.goldMine.status",
-                }, {
-                    text: "Улучшить",
-                    callback_data: "builds.goldMine.upgrade",
-                }],[{
-                    text: "Собрать прибыть",
-                    callback_data: "builds.goldMine.collect",
-                }], [{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        })
+        if (imageStream) {
+            await sendPhoto(chatId, imageStream, {
+                caption: getCaption('goldMine', "home", build), reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Статус",
+                        callback_data: "builds.goldMine.status",
+                    }, {
+                        text: "Улучшить",
+                        callback_data: "builds.goldMine.upgrade",
+                    }],[{
+                        text: "Собрать прибыть",
+                        callback_data: "builds.goldMine.collect",
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
+        } else {
+            await sendMessage(chatId, getCaption('goldMine', "home", build), {
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Статус",
+                        callback_data: "builds.goldMine.status",
+                    }, {
+                        text: "Улучшить",
+                        callback_data: "builds.goldMine.upgrade",
+                    }],[{
+                        text: "Собрать прибыть",
+                        callback_data: "builds.goldMine.collect",
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
+        }
     }
 }],[/^builds.crystalLake(?:\.back)?$/, async function (session, callback) {
     if (getUserName(session, "nickname") !== callback.from.username) {
@@ -180,23 +225,43 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
     } else {
         let imageStream = getLocalImageByPath(build.currentLvl, 'builds/crystalLake');
 
-        await sendPhoto(chatId, imageStream, {
-            caption: getCaption('crystalLake', "home", build), reply_markup: {
-                inline_keyboard: [[{
-                    text: "Статус",
-                    callback_data: "builds.crystalLake.status",
-                }, {
-                    text: getUpgradeButtonText(build.currentLvl),
-                    callback_data: "builds.crystalLake.upgrade",
-                }],[{
-                    text: "Собрать прибыть",
-                    callback_data: "builds.crystalLake.collect",
-                }], [{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        })
+        if (imageStream) {
+            await sendPhoto(chatId, imageStream, {
+                caption: getCaption('crystalLake', "home", build), reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Статус",
+                        callback_data: "builds.crystalLake.status",
+                    }, {
+                        text: getUpgradeButtonText(build.currentLvl),
+                        callback_data: "builds.crystalLake.upgrade",
+                    }], [{
+                        text: "Собрать прибыть",
+                        callback_data: "builds.crystalLake.collect",
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
+        } else {
+            await sendMessage(chatId, getCaption('crystalLake', "home", build), {
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Статус",
+                        callback_data: "builds.crystalLake.status",
+                    }, {
+                        text: getUpgradeButtonText(build.currentLvl),
+                        callback_data: "builds.crystalLake.upgrade",
+                    }], [{
+                        text: "Собрать прибыть",
+                        callback_data: "builds.crystalLake.collect",
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
+        }
     }
 }],[/^builds.ironDeposit(?:\.back)?$/, async function (session, callback) {
     if (getUserName(session, "nickname") !== callback.from.username) {
@@ -214,7 +279,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
 
     let build = await getBuild(chatId, callback.from.id, 'ironDeposit');
     if (isBack) {
-        await bot.editMessageCaption(getCaption('crystalLake', "home", build), {
+        await bot.editMessageCaption(getCaption('ironDeposit', "home", build), {
             chat_id: chatId,
             message_id: messageId,
             reply_markup: {
@@ -236,22 +301,42 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
     } else {
         let imageStream = getLocalImageByPath(build.currentLvl, 'builds/ironDeposit');
 
-        await sendPhoto(chatId, imageStream, {
-            caption: getCaption('ironDeposit', "home", build), reply_markup: {
-                inline_keyboard: [[{
-                    text: "Статус",
-                    callback_data: "builds.ironDeposit.status",
-                }, {
-                    text: getUpgradeButtonText(build.currentLvl),
-                    callback_data: "builds.ironDeposit.upgrade",
-                }], [{
-                    text: "Собрать прибыть",
-                    callback_data: "builds.ironDeposit.collect",
-                }], [{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        })
+        if (imageStream) {
+            await sendPhoto(chatId, imageStream, {
+                caption: getCaption('ironDeposit', "home", build), reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Статус",
+                        callback_data: "builds.ironDeposit.status",
+                    }, {
+                        text: getUpgradeButtonText(build.currentLvl),
+                        callback_data: "builds.ironDeposit.upgrade",
+                    }], [{
+                        text: "Собрать прибыть",
+                        callback_data: "builds.ironDeposit.collect",
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
+        } else {
+            await sendMessage(chatId, getCaption('ironDeposit', "home", build), {
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Статус",
+                        callback_data: "builds.ironDeposit.status",
+                    }, {
+                        text: getUpgradeButtonText(build.currentLvl),
+                        callback_data: "builds.ironDeposit.upgrade",
+                    }], [{
+                        text: "Собрать прибыть",
+                        callback_data: "builds.ironDeposit.collect",
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
+        }
     }
 }]];

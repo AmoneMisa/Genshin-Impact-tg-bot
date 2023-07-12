@@ -15,7 +15,15 @@ module.exports = {
         startLvl: 1,
         updateCostGold: 300,
         updateCostCrystal: 20,
-        upgradeTime: 15,
+        upgradeTime: [{
+            level: 2, time: 0.25,
+        }, {
+            level: 3, time: 0.25,
+        }, {
+            level: 4, time: 0.25,
+        }, {
+            level: 5, time: 0.25,
+        }], // часы
         maxLvl: 30,
         productionPerHour: 1000,
         available: true,
@@ -52,6 +60,15 @@ module.exports = {
             {level: 4, gold: 12500, ironOre: 80, crystals: 0},
             // Далее для каждого следующего уровня стоимость увеличивается
         ],
+        upgradeTime: [{
+            level: 2, time: 0.15,
+        }, {
+            level: 3, time: 0.25,
+        }, {
+            level: 4, time: 0.35,
+        }, {
+            level: 5, time: 0.55,
+        }], // часы
         resourcesType: "crystal",
         available: true
     },
@@ -70,7 +87,15 @@ module.exports = {
         startLvl: 1,
         description: "Ваше главное здание. Вы можете выбрать его внешний вид через меню дворца. В зависимости от его уровня," +
             " зависит максимальный доступный уровень Ваших остальных построек.",
-        upgradeTime: 6, // часы
+        upgradeTime: [{
+            level: 2, time: 2,
+        }, {
+            level: 3, time: 2.5,
+        }, {
+            level: 4, time: 3,
+        }, {
+            level: 5, time: 6,
+        }], // часы
         upgradeCosts: [{
             level: 2, gold: 2000, ironOre: 60, crystals: 300
         }],
@@ -139,6 +164,15 @@ module.exports = {
         name: "Залежи железной руды",
         description: "Ваши месторождения железной руды. Она необходима для улучшения оружия, брони и построек. Работает непрерывно до 36 часов.",
         productionPerHour: 5,
+        upgradeTime: [{
+            level: 2, time: 0.25,
+        }, {
+            level: 3, time: 0.25,
+        }, {
+            level: 4, time: 0.25,
+        }, {
+            level: 5, time: 0.25,
+        }],
         maxWorkHoursWithoutCollection: 36,
         upgradeRequirements: [
             {level: 2, palaceLevel: 1},

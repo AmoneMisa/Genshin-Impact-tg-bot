@@ -1,7 +1,7 @@
-module.exports = function (build, lvl) {
+module.exports = function (buildName, lvl) {
         let increaseFactor;
 
-        switch (build) {
+        switch (buildName) {
             case "goldMine":
                 increaseFactor = 0.1;
                 break;

@@ -10,6 +10,7 @@ const getSession = require('./functions/getters/getSession');
 const getChatSessionSettings = require('./functions/getters/getChatSessionSettings');
 const debugMessage = require('./functions/tgBotFunctions/debugMessage');
 const sendMessage = require('./functions/tgBotFunctions/sendMessage');
+const setGlobalAccumulateTimer = require('./functions/game/builds/setGlobalAccumulateTimer');
 const log = intel.getLogger("genshin");
 const cron = require('node-cron');
 
@@ -146,6 +147,8 @@ bot.on("callback_query", async (callback) => {
         // log.info('%:2j', session);
     });
 });
+
+setGlobalAccumulateTimer();
 
 function writeFiles(backup) {
     writeFile("sessions", sessions, backup);
