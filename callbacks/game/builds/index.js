@@ -1,5 +1,13 @@
 const builds = require('./builds');
+const changeType = require('./changeType');
+const collectResources = require('./collectResources');
+const status = require('./status');
+const upgrade = require('./upgrade');
 
 module.exports = [
-    ...builds
+    ...builds,
+    ...changeType,
+    ...collectResources,
+    ...status,
+    ...upgrade,
 ];

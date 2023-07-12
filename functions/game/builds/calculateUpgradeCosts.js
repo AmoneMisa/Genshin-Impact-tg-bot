@@ -1,11 +1,11 @@
 // Расчет стоимости улучшения до заданного уровня
-function calculateUpgradeCosts(building, level) {
-    const upgradeCosts = [...building.upgradeCosts]; // Создаем копию массива стоимостей улучшений
+function calculateUpgradeCosts(build, level) {
+    const upgradeCosts = [...build.upgradeCosts]; // Создаем копию массива стоимостей улучшений
 
     while (upgradeCosts.length < level) {
         const previousLevel = upgradeCosts.length + 1;
         const previousCost = upgradeCosts[previousLevel - 2]; // Получаем стоимость предыдущего уровня
-        const costIncreaseFactor = 1.178; // Фактор увеличения стоимости (примерное значение, можно настроить по необходимости)
+        const costIncreaseFactor = 1.3; // Фактор увеличения стоимости (примерное значение, можно настроить по необходимости)
 
         // Рассчитываем стоимость для текущего уровня
         const currentCost = {

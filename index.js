@@ -11,6 +11,7 @@ const getChatSessionSettings = require('./functions/getters/getChatSessionSettin
 const debugMessage = require('./functions/tgBotFunctions/debugMessage');
 const sendMessage = require('./functions/tgBotFunctions/sendMessage');
 const log = intel.getLogger("genshin");
+const cron = require('node-cron');
 
 const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');

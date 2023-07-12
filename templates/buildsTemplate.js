@@ -17,7 +17,7 @@ module.exports = {
         updateCostCrystal: 20,
         upgradeTime: 15,
         maxLvl: 30,
-        perHour: 1000,
+        productionPerHour: 1000,
         available: true,
         maxWorkHoursWithoutCollection: 36,
         upgradeCosts: [{
@@ -25,13 +25,14 @@ module.exports = {
             gold: 320,
             crystal: 22,
             ironOre: 10
-        }]
+        }],
+        resourcesType: "gold"
     },
     crystalLake: {
         startLvl: 0,
         name: "Озеро кристаллов",
         description: "Кристальное озеро, которое производит для Вас некоторое количество кристаллов, нужных для развития Вашего персонажа и Ваших построек. Работает непрерывно до 72 часов. Доступно для постройки от 2 уровня дворца",
-        crystalIncomePerHour: 50,
+        productionPerHour: 50,
         maxWorkHoursWithoutCollection: 72,
         upgradeRequirements: [
             {level: 2, palaceLevel: 2},
@@ -51,6 +52,7 @@ module.exports = {
             {level: 4, gold: 12500, ironOre: 80, crystals: 0},
             // Далее для каждого следующего уровня стоимость увеличивается
         ],
+        resourcesType: "crystal",
         available: true
     },
     shop: {
@@ -136,7 +138,7 @@ module.exports = {
     ironDeposit: {
         name: "Залежи железной руды",
         description: "Ваши месторождения железной руды. Она необходима для улучшения оружия, брони и построек. Работает непрерывно до 36 часов.",
-        ironOreProductionPerHour: 5,
+        productionPerHour: 5,
         maxWorkHoursWithoutCollection: 36,
         upgradeRequirements: [
             {level: 2, palaceLevel: 1},
@@ -156,6 +158,7 @@ module.exports = {
             gold: 1000
         },
         maxLvl: 30,
+        resourcesType: "ironOre",
         available: true
     }
 };

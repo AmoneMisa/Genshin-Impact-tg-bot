@@ -13,6 +13,14 @@ module.exports = function () {
     }
 
     result[key] = {currentLvl: build.startLvl, upgradeStartedAt: null, lastCollectAt: null};
+
+    if (build.hasOwnProperty('resourcesType')) {
+      result[key].resourceCollected = 0;
+    }
+
+    if (build.hasOwnProperty('availableTypes')) {
+      result[key].type = "common";
+    }
   }
 
     return result;
