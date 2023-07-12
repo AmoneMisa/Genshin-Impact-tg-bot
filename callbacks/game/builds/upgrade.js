@@ -54,7 +54,7 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
         caption = "upgrade";
     }
 
-    try {
+    // try {
         await bot.editMessageCaption(getCaption(buildName, caption, build), {
             chat_id: chatId,
             message_id: messageId,
@@ -62,9 +62,9 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
                 inline_keyboard: keyboard
             }
         });
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.upgrade - ошибка редактирования заголовка`);
-    }
+    // } catch (e) {
+    //     debugMessage(`${chatId} - builds.${buildName}.upgrade - ошибка редактирования заголовка`);
+    // }
 }], [/^builds\.[^.]+\.upgrade\.upgradeLvl$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.upgrade\.upgradeLvl$/);
     let messageId = callback.message.message_id;
@@ -73,10 +73,11 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
     let build = await getBuild(chatId, callback.from.id, buildName);
     let buildTemplate = buildsTemplate[buildName];
 
-    let upgrades = calculateUpgradeCosts(buildTemplate.upgradeCosts, build.currentLvl);
-    let currentUpgrade = upgrades[build.currentLvl - 1];
+    let nextLvl = build.currentLvl + 1;
+    let currentUpgrade = calculateUpgradeCosts(buildTemplate.upgradeCosts, nextLvl);
     let playerInventory = session.game.inventory;
 
+    console.log(currentUpgrade);
     if (playerInventory.gold < currentUpgrade.gold) {
         return sendMessageWithDelete(chatId, `Недостаточно золота.\n\nВ наличии: ${playerInventory.gold}.\n\nНеобходимо: ${currentUpgrade.gold}`, 5000);
     }

@@ -18,5 +18,5 @@ module.exports = function (upgradeCostsArray, level) {
         upgradeCosts.push(currentCost); // Добавляем стоимость для текущего уровня в массив
     }
 
-    return upgradeCosts;
+    return upgradeCosts[level - 2];
 }

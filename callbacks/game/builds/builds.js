@@ -15,7 +15,7 @@ function getUpgradeButtonText(lvl) {
 }
 
 module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callback) {
-    const isBack = callback.data ==='builds.palace.back';
+    const isBack = callback.data === 'builds.palace.back';
 
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
@@ -38,16 +38,16 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                 inline_keyboard: [[{
                     text: "Изменить тип",
                     callback_data: "builds.palace.changeType",
-                },{
+                }, {
                     text: "Статус",
                     callback_data: "builds.palace.status",
-                }],[{
+                }], [{
                     text: "Улучшить",
                     callback_data: "builds.palace.upgrade",
-                },{
+                }, {
                     text: "Статус казны",
                     callback_data: "builds.palace.guarded",
-                }],[{
+                }], [{
                     text: "Изменить название",
                     callback_data: "builds.palace.changeName",
                 }], [{
@@ -65,16 +65,16 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                     inline_keyboard: [[{
                         text: "Изменить тип",
                         callback_data: "builds.palace.changeType",
-                    },{
+                    }, {
                         text: "Статус",
                         callback_data: "builds.palace.status",
-                    }],[{
+                    }], [{
                         text: "Улучшить",
                         callback_data: "builds.palace.upgrade",
-                    },{
+                    }, {
                         text: "Статус казны",
                         callback_data: "builds.palace.guarded",
-                    }],[{
+                    }], [{
                         text: "Изменить название",
                         callback_data: "builds.palace.changeName",
                     }], [{
@@ -89,16 +89,16 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                     inline_keyboard: [[{
                         text: "Изменить тип",
                         callback_data: "builds.palace.changeType",
-                    },{
+                    }, {
                         text: "Статус",
                         callback_data: "builds.palace.status",
-                    }],[{
+                    }], [{
                         text: "Улучшить",
                         callback_data: "builds.palace.upgrade",
-                    },{
+                    }, {
                         text: "Статус казны",
                         callback_data: "builds.palace.guarded",
-                    }],[{
+                    }], [{
                         text: "Изменить название",
                         callback_data: "builds.palace.changeName",
                     }], [{
@@ -110,7 +110,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
         }
     }
 }], [/^builds\.goldMine(?:\.back)?$/, async function (session, callback) {
-    const isBack = callback.data ==='builds.goldMine.back';
+    const isBack = callback.data === 'builds.goldMine.back';
 
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
@@ -136,7 +136,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                 }, {
                     text: "Улучшить",
                     callback_data: "builds.goldMine.upgrade",
-                }],[{
+                }], [{
                     text: "Собрать прибыть",
                     callback_data: "builds.goldMine.collect",
                 }], [{
@@ -157,7 +157,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                     }, {
                         text: "Улучшить",
                         callback_data: "builds.goldMine.upgrade",
-                    }],[{
+                    }], [{
                         text: "Собрать прибыть",
                         callback_data: "builds.goldMine.collect",
                     }], [{
@@ -175,7 +175,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                     }, {
                         text: "Улучшить",
                         callback_data: "builds.goldMine.upgrade",
-                    }],[{
+                    }], [{
                         text: "Собрать прибыть",
                         callback_data: "builds.goldMine.collect",
                     }], [{
@@ -186,11 +186,11 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
             })
         }
     }
-}],[/^builds.crystalLake(?:\.back)?$/, async function (session, callback) {
+}], [/^builds.crystalLake(?:\.back)?$/, async function (session, callback) {
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
-    const isBack = callback.data ==='builds.crystalLake.back';
+    const isBack = callback.data === 'builds.crystalLake.back';
 
 
     if (!session.game.hasOwnProperty('builds')) {
@@ -213,7 +213,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
                 }, {
                     text: getUpgradeButtonText(build.currentLvl),
                     callback_data: "builds.crystalLake.upgrade",
-                }],[{
+                }], [{
                     text: "Собрать прибыть",
                     callback_data: "builds.crystalLake.collect",
                 }], [{
@@ -263,12 +263,12 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
             })
         }
     }
-}],[/^builds.ironDeposit(?:\.back)?$/, async function (session, callback) {
+}], [/^builds.ironDeposit(?:\.back)?$/, async function (session, callback) {
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
 
-    const isBack = callback.data ==='builds.ironDeposit.back';
+    const isBack = callback.data === 'builds.ironDeposit.back';
 
     if (!session.game.hasOwnProperty('builds')) {
         return;
