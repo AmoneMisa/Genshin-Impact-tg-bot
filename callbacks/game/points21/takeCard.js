@@ -2,36 +2,36 @@ const bot = require('../../../bot');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const getChatSession = require('../../../functions/getters/getChatSession');
 const pointMessage = require('../../../functions/game/point21/pointMessage');
-const validatePointSession = require('../../../functions/game/point21/validatePointSession');
-const checkAllPlayersPassed = require('../../../functions/game/point21/checkAllPlayersPassed');
+const validateGameSession = require('../../../functions/game/general/validateGameSession');
+const checkAllPlayersPassed = require('../../../functions/game/general/checkAllPlayersPassed');
 const getCard = require('../../../functions/game/point21/getCard');
 const getPoints = require('../../../functions/game/point21/getPoints');
-const endGame = require('../../../functions/game/point21/endGame');
-const endGameTimer = require('../../../functions/game/point21/endGameTimer');
+const endGame = require('../../../functions/game/general/endGame');
+const endGameTimer = require('../../../functions/game/general/endGameTimer');
 
 module.exports = [["points_card", function (session, callback) {
     try {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = session.userChatData.user.id;
 
-        if (!validatePointSession(chatSession, userId)) {
+        if (!validateGameSession(chatSession, userId, "points")) {
             return;
         }
 
-        endGameTimer(chatSession, 20 * 1000, callback.message.chat.id);
+        endGameTimer(chatSession, 20 * 1000, callback.message.chat.id, "points");
 
         getCard(chatSession, userId);
-        chatSession.pointGameSessionLastUpdateAt = new Date().getTime();
+        chatSession.game.points.gameSessionLastUpdateAt = new Date().getTime();
 
-        let player = chatSession.pointPlayers[userId];
+        let player = chatSession.game.points.players[userId];
         let points = getPoints(player);
 
         if (points >= 21) {
             player.isPass = true;
         }
 
-        if (checkAllPlayersPassed(chatSession)) {
-            endGame(chatSession, callback.message.chat.id, callback.message.message_id);
+        if (checkAllPlayersPassed(chatSession, "points")) {
+            endGame(chatSession, callback.message.chat.id, callback.message.message_id, true,"points");
             return;
         }
 

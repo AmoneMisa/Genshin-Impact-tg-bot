@@ -18,7 +18,8 @@ const gamesCommands = [
     {command: "bowling", description: "Боулинг"},
     {command: "darts", description: "Дартс"},
     {command: "basketball", description: "Баскетбол"},
-    {command: "football", description: "Футбол"}
+    {command: "football", description: "Футбол"},
+    {command: "elements", description: "Элементы"}
 ];
 
 const formsCommands = [

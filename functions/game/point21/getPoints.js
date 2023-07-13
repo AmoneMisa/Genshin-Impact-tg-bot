@@ -15,16 +15,24 @@ function getCardPoints(card, points) {
 }
 
 module.exports = function (player) {
+    if (!player) {
+        return ;
+    }
+
+    if (!player.usedItems) {
+        return ;
+    }
+
     let points = 0;
 
-    for (let card of player.cards) {
+    for (let card of player.usedItems) {
         if (!card.startsWith('Т')) {
             let cardPoints = getCardPoints(card, points);
             points += cardPoints;
         }
     }
 
-    for (let card of player.cards) {
+    for (let card of player.usedItems) {
         if (card.startsWith('Т')) {
             let cardPoints = getCardPoints(card, points);
             points += cardPoints;

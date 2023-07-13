@@ -4,15 +4,19 @@ const getMembers = require('../../../functions/getters/getMembers');
 const gameStatusMessage = require('../../../functions/game/point21/gameStatusMessage');
 const bot = require('../../../bot');
 
-module.exports = [["points_enter", async (session, callback) => {
+module.exports = [[/[^\b_]+_enter$/, async (session, callback) => {
+    const [, gameName] = callback.data.match(/([^\b_]+)_enter$/);
+
     try {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = callback.from.id;
+        let players = chatSession.game[gameName].players;
+        let player = players[userId];
 
-        if (!chatSession.pointPlayers[userId]) {
-            chatSession.pointPlayers[userId] = {
+        if (!player) {
+            players[userId] = {
                 bet: 0,
-                cards: [],
+                items: [],
                 isPass: false
             };
         } else {
@@ -23,21 +27,21 @@ module.exports = [["points_enter", async (session, callback) => {
 
         bot.editMessageText(`${gameStatusMessage(chatSession, members)}`, {
             chat_id: callback.message.chat.id,
-            message_id: chatSession.pointMessageId,
+            message_id: chatSession.game[gameName].messageId,
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Участвовать",
-                    callback_data: "points_enter"
+                    callback_data: `${gameName}_enter`
                 }], [{
                     text: "Покинуть игру",
-                    callback_data: "points_leave"
+                    callback_data: `${gameName}_leave`
                 }]]
             }
         });
 
     } catch (e) {
-        debugMessage(`Command: points_enter\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: ${gameName}_enter\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

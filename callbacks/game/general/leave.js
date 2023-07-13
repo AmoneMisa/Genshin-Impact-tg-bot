@@ -4,18 +4,23 @@ const gameStatusMessage = require('../../../functions/game/point21/gameStatusMes
 const bot = require('../../../bot');
 const getMembers = require('../../../functions/getters/getMembers');
 
-module.exports = [["points_leave", async (session, callback) => {
+module.exports = [[/[^\b_]+_leave$/, async (session, callback) => {
+    const [, gameName] = callback.data.match(/([^\b]+)_leave$/);
+
     try {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = callback.from.id;
 
-        if (!chatSession.hasOwnProperty("pointPlayers")) {
-            chatSession.pointPlayers = {};
+        if (!chatSession.game[gameName].hasOwnProperty("players")) {
+            chatSession.game[gameName].players = {};
             return;
         }
 
-        if (chatSession.pointPlayers[userId]) {
-            delete chatSession.pointPlayers[userId];
+        let players = chatSession.game[gameName].players;
+        let player = players[userId];
+
+        if (player) {
+            delete players[userId];
         } else {
             return ;
         }
@@ -24,21 +29,21 @@ module.exports = [["points_leave", async (session, callback) => {
 
         bot.editMessageText(`${gameStatusMessage(chatSession, members)}`, {
             chat_id: callback.message.chat.id,
-            message_id: chatSession.pointMessageId,
+            message_id: chatSession.game[gameName].messageId,
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Участвовать",
-                    callback_data: "points_enter"
+                    callback_data: `${gameName}_enter`
                 }], [{
                     text: "Покинуть игру",
-                    callback_data: "points_leave"
+                    callback_data: `${gameName}_leave`
                 }]]
             }
         });
 
     } catch (e) {
-        debugMessage(`Command: points_leave\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
+        debugMessage(`Command: ${gameName}_leave\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
         throw e;
     }
 }]];

@@ -1,7 +1,7 @@
-module.exports = function (chatSession, members) {
+module.exports = function (players, members) {
     let str = "";
 
-    for (let [id, player] of Object.entries(chatSession.pointPlayers)) {
+    for (let [id, player] of Object.entries(players)) {
         if (id === "bot") {
             continue;
         }

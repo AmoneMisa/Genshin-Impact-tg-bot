@@ -11,10 +11,10 @@ module.exports = [[/(?:^|\s)\/reset_point_game\b/, (msg) => {
     }
 
     let chatSession = getChatSession(msg.chat.id);
-    chatSession.pointIsStart = false;
-    chatSession.pointGameSessionIsStart = false;
-    chatSession.pointPlayers = {};
-    chatSession.pointUsedCards = [];
+    chatSession.game.points.isStart = false;
+    chatSession.game.points.gameSessionIsStart = false;
+    chatSession.game.points.players = {};
+    chatSession.game.points.usedItems = [];
 
     sendMessage(msg.chat.id, `Сессия игры в очко сброшена.`);
 }]];

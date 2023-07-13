@@ -16,7 +16,7 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
     try {
         let chatSession = getChatSession(msg.chat.id);
 
-        if (chatSession.pointPlayers && chatSession.pointPlayers[session.userChatData.user.id] ||
+        if (chatSession.game.points.players && chatSession.game.points.players[session.userChatData.user.id] ||
             isGameStarted(session, 'dice') ||
             isGameStarted(session, 'bowling') ||
             isGameStarted(session, 'darts') ||

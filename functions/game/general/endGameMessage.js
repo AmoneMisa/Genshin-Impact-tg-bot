@@ -1,4 +1,4 @@
-const getWinners = require('../../../functions/game/point21/getWinners');
+const getWinners = require('./getWinners');
 const bot = require('../../../bot');
 const sendMessageWithDelete = require('../../tgBotFunctions/sendMessageWithDelete');
 
