@@ -26,6 +26,10 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
             }
         }
 
+        if (!chatSession.hasOwnProperty("game")) {
+            chatSession.game = {};
+        }
+
         if (!chatSession.game.hasOwnProperty("points")) {
             chatSession.game.points = {};
         }
@@ -65,8 +69,8 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
 
         function startGame() {
             for (let playerId of Object.keys(chatSession.game.points.players)) {
-                getCard(chatSession, playerId);
-                getCard(chatSession, playerId);
+                getCard(chatSession.game.points, playerId);
+                getCard(chatSession.game.points, playerId);
             }
 
             chatSession.game.points.isStart = true;
