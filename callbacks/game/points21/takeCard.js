@@ -20,7 +20,7 @@ module.exports = [["points_card", function (session, callback) {
 
         endGameTimer(chatSession, 20 * 1000, callback.message.chat.id, "points");
 
-        getCard(chatSession, userId);
+        getCard(chatSession.game.points, userId);
         chatSession.game.points.gameSessionLastUpdateAt = new Date().getTime();
 
         let player = chatSession.game.points.players[userId];
