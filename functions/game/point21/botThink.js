@@ -16,6 +16,6 @@ module.exports = function (chatSession) {
            break;
        }
 
-        getCard(chatSession, "bot");
+        getCard(chatSession.game.points, "bot");
     }
 };
