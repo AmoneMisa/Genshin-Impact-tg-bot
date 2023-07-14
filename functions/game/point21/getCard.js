@@ -16,8 +16,8 @@ function getCard(game) {
 }
 
 module.exports = function (game, userId) {
+    console.log(game)
     let card = getCard(game);
-    console.log(game.players)
     game.players[userId].usedItems.push(card);
     game.usedItems.push(card);
     return card;
