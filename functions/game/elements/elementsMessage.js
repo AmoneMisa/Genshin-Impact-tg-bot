@@ -1,16 +1,13 @@
-const calcScore = require('./calcScore');
-
 module.exports = function (gameSession) {
     let str = "Игра в элементы.\n\n";
-    let scores = calcScore(gameSession);
+    let players = gameSession.game.elements.players;
 
-    for (let [playerId, score] of Object.entries(scores)) {
-        let member = gameSession.members[playerId];
-        let player = gameSession.elements.players[playerId];
+    for (let player of Object.values(players)) {
+        let member = gameSession.members[player.id];
 
-        str += `${playerId === "bot" ? "Всемогущий" : `@${member.userChatData.user.username || member.userChatData.user.id}`}: `;
-        str += player.game.elements.map(element => `${element}`).join(', ') + "; ";
-        str += `Всего очков: ${score}\n`;
+        str += `${player.id === "bot" ? "Всемогущий" : `@${member.userChatData.user.username || member.userChatData.user.id}`}: `;
+        str += player.usedItems.map(element => `${element}`).join(', ') + "; ";
+        str += `Всего очков: ${player.points}\n`;
     }
 
     return str;

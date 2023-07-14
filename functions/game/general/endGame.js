@@ -1,7 +1,7 @@
 const pointsBotThink = require('../point21/botThink');
-const elementsBotThink = require('../elements/botThink');
 const findWinners = require('./findWinners');
 const endGameMessage = require('./endGameMessage');
+const setEndGameTimer = require('./setEndGameTimer');
 
 module.exports = function (chatSession, chatId, messageId, isDefault = true, gameName) {
     if (!chatSession.game[gameName]) {
@@ -13,9 +13,6 @@ module.exports = function (chatSession, chatId, messageId, isDefault = true, gam
     if (gameName === "points") {
         pointsBotThink(chatSession);
     }
-    if (gameName === "elements") {
-        elementsBotThink(chatSession);
-    }
 
     winners = findWinners(chatSession, gameName);
 
@@ -23,5 +20,12 @@ module.exports = function (chatSession, chatId, messageId, isDefault = true, gam
     chatSession.game[gameName].gameSessionIsStart = false;
     chatSession.game[gameName].players = {};
     chatSession.game[gameName].usedItems = [];
-    endGameMessage(winners, chatId, messageId, isDefault);
+
+    if (gameName === "elements") {
+        chatSession.game.elements.currentRound = 1;
+        chatSession.game.elements.countPresses = 0;
+    }
+
+    endGameMessage(winners, chatId, messageId, isDefault, gameName);
+    setEndGameTimer(chatSession, 0, chatId, gameName, null);
 };

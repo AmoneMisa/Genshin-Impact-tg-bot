@@ -1,9 +1,7 @@
 module.exports = function (player, currentRound) {
-    if (player.counter === currentRound) {
-        return true;
+    if (player.counter > currentRound) {
+        throw new Error("player.counter больше, чем текущий раунд");
     }
 
-    if (player.counter < currentRound) {
-        return false
-    }
+    return player.counter === currentRound;
 }

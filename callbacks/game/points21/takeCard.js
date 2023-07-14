@@ -14,7 +14,7 @@ module.exports = [["points_card", function (session, callback) {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = session.userChatData.user.id;
 
-        if (!validateGameSession(chatSession, userId, "points")) {
+        if (!validateGameSession(chatSession.game.points, userId, "points")) {
             return;
         }
 

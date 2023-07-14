@@ -1,14 +1,15 @@
+const isPlayerEndedRound = require('./isPlayerEndedRound');
+
 module.exports = function (players, currentRound) {
-    let playersEndedRound = [];
     for (let [playerId, player] of Object.entries(players)) {
         if (playerId === "bot") {
             continue;
         }
 
-        if (player.counter === currentRound) {
-            playersEndedRound.push(player);
+        if (!isPlayerEndedRound(player, currentRound)) {
+            return false;
         }
     }
 
-    return playersEndedRound.length === Object.keys(players ).length - 1;
+    return true;
 }

@@ -17,7 +17,6 @@ function getCard(gameSession) {
 
 module.exports = function (gameSession, userId) {
     let card = getCard(gameSession);
-
     gameSession.game.points.players[userId].usedItems.push(card);
     gameSession.game.points.usedItems.push(card);
     return card;

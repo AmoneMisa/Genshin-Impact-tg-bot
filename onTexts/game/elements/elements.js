@@ -4,6 +4,7 @@ const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getRandomElement = require('../../../functions/game/elements/getRandomElement');
 const elementsMessage = require('../../../functions/game/elements/elementsMessage');
 const botThink = require('../../../functions/game/elements/botThink');
+const updatePoints = require('../../../functions/game/elements/updatePoints');
 const getChatSession = require('../../../functions/getters/getChatSession');
 const getMembers = require('../../../functions/getters/getMembers');
 const betMessage = require('../../../functions/game/general/betMessage');
@@ -15,25 +16,30 @@ module.exports = [[/(?:^|\s)\/elements\b/, (msg, session) => {
         let chatSession = getChatSession(msg.chat.id);
         let members = getMembers(msg.chat.id);
         let userId = session.userChatData.user.id;
-        let id;
 
-        if (chatSession.game.elements.isStart) {
-            return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
-                .then(message => {
-                    deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
-                });
+        if (chatSession.game.elements.gameSessionIsStart) {
+            if (new Date().getTime() - chatSession.game.elements.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
+                return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
+                    .then(message => {
+                        deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
+                    });
+            }
         }
 
         chatSession.game.elements.players = {
             bot: {
-                usedItems: []
+                usedItems: [],
+                points: 0,
+                id: "bot"
             }
         };
 
         if (!chatSession.game.elements.players[userId]) {
             chatSession.game.elements.players[userId] = {
                 bet: 0,
-                usedItems: []
+                usedItems: [],
+                points: 0,
+                id: userId
             };
         }
 
@@ -69,14 +75,14 @@ module.exports = [[/(?:^|\s)\/elements\b/, (msg, session) => {
                     callback_data: "elements_allin_bet"
                 }]]
             }
-        }).then(message => id = message.message_id);
-
+        }).then(message => chatSession.game.elements.messageId = message.message_id);
         function startGame() {
             for (let playerId of Object.keys(chatSession.game.elements.players)) {
                 getRandomElement(chatSession, playerId);
             }
 
             botThink(chatSession);
+            updatePoints(chatSession.game.elements.players);
             chatSession.game.elements.isStart = true;
 
             return sendMessage(msg.chat.id, `Игра началась. Ставки больше не принимаются.`)
@@ -86,7 +92,7 @@ module.exports = [[/(?:^|\s)\/elements\b/, (msg, session) => {
                 .then(() => {
                     bot.editMessageText(elementsMessage(chatSession, userId), {
                         chat_id: msg.chat.id,
-                        message_id: id,
+                        message_id: chatSession.game.elements.messageId,
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: "Стихия!",

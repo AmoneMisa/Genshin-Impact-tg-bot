@@ -7,6 +7,7 @@ const getRandomElement = require('../../../functions/game/elements/getRandomElem
 const isRoundEnd = require('../../../functions/game/elements/isRoundEnd');
 const isPlayerEndedRound = require('../../../functions/game/elements/isPlayerEndedRound');
 const validateEndGame = require('../../../functions/game/elements/validateEndGame');
+const updatePoints = require('../../../functions/game/elements/updatePoints');
 const endGame = require('../../../functions/game/general/endGame');
 const endGameTimer = require('../../../functions/game/general/endGameTimer');
 
@@ -20,37 +21,38 @@ module.exports = [["elements_take", function (session, callback) {
         let userId = session.userChatData.user.id;
         let game = chatSession.game.elements;
 
-        if (!validateGameSession(chatSession, userId, "elements")) {
+        if (!validateGameSession(game, userId, "elements")) {
             return;
+        }
+
+        if (!game.players[userId].hasOwnProperty("counter")) {
+            game.players[userId].counter = 0;
+        }
+
+        if (!game.hasOwnProperty("currentRound")) {
+            game.currentRound = 1;
         }
 
         if (isPlayerEndedRound(game.players[userId], game.currentRound)) {
             return;
         }
 
-        if (validateEndGame(game.currentRound, maxCountRounds)) {
-            endGame(chatSession, chatId, game.messageId, true, "elements");
-            return;
-        }
-
-        if (!isRoundEnd(game.players, game.currentRound)) {
-            return;
-        }
-
         endGameTimer(chatSession, 20 * 1000, chatId, "elements");
         getRandomElement(chatSession, userId);
-        game.countPresses += 1;
+        game.players[userId].counter++;
 
-        if (session.game.elements.hasOwnProperty("counter")) {
-            session.game.elements.counter = 0;
+        let roundEnd = isRoundEnd(game.players, game.currentRound);
+
+        if (roundEnd) {
+            game.currentRound++;
+            updatePoints(game.players);
         }
 
-        session.game.elements.counter += 1;
         game.gameSessionLastUpdateAt = new Date().getTime();
 
         bot.editMessageText(elementsMessage(chatSession, userId), {
             chat_id: chatId,
-            message_id: callback.message.message_id,
+            message_id: game.messageId,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Стихия!",
@@ -59,8 +61,8 @@ module.exports = [["elements_take", function (session, callback) {
             }
         });
 
-        if (game.countPresses === game.players.length - 1) {
-            game.currentRound += 1;
+        if (roundEnd && validateEndGame(game.currentRound, maxCountRounds)) {
+            endGame(chatSession, chatId, game.messageId, true, "elements");
         }
     } catch (e) {
         debugMessage(`Command: elements_card\nIn: ${chatId} - ${callback.message.chat.title}\n\nError: ${e}`);

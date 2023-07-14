@@ -26,6 +26,10 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
             }
         }
 
+        if (!chatSession.game.hasOwnProperty("points")) {
+            chatSession.game.points = {};
+        }
+
         chatSession.game.points.gameSessionIsStart = true;
         chatSession.game.points.gameSessionLastUpdateAt = new Date().getTime();
 

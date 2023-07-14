@@ -1,5 +1,4 @@
 const getPoints = require('../point21/getPoints');
-const calcScore = require('../elements/calcScore');
 
 function calcMaxPoints(players, gameName) {
     let maxPoints = 0;
@@ -15,11 +14,9 @@ function calcMaxPoints(players, gameName) {
     }
 
     if (gameName === "elements") {
-        let pointsObject = calcScore(players);
-
-        for (let points of Object.values(pointsObject)) {
-            if (points > maxPoints) {
-                maxPoints = points;
+        for (let player of Object.values(players)) {
+            if (player.points > maxPoints) {
+                maxPoints = player.points;
             }
         }
     }
@@ -39,7 +36,7 @@ function getBet(id, player) {
     return bet;
 }
 
-function getName(id, player, members) {
+function getName(id, members) {
     let name;
 
     if (id === "bot") {
@@ -59,8 +56,8 @@ function getWinners(players, maxPoints, gameName, members) {
     if (gameName === "points") {
         for (let [id, player] of Object.entries(players)) {
             let points = getPoints(player);
-
-            let name = getName(id, player, members);
+            let cards = player.usedItems;
+            let name = getName(id, members);
             let bet = getBet(id, player);
 
             if (points === 21) {
@@ -83,18 +80,20 @@ function getWinners(players, maxPoints, gameName, members) {
                 bet,
                 points,
                 diffGold,
+                cards,
                 isWining
             })
         }
     }
 
     if (gameName === "elements") {
-        let scores = calcScore(players);
-        for (let [id, score] of Object.entries(scores)) {
-            let name = getName(id, players[id], members);
-            let bet = getBet(id, players[id]);
+        for (let player of Object.values(players)) {
+            let name = getName(player.id, members);
+            let bet = getBet(player.id, player);
+            let points = player.points;
+            let elements = player.usedItems;
 
-            if (score >= maxPoints) {
+            if (points === maxPoints) {
                 isWining = true;
                 diffGold = bet * 1.75;
             } else {
@@ -103,15 +102,16 @@ function getWinners(players, maxPoints, gameName, members) {
             }
 
             if (diffGold !== 0) {
-                members[id].game.inventory.gold = Math.round(members[id].game.inventory.gold + diffGold);
+                members[player.id].game.inventory.gold = Math.round(members[player.id].game.inventory.gold + diffGold);
             }
 
             winners.push({
                 name,
                 bet,
-                score,
+                points,
                 diffGold,
-                isWining
+                isWining,
+                elements
             })
         }
     }

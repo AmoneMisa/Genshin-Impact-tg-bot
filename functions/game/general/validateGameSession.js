@@ -1,13 +1,15 @@
-module.exports = function (chatSession, userId, gameName) {
-    if (!chatSession.game[gameName].isStart) {
+module.exports = function (game, userId, gameName) {
+    if (!game.isStart) {
         return false;
     }
 
-    if (!chatSession.game[gameName].players[userId]) {
+    if (!game.players[userId]) {
         return false;
     }
 
     if (gameName !== "elements") {
-        return !chatSession.game[gameName].players[userId].isPass;
+        return !game.players[userId].isPass;
     }
+
+    return true;
 };

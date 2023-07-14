@@ -1,12 +1,10 @@
-const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
-const getChatSession = require('../../../functions/getters/getChatSession');
-const gameStatusMessage = require('../../../functions/game/point21/gameStatusMessage');
-const bot = require('../../../bot');
-const getMembers = require('../../../functions/getters/getMembers');
+const getChatSession = require("../../getters/getChatSession");
+const getMembers = require("../../getters/getMembers");
+const bot = require("../../../bot");
+const gameStatusMessage = require("../point21/gameStatusMessage");
+const debugMessage = require("../../tgBotFunctions/debugMessage");
 
-module.exports = [[/[^\b_]+_leave$/, async (session, callback) => {
-    const [, gameName] = callback.data.match(/([^\b]+)_leave$/);
-
+module.exports = function (session, callback, gameName) {
     try {
         let chatSession = getChatSession(callback.message.chat.id);
         let userId = callback.from.id;
@@ -46,4 +44,4 @@ module.exports = [[/[^\b_]+_leave$/, async (session, callback) => {
         debugMessage(`Command: ${gameName}_leave\nIn: ${callback.message.chat.id} - ${callback.message.chat.title}\n\nError: ${e}`);
         throw e;
     }
-}]];
+}
