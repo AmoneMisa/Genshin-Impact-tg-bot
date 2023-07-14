@@ -1,3 +1,5 @@
+require('./errorHandler');
+
 const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
@@ -83,7 +85,7 @@ for (let [key, value] of onTexts) {
         let settings = getChatSessionSettings(msg.chat.id);
         let foundSettingKey = null;
 
-        for (let [commandRegexp, settingKey] of Object.entries(commandMap)){
+        for (let [commandRegexp, settingKey] of Object.entries(commandMap)) {
             commandRegexp = new RegExp(`^${commandRegexp}$`);
             if (commandRegexp.test(command)) {
                 foundSettingKey = settingKey;
