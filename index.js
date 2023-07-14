@@ -16,8 +16,6 @@ const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');
 const buttonsDictionary = require("./dictionaries/buttons");
 
-debugMessage("Я включился");
-
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
     {command: "help", description: "Помощь"},
@@ -65,6 +63,7 @@ const commandMap = {
     "dice": "dice",
     "darts": "darts",
     "bowling": "bowling",
+    "elements": "elements",
     "chest": "chests",
     "title": "titles",
     "titles": "titles",
