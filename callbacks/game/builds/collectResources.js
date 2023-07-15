@@ -70,10 +70,10 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
     setTimerForCollectResources(build, maxWorkHoursWithoutCollection, defaultCollectionPerHour);
 
     try {
-        let imageStream = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
+        let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
         await bot.deleteMessage(chatId, messageId);
 
-        if (imageStream) {
+        if (imagePath) {
             await bot.editMessageCaption(getCaption(buildName, "home", build,),{
                 caption: getCaption(buildName, "home", build),
                 reply_markup: {

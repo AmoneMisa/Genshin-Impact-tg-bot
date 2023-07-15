@@ -20,6 +20,9 @@ module.exports = function () {
 
     if (build.hasOwnProperty('availableTypes')) {
       result[key].type = "common";
+      result[key].availableTypes = Object.entries(buildsTemplate[key].availableTypes)
+          .filter(([key, value]) => !value.isPayment)
+          .map(([key, value]) => key);
     }
   }
 

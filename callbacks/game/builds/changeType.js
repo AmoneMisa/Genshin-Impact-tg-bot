@@ -2,6 +2,7 @@ const getBuild = require("../../../functions/game/builds/getBuild");
 const bot = require("../../../bot");
 const buttonsDictionary = require("../../../dictionaries/buttons");
 const debugMessage = require("../../../functions/tgBotFunctions/debugMessage");
+const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const buildsTemplate = require("../../../templates/buildsTemplate");
@@ -61,6 +62,15 @@ module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callb
     let chatId = callback.message.chat.id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
+    if (!session.game.builds[buildName].availableTypes) {
+        session.game.builds[buildName].availableTypes = Object.entries(buildsTemplate[buildName].availableTypes)
+            .filter(([key, value]) => !value.isPayment)
+            .map(([key, value]) => key);
+    }
+
+    if (!session.game.builds[buildName].availableTypes.includes(typeName)) {
+        return sendMessageWithDelete(chatId, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
+    }
 
     try {
         await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
@@ -91,11 +101,11 @@ module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callb
     build.type = typeName;
 
     try {
-        let imageStream = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
+        let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
         await bot.deleteMessage(chatId, messageId);
 
-        if (imageStream) {
-            await sendPhoto(chatId, imageStream, {
+        if (imagePath) {
+            await sendPhoto(chatId, imagePath, {
                 caption: getCaption(buildName, "home", build),
                 reply_markup: {
                     inline_keyboard: [[{

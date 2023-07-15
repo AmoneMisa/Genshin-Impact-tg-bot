@@ -30,6 +30,8 @@ module.exports = function (name, action, build) {
         case "changeType":
             return `${buildTemplate.name} - Изменить внешний вид\n\nПо умолчанию, Вам доступен только стандартный вид, для получения других внешних видов, необходимо зайти в магазин через команду /shop.`;
         case "changeName":
+            return `${buildTemplate.name} - Изменить название дворца. Смена стоит 15000 золота. Чтобы приобрести право на смену названия - зайди в магазин: /shop`;
+            case "changeName.0":
             return `${buildTemplate.name} - Изменить название дворца`;
         case "guarded":
             return `${buildTemplate.name} - статус казны.\n\nНа данный момент под защитой: золота, руды, кристаллов.`;

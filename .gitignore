@@ -5,6 +5,7 @@ sessions*.json
 titles*.json
 bosses*.json
 trustedChats.json
+imagesIds.json
 
 #on hold
 /templates/shopTemplate.js

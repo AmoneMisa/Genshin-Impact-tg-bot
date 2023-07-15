@@ -12,7 +12,7 @@ module.exports = function (number, path) {
             const end = parseInt(match[2]);
 
             if (start <= number && number <= end) {
-                return fs.createReadStream(`${imagePath}/${file}`);
+                return `${imagePath}/${file}`;
             }
         }
     }

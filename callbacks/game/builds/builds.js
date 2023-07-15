@@ -57,10 +57,10 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
             }
         });
     } else {
-        let imageStream = getLocalImageByPath(build.currentLvl, `builds/palace/${build.type || 'common'}`);
+        let imagePath = getLocalImageByPath(build.currentLvl, `builds/palace/${build.type || 'common'}`);
 
-        if (imageStream) {
-            await sendPhoto(chatId, imageStream, {
+        if (imagePath) {
+            await sendPhoto(chatId, imagePath, {
                 caption: getCaption('palace', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Изменить тип",
@@ -146,10 +146,10 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
             }
         });
     } else {
-        let imageStream = getLocalImageByPath(build.currentLvl, 'builds/goldMine');
+        let imagePath = getLocalImageByPath(build.currentLvl, 'builds/goldMine');
 
-        if (imageStream) {
-            await sendPhoto(chatId, imageStream, {
+        if (imagePath) {
+            await sendPhoto(chatId, imagePath, {
                 caption: getCaption('goldMine', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
@@ -223,10 +223,10 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
             }
         });
     } else {
-        let imageStream = getLocalImageByPath(build.currentLvl, 'builds/crystalLake');
+        let imagePath = getLocalImageByPath(build.currentLvl, 'builds/crystalLake');
 
-        if (imageStream) {
-            await sendPhoto(chatId, imageStream, {
+        if (imagePath) {
+            await sendPhoto(chatId, imagePath, {
                 caption: getCaption('crystalLake', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
@@ -299,10 +299,10 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
             }
         });
     } else {
-        let imageStream = getLocalImageByPath(build.currentLvl, 'builds/ironDeposit');
+        let imagePath = getLocalImageByPath(build.currentLvl, 'builds/ironDeposit');
 
-        if (imageStream) {
-            await sendPhoto(chatId, imageStream, {
+        if (imagePath) {
+            await sendPhoto(chatId, imagePath, {
                 caption: getCaption('ironDeposit', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
