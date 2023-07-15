@@ -22,7 +22,7 @@ module.exports = function (name, action, build) {
         case "upgrade.speedup.0":
             return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nВы уверены, что хотите ускорить постройку?\n\nСтоимость ускорения: ${getSpeedUpCost(buildTemplate.upgradeTime)}\n\nОставшееся время для улучшения: ${calculateBuildTime(name, build.currentLvl, build)}`;
         case "status":
-            return `${buildTemplate.name} - статус здания.\n\nУровень: ${build.currentLvl}\nСтатус: ${getBuildStatus(name, build)}`;
+            return `${buildTemplate.name} - статус здания.\n\nУровень: ${build.currentLvl}\nСтатус:\n${getBuildStatus(name, build)}`;
         case "collect.0":
             return `${buildTemplate.name} - собрать прибыль.\n\nПроизведено: ${build.resourceCollected}.\nОсталось времени непрерывного производства: ${remain}`;
         case "collect.1":
@@ -32,7 +32,7 @@ module.exports = function (name, action, build) {
         case "changeName":
             return `${buildTemplate.name} - Изменить название дворца. Смена стоит 15000 золота. Чтобы приобрести право на смену названия - зайди в магазин: /shop`;
             case "changeName.0":
-            return `${buildTemplate.name} - Изменить название дворца`;
+            return `${buildTemplate.name} - Изменить название дворца. Введи новое название.`;
         case "guarded":
             return `${buildTemplate.name} - статус казны.\n\nНа данный момент под защитой: золота, руды, кристаллов.`;
         default:
