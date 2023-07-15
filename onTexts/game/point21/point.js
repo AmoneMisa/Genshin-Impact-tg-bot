@@ -54,6 +54,10 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
             };
         }
 
+        if (!chatSession.game.points.players[userId].hasOwnProperty("usedItems")) {
+            chatSession.game.points.players[userId].usedItems = [];
+        }
+
         sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members)}`, {
             disable_notification: true,
             reply_markup: {
@@ -124,7 +128,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                             }, {
                                 text: "Ставка (x10)",
                                 callback_data: "points_xten_bet"
-                            }],[{
+                            }], [{
                                 text: "Ставка (x20)",
                                 callback_data: "points_x20_bet"
                             }, {

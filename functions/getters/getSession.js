@@ -12,17 +12,17 @@ module.exports = async function (chatId, userId) {
         };
     }
 
-    if (!members[userId].hasOwnProperty("reddit")) {
-        members[userId].reddit = {
-            subscribes: [],
-            countPosts: 3,
-            postType: "hot",
-            timer: {
-                hour: 2,
-                minute: 0
-            }
-        };
-    }
+    // if (!members[userId].hasOwnProperty("reddit")) {
+    //     members[userId].reddit = {
+    //         subscribes: [],
+    //         countPosts: 3,
+    //         postType: "hot",
+    //         timer: {
+    //             hour: 2,
+    //             minute: 0
+    //         }
+    //     };
+    // }
 
     if (!members[userId].game) {
         members[userId].game = {
