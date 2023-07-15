@@ -1,89 +1,102 @@
 const bot = require('../../../bot');
 const {myId} = require('../../../config');
-const buttonsDictionary = require('../../../dictionaries/buttons');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getRandomElement = require('../../../functions/game/elements/getRandomElement');
+const elementsMessage = require('../../../functions/game/elements/elementsMessage');
+const botThink = require('../../../functions/game/elements/botThink');
+const updatePoints = require('../../../functions/game/elements/updatePoints');
 const getChatSession = require('../../../functions/getters/getChatSession');
-const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const getMembers = require('../../../functions/getters/getMembers');
+const betMessage = require('../../../functions/game/general/betMessage');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 
-module.exports = [[/(?:^|\s)\/elements\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/elements\b/, (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
         let chatSession = getChatSession(msg.chat.id);
         let members = getMembers(msg.chat.id);
         let userId = session.userChatData.user.id;
-        let id;
 
-        if (chatSession.pointIsStart) {
-            return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
-                .then(message => {
-                    deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
-                });
+        if (chatSession.game.elements.gameSessionIsStart) {
+            if (new Date().getTime() - chatSession.game.elements.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
+                return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
+                    .then(message => {
+                        deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
+                    });
+            }
         }
 
-        chatSession.pointPlayers = {
+        chatSession.game.elements.players = {
             bot: {
-                isPass: false,
-                cards: []
+                usedItems: [],
+                points: 0,
+                id: "bot"
             }
         };
 
-        chatSession.pointUsedCards = [];
-
-        if (!chatSession.pointPlayers[userId]) {
-            chatSession.pointPlayers[userId] = {
+        if (!chatSession.game.elements.players[userId]) {
+            chatSession.game.elements.players[userId] = {
                 bet: 0,
-                cards: [],
-                isPass: false
+                usedItems: [],
+                points: 0,
+                id: userId
             };
         }
 
-        sendMessage(msg.chat.id, `${betMessage(chatSession, members)}`, {
+        sendMessage(msg.chat.id, `${betMessage(chatSession.game.elements.players, members)}`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Ставка (+100)",
-                    callback_data: "points_bet"
+                    callback_data: "elements_bet"
                 }, {
                     text: "Ставка (х2)",
-                    callback_data: "points_double_bet"
+                    callback_data: "elements_double_bet"
                 }], [{
                     text: "Ставка (+1000)",
-                    callback_data: "points_thousand_bet"
+                    callback_data: "elements_thousand_bet"
                 }, {
                     text: "Ставка (х5)",
-                    callback_data: "points_xfive_bet"
+                    callback_data: "elements_xfive_bet"
                 }], [{
-                    text: "Ставка All-in",
-                    callback_data: "points_allin_bet"
-                }, {
                     text: "Ставка (+10000)",
-                    callback_data: "points_10t_bet"
+                    callback_data: "elements_10t_bet"
+                }, {
+                    text: "Ставка (x10)",
+                    callback_data: "elements_xten_bet"
+                }], [{
+                    text: "Ставка (x20)",
+                    callback_data: "elements_x20_bet"
+                }, {
+                    text: "Ставка (x50)",
+                    callback_data: "elements_x50_bet"
+                }], [{
+                    text: "Всё или ничего",
+                    callback_data: "elements_allin_bet"
                 }]]
             }
-        }).then(message => id = message.message_id);
-
+        }).then(message => chatSession.game.elements.messageId = message.message_id);
         function startGame() {
-            for (let playerId of Object.keys(chatSession.pointPlayers)) {
-                getCard(chatSession, playerId);
-                getCard(chatSession, playerId);
+            for (let playerId of Object.keys(chatSession.game.elements.players)) {
+                getRandomElement(chatSession, playerId);
             }
 
             botThink(chatSession);
-            chatSession.pointIsStart = true;
+            updatePoints(chatSession.game.elements.players);
+            chatSession.game.elements.isStart = true;
 
             return sendMessage(msg.chat.id, `Игра началась. Ставки больше не принимаются.`)
                 .then(message => {
                     deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
                 })
                 .then(() => {
-                    bot.editMessageText(pointMessage(chatSession, userId), {
+                    bot.editMessageText(elementsMessage(chatSession, userId), {
                         chat_id: msg.chat.id,
-                        message_id: id,
+                        message_id: chatSession.game.elements.messageId,
                         reply_markup: {
                             inline_keyboard: [[{
-                                text: "Получить элемент",
-                                callback_data: "points_card"
+                                text: "Стихия!",
+                                callback_data: "elements_take"
                             }]]
                         }
                     });

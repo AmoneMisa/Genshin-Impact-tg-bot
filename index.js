@@ -1,3 +1,5 @@
+require('./errorHandler');
+
 const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
@@ -17,8 +19,6 @@ const cron = require('node-cron');
 const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');
 const buttonsDictionary = require("./dictionaries/buttons");
-
-debugMessage("Я включился");
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
@@ -67,6 +67,7 @@ const commandMap = {
     "dice": "dice",
     "darts": "darts",
     "bowling": "bowling",
+    "elements": "elements",
     "chest": "chests",
     "title": "titles",
     "titles": "titles",
@@ -86,7 +87,7 @@ for (let [key, value] of onTexts) {
         let settings = getChatSessionSettings(msg.chat.id);
         let foundSettingKey = null;
 
-        for (let [commandRegexp, settingKey] of Object.entries(commandMap)){
+        for (let [commandRegexp, settingKey] of Object.entries(commandMap)) {
             commandRegexp = new RegExp(`^${commandRegexp}$`);
             if (commandRegexp.test(command)) {
                 foundSettingKey = settingKey;

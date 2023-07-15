@@ -16,6 +16,7 @@ module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
                 "/add_experience - Добавить опыт пользователю\n" +
                 "/add_gold - Добавить золота пользователю\n" +
                 "/reset_point_game - Сбросить игру в очко\n" +
+                "/reset_elements_game - Сбросить игру в элементы\n" +
                 "/receive_user_sword_timer - Сбросить таймер меча для пользователя"
             );
 

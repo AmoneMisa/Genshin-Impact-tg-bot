@@ -80,6 +80,9 @@ module.exports = [["help", function (session, callback) {
             }, {
                 text: "Футбол",
                 callback_data: "help_minigames_football"
+            }, {
+                text: "Элементы",
+                callback_data: "help_minigames_elements"
             }], [{
                 text: "Ресурсы (кристаллы)",
                 callback_data: "help_minigames_crystals"
@@ -392,6 +395,20 @@ module.exports = [["help", function (session, callback) {
     });
 }], ["help_minigames_football", function (session, callback) {
     bot.editMessageText(`${dictionary.ru.help.football}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_elements", function (session, callback) {
+    bot.editMessageText(`${dictionary.ru.help.elements}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {

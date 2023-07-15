@@ -1,13 +1,13 @@
-const bet = require('./bet');
-const pass = require('./pass');
 const takeCard = require('./takeCard');
+const bet = require('./bet');
 const enter = require('./enter');
 const leave = require('./leave');
+const pass = require('./pass');
 
 module.exports = [
-    ...bet,
-    ...pass,
     ...takeCard,
+    ...bet,
     ...enter,
-    ...leave
+    ...leave,
+    ...pass
 ];

@@ -3,10 +3,10 @@ const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getChatSession = require('../../../functions/getters/getChatSession');
 const getMembers = require('../../../functions/getters/getMembers');
 const pointMessage = require('../../../functions/game/point21/pointMessage');
-const betMessage = require('../../../functions/game/point21/betMessage');
+const betMessage = require('../../../functions/game/general/betMessage');
 const gameStatusMessage = require('../../../functions/game/point21/gameStatusMessage');
 const getCard = require('../../../functions/game/point21/getCard');
-const endGameTimer = require('../../../functions/game/point21/endGameTimer');
+const endGameTimer = require('../../../functions/game/general/endGameTimer');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 
@@ -17,8 +17,8 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         let members = getMembers(msg.chat.id);
         let userId = session.userChatData.user.id;
 
-        if (chatSession.pointGameSessionIsStart) {
-            if (new Date().getTime() - chatSession.pointGameSessionLastUpdateAt <= 2 * 60 * 1000) {
+        if (chatSession.game.points.gameSessionIsStart) {
+            if (new Date().getTime() - chatSession.game.points.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
                 return sendMessage(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.")
                     .then(message => {
                         deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
@@ -26,24 +26,36 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
             }
         }
 
-        chatSession.pointGameSessionIsStart = true;
-        chatSession.pointGameSessionLastUpdateAt = new Date().getTime();
+        if (!chatSession.hasOwnProperty("game")) {
+            chatSession.game = {};
+        }
 
-        chatSession.pointPlayers = {
+        if (!chatSession.game.hasOwnProperty("points")) {
+            chatSession.game.points = {};
+        }
+
+        chatSession.game.points.gameSessionIsStart = true;
+        chatSession.game.points.gameSessionLastUpdateAt = new Date().getTime();
+
+        chatSession.game.points.players = {
             bot: {
                 isPass: false,
-                cards: []
+                usedItems: []
             }
         };
 
-        chatSession.pointUsedCards = [];
+        chatSession.game.points.usedItems = [];
 
-        if (!chatSession.pointPlayers[userId]) {
-            chatSession.pointPlayers[userId] = {
+        if (!chatSession.game.points.players[userId]) {
+            chatSession.game.points.players[userId] = {
                 bet: 0,
-                cards: [],
+                usedItems: [],
                 isPass: false
             };
+        }
+
+        if (!chatSession.game.points.players[userId].hasOwnProperty("usedItems")) {
+            chatSession.game.points.players[userId].usedItems = [];
         }
 
         sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members)}`, {
@@ -57,16 +69,16 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                     callback_data: "points_leave"
                 }]]
             }
-        }).then(message => chatSession.pointMessageId = message.message_id);
+        }).then(message => chatSession.game.points.messageId = message.message_id);
 
         function startGame() {
-            for (let playerId of Object.keys(chatSession.pointPlayers)) {
-                getCard(chatSession, playerId);
-                getCard(chatSession, playerId);
+            for (let playerId of Object.keys(chatSession.game.points.players)) {
+                getCard(chatSession.game.points, playerId);
+                getCard(chatSession.game.points, playerId);
             }
 
-            chatSession.pointIsStart = true;
-            endGameTimer(chatSession, 20 * 1000, msg.chat.id);
+            chatSession.game.points.isStart = true;
+            endGameTimer(chatSession, 20 * 1000, msg.chat.id, "points");
 
             return sendMessage(msg.chat.id, `Игра началась. Ставки больше не принимаются.`)
                 .then(message => {
@@ -74,7 +86,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                 }).then(() => {
                     bot.editMessageText(pointMessage(chatSession, userId), {
                         chat_id: msg.chat.id,
-                        message_id: chatSession.pointMessageId,
+                        message_id: chatSession.game.points.messageId,
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: "Взять карту",
@@ -94,9 +106,9 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                 .then(message => {
                     deleteMessageTimeout(msg.chat.id, message.message_id, 7000);
                 }).then(() => {
-                    bot.editMessageText(betMessage(chatSession, members, 'pointPlayers'), {
+                    bot.editMessageText(betMessage(chatSession.game.points.players, members), {
                         chat_id: msg.chat.id,
-                        message_id: chatSession.pointMessageId,
+                        message_id: chatSession.game.points.messageId,
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: "Ставка (+100)",
@@ -116,7 +128,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
                             }, {
                                 text: "Ставка (x10)",
                                 callback_data: "points_xten_bet"
-                            }],[{
+                            }], [{
                                 text: "Ставка (x20)",
                                 callback_data: "points_x20_bet"
                             }, {
