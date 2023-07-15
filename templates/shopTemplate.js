@@ -8,8 +8,8 @@ module.exports = [
     {name: "Малое зелье ХП", cost: 750, time: 1, command: "potionHp1000", message: "ты получил зелье восстановления хп на 1000 единиц", category: "player"},
     {name: "Среднее зелье ХП", cost: 1850, time: 1, command: "potionHp3000", message: "ты получил зелье восстановления хп на 3000 единиц", category: "player"},
     {name: "Доп. открытие сундучков", cost: 5000, time: 1, command: "chestAddTry", message: "ты получил дополнительную попытку для сундучков", category: "misc"},
-    {name: "Эльфийский вид для дворца", cost: 30000, time: 1, command: "palaceElven", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
-    {name: "Королевский вид для дворца", cost: 33000, time: 1, command: "palaceRoyal", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
+    {name: "Эльфийский вид для дворца", cost: 30000, time: 1, command: "palaceElven", type: "elven", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
+    {name: "Королевский вид для дворца", cost: 33000, time: 1, command: "palaceRoyal", type: "royal", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
     {name: "Изменить название дворца", cost: 15000, time: 1, command: "palaceChangeName", message: "ты получил карточку для смены названия дворца! Чтобы её применить, измени название дворца через меню построек", category: "builds"},
 ];
 

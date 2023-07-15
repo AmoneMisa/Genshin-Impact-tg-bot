@@ -5,15 +5,15 @@ const buttonsDictionary = require("../../../dictionaries/buttons");
 const debugMessage = require("../../../functions/tgBotFunctions/debugMessage");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 
-module.exports = [[/^builds\.[^.]+\.changeName\.[^.]+$/, async function (session, callback) {
-    const [, buildName, typeName] = callback.data.match(/^builds\.([^.]+)\.changeName\.([^.]+)$/);
+module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callback) {
+    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeName$/);
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
 
     if (!session.game.builds[buildName].canChangeName) {
-        return sendMessageWithDelete(chatId, "У тебя нет карточки для смены названия. Чтобы её получить, зайди в магазин: /shop", {}, 15 * 60);
+        return sendMessageWithDelete(chatId, "У тебя нет карточки для смены названия. Чтобы её получить, зайди в магазин: /shop", {}, 5 * 1000);
     }
 
     try {
@@ -23,7 +23,7 @@ module.exports = [[/^builds\.[^.]+\.changeName\.[^.]+$/, async function (session
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Подтвердить смену",
-                    callback_data: `builds.${buildName}.changeName.${typeName}.0`
+                    callback_data: `builds.${buildName}.changeName.0`
                 }], [{
                     text: "Назад",
                     callback_data: `builds.${buildName}.back`
@@ -34,17 +34,16 @@ module.exports = [[/^builds\.[^.]+\.changeName\.[^.]+$/, async function (session
             }
         });
     } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.changeName.${typeName} - ошибка редактирования заголовка`);
+        debugMessage(`${chatId} - builds.${buildName}.changeName - ошибка редактирования заголовка`);
     }
-}], [/^builds\.[^.]+\.changeName\.[^.]\.0+$/, async function (session, callback) {
-    const [, buildName, typeName] = callback.data.match(/^builds\.([^.]+)\.changeName\.([^.]+)\.0$/);
+}], [/^builds\.[^.]+\.changeName\.0$/, async function (session, callback) {
+    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeName\.0$/);
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
 
     try {
-
         bot.editMessageCaption(getCaption(buildName, "changeName.0", build), {
             chat_id: chatId,
             message_id: messageId,
@@ -79,6 +78,6 @@ module.exports = [[/^builds\.[^.]+\.changeName\.[^.]+$/, async function (session
             console.error(e);
         });
     } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.changeName.${typeName} - ошибка редактирования заголовка`);
+        debugMessage(`${chatId} - builds.${buildName}.changeName.0 - ошибка редактирования заголовка`);
     }
 }]];

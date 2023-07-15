@@ -47,13 +47,12 @@ function check(session, command, item, isDaily) {
                 session.timerOpenChestCallback = 0;
                 session.game.shopTimers[command] = getOffsetToDay();
             } else if (command.includes("palace") && command !== "palaceChangeName") {
-                let [, type] = command.match(/^palace\.([^.]+)$/);
-
-                if (session.game.builds.palace && session.game.builds.palace.availableTypes.includes(type)) {
+                let buildType = shopTemplate.filter(item => item.command === command).map(item => item.type)[0];
+                if (session.game.builds.palace.availableTypes.includes(buildType)) {
                     return `${getUserName(session, "nickname")}, у тебя уже есть этот тип здания.`;
                 }
 
-                session.game.builds.palace.availableTypes.push(type);
+                session.game.builds.palace.availableTypes.push(buildType);
             } else if (command.includes("palaceChangeName")) {
                 if (session?.game?.builds?.palace?.canChangeName) {
                     return `${getUserName(session, "nickname")}, у тебя уже есть карточка на смену названия этого здания.`;
@@ -81,5 +80,4 @@ module.exports = function (session, command, item) {
     }
 
     return check(session, command, item);
-
 };

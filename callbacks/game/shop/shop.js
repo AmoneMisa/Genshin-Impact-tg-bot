@@ -4,7 +4,7 @@ const shopTemplate = require('../../../templates/shopTemplate');
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getUserName = require("../../../functions/getters/getUserName");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
-const bossShopSellItem = require("../../../functions/game/shop/shopSellItem");
+const shopSellItem = require("../../../functions/game/shop/shopSellItem");
 
 function buildKeyboard(category, isBuy) {
     let buttons = [];
@@ -147,7 +147,12 @@ module.exports = [[/^shop$/, async function (session, callback) {
 
     let item = shopTemplate.filter(_item => _item.command === itemName);
     item = item[0];
-    bossShopSellItem(session, item.command, item);
+
+    let sellItem = shopSellItem(session, item.command, item);
+    console.log(sellItem);
+    if (typeof sellItem === "string") {
+        return sendMessageWithDelete(chatId, sellItem, {}, 10 * 1000);
+    }
 
     try {
         await bot.editMessageText(`@${getUserName(session, "nickname")}, поздравляем с покупкой ${item.name}!`, {
