@@ -7,7 +7,7 @@ module.exports = function (chatSession, timer, chatId, gameName, callback) {
     }
 
     if (callback) {
-        timersMap[gameName] = setTimeout(callback, timer);
+        timersMap[gameName] = +setTimeout(callback, timer);
     }
 
 };

@@ -1,18 +1,23 @@
 module.exports = function (build, lvl) {
         let increaseFactor;
+        let newResourcesCounter = {};
 
-        switch (build) {
-            case "goldMine":
-                increaseFactor = 0.08;
-                break;
-            case "crystalLake":
+        for (let [resourceName, resource] of Object.entries(build.bonusEffect)) {
+            if (resourceName === "guardedGold") {
+                increaseFactor = 0.017;
+                newResourcesCounter["guardedGold"] = resource / increaseFactor * lvl;
+            }
+
+            if (resourceName === "guardedCrystals") {
                 increaseFactor = 0.03 * lvl;
-                break;
-            case "ironDeposit":
-                increaseFactor = 0.05;
-                break;
-            default: increaseFactor = 0.5;
+                newResourcesCounter["guardedCrystals"] = resource / increaseFactor * lvl;
+            }
+
+            if (resourceName === "guardedIronOre") {
+                increaseFactor = 0.025;
+                newResourcesCounter["guardedIronOre"] = resource / increaseFactor * lvl;
+            }
         }
 
-        return increaseFactor * lvl;
+        return newResourcesCounter;
 };

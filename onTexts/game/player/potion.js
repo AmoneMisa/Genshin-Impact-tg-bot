@@ -10,14 +10,14 @@ module.exports = [[/(?:^|\s)\/potion_([0-9]+)\b/, async (msg, regExp, session) =
         for (let item of session.game.inventory.potions) {
             if (item.name.includes(potion) && session.game.inventory.potions[0].count > 0) {
                 session.game.inventory.potions[0].count--;
-                session.game.boss.damagedHp -= parseInt(potion);
+                session.game.stats.currentHp += parseInt(potion);
                 sendMessage(msg.chat.id, `Ты использовал зелье восстановления хп (1000).`, {
                     disable_notification: true
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5000));
                 return ;
             } else if (item.name.includes(potion) && session.game.inventory.potions[1].count > 0) {
                 session.game.inventory.potions[1].count--;
-                session.game.boss.damagedHp -= parseInt(potion);
+                session.game.stats.currentHp += parseInt(potion);
                 sendMessage(msg.chat.id, `Ты использовал зелье восстановления хп (3000).`, {
                     disable_notification: true
                 }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5000));

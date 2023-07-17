@@ -1,5 +1,5 @@
 module.exports = function (skill, dmg) {
-    let modificator = skill.vampirePower;
+    let modifier = skill.vampirePower;
 
-    return  Math.ceil(dmg * modificator);
+    return  Math.ceil(dmg * modifier);
 };

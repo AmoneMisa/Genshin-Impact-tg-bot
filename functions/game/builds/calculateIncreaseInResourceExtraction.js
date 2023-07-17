@@ -3,15 +3,15 @@ module.exports = function (buildName, lvl) {
 
         switch (buildName) {
             case "goldMine":
-                increaseFactor = 0.1;
+                increaseFactor = 1.01;
                 break;
             case "crystalLake":
-                increaseFactor = 0.05 * lvl;
+                increaseFactor = 1.05 * lvl;
                 break;
             case "ironDeposit":
-                increaseFactor = 0.02;
+                increaseFactor = 1.02;
                 break;
-            default: increaseFactor = 0.1;
+            default: increaseFactor = 1.01;
         }
 
         return increaseFactor * lvl;

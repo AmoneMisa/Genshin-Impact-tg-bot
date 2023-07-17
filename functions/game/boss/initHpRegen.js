@@ -9,17 +9,17 @@ module.exports = function (chatId, recovery) {
     }
 
     function bossRegenHp(boss, chatId) {
-        if (boss.damagedHp === 0) {
+        if (boss.currentHp === boss.hp) {
             return;
         }
 
-        boss.damagedHp -= Math.ceil(boss.hp * 0.08);
+        boss.currentHp += Math.ceil(boss.hp * 0.08);
 
-        if (boss.damagedHp < 0) {
-            boss.damagedHp = 0;
+        if (boss.currentHp < 0) {
+            boss.currentHp = 0;
         }
 
-        sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.hp - boss.damagedHp}`);
+        sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.currentHp}`);
     }
 
     if (boss.skill.effect === "hp_regen") {

@@ -2,15 +2,27 @@ const userTemplate = require('../../templates/userTemplate');
 const bot = require('../../bot');
 const getMembers = require('./getMembers');
 const getBuildFromTemplate = require('../game/builds/getBuildFromTemplate');
+const classStatsTemplate = require('../../templates/classStatsTemplate');
+const classSkillsTemplate = require('../../templates/classSkillsTemplate');
+const potionsInInventoryTemplate = require('../../templates/potionsInInventoryTemplate');
 
 module.exports = async function (chatId, userId) {
     let members = getMembers(chatId);
+    let getUpdatedData = await bot.getChatMember(chatId, userId);
 
     if (!members[userId]) {
         members[userId] = {
-            userChatData: await bot.getChatMember(chatId, userId),
+            userChatData: getUpdatedData,
             user: {...userTemplate}
         };
+    }
+
+    if (members[userId].userChatData.user.username !== getUpdatedData.user.username) {
+        members[userId].userChatData.user.username = getUpdatedData.user.username;
+    }
+
+    if (members[userId].userChatData.user.first_name !== getUpdatedData.user.first_name) {
+        members[userId].userChatData.user.first_name = getUpdatedData.user.first_name;
     }
 
     // if (!members[userId].hasOwnProperty("reddit")) {
@@ -64,30 +76,8 @@ module.exports = async function (chatId, userId) {
             },
             effects: [],
             gameClass: {
-                stats: {
-                    translateName: "Бродяжка",
-                    attack: 1,
-                    defence: 1,
-                    criticalDamage: 1,
-                    criticalChance: 1
-                },
-                skills: [{
-                    slot: 0,
-                    name: "Тык палкой",
-                    description: "Тыкнуть палкой в босса.",
-                    effect: "common_attack",
-                    damageModificator: 1,
-                    cooltime: 0,
-                    isSelf: false,
-                    isDealDamage: true,
-                    isHeal: false,
-                    isShield: false,
-                    isBuff: false,
-                    needlvl: 0,
-                    crystalCost: 0,
-                    cost: 0,
-                    cooltimeReceive: 0
-                }]
+                stats: classStatsTemplate[0],
+                skills: classSkillsTemplate[0]
             },
             shopTimers: {
                 swordImmune: 0,
@@ -100,12 +90,11 @@ module.exports = async function (chatId, userId) {
             inventory: {
                 gold: 0,
                 crystals: 0,
-                potions: [{name: "hp_1000", count: 0}, {name: "hp_3000", count: 0}]
+                ironOre: 0,
+                potions: potionsInInventoryTemplate
             },
             boss: {
-                hp: 1000,
-                damagedHp: 0,
-                damage: 0
+                isDead: false
             }
         };
     }
@@ -122,33 +111,28 @@ module.exports = async function (chatId, userId) {
         members[userId].game.inventory.crystals = 0;
     }
 
+    if (!members[userId].game.inventory.hasOwnProperty("ironOre")) {
+        members[userId].game.inventory.ironOre = 0;
+    }
+
+    if (Array.isArray(members[userId].game.inventory.potions)) {
+        members[userId].game.inventory.potions = potionsInInventoryTemplate;
+    }
+
     if (!members[userId].game.hasOwnProperty("gameClass")) {
         members[userId].game.gameClass = {
-            stats: {
-                translateName: "Бродяжка",
-                attack: 1,
-                defence: 1,
-                criticalDamage: 1,
-                criticalChance: 1
-            },
-            skills: [{
-                slot: 0,
-                name: "Тык палкой",
-                description: "Тыкнуть палкой в босса.",
-                effect: "common_attack",
-                damageModificator: 1,
-                cooltime: 0,
-                isSelf: false,
-                isDealDamage: true,
-                isHeal: false,
-                isShield: false,
-                isBuff: false,
-                needlvl: 0,
-                crystalCost: 0,
-                cost: 0,
-                cooltimeReceive: 0
-            }]
+            stats: classStatsTemplate[0],
+            skills: classSkillsTemplate[0]
         };
+    }
+
+    let foundedClass = classStatsTemplate.find(_class => _class.name === members[userId].game.gameClass.stats.name || _class.name === "noClass");
+    for (let [newStatKey, newStatValue] of Object.entries(foundedClass)) {
+        if (members[userId].game.gameClass.stats.hasOwnProperty(newStatValue) && members[userId].game.gameClass.stats[newStatValue]) {
+            continue;
+        }
+
+        members[userId].game.gameClass.stats[newStatKey] = newStatValue;
     }
 
     return members[userId];

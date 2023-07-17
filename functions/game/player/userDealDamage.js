@@ -8,23 +8,23 @@ module.exports = async function (session, boss, sendMessage, skill) {
     try {
         let message = "";
 
-        if (!boss.damagedHp) {
-            boss.damagedHp = 0;
+        if (!boss.currentHp) {
+            boss.currentHp = boss.hp;
         }
 
         let {dmg, isHasCritical} = calcDamage(session, skill, boss);
 
         if (skill.effect.includes("vampire")) {
             let vampire = userVampireSkill(skill, dmg);
-            session.game.boss.damagedHp -= vampire;
-            if (session.game.boss.hp <= session.game.boss.damagedHp || session.game.boss.damagedHp < 0) {
-                session.game.boss.damagedHp = 0;
+            session.game.stats.currentHp += vampire;
+            if (session.game.stats.currentHp <= 0) {
+                session.game.stats.currentHp = 0;
             }
-            message += `Ты отвампирил себе ${vampire} хп. Твоё текущее хп: ${session.game.boss.damagedHp}`;
+            message += `Ты отвампирил себе ${vampire} хп. Твоё текущее хп: ${session.game.stats.currentHp}`;
         }
 
-        boss.damagedHp += dmg;
-        session.game.boss.damage += dmg;
+        boss.currentHp -= dmg;
+        boss.listOfDamage[session.userChatData.user.id].damage += dmg;
 
         if (boss.skill.effect.includes("reflect") || boss.skill.effect.includes("rage")) {
             message += await bossReflectDamage(session, boss, dmg);

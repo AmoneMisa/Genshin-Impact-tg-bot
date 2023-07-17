@@ -6,7 +6,7 @@ const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMes
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const getCaption = require('../../../functions/game/builds/getCaption');
 const setTimerForCollectResources = require('../../../functions/game/builds/setTimerForCollectResources');
-const buildsTemplate = require( "../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../templates/buildsTemplate");
 
 module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.collect$/);
@@ -14,7 +14,7 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
     let chatId = callback.message.chat.id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let resourcesCount = build.resources;
+    let resourcesCount = Math.ceil(build.resourceCollected);
 
     let keyboard;
     if (resourcesCount > 0) {
@@ -49,8 +49,8 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
     } catch (e) {
         debugMessage(`${chatId} - builds.${build}.upgrade - ошибка редактирования заголовка`);
     }
-}], [/^builds\.[^.]+\.collect\.[^.]+\.0$/, async function (session, callback) {
-    const [, buildName, typeName] = callback.data.match(/^builds\.([^.]+)\.collect\.([^.]+)\.0$/);
+}], [/^builds\.[^.]+\.collect\.0$/, async function (session, callback) {
+    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.collect\.0$/);
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
@@ -60,34 +60,32 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
         return sendMessageWithDelete(chatId, "Вы не можете собирать ресурсы со здания, которое в данный момент улучшается", {}, 5000);
     }
 
+    build.lastCollectAt = new Date().getTime();
+
     let buildTemplate = buildsTemplate[buildName];
-    let resourcesType =  buildTemplate.resources.type;
-    session.game.inventory[resourcesType] += build.resourceCollected;
+    let resourcesType = buildTemplate.resourcesType;
+    session.game.inventory[resourcesType] += Math.ceil(build.resourceCollected);
     build.resourceCollected = 0;
 
     let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
     let defaultCollectionPerHour = buildTemplate.productionPerHour;
     setTimerForCollectResources(build, maxWorkHoursWithoutCollection, defaultCollectionPerHour);
 
-    try {
-        let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
-        await bot.deleteMessage(chatId, messageId);
+    let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}`);
 
-        if (imagePath) {
-            await bot.editMessageCaption(getCaption(buildName, "home", build,),{
-                caption: getCaption(buildName, "home", build),
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Назад",
-                        callback_data: `builds.${buildName}.back`
-                    }], [{
-                        text: buttonsDictionary["ru"].close,
-                        callback_data: "close"
-                    }]]
-                }
-            });
-        }
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.collect.${typeName}.0 - ошибка редактирования заголовка`);
+    if (imagePath) {
+        await bot.editMessageCaption(getCaption(buildName, "home", build), {
+            message_id: messageId,
+            chat_id: chatId,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
     }
 }]];

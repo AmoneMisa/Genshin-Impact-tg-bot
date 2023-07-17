@@ -5,17 +5,21 @@ const getUserName = require('../../getters/getUserName');
 
 module.exports = function (boss, sessions, sendMessage) {
     try {
-        if (boss.damagedHp < boss.hp) {
+        if (boss.currentHp <= 0) {
             return false;
         }
 
         let message = `Лут группы после убийства босса\n\n`;
-        let arrSessions = Object.values(sessions);
-        arrSessions = arrSessions.filter(item => item?.game?.boss?.damage !== undefined && item?.game?.boss?.damage > 0);
-        arrSessions.sort((a, b) => b.game.boss.damage - a.game.boss.damage);
+        let players = boss.listOfDamage;
+        players.sort((a, b) => b.damage - a.damage);
+
+        for (let player of players) {
+            message += `${getUserName(player, "nickname")}: ${players[player.id]}\n`;
+        }
 
         let i = 1;
 
+        let arrSessions = Object.values(sessions);
         for (let session of arrSessions) {
             if (!session.game.stats) {
                 session.game.stats = {};

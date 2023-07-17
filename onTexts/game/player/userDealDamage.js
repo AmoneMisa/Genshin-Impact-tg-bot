@@ -46,7 +46,7 @@ module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
             return false;
         }
 
-        if (session.game.boss.hp <= session.game.boss.damagedHp || session.game.boss.isDead) {
+        if (session.game.stats.currentHp || session.game.boss.isDead) {
             sendMessage(msg.chat.id, `Ты немножко труп. Жди следующего призыва босса`);
             return false;
         }

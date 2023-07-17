@@ -1,10 +1,11 @@
-const bot = require('../../bot');
-const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
-const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const buttonsDictionary = require('../../dictionaries/buttons');
-const getTime = require('../../functions/getters/getTime');
-let classes = require('../../templates/classStatsTemplate');
-const getUserName = require('../../functions/getters/getUserName');
+const bot = require('../../../bot');
+const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const buttonsDictionary = require('../../../dictionaries/buttons');
+const getTime = require('../../../functions/getters/getTime');
+let classes = require('../../../templates/classStatsTemplate');
+const getUserName = require('../../../functions/getters/getUserName');
+const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
 
 module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
     try {
@@ -14,22 +15,12 @@ module.exports = [[/(?:^|\s)\/change_class\b/, (msg, session) => {
             session.changeClassTimer = 0;
         }
 
-        let [remain, hours, minutes, seconds] = getTime(session.changeClassTimer);
+        let [remain] = getTime(session.changeClassTimer);
 
         if (remain > 0) {
-            if (hours > 0) {
-                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
-                    disable_notification: true
-                });
-            } else if (minutes > 0) {
-                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${minutes} мин ${seconds} сек`, {
-                    disable_notification: true
-                });
-            } else {
-                return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${seconds} сек`, {
-                    disable_notification: true
-                });
-            }
+            return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${getStringRemainTime(remain)}`, {
+                disable_notification: true
+            });
         }
 
         let info = "";

@@ -1,5 +1,5 @@
 const sendGold = require('./sendGold');
-const setPlayerClass = require('./setPlayerClass');
+const setPlayerClass = require('./player/setPlayerClass');
 const boss = require('./boss');
 const sword = require('./sword');
 const chest = require('./chest');

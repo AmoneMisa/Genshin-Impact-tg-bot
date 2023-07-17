@@ -2,6 +2,7 @@ const sword = require('./sword');
 const chest = require('./chest');
 const point = require('./point');
 const gold = require('./gold');
+const ironOre = require('./ironOre');
 const crystals = require('./crystals');
 const experience = require('./experience');
 const boss = require('./boss');
@@ -18,6 +19,7 @@ module.exports = [
     ...chest,
     ...point,
     ...gold,
+    ...ironOre,
     ...experience,
     ...dice,
     ...boss,

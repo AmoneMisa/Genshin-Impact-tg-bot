@@ -48,13 +48,13 @@ module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
             }
         } else if (skill.isHeal) {
             let heal = userHealSkill(session, skill);
-            session.game.boss.damagedHp -= heal;
+            session.game.stats.currentHp += heal;
 
-            if (session.game.boss.damagedHp < 0) {
-                session.game.boss.damagedHp = 0;
+            if (session.game.stats.currentHp < 0) {
+                session.game.stats.currentHp = 0;
             }
 
-            sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.boss.hp - session.game.boss.damagedHp}`)
+            sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.stats.currentHp}`)
                 .then(message => messageId = message.message_id);
         } else if (skill.isShield) {
             let shield = userShieldSkill(session, skill);

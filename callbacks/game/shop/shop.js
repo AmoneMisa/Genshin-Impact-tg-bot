@@ -149,7 +149,6 @@ module.exports = [[/^shop$/, async function (session, callback) {
     item = item[0];
 
     let sellItem = shopSellItem(session, item.command, item);
-    console.log(sellItem);
     if (typeof sellItem === "string") {
         return sendMessageWithDelete(chatId, sellItem, {}, 10 * 1000);
     }

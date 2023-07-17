@@ -24,5 +24,4 @@ module.exports = function (chatId, recovery) {
     }
 
     boss.attackIntervalId = +setInterval(() => dealDamage(), 60 * 60 * 1000);
-    // boss.attackIntervalId = +setInterval(() => dealDamage(), 10 * 1000);
 };

@@ -1,3 +1,3 @@
-const addGold = require('./addGold');
+const addGold = require('../ironOre/addIronOre');
 
 module.exports = [...addGold];

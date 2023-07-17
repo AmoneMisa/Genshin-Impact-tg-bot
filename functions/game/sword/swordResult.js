@@ -1,19 +1,14 @@
 const getTime = require('../../getters/getTime');
 const getRandom = require('../../getters/getRandom');
 const getOffset = require('../../getters/getOffset');
+const getStringRemainTime = require('../../getters/getStringRemainTime');
 const getUserName = require('../../getters/getUserName');
 
 module.exports = function (session) {
-    let [remain, hours, minutes, seconds] = getTime(session.timerSwordCallback);
+    let [remain] = getTime(session.timerSwordCallback);
 
     if (remain > 0) {
-        if (hours > 0) {
-            return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`;
-        } else if (minutes > 0) {
-            return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`;
-        } else {
-            return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`;
-        }
+        return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${getStringRemainTime(remain)}`;
     }
 
     session.timerSwordCallback = getOffset();

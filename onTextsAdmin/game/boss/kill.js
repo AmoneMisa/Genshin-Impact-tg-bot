@@ -15,7 +15,7 @@ module.exports = [[/(?:^|\s)\/kill\b/, (msg) => {
 
         let boss = bosses[msg.chat.id];
 
-        if (boss.hp === 0 && boss.damagedHp === 0) {
+        if (boss.hp === 0 && boss.currentHp === 0) {
             return;
         }
 
@@ -27,7 +27,7 @@ module.exports = [[/(?:^|\s)\/kill\b/, (msg) => {
         clearInterval(boss.attackIntervalId);
         debugMessage("kill", boss.attackIntervalId);
         boss.attackIntervalId = null;
-        boss.damagedHp = 0;
+        boss.currentHp = 0;
         boss.hp = 0;
 
         sendMessage(msg.chat.id, "Босс убит админом.", {

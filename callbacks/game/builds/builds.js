@@ -192,7 +192,6 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
     }
     const isBack = callback.data === 'builds.crystalLake.back';
 
-
     if (!session.game.hasOwnProperty('builds')) {
         return;
     }

@@ -57,22 +57,21 @@ module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callb
                 session.game.builds[buildName].customName = replyMsg.text;
                 bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
                 bot.deleteMessage(msg.chat.id, msg.message_id);
+                bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${session.game.builds[buildName].customName}`, {
+                    chat_id: chatId,
+                    message_id: messageId,
+                    disable_notification: true,
+                    reply_markup: {
+                        inline_keyboard: [[{
+                            text: "Назад",
+                            callback_data: `builds.${buildName}.back`
+                        }], [{
+                            text: buttonsDictionary["ru"].close,
+                            callback_data: "close"
+                        }]]
+                    }
+                })
             });
-
-            bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${session.game.builds[buildName].customName}`, {
-                chat_id: chatId,
-                message_id: messageId,
-                disable_notification: true,
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Назад",
-                        callback_data: `builds.${buildName}.back`
-                    }], [{
-                        text: buttonsDictionary["ru"].close,
-                        callback_data: "close"
-                    }]]
-                }
-            })
         }).catch(e => {
             console.error(e);
         });

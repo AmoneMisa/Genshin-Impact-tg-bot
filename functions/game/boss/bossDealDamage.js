@@ -16,22 +16,24 @@ module.exports = function (members, boss, chatId) {
         clearInterval(boss.attackIntervalId);
         debugMessage(`DEBUG. Все члены группы мертвы: ${boss.attackIntervalId}`);
         boss.attackIntervalId = null;
-        boss.damagedHp = 0;
+        boss.currentHp = 0;
         boss.hp = 0;
 
         return false;
     }
 
     for (let member of Object.values(members)) {
-        let player = member.game.boss;
+        let player = member.game;
         let dmg = calcBossDamage(boss, member);
         message += `${member.userChatData.user.username} - ${dmg} урона`;
 
-        if (member.game.boss.hasOwnProperty("shield")) {
-            if (player.shield > 0) {
-                if (dmg > player.shield) {
-                    player.shield = 0;
-                    dmg = dmg - player.shield;
+        let playerShield = player.effects.filter(effect => effect.name === "shield");
+
+        if (playerShield) {
+            if (playerShield.shield > 0) {
+                if (dmg > playerShield.shield) {
+                    playerShield.shield = 0;
+                    dmg = dmg - playerShield.shield;
 
                 } else {
                     player.shield -= dmg;
@@ -39,11 +41,11 @@ module.exports = function (members, boss, chatId) {
             }
         }
 
-        player.damagedHp += dmg;
+        player.currentHp -= dmg;
 
-        if (player.hp <= player.damagedHp && !player.isDead) {
+        if (player.hp <= player.currentHp && !player.isDead) {
             player.isDead = true;
-            player.damagedHp = 0;
+            player.currentHp = 0;
             sendMessage(chatId, `@${member.userChatData.user.username}, ты был повержен(-а) боссом.`, {
                 disable_notification: true
             });

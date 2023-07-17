@@ -3,6 +3,23 @@
 //cooltime is times attack to boss
 
 module.exports = {
+    noClass: [{
+        slot: 0,
+        name: "Тык палкой",
+        description: "Тыкнуть палкой в босса.",
+        effect: "common_attack",
+        damageModificator: 1,
+        cooltime: 0,
+        isSelf: false,
+        isDealDamage: true,
+        isHeal: false,
+        isShield: false,
+        isBuff: false,
+        needlvl: 0,
+        crystalCost: 0,
+        cost: 0,
+        cooltimeReceive: 0
+    }],
     warrior: [{
         slot: 0,
         name: "Взмах меча",

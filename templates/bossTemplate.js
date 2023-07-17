@@ -1,6 +1,7 @@
 module.exports = {
     name: "Киваха",
     nameCall: "Киваху",
+    listOfDamage: {},
     stats: {
         attack: 10,
         defence: 15,

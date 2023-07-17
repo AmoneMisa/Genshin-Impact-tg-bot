@@ -19,6 +19,7 @@ const cron = require('node-cron');
 const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');
 const buttonsDictionary = require("./dictionaries/buttons");
+const {myId} = require("./config");
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
@@ -139,14 +140,26 @@ bot.on("callback_query", async (callback) => {
 
     for (let [key, value] of callbacks) {
         if ((key instanceof RegExp && key.test(callback.data)) || callback.data === key) {
-            results.push(value(session, callback) || Promise.resolve());
+            let result = value(session, callback) || Promise.resolve();
+            result.catch(e => {
+                console.error(callback.data);
+                console.error(e);
+                debugMessage(`Произошла ошибка: ${callback.data} - ${e}`);
+            });
+            results.push(result);
         }
     }
 
-    Promise.all(results).then(() => {
-        bot.answerCallbackQuery(callback.id);
-        // log.info('%:2j', session);
-    });
+    if (results.length > 0) {
+        Promise.all(results).then(() => {
+            bot.answerCallbackQuery(callback.id);
+            // log.info('%:2j', session);
+        });
+    } else {
+        console.error(callback.data);
+        console.error("Нет ни одного обработчика");
+        debugMessage(`Произошла ошибка: ${callback.data} - Нет ни одного обработчика`);
+    }
 });
 
 setGlobalAccumulateTimer();

@@ -2,6 +2,7 @@ const bossCallback = require('./boss');
 const chestCallback = require('./chest');
 const experienceCallback = require('./experience');
 const goldCallback = require('./gold');
+const ironOre = require('./ironOre');
 const crystalsCallback = require('./crystals');
 const points21 = require('./points21');
 const swordCallback = require('./sword');
@@ -20,6 +21,7 @@ const shop = require('./shop');
 module.exports = [
     ...bossCallback,
     ...goldCallback,
+    ...ironOre,
     ...experienceCallback,
     ...crystalsCallback,
     ...chestCallback,

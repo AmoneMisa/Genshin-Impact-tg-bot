@@ -1,32 +1,36 @@
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getTime = require('../../getters/getTime');
+const getStringRemainTime = require('../../getters/getStringRemainTime');
 const calculateUpgradeCosts = require('../../../functions/game/builds/calculateUpgradeCosts');
 const calculateOptimalSpeedUpCost = require('../../../functions/game/builds/calculateOptimalSpeedUpCost');
-const calculateBuildTime = require('../../../functions/game/builds/calculateBuildTime');
+const calculateRemainBuildTime = require('./calculateRemainBuildTime');
+const calculateIncreaseInResourceExtraction = require("./calculateIncreaseInResourceExtraction");
 
-module.exports = function (name, action, build) {
-    let buildTemplate = buildsTemplate[name];
-    let [remain] = getTime(build.lastCollectAt);
+module.exports = function (buildName, action, build) {
+    let buildTemplate = buildsTemplate[buildName];
+    let [remain] = getTime(build.lastCollectAt + (buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000));
 
     switch (action) {
         case "home":
-            return `${buildTemplate.name} - ${buildTemplate.description}`;
+            return `${build.customName || buildTemplate.name} - ${buildTemplate.description}`;
         case "upgrade":
             return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nСтоимость улучшения на следующий уровень: ${getUpgradeCostText(build, buildTemplate)}`;
         case "upgrade.upgradeLvl":
             return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nВы уверены, что хотите улучшить здание?\n\nСтоимость улучшения на следующий уровень: ${getUpgradeCostText(build, buildTemplate)}`;
         case "upgrade.upgradeLvl.0":
-            return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nВы успешно улучшили здание до: ${build.currentLvl} ур.!`;
+            return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nВы начали улучшение здания до: ${build.currentLvl} ур.!`;
         case "upgrade.speedup":
             return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nЗдание уже улучшается. Вы можете ускорить постройку.`;
         case "upgrade.speedup.0":
-            return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nВы уверены, что хотите ускорить постройку?\n\nСтоимость ускорения: ${getSpeedUpCost(buildTemplate.upgradeTime)}\n\nОставшееся время для улучшения: ${calculateBuildTime(name, build.currentLvl, build)}`;
+            return `${buildTemplate.name} - улучшение здания.\n\nУровень: ${build.currentLvl}\nВы уверены, что хотите ускорить постройку?\n\nСтоимость ускорения: ${calculateOptimalSpeedUpCost(buildName, build)} кристаллов.\n\nОставшееся время для улучшения: ${getStringRemainTime(calculateRemainBuildTime(buildName, build))}`;
+        case "upgrade.speedup.1":
+            return `${buildTemplate.name} - улучшение здания.\n\nВы успешно завершили улучшение здания ${buildTemplate.name} до ${build.currentLvl} ур!`;
         case "status":
-            return `${buildTemplate.name} - статус здания.\n\nУровень: ${build.currentLvl}\nСтатус:\n${getBuildStatus(name, build)}`;
+            return `${buildTemplate.name} - статус здания.\n\nУровень: ${build.currentLvl}\nСтатус:\n${getBuildStatus(buildName, build)}`;
         case "collect.0":
-            return `${buildTemplate.name} - собрать прибыль.\n\nПроизведено: ${build.resourceCollected}.\nОсталось времени непрерывного производства: ${remain}`;
+            return `${buildTemplate.name} - собрать прибыль.\n\nПроизведено: ${build.resourceCollected}.\nОсталось времени непрерывного производства: ${getStringRemainTime(remain)}`;
         case "collect.1":
-            return `${buildTemplate.name} - невозможно собрать прибыль.\n\nЕщё ничего не произведено.\nОсталось времени непрерывного производства: ${remain}`;
+            return `${buildTemplate.name} - невозможно собрать прибыль.\n\nЕщё ничего не произведено.\nОсталось времени непрерывного производства: ${getStringRemainTime(remain)}`;
         case "changeType":
             return `${buildTemplate.name} - Изменить внешний вид\n\nПо умолчанию, Вам доступен только стандартный вид, для получения других внешних видов, необходимо зайти в магазин через команду /shop.`;
         case "changeName":
@@ -40,12 +44,12 @@ module.exports = function (name, action, build) {
     }
 }
 
-function getBuildStatus(name, build) {
-    let types = buildsTemplate[name]?.availableTypes;
+function getBuildStatus(buildName, build) {
+    let types = buildsTemplate[buildName]?.availableTypes;
 
-    if (name === "goldMine" || name === "ironDeposit" || name === "crystalLake") {
-        return `Текущие накопления: ${build.resourceCollected}`;
-    } else if (name === "palace") {
+    if (buildName === "goldMine" || buildName === "ironDeposit" || buildName === "crystalLake") {
+        return `Текущие накопления: ${build.resourceCollected}\nПроизводство в час: ${buildsTemplate[buildName].productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl)}`;
+    } else if (buildName === "palace") {
         return `Тип дворца: ${types[build.type].name}\nНазвание дворца: ${build.customName || "Дворец"}`;
     }
 }
@@ -68,8 +72,4 @@ function getUpgradeCostText(build, buildTemplate) {
     }
 
     return str;
-}
-
-function getSpeedUpCost(buildUpgradeTime) {
-    return calculateOptimalSpeedUpCost(buildUpgradeTime);
 }
