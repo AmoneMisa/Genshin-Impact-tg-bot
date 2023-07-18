@@ -17,26 +17,22 @@ module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callb
         return sendMessageWithDelete(chatId, "У тебя нет карточки для смены названия. Чтобы её получить, зайди в магазин: /shop", {}, 5 * 1000);
     }
 
-    try {
-        await bot.editMessageCaption(getCaption(buildName, "changeName", build), {
-            chat_id: chatId,
-            message_id: messageId,
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: "Подтвердить смену",
-                    callback_data: `builds.${buildName}.changeName.0`
-                }], [{
-                    text: "Назад",
-                    callback_data: `builds.${buildName}.back`
-                }], [{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        });
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.changeName - ошибка редактирования заголовка`);
-    }
+    await bot.editMessageCaption(getCaption(buildName, "changeName", build), {
+        chat_id: chatId,
+        message_id: messageId,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Подтвердить смену",
+                callback_data: `builds.${buildName}.changeName.0`
+            }], [{
+                text: "Назад",
+                callback_data: `builds.${buildName}.back`
+            }], [{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
 }], [/^builds\.[^.]+\.changeName\.0$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeName\.0$/);
     let messageId = callback.message.message_id;
@@ -44,40 +40,36 @@ module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callb
 
     let build = await getBuild(chatId, callback.from.id, buildName);
 
-    try {
-        sendMessage(chatId, getCaption(buildName, "changeName.0", build), {
-            disable_notification: true,
-            reply_markup: {
-                selective: true,
-                force_reply: true
-            }
-        }).then((msg) => {
-            let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
-                bot.removeReplyListener(id);
-                session.game.builds[buildName].customName = replyMsg.text;
-                bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-                bot.deleteMessage(msg.chat.id, msg.message_id);
-                bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${session.game.builds[buildName].customName}`, {
-                    chat_id: chatId,
-                    message_id: messageId,
-                    disable_notification: true,
-                    reply_markup: {
-                        inline_keyboard: [[{
-                            text: "Назад",
-                            callback_data: `builds.${buildName}.back`
-                        }], [{
-                            text: buttonsDictionary["ru"].close,
-                            callback_data: "close"
-                        }]]
-                    }
-                })
-            });
-        }).catch(e => {
-            console.error(e);
+    sendMessage(chatId, getCaption(buildName, "changeName.0", build), {
+        disable_notification: true,
+        reply_markup: {
+            selective: true,
+            force_reply: true
+        }
+    }).then((msg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+            bot.removeReplyListener(id);
+            session.game.builds[buildName].customName = replyMsg.text;
+            bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+            bot.deleteMessage(msg.chat.id, msg.message_id);
+            bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${session.game.builds[buildName].customName}`, {
+                chat_id: chatId,
+                message_id: messageId,
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Назад",
+                        callback_data: `builds.${buildName}.back`
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            })
         });
+    }).catch(e => {
+        console.error(e);
+    });
 
-        session.game.builds.palace.canChangeName = false;
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.changeName.0 - ошибка редактирования заголовка`);
-    }
+    session.game.builds.palace.canChangeName = false;
 }]];

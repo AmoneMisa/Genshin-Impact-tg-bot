@@ -1,13 +1,14 @@
+const getEmoji = require('../../getters/getEmoji');
+
 module.exports = function (inventory) {
-    let message = "";
+    let message = `${getEmoji("inventory")} Инвентарь\n\n`;
 
     for (let [key, item] of Object.entries(inventory)) {
         if (key === "potions") {
             message += getPotionsMessage(inventory[key]);
         } else {
-            message += `${translateMap[key]}: ${item}\n`;
+            message += `${getEmoji(key)} ${translateMap[key]}: ${item}\n`;
         }
-
     }
 
     return message;
@@ -15,13 +16,9 @@ module.exports = function (inventory) {
 
 function getPotionsMessage(potions) {
     let message = "";
-    for (let [key, potion] of Object.entries(potions)) {
-        console.log(potions, key, potion)
-        message += `${translateMap[key]}:\n`;
-
-        for (let [potionKey, potionValue] of Object.entries(potion)) {
-            message += `${translateMap["potion"]} ${translateMap[potionKey]} - ${translateMap["recovery"]} ${potionValue.power}. Количество: ${potionValue.count}\n`;
-        }
+    for (let potion of potions) {
+        let findStr = `${potion.bottleType}.${potion.type}`;
+        message += `${getEmoji(findStr)} ${potion.name}: ${potion.description}. Количество: ${potion.count}\n`;
     }
 
     return message;
@@ -32,9 +29,5 @@ const translateMap = {
     crystals: "Кристаллы",
     ironOre: "Железная руда",
     potions: "Зелья",
-    potion: "Зелье",
-    recovery: "восстанавливает",
-    hp: "Хп",
-    small: "Крохотное",
-    smallMedium: "Маленькое",
+    hp: "Хп"
 };

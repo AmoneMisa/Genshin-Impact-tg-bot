@@ -7,6 +7,7 @@ const getLocalImageByPath = require("../../../functions/getters/getLocalImageByP
 const getCaption = require('../../../functions/game/builds/getCaption');
 const setTimerForCollectResources = require('../../../functions/game/builds/setTimerForCollectResources');
 const buildsTemplate = require("../../../templates/buildsTemplate");
+const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 
 module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.collect$/);
@@ -38,7 +39,7 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
         }]];
     }
 
-    try {
+    if (callback.message.photo) {
         await bot.editMessageCaption(getCaption(buildName, `collect.${resourcesCount > 0 ? 0 : 1}`, build), {
             chat_id: chatId,
             message_id: messageId,
@@ -46,8 +47,12 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
                 inline_keyboard: keyboard
             }
         });
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${build}.upgrade - ошибка редактирования заголовка`);
+    } else {
+        await sendMessage(chatId, getCaption(buildName, `collect.${resourcesCount > 0 ? 0 : 1}`, build), {
+            reply_markup: {
+                inline_keyboard: keyboard
+            }
+        })
     }
 }], [/^builds\.[^.]+\.collect\.0$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.collect\.0$/);
@@ -71,9 +76,7 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
     let defaultCollectionPerHour = buildTemplate.productionPerHour;
     setTimerForCollectResources(build, maxWorkHoursWithoutCollection, defaultCollectionPerHour);
 
-    let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}`);
-
-    if (imagePath) {
+    if (callback.message.photo) {
         await bot.editMessageCaption(getCaption(buildName, "home", build), {
             message_id: messageId,
             chat_id: chatId,
@@ -87,5 +90,19 @@ module.exports = [[/^builds\.[^.]+\.collect$/, async function (session, callback
                 }]]
             }
         });
+    } else {
+        await sendMessage(chatId, getCaption(buildName, "home", build), {
+            reply_markup: {
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Назад",
+                        callback_data: `builds.${buildName}.back`
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            }
+        })
     }
 }]];

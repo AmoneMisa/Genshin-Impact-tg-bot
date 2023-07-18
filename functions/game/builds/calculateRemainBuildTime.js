@@ -22,10 +22,8 @@ module.exports = function (buildName, build) {
 
     if (buildTemplate.upgradeTime[build.currentLvl - 2]) {
         buildTime = buildTemplate.upgradeTime[build.currentLvl - 2].time;
-        console.log("1", buildTime);
     } else {
         buildTime = calculateIncreaseUpgradeTime(buildName, build.currentLvl);
-        console.log("2",buildTime);
     }
 
     let upgradeEndedAt = build.upgradeStartedAt + buildTime * 60 * 60 * 1000;

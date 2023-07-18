@@ -6,6 +6,9 @@ const getCaption = require('../../../functions/game/builds/getCaption');
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const buttonsDictionary = require("../../../dictionaries/buttons");
 const bot = require('../../../bot');
+const getBuildList = require("../../../functions/game/builds/getBuildList");
+const getBuildListFromTemplate = require("../../../functions/game/builds/getBuildFromTemplate");
+const buildsTemplate = require("../../../templates/buildsTemplate");
 
 function getUpgradeButtonText(lvl) {
     if (lvl === 0) {
@@ -14,7 +17,48 @@ function getUpgradeButtonText(lvl) {
     return "Улучшить";
 }
 
-module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callback) {
+module.exports = [["player.builds", async function (session, callback) {
+    let id;
+    let chatId = callback.message.chat.id;
+    let userId = session.userChatData.user.id;
+    let buildsList = await getBuildList(chatId, userId);
+    let defaultBuilds = getBuildListFromTemplate();
+    for (let [key, build] of Object.entries(defaultBuilds)) {
+        if (buildsList[key]) {
+            continue;
+        }
+
+        buildsList[key] = build;
+    }
+
+    let buttons = [];
+    let tempArray = null;
+    let i = 0;
+
+    if (Object.entries(buildsList).length) {
+        for (let [key, build] of Object.entries(buildsList)) {
+            if (i % 3 === 0) {
+                tempArray = [];
+                buttons.push(tempArray);
+            }
+
+            tempArray.push({text: buildsTemplate[key].name, callback_data: `builds.${key}`});
+            i++;
+        }
+    }
+
+    buttons.push([{
+        text: buttonsDictionary["ru"].close,
+        callback_data: "close"
+    }]);
+
+    sendMessage(userId, `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`, {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: buttons
+        }
+    }).then(message => id = message.message_id);
+}], [/^builds\.palace(?:\.back)?$/, async function (session, callback) {
     const isBack = callback.data === 'builds.palace.back';
 
     if (getUserName(session, "nickname") !== callback.from.username) {
@@ -30,7 +74,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
 
     let build = await getBuild(chatId, callback.from.id, 'palace');
 
-    if (isBack) {
+    if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('palace', "home", build), {
             chat_id: chatId,
             message_id: messageId,
@@ -125,7 +169,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
 
     let build = await getBuild(chatId, callback.from.id, 'goldMine');
 
-    if (isBack) {
+    if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('goldMine', "home", build), {
             chat_id: chatId,
             message_id: messageId,
@@ -201,7 +245,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
 
     let build = getBuild(chatId, callback.from.id, 'crystalLake');
 
-    if (isBack) {
+    if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('crystalLake', "home", build), {
             chat_id: chatId,
             message_id: messageId,
@@ -277,7 +321,7 @@ module.exports = [[/^builds\.palace(?:\.back)?$/, async function (session, callb
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, 'ironDeposit');
-    if (isBack) {
+    if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('ironDeposit', "home", build), {
             chat_id: chatId,
             message_id: messageId,

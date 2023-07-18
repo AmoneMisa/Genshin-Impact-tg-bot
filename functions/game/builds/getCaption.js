@@ -60,7 +60,7 @@ function getUpgradeCost(build, buildTemplate) {
 }
 
 function getUpgradeCostText(build, buildTemplate) {
-    const map = { gold: "золота", crystal: "кристаллов", ironOre: "железной руды" };
+    const map = { gold: "золота", crystals: "кристаллов", ironOre: "железной руды" };
     let str = ``;
 
     for (let [upgradeKey, upgradeValue] of Object.entries(getUpgradeCost(build, buildTemplate))) {

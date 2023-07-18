@@ -8,10 +8,19 @@ module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
     try {
         bot.deleteMessage(msg.chat.id, msg.message_id);
 
-        sendMessage(msg.chat.id, `${userGetStats(session)}`, {
+        sendMessage(msg.from.id, `${userGetStats(session)}`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
+                    text: "Выбрать класс",
+                    callback_data: "player.changeClass"
+                }], [{
+                    text: "Показать инвентарь",
+                    callback_data: "player.inventory"
+                }], [{
+                    text: "Мои здания",
+                    callback_data: "player.builds"
+                }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
                 }]]

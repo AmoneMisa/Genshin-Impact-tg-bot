@@ -1,11 +1,7 @@
 const userDealDamage = require('./userDealDamage');
-const userStatsList = require('./userStatsList');
-const userHeal = require('./userHeal');
-const potion = require('./potion');
+const whoami = require('./whoami');
 
 module.exports = [
     ...userDealDamage,
-    ...userStatsList,
-    ...userHeal,
-    ...potion
+    ...whoami
 ];

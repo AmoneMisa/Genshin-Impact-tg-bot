@@ -1,9 +1,9 @@
 const getPlayerClass = require("./getPlayerClass");
 
-module.exports = function (session) {
-    let {stats} = getPlayerClass(session);
+module.exports = function (gameClass, baseStats) {
+    let {stats} = getPlayerClass(gameClass);
     let attack = stats.attack;
-    let lvl = session.game.stats.lvl;
+    let lvl = baseStats.lvl;
 
     attack += (lvl - 1) * 2;
     return attack;

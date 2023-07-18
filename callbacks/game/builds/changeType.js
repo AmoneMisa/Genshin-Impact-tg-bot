@@ -45,17 +45,13 @@ module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callb
         callback_data: "close"
     }]);
 
-    try {
-        await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
-            chat_id: chatId,
-            message_id: messageId,
-            reply_markup: {
-                inline_keyboard: buttons
-            }
-        });
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.upgrade - ошибка редактирования заголовка`);
-    }
+    await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
+        chat_id: chatId,
+        message_id: messageId,
+        reply_markup: {
+            inline_keyboard: buttons
+        }
+    });
 }], [/^builds\.[^.]+\.changeType\.[^.]+$/, async function (session, callback) {
     const [, buildName, typeName] = callback.data.match(/^builds\.([^.]+)\.changeType\.([^.]+)$/);
     let messageId = callback.message.message_id;
@@ -72,26 +68,22 @@ module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callb
         return sendMessageWithDelete(chatId, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
     }
 
-    try {
-        await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
-            chat_id: chatId,
-            message_id: messageId,
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: "Подтвердить смену",
-                    callback_data: `builds.${buildName}.changeType.${typeName}.0`
-                }], [{
-                    text: "Назад",
-                    callback_data: `builds.${buildName}.back`
-                }], [{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        });
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.changeType.${typeName} - ошибка редактирования заголовка`);
-    }
+    await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
+        chat_id: chatId,
+        message_id: messageId,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Подтвердить смену",
+                callback_data: `builds.${buildName}.changeType.${typeName}.0`
+            }], [{
+                text: "Назад",
+                callback_data: `builds.${buildName}.back`
+            }], [{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
 }], [/^builds\.[^.]+\.changeType\.[^.]+\.0$/, async function (session, callback) {
     const [, buildName, typeName] = callback.data.match(/^builds\.([^.]+)\.changeType\.([^.]+)\.0$/);
     let messageId = callback.message.message_id;

@@ -17,23 +17,29 @@ const getBuildList = require("../../../functions/game/builds/getBuildList");
 const getSession = require("../../../functions/getters/getSession");
 const userStatsMap = require("../../../dictionaries/userStats");
 
-function getUpgradeRequirementsMessage(buildName, currentLvl, chatId, userId) {
-    let buildList = getBuildList(chatId, userId);
+async function getUpgradeRequirementsMessage(buildName, currentLvl, chatId, userId) {
+    let buildList = await getBuildList(chatId, userId);
     let upgrades = buildsTemplate[buildName].upgradeRequirements[currentLvl - 1];
     let str = "";
-    for (let [upgradeKey, upgradeValue] of upgrades) {
+    for (let upgradeKey of Object.keys(upgrades)) {
         if (upgradeKey === "buildRequirements") {
-            str += `Требуется: ${buildsTemplate[upgradeKey].name} - ${upgradeValue}\n`;
-            str += `Текущее: ${buildsTemplate[upgradeKey].name} - ${buildList[upgradeKey].currentLvl}\n`;
+            str += "Требования построек:\n"
+
+            for (let buildRequirement of upgrades.buildRequirements) {
+                str += `Требуется: ${buildsTemplate[buildRequirement.name].name} - ${buildRequirement.level} ур.\n`;
+                str += `Текущее: ${buildsTemplate[buildRequirement.name].name} - ${buildList[buildRequirement.name].currentLvl} ур.\n`;
+            }
         }
 
         if (upgradeKey === "characterRequirements") {
-            let session = getSession(chatId, userId);
-            str += `Требуется: ${userStatsMap[upgradeKey]} - ${upgradeValue}`;
-            str += `Текущее: ${userStatsMap[upgradeKey]} - ${session.game.stats[upgradeKey] || session.game.gameClass.stats[upgradeKey]}`;
+            str += "\nТребования персонажа:\n"
+            let session = await getSession(chatId, userId);
+            for (let characterRequirement of upgrades.characterRequirements) {
+                str += `Требуется: ${userStatsMap[characterRequirement.name]} - ${characterRequirement.level}\n`;
+                str += `Текущее: ${userStatsMap[characterRequirement.name]} - ${session.game.stats[characterRequirement.name] || session.game.gameClass.stats[characterRequirement.name]}`;
+            }
         }
     }
-
     return str;
 }
 
@@ -44,7 +50,7 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
 
     let build = await getBuild(chatId, callback.from.id, buildName);
     if (!isCanBeBuild(buildName, build, chatId, callback.from.id)) {
-        return sendMessage(chatId, `@${getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
+        return sendMessage(chatId, `@${getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Назад",
@@ -89,13 +95,21 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
         caption = "upgrade";
     }
 
-    await bot.editMessageCaption(getCaption(buildName, caption, build), {
-        chat_id: chatId,
-        message_id: messageId,
-        reply_markup: {
-            inline_keyboard: keyboard
-        }
-    });
+    if (callback.message.photo) {
+        await bot.editMessageCaption(getCaption(buildName, caption, build), {
+            chat_id: chatId,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: keyboard
+            }
+        });
+    } else {
+        await sendMessage(chatId, (getCaption(buildName, caption, build), {
+            reply_markup: {
+                inline_keyboard: keyboard
+            }
+        }))
+    }
 }], [/^builds\.[^.]+\.upgrade\.upgradeLvl$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.upgrade\.upgradeLvl$/);
     let messageId = callback.message.message_id;
@@ -137,22 +151,39 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
         return;
     }
 
-    await bot.editMessageCaption(getCaption(buildName, "upgrade.upgradeLvl", build), {
-        chat_id: chatId,
-        message_id: messageId,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: "Подтвердить улучшение",
-                callback_data: `builds.${buildName}.upgrade.upgradeLvl.0`
-            }], [{
-                text: "Назад",
-                callback_data: `builds.${buildName}.back`
-            }], [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+    if (callback.message.photo) {
+        await bot.editMessageCaption(getCaption(buildName, "upgrade.upgradeLvl", build), {
+            chat_id: chatId,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Подтвердить улучшение",
+                    callback_data: `builds.${buildName}.upgrade.upgradeLvl.0`
+                }], [{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } else {
+        await sendMessage(chatId, getCaption(buildName, "upgrade.upgradeLvl", build), {
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Подтвердить улучшение",
+                    callback_data: `builds.${buildName}.upgrade.upgradeLvl.0`
+                }], [{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        })
+    }
 }], [/^builds\.[^.]+\.upgrade\.speedup$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.upgrade\.speedup$/);
     let messageId = callback.message.message_id;
@@ -180,23 +211,39 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
         return sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {}, 5000);
     }
 
-    await bot.editMessageCaption(getCaption(buildName, "upgrade.speedup.0", build), {
-        chat_id: chatId,
-        message_id: messageId,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: "Подтвердить ускорение",
-                callback_data: `builds.${buildName}.upgrade.speedup.0`
-            }], [{
-                text: "Назад",
-                callback_data: `builds.${buildName}.back`
-            }], [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
-
+    if (callback.message.photo) {
+        await bot.editMessageCaption(getCaption(buildName, "upgrade.speedup.0", build), {
+            chat_id: chatId,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Подтвердить ускорение",
+                    callback_data: `builds.${buildName}.upgrade.speedup.0`
+                }], [{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } else {
+        await sendMessage(chatId, getCaption(buildName, "upgrade.speedup.0", build), {
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Подтвердить ускорение",
+                    callback_data: `builds.${buildName}.upgrade.speedup.0`
+                }], [{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        })
+    }
 }], [/^builds\.[^.]+\.upgrade\.speedup\.0$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.upgrade\.speedup\.0$/);
     let messageId = callback.message.message_id;
@@ -228,19 +275,33 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
 
     speedupUpgradeBuild(buildName, build, session);
 
-    await bot.editMessageCaption(getCaption(buildName, "upgrade.speedup.1", build), {
-        chat_id: chatId,
-        message_id: messageId,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: "Назад",
-                callback_data: `builds.${buildName}.back`
-            }], [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+    if (callback.message.photo) {
+        await bot.editMessageCaption(getCaption(buildName, "upgrade.speedup.1", build), {
+            chat_id: chatId,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } else {
+        await sendMessage(chatId, getCaption(buildName, "upgrade.speedup.1", build), {
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        })
+    }
 }], [/^builds\.[^.]+\.upgrade\.upgradeLvl\.0$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.upgrade\.upgradeLvl\.0$/);
     let messageId = callback.message.message_id;
@@ -263,17 +324,31 @@ module.exports = [[/^builds\.[^.]+\.upgrade$/, async function (session, callback
     build.upgradeStartedAt = new Date().getTime();
     upgradeBuildTimer(buildName, build, chatId, session);
 
-    await bot.editMessageCaption(getCaption(buildName, "upgrade.upgradeLvl.0", build), {
-        chat_id: chatId,
-        message_id: messageId,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: "Назад",
-                callback_data: `builds.${buildName}.back`
-            }], [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+    if (callback.message.photo) {
+        await bot.editMessageCaption(getCaption(buildName, "upgrade.upgradeLvl.0", build), {
+            chat_id: chatId,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } else {
+        await sendMessage(chatId, getCaption(buildName, "upgrade.upgradeLvl.0", build), {
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Назад",
+                    callback_data: `builds.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        })
+    }
 }]];

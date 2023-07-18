@@ -1,5 +1,6 @@
 module.exports = [{
     name: "noClass",
+    description: "Класс без определенной специализации, представляет собой бродягу, который не обладает выдающимися навыками или способностями",
     translateName: "Бродяжка",
     attack: 1,
     defence: 1,
@@ -16,6 +17,7 @@ module.exports = [{
     speed: 1
 }, {
     name: "warrior",
+    description: "Класс-воин с высокой защитой и силой атаки, предназначенный для ближнего боя",
     translateName: "Палладин",
     attack: 2,
     defence: 4,
@@ -32,6 +34,7 @@ module.exports = [{
     speed: 2
 }, {
     name: "mage",
+    description: "Класс-маг, специализирующийся на магических атаках и обладающий высокой скоростью и маной",
     translateName: "Маг",
     attack: 4,
     defence: 2,
@@ -48,6 +51,7 @@ module.exports = [{
     speed: 5,
 }, {
     name: "priest",
+    description: "Класс-жрец, обладающий высокой выносливостью и защитой, а также способностью исцелять союзников",
     translateName: "Прист",
     attack: 1,
     defence: 5,
@@ -64,6 +68,7 @@ module.exports = [{
     speed: 4
 }, {
     name: "archer",
+    description: "Класс-лучник, способный наносить высокий физический урон с дальней дистанции.",
     translateName: "Лучник",
     attack: 5,
     defence: 0,

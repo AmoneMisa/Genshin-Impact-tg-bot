@@ -115,9 +115,11 @@ module.exports = async function (chatId, userId) {
         members[userId].game.inventory.ironOre = 0;
     }
 
-    if (Array.isArray(members[userId].game.inventory.potions)) {
-        members[userId].game.inventory.potions = potionsInInventoryTemplate;
-    }
+    members[userId].game.inventory.potions.forEach(potion => {
+        if (!potion.bottleType || !potion.description) {
+            members[userId].game.inventory.potions = potionsInInventoryTemplate;
+        }
+    })
 
     if (!members[userId].game.hasOwnProperty("gameClass")) {
         members[userId].game.gameClass = {

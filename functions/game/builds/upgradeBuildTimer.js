@@ -7,7 +7,6 @@ const buildsTemplate = require("../../../templates/buildsTemplate");
 module.exports = function (buildName, build, chatId, session) {
     let remain = calculateRemainBuildTime(buildName, build);
     let buildTemplate = buildsTemplate[buildName];
-    console.log(remain);
     build.upgradeTimerId = +setTimeout(() => {
         upgradeBuild(build);
         build.upgradeTimerId = null;

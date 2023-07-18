@@ -1,5 +1,6 @@
-module.exports = function (session) {
-    if (session.game.hasOwnProperty("gameClass")) {
-        return {skills: session.game.gameClass.skills, stats: session.game.gameClass.stats};
+module.exports = function (gameClass) {
+    if (!gameClass) {
+        return null;
     }
+    return {skills: gameClass.skills, stats: gameClass.stats || gameClass};
 };

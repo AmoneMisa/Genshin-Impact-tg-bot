@@ -1,5 +1,4 @@
 const sendGold = require('./sendGold');
-const setPlayerClass = require('./player/setPlayerClass');
 const boss = require('./boss');
 const sword = require('./sword');
 const chest = require('./chest');
@@ -11,7 +10,6 @@ const bowling = require('./bowling');
 const darts = require('./darts');
 const basketball = require('./basketball');
 const football = require('./football');
-const builds = require('./builds');
 const elements = require('./elements');
 const shop = require('./shop');
 
@@ -21,7 +19,6 @@ module.exports = [
     ...boss,
     ...chest,
     ...point21,
-    ...setPlayerClass,
     ...player,
     ...slots,
     ...dice,
@@ -29,7 +26,6 @@ module.exports = [
     ...darts,
     ...basketball,
     ...football,
-    ...builds,
     ...elements,
     ...shop
 ];
