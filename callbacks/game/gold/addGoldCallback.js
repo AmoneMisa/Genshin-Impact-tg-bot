@@ -7,33 +7,29 @@ const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
-    try {
-        const [, chatId, userId] = callback.data.match(/^add_gold\.([\-0-9]+)\.([0-9]+)$/);
-        let targetSession = await getSession(chatId, userId);
-        sendMessage(callback.message.chat.id, `Сколько золота добавить для ${getUserName(targetSession, "name")}?`, {
-            disable_notification: true,
-            reply_markup: {
-                selective: true,
-                force_reply: true
-            }
-        }).then((msg) => {
-            let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
-                bot.removeReplyListener(id);
-                let gold = parseInt(replyMsg.text);
-                targetSession.game.inventory.gold += gold;
+    const [, chatId, userId] = callback.data.match(/^add_gold\.([\-0-9]+)\.([0-9]+)$/);
+    let targetSession = await getSession(chatId, userId);
+    sendMessage(callback.message.chat.id, `Сколько золота добавить для ${getUserName(targetSession, "name")}?`, {
+        disable_notification: true,
+        reply_markup: {
+            selective: true,
+            force_reply: true
+        }
+    }).then((msg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+            bot.removeReplyListener(id);
+            let gold = parseInt(replyMsg.text);
+            targetSession.game.inventory.gold += gold;
 
-                deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-                deleteMessage(msg.chat.id, msg.message_id);
-                return sendMessage(callback.message.chat.id, `Ты добавил ${gold} золота для ${getUserName(targetSession, "name")}.`, {
-                    disable_notification: true
-                });
+            deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+            deleteMessage(msg.chat.id, msg.message_id);
+            return sendMessage(callback.message.chat.id, `Ты добавил ${gold} золота для ${getUserName(targetSession, "name")}.`, {
+                disable_notification: true
             });
-        }).catch(e => {
-            console.error(e);
         });
-    } catch (e) {
+    }).catch(e => {
         console.error(e);
-    }
+    });
 }], [/^add_gold\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
     let [, chatId, page] = callback.data.match(/^add_gold\.([\-0-9]+)_([^.]+)$/);
     page = parseInt(page);

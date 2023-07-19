@@ -32,7 +32,7 @@ const bossCommands = [
     {command: "boss_hp", description: "Показать Хп босса"},
     {command: "deal_damage", description: "Нанести урон боссу"},
     {command: "heal", description: "Похиллить себя"},
-    {command: "whoami", description: "Моя статистика  меню персонажа"},
+    {command: "whoami", description: "Моя статистика и меню персонажа"},
     {command: "exchange", description: "Обменник кристаллов"}
 ];
 

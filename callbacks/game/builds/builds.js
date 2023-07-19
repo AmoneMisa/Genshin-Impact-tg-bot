@@ -17,9 +17,9 @@ function getUpgradeButtonText(lvl) {
     return "Улучшить";
 }
 
-module.exports = [["player.builds", async function (session, callback) {
+module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callback) {
     let id;
-    let chatId = callback.message.chat.id;
+    let chatId = callback.data.match(/^player\.([\-0-9]+)\.builds/);
     let userId = session.userChatData.user.id;
     let buildsList = await getBuildList(chatId, userId);
     let defaultBuilds = getBuildListFromTemplate();
@@ -36,13 +36,13 @@ module.exports = [["player.builds", async function (session, callback) {
     let i = 0;
 
     if (Object.entries(buildsList).length) {
-        for (let [key, build] of Object.entries(buildsList)) {
+        for (let key of Object.keys(buildsList)) {
             if (i % 3 === 0) {
                 tempArray = [];
                 buttons.push(tempArray);
             }
 
-            tempArray.push({text: buildsTemplate[key].name, callback_data: `builds.${key}`});
+            tempArray.push({text: buildsTemplate[key].name, callback_data: `builds.${chatId}.${key}`});
             i++;
         }
     }
@@ -58,8 +58,9 @@ module.exports = [["player.builds", async function (session, callback) {
             inline_keyboard: buttons
         }
     }).then(message => id = message.message_id);
-}], [/^builds\.palace(?:\.back)?$/, async function (session, callback) {
-    const isBack = callback.data === 'builds.palace.back';
+}], [/^builds\.[\-0-9]+\.palace(?:\.back)?$/, async function (session, callback) {
+    const isBack = callback.data.includes("back");
+    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.palace(?:\.back)?$/);
 
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
@@ -69,31 +70,30 @@ module.exports = [["player.builds", async function (session, callback) {
         return;
     }
 
-    let chatId = callback.message.chat.id;
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, 'palace');
 
     if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('palace', "home", build), {
-            chat_id: chatId,
+            chat_id: callback.message.chat.id,
             message_id: messageId,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Изменить тип",
-                    callback_data: "builds.palace.changeType",
+                    callback_data: `builds.${chatId}.palace.changeType`,
                 }, {
                     text: "Статус",
-                    callback_data: "builds.palace.status",
+                    callback_data: `builds.${chatId}.palace.status`,
                 }], [{
                     text: "Улучшить",
-                    callback_data: "builds.palace.upgrade",
+                    callback_data: `builds.${chatId}.palace.upgrade`,
                 }, {
                     text: "Статус казны",
-                    callback_data: "builds.palace.guarded",
+                    callback_data:` "builds.${chatId}.palace.guarded"`,
                 }], [{
                     text: "Изменить название",
-                    callback_data: "builds.palace.changeName",
+                    callback_data: `builds.${chatId}.palace.changeName`,
                 }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
@@ -104,23 +104,23 @@ module.exports = [["player.builds", async function (session, callback) {
         let imagePath = getLocalImageByPath(build.currentLvl, `builds/palace/${build.type || 'common'}`);
 
         if (imagePath) {
-            await sendPhoto(chatId, imagePath, {
+            await sendPhoto(callback.message.chat.id, imagePath, {
                 caption: getCaption('palace', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Изменить тип",
-                        callback_data: "builds.palace.changeType",
+                        callback_data: `builds.${chatId}.palace.changeType`,
                     }, {
                         text: "Статус",
-                        callback_data: "builds.palace.status",
+                        callback_data: `builds.${chatId}.palace.status`,
                     }], [{
                         text: "Улучшить",
-                        callback_data: "builds.palace.upgrade",
+                        callback_data: `builds.${chatId}.palace.upgrade`,
                     }, {
                         text: "Статус казны",
-                        callback_data: "builds.palace.guarded",
+                        callback_data:` "builds.${chatId}.palace.guarded"`,
                     }], [{
                         text: "Изменить название",
-                        callback_data: "builds.palace.changeName",
+                        callback_data: `builds.${chatId}.palace.changeName`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -128,23 +128,23 @@ module.exports = [["player.builds", async function (session, callback) {
                 }
             });
         } else {
-            await sendMessage(chatId, getCaption('palace', "home", build), {
+            await sendMessage(callback.message.chat.id, getCaption('palace', "home", build), {
                 reply_markup: {
                     inline_keyboard: [[{
                         text: "Изменить тип",
-                        callback_data: "builds.palace.changeType",
+                        callback_data: `builds.${chatId}.palace.changeType`,
                     }, {
                         text: "Статус",
-                        callback_data: "builds.palace.status",
+                        callback_data: `builds.${chatId}.palace.status`,
                     }], [{
                         text: "Улучшить",
-                        callback_data: "builds.palace.upgrade",
+                        callback_data: `builds.${chatId}.palace.upgrade`,
                     }, {
                         text: "Статус казны",
-                        callback_data: "builds.palace.guarded",
+                        callback_data:` "builds.${chatId}.palace.guarded"`,
                     }], [{
                         text: "Изменить название",
-                        callback_data: "builds.palace.changeName",
+                        callback_data: `builds.${chatId}.palace.changeName`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -153,8 +153,9 @@ module.exports = [["player.builds", async function (session, callback) {
             })
         }
     }
-}], [/^builds\.goldMine(?:\.back)?$/, async function (session, callback) {
-    const isBack = callback.data === 'builds.goldMine.back';
+}], [/^builds\.[\-0-9]+\.goldMine(?:\.back)?$/, async function (session, callback) {
+    const isBack = callback.data.includes("back");
+    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.goldMine(?:\.back)?$/);
 
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
@@ -164,25 +165,24 @@ module.exports = [["player.builds", async function (session, callback) {
         return;
     }
 
-    let chatId = callback.message.chat.id;
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, 'goldMine');
 
     if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('goldMine', "home", build), {
-            chat_id: chatId,
+            chat_id: callback.message.chat.id,
             message_id: messageId,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Статус",
-                    callback_data: "builds.goldMine.status",
+                    callback_data: `builds.${chatId}.goldMine.status`,
                 }, {
                     text: "Улучшить",
-                    callback_data: "builds.goldMine.upgrade",
+                    callback_data: `builds.${chatId}.goldMine.upgrade`,
                 }], [{
                     text: "Собрать прибыть",
-                    callback_data: "builds.goldMine.collect",
+                    callback_data: `builds.${chatId}.goldMine.collect`,
                 }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
@@ -193,17 +193,17 @@ module.exports = [["player.builds", async function (session, callback) {
         let imagePath = getLocalImageByPath(build.currentLvl, 'builds/goldMine');
 
         if (imagePath) {
-            await sendPhoto(chatId, imagePath, {
+            await sendPhoto(callback.message.chat.id, imagePath, {
                 caption: getCaption('goldMine', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
-                        callback_data: "builds.goldMine.status",
+                        callback_data: `builds.${chatId}.goldMine.status`,
                     }, {
                         text: "Улучшить",
-                        callback_data: "builds.goldMine.upgrade",
+                        callback_data: `builds.${chatId}.goldMine.upgrade`,
                     }], [{
                         text: "Собрать прибыть",
-                        callback_data: "builds.goldMine.collect",
+                        callback_data: `builds.${chatId}.goldMine.collect`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -211,17 +211,17 @@ module.exports = [["player.builds", async function (session, callback) {
                 }
             })
         } else {
-            await sendMessage(chatId, getCaption('goldMine', "home", build), {
+            await sendMessage(callback.message.chat.id, getCaption('goldMine', "home", build), {
                 reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
-                        callback_data: "builds.goldMine.status",
+                        callback_data: `builds.${chatId}.goldMine.status`,
                     }, {
                         text: "Улучшить",
-                        callback_data: "builds.goldMine.upgrade",
+                        callback_data: `builds.${chatId}.goldMine.upgrade`,
                     }], [{
                         text: "Собрать прибыть",
-                        callback_data: "builds.goldMine.collect",
+                        callback_data: `builds.${chatId}.goldMine.collect`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -230,35 +230,34 @@ module.exports = [["player.builds", async function (session, callback) {
             })
         }
     }
-}], [/^builds.crystalLake(?:\.back)?$/, async function (session, callback) {
+}], [/^builds\.[\-0-9]+\.crystalLake(?:\.back)?$/, async function (session, callback) {
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
-    const isBack = callback.data === 'builds.crystalLake.back';
-
+    const isBack = callback.data.includes("back");
+    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.crystalLake(?:\.back)?$/);
     if (!session.game.hasOwnProperty('builds')) {
         return;
     }
 
-    let chatId = callback.message.chat.id;
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, 'crystalLake');
 
     if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('crystalLake', "home", build), {
-            chat_id: chatId,
+            chat_id: callback.message.chat.id,
             message_id: messageId,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Статус",
-                    callback_data: "builds.crystalLake.status",
+                    callback_data: `builds.${chatId}.crystalLake.status`,
                 }, {
                     text: getUpgradeButtonText(build.currentLvl),
-                    callback_data: "builds.crystalLake.upgrade",
+                    callback_data: `builds.${chatId}.crystalLake.upgrade`,
                 }], [{
                     text: "Собрать прибыть",
-                    callback_data: "builds.crystalLake.collect",
+                    callback_data: `builds.${chatId}.crystalLake.collect`,
                 }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
@@ -268,17 +267,17 @@ module.exports = [["player.builds", async function (session, callback) {
     } else {
         let imagePath = getLocalImageByPath(build.currentLvl, 'builds/crystalLake');
         if (imagePath) {
-            await sendPhoto(chatId, imagePath, {
+            await sendPhoto(callback.message.chat.id, imagePath, {
                 caption: getCaption('crystalLake', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
-                        callback_data: "builds.crystalLake.status",
+                        callback_data: `builds.${chatId}.crystalLake.status`,
                     }, {
                         text: getUpgradeButtonText(build.currentLvl),
-                        callback_data: "builds.crystalLake.upgrade",
+                        callback_data: `builds.${chatId}.crystalLake.upgrade`,
                     }], [{
                         text: "Собрать прибыть",
-                        callback_data: "builds.crystalLake.collect",
+                        callback_data: `builds.${chatId}.crystalLake.collect`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -286,17 +285,17 @@ module.exports = [["player.builds", async function (session, callback) {
                 }
             })
         } else {
-            await sendMessage(chatId, getCaption('crystalLake', "home", build), {
+            await sendMessage(callback.message.chat.id, getCaption('crystalLake', "home", build), {
                 reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
-                        callback_data: "builds.crystalLake.status",
+                        callback_data: `builds.${chatId}.crystalLake.status`,
                     }, {
                         text: getUpgradeButtonText(build.currentLvl),
-                        callback_data: "builds.crystalLake.upgrade",
+                        callback_data: `builds.${chatId}.crystalLake.upgrade`,
                     }], [{
                         text: "Собрать прибыть",
-                        callback_data: "builds.crystalLake.collect",
+                        callback_data: `builds.${chatId}.crystalLake.collect`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -305,35 +304,34 @@ module.exports = [["player.builds", async function (session, callback) {
             })
         }
     }
-}], [/^builds.ironDeposit(?:\.back)?$/, async function (session, callback) {
+}], [/^builds\.[\-0-9]+\.ironDeposit(?:\.back)?$/, async function (session, callback) {
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
-
-    const isBack = callback.data === 'builds.ironDeposit.back';
+    const isBack = callback.data.includes("back");
+    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.ironDeposit(?:\.back)?$/);
 
     if (!session.game.hasOwnProperty('builds')) {
         return;
     }
 
-    let chatId = callback.message.chat.id;
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, 'ironDeposit');
     if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('ironDeposit', "home", build), {
-            chat_id: chatId,
+            chat_id: callback.message.chat.id,
             message_id: messageId,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Статус",
-                    callback_data: "builds.ironDeposit.status",
+                    callback_data: `builds.${chatId}.ironDeposit.status`,
                 }, {
                     text: getUpgradeButtonText(build.currentLvl),
-                    callback_data: "builds.ironDeposit.upgrade",
+                    callback_data: `builds.${chatId}.ironDeposit.upgrade`,
                 }], [{
                     text: "Собрать прибыть",
-                    callback_data: "builds.ironDeposit.collect",
+                    callback_data: `builds.${chatId}.ironDeposit.collect`,
                 }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
@@ -344,17 +342,17 @@ module.exports = [["player.builds", async function (session, callback) {
         let imagePath = getLocalImageByPath(build.currentLvl, 'builds/ironDeposit');
 
         if (imagePath) {
-            await sendPhoto(chatId, imagePath, {
+            await sendPhoto(callback.message.chat.id, imagePath, {
                 caption: getCaption('ironDeposit', "home", build), reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
-                        callback_data: "builds.ironDeposit.status",
+                        callback_data: `builds.${chatId}.ironDeposit.status`,
                     }, {
                         text: getUpgradeButtonText(build.currentLvl),
-                        callback_data: "builds.ironDeposit.upgrade",
+                        callback_data: `builds.${chatId}.ironDeposit.upgrade`,
                     }], [{
                         text: "Собрать прибыть",
-                        callback_data: "builds.ironDeposit.collect",
+                        callback_data: `builds.${chatId}.ironDeposit.collect`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -362,17 +360,17 @@ module.exports = [["player.builds", async function (session, callback) {
                 }
             })
         } else {
-            await sendMessage(chatId, getCaption('ironDeposit', "home", build), {
+            await sendMessage(callback.message.chat.id, getCaption('ironDeposit', "home", build), {
                 reply_markup: {
                     inline_keyboard: [[{
                         text: "Статус",
-                        callback_data: "builds.ironDeposit.status",
+                        callback_data: `builds.${chatId}.ironDeposit.status`,
                     }, {
                         text: getUpgradeButtonText(build.currentLvl),
-                        callback_data: "builds.ironDeposit.upgrade",
+                        callback_data: `builds.${chatId}.ironDeposit.upgrade`,
                     }], [{
                         text: "Собрать прибыть",
-                        callback_data: "builds.ironDeposit.collect",
+                        callback_data: `builds.${chatId}.ironDeposit.collect`,
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"

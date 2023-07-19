@@ -1,17 +1,18 @@
 const getUserName = require("../../../functions/getters/getUserName");
+const getSession = require("../../../functions/getters/getSession");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const getInventoryMessage = require("../../../functions/game/player/getInventoryMessage");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const inventoryTranslate = require("../../../dictionaries/inventory");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 
-module.exports = [["player.inventory", function (session, callback) {
+module.exports = [[/player\.[\-0-9]+\.inventory/, function (session, callback) {
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
-
-    let chatId = callback.message.chat.id;
-    let inventory = session.game.inventory;
+    const [, chatId] = callback.data.match(/^player\.([\-0-9]+)\.inventory$/);
+    let foundedSession = getSession(chatId, callback.from.id);
+    let inventory = foundedSession.game.inventory;
 
     let buttons = [];
     let tempArray = null;
@@ -30,7 +31,7 @@ module.exports = [["player.inventory", function (session, callback) {
         i++;
     }
 
-    sendMessage(chatId, `@${getUserName(session, "nickname")}, ${getInventoryMessage(inventory)}`, {
+    sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
         disable_notification: true,
         reply_markup: {
             selective: true,

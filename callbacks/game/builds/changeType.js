@@ -1,18 +1,17 @@
 const getBuild = require("../../../functions/game/builds/getBuild");
 const bot = require("../../../bot");
 const buttonsDictionary = require("../../../dictionaries/buttons");
-const debugMessage = require("../../../functions/tgBotFunctions/debugMessage");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getCaption = require('../../../functions/game/builds/getCaption');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const getSession = require("../../../functions/getters/getSession");
 
-module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callback) {
-    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeType$/);
+module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (session, callback) {
+    const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType$/);
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
     let types = buildsTemplate[buildName].availableTypes;
@@ -33,85 +32,84 @@ module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callb
                 buttons.push(tempArray);
             }
 
-            tempArray.push({text: type.name, callback_data: `builds.${buildName}.changeType.${key}`});
+            tempArray.push({text: type.name, callback_data: `builds.${chatId}.${buildName}.changeType.${key}`});
             i++;
         }
     }
 
     buttons.push([{
         text: "Назад",
-        callback_data: `builds.${buildName}.back`
+        callback_data: `builds.${chatId}.${buildName}.back`
     }], [{
         text: buttonsDictionary["ru"].close,
         callback_data: "close"
     }]);
 
     await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
-        chat_id: chatId,
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
             inline_keyboard: buttons
         }
     });
-}], [/^builds\.[^.]+\.changeType\.[^.]+$/, async function (session, callback) {
-    const [, buildName, typeName] = callback.data.match(/^builds\.([^.]+)\.changeType\.([^.]+)$/);
+}], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+$/, async function (session, callback) {
+    const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)$/);
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
+    let foundedSession = getSession(chatId, callback.from.id);
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    if (!session.game.builds[buildName].availableTypes) {
-        session.game.builds[buildName].availableTypes = Object.entries(buildsTemplate[buildName].availableTypes)
+    if (!foundedSession.game.builds[buildName].availableTypes) {
+        foundedSession.game.builds[buildName].availableTypes = Object.entries(buildsTemplate[buildName].availableTypes)
             .filter(([key, value]) => !value.isPayment)
             .map(([key, value]) => key);
     }
 
-    if (!session.game.builds[buildName].availableTypes.includes(typeName)) {
-        return sendMessageWithDelete(chatId, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
+    if (!foundedSession.game.builds[buildName].availableTypes.includes(typeName)) {
+        return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
     }
 
     await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
-        chat_id: chatId,
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
             inline_keyboard: [[{
                 text: "Подтвердить смену",
-                callback_data: `builds.${buildName}.changeType.${typeName}.0`
+                callback_data: `builds.${chatId}.${buildName}.changeType.${typeName}.0`
             }], [{
                 text: "Назад",
-                callback_data: `builds.${buildName}.back`
+                callback_data: `builds.${chatId}.${buildName}.back`
             }], [{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]
         }
     });
-}], [/^builds\.[^.]+\.changeType\.[^.]+\.0$/, async function (session, callback) {
-    const [, buildName, typeName] = callback.data.match(/^builds\.([^.]+)\.changeType\.([^.]+)\.0$/);
+}], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+\.0$/, async function (session, callback) {
+    const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)\.0$/);
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
+    let foundedSession = getSession(chatId, callback.from.id);
 
+    if (!foundedSession.game.builds[buildName].availableTypes.includes(typeName)) {
+        return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
+    }
     let build = await getBuild(chatId, callback.from.id, buildName);
     build.type = typeName;
+    
+    let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
+    deleteMessage(callback.message.chat.id, messageId);
 
-    try {
-        let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
-        deleteMessage(chatId, messageId);
-
-        if (imagePath) {
-            await sendPhoto(chatId, imagePath, {
-                caption: getCaption(buildName, "home", build),
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Назад",
-                        callback_data: `builds.${buildName}.back`
-                    }], [{
-                        text: buttonsDictionary["ru"].close,
-                        callback_data: "close"
-                    }]]
-                }
-            });
-        }
-    } catch (e) {
-        debugMessage(`${chatId} - builds.${buildName}.changeType.${typeName}.0 - ошибка редактирования изображения`);
+    if (imagePath) {
+        await sendPhoto(callback.message.chat.id, imagePath, {
+            caption: getCaption(buildName, "home", build),
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Назад",
+                    callback_data: `builds.${chatId}.${buildName}.back`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
     }
 }]];

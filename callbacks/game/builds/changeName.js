@@ -5,42 +5,43 @@ const buttonsDictionary = require("../../../dictionaries/buttons");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const getSession = require("../../../functions/getters/getSession");
 
-module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callback) {
-    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeName$/);
+module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (session, callback) {
+    const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/);
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
+    let foundedSession = getSession(chatId, callback.from.id);
 
-    if (!session.game.builds[buildName].canChangeName) {
-        return sendMessageWithDelete(chatId, "У тебя нет карточки для смены названия. Чтобы её получить, зайди в магазин: /shop", {}, 5 * 1000);
+    if (!foundedSession.game.builds[buildName].canChangeName) {
+        return sendMessageWithDelete(callback.message.chat.id, "У тебя нет карточки для смены названия. Чтобы её купить, зайди в магазин: /shop", {}, 5 * 1000);
     }
 
     await bot.editMessageCaption(getCaption(buildName, "changeName", build), {
-        chat_id: chatId,
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
             inline_keyboard: [[{
                 text: "Подтвердить смену",
-                callback_data: `builds.${buildName}.changeName.0`
+                callback_data: `builds.${chatId}.${buildName}.changeName.0`
             }], [{
                 text: "Назад",
-                callback_data: `builds.${buildName}.back`
+                callback_data: `builds.${chatId}.${buildName}.back`
             }], [{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]
         }
     });
-}], [/^builds\.[^.]+\.changeName\.0$/, async function (session, callback) {
-    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeName\.0$/);
+}], [/^builds\.[\-0-9]+\.[^.]+\.changeName\.0$/, async function (session, callback) {
+    const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeName\.0$/);
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
+    let foundedSession = getSession(chatId, callback.from.id);
 
-    sendMessage(chatId, getCaption(buildName, "changeName.0", build), {
+    sendMessage(callback.message.chat.id, getCaption(buildName, "changeName.0", build), {
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -49,18 +50,18 @@ module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callb
     }).then((msg) => {
         let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
             bot.removeReplyListener(id);
-            session.game.builds[buildName].customName = replyMsg.text;
+            foundedSession.game.builds[buildName].customName = replyMsg.text;
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
 
-            bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${session.game.builds[buildName].customName}`, {
-                chat_id: chatId,
+            bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${foundedSession.game.builds[buildName].customName}`, {
+                chat_id: callback.message.chat.id,
                 message_id: messageId,
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{
                         text: "Назад",
-                        callback_data: `builds.${buildName}.back`
+                        callback_data: `builds.${chatId}.${buildName}.back`
                     }], [{
                         text: buttonsDictionary["ru"].close,
                         callback_data: "close"
@@ -72,5 +73,5 @@ module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callb
         console.error(e);
     });
 
-    session.game.builds.palace.canChangeName = false;
+    foundedSession.game.builds.palace.canChangeName = false;
 }]];

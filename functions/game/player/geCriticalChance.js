@@ -1,6 +1,6 @@
-const getPlayerClass = require("./getPlayerGameClass");
+const getPlayerGameClass = require("./getPlayerGameClass");
 
 module.exports = function (session) {
-    let {stats} = getPlayerClass(session);
+    let {stats} = getPlayerGameClass(session);
     return stats.criticalChance;
 };

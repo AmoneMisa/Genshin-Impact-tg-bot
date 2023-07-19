@@ -4,21 +4,20 @@ const buttonsDictionary = require("../../../dictionaries/buttons");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const getCaption = require('../../../functions/game/builds/getCaption');
 
-module.exports = [[/^builds\.[^.]+\.status$/, async function (session, callback) {
-    const [, buildName] = callback.data.match(/^builds\.([^.]+)\.status$/);
-    let chatId = callback.message.chat.id;
+module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.status$/, async function (session, callback) {
+    const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.status$/);
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
 
     if (callback.message.photo) {
         await bot.editMessageCaption(getCaption(buildName, "status", build), {
-            chat_id: chatId,
+            chat_id: callback.message.chat.id,
             message_id: messageId,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Назад",
-                    callback_data: `builds.${buildName}.back`
+                    callback_data: `builds.${chatId}.${buildName}.back`
                 }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"
@@ -26,11 +25,11 @@ module.exports = [[/^builds\.[^.]+\.status$/, async function (session, callback)
             }
         });
     } else {
-        sendMessage(chatId, getCaption(buildName, "status", build), {
+        sendMessage(callback.message.chat.id, getCaption(buildName, "status", build), {
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Назад",
-                    callback_data: `builds.${buildName}.back`
+                    callback_data: `builds.${chatId}.${buildName}.back`
                 }], [{
                     text: buttonsDictionary["ru"].close,
                     callback_data: "close"

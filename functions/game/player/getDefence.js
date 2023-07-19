@@ -1,7 +1,7 @@
-const getPlayerClass = require("./getPlayerGameClass");
+const getPlayerGameClass = require("./getPlayerGameClass");
 
 module.exports = function (gameClass, baseStats) {
-    let {stats} = getPlayerClass(gameClass);
+    let {stats} = getPlayerGameClass(gameClass);
     let defence = stats.defence;
     let lvl = baseStats.lvl;
 

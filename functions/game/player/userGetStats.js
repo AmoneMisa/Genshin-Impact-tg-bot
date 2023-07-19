@@ -1,4 +1,4 @@
-const getPlayerStatsMessage = require("./getPlayerGameClassMessage");
+const getPlayerGameClassMessage = require("./getPlayerGameClassMessage");
 const getUserName = require('../../getters/getUserName');
 const getEmoji = require('../../getters/getEmoji');
 
@@ -13,7 +13,7 @@ module.exports = function (session) {
     message += `${getEmoji("currentExp")} Текущее к-во опыта: ${baseStats.currentExp}\n`;
     message += `${getEmoji("needExp")} Требуемое к-во опыта до следующего уровня: ${baseStats.needExp}\n\n`;
 
-    message += getPlayerStatsMessage(gameClass, baseStats, playerEffects);
+    message += getPlayerGameClassMessage(gameClass, baseStats, playerEffects);
 
     if (session.swordImmune) {
         message += "Иммунитет к выпадению отрицательного числа при увеличении меча.\n"
