@@ -128,7 +128,13 @@ module.exports = async function (chatId, userId) {
         };
     }
 
-    let foundedClass = classStatsTemplate.find(_class => _class.name === members[userId].game.gameClass.stats.name || _class.name === "noClass");
+    let foundedClass;
+    if (members[userId].game.gameClass.stats.name) {
+        foundedClass = classStatsTemplate.find(_class => _class.name === members[userId].game.gameClass.stats.name);
+    } else {
+        foundedClass = classStatsTemplate.find(_class => _class.name === "noClass");
+    }
+
     for (let [newStatKey, newStatValue] of Object.entries(foundedClass)) {
         if (members[userId].game.gameClass.stats.hasOwnProperty(newStatValue) && members[userId].game.gameClass.stats[newStatValue]) {
             continue;
