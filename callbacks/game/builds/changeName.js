@@ -12,7 +12,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (sess
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!foundedSession.game.builds[buildName].canChangeName) {
         return sendMessageWithDelete(callback.message.chat.id, "У тебя нет карточки для смены названия. Чтобы её купить, зайди в магазин: /shop", {}, 5 * 1000);
@@ -39,7 +39,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (sess
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     sendMessage(callback.message.chat.id, getCaption(buildName, "changeName.0", build), {
         disable_notification: true,

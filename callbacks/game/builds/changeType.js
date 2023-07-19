@@ -55,7 +55,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
 }], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+$/, async function (session, callback) {
     const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)$/);
     let messageId = callback.message.message_id;
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     let build = await getBuild(chatId, callback.from.id, buildName);
     if (!foundedSession.game.builds[buildName].availableTypes) {
@@ -87,7 +87,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
 }], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+\.0$/, async function (session, callback) {
     const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!foundedSession.game.builds[buildName].availableTypes.includes(typeName)) {
         return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);

@@ -48,10 +48,10 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!isCanBeBuild(buildName, build, chatId, callback.from.id)) {
-        return sendMessage(chatId, `@${getUserName(foundedSession, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
+        return sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Назад",
@@ -116,7 +116,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!isCanBeBuild(buildName, build, chatId, callback.from.id)) {
         return sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
@@ -189,11 +189,11 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session
     const [, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade\.speedup$/);
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     let build = await getBuild(chatId, callback.from.id, buildName);
     if (!isCanBeBuild(buildName, build, chatId, callback.from.id)) {
-        return sendMessage(chatId, `@${getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
+        return sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Назад",
@@ -249,7 +249,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session
 }], [/^builds\.[\-0-9]+\.[^.]+\.upgrade\.speedup\.0$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade\.speedup\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     let build = await getBuild(chatId, callback.from.id, buildName);
 
@@ -307,7 +307,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session
 }], [/^builds\.[\-0-9]+\.[^.]+\.upgrade\.upgradeLvl\.0$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade\.upgradeLvl\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     let build = await getBuild(chatId, callback.from.id, buildName);
     if (!isCanBeBuild(buildName, build, chatId, callback.from.id)) {

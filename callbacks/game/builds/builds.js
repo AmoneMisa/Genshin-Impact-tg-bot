@@ -9,6 +9,7 @@ const bot = require('../../../bot');
 const getBuildList = require("../../../functions/game/builds/getBuildList");
 const getBuildListFromTemplate = require("../../../functions/game/builds/getBuildFromTemplate");
 const buildsTemplate = require("../../../templates/buildsTemplate");
+const getSession = require("../../../functions/getters/getSession");
 
 function getUpgradeButtonText(lvl) {
     if (lvl === 0) {
@@ -19,8 +20,9 @@ function getUpgradeButtonText(lvl) {
 
 module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callback) {
     let id;
-    let chatId = callback.data.match(/^player\.([\-0-9]+)\.builds/);
-    let userId = session.userChatData.user.id;
+    let [ , chatId] = callback.data.match(/^player\.([\-0-9]+)\.builds/);
+    let foundedSession = await getSession(chatId, callback.from.id);
+    let userId = foundedSession.userChatData.user.id;
     let buildsList = await getBuildList(chatId, userId);
     let defaultBuilds = getBuildListFromTemplate();
     for (let [key, build] of Object.entries(defaultBuilds)) {
@@ -60,13 +62,14 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
     }).then(message => id = message.message_id);
 }], [/^builds\.[\-0-9]+\.palace(?:\.back)?$/, async function (session, callback) {
     const isBack = callback.data.includes("back");
-    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.palace(?:\.back)?$/);
+    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.palace(?:\.back)?$/);
 
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
+    let foundedSession = await getSession(chatId, callback.from.id);
 
-    if (!session.game.hasOwnProperty('builds')) {
+    if (!foundedSession.game.hasOwnProperty('builds')) {
         return;
     }
 
@@ -90,7 +93,7 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
                     callback_data: `builds.${chatId}.palace.upgrade`,
                 }, {
                     text: "Статус казны",
-                    callback_data:` "builds.${chatId}.palace.guarded"`,
+                    callback_data: ` "builds.${chatId}.palace.guarded"`,
                 }], [{
                     text: "Изменить название",
                     callback_data: `builds.${chatId}.palace.changeName`,
@@ -117,7 +120,7 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
                         callback_data: `builds.${chatId}.palace.upgrade`,
                     }, {
                         text: "Статус казны",
-                        callback_data:` "builds.${chatId}.palace.guarded"`,
+                        callback_data: ` "builds.${chatId}.palace.guarded"`,
                     }], [{
                         text: "Изменить название",
                         callback_data: `builds.${chatId}.palace.changeName`,
@@ -141,7 +144,7 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
                         callback_data: `builds.${chatId}.palace.upgrade`,
                     }, {
                         text: "Статус казны",
-                        callback_data:` "builds.${chatId}.palace.guarded"`,
+                        callback_data: ` "builds.${chatId}.palace.guarded"`,
                     }], [{
                         text: "Изменить название",
                         callback_data: `builds.${chatId}.palace.changeName`,
@@ -155,13 +158,14 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
     }
 }], [/^builds\.[\-0-9]+\.goldMine(?:\.back)?$/, async function (session, callback) {
     const isBack = callback.data.includes("back");
-    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.goldMine(?:\.back)?$/);
+    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.goldMine(?:\.back)?$/);
 
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
+    let foundedSession = await getSession(chatId, callback.from.id);
 
-    if (!session.game.hasOwnProperty('builds')) {
+    if (!foundedSession.game.hasOwnProperty('builds')) {
         return;
     }
 
@@ -235,7 +239,7 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
         return;
     }
     const isBack = callback.data.includes("back");
-    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.crystalLake(?:\.back)?$/);
+    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.crystalLake(?:\.back)?$/);
     if (!session.game.hasOwnProperty('builds')) {
         return;
     }
@@ -309,9 +313,10 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
         return;
     }
     const isBack = callback.data.includes("back");
-    let chatId = callback.data.match(/^builds\.([\-0-9]+)\.ironDeposit(?:\.back)?$/);
+    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.ironDeposit(?:\.back)?$/);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
-    if (!session.game.hasOwnProperty('builds')) {
+    if (!foundedSession.game.hasOwnProperty('builds')) {
         return;
     }
 

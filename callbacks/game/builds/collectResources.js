@@ -63,7 +63,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.collect$/, async function (session
     }
 
     build.lastCollectAt = new Date().getTime();
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
 
     let buildTemplate = buildsTemplate[buildName];
     let resourcesType = buildTemplate.resourcesType;

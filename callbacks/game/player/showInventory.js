@@ -6,12 +6,12 @@ const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const inventoryTranslate = require("../../../dictionaries/inventory");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 
-module.exports = [[/player\.[\-0-9]+\.inventory/, function (session, callback) {
+module.exports = [[/player\.[\-0-9]+\.inventory/, async function (session, callback) {
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
     const [, chatId] = callback.data.match(/^player\.([\-0-9]+)\.inventory$/);
-    let foundedSession = getSession(chatId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
     let inventory = foundedSession.game.inventory;
 
     let buttons = [];
