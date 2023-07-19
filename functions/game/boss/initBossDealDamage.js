@@ -1,7 +1,6 @@
 const getMembers = require("../../getters/getMembers");
 const bossDealDamage = require("../../game/boss/bossDealDamage");
 const {bosses} = require("../../../data");
-const bot = require('../../../bot');
 const sendMessage = require('../../tgBotFunctions/sendMessage');
 const deleteMessageTimeout = require("../../tgBotFunctions/deleteMessageTimeout");
 

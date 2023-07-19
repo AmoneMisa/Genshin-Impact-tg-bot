@@ -1,4 +1,3 @@
-const bot = require('../../../bot');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const shop = require('../../../functions/game/shop/shop');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");

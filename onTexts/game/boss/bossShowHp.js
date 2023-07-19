@@ -1,4 +1,3 @@
-const bot = require('../../../bot');
 const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');

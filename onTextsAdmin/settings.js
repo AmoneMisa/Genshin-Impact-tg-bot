@@ -1,5 +1,4 @@
 const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const bot = require('../bot');
 const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const getMemberStatus = require("../functions/getters/getMemberStatus");
 const getChatSession = require("../functions/getters/getChatSession");

@@ -1,4 +1,3 @@
-const bot = require('../../../bot');
 const {myId} = require('../../../config');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getSession = require('../../../functions/getters/getSession');

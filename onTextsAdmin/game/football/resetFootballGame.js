@@ -1,4 +1,3 @@
-const bot = require('../../../bot');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getSession = require('../../../functions/getters/getSession');
 const endGame = require('../../../functions/game/football/endGame');

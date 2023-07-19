@@ -1,4 +1,3 @@
-const bot = require('../../../bot');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
