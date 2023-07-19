@@ -3,10 +3,11 @@ const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const userGetStats = require('../../../functions/game/player/userGetStats');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
 
         sendMessage(msg.from.id, `${userGetStats(session)}`, {
             disable_notification: true,

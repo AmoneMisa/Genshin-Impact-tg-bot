@@ -13,27 +13,28 @@ module.exports = [["player.inventory", function (session, callback) {
     let chatId = callback.message.chat.id;
     let inventory = session.game.inventory;
 
-    let info = "";
-
     let buttons = [];
     let tempArray = null;
     let i = 0;
 
     for (let key of Object.keys(inventory)) {
+        if (!Array.isArray(inventory[key])) {
+            continue;
+        }
+
         if (i % 3 === 0) {
             tempArray = [];
             buttons.push(tempArray);
         }
         tempArray.push({text: `${getEmoji(key)} ${inventoryTranslate[key]}`, callback_data: `player.inventory.${key}`});
-        info += getInventoryMessage(inventory);
         i++;
     }
 
-    sendMessage(chatId, `@${getUserName(session, "nickname")}, ${info}`, {
+    sendMessage(chatId, `@${getUserName(session, "nickname")}, ${getInventoryMessage(inventory)}`, {
         disable_notification: true,
         reply_markup: {
             selective: true,
-            inline_keyboard: [...controlButtons("player.inventory", buttons, 1, true)]
+            inline_keyboard: [...controlButtons("player.inventory", buttons, 1)]
         }
     });
 }]];

@@ -3,6 +3,7 @@ const bossDealDamage = require("../../game/boss/bossDealDamage");
 const {bosses} = require("../../../data");
 const bot = require('../../../bot');
 const sendMessage = require('../../tgBotFunctions/sendMessage');
+const deleteMessageTimeout = require("../../tgBotFunctions/deleteMessageTimeout");
 
 module.exports = function (chatId, recovery) {
     let boss = bosses[chatId];
@@ -20,7 +21,7 @@ module.exports = function (chatId, recovery) {
         }
 
         return sendMessage(chatId, message)
-            .then(message => setTimeout(() => bot.deleteMessage(chatId, message.message_id), 10 * 1000));
+            .then(message => deleteMessageTimeout(chatId, message.message_id, 10 * 1000));
     }
 
     boss.attackIntervalId = +setInterval(() => dealDamage(), 60 * 60 * 1000);

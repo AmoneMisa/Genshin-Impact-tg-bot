@@ -243,7 +243,7 @@ module.exports = [["player.builds", async function (session, callback) {
     let chatId = callback.message.chat.id;
     let messageId = callback.message.message_id;
 
-    let build = getBuild(chatId, callback.from.id, 'crystalLake');
+    let build = await getBuild(chatId, callback.from.id, 'crystalLake');
 
     if (isBack && callback.message.photo) {
         await bot.editMessageCaption(getCaption('crystalLake', "home", build), {
@@ -267,7 +267,6 @@ module.exports = [["player.builds", async function (session, callback) {
         });
     } else {
         let imagePath = getLocalImageByPath(build.currentLvl, 'builds/crystalLake');
-
         if (imagePath) {
             await sendPhoto(chatId, imagePath, {
                 caption: getCaption('crystalLake', "home", build), reply_markup: {

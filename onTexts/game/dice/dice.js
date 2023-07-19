@@ -4,10 +4,11 @@ const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getSession = require('../../../functions/getters/getSession');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/dice\b/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let session = await getSession(msg.chat.id, msg.from.id);
         let id;
 

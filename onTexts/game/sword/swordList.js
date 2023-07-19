@@ -4,10 +4,11 @@ const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getMembers = require('../../../functions/getters/getMembers');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const swordsMessage = require('../../../functions/game/sword/swordsMessage');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/swords\b/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let members = getMembers(msg.chat.id);
 
         sendMessage(msg.chat.id, `${swordsMessage(members)}`, {

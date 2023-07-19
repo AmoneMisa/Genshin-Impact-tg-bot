@@ -4,6 +4,7 @@ const sendPrize = require('../../../functions/game/general/sendPrize');
 const endGame = require('../../../functions/game/football/endGame');
 const bot = require('../../../bot');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessageTimeout = require("../../../functions/tgBotFunctions/deleteMessageTimeout");
 
 let maxPulls = 3;
 
@@ -19,7 +20,7 @@ module.exports = [[/^football_pull$/, async function (session, callback) {
     let chatId = callback.message.chat.id;
 
     await bot.sendDice(chatId, {emoji: '⚽'}).then(msg => {
-        setTimeout(() => bot.deleteMessage(chatId, msg.message_id), 10000);
+        deleteMessageTimeout(chatId, msg.message_id, 10 * 1000);
         session.game.football.ball += msg.dice.value;
     });
 

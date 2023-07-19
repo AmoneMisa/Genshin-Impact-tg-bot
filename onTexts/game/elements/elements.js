@@ -9,10 +9,11 @@ const getChatSession = require('../../../functions/getters/getChatSession');
 const getMembers = require('../../../functions/getters/getMembers');
 const betMessage = require('../../../functions/game/general/betMessage');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/elements\b/, (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let chatSession = getChatSession(msg.chat.id);
         let members = getMembers(msg.chat.id);
         let userId = session.userChatData.user.id;

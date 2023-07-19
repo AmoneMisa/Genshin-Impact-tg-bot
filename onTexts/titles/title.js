@@ -1,13 +1,13 @@
-const bot = require('../../bot');
 const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const titleMessage = require('../../functions/game/titles/titleMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 const deleteMessageTimeout = require('../../functions/tgBotFunctions/deleteMessageTimeout');
+const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/title\b/, (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
 
         sendMessage(msg.chat.id, titleMessage(msg.chat.id, session), {
             disable_notification: true,

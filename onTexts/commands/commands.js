@@ -2,6 +2,7 @@ const bot = require('../../bot');
 const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
 const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
+const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
 
 const gamesCommands = [
     {command: "title", description: "Получить случайный титул"},
@@ -32,8 +33,7 @@ const bossCommands = [
     {command: "boss_hp", description: "Показать Хп босса"},
     {command: "deal_damage", description: "Нанести урон боссу"},
     {command: "heal", description: "Похиллить себя"},
-    {command: "whoami", description: "Моя статистика"},
-    {command: "change_class", description: "Изменить класс"},
+    {command: "whoami", description: "Моя статистика  меню персонажа"},
     {command: "exchange", description: "Обменник кристаллов"}
 ];
 
@@ -47,7 +47,7 @@ const resetGamesCommands = [
 
 module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let message = `Список игр бота:\n\n`;
         for (let command of gamesCommands) {
             message += `/${command.command} - ${command.description}\n`;
@@ -68,7 +68,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     }
 }], [/(?:^|\s)\/games_boss\b/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let message = `Список команд для босса:\n\n`;
         for (let command of bossCommands) {
             message += `/${command.command} - ${command.description}\n`;
@@ -89,7 +89,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     }
 }], [/(?:^|\s)\/games_form\b/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let message = `Список команд анкет по Геншину:\n\n`;
 
         for (let command of formsCommands) {
@@ -111,7 +111,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     }
 }], [/(?:^|\s)\/reset_games_timers\b/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let message = `Список команд для сброса таймера персональных игр:\n\n`;
 
         for (let command of resetGamesCommands) {

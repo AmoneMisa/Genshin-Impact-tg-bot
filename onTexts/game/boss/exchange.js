@@ -3,10 +3,11 @@ const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/exchange\b/, async (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери, сколько кристаллов ты хочешь купить. Обмен 1 кристалл х 1500 голды.`, {
             disable_notification: true,
             reply_markup: {

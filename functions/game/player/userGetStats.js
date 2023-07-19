@@ -1,4 +1,4 @@
-const getPlayerStatsMessage = require("./getPlayerStatsMessage");
+const getPlayerStatsMessage = require("./getPlayerGameClassMessage");
 const getUserName = require('../../getters/getUserName');
 const getEmoji = require('../../getters/getEmoji');
 

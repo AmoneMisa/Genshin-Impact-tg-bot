@@ -7,10 +7,11 @@ const summonBoss = require('../../../functions/game/boss/summonBoss');
 const initHpRegen = require('../../../functions/game/boss/initHpRegen');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let members = getMembers(msg.chat.id);
 
         sendMessage(msg.chat.id, `${await summonBoss(msg.chat.id, bosses, members)}`, {

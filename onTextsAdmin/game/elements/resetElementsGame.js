@@ -2,9 +2,10 @@ const bot = require('../../../bot');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getChatSession = require('../../../functions/getters/getChatSession');
 const getMemberStatus = require("../../../functions/getters/getMemberStatus");
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/reset_elements_game\b/, (msg) => {
-    bot.deleteMessage(msg.chat.id, msg.message_id);
+    deleteMessage(msg.chat.id, msg.message_id);
 
     if (!getMemberStatus(msg.chat.id, msg.from.id)) {
         return;

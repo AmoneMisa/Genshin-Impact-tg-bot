@@ -18,7 +18,7 @@ module.exports = [{
 }, {
     name: "warrior",
     description: "Класс-воин с высокой защитой и силой атаки, предназначенный для ближнего боя",
-    translateName: "Палладин",
+    translateName: "Паладин",
     attack: 2,
     defence: 4,
     criticalChance: 10,

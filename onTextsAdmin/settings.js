@@ -5,6 +5,7 @@ const getMemberStatus = require("../functions/getters/getMemberStatus");
 const getChatSession = require("../functions/getters/getChatSession");
 const getChatSessionSettings = require("../functions/getters/getChatSessionSettings");
 const controlButtons = require("../functions/keyboard/controlButtons");
+const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
     try {
@@ -75,9 +76,8 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
         }
 
         chatSession.settingsButtons = buttons;
-
-        bot.deleteMessage(msg.chat.id, msg.message_id);
-        sendMessage(msg.chat.id, "Нажми на кнопку, чтобы включить или отключить функцию.", {
+        deleteMessage(msg.chat.id, msg.message_id);
+        await sendMessage(msg.chat.id, "Нажми на кнопку, чтобы включить или отключить функцию.", {
                 reply_markup: {
                     inline_keyboard: [...controlButtons("settings", chatSession.settingsButtons, 1)]
                 }

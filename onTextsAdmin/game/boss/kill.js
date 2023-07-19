@@ -1,13 +1,13 @@
-const bot = require('../../../bot');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const {bosses} = require('../../../data');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const getMemberStatus = require("../../../functions/getters/getMemberStatus");
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/kill\b/, (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
 
         if (!getMemberStatus(msg.chat.id, msg.from.id)) {
             return;

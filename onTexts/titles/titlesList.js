@@ -1,25 +1,19 @@
-const bot = require('../../bot');
-const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const {titles} = require('../../data');
 const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const titlesMessage = require('../../functions/game/titles/titlesMessage');
 const buttonsDictionary = require('../../dictionaries/buttons');
+const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/titles/, (msg) => {
-    try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+    deleteMessage(msg.chat.id, msg.message_id);
 
-        sendMessage(msg.chat.id, titlesMessage(titles[msg.chat.id]), {
-            disable_notification: true,
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        });
-    } catch (e) {
-        debugMessage(`Command: /titles\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
-        throw e;
-    }
+    sendMessage(msg.chat.id, titlesMessage(titles[msg.chat.id]), {
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: buttonsDictionary["ru"].close,
+                callback_data: "close"
+            }]]
+        }
+    });
 }]];

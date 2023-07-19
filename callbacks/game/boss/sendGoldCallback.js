@@ -5,6 +5,7 @@ const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const getSession = require('../../../functions/getters/getSession');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, callback) {
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
@@ -35,8 +36,8 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
                 session.game.inventory.gold -= gold;
             }
 
-            bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-            bot.deleteMessage(msg.chat.id, msg.message_id);
+            deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+            deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /whoami`, {
                 disable_notification: true
             }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));

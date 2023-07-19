@@ -7,6 +7,7 @@ const getChatSession = require('../../functions/getters/getChatSession');
 const buildKeyboard = require('../../functions/keyboard/buildKeyboard');
 const controlButtons = require('../../functions/keyboard/controlButtons');
 const getUserName = require('../../functions/getters/getUserName');
+const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
 
 function isGameStarted(session, gameName) {
    return session.game.hasOwnProperty(gameName) && session.game.dice.hasOwnProperty('isStart') && session.game[gameName].isStart;
@@ -27,7 +28,7 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
             return;
         }
 
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let usersList = getMembers(msg.chat.id);
 
         usersList = Object.values(usersList).filter(item => !item.userChatData.user.is_bot && (item.userChatData.user.id !== msg.from.id));

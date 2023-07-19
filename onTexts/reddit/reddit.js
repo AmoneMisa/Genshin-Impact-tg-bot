@@ -1,7 +1,6 @@
-const bot = require('../../bot');
-const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const controlButtons = require('../../functions/keyboard/controlButtons');
+const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
 
 const buttons = [[{
     "text": "Подписаться на группу",
@@ -27,18 +26,12 @@ const buttons = [[{
 }]];
 
 module.exports = [[/(?:^|\s)\/reddit\b/, (msg, session) => {
-    try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+    deleteMessage(msg.chat.id, msg.message_id);
 
-        sendMessage(msg.chat.id, "Команды для Reddit", {
-            disable_notifications: true,
-            reply_markup: {
-                inline_keyboard: [...controlButtons("reddit", buttons, 1)]
-            }
-        });
-
-    } catch (e) {
-        debugMessage(`Command: /reddit\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
-        throw e;
-    }
+    sendMessage(msg.chat.id, "Команды для Reddit", {
+        disable_notifications: true,
+        reply_markup: {
+            inline_keyboard: [...controlButtons("reddit", buttons, 1)]
+        }
+    });
 }]];

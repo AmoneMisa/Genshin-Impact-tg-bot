@@ -2,10 +2,11 @@ const bot = require('../bot');
 const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const buttonsDictionary = require('../dictionaries/buttons');
 const sendMessage = require('../functions/tgBotFunctions/sendMessage');
+const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/start/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let commands = await bot.getMyCommands();
         let message = `Список команд бота:\n\n`;
         for (let command of commands) {

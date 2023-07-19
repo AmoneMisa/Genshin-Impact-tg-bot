@@ -9,10 +9,11 @@ const getCard = require('../../../functions/game/point21/getCard');
 const endGameTimer = require('../../../functions/game/general/endGameTimer');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let chatSession = getChatSession(msg.chat.id);
         let members = getMembers(msg.chat.id);
         let userId = session.userChatData.user.id;

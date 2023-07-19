@@ -1,13 +1,13 @@
-const bot = require('../../../bot');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
 const controlButtons = require('../../../functions/keyboard/controlButtons');
 const getMemberStatus = require("../../../functions/getters/getMemberStatus");
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/add_crystals\b/, (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
 
         if (!getMemberStatus(msg.chat.id, msg.from.id)) {
             return;

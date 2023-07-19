@@ -7,6 +7,7 @@ const getLocalImageByPath = require("../../../functions/getters/getLocalImageByP
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getCaption = require('../../../functions/game/builds/getCaption');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeType$/);
@@ -94,7 +95,7 @@ module.exports = [[/^builds\.[^.]+\.changeType$/, async function (session, callb
 
     try {
         let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
-        await bot.deleteMessage(chatId, messageId);
+        deleteMessage(chatId, messageId);
 
         if (imagePath) {
             await sendPhoto(chatId, imagePath, {

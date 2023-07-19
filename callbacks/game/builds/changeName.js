@@ -2,9 +2,9 @@ const getBuild = require("../../../functions/game/builds/getBuild");
 const bot = require("../../../bot");
 const getCaption = require("../../../functions/game/builds/getCaption");
 const buttonsDictionary = require("../../../dictionaries/buttons");
-const debugMessage = require("../../../functions/tgBotFunctions/debugMessage");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callback) {
     const [, buildName] = callback.data.match(/^builds\.([^.]+)\.changeName$/);
@@ -50,8 +50,9 @@ module.exports = [[/^builds\.[^.]+\.changeName$/, async function (session, callb
         let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
             bot.removeReplyListener(id);
             session.game.builds[buildName].customName = replyMsg.text;
-            bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-            bot.deleteMessage(msg.chat.id, msg.message_id);
+            deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+            deleteMessage(msg.chat.id, msg.message_id);
+
             bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${session.game.builds[buildName].customName}`, {
                 chat_id: chatId,
                 message_id: messageId,

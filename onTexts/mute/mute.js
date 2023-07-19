@@ -2,10 +2,11 @@ const bot = require('../../bot');
 const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
 const getUserName = require('../../functions/getters/getUserName');
+const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         bot.restrictChatMember(msg.chat.id, msg.from.id, {
             permissions: {
                 can_send_messages: false,

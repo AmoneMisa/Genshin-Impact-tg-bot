@@ -2,6 +2,7 @@ const bot = require('../bot');
 const {myId} = require('../config');
 const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const fs = require('fs');
+const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/get_debug_log\b/, async (msg) => {
     try {
@@ -9,7 +10,7 @@ module.exports = [[/(?:^|\s)\/get_debug_log\b/, async (msg) => {
             return;
         }
 
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let document = fs.createReadStream('./api.access.log');
         let year = new Date().getFullYear();
         let month = new Date().getMonth();

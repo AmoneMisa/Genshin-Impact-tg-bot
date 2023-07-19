@@ -2,6 +2,7 @@ const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 const bot = require('../bot');
 const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const getMemberStatus = require("../functions/getters/getMemberStatus");
+const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         try {
@@ -9,8 +10,8 @@ module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
                 return;
             }
 
-            bot.deleteMessage(msg.chat.id, msg.message_id);
-            sendMessage(msg.from.id, "/kill - Убить босса\n" +
+            deleteMessage(msg.chat.id, msg.message_id);
+            await sendMessage(msg.from.id, "/kill - Убить босса\n" +
                 "/receive_user_chest_timer - Сбросить таймер сундучка для пользователя\n" +
                 "/add_crystals - Добавить кристаллов пользователю\n" +
                 "/add_experience - Добавить опыт пользователю\n" +

@@ -1,4 +1,3 @@
-const bot = require('../../bot');
 const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
 const dictionary = require('../../dictionaries/main');
 const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
@@ -6,10 +5,11 @@ const deleteMessageTimeout = require('../../functions/tgBotFunctions/deleteMessa
 const setButtons = require('../../functions/form/setButtons');
 const commands = require('../../dictionaries/commands');
 const getUserName = require('../../functions/getters/getUserName');
+const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/form/, async (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         let buttons = setButtons(commands);
 
         let name = getUserName(session, "nickname") !== undefined ? getUserName(session, "nickname") : getUserName(session, "name");

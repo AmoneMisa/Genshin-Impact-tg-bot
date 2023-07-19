@@ -1,9 +1,9 @@
-const bot = require('../../bot');
+const deleteMessage = require('./deleteMessage');
 
 module.exports = function (chatId, msg, milliseconds) {
     if (!msg) {
         return;
     }
 
-    setTimeout(() => bot.deleteMessage(chatId, msg), milliseconds);
+    setTimeout(() => deleteMessage(chatId, msg), milliseconds);
 };

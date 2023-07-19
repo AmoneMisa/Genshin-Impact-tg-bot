@@ -6,10 +6,11 @@ const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const getTime = require('../../../functions/getters/getTime');
 const isBossDead = require('../../../functions/game/boss/isBossDead');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/deal_damage\b/, (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
 
         if (!session.timerDealDamageCallback) {
             session.timerDealDamageCallback = 0;

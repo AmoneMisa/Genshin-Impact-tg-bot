@@ -5,10 +5,11 @@ const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 const getTime = require('../../../functions/getters/getTime');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
 
         let [remain, hours, minutes, seconds] = getTime(session.timerOpenChestCallback);
 

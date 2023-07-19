@@ -4,6 +4,7 @@ const {myId} = require('../config');
 const {updTrustedChats} = require('../data');
 const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const fs = require('fs');
+const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
     try {
@@ -30,8 +31,8 @@ module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
                     return sendMessage(myId, `Чат уже добавлен в доверенные: ${replyMsg.text}`);
                 }
 
-                bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-                bot.deleteMessage(msg.chat.id, msg.message_id);
+                deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+                deleteMessage(msg.chat.id, msg.message_id);
             });
         });
 

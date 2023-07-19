@@ -4,6 +4,7 @@ const bot = require('../../../bot');
 const controlButtons = require('../../../functions/keyboard/controlButtons');
 const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     try {
@@ -21,8 +22,8 @@ module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, 
                 let gold = parseInt(replyMsg.text);
                 targetSession.game.inventory.gold += gold;
 
-                bot.deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-                bot.deleteMessage(msg.chat.id, msg.message_id);
+                deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+                deleteMessage(msg.chat.id, msg.message_id);
                 return sendMessage(callback.message.chat.id, `Ты добавил ${gold} золота для ${getUserName(targetSession, "name")}.`, {
                     disable_notification: true
                 });

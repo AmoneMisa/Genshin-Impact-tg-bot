@@ -4,10 +4,11 @@ const getMemberStatus = require('../../../functions/getters/getMemberStatus');
 const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
 const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
 const controlButtons = require('../../../functions/keyboard/controlButtons');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/add_iron_ore\b/, (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         if (!getMemberStatus(msg.chat.id, msg.from.id)) {
             return;
         }

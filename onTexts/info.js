@@ -1,12 +1,12 @@
-const bot = require('../bot');
 const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const dictionary = require('../dictionaries/main');
 const buttonsDictionary = require('../dictionaries/buttons');
 const sendMessage = require('../functions/tgBotFunctions/sendMessage');
+const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/info/, async (msg) => {
     try {
-        bot.deleteMessage(msg.chat.id, msg.message_id);
+        deleteMessage(msg.chat.id, msg.message_id);
         sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
             disable_notification: true,
             reply_markup: {

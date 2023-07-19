@@ -3,10 +3,11 @@ const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/slots\b/, async (msg, session) => {
     try {
-        retryBotRequest(bot => bot.deleteMessage(msg.chat.id, msg.message_id));
+        await retryBotRequest(bot => deleteMessage(msg.chat.id, msg.message_id));
 
         if (session.game.hasOwnProperty('slots')) {
             if (new Date().getTime() - session.game.slots.startedAt <= 2 * 60 * 1000) {
