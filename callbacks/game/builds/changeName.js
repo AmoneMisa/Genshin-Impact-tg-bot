@@ -6,6 +6,7 @@ const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMes
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const getSession = require("../../../functions/getters/getSession");
+const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 
 module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/);
@@ -18,7 +19,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (sess
         return sendMessageWithDelete(callback.message.chat.id, "У тебя нет карточки для смены названия. Чтобы её купить, зайди в магазин: /shop", {}, 5 * 1000);
     }
 
-    await bot.editMessageCaption(getCaption(buildName, "changeName", build), {
+    await editMessageCaption(getCaption(buildName, "changeName", build), {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
@@ -54,7 +55,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (sess
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
 
-            bot.editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${foundedSession.game.builds[buildName].customName}`, {
+            editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${foundedSession.game.builds[buildName].customName}`, {
                 chat_id: callback.message.chat.id,
                 message_id: messageId,
                 disable_notification: true,

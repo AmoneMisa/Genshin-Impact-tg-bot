@@ -1,5 +1,4 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const userDealDamage = require('../../../functions/game/player/userDealDamage');
 const userHealSkill = require('../../../functions/game/player/userHealSkill');
@@ -10,13 +9,14 @@ const isBossDead = require('../../../functions/game/boss/isBossDead');
 const getMembers = require('../../../functions/getters/getMembers');
 const {bosses} = require('../../../data');
 const getUserName = require('../../../functions/getters/getUserName');
+const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 
 function getOffset() {
     return new Date().getTime() + 60 * 60 * 1000;
 }
 
 module.exports = [[/^skill\.[0-9]+$/, function (session, callback) {
-    bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
+    deleteMessage(callback.message.chat.id, callback.message.message_id);
 
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;

@@ -2,6 +2,7 @@ const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const bot = require("../../../bot");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 const getUserName = require("../../../functions/getters/getUserName");
+const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
 const buttons = [[{
     "text": "Подписаться на группу",
@@ -163,7 +164,7 @@ module.exports = [["reddit.getPosts", async function (session, callback) {
     let [, page] = callback.data.match(/^reddit_([^.]+)$/);
     page = parseInt(page);
 
-    return bot.editMessageText("Команды для Reddit", {
+    return editMessageText("Команды для Reddit", {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

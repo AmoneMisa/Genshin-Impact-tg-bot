@@ -1,11 +1,11 @@
 const getWinners = require('./getWinners');
-const bot = require('../../../bot');
+const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 const sendMessageWithDelete = require('../../tgBotFunctions/sendMessageWithDelete');
 
 module.exports = function (winners, chatId, messageId, isDefault = true, gameName) {
     if (isDefault) {
-        bot.deleteMessage(chatId, messageId);
+        deleteMessage(chatId, messageId);
     }
 
-    sendMessageWithDelete(chatId, getWinners(winners, gameName), {}, 60 * 1000);
+    return sendMessageWithDelete(chatId, getWinners(winners, gameName), {}, 60 * 1000);
 };

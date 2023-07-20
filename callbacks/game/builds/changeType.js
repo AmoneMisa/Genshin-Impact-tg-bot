@@ -8,6 +8,7 @@ const buildsTemplate = require("../../../templates/buildsTemplate");
 const getCaption = require('../../../functions/game/builds/getCaption');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const getSession = require("../../../functions/getters/getSession");
+const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 
 module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType$/);
@@ -45,13 +46,13 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
         callback_data: "close"
     }]);
 
-    await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
+    await editMessageCaption(getCaption(buildName, "changeType", build), {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
             inline_keyboard: buttons
         }
-    });
+    }, callback.message.photo);
 }], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+$/, async function (session, callback) {
     const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)$/);
     let messageId = callback.message.message_id;
@@ -68,7 +69,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
         return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
     }
 
-    await bot.editMessageCaption(getCaption(buildName, "changeType", build), {
+    await editMessageCaption(getCaption(buildName, "changeType", build), {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
@@ -83,7 +84,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+\.0$/, async function (session, callback) {
     const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)\.0$/);
     let messageId = callback.message.message_id;
@@ -96,7 +97,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
     build.type = typeName;
     
     let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
-    deleteMessage(callback.message.chat.id, messageId);
+    await deleteMessage(callback.message.chat.id, messageId);
 
     if (imagePath) {
         await sendPhoto(callback.message.chat.id, imagePath, {

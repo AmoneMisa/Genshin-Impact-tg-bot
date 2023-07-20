@@ -32,7 +32,7 @@ async function bet(session, callback, calcFunc) {
 }
 
 async function updateMessage(session, callback) {
-    return await retryBotRequest(bot => bot.editMessageText(`Ставка: ${session.game.slots.bet}`, {
+    return editMessageText(`Ставка: ${session.game.slots.bet}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
@@ -65,7 +65,7 @@ async function updateMessage(session, callback) {
                 callback_data: "slots_allin_bet"
             }]]
         }
-    }));
+    });
 }
 
 module.exports = [

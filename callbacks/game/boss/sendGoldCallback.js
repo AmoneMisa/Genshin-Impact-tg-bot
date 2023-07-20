@@ -6,6 +6,7 @@ const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMe
 const getSession = require('../../../functions/getters/getSession');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
 module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, callback) {
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
@@ -52,7 +53,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
 
     let buttons = buildKeyboard(callback.message.chat.id, 'send_gold_recipient');
 
-    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+    return editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

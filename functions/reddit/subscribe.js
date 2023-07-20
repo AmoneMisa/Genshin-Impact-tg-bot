@@ -26,18 +26,13 @@ module.exports = async function (name, session, chatId) {
         chatSession.reddit.subscribes[name]++;
     }
 
-    try {
-        const result = await axios.get(`https://www.reddit.com/r/${name.replaceAll(/\s/g, "")}/about.json`);
-        if (result.status === 200) {
-            session.reddit.subscribes[name] = {
-                name: "",
-                timer: 2,
-                isStart: true
-            };
-            return true;
-        }
-    } catch (e) {
-        console.error(e);
-        return e;
+    const result = await axios.get(`https://www.reddit.com/r/${name.replaceAll(/\s/g, "")}/about.json`);
+    if (result.status === 200) {
+        session.reddit.subscribes[name] = {
+            name: "",
+            timer: 2,
+            isStart: true
+        };
+        return true;
     }
 };

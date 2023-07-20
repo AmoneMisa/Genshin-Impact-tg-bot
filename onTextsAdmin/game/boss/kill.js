@@ -6,35 +6,30 @@ const getMemberStatus = require("../../../functions/getters/getMemberStatus");
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/kill\b/, (msg) => {
-    try {
-        deleteMessage(msg.chat.id, msg.message_id);
+    deleteMessage(msg.chat.id, msg.message_id);
 
-        if (!getMemberStatus(msg.chat.id, msg.from.id)) {
-            return;
-        }
-
-        let boss = bosses[msg.chat.id];
-
-        if (boss.hp === 0 && boss.currentHp === 0) {
-            return;
-        }
-
-        if (boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
-            boss.hpRegenIntervalId = null;
-        }
-
-        boss.skill = null;
-        clearInterval(boss.attackIntervalId);
-        debugMessage("kill", boss.attackIntervalId);
-        boss.attackIntervalId = null;
-        boss.currentHp = 0;
-        boss.hp = 0;
-
-        sendMessage(msg.chat.id, "Босс убит админом.", {
-            disable_notification: true
-        }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5000));
-    } catch (e) {
-        debugMessage(`Command: /kill\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
-        throw e;
+    if (!getMemberStatus(msg.chat.id, msg.from.id)) {
+        return;
     }
+
+    let boss = bosses[msg.chat.id];
+
+    if (boss.hp === 0 && boss.currentHp === 0) {
+        return;
+    }
+
+    if (boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
+        boss.hpRegenIntervalId = null;
+    }
+
+    boss.skill = null;
+    clearInterval(boss.attackIntervalId);
+    debugMessage("kill", boss.attackIntervalId);
+    boss.attackIntervalId = null;
+    boss.currentHp = 0;
+    boss.hp = 0;
+
+    sendMessage(msg.chat.id, "Босс убит админом.", {
+        disable_notification: true
+    }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 5 * 1000));
 }]];

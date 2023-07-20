@@ -1,9 +1,9 @@
-const bot = require('../bot');
 const dictionary = require('../dictionaries/main');
 const buttonsDictionary = require('../dictionaries/buttons');
+const editMessageText = require('../functions/tgBotFunctions/editMessageText');
 
 module.exports = [["help", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.main}`, {
+    return editMessageText(`${dictionary.ru.help.main}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -26,13 +26,16 @@ module.exports = [["help", function (session, callback) {
                 text: "Связь с разработчиком",
                 callback_data: "help_contact"
             }], [{
+                text: "Меню игрока (whoami)",
+                callback_data: "help_whoami"
+            }], [{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]
         }
     });
 }], ["help_admin", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.adminCommands}`, {
+    return editMessageText(`${dictionary.ru.help.adminCommands}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -46,7 +49,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.minigames}`, {
+   return editMessageText(`${dictionary.ru.help.minigames}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -96,7 +99,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_boss", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.boss}`, {
+    return editMessageText(`${dictionary.ru.help.boss}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -125,7 +128,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_form", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.form}`, {
+    return editMessageText(`${dictionary.ru.help.form}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -141,8 +144,22 @@ module.exports = [["help", function (session, callback) {
             }]]
         }
     });
+}], ["help_whoami", function (session, callback) {
+    return editMessageText(`${dictionary.ru.help.whoami}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
 }], ["help_form_deep", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.helpForm}`, {
+    return editMessageText(`${dictionary.ru.help.helpForm}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -156,7 +173,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_mute", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.mute}`, {
+    return editMessageText(`${dictionary.ru.help.mute}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -170,7 +187,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_contact", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.contact}`, {
+    return editMessageText(`${dictionary.ru.help.contact}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -184,7 +201,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_boss_shop", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.bossShop}`, {
+    return editMessageText(`${dictionary.ru.help.bossShop}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -198,7 +215,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_boss_dealDamage", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.bossDealDamage}`, {
+    return editMessageText(`${dictionary.ru.help.bossDealDamage}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -212,7 +229,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_boss_class", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.class}`, {
+    return editMessageText(`${dictionary.ru.help.class}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -226,7 +243,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_boss_stats", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.stats}`, {
+    return editMessageText(`${dictionary.ru.help.stats}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -240,7 +257,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_boss_sendGold", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.sendGold}`, {
+    return editMessageText(`${dictionary.ru.help.sendGold}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -254,7 +271,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_dice", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.dice}`, {
+    return editMessageText(`${dictionary.ru.help.dice}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -268,7 +285,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_point", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.point}`, {
+    return editMessageText(`${dictionary.ru.help.point}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -282,7 +299,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_chest", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.chest}`, {
+    return editMessageText(`${dictionary.ru.help.chest}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -296,7 +313,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_titles", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.title}`, {
+    return editMessageText(`${dictionary.ru.help.title}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -310,7 +327,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_slots", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.slots}`, {
+    return editMessageText(`${dictionary.ru.help.slots}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -324,7 +341,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_sword", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.sword}`, {
+    return editMessageText(`${dictionary.ru.help.sword}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -338,7 +355,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_crystals", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.crystals}`, {
+    return editMessageText(`${dictionary.ru.help.crystals}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -352,7 +369,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_bowling", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.bowling}`, {
+    return editMessageText(`${dictionary.ru.help.bowling}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -366,7 +383,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_darts", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.darts}`, {
+    return editMessageText(`${dictionary.ru.help.darts}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -380,7 +397,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_basketball", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.basketball}`, {
+    return editMessageText(`${dictionary.ru.help.basketball}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -394,7 +411,7 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_football", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.football}`, {
+    return editMessageText(`${dictionary.ru.help.football}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
@@ -408,7 +425,21 @@ module.exports = [["help", function (session, callback) {
         }
     });
 }], ["help_minigames_elements", function (session, callback) {
-    bot.editMessageText(`${dictionary.ru.help.elements}`, {
+    return editMessageText(`${dictionary.ru.help.elements}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_elements", function (session, callback) {
+    return editMessageText(`${dictionary.ru.help.elements}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {

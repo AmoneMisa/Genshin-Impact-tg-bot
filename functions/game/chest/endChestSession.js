@@ -1,5 +1,5 @@
 const getOffset = require('../../getters/getOffset');
-const bot = require('../../../bot');
+const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 
 module.exports = function (session, callback) {
     if (session.chestCounter > 2) {
@@ -7,6 +7,6 @@ module.exports = function (session, callback) {
         session.chestCounter = 0;
         session.chosenChests = [];
         session.chestButtons = [];
-        bot.deleteMessage(callback.message.chat.id, callback.message.message_id);
+        return deleteMessage(callback.message.chat.id, callback.message.message_id);
     }
 };

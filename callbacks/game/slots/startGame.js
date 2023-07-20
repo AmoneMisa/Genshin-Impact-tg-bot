@@ -1,5 +1,6 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
+const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
+const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const getUserName = require('../../../functions/getters/getUserName');
 
@@ -17,9 +18,8 @@ module.exports = [
             return;
         }
 
-
         session.game.slots.state = 'spin1';
-        retryBotRequest(bot => bot.deleteMessage(callback.message.chat.id, callback.message.message_id));
+        await deleteMessage(callback.message.chat.id, callback.message.message_id);
 
         let spinSet = ['😈', '❤️', '💋', '🤏', '🛫', '🚗', '💩', '👻', '👽', '☠️'];
         let isWin = Math.random() < 0.2;
@@ -62,10 +62,10 @@ module.exports = [
 
             session.game.slots.state = 'spin2';
 
-            await retryBotRequest(bot => bot.editMessageText(`@${getUserName(session, "nickname")}, ${resultSpins.slice(0, 2).join('')}`, {
+            await editMessageText(`@${getUserName(session, "nickname")}, ${resultSpins.slice(0, 2).join('')}`, {
                 chat_id: sentMessage.chat.id,
                 message_id: sentMessage.message_id,
-            }));
+            });
             setTimeout(async () => {
                 if (!session.game.hasOwnProperty('slots')) {
                     return;
@@ -86,10 +86,10 @@ module.exports = [
                     text = `@${getUserName(session, "nickname")}, ${resultSpins.join('')} - ты проиграл. Проигрыш: ${session.game.slots.bet}`;
                 }
 
-                await retryBotRequest(bot => bot.editMessageText(text, {
+                await editMessageText(text, {
                     chat_id: sentMessage.chat.id,
                     message_id: sentMessage.message_id,
-                }));
+                });
                 deleteMessageTimeout(sentMessage.chat.id, sentMessage.message_id, 60 * 1000);
                 delete session.game.slots;
             }, 1500);

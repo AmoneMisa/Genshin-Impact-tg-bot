@@ -2,42 +2,35 @@ const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 const bot = require('../bot');
 const {myId} = require('../config');
 const {updTrustedChats} = require('../data');
-const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const fs = require('fs');
 const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
-    try {
-        if (msg.from.id !== myId) {
-            return;
-        }
-
-        sendMessage(myId, "Введи id чата, чтобы добавить его в доверенные.", {
-            reply_markup: {
-                selective: true,
-                force_reply: true
-            }
-        }).then(msg => {
-            bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
-                const trustedChats = fs.readFileSync('trustedChats.json');
-                let trustedChatsArray = JSON.parse(trustedChats);
-
-                if (!trustedChatsArray.includes(replyMsg.text)) {
-                    trustedChatsArray.push((replyMsg.text).toString());
-                    fs.writeFileSync('trustedChats.json', JSON.stringify(trustedChatsArray));
-                    updTrustedChats();
-                    sendMessage(myId, `Чат добавлен в доверенные: ${replyMsg.text}`);
-                } else {
-                    return sendMessage(myId, `Чат уже добавлен в доверенные: ${replyMsg.text}`);
-                }
-
-                deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-                deleteMessage(msg.chat.id, msg.message_id);
-            });
-        });
-
-    } catch (e) {
-        debugMessage(`Command: /mark_trusted\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
-        throw e;
+    if (msg.from.id !== myId) {
+        return;
     }
+
+    sendMessage(myId, "Введи id чата, чтобы добавить его в доверенные.", {
+        reply_markup: {
+            selective: true,
+            force_reply: true
+        }
+    }).then(msg => {
+        bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+            const trustedChats = fs.readFileSync('trustedChats.json');
+            let trustedChatsArray = JSON.parse(trustedChats);
+
+            if (!trustedChatsArray.includes(replyMsg.text)) {
+                trustedChatsArray.push((replyMsg.text).toString());
+                fs.writeFileSync('trustedChats.json', JSON.stringify(trustedChatsArray));
+                updTrustedChats();
+                sendMessage(myId, `Чат добавлен в доверенные: ${replyMsg.text}`);
+            } else {
+                return sendMessage(myId, `Чат уже добавлен в доверенные: ${replyMsg.text}`);
+            }
+
+            deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+            deleteMessage(msg.chat.id, msg.message_id);
+        });
+    });
 }]];

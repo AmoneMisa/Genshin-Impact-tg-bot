@@ -1,9 +1,9 @@
-const bot = require('../../bot');
+const retryBotRequest = require('./retryBotRequest');
 
 module.exports = function (chatId, msg) {
     if (!msg) {
         return;
     }
 
-    bot.deleteMessage(chatId, msg);
+    return retryBotRequest(bot => bot.deleteMessage(chatId, msg));
 };

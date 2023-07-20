@@ -1,21 +1,21 @@
-module.exports = function (build, lvl) {
+module.exports = function (buildTemplate, currentLvl) {
         let increaseFactor;
         let newResourcesCounter = {};
 
-        for (let [resourceName, resource] of Object.entries(build.bonusEffect)) {
+        for (let [resourceName, resource] of Object.entries(buildTemplate.bonusEffect)) {
             if (resourceName === "guardedGold") {
-                increaseFactor = 0.017;
-                newResourcesCounter["guardedGold"] = resource / increaseFactor * lvl;
+                increaseFactor = 1.017;
+                newResourcesCounter["guardedGold"] = Math.ceil(resource * increaseFactor * currentLvl);
             }
 
             if (resourceName === "guardedCrystals") {
-                increaseFactor = 0.03 * lvl;
-                newResourcesCounter["guardedCrystals"] = resource / increaseFactor * lvl;
+                increaseFactor = 1.03 * currentLvl;
+                newResourcesCounter["guardedCrystals"] = Math.ceil(resource * increaseFactor * currentLvl);
             }
 
             if (resourceName === "guardedIronOre") {
-                increaseFactor = 0.025;
-                newResourcesCounter["guardedIronOre"] = resource / increaseFactor * lvl;
+                increaseFactor = 1.025;
+                newResourcesCounter["guardedIronOre"] = Math.ceil(resource * increaseFactor * currentLvl);
             }
         }
 

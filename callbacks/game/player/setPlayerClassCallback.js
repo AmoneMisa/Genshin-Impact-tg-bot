@@ -10,8 +10,7 @@ const getPlayerGameClassMessage = require("../../../functions/game/player/getPla
 const classes = require("../../../templates/classStatsTemplate");
 const getEmoji = require('../../../functions/getters/getEmoji');
 const getSession = require('../../../functions/getters/getSession');
-// Получать сессию из конкретного чата и записывать изменения в неё
-const bot = require('../../../bot');
+const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
 function getOffset() {
     return new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
@@ -57,7 +56,7 @@ module.exports = [[/^player\.[\-0-9]+\.changeClass(?:\.back)?$/, async function 
     }
 
     if (isBack) {
-        bot.editMessageText(`@${getUserName(session, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
+        return editMessageText(`@${getUserName(session, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             disable_notification: true,
@@ -67,7 +66,7 @@ module.exports = [[/^player\.[\-0-9]+\.changeClass(?:\.back)?$/, async function 
             }
         })
     } else {
-        sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
+        return sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,
@@ -86,7 +85,7 @@ module.exports = [[/^player\.[\-0-9]+\.changeClass(?:\.back)?$/, async function 
     let classTemplate = getClassStatsFromTemplate(_class);
     let info = `Информация о классе ${getEmoji(classTemplate.name)} ${classTemplate.translateName}\n\n${getPlayerGameClassMessage(classTemplate, foundedSession.game.stats, foundedSession.game.effects)}\n`;
 
-    bot.editMessageText(`${getUserName(foundedSession, "nickname")}, ${info}`, {
+    return editMessageText(`${getUserName(foundedSession, "nickname")}, ${info}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
@@ -123,7 +122,7 @@ module.exports = [[/^player\.[\-0-9]+\.changeClass(?:\.back)?$/, async function 
     changePlayerClass(foundedSession, classStatsTemplate);
 
     let {stats} = getPlayerGameClass(foundedSession.game.gameClass);
-    bot.editMessageText(`@${getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`, {
+    return editMessageText(`@${getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

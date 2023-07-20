@@ -4,12 +4,12 @@ const controlButtons = require('../../functions/keyboard/controlButtons');
 const translation = require('../../dictionaries/translate');
 const userTemplate = require('../../templates/userTemplate');
 const getMembers = require('../../functions/getters/getMembers');
-const bot = require('../../bot');
+const editMessageText = require('../../functions/tgBotFunctions/editMessageText');
 
 module.exports = [["info", function (session, callback) {
     let buttons = buildKeyboard(callback.message.chat.id, 'info');
 
-    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+    return editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -54,7 +54,7 @@ module.exports = [["info", function (session, callback) {
         }
     }
 
-    bot.editMessageText(formatMessage(currentUser), {
+    return editMessageText(formatMessage(currentUser), {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -74,7 +74,7 @@ module.exports = [["info", function (session, callback) {
 
     let buttons = buildKeyboard(callback.message.chat.id, 'info');
 
-    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+    return editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

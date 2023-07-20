@@ -1,5 +1,4 @@
-const bot = require('../../../bot');
-const debugMessage = require('../../../functions/tgBotFunctions/debugMessage');
+const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 const getChatSession = require('../../../functions/getters/getChatSession');
 const elementsMessage = require('../../../functions/game/elements/elementsMessage');
 const validateGameSession = require('../../../functions/game/general/validateGameSession');
@@ -16,56 +15,51 @@ let maxCountRounds = 3;
 module.exports = [["elements_take", function (session, callback) {
     let chatId = callback.message.chat.id;
 
-    try {
-        let chatSession = getChatSession(chatId);
-        let userId = session.userChatData.user.id;
-        let game = chatSession.game.elements;
+    let chatSession = getChatSession(chatId);
+    let userId = session.userChatData.user.id;
+    let game = chatSession.game.elements;
 
-        if (!validateGameSession(game, userId, "elements")) {
-            return;
+    if (!validateGameSession(game, userId, "elements")) {
+        return;
+    }
+
+    if (!game.players[userId].hasOwnProperty("counter")) {
+        game.players[userId].counter = 0;
+    }
+
+    if (!game.hasOwnProperty("currentRound")) {
+        game.currentRound = 1;
+    }
+
+    if (isPlayerEndedRound(game.players[userId], game.currentRound)) {
+        return;
+    }
+
+    endGameTimer(chatSession, 20 * 1000, chatId, "elements");
+    getRandomElement(chatSession, userId);
+    game.players[userId].counter++;
+
+    let roundEnd = isRoundEnd(game.players, game.currentRound);
+
+    if (roundEnd) {
+        game.currentRound++;
+        updatePoints(game.players);
+    }
+
+    game.gameSessionLastUpdateAt = new Date().getTime();
+
+    editMessageText(elementsMessage(chatSession, userId), {
+        chat_id: chatId,
+        message_id: game.messageId,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Стихия!",
+                callback_data: "elements_take"
+            }]]
         }
+    });
 
-        if (!game.players[userId].hasOwnProperty("counter")) {
-            game.players[userId].counter = 0;
-        }
-
-        if (!game.hasOwnProperty("currentRound")) {
-            game.currentRound = 1;
-        }
-
-        if (isPlayerEndedRound(game.players[userId], game.currentRound)) {
-            return;
-        }
-
-        endGameTimer(chatSession, 20 * 1000, chatId, "elements");
-        getRandomElement(chatSession, userId);
-        game.players[userId].counter++;
-
-        let roundEnd = isRoundEnd(game.players, game.currentRound);
-
-        if (roundEnd) {
-            game.currentRound++;
-            updatePoints(game.players);
-        }
-
-        game.gameSessionLastUpdateAt = new Date().getTime();
-
-        bot.editMessageText(elementsMessage(chatSession, userId), {
-            chat_id: chatId,
-            message_id: game.messageId,
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: "Стихия!",
-                    callback_data: "elements_take"
-                }]]
-            }
-        });
-
-        if (roundEnd && validateEndGame(game.currentRound, maxCountRounds)) {
-            endGame(chatSession, chatId, game.messageId, true, "elements");
-        }
-    } catch (e) {
-        debugMessage(`Command: elements_card\nIn: ${chatId} - ${callback.message.chat.title}\n\nError: ${e}`);
-        throw e;
+    if (roundEnd && validateEndGame(game.currentRound, maxCountRounds)) {
+        endGame(chatSession, chatId, game.messageId, true, "elements");
     }
 }]];

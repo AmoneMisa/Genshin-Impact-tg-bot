@@ -1,13 +1,11 @@
-const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const dictionary = require('../dictionaries/main');
 const buttonsDictionary = require('../dictionaries/buttons');
 const sendMessage = require('../functions/tgBotFunctions/sendMessage');
 const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/help\b/, async (msg) => {
-    try {
-        deleteMessage(msg.chat.id, msg.message_id);
-        sendMessage(msg.chat.id, `${dictionary["ru"].help.main}`, {
+        await deleteMessage(msg.chat.id, msg.message_id);
+        return sendMessage(msg.chat.id, `${dictionary["ru"].help.main}`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
@@ -34,8 +32,4 @@ module.exports = [[/(?:^|\s)\/help\b/, async (msg) => {
                 }]]
             }
         });
-    } catch (e) {
-        debugMessage(`Command: /help\nIn: ${msg.chat.id} - ${msg.chat.title}\n\nError: ${e}`);
-        throw e;
-    }
 }]];

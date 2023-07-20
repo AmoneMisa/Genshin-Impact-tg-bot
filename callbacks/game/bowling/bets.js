@@ -1,4 +1,4 @@
-const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
+const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getUserName = require('../../../functions/getters/getUserName');
 
@@ -28,7 +28,7 @@ async function bet(session, callback, calcFunc) {
 }
 
 async function updateMessage(session, callback) {
-    return await retryBotRequest(bot => bot.editMessageText(`@${getUserName(session, "nickname")}, твоя ставка: ${session.game.bowling.bet}`, {
+    return editMessageText(`@${getUserName(session, "nickname")}, твоя ставка: ${session.game.bowling.bet}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
@@ -61,7 +61,7 @@ async function updateMessage(session, callback) {
                 callback_data: "bowling_allin_bet"
             }]]
         }
-    }));
+    });
 }
 
 module.exports = [

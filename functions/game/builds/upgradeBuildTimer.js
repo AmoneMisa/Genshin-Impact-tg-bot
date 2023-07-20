@@ -10,6 +10,6 @@ module.exports = function (buildName, build, chatId, session) {
     build.upgradeTimerId = +setTimeout(() => {
         upgradeBuild(build);
         build.upgradeTimerId = null;
-        sendMessage(chatId, `@${getUserName(session, "nickname")}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
+        return sendMessage(chatId, `@${getUserName(session, "nickname")}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
     }, remain);
 }

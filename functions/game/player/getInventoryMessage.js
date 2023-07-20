@@ -15,7 +15,7 @@ module.exports = function (inventory) {
 }
 
 function getPotionsMessage(potions) {
-    let message = "";
+    let message = `\n${getEmoji("potions")} ${translateMap["potions"]}:\n`;
     for (let potion of potions) {
         let findStr = `${potion.bottleType}.${potion.type}`;
         message += `${getEmoji(findStr)} ${potion.name}: ${potion.description}. Количество: ${potion.count}\n`;

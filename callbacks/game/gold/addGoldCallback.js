@@ -5,6 +5,7 @@ const controlButtons = require('../../../functions/keyboard/controlButtons');
 const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
 module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_gold\.([\-0-9]+)\.([0-9]+)$/);
@@ -36,7 +37,7 @@ module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, 
 
     let buttons = buildKeyboard(chatId, `add_gold.${chatId}`);
 
-    return bot.editMessageText(`Выбери интересующего тебя участника`, {
+    return editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

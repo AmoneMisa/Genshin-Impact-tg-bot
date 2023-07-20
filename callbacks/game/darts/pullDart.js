@@ -1,4 +1,5 @@
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
+const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 const isWinPoints = require('../../../functions/game/general/isWinByPoints');
 const sendPrize = require('../../../functions/game/general/sendPrize');
 const endGame = require('../../../functions/game/darts/endGame');
@@ -29,8 +30,8 @@ module.exports = [[/^darts_pull$/, async function (session, callback) {
     if (session.game.darts.counter === maxPulls) {
         let result = isWinPoints(session.game.darts.dart, 13, 18);
         if (!result) {
-            bot.deleteMessage(chatId, callback.message.message_id);
-            sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.darts.dart}. Ставка: ${session.game.darts.bet}`, {}, 7000);
+            await deleteMessage(chatId, callback.message.message_id);
+            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.darts.dart}. Ставка: ${session.game.darts.bet}`, {}, 7000);
             return endGame(session);
         }
 
@@ -43,8 +44,8 @@ module.exports = [[/^darts_pull$/, async function (session, callback) {
         }
         
         sendPrize(session, modifier, 'darts');
-        bot.deleteMessage(chatId, callback.message.message_id);
-        sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.darts.bet}\nВыигрыш: ${Math.round(session.game.darts.bet * modifier)}\nСумма очков: ${session.game.darts.dart}`, {}, 7000);
+        await deleteMessage(chatId, callback.message.message_id);
+        await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.darts.bet}\nВыигрыш: ${Math.round(session.game.darts.bet * modifier)}\nСумма очков: ${session.game.darts.dart}`, {}, 7000);
 
         return endGame(session);
     }

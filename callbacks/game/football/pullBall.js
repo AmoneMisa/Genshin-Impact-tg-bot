@@ -5,6 +5,7 @@ const endGame = require('../../../functions/game/football/endGame');
 const bot = require('../../../bot');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessageTimeout = require("../../../functions/tgBotFunctions/deleteMessageTimeout");
+const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 
 let maxPulls = 3;
 
@@ -29,8 +30,8 @@ module.exports = [[/^football_pull$/, async function (session, callback) {
     if (session.game.football.counter === maxPulls) {
         let result = isWinPoints(session.game.football.ball, 12, 15);
         if (!result) {
-            bot.deleteMessage(chatId, callback.message.message_id);
-            sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.football.ball}. Ставка: ${session.game.football.bet}`, {}, 7000);
+            await deleteMessage(chatId, callback.message.message_id);
+            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.football.ball}. Ставка: ${session.game.football.bet}`, {}, 7000);
             return endGame(session);
         }
 
@@ -43,8 +44,8 @@ module.exports = [[/^football_pull$/, async function (session, callback) {
         }
         
         sendPrize(session, modifier, 'football');
-        bot.deleteMessage(chatId, callback.message.message_id);
-        sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.football.bet}\nВыигрыш: ${Math.round(session.game.football.bet * modifier)}\nСумма очков: ${session.game.football.ball}`, {}, 7000);
+        await deleteMessage(chatId, callback.message.message_id);
+        await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.football.bet}\nВыигрыш: ${Math.round(session.game.football.bet * modifier)}\nСумма очков: ${session.game.football.ball}`, {}, 7000);
 
         return endGame(session);
     }

@@ -1,5 +1,6 @@
 require('./errorHandler');
 
+const deleteMessage = require('./functions/tgBotFunctions/deleteMessage');
 const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
@@ -25,6 +26,7 @@ bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
     {command: "help", description: "Помощь"},
     {command: "games", description: "Список игр"},
+    {command: "games_player", description: "Команды для управления персонажем"},
     {command: "games_boss", description: "Команды для босса"},
     {command: "games_form", description: "Команды для анкет"},
     {command: "reset_games_timers", description: "Сбросить таймеры для персональных игр"},
@@ -96,7 +98,7 @@ for (let [key, value] of onTexts) {
         let commandStatus = foundSettingKey !== null ? settings[foundSettingKey] : null;
 
         if (commandStatus !== null && !commandStatus) {
-            await bot.deleteMessage(msg.chat.id, msg.message_id);
+            await deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(msg.chat.id, `Команда /${command} отключена. Чтобы её включить используйте /settings`, {
                 disable_notification: true,
                 reply_markup: {
