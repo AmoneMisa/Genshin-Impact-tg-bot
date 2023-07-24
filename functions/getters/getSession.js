@@ -76,8 +76,8 @@ module.exports = async function (chatId, userId) {
             },
             effects: [],
             gameClass: {
-                stats: classStatsTemplate[0],
-                skills: classSkillsTemplate[0]
+                stats: {...classStatsTemplate[0]},
+                skills: {...classSkillsTemplate[0]}
             },
             shopTimers: {
                 swordImmune: 0,
@@ -91,10 +91,7 @@ module.exports = async function (chatId, userId) {
                 gold: 0,
                 crystals: 0,
                 ironOre: 0,
-                potions: potionsInInventoryTemplate
-            },
-            boss: {
-                isDead: false
+                potions: lodash.cloneDeep(potionsInInventoryTemplate)
             }
         };
     }
@@ -117,14 +114,14 @@ module.exports = async function (chatId, userId) {
 
     members[userId].game.inventory.potions.forEach(potion => {
         if (!potion.bottleType || !potion.description) {
-            members[userId].game.inventory.potions = potionsInInventoryTemplate;
+            members[userId].game.inventory.potions = lodash.cloneDeep(potionsInInventoryTemplate);
         }
     })
 
     if (!members[userId].game.hasOwnProperty("gameClass")) {
         members[userId].game.gameClass = {
-            stats: classStatsTemplate[0],
-            skills: classSkillsTemplate[0]
+            stats: {...classStatsTemplate[0]},
+            skills: {...classSkillsTemplate[0]}
         };
     }
 
@@ -136,7 +133,7 @@ module.exports = async function (chatId, userId) {
     }
 
     for (let [newStatKey, newStatValue] of Object.entries(foundedClass)) {
-        if (members[userId].game.gameClass.stats.hasOwnProperty(newStatValue) && members[userId].game.gameClass.stats[newStatValue]) {
+        if (members[userId].game.gameClass.stats.hasOwnProperty(newStatKey)) {
             continue;
         }
 

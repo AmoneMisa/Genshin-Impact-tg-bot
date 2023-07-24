@@ -13,7 +13,7 @@ module.exports = function (chatId, recovery) {
             return;
         }
 
-        boss.currentHp += Math.ceil(boss.hp * 0.08);
+        boss.currentHp += Math.ceil(boss.hp * 1.08);
 
         if (boss.currentHp < 0) {
             boss.currentHp = 0;

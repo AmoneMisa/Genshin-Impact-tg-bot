@@ -1,9 +1,9 @@
 module.exports = function (session, skill) {
-    let hp = session.game.stats.maxHp;
+    let maxHp = session.game.gameClass.stats.maxHp;
     let modifier = skill.shieldPower;
     let shield;
 
-    shield = Math.ceil(hp * modifier);
+    shield = Math.ceil(maxHp * modifier);
 
     return shield;
 };

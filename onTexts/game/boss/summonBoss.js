@@ -1,28 +1,44 @@
-const {bosses} = require('../../../data');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const buttonsDictionary = require('../../../dictionaries/buttons');
-const getMembers = require('../../../functions/getters/getMembers');
-const summonBoss = require('../../../functions/game/boss/summonBoss');
-const initHpRegen = require('../../../functions/game/boss/initHpRegen');
-const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const getBoss = require('../../../functions/game/boss/getBossStatus/getAliveBoss');
+const bossAlreadySummoned = require('../../../functions/game/boss/getBossStatus/bossAlreadySummoned');
 
-module.exports = [[/(?:^|\s)\/summon_boss\b/, async (msg) => {
-    await deleteMessage(msg.chat.id, msg.message_id);
-    let members = getMembers(msg.chat.id);
+module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
+    let chatId = msg.chat.id;
+    await deleteMessage(chatId, msg.message_id);
+    let keyboard = [];
+    let boss = getBoss(chatId);
 
-    sendMessage(msg.chat.id, `${await summonBoss(msg.chat.id, bosses, members)}`, {
+    let isAlreadyCalled = bossAlreadySummoned(boss);
+    if (!isAlreadyCalled) {
+        keyboard.push([{
+            text: "Призвать босса",
+            callback_data: `boss.summon`
+        }]);
+    } else {
+        keyboard.push([{
+            text: "Нанести удар",
+            callback_data: "boss.dealDamage"
+        }, {
+            text: "Статистика босса",
+            callback_data: "boss.status"
+        }], [{
+            text: "Возможный дроп",
+            callback_data: "boss.lootList"
+        }, {
+            text: "Список урона",
+            callback_data: "boss.damageList"
+        }]);
+    }
+
+    return sendMessage(chatId, "Выбери необходимое действие", {
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: [[{
+            inline_keyboard: [...keyboard, [{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]
         }
-    }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
-
-    let boss = bosses[msg.chat.id];
-
-    initHpRegen(msg.chat.id);
-    boss.stats.currentSummons++;
+    });
 }]];

@@ -1,11 +1,15 @@
 const getMembers = require("../../getters/getMembers");
 const bossDealDamage = require("../../game/boss/bossDealDamage");
-const {bosses} = require("../../../data");
-const sendMessage = require('../../tgBotFunctions/sendMessage');
-const deleteMessageTimeout = require("../../tgBotFunctions/deleteMessageTimeout");
+const getBossDealDamageMessage = require("../../game/boss/getters/getBossDealDamageMessage");
+const getAliveBoss = require("../../game/boss/getBossStatus/getAliveBoss");
+const sendMessageWithDelete = require('../../tgBotFunctions/sendMessageWithDelete');
 
 module.exports = function (chatId, recovery) {
-    let boss = bosses[chatId];
+    let boss = getAliveBoss(chatId);
+    if (!boss) {
+        // throw new Error("Босс не найден!");
+        return;
+    }
 
     if (recovery && !(boss.hasOwnProperty("attackIntervalId") && boss.attackIntervalId !== null)) {
         return;
@@ -14,13 +18,10 @@ module.exports = function (chatId, recovery) {
     let members = getMembers(chatId);
 
     function dealDamage() {
-        let message = bossDealDamage(members, boss, chatId);
-        if (!message) {
-            message = `Босс перебил всю группу и дал дёру. Его можно перепризвать командой /summon_boss.`;
+        let dmgList = bossDealDamage(members, boss, chatId);
+        if (dmgList) {
+            return sendMessageWithDelete(chatId, getBossDealDamageMessage(members, dmgList), {}, 10 * 1000);
         }
-
-        return sendMessage(chatId, message)
-            .then(message => deleteMessageTimeout(chatId, message.message_id, 10 * 1000));
     }
 
     boss.attackIntervalId = +setInterval(() => dealDamage(), 60 * 60 * 1000);

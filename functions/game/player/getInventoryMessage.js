@@ -1,13 +1,27 @@
 const getEmoji = require('../../getters/getEmoji');
 
-module.exports = function (inventory) {
+module.exports = function (inventory, isSoloItem = false) {
     let message = `${getEmoji("inventory")} Инвентарь\n\n`;
 
-    for (let [key, item] of Object.entries(inventory)) {
-        if (key === "potions") {
-            message += getPotionsMessage(inventory[key]);
-        } else {
-            message += `${getEmoji(key)} ${translateMap[key]}: ${item}\n`;
+    if (isSoloItem) {
+        let itemName = inventory.bottleType ? `${inventory.bottleType}.${inventory.type}` : inventory.type;
+        message += `${getEmoji(itemName)} ${translateMap[itemName]}: ${inventory.description}.`;
+    } else if (Array.isArray(inventory)) {
+        for (let item of inventory) {
+            console.log(item.type)
+            if (item.hasOwnProperty("bottleType")) {
+                message += `${getEmoji(`${item.bottleType}.${item.type}`)} ${item.name}: ${item.description}.\nКоличество: ${item.count}\n\n`;
+            } else {
+                message += `${getEmoji(item.type)} ${translateMap[item.type]}: ${item.description}\n`;
+            }
+        }
+    } else {
+        for (let [key, item] of Object.entries(inventory)) {
+            if (key === "potions") {
+                message += getPotionsMessage(inventory[key]);
+            } else {
+                message += `${getEmoji(key)} ${translateMap[key]}: ${item}\n`;
+            }
         }
     }
 

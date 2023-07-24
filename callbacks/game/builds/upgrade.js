@@ -14,7 +14,7 @@ const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMes
 const getUserName = require('../../../functions/getters/getUserName');
 const getBuildList = require("../../../functions/game/builds/getBuildList");
 const getSession = require("../../../functions/getters/getSession");
-const userStatsMap = require("../../../dictionaries/userStats");
+const userStatsMap = require("../../../dictionaries/statsDictionary");
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 
 async function errorUpdateMessage(buildName, build, chatId, messageId, callback, session) {

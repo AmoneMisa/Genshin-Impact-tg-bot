@@ -2,7 +2,7 @@ const getUserName = require('../../getters/getUserName');
 
 module.exports = function (boss) {
     if (!boss) {
-        return `Группа ещё не призвала босса. Призвать можно командой /summon_boss`;
+        return `Группа ещё не призвала босса. Призвать можно командой /boss`;
     }
 
     if (!boss.currentHp) {

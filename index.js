@@ -20,7 +20,6 @@ const cron = require('node-cron');
 const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');
 const buttonsDictionary = require("./dictionaries/buttons");
-const {myId} = require("./config");
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},

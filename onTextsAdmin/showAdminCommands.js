@@ -1,5 +1,4 @@
 const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const debugMessage = require('../functions/tgBotFunctions/debugMessage');
 const getMemberStatus = require("../functions/getters/getMemberStatus");
 const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
 

@@ -1,14 +1,16 @@
 const calcBossDamage = require('./calcBossDamage');
-const sendMessage = require('../../tgBotFunctions/sendMessage');
 const debugMessage = require('../../tgBotFunctions/debugMessage');
 
-module.exports = function (members, boss, chatId) {
-    let message = `Босс нанёс урон всей группе:\n\n`;
+module.exports = function (members, boss) {
+    if (!boss) {
+        throw new Error("Босс не найден!");
+    }
 
-    members = Object.values(members).filter(member => !member.game.boss.isDead);
+    members = Object.values(members).filter(member => member.game.gameClass.stats.hp > 0);
 
     if (!members.length) {
         if (boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
+            clearInterval(boss.hpRegenIntervalId);
             boss.hpRegenIntervalId = null;
         }
 
@@ -22,35 +24,38 @@ module.exports = function (members, boss, chatId) {
         return false;
     }
 
+    let bossDmg = {};
     for (let member of Object.values(members)) {
         let player = member.game;
         let dmg = calcBossDamage(boss, member);
-        message += `${member.userChatData.user.username} - ${dmg} урона`;
-
         let playerShield = player.effects.filter(effect => effect.name === "shield");
+        let shield;
 
-        if (playerShield) {
-            if (playerShield.shield > 0) {
-                if (dmg > playerShield.shield) {
-                    playerShield.shield = 0;
-                    dmg = dmg - playerShield.shield;
-
-                } else {
-                    player.shield -= dmg;
-                }
-            }
+        if (playerShield && playerShield.value > 0) {
+            shield = playerShield.value;
+        } else {
+            shield = 0;
         }
 
-        player.currentHp -= dmg;
+        let damageShield = Math.min(shield, dmg);
+        let damageHp = Math.min(player.gameClass.stats.hp, dmg - damageShield);
 
-        if (player.hp <= player.currentHp && !player.isDead) {
-            player.isDead = true;
-            player.currentHp = 0;
-            sendMessage(chatId, `@${member.userChatData.user.username}, ты был повержен(-а) боссом.`, {
-                disable_notification: true
-            });
+        if (damageShield > 0) {
+            playerShield.value -= damageShield;
         }
+
+        player.gameClass.stats.hp -= damageHp;
+
+        if (player.gameClass.stats.hp <= 0) {
+            player.gameClass.stats.hp = 0;
+        }
+
+        bossDmg[member.userChatData.id] = {
+            dmg,
+            username: member.userChatData.user.username,
+            hp: player.gameClass.stats.hp <= 0
+        };
     }
 
-    return message;
+    return bossDmg;
 };

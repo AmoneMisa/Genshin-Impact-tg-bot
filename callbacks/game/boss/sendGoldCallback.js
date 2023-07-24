@@ -1,4 +1,5 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
 const controlButtons = require('../../../functions/keyboard/controlButtons');
 const bot = require('../../../bot');
@@ -28,8 +29,7 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
             let gold = parseInt(replyMsg.text);
 
             if (session.game.inventory.gold < gold) {
-                return sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, у тебя столько нет. Посмотреть количество золота можно командой /whoami`)
-                    .then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
+                return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(session, "nickname")}, у тебя столько нет. Посмотреть количество золота можно командой /whoami`, 10 * 1000);
             }
 
             if (session.game.inventory.gold >= gold) {
@@ -38,10 +38,11 @@ module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, call
             }
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
-            deleteMessage(msg.chat.id, msg.message_id);
-            return sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /whoami`, {
+            return editMessageText(`@${getUserName(session, "nickname")}, ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /whoami`, {
+                chat_id: callback.message.chat.id,
+                message_id: msg.message_id,
                 disable_notification: true
-            }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10000));
+            }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 10 * 1000));
         });
 
     }).catch(e => {

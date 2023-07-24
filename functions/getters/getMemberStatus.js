@@ -1,4 +1,5 @@
 const getMembers = require('./getMembers');
+const {myId} = require("../../config");
 
 module.exports = function (chatId, msgId) {
     let members = getMembers(chatId);
@@ -13,5 +14,5 @@ module.exports = function (chatId, msgId) {
         }
     }
 
-    return msgId === 86416302;
+    return msgId === myId;
 }

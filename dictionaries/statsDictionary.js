@@ -14,4 +14,8 @@ module.exports = {
     currentExp: "Текущее количество опыта",
     needExp: "Необходимое количество опыта",
     lvl: "Уровень",
+    currentSummons: "Количество призывов",
+    needSummons: "Необходимо призывов",
+    minDamage: "Минимальный урон",
+    maxDamage: "Максимальный урон"
 };

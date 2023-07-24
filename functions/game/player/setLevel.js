@@ -8,7 +8,7 @@ module.exports = function (session) {
                 session.game.stats.currentExp -= level.needExp;
                 session.game.stats.lvl++;
                 session.game.inventory.gold += Math.ceil( 1000 * session.game.stats.lvl * 1.33);
-                session.game.boss.hp = Math.ceil(1000 * session.game.stats.lvl * 1.05) + 125;
+                session.game.gameClass.stats.hp = Math.ceil(1000 * session.game.stats.lvl * 1.05) + 125;
 
                 if (session.game.hasOwnProperty("gameClass")) {
                     setPlayerStats(session);

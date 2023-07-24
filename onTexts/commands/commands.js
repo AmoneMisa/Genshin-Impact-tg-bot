@@ -32,9 +32,7 @@ const playerCommands = [
 ]
 
 const bossCommands = [
-    {command: "summon_boss", description: "Призвать босса"},
-    {command: "boss_hp", description: "Показать Хп босса"},
-    {command: "deal_damage", description: "Нанести урон боссу"},
+    {command: "boss", description: "Меню босса"}
 ];
 
 const resetGamesCommands = [

@@ -1,23 +1,22 @@
-const setSkillCooltime = require('./setSkillCooltime');
+const getSkillCooltime = require('./getSkillCooltime');
 const skillUsageCost = require('./skillUsageCost');
 
 module.exports = function (session, skill) {
     if (skill.slot === 0) {
-        return {isCanBeUsed: true};
+        return true;
     }
-
 
     let enoughCostForUsage = skillUsageCost(session, skill);
 
     if (!enoughCostForUsage) {
-        return {isCanBeUsed: false, message: "Недостаточно средств для использования скилла."};
+        return 1;
     }
 
-    let cooltime = setSkillCooltime(skill);
+    let cooltime = getSkillCooltime(skill);
 
     if (cooltime > 0) {
-        return {isCanBeUsed: false, message: `Скилл в кд. Осталось ${cooltime} ударов.`};
+        return 2;
     }
 
-    return {isCanBeUsed: true};
+    return true;
 };

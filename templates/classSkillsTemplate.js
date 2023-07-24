@@ -100,7 +100,7 @@ module.exports = {
         name: "Лунная тень",
         description: "Создаёт щит на 45% от хп.",
         effect: "shield",
-        shieldPower: 0.45,
+        shieldPower: 1.45,
         cooltime: 5,
         isSelf: true,
         isDealDamage: false,

@@ -9,11 +9,16 @@ function getRetryAfter(e) {
         return 1;
     }
 
-    if (e.response.body['error_code'] !== 429) {
-        return 1;
+    if (e.response.body['error_code'] === 400) {
+        console.error(Object.fromEntries(new URLSearchParams(e.response.request.body).entries()));
+        return -1;
     }
 
-    return e.response.body['parameters']['retry_after'];
+    if (e.response.body['error_code'] === 429) {
+        return e.response.body['parameters']['retry_after'];
+    }
+
+    return 1;
 }
 
 module.exports = async function retryBotRequest(request) {
@@ -26,6 +31,9 @@ module.exports = async function retryBotRequest(request) {
             lastE = e;
             log.info(`Try: %s`, i);
             let retryAfter = getRetryAfter(e);
+            if (retryAfter === -1) {
+                break;
+            }
             log.info('Retry after: %s', retryAfter);
             if (e.response) {
                 log.info('Body: %:2j', e.response.body);

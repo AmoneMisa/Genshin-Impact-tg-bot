@@ -1,14 +1,16 @@
 const getRandom = require('../../getters/getRandom');
 const getAttack = require('../../game/player/getAttack');
-const getBossDefence = require('../../game/boss/getBossDefence');
+const getBossDefence = require('./getBossStats/getBossDefence');
 const getDamageMultiplier = require('../../game/player/getDamageMultiplier');
 const getCriticalChance = require('../player/geCriticalChance');
 const getCriticalChanceMultiplier = require('../player/getCriticalChanceMultiplier');
 const getCriticalDamage = require('../player/geCriticalDamage');
 const getCriticalDamageMultiplier = require('../player/getCriticalDamageMultiplier');
+const bossesTemplate = require("../../../templates/bossTemplate");
 
 module.exports = function (session, skill, boss) {
     let dmg;
+    let template = bossesTemplate.find(bossTemplate => bossTemplate.name === boss.name);
     let modifier = skill.damageModificator || 1;
 
     let criticalChanceMultiplier = getCriticalChanceMultiplier(session);
@@ -24,11 +26,12 @@ module.exports = function (session, skill, boss) {
     let criticalDamageMultiplier = getCriticalDamageMultiplier(session);
     criticalDamage *= criticalDamageMultiplier;
 
-    let attack = getAttack(session);
-    let damageMultiplier = getDamageMultiplier(session);
-    let bossDefence = getBossDefence(boss);
+    let attack = getAttack(session.game.gameClass, session.game.stats);
+    let damageMultiplier = getDamageMultiplier(session.game.effects);
+    let bossDefence = getBossDefence(boss, template);
 
     dmg = Math.ceil(getRandom(270, 400) * (Math.pow(1.05, attack) / Math.pow(1.03, bossDefence)) * modifier);
+
     dmg *= damageMultiplier;
 
     if (getRandom(1, 100) <= criticalChance) {
@@ -45,6 +48,5 @@ module.exports = function (session, skill, boss) {
     }
 
     dmg = Math.ceil(dmg);
-
     return {dmg, isHasCritical};
 };
