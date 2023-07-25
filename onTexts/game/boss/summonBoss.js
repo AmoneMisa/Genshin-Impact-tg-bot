@@ -1,8 +1,11 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const getBoss = require('../../../functions/game/boss/getBossStatus/getAliveBoss');
 const bossAlreadySummoned = require('../../../functions/game/boss/getBossStatus/bossAlreadySummoned');
+const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
+const summonBossMessage = require("../../../functions/game/boss/summonBossMessage");
+const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 
 module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
     let chatId = msg.chat.id;
@@ -14,7 +17,7 @@ module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
     if (!isAlreadyCalled) {
         keyboard.push([{
             text: "Призвать босса",
-            callback_data: `boss.summon`
+            callback_data: "boss.summon"
         }]);
     } else {
         keyboard.push([{
@@ -32,13 +35,25 @@ module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
         }]);
     }
 
-    return sendMessage(chatId, "Выбери необходимое действие", {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [...keyboard, [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+    let imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
+    if (imagePath) {
+        return sendPhoto(msg.chat.id, imagePath, {
+            caption: `${summonBossMessage(chatId, boss, false)}`,
+            reply_markup: {
+                inline_keyboard: [...keyboard, [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } else {
+        return sendMessage(msg.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
+            reply_markup: {
+                inline_keyboard: [...keyboard, [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        })
+    }
 }]];

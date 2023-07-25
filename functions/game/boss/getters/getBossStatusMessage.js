@@ -8,6 +8,9 @@ module.exports = function (boss) {
 
     let str = `${getEmoji("hp")} ${statsDictionary["maxHp"]}: ${boss.hp}\n${statsDictionary["hp"]}: ${boss.currentHp}\n`;
     for (let [key, stat] of Object.entries(boss.stats)) {
+        if (key === "needSummons") {
+            stat = stat - boss.stats.currentSummons;
+        }
         str += `${getEmoji(key)} ${statsDictionary[key]}: ${stat}\n`;
     }
 

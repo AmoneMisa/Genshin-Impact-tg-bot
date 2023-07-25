@@ -1,7 +1,8 @@
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
 const getUserName = require("../../../functions/getters/getUserName");
 const getMembers = require("../../../functions/getters/getMembers");
+const getEmoji = require("../../../functions/getters/getEmoji");
 const summonBoss = require("../../../functions/game/boss/summonBoss");
+const getBossLoot = require("../../../functions/game/boss/getters/getBossLoot");
 const getBossStatusMessage = require("../../../functions/game/boss/getters/getBossStatusMessage");
 const summonBossMessage = require("../../../functions/game/boss/summonBossMessage");
 const getAliveBoss = require("../../../functions/game/boss/getBossStatus/getAliveBoss");
@@ -10,6 +11,11 @@ const getTime = require("../../../functions/getters/getTime");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
+const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
+const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
+const inventoryDictionary = require('../../../dictionaries/inventory.js');
 
 module.exports = [["boss", async function (session, callback) {
     let messageId = callback.message.message_id;
@@ -38,8 +44,8 @@ module.exports = [["boss", async function (session, callback) {
         }]);
     }
 
-    return editMessageText(`"Выбери необходимое действие"`, {
-        chat_id: chatId,
+    return editMessageCaption(`${summonBossMessage(chatId, boss, false)}`, {
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
@@ -48,7 +54,7 @@ module.exports = [["boss", async function (session, callback) {
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], ["boss.summon", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
@@ -79,17 +85,29 @@ module.exports = [["boss", async function (session, callback) {
         callback_data: "boss.damageList"
     }]];
 
-    return editMessageText(`${summonBossMessage(chatId, boss, false)}`, {
-        chat_id: chatId,
-        message_id: messageId,
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [...keyboard, [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+    await deleteMessage(chatId, messageId);
+
+    let imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
+    if (imagePath) {
+        return sendPhoto(callback.message.chat.id, imagePath, {
+            caption: `${summonBossMessage(chatId, boss, false)}`,
+            reply_markup: {
+                inline_keyboard: [...keyboard, [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+    } else {
+        return sendMessage(callback.message.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
+            reply_markup: {
+                inline_keyboard: [...keyboard, [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        })
+    }
 }], ["boss.dealDamage", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
@@ -126,7 +144,7 @@ module.exports = [["boss", async function (session, callback) {
         message += `${skill.name} - ${skill.description} Стоимость использования: ${skill.cost} золота, ${skill.crystalCost} кристаллов.\n\n`;
     }
 
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери скилл:\n${message}`, {
+    return editMessageCaption(`@${getUserName(session, "nickname")}, выбери скилл:\n${message}`, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
@@ -139,7 +157,7 @@ module.exports = [["boss", async function (session, callback) {
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], ["boss.status", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
@@ -149,7 +167,7 @@ module.exports = [["boss", async function (session, callback) {
         return sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
     }
 
-    return editMessageText(getBossStatusMessage(aliveBoss), {
+    return editMessageCaption(getBossStatusMessage(aliveBoss), {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
@@ -162,12 +180,41 @@ module.exports = [["boss", async function (session, callback) {
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], ["boss.lootList", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
+    let aliveBoss = getAliveBoss(chatId);
 
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+    if (!aliveBoss) {
+        return sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+    }
+
+    let loot = getBossLoot(aliveBoss);
+    let message = "Возможный дроп\n";
+    for (let [key, value] of Object.entries(loot)) {
+        message += `\n${getEmoji(key)} ${inventoryDictionary[key]}:\n`;
+        let max = Math.max(...value.map(item => item.maxAmount));
+        let min = Math.min(...value.map(item => item.minAmount));
+
+        if (key === "experience") {
+            for (let i = 0; i < value.length; i++) {
+                let place = i + 1;
+                let item = value[i];
+                let isLast = i === value.length - 1;
+
+                if (isLast) {
+                    message += `${place}-∞ место - ${item}\n`;
+                } else {
+                    message += `${place} место - ${item}\n`;
+                }
+            }
+        } else {
+            message += `${min}-${max} - ${getEmoji("chance")} 100%\n`;
+        }
+    }
+
+    return editMessageCaption(message, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
@@ -180,7 +227,7 @@ module.exports = [["boss", async function (session, callback) {
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], ["boss.damageList", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
@@ -198,7 +245,7 @@ module.exports = [["boss", async function (session, callback) {
         message += `${getUserName(members[player.id], "nickname")}: ${player.damage}\n`;
     }
 
-    return editMessageText(message, {
+    return editMessageCaption(message, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
@@ -211,5 +258,5 @@ module.exports = [["boss", async function (session, callback) {
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }]];

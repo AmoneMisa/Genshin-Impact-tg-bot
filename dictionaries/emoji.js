@@ -27,6 +27,7 @@ module.exports = [
     {type: "currentExp", name: "Текущее количество опыта", emoji: "🌟", category: "baseStats"},
     {type: "needExp", name: "Требуемое количество опыта до следующего уровня", emoji: "🎯", category: "baseStats"},
     {type: "exp", name: "Опыт", emoji: "📖", category: "baseStats"},
+    {type: "experience", name: "Опыт", emoji: "📖", category: "baseStats"},
     {type: "hpRestoreSpeed", name: "Скорость восстановления здоровья", emoji: "⏳❤️", category: "classStats"},
     {type: "mpRestoreSpeed", name: "Скорость восстановления маны", emoji: "⏳💙", category: "classStats"},
     {type: "damageMultiplier", name: "Множитель урона", emoji: "✨", category: "classStats"},
@@ -38,4 +39,6 @@ module.exports = [
     {type: "archer", name: "Лучник", emoji: "🏹", category: "classStats"},
     {type: "warrior", name: "Палладин", emoji: "⚔️🛡️", category: "classStats"},
     {type: "berserk", name: "Берсерк", emoji: "⚔️💪", category: "classStats"},
+    {type: "infinity", name: "Бесконечность", emoji: "♾️", category: "text"},
+    {type: "chance", name: "Шанс", emoji: "☘", category: "text"},
 ];
