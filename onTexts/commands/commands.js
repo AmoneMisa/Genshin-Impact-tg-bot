@@ -7,7 +7,6 @@ const gamesCommands = [
     {command: "titles", description: "Список титулов группы"},
     {command: "sword", description: "Увеличить свой меч"},
     {command: "swords", description: "Список мечей всей группы"},
-    {command: "change_class", description: "Изменить класс"},
     {command: "shop", description: "Магазин"},
     {command: "send_gold", description: "Перевести золото"},
     {command: "chest", description: "Открыть сундук"},
@@ -18,7 +17,8 @@ const gamesCommands = [
     {command: "darts", description: "Дартс"},
     {command: "basketball", description: "Баскетбол"},
     {command: "football", description: "Футбол"},
-    {command: "elements", description: "Элементы"}
+    {command: "elements", description: "Элементы"},
+    {command: "boss", description: "Меню босса"}
 ];
 
 const formsCommands = [
@@ -30,10 +30,6 @@ const playerCommands = [
     {command: "whoami", description: "Моя статистика и меню персонажа"},
     {command: "exchange", description: "Обменник кристаллов"},
 ]
-
-const bossCommands = [
-    {command: "boss", description: "Меню босса"}
-];
 
 const resetGamesCommands = [
     {command: "reset_darts_game", description: "Сбросить игру в дартс"},
@@ -47,22 +43,6 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let message = `Список игр бота:\n\n`;
     for (let command of gamesCommands) {
-        message += `/${command.command} - ${command.description}\n`;
-    }
-
-    return sendMessage(msg.chat.id, message, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
-}], [/(?:^|\s)\/games_boss\b/, async (msg) => {
-    await deleteMessage(msg.chat.id, msg.message_id);
-    let message = `Список команд для босса:\n\n`;
-    for (let command of bossCommands) {
         message += `/${command.command} - ${command.description}\n`;
     }
 

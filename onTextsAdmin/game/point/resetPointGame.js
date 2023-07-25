@@ -16,5 +16,5 @@ module.exports = [[/(?:^|\s)\/reset_point_game\b/, (msg) => {
     chatSession.game.points.players = {};
     chatSession.game.points.usedItems = [];
 
-    sendMessage(msg.chat.id, `Сессия игры в очко сброшена.`);
+    return sendMessage(msg.chat.id, `Сессия игры в очко сброшена.`);
 }]];

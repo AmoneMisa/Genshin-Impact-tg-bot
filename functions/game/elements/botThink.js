@@ -4,4 +4,5 @@ module.exports = function (chatSession) {
     getRandomElement(chatSession, "bot");
     getRandomElement(chatSession, "bot");
     getRandomElement(chatSession, "bot");
+    getRandomElement(chatSession, "bot");
 };

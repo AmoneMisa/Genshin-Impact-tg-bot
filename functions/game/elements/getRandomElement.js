@@ -19,7 +19,7 @@ function getElement(gameSession) {
 module.exports = function (gameSession, userId) {
     let players = gameSession.game.elements.players;
     let element = getElement(gameSession);
-
+    console.log(players[userId]);
     players[userId].usedItems.push(element);
     return element;
 };

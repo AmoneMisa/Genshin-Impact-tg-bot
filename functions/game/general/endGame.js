@@ -27,5 +27,11 @@ module.exports = function (chatSession, chatId, messageId, isDefault = true, gam
     }
 
     endGameMessage(winners, chatId, messageId, isDefault, gameName);
+
+    clearTimeout(chatSession.game.elements.startGameTimeout);
+    chatSession.game[gameName].startGameTimeout = null;
+    clearTimeout(chatSession.game.elements.startBetTimeout);
+    chatSession.game[gameName].startBetTimeout = null;
+
     setEndGameTimer(chatSession, 0, chatId, gameName, null);
 };

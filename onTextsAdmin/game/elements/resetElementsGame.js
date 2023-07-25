@@ -11,12 +11,11 @@ module.exports = [[/(?:^|\s)\/reset_elements_game\b/, (msg) => {
     }
 
     let chatSession = getChatSession(msg.chat.id);
-    chatSession.game.elements.isStart = false;
     chatSession.game.elements.gameSessionIsStart = false;
     chatSession.game.elements.players = {};
     chatSession.game.elements.usedItems = [];
     chatSession.game.elements.currentRound = 1;
     chatSession.game.elements.countPresses = 0;
 
-    sendMessage(msg.chat.id, `Сессия игры в элементы сброшена.`);
+    return sendMessage(msg.chat.id, `Сессия игры в элементы сброшена.`);
 }]];

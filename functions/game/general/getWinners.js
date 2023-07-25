@@ -44,7 +44,7 @@ function getFinishElementsMessage(winner) {
         str += `${element}`;
     }
 
-    let synergyStr = "\nСобранные синергии:";
+    let synergyStr = "\n\nСобранные синергии:";
     for (let synergy of synergies) {
         if (synergy.every(val => winner.elements.includes(val))) {
             if (synergy.length === 2) {

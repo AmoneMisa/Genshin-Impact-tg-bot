@@ -1,6 +1,6 @@
 const getChatSession = require("../../getters/getChatSession");
 const getMembers = require("../../getters/getMembers");
-const gameStatusMessage = require("../point21/gameStatusMessage");
+const gameStatusMessage = require("./gameStatusMessage");
 const editMessageText = require("../../tgBotFunctions/editMessageText");
 
 module.exports = function (session, callback, gameName) {
@@ -21,7 +21,7 @@ module.exports = function (session, callback, gameName) {
 
     let members = getMembers(callback.message.chat.id);
 
-    editMessageText(`${gameStatusMessage(chatSession, members)}`, {
+    return editMessageText(`${gameStatusMessage(chatSession, members, gameName)}`, {
         chat_id: callback.message.chat.id,
         message_id: chatSession.game[gameName].messageId,
         disable_notification: true,
