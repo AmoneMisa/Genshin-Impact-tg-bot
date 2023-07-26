@@ -50,7 +50,7 @@ module.exports = function (members, boss) {
             player.gameClass.stats.hp = 0;
         }
 
-        bossDmg[member.userChatData.id] = {
+        bossDmg[member.userChatData.user.id] = {
             dmg,
             username: member.userChatData.user.username,
             hp: player.gameClass.stats.hp <= 0

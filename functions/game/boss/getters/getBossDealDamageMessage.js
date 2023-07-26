@@ -1,10 +1,12 @@
-module.exports = function (members, dmgList) {
+module.exports = function (dmgList) {
     let message = `Босс нанёс урон всей группе:\n\n`;
 
-    for (let dmg of Object.values(dmgList)) {
-        message += `@${dmg.username} - ${dmg.dmg} урона\n`;
-        message += `@${member.userChatData.user.username}, ты был повержен(-а) боссом.\n`;
+    for (let player of Object.values(dmgList)) {
+        message += `@${player.username} - ${player.dmg} урона\n`;
 
+        if (!player.hp) {
+            message += `@${player.username}, ты был повержен(-а) боссом.\n`;
+        }
     }
 
     return message;

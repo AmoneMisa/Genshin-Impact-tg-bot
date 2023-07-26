@@ -1,10 +1,6 @@
 const getPlayerGameClass = require("./getPlayerGameClass");
 
-module.exports = function (gameClass, baseStats) {
+module.exports = function (gameClass) {
     let {stats} = getPlayerGameClass(gameClass);
-    let defence = stats.defence;
-    let lvl = baseStats.lvl;
-
-    defence += (lvl - 1) * 1.2;
-    return Math.ceil(defence);
+    return stats.defence;
 };

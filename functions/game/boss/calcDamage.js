@@ -26,11 +26,12 @@ module.exports = function (session, skill, boss) {
     let criticalDamageMultiplier = getCriticalDamageMultiplier(session);
     criticalDamage *= criticalDamageMultiplier;
 
-    let attack = getAttack(session.game.gameClass, session.game.stats);
+    let attack = getAttack(session.game.gameClass);
     let damageMultiplier = getDamageMultiplier(session.game.effects);
     let bossDefence = getBossDefence(boss, template);
+    let additionalDamage = (session.game.gameClass.stats.additionalDamage / 100) + 1;
 
-    dmg = Math.ceil(getRandom(270, 400) * (Math.pow(1.05, attack) / Math.pow(1.03, bossDefence)) * modifier);
+    dmg = getRandom(270, 480) * attack / bossDefence * modifier * additionalDamage;
 
     dmg *= damageMultiplier;
 

@@ -7,10 +7,10 @@ module.exports = function (boss, player) {
     let bossTemplate = bossesTemplate.find(boss => boss.name === boss.name);
     let attack = getBossAttack(boss, bossTemplate);
     let defence = getPlayerDefence(player);
+    let reduceIncomingPlayerDamage = (player.stats.reduceIncomingDamage / 100) + 1;
+    let dmg = Math.ceil(getRandom(boss.stats.minDamage, boss.stats.maxDamage) * attack / defence) * reduceIncomingPlayerDamage;
 
-    let dmg = Math.ceil(getRandom(250, 370) * (Math.pow(1.05, attack) / Math.pow(1.03, defence)));
-
-    if (getRandom(0, 100) <= boss.stats.criticalChance) {
+    if (Math.random() * 100 <= boss.stats.criticalChance) {
         dmg *= boss.stats.criticalDamage;
     }
 

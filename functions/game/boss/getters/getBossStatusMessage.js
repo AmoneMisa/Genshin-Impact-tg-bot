@@ -11,7 +11,7 @@ module.exports = function (boss) {
         if (key === "needSummons") {
             stat = stat - boss.stats.currentSummons;
         }
-        str += `${getEmoji(key)} ${statsDictionary[key]}: ${stat}\n`;
+        str += `${getEmoji(key)} ${statsDictionary[key]}: ${Math.ceil(stat)}\n`;
     }
 
     return str;
