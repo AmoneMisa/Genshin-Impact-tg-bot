@@ -5,7 +5,7 @@ const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
 const bot = require('./bot');
-const {sessions, titles, bosses, trustedChats} = require('./data');
+const {sessions, bosses, trustedChats} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
@@ -13,6 +13,7 @@ const getSession = require('./functions/getters/getSession');
 const getChatSessionSettings = require('./functions/getters/getChatSessionSettings');
 const debugMessage = require('./functions/tgBotFunctions/debugMessage');
 const sendMessage = require('./functions/tgBotFunctions/sendMessage');
+const writeFiles = require('./functions/misc/writeFiles');
 const setGlobalAccumulateTimer = require('./functions/game/builds/setGlobalAccumulateTimer');
 const log = intel.getLogger("genshin");
 const cron = require('node-cron');
@@ -161,20 +162,6 @@ bot.on("callback_query", async (callback) => {
 });
 
 setGlobalAccumulateTimer();
-
-function writeFiles(backup) {
-    writeFile("sessions", sessions, backup);
-    writeFile("bosses", bosses, backup);
-    writeFile("titles", titles, backup);
-}
-
-function writeFile(name, data, backup) {
-    if (backup) {
-        fs.renameSync(`./${name}.json`, `./${name}-${(new Date()).getTime()}.json`);
-    }
-
-    fs.writeFileSync(`./${name}.json`, JSON.stringify(data));
-}
 
 let setIntervalId = setInterval(() => {
     writeFiles(false);

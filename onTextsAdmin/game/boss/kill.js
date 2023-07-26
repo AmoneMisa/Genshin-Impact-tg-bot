@@ -20,7 +20,7 @@ module.exports = [[/(?:^|\s)\/kill\b/, async (msg) => {
         throw new Error(`Босс уже мёртв чате: ${msg.chat.id}`);
     }
 
-    if (boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
+    if (boss.skill && boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
         clearInterval(boss.hpRegenIntervalId);
         boss.hpRegenIntervalId = null;
     }

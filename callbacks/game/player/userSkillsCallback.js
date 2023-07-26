@@ -17,14 +17,13 @@ const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage')
 const isBossAlive = require("../../../functions/game/boss/getBossStatus/isBossAlive");
 
 function getOffset() {
-    // return new Date().getTime() + 2 * 60 * 1000;
-    return new Date().getTime() + 2 * 1000;
+    return new Date().getTime() + 2 * 60 * 1000;
 }
 
 module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
     await deleteMessage(callback.message.chat.id, callback.message.message_id);
 
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!callback.message?.text?.includes(getUserName(session, "nickname")) && !callback?.message?.caption?.includes(getUserName(session, "nickname"))) {
         return;
     }
 

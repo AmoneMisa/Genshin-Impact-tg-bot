@@ -4,6 +4,8 @@ let getDebugLog = require('./getDebugLog');
 let addTrustedChat = require('./addTrustedChat');
 let showAdminCommands = require('./showAdminCommands');
 let settings = require('./settings');
+let sendFile = require('./sendFile');
+let getFileAndBackup = require('./getFileAndBackup');
 
 module.exports = [
     ...game,
@@ -11,5 +13,7 @@ module.exports = [
     ...getDebugLog,
     ...addTrustedChat,
     ...showAdminCommands,
-    ...settings
+    ...settings,
+    ...sendFile,
+    ...getFileAndBackup
 ];

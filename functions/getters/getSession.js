@@ -132,13 +132,7 @@ module.exports = async function (chatId, userId) {
         foundedClass = classStatsTemplate.find(_class => _class.name === "noClass");
     }
 
-    for (let [newStatKey, newStatValue] of Object.entries(foundedClass)) {
-        if (members[userId].game.gameClass.stats.hasOwnProperty(newStatKey)) {
-            continue;
-        }
-
-        members[userId].game.gameClass.stats[newStatKey] = newStatValue;
-    }
+    members[userId].game.gameClass.stats = Object.assign({}, foundedClass, members[userId].game.gameClass.stats);
 
     return members[userId];
 };

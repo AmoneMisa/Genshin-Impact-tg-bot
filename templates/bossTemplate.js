@@ -14,13 +14,14 @@ module.exports = [{
         lvl: 1,
         currentSummons: 0,
         needSummons: 3
-    }
-},{
+    },
+    skill: {}
+}, {
     name: "avrora",
     nameCall: "Аврору",
     description: "Невероятно красивая Фея воды, которую захватила порча. Она может как соблазнить, так и безжалостно убить любого на своём пути.",
     listOfDamage: [],
-    availableSkills: ["reflect"],
+    availableSkills: ["reflect", "life"],
     stats: {
         attack: 20,
         defence: 4,
@@ -31,13 +32,14 @@ module.exports = [{
         lvl: 1,
         currentSummons: 0,
         needSummons: 4
-    }
+    },
+    skill: {}
 }, {
     name: "fjorina",
     nameCall: "Фйорину",
     description: "Полу-девушка, полу-змея, которая управляет стихией огня и яда. В руке длинное копьё с огненным алмазным наконечником",
     listOfDamage: [],
-    availableSkills: ["reflect"],
+    availableSkills: ["reflect", "rage"],
     stats: {
         attack: 16,
         defence: 10,
@@ -48,13 +50,14 @@ module.exports = [{
         lvl: 1,
         currentSummons: 0,
         needSummons: 2
-    }
+    },
+    skill: {}
 }, {
     name: "radjahal",
     nameCall: "Раджахала",
     description: "Опасный и злобный орангутанг, который управляет стихией льда",
     listOfDamage: [],
-    availableSkills: ["reflect"],
+    availableSkills: ["reflect", "hp_regen"],
     stats: {
         attack: 12,
         defence: 12,
@@ -65,13 +68,14 @@ module.exports = [{
         lvl: 1,
         currentSummons: 0,
         needSummons: 3
-    }
+    },
+    skill: {}
 }, {
     name: "carnevorusIsse",
     nameCall: "Карневорус Иссе",
     description: "Огромный цветок, похожий на хризантему, наделенный элементами света и тьмы, что придает ему особое свечение, особенно опасное, имеет длинную виноградную лозу, которая обвивает неосторожных путников.",
     listOfDamage: [],
-    availableSkills: ["reflect"],
+    availableSkills: ["reflect", "resistance", "hp_regen"],
     stats: {
         attack: 8,
         defence: 25,
@@ -82,5 +86,6 @@ module.exports = [{
         lvl: 1,
         currentSummons: 0,
         needSummons: 3
-    }
+    },
+    skill: {}
 }];
