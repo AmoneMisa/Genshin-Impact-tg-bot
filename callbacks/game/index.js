@@ -9,7 +9,7 @@ const swordCallback = require('./sword');
 const player = require('./player');
 const slots = require('./slots');
 const dice = require('./dice');
-const reddit = require('./reddit');
+// const reddit = require('./reddit');
 const bowling = require('./bowling');
 const darts = require('./darts');
 const basketball = require('./basketball');
@@ -30,7 +30,7 @@ module.exports = [
     ...player,
     ...slots,
     ...dice,
-    ...reddit,
+    // ...reddit,
     ...bowling,
     ...darts,
     ...basketball,
