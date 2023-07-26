@@ -1,8 +1,12 @@
 const getClassStatsFromTemplate = require('./getGameClassStatsFromTemplate');
+const changePlayerClass = require("./changePlayerGameClass");
 
 module.exports = function (session) {
-    let className = session?.game?.gameClass?.stats?.name || "noClass";
-    let template = getClassStatsFromTemplate(className);
+    let template = getClassStatsFromTemplate(session?.game?.gameClass?.stats?.name);
+
+    if (!session.game.hasOwnProperty("gameClass")) {
+        changePlayerClass(session, "noClass");
+    }
 
     session.game.gameClass.stats.attack = Math.ceil(template.attack * Math.pow(1.105, session.game.stats.lvl - 1) + 8);
     session.game.gameClass.stats.defence = Math.ceil(template.defence * Math.pow(1.102, session.game.stats.lvl - 1) + 6);
