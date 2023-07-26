@@ -27,10 +27,8 @@ bot.setMyCommands([
     {command: "help", description: "Помощь"},
     {command: "games", description: "Список игр"},
     {command: "games_player", description: "Команды для управления персонажем"},
-    {command: "games_boss", description: "Команды для босса"},
     {command: "games_form", description: "Команды для анкет"},
     {command: "reset_games_timers", description: "Сбросить таймеры для персональных игр"},
-    // {command: "reddit", description: "Команды для Reddit"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
 ], {

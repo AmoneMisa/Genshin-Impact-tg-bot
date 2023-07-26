@@ -27,7 +27,7 @@ module.exports = function (members, boss) {
     let bossDmg = {};
     let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot);
 
-    for (let member of Object.values(filteredMembers)) {
+    for (let member of filteredMembers) {
         let player = member.game;
         let dmg = Math.ceil(calcBossDamage(boss, player));
         let playerShield = player.effects.filter(effect => effect.name === "shield");

@@ -133,6 +133,11 @@ module.exports = async function (chatId, userId) {
         foundedClass = classStatsTemplate.find(_class => _class.name === "noClass");
     }
 
+    delete members[userId]?.game?.gameClass?.boss?.isDead;
+    delete members[userId].game?.gameClass?.boss?.damagedHp;
+    delete members[userId].game?.gameClass?.boss?.hp;
+    delete members[userId].game?.gameClass?.boss?.damage;
+
     members[userId].game.gameClass.stats = Object.assign({}, foundedClass, members[userId].game.gameClass.stats);
 
     return members[userId];
