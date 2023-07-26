@@ -31,7 +31,7 @@ module.exports = function (session, skill, boss) {
     let bossDefence = getBossDefence(boss, template);
     let additionalDamage = (session.game.gameClass.stats.additionalDamage / 100) + 1;
 
-    dmg = getRandom(270, 480) * attack / bossDefence * modifier * additionalDamage;
+    dmg = getRandom(270, 720) * attack / bossDefence * modifier * additionalDamage;
 
     dmg *= damageMultiplier;
 
