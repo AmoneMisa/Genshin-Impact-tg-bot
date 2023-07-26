@@ -16,6 +16,5 @@ module.exports = function (chatId, name) {
         i++;
     }
 
-    console.log(buttons);
     return buttons;
 };

@@ -11,5 +11,5 @@ module.exports = [[/(?:^|\s)\/update_boss_model\b/, async (msg) => {
     }
 
     updateBossModel();
-    return sendMessage(myId, "Боссы обновлены. Убедиться в результате можно по команде /get_file filename");
+    return sendMessage(myId, "Боссы обновлены. Убедиться в результате можно по команде /get_file bosses.json");
 }]];
