@@ -5,8 +5,9 @@ module.exports = function (chatId, name) {
     let tempArray = null;
     let i = 0;
     let members = getMembers(chatId);
+    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot);
 
-    for (let [key, member] of Object.entries(members)) {
+    for (let [key, member] of Object.entries(filteredMembers)) {
         if (i % 3 === 0) {
             tempArray = [];
             buttons.push(tempArray);

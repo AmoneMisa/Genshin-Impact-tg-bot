@@ -4,7 +4,7 @@ const updatePlayerStats = require('./updatePlayerStats');
 module.exports = function (session) {
     for (let level of levelsTemplate) {
         if (level.lvl !== session.game.stats.lvl) {
-            return
+            continue;
         }
 
         if (session.game.stats.currentExp >= level.needExp) {

@@ -9,12 +9,12 @@ module.exports = function (members, boss) {
     members = Object.values(members).filter(member => member.game.gameClass.stats.hp > 0);
 
     if (!members.length) {
-        if (boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
+        if (boss.skill && boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
             clearInterval(boss.hpRegenIntervalId);
             boss.hpRegenIntervalId = null;
         }
 
-        boss.skill = null;
+        boss.skill = {};
         clearInterval(boss.attackIntervalId);
         debugMessage(`DEBUG. Все члены группы мертвы: ${boss.attackIntervalId}`);
         boss.attackIntervalId = null;
@@ -25,9 +25,11 @@ module.exports = function (members, boss) {
     }
 
     let bossDmg = {};
-    for (let member of Object.values(members)) {
+    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot);
+
+    for (let member of Object.values(filteredMembers)) {
         let player = member.game;
-        let dmg = calcBossDamage(boss, member);
+        let dmg = Math.ceil(calcBossDamage(boss, player));
         let playerShield = player.effects.filter(effect => effect.name === "shield");
         let shield;
 
@@ -53,7 +55,7 @@ module.exports = function (members, boss) {
         bossDmg[member.userChatData.user.id] = {
             dmg,
             username: member.userChatData.user.username,
-            hp: player.gameClass.stats.hp <= 0
+            hp: player.gameClass.stats.hp
         };
     }
 

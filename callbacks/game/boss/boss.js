@@ -22,12 +22,14 @@ module.exports = [["boss", async function (session, callback) {
     let chatId = callback.message.chat.id;
     let keyboard = [];
     let boss = getAliveBoss(chatId);
+    let message = "";
 
     if (!boss) {
         keyboard.push([{
             text: "Призвать босса",
             callback_data: "boss.summon"
         }]);
+        message = "Призови босса!"
     } else {
         keyboard.push([{
             text: "Нанести удар",
@@ -42,9 +44,10 @@ module.exports = [["boss", async function (session, callback) {
             text: "Список урона",
             callback_data: "boss.damageList"
         }]);
+        message = summonBossMessage(chatId, boss, false);
     }
 
-    return editMessageCaption(`${summonBossMessage(chatId, boss, false)}`, {
+    return editMessageCaption(message, {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
@@ -64,13 +67,7 @@ module.exports = [["boss", async function (session, callback) {
         return summonBossMessage(chatId, aliveBoss, true);
     }
 
-    let members = getMembers(chatId);
-    for (let member of Object.values(members)) {
-        member.game.gameClass.stats.hp = member.game.gameClass.stats.maxHp;
-    }
-
     let boss = await summonBoss(chatId);
-
     let keyboard = [[{
         text: "Нанести удар",
         callback_data: "boss.dealDamage"

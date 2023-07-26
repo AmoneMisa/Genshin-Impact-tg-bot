@@ -17,11 +17,13 @@ module.exports = function (chatId, recovery) {
 
     let members = getMembers(chatId);
     function dealDamage() {
-        let dmgList = bossDealDamage(members, boss, chatId);
+        let dmgList = bossDealDamage(members, boss);
+
         if (dmgList) {
             return sendMessageWithDelete(chatId, getBossDealDamageMessage(dmgList), {}, 10 * 1000);
         }
     }
 
-    boss.attackIntervalId = +setInterval(() => dealDamage(), 2 * 60 * 1000);
+    boss.attackIntervalId = +setInterval(() => dealDamage(), 5 * 60 * 1000);
+    // boss.attackIntervalId = +setInterval(() => dealDamage(), 2 * 1000);
 };

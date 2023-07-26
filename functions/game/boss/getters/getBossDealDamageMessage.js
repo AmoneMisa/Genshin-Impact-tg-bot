@@ -4,7 +4,7 @@ module.exports = function (dmgList) {
     for (let player of Object.values(dmgList)) {
         message += `@${player.username} - ${player.dmg} урона\n`;
 
-        if (!player.hp) {
+        if (player.hp  <= 0) {
             message += `@${player.username}, ты был повержен(-а) боссом.\n`;
         }
     }

@@ -13,6 +13,7 @@ module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         "/add_crystals - Добавить кристаллов пользователю\n" +
         "/add_experience - Добавить опыт пользователю\n" +
         "/add_gold - Добавить золота пользователю\n" +
+        "/update_characteristics - Пересчитать очки характеристик пользователю\n" +
         "/add_iron_ore - Добавить железной руды пользователю\n" +
         "/reset_point_game - Сбросить игру в очко\n" +
         "/reset_elements_game - Сбросить игру в элементы\n" +

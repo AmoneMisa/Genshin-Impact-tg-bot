@@ -10,6 +10,8 @@ module.exports = [
     {name: "Доп. открытие сундучков", cost: 5000, time: 1, command: "chestAddTry", message: "ты получил дополнительную попытку для сундучков", category: "misc"},
     {name: "Эльфийский вид для дворца", cost: 30000, time: 1, command: "palaceElven", type: "elven", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
     {name: "Королевский вид для дворца", cost: 33000, time: 1, command: "palaceRoyal", type: "royal", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
+    // {name: "Готический вид для дворца", cost: 28000, time: 1, command: "palaceGothic", type: "gothic", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
+    // {name: "Пляжный вид для дворца", cost: 12000, time: 1, command: "palaceBeach", type: "beach", message: "ты получил новый вид для дворца! Чтобы его применить, измени вид дворца через меню построек", category: "builds"},
     {name: "Изменить название дворца", cost: 15000, time: 1, command: "palaceChangeName", message: "ты получил карточку для смены названия дворца! Чтобы её применить, измени название дворца через меню построек", category: "builds"},
 ];
 

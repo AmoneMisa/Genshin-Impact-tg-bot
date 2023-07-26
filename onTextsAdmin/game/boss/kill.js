@@ -31,6 +31,7 @@ module.exports = [[/(?:^|\s)\/kill\b/, async (msg) => {
     boss.attackIntervalId = null;
     boss.currentHp = 0;
     boss.hp = 0;
+    boss.listOfDamage = [];
 
     await sendMessageWithDelete(msg.chat.id, "Босс убит админом.", {
         disable_notification: true

@@ -33,13 +33,13 @@ let prizes = [{
 }, {
     name: "sword",
     minAmount: 1,
-    maxAmount: 5,
+    maxAmount: 10,
     from: 75,
     chance: 10
 }, {
     name: "brokenSword",
     minAmount: -1,
-    maxAmount: -5,
+    maxAmount: -10,
     from: 85,
     chance: 5
 }, {

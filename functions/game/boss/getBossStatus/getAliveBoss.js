@@ -3,8 +3,9 @@ const getBossesByChatId = require("../getters/getBossesByChatId");
 
 module.exports = function (chatId) {
     let chatBosses = getBossesByChatId(chatId);
+
     if (!Array.isArray(chatBosses)) {
-        return ;
+        return false;
     }
 
     return chatBosses.find(bossAlreadySummoned);

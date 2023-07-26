@@ -60,6 +60,7 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
                     aliveBoss.skill = null;
                     aliveBoss.currentHp = 0;
                     aliveBoss.hp = 0;
+                    aliveBoss.listOfDamage = [];
                 }
             }
         } else if (skill.isHeal) {
