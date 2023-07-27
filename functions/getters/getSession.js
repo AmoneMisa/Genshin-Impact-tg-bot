@@ -103,6 +103,7 @@ module.exports = async function (chatId, userId) {
 
     if (!members[userId].game.hasOwnProperty("builds")) {
         members[userId].game.builds = getBuildFromTemplate();
+        members[userId].game.builds.stealImmuneTimer = 0;
     }
 
     if (!members[userId].game.inventory.hasOwnProperty("crystals")) {

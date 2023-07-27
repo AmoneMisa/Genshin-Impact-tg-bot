@@ -1,5 +1,6 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
+const scheduleSendMessage = require('../../../functions/tgBotFunctions/scheduleSendMessage');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const userDealDamage = require('../../../functions/game/player/userDealDamage');
 const setSkillCooltime = require('../../../functions/game/player/setSkillCooltime');
@@ -15,9 +16,11 @@ const getMembers = require('../../../functions/getters/getMembers');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 const isBossAlive = require("../../../functions/game/boss/getBossStatus/isBossAlive");
+const notificationMessagesDictionary = require("../../../dictionaries/notificationMessagesDictionary");
 
 function getOffset() {
-    return new Date().getTime() + 2 * 60 * 1000;
+    // return new Date().getTime() + 2 * 60 * 1000;
+    return new Date().getTime() + 2 * 1000;
 }
 
 module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
@@ -86,7 +89,12 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
             sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`)
                 .then(message => messageId = message.message_id);
         }
+        
         session.timerDealDamageCallback = getOffset();
+        scheduleSendMessage(session.userChatData.user.id,
+            `@${getUserName(session, "nickname")}, ${notificationMessagesDictionary["boss"].playerCanDealDamage}`,
+            {},
+            session.timerDealDamageCallback);
 
         for (let _skill of session.game.gameClass.skills) {
             if (_skill.cooltimeReceive > 0) {
