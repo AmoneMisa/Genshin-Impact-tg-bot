@@ -1,4 +1,4 @@
-const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
+const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getUserName = require('../../../functions/getters/getUserName');
 
