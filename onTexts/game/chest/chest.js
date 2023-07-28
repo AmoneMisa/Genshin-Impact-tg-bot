@@ -1,29 +1,20 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 const getTime = require('../../../functions/getters/getTime');
-const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
 
 module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    let [remain, hours, minutes, seconds] = getTime(session.timerOpenChestCallback);
+    let [remain] = getTime(session.timerOpenChestCallback);
 
     if (remain > 0) {
-        if (hours > 0) {
-            return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${hours} ч ${minutes} мин ${seconds} сек`, {
-                disable_notification: true,
-            }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
-        } else if (minutes > 0) {
-            return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${minutes} мин ${seconds} сек`, {
-                disable_notification: true,
-            }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
-        } else {
-            return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${seconds} сек`, {
-                disable_notification: true,
-            }).then(message => deleteMessageTimeout(msg.chat.id, message.message_id, 6000));
-        }
+        return sendMessageWithDelete(msg.chat.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${getStringRemainTime(remain)}`, {
+            disable_notification: true,
+        }, 6 * 1000);
     }
 
     let buttons = getRandomChest();

@@ -29,8 +29,9 @@ module.exports = [{
     maxMp: 400,
     mp: 400,
     hp: 5000,
-    hpRestoreSpeed: 7,
-    mpRestoreSpeed: 3,
+    hpRestoreSpeed: 4,
+    mpRestoreSpeed: 2,
+    cpRestoreSpeed: 4,
     speed: 2
 }, {
     name: "mage",
@@ -46,8 +47,9 @@ module.exports = [{
     maxMp: 650,
     mp: 650,
     hp: 2000,
-    hpRestoreSpeed: 5,
+    hpRestoreSpeed: 2,
     mpRestoreSpeed: 5,
+    cpRestoreSpeed: 3,
     speed: 5,
 }, {
     name: "priest",
@@ -63,8 +65,9 @@ module.exports = [{
     maxMp: 800,
     mp: 800,
     hp: 4000,
-    hpRestoreSpeed: 6,
-    mpRestoreSpeed: 10,
+    hpRestoreSpeed: 2,
+    mpRestoreSpeed: 3.2,
+    cpRestoreSpeed: 3,
     speed: 4
 }, {
     name: "archer",
@@ -80,7 +83,8 @@ module.exports = [{
     maxMp: 500,
     mp: 500,
     hp: 3200,
-    hpRestoreSpeed: 5,
-    mpRestoreSpeed: 4,
+    hpRestoreSpeed: 2,
+    mpRestoreSpeed: 3,
+    cpRestoreSpeed: 2,
     speed: 7
 }];

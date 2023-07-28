@@ -13,15 +13,10 @@ module.exports = function () {
                     template = bossesTemplate.find(_boss => _boss.name === "kivaha");
                 }
 
-                boss = Object.assign({},template, boss);
+                boss = Object.assign({}, template, boss);
 
-                if (boss.damagedHp) {
-                    delete boss.damagedHp;
-                }
-
-                if (boss.hp) {
-                    delete boss.hp;
-                }
+                delete boss.damagedHp;
+                delete boss.hp;
 
                 newBossesArray.push(boss);
             }
@@ -36,12 +31,9 @@ module.exports = function () {
 
             let boss = Object.assign({}, template, bossesArray);
 
-            if (boss.damagedHp) {
-                delete boss.damagedHp;
-            }
-            if (boss.hp) {
-                delete boss.hp;
-            }
+            delete boss.damagedHp;
+            delete boss.hp;
+
             newBossesArray.push(boss);
             newBosses[chatId] = newBossesArray;
         }

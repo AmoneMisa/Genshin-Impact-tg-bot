@@ -2,7 +2,7 @@ const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const userDealDamage = require('../../../functions/game/player/userDealDamage');
-const setSkillCooltime = require('../../../functions/game/player/setSkillCooltime');
+const setSkillCooldown = require('../../../functions/game/player/setSkillCooldown');
 const userDealDamageMessage = require('../../../functions/game/player/userDealDamageMessage');
 const userHealSkill = require('../../../functions/game/player/userHealSkill');
 const userShieldSkill = require('../../../functions/game/player/userShieldSkill');
@@ -15,10 +15,7 @@ const getMembers = require('../../../functions/getters/getMembers');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 const isBossAlive = require("../../../functions/game/boss/getBossStatus/isBossAlive");
-
-function getOffset() {
-    return new Date().getTime() + 2 * 60 * 1000;
-}
+const skillUsagePayCost = require('../../../functions/game/player/skillUsagePayCost');
 
 module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
     await deleteMessage(callback.message.chat.id, callback.message.message_id);
@@ -33,23 +30,26 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
     let aliveBoss = getAliveBoss(callback.message.chat.id);
     let isCanBeUsed = isPlayerCanUseSkill(session, skill);
     let messageId = null;
-    if (typeof isCanBeUsed === "number") {
+
+    if (isCanBeUsed !== 0) {
         return sendMessageWithDelete(callback.message.chat.id, isPlayerCanUseSkillMessage(isCanBeUsed, skill), {}, 10 * 1000);
     }
 
-    if (isCanBeUsed) {
+    if (isCanBeUsed === 0) {
+        let costCount = skill.costHp > 0 ? skill.costHp : skill.cost;
+        let costType = skill.costHp > 0 ? "hp" : "mp";
+
+        skillUsagePayCost(session, costType, costCount);
         if (skill.isDealDamage) {
             let dealDamage = userDealDamage(session, aliveBoss, skill);
             if (dealDamage) {
                 aliveBoss = getAliveBoss(callback.message.chat.id);
-                await sendMessageWithDelete(callback.message.chat.id, userDealDamageMessage(session, aliveBoss, dealDamage), {}, 150 * 1000);
+                await sendMessageWithDelete(callback.message.chat.id, userDealDamageMessage(session, aliveBoss, dealDamage), {}, 15 * 1000);
 
                 if (!isBossAlive(aliveBoss)) {
                     let loot = bossSendLoot(aliveBoss, members);
                     await sendMessageWithDelete(callback.message.chat.id, bossLootMessage(aliveBoss, loot), {}, 25 * 1000);
-                    clearInterval(session.timerDealDamageCallback);
                     clearInterval(aliveBoss.attackIntervalId);
-                    session.timerDealDamageCallback = null;
                     aliveBoss.attackIntervalId = null;
 
                     if (aliveBoss.skill.effect === "hp_regen" && aliveBoss.hpRegenIntervalId) {
@@ -86,15 +86,8 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
             sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`)
                 .then(message => messageId = message.message_id);
         }
-        session.timerDealDamageCallback = getOffset();
 
-        for (let _skill of session.game.gameClass.skills) {
-            if (_skill.cooltimeReceive > 0) {
-                _skill.cooltimeReceive--;
-            }
-        }
-
-        setSkillCooltime(skill);
+        setSkillCooldown(skill);
     } else {
         sendMessage(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.")
             .then(message => messageId = message.message_id);

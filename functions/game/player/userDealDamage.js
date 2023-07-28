@@ -45,5 +45,6 @@ module.exports = function (session, boss, skill) {
         session.game.gameClass.stats.hp = playerStats.hp;
     }
 
+    session.game.stats.inFightTimer = new Date().getTime() + 1.5 * 60 * 1000;
     return {isHasCritical, dmg, vampire: vampire || 0, reflectDamage: reflectDamage || 0};
 };

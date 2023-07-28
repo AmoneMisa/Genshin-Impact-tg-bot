@@ -23,6 +23,6 @@ module.exports = function (chatId, recovery) {
     }
 
     if (boss.skill.effect === "hp_regen") {
-        boss.hpRegenIntervalId = +setInterval(() => bossRegenHp(boss, chatId), 60 * 60 * 1000);
+        boss.hpRegenIntervalId = +setInterval(() => bossRegenHp(boss, chatId), 2 * 60 * 1000);
     }
 };
