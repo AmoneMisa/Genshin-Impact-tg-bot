@@ -7,9 +7,7 @@ const getBossStatusMessage = require("../../../functions/game/boss/getters/getBo
 const summonBossMessage = require("../../../functions/game/boss/summonBossMessage");
 const getAliveBoss = require("../../../functions/game/boss/getBossStatus/getAliveBoss");
 const buttonsDictionary = require("../../../dictionaries/buttons");
-const getTime = require("../../../functions/getters/getTime");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
@@ -108,18 +106,6 @@ module.exports = [["boss", async function (session, callback) {
 }], ["boss.dealDamage", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    if (!session.timerDealDamageCallback) {
-        session.timerDealDamageCallback = 0;
-    }
-
-    let [remain] = getTime(session.timerDealDamageCallback);
-
-    if (remain > 0) {
-        return sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, команду можно вызывать раз в две минуты. Осталось: ${getStringRemainTime(remain)}`, {
-            disable_notification: true,
-        }, 6 * 1000);
-    }
-
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
@@ -138,7 +124,10 @@ module.exports = [["boss", async function (session, callback) {
     let message = "";
 
     for (let skill of session.game.gameClass.skills) {
-        message += `${skill.name} - ${skill.description} Стоимость использования: ${skill.cost} золота, ${skill.crystalCost} кристаллов.\n\n`;
+        let costCount = skill.costHp > 0 ? skill.costHp : skill.cost;
+        let costType = skill.costHp > 0 ? "hp" : "mp";
+
+        message += `${skill.name} - ${skill.description} Стоимость использования: ${getEmoji(costType)} ${costCount}\n\n`;
     }
 
     return editMessageCaption(`@${getUserName(session, "nickname")}, выбери скилл:\n${message}`, {

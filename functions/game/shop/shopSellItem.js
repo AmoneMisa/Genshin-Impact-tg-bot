@@ -1,17 +1,31 @@
 const shopTemplate = require('../../../templates/shopTemplate');
+const potionsInInventoryTemplate = require('../../../templates/potionsInInventoryTemplate');
 const getOffsetToDay = require('../../getters/getOffsetToDay');
 const getOffset = require('../../getters/getOffset');
 const getUserName = require('../../getters/getUserName');
+
+function getPotionCharacteristics(command) {
+    const match = command.match(/^(potion|elixir)(Hp|Mp)(\d+)$/);
+
+    if (match) {
+        const [, bottleType, itemType, power] = match;
+        return {
+            bottleType,
+            type: itemType.toLowerCase(),
+            power: parseInt(power)
+        };
+    }
+}
 
 function check(session, command, item, isDaily) {
     if (!isDaily) {
         if (session.game.shopTimers[command] >= getOffsetToDay()) {
             return `${getUserName(session, "nickname")}, уже была совершена покупка на этой неделе. Попытка обновится в понедельник в 00.00`;
         }
-    } else {
-        if (session.game.shopTimers[command] >= getOffset()) {
-            return `${getUserName(session, "nickname")}, уже была совершена покупка на этой неделе. Попытка обновится в 00.00`;
-        }
+    }
+
+    if (session.game.shopTimers[command] >= getOffset()) {
+        return `${getUserName(session, "nickname")}, уже покупка была совершена сегодня. Попытка обновится в 00.00`;
     }
 
     if (session.game.inventory.gold >= item.cost) {
@@ -22,23 +36,29 @@ function check(session, command, item, isDaily) {
             session.sword += 25;
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("bossAddDmg")) {
-            session.game.effects.push({name: "addDamage", amount: 75, count: 10});
+            session.game.effects.push({name: "addDamage", amount: 75, count: 5});
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("bossAddCrChance")) {
-            session.game.effects.push({name: "addCritChance", amount: 50, count: 10});
+            session.game.effects.push({name: "addCritChance", amount: 50, count: 5});
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("bossAddCrDmg")) {
-            session.game.effects.push({name: "addCritDamage", amount: 150, count: 10});
+            session.game.effects.push({name: "addCritDamage", amount: 150, count: 5});
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("swordAddTry")) {
             session.timerSwordCallback = 0;
             session.game.shopTimers[command] = getOffsetToDay();
-        } else if (command.includes("potionHp1000")) {
-            session.game.inventory.potions[0].count++;
-            session.game.shopTimers[command] = getOffset();
-        } else if (command.includes("potionHp3000")) {
-            session.game.inventory.potions[1].count++;
-            session.game.shopTimers[command] = getOffset();
+        } else if (command.includes("potion") || command.includes("elixir")) {
+            let potion = getPotionCharacteristics(command);
+            let foundedPotion = session.game.inventory.potions.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
+
+            if (foundedPotion) {
+                foundedPotion.count++;
+            } else {
+                let potionTemplate = potionsInInventoryTemplate.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
+                session.game.inventory.potions.push(potionTemplate);
+                let foundedPotion = session.game.inventory.potions.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
+                foundedPotion.count++;
+            }
         } else if (command.includes("chestAddTry")) {
             session.chestCounter = 0;
             session.chosenChests = [];
@@ -71,7 +91,7 @@ module.exports = function (session, command, item) {
         return `${getUserName(session, "nickname")}, сначала нужно обзавестись золотишком, чтобы что-то купить.`
     }
 
-    if (command.includes("hpPotion")) {
+    if (command.includes("potion") || command.includes("elixir")) {
         return check(session, command, item, true);
     }
 

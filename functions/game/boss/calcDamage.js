@@ -11,7 +11,7 @@ const bossesTemplate = require("../../../templates/bossTemplate");
 module.exports = function (session, skill, boss) {
     let dmg;
     let template = bossesTemplate.find(bossTemplate => bossTemplate.name === boss.name);
-    let modifier = skill.damageModificator || 1;
+    let modifier = skill.damageModifier || 1;
 
     let criticalChanceMultiplier = getCriticalChanceMultiplier(session);
     let criticalChance = getCriticalChance(session) + criticalChanceMultiplier;

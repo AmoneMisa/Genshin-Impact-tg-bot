@@ -10,11 +10,20 @@ module.exports = function (session, callback, gameName) {
     let player = players[userId];
 
     if (!player) {
-        players[userId] = {
-            bet: 0,
-            items: [],
-            isPass: false
-        };
+        if (gameName === "points") {
+            players[userId] = {
+                bet: 0,
+                usedItems: [],
+                isPass: false
+            };
+        } else if (gameName === "elements") {
+            players[userId] = {
+                bet: 0,
+                usedItems: [],
+                points: 0,
+                id: userId
+            };
+        }
     } else {
         return;
     }

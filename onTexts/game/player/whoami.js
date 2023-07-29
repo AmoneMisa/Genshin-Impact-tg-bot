@@ -18,6 +18,9 @@ module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
                 text: "Мои здания",
                 callback_data: `player.${msg.chat.id}.builds`
             }], [{
+                text: "Обновить",
+                callback_data: `player.${msg.chat.id}.reload`
+            }], [{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]

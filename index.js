@@ -15,12 +15,16 @@ const debugMessage = require('./functions/tgBotFunctions/debugMessage');
 const sendMessage = require('./functions/tgBotFunctions/sendMessage');
 const writeFiles = require('./functions/misc/writeFiles');
 const setGlobalAccumulateTimer = require('./functions/game/builds/setGlobalAccumulateTimer');
+const setCpRegen = require('./functions/game/player/setCpRegen');
+const setHpRegen = require('./functions/game/player/setHpRegen');
+const setMpRegen = require('./functions/game/player/setMpRegen');
 const log = intel.getLogger("genshin");
 const cron = require('node-cron');
 
 const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
 const initHpRegen = require('./functions/game/boss/initHpRegen');
 const buttonsDictionary = require("./dictionaries/buttons");
+const setTimerForCollectResources = require("./functions/game/builds/setTimerForCollectResources");
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
@@ -49,12 +53,9 @@ function isTrusted(chatId) {
 })();
 
 const commandMap = {
-    "summon_boss": "boss",
+    "boss": "boss",
     "shop": "boss",
     "exchange": "boss",
-    "boss_hp": "boss",
-    "deal_damage": "boss",
-    "heal": "boss",
     "whoami": "whoami",
     "send_gold": "sendGold",
     "sword": "swords",
@@ -65,6 +66,8 @@ const commandMap = {
     "dice": "dice",
     "darts": "darts",
     "bowling": "bowling",
+    "basketball": "basketball",
+    "football": "football",
     "elements": "elements",
     "chest": "chests",
     "title": "titles",
@@ -117,10 +120,10 @@ for (let [key, value] of onTexts) {
     });
 }
 
-for (let id of Object.keys(bosses)) {
-    initBossDealDamage(id, true);
-    initHpRegen(id, true);
-}
+
+initBossDealDamage();
+initHpRegen();
+
 
 for (let [key, value] of onTextsAdmin) {
     bot.onText(key, value);
@@ -136,15 +139,29 @@ bot.on("callback_query", async (callback) => {
     let results = [];
 
     for (let [key, value] of callbacks) {
-        if ((key instanceof RegExp && key.test(callback.data)) || callback.data === key) {
-            let result = value(session, callback) || Promise.resolve();
-            result.catch(e => {
-                console.error(callback.data);
-                console.error(e);
-                debugMessage(`Произошла ошибка: ${callback.data} - ${e}`);
-            });
-            results.push(result);
+
+        let result = null;
+
+        if (key instanceof RegExp) {
+            let match = callback.data.match(key);
+
+            if (match) {
+                result = value(session, callback, match) || Promise.resolve();
+            }
+        } else if (callback.data === key) {
+            result = value(session, callback) || Promise.resolve();
         }
+
+        if (result === null) {
+            continue;
+        }
+
+        result.catch(e => {
+            console.error(callback.data);
+            console.error(e);
+            debugMessage(`Произошла ошибка: ${callback.data} - ${e}`);
+        });
+        results.push(result);
     }
 
     if (results.length > 0) {
@@ -160,6 +177,10 @@ bot.on("callback_query", async (callback) => {
 });
 
 setGlobalAccumulateTimer();
+setCpRegen();
+setHpRegen();
+setMpRegen();
+setTimerForCollectResources();
 
 let setIntervalId = setInterval(() => {
     writeFiles(false);

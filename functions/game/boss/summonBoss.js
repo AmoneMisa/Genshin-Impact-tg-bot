@@ -33,7 +33,6 @@ module.exports = async function (chatId) {
     let members = await getMembers(chatId);
     for (let session of Object.values(members)) {
         session.game.gameClass.stats.hp = session.game.gameClass.stats.maxHp;
-        session.timerDealDamageCallback = 0;
     }
 
     boss.stats.currentSummons++;

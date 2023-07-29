@@ -43,7 +43,7 @@ function buildCategoryKeyboard() {
     return buttons;
 }
 
-module.exports = [[/^shop$/, async function (session, callback) {
+module.exports = [["shop", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
@@ -55,10 +55,8 @@ module.exports = [[/^shop$/, async function (session, callback) {
             inline_keyboard: controlButtons("shop", buildCategoryKeyboard(), 1)
         }
     });
-}], [/^shop_[^.]+$/, async function (session, callback) {
-    let [, page] = callback.data.match(/^shop_([^.]+)$/);
+}], [/^shop_([^.]+)$/, async function (session, callback, [ , page]) {
     page = parseInt(page);
-
     let buttons = buildCategoryKeyboard();
 
     return editMessageText(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
@@ -71,35 +69,32 @@ module.exports = [[/^shop$/, async function (session, callback) {
             ]
         }
     });
-}], [/^shop\.[^.]+$/, async function (session, callback) {
-    const [, category] = callback.data.match(/^shop\.([^.]+)$/);
+}], [/^shop\.([^.]+)$/, async function (session, callback, [ , category]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери предметы для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+    return editMessageText(`@${getUserName(session, "nickname")}, выбери предметы для покупки в магазине.`, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: controlButtons("shop", buildKeyboard(category, true), 1, true)
+            inline_keyboard: controlButtons(`shop.${category}`, buildKeyboard(category, true), 1, true)
         }
     });
-}], [/^shop\.[^.]+_\d+$/, async function (session, callback) {
-    let [, category, page] = callback.data.match(/^shop\.([^.])_([^.]+)$/);
+}], [/^shop\.([^.0-9]+)_(\d+)$/, async function (session, callback, [, category, page]) {
     page = parseInt(page);
 
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери предмет для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+    return editMessageText(`@${getUserName(session, "nickname")}, выбери предмет для покупки в магазине.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons("shop", buildKeyboard(category), page)
+                ...controlButtons(`shop.${category}`, buildKeyboard(category), page)
             ]
         }
     });
-}], [/^shop\.[^.]+\.[^.]+\.buy$/, async function (session, callback) {
-    const [, category, itemName] = callback.data.match(/^shop\.([^.]+)\.([^.]+)\.buy$/);
+}], [/^shop\.([^.]+)\.([^.]+)\.buy$/, async function (session, callback, [, category, itemName]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
@@ -127,8 +122,7 @@ module.exports = [[/^shop$/, async function (session, callback) {
             }]]
         }
     });
-}], [/^shop\.[^.]+\.[^.]+\.buy\.0$/, async function (session, callback) {
-    const [, category, itemName] = callback.data.match(/^shop\.([^.]+)\.([^.]+)\.buy\.0$/);
+}], [/^shop\.[^.]+\.([^.]+)\.buy\.0$/, async function (session, callback, [, itemName]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
@@ -145,13 +139,7 @@ module.exports = [[/^shop$/, async function (session, callback) {
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: [[{
-                text: categoriesMap[category], callback_data: `shop.${category}`
-            }, {
-                text: "Главная", callback_data: "shop"
-            }], [{
-                text: "Закрыть", callback_data: "close"
-            }]]
+            inline_keyboard: controlButtons("shop", buildCategoryKeyboard(), 1)
         }
     });
 }]];

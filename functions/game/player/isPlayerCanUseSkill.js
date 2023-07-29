@@ -1,22 +1,18 @@
-const getSkillCooltime = require('./getSkillCooltime');
-const skillUsageCost = require('./skillUsageCost');
+const getSkillCooldown = require('./getSkillCooldown');
+const isEnoughResourcesForUseSkill = require('./isEnoughResourcesForUseSkill');
 
 module.exports = function (session, skill) {
-    if (skill.slot === 0) {
-        return true;
-    }
-
-    let enoughCostForUsage = skillUsageCost(session, skill);
+    let enoughCostForUsage = isEnoughResourcesForUseSkill(session, skill);
 
     if (!enoughCostForUsage) {
         return 1;
     }
 
-    let cooltime = getSkillCooltime(skill);
+    let cooldown = getSkillCooldown(skill);
 
-    if (cooltime > 0) {
+    if (cooldown > new Date().getTime()) {
         return 2;
     }
 
-    return true;
+    return 0;
 };

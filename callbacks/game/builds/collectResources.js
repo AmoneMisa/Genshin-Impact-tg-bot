@@ -2,13 +2,11 @@ const getBuild = require("../../../functions/game/builds/getBuild");
 const buttonsDictionary = require("../../../dictionaries/buttons");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getCaption = require('../../../functions/game/builds/getCaption');
-const setTimerForCollectResources = require('../../../functions/game/builds/setTimerForCollectResources');
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getSession = require("../../../functions/getters/getSession");
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 
-module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.collect$/, async function (session, callback) {
-    const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.collect$/);
+module.exports = [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (session, callback, [, chatId, buildName]) {
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
@@ -43,8 +41,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.collect$/, async function (session
             inline_keyboard: keyboard
         }
     }, callback.message.photo);
-}], [/^builds\.[\-0-9]+\.[^.]+\.collect\.0$/, async function (session, callback) {
-    const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.collect\.0$/);
+}], [/^builds\.([\-0-9]+)\.([^.]+)\.collect\.0$/, async function (session, callback, [, chatId, buildName]) {
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
@@ -55,17 +52,12 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.collect$/, async function (session
 
     build.lastCollectAt = new Date().getTime();
     let foundedSession = await getSession(chatId, callback.from.id);
-
     let buildTemplate = buildsTemplate[buildName];
     let resourcesType = buildTemplate.resourcesType;
     foundedSession.game.inventory[resourcesType] += Math.ceil(build.resourceCollected);
     build.resourceCollected = 0;
 
-    let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
-    let defaultCollectionPerHour = buildTemplate.productionPerHour;
-    setTimerForCollectResources(build, maxWorkHoursWithoutCollection, defaultCollectionPerHour);
-
-    await editMessageCaption(getCaption(buildName, "home", build), {
+    return editMessageCaption(getCaption(buildName, "home", build), {
         message_id: messageId,
         chat_id: callback.message.chat.id,
         reply_markup: {

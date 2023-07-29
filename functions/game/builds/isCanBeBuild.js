@@ -33,48 +33,51 @@ module.exports = async function (buildName, build, chatId, userId) {
 }
 
 function checkBuildRequirements(buildList, requirements) {
+    let result = false;
+
     if (!requirements.length) {
-        return true;
+        result = true;
     }
 
     requirements.forEach(requirement => {
         let build = buildList[requirement.name];
+
         if (!build) {
-            return false;
+            result = false;
         }
 
-        if (build.currentLvl < requirement.level) {
-            return false;
-        }
+        result = build.currentLvl >= requirement.level;
     });
 
-    return true;
+    return result;
 }
 
 function checkCharacterRequirements({stats, gameClass}, requirements) {
+    let result = false;
+
     if (!requirements.length) {
-        return true;
+        result = true;
     }
 
     if (!stats || !gameClass) {
-        return false;
+        result = false;
     }
 
     requirements.forEach(requirement => {
         if (!stats[requirement.name] && !gameClass[requirement.name]) {
-            return false;
+            result = false;
         }
 
         for (let [key, value] of Object.entries(requirement)) {
             if (stats[key]) {
-                return stats[key] >= value;
+                result = stats[key] >= value;
             }
 
             if (gameClass[key]) {
-                return gameClass[key] >= value;
+                result = gameClass[key] >= value;
             }
         }
     });
 
-    return true;
+    return result;
 }

@@ -16,7 +16,6 @@
     "lodash": "^4.17.21",
     "node-cron": "^3.0.2",
     "node-schedule": "^2.1.0",
-    "node-telegram-bot-api": "^0.53.0",
-    "snoowrap": "^1.23.0"
+    "node-telegram-bot-api": "^0.53.0"
   }
 }

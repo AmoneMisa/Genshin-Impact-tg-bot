@@ -26,18 +26,6 @@ module.exports = async function (chatId, userId) {
         members[userId].userChatData.user.first_name = getUpdatedData.user.first_name;
     }
 
-    // if (!members[userId].hasOwnProperty("reddit")) {
-    //     members[userId].reddit = {
-    //         subscribes: [],
-    //         countPosts: 3,
-    //         postType: "hot",
-    //         timer: {
-    //             hour: 2,
-    //             minute: 0
-    //         }
-    //     };
-    // }
-
     if (!members[userId].game) {
         members[userId].game = {
             dice: {
@@ -74,6 +62,7 @@ module.exports = async function (chatId, userId) {
                 currentExp: 0,
                 needExp: 1500,
                 lvl: 1,
+                inFightTimer: 0
             },
             effects: [],
             gameClass: {
@@ -134,7 +123,7 @@ module.exports = async function (chatId, userId) {
         foundedClass = classStatsTemplate.find(_class => _class.name === "noClass");
     }
 
-    delete members[userId]?.game?.gameClass?.boss?.isDead;
+    delete members[userId].game?.gameClass?.boss?.isDead;
     delete members[userId].game?.gameClass?.boss?.damagedHp;
     delete members[userId].game?.gameClass?.boss?.hp;
     delete members[userId].game?.gameClass?.boss?.damage;

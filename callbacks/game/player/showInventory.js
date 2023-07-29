@@ -101,7 +101,7 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
 
         if (foundedItems.length > 0) {
             replyMarkup = {
-                seceltive: true,
+                selective: true,
                 inline_keyboard: [...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedSession.game.inventory, userId), 1)]
             };
         }
