@@ -4,5 +4,14 @@ const exchangeCallback = require('./exchangeCallback');
 const showInventory = require('./showInventory');
 const updateCharacteristics = require('./updateCharacteristics');
 const reloadWhoAmI = require('./reloadWhoAmI');
+const stealResources = require('./stealResources');
 
-module.exports = [...setPlayerClassCallback, ...userSkillsCallback, ...exchangeCallback, ...showInventory, ...updateCharacteristics, ...reloadWhoAmI];
+module.exports = [
+    ...setPlayerClassCallback,
+    ...userSkillsCallback,
+    ...exchangeCallback,
+    ...showInventory,
+    ...updateCharacteristics,
+    ...reloadWhoAmI,
+    ...stealResources
+];

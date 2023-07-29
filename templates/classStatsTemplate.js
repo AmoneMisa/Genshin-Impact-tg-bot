@@ -16,6 +16,7 @@ module.exports = [{
     hp: 1000,
     hpRestoreSpeed: 5, // единиц в секунду
     mpRestoreSpeed: 2, // единиц в секунду
+    cpRestoreSpeed: 1, // единиц в секунду
     speed: 1,
     block: 1,
     accuracy: 1,

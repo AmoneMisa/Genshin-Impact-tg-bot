@@ -1,6 +1,6 @@
 const getMembers = require('../getters/getMembers');
 
-module.exports = function (chatId, name) {
+module.exports = function (chatId, name, includeHimself = true, callerId) {
     let buttons = [];
     let tempArray = null;
     let i = 0;
@@ -8,6 +8,10 @@ module.exports = function (chatId, name) {
     let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot);
 
     for (let member of filteredMembers) {
+        if (!includeHimself && member.userChatData.user.id === callerId) {
+            continue;
+        }
+
         if (i % 3 === 0) {
             tempArray = [];
             buttons.push(tempArray);

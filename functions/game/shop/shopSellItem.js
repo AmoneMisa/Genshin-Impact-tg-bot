@@ -36,13 +36,13 @@ function check(session, command, item, isDaily) {
             session.sword += 25;
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("bossAddDmg")) {
-            session.game.effects.push({name: "addDamage", amount: 75, count: 5});
+            session.game.effects.push({name: "addDamageToBoss", amount: 75, count: 5});
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("bossAddCrChance")) {
-            session.game.effects.push({name: "addCritChance", amount: 50, count: 5});
+            session.game.effects.push({name: "addCritChanceToBoss", amount: 50, count: 5});
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("bossAddCrDmg")) {
-            session.game.effects.push({name: "addCritDamage", amount: 150, count: 5});
+            session.game.effects.push({name: "addCritDamageToBoss", amount: 150, count: 5});
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("swordAddTry")) {
             session.timerSwordCallback = 0;

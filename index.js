@@ -18,6 +18,7 @@ const setGlobalAccumulateTimer = require('./functions/game/builds/setGlobalAccum
 const setCpRegen = require('./functions/game/player/setCpRegen');
 const setHpRegen = require('./functions/game/player/setHpRegen');
 const setMpRegen = require('./functions/game/player/setMpRegen');
+const restoreChancesToSteal = require('./functions/game/player/restoreChancesToSteal');
 const log = intel.getLogger("genshin");
 const cron = require('node-cron');
 
@@ -180,6 +181,7 @@ setGlobalAccumulateTimer();
 setCpRegen();
 setHpRegen();
 setMpRegen();
+restoreChancesToSteal();
 setTimerForCollectResources();
 
 let setIntervalId = setInterval(() => {

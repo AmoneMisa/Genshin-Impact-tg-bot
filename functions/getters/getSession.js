@@ -67,7 +67,7 @@ module.exports = async function (chatId, userId) {
             effects: [],
             gameClass: {
                 stats: {...classStatsTemplate[0]},
-                skills: {...classSkillsTemplate[0]}
+                skills: {...classSkillsTemplate.noClass}
             },
             shopTimers: {
                 swordImmune: 0,
@@ -93,6 +93,7 @@ module.exports = async function (chatId, userId) {
     if (!members[userId].game.hasOwnProperty("builds")) {
         members[userId].game.builds = getBuildFromTemplate();
         members[userId].game.builds.stealImmuneTimer = 0;
+        members[userId].game.builds.chanceToSteal = 2;
     }
 
     if (!members[userId].game.inventory.hasOwnProperty("crystals")) {
@@ -112,15 +113,21 @@ module.exports = async function (chatId, userId) {
     if (!members[userId].game.hasOwnProperty("gameClass")) {
         members[userId].game.gameClass = {
             stats: {...classStatsTemplate[0]},
-            skills: {...classSkillsTemplate[0]}
+            skills: {...classSkillsTemplate.noClass}
         };
     }
 
-    let foundedClass;
-    if (members[userId].game.gameClass.stats.name) {
-        foundedClass = classStatsTemplate.find(_class => _class.name === members[userId].game.gameClass.stats.name);
-    } else {
-        foundedClass = classStatsTemplate.find(_class => _class.name === "noClass");
+    let className = members[userId].game.gameClass.stats.name || 'noClass';
+
+    if (!classSkillsTemplate[className]) {
+        throw new Error("Not found skills for class " + className);
+    }
+
+    let foundedClassSkills = classSkillsTemplate[className];
+    let foundedClassStats = classStatsTemplate.find(_class => _class.name === className);
+
+    if (!foundedClassStats) {
+        throw new Error("Not found stats for class " + className);
     }
 
     delete members[userId].game?.gameClass?.boss?.isDead;
@@ -128,7 +135,8 @@ module.exports = async function (chatId, userId) {
     delete members[userId].game?.gameClass?.boss?.hp;
     delete members[userId].game?.gameClass?.boss?.damage;
 
-    members[userId].game.gameClass.stats = Object.assign({}, foundedClass, members[userId].game.gameClass.stats);
+    members[userId].game.gameClass.stats = Object.assign({}, foundedClassStats, members[userId].game.gameClass.stats);
+    members[userId].game.gameClass.skills = [...foundedClassSkills];
 
     return members[userId];
 };
