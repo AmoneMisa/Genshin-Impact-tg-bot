@@ -11,7 +11,6 @@ const bowling = require('./bowling');
 const darts = require('./darts');
 const basketball = require('./basketball');
 const football = require('./football');
-// const builds = require('./builds');
 const elements = require('./elements');
 const player = require('./player');
 
@@ -29,7 +28,6 @@ module.exports = [
     ...darts,
     ...basketball,
     ...football,
-    // ...builds,
     ...elements,
     ...player
 ];
