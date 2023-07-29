@@ -20,7 +20,7 @@ module.exports = function (members, boss) {
     for (let member of filteredMembers) {
         let player = member.game;
         let dmg = Math.ceil(calcBossDamage(boss, player));
-        let playerShield = player.effects.filter(effect => effect.name === "shield");
+        let playerShield = player.effects.find(effect => effect.name === "shield");
         let shield;
 
         if (playerShield && playerShield.value > 0) {
