@@ -46,9 +46,7 @@ function checkBuildRequirements(buildList, requirements) {
             result = false;
         }
 
-        if (build.currentLvl < requirement.level) {
-            result = false;
-        }
+        result = build.currentLvl >= requirement.level;
     });
 
     return result;
