@@ -11,6 +11,10 @@ module.exports = function () {
                     continue;
                 }
 
+                if (session.game.gameClass.stats.hp <= 0) {
+                    continue;
+                }
+
                 if (isPlayerInFight(session)) {
                     continue;
                 }

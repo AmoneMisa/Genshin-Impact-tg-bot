@@ -8,14 +8,7 @@ module.exports = function (members, boss) {
     let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && member.game.gameClass.stats.hp > 0);
 
     if (!filteredMembers.length) {
-        if (boss.skill && boss.skill.effect === "hp_regen" && boss.hpRegenIntervalId) {
-            clearInterval(boss.hpRegenIntervalId);
-            boss.hpRegenIntervalId = null;
-        }
-
         boss.skill = {};
-        clearInterval(boss.attackIntervalId);
-        boss.attackIntervalId = null;
         boss.currentHp = 0;
         boss.hp = 0;
 
@@ -45,7 +38,7 @@ module.exports = function (members, boss) {
 
         player.gameClass.stats.hp -= damageHp;
 
-        if (player.gameClass.stats.hp <= 0) {
+        if (player.gameClass.stats.hp < 0) {
             player.gameClass.stats.hp = 0;
         }
 

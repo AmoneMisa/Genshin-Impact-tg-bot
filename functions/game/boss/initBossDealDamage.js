@@ -1,29 +1,26 @@
 const getMembers = require("../../getters/getMembers");
 const bossDealDamage = require("../../game/boss/bossDealDamage");
 const getBossDealDamageMessage = require("../../game/boss/getters/getBossDealDamageMessage");
-const getAliveBoss = require("../../game/boss/getBossStatus/getAliveBoss");
+const isBossAlive = require("../../game/boss/getBossStatus/isBossAlive");
 const sendMessageWithDelete = require('../../tgBotFunctions/sendMessageWithDelete');
+const cron = require("node-cron");
+const {bosses} = require("../../../data");
 
-module.exports = function (chatId, recovery) {
-    let boss = getAliveBoss(chatId);
-    if (!boss) {
-        // throw new Error("Босс не найден!");
-        return;
-    }
+module.exports = function () {
+    cron.schedule('2 * * * *', async () => {
+        for (let [chatId, bossesArray] of Object.entries(bosses)) {
+            for (let boss of bossesArray) {
+                if (!isBossAlive(boss)) {
+                    continue ;
+                }
 
-    if (recovery && !(boss.hasOwnProperty("attackIntervalId") && boss.attackIntervalId !== null)) {
-        return;
-    }
+                let members = getMembers(chatId);
+                let dmgList = bossDealDamage(members, boss);
 
-    let members = getMembers(chatId);
-    function dealDamage() {
-        let dmgList = bossDealDamage(members, boss);
-
-        if (dmgList) {
-            return sendMessageWithDelete(chatId, getBossDealDamageMessage(dmgList), {}, 10 * 1000);
+                if (dmgList) {
+                    await sendMessageWithDelete(chatId, getBossDealDamageMessage(dmgList), {}, 10 * 1000);
+                }
+            }
         }
-    }
-
-    boss.attackIntervalId = +setInterval(() => dealDamage(), 3 * 60 * 1000);
-    // boss.attackIntervalId = +setInterval(() => dealDamage(), 2 * 1000);
+    });
 };

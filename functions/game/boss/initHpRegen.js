@@ -1,28 +1,27 @@
 const {bosses} = require("../../../data");
 const sendMessage = require('../../tgBotFunctions/sendMessage');
+const isBossAlive = require("../../game/boss/getBossStatus/isBossAlive");
+const cron = require("node-cron");
 
-module.exports = function (chatId, recovery) {
-    let boss = bosses[chatId];
+module.exports = function () {
+    cron.schedule('*/2 * * * *', async () => {
+        for (let [chatId, bossesArray] of Object.entries(bosses)) {
+            for (let boss of bossesArray) {
+                if (boss.skill.effect !== "hp_regen") {
+                    continue;
+                }
 
-    if (recovery && !(boss.hasOwnProperty("hpRegenIntervalId") && boss.hpRegenIntervalId !== null)) {
-        return;
-    }
+                if (boss.currentHp === boss.hp) {
+                    continue;
+                }
 
-    function bossRegenHp(boss, chatId) {
-        if (boss.currentHp === boss.hp) {
-            return;
+                if (isBossAlive(boss)) {
+                    boss.currentHp = 0;
+                    continue;
+                }
+                boss.currentHp = Math.max(boss.hp, boss.currentHp + Math.ceil(boss.hp * 1.08));
+                await sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.currentHp}`);
+            }
         }
-
-        boss.currentHp += Math.ceil(boss.hp * 1.08);
-
-        if (boss.currentHp < 0) {
-            boss.currentHp = 0;
-        }
-
-        sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.currentHp}`);
-    }
-
-    if (boss.skill.effect === "hp_regen") {
-        boss.hpRegenIntervalId = +setInterval(() => bossRegenHp(boss, chatId), 2 * 60 * 1000);
-    }
+    });
 };

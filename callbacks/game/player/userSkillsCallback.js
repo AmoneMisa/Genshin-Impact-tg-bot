@@ -49,13 +49,6 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
                 if (!isBossAlive(aliveBoss)) {
                     let loot = bossSendLoot(aliveBoss, members);
                     await sendMessageWithDelete(callback.message.chat.id, bossLootMessage(aliveBoss, loot), {}, 25 * 1000);
-                    clearInterval(aliveBoss.attackIntervalId);
-                    aliveBoss.attackIntervalId = null;
-
-                    if (aliveBoss.skill.effect === "hp_regen" && aliveBoss.hpRegenIntervalId) {
-                        clearInterval(aliveBoss.hpRegenIntervalId);
-                        aliveBoss.hpRegenIntervalId = null;
-                    }
 
                     aliveBoss.skill = null;
                     aliveBoss.currentHp = 0;

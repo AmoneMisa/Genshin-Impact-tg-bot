@@ -16,7 +16,8 @@ module.exports = function () {
                 boss = Object.assign({}, template, boss);
 
                 delete boss.damagedHp;
-                delete boss.hp;
+                delete boss.hpRegenIntervalId;
+                delete boss.attackIntervalId;
 
                 newBossesArray.push(boss);
             }
@@ -32,7 +33,8 @@ module.exports = function () {
             let boss = Object.assign({}, template, bossesArray);
 
             delete boss.damagedHp;
-            delete boss.hp;
+            delete boss.hpRegenIntervalId;
+            delete boss.attackIntervalId;
 
             newBossesArray.push(boss);
             newBosses[chatId] = newBossesArray;
