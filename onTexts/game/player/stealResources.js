@@ -17,7 +17,7 @@ module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     }
     let [attackerRemain] = getTime(session.game.stealImmuneTimer);
 
-    if (attackerRemain) {
+    if (attackerRemain > 0) {
         await sendMessageWithDelete(msg.chat.id, `@${getUserName(session, "nickname")}, у тебя висит щит от ограблений. Если ты ограбишь кого-то, щит спадёт. Время действия щита: ${getStringRemainTime(attackerRemain)}`, {}, 15 * 1000);
     }
 

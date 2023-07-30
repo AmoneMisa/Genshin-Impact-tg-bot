@@ -17,15 +17,17 @@ module.exports = function (session) {
         }
     }
 
-    if (session.game.builds.hasOwnProperty("stealImmuneTimer")) {
-        delete session.game.builds.stealImmuneTimer;
-    }
+    if (session.game.hasOwnProperty("builds")) {
+        if (session.game.builds.hasOwnProperty("stealImmuneTimer")) {
+            delete session.game.builds.stealImmuneTimer;
+        }
 
-    if (session.game.builds.hasOwnProperty("chanceToSteal")) {
-        delete session.game.builds.chanceToSteal;
-    }
+        if (session.game.builds.hasOwnProperty("chanceToSteal")) {
+            delete session.game.builds.chanceToSteal;
+        }
 
-    if (session.game.builds.hasOwnProperty("stealChance")) {
-        delete session.game.builds.stealChance;
+        if (session.game.builds.hasOwnProperty("stealChance")) {
+            delete session.game.builds.stealChance;
+        }
     }
 }
