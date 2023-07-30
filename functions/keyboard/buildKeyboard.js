@@ -5,14 +5,10 @@ module.exports = function (chatId, name, includeHimself = true, callerId) {
     let tempArray = null;
     let i = 0;
     let members = getMembers(chatId);
-    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot);
+    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided);
 
     for (let member of filteredMembers) {
         if (!includeHimself && member.userChatData.user.id === callerId) {
-            continue;
-        }
-
-        if (member.isHided) {
             continue;
         }
 
@@ -20,6 +16,7 @@ module.exports = function (chatId, name, includeHimself = true, callerId) {
             tempArray = [];
             buttons.push(tempArray);
         }
+
         tempArray.push({text: member.userChatData.user.first_name, callback_data: `${name}.${member.userChatData.user.id}`});
         i++;
     }

@@ -30,4 +30,12 @@ module.exports = function (session) {
             delete session.game.builds.stealChance;
         }
     }
+
+    if (session.game.hasOwnProperty("reddit")) {
+        delete session.reddit;
+    }
+
+    if (session.game.hasOwnProperty("timerBossCallback")) {
+        delete session.timerBossCallback;
+    }
 }
