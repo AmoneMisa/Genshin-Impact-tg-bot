@@ -16,8 +16,7 @@ module.exports = function (chatId, name, includeHimself = true, callerId) {
             continue;
         }
 
-        if (i % 1 === 0) {
-        // if (i % 3 === 0) {
+        if (i % 3 === 0) {
             tempArray = [];
             buttons.push(tempArray);
         }
