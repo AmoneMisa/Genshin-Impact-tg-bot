@@ -57,6 +57,7 @@ const commandMap = {
     "boss": "boss",
     "shop": "boss",
     "exchange": "boss",
+    "steal_resources": "whoami",
     "whoami": "whoami",
     "send_gold": "sendGold",
     "sword": "swords",
@@ -75,7 +76,7 @@ const commandMap = {
     "titles": "titles",
     "info": "form",
     "form": "form",
-    "set[A-Z].*": "form",
+    "set[A-Z].*": "form"
 };
 
 for (let [key, value] of onTexts) {

@@ -1,6 +1,8 @@
 const getPlayerGameClassMessage = require("./getPlayerGameClassMessage");
 const getUserName = require('../../getters/getUserName');
 const getEmoji = require('../../getters/getEmoji');
+const getTime = require("../../getters/getTime");
+const getStringRemainTime = require("../../getters/getStringRemainTime");
 
 module.exports = function (session) {
     let game = session.game;
@@ -17,6 +19,13 @@ module.exports = function (session) {
 
     if (session.swordImmune) {
         message += "Иммунитет к выпадению отрицательного числа при увеличении меча.\n"
+    }
+
+    message += `Количество попыток ограбления: ${session.game.chanceToSteal};\n`
+
+    let [remain] = getTime(game.stealImmuneTimer);
+    if (remain > 0) {
+        message += `Иммунитет от ограбления: ${getStringRemainTime(remain)};\n`
     }
 
     return message;

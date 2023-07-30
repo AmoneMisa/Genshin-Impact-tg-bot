@@ -5,6 +5,7 @@ const showInventory = require('./showInventory');
 const updateCharacteristics = require('./updateCharacteristics');
 const reloadWhoAmI = require('./reloadWhoAmI');
 const stealResources = require('./stealResources');
+const addStealChance = require('./addStealChance');
 
 module.exports = [
     ...setPlayerClassCallback,
@@ -13,5 +14,6 @@ module.exports = [
     ...showInventory,
     ...updateCharacteristics,
     ...reloadWhoAmI,
-    ...stealResources
+    ...stealResources,
+    ...addStealChance
 ];

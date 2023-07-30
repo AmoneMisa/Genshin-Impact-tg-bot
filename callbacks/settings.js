@@ -7,8 +7,7 @@ const setButtonText = require("../functions/keyboard/setButtonText");
 const controlButtons = require("../functions/keyboard/controlButtons");
 const editMessageText = require('../functions/tgBotFunctions/editMessageText');
 
-module.exports = [[/^settings\.[^.]+\.[0-1]+$/, function (session, callback) {
-    const [, setting, flag] = callback.data.match(/^settings\.([^.]+)\.([0-1]+)$/);
+module.exports = [[/^settings\.([^.]+)\.([0-1]+)$/, function (session, callback, [, setting, flag]) {
     let chatSession = getChatSession(callback.message.chat.id);
     if (!getMemberStatus(callback.message.chat.id, chatSession.settingsMessageId)) {
         return;
@@ -33,12 +32,11 @@ module.exports = [[/^settings\.[^.]+\.[0-1]+$/, function (session, callback) {
             inline_keyboard: [...controlButtons("settings", chatSession.settingsButtons, 1)]
         }
     });
-}], [/^settings_[^.]+$/, function (session, callback) {
+}], [/^settings_([^.]+)$/, function (session, callback, [, page]) {
     let chatSession = getChatSession(callback.message.chat.id);
     if (!getMemberStatus(callback.message.chat.id, chatSession.settingsMessageId)) {
         return;
     }
-    let [, page] = callback.data.match(/^settings_([^.]+)$/);
     page = parseInt(page);
 
     return editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {

@@ -1,0 +1,24 @@
+const sendMessage = require('../functions/tgBotFunctions/sendMessage');
+const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+const {myId} = require("../config");
+
+module.exports = [[/(?:^|\s)\/creator_commands\b/, async (msg) => {
+    if (msg.from.id !== myId) {
+        return;
+    }
+
+    await deleteMessage(msg.chat.id, msg.message_id);
+    return sendMessage(msg.from.id, "/send_file - Отправить файл в корень с бэкапом старого\n" +
+        "/get_file filename - Получить файл из корня проекта\n" +
+        "/get_debug_log - Получить дебаг лог\n" +
+        "/get_chat_data - Информация о чате\n" +
+        "/hide_dead_souls - Проставить флаги мёртвым душам\n" +
+        "/mark_trusted - Добавить чат и его участников в доверенные\n" +
+        "/update_characteristics - Пересчитать очки характеристик пользователю или всей группе\n" +
+        "/update_boss_model - Обновить модель боссов\n" +
+        "/clear_all_sessions - Почистить сессии пользователей от старых полей\n" +
+        "/update_all_players_skills - Обновить модель всех скиллов всех пользователей\n" +
+        "/update_all_players_characteristic - Обновить модель всех статов всех пользователей\n" +
+        "/reset_sword_timer - Сбросить таймеры мечей у всех пользователей\n"
+    );
+}]];

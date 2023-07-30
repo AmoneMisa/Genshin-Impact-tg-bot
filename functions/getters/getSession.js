@@ -14,6 +14,7 @@ module.exports = async function (chatId, userId) {
     if (!members[userId]) {
         members[userId] = {
             userChatData: getUpdatedData,
+            isHided: false,
             user: {...userTemplate}
         };
     }
@@ -92,8 +93,8 @@ module.exports = async function (chatId, userId) {
 
     if (!members[userId].game.hasOwnProperty("builds")) {
         members[userId].game.builds = getBuildFromTemplate();
-        members[userId].game.builds.stealImmuneTimer = 0;
-        members[userId].game.builds.chanceToSteal = 2;
+        members[userId].game.stealImmuneTimer = 0;
+        members[userId].game.chanceToSteal = 2;
     }
 
     if (!members[userId].game.inventory.hasOwnProperty("crystals")) {
@@ -129,11 +130,6 @@ module.exports = async function (chatId, userId) {
     if (!foundedClassStats) {
         throw new Error("Not found stats for class " + className);
     }
-
-    delete members[userId].game?.gameClass?.boss?.isDead;
-    delete members[userId].game?.gameClass?.boss?.damagedHp;
-    delete members[userId].game?.gameClass?.boss?.hp;
-    delete members[userId].game?.gameClass?.boss?.damage;
 
     members[userId].game.gameClass.stats = Object.assign({}, foundedClassStats, members[userId].game.gameClass.stats);
     members[userId].game.gameClass.skills = [...foundedClassSkills];

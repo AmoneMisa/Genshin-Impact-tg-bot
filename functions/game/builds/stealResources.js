@@ -8,8 +8,8 @@ module.exports = function (currentUser, targetUser) {
     let buildTemplate = buildsTemplate["palace"];
     let maxHp = targetUser.game.gameClass.stats.maxHp;
 
-    if (!targetUser.game.builds.stealImmuneTimer) {
-        targetUser.game.builds.stealImmuneTimer = 0;
+    if (!targetUser.game.stealImmuneTimer) {
+        targetUser.game.stealImmuneTimer = 0;
     }
 
     if (remainHp / maxHp > 0.6) {
@@ -43,7 +43,7 @@ module.exports = function (currentUser, targetUser) {
     defenderInventory.ironOre -= ironOreToSteal;
     defenderInventory.crystals -= crystalsToSteal;
 
-    targetUser.game.builds.stealImmuneTimer = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 часа иммунитета от воровства
+    targetUser.game.stealImmuneTimer = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 часа иммунитета от воровства
 
     let gainedExp = Math.ceil(Math.max(5500, (currentUser.game.stats.currentExp * 0.01 * (targetUser.game.stats.lvl - currentUser.game.stats.lvl) + 5500)));
     currentUser.game.stats.currentExp += gainedExp;
@@ -53,5 +53,5 @@ module.exports = function (currentUser, targetUser) {
 }
 
 function canSteal(targetUser) {
-    return new Date().getTime() >= targetUser.game.builds.stealImmuneTimer;
+    return new Date().getTime() >= targetUser.game.stealImmuneTimer;
 }

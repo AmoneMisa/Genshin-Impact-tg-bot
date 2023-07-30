@@ -7,8 +7,7 @@ const getUserName = require('../../../functions/getters/getUserName');
 const updatePlayerStats = require('../../../functions/game/player/updatePlayerStats');
 const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
-module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
-    const [, chatId, userId] = callback.data.match(/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/);
+module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     updatePlayerStats(targetSession);
 
@@ -17,8 +16,7 @@ module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async funct
     }).catch(e => {
         console.error(e);
     });
-}], [/^update_characteristics\.([\-0-9]+)\.all$/, async function (session, callback) {
-    const [, chatId] = callback.data.match(/^update_characteristics\.([\-0-9]+)\.all$/);
+}], [/^update_characteristics\.([\-0-9]+)\.all$/, async function (session, callback, [, chatId]) {
     let targetMembers = getMembers(chatId);
     let filteredMembers = Object.values(targetMembers).filter(member => !member.userChatData.user.is_bot);
 
@@ -31,10 +29,8 @@ module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async funct
     }).catch(e => {
         console.error(e);
     });
-}], [/^update_characteristics\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
-    let [, chatId, page] = callback.data.match(/^update_characteristics\.([\-0-9]+)_([^.]+)$/);
+}], [/^update_characteristics\.([\-0-9]+)_([^.]+)$/, function (session, callback, [, chatId, page]) {
     page = parseInt(page);
-
     let buttons = buildKeyboard(chatId, `update_characteristics.${chatId}`);
 
     return editMessageText(`Выбери интересующего тебя участника`, {

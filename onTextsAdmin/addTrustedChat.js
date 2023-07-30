@@ -1,4 +1,5 @@
 const sendMessage = require('../functions/tgBotFunctions/sendMessage');
+const getMembers = require('../functions/getters/getMembers');
 const bot = require('../bot');
 const {myId} = require('../config');
 const {updTrustedChats} = require('../data');
@@ -19,12 +20,30 @@ module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
         bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
             const trustedChats = fs.readFileSync('trustedChats.json');
             let trustedChatsArray = JSON.parse(trustedChats);
+            let chatMembers = getMembers(replyMsg.text);
+            let trustedChatsContainsAllMembers = true;
+
+            if (chatMembers) {
+                for (let memberId of Object.keys(chatMembers)) {
+                    if (!trustedChatsArray.includes(memberId)) {
+                        trustedChatsContainsAllMembers = false;
+                        break;
+                    }
+                }
+            }
 
             if (!trustedChatsArray.includes(replyMsg.text)) {
                 trustedChatsArray.push((replyMsg.text).toString());
                 fs.writeFileSync('trustedChats.json', JSON.stringify(trustedChatsArray));
                 updTrustedChats();
                 sendMessage(myId, `Чат добавлен в доверенные: ${replyMsg.text}`);
+            } else if (!trustedChatsContainsAllMembers) {
+                for (let memberId of Object.keys(chatMembers)) {
+                    if (!trustedChatsArray.includes(memberId)) {
+                        trustedChatsArray.push(memberId);
+                        sendMessage(myId, `Чат добавлен в доверенные: ${memberId}`);
+                    }
+                }
             } else {
                 return sendMessage(myId, `Чат уже добавлен в доверенные: ${replyMsg.text}`);
             }
