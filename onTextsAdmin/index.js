@@ -7,6 +7,7 @@ let showCreatorCommands = require('./showCreatorCommands');
 let settings = require('./settings');
 let sendFile = require('./sendFile');
 let getFileAndBackup = require('./getFileAndBackup');
+let hideDeadSouls = require('./hideDeadSouls');
 
 module.exports = [
     ...game,
@@ -17,5 +18,6 @@ module.exports = [
     ...showCreatorCommands,
     ...settings,
     ...sendFile,
-    ...getFileAndBackup
+    ...getFileAndBackup,
+    ...hideDeadSouls
 ];
