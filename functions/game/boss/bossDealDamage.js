@@ -5,7 +5,7 @@ module.exports = function (members, boss) {
         throw new Error("Босс не найден!");
     }
 
-    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && member.game.gameClass.stats.hp > 0);
+    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided && member.game.gameClass.stats.hp > 0);
 
     if (!filteredMembers.length) {
         boss.skill = {};

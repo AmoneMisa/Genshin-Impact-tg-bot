@@ -1,5 +1,5 @@
 module.exports = function (session) {
-    if (session.game.gameClass.boss) {
+    if (session.game.gameClass.hasOwnProperty("boss")) {
         if (session.game.gameClass.boss.hasOwnProperty("isDead")) {
             delete session.game.gameClass.boss.isDead;
         }

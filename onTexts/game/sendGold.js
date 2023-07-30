@@ -28,7 +28,7 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, (msg, session) => {
     deleteMessage(msg.chat.id, msg.message_id);
     let usersList = getMembers(msg.chat.id);
 
-    usersList = Object.values(usersList).filter(item => !item.userChatData.user.is_bot && (item.userChatData.user.id !== msg.from.id));
+    usersList = Object.values(usersList).filter(item => !item.userChatData.user.is_bot && (item.userChatData.user.id !== msg.from.id) && !item.isHided);
 
     if (!usersList.length) {
         return sendMessage(msg.chat.id, `Нет никого, кому ты мог бы перевести золото.`, {

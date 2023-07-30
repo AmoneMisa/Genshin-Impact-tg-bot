@@ -18,7 +18,7 @@ module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async funct
     });
 }], [/^update_characteristics\.([\-0-9]+)\.all$/, async function (session, callback, [, chatId]) {
     let targetMembers = getMembers(chatId);
-    let filteredMembers = Object.values(targetMembers).filter(member => !member.userChatData.user.is_bot);
+    let filteredMembers = Object.values(targetMembers).filter(member => !member.userChatData.user.is_bot && !member.isHided);
 
     for (let member of filteredMembers) {
         updatePlayerStats(member);
