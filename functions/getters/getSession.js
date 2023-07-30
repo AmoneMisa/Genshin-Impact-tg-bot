@@ -13,19 +13,12 @@ module.exports = async function (chatId, userId) {
 
     if (!members[userId]) {
         members[userId] = {
-            userChatData: getUpdatedData,
             isHided: false,
             user: {...userTemplate}
         };
     }
 
-    if (members[userId].userChatData.user.username !== getUpdatedData.user.username) {
-        members[userId].userChatData.user.username = getUpdatedData.user.username;
-    }
-
-    if (members[userId].userChatData.user.first_name !== getUpdatedData.user.first_name) {
-        members[userId].userChatData.user.first_name = getUpdatedData.user.first_name;
-    }
+    members[userId].userChatData = Object.assign({}, getUpdatedData.user.username);
 
     if (!members[userId].game) {
         members[userId].game = {

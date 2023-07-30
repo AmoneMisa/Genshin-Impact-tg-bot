@@ -38,12 +38,14 @@ module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
                 updTrustedChats();
                 sendMessage(myId, `Чат добавлен в доверенные: ${replyMsg.text}`);
             } else if (!trustedChatsContainsAllMembers) {
+                let ids = "";
                 for (let memberId of Object.keys(chatMembers)) {
                     if (!trustedChatsArray.includes(memberId)) {
                         trustedChatsArray.push(memberId);
-                        sendMessage(myId, `Чат добавлен в доверенные: ${memberId}`);
+                        ids += `${memberId}; `;
                     }
                 }
+                sendMessage(myId, `Чаты добавлены в доверенные: ${ids}`);
             } else {
                 return sendMessage(myId, `Чат уже добавлен в доверенные: ${replyMsg.text}`);
             }
