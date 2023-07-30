@@ -1,19 +1,25 @@
 const {sessions} = require("../../data");
 const bot = require("../../bot");
+const debugMessage = require("../tgBotFunctions/debugMessage");
 
 module.exports = async function () {
     for (let [chatId, chatSession] of Object.entries(sessions)) {
         for (let [userId, session] of Object.entries(chatSession.members)) {
-            let chatMember = await bot.getChatMember(chatId, parseInt(userId));
-            if (!chatMember) {
-                session.isHided = true;
-            }
+            bot.getChatMember(chatId, parseInt(userId)).then(chatMember => {
 
-            if (chatMember && session.isHided) {
-                session.isHided = false;
-            }
+                debugMessage(JSON.stringify(chatMember));
 
-            session.isHided = false;
+                if (!chatMember) {
+                    session.isHided = true;
+                    return;
+                }
+
+                if (chatMember && session.isHided) {
+                    session.isHided = false;
+                } else {
+                    session.isHided = false;
+                }
+            });
         }
     }
 }
