@@ -7,7 +7,7 @@ module.exports = function (chatId, name, includeHimself = true, callerId) {
     let i = 0;
     let members = getMembers(chatId);
     let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided);
-    debugMessage(JSON.stringify(filteredMembers));
+
     for (let member of filteredMembers) {
         if (!includeHimself && member.userChatData.user.id === callerId) {
             continue;

@@ -31,8 +31,7 @@ module.exports = [[/^add_crystals\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
     }).catch(e => {
         console.error(e);
     });
-}], [/^add_crystals\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
-    let [, chatId, page] = callback.data.match(/^add_crystals\.([\-0-9]+)_([^.]+)$/);
+}], [/^add_crystals\.([\-0-9]+)_([^.]+)$/, function (session, callback, [, chatId, page]) {
     page = parseInt(page);
 
     let buttons = buildKeyboard(chatId, `add_crystals.${chatId}`);

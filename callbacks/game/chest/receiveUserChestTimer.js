@@ -13,8 +13,7 @@ module.exports = [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function
     targetSession.chestButtons = [];
     targetSession.timerOpenChestCallback = 0;
     return sendMessage(callback.message.chat.id, `Таймер сундука для ${getUserName(targetSession, "name")} обнулён.`);
-}], [/^receive_chest_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
-    let [, chatId, page] = callback.data.match(/^receive_chest_timer\.([\-0-9]+)_([^.]+)$/);
+}], [/^receive_chest_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback, [, chatId, page]) {
     page = parseInt(page);
 
     let buttons = buildKeyboard(chatId, `receive_chest_timer.${chatId}`);
