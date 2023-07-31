@@ -1,5 +1,6 @@
 const getUserName = require('../../../functions/getters/getUserName');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
+const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
+const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 
 const genderTranslateMap = {
     male: "Мужской",
@@ -7,16 +8,16 @@ const genderTranslateMap = {
 }
 
 module.exports = [[/^gender\.([^.]+)$/, async function (session, callback, [, gender]) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
 
     session.gender = gender;
 
-    return editMessageText(`@${getUserName(session, "nickname")}, твой пол: ${genderTranslateMap[gender]}`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, твой пол: ${genderTranslateMap[gender]}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true
-    });
+    }, callback.message.photo).then(msg => deleteMessageTimeout(msg.chat.id, msg.message_id, 5 * 1000));
 }]];
 

@@ -1,4 +1,5 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
@@ -6,6 +7,7 @@ const buildKeyboard = require("../../../functions/keyboard/buildKeyboard");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getTime = require("../../../functions/getters/getTime");
 const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
+const getFile = require("../../../functions/getters/getFile");
 
 module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
@@ -25,10 +27,29 @@ module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
         return sendMessageWithDelete(msg.chat.id, `@${getUserName(session, "nickname")}, у тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {}, 15 * 1000);
     }
 
-    await sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери, у кого хочешь украсть ресурсы.`, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: controlButtons("steal_resources", buttons, 1)
-        }
-    });
+    const file = getFile("images/misc", "stealResources");
+
+    let text = "";
+    if (buttons.length) {
+        text = `@${getUserName(session, "nickname")}, выбери, у кого хочешь украсть ресурсы.`;
+    } else {
+        text = `@${getUserName(session, "nickname")}, тебе не у кого красть ресурсы.`
+    }
+
+    if (file) {
+        await sendPhoto(msg.chat.id, file, {
+            caption: text,
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: controlButtons("steal_resources", buttons, 1)
+            }
+        });
+    } else {
+        await sendMessage(msg.chat.id, text, {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: controlButtons("steal_resources", buttons, 1)
+            }
+        });
+    }
 }]];

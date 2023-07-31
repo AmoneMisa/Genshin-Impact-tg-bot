@@ -8,7 +8,8 @@ const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const inventoryTranslate = require("../../../dictionaries/inventory");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
+const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
+const getFile = require("../../../functions/getters/getFile");
 
 function buildInventoryKeyboard(inventory, userId) {
     let buttons = [];
@@ -82,13 +83,12 @@ function getItemData(item, items) {
     throw new Error(`Не найдено такой категории: ${items}`);
 }
 
-module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (session, callback) {
+module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (session, callback, [, userId]) {
     // Меню инвентаря
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
     const isBack = callback.data.includes("back");
-    const [, userId] = callback.data.match(/^player\.([\-0-9]+)\.inventory$/);
     let foundedSession = await getSession(userId, callback.from.id);
     let inventory = foundedSession.game.inventory;
     let replyMarkup = {};
@@ -109,24 +109,33 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
     }
 
     if (isBack) {
-        return editMessageText(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
+        return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             reply_markup: replyMarkup
-        });
+        }, callback.message.photo);
     }
 
-    return sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
-        disable_notification: true,
-        reply_markup: replyMarkup
-    });
-}], [/player\.[\-0-9]+\.inventory_[^.]+$/, async function (session, callback) {
-    let [, userId, page] = callback.data.match(/player\.[\-0-9]+\.inventory_([^.]+)$/);
+    const file = getFile("images/misc", "inventory");
+
+    if (file) {
+        await sendPhoto(callback.message.chat.id, file, {
+            caption: `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`,
+            disable_notification: true,
+            reply_markup: replyMarkup
+        });
+    } else {
+        await sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
+            disable_notification: true,
+            reply_markup: replyMarkup
+        });
+    }
+}], [/player\.[\-0-9]+\.inventory_([^.]+)$/, async function (session, callback, [, userId, page]) {
     page = parseInt(page);
     let foundedSession = await getSession(userId, callback.from.id);
     let inventory = foundedSession.game.inventory;
 
-    return editMessageText(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
+    return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -135,14 +144,13 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
                 ...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedSession.game.inventory, userId), page)
             ]
         }
-    });
-}], [/player\.[\-0-9]+\.inventory\.[^.]+$/, async function (session, callback) {
+    }, callback.message.photo);
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)$/, async function (session, callback, [, userId, items]) {
     // Меню категории инвентаря
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
 
-    const [, userId, items] = callback.data.match(/^player\.([\-0-9]+)\.inventory\.([^.]+)$/);
     let foundedSession = await getSession(userId, callback.from.id);
     let foundedItems = foundedSession.game.inventory[items].filter(item => item.count > 0);
 
@@ -150,7 +158,7 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
         return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодейстовать.`, {}, 10 * 1000);
     }
 
-    return editMessageText(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems)}`, {
+    return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -162,14 +170,13 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
                 text: "Закрыть", callback_data: "close"
             }]]
         }
-    });
-}], [/player\.[\-0-9]+\.inventory\.[^.]+\.[^.]+$/, async function (session, callback) {
+    }, callback.message.photo);
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)$/, async function (session, callback, [, userId, items, item]) {
     // Меню предмета инвентаря
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
 
-    const [, userId, items, item] = callback.data.match(/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)$/);
     let foundedSession = await getSession(userId, callback.from.id);
     let itemData = getItemData(item, items);
     let foundedItem;
@@ -184,7 +191,7 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
     }
 
     let itemName = foundedItem.bottleType ? `${foundedItem.bottleType}-${foundedItem.type}-${foundedItem.power}` : foundedItem.type;
-    return editMessageText(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItem, true)}`, {
+    return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItem, true)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -199,14 +206,13 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
                 text: "Закрыть", callback_data: "close"
             }]]
         }
-    });
-}], [/player\.[\-0-9]+\.inventory\.[^.]+\.[^.]+\.0+$/, async function (session, callback) {
+    }, callback.message.photo);
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.0$/, async function (session, callback, [, userId, items, item]) {
     // Меню подтверждения действия для предмета инвентаря
     if (!callback.message.text.includes(getUserName(session, "nickname"))) {
         return;
     }
 
-    const [, userId, items, item] = callback.data.match(/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.0$/);
     let foundedSession = await getSession(userId, callback.from.id);
     let itemData = getItemData(item, items);
     let foundedItem;
@@ -224,7 +230,7 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
     if (item.includes("potion-hp") || item.includes("elixir-hp")) {
         let healResult = useHealPotion(foundedSession, foundedItem);
         if (healResult === 1) {
-            return editMessageText(`@${getUserName(session, "nickname")}, ты мёртв. Ты восстановишь ${getEmoji("hp")} хп после нового призыва босса.`, {
+            return editMessageCaption(`@${getUserName(session, "nickname")}, ты мёртв. Ты восстановишь ${getEmoji("hp")} хп после нового призыва босса.`, {
                 chat_id: callback.message.chat.id,
                 message_id: callback.message.message_id,
                 disable_notification: true,
@@ -235,11 +241,11 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
                         callback_data: `player.${userId}.inventory`
                     }, {text: "Закрыть", callback_data: "close"}]]
                 }
-            });
+            }, callback.message.photo);
         }
 
         if (healResult === 2) {
-            return editMessageText(`@${getUserName(session, "nickname")}, ты не ранен, нет нужды восстанавливать ${getEmoji("hp")} хп.`, {
+            return editMessageCaption(`@${getUserName(session, "nickname")}, ты не ранен, нет нужды восстанавливать ${getEmoji("hp")} хп.`, {
                 chat_id: callback.message.chat.id,
                 message_id: callback.message.message_id,
                 disable_notification: true,
@@ -250,23 +256,26 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
                         callback_data: `player.${userId}.inventory`
                     }, {text: "Закрыть", callback_data: "close"}]]
                 }
-            });
+            }, callback.message.photo);
         }
 
         if (healResult === 0) {
-            sendMessageWithDelete(userId, `@${getUserName(session, "nickname")}, ты восстановил своё ${getEmoji("hp")} хп на ${foundedItem.power}.`, {
+            await editMessageCaption(`@${getUserName(session, "nickname")}, ты восстановил своё ${getEmoji("hp")} хп на ${foundedItem.power}.`, {
                 chat_id: callback.message.chat.id,
                 message_id: callback.message.message_id,
                 disable_notification: true,
                 reply_markup: {
                     selective: true,
-                    inline_keyboard: [[{text: "Закрыть", callback_data: "close"}]]
+                    inline_keyboard: [[{
+                        text: "Назад",
+                        callback_data: `player.${userId}.inventory`
+                    }, {text: "Закрыть", callback_data: "close"}]]
                 }
-            }, {}, 15 * 1000);
+            }, callback.message.photo);
         }
     }
 
-    return editMessageText(`@${getUserName(foundedSession, "nickname")}, ты использовал предмет: ${foundedItem.name}!`, {
+    return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ты использовал предмет: ${foundedItem.name}!`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -277,5 +286,5 @@ module.exports = [[/player\.[\-0-9]+\.inventory(?:\.back)?$/, async function (se
                 callback_data: `player.${userId}.inventory`
             }, {text: "Закрыть", callback_data: "close"}]]
         }
-    });
+    }, callback.message.photo);
 }]];

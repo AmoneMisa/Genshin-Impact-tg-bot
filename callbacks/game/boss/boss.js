@@ -83,6 +83,7 @@ module.exports = [["boss", async function (session, callback) {
     await deleteMessage(chatId, messageId);
 
     let imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
+
     if (imagePath) {
         return sendPhoto(callback.message.chat.id, imagePath, {
             caption: `${summonBossMessage(chatId, boss, false)}`,

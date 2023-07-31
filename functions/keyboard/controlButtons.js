@@ -1,6 +1,13 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
 
 module.exports = function (name, buttonRows, page, homeName) {
+    if (!buttonRows.length) {
+        return [[{
+            text: buttonsDictionary["ru"].close,
+            callback_data: "close"
+        }]];
+    }
+
     let pageSize = 3;
     let countPages = Math.ceil(buttonRows.length / pageSize);
     let currentPage = page || 1;

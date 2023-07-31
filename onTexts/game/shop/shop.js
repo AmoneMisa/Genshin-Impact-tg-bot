@@ -2,6 +2,7 @@ const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage")
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const getUserName = require("../../../functions/getters/getUserName");
+const getFile = require("../../../functions/getters/getFile");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 const fs = require("fs");
 
@@ -24,12 +25,10 @@ function buildKeyboard() {
 
 module.exports = [[/(?:^|\s)\/shop\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    const imagePath = "images/misc";
-    const files = fs.readdirSync(imagePath);
-    const file = files.find(_file => _file.match(/^shop\.(?:jpg|gif|png)$/));
+    const file = getFile( "images/misc", "shop");
 
-    if (imagePath) {
-        await sendPhoto(msg.chat.id, `${imagePath}/${file}`, {
+    if (file) {
+        await sendPhoto(msg.chat.id, file, {
             caption: `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`,
             disable_notification: true,
             reply_markup: {

@@ -10,6 +10,7 @@ const getBuildList = require("../../../functions/game/builds/getBuildList");
 const getBuildListFromTemplate = require("../../../functions/game/builds/getBuildFromTemplate");
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getSession = require("../../../functions/getters/getSession");
+const getFile = require("../../../functions/getters/getFile");
 
 function getUpgradeButtonText(lvl) {
     if (lvl === 0) {
@@ -18,13 +19,13 @@ function getUpgradeButtonText(lvl) {
     return "Улучшить";
 }
 
-module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callback) {
+module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, callback, [, chatId]) {
     let id;
-    let [ , chatId] = callback.data.match(/^player\.([\-0-9]+)\.builds/);
     let foundedSession = await getSession(chatId, callback.from.id);
     let userId = foundedSession.userChatData.user.id;
     let buildsList = await getBuildList(chatId, userId);
     let defaultBuilds = getBuildListFromTemplate();
+
     for (let [key, build] of Object.entries(defaultBuilds)) {
         if (buildsList[key]) {
             continue;
@@ -54,19 +55,26 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
         callback_data: "close"
     }]);
 
-    sendMessage(userId, `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: buttons
-        }
-    }).then(message => id = message.message_id);
-}], [/^builds\.[\-0-9]+\.palace(?:\.back)?$/, async function (session, callback) {
-    const isBack = callback.data.includes("back");
-    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.palace(?:\.back)?$/);
+    const file = getFile("images/misc", "builds");
 
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
+    if (file) {
+        await sendPhoto(userId, file, {
+            caption: `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`,
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: buttons
+            }
+        }).then(message => id = message.message_id);
+    } else {
+        await sendMessage(userId, `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`, {
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: buttons
+            }
+        }).then(message => id = message.message_id);
     }
+}], [/^builds\.([\-0-9]+)\.palace(?:\.back)?$/, async function (session, callback, [, chatId]) {
+    const isBack = callback.data.includes("back");
     let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!foundedSession.game.hasOwnProperty('builds')) {
@@ -121,13 +129,13 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
             })
         }
     }
-}], [/^builds\.[\-0-9]+\.goldMine(?:\.back)?$/, async function (session, callback) {
+}], [/^builds\.([\-0-9]+)\.goldMine(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
-    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.goldMine(?:\.back)?$/);
 
     if (getUserName(session, "nickname") !== callback.from.username) {
         return;
     }
+
     let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!foundedSession.game.hasOwnProperty('builds')) {
@@ -175,13 +183,9 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
             })
         }
     }
-}], [/^builds\.[\-0-9]+\.crystalLake(?:\.back)?$/, async function (session, callback) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
-    }
-
+}], [/^builds\.([\-0-9]+)\.crystalLake(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
-    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.crystalLake(?:\.back)?$/);
+
     if (!session.game.hasOwnProperty('builds')) {
         return;
     }
@@ -213,6 +217,7 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
         }, callback.message.photo);
     } else {
         let imagePath = getLocalImageByPath(build.currentLvl, 'builds/crystalLake');
+
         if (imagePath) {
             await sendPhoto(callback.message.chat.id, imagePath, {
                 caption: getCaption('crystalLake', "home", build), reply_markup: {
@@ -227,12 +232,8 @@ module.exports = [[/^player\.[\-0-9]+\.builds$/, async function (session, callba
             })
         }
     }
-}], [/^builds\.[\-0-9]+\.ironDeposit(?:\.back)?$/, async function (session, callback) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
-    }
+}], [/^builds\.[\-0-9]+\.ironDeposit(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
-    let [ , chatId] = callback.data.match(/^builds\.([\-0-9]+)\.ironDeposit(?:\.back)?$/);
     let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!foundedSession.game.hasOwnProperty('builds')) {

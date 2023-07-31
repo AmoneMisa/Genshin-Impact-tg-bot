@@ -1,7 +1,7 @@
 const controlButtons = require('../../../functions/keyboard/controlButtons');
 const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
 const getUserName = require('../../../functions/getters/getUserName');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
+const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getSession = require('../../../functions/getters/getSession');
 const stealResources = require('../../../functions/game/builds/stealResources');
@@ -39,18 +39,18 @@ ${getEmoji("crystals")} ${stealResult.crystalsToSteal} кристаллов.
         session.game.chanceToSteal--;
     }
 
-    editMessageText(`@${getUserName(session, "nickname")}, твоя попытка ограбить @${getUserName(targetSession, "nickname")}: ${message}`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, твоя попытка ограбить @${getUserName(targetSession, "nickname")}: ${message}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true
     }).catch(e => {
         console.error(e);
     });
-}], [/^steal_resources_([^.]+)$/, function (session, callback, [,  page]) {
+}], [/^steal_resources_([^.]+)$/, async function (session, callback, [, page]) {
     page = parseInt(page);
     let buttons = buildKeyboard(callback.message.chat.id, "steal_resources");
 
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери, у кого хочешь попытаться украсть ресурсы.`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери, у кого хочешь попытаться украсть ресурсы.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

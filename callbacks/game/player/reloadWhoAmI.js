@@ -1,4 +1,3 @@
-const getUserName = require('../../../functions/getters/getUserName');
 const getSession = require('../../../functions/getters/getSession');
 const userGetStats = require("../../../functions/game/player/userGetStats");
 const buttonsDictionary = require("../../../dictionaries/buttons");
@@ -12,7 +11,7 @@ module.exports = [[/^player\.([\-0-9]+)\.reload$/, async function (session, call
         return;
     }
 
-    return editMessageCaption(newMessage, {
+    await editMessageCaption(newMessage, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -34,6 +33,6 @@ module.exports = [[/^player\.([\-0-9]+)\.reload$/, async function (session, call
                 callback_data: "close"
             }]]
         }
-    }, callback.message.photo);
+    }, callback.message.photo).catch(e => console.error(e));
 }]];
 

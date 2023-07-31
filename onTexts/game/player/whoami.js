@@ -3,17 +3,17 @@ const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const userGetStats = require('../../../functions/game/player/userGetStats');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
+const getFile = require("../../../functions/getters/getFile");
 
 module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let className = session.game.gameClass.stats.name || "noClass";
     let gender = session.gender || "male";
 
-    let imagePath = getLocalImageByPath(session.game.stats.lvl, `classes/${className}/${gender}`);
+    let file = getFile(`images/classes/${className}/${gender}`, className);
 
-    if (imagePath) {
-        return sendPhoto(msg.from.id, imagePath, {
+    if (file) {
+        return sendPhoto(msg.from.id, file, {
             caption: `${userGetStats(session)}`,
             disable_notification: true,
             reply_markup: {

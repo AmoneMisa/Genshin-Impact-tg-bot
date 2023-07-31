@@ -5,13 +5,11 @@ const controlButtons = require('../../../functions/keyboard/controlButtons');
 const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
 const getUserName = require('../../../functions/getters/getUserName');
 
-module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
-        const [, chatId, userId] = callback.data.match(/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/);
-        let targetSession = await getSession(chatId, userId);
-        targetSession.timerSwordCallback = 0;
-        return sendMessage(callback.message.chat.id, `Таймер меча для ${getUserName(targetSession, "name")} обнулён.`);
-}], [/^receive_sword_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
-    let [, chatId, page] = callback.data.match(/^receive_sword_timer\.([\-0-9]+)_([^.]+)$/);
+module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
+    let targetSession = await getSession(chatId, userId);
+    targetSession.timerSwordCallback = 0;
+    return sendMessage(callback.message.chat.id, `Таймер меча для ${getUserName(targetSession, "name")} обнулён.`);
+}], [/^receive_sword_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback, [, chatId, page]) {
     page = parseInt(page);
 
     let buttons = buildKeyboard(chatId, `receive_sword_timer.${chatId}`);

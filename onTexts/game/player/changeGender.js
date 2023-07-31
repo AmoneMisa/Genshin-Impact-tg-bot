@@ -1,11 +1,16 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
+const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
 const buttonsDictionary = require('../../../dictionaries/buttons');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const getUserName = require("../../../functions/getters/getUserName");
+const getFile = require("../../../functions/getters/getFile");
 
 module.exports = [[/(?:^|\s)\/select_gender\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    await sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери свой пол`, {
+
+    const file = getFile("images/misc", "gender");
+
+    await sendPhoto(msg.chat.id, file, {
+        caption: `@${getUserName(session, "nickname")}, выбери свой пол`,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
