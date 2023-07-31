@@ -4,6 +4,7 @@ const getEmoji = require("../../../functions/getters/getEmoji");
 const getInventoryMessage = require("../../../functions/game/player/getInventoryMessage");
 const useHealPotion = require("../../../functions/game/player/useHealPotion");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const inventoryTranslate = require("../../../dictionaries/inventory");
 const controlButtons = require("../../../functions/keyboard/controlButtons");

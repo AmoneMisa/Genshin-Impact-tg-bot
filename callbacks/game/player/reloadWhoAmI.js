@@ -1,15 +1,10 @@
 const getUserName = require('../../../functions/getters/getUserName');
 const getSession = require('../../../functions/getters/getSession');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 const userGetStats = require("../../../functions/game/player/userGetStats");
 const buttonsDictionary = require("../../../dictionaries/buttons");
+const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
 
-module.exports = [[/^player\.[\-0-9]+\.reload$/, async function (session, callback) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
-        return;
-    }
-
-    const [, userId] = callback.data.match(/^player\.([\-0-9]+)\.reload/);
+module.exports = [[/^player\.([\-0-9]+)\.reload$/, async function (session, callback, [, userId]) {
     const foundedSession = await getSession(userId, callback.from.id);
     let newMessage = userGetStats(foundedSession);
 
@@ -17,7 +12,7 @@ module.exports = [[/^player\.[\-0-9]+\.reload$/, async function (session, callba
         return;
     }
 
-    return editMessageText(newMessage, {
+    return editMessageCaption(newMessage, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -39,7 +34,6 @@ module.exports = [[/^player\.[\-0-9]+\.reload$/, async function (session, callba
                 callback_data: "close"
             }]]
         }
-    });
-
+    }, callback.message.photo);
 }]];
 
