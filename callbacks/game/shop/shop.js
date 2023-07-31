@@ -1,4 +1,4 @@
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
+const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
 const shopTemplate = require('../../../templates/shopTemplate');
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getUserName = require("../../../functions/getters/getUserName");
@@ -47,19 +47,19 @@ module.exports = [["shop", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
 
-    await editMessageText(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: controlButtons("shop", buildCategoryKeyboard(), 1)
         }
-    });
+    }, callback.message.photo);
 }], [/^shop_([^.]+)$/, async function (session, callback, [ , page]) {
     page = parseInt(page);
     let buttons = buildCategoryKeyboard();
 
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -68,23 +68,22 @@ module.exports = [["shop", async function (session, callback) {
                 ...controlButtons("shop", buttons, page)
             ]
         }
-    });
+    }, callback.message.photo);
 }], [/^shop\.([^._]+)$/, async function (session, callback, [ , category]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    console.log("туть")
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери предметы для покупки в магазине.`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери предметы для покупки в магазине.`, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: controlButtons(`shop.${category}`, buildKeyboard(category, true), 1, "shop")
         }
-    });
+    }, callback.message.photo);
 }], [/^shop\.([^.0-9]+)_(\d+)$/, async function (session, callback, [, category, page]) {
     page = parseInt(page);
-    console.log(page);
-    return editMessageText(`@${getUserName(session, "nickname")}, выбери предмет для покупки в магазине.`, {
+
+    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери предмет для покупки в магазине.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -93,7 +92,7 @@ module.exports = [["shop", async function (session, callback) {
                 ...controlButtons(`shop.${category}`, buildKeyboard(category), page, "shop")
             ]
         }
-    });
+    }, callback.message.photo);
 }], [/^shop\.([^.]+)\.([^.]+)\.buy$/, async function (session, callback, [, category, itemName]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
@@ -105,7 +104,7 @@ module.exports = [["shop", async function (session, callback) {
         return sendMessageWithDelete(chatId, `"@${getUserName(session, "nickname")},недостаточно золота."`, {});
     }
 
-    return editMessageText(`@${getUserName(session, "nickname")}, ты уверен, что хочешь купить ${item.name}?.\nСтоимость: ${item.cost} золота.`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, ты уверен, что хочешь купить ${item.name}?.\nСтоимость: ${item.cost} золота.`, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
@@ -121,7 +120,7 @@ module.exports = [["shop", async function (session, callback) {
                 text: "Закрыть", callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], [/^shop\.[^.]+\.([^.]+)\.buy\.0$/, async function (session, callback, [, itemName]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
@@ -134,12 +133,12 @@ module.exports = [["shop", async function (session, callback) {
         return sendMessageWithDelete(chatId, sellItem, {}, 10 * 1000);
     }
 
-    return editMessageText(`@${getUserName(session, "nickname")}, поздравляем с покупкой ${item.name}!`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, поздравляем с покупкой ${item.name}!`, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: controlButtons("shop", buildCategoryKeyboard(), 1)
         }
-    });
+    }, callback.message.photo);
 }]];
