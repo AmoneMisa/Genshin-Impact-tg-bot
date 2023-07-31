@@ -29,6 +29,7 @@ const formsCommands = [
 const playerCommands = [
     {command: "whoami", description: "Моя статистика и меню персонажа"},
     {command: "steal_resources", description: "Украсть ресурсы у чужого персонажа"},
+    {command: "select_gender", description: "Указать свой пол"},
     {command: "exchange", description: "Обменник кристаллов"},
 ]
 

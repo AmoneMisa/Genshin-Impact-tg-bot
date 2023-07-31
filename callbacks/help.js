@@ -452,4 +452,32 @@ module.exports = [["help", function (session, callback) {
             }]]
         }
     });
+}], ["help_minigames_steal_resources", function (session, callback) {
+    return editMessageText(`${dictionary.ru.help.stealResources}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_select_gender", function (session, callback) {
+    return editMessageText(`${dictionary.ru.help.selectGender}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
 }]];
