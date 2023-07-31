@@ -12,6 +12,10 @@ module.exports = function (currentUser, targetUser) {
         targetUser.game.stealImmuneTimer = 0;
     }
 
+    if (!canSteal(targetUser)) {
+        return {resultCode: 1};
+    }
+
     if (remainHp / maxHp > 0.6) {
         return {resultCode: 2, remainHp};
     }

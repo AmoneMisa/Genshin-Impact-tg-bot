@@ -20,7 +20,7 @@ module.exports = [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (s
         let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
             bot.removeReplyListener(id);
             let chanceToSteal = parseInt(replyMsg.text);
-            targetsession.game.chanceToSteal += chanceToSteal;
+            targetSession.game.chanceToSteal += chanceToSteal;
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
