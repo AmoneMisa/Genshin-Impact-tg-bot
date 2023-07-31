@@ -69,28 +69,28 @@ module.exports = [["shop", async function (session, callback) {
             ]
         }
     });
-}], [/^shop\.([^.]+)$/, async function (session, callback, [ , category]) {
+}], [/^shop\.([^._]+)$/, async function (session, callback, [ , category]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-
+    console.log("туть")
     return editMessageText(`@${getUserName(session, "nickname")}, выбери предметы для покупки в магазине.`, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: controlButtons(`shop.${category}`, buildKeyboard(category, true), 1, true)
+            inline_keyboard: controlButtons(`shop.${category}`, buildKeyboard(category, true), 1, "shop")
         }
     });
 }], [/^shop\.([^.0-9]+)_(\d+)$/, async function (session, callback, [, category, page]) {
     page = parseInt(page);
-
+    console.log(page);
     return editMessageText(`@${getUserName(session, "nickname")}, выбери предмет для покупки в магазине.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons(`shop.${category}`, buildKeyboard(category), page)
+                ...controlButtons(`shop.${category}`, buildKeyboard(category), page, "shop")
             ]
         }
     });

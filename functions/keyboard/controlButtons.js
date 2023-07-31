@@ -1,6 +1,6 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
 
-module.exports = function (name, buttonRows, page, isHasHome) {
+module.exports = function (name, buttonRows, page, homeName) {
     let pageSize = 3;
     let countPages = Math.ceil(buttonRows.length / pageSize);
     let currentPage = page || 1;
@@ -30,10 +30,10 @@ module.exports = function (name, buttonRows, page, isHasHome) {
         });
     }
 
-    if (isHasHome) {
+    if (homeName) {
         controlButtons.push({
            text: "Главная",
-           callback_data: name
+           callback_data: homeName
         });
     }
 
