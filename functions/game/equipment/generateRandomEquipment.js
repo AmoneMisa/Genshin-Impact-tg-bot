@@ -1,19 +1,53 @@
 const equipmentTemplate = require("../../../templates/equipmentTemplate");
 const equipmentBonusStatsTemplate = require("../../../templates/equipmentBonusStatsTemplate");
 const getRandom = require("../../getters/getRandom");
+const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
 const getValueByChance = require("../../getters/getValueByChance");
 const getNewChancesArrayByValue = require("../../getters/getNewChancesArrayByValue");
+const equipmentDictionary = require("../../../dictionaries/equipment");
 
-// Сделать шаблон для заполнения эквипа
+module.exports = function (gameClass, currentLvl, grade) {
+    let buildItem = getItemData(gameClass, currentLvl, grade);
+    let cost = getItemCost(buildItem);
 
-module.exports = function (gameClass, currentLvl) {
-    const grade = getItemGrade(currentLvl);
+    return {
+        name: equipmentNameGenerator(buildItem, cost),
+        grade: buildItem.grade.name,
+        quality: {current: buildItem.quality, max: buildItem.maxQuality},
+        persistence: {current: buildItem.persistence, max: buildItem.maxPersistence},
+        rarity: buildItem.rarity.name,
+        type: {
+            mainType: buildItem.type.mainType.name,
+            type: buildItem.type.type,
+            kind: buildItem.type.kind
+        },
+        stats: buildItem.stats,
+        cost: cost
+    }
+}
+
+function equipmentNameGenerator(item, cost) {
+    let what;
+
+    if (item.type.mainType.name === "armor") {
+        what = item.type.type.translatedName;
+    } else {
+        what = item.type.kind.translatedName;
+    }
+
+    let which = equipmentDictionary.whichList[Math.floor(Math.random() * equipmentDictionary.whichList.length)];
+    let whose = equipmentDictionary.whoseList[Math.floor(Math.random() * equipmentDictionary.whoseList.length)];
+    return `(${item.grade.name} - Grade, ${item.rarity.name}) ${what} ${which} ${whose} - ${cost} золота`;
+}
+
+function getItemData(gameClass, currentLvl, calledGrade) {
+    const grade = getItemGrade(currentLvl, calledGrade);
+    console.log(grade)
+    const type = getItemType();
     const {quality, maxQuality} = getItemQuality(grade);
     const {persistence, maxPersistence} = getItemPersistence(grade);
-    const rarity = getItemRarity(grade);
-    const type = getItemType();
     const stats = getItemAdditionalStats(type, grade);
-    const cost = getItemCost(grade, rarity, stats);
+    const rarity = getItemRarity(stats.length);
 
     return {
         grade,
@@ -23,16 +57,23 @@ module.exports = function (gameClass, currentLvl) {
         maxPersistence,
         rarity,
         type,
-        stats,
-        cost
+        stats
     };
 }
 
 // Функция для получения уровня предмета
-function getItemGrade(currentLvl) {
+function getItemGrade(currentLvl, calledGrade) {
+    console.log(calledGrade, "calledGrade")
     let chanceForUpgradedGrade = 0.05;
     let chance = Math.random();
-    let currentGrade = equipmentTemplate.grades.find(grade => grade.lvl.from <= currentLvl && currentLvl <= grade.lvl.to);
+    let currentGrade;
+
+    if (calledGrade) {
+        currentGrade = equipmentTemplate.grades.find(grade => grade.name.toLowerCase() === calledGrade.toLowerCase());
+    } else {
+        currentGrade = equipmentTemplate.grades.find(grade => grade.lvl.from <= currentLvl && currentLvl <= grade.lvl.to);
+    }
+
     let currentGradeIndex = equipmentTemplate.grades.indexOf(currentGrade);
 
     if (chanceForUpgradedGrade >= chance) {
@@ -70,7 +111,10 @@ function getItemPersistence(itemGrade) {
 
 // Функция для получения типа предмета
 function getItemType() {
-    return equipmentTemplate.itemType[getRandom(0, equipmentTemplate.itemType.length - 1)];
+    let mainType = equipmentTemplate.itemType[getRandom(0, equipmentTemplate.itemType.length - 1)];
+    let type = mainType.hasOwnProperty("types") ? mainType.types[getRandom(0, mainType.types.length - 1)] : null;
+    let kind = mainType.hasOwnProperty("kind") ? mainType.kind[getRandom(0, mainType.kind.length - 1)] : null;
+    return {mainType, type, kind};
 }
 
 // Функции для получения характеристик предмета
@@ -100,10 +144,10 @@ function getItemAdditionalStats(itemType, itemGrade) {
 
     let chance = Math.random();
 
-    return getRandomItemStats(getValueByChance(chance, chances));
+    return getRandomItemStats(getValueByChance(chance, chances), itemGrade);
 }
 
-function getRandomItemStats(count) {
+function getRandomItemStats(count, grade) {
     const possibleStats = [
         "attack",
         "defence",
@@ -131,7 +175,8 @@ function getRandomItemStats(count) {
             continue;
         }
 
-        characteristics.push(randomStat);
+        let stat = {name: randomStat, value: setItemStatsValue(randomStat, grade)}
+        characteristics.push(stat);
     }
 
     return characteristics;
@@ -148,20 +193,20 @@ function setItemStatsValue(stat, itemGrade) {
     } else {
         chances = equipmentBonusStatsTemplate[stat];
     }
+
     let randomItem = getValueByChance(chance, chances);
-    return getRandom(randomItem.min, randomItem.max);
+    return getRandomWithoutFloor(randomItem.min, randomItem.max);
 }
 
 // Функция для получения стоимости предмета
-function getItemCost(grade) {
-    console.log(grade);
-    let classPrice = equipmentTemplate.grades.find(grade => grade.name === grade.name).cost;
+function getItemCost(item) {
+    let gradePrice = equipmentTemplate.grades.find(grade => grade.name === item.grade.name).cost;
     let rarityPrice = equipmentTemplate.rarity.find(rarity => rarity.name === item.rarity.name).cost;
     let setPrice = item.isSet ? 65000 : 0;
     let qualityPrice = 300 + (item.quality / 100) * (100000 - 300);
-    let persistencePrice = 90 + (item.maxPersistence / 100) * (8900 - 90);
+    let persistencePrice = 90 + (item.persistence / 100) * (8900 - 90);
 
-    return classPrice + rarityPrice + setPrice + qualityPrice + persistencePrice;
+    return Math.floor(gradePrice + rarityPrice + setPrice + qualityPrice + persistencePrice);
 
 //Стоимость в золоте:
 // Базовая стоимость класса снаряжения

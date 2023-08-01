@@ -23,6 +23,7 @@ module.exports = async function (chatId, userId) {
 
     if (!members[userId].game) {
         members[userId].game = {
+            gacha: {},
             dice: {
                 isStart: false,
                 bet: 0,
@@ -127,6 +128,10 @@ module.exports = async function (chatId, userId) {
 
     members[userId].game.gameClass.stats = Object.assign({}, foundedClassStats, members[userId].game.gameClass.stats);
     members[userId].game.gameClass.skills = [...foundedClassSkills];
+
+    if (members[userId].game.hasOwnProperty("gacha")) {
+        members[userId].game.gacha = {};
+    }
 
     return members[userId];
 };

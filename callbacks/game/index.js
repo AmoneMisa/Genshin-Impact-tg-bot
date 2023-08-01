@@ -16,6 +16,7 @@ const football = require('./football');
 const elements = require('./elements');
 const builds = require('./builds');
 const shop = require('./shop');
+const equipmentGacha = require('./equipmentGacha');
 
 module.exports = [
     ...bossCallback,
@@ -35,5 +36,6 @@ module.exports = [
     ...football,
     ...elements,
     ...builds,
-    ...shop
+    ...shop,
+    ...equipmentGacha
 ];

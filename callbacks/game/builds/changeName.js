@@ -68,7 +68,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (sess
                         callback_data: "close"
                     }]]
                 }
-            })
+            }, callback.message.photo)
         });
     }).catch(e => {
         console.error(e);

@@ -18,6 +18,7 @@ module.exports = [[/^gender\.([^.]+)$/, async function (session, callback, [, ge
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true
-    }, callback.message.photo).then(msg => deleteMessageTimeout(msg.chat.id, msg.message_id, 5 * 1000));
+    }, callback.message.photo)
+        .then(msg => deleteMessageTimeout(msg.chat.id, msg.message_id, 5 * 1000));
 }]];
 

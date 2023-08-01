@@ -49,7 +49,7 @@ module.exports = function (currentUser, targetUser) {
 
     targetUser.game.stealImmuneTimer = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 часа иммунитета от воровства
 
-    let gainedExp = Math.ceil(Math.max(5500, (currentUser.game.stats.currentExp * 0.01 * (targetUser.game.stats.lvl - currentUser.game.stats.lvl) + 5500)));
+    let gainedExp = Math.ceil(Math.max(9500, (currentUser.game.stats.currentExp * 0.077 * (targetUser.game.stats.lvl - currentUser.game.stats.lvl) + 9500)));
     currentUser.game.stats.currentExp += gainedExp;
     setLevel(currentUser);
 

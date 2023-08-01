@@ -5,14 +5,14 @@ module.exports = {
         cost: 100,
         lvl: {from: 1, to: 20},
         characteristics: {min: 0, max: 2},
-        quality: {min: 0, max: 0},
+        quality: {min: 0, max: 5},
         persistence: {min: 1, max: 15}
     }, {
         name: 'D',
         cost: 1200,
         lvl: {from: 21, to: 39},
         characteristics: {min: 1, max: 2},
-        quality: {min: 0, max: 0},
+        quality: {min: 0, max: 10},
         persistence: {min: 15, max: 50}
     }, {
         name: 'C',
@@ -74,77 +74,81 @@ module.exports = {
         name: "weapon",
         translatedName: 'Оружие',
         // Типы оружия
-        types: [{
-            translatedName: "Одноручный меч", name: "oneHandedSword", types: ["sword", "oneHanded"], hand: 1
-        }, {
-            translatedName: "Двуручный меч", name: "twoHandedSword", types: ["sword", "twoHanded"], hand: 2
-        }, {
-            translatedName: "Кинжал", name: "dagger", types: ["dagger", "oneHanded"], hand: 1
-        }, {
-            translatedName: "Посох", name: "mace", types: ["mace", "oneHanded"], hand: 1
-        }, {
-            translatedName: "Блант", name: "blunt", types: ["blunt", "oneHanded"], hand: 1
-        }, {
-            translatedName: "Лук", name: "bow", types: ["bow", "twoHanded"], hand: 2
-        }, {
-            translatedName: "Арбалет", name: "crossbow", types: ["crossbow", "twoHanded"], hand: 2
-        }, {
-            translatedName: "Кастеты", name: "knuckles", types: ["knuckles", "twoHanded"], hand: 2
-        }],
         kind: [{
-            sword: {
-                translatedName: "Меч",
-                penalty: null,
-                characteristics: {
-                    power: 45,
-                    randomDamage: 0.1
-                }
-            }, dagger: {
-                translatedName: "Кинжал",
-                penalty: null,
-                characteristics: {
-                    power: 30,
-                    randomDamage: 0.05
-                }
-            }, mace: {
-                translatedName: "Посох",
-                penalty: null,
-                characteristics: {
-                    power: 50,
-                    randomDamage: 0.1
-                }
-            }, bow: {
-                translatedName: "Лук",
-                penalty: null,
-                characteristics: {
-                    power: 38,
-                    randomDamage: 0.05
-                }
-            }, crossbow: {
-                translatedName: "Арбалет",
-                penalty: null,
-                characteristics: {
-                    power: 54,
-                    randomDamage: 0.1
-                }
-            }, blunt: {
-                translatedName: "Блант",
-                penalty: null,
-                characteristics: {
-                    power: 66,
-                    randomDamage: 0.2
-                }
-            }, fists: {
-                translatedName: "Кастеты",
-                penalty: null,
-                characteristics: {
-                    power: 52,
-                    randomDamage: 0.05
-                }
+            type: "sword",
+            translatedName: "Меч",
+            hand: 1,
+            penalty: null,
+            characteristics: {
+                power: 45,
+                randomDamage: 0.1
+            }
+        }, {
+            type: "bigSword",
+            translatedName: "Двуручный меч",
+            hand: 2,
+            penalty: null,
+            characteristics: {
+                power: 45,
+                randomDamage: 0.1
+            }
+        }, {
+            type: "dagger",
+            translatedName: "Кинжал",
+            hand: 1,
+            penalty: null,
+            characteristics: {
+                power: 30,
+                randomDamage: 0.05
+            }
+        }, {
+            type: "mace",
+            translatedName: "Посох",
+            hand: 1,
+            penalty: null,
+            characteristics: {
+                power: 50,
+                randomDamage: 0.1
+            }
+        }, {
+            type: "bow",
+            translatedName: "Лук",
+            hand: 2,
+            penalty: null,
+            characteristics: {
+                power: 38,
+                randomDamage: 0.05
+            }
+        }, {
+            type: "crossbow",
+            translatedName: "Арбалет",
+            hand: 2,
+            penalty: null,
+            characteristics: {
+                power: 54,
+                randomDamage: 0.1
+            }
+        }, {
+            type: "blunt",
+            translatedName: "Блант",
+            hand: 1,
+            penalty: null,
+            characteristics: {
+                power: 66,
+                randomDamage: 0.2
+            }
+        }, {
+            type: "fists",
+            translatedName: "Кастеты",
+            hand: 2,
+            penalty: null,
+            characteristics: {
+                power: 52,
+                randomDamage: 0.05
             }
         }]
     }, {
-        name: "equipment",
+        name: "armor",
         translatedName: 'Снаряжение',
         // Тип снаряжения
         types: [{
@@ -155,8 +159,6 @@ module.exports = {
             translatedName: "Поножи", name: "greaves", slots: ["down"]
         }, {
             translatedName: "Ботинки", name: "boots", slots: ["boots"]
-        }, {
-            translatedName: "Плащ", name: "cloak", slots: ["cloak"]
         }, {
             translatedName: "Верхняя часть доспеха", name: "body", slots: ["up"]
         }, {
@@ -210,7 +212,7 @@ module.exports = {
                 defence: 1.75,
                 maxMp: 0.03,
                 mpRestoreSpeed: 0.045,
-                name: "maxHp", value: 0.016
+                maxHp: 0.016
             }
         }]
     }, {
@@ -218,8 +220,8 @@ module.exports = {
         translatedName: 'Щит',
         // Виды щитов
         kind: [{
-            name: "Большой щит",
-            translatedName: "big-shield",
+            name: "big-shield",
+            translatedName: "Большой щит",
             penalty: {
                 evasion: 10,
                 accuracy: 8
@@ -254,5 +256,9 @@ module.exports = {
                 mpRestoreSpeed: 0.09
             }
         }]
-    }]
+    }
+    // , {
+    //     translatedName: "Плащ", name: "cloak", slots: ["cloak"]
+    // }
+    ]
 };

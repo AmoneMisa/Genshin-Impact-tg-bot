@@ -10,20 +10,20 @@ const getUserName = require('../../../functions/getters/getUserName');
 
 let prizes = [{
     name: "experience",
-    minAmount: 100,
-    maxAmount: 650,
+    minAmount: 4970,
+    maxAmount: 115850,
     from: 0,
     chance: 15
 }, {
     name: "gold",
-    minAmount: 100,
-    maxAmount: 1500,
+    minAmount: 750,
+    maxAmount: 18500,
     from: 15,
     chance: 20
 }, {
     name: "crystal",
-    minAmount: 10,
-    maxAmount: 150,
+    minAmount: 50,
+    maxAmount: 950,
     from: 35,
     chance: 10
 }, {
@@ -48,8 +48,7 @@ let prizes = [{
     chance: 10
 }];
 
-module.exports = [[/^chest_[0-9]+$/, function (session, callback) {
-    const [chest] = callback.data.match(/^chest_[0-9]+$/);
+module.exports = [[/^chest_([0-9]+)$/, function (session, callback, [ , chest]) {
     session.chestCounter = session.chestCounter || 0;
     session.chosenChests = session.chosenChests || [];
 
