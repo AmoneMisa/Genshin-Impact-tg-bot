@@ -43,7 +43,7 @@ ${getEmoji("crystals")} ${stealResult.crystalsToSteal} кристаллов.
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true
-    }).catch(e => {
+    }, callback.message.photo).catch(e => {
         console.error(e);
     });
 }], [/^steal_resources_([^.]+)$/, async function (session, callback, [, page]) {
@@ -59,5 +59,5 @@ ${getEmoji("crystals")} ${stealResult.crystalsToSteal} кристаллов.
                 ...controlButtons("steal_resources", buttons, page)
             ]
         }
-    });
+    }, callback.message.photo);
 }]];
