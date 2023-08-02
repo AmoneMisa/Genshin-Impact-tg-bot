@@ -77,7 +77,31 @@ module.exports = async function (chatId, userId) {
                 gold: 0,
                 crystals: 0,
                 ironOre: 0,
-                potions: lodash.cloneDeep(potionsInInventoryTemplate)
+                potions: lodash.cloneDeep(potionsInInventoryTemplate),
+                gacha: {},
+                equipment: {
+                    armor: {
+                        helmet: [],
+                        boots: [],
+                        gloves: [],
+                        fullBody: [],
+                        greaves: [],
+                        body: []
+                    },
+                    weapon: {
+                        sword: [],
+                        bigSword: [],
+                        bow: [],
+                        crossBow: [],
+                        dagger: [],
+                        mace: [],
+                        blunt: [],
+                        fists: [],
+                    },
+                    shield: {},
+                    accessories: {},
+                    cloak: {}
+                }
             }
         };
     }
@@ -129,8 +153,38 @@ module.exports = async function (chatId, userId) {
     members[userId].game.gameClass.stats = Object.assign({}, foundedClassStats, members[userId].game.gameClass.stats);
     members[userId].game.gameClass.skills = [...foundedClassSkills];
 
-    if (members[userId].game.hasOwnProperty("gacha")) {
+    if (!members[userId].game.inventory.hasOwnProperty("gacha")) {
+        members[userId].game.inventory.gacha = {};
+    }
+
+    if (!members[userId].game.hasOwnProperty("gacha")) {
         members[userId].game.gacha = {};
+    }
+
+    if (!members[userId].game.inventory.hasOwnProperty("equipment")) {
+        members[userId].game.inventory.equipment = {
+            armor: {
+                helmet: [],
+                boots: [],
+                gloves: [],
+                fullBody: [],
+                greaves: [],
+                body: []
+            },
+            weapon: {
+                sword: [],
+                bigSword: [],
+                bow: [],
+                crossBow: [],
+                dagger: [],
+                mace: [],
+                blunt: [],
+                fists: [],
+            },
+            accessories: {},
+            cloak: {},
+            shield: {}
+        };
     }
 
     return members[userId];

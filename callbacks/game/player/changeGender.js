@@ -1,6 +1,7 @@
 const getUserName = require('../../../functions/getters/getUserName');
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 const genderTranslateMap = {
     male: "Мужской",
@@ -8,8 +9,8 @@ const genderTranslateMap = {
 }
 
 module.exports = [[/^gender\.([^.]+)$/, async function (session, callback, [, gender]) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
     session.gender = gender;

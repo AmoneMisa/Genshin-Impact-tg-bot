@@ -59,15 +59,15 @@ module.exports = {
     }],
 // Редкость и соответствующие ей цены в золоте, количество характеристик, необходимых для выставления качества
     rarity: [
-        {name: 'Сломано', cost: 50, count: 0},
-        {name: 'Обычное', cost: 160, count: 1},
-        {name: 'Необычное', cost: 600, count: 2},
-        {name: 'Особое', cost: 5000, count: 3},
-        {name: 'Уникальное', cost: 8900, count: 4},
-        {name: 'Редкое', cost: 25000, count: 5},
-        {name: 'Королевское', cost: 197000, count: 6},
-        {name: 'Магическое', cost: 435000, count: 7},
-        {name: 'Божественное', cost: 6500000, count: 8}
+        {name: 'break', translatedName: 'Сломано', cost: 50, count: 0},
+        {name: 'common', translatedName: 'Обычное', cost: 160, count: 1},
+        {name: 'unusual', translatedName: 'Необычное', cost: 600, count: 2},
+        {name: 'special', translatedName: 'Особое', cost: 5000, count: 3},
+        {name: 'unique', translatedName: 'Уникальное', cost: 8900, count: 4},
+        {name: 'rare', translatedName: 'Редкое', cost: 25000, count: 5},
+        {name: 'royal', translatedName: 'Королевское', cost: 197000, count: 6},
+        {name: 'magic', translatedName: 'Магическое', cost: 435000, count: 7},
+        {name: 'goddess', translatedName: 'Божественное', cost: 6500000, count: 8}
     ],
     // Предметы
     itemType: [{
@@ -75,6 +75,7 @@ module.exports = {
         translatedName: 'Оружие',
         // Типы оружия
         kind: [{
+            classOwner: ["warrior"],
             type: "sword",
             translatedName: "Меч",
             hand: 1,
@@ -85,6 +86,7 @@ module.exports = {
             }
         }, {
             type: "bigSword",
+            classOwner: ["warrior"],
             translatedName: "Двуручный меч",
             hand: 2,
             penalty: null,
@@ -94,6 +96,7 @@ module.exports = {
             }
         }, {
             type: "dagger",
+            classOwner: ["warrior", "assassin", "archer"],
             translatedName: "Кинжал",
             hand: 1,
             penalty: null,
@@ -103,6 +106,7 @@ module.exports = {
             }
         }, {
             type: "mace",
+            classOwner: ["mage", "priest"],
             translatedName: "Посох",
             hand: 1,
             penalty: null,
@@ -112,6 +116,7 @@ module.exports = {
             }
         }, {
             type: "bow",
+            classOwner: ["archer", "warrior", "assassin"],
             translatedName: "Лук",
             hand: 2,
             penalty: null,
@@ -121,6 +126,7 @@ module.exports = {
             }
         }, {
             type: "crossbow",
+            classOwner: ["archer", "warrior", "assassin"],
             translatedName: "Арбалет",
             hand: 2,
             penalty: null,
@@ -130,6 +136,7 @@ module.exports = {
             }
         }, {
             type: "blunt",
+            classOwner: ["warrior", "priest"],
             translatedName: "Блант",
             hand: 1,
             penalty: null,
@@ -139,6 +146,7 @@ module.exports = {
             }
         }, {
             type: "fists",
+            classOwner: ["warrior"],
             translatedName: "Кастеты",
             hand: 2,
             penalty: null,
@@ -162,11 +170,12 @@ module.exports = {
         }, {
             translatedName: "Верхняя часть доспеха", name: "body", slots: ["up"]
         }, {
-            translatedName: "Целый доспех", name: "full-body", slots: ["up", "down"]
+            translatedName: "Целый доспех", name: "fullBody", slots: ["up", "down"]
         }],
         // Вид снаряжения
         kind: [{
             name: "heavy",
+            classOwner: ["warrior"],
             translatedName: "Тяжёлое",
             penalty: {
                 evasion: 5,
@@ -180,6 +189,7 @@ module.exports = {
             }
         }, {
             name: "medium",
+            classOwner: ["assassin", "archer", "warrior"],
             translatedName: "Среднее",
             penalty: {
                 evasion: 2,
@@ -192,6 +202,7 @@ module.exports = {
             }
         }, {
             name: "light",
+            classOwner: ["assassin", "archer", "priest", "warrior"],
             translatedName: "Лёгкое",
             penalty: {
                 reduceIncomingDamage: 0.0275
@@ -204,6 +215,7 @@ module.exports = {
             }
         }, {
             name: "robe",
+            classOwner: ["priest", "mage"],
             translatedName: "Роба",
             penalty: {
                 reduceIncomingDamage: 0.048
@@ -257,8 +269,8 @@ module.exports = {
             }
         }]
     }
-    // , {
-    //     translatedName: "Плащ", name: "cloak", slots: ["cloak"]
-    // }
+        // , {
+        //     translatedName: "Плащ", name: "cloak", slots: ["cloak"]
+        // }
     ]
 };

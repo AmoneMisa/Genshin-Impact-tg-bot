@@ -37,12 +37,11 @@ function equipmentNameGenerator(item, cost) {
 
     let which = equipmentDictionary.whichList[Math.floor(Math.random() * equipmentDictionary.whichList.length)];
     let whose = equipmentDictionary.whoseList[Math.floor(Math.random() * equipmentDictionary.whoseList.length)];
-    return `(${item.grade.name} - Grade, ${item.rarity.name}) ${what} ${which} ${whose} - ${cost} золота`;
+    return `(${item.grade.name} - Grade, ${item.rarity.translatedName}) ${what} ${which} ${whose} - ${cost} золота`;
 }
 
 function getItemData(gameClass, currentLvl, calledGrade) {
     const grade = getItemGrade(currentLvl, calledGrade);
-    console.log(grade)
     const type = getItemType();
     const {quality, maxQuality} = getItemQuality(grade);
     const {persistence, maxPersistence} = getItemPersistence(grade);
@@ -63,7 +62,6 @@ function getItemData(gameClass, currentLvl, calledGrade) {
 
 // Функция для получения уровня предмета
 function getItemGrade(currentLvl, calledGrade) {
-    console.log(calledGrade, "calledGrade")
     let chanceForUpgradedGrade = 0.05;
     let chance = Math.random();
     let currentGrade;

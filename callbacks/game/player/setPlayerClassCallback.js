@@ -15,13 +15,16 @@ const getEmoji = require('../../../functions/getters/getEmoji');
 const getSession = require('../../../functions/getters/getSession');
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const fs = require("fs");
+const checkUserCall = require("../../../functions/misc/checkUserCall");
+const updatePlayerStats = require("../../../functions/game/player/updatePlayerStats");
+const getFile = require("../../../functions/getters/getFile");
 
 function getOffset() {
     return new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
 }
 
 module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function (session, callback, [, chatId]) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+   if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -92,7 +95,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
         }
     }
 }], [/^player\.([\-0-9]+)\.changeClass\.([^.]+)$/, async function (session, callback, [, userId, _class]) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -117,7 +120,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
         }
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.changeClass\.([^.]+)\.0$/, async function (session, callback, [, chatId, _class]) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -134,13 +137,13 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
 
     let classStatsTemplate = getClassStatsFromTemplate(_class);
     changePlayerClass(foundedSession, classStatsTemplate);
+    updatePlayerStats(foundedSession);
 
     let {stats} = getPlayerGameClass(foundedSession.game.gameClass);
     let gender = session.gender || "male";
-    const file = fs.readdirSync(`images/classes/${_class}/${gender}`);
+    let file = getFile(`images/classes/${_class}/${gender}`, _class);
 
-    return editMessageMedia(file, {
-        caption: `@${getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`,
+    return editMessageMedia(file, `@${getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

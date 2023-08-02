@@ -10,6 +10,9 @@ const inventoryTranslate = require("../../../dictionaries/inventory");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 const getFile = require("../../../functions/getters/getFile");
+const checkUserCall = require("../../../functions/misc/checkUserCall");
+const editMessageMedia = require("../../../functions/tgBotFunctions/editMessageMedia");
+const buttonsDictionary = require("../../../dictionaries/buttons");
 
 function buildInventoryKeyboard(inventory, userId) {
     let buttons = [];
@@ -85,9 +88,10 @@ function getItemData(item, items) {
 
 module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (session, callback, [, userId]) {
     // Меню инвентаря
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
+
     const isBack = callback.data.includes("back");
     let foundedSession = await getSession(userId, callback.from.id);
     let inventory = foundedSession.game.inventory;
@@ -147,7 +151,7 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.inventory\.([^.]+)$/, async function (session, callback, [, userId, items]) {
     // Меню категории инвентаря
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -155,7 +159,7 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     let foundedItems = foundedSession.game.inventory[items].filter(item => item.count > 0);
 
     if (foundedItems.length <= 0) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодейстовать.`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {}, 10 * 1000);
     }
 
     return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems)}`, {
@@ -173,7 +177,7 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)$/, async function (session, callback, [, userId, items, item]) {
     // Меню предмета инвентаря
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -209,7 +213,7 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.0$/, async function (session, callback, [, userId, items, item]) {
     // Меню подтверждения действия для предмета инвентаря
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 

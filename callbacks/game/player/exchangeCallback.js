@@ -1,14 +1,15 @@
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const getUserName = require('../../../functions/getters/getUserName');
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 module.exports = [[/^crystal_buy\.([\-0-9]+)+$/, function (session, callback) {
     let [, amount] = callback.data.match(/^crystal_buy\.([\-0-9]+)$/);
 
     amount = parseInt(amount);
 
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
-        return;
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
     if (session.game.inventory.gold < amount * 1500) {

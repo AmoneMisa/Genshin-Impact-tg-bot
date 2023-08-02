@@ -7,6 +7,7 @@ const editChest = require('../../../functions/game/chest/editChest');
 const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const getUserName = require('../../../functions/getters/getUserName');
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 let prizes = [{
     name: "experience",
@@ -52,8 +53,8 @@ module.exports = [[/^chest_([0-9]+)$/, function (session, callback, [ , chest]) 
     session.chestCounter = session.chestCounter || 0;
     session.chosenChests = session.chosenChests || [];
 
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
-        return;
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
     if (session.chosenChests.includes(chest)) {

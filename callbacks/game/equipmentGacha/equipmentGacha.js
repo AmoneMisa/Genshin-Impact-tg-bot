@@ -1,7 +1,5 @@
 const generateRandomEquipment = require('../../../functions/game/equipment/generateRandomEquipment');
 const getUserName = require('../../../functions/getters/getUserName');
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 const editMessageMedia = require('../../../functions/tgBotFunctions/editMessageMedia');
 const getFile = require("../../../functions/getters/getFile");
@@ -13,9 +11,10 @@ const makeRoll = require("../../../functions/game/equipment/makeRoll");
 const breakItemToSpins = require("../../../functions/game/equipment/breakItemToSpins");
 const addItemToUserInventory = require("../../../functions/game/equipment/addItemToUserInventory");
 const getEmoji = require("../../../functions/getters/getEmoji");
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 module.exports = [[/^lucky_roll$/, async function (session, callback) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -49,13 +48,77 @@ module.exports = [[/^lucky_roll$/, async function (session, callback) {
         }
     });
 }], [/^lucky_roll.([^.]+)$/, async function (session, callback, [, gachaType]) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
+    let gacha = gachaTemplate[gachaType];
     let costMessage = "";
-    for (let [costKey, costValue] of Object.entries(gachaTemplate[gachaType].spinCost)) {
-        costMessage += `${getEmoji(costKey)} ${inventory[costKey]} - ${costValue}\n`;
+
+    let isFreeSpin = session.game.gacha[gachaType] > 0;
+    let isLevelEnough = session.game.stats.lvl >= gacha.needLvl;
+
+    if (!isLevelEnough) {
+        return editMessageCaption(`@${getUserName(session, "nickname")}, твой уровень слишком низкий. Текущий уровень: ${session.game.stats.lvl}. Требуемый уровень: ${gacha.needLvl}`, {
+            chat_id: callback.message.chat.id,
+            message_id: callback.message.message_id,
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Главное меню",
+                    callback_data: `lucky_roll`
+                }], [{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        }, callback.message.photo);
+    }
+
+    if (isFreeSpin) {
+        costMessage += `Бесплатные попытки! Количество: ${session.game.gacha[gachaType]}. (Обновляются каждый день)\n`;
+        session.game.gacha[gachaType]--;
+    } else if (session.game.inventory.gacha[gachaType] >= gacha.piecesForFleeCall) {
+        costMessage += `В первую очередь расходуются осколки. Твоё количество осколков: ${session.game.inventory.gacha[gachaType]}. Необходимое количество: ${gacha.piecesForFleeCall}\n`;
+        session.game.inventory.gacha[gachaType] -= gacha.piecesForFleeCall;
+    } else {
+        if (gacha.spinCost.gold > session.game.inventory.gold) {
+            return editMessageCaption(`@${getUserName(session, "nickname")}, недостаточно золота. Твоё золото: ${session.game.inventory.gold}. Требуемое количество: ${gacha.spinCost.gold}`, {
+                chat_id: callback.message.chat.id,
+                message_id: callback.message.message_id,
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Главное меню",
+                        callback_data: `lucky_roll`
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            }, callback.message.photo);
+        }
+
+        if (gachaTemplate[gachaType].spinCost.crystals > session.game.inventory.crystals) {
+            return editMessageCaption(`@${getUserName(session, "nickname")}, недостаточно кристаллов. Твои кристаллы: ${session.game.inventory.gold}. Требуемое количество: ${gacha.spinCost.crystals}`, {
+                chat_id: callback.message.chat.id,
+                message_id: callback.message.message_id,
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Главное меню",
+                        callback_data: `lucky_roll`
+                    }], [{
+                        text: buttonsDictionary["ru"].close,
+                        callback_data: "close"
+                    }]]
+                }
+            }, callback.message.photo);
+        }
+
+        for (let [costKey, costValue] of Object.entries(gacha.spinCost)) {
+            costMessage += `${getEmoji(costKey)} ${inventory[costKey]} - ${costValue}\n`;
+        }
     }
 
     let file = getFile(`images/gacha`, gachaType);
@@ -80,16 +143,15 @@ module.exports = [[/^lucky_roll$/, async function (session, callback) {
         });
     }
 }], [/^lucky_roll.([^.]+)\.roll$/, async function (session, callback, [, gachaType]) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
-    // Допилить соотношения названий гач и грейдов шмоток для генерации.
-    makeRoll(session.game.inventory, gachaTemplate[gachaType].spinCost);
-    let result = generateRandomEquipment(session.game.gameClass, session.game.stats.lvl, gachaType);
+    let randomGrade = makeRoll(session.game.inventory, gachaTemplate[gachaType]);
+    let result = generateRandomEquipment(session.game.gameClass, session.game.stats.lvl, randomGrade);
     session.game.gacha.tepmItem = result;
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, твой выигрыш:\n${getItemString(result)}. Ты можешь оставить его или распылить на осколки для призыва.`, {
+    await editMessageCaption(`@${getUserName(session, "nickname")}, твой выигрыш:\n${getItemString(result)} Ты можешь оставить его или распылить на осколки для призыва.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
@@ -103,11 +165,11 @@ module.exports = [[/^lucky_roll$/, async function (session, callback) {
         }
     }, callback.message.photo);
 }], [/^lucky_roll.([^.]+)\.save$/, async function (session, callback, [, gachaType]) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
-    addItemToUserInventory(session.game.inventory, session.game.gacha.tepmItem);
+    addItemToUserInventory(session, session.game.gacha.tepmItem);
     await editMessageCaption(`@${getUserName(session, "nickname")}, предмет добавлен в инвентарь.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
@@ -120,13 +182,13 @@ module.exports = [[/^lucky_roll$/, async function (session, callback) {
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], [/^lucky_roll.([^.]+)\.break$/, async function (session, callback, [, gachaType]) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
-    let countItems = breakItemToSpins(session.game.gacha, session.game.gacha.tepmItem, gachaType);
+    let countItems = breakItemToSpins(session.game.inventory, session.game.gacha.tepmItem, gachaType);
 
     await editMessageCaption(`@${getUserName(session, "nickname")}, ты получил ${countItems} осколков для "${gachaTemplate[gachaType].name}"!`, {
         chat_id: callback.message.chat.id,
@@ -140,5 +202,5 @@ module.exports = [[/^lucky_roll$/, async function (session, callback) {
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }]];

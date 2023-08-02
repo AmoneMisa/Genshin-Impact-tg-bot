@@ -1,14 +1,6 @@
 const userStatsMap = require("../../../dictionaries/statsDictionary");
+const inventory = require("../../../dictionaries/inventory");
 const getEmoji = require("../../../functions/getters/getEmoji");
-
-const slotsMap = {
-    helmet: "Голова/Шлем",
-    gloves: "Перчатки/Наручи",
-    down: "Низ",
-    boots: "Ботинки/Сапоги",
-    cloak: "Плащ/Накидка",
-    up: "Верх"
-}
 
 module.exports = function (item) {
     let str = `${item.name}\n\n`;
@@ -30,7 +22,7 @@ module.exports = function (item) {
         str += `Слот: `;
 
         for (let slot of item.type.type.slots) {
-            str += `${slotsMap[slot]} `;
+            str += `${inventory[slot]} `;
         }
         str += "\n";
 
@@ -44,7 +36,7 @@ module.exports = function (item) {
     }
 
     if (item.stats.length) {
-        str += `\nДополнительные характеристики:\n`;
+        str += `\n${getEmoji(item.rarity)} Дополнительные характеристики:\n`;
         for (let stat of item.stats) {
             str += `${getEmoji(stat.name)} ${userStatsMap[stat.name]}: ${stat.value}\n`;
         }

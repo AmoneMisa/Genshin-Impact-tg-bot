@@ -6,12 +6,13 @@ const bot = require('../../../bot');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessageTimeout = require("../../../functions/tgBotFunctions/deleteMessageTimeout");
 const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 let maxPulls = 3;
 
 module.exports = [[/^football_pull$/, async function (session, callback) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
     if (!session.game.hasOwnProperty('football')) {
