@@ -1,7 +1,14 @@
 const getRandom = require("../../getters/getRandom");
+
 module.exports = function (inventory, item, gachaType) {
     let result = getRandom(costSpins[gachaTypeMap[gachaType] - 1].min, costSpins[gachaTypeMap[gachaType] - 1].max);
-    inventory.gacha[gachaType] += result;
+
+    if (!inventory.gacha.find(gachaItem => gachaItem.name === gachaType)) {
+        inventory.gacha.push({name: gachaType, value: result});
+    } else {
+        inventory.gacha.find(gachaItem => gachaItem.name === gachaType).value += result;
+    }
+
     return result;
 }
 

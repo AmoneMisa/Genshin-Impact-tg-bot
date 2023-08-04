@@ -1,3 +1,5 @@
+// Переделать шаблон на массив экипировки
+
 module.exports = {
 // Классы и соответствующие им цены и характеристики
     grades: [{
@@ -76,19 +78,23 @@ module.exports = {
         // Типы оружия
         kind: [{
             classOwner: ["warrior"],
-            type: "sword",
+            category: "sword",
+            type: "oneHandedSword",
+            typeTranslatedName: "Меч",
             translatedName: "Меч",
-            hand: 1,
+            slots: ["leftHand", "rightHand"],
             penalty: null,
             characteristics: {
                 power: 45,
                 randomDamage: 0.1
             }
         }, {
-            type: "bigSword",
+            type: "twoHandedSword",
             classOwner: ["warrior"],
+            category: "sword",
+            typeTranslatedName: "Двуручный меч",
             translatedName: "Двуручный меч",
-            hand: 2,
+            slots: ["leftHand", "rightHand"],
             penalty: null,
             characteristics: {
                 power: 45,
@@ -96,9 +102,11 @@ module.exports = {
             }
         }, {
             type: "dagger",
+            category: "dagger",
+            typeTranslatedName: "Кинжал",
             classOwner: ["warrior", "assassin", "archer"],
             translatedName: "Кинжал",
-            hand: 1,
+            slots: ["leftHand"],
             penalty: null,
             characteristics: {
                 power: 30,
@@ -106,9 +114,11 @@ module.exports = {
             }
         }, {
             type: "mace",
+            category: "mace",
+            typeTranslatedName: "Посох",
             classOwner: ["mage", "priest"],
             translatedName: "Посох",
-            hand: 1,
+            slots: ["leftHand"],
             penalty: null,
             characteristics: {
                 power: 50,
@@ -116,39 +126,47 @@ module.exports = {
             }
         }, {
             type: "bow",
+            category: "bow",
+            typeTranslatedName: "Лук",
             classOwner: ["archer", "warrior", "assassin"],
             translatedName: "Лук",
-            hand: 2,
+            slots: ["leftHand", "rightHand"],
             penalty: null,
             characteristics: {
                 power: 38,
                 randomDamage: 0.05
             }
         }, {
+            category: "bow",
             type: "crossbow",
+            typeTranslatedName: "Арбалет",
             classOwner: ["archer", "warrior", "assassin"],
             translatedName: "Арбалет",
-            hand: 2,
+            slots: ["leftHand", "rightHand"],
             penalty: null,
             characteristics: {
                 power: 54,
                 randomDamage: 0.1
             }
         }, {
+            category: "blunt",
             type: "blunt",
+            typeTranslatedName: "Блант",
             classOwner: ["warrior", "priest"],
             translatedName: "Блант",
-            hand: 1,
+            slots: ["leftHand"],
             penalty: null,
             characteristics: {
                 power: 66,
                 randomDamage: 0.2
             }
         }, {
+            category: "fists",
             type: "fists",
+            typeTranslatedName: "Кастеты",
             classOwner: ["warrior"],
             translatedName: "Кастеты",
-            hand: 2,
+            slots: ["leftHand", "rightHand"],
             penalty: null,
             characteristics: {
                 power: 52,
@@ -158,73 +176,379 @@ module.exports = {
     }, {
         name: "armor",
         translatedName: 'Снаряжение',
-        // Тип снаряжения
-        types: [{
-            translatedName: "Шлем", name: "helmet", slots: ["helmet"]
-        }, {
-            translatedName: "Перчатки", name: "gloves", slots: ["gloves"]
-        }, {
-            translatedName: "Поножи", name: "greaves", slots: ["down"]
-        }, {
-            translatedName: "Ботинки", name: "boots", slots: ["boots"]
-        }, {
-            translatedName: "Верхняя часть доспеха", name: "body", slots: ["up"]
-        }, {
-            translatedName: "Целый доспех", name: "fullBody", slots: ["up", "down"]
-        }],
         // Вид снаряжения
         kind: [{
-            name: "heavy",
+            type: "heavy",
             classOwner: ["warrior"],
-            translatedName: "Тяжёлое",
+            typeTranslatedName: "Тяжёлое",
+            translatedName: "Шлем",
+            slots: ["helmet"],
+            category: "helmet",
             penalty: {
-                evasion: 5,
-                accuracy: 3,
-                mpRestoreSpeed: 0.03
+                mpRestoreSpeed: 0.0155
             },
             characteristics: {
-                defence: 5,
-                maxHp: 0.037,
-                reduceIncomingDamage: 0.018
+                defence: 3,
+                maxHp: 0.017,
+                reduceIncomingDamage: 0.005
             }
         }, {
-            name: "medium",
+            type: "medium",
             classOwner: ["assassin", "archer", "warrior"],
-            translatedName: "Среднее",
+            typeTranslatedName: "Среднее",
+            translatedName: "Шлем",
+            slots: ["helmet"],
+            category: "helmet",
             penalty: {
                 evasion: 2,
                 cpRestoreSpeed: 0.02
             },
             characteristics: {
-                defence: 3.5,
-                accuracy: 6,
-                additionalDamage: 0.015
+                defence: 2.5,
+                accuracy: 2,
+                maxCp: 0.003
             }
         }, {
-            name: "light",
+            type: "light",
             classOwner: ["assassin", "archer", "priest", "warrior"],
-            translatedName: "Лёгкое",
+            typeTranslatedName: "Лёгкое",
+            translatedName: "Шлем",
+            slots: ["helmet"],
+            category: "helmet",
+            penalty: {
+                reduceIncomingDamage: 0.0175
+            },
+            characteristics: {
+                defence: 1.75,
+                accuracy: 8
+            }
+        }, {
+            type: "robe",
+            classOwner: ["priest", "mage"],
+            typeTranslatedName: "Роба",
+            translatedName: "Тиара",
+            slots: ["helmet"],
+            category: "helmet",
+            penalty: {
+                reduceIncomingDamage: 0.048
+            },
+            characteristics: {
+                defence: 1.55,
+                maxMp: 0.03,
+                mpRestoreSpeed: 0.045,
+                maxHp: 0.016
+            }
+        }, {
+            type: "heavy",
+            classOwner: ["warrior"],
+            typeTranslatedName: "Тяжёлое",
+            translatedName: "Перчатки",
+            slots: ["gloves"],
+            category: "gloves",
+            penalty: {
+                accuracy: 3,
+                mpRestoreSpeed: 0.03
+            },
+            characteristics: {
+                defence: 6,
+                maxHp: 0.024,
+                reduceIncomingDamage: 0.018
+            }
+        }, {
+            type: "medium",
+            classOwner: ["assassin", "archer", "warrior"],
+            typeTranslatedName: "Среднее",
+            translatedName: "Перчатки",
+            slots: ["gloves"],
+            category: "gloves",
+            penalty: {
+                evasion: 2,
+                cpRestoreSpeed: 0.02
+            },
+            characteristics: {
+                defence: 4.75,
+                accuracy: 3
+            }
+        }, {
+            type: "light",
+            classOwner: ["assassin", "archer", "priest", "warrior"],
+            typeTranslatedName: "Лёгкое",
+            translatedName: "Перчатки",
+            slots: ["gloves"],
+            category: "gloves",
+            penalty: {
+                reduceIncomingDamage: 0.0175
+            },
+            characteristics: {
+                defence: 3.5,
+                additionalDamage: 0.025,
+                accuracy: 4
+            }
+        }, {
+            type: "robe",
+            classOwner: ["priest", "mage"],
+            typeTranslatedName: "Роба",
+            translatedName: "Наручи",
+            slots: ["gloves"],
+            category: "gloves",
+            penalty: {
+                reduceIncomingDamage: 0.048
+            },
+            characteristics: {
+                defence: 2.25,
+                maxMp: 0.04,
+                mpRestoreSpeed: 0.065,
+                maxCp: 0.024
+            }
+        }, {
+            type: "heavy",
+            classOwner: ["warrior"],
+            typeTranslatedName: "Тяжёлое",
+            translatedName: "Поножи",
+            slots: ["down"],
+            category: "greaves",
+            penalty: {
+                evasion: 5,
+                accuracy: 4
+            },
+            characteristics: {
+                defence: 7,
+                maxCp: 0.04,
+                reduceIncomingDamage: 0.022
+            }
+        }, {
+            type: "medium",
+            classOwner: ["assassin", "archer", "warrior"],
+            typeTranslatedName: "Среднее",
+            translatedName: "Поножи",
+            slots: ["down"],
+            category: "greaves",
+            penalty: {
+                hpRestoreSpeed: 0.02
+            },
+            characteristics: {
+                defence: 5.55
+            }
+        }, {
+            type: "light",
+            classOwner: ["assassin", "archer", "priest", "warrior"],
+            typeTranslatedName: "Лёгкое",
+            translatedName: "Поножи",
+            slots: ["down"],
+            category: "greaves",
+            penalty: {
+                reduceIncomingDamage: 0.0275
+            },
+            characteristics: {
+                defence: 3.85,
+                evasion: 7,
+                accuracy: 3
+            }
+        }, {
+            type: "robe",
+            classOwner: ["priest", "mage"],
+            typeTranslatedName: "Роба",
+            translatedName: "Обмотки",
+            slots: ["down"],
+            category: "greaves",
+            penalty: {
+                reduceIncomingDamage: 0.048
+            },
+            characteristics: {
+                defence: 2.98,
+                maxMp: 0.06,
+                mpRestoreSpeed: 0.015,
+                maxHp: 0.034
+            }
+        }, {
+            type: "heavy",
+            classOwner: ["warrior"],
+            typeTranslatedName: "Тяжёлое",
+            translatedName: "Ботинки",
+            slots: ["boots"],
+            category: "boots",
+            penalty: {
+                evasion: 5,
+                accuracy: 3,
+                hpRestoreSpeed: 0.03
+            },
+            characteristics: {
+                defence: 5,
+                maxMp: 0.027,
+                reduceIncomingDamage: 0.006
+            }
+        }, {
+            type: "medium",
+            classOwner: ["assassin", "archer", "warrior"],
+            typeTranslatedName: "Среднее",
+            translatedName: "Ботинки",
+            slots: ["boots"],
+            category: "boots",
+            penalty: {
+                evasion: 1,
+                mpRestoreSpeed: 0.03
+            },
+            characteristics: {
+                defence: 3.5,
+                accuracy: 6,
+                additionalDamage: 0.025
+            }
+        }, {
+            type: "light",
+            classOwner: ["assassin", "archer", "priest", "warrior"],
+            typeTranslatedName: "Лёгкое",
+            translatedName: "Сапоги",
+            slots: ["boots"],
+            category: "boots",
             penalty: {
                 reduceIncomingDamage: 0.0275
             },
             characteristics: {
                 defence: 2.5,
+                evasion: 6,
+                accuracy: 4
+            }
+        }, {
+            type: "robe",
+            classOwner: ["priest", "mage"],
+            typeTranslatedName: "Роба",
+            translatedName: "Ножные браслеты",
+            slots: ["boots"],
+            category: "boots",
+            penalty: {
+                reduceIncomingDamage: 0.048
+            },
+            characteristics: {
+                defence: 1.75
+            }
+        }, {
+            type: "heavy",
+            classOwner: ["warrior"],
+            typeTranslatedName: "Тяжёлое",
+            translatedName: "Верхняя часть доспеха",
+            slots: ["up"],
+            category: "body",
+            penalty: {
+                evasion: 8,
+                accuracy: 6
+            },
+            characteristics: {
+                defence: 9,
+                maxHp: 0.0244,
+                reduceIncomingDamage: 0.022
+            }
+        }, {
+            type: "medium",
+            classOwner: ["assassin", "archer", "warrior"],
+            typeTranslatedName: "Среднее",
+            translatedName: "Верхняя часть доспеха",
+            slots: ["up"],
+            category: "body",
+            penalty: {
+                evasion: 2,
+                cpRestoreSpeed: 0.02
+            },
+            characteristics: {
+                defence: 7.5,
+                accuracy: 6,
+                additionalDamage: 0.015
+            }
+        }, {
+            type: "light",
+            classOwner: ["assassin", "archer", "priest", "warrior"],
+            typeTranslatedName: "Лёгкое",
+            translatedName: "Верхняя часть доспеха",
+            slots: ["up"],
+            category: "body",
+            penalty: {
+                reduceIncomingDamage: 0.0275
+            },
+            characteristics: {
+                defence: 5.5,
                 evasion: 10,
                 additionalDamage: 0.025,
                 accuracy: 8
             }
         }, {
-            name: "robe",
+            type: "robe",
             classOwner: ["priest", "mage"],
-            translatedName: "Роба",
+            typeTranslatedName: "Роба",
+            translatedName: "Верхняя часть доспеха",
+            slots: ["up"],
+            category: "body",
             penalty: {
                 reduceIncomingDamage: 0.048
             },
             characteristics: {
-                defence: 1.75,
+                defence: 4.75,
                 maxMp: 0.03,
                 mpRestoreSpeed: 0.045,
                 maxHp: 0.016
+            }
+        }, {
+            type: "heavy",
+            classOwner: ["warrior"],
+            typeTranslatedName: "Тяжёлое",
+            translatedName: "Целый доспех",
+            slots: ["up", "down"],
+            category: "fullBody",
+            penalty: {
+                evasion: 7,
+                accuracy: 5,
+                mpRestoreSpeed: 0.08
+            },
+            characteristics: {
+                defence: 15,
+                maxHp: 0.0544,
+                reduceIncomingDamage: 0.042
+            }
+        }, {
+            type: "medium",
+            classOwner: ["assassin", "archer", "warrior"],
+            typeTranslatedName: "Среднее",
+            translatedName: "Целый доспех",
+            slots: ["up", "down"],
+            category: "fullBody",
+            penalty: {
+                evasion: 2,
+                cpRestoreSpeed: 0.02
+            },
+            characteristics: {
+                defence: 11.5,
+                accuracy: 4,
+                additionalDamage: 0.015
+            }
+        }, {
+            type: "light",
+            classOwner: ["assassin", "archer", "priest", "warrior"],
+            typeTranslatedName: "Лёгкое",
+            translatedName: "Одеяние",
+            slots: ["up", "down"],
+            category: "fullBody",
+            penalty: {
+                reduceIncomingDamage: 0.0275
+            },
+            characteristics: {
+                defence: 9.7,
+                evasion: 12,
+                additionalDamage: 0.015,
+                accuracy: 2
+            }
+        }, {
+            type: "robe",
+            classOwner: ["priest", "mage"],
+            typeTranslatedName: "Роба",
+            translatedName: "Мантия",
+            slots: ["up", "down"],
+            category: "fullBody",
+            penalty: {
+                reduceIncomingDamage: 0.048
+            },
+            characteristics: {
+                defence: 8.95,
+                maxMp: 0.07,
+                mpRestoreSpeed: 0.025,
+                maxHp: 0.036
             }
         }]
     }, {
@@ -232,8 +556,11 @@ module.exports = {
         translatedName: 'Щит',
         // Виды щитов
         kind: [{
-            name: "big-shield",
+            type: "bigShield",
             translatedName: "Большой щит",
+            typeTranslatedName: "Большой щит",
+            classOwner: ["priest", "mage", "warrior"],
+            slots: ["leftHand"],
             penalty: {
                 evasion: 10,
                 accuracy: 8
@@ -244,8 +571,11 @@ module.exports = {
                 reduceIncomingDamage: 5
             }
         }, {
-            name: "small-shield",
+            type: "smallShield",
+            classOwner: ["priest", "mage", "warrior", "assassin"],
             translatedName: "Маленький щит",
+            typeTranslatedName: "Маленький щит",
+            slots: ["leftHand"],
             penalty: {
                 evasion: 4,
                 accuracy: 2
@@ -256,8 +586,12 @@ module.exports = {
                 cpRestoreSpeed: 0.05
             }
         }, {
-            name: "sigill",
+            category: "sigill",
+            classOwner: ["priest", "mage"],
+            typeTranslatedName: "Сигил",
             translatedName: "Сигил",
+            type: "sigill",
+            slots: ["leftHand"],
             penalty: {
                 evasion: 2,
                 accuracy: 2

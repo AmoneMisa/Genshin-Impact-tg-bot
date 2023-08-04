@@ -10,22 +10,41 @@ module.exports = function (inventory, isSoloItem = false) {
         message += `${getEmoji("ironOre")} железная руда: ${inventory.ironOre}\n`;
     }
 
-
     if (isSoloItem) {
-        let itemName = inventory.bottleType ? `${inventory.bottleType}.${inventory.type}` : inventory.type;
-        message += `${getEmoji(itemName)} ${inventory.name}: ${inventory.description}.`;
-
-    } else if (Array.isArray(inventory)) {
-        let filteredInventory = inventory.filter(item => item.count > 0);
-
-        if (filteredInventory.length <= 0) {
-            return "";
+        let itemName;
+        if (inventory.hasOwnProperty("bottleType")) {
+            itemName = `${inventory.bottleType}.${inventory.type}`;
+        } else if (inventory.hasOwnProperty("grade")) {
+            itemName = inventory.mainType
+        } else {
+            itemName = inventory.type;
         }
 
+        message += `${getEmoji(itemName)} ${inventory.name}: ${inventory.description}.`;
+    } else if (Array.isArray(inventory)) {
         for (let item of inventory) {
+            if (typeof item === "string" || typeof item === "number") {
+                continue;
+            }
+
+            if (Array.isArray(item)) {
+                for (let itemObj of item) {
+
+                    if (typeof itemObj === "string" || typeof itemObj === "number") {
+                        continue;
+                    }
+
+                    if (itemObj.hasOwnProperty("mainType")) {
+                        message += `${getEmoji(itemObj.category)} ${itemObj.name}\n`;
+                    } else {
+                        message += `${getEmoji(itemObj.category)} ${itemObj.name}: ${itemObj.description}\n`;
+                    }
+                }
+            }
+
             if (item.hasOwnProperty("bottleType")) {
                 message += `${getEmoji(`${item.bottleType}.${item.type}`)} ${item.name}: ${item.description}.\nКоличество: ${item.count}\n\n`;
-            } else {
+            } else if (item.type) {
                 message += `${getEmoji(item.type)} ${inventoryDictionary[item.type]}: ${item.description}\n`;
             }
         }
@@ -69,21 +88,26 @@ function getPotionsMessage(potions) {
 function getEquipMessage(equipment) {
     let message = `\n${inventoryDictionary["equipment"]}:\n`;
 
-    for (let [equipName, type] of Object.entries(equipment)) {
-        let filteredTypes = Array.from(Object.values(type)).filter(kindArray => kindArray.length);
+    if (equipment.length >= 10) {
+        equipment.slice(0, 10);
+    }
 
-        if (!filteredTypes.length) {
-            continue;
+    let equipmentByMainType = {};
+
+    for (let equip of equipment) {
+
+        if (!equipmentByMainType[equip.mainType]) {
+            equipmentByMainType[equip.mainType] = []
         }
 
-        if (filteredTypes.length >= 5) {
-            filteredTypes.slice(0, 4);
-        }
+        equipmentByMainType[equip.mainType].push(equip);
+    }
 
-        message += `${getEmoji(equipName)} ${inventoryDictionary[equipName]}:\n`;
+    for (let [mainType, equipList] of Object.entries(equipmentByMainType)) {
+        message += `${getEmoji(mainType)} ${inventoryDictionary[mainType]}:\n`;
 
-        for (let [equipItem] of filteredTypes) {
-            message += `${getEmoji("separator")} ${equipItem.name} \n`
+        for (let equip of equipList) {
+            message += `${getEmoji(equip.kind)} ${equip.name}\n`;
         }
     }
 
@@ -92,12 +116,9 @@ function getEquipMessage(equipment) {
 
 function getGachaMessage(gacha) {
     let message = `\n${inventoryDictionary["gacha"]}:\n`;
-    for (let [key, value] of Object.entries(gacha)) {
-        if (value === 0) {
-            continue;
-        }
+    for (let gachaItem of gacha) {
 
-        message += `${inventoryDictionary[key]}: осколки для призыва. Количество: ${value}\n`;
+        message += `${inventoryDictionary[gachaItem.name]}: осколки для призыва. Количество: ${gachaItem.value}\n`;
     }
 
     return message;

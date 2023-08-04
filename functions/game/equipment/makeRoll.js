@@ -1,9 +1,15 @@
 const getValueByChance = require("../../getters/getValueByChance");
-module.exports = function (inventory, spin) {
-    for (let [costKey, costValue] of Object.entries(spin.spinCost)) {
-        inventory[costKey] -= costValue;
+
+module.exports = function (player, spin, isFree) {
+    let chance = Math.random();
+
+    if (isFree) {
+        return getValueByChance(chance, spin.gradesForSpin);
     }
 
-    let chance = Math.random();
+    for (let [costKey, costValue] of Object.entries(spin.spinCost)) {
+        player.inventory[costKey] -= costValue;
+    }
+
     return getValueByChance(chance, spin.gradesForSpin);
 }

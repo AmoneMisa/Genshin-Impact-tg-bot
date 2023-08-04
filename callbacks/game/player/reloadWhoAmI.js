@@ -19,6 +19,9 @@ module.exports = [[/^player\.([\-0-9]+)\.reload$/, async function (session, call
             inline_keyboard: [[{
                 text: "Выбрать класс",
                 callback_data: `player.${userId}.changeClass`
+            }],[{
+                text: "Состояние персонажа",
+                callback_data: `player.${userId}.character`
             }], [{
                 text: "Показать инвентарь",
                 callback_data: `player.${userId}.inventory`

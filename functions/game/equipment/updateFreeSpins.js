@@ -6,8 +6,8 @@ module.exports = function () {
     cron.schedule('59 23 * * *', async () => {
         for (let chatSession of Object.values(sessions)) {
             for (let session of Object.values(chatSession.members)) {
-                for (let [key, value] of gachaTemplate) {
-                    session.game.gacha[key] = value.freeSpins;
+                for (let value of gachaTemplate) {
+                    session.game.gacha[value.name] = value.freeSpins;
                 }
             }
         }

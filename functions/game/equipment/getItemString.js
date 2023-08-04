@@ -6,31 +6,29 @@ module.exports = function (item) {
     let str = `${item.name}\n\n`;
     str += `Характеристики:\n`;
 
-    if (item.type.mainType === "shield") {
-
-        for (let [characteristicKey, characteristicValue] of Object.entries(item.type.kind.characteristics)) {
+    if (item.mainType === "shield") {
+        for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
+            str += `${getEmoji(characteristicKey)} ${userStatsMap[characteristicKey]}: ${characteristicValue}\n`;
+        }
+    } else if (item.mainType === "armor") {
+        for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
             str += `${getEmoji(characteristicKey)} ${userStatsMap[characteristicKey]}: ${characteristicValue}\n`;
         }
 
-    } else if (item.type.mainType === "armor") {
-
-        for (let [characteristicKey, characteristicValue] of Object.entries(item.type.kind.characteristics)) {
-            str += `${getEmoji(characteristicKey)} ${userStatsMap[characteristicKey]}: ${characteristicValue}\n`;
-        }
-
-        str += `Тип: ${getEmoji(item.type.kind.name)} ${item.type.kind.translatedName}\n`;
+        str += `Тип: ${getEmoji(item.kind)} ${item.translatedName}\n`;
         str += `Слот: `;
 
-        for (let slot of item.type.type.slots) {
+        for (let slot of item.slots) {
             str += `${inventory[slot]} `;
         }
+
         str += "\n";
 
-    } else if (item.type.mainType === "weapon") {
-        str += `${getEmoji("power")} Сила: ${item.type.kind.characteristics.power}\n`;
-        if (item.type.kind.hand === 1) {
+    } else if (item.mainType === "weapon") {
+        str += `${getEmoji("power")} Сила: ${item.characteristics.power}\n`;
+        if (item.slots.length === 1) {
             str += `${getEmoji("oneHanded")} Одноручное\n`;
-        } else if (item.type.kind.hand === 2) {
+        } else {
             str += `${getEmoji("twoHanded")} Двуручное\n`;
         }
     }
@@ -42,8 +40,8 @@ module.exports = function (item) {
         }
     }
 
-    if (item.type.kind.penalty) {
-        for (let [statKey, statValue] of Object.entries(item.type.kind.penalty)) {
+    if (item.penalty) {
+        for (let [statKey, statValue] of Object.entries(item.penalty)) {
             str += `${getEmoji(statKey)} ${userStatsMap[statKey]}: ${statValue}\n`
         }
     }

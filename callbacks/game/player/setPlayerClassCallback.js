@@ -14,7 +14,6 @@ const classes = require("../../../templates/classStatsTemplate");
 const getEmoji = require('../../../functions/getters/getEmoji');
 const getSession = require('../../../functions/getters/getSession');
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
-const fs = require("fs");
 const checkUserCall = require("../../../functions/misc/checkUserCall");
 const updatePlayerStats = require("../../../functions/game/player/updatePlayerStats");
 const getFile = require("../../../functions/getters/getFile");

@@ -12,40 +12,45 @@ module.exports = function (gameClass, currentLvl, grade) {
 
     return {
         name: equipmentNameGenerator(buildItem, cost),
+        description: equipmentDescriptionGenerator(),
         grade: buildItem.grade.name,
+        classOwner: buildItem.kind.classOwner,
         quality: {current: buildItem.quality, max: buildItem.maxQuality},
         persistence: {current: buildItem.persistence, max: buildItem.maxPersistence},
         rarity: buildItem.rarity.name,
-        type: {
-            mainType: buildItem.type.mainType.name,
-            type: buildItem.type.type,
-            kind: buildItem.type.kind
-        },
+        rarityTranslated: buildItem.rarity.translatedName,
+        mainType: buildItem.mainType,
+        category: buildItem.kind.category,
+        kind: buildItem.kind.type,
+        characteristics: buildItem.kind.characteristics,
+        penalty: buildItem.kind.penalty,
+        translatedName: buildItem.kind.translatedName,
+        slots: buildItem.kind.slots,
         stats: buildItem.stats,
         cost: cost
     }
 }
 
 function equipmentNameGenerator(item, cost) {
-    let what;
-
-    if (item.type.mainType.name === "armor") {
-        what = item.type.type.translatedName;
-    } else {
-        what = item.type.kind.translatedName;
-    }
-
-    let which = equipmentDictionary.whichList[Math.floor(Math.random() * equipmentDictionary.whichList.length)];
-    let whose = equipmentDictionary.whoseList[Math.floor(Math.random() * equipmentDictionary.whoseList.length)];
+    let what = item.kind.translatedName;
+    let which = equipmentDictionary.whichList[Math.floor(Math.random() * (equipmentDictionary.whichList.length - 1))];
+    let whose = equipmentDictionary.whoseList[Math.floor(Math.random() * (equipmentDictionary.whoseList.length - 1))];
     return `(${item.grade.name} - Grade, ${item.rarity.translatedName}) ${what} ${which} ${whose} - ${cost} золота`;
+}
+
+function equipmentDescriptionGenerator() {
+    let where = equipmentDictionary.descriptionWhere[Math.floor(Math.random() * (equipmentDictionary.descriptionWhere.length - 1))];
+    let whose = equipmentDictionary.descriptionWhose[Math.floor(Math.random() * (equipmentDictionary.descriptionWhose.length - 1))];
+    let why = equipmentDictionary.descriptionWhy[Math.floor(Math.random() * (equipmentDictionary.descriptionWhy.length - 1))];
+    return `${where} ${whose} ${why}`;
 }
 
 function getItemData(gameClass, currentLvl, calledGrade) {
     const grade = getItemGrade(currentLvl, calledGrade);
-    const type = getItemType();
+    const {mainType, kind} = getItemType();
     const {quality, maxQuality} = getItemQuality(grade);
     const {persistence, maxPersistence} = getItemPersistence(grade);
-    const stats = getItemAdditionalStats(type, grade);
+    const stats = getItemAdditionalStats(grade);
     const rarity = getItemRarity(stats.length);
 
     return {
@@ -55,7 +60,8 @@ function getItemData(gameClass, currentLvl, calledGrade) {
         persistence,
         maxPersistence,
         rarity,
-        type,
+        mainType,
+        kind,
         stats
     };
 }
@@ -110,13 +116,12 @@ function getItemPersistence(itemGrade) {
 // Функция для получения типа предмета
 function getItemType() {
     let mainType = equipmentTemplate.itemType[getRandom(0, equipmentTemplate.itemType.length - 1)];
-    let type = mainType.hasOwnProperty("types") ? mainType.types[getRandom(0, mainType.types.length - 1)] : null;
-    let kind = mainType.hasOwnProperty("kind") ? mainType.kind[getRandom(0, mainType.kind.length - 1)] : null;
-    return {mainType, type, kind};
+    let kind = mainType.kind[getRandom(0, mainType.kind.length - 1)];
+    return {mainType: mainType.name, kind};
 }
 
 // Функции для получения характеристик предмета
-function getItemAdditionalStats(itemType, itemGrade) {
+function getItemAdditionalStats(itemGrade) {
     let itemTemplateGrade = equipmentTemplate.grades.find(grade => grade.name === itemGrade.name);
     let min = itemTemplateGrade.characteristics.min;
     let max = itemTemplateGrade.characteristics.max;
