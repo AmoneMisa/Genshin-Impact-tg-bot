@@ -1,12 +1,12 @@
 const getRandom = require('../../getters/getRandom');
-const getAttack = require('../../game/player/getAttack');
+const getAttack = require('../player/getters/getAttack');
 const getBossDefence = require('./getBossStats/getBossDefence');
-const getDamageMultiplier = require('../../game/player/getDamageMultiplier');
-const getCriticalChance = require('../player/getCriticalChance');
-const getCriticalChanceMultiplier = require('../player/getCriticalChanceMultiplier');
-const getCriticalDamage = require('../player/getCriticalDamage');
-const getAdditionalDamage = require('../player/getAdditionalDamage');
-const getCriticalDamageMultiplier = require('../player/getCriticalDamageMultiplier');
+const getDamageMultiplier = require('../player/getters/getDamageMultiplier');
+const getCriticalChance = require('../player/getters/getCriticalChance');
+const getCriticalChanceMultiplier = require('../player/getters/getCriticalChanceMultiplier');
+const getCriticalDamage = require('../player/getters/getCriticalDamage');
+const getAdditionalDamage = require('../player/getters/getAdditionalDamage');
+const getCriticalDamageMultiplier = require('../player/getters/getCriticalDamageMultiplier');
 const bossesTemplate = require("../../../templates/bossTemplate");
 
 module.exports = function (session, skill, boss) {

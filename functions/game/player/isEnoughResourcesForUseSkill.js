@@ -1,5 +1,5 @@
-const getCurrentMp = require("./getCurrentMp");
-const getCurrentHp = require("./getCurrentHp");
+const getCurrentMp = require("./getters/getCurrentMp");
+const getCurrentHp = require("./getters/getCurrentHp");
 
 module.exports = function (session, skill) {
     let userMp = getCurrentMp(session.game.gameClass);

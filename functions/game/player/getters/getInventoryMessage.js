@@ -1,5 +1,5 @@
-const getEmoji = require('../../getters/getEmoji');
-const inventoryDictionary = require('../../../dictionaries/inventory');
+const getEmoji = require('../../../getters/getEmoji');
+const inventoryDictionary = require('../../../../dictionaries/inventory');
 
 module.exports = function (inventory, isSoloItem = false) {
     let message = `${getEmoji("inventory")} Инвентарь\n\n`;

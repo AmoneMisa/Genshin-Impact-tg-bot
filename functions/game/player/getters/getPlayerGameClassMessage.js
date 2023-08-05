@@ -11,7 +11,7 @@ const getCurrentCp = require("./getCurrentCp");
 const getCurrentMp = require("./getCurrentMp");
 const getCurrentHp = require("./getCurrentHp");
 const getDamageMultiplier = require("./getDamageMultiplier");
-const getEmoji = require('../../getters/getEmoji');
+const getEmoji = require('../../../getters/getEmoji');
 
 module.exports = function (session, baseStats, playerEffects, gameClassTemplate) {
     let message = "";

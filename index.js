@@ -17,17 +17,14 @@ const writeFiles = require('./functions/misc/writeFiles');
 
 const evenSecond = require('./functions/shedullers/evenSecond');
 const evenMinute = require('./functions/shedullers/evenMinute');
+const evenTwoMinutes = require('./functions/shedullers/evenTwoMinutes');
 const evenFiveMinutes = require('./functions/shedullers/evenFiveMinutes');
 const evenHour = require('./functions/shedullers/evenHour');
 const evenDay = require('./functions/shedullers/evenDay');
 
 const log = intel.getLogger("genshin");
 const cron = require('node-cron');
-
-const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
-const initHpRegen = require('./functions/game/boss/initHpRegen');
 const buttonsDictionary = require("./dictionaries/buttons");
-const setTimerForCollectResources = require("./functions/shedullers/timerForAccumulateResources");
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
@@ -124,11 +121,6 @@ for (let [key, value] of onTexts) {
     });
 }
 
-
-initBossDealDamage();
-initHpRegen();
-
-
 for (let [key, value] of onTextsAdmin) {
     bot.onText(key, value);
 }
@@ -182,6 +174,7 @@ bot.on("callback_query", async (callback) => {
 
 evenSecond();
 evenMinute();
+evenTwoMinutes();
 evenFiveMinutes();
 evenHour();
 evenDay();

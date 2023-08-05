@@ -1,12 +1,17 @@
 const {sessions} = require("../../data");
 const isPlayerInFight = require("../game/player/isPlayerInFight");
-const getMaxHp = require("../game/player/getMaxHp");
-const getCurrentHp = require("../game/player/getCurrentHp");
+const getMaxHp = require("../game/player/getters/getMaxHp");
+const getCurrentHp = require("../game/player/getters/getCurrentHp");
 
 module.exports = function () {
     for (let chatSession of Object.values(sessions)) {
         for (let session of Object.values(chatSession.members)) {
             let hpRegenSpeed = session.game.gameClass.stats.hpRestoreSpeed;
+            if (getCurrentHp(session) > getMaxHp(session)) {
+                session.game.gameClass.stats.hp = getMaxHp(session);
+                continue;
+            }
+
             if (getCurrentHp(session) === getMaxHp(session)) {
                 continue;
             }

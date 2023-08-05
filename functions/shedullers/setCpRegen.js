@@ -1,12 +1,17 @@
 const {sessions} = require("../../data");
 const isPlayerInFight = require("../game/player/isPlayerInFight");
-const getMaxCp = require("../game/player/getMaxCp");
-const getCurrentCp = require("../game/player/getCurrentCp");
+const getMaxCp = require("../game/player/getters/getMaxCp");
+const getCurrentCp = require("../game/player/getters/getCurrentCp");
 
 module.exports = function () {
     for (let chatSession of Object.values(sessions)) {
         for (let session of Object.values(chatSession.members)) {
             let cpRegenSpeed = session.game.gameClass.stats.cpRestoreSpeed;
+            if (getCurrentCp(session) > getMaxCp(session)) {
+                session.game.gameClass.stats.cp = getMaxCp(session);
+                continue;
+            }
+
             if (getCurrentCp(session) === getMaxCp(session)) {
                 continue;
             }

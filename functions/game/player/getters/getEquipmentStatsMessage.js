@@ -1,6 +1,6 @@
-const inventoryTranslate = require("../../../dictionaries/inventory");
-const statsDictionary = require("../../../dictionaries/statsDictionary");
-const getEmoji = require("../../getters/getEmoji");
+const inventoryTranslate = require("../../../../dictionaries/inventory");
+const statsDictionary = require("../../../../dictionaries/statsDictionary");
+const getEmoji = require("../../../getters/getEmoji");
 
 let percentageStats = ["criticalDamage", "reduceIncomingDamage", "additionalDamage", "maxHp", "maxCp", "maxMp"];
 

@@ -1,6 +1,6 @@
 const getRandom = require('../../getters/getRandom');
-const getPlayerDefence = require('../player/getDefence');
-const getReduceIncomingDamage = require('../player/getReduceIncomingDamage');
+const getPlayerDefence = require('../player/getters/getDefence');
+const getReduceIncomingDamage = require('../player/getters/getReduceIncomingDamage');
 const getBossAttack = require('./getBossStats/getBossAttack');
 const bossesTemplate = require("../../../templates/bossTemplate");
 

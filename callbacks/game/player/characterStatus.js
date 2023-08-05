@@ -1,7 +1,7 @@
 const getSession = require('../../../functions/getters/getSession');
 const buttonsDictionary = require("../../../dictionaries/buttons");
 const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
-const getEquipmentStatsMessage = require("../../../functions/game/player/getEquipmentStatsMessage");
+const getEquipmentStatsMessage = require("../../../functions/game/player/getters/getEquipmentStatsMessage");
 
 module.exports = [[/^player\.([\-0-9]+)\.character$/, async function (session, callback, [, userId]) {
     const foundedSession = await getSession(userId, callback.from.id);

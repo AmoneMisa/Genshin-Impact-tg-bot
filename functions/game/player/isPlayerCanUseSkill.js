@@ -1,4 +1,4 @@
-const getSkillCooldown = require('./getSkillCooldown');
+const getSkillCooldown = require('./getters/getSkillCooldown');
 const isEnoughResourcesForUseSkill = require('./isEnoughResourcesForUseSkill');
 
 module.exports = function (session, skill) {

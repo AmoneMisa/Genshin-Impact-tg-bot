@@ -1,5 +1,5 @@
 const getPlayerGameClass = require("./getPlayerGameClass");
-const getEquipStatByName = require("../../../functions/game/player/getEquipStatByName");
+const getEquipStatByName = require("./getEquipStatByName");
 
 module.exports = function (gameClass, session) {
     let {stats} = getPlayerGameClass(gameClass);

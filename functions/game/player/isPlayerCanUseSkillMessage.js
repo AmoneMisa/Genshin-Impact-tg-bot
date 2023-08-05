@@ -1,4 +1,4 @@
-const getSkillCooldown = require("./getSkillCooldown");
+const getSkillCooldown = require("./getters/getSkillCooldown");
 const getStringRemainTime = require("../../getters/getStringRemainTime");
 const getTime = require("../../getters/getTime");
 

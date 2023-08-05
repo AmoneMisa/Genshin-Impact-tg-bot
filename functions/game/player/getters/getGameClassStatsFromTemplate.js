@@ -1,4 +1,4 @@
-const stats = require("../../../templates/classStatsTemplate");
+const stats = require("../../../../templates/classStatsTemplate");
 
 module.exports = function (className) {
     if (!className) {
