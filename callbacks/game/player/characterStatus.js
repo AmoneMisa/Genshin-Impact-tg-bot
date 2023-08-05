@@ -12,6 +12,9 @@ module.exports = [[/^player\.([\-0-9]+)\.character$/, async function (session, c
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
+                text: "Назад",
+                callback_data: `player.${userId}.whoami`
+            }],[{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]

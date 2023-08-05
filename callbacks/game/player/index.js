@@ -8,6 +8,7 @@ const stealResources = require('./stealResources');
 const addStealChance = require('./addStealChance');
 const changeGender = require('./changeGender');
 const characterStatus = require('./characterStatus');
+const whoamiHome = require('./whoamiHome');
 
 module.exports = [
     ...setPlayerClassCallback,
@@ -19,5 +20,6 @@ module.exports = [
     ...stealResources,
     ...addStealChance,
     ...changeGender,
-    ...characterStatus
+    ...characterStatus,
+    ...whoamiHome
 ];

@@ -86,7 +86,8 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 45,
-                randomDamage: 0.1
+                randomDamage: 0.1,
+                accuracy: 20
             }
         }, {
             type: "twoHandedSword",
@@ -98,7 +99,8 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 45,
-                randomDamage: 0.1
+                randomDamage: 0.1,
+                criticalDamage: 0.4
             }
         }, {
             type: "dagger",
@@ -110,7 +112,9 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 30,
-                randomDamage: 0.05
+                randomDamage: 0.05,
+                accuracy: 35,
+                evasion: 20
             }
         }, {
             type: "mace",
@@ -122,7 +126,9 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 50,
-                randomDamage: 0.1
+                randomDamage: 0.1,
+                mpRestoreSpeed: 0.15,
+                maxMp: 0.18
             }
         }, {
             type: "bow",
@@ -134,7 +140,9 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 38,
-                randomDamage: 0.05
+                randomDamage: 0.05,
+                maxCp: 0.05,
+                criticalChance: 15,
             }
         }, {
             category: "bow",
@@ -146,7 +154,9 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 54,
-                randomDamage: 0.1
+                randomDamage: 0.1,
+                criticalChance: 10,
+                criticalDamage: 0.05,
             }
         }, {
             category: "blunt",
@@ -158,7 +168,11 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 66,
-                randomDamage: 0.2
+                randomDamage: 0.2,
+                criticalDamage: 0.5,
+                cpRestoreSpeed: 0.08,
+                hpRestoreSpeed: 0.1,
+                maxHp: 0.07
             }
         }, {
             category: "fists",
@@ -170,7 +184,11 @@ module.exports = {
             penalty: null,
             characteristics: {
                 power: 52,
-                randomDamage: 0.05
+                randomDamage: 0.05,
+                criticalChance: 12,
+                cpRestoreSpeed: 0.1,
+                hpRestoreSpeed: 0.08,
+                maxCp: 0.05
             }
         }]
     }, {

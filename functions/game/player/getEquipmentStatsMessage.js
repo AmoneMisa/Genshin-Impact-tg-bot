@@ -6,6 +6,8 @@ module.exports = function (session) {
     let equipmentStats = session.game.equipmentStats;
     let message = "";
 
+    console.log("equipmentStats", session.game.equipmentStats);
+
     for (let [statName, stat] of Object.entries(equipmentStats)) {
         if (stat === null) {
             return;

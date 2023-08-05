@@ -1,8 +1,7 @@
-const equipmentTemplate = require("../../../templates/equipmentTemplate");
 const unequipItem = require("./unequipItem");
 
 module.exports = function (session, item) {
-    let [characteristics, penalty] = calcAdditionalStats(session.game, item);
+    let [characteristics, penalty] = setAdditionalStats(session.game, item);
 
     if (item.isUsed) {
         return 1;
@@ -43,76 +42,30 @@ module.exports = function (session, item) {
 }
 
 function calcMainStats(player, item) {
-    let penaltyModifier = 1;
-
-    if (!item.classOwner.includes(player.gameClass.stats.name)) {
-        penaltyModifier += 0.25;
-    }
-
-    let gradeTemplate = equipmentTemplate.grades.find(grade => grade.name === item.grade);
-    let minLvl = gradeTemplate.lvl.from;
-
-    if (minLvl > player.stats.lvl) {
-        penaltyModifier += 0.65;
-    }
-
     if (item.mainType === "weapon") {
-        if (penaltyModifier === 1) {
-            return item.characteristics.power;
-        }
-
-        return item.characteristics.power * penaltyModifier;
+        return item.characteristics.power;
     }
 
     if (item.mainType === "armor") {
-        if (penaltyModifier === 1) {
-            return item.characteristics.defence;
-        }
-
-        return  item.characteristics.defence * penaltyModifier;
+        return item.characteristics.defence;
     }
 
     if (item.mainType === "shield") {
-        if (penaltyModifier === 1) {
-            return item.characteristics.block;
-        }
-
-        return item.characteristics.block * penaltyModifier;
+        return item.characteristics.block;
     }
 }
 
-function calcAdditionalStats(player, item) {
-    let penaltyModifier = 1;
+function setAdditionalStats(player, item) {
     let newCharacteristics = [];
     let newPenalty = [];
 
-    if (!item.classOwner.includes(player.gameClass.stats.name)) {
-        penaltyModifier += 0.45;
-    }
-
-    let gradeTemplate = equipmentTemplate.grades.find(grade => grade.name === item.grade);
-    let minLvl = gradeTemplate.lvl.from;
-
-    if (minLvl > player.stats.lvl) {
-        penaltyModifier += 0.45;
-    }
-
     for (let [characteristicName, characteristicValue] of Object.entries(item.characteristics)) {
-        if (penaltyModifier === 1) {
-            newCharacteristics.push({characteristicName, characteristicValue});
-        } else {
-            newCharacteristics.push({characteristicName, characteristicValue: characteristicValue * penaltyModifier});
-
-        }
+        newCharacteristics.push({characteristicName, characteristicValue});
     }
 
     if (item.penalty) {
         for (let [characteristicName, characteristicValue] of Object.entries(item.penalty)) {
-            if (penaltyModifier === 1) {
-                newPenalty.push({characteristicName, characteristicValue});
-            } else {
-                newPenalty.push({characteristicName, characteristicValue: characteristicValue * (1 + penaltyModifier)});
-            }
+            newPenalty.push({characteristicName, characteristicValue});
         }
     }
 
