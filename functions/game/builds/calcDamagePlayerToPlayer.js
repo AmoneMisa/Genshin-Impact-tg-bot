@@ -109,25 +109,28 @@ function calculateDamage(attacker, defender, skill) {
 }
 
 function calcSkillDamage(attacker, defender, skill) {
+    let defenderGameClass= defender.game.gameClass;
+    let attackerGameClass= attacker.game.gameClass;
+
     let dmg;
     let modifier = skill.damageModifier || 1;
 
     let criticalChanceMultiplier = getCriticalChanceMultiplier(attacker);
-    let criticalChance = getCriticalChance(attacker) + criticalChanceMultiplier;
+    let criticalChance = getCriticalChance(attackerGameClass, attacker) + criticalChanceMultiplier;
 
     if (criticalChance > 100) {
         criticalChance = 100;
     }
 
-    let criticalDamage = getCriticalDamage(attacker);
+    let criticalDamage = getCriticalDamage(attackerGameClass, attacker);
     let criticalDamageMultiplier = getCriticalDamageMultiplier(attacker);
     criticalDamage *= criticalDamageMultiplier;
 
-    let attack = getAttack(attacker.game.gameClass);
+    let attack = getAttack(attackerGameClass, attacker);
     let damageMultiplier = getDamageMultiplier(attacker.game.effects);
-    let defenderDefence = getDefence(defender.game.gameClass);
-    let additionalDamage = getAdditionalDamage(attacker) / 100 + 1;
-    let reduceIncomingDamage = getReduceIncomingDamage(attacker) / 100 + 1;
+    let defenderDefence = getDefence(defenderGameClass, defender);
+    let additionalDamage = getAdditionalDamage(attackerGameClass, attacker) + 1;
+    let reduceIncomingDamage = getReduceIncomingDamage(defenderGameClass, defender) + 1;
 
     dmg = getRandom(9, 70) * attack / defenderDefence * modifier * additionalDamage;
     dmg *= damageMultiplier;

@@ -1,25 +1,23 @@
 const unequipItem = require("./unequipItem");
+const equipmentTemplate = require("../../../templates/equipmentTemplate");
 
 module.exports = function (session, item) {
-    let [characteristics, penalty] = setAdditionalStats(session.game, item);
+    let characteristics = setStats(session.game, item);
 
     if (item.isUsed) {
         return 1;
     }
 
     let isFirst = true;
-    for (let slot of item.slots) {
-        if (session.game.equipmentStats[slot] !== null) {
-            unequipItem(session.game, item, slot);
-        }
+    let equipTemplateGrade = equipmentTemplate.grades.find(grade => grade.name === item.grade);
+    unequipItem(session.game, item);
 
+    for (let slot of item.slots) {
         if (!isFirst) {
             session.game.equipmentStats[slot] = {
                 mainType: item.mainType,
                 name: item.name,
-                main: null,
-                additional: null,
-                penalty: null,
+                characteristics: null,
                 isFilled: true
             }
         }
@@ -27,9 +25,9 @@ module.exports = function (session, item) {
         session.game.equipmentStats[slot] = {
             mainType: item.mainType,
             name: item.name,
-            main: calcMainStats(session.game, item),
-            additional: characteristics,
-            penalty: penalty,
+            minLvl: equipTemplateGrade.lvl.from,
+            classOwner: item.classOwner,
+            characteristics,
             isFilled: true
         }
 
@@ -41,7 +39,7 @@ module.exports = function (session, item) {
     return 0;
 }
 
-function calcMainStats(player, item) {
+function getMainStats(player, item) {
     if (item.mainType === "weapon") {
         return item.characteristics.power;
     }
@@ -55,19 +53,35 @@ function calcMainStats(player, item) {
     }
 }
 
-function setAdditionalStats(player, item) {
-    let newCharacteristics = [];
-    let newPenalty = [];
-
-    for (let [characteristicName, characteristicValue] of Object.entries(item.characteristics)) {
-        newCharacteristics.push({characteristicName, characteristicValue});
-    }
-
-    if (item.penalty) {
-        for (let [characteristicName, characteristicValue] of Object.entries(item.penalty)) {
-            newPenalty.push({characteristicName, characteristicValue});
+function setStats(player, item) {
+    let statName;
+    switch (item.mainType) {
+        case "weapon": {
+            statName = "power";
+            break;
+        }
+        case "armor": {
+            statName = "defencePower";
+            break;
+        }
+        case "shield": {
+            statName = "block";
+            break;
         }
     }
 
-    return [newCharacteristics, newPenalty];
+    let newStats = [];
+    newStats.push({name: statName, value: getMainStats(player, item), type: "main"});
+
+    for (let [name, value] of Object.entries(item.characteristics)) {
+        newStats.push({name, value, type: "additional"});
+    }
+
+    if (item.penalty) {
+        for (let [name, value] of Object.entries(item.penalty)) {
+            newStats.push({name, value, type: "penalty"});
+        }
+    }
+
+    return newStats;
 }

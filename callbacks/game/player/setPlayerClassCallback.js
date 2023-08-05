@@ -100,7 +100,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
 
     const foundedSession = await getSession(userId, callback.from.id);
     let classTemplate = getClassStatsFromTemplate(_class);
-    let info = `Информация о классе ${getEmoji(classTemplate.name)} ${classTemplate.translateName}\n\n${getPlayerGameClassMessage(classTemplate, foundedSession.game.stats, foundedSession.game.effects)}\n`;
+    let info = `Информация о классе ${getEmoji(classTemplate.name)} ${classTemplate.translateName}\n\n${getPlayerGameClassMessage(foundedSession, foundedSession.game.stats, foundedSession.game.effects, classTemplate)}\n`;
 
     return editMessageCaption(`${getUserName(foundedSession, "nickname")}, ${info}`, {
         chat_id: callback.message.chat.id,
@@ -111,7 +111,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
                 callback_data: `player.${userId}.changeClass.${_class}.0`
             }], [{
                 text: "Назад",
-                callback_data: `player.${userId}.changeClass`
+                callback_data: `player.${userId}.changeClass.back`
             }], [{
                 text: "Закрыть",
                 callback_data: "close"
@@ -148,7 +148,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
         reply_markup: {
             inline_keyboard: [[{
                 text: "Назад",
-                callback_data: `player.${chatId}.changeClass`
+                callback_data: `player.${chatId}.changeClass.back`
             }], [{
                 text: "Закрыть",
                 callback_data: "close"

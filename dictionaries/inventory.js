@@ -56,4 +56,6 @@ module.exports = {
     additional: "Дополнительные эффекты",
     main: "Основные эффекты",
     name: "Название",
+    power: "Сила оружия",
+    defencePower: "Сила брони",
 };

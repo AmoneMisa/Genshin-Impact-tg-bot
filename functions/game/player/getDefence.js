@@ -1,6 +1,7 @@
 const getPlayerGameClass = require("./getPlayerGameClass");
+const getEquipStatByName = require("./getEquipStatByName");
 
-module.exports = function (gameClass) {
+module.exports = function (gameClass, session) {
     let {stats} = getPlayerGameClass(gameClass);
-    return stats.defence;
+    return Math.round((stats.defence + getEquipStatByName(session, "defence")) * getEquipStatByName(session, "defencePower"));
 };

@@ -2,11 +2,11 @@ const inventoryTranslate = require("../../../dictionaries/inventory");
 const statsDictionary = require("../../../dictionaries/statsDictionary");
 const getEmoji = require("../../getters/getEmoji");
 
+let percentageStats = ["criticalDamage", "reduceIncomingDamage", "additionalDamage", "maxHp", "maxCp", "maxMp"];
+
 module.exports = function (session) {
     let equipmentStats = session.game.equipmentStats;
     let message = "";
-
-    console.log("equipmentStats", session.game.equipmentStats);
 
     for (let [statName, stat] of Object.entries(equipmentStats)) {
         if (stat === null) {
@@ -14,25 +14,29 @@ module.exports = function (session) {
         }
 
         message += `\n${getEmoji(statName)} ${inventoryTranslate[statName]}: ${stat.name}\n`;
-        message += `Характеристики:\n`;
-        let characteristicName = "";
+        message += `${getEmoji("separator")} Характеристики:\n`;
 
-        if (equipmentStats.mainType === "weapon") {
-            characteristicName = "attack";
-        } else if (equipmentStats.mainType === "armor") {
-            characteristicName =  "defence";
-        } else if (equipmentStats.mainType === "shield") {
-            characteristicName = "block";
+        let penaltyStats = [];
+        for (let addStats of stat.characteristics) {
+            if (addStats.type === "main") {
+                continue;
+            }
+
+            if (addStats.type === "penalty") {
+                penaltyStats.push(addStats);
+                continue;
+            }
+
+            let value = percentageStats.includes(addStats.name) ? `${(addStats.value * 100).toFixed(2)}%` : addStats.value;
+            message += `${getEmoji(addStats.name)} ${statsDictionary[addStats.name]}: ${value}\n`;
         }
 
-        message += `${getEmoji(characteristicName)} ${statsDictionary[characteristicName]} ${stat.main}\n`;
-
-        for (let addStats of stat.additional) {
-            message += `${getEmoji(addStats.characteristicName)} ${statsDictionary[addStats.characteristicName]}: ${addStats.characteristicValue}\n`;
+        if (penaltyStats.length) {
+            message += `${getEmoji("separator")} Негативные эффекты:\n`;
         }
-
-        for (let penalty of stat.penalty) {
-            message += `${getEmoji(penalty.characteristicName)} ${statsDictionary[penalty.characteristicName]}: ${penalty.characteristicValue}\n`;
+        for (let addStats of penaltyStats) {
+            let value = percentageStats.includes(addStats.name) ? `${(addStats.value * 100).toFixed(2)}%` : addStats.value;
+            message += `${getEmoji(addStats.name)} ${statsDictionary[addStats.name]}: ${value}\n`;
         }
     }
 

@@ -359,7 +359,7 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
 
     let equipResult = equipItem(foundedSession, foundedItem);
     if (equipResult === 1) {
-        unequipItem(session.game, foundedItem, foundedItem.slots);
+        unequipItem(foundedSession.game, foundedItem);
     } else {
         return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке снять предмет (${foundedItem.name}).`, {}, 10 * 1000);
     }
@@ -402,7 +402,7 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
 
     let equipResult = equipItem(foundedSession, foundedItem);
     if (equipResult === 1) {
-        unequipItem(session.game, foundedItem, foundedItem.slots);
+        unequipItem(foundedSession.game, foundedItem);
         let indexOf = foundedSession.game.inventory.equipment.indexOf(foundedItem);
         foundedSession.game.inventory.gold += foundedItem.cost;
         foundedSession.game.inventory.equipment.splice(indexOf, 1);

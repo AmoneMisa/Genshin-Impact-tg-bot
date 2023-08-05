@@ -7,7 +7,6 @@ const getStringRemainTime = require("../../getters/getStringRemainTime");
 module.exports = function (session) {
     let game = session.game;
     let baseStats = game.stats;
-    let gameClass = game.gameClass;
     let playerEffects = game.effects;
 
     let message = `Статистика @${getUserName(session, "nickname")}:\n`;
@@ -15,7 +14,7 @@ module.exports = function (session) {
     message += `${getEmoji("currentExp")} Текущее к-во опыта: ${baseStats.currentExp}\n`;
     message += `${getEmoji("needExp")} Требуемое к-во опыта до следующего уровня: ${baseStats.needExp}\n\n`;
 
-    message += getPlayerGameClassMessage(gameClass, baseStats, playerEffects);
+    message += getPlayerGameClassMessage(session, baseStats, playerEffects);
 
     if (session.swordImmune) {
         message += "Иммунитет к выпадению отрицательного числа при увеличении меча.\n"

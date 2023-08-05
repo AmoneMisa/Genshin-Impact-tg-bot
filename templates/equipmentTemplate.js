@@ -578,7 +578,7 @@ module.exports = {
             translatedName: "Большой щит",
             typeTranslatedName: "Большой щит",
             classOwner: ["priest", "mage", "warrior"],
-            slots: ["leftHand"],
+            slots: ["rightHand"],
             penalty: {
                 evasion: 10,
                 accuracy: 8
@@ -586,14 +586,14 @@ module.exports = {
             characteristics: {
                 block: 45,
                 maxHp: 0.03,
-                reduceIncomingDamage: 5
+                reduceIncomingDamage: 0.05
             }
         }, {
             type: "smallShield",
             classOwner: ["priest", "mage", "warrior", "assassin"],
             translatedName: "Маленький щит",
             typeTranslatedName: "Маленький щит",
-            slots: ["leftHand"],
+            slots: ["rightHand"],
             penalty: {
                 evasion: 4,
                 accuracy: 2
@@ -609,7 +609,7 @@ module.exports = {
             typeTranslatedName: "Сигил",
             translatedName: "Сигил",
             type: "sigill",
-            slots: ["leftHand"],
+            slots: ["rightHand"],
             penalty: {
                 evasion: 2,
                 accuracy: 2

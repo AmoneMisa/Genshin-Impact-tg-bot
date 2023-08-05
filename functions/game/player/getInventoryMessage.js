@@ -5,9 +5,9 @@ module.exports = function (inventory, isSoloItem = false) {
     let message = `${getEmoji("inventory")} Инвентарь\n\n`;
 
     if (inventory.hasOwnProperty("gold") && inventory.hasOwnProperty("crystals") && inventory.hasOwnProperty("ironOre")) {
-        message += `${getEmoji("gold")} золото: ${inventory.gold}\n`;
-        message += `${getEmoji("crystals")} кристаллы: ${inventory.crystals}\n`;
-        message += `${getEmoji("ironOre")} железная руда: ${inventory.ironOre}\n`;
+        message += `${getEmoji("gold")} Золото: ${inventory.gold}\n`;
+        message += `${getEmoji("crystals")} Кристаллы: ${inventory.crystals}\n`;
+        message += `${getEmoji("ironOre")} Железная руда: ${inventory.ironOre}\n`;
     }
 
     if (isSoloItem) {
@@ -34,11 +34,7 @@ module.exports = function (inventory, isSoloItem = false) {
                         continue;
                     }
 
-                    if (itemObj.hasOwnProperty("mainType")) {
-                        message += `${getEmoji(itemObj.category)} ${itemObj.name}\n`;
-                    } else {
-                        message += `${getEmoji(itemObj.category)} ${itemObj.name}: ${itemObj.description}\n`;
-                    }
+                    message += `${getEmoji(itemObj.category)} ${itemObj.name}\n`;
                 }
             }
 
@@ -107,7 +103,11 @@ function getEquipMessage(equipment) {
         message += `${getEmoji(mainType)} ${inventoryDictionary[mainType]}:\n`;
 
         for (let equip of equipList) {
-            message += `${getEmoji(equip.kind)} ${equip.name}\n`;
+            if (equip.isUsed) {
+                message += `${getEmoji(equip.category)} ${equip.name} (Используется)\n`;
+            } else {
+                message += `${getEmoji(equip.category)} ${equip.name}\n`;
+            }
         }
     }
 

@@ -27,7 +27,7 @@ module.exports = function (session, skill, boss) {
     let criticalDamageMultiplier = getCriticalDamageMultiplier(session);
     criticalDamage *= criticalDamageMultiplier;
 
-    let attack = getAttack(session.game.gameClass);
+    let attack = getAttack(session.game.gameClass, session);
     let damageMultiplier = getDamageMultiplier(session.game.effects);
     let bossDefence = getBossDefence(boss, template);
     let additionalDamage = (getAdditionalDamage(session) / 100) + 1;
