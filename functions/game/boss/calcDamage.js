@@ -1,4 +1,5 @@
 const getRandom = require('../../getters/getRandom');
+const getRandomWithoutFloor = require('../../getters/getRandomWithoutFloor');
 const getAttack = require('../player/getters/getAttack');
 const getBossDefence = require('./getBossStats/getBossDefence');
 const getDamageMultiplier = require('../player/getters/getDamageMultiplier');
@@ -49,9 +50,11 @@ module.exports = function (session, skill, boss) {
         }
     }
 
-    let minDmg = dmg - dmg * getEquipStatByName(session, "randomDamage", true);
-    let maxDmg = dmg + dmg * getEquipStatByName(session, "randomDamage", true);
-
-    dmg = Math.ceil(Math.random() * (maxDmg - minDmg + 1) + minDmg);
+    // Добавляем в расчёт рандомный разброс от оружия
+    let randomWeaponDamage = getEquipStatByName(session, "randomDamage");
+    let minDmg = 1 - randomWeaponDamage;
+    let maxDmg = 1 + randomWeaponDamage;
+    let rndDmg = getRandomWithoutFloor(minDmg, maxDmg);
+    dmg = Math.ceil(dmg * rndDmg);
     return {dmg, isHasCritical};
 };

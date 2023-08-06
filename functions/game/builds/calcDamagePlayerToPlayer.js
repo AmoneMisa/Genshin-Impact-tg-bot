@@ -21,13 +21,15 @@ const getDamageMultiplier = require("../player/getters/getDamageMultiplier");
 const getRandom = require("../../getters/getRandom");
 const limit = require("../../misc/limit");
 const chanceToHitTemplate = require("../../../templates/chanceToHitTemplate");
+const getEquipStatByName = require("../player/getters/getEquipStatByName");
+const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
 
 module.exports = function (attacker, defender) {
     let skills = attacker.game.gameClass.skills;
     skills.sort(compareSkills).reverse();
     let cooldowns = skills.map(_ => 0);
-    let defenderHp =  getMaxHp(defender);
-    let defenderMaxHp =  getMaxHp(defender);
+    let defenderHp = getMaxHp(defender);
+    let defenderMaxHp = getMaxHp(defender);
     let defenderCp = getMaxCp(defender);
     let defenderMaxCp = getMaxCp(defender);
     let attackerHp = getCurrentHp(attacker);
@@ -75,7 +77,7 @@ function compareSkills(skillA, skillB) {
     let damageModifierA = skillA.damageModifier || 0;
     let damageModifierB = skillB.damageModifier || 0;
 
-    return damageModifierA -  damageModifierB;
+    return damageModifierA - damageModifierB;
 }
 
 function calculateDamage(attacker, defender, skill) {
@@ -87,7 +89,7 @@ function calculateDamage(attacker, defender, skill) {
     // Расчет попадания и уворота. Магические классы (на данный момент - маг, прист) всегда попадают скиллами, но могут увернуться.
     // Так же, если уровень защитника на 8 и более, выше, чем уровень нападающего, защитник всегда уклоняется.
     if (!isMagicClass || (defender.game.stats.lvl - attacker.game.stats.lvl < 8)) {
-        let diff =  limit(
+        let diff = limit(
             getAccuracy(attacker) - getEvasion(defender),
             -25, 10
         );
@@ -112,6 +114,14 @@ function calculateDamage(attacker, defender, skill) {
         }
     }
 
+    // Добавляем в расчёт рандомный разброс от оружия
+    let randomWeaponDamage = getEquipStatByName(attacker, "randomDamage");
+    let minDmg = 1 - randomWeaponDamage;
+    let maxDmg = 1 + randomWeaponDamage;
+    let rndDmg = getRandomWithoutFloor(minDmg, maxDmg);
+
+    damage = Math.ceil(damage * rndDmg);
+
     return {
         damage,
         isHit,
@@ -120,8 +130,8 @@ function calculateDamage(attacker, defender, skill) {
 }
 
 function calcSkillDamage(attacker, defender, skill) {
-    let defenderGameClass= defender.game.gameClass;
-    let attackerGameClass= attacker.game.gameClass;
+    let defenderGameClass = defender.game.gameClass;
+    let attackerGameClass = attacker.game.gameClass;
 
     let dmg;
     let modifier = skill.damageModifier || 1;

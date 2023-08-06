@@ -1,3 +1,5 @@
+const lodash = require("lodash");
+
 module.exports = function (min, max) {
-    return (Math.random() * (max - min + 1) + min).toFixed(3);
+    return lodash.round(Math.random() * (max - min + 1) + min, 3);
 };

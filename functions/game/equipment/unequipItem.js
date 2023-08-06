@@ -5,5 +5,6 @@ module.exports = function (session, item) {
     for (let _slot of item.slots) {
         session.game.equipmentStats[_slot] = null;
     }
-    updatePlayerStats(session)
+
+    updatePlayerStats(session);
 }
