@@ -1,5 +1,6 @@
 const unequipItem = require("./unequipItem");
 const equipmentTemplate = require("../../../templates/equipmentTemplate");
+const updatePlayerStats = require("../player/updatePlayerStats");
 
 module.exports = function (session, item) {
     let characteristics = setStats(session.game, item);
@@ -10,7 +11,7 @@ module.exports = function (session, item) {
 
     let isFirst = true;
     let equipTemplateGrade = equipmentTemplate.grades.find(grade => grade.name === item.grade);
-    unequipItem(session.game, item);
+    unequipItem(session, item);
 
     for (let slot of item.slots) {
         if (!isFirst) {
@@ -35,6 +36,7 @@ module.exports = function (session, item) {
     }
 
     item.isUsed = true;
+    updatePlayerStats(session);
 
     return 0;
 }

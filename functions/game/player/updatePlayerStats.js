@@ -18,4 +18,6 @@ module.exports = function (session) {
     session.game.gameClass.stats.cp = Math.ceil(template.cp * session.game.stats.lvl * 1.224) + 37;
     session.game.gameClass.stats.criticalDamage = template.criticalDamage;
     session.game.gameClass.stats.criticalChance = template.criticalChance;
+    session.game.gameClass.stats.additionalDamageMul = template.additionalDamageMul;
+    session.game.gameClass.stats.incomingDamageModifier = template.incomingDamageModifier;
 };

@@ -13,6 +13,10 @@ module.exports = [[/(?:^|\s)\/update_all_players_skills\b/, async (msg) => {
 
     for (let chatSession of Object.values(data.sessions)) {
         for (let session of Object.values(chatSession.members)) {
+            if (session.userChatData.user.is_bot) {
+                continue;
+            }
+
             updatePlayerSkills(session);
         }
     }

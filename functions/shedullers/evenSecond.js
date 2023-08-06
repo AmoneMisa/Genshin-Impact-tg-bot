@@ -5,8 +5,12 @@ const setMpRegen = require("./setMpRegen");
 
 module.exports = function () {
     cron.schedule("* * * * * *", () => {
-        setHpRegen();
-        setCpRegen();
-        setMpRegen();
+        try {
+            setHpRegen();
+            setCpRegen();
+            setMpRegen();
+        } catch (e) {
+            console.error(e);
+        }
     })
 }

@@ -1,5 +1,3 @@
-// Переделать шаблон на массив экипировки
-
 module.exports = {
 // Классы и соответствующие им цены и характеристики
     grades: [{
@@ -7,6 +5,7 @@ module.exports = {
         cost: 100,
         lvl: {from: 1, to: 20},
         characteristics: {min: 0, max: 2},
+        penalty: {min: 0, max: 2},
         quality: {min: 0, max: 5},
         persistence: {min: 1, max: 15}
     }, {
@@ -14,6 +13,7 @@ module.exports = {
         cost: 1200,
         lvl: {from: 21, to: 39},
         characteristics: {min: 1, max: 2},
+        penalty: {min: 0, max: 2},
         quality: {min: 0, max: 10},
         persistence: {min: 15, max: 50}
     }, {
@@ -21,6 +21,7 @@ module.exports = {
         cost: 3400,
         lvl: {from: 40, to: 54},
         characteristics: {min: 1, max: 3},
+        penalty: {min: 0, max: 2},
         quality: {min: 0, max: 100},
         persistence: {min: 15, max: 85}
     }, {
@@ -28,6 +29,7 @@ module.exports = {
         cost: 7000,
         lvl: {from: 55, to: 60},
         characteristics: {min: 2, max: 3},
+        penalty: {min: 0, max: 3},
         quality: {min: 0, max: 100},
         persistence: {min: 35, max: 120}
     }, {
@@ -35,6 +37,7 @@ module.exports = {
         cost: 55000,
         lvl: {from: 61, to: 69},
         characteristics: {min: 3, max: 4},
+        penalty: {min: 0, max: 3},
         quality: {min: 0, max: 100},
         persistence: {min: 45, max: 155}
     }, {
@@ -42,6 +45,7 @@ module.exports = {
         cost: 136000,
         lvl: {from: 70, to: 79},
         characteristics: {min: 3, max: 5},
+        penalty: {min: 0, max: 4},
         quality: {min: 0, max: 100},
         persistence: {min: 55, max: 190}
     }, {
@@ -49,6 +53,7 @@ module.exports = {
         cost: 223000,
         lvl: {from: 80, to: 94},
         characteristics: {min: 4, max: 6},
+        penalty: {min: 0, max: 4},
         quality: {min: 0, max: 100},
         persistence: {min: 75, max: 225}
     }, {
@@ -56,6 +61,7 @@ module.exports = {
         cost: 1890000,
         lvl: {from: 95, to: 100},
         characteristics: {min: 6, max: 8},
+        penalty: {min: 0, max: 4},
         quality: {min: 0, max: 100},
         persistence: {min: 90, max: 300}
     }],
@@ -83,7 +89,6 @@ module.exports = {
             typeTranslatedName: "Меч",
             translatedName: "Меч",
             slots: ["leftHand", "rightHand"],
-            penalty: null,
             characteristics: {
                 power: 45,
                 randomDamage: 0.1,
@@ -96,7 +101,6 @@ module.exports = {
             typeTranslatedName: "Двуручный меч",
             translatedName: "Двуручный меч",
             slots: ["leftHand", "rightHand"],
-            penalty: null,
             characteristics: {
                 power: 45,
                 randomDamage: 0.1,
@@ -109,7 +113,6 @@ module.exports = {
             classOwner: ["warrior", "assassin", "archer"],
             translatedName: "Кинжал",
             slots: ["leftHand"],
-            penalty: null,
             characteristics: {
                 power: 30,
                 randomDamage: 0.05,
@@ -123,12 +126,11 @@ module.exports = {
             classOwner: ["mage", "priest"],
             translatedName: "Посох",
             slots: ["leftHand"],
-            penalty: null,
             characteristics: {
                 power: 50,
                 randomDamage: 0.1,
                 mpRestoreSpeed: 0.15,
-                maxMp: 0.18
+                maxMpMul: 1 + 0.18
             }
         }, {
             type: "bow",
@@ -137,11 +139,10 @@ module.exports = {
             classOwner: ["archer", "warrior", "assassin"],
             translatedName: "Лук",
             slots: ["leftHand", "rightHand"],
-            penalty: null,
             characteristics: {
                 power: 38,
                 randomDamage: 0.05,
-                maxCp: 0.05,
+                maxCpMul: 1 + 0.05,
                 criticalChance: 15,
             }
         }, {
@@ -151,12 +152,11 @@ module.exports = {
             classOwner: ["archer", "warrior", "assassin"],
             translatedName: "Арбалет",
             slots: ["leftHand", "rightHand"],
-            penalty: null,
             characteristics: {
                 power: 54,
                 randomDamage: 0.1,
                 criticalChance: 10,
-                criticalDamage: 0.05,
+                criticalDamage: 1 + 0.05,
             }
         }, {
             category: "blunt",
@@ -169,10 +169,10 @@ module.exports = {
             characteristics: {
                 power: 66,
                 randomDamage: 0.2,
-                criticalDamage: 0.5,
+                criticalDamage: 1 + 0.5,
                 cpRestoreSpeed: 0.08,
                 hpRestoreSpeed: 0.1,
-                maxHp: 0.07
+                maxHpMul: 1 + 0.07
             }
         }, {
             category: "fists",
@@ -188,7 +188,7 @@ module.exports = {
                 criticalChance: 12,
                 cpRestoreSpeed: 0.1,
                 hpRestoreSpeed: 0.08,
-                maxCp: 0.05
+                maxCpMul: 1 + 0.05
             }
         }]
     }, {
@@ -202,13 +202,12 @@ module.exports = {
             translatedName: "Шлем",
             slots: ["helmet"],
             category: "helmet",
-            penalty: {
-                mpRestoreSpeed: 0.0155
-            },
+            penalty: {},
             characteristics: {
                 defence: 3,
-                maxHp: 0.017,
-                reduceIncomingDamage: 0.005
+                mpRestoreSpeed: -0.0155,
+                maxHpMul: 1 + 0.017,
+                incomingDamageModifier: 1 + 0.005
             }
         }, {
             type: "medium",
@@ -217,14 +216,12 @@ module.exports = {
             translatedName: "Шлем",
             slots: ["helmet"],
             category: "helmet",
-            penalty: {
-                evasion: 2,
-                cpRestoreSpeed: 0.02
-            },
             characteristics: {
                 defence: 2.5,
                 accuracy: 2,
-                maxCp: 0.003
+                maxCpMul: 1 + 0.003,
+                evasion: -2,
+                cpRestoreSpeed: -0.02
             }
         }, {
             type: "light",
@@ -233,11 +230,9 @@ module.exports = {
             translatedName: "Шлем",
             slots: ["helmet"],
             category: "helmet",
-            penalty: {
-                reduceIncomingDamage: 0.0175
-            },
             characteristics: {
                 defence: 1.75,
+                incomingDamageModifier: 1 + 0.0175,
                 accuracy: 8
             }
         }, {
@@ -247,14 +242,12 @@ module.exports = {
             translatedName: "Тиара",
             slots: ["helmet"],
             category: "helmet",
-            penalty: {
-                reduceIncomingDamage: 0.048
-            },
             characteristics: {
                 defence: 1.55,
-                maxMp: 0.03,
+                maxMpMul: 1 + 0.03,
                 mpRestoreSpeed: 0.045,
-                maxHp: 0.016
+                maxHpMul: 1 + 0.016,
+                incomingDamageModifier: 1 + 0.048
             }
         }, {
             type: "heavy",
@@ -263,14 +256,12 @@ module.exports = {
             translatedName: "Перчатки",
             slots: ["gloves"],
             category: "gloves",
-            penalty: {
-                accuracy: 3,
-                mpRestoreSpeed: 0.03
-            },
             characteristics: {
                 defence: 6,
-                maxHp: 0.024,
-                reduceIncomingDamage: 0.018
+                maxHpMul: 1 + 0.024,
+                incomingDamageModifier: 1 - 0.018,
+                accuracy: -3,
+                mpRestoreSpeed: -0.03
             }
         }, {
             type: "medium",
@@ -279,13 +270,11 @@ module.exports = {
             translatedName: "Перчатки",
             slots: ["gloves"],
             category: "gloves",
-            penalty: {
-                evasion: 2,
-                cpRestoreSpeed: 0.02
-            },
             characteristics: {
                 defence: 4.75,
-                accuracy: 3
+                accuracy: 3,
+                evasion: -2,
+                cpRestoreSpeed: -0.02
             }
         }, {
             type: "light",
@@ -294,13 +283,11 @@ module.exports = {
             translatedName: "Перчатки",
             slots: ["gloves"],
             category: "gloves",
-            penalty: {
-                reduceIncomingDamage: 0.0175
-            },
             characteristics: {
                 defence: 3.5,
-                additionalDamage: 0.025,
-                accuracy: 4
+                additionalDamageMul: 0.025,
+                accuracy: 4,
+                incomingDamageModifier: 1 + 0.0175
             }
         }, {
             type: "robe",
@@ -309,14 +296,12 @@ module.exports = {
             translatedName: "Наручи",
             slots: ["gloves"],
             category: "gloves",
-            penalty: {
-                reduceIncomingDamage: 0.048
-            },
             characteristics: {
                 defence: 2.25,
-                maxMp: 0.04,
+                maxMpMul: 0.04,
                 mpRestoreSpeed: 0.065,
-                maxCp: 0.024
+                maxCpMul: 0.024,
+                incomingDamageModifier: 1 + 0.048
             }
         }, {
             type: "heavy",
@@ -325,14 +310,12 @@ module.exports = {
             translatedName: "Поножи",
             slots: ["down"],
             category: "greaves",
-            penalty: {
-                evasion: 5,
-                accuracy: 4
-            },
             characteristics: {
                 defence: 7,
-                maxCp: 0.04,
-                reduceIncomingDamage: 0.022
+                maxCpMul: 0.04,
+                incomingDamageModifier: 1 + 0.022,
+                evasion: -5,
+                accuracy: -4
             }
         }, {
             type: "medium",
@@ -341,11 +324,9 @@ module.exports = {
             translatedName: "Поножи",
             slots: ["down"],
             category: "greaves",
-            penalty: {
-                hpRestoreSpeed: 0.02
-            },
             characteristics: {
-                defence: 5.55
+                defence: 5.55,
+                hpRestoreSpeed: -0.02
             }
         }, {
             type: "light",
@@ -354,13 +335,11 @@ module.exports = {
             translatedName: "Поножи",
             slots: ["down"],
             category: "greaves",
-            penalty: {
-                reduceIncomingDamage: 0.0275
-            },
             characteristics: {
                 defence: 3.85,
                 evasion: 7,
-                accuracy: 3
+                accuracy: 3,
+                incomingDamageModifier: 1 + 0.0275
             }
         }, {
             type: "robe",
@@ -369,14 +348,12 @@ module.exports = {
             translatedName: "Обмотки",
             slots: ["down"],
             category: "greaves",
-            penalty: {
-                reduceIncomingDamage: 0.048
-            },
             characteristics: {
                 defence: 2.98,
-                maxMp: 0.06,
+                maxMpMul: 1 + 0.06,
                 mpRestoreSpeed: 0.015,
-                maxHp: 0.034
+                maxHpMul: 1 + 0.034,
+                incomingDamageModifier: 1 + 0.048
             }
         }, {
             type: "heavy",
@@ -385,15 +362,13 @@ module.exports = {
             translatedName: "Ботинки",
             slots: ["boots"],
             category: "boots",
-            penalty: {
-                evasion: 5,
-                accuracy: 3,
-                hpRestoreSpeed: 0.03
-            },
             characteristics: {
                 defence: 5,
-                maxMp: 0.027,
-                reduceIncomingDamage: 0.006
+                maxMpMul: 0.027,
+                incomingDamageModifier: 1 + 0.006,
+                evasion: -5,
+                accuracy: -3,
+                hpRestoreSpeed: -0.03
             }
         }, {
             type: "medium",
@@ -402,14 +377,12 @@ module.exports = {
             translatedName: "Ботинки",
             slots: ["boots"],
             category: "boots",
-            penalty: {
-                evasion: 1,
-                mpRestoreSpeed: 0.03
-            },
             characteristics: {
                 defence: 3.5,
                 accuracy: 6,
-                additionalDamage: 0.025
+                additionalDamageMul: 1 + 0.025,
+                evasion: -1,
+                mpRestoreSpeed: -0.03
             }
         }, {
             type: "light",
@@ -418,13 +391,11 @@ module.exports = {
             translatedName: "Сапоги",
             slots: ["boots"],
             category: "boots",
-            penalty: {
-                reduceIncomingDamage: 0.0275
-            },
             characteristics: {
                 defence: 2.5,
                 evasion: 6,
-                accuracy: 4
+                accuracy: 4,
+                incomingDamageModifier: 1 + 0.0275
             }
         }, {
             type: "robe",
@@ -433,11 +404,9 @@ module.exports = {
             translatedName: "Ножные браслеты",
             slots: ["boots"],
             category: "boots",
-            penalty: {
-                reduceIncomingDamage: 0.048
-            },
             characteristics: {
-                defence: 1.75
+                defence: 1.75,
+                incomingDamageModifier: 1 + 0.048
             }
         }, {
             type: "heavy",
@@ -446,14 +415,12 @@ module.exports = {
             translatedName: "Верхняя часть доспеха",
             slots: ["up"],
             category: "body",
-            penalty: {
-                evasion: 8,
-                accuracy: 6
-            },
             characteristics: {
                 defence: 9,
-                maxHp: 0.0244,
-                reduceIncomingDamage: 0.022
+                maxHpMul: 1 + 0.0244,
+                incomingDamageModifier: 1 - 0.022,
+                evasion: -8,
+                accuracy: -6
             }
         }, {
             type: "medium",
@@ -462,14 +429,12 @@ module.exports = {
             translatedName: "Верхняя часть доспеха",
             slots: ["up"],
             category: "body",
-            penalty: {
-                evasion: 2,
-                cpRestoreSpeed: 0.02
-            },
             characteristics: {
                 defence: 7.5,
                 accuracy: 6,
-                additionalDamage: 0.015
+                additionalDamageMul: 1 + 0.015,
+                evasion: -2,
+                cpRestoreSpeed: -0.02
             }
         }, {
             type: "light",
@@ -478,14 +443,12 @@ module.exports = {
             translatedName: "Верхняя часть доспеха",
             slots: ["up"],
             category: "body",
-            penalty: {
-                reduceIncomingDamage: 0.0275
-            },
             characteristics: {
                 defence: 5.5,
                 evasion: 10,
-                additionalDamage: 0.025,
-                accuracy: 8
+                additionalDamageMul: 1 + 0.025,
+                accuracy: 8,
+                incomingDamageModifier: 1 + 0.0275
             }
         }, {
             type: "robe",
@@ -494,14 +457,13 @@ module.exports = {
             translatedName: "Верхняя часть доспеха",
             slots: ["up"],
             category: "body",
-            penalty: {
-                reduceIncomingDamage: 0.048
-            },
+            penalty: {},
             characteristics: {
                 defence: 4.75,
-                maxMp: 0.03,
+                maxMpMul: 1 + 0.03,
                 mpRestoreSpeed: 0.045,
-                maxHp: 0.016
+                incomingDamageModifier: 1 + 0.048,
+                maxHpMul: 1 + 0.016
             }
         }, {
             type: "heavy",
@@ -510,15 +472,13 @@ module.exports = {
             translatedName: "Целый доспех",
             slots: ["up", "down"],
             category: "fullBody",
-            penalty: {
-                evasion: 7,
-                accuracy: 5,
-                mpRestoreSpeed: 0.08
-            },
             characteristics: {
                 defence: 15,
-                maxHp: 0.0544,
-                reduceIncomingDamage: 0.042
+                maxHpMul: 1 + 0.0544,
+                incomingDamageModifier: 1 + 0.042,
+                evasion: -7,
+                accuracy: -5,
+                mpRestoreSpeed: -0.08
             }
         }, {
             type: "medium",
@@ -527,14 +487,12 @@ module.exports = {
             translatedName: "Целый доспех",
             slots: ["up", "down"],
             category: "fullBody",
-            penalty: {
-                evasion: 2,
-                cpRestoreSpeed: 0.02
-            },
             characteristics: {
                 defence: 11.5,
                 accuracy: 4,
-                additionalDamage: 0.015
+                additionalDamageMul: 1 + 0.015,
+                evasion: -2,
+                cpRestoreSpeed: -0.02
             }
         }, {
             type: "light",
@@ -543,13 +501,11 @@ module.exports = {
             translatedName: "Одеяние",
             slots: ["up", "down"],
             category: "fullBody",
-            penalty: {
-                reduceIncomingDamage: 0.0275
-            },
             characteristics: {
                 defence: 9.7,
                 evasion: 12,
-                additionalDamage: 0.015,
+                additionalDamageMul: 1 + 0.015,
+                incomingDamageModifier: 1 + 0.0275,
                 accuracy: 2
             }
         }, {
@@ -559,14 +515,12 @@ module.exports = {
             translatedName: "Мантия",
             slots: ["up", "down"],
             category: "fullBody",
-            penalty: {
-                reduceIncomingDamage: 0.048
-            },
             characteristics: {
                 defence: 8.95,
-                maxMp: 0.07,
+                maxMpMul: 1 + 0.07,
                 mpRestoreSpeed: 0.025,
-                maxHp: 0.036
+                incomingDamageModifier: 1 + 0.048,
+                maxHpMul: 1 + 0.036
             }
         }]
     }, {
@@ -579,14 +533,12 @@ module.exports = {
             typeTranslatedName: "Большой щит",
             classOwner: ["priest", "mage", "warrior"],
             slots: ["rightHand"],
-            penalty: {
-                evasion: 10,
-                accuracy: 8
-            },
             characteristics: {
                 block: 45,
-                maxHp: 0.03,
-                reduceIncomingDamage: 0.05
+                maxHpMul: 1 + 0.03,
+                incomingDamageModifier: 0.05,
+                evasion: -10,
+                accuracy: -8
             }
         }, {
             type: "smallShield",
@@ -594,14 +546,12 @@ module.exports = {
             translatedName: "Маленький щит",
             typeTranslatedName: "Маленький щит",
             slots: ["rightHand"],
-            penalty: {
-                evasion: 4,
-                accuracy: 2
-            },
             characteristics: {
                 block: 15,
-                maxCp: 0.06,
-                cpRestoreSpeed: 0.05
+                maxCpMul: 1 + 0.06,
+                cpRestoreSpeed: 0.05,
+                evasion: -4,
+                accuracy: -2
             }
         }, {
             category: "sigill",
@@ -610,14 +560,12 @@ module.exports = {
             translatedName: "Сигил",
             type: "sigill",
             slots: ["rightHand"],
-            penalty: {
-                evasion: 2,
-                accuracy: 2
-            },
             characteristics: {
                 block: 7,
-                maxMp: 0.08,
-                mpRestoreSpeed: 0.09
+                maxMpMul: 1 + 0.08,
+                mpRestoreSpeed: 0.09,
+                evasion: -2,
+                accuracy: -2
             }
         }]
     }

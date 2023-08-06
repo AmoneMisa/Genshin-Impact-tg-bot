@@ -1,6 +1,7 @@
+const getClassStatsFromTemplate = require("./getGameClassStatsFromTemplate");
 module.exports = function (gameClass) {
     if (!gameClass) {
-        return null;
+        gameClass = getClassStatsFromTemplate("noClass");
     }
 
     return {skills: gameClass.skills, stats: gameClass.stats || gameClass};

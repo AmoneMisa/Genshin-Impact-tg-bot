@@ -6,7 +6,12 @@ const getCurrentCp = require("../game/player/getters/getCurrentCp");
 module.exports = function () {
     for (let chatSession of Object.values(sessions)) {
         for (let session of Object.values(chatSession.members)) {
+            if (session.userChatData.user.is_bot) {
+                continue;
+            }
+
             let cpRegenSpeed = session.game.gameClass.stats.cpRestoreSpeed;
+
             if (getCurrentCp(session) > getMaxCp(session)) {
                 session.game.gameClass.stats.cp = getMaxCp(session);
                 continue;

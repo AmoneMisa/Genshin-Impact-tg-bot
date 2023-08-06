@@ -1,5 +1,13 @@
-module.exports = function (session, statName) {
+module.exports = function (session, statName, isMul = false) {
+    if (!session.game || !session.game.equipmentStats) {
+        return ;
+    }
+
     let statValue = (statName === "defencePower" || statName === "power") ? 1 : 0;
+
+    if (isMul) {
+        statValue = 1;
+    }
 
     for (let slot of Object.values(session.game.equipmentStats)) {
         if (!slot) {
@@ -11,10 +19,18 @@ module.exports = function (session, statName) {
                 continue;
             }
 
-            if (stat.type !== "penalty") {
-                statValue += stat.value;
+            if (isMul) {
+                if (stat.type !== "penalty") {
+                    statValue *= 1 + stat.value;
+                } else {
+                    statValue *= 1 - stat.value;
+                }
             } else {
-                statValue -= stat.value;
+                if (stat.type !== "penalty") {
+                    statValue += stat.value;
+                } else {
+                    statValue -= stat.value;
+                }
             }
         }
 

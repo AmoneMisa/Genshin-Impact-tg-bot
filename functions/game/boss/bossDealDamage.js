@@ -1,11 +1,12 @@
 const calcBossDamage = require('./calcBossDamage');
+const getCurrentHp = require("../player/getters/getCurrentHp");
 
 module.exports = function (members, boss) {
     if (!boss) {
         throw new Error("Босс не найден!");
     }
 
-    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided && member.game.gameClass.stats.hp > 0);
+    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided && getCurrentHp(member) > 0);
 
     if (!filteredMembers.length) {
         boss.skill = {};
@@ -19,7 +20,7 @@ module.exports = function (members, boss) {
 
     for (let member of filteredMembers) {
         let player = member.game;
-        let dmg = Math.ceil(calcBossDamage(boss, player));
+        let dmg = Math.ceil(calcBossDamage(boss, member));
         let playerShield = player.effects.find(effect => effect.name === "shield");
         let shield;
 

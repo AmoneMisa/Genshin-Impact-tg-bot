@@ -1,6 +1,24 @@
 const userStatsMap = require("../../../dictionaries/statsDictionary");
 const inventory = require("../../../dictionaries/inventory");
 const getEmoji = require("../../../functions/getters/getEmoji");
+const isStatPenalty = require("../../game/equipment/isStatPenalty");
+
+function getStr(key, value) {
+    let strValue;
+
+    if (key.match(/Mul$/) || key === "incomingDamageModifier") {
+        value = ((value - 1) * 100);
+        strValue = value.toFixed(2) + '%';
+    } else {
+        strValue = '' + value;
+    }
+
+    if (value > 0) {
+        strValue = '+' + strValue;
+    }
+
+    return `${getEmoji(key)} ${userStatsMap[key]}: ${strValue}\n`;
+}
 
 module.exports = function (item) {
     let str = `${item.name}\n\n`;
@@ -8,11 +26,12 @@ module.exports = function (item) {
 
     if (item.mainType === "shield") {
         for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
-            str += `${getEmoji(characteristicKey)} ${userStatsMap[characteristicKey]}: ${characteristicValue}\n`;
+            str += getStr(characteristicKey, characteristicValue);
         }
     } else if (item.mainType === "armor") {
         for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
-            str += `${getEmoji(characteristicKey)} ${userStatsMap[characteristicKey]}: ${characteristicValue}\n`;
+            console.log(characteristicKey, characteristicValue)
+            str += getStr(characteristicKey, characteristicValue);
         }
 
         str += `Тип: ${getEmoji(item.kind)} ${item.translatedName}\n`;
@@ -33,16 +52,21 @@ module.exports = function (item) {
         }
     }
 
-    if (item.stats.length) {
+    let filteredStats = item.stats.filter(_stat => !isStatPenalty(_stat.name, _stat.value));
+
+    if (filteredStats.length) {
         str += `\n${getEmoji(item.rarity)} Дополнительные характеристики:\n`;
-        for (let stat of item.stats) {
-            str += `${getEmoji(stat.name)} ${userStatsMap[stat.name]}: ${stat.value}\n`;
+        for (let stat of filteredStats) {
+            str += getStr(stat.name, stat.value);
         }
     }
 
-    if (item.penalty) {
-        for (let [statKey, statValue] of Object.entries(item.penalty)) {
-            str += `${getEmoji(statKey)} ${userStatsMap[statKey]}: ${statValue}\n`
+    let penalty = item.stats.filter(_stat => isStatPenalty(_stat.name, _stat.value));
+
+    if (penalty.length) {
+        str += `\nОтрицательные характеристики:\n`;
+        for (let stat of penalty) {
+            str += getStr(stat.name, stat.value);
         }
     }
 

@@ -3,6 +3,7 @@ const equipmentBonusStatsTemplate = require("../../../templates/equipmentBonusSt
 const getRandom = require("../../getters/getRandom");
 const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
 const getValueByChance = require("../../getters/getValueByChance");
+const isStatPenalty = require("../../game/equipment/isStatPenalty");
 const getNewChancesArrayByValue = require("../../getters/getNewChancesArrayByValue");
 const equipmentDictionary = require("../../../dictionaries/equipment");
 
@@ -23,10 +24,9 @@ module.exports = function (gameClass, currentLvl, grade) {
         category: buildItem.kind.category,
         kind: buildItem.kind.type,
         characteristics: buildItem.kind.characteristics,
-        penalty: buildItem.kind.penalty,
         translatedName: buildItem.kind.translatedName,
         slots: buildItem.kind.slots,
-        stats: buildItem.stats,
+        stats: [...buildItem.stats, ...buildItem.penalty],
         cost: cost
     }
 }
@@ -50,8 +50,11 @@ function getItemData(gameClass, currentLvl, calledGrade) {
     const {mainType, kind} = getItemType();
     const {quality, maxQuality} = getItemQuality(grade);
     const {persistence, maxPersistence} = getItemPersistence(grade);
-    const stats = getItemAdditionalStats(grade);
-    const rarity = getItemRarity(stats.length);
+    let characteristicsKeys = Object.keys(kind.characteristics);
+    const stats = getItemAdditionalStats(grade, characteristicsKeys);
+    characteristicsKeys = [...characteristicsKeys, stats.map(stat => stat.name)];
+    const penalty = getItemAdditionalPenaltyStats(grade, characteristicsKeys);
+    const rarity = getItemRarity(Object.entries(stats).filter(([name, value]) => !isStatPenalty(name, value)).length);
 
     return {
         grade,
@@ -62,7 +65,8 @@ function getItemData(gameClass, currentLvl, calledGrade) {
         rarity,
         mainType,
         kind,
-        stats
+        stats,
+        penalty
     };
 }
 
@@ -121,7 +125,7 @@ function getItemType() {
 }
 
 // Функции для получения характеристик предмета
-function getItemAdditionalStats(itemGrade) {
+function getItemAdditionalStats(itemGrade, characteristicsKeys) {
     let itemTemplateGrade = equipmentTemplate.grades.find(grade => grade.name === itemGrade.name);
     let min = itemTemplateGrade.characteristics.min;
     let max = itemTemplateGrade.characteristics.max;
@@ -147,19 +151,60 @@ function getItemAdditionalStats(itemGrade) {
 
     let chance = Math.random();
 
-    return getRandomItemStats(getValueByChance(chance, chances), itemGrade);
+    return getRandomItemStats(getValueByChance(chance, chances), itemGrade, characteristicsKeys);
 }
 
-function getRandomItemStats(count, grade) {
+// Функции для получения штрафа предмета
+function getItemAdditionalPenaltyStats(itemGrade, characteristicsKeys) {
+    let itemTemplateGrade = equipmentTemplate.grades.find(grade => grade.name === itemGrade.name);
+
+    if (!itemTemplateGrade) {
+        throw new Error(`Не найден такой грейд: ${JSON.stringify(itemGrade)}`);
+    }
+
+    let min = itemTemplateGrade.penalty.min;
+    let max = itemTemplateGrade.penalty.max;
+    let diff = max - min;
+    let chances;
+
+    if (diff > 1) {
+        let middle = Math.round((min + max) / 2);
+        chances = [{
+            chance: 0.63, value: min
+        }, {
+            chance: 0.3, value: middle
+        }, {
+            chance: 0.07, value: max
+        }];
+    } else {
+        chances = [{
+            chance: 0.93, value: min
+        }, {
+            chance: 0.07, value: max
+        }];
+    }
+
+    let chance = Math.random();
+
+    return getRandomItemStats(getValueByChance(chance, chances), itemGrade, characteristicsKeys);
+}
+
+function getRandomItemStats(count, grade, characteristicsKeys) {
     const possibleStats = [
+        "skillCooltimeMul",
         "attack",
+        "attackMul",
         "defence",
+        "defenceMul",
         "criticalChance",
         "criticalDamage",
-        "reduceIncomingDamage",
-        "additionalDamage",
+        "incomingDamageModifier",
+        "additionalDamageMul",
+        "maxHpMul",
         "maxHp",
+        "maxCpMul",
         "maxCp",
+        "maxMpMul",
         "maxMp",
         "hpRestoreSpeed",
         "mpRestoreSpeed",
@@ -167,22 +212,29 @@ function getRandomItemStats(count, grade) {
         "speed",
         "block",
         "accuracy",
-        "evasion"
+        "evasion",
+        "healPowerMul",
+        "healPowerPotionsMul",
     ];
 
-    let characteristics = [];
+    let newCharacteristics = [];
+    let newCharacteristicsKeys = [];
 
-    while (characteristics.length < count) {
+    while (newCharacteristics.length < count) {
         let randomStat = possibleStats[getRandom(0, possibleStats.length - 1)];
-        if (characteristics.includes(randomStat)) {
+        if (characteristicsKeys.includes(randomStat)) {
+            continue;
+        }
+        if (newCharacteristicsKeys.includes(randomStat)) {
             continue;
         }
 
         let stat = {name: randomStat, value: setItemStatsValue(randomStat, grade)}
-        characteristics.push(stat);
+        newCharacteristics.push(stat);
+        newCharacteristicsKeys.push(randomStat);
     }
 
-    return characteristics;
+    return newCharacteristics;
 }
 
 function setItemStatsValue(stat, itemGrade) {
@@ -205,6 +257,7 @@ function setItemStatsValue(stat, itemGrade) {
 function getItemCost(item) {
     let gradePrice = equipmentTemplate.grades.find(grade => grade.name === item.grade.name).cost;
     let rarityPrice = equipmentTemplate.rarity.find(rarity => rarity.name === item.rarity.name).cost;
+    // let penalty = item.kind.penalty;
     let setPrice = item.isSet ? 65000 : 0;
     let qualityPrice = 300 + (item.quality / 100) * (100000 - 300);
     let persistencePrice = 90 + (item.persistence / 100) * (8900 - 90);
@@ -219,4 +272,5 @@ function getItemCost(item) {
 // если снаряжение принадлежит к сэту снаряжения (набор снаряжения будет указан в отдельном списке.), то 65000 +
 // качество снаряжения (от 300 до 100000 в зависимости от количества единиц качества) +
 // прочность снаряжения (от 90 до 8900 в зависимости от максимальных единиц прочности).
+// За каждый негативный стат - минус 5000
 }

@@ -3,6 +3,7 @@ const lodash = require("lodash");
 const potionsInInventoryTemplate = require("../../templates/potionsInInventoryTemplate");
 const classStatsTemplate = require("../../templates/classStatsTemplate");
 const classSkillsTemplate = require("../../templates/classSkillsTemplate");
+
 module.exports = function (session) {
     if (!session.game) {
         session.game = {

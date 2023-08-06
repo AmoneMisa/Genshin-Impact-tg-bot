@@ -173,7 +173,7 @@ bot.on("callback_query", async (callback) => {
 });
 
 evenSecond();
-evenMinute();
+// evenMinute();
 evenTwoMinutes();
 evenFiveMinutes();
 evenHour();

@@ -1,8 +1,7 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 const userDealDamage = require('../../../functions/game/player/userDealDamage');
 const setSkillCooldown = require('../../../functions/game/player/setSkillCooldown');
+const getCurrentHp = require('../../../functions/game/player/getters/getCurrentHp');
 const userDealDamageMessage = require('../../../functions/game/player/userDealDamageMessage');
 const userHealSkill = require('../../../functions/game/player/userHealSkill');
 const userShieldSkill = require('../../../functions/game/player/userShieldSkill');
@@ -29,7 +28,6 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
     let members = getMembers(callback.message.chat.id);
     let aliveBoss = getAliveBoss(callback.message.chat.id);
     let isCanBeUsed = isPlayerCanUseSkill(session, skill);
-    let messageId = null;
 
     if (isCanBeUsed !== 0) {
         return sendMessageWithDelete(callback.message.chat.id, isPlayerCanUseSkillMessage(isCanBeUsed, skill), {}, 10 * 1000);
@@ -60,12 +58,11 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
             let heal = userHealSkill(session, skill);
             session.game.gameClass.stats.hp += heal;
 
-            if (session.game.gameClass.stats.hp < 0) {
+            if (getCurrentHp(session) < 0) {
                 session.game.gameClass.stats.hp = 0;
             }
 
-            sendMessage(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${session.game.gameClass.stats.hp}`)
-                .then(message => messageId = message.message_id);
+            await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(session)}`, 15 * 1000);
         } else if (skill.isShield) {
             let shield = userShieldSkill(session, skill);
             let shieldEffect = session.game.effects.find(effect => effect.name === "shield")
@@ -76,15 +73,11 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
                 shieldEffect.value = shield;
             }
 
-            sendMessage(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`)
-                .then(message => messageId = message.message_id);
+            await sendMessageWithDelete(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`, 15 * 1000);
         }
 
-        setSkillCooldown(skill);
+        setSkillCooldown(skill, session);
     } else {
-        sendMessage(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.")
-            .then(message => messageId = message.message_id);
+        await sendMessageWithDelete(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.", 15 * 1000);
     }
-
-    deleteMessageTimeout(callback.message.chat.id, messageId, 15 * 1000);
 }]];

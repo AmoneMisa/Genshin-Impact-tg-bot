@@ -7,5 +7,5 @@ module.exports = function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return Math.round(stats.maxMp * (1 + getEquipStatByName(session, "maxMp")));
+    return stats.incomingDamageModifier * getEquipStatByName(session, "incomingDamageModifier", true);
 };

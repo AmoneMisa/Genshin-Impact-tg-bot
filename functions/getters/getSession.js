@@ -4,8 +4,6 @@ const getMembers = require('./getMembers');
 const getLostedFieldsInSession = require('./getLostedFieldsInSession');
 const classStatsTemplate = require('../../templates/classStatsTemplate');
 const classSkillsTemplate = require('../../templates/classSkillsTemplate');
-const potionsInInventoryTemplate = require('../../templates/potionsInInventoryTemplate');
-const lodash = require("lodash");
 
 module.exports = async function (chatId, userId) {
     let members = getMembers(chatId);

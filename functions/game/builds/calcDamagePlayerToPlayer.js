@@ -3,9 +3,20 @@ const getCriticalChance = require("../player/getters/getCriticalChance");
 const getCriticalDamage = require("../player/getters/getCriticalDamage");
 const getCriticalDamageMultiplier = require("../player/getters/getCriticalDamageMultiplier");
 const getAttack = require("../player/getters/getAttack");
-const getAdditionalDamage = require("../player/getters/getAdditionalDamage");
+const getMaxHp = require("../player/getters/getMaxHp");
+const getCurrentHp = require("../player/getters/getCurrentHp");
+const getMaxCp = require("../player/getters/getMaxCp");
+const getMaxMp = require("../player/getters/getMaxMp");
+const getCurrentMp = require("../player/getters/getCurrentMp");
+const getAdditionalDamageMul = require("../player/getters/getAdditionalDamageMul");
 const getDefence = require("../player/getters/getDefence");
-const getReduceIncomingDamage = require("../player/getters/getReduceIncomingDamage");
+const getAccuracy = require("../player/getters/getAccuracy");
+const getBlock = require("../player/getters/getBlock");
+const getEvasion = require("../player/getters/getEvasion");
+const getMpRestoreSpeed = require("../player/getters/getMpRestoreSpeed");
+const getHpRestoreSpeed = require("../player/getters/getHpRestoreSpeed");
+const getCpRestoreSpeed = require("../player/getters/getCpRestoreSpeed");
+const getIncomingDamageModifier = require("../player/getters/getIncomingDamageModifier");
 const getDamageMultiplier = require("../player/getters/getDamageMultiplier");
 const getRandom = require("../../getters/getRandom");
 const limit = require("../../misc/limit");
@@ -15,14 +26,14 @@ module.exports = function (attacker, defender) {
     let skills = attacker.game.gameClass.skills;
     skills.sort(compareSkills).reverse();
     let cooldowns = skills.map(_ => 0);
-    let defenderHp =  defender.game.gameClass.stats.maxHp;
-    let defenderMaxHp =  defender.game.gameClass.stats.maxHp;
-    let defenderCp = defender.game.gameClass.stats.maxCp;
-    let defenderMaxCp = defender.game.gameClass.stats.maxCp;
-    let attackerHp = attacker.game.gameClass.stats.hp;
-    let attackerMaxMp = attacker.game.gameClass.stats.maxMp;
-    let attackerMp = attacker.game.gameClass.stats.mp;
-    let attackerMpRestoreSpeed = attacker.game.gameClass.stats.mpRestoreSpeed;
+    let defenderHp =  getMaxHp(defender);
+    let defenderMaxHp =  getMaxHp(defender);
+    let defenderCp = getMaxCp(defender);
+    let defenderMaxCp = getMaxCp(defender);
+    let attackerHp = getCurrentHp(attacker);
+    let attackerMaxMp = getMaxMp(attacker);
+    let attackerMp = getCurrentMp(attacker);
+    let attackerMpRestoreSpeed = getMpRestoreSpeed(attacker);
     // расчёт суммарного урона атакующего по защитнику за 2 минуты.
     for (let i = 0; i < 120; i++) {
         for (let j = 0; j < skills.length; j++) {
@@ -53,8 +64,8 @@ module.exports = function (attacker, defender) {
 
         attackerMp = Math.min(attackerMaxMp, attackerMp + attackerMpRestoreSpeed);
         cooldowns = cooldowns.map(cooldown => Math.max(0, cooldown - 1));
-        defenderHp = Math.min(defenderMaxHp, defenderHp + defender.game.gameClass.stats.hpRestoreSpeed);
-        defenderCp = Math.min(defenderMaxCp, defenderCp + defender.game.gameClass.stats.cpRestoreSpeed);
+        defenderHp = Math.min(defenderMaxHp, defenderHp + getHpRestoreSpeed(defender));
+        defenderCp = Math.min(defenderMaxCp, defenderCp + getCpRestoreSpeed(defender));
     }
 
     return defenderHp;
@@ -77,7 +88,7 @@ function calculateDamage(attacker, defender, skill) {
     // Так же, если уровень защитника на 8 и более, выше, чем уровень нападающего, защитник всегда уклоняется.
     if (!isMagicClass || (defender.game.stats.lvl - attacker.game.stats.lvl < 8)) {
         let diff =  limit(
-            attacker.game.gameClass.stats.accuracy - defender.game.gameClass.stats.evasion,
+            getAccuracy(attacker) - getEvasion(defender),
             -25, 10
         );
         let i = diff + 25;
@@ -89,7 +100,7 @@ function calculateDamage(attacker, defender, skill) {
     if (isHit) {
         damage = calcSkillDamage(attacker, defender, skill);
         // Проверка на блок урона
-        const blockRate = (defender.game.gameClass.stats.block - 1) / (135 - 1);
+        const blockRate = (getBlock(defender) - 1) / (135 - 1);
         // Минимальный шанс заблокировать урон - 1.75%, максимальный - 65%.
         const blockChance = 0.0175 + (0.65 - 0.0175) * blockRate;
 
@@ -129,10 +140,10 @@ function calcSkillDamage(attacker, defender, skill) {
     let attack = getAttack(attackerGameClass, attacker);
     let damageMultiplier = getDamageMultiplier(attacker.game.effects);
     let defenderDefence = getDefence(defenderGameClass, defender);
-    let additionalDamage = getAdditionalDamage(attackerGameClass, attacker) + 1;
-    let reduceIncomingDamage = getReduceIncomingDamage(defenderGameClass, defender) + 1;
+    let additionalDamageMul = getAdditionalDamageMul(attackerGameClass, attacker) + 1;
+    let incomingDamageModifier = getIncomingDamageModifier(defenderGameClass, defender) + 1;
 
-    dmg = getRandom(9, 70) * attack / defenderDefence * modifier * additionalDamage;
+    dmg = 70 * attack / defenderDefence * modifier * additionalDamageMul;
     dmg *= damageMultiplier;
 
     if (getRandom(1, 100) <= criticalChance) {
@@ -147,7 +158,7 @@ function calcSkillDamage(attacker, defender, skill) {
         }
     }
 
-    dmg = dmg * reduceIncomingDamage;
+    dmg = dmg * incomingDamageModifier;
     dmg = Math.ceil(dmg);
 
     return dmg;

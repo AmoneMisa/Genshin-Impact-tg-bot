@@ -2,11 +2,12 @@ const calcDamagePlayerToPlayer = require('./calcDamagePlayerToPlayer');
 const calculateIncreaseGuardedResources = require('./calculateIncreaseGuardedResources');
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const setLevel = require("../player/setLevel");
+const getMaxHp = require("../player/getters/getMaxHp");
 
 module.exports = function (currentUser, targetUser) {
     let remainHp = calcDamagePlayerToPlayer(currentUser, targetUser);
     let buildTemplate = buildsTemplate["palace"];
-    let maxHp = targetUser.game.gameClass.stats.maxHp;
+    let maxHp = getMaxHp(targetUser, targetUser.game.gameClass);
 
     if (!targetUser.game.stealImmuneTimer) {
         targetUser.game.stealImmuneTimer = 0;

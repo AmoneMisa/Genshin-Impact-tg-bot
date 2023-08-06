@@ -3,6 +3,10 @@ const checkAccumulateTimer = require("../game/builds/checkAccumulateTimer");
 
 module.exports = function () {
     cron.schedule('0 * * * *', async () => {
-        await checkAccumulateTimer();
+        try {
+            await checkAccumulateTimer();
+        } catch (e) {
+            console.error(e);
+        }
     });
 }

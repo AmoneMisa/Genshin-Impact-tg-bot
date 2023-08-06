@@ -1,8 +1,9 @@
 const inventoryTranslate = require("../../../../dictionaries/inventory");
 const statsDictionary = require("../../../../dictionaries/statsDictionary");
 const getEmoji = require("../../../getters/getEmoji");
+const lodash = require("lodash");
 
-let percentageStats = ["criticalDamage", "reduceIncomingDamage", "additionalDamage", "maxHp", "maxCp", "maxMp"];
+let percentageStats = ["criticalDamage", "incomingDamageModifier", "additionalDamageMul", "maxHp", "maxCp", "maxMp"];
 
 module.exports = function (session) {
     let equipmentStats = session.game.equipmentStats;
@@ -10,7 +11,19 @@ module.exports = function (session) {
 
     for (let [statName, stat] of Object.entries(equipmentStats)) {
         if (stat === null) {
-            return;
+            continue;
+        }
+
+        if (statName === "leftHand") {
+            if (lodash.isEqual(equipmentStats["rightHand"], stat)) {
+                continue;
+            }
+        }
+
+        if (statName === "up") {
+            if (lodash.isEqual(equipmentStats["down"], stat)) {
+                continue;
+            }
         }
 
         message += `\n${getEmoji(statName)} ${inventoryTranslate[statName]}: ${stat.name}\n`;
@@ -24,6 +37,10 @@ module.exports = function (session) {
 
             if (addStats.type === "penalty") {
                 penaltyStats.push(addStats);
+                continue;
+            }
+
+            if (addStats.name === "randomDamage") {
                 continue;
             }
 
