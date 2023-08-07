@@ -11,16 +11,16 @@ const bossSendLoot = require('../../../functions/game/boss/bossSendLoot');
 const bossLootMessage = require('../../../functions/game/boss/bossLootMessage');
 const getAliveBoss = require('../../../functions/game/boss/getBossStatus/getAliveBoss');
 const getMembers = require('../../../functions/getters/getMembers');
-const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
 const isBossAlive = require("../../../functions/game/boss/getBossStatus/isBossAlive");
 const skillUsagePayCost = require('../../../functions/game/player/skillUsagePayCost');
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
     await deleteMessage(callback.message.chat.id, callback.message.message_id);
 
-    if (!callback.message?.text?.includes(getUserName(session, "nickname")) && !callback?.message?.caption?.includes(getUserName(session, "nickname"))) {
-        return;
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
     const [, skillSlot] = callback.data.match(/^skill\.([0-9]+)$/);
@@ -62,7 +62,7 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
                 session.game.gameClass.stats.hp = 0;
             }
 
-            await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(session)}`, 15 * 1000);
+            await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(session)}`, {}, 15 * 1000);
         } else if (skill.isShield) {
             let shield = userShieldSkill(session, skill);
             let shieldEffect = session.game.effects.find(effect => effect.name === "shield")
@@ -73,11 +73,11 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
                 shieldEffect.value = shield;
             }
 
-            await sendMessageWithDelete(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`, 15 * 1000);
+            await sendMessageWithDelete(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`, {},15 * 1000);
         }
 
         setSkillCooldown(skill, session);
     } else {
-        await sendMessageWithDelete(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.", 15 * 1000);
+        await sendMessageWithDelete(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.", {},15 * 1000);
     }
 }]];

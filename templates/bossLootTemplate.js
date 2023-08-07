@@ -62,25 +62,28 @@ module.exports = {
         from: 38,
         chance: 62
     }],
-    equipment: [{
-        equipmentLvlModifier: 2, // Лут выдаётся случайно. Первому месту падает всегда одна вещь, остальным - случайно.
-        minAmount: 80,
-        from: 0,
-        chance: 1
-    }, {
-        maxAmount: 345,
-        minAmount: 30,
-        from: 2,
-        chance: 4
-    }, {
-        maxAmount: 230,
-        minAmount: 15,
-        from: 7,
-        chance: 30
-    }, {
-        maxAmount: 150,
-        minAmount: 3,
-        from: 38,
-        chance: 62
-    }]
+    // equipment: [{
+    //     // Лут выдаётся случайно. Первому месту падает всегда одна вещь, остальным - случайно.
+    //     // При этом, первое место может получить дополнительную вещь из числа тех, что выпадают случайно
+    //     // session.game.stats.lvl, randomGrade
+    //     equipmentLvlModifier: 2,
+    //     minAmount: 80,
+    //     from: 0,
+    //     chance: 1
+    // }, {
+    //     maxAmount: 345,
+    //     minAmount: 30,
+    //     from: 2,
+    //     chance: 4
+    // }, {
+    //     maxAmount: 230,
+    //     minAmount: 15,
+    //     from: 7,
+    //     chance: 30
+    // }, {
+    //     maxAmount: 150,
+    //     minAmount: 3,
+    //     from: 38,
+    //     chance: 62
+    // }]
 }

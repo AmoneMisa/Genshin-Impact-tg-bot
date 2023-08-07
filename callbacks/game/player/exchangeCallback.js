@@ -5,7 +5,6 @@ const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 module.exports = [[/^crystal_buy\.([\-0-9]+)+$/, function (session, callback) {
     let [, amount] = callback.data.match(/^crystal_buy\.([\-0-9]+)$/);
-
     amount = parseInt(amount);
 
     if (!checkUserCall(callback, session)) {

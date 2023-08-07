@@ -8,15 +8,19 @@ const stealResources = require('../../../functions/game/builds/stealResources');
 const getEmoji = require("../../../functions/getters/getEmoji");
 const getTime = require("../../../functions/getters/getTime");
 const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 function getRemainHpInPercent(maxHp, remainHp) {
     return (remainHp / maxHp * 100).toFixed(2);
 }
 
 module.exports = [[/^steal_resources\.([0-9]+)$/, async function (session, callback, [, userId]) {
+    if (!checkUserCall(callback, session)) {
+        return;
+    }
+
     let targetSession = await getSession(callback.message.chat.id, userId);
     let stealResult = stealResources(session, targetSession);
-    let message;
     let [remain] = getTime(targetSession.game.stealImmuneTimer);
 
     if (!session.game.chanceToSteal && session.game.chanceToSteal !== 0) {
@@ -27,26 +31,34 @@ module.exports = [[/^steal_resources\.([0-9]+)$/, async function (session, callb
         return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(session, "nickname")}, у тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {}, 15 * 1000);
     }
 
+    let message;
     if (stealResult.resultCode === 1) {
         message = `\nУ пользователя защита, нельзя воровать ресурсы. Осталось действия щита: ${getStringRemainTime(remain)}`;
     } else if (stealResult.resultCode === 2) {
         message = `\nТы проиграл бой и возвращаешься ни с чем.\nОставшееся ${getEmoji("hp")} хп защитника: ${getRemainHpInPercent(targetSession.game.gameClass.stats.maxHp, stealResult.remainHp)}%`;
+        session.game.chanceToSteal--;
+        session.game.stealImmuneTimer = 0;
     } else {
         message = `\nТы украл:\n${getEmoji("gold")} ${stealResult.goldToSteal} золота
 ${getEmoji("ironOre")} ${stealResult.ironOreToSteal} железной руды
 ${getEmoji("crystals")} ${stealResult.crystalsToSteal} кристаллов.
 Получил за грабёж: ${getEmoji("exp")} ${stealResult.gainedExp} опыта.\n\nОсталось хп у защитника: ${stealResult.remainHp}`;
         session.game.chanceToSteal--;
+        session.game.stealImmuneTimer = 0;
     }
 
     await editMessageCaption(`@${getUserName(session, "nickname")}, твоя попытка ограбить @${getUserName(targetSession, "nickname")}: ${message}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true
-    }).catch(e => {
+    }, callback.message.photo).catch(e => {
         console.error(e);
     });
 }], [/^steal_resources_([^.]+)$/, async function (session, callback, [, page]) {
+    if (!checkUserCall(callback, session)) {
+        return;
+    }
+
     page = parseInt(page);
     let buttons = buildKeyboard(callback.message.chat.id, "steal_resources");
 
@@ -59,5 +71,5 @@ ${getEmoji("crystals")} ${stealResult.crystalsToSteal} кристаллов.
                 ...controlButtons("steal_resources", buttons, page)
             ]
         }
-    });
+    }, callback.message.photo);
 }]];

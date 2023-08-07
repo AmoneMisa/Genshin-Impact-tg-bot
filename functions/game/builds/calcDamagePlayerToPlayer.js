@@ -23,6 +23,7 @@ const limit = require("../../misc/limit");
 const chanceToHitTemplate = require("../../../templates/chanceToHitTemplate");
 const getEquipStatByName = require("../player/getters/getEquipStatByName");
 const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
+const lodash = require("lodash");
 
 module.exports = function (attacker, defender) {
     let skills = attacker.game.gameClass.skills;
@@ -137,21 +138,21 @@ function calcSkillDamage(attacker, defender, skill) {
     let modifier = skill.damageModifier || 1;
 
     let criticalChanceMultiplier = getCriticalChanceMultiplier(attacker);
-    let criticalChance = getCriticalChance(attackerGameClass, attacker) + criticalChanceMultiplier;
+    let criticalChance = getCriticalChance(attacker, attackerGameClass) + criticalChanceMultiplier;
 
     if (criticalChance > 100) {
         criticalChance = 100;
     }
 
-    let criticalDamage = getCriticalDamage(attackerGameClass, attacker);
+    let criticalDamage = getCriticalDamage(attacker, attackerGameClass);
     let criticalDamageMultiplier = getCriticalDamageMultiplier(attacker);
     criticalDamage *= criticalDamageMultiplier;
 
-    let attack = getAttack(attackerGameClass, attacker);
+    let attack = getAttack(attacker, attackerGameClass);
     let damageMultiplier = getDamageMultiplier(attacker.game.effects);
-    let defenderDefence = getDefence(defenderGameClass, defender);
-    let additionalDamageMul = getAdditionalDamageMul(attackerGameClass, attacker) + 1;
-    let incomingDamageModifier = getIncomingDamageModifier(defenderGameClass, defender) + 1;
+    let defenderDefence = getDefence(defender, defenderGameClass);
+    let additionalDamageMul = getAdditionalDamageMul(attacker, attackerGameClass);
+    let incomingDamageModifier = getIncomingDamageModifier(defender, defenderGameClass);
 
     dmg = 70 * attack / defenderDefence * modifier * additionalDamageMul;
     dmg *= damageMultiplier;
@@ -170,6 +171,10 @@ function calcSkillDamage(attacker, defender, skill) {
 
     dmg = dmg * incomingDamageModifier;
     dmg = Math.ceil(dmg);
+
+    if (lodash.isNaN(dmg) || lodash.isUndefined(dmg)) {
+        throw new Error(`Ошибка в подсчёте урона игрока против игрока: ${dmg}`);
+    }
 
     return dmg;
 }

@@ -8,8 +8,8 @@ const getNewChancesArrayByValue = require("../../getters/getNewChancesArrayByVal
 const equipmentDictionary = require("../../../dictionaries/equipment");
 const lodash = require("lodash");
 
-module.exports = function (gameClass, currentLvl, grade) {
-    let buildItem = getItemData(gameClass, currentLvl, grade);
+module.exports = function (currentLvl, grade) {
+    let buildItem = getItemData(currentLvl, grade);
     let cost = getItemCost(buildItem);
 
     return {
@@ -46,7 +46,7 @@ function equipmentDescriptionGenerator() {
     return `${where} ${whose} ${why}`;
 }
 
-function getItemData(gameClass, currentLvl, calledGrade) {
+function getItemData(currentLvl, calledGrade) {
     const grade = getItemGrade(currentLvl, calledGrade);
     const {mainType, kind} = getItemType();
     const {quality, maxQuality} = getItemQuality(grade);

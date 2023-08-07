@@ -19,10 +19,6 @@ module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     }
     let [attackerRemain] = getTime(session.game.stealImmuneTimer);
 
-    if (attackerRemain > 0) {
-        await sendMessageWithDelete(msg.chat.id, `@${getUserName(session, "nickname")}, у тебя висит щит от ограблений. Если ты ограбишь кого-то, щит спадёт. Время действия щита: ${getStringRemainTime(attackerRemain)}`, {}, 15 * 1000);
-    }
-
     if (session.game.chanceToSteal === 0) {
         return sendMessageWithDelete(msg.chat.id, `@${getUserName(session, "nickname")}, у тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {}, 15 * 1000);
     }
@@ -34,6 +30,10 @@ module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
         text = `@${getUserName(session, "nickname")}, выбери, у кого хочешь украсть ресурсы.`;
     } else {
         text = `@${getUserName(session, "nickname")}, тебе не у кого красть ресурсы.`
+    }
+
+    if (attackerRemain > 0) {
+        text += `У тебя висит щит от ограблений. Если ты ограбишь кого-то, щит спадёт. Время действия щита: ${getStringRemainTime(attackerRemain)}`;
     }
 
     if (file) {

@@ -67,7 +67,7 @@ function getGoldReward(place, loot) {
 function getExperienceReward(place, loot) {
     const maxPlace = loot.experience.length;
     place = Math.min(place, maxPlace);
-    return getRandom(loot.experience[place - 1].min, loot.experience[place - 1].max);
+    return getRandom(loot.experience[place - 1].minAmount, loot.experience[place - 1].maxAmount);
 }
 
 function getCrystalsReward(place, loot) {

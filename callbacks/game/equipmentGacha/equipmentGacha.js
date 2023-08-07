@@ -145,7 +145,7 @@ module.exports = [[/^lucky_roll$/, async function (session, callback) {
     }
 
     let randomGrade = makeRoll(session.game, gachaTemplate.find(item => item.name === gachaType), isCanBeRolledResult < 0);
-    let result = generateRandomEquipment(session.game.gameClass, session.game.stats.lvl, randomGrade);
+    let result = generateRandomEquipment(session.game.stats.lvl, randomGrade);
     session.game.gachaTempItem = result;
 
     await editMessageCaption(`@${getUserName(session, "nickname")}, твой выигрыш:\n${getItemString(result)}\nТы можешь оставить его или распылить на осколки для призыва.`, {
