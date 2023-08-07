@@ -6,6 +6,7 @@ const getValueByChance = require("../../getters/getValueByChance");
 const isStatPenalty = require("../../game/equipment/isStatPenalty");
 const getNewChancesArrayByValue = require("../../getters/getNewChancesArrayByValue");
 const equipmentDictionary = require("../../../dictionaries/equipment");
+const lodash = require("lodash");
 
 module.exports = function (gameClass, currentLvl, grade) {
     let buildItem = getItemData(gameClass, currentLvl, grade);
@@ -255,14 +256,55 @@ function setItemStatsValue(stat, itemGrade) {
 
 // Функция для получения стоимости предмета
 function getItemCost(item) {
-    let gradePrice = equipmentTemplate.grades.find(grade => grade.name === item.grade.name).cost;
-    let rarityPrice = equipmentTemplate.rarity.find(rarity => rarity.name === item.rarity.name).cost;
-    // let penalty = item.kind.penalty;
+    let grade = equipmentTemplate.grades.find(grade => grade.name === item.grade.name);
+
+    if (lodash.isUndefined(grade)) {
+        throw new Error(`Не найден грейд для предмета: ${JSON.stringify(item)}`);
+    }
+
+    let gradeIndex = equipmentTemplate.grades.indexOf(grade);
+    let prevGrade;
+
+    if (gradeIndex > 0) {
+        prevGrade = equipmentTemplate.grades[gradeIndex - 1];
+    } else {
+        prevGrade = grade;
+    }
+
+    let gradePrice = getRandom(prevGrade.cost, grade.cost);
+    let rarity = equipmentTemplate.rarity.find(rarity => rarity.name === item.rarity.name);
+
+    if (lodash.isUndefined(rarity)) {
+        throw new Error(`Не найдена редкость для предмета: ${JSON.stringify(item)}`);
+    }
+
+    let rarityIndex = equipmentTemplate.rarity.indexOf(rarity);
+    let rarityPrev;
+
+    if (gradeIndex > 0) {
+        rarityPrev = equipmentTemplate.rarity[rarityIndex - 1];
+    } else {
+        rarityPrev = rarity;
+    }
+
+    let rarityPrice = getRandom(rarityPrev.cost, rarity.cost);
+
+    let penalty = item.characteristics.filter(stat => isStatPenalty(stat.name, stat.value));
+    let penaltyPrice = penalty.length * -5000;
+
+    if (lodash.isUndefined(item.quality)) {
+        throw new Error(`Не найдено качество для предмета: ${JSON.stringify(item)}`);
+    }
+
+    if (lodash.isUndefined(item.persistence)) {
+        throw new Error(`Не найдена прочность для предмета: ${JSON.stringify(item)}`);
+    }
+
     let setPrice = item.isSet ? 65000 : 0;
     let qualityPrice = 300 + (item.quality / 100) * (100000 - 300);
     let persistencePrice = 90 + (item.persistence / 100) * (8900 - 90);
 
-    return Math.floor(gradePrice + rarityPrice + setPrice + qualityPrice + persistencePrice);
+    return Math.floor(gradePrice + rarityPrice + setPrice + qualityPrice + persistencePrice + penaltyPrice);
 
 //Стоимость в золоте:
 // Базовая стоимость класса снаряжения
@@ -273,4 +315,5 @@ function getItemCost(item) {
 // качество снаряжения (от 300 до 100000 в зависимости от количества единиц качества) +
 // прочность снаряжения (от 90 до 8900 в зависимости от максимальных единиц прочности).
 // За каждый негативный стат - минус 5000
+// Стоимость считается рандомно от предыдущего качества до текущего
 }
