@@ -1,4 +1,4 @@
-const userStatsMap = require("../../../dictionaries/statsDictionary");
+const statsDictionary = require("../../../dictionaries/statsDictionary");
 const inventory = require("../../../dictionaries/inventory");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const isStatPenalty = require("../../game/equipment/isStatPenalty");
@@ -17,7 +17,7 @@ function getStr(key, value) {
         strValue = '+' + strValue;
     }
 
-    return `${getEmoji(key)} ${userStatsMap[key]}: ${strValue}\n`;
+    return `${getEmoji(key)} ${statsDictionary[key]}: ${strValue}\n`;
 }
 
 module.exports = function (item) {
@@ -30,7 +30,6 @@ module.exports = function (item) {
         }
     } else if (item.mainType === "armor") {
         for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
-            console.log(characteristicKey, characteristicValue)
             str += getStr(characteristicKey, characteristicValue);
         }
 
@@ -44,7 +43,7 @@ module.exports = function (item) {
         str += "\n";
 
     } else if (item.mainType === "weapon") {
-        str += `${getEmoji("power")} Сила: ${item.characteristics.power}\n`;
+        str += `${getEmoji("power")} ${statsDictionary["power"]} : ${item.characteristics.power}\n`;
         if (item.slots.length === 1) {
             str += `${getEmoji("oneHanded")} Одноручное\n`;
         } else {

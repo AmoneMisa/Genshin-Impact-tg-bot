@@ -285,7 +285,7 @@ module.exports = {
             category: "gloves",
             characteristics: {
                 defence: 3.5,
-                additionalDamageMul: 0.025,
+                additionalDamageMul: 1 + 0.025,
                 accuracy: 4,
                 incomingDamageModifier: 1 + 0.0175
             }
@@ -298,9 +298,9 @@ module.exports = {
             category: "gloves",
             characteristics: {
                 defence: 2.25,
-                maxMpMul: 0.04,
+                maxMpMul: 1 + 0.04,
                 mpRestoreSpeed: 0.065,
-                maxCpMul: 0.024,
+                maxCpMul: 1 + 0.024,
                 incomingDamageModifier: 1 + 0.048
             }
         }, {
@@ -312,7 +312,7 @@ module.exports = {
             category: "greaves",
             characteristics: {
                 defence: 7,
-                maxCpMul: 0.04,
+                maxCpMul: 1 + 0.04,
                 incomingDamageModifier: 1 + 0.022,
                 evasion: -5,
                 accuracy: -4
@@ -364,7 +364,7 @@ module.exports = {
             category: "boots",
             characteristics: {
                 defence: 5,
-                maxMpMul: 0.027,
+                maxMpMul: 1 + 0.027,
                 incomingDamageModifier: 1 + 0.006,
                 evasion: -5,
                 accuracy: -3,

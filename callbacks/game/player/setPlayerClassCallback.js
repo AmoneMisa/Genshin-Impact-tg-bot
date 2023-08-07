@@ -67,7 +67,10 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
             disable_notification: true,
             reply_markup: {
                 selective: true,
-                inline_keyboard: [...buttons, [{text: "Закрыть", callback_data: "close"}]]
+                inline_keyboard: [...buttons, [{
+                    text: "Главная",
+                    callback_data: `player.${chatId}.whoami`
+                }], [{text: "Закрыть", callback_data: "close"}]]
             }
         }, callback.message.photo);
     } else {
@@ -88,7 +91,10 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
                 disable_notification: true,
                 reply_markup: {
                     selective: true,
-                    inline_keyboard: [...buttons, [{text: "Закрыть", callback_data: "close"}]]
+                    inline_keyboard: [...buttons, [{
+                        text: "Главная",
+                        callback_data: `player.${chatId}.whoami`
+                    }], [{text: "Закрыть", callback_data: "close"}]]
                 }
             });
         }
@@ -99,7 +105,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
     }
 
     const foundedSession = await getSession(userId, callback.from.id);
-    let classTemplate = getClassStatsFromTemplate(_class);
+    let classTemplate = getClassStatsFromTemplate(_class, foundedSession.game.stats.lvl);
     let info = `Информация о классе ${getEmoji(classTemplate.name)} ${classTemplate.translateName}\n\n${getPlayerGameClassMessage(foundedSession, foundedSession.game.stats, foundedSession.game.effects, classTemplate)}\n`;
 
     return editMessageCaption(`${getUserName(foundedSession, "nickname")}, ${info}`, {
@@ -109,6 +115,9 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
             inline_keyboard: [[{
                 text: "Подтвердить смену",
                 callback_data: `player.${userId}.changeClass.${_class}.0`
+            }], [{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
             }], [{
                 text: "Назад",
                 callback_data: `player.${userId}.changeClass.back`
@@ -147,6 +156,9 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
         message_id: callback.message.message_id,
         reply_markup: {
             inline_keyboard: [[{
+                text: "Главная",
+                callback_data: `player.${chatId}.whoami`
+            }],[{
                 text: "Назад",
                 callback_data: `player.${chatId}.changeClass.back`
             }], [{

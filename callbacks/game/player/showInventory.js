@@ -5,6 +5,7 @@ const getInventoryMessage = require("../../../functions/game/player/getters/getI
 const equipItem = require("../../../functions/game/equipment/equipItem");
 const useHealPotion = require("../../../functions/game/player/useHealPotion");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const editMessageMedia = require("../../../functions/tgBotFunctions/editMessageMedia");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const inventoryTranslate = require("../../../dictionaries/inventory");
@@ -113,7 +114,10 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     if (foundedItems.length > 0) {
         replyMarkup = {
             selective: true,
-            inline_keyboard: [...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedItems, userId), 1)]
+            inline_keyboard: [...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedItems, userId), 1), [{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }]]
         };
     }
 
@@ -123,20 +127,11 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
             message_id: callback.message.message_id,
             reply_markup: replyMarkup
         }, callback.message.photo);
-
-        return;
-    }
-
-    const file = getFile("images/misc", "inventory");
-
-    if (file) {
-        await sendPhoto(callback.message.chat.id, file, {
-            caption: `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`,
-            disable_notification: true,
-            reply_markup: replyMarkup
-        });
     } else {
-        await sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
+        const file = getFile("images/misc", "inventory");
+        await editMessageMedia(file, `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
+            chat_id: callback.message.chat.id,
+            message_id: callback.message.message_id,
             disable_notification: true,
             reply_markup: replyMarkup
         });
@@ -152,7 +147,11 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedSession.game.inventory, userId), page)
+                ...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedSession.game.inventory, userId), page),
+                [{
+                    text: "Главная",
+                    callback_data: `player.${userId}.whoami`
+                }]
             ]
         }
     }, callback.message.photo);
@@ -188,6 +187,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         reply_markup: {
             selective: true,
             inline_keyboard: [...buildInventoryCategoryItemKeyboard(foundedItems, userId, items), [{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }], [{
                 text: "Назад", callback_data: `player.${userId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
@@ -249,6 +251,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         reply_markup: {
             selective: true,
             inline_keyboard: [buttons, [{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }], [{
                 text: "Назад", callback_data: `player.${userId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
@@ -310,6 +315,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
             reply_markup: {
                 selective: true,
                 inline_keyboard: [[{
+                    text: "Главная",
+                    callback_data: `player.${userId}.whoami`
+                }], [{
                     text: "Назад",
                     callback_data: `player.${userId}.inventory.back`
                 }, {
@@ -326,6 +334,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         reply_markup: {
             selective: true,
             inline_keyboard: [[{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }], [{
                 text: "Назад",
                 callback_data: `player.${userId}.inventory.back`
             }, {
@@ -359,7 +370,7 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
 
     let equipResult = equipItem(foundedSession, foundedItem);
     if (equipResult === 1) {
-        unequipItem(foundedSession.game, foundedItem);
+        unequipItem(foundedSession, foundedItem);
     } else {
         return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке снять предмет (${foundedItem.name}).`, {}, 10 * 1000);
     }
@@ -371,9 +382,14 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         reply_markup: {
             selective: true,
             inline_keyboard: [[{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }], [{
                 text: "Назад",
                 callback_data: `player.${userId}.inventory.back`
-            }, {text: "Закрыть", callback_data: "close"}]]
+            }, {
+                text: "Закрыть", callback_data: "close"
+            }]]
         }
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.2$/, async function (session, callback, [, userId, items, i]) {
@@ -417,6 +433,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         reply_markup: {
             selective: true,
             inline_keyboard: [[{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }], [{
                 text: "Назад",
                 callback_data: `player.${userId}.inventory.back`
             }, {text: "Закрыть", callback_data: "close"}]]
@@ -446,6 +465,9 @@ async function sendHealMessage(result, callback, session, foundedItem, userId) {
         reply_markup: {
             selective: true,
             inline_keyboard: [[{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }], [{
                 text: "Назад",
                 callback_data: `player.${userId}.inventory.back`
             }, {

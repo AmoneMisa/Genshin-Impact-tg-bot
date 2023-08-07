@@ -1,6 +1,7 @@
 const bossReflectDamage = require('../boss/bossReflectDamage');
 const calcDamage = require('../boss/calcDamage');
 const userVampireSkill = require('./userVampireSkill');
+const getMaxHp = require("./getters/getMaxHp");
 
 module.exports = function (session, boss, skill) {
     if (!boss) {
@@ -13,15 +14,7 @@ module.exports = function (session, boss, skill) {
 
     if (skill.effect.includes("vampire")) {
         vampire = userVampireSkill(skill, dmg);
-        playerStats.hp += vampire;
-
-        if (playerStats.hp <= 0) {
-            playerStats.hp = 0;
-        }
-
-        if (playerStats.hp > playerStats.maxHp) {
-            playerStats.hp = playerStats.maxHp;
-        }
+        playerStats.hp = Math.ceil(Math.min(vampire, getMaxHp(session, session.game.gameClass)));
     }
 
     boss.currentHp -= dmg;

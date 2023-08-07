@@ -1,12 +1,12 @@
 module.exports = function (session, statName, isMul = false) {
     if (!session.game || !session.game.equipmentStats) {
-        return ;
+        return;
     }
 
-    let statValue = (statName === "defencePower" || statName === "power") ? 1 : 0;
+    let totalStatValue = (statName === "defencePower" || statName === "power") ? 1 : 0;
 
     if (isMul) {
-        statValue = 1;
+        totalStatValue = 1;
     }
 
     for (let slot of Object.values(session.game.equipmentStats)) {
@@ -14,34 +14,27 @@ module.exports = function (session, statName, isMul = false) {
             continue;
         }
 
-        for (let stat of slot.characteristics) {
-            if (stat.name !== statName) {
+        for (let [statKey, statValue] of Object.entries(slot.characteristics)) {
+
+            if (statKey !== statName) {
                 continue;
             }
 
             if (isMul) {
-                if (stat.type !== "penalty") {
-                    statValue *= 1 + stat.value;
-                } else {
-                    statValue *= 1 - stat.value;
-                }
+                totalStatValue *= statValue;
             } else {
-                if (stat.type !== "penalty") {
-                    statValue += stat.value;
-                } else {
-                    statValue -= stat.value;
-                }
+                totalStatValue += statValue;
             }
         }
 
         if (session.game.stats.lvl < slot.minLvl) {
-            statValue *= 0.65;
+            totalStatValue *= 0.65;
         }
 
         if (slot.classOwner && !slot.classOwner.includes(session.game.gameClass.stats.name)) {
-            statValue *= 0.25;
+            totalStatValue *= 0.25;
         }
 
     }
-    return statValue;
+    return totalStatValue;
 }

@@ -11,8 +11,8 @@ module.exports = function (session) {
 
     let message = `Статистика @${getUserName(session, "nickname")}:\n`;
     message += `${getEmoji("lvl")} Уровень: ${baseStats.lvl}\n`;
-    message += `${getEmoji("currentExp")} Текущее к-во опыта: ${baseStats.currentExp}\n`;
-    message += `${getEmoji("needExp")} Требуемое к-во опыта до следующего уровня: ${baseStats.needExp}\n\n`;
+    message += `${getEmoji("currentExp")} Текущее количество опыта: ${baseStats.currentExp}\n`;
+    message += `${getEmoji("needExp")} Требуемое количество опыта до следующего уровня: ${baseStats.needExp}\n\n`;
 
     message += getPlayerGameClassMessage(session, baseStats, playerEffects);
 

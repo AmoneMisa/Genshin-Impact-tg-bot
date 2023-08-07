@@ -53,7 +53,7 @@ function getItemData(gameClass, currentLvl, calledGrade) {
     const {persistence, maxPersistence} = getItemPersistence(grade);
     let characteristicsKeys = Object.keys(kind.characteristics);
     const stats = getItemAdditionalStats(grade, characteristicsKeys);
-    characteristicsKeys = [...characteristicsKeys, stats.map(stat => stat.name)];
+    characteristicsKeys = [...characteristicsKeys, ...stats.map(stat => stat.name)];
     const penalty = getItemAdditionalPenaltyStats(grade, characteristicsKeys);
     const rarity = getItemRarity(Object.entries(stats).filter(([name, value]) => !isStatPenalty(name, value)).length);
 
@@ -223,9 +223,11 @@ function getRandomItemStats(count, grade, characteristicsKeys) {
 
     while (newCharacteristics.length < count) {
         let randomStat = possibleStats[getRandom(0, possibleStats.length - 1)];
+
         if (characteristicsKeys.includes(randomStat)) {
             continue;
         }
+
         if (newCharacteristicsKeys.includes(randomStat)) {
             continue;
         }
@@ -289,7 +291,7 @@ function getItemCost(item) {
 
     let rarityPrice = getRandom(rarityPrev.cost, rarity.cost);
 
-    let penalty = item.characteristics.filter(stat => isStatPenalty(stat.name, stat.value));
+    let penalty = Object.entries(item.kind.characteristics).filter(([statName, statValue]) => isStatPenalty(statName, statValue));
     let penaltyPrice = penalty.length * -5000;
 
     if (lodash.isUndefined(item.quality)) {

@@ -7,5 +7,5 @@ module.exports = function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return Math.round((stats.defence * getEquipStatByName(session, "defenceMul") * getEquipStatByName(session, "defencePower") + getEquipStatByName(session, "defence")));
+    return Math.round((stats.defence * getEquipStatByName(session, "defenceMul", true) * getEquipStatByName(session, "defencePower", true) + getEquipStatByName(session, "defence")));
 };
