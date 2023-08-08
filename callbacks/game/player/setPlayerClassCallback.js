@@ -23,7 +23,7 @@ function getOffset() {
 }
 
 module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function (session, callback, [, chatId]) {
-   if (!checkUserCall(callback, session)) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -61,7 +61,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
     }
 
     if (isBack) {
-        return editMessageCaption(`@${getUserName(session, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
+        return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             disable_notification: true,
@@ -74,30 +74,19 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
             }
         }, callback.message.photo);
     } else {
-        let className = session.game.gameClass.stats.name || "noClass";
-        let gender = session.gender || "male";
-        let imagePath = getLocalImageByPath(session.game.stats.lvl, `classes/${className}/${gender}`);
+        let className = foundedSession.game.gameClass.stats.name || "noClass";
+        let gender = foundedSession.gender || "male";
+        const file = getFile(`images/classes/${className}/${gender}`, className);
 
-        if (imagePath) {
-            return sendPhoto(callback.message.chat.id, imagePath, {
-                caption: `@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`,
-                disable_notification: true,
-                reply_markup: {
-                    inline_keyboard: [...buttons, [{text: "Закрыть", callback_data: "close"}]]
-                }
-            });
-        } else {
-            return sendMessage(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
-                disable_notification: true,
-                reply_markup: {
-                    selective: true,
-                    inline_keyboard: [...buttons, [{
-                        text: "Главная",
-                        callback_data: `player.${chatId}.whoami`
-                    }], [{text: "Закрыть", callback_data: "close"}]]
-                }
-            });
-        }
+        await editMessageMedia(file, `@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
+            chat_id: callback.message.chat.id,
+            message_id: callback.message.message_id,
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [...buttons, [{text: "Закрыть", callback_data: "close"}]]
+            }
+        });
+
     }
 }], [/^player\.([\-0-9]+)\.changeClass\.([^.]+)$/, async function (session, callback, [, userId, _class]) {
     if (!checkUserCall(callback, session)) {
@@ -158,7 +147,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
             inline_keyboard: [[{
                 text: "Главная",
                 callback_data: `player.${chatId}.whoami`
-            }],[{
+            }], [{
                 text: "Назад",
                 callback_data: `player.${chatId}.changeClass.back`
             }], [{

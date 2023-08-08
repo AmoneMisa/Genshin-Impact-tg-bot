@@ -3,7 +3,6 @@ const bossDealDamage = require("../game/boss/bossDealDamage");
 const getBossDealDamageMessage = require("../game/boss/getters/getBossDealDamageMessage");
 const isBossAlive = require("../game/boss/getBossStatus/isBossAlive");
 const sendMessageWithDelete = require('../tgBotFunctions/sendMessageWithDelete');
-const cron = require("node-cron");
 const {bosses} = require("../../data");
 
 module.exports = async function () {

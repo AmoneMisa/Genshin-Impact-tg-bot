@@ -1,4 +1,5 @@
 const getPlayerGameClass = require("./getPlayerGameClass");
+const getMaxCp = require("./getMaxCp");
 
 module.exports = function (session, gameClass) {
     if (!gameClass) {
@@ -6,5 +7,5 @@ module.exports = function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return stats.cp;
+    return Math.min(Math.round(stats.cp), getMaxCp(session, gameClass));
 };

@@ -1,8 +1,6 @@
-const getMembers = require('../../getters/getMembers');
 const getBossStats = require('./getBossStats/getBossStats');
 const getBossSkill = require('./getters/getBossSkill');
 const getBossHp = require('./getBossStats/getBossHp');
-const initBossDealDamage = require('../../shedullers/initBossDealDamage');
 const getRandomBoss = require("./getters/getRandomBoss");
 const getBossByName = require("./getters/getBossByName");
 const addBossIntoChatSession = require("./addBossIntoChatSession");
@@ -17,6 +15,7 @@ module.exports = async function (chatId) {
         boss = lodash.cloneDeep(bossTemplate);
         addBossIntoChatSession(chatId, boss);
     }
+
     updateBossLevel(boss);
 
     boss.skill = getBossSkill(boss.name);
@@ -29,14 +28,7 @@ module.exports = async function (chatId) {
     let lvl = boss.stats.lvl || bossTemplate.stats.lvl;
 
     boss.stats = {...getBossStats(boss, bossTemplate), currentSummons, needSummons, lvl};
-
-    let members = await getMembers(chatId);
-    for (let session of Object.values(members)) {
-        session.game.gameClass.stats.hp = session.game.gameClass.stats.maxHp;
-    }
-
     boss.stats.currentSummons++;
-    initBossDealDamage(chatId);
 
     return boss;
 };

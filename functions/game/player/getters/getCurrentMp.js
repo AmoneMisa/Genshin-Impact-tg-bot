@@ -1,4 +1,5 @@
 const getPlayerGameClass = require("./getPlayerGameClass");
+const getMaxMp = require("./getMaxMp");
 
 module.exports = function (session, gameClass) {
     if (!gameClass) {
@@ -6,5 +7,5 @@ module.exports = function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return stats.mp;
+    return Math.min( Math.round(stats.mp), getMaxMp(session, gameClass));
 };

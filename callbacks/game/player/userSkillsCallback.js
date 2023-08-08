@@ -17,8 +17,6 @@ const skillUsagePayCost = require('../../../functions/game/player/skillUsagePayC
 const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
-    await deleteMessage(callback.message.chat.id, callback.message.message_id);
-
     if (!checkUserCall(callback, session)) {
         return ;
     }
@@ -45,6 +43,7 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
                 await sendMessageWithDelete(callback.message.chat.id, userDealDamageMessage(session, aliveBoss, dealDamage), {}, 15 * 1000);
 
                 if (!isBossAlive(aliveBoss)) {
+                    await deleteMessage(callback.message.chat.id, callback.message.message_id);
                     let loot = bossSendLoot(aliveBoss, members);
                     await sendMessageWithDelete(callback.message.chat.id, bossLootMessage(aliveBoss, loot), {}, 25 * 1000);
 
