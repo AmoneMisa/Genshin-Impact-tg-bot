@@ -6,6 +6,7 @@ const titles = require('./titles');
 const game = require('./game');
 const mute = require('./mute');
 const commands = require('./commands');
+const feedback = require('./feedback');
 
 module.exports = [
     ...start,
@@ -16,4 +17,5 @@ module.exports = [
     ...game,
     ...mute,
     ...commands,
+    ...feedback,
 ];

@@ -14,18 +14,16 @@ const getChatSessionSettings = require('./functions/getters/getChatSessionSettin
 const debugMessage = require('./functions/tgBotFunctions/debugMessage');
 const sendMessage = require('./functions/tgBotFunctions/sendMessage');
 const writeFiles = require('./functions/misc/writeFiles');
-const setGlobalAccumulateTimer = require('./functions/game/builds/setGlobalAccumulateTimer');
-const setCpRegen = require('./functions/game/player/setCpRegen');
-const setHpRegen = require('./functions/game/player/setHpRegen');
-const setMpRegen = require('./functions/game/player/setMpRegen');
-const restoreChancesToSteal = require('./functions/game/player/restoreChancesToSteal');
-const log = intel.getLogger("genshin");
-const cron = require('node-cron');
 
-const initBossDealDamage = require('./functions/game/boss/initBossDealDamage');
-const initHpRegen = require('./functions/game/boss/initHpRegen');
+const evenSecond = require('./functions/shedullers/evenSecond');
+const evenMinute = require('./functions/shedullers/evenMinute');
+const evenTwoMinutes = require('./functions/shedullers/evenTwoMinutes');
+const evenFiveMinutes = require('./functions/shedullers/evenFiveMinutes');
+const evenHour = require('./functions/shedullers/evenHour');
+const evenDay = require('./functions/shedullers/evenDay');
+
+const log = intel.getLogger("genshin");
 const buttonsDictionary = require("./dictionaries/buttons");
-const setTimerForCollectResources = require("./functions/game/builds/setTimerForCollectResources");
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
@@ -36,6 +34,7 @@ bot.setMyCommands([
     {command: "reset_games_timers", description: "Сбросить таймеры для персональных игр"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
+    {command: "feedback", description: "Обратная связь с разработчиком (Работает в тестовом режиме)"},
 ], {
     scope: {type: "default"}
 });
@@ -57,8 +56,10 @@ const commandMap = {
     "boss": "boss",
     "shop": "boss",
     "exchange": "boss",
+    "gacha": "whoami",
     "steal_resources": "whoami",
     "whoami": "whoami",
+    "change_gender": "whoami",
     "send_gold": "sendGold",
     "sword": "swords",
     "swords": "swords",
@@ -122,11 +123,6 @@ for (let [key, value] of onTexts) {
     });
 }
 
-
-initBossDealDamage();
-initHpRegen();
-
-
 for (let [key, value] of onTextsAdmin) {
     bot.onText(key, value);
 }
@@ -178,12 +174,12 @@ bot.on("callback_query", async (callback) => {
     }
 });
 
-setGlobalAccumulateTimer();
-setCpRegen();
-setHpRegen();
-setMpRegen();
-restoreChancesToSteal();
-setTimerForCollectResources();
+evenSecond();
+// evenMinute();
+evenTwoMinutes();
+evenFiveMinutes();
+evenHour();
+evenDay();
 
 let setIntervalId = setInterval(() => {
     writeFiles(false);

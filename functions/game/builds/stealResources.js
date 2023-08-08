@@ -2,11 +2,12 @@ const calcDamagePlayerToPlayer = require('./calcDamagePlayerToPlayer');
 const calculateIncreaseGuardedResources = require('./calculateIncreaseGuardedResources');
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const setLevel = require("../player/setLevel");
+const getMaxHp = require("../player/getters/getMaxHp");
 
 module.exports = function (currentUser, targetUser) {
     let remainHp = calcDamagePlayerToPlayer(currentUser, targetUser);
     let buildTemplate = buildsTemplate["palace"];
-    let maxHp = targetUser.game.gameClass.stats.maxHp;
+    let maxHp = getMaxHp(targetUser, targetUser.game.gameClass);
 
     if (!targetUser.game.stealImmuneTimer) {
         targetUser.game.stealImmuneTimer = 0;
@@ -49,7 +50,7 @@ module.exports = function (currentUser, targetUser) {
 
     targetUser.game.stealImmuneTimer = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 часа иммунитета от воровства
 
-    let gainedExp = Math.ceil(Math.max(5500, (currentUser.game.stats.currentExp * 0.01 * (targetUser.game.stats.lvl - currentUser.game.stats.lvl) + 5500)));
+    let gainedExp = Math.ceil(Math.max(9500, (currentUser.game.stats.currentExp * 0.077 * (targetUser.game.stats.lvl - currentUser.game.stats.lvl) + 9500)));
     currentUser.game.stats.currentExp += gainedExp;
     setLevel(currentUser);
 

@@ -189,11 +189,13 @@ module.exports = [["boss", async function (session, callback) {
                 let place = i + 1;
                 let item = value[i];
                 let isLast = i === value.length - 1;
+                let localMax = item.maxAmount;
+                let localMin = item.minAmount;
 
                 if (isLast) {
-                    message += `${place}-∞ место - ${item}\n`;
+                    message += `${place}-∞ место - ${localMin}-${localMax}\n`;
                 } else {
-                    message += `${place} место - ${item}\n`;
+                    message += `${place} место - ${localMin}-${localMax}\n`;
                 }
             }
         } else {

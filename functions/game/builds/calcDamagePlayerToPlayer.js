@@ -1,28 +1,42 @@
-const getCriticalChanceMultiplier = require("../player/getCriticalChanceMultiplier");
-const getCriticalChance = require("../player/getCriticalChance");
-const getCriticalDamage = require("../player/getCriticalDamage");
-const getCriticalDamageMultiplier = require("../player/getCriticalDamageMultiplier");
-const getAttack = require("../player/getAttack");
-const getAdditionalDamage = require("../player/getAdditionalDamage");
-const getDefence = require("../player/getDefence");
-const getReduceIncomingDamage = require("../player/getReduceIncomingDamage");
-const getDamageMultiplier = require("../player/getDamageMultiplier");
+const getCriticalChanceMultiplier = require("../player/getters/getCriticalChanceMultiplier");
+const getCriticalChance = require("../player/getters/getCriticalChance");
+const getCriticalDamage = require("../player/getters/getCriticalDamage");
+const getCriticalDamageMultiplier = require("../player/getters/getCriticalDamageMultiplier");
+const getAttack = require("../player/getters/getAttack");
+const getMaxHp = require("../player/getters/getMaxHp");
+const getCurrentHp = require("../player/getters/getCurrentHp");
+const getMaxCp = require("../player/getters/getMaxCp");
+const getMaxMp = require("../player/getters/getMaxMp");
+const getCurrentMp = require("../player/getters/getCurrentMp");
+const getAdditionalDamageMul = require("../player/getters/getAdditionalDamageMul");
+const getDefence = require("../player/getters/getDefence");
+const getAccuracy = require("../player/getters/getAccuracy");
+const getBlock = require("../player/getters/getBlock");
+const getEvasion = require("../player/getters/getEvasion");
+const getMpRestoreSpeed = require("../player/getters/getMpRestoreSpeed");
+const getHpRestoreSpeed = require("../player/getters/getHpRestoreSpeed");
+const getCpRestoreSpeed = require("../player/getters/getCpRestoreSpeed");
+const getIncomingDamageModifier = require("../player/getters/getIncomingDamageModifier");
+const getDamageMultiplier = require("../player/getters/getDamageMultiplier");
 const getRandom = require("../../getters/getRandom");
 const limit = require("../../misc/limit");
 const chanceToHitTemplate = require("../../../templates/chanceToHitTemplate");
+const getEquipStatByName = require("../player/getters/getEquipStatByName");
+const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
+const lodash = require("lodash");
 
 module.exports = function (attacker, defender) {
     let skills = attacker.game.gameClass.skills;
     skills.sort(compareSkills).reverse();
     let cooldowns = skills.map(_ => 0);
-    let defenderHp =  defender.game.gameClass.stats.maxHp;
-    let defenderMaxHp =  defender.game.gameClass.stats.maxHp;
-    let defenderCp = defender.game.gameClass.stats.maxCp;
-    let defenderMaxCp = defender.game.gameClass.stats.maxCp;
-    let attackerHp = attacker.game.gameClass.stats.hp;
-    let attackerMaxMp = attacker.game.gameClass.stats.maxMp;
-    let attackerMp = attacker.game.gameClass.stats.mp;
-    let attackerMpRestoreSpeed = attacker.game.gameClass.stats.mpRestoreSpeed;
+    let defenderHp = getMaxHp(defender);
+    let defenderMaxHp = getMaxHp(defender);
+    let defenderCp = getMaxCp(defender);
+    let defenderMaxCp = getMaxCp(defender);
+    let attackerHp = getCurrentHp(attacker);
+    let attackerMaxMp = getMaxMp(attacker);
+    let attackerMp = getCurrentMp(attacker);
+    let attackerMpRestoreSpeed = getMpRestoreSpeed(attacker);
     // расчёт суммарного урона атакующего по защитнику за 2 минуты.
     for (let i = 0; i < 120; i++) {
         for (let j = 0; j < skills.length; j++) {
@@ -53,8 +67,8 @@ module.exports = function (attacker, defender) {
 
         attackerMp = Math.min(attackerMaxMp, attackerMp + attackerMpRestoreSpeed);
         cooldowns = cooldowns.map(cooldown => Math.max(0, cooldown - 1));
-        defenderHp = Math.min(defenderMaxHp, defenderHp + defender.game.gameClass.stats.hpRestoreSpeed);
-        defenderCp = Math.min(defenderMaxCp, defenderCp + defender.game.gameClass.stats.cpRestoreSpeed);
+        defenderHp = Math.min(defenderMaxHp, defenderHp + getHpRestoreSpeed(defender));
+        defenderCp = Math.min(defenderMaxCp, defenderCp + getCpRestoreSpeed(defender));
     }
 
     return defenderHp;
@@ -64,7 +78,7 @@ function compareSkills(skillA, skillB) {
     let damageModifierA = skillA.damageModifier || 0;
     let damageModifierB = skillB.damageModifier || 0;
 
-    return damageModifierA -  damageModifierB;
+    return damageModifierA - damageModifierB;
 }
 
 function calculateDamage(attacker, defender, skill) {
@@ -76,8 +90,8 @@ function calculateDamage(attacker, defender, skill) {
     // Расчет попадания и уворота. Магические классы (на данный момент - маг, прист) всегда попадают скиллами, но могут увернуться.
     // Так же, если уровень защитника на 8 и более, выше, чем уровень нападающего, защитник всегда уклоняется.
     if (!isMagicClass || (defender.game.stats.lvl - attacker.game.stats.lvl < 8)) {
-        let diff =  limit(
-            attacker.game.gameClass.stats.accuracy - defender.game.gameClass.stats.evasion,
+        let diff = limit(
+            getAccuracy(attacker) - getEvasion(defender),
             -25, 10
         );
         let i = diff + 25;
@@ -89,7 +103,7 @@ function calculateDamage(attacker, defender, skill) {
     if (isHit) {
         damage = calcSkillDamage(attacker, defender, skill);
         // Проверка на блок урона
-        const blockRate = (defender.game.gameClass.stats.block - 1) / (135 - 1);
+        const blockRate = (getBlock(defender) - 1) / (135 - 1);
         // Минимальный шанс заблокировать урон - 1.75%, максимальный - 65%.
         const blockChance = 0.0175 + (0.65 - 0.0175) * blockRate;
 
@@ -101,6 +115,14 @@ function calculateDamage(attacker, defender, skill) {
         }
     }
 
+    // Добавляем в расчёт рандомный разброс от оружия
+    let randomWeaponDamage = getEquipStatByName(attacker, "randomDamage");
+    let minDmg = 1 - randomWeaponDamage;
+    let maxDmg = 1 + randomWeaponDamage;
+    let rndDmg = getRandomWithoutFloor(minDmg, maxDmg);
+
+    damage = Math.ceil(damage * rndDmg);
+
     return {
         damage,
         isHit,
@@ -109,27 +131,30 @@ function calculateDamage(attacker, defender, skill) {
 }
 
 function calcSkillDamage(attacker, defender, skill) {
+    let defenderGameClass = defender.game.gameClass;
+    let attackerGameClass = attacker.game.gameClass;
+
     let dmg;
     let modifier = skill.damageModifier || 1;
 
     let criticalChanceMultiplier = getCriticalChanceMultiplier(attacker);
-    let criticalChance = getCriticalChance(attacker) + criticalChanceMultiplier;
+    let criticalChance = getCriticalChance(attacker, attackerGameClass) + criticalChanceMultiplier;
 
     if (criticalChance > 100) {
         criticalChance = 100;
     }
 
-    let criticalDamage = getCriticalDamage(attacker);
+    let criticalDamage = getCriticalDamage(attacker, attackerGameClass);
     let criticalDamageMultiplier = getCriticalDamageMultiplier(attacker);
     criticalDamage *= criticalDamageMultiplier;
 
-    let attack = getAttack(attacker.game.gameClass);
+    let attack = getAttack(attacker, attackerGameClass);
     let damageMultiplier = getDamageMultiplier(attacker.game.effects);
-    let defenderDefence = getDefence(defender.game.gameClass);
-    let additionalDamage = getAdditionalDamage(attacker) / 100 + 1;
-    let reduceIncomingDamage = getReduceIncomingDamage(attacker) / 100 + 1;
+    let defenderDefence = getDefence(defender, defenderGameClass);
+    let additionalDamageMul = getAdditionalDamageMul(attacker, attackerGameClass);
+    let incomingDamageModifier = getIncomingDamageModifier(defender, defenderGameClass);
 
-    dmg = getRandom(9, 70) * attack / defenderDefence * modifier * additionalDamage;
+    dmg = 70 * attack / defenderDefence * modifier * additionalDamageMul;
     dmg *= damageMultiplier;
 
     if (getRandom(1, 100) <= criticalChance) {
@@ -144,8 +169,12 @@ function calcSkillDamage(attacker, defender, skill) {
         }
     }
 
-    dmg = dmg * reduceIncomingDamage;
+    dmg = dmg * incomingDamageModifier;
     dmg = Math.ceil(dmg);
+
+    if (lodash.isNaN(dmg) || lodash.isUndefined(dmg)) {
+        throw new Error(`Ошибка в подсчёте урона игрока против игрока: ${dmg}`);
+    }
 
     return dmg;
 }

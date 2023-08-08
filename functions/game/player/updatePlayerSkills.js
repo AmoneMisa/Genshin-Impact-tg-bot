@@ -1,4 +1,4 @@
-const getGameClassSkillsFromTemplate = require('./getGameClassSkillsFromTemplate');
+const getGameClassSkillsFromTemplate = require('./getters/getGameClassSkillsFromTemplate');
 const changePlayerClass = require("./changePlayerGameClass");
 
 module.exports = function (session) {

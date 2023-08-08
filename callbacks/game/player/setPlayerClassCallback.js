@@ -4,24 +4,26 @@ const editMessageCaption = require('../../../functions/tgBotFunctions/editMessag
 const editMessageMedia = require('../../../functions/tgBotFunctions/editMessageMedia');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const changePlayerClass = require('../../../functions/game/player/changePlayerGameClass');
-const getPlayerGameClass = require('../../../functions/game/player/getPlayerGameClass');
-const getClassStatsFromTemplate = require('../../../functions/game/player/getGameClassStatsFromTemplate');
+const getPlayerGameClass = require('../../../functions/game/player/getters/getPlayerGameClass');
+const getClassStatsFromTemplate = require('../../../functions/game/player/getters/getGameClassStatsFromTemplate');
 const getUserName = require('../../../functions/getters/getUserName');
 const getTime = require("../../../functions/getters/getTime");
 const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
-const getPlayerGameClassMessage = require("../../../functions/game/player/getPlayerGameClassMessage");
+const getPlayerGameClassMessage = require("../../../functions/game/player/getters/getPlayerGameClassMessage");
 const classes = require("../../../templates/classStatsTemplate");
 const getEmoji = require('../../../functions/getters/getEmoji');
 const getSession = require('../../../functions/getters/getSession');
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
-const fs = require("fs");
+const checkUserCall = require("../../../functions/misc/checkUserCall");
+const updatePlayerStats = require("../../../functions/game/player/updatePlayerStats");
+const getFile = require("../../../functions/getters/getFile");
 
 function getOffset() {
     return new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
 }
 
 module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function (session, callback, [, chatId]) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+   if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -65,7 +67,10 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
             disable_notification: true,
             reply_markup: {
                 selective: true,
-                inline_keyboard: [...buttons, [{text: "Закрыть", callback_data: "close"}]]
+                inline_keyboard: [...buttons, [{
+                    text: "Главная",
+                    callback_data: `player.${chatId}.whoami`
+                }], [{text: "Закрыть", callback_data: "close"}]]
             }
         }, callback.message.photo);
     } else {
@@ -86,19 +91,22 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
                 disable_notification: true,
                 reply_markup: {
                     selective: true,
-                    inline_keyboard: [...buttons, [{text: "Закрыть", callback_data: "close"}]]
+                    inline_keyboard: [...buttons, [{
+                        text: "Главная",
+                        callback_data: `player.${chatId}.whoami`
+                    }], [{text: "Закрыть", callback_data: "close"}]]
                 }
             });
         }
     }
 }], [/^player\.([\-0-9]+)\.changeClass\.([^.]+)$/, async function (session, callback, [, userId, _class]) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
     const foundedSession = await getSession(userId, callback.from.id);
-    let classTemplate = getClassStatsFromTemplate(_class);
-    let info = `Информация о классе ${getEmoji(classTemplate.name)} ${classTemplate.translateName}\n\n${getPlayerGameClassMessage(classTemplate, foundedSession.game.stats, foundedSession.game.effects)}\n`;
+    let classTemplate = getClassStatsFromTemplate(_class, foundedSession.game.stats.lvl);
+    let info = `Информация о классе ${getEmoji(classTemplate.name)} ${classTemplate.translateName}\n\n${getPlayerGameClassMessage(foundedSession, foundedSession.game.stats, foundedSession.game.effects, classTemplate)}\n`;
 
     return editMessageCaption(`${getUserName(foundedSession, "nickname")}, ${info}`, {
         chat_id: callback.message.chat.id,
@@ -108,8 +116,11 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
                 text: "Подтвердить смену",
                 callback_data: `player.${userId}.changeClass.${_class}.0`
             }], [{
+                text: "Главная",
+                callback_data: `player.${userId}.whoami`
+            }], [{
                 text: "Назад",
-                callback_data: `player.${userId}.changeClass`
+                callback_data: `player.${userId}.changeClass.back`
             }], [{
                 text: "Закрыть",
                 callback_data: "close"
@@ -117,7 +128,7 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
         }
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.changeClass\.([^.]+)\.0$/, async function (session, callback, [, chatId, _class]) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
+    if (!checkUserCall(callback, session)) {
         return;
     }
 
@@ -134,19 +145,22 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
 
     let classStatsTemplate = getClassStatsFromTemplate(_class);
     changePlayerClass(foundedSession, classStatsTemplate);
+    updatePlayerStats(foundedSession);
 
     let {stats} = getPlayerGameClass(foundedSession.game.gameClass);
     let gender = session.gender || "male";
-    const file = fs.readdirSync(`images/classes/${_class}/${gender}`);
+    let file = getFile(`images/classes/${_class}/${gender}`, _class);
 
-    return editMessageMedia(file, {
-        caption: `@${getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`,
+    return editMessageMedia(file, `@${getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
             inline_keyboard: [[{
+                text: "Главная",
+                callback_data: `player.${chatId}.whoami`
+            }],[{
                 text: "Назад",
-                callback_data: `player.${chatId}.changeClass`
+                callback_data: `player.${chatId}.changeClass.back`
             }], [{
                 text: "Закрыть",
                 callback_data: "close"

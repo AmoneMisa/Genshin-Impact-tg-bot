@@ -24,7 +24,7 @@ module.exports = function (boss) {
             for (let [key, value] of Object.entries(loot)) {
 
                 if (key === "from" || key === "chance") {
-                    // Шансы на получение награды - НЕ менять!
+                    // Шансы на получение награды - строку НЕ менять!
                     newLoot[key] = value;
                     continue;
                 }

@@ -34,7 +34,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (sess
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], [/^builds\.[\-0-9]+\.[^.]+\.changeName\.0$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeName\.0$/);
     let messageId = callback.message.message_id;
@@ -68,7 +68,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeName$/, async function (sess
                         callback_data: "close"
                     }]]
                 }
-            })
+            }, callback.message.photo)
         });
     }).catch(e => {
         console.error(e);

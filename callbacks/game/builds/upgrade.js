@@ -14,7 +14,7 @@ const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMes
 const getUserName = require('../../../functions/getters/getUserName');
 const getBuildList = require("../../../functions/game/builds/getBuildList");
 const getSession = require("../../../functions/getters/getSession");
-const userStatsMap = require("../../../dictionaries/statsDictionary");
+const statsDictionary = require("../../../dictionaries/statsDictionary");
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 
 async function errorUpdateMessage(buildName, build, chatId, messageId, callback, session) {
@@ -51,8 +51,8 @@ async function getUpgradeRequirementsMessage(buildName, currentLvl, chatId, user
             str += "\nТребования персонажа:\n"
             let session = await getSession(chatId, userId);
             for (let characterRequirement of upgrades.characterRequirements) {
-                str += `Требуется: ${userStatsMap[characterRequirement.name]} - ${characterRequirement.level}\n`;
-                str += `Текущее: ${userStatsMap[characterRequirement.name]} - ${session.game.stats[characterRequirement.name] || session.game.gameClass.stats[characterRequirement.name]}`;
+                str += `Требуется: ${statsDictionary[characterRequirement.name]} - ${characterRequirement.level}\n`;
+                str += `Текущее: ${statsDictionary[characterRequirement.name]} - ${session.game.stats[characterRequirement.name] || session.game.gameClass.stats[characterRequirement.name]}`;
             }
         }
     }

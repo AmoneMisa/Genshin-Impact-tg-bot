@@ -8,13 +8,13 @@ const getSession = require('../../../functions/getters/getSession');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
-module.exports = [[/^send_gold_recipient\.[^.]+$/, async function (session, callback) {
-    if (!callback.message.text.includes(getUserName(session, "nickname"))) {
-        return;
+module.exports = [[/^send_gold_recipient\.([^.]+)$/, async function (session, callback, [, userId]) {
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
-    const [, userId] = callback.data.match(/^send_gold_recipient\.([^.]+)$/);
     const recipient = await getSession(callback.message.chat.id, userId);
 
     sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, сколько хочешь передать? Можно вводить только цифры и целочисленные значения.`, {

@@ -21,6 +21,9 @@ module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
                     text: "Выбрать класс",
                     callback_data: `player.${msg.chat.id}.changeClass`
                 }], [{
+                    text: "Состояние персонажа",
+                    callback_data: `player.${msg.chat.id}.character`
+                }], [{
                     text: "Показать инвентарь",
                     callback_data: `player.${msg.chat.id}.inventory`
                 }], [{
@@ -42,6 +45,9 @@ module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
                 inline_keyboard: [[{
                     text: "Выбрать класс",
                     callback_data: `player.${msg.chat.id}.changeClass`
+                }], [{
+                    text: "Состояние персонажа",
+                    callback_data: `player.${msg.chat.id}.character`
                 }], [{
                     text: "Показать инвентарь",
                     callback_data: `player.${msg.chat.id}.inventory`

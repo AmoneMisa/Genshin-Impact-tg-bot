@@ -1,3 +1,7 @@
+const getEquipStatByName = require("./getters/getEquipStatByName");
+const getMaxHp = require("./getters/getMaxHp");
+const getCurrentHp = require("./getters/getCurrentHp");
+
 module.exports = function (session, potion) {
     let player = session.game.gameClass.stats;
 
@@ -5,18 +9,12 @@ module.exports = function (session, potion) {
         return 1;
     }
 
-    if (player.hp === player.maxHp) {
+    if (getCurrentHp(session, session.game.gameClass) === getMaxHp(session, session.game.gameClass)) {
         return 2;
     }
 
     potion.count--;
-    player.hp += potion.power;
-
-    if (player.hp > player.maxHp) {
-        player.hp = player.maxHp;
-    }
-
-    session.game.gameClass.stats.hp = player.hp;
-    session.game.inventory.potions.find(_potion => _potion.name === potion.name && _potion.power === potion.power).count = potion.count;
+    session.game.gameClass.stats.hp = Math.min(potion.power * getEquipStatByName(session, "healPowerPotionsMul", true), getMaxHp(session, session.game.gameClass));
+    session.game.inventory.potions.find(_potion => _potion.bottleType === potion.bottleType && _potion.name === potion.name && _potion.power === potion.power).count = potion.count;
     return 0;
 };

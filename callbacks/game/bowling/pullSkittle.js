@@ -6,12 +6,13 @@ const endGame = require('../../../functions/game/bowling/endGame');
 const bot = require('../../../bot');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 let maxPulls = 2;
 
 module.exports = [[/^bowling_pull$/, async function (session, callback) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
     if (!session.game.hasOwnProperty('bowling')) {

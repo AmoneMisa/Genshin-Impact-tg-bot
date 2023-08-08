@@ -1,4 +1,4 @@
-let step = 1.75;
+let step = 1.15;
 let currentExpCount = 1500;
 let countLvls = 100;
 

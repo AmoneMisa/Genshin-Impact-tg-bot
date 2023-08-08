@@ -12,6 +12,7 @@ const basketball = require('./basketball');
 const football = require('./football');
 const elements = require('./elements');
 const shop = require('./shop');
+const equipmentGacha = require('./equipmentGacha');
 
 module.exports = [
     ...sendGold,
@@ -27,5 +28,6 @@ module.exports = [
     ...basketball,
     ...football,
     ...elements,
+    ...equipmentGacha,
     ...shop
 ];

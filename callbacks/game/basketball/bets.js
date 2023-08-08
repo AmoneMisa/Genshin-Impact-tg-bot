@@ -1,10 +1,11 @@
 const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getUserName = require('../../../functions/getters/getUserName');
+const checkUserCall = require("../../../functions/misc/checkUserCall");
 
 async function bet(session, callback, calcFunc) {
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
+    if (!checkUserCall(callback, session)) {
+        return ;
     }
 
     if (!session.game.hasOwnProperty('basketball')) {

@@ -13,6 +13,10 @@ module.exports = [[/(?:^|\s)\/clear_all_sessions\b/, async (msg) => {
 
     for (let chatSession of Object.values(data.sessions)) {
         for (let session of Object.values(chatSession.members)) {
+            if (session.userChatData.user.is_bot) {
+                continue;
+            }
+
             clearSession(session);
         }
     }

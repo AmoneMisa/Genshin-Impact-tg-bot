@@ -11,6 +11,8 @@ const getBuildListFromTemplate = require("../../../functions/game/builds/getBuil
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getSession = require("../../../functions/getters/getSession");
 const getFile = require("../../../functions/getters/getFile");
+const checkUserCall = require("../../../functions/misc/checkUserCall");
+const editMessageMedia = require("../../../functions/tgBotFunctions/editMessageMedia");
 
 function getUpgradeButtonText(lvl) {
     if (lvl === 0) {
@@ -132,17 +134,11 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
 }], [/^builds\.([\-0-9]+)\.goldMine(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
 
-    if (getUserName(session, "nickname") !== callback.from.username) {
-        return;
-    }
-
     let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!foundedSession.game.hasOwnProperty('builds')) {
         return;
     }
-
-    let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, 'goldMine');
     let keyboard = [[{
@@ -158,10 +154,11 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
         text: buttonsDictionary["ru"].close,
         callback_data: "close"
     }]];
+
     if (isBack) {
         await editMessageCaption(getCaption('goldMine', "home", build), {
             chat_id: callback.message.chat.id,
-            message_id: messageId,
+            message_id: callback.message.message_id,
             reply_markup: {
                 inline_keyboard: keyboard
             }
@@ -232,7 +229,7 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
             })
         }
     }
-}], [/^builds\.[\-0-9]+\.ironDeposit(?:\.back)?$/, async function (session, callback, [, chatId]) {
+}], [/^builds\.([\-0-9]+)\.ironDeposit(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
     let foundedSession = await getSession(chatId, callback.from.id);
 
