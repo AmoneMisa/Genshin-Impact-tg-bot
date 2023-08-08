@@ -7,5 +7,5 @@ module.exports = function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return stats.additionalDamageMul * getEquipStatByName(session, "additionalDamageMul", true);
+    return Math.min(3, stats.additionalDamageMul * getEquipStatByName(session, "additionalDamageMul", true));
 };

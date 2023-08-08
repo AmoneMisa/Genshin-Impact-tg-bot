@@ -20,4 +20,5 @@ module.exports = function (session) {
     session.game.gameClass.stats.criticalChance = template.criticalChance;
     session.game.gameClass.stats.additionalDamageMul = template.additionalDamageMul;
     session.game.gameClass.stats.incomingDamageModifier = template.incomingDamageModifier;
+    session.game.gameClass.stats.speed = Math.ceil(template.speed + ((session.game.stats.lvl / 12) * 2));
 };

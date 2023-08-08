@@ -40,7 +40,7 @@ module.exports = [{
     hpRestoreSpeed: 4,
     mpRestoreSpeed: 2,
     cpRestoreSpeed: 4,
-    speed: 2,
+    speed: 104,
     block: 85,
     accuracy: 60,
     evasion: 30
@@ -63,7 +63,7 @@ module.exports = [{
     hpRestoreSpeed: 2,
     mpRestoreSpeed: 5,
     cpRestoreSpeed: 3,
-    speed: 5,
+    speed: 116,
     block: 35,
     accuracy: 80,
     evasion: 40
@@ -86,7 +86,7 @@ module.exports = [{
     hpRestoreSpeed: 2,
     mpRestoreSpeed: 3.2,
     cpRestoreSpeed: 3,
-    speed: 4,
+    speed: 108,
     block: 75,
     accuracy: 65,
     evasion: 58
@@ -109,7 +109,7 @@ module.exports = [{
     hpRestoreSpeed: 2,
     mpRestoreSpeed: 3,
     cpRestoreSpeed: 2,
-    speed: 7,
+    speed: 142,
     block: 15,
     accuracy: 115,
     evasion: 70

@@ -16,7 +16,6 @@ module.exports = function (session) {
     let newSkillsArray = [];
     for (let skill of session.game.gameClass.skills) {
         delete skill.crystalCost;
-        delete skill.cooltimeReceive;
 
         skill = Object.assign({}, skill, template[skill.slot]);
         newSkillsArray.push(skill);

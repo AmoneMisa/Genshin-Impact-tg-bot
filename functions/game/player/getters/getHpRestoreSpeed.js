@@ -7,5 +7,5 @@ module.exports = function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return stats.hpRestoreSpeed + getEquipStatByName(session, "hpRestoreSpeed");
+    return Math.min(14, stats.hpRestoreSpeed + getEquipStatByName(session, "hpRestoreSpeed"));
 };

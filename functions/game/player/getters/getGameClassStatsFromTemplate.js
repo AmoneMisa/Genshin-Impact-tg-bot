@@ -19,7 +19,9 @@ module.exports = function (className, lvl = 1) {
     statsTemplate.mp = Math.ceil(statsTemplate.maxMp * lvl * 1.0375) + 25;
     statsTemplate.maxMp = Math.ceil(statsTemplate.maxMp * lvl * 1.0375) + 25;
     statsTemplate.maxCp = Math.ceil(statsTemplate.maxCp * lvl * 1.0224) + 37;
-    statsTemplate.cp = Math.ceil(statsTemplate.cp * lvl * 1.224) + 37;
+    statsTemplate.cp = Math.ceil(statsTemplate.cp * lvl * 1.0224) + 37;
+    // Каждые 12 уровней - +2 единицы скорости
+    statsTemplate.speed = Math.ceil(statsTemplate.speed + ((lvl / 12) * 2));
 
     return statsTemplate;
 }
