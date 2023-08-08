@@ -89,6 +89,15 @@ module.exports = [["help", function (session, callback) {
             }], [{
                 text: "Ресурсы (кристаллы)",
                 callback_data: "help_minigames_crystals"
+            },{
+                text: "Постройки",
+                callback_data: "help_minigames_builds"
+            },{
+                text: "Гача",
+                callback_data: "help_minigames_gacha"
+            }], [{
+                text: "Снаряжение",
+                callback_data: "help_minigames_equipment"
             }], [{
                 text: "Назад",
                 callback_data: "help"
@@ -468,6 +477,48 @@ module.exports = [["help", function (session, callback) {
     });
 }], ["help_minigames_select_gender", function (session, callback) {
     return editMessageText(`${dictionary.ru.help.selectGender}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_gacha", function (session, callback) {
+    return editMessageText(`${dictionary.ru.help.gacha}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_equipment", function (session, callback) {
+    return editMessageText(`${dictionary.ru.help.equipment}`, {
+        message_id: callback.message.message_id,
+        chat_id: callback.message.chat.id,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Назад",
+                callback_data: "help_minigames"
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], ["help_minigames_builds", function (session, callback) {
+    return editMessageText(`${dictionary.ru.help.builds}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         reply_markup: {
