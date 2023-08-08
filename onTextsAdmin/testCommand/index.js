@@ -1,3 +1,3 @@
-const testCommand = require('./testCommand');
+// const testCommand = require('./testCommand');
 
-module.exports = [...testCommand];
+// module.exports = [...testCommand];
