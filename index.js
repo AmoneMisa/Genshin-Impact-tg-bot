@@ -23,7 +23,6 @@ const evenHour = require('./functions/shedullers/evenHour');
 const evenDay = require('./functions/shedullers/evenDay');
 
 const log = intel.getLogger("genshin");
-const cron = require('node-cron');
 const buttonsDictionary = require("./dictionaries/buttons");
 
 bot.setMyCommands([
@@ -35,6 +34,7 @@ bot.setMyCommands([
     {command: "reset_games_timers", description: "Сбросить таймеры для персональных игр"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
+    {command: "feedback", description: "Обратная связь с разработчиком (Работает в тестовом режиме)"},
 ], {
     scope: {type: "default"}
 });
@@ -56,8 +56,10 @@ const commandMap = {
     "boss": "boss",
     "shop": "boss",
     "exchange": "boss",
+    "gacha": "whoami",
     "steal_resources": "whoami",
     "whoami": "whoami",
+    "change_gender": "whoami",
     "send_gold": "sendGold",
     "sword": "swords",
     "swords": "swords",
