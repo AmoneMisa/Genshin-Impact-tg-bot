@@ -18,6 +18,7 @@ const gamesCommands = [
     {command: "basketball", description: "Баскетбол"},
     {command: "football", description: "Футбол"},
     {command: "elements", description: "Элементы"},
+    {command: "lucky_roll", description: "Гача"},
     {command: "boss", description: "Меню босса"}
 ];
 
