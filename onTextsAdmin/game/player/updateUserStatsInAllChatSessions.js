@@ -6,7 +6,7 @@ const data = require("../../../data");
 const setLevel = require("../../../functions/game/player/setLevel");
 
 module.exports = [[/(?:^|\s)\/update_all_players_characteristic\b/, async (msg) => {
-    deleteMessage(msg.chat.id, msg.message_id);
+    await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {
         return;

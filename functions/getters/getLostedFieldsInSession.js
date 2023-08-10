@@ -117,7 +117,11 @@ module.exports = function (session) {
     }
 
     if (!session.game.inventory.hasOwnProperty("gacha")) {
-        session.game.inventory.gacha = {};
+        session.game.inventory.gacha = [];
+    }
+
+    if (lodash.isObject(session.game.inventory.gacha)) {
+        session.game.inventory.gacha = [];
     }
 
     if (!session.game.hasOwnProperty("gacha")) {
