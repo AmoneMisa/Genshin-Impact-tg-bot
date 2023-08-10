@@ -16,7 +16,9 @@ module.exports = async function () {
             let dmgList = bossDealDamage(members, boss);
 
             if (dmgList) {
-                await sendMessageWithDelete(chatId, getBossDealDamageMessage(dmgList), {}, 10 * 1000);
+                await sendMessageWithDelete(chatId, getBossDealDamageMessage(dmgList), {
+                    disable_notification: true
+                }, 10 * 1000);
             }
         }
     }
