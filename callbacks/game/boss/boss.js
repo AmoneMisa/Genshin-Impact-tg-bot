@@ -3,6 +3,7 @@ const getMembers = require("../../../functions/getters/getMembers");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const summonBoss = require("../../../functions/game/boss/summonBoss");
 const getBossLoot = require("../../../functions/game/boss/getters/getBossLoot");
+const getSkillCooldown = require("../../../functions/game/player/getters/getSkillCooldown");
 const getBossStatusMessage = require("../../../functions/game/boss/getters/getBossStatusMessage");
 const summonBossMessage = require("../../../functions/game/boss/summonBossMessage");
 const getAliveBoss = require("../../../functions/game/boss/getBossStatus/getAliveBoss");
@@ -119,7 +120,13 @@ module.exports = [["boss", async function (session, callback) {
 
     let buttonsSkills = [];
     for (let skill of session.game.gameClass.skills) {
-        buttonsSkills.push([{text: skill.name, callback_data: `skill.${skill.slot}`}]);
+        let skillName = skill.name;
+
+        if (getSkillCooldown(skill) > new Date().getTime()) {
+            skillName += " (В откате)";
+        }
+
+        buttonsSkills.push([{text: skillName, callback_data: `skill.${skill.slot}`}]);
     }
 
     let message = "";

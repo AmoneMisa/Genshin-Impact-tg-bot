@@ -15,6 +15,7 @@ const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage')
 const isBossAlive = require("../../../functions/game/boss/getBossStatus/isBossAlive");
 const skillUsagePayCost = require('../../../functions/game/player/skillUsagePayCost');
 const checkUserCall = require("../../../functions/misc/checkUserCall");
+const getTime = require("../../../functions/getters/getTime");
 
 module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
     if (!checkUserCall(callback, session)) {
@@ -29,6 +30,11 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
 
     if (isCanBeUsed !== 0) {
         return sendMessageWithDelete(callback.message.chat.id, isPlayerCanUseSkillMessage(isCanBeUsed, skill), {}, 10 * 1000);
+    }
+
+    let [remain] = getTime(skill.cooldownReceive);
+    if (remain > 0) {
+        return;
     }
 
     if (isCanBeUsed === 0) {
