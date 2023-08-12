@@ -13,6 +13,7 @@ const basketball = require('./basketball');
 const football = require('./football');
 const elements = require('./elements');
 const player = require('./player');
+const titles = require('./titles');
 
 module.exports = [
     ...sword,
@@ -29,5 +30,6 @@ module.exports = [
     ...basketball,
     ...football,
     ...elements,
-    ...player
+    ...player,
+    ...titles
 ];

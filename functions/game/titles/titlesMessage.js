@@ -1,12 +1,12 @@
 module.exports =  function (titles) {
     if (!titles || !titles.length) {
-        return "В группе ещё нет ни одного титула. Чтобы получить титул используйте команду /title"
+        return "В группе ещё нет ни одного титула. Чтобы получить титул используйте команду /title [название титула, введённое вручную]";
     }
 
     let str = "";
 
     for (let title of titles) {
-        str += `${title.user}: ${title.title}\n`;
+        str += `${title}\n`;
     }
 
     return str;

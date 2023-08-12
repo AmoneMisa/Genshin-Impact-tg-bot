@@ -116,8 +116,9 @@ for (let [key, value] of onTexts) {
         }
 
         let session = await getSession(msg.chat.id, msg.from.id);
+
         if (regExp.length > 1) {
-            return value(msg, regExp, session);
+            return value(msg, session, regExp);
         } else {
             return value(msg, session);
         }
