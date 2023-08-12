@@ -3,11 +3,13 @@ const updateUserStatsInAllChatSessions = require('./updateUserStatsInAllChatSess
 const updateUserSkillsInAllChatSessions = require('./updateUserSkillsInAllChatSessions');
 const addStealChance = require('./addStealChance');
 const clearSessionsInAllChatSessions = require('./clearSessionsInAllChatSessions');
+const respawn = require('./respawn');
 
 module.exports = [
     ...updateUserStats,
     ...updateUserStatsInAllChatSessions,
     ...updateUserSkillsInAllChatSessions,
     ...clearSessionsInAllChatSessions,
-    ...addStealChance
+    ...addStealChance,
+    ...respawn
 ];

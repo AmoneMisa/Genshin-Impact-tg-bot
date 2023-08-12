@@ -7,7 +7,7 @@ module.exports = [[/^player\.([\-0-9]+)\.reload$/, async function (session, call
     const foundedSession = await getSession(userId, callback.from.id);
     let newMessage = userGetStats(foundedSession);
 
-    if (callback.message.text === newMessage) {
+    if (callback?.message?.text?.trim() === newMessage.trim() || callback?.message?.caption?.trim() === newMessage.trim()) {
         return;
     }
 
@@ -19,7 +19,7 @@ module.exports = [[/^player\.([\-0-9]+)\.reload$/, async function (session, call
             inline_keyboard: [[{
                 text: "Выбрать класс",
                 callback_data: `player.${userId}.changeClass`
-            }],[{
+            }], [{
                 text: "Состояние персонажа",
                 callback_data: `player.${userId}.character`
             }], [{

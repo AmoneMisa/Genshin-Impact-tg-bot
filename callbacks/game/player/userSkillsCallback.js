@@ -63,10 +63,6 @@ module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
             let heal = userHealSkill(session, skill);
             session.game.gameClass.stats.hp += heal;
 
-            if (getCurrentHp(session) < 0) {
-                session.game.gameClass.stats.hp = 0;
-            }
-
             await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(session)}`, {}, 15 * 1000);
         } else if (skill.isShield) {
             let shield = userShieldSkill(session, skill);

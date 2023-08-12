@@ -7,7 +7,7 @@ module.exports = [[/^player\.([\-0-9]+)\.whoami$/, async function (session, call
     const foundedSession = await getSession(userId, callback.from.id);
     let newMessage = userGetStats(foundedSession);
 
-    if (callback.message.text === newMessage) {
+    if (callback?.message?.text?.trim() === newMessage.trim() || callback?.message?.caption?.trim() === newMessage.trim()) {
         return;
     }
 

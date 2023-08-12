@@ -1,4 +1,5 @@
 const bossLootTemplate = require('../../../../templates/bossLootTemplate');
+const lodash = require("lodash");
 
 const modifiers = {
     kivaha: {gold: 1.03, crystals: 1.04, experience: 1.1},
@@ -23,12 +24,20 @@ module.exports = function (boss) {
             let newLoot = {};
             for (let [key, value] of Object.entries(loot)) {
 
-                if (key === "from" || key === "chance") {
+                if (key === "chance") {
                     // Шансы на получение награды - строку НЕ менять!
                     newLoot[key] = value;
                     continue;
                 }
-                newLoot[key] = Math.ceil(value * modifiers[boss.name][lootType] * boss.stats.lvl);
+
+                if (lodash.isObject(value)) {
+                    newLoot[key] = {
+                        minAmount: Math.ceil(value.minAmount * modifiers[boss.name][lootType] * boss.stats.lvl),
+                        maxAmount: Math.ceil(value.maxAmount * modifiers[boss.name][lootType] * boss.stats.lvl)
+                    };
+                } else {
+                    newLoot[key] = Math.ceil(value * modifiers[boss.name][lootType] * boss.stats.lvl);
+                }
             }
             newLootTypeArray.push(newLoot);
             newLootObj[lootType] = newLootTypeArray;

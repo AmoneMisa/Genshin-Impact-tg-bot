@@ -36,6 +36,10 @@ module.exports = function (session, boss, skill) {
         reflectDamage = bossReflectDamage(boss, dmg);
         playerStats.hp -= Math.min(playerStats.hp, reflectDamage);
         session.game.gameClass.stats.hp = playerStats.hp;
+
+        if (playerStats.hp === 0) {
+            session.game.respawnTime = new Date().getTime() + 60 * 1000; // Минута на респаун персонажа
+        }
     }
 
     session.game.stats.inFightTimer = new Date().getTime() + 1.5 * 60 * 1000;

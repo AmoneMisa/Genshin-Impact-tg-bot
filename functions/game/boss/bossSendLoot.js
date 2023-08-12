@@ -1,25 +1,26 @@
 const getRandom = require('../../getters/getRandom');
+const generateRandomEquipment = require('../../game/equipment/generateRandomEquipment');
+const getValueByChance = require("../../getters/getValueByChance");
 const getBossLoot = require('./getters/getBossLoot');
 const setLevel = require('../player/setLevel');
+const lodash = require("lodash");
 
 module.exports = function (boss, sessions) {
     if (boss.currentHp > 0) {
         return false;
     }
 
-    let players = boss.listOfDamage;
-    players.sort((a, b) => b.damage - a.damage);
-
     let i = 1;
     let gotLoot = {};
     let arrSessions = Object.values(sessions);
-    arrSessions.filter(session => !session.userChatData.user.is_bot);
+    let players = boss.listOfDamage;
+    players.sort((a, b) => b.damage - a.damage);
+    let playedSessions = arrSessions
+        .filter(session => !session.userChatData.user.is_bot)
+        .filter(session => players.find(player => player.id === session.userChatData.user.id));
 
-    for (let session of arrSessions) {
+    for (let session of playedSessions) {
         let userId = session.userChatData.user.id;
-        if (!players.find(player => player.id === userId)) {
-            continue;
-        }
 
         if (!session.game.stats) {
             session.game.stats = {};
@@ -37,6 +38,10 @@ module.exports = function (boss, sessions) {
         let gotCrystals = getCrystalsReward(i, loot);
         session.game.inventory.crystals += gotCrystals;
 
+        if (i === 1) {
+            session.game.inventory.equipment.push(generateRandomEquipment(session.game.stats.lvl));
+        }
+
         setLevel(session);
         gotLoot[userId] = {
             username: session.userChatData.user.username,
@@ -49,35 +54,71 @@ module.exports = function (boss, sessions) {
         i++;
     }
 
+    let randomPlayedSessions = getEquipmentRewardList(getBossLoot(boss), playedSessions);
+
+    for (let session of randomPlayedSessions) {
+        let userId = session.userChatData.user.id;
+        let item = generateRandomEquipment(session.game.stats.lvl);
+        session.game.inventory.equipment.push(item);
+        gotLoot[userId].equipment = item.name;
+    }
+
+    if (players.length > 0) {
+        let firstPlaceUserId = players[0].id;
+        let session = sessions[firstPlaceUserId];
+        let item = generateRandomEquipment(session.game.stats.lvl);
+        session.game.inventory.equipment.push(item);
+        gotLoot[firstPlaceUserId].firstPlaceEquipment = item.name;
+    }
+
     return gotLoot;
 };
 
 function getGoldReward(place, loot) {
-    let goldChance = getRandom(0, 99);
+    let goldChance = Math.random();
+    let goldRewardObj = getValueByChance(goldChance, loot.gold);
 
-    for (const gold of loot.gold) {
-        if (gold.from <= goldChance && goldChance < gold.from + gold.chance) {
-            return getRandom(gold.minAmount, gold.maxAmount);
-        }
+    if (lodash.isUndefined(goldRewardObj) || lodash.isNull(goldRewardObj)) {
+        return 0;
     }
 
-    return 0;
+    return getRandom(goldRewardObj.minAmount, goldRewardObj.maxAmount);
 }
 
 function getExperienceReward(place, loot) {
     const maxPlace = loot.experience.length;
     place = Math.min(place, maxPlace);
-    return getRandom(loot.experience[place - 1].minAmount, loot.experience[place - 1].maxAmount);
+    return getRandom(loot.experience[place - 1].value.minAmount, loot.experience[place - 1].value.maxAmount);
 }
 
 function getCrystalsReward(place, loot) {
-    let crystalChance = getRandom(0, 99);
+    let crystalChance = Math.random();
+    let crystalRewardObj = getValueByChance(crystalChance, loot.crystals);
 
-    for (const crystals of loot.crystals) {
-        if (crystals.from <= crystalChance && crystalChance < crystals.from + crystals.chance) {
-            return getRandom(crystals.minAmount, crystals.maxAmount);
-        }
+    if (lodash.isUndefined(crystalRewardObj) || lodash.isNull(crystalRewardObj)) {
+        return 0;
     }
 
-    return 0;
+    return getRandom(crystalRewardObj.minAmount, crystalRewardObj.maxAmount);
+}
+
+function getEquipmentRewardList(loot, playedSessions) {
+    let equipmentCountChance = Math.random();
+    let equipmentCount = getValueByChance(equipmentCountChance, loot.equipment);
+    let randomPlayedSession = shuffle([...playedSessions]);
+    let countSessions = Math.round(playedSessions.length * equipmentCount);
+    return randomPlayedSession.slice(0, countSessions);
+}
+
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
 }

@@ -23,6 +23,7 @@ module.exports = function (session) {
                 down: null,
                 cloak: null
             },
+            respawnTime: 0,
             gacha: [],
             dice: {
                 isStart: false,
@@ -152,5 +153,9 @@ module.exports = function (session) {
 
     if (!session.game.hasOwnProperty("equipmentStats")) {
         session.game.equipmentStats = {};
+    }
+
+    if (!session.game.hasOwnProperty("respawnTime")) {
+        session.game.respawnTime = 0;
     }
 }

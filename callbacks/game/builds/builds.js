@@ -11,8 +11,6 @@ const getBuildListFromTemplate = require("../../../functions/game/builds/getBuil
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getSession = require("../../../functions/getters/getSession");
 const getFile = require("../../../functions/getters/getFile");
-const checkUserCall = require("../../../functions/misc/checkUserCall");
-const editMessageMedia = require("../../../functions/tgBotFunctions/editMessageMedia");
 
 function getUpgradeButtonText(lvl) {
     if (lvl === 0) {

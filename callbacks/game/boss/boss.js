@@ -4,6 +4,7 @@ const getEmoji = require("../../../functions/getters/getEmoji");
 const summonBoss = require("../../../functions/game/boss/summonBoss");
 const getBossLoot = require("../../../functions/game/boss/getters/getBossLoot");
 const getSkillCooldown = require("../../../functions/game/player/getters/getSkillCooldown");
+const getCurrentHp = require("../../../functions/game/player/getters/getCurrentHp");
 const getBossStatusMessage = require("../../../functions/game/boss/getters/getBossStatusMessage");
 const summonBossMessage = require("../../../functions/game/boss/summonBossMessage");
 const getAliveBoss = require("../../../functions/game/boss/getBossStatus/getAliveBoss");
@@ -15,6 +16,8 @@ const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage")
 const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const inventoryDictionary = require('../../../dictionaries/inventory.js');
+const getTime = require("../../../functions/getters/getTime");
+const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
 
 module.exports = [["boss", async function (session, callback) {
     let messageId = callback.message.message_id;
@@ -114,8 +117,10 @@ module.exports = [["boss", async function (session, callback) {
         return sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
     }
 
-    if (session.game.gameClass.stats.hp <= 0) {
-        return sendMessage(chatId, `Ты немножко труп. Жди следующего призыва босса`);
+    if (getCurrentHp(session, session.game.gameClass) <= 0) {
+        let [remain] = getTime(session.game.respawnTime);
+
+        return sendMessage(chatId, `Ты мёртв. Время до воскрешения: ${getStringRemainTime(remain)}.`);
     }
 
     let buttonsSkills = [];

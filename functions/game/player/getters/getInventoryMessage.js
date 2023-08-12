@@ -83,15 +83,14 @@ function getPotionsMessage(potions) {
 
 function getEquipMessage(equipment) {
     let message = `\n${inventoryDictionary["equipment"]}:\n`;
-
-    if (equipment.length >= 10) {
-        equipment.slice(0, 10);
+    let newEquipment = equipment;
+    if (equipment.length >= 4) {
+        newEquipment = equipment.slice(0, 4);
     }
 
     let equipmentByMainType = {};
 
-    for (let equip of equipment) {
-
+    for (let equip of newEquipment) {
         if (!equipmentByMainType[equip.mainType]) {
             equipmentByMainType[equip.mainType] = []
         }
@@ -115,9 +114,13 @@ function getEquipMessage(equipment) {
 }
 
 function getGachaMessage(gacha) {
-    let message = `\n${inventoryDictionary["gacha"]}:\n`;
-    for (let gachaItem of gacha) {
+    if (!gacha.length) {
+        return "";
+    }
 
+    let message = `\n${inventoryDictionary["gacha"]}:\n`;
+
+    for (let gachaItem of gacha) {
         message += `${inventoryDictionary[gachaItem.name]}: осколки для призыва. Количество: ${gachaItem.value}\n`;
     }
 
