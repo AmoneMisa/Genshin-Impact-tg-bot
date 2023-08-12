@@ -3,7 +3,7 @@ const bossDealDamage = require("../game/boss/bossDealDamage");
 const getBossDealDamageMessage = require("../game/boss/getters/getBossDealDamageMessage");
 const isBossAlive = require("../game/boss/getBossStatus/isBossAlive");
 const sendMessageWithDelete = require('../tgBotFunctions/sendMessageWithDelete');
-const {bosses} = require("../../data");
+const {bosses, sessions} = require("../../data");
 
 module.exports = async function () {
     for (let [chatId, bossesArray] of Object.entries(bosses)) {
@@ -14,6 +14,10 @@ module.exports = async function () {
 
             let members = getMembers(chatId);
             let dmgList = bossDealDamage(members, boss);
+
+            if (sessions[chatId].bossSettings.showDamageMessage === 0) {
+                continue;
+            }
 
             if (dmgList) {
                 await sendMessageWithDelete(chatId, getBossDealDamageMessage(dmgList), {

@@ -14,5 +14,9 @@ module.exports = function (chatId) {
         sessions[chatId].game = {points: {}, elements: {}};
     }
 
+    if (!sessions[chatId].hasOwnProperty("bossSettings")) {
+        sessions[chatId].bossSettings = {showDamageMessage: 1, showHealMessage: 1};
+    }
+
     return sessions[chatId];
 };

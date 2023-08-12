@@ -1,18 +1,18 @@
 const getMembers = require('./getMembers');
 const {myId} = require("../../config");
 
-module.exports = function (chatId, msgId) {
+module.exports = function (chatId, userId) {
     let members = getMembers(chatId);
 
-    if (members[msgId]) {
-        if (members[msgId].userChatData.status === "administrator") {
+    if (members[userId]) {
+        if (members[userId].userChatData.status === "administrator") {
             return true;
         }
 
-        if (members[msgId].userChatData.status === "creator") {
+        if (members[userId].userChatData.status === "creator") {
             return true;
         }
     }
 
-    return msgId === myId;
+    return userId === myId;
 }

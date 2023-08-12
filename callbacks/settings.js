@@ -7,7 +7,7 @@ const setButtonText = require("../functions/keyboard/setButtonText");
 const controlButtons = require("../functions/keyboard/controlButtons");
 const editMessageText = require('../functions/tgBotFunctions/editMessageText');
 
-module.exports = [[/^settings\.([^.]+)\.([0-1]+)$/, function (session, callback, [, setting, flag]) {
+module.exports = [[/^settings\.([^.]+)\.([0-1]+)$/, async function (session, callback, [, setting, flag]) {
     let chatSession = getChatSession(callback.message.chat.id);
     if (!getMemberStatus(callback.message.chat.id, chatSession.settingsMessageId)) {
         return;
@@ -24,7 +24,7 @@ module.exports = [[/^settings\.([^.]+)\.([0-1]+)$/, function (session, callback,
         }
     }
 
-    editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {
+    await editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         disable_notification: true,
@@ -32,14 +32,14 @@ module.exports = [[/^settings\.([^.]+)\.([0-1]+)$/, function (session, callback,
             inline_keyboard: [...controlButtons("settings", chatSession.settingsButtons, 1)]
         }
     });
-}], [/^settings_([^.]+)$/, function (session, callback, [, page]) {
+}], [/^settings_([^.]+)$/, async function (session, callback, [, page]) {
     let chatSession = getChatSession(callback.message.chat.id);
     if (!getMemberStatus(callback.message.chat.id, chatSession.settingsMessageId)) {
         return;
     }
     page = parseInt(page);
 
-    return editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {
+    await editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
