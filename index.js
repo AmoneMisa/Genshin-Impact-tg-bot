@@ -72,6 +72,7 @@ const commandMap = {
     "basketball": "basketball",
     "football": "football",
     "elements": "elements",
+    "horoscope": "horoscope",
     "chest": "chests",
     "title": "titles",
     "titles": "titles",
