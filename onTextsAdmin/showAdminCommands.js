@@ -18,6 +18,8 @@ module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         "/add_iron_ore - Добавить железной руды пользователю\n" +
         "/reset_point_game - Сбросить игру в очко\n" +
         "/reset_elements_game - Сбросить игру в элементы\n" +
-        "/receive_user_sword_timer - Сбросить таймер меча для пользователя"
+        "/receive_user_sword_timer - Сбросить таймер меча для пользователя\n" +
+        "/boss_settings - Настройки босса\n" +
+        "/settings - Настройки бота"
     );
 }]];

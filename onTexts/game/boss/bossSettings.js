@@ -19,7 +19,7 @@ module.exports = [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
     }]];
 
     let settings = getChatSessionBossSettings(msg.chat.id);
-    console.log(settings)
+
     for (const buttonLine of buttons) {
         for (const button of buttonLine) {
             let flag = settings[button.callback_data.replace(/^bossSettings\./, '')];
