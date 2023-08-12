@@ -19,6 +19,7 @@ module.exports = [[/(?:^|\s)\/creator_commands\b/, async (msg) => {
         "/clear_all_sessions - Почистить сессии пользователей от старых полей\n" +
         "/update_all_players_skills - Обновить модель всех скиллов всех пользователей\n" +
         "/update_all_players_characteristic - Обновить модель всех статов всех пользователей\n" +
-        "/reset_sword_timer - Сбросить таймеры мечей у всех пользователей\n"
+        "/reset_sword_timer - Сбросить таймеры мечей у всех пользователей\n"+
+        "/clear_titles - Очистить титулы от некорректных данных\n"
     );
 }]];

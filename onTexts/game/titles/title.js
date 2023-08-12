@@ -18,7 +18,12 @@ module.exports = [[/(?:^|\s)\/title ([A-яА-яЁё]+)(?:\s|$)/, async (msg, ses
 
         session.timerTitleCallback = new Date().getTime() + 10 * 60 * 1000;
         message = `Сегодня ты, @${getUserName(randomMember, "nickname")} - ${title}`;
-        data.titles[msg.chat.id].unshift(message.replace("@", ""));
+
+        if (!data.titles[msg.chat.id]) {
+            data.titles[msg.chat.id].push(message.replace("@", ""));
+        } else {
+            data.titles[msg.chat.id].unshift(message.replace("@", ""));
+        }
 
         while (data.titles[msg.chat.id].length > 15) {
             data.titles[msg.chat.id].pop();
