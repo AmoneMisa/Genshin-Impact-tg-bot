@@ -17,12 +17,11 @@ const skillUsagePayCost = require('../../../functions/game/player/skillUsagePayC
 const checkUserCall = require("../../../functions/misc/checkUserCall");
 const getTime = require("../../../functions/getters/getTime");
 
-module.exports = [[/^skill\.[0-9]+$/, async function (session, callback) {
+module.exports = [[/^skill\.([0-9]+)$/, async function (session, callback, [, skillSlot]) {
     if (!checkUserCall(callback, session)) {
         return ;
     }
 
-    const [, skillSlot] = callback.data.match(/^skill\.([0-9]+)$/);
     const skill = session.game.gameClass.skills[skillSlot];
     let members = getMembers(callback.message.chat.id);
     let aliveBoss = getAliveBoss(callback.message.chat.id);

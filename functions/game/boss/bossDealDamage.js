@@ -1,5 +1,6 @@
 const calcBossDamage = require('./calcBossDamage');
 const getCurrentHp = require("../player/getters/getCurrentHp");
+const lodash = require("lodash");
 
 module.exports = function (members, boss) {
     if (!boss) {
@@ -45,7 +46,9 @@ module.exports = function (members, boss) {
 
         bossDmg[member.userChatData.user.id] = {
             dmg,
-            username: member.userChatData.user.username,
+            username: lodash.isUndefined(member.userChatData.user.username)
+                ? member.userChatData.user.first_name
+                : member.userChatData.user.username,
             hp: player.gameClass.stats.hp
         };
     }
