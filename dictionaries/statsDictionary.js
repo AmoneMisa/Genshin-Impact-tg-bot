@@ -35,4 +35,8 @@ module.exports = {
     healPowerMul: "Мощность исцеления (навыки)",
     healPowerPotionsMul: "Мощность исцеления (эликсиры и банки)",
     skillCooltimeMul: "Скорость восстановления скиллов",
+    archer: "Лучник",
+    priest: "Прист",
+    mage: "Маг",
+    warrior: "Паладин"
 };

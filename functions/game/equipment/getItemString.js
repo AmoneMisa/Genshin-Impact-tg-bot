@@ -1,4 +1,5 @@
 const statsDictionary = require("../../../dictionaries/statsDictionary");
+const equipmentTemplate = require("../../../templates/equipmentTemplate");
 const inventory = require("../../../dictionaries/inventory");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const isStatPenalty = require("../../game/equipment/isStatPenalty");
@@ -22,6 +23,21 @@ function getStr(key, value) {
 
 module.exports = function (item) {
     let str = `${item.name}\n\n`;
+
+    str += `Класс: `;
+
+    for (let classOwner of item.classOwner) {
+        if (classOwner === "assassin") {
+            continue;
+        }
+
+        str += `${statsDictionary[classOwner]} `;
+    }
+
+    str += "\n\n";
+
+    str += `Минимальный уровень для использования: ${equipmentTemplate.grades.find(grade => grade.name === item.grade).lvl.from}\n\n`;
+
     str += `Характеристики:\n`;
 
     if (item.mainType === "shield") {

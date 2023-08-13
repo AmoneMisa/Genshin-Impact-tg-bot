@@ -26,15 +26,6 @@ module.exports = function (session, statName, isMul = false) {
                 totalStatValue += statValue;
             }
         }
-
-        if (session.game.stats.lvl < slot.minLvl) {
-            totalStatValue *= 0.65;
-        }
-
-        if (slot.classOwner && !slot.classOwner.includes(session.game.gameClass.stats.name)) {
-            totalStatValue *= 0.25;
-        }
-
     }
     return totalStatValue;
 }

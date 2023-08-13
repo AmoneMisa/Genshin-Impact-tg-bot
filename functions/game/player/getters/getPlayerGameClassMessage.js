@@ -21,6 +21,7 @@ const getEmoji = require('../../../getters/getEmoji');
 const statsDictionary = require("../../../../dictionaries/statsDictionary");
 
 const lodash = require("lodash");
+const isHasPenalty = require("../../equipment/isHasPenalty");
 
 module.exports = function (session, baseStats, playerEffects, gameClassTemplate) {
     let message = "";
@@ -39,6 +40,10 @@ module.exports = function (session, baseStats, playerEffects, gameClassTemplate)
     }
 
     message += `${getEmoji(classStats.name)} Класс: ${classStats.translateName}\n`;
+
+    if (isHasPenalty(session)) {
+        message += "⛔️ Надет один или более предметов, которые выше Вашего уровня. На некоторые Ваши характеристики наложен штраф в 45%. Рекомендуем снять высокоуровневое снаряжение или поднять уровень.⛔️\n";
+    }
 
     if (baseStats) {
         message += `${getEmoji("attack")} ${statsDictionary["attack"]}: ${getAttack(session, gameClass)}\n`;
