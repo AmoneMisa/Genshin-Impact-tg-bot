@@ -1,23 +1,24 @@
 const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
+const getSession = require("../../../functions/getters/getSession");
 const shopTemplate = require('../../../templates/shopTemplate');
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const getUserName = require("../../../functions/getters/getUserName");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 const shopSellItem = require("../../../functions/game/shop/shopSellItem");
 
-function buildKeyboard(category, isBuy) {
+function buildKeyboard(category, isBuy, chatId) {
     let buttons = [];
     for (let item of shopTemplate) {
         if (item.category === category) {
             if (isBuy) {
                 buttons.push([{
                     text: `${item.name} - ${item.cost}`,
-                    callback_data: `shop.${item.category}.${item.command}.buy`
+                    callback_data: `shop.${chatId}.${item.category}.${item.command}.buy`
                 }]);
             } else {
                 buttons.push([{
                     text: `${item.name} - ${item.cost}`,
-                    callback_data: `shop.${item.category}.${item.command}`
+                    callback_data: `shop.${chatId}.${item.category}.${item.command}`
                 }]);
             }
         }
@@ -34,30 +35,29 @@ const categoriesMap = {
     builds: "Всё для построек",
 };
 
-function buildCategoryKeyboard() {
+function buildCategoryKeyboard(chatId) {
     let buttons = [];
     for (let [key, value] of Object.entries(categoriesMap)) {
-        buttons.push([{text: value, callback_data: `shop.${key}`}]);
+        buttons.push([{text: value, callback_data: `shop.${chatId}.${key}`}]);
     }
 
     return buttons;
 }
 
-module.exports = [["shop", async function (session, callback) {
+module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , chatId]) {
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
 
     await editMessageCaption(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
-        chat_id: chatId,
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: controlButtons("shop", buildCategoryKeyboard(), 1)
+            inline_keyboard: controlButtons(`shop.${chatId}`, buildCategoryKeyboard(chatId), 1)
         }
     }, callback.message.photo);
-}], [/^shop_([^.]+)$/, async function (session, callback, [ , page]) {
+}], [/^shop\.([\-0-9]+)_([^.]+)$/, async function (session, callback, [ , chatId, page]) {
     page = parseInt(page);
-    let buttons = buildCategoryKeyboard();
+    let buttons = buildCategoryKeyboard(chatId);
 
     await editMessageCaption(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
         chat_id: callback.message.chat.id,
@@ -65,22 +65,22 @@ module.exports = [["shop", async function (session, callback) {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons("shop", buttons, page)
+                ...controlButtons(`shop.${chatId}`, buttons, page)
             ]
         }
     }, callback.message.photo);
-}], [/^shop\.([^._]+)$/, async function (session, callback, [ , category]) {
+}], [/^shop\.([\-0-9]+)\.([^._]+)$/, async function (session, callback, [ , chatId, category]) {
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
+
     await editMessageCaption(`@${getUserName(session, "nickname")}, выбери предметы для покупки в магазине.`, {
-        chat_id: chatId,
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: controlButtons(`shop.${category}`, buildKeyboard(category, true), 1, "shop")
+            inline_keyboard: controlButtons(`shop.${chatId}.${category}`, buildKeyboard(category, true, chatId), 1, `shop.${chatId}`)
         }
     }, callback.message.photo);
-}], [/^shop\.([^.0-9]+)_(\d+)$/, async function (session, callback, [, category, page]) {
+}], [/^shop\.([\-0-9]+)\.([^.0-9]+)_(\d+)$/, async function (session, callback, [, chatId, category, page]) {
     page = parseInt(page);
 
     await editMessageCaption(`@${getUserName(session, "nickname")}, выбери предмет для покупки в магазине.`, {
@@ -89,55 +89,55 @@ module.exports = [["shop", async function (session, callback) {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons(`shop.${category}`, buildKeyboard(category, true), page, "shop")
+                ...controlButtons(`shop.${chatId}.${category}`, buildKeyboard(category, true, chatId), page, `shop.${chatId}`)
             ]
         }
     }, callback.message.photo);
-}], [/^shop\.([^.]+)\.([^.]+)\.buy$/, async function (session, callback, [, category, itemName]) {
+}], [/^shop\.([\-0-9]+)\.([^.]+)\.([^.]+)\.buy$/, async function (session, callback, [, chatId, category, itemName]) {
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
     let item = shopTemplate.filter(_item => _item.command === itemName);
     item = item[0];
 
-    if (session.game.inventory.gold < item.cost) {
-        return sendMessageWithDelete(chatId, `"@${getUserName(session, "nickname")},недостаточно золота."`, {});
+    let foundSession = await getSession(chatId, callback.from.id);
+
+    if (foundSession.game.inventory.gold < item.cost) {
+        return sendMessageWithDelete(callback.message.chat.id, `"@${getUserName(foundSession, "nickname")},недостаточно золота."`, {});
     }
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, ты уверен, что хочешь купить ${item.name}?.\nСтоимость: ${item.cost} золота.`, {
-        chat_id: chatId,
+    await editMessageCaption(`@${getUserName(foundSession, "nickname")}, ты уверен, что хочешь купить ${item.name}?.\nСтоимость: ${item.cost} золота.`, {
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
                 text: "Купить",
-                callback_data: `shop.${category}.${itemName}.buy.0`
+                callback_data: `shop.${chatId}.${category}.${itemName}.buy.0`
             }], [{
-                text: categoriesMap[category], callback_data: `shop.${category}`
+                text: categoriesMap[category], callback_data: `shop.${chatId}.${category}`
             }, {
-                text: "Главная", callback_data: "shop"
+                text: "Главная", callback_data: `shop.${chatId}`
             }], [{
                 text: "Закрыть", callback_data: "close"
             }]]
         }
     }, callback.message.photo);
-}], [/^shop\.[^.]+\.([^.]+)\.buy\.0$/, async function (session, callback, [, itemName]) {
+}], [/^shop\.([\-0-9]+)\.[^.]+\.([^.]+)\.buy\.0$/, async function (session, callback, [, chatId, itemName]) {
     let messageId = callback.message.message_id;
-    let chatId = callback.message.chat.id;
-
     let item = shopTemplate.filter(_item => _item.command === itemName);
     item = item[0];
+    let foundSession = await getSession(chatId, callback.from.id);
+    let sellItem = shopSellItem(foundSession, item.command, item);
 
-    let sellItem = shopSellItem(session, item.command, item);
     if (typeof sellItem === "string") {
-        return sendMessageWithDelete(chatId, sellItem, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, sellItem, {}, 10 * 1000);
     }
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, поздравляем с покупкой ${item.name}!`, {
-        chat_id: chatId,
+    await editMessageCaption(`@${getUserName(foundSession, "nickname")}, поздравляем с покупкой ${item.name}!`, {
+        chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: controlButtons("shop", buildCategoryKeyboard(), 1)
+            inline_keyboard: controlButtons(`shop.${chatId}`, buildCategoryKeyboard(chatId), 1)
         }
     }, callback.message.photo);
 }]];

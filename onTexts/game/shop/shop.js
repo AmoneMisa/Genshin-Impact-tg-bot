@@ -28,18 +28,18 @@ module.exports = [[/(?:^|\s)\/shop\b/, async (msg, session) => {
     const file = getFile( "images/misc", "shop");
 
     if (file) {
-        await sendPhoto(msg.chat.id, file, {
+        await sendPhoto(msg.from.id, file, {
             caption: `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`,
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons("shop", buildKeyboard(), 1)
+                inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(), 1)
             }
         });
     } else {
-        await sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+        await sendMessage(msg.from.id, `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons("shop", buildKeyboard(), 1)
+                inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(), 1)
             }
         });
     }

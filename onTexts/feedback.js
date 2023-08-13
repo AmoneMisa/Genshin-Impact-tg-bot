@@ -16,7 +16,6 @@ module.exports = [[/(?:^|\s)\/feedback/, async (msg) => {
             force_reply: true
         }
     }).then(message => {
-        console.log(message)
         let id = bot.onReplyToMessage(message.chat.id, message.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             return sendMessage(myId, `Фидбек от ${msg.from.id} ${getUserName(session, "name")} (@${getUserName(session, "nickname")}): ${replyMsg.text}`, {
