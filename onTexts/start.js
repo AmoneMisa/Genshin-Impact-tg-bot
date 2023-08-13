@@ -7,6 +7,7 @@ module.exports = [[/(?:^|\s)\/start/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let commands = await bot.getMyCommands();
     let message = `Список команд бота:\n\n`;
+    message += `‼️ Перед использованием некоторых команд, пожалуйста, убедитесь, что Вы начали диалог с ботом, иначе он не сможет присылать Вам сообщения. Это не прихоть разработчика, это ограничения телеграма с целью борьбы со спам-ботами.‼️\n\n`;
     for (let command of commands) {
         message += `/${command.command} - ${command.description}\n`;
     }

@@ -169,6 +169,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     if (equipmentNames.includes(items)) {
         itemsWithIndex = foundedSession.game.inventory.equipment.map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, equip]) => equip.mainType === items);
+    } else if (items === "hp" || items === "mp" || items === "cp") {
+        itemsWithIndex = foundedSession.game.inventory.potions.map((item, i) => [i, item]);
+        foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
     } else {
         itemsWithIndex = foundedSession.game.inventory[items].map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
@@ -205,6 +208,8 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
 
     if (equipmentNames.includes(items)) {
         itemsList = foundedSession.game.inventory.equipment;
+    } else if (items === "hp" || items === "mp" || items === "cp") {
+        itemsList = foundedSession.game.inventory.potions;
     } else {
         itemsList = foundedSession.game.inventory[items];
     }
@@ -217,8 +222,8 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         callback_data: `player.${userId}.inventory.${items}.${i}.0`
     }]
 
-    if (items === "potions") {
-        foundedItem = foundedSession.game.inventory[items].find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
+    if (items === "hp" || items === "mp" || items === "cp") {
+        foundedItem = foundedSession.game.inventory.potions.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
     } else if (equipmentNames.includes(items)) {
         foundedItem = foundedSession.game.inventory.equipment.find(_item =>
             _item.grade === itemData.grade
@@ -226,7 +231,6 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
             && _item.mainType === itemData.mainType
             && _item.cost === itemData.cost
         );
-
 
         if (foundedItem.isUsed) {
             buttons[0].text = "Снять";
@@ -269,6 +273,8 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
 
     if (equipmentNames.includes(items)) {
         itemsList = foundedSession.game.inventory.equipment;
+    } else if (items === "hp" || items === "mp" || items === "cp") {
+        itemsList = foundedSession.game.inventory.potions;
     } else {
         itemsList = foundedSession.game.inventory[items];
     }
@@ -276,8 +282,8 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     let itemData = itemsList[i];
     let foundedItem;
 
-    if (items === "potions") {
-        foundedItem = foundedSession.game.inventory[items].find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
+    if (items === "hp" || items === "mp" || items === "cp") {
+        foundedItem = foundedSession.game.inventory.potions.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
     } else if (equipmentNames.includes(items)) {
         foundedItem = foundedSession.game.inventory.equipment.find(_item =>
             _item.grade === itemData.grade

@@ -10,26 +10,26 @@ module.exports = [[/(?:^|\s)\/lucky_roll\b/, async (msg, session) => {
     let file = getFile(`images/gacha`, "choice");
 
     if (file) {
-        await sendPhoto(msg.chat.id, file, {
+        await sendPhoto(msg.from.id, file, {
             caption: `@${getUserName(session, "nickname")}, выбери спираль удачи`,
             disable_notification: true,
             reply_markup: {
                 selective: true,
                 inline_keyboard: [[{
                     text: "Спираль новичка",
-                    callback_data: "lucky_roll.newbie"
+                    callback_data: `lucky_roll.${msg.chat.id}.newbie`
                 }, {
                     text: "Обычная спираль",
-                    callback_data: "lucky_roll.common"
+                    callback_data: `lucky_roll.${msg.chat.id}.common`
                 }], [{
                     text: "Спираль редкостей",
-                    callback_data: "lucky_roll.rare"
+                    callback_data: `lucky_roll.${msg.chat.id}.rare`
                 }, {
                     text: "Королевская спираль",
-                    callback_data: "lucky_roll.royal"
+                    callback_data: `lucky_roll.${msg.chat.id}.royal`
                 }], [{
                     text: "Божественная спираль",
-                    callback_data: "lucky_roll.goddess"
+                    callback_data: `lucky_roll.${msg.chat.id}.goddess`
                 }], [{
                     text: "Закрыть",
                     callback_data: "close"
@@ -37,25 +37,25 @@ module.exports = [[/(?:^|\s)\/lucky_roll\b/, async (msg, session) => {
             }
         });
     } else {
-        return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери спираль удачи`, {
+        return sendMessage(msg.from.id, `@${getUserName(session, "nickname")}, выбери спираль удачи`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,
                 inline_keyboard: [[{
                     text: "Спираль новичка",
-                    callback_data: "lucky_roll.newbie"
+                    callback_data: `lucky_roll.${msg.chat.id}.newbie`
                 }, {
                     text: "Обычная спираль",
-                    callback_data: "lucky_roll.common"
+                    callback_data: `lucky_roll.${msg.chat.id}.common`
                 }], [{
                     text: "Спираль редкостей",
-                    callback_data: "lucky_roll.rare"
+                    callback_data: `lucky_roll.${msg.chat.id}.rare`
                 }, {
                     text: "Королевская спираль",
-                    callback_data: "lucky_roll.royal"
+                    callback_data: `lucky_roll.${msg.chat.id}.royal`
                 }], [{
                     text: "Божественная спираль",
-                    callback_data: "lucky_roll.goddess"
+                    callback_data: `lucky_roll.${msg.chat.id}.goddess`
                 }], [{
                     text: "Закрыть",
                     callback_data: "close"

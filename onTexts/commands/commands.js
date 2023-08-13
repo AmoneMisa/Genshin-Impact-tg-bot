@@ -46,6 +46,8 @@ const resetGamesCommands = [
 module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let message = `Список игр бота:\n\n`;
+    message += `‼️ Перед использованием некоторых команд, пожалуйста, убедитесь, что Вы начали диалог с ботом, иначе он не сможет присылать Вам сообщения. Это не прихоть разработчика, это ограничения телеграма с целью борьбы со спам-ботами.‼️\n\n`;
+
     for (let command of gamesCommands) {
         message += `/${command.command} - ${command.description}\n`;
     }
@@ -62,6 +64,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
 }], [/(?:^|\s)\/games_player\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let message = `Список команд для игрока:\n\n`;
+    message += `‼️ Перед использованием некоторых команд, пожалуйста, убедитесь, что Вы начали диалог с ботом, иначе он не сможет присылать Вам сообщения. Это не прихоть разработчика, это ограничения телеграма с целью борьбы со спам-ботами.‼️\n\n`;
     for (let command of playerCommands) {
         message += `/${command.command} - ${command.description}\n`;
     }
@@ -78,6 +81,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
 }], [/(?:^|\s)\/games_form\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let message = `Список команд анкет по Геншину:\n\n`;
+    message += `‼️ Перед использованием некоторых команд, пожалуйста, убедитесь, что Вы начали диалог с ботом, иначе он не сможет присылать Вам сообщения. Это не прихоть разработчика, это ограничения телеграма с целью борьбы со спам-ботами.‼️\n\n`;
 
     for (let command of formsCommands) {
         message += `/${command.command} - ${command.description}\n`;
