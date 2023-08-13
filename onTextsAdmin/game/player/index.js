@@ -4,6 +4,7 @@ const updateUserSkillsInAllChatSessions = require('./updateUserSkillsInAllChatSe
 const addStealChance = require('./addStealChance');
 const clearSessionsInAllChatSessions = require('./clearSessionsInAllChatSessions');
 const respawn = require('./respawn');
+const clearChatSession = require('./clearBossSession');
 
 module.exports = [
     ...updateUserStats,
@@ -11,5 +12,6 @@ module.exports = [
     ...updateUserSkillsInAllChatSessions,
     ...clearSessionsInAllChatSessions,
     ...addStealChance,
-    ...respawn
+    ...respawn,
+    ...clearChatSession
 ];

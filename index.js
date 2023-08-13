@@ -81,11 +81,21 @@ const commandMap = {
     "set[A-Z].*": "form"
 };
 
+let supergroupCommands = ["boss", "title", "titles", "info", "form", "sword", "swords", "shop", "send_gold", "mute", "steal_resources", "gacha", "exchange", "change_gender"];
+
 for (let [key, value] of onTexts) {
     bot.onText(key, async function (msg, regExp) {
         if (!isTrusted(msg.chat.id)) {
             debugMessage(`${msg.chat.id} - попытка обратиться к боту.`);
             return sendMessage(msg.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.");
+        }
+
+        if (msg.chat.type === "chanel") {
+            return sendMessage(msg.chat.id, "Этот бот не доступен для использования в каналах.");
+        }
+
+        if (msg.chat.type === "private" && supergroupCommands.includes(regExp[0].replace(/^\//, ''))) {
+            return sendMessage(msg.chat.id, "Эта команда не доступна в приватном чате.");
         }
 
         let command = regExp[0].replace(/^\//, '');

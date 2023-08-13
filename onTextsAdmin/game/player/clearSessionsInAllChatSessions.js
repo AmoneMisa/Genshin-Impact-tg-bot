@@ -5,7 +5,7 @@ const clearSession = require("../../../functions/misc/clearSession");
 const data = require("../../../data");
 
 module.exports = [[/(?:^|\s)\/clear_all_sessions\b/, async (msg) => {
-    deleteMessage(msg.chat.id, msg.message_id);
+    await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {
         return;
@@ -20,5 +20,5 @@ module.exports = [[/(?:^|\s)\/clear_all_sessions\b/, async (msg) => {
             clearSession(session);
         }
     }
-    return sendMessage(myId, "Все сессии очищены. Убедиться в результате можно по команде /get_file sessions.json");
+    await sendMessage(myId, "Все сессии очищены. Убедиться в результате можно по команде /get_file sessions.json");
 }]];
