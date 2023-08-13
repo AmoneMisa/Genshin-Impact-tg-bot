@@ -89,14 +89,13 @@ module.exports = [["shop", async function (session, callback) {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons(`shop.${category}`, buildKeyboard(category), page, "shop")
+                ...controlButtons(`shop.${category}`, buildKeyboard(category, true), page, "shop")
             ]
         }
     }, callback.message.photo);
 }], [/^shop\.([^.]+)\.([^.]+)\.buy$/, async function (session, callback, [, category, itemName]) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-
     let item = shopTemplate.filter(_item => _item.command === itemName);
     item = item[0];
 
