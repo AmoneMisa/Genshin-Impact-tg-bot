@@ -1,32 +1,24 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const buttonsDictionary = require('../../../dictionaries/buttons');
+const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getUserName = require('../../../functions/getters/getUserName');
+const getEmoji = require('../../../functions/getters/getEmoji');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
-module.exports = [[/(?:^|\s)\/exchange\b/, async (msg, session) => {
+module.exports = [[/(?:^|\s)\/exchange ([0-9]+)\b/, async (msg, session, [ , amount]) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, выбери, сколько кристаллов ты хочешь купить. Обмен 1 кристалл х 1500 голды.`, {
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: "50 кристаллов",
-                callback_data: "crystal_buy.50"
-            }, {
-                text: "100 кристаллов",
-                callback_data: "crystal_buy.100"
-            }], [{
-                text: "200 кристаллов",
-                callback_data: "crystal_buy.200"
-            }, {
-                text: "500 кристаллов",
-                callback_data: "crystal_buy.500"
-            }], [{
-                text: "1000 кристаллов",
-                callback_data: "crystal_buy.1000"
-            }], [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    });
+
+    let crystals = parseInt(amount);
+
+    if (session.game.inventory.gold < crystals * 1500) {
+        return sendMessageWithDelete(msg.from.id, `${getUserName(session, "nickname")}, у тебя не хватает ${crystals * 1500 - session.game.inventory.gold} золота для этой покупки`, {}, 10 * 1000);
+    }
+
+    session.game.inventory.gold -= crystals * 1500;
+
+    if (typeof session.game.inventory.crystals === "string") {
+        session.game.inventory.crystals = parseInt(session.game.inventory.crystals);
+    }
+
+    session.game.inventory.crystals += crystals;
+
+    return sendMessageWithDelete(msg.from.id, `Ты купил ${getEmoji("crystals")} ${crystals} кристаллов.`, { disable_notification: true }, 10 * 1000);
 }]];
