@@ -139,6 +139,18 @@ for (let [key, value] of onTextsAdmin) {
     bot.onText(key, value);
 }
 
+bot.on("new_chat_members", async (msg) => {
+    for (let newChatMember of msg.new_chat_members) {
+        let session = await getSession(msg.chat.id, newChatMember.id);
+        session.isHided = false;
+    }
+});
+
+bot.on("left_chat_member", async (msg) => {
+    let session = await getSession(msg.chat.id, msg.left_chat_participant.id);
+    session.isHided = true;
+});
+
 bot.on("callback_query", async (callback) => {
     if (!isTrusted(callback.message.chat.id)) {
         debugMessage(`${callback.message.chat.id} - попытка обратиться к боту.`);
