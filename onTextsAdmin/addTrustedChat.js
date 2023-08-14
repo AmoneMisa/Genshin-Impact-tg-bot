@@ -20,34 +20,51 @@ module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
         bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
             const trustedChats = fs.readFileSync('trustedChats.json');
             let trustedChatsArray = JSON.parse(trustedChats);
+            let uniqueIds = new Set();
+
+            for (let id of trustedChatsArray) {
+                uniqueIds.add(id);
+            }
+
             let chatMembers = getMembers(replyMsg.text);
             let trustedChatsContainsAllMembers = true;
 
+            if (!uniqueIds.has(replyMsg.text)) {
+                trustedChatsArray = [];
+                uniqueIds.add((replyMsg.text).toString());
+                trustedChatsArray = Array.from(uniqueIds);
+
+                fs.writeFileSync('trustedChats.json', JSON.stringify(trustedChatsArray));
+                updTrustedChats();
+                sendMessage(myId, `Чат добавлен в доверенные: ${replyMsg.text}`);
+            }
+
             if (chatMembers) {
                 for (let memberId of Object.keys(chatMembers)) {
-                    if (!trustedChatsArray.includes(memberId)) {
+                    if (!uniqueIds.has(memberId)) {
                         trustedChatsContainsAllMembers = false;
                         break;
                     }
                 }
             }
 
-            if (!trustedChatsArray.includes(replyMsg.text)) {
-                trustedChatsArray.push((replyMsg.text).toString());
-                fs.writeFileSync('trustedChats.json', JSON.stringify(trustedChatsArray));
-                updTrustedChats();
-                sendMessage(myId, `Чат добавлен в доверенные: ${replyMsg.text}`);
-            } else if (!trustedChatsContainsAllMembers) {
+            if (!trustedChatsContainsAllMembers) {
                 let ids = "";
+                trustedChatsArray = [];
+
                 for (let memberId of Object.keys(chatMembers)) {
-                    if (!trustedChatsArray.includes(memberId)) {
-                        trustedChatsArray.push(memberId);
+                    if (!uniqueIds.has(memberId)) {
+                        uniqueIds.add(memberId);
                         ids += `${memberId}; `;
                     }
                 }
+
+                trustedChatsArray = Array.from(uniqueIds);
+                fs.writeFileSync('trustedChats.json', JSON.stringify(trustedChatsArray));
+                updTrustedChats();
                 sendMessage(myId, `Чаты добавлены в доверенные: ${ids}`);
             } else {
-                return sendMessage(myId, `Чат уже добавлен в доверенные: ${replyMsg.text}`);
+                return sendMessage(myId, `Все приватные чаты уже добавлены в доверенные: ${replyMsg.text}`);
             }
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
