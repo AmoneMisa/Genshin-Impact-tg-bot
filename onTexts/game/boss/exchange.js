@@ -6,7 +6,7 @@ const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage")
 module.exports = [[/(?:^|\s)\/exchange ([0-9]+)\b/, async (msg, session, [ , amount]) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    let crystals = parseInt(amount);
+    let crystals = Math.round(parseInt(amount));
 
     if (session.game.inventory.gold < crystals * 1500) {
         return sendMessageWithDelete(msg.from.id, `${getUserName(session, "nickname")}, у тебя не хватает ${crystals * 1500 - session.game.inventory.gold} золота для этой покупки`, {}, 10 * 1000);
