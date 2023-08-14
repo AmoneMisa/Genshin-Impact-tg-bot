@@ -8,7 +8,7 @@ module.exports = [
     {type: "inventory", name: "Инвентарь", emoji: "🎒", category: "inventory"},
     {type: "hp", name: "Здоровье", emoji: "❤️", category: "classStats"},
     {type: "mp", name: "Мана", emoji: "💙", category: "classStats"},
-    {type: "cp", name: "Мана", emoji: "🧡", category: "classStats"},
+    {type: "cp", name: "Цп", emoji: "🧡", category: "classStats"},
     {type: "attack", name: "Атака", emoji: "⚔️", category: "classStats"},
     {type: "defence", name: "Защита", emoji: "🛡️", category: "classStats"},
     {type: "speed", name: "Скорость", emoji: "🏃", category: "classStats"},
@@ -88,5 +88,9 @@ module.exports = [
     {type: "accessories", name: "Аксессуары", emoji: "🟥", category: "text"},
     {type: "cloak", name: "Плащ - Накидка", emoji: "🟦", category: "text"},
     {type: "cloaks", name: "Плащи - Накидки", emoji: "🟦", category: "text"},
+    {type: "separator", name: "Разделитель", emoji: "▻", category: "text"},
+    {type: "brokenSword", name: "Сломанный меч", emoji: "🪠", category: "text"},
+    {type: "immuneToUpSword", name: "Иммунитет к увеличению меча", emoji: "⤵", category: "text"},
+    {type: "nothing", name: "Пустышка", emoji: "💩", category: "text"},
     {type: "separator", name: "Разделитель", emoji: "▻", category: "text"},
 ];
