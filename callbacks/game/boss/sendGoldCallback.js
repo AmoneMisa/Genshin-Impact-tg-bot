@@ -35,6 +35,7 @@ module.exports = [[/^sendGoldRecipient\.([\-0-9]+)\.([^.]+)$/, async function (s
            }, 30 * 1000);
 
             await deleteMessage(replyMsg.chat.id, replyMsg.message_id);
+            await deleteMessage(callback.message.chat.id, msg.message_id);
         });
     }).catch(e => {
         console.error(e);
