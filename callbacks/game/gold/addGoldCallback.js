@@ -7,8 +7,7 @@ const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
-module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
-    const [, chatId, userId] = callback.data.match(/^add_gold\.([\-0-9]+)\.([0-9]+)$/);
+module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     sendMessage(callback.message.chat.id, `Сколько золота добавить для ${getUserName(targetSession, "name")}?`, {
         disable_notification: true,
@@ -31,8 +30,7 @@ module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, 
     }).catch(e => {
         console.error(e);
     });
-}], [/^add_gold\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
-    let [, chatId, page] = callback.data.match(/^add_gold\.([\-0-9]+)_([^.]+)$/);
+}], [/^add_gold\.([\-0-9]+)_([^.]+)$/, function (session, callback, [, chatId, page]) {
     page = parseInt(page);
 
     let buttons = buildKeyboard(chatId, `add_gold.${chatId}`);

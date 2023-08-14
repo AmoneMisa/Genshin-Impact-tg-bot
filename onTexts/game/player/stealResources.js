@@ -1,6 +1,5 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
 const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 const buildKeyboard = require("../../../functions/keyboard/buildKeyboard");
@@ -12,24 +11,25 @@ const getFile = require("../../../functions/getters/getFile");
 module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    let buttons = buildKeyboard(msg.chat.id, "steal_resources", false, msg.from.id);
+    let buttons = buildKeyboard(msg.chat.id, `stealResources.${msg.chat.id}`, false, msg.from.id);
 
     if (!session.game.chanceToSteal && session.game.chanceToSteal !== 0) {
         session.game.chanceToSteal = 2;
     }
+
     let [attackerRemain] = getTime(session.game.stealImmuneTimer);
 
     if (session.game.chanceToSteal === 0) {
-        return sendMessageWithDelete(msg.chat.id, `@${getUserName(session, "nickname")}, у тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {}, 15 * 1000);
+        return sendMessageWithDelete(msg.from.id, `У тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {}, 15 * 1000);
     }
 
     const file = getFile("images/misc", "stealResources");
 
     let text = "";
     if (buttons.length) {
-        text = `@${getUserName(session, "nickname")}, выбери, у кого хочешь украсть ресурсы.`;
+        text = `Выбери, у кого хочешь украсть ресурсы.`;
     } else {
-        text = `@${getUserName(session, "nickname")}, тебе не у кого красть ресурсы.`
+        text = `Не у кого красть ресурсы.`
     }
 
     if (attackerRemain > 0) {
@@ -37,18 +37,18 @@ module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     }
 
     if (file) {
-        await sendPhoto(msg.chat.id, file, {
+        await sendPhoto(msg.from.id, file, {
             caption: text,
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons("steal_resources", buttons, 1)
+                inline_keyboard: controlButtons(`stealResources.${msg.chat.id}`, buttons, 1)
             }
         });
     } else {
-        await sendMessage(msg.chat.id, text, {
+        await sendMessage(msg.from.id, text, {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons("steal_resources", buttons, 1)
+                inline_keyboard: controlButtons(`stealResources.${msg.chat.id}`, buttons, 1)
             }
         });
     }
