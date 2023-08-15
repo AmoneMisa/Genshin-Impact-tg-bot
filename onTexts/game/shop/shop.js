@@ -14,10 +14,10 @@ const categoriesMap = {
     builds: "Всё для построек",
 };
 
-function buildKeyboard() {
+function buildKeyboard(chatId) {
     let buttons = [];
     for (let [key, value] of Object.entries(categoriesMap)) {
-        buttons.push([{text: value, callback_data: `shop.${key}`}]);
+        buttons.push([{text: value, callback_data: `shop.${chatId}.${key}`}]);
     }
 
     return buttons;
@@ -32,14 +32,14 @@ module.exports = [[/(?:^|\s)\/shop\b/, async (msg, session) => {
             caption: `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`,
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(), 1)
+                inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(msg.chat.id), 1)
             }
         });
     } else {
         await sendMessage(msg.from.id, `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(), 1)
+                inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(msg.chat.id), 1)
             }
         });
     }

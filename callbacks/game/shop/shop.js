@@ -101,10 +101,10 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
     let foundSession = await getSession(chatId, callback.from.id);
 
     if (foundSession.game.inventory.gold < item.cost) {
-        return sendMessageWithDelete(callback.message.chat.id, `"@${getUserName(foundSession, "nickname")},недостаточно золота."`, {});
+        return sendMessageWithDelete(callback.message.chat.id, `Недостаточно золота`, {});
     }
 
-    await editMessageCaption(`@${getUserName(foundSession, "nickname")}, ты уверен, что хочешь купить ${item.name}?.\nСтоимость: ${item.cost} золота.`, {
+    await editMessageCaption(`Ты уверен, что хочешь купить ${item.name}?.\nСтоимость: ${item.cost} золота.`, {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
@@ -132,7 +132,7 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
         return sendMessageWithDelete(callback.message.chat.id, sellItem, {}, 10 * 1000);
     }
 
-    await editMessageCaption(`@${getUserName(foundSession, "nickname")}, поздравляем с покупкой ${item.name}!`, {
+    await editMessageCaption(`Поздравляем с покупкой ${item.name}!`, {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
