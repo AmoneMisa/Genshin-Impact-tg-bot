@@ -2,7 +2,6 @@ const editMessageCaption = require("../../../functions/tgBotFunctions/editMessag
 const getSession = require("../../../functions/getters/getSession");
 const shopTemplate = require('../../../templates/shopTemplate');
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const getUserName = require("../../../functions/getters/getUserName");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 const shopSellItem = require("../../../functions/game/shop/shopSellItem");
 
@@ -47,7 +46,7 @@ function buildCategoryKeyboard(chatId) {
 module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , chatId]) {
     let messageId = callback.message.message_id;
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+    await editMessageCaption(`Выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
@@ -59,7 +58,7 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
     page = parseInt(page);
     let buttons = buildCategoryKeyboard(chatId);
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+    await editMessageCaption(`Выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -72,7 +71,7 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
 }], [/^shop\.([\-0-9]+)\.([^._]+)$/, async function (session, callback, [ , chatId, category]) {
     let messageId = callback.message.message_id;
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери предметы для покупки в магазине.`, {
+    await editMessageCaption(`Выбери предметы для покупки в магазине.`, {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,
@@ -83,7 +82,7 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
 }], [/^shop\.([\-0-9]+)\.([^.0-9]+)_(\d+)$/, async function (session, callback, [, chatId, category, page]) {
     page = parseInt(page);
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, выбери предмет для покупки в магазине.`, {
+    await editMessageCaption(`Выбери предмет для покупки в магазине.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
