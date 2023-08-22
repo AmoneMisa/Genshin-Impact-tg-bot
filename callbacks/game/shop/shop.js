@@ -100,7 +100,8 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
     let foundSession = await getSession(chatId, callback.from.id);
 
     if (foundSession.game.inventory.gold < item.cost) {
-        return sendMessageWithDelete(callback.message.chat.id, `Недостаточно золота`, {});
+        await sendMessageWithDelete(callback.message.chat.id, `Недостаточно золота`, {});
+        return;
     }
 
     await editMessageCaption(`Ты уверен, что хочешь купить ${item.name}?.\nСтоимость: ${item.cost} золота.`, {

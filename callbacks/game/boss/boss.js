@@ -1,5 +1,6 @@
 const getUserName = require("../../../functions/getters/getUserName");
 const getMembers = require("../../../functions/getters/getMembers");
+const getChatSession = require("../../../functions/getters/getChatSession");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const summonBoss = require("../../../functions/game/boss/summonBoss");
 const getBossLoot = require("../../../functions/game/boss/getters/getBossLoot");
@@ -66,10 +67,22 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (aliveBoss) {
-        return summonBossMessage(chatId, aliveBoss, true);
+        await sendMessage(chatId, summonBossMessage(chatId, aliveBoss, true), {
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: buttonsDictionary["ru"].close,
+                    callback_data: "close"
+                }]]
+            }
+        });
+        return;
     }
 
     let boss = await summonBoss(chatId);
+
+    let chatSession = getChatSession(chatId);
+    chatSession.bossMenuMessageId = callback.message.message_id;
+
     let keyboard = [[{
         text: "Нанести удар",
         callback_data: "boss.dealDamage"
@@ -114,13 +127,15 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        return sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        return;
     }
 
     if (getCurrentHp(session, session.game.gameClass) <= 0) {
         let [remain] = getTime(session.game.respawnTime);
 
-        return sendMessage(chatId, `Ты мёртв. Время до воскрешения: ${getStringRemainTime(remain)}.`);
+        await sendMessage(chatId, `Ты мёртв. Время до воскрешения: ${getStringRemainTime(remain)}.`);
+        return;
     }
 
     let buttonsSkills = [];
@@ -131,7 +146,7 @@ module.exports = [["boss", async function (session, callback) {
             skillName += " (В откате)";
         }
 
-        buttonsSkills.push([{text: skillName, callback_data: `skill.${skill.slot}`}]);
+        buttonsSkills.push([{text: skillName, callback_data: `skill.${chatId}.${skill.slot}`}]);
     }
 
     let message = "";
@@ -143,15 +158,15 @@ module.exports = [["boss", async function (session, callback) {
         message += `${skill.name} - ${skill.description} Стоимость использования: ${getEmoji(costType)} ${costCount}\n\n`;
     }
 
-    return editMessageCaption(`@${getUserName(session, "nickname")}, выбери скилл:\n${message}`, {
+    let imagePath = getLocalImageByPath(aliveBoss.stats.lvl, `bosses/${aliveBoss.name}`);
+
+    await sendPhoto(callback.from.id, imagePath, {
+        caption: `Выбери скилл:\n${message}`,
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [...buttonsSkills, [{
-                text: "Назад",
-                callback_data: "boss"
-            }], [{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]
@@ -163,10 +178,11 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        return sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        return;
     }
 
-    return editMessageCaption(getBossStatusMessage(aliveBoss), {
+    await editMessageCaption(getBossStatusMessage(aliveBoss), {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
@@ -186,7 +202,8 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        return sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        return;
     }
 
     let loot = getBossLoot(aliveBoss);
@@ -215,7 +232,7 @@ module.exports = [["boss", async function (session, callback) {
         }
     }
 
-    return editMessageCaption(message, {
+    await editMessageCaption(message, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,
@@ -235,7 +252,8 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        return sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        return;
     }
 
     let players = aliveBoss.listOfDamage;
@@ -246,7 +264,7 @@ module.exports = [["boss", async function (session, callback) {
         message += `${getUserName(members[player.id], "nickname")}: ${player.damage}\n`;
     }
 
-    return editMessageCaption(message, {
+    await editMessageCaption(message, {
         chat_id: chatId,
         message_id: messageId,
         disable_notification: true,

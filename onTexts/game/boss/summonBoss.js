@@ -7,6 +7,7 @@ const summonBoss = require('../../../functions/game/boss/summonBoss');
 const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const summonBossMessage = require("../../../functions/game/boss/summonBossMessage");
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const getChatSession = require("../../../functions/getters/getChatSession");
 
 module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
     let chatId = msg.chat.id;
@@ -31,9 +32,12 @@ module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
         boss = await summonBoss(chatId);
     }
 
+    let chatSession = getChatSession(chatId);
+
+
     let imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
     if (imagePath) {
-        return sendPhoto(msg.chat.id, imagePath, {
+        sendPhoto(msg.chat.id, imagePath, {
             caption: `${summonBossMessage(chatId, boss, false)}`,
             reply_markup: {
                 inline_keyboard: [...keyboard, [{
@@ -41,15 +45,16 @@ module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
                     callback_data: "close"
                 }]]
             }
-        });
+        }).then(message => chatSession.bossMenuMessageId = message.message_id);
+        return;
     }
 
-    return sendMessage(msg.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
+    sendMessage(msg.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
         reply_markup: {
             inline_keyboard: [...keyboard, [{
                 text: buttonsDictionary["ru"].close,
                 callback_data: "close"
             }]]
         }
-    })
+    }).then(message => chatSession.bossMenuMessageId = message.message_id);
 }]];
