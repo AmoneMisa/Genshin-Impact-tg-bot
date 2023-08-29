@@ -5,9 +5,8 @@ const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMes
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
-module.exports = [[/(?:^|\s)\/basketball\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/basketball\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    let session = await getSession(msg.chat.id, msg.from.id);
     let id;
 
     if (!session.game.hasOwnProperty('basketball')) {

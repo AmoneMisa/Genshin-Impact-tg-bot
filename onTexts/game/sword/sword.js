@@ -4,8 +4,8 @@ const swordResult = require('../../../functions/game/sword/swordResult');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 
 module.exports = [[/(?:^|\s)\/sword\b/, async (msg, session) => {
-    deleteMessage(msg.chat.id, msg.message_id);
-    sendMessage(msg.chat.id, `${swordResult(session)}`, {
+    await deleteMessage(msg.chat.id, msg.message_id);
+    await sendMessage(msg.chat.id, `${swordResult(session)}`, {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{

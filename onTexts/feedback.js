@@ -5,9 +5,8 @@ const getUserName = require("../functions/getters/getUserName");
 const getSession = require("../functions/getters/getSession");
 const {myId} = require("../config");
 
-module.exports = [[/(?:^|\s)\/feedback/, async (msg) => {
+module.exports = [[/(?:^|\s)\/feedback/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    let session = await getSession(msg.chat.id, msg.from.id);
 
     sendMessage(msg.from.id, `${getUserName(session, "name")}, Возникли вопросы? Нашли баг? Есть предложения или пожелания? Можете написать Ваши мысли в ответ к этому сообщению.`, {
         disable_notification: true,

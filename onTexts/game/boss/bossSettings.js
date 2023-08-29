@@ -29,7 +29,7 @@ module.exports = [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
     }
 
     chatSession.bossSettingsButtons = buttons;
-    return sendMessage(msg.chat.id, `Глобальные настройки всех боссов в этом чате`, {
+    await sendMessage(msg.chat.id, `Глобальные настройки всех боссов в этом чате`, {
         reply_markup: {
             inline_keyboard: [...buttons, [{
                 text: buttonsDictionary["ru"].close,

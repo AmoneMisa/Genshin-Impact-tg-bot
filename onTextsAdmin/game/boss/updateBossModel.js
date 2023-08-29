@@ -4,7 +4,7 @@ const {myId} = require("../../../config");
 const updateBossModel = require("../../../functions/game/boss/updateBossModel");
 
 module.exports = [[/(?:^|\s)\/update_boss_model\b/, async (msg) => {
-    deleteMessage(msg.chat.id, msg.message_id);
+    await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {
         return;

@@ -52,7 +52,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
         message += `/${command.command} - ${command.description}\n`;
     }
 
-    return sendMessage(msg.chat.id, message, {
+    await sendMessage(msg.chat.id, message, {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
@@ -69,7 +69,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
         message += `/${command.command} - ${command.description}\n`;
     }
 
-    return sendMessage(msg.chat.id, message, {
+    await sendMessage(msg.chat.id, message, {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
@@ -87,7 +87,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
         message += `/${command.command} - ${command.description}\n`;
     }
 
-    return sendMessage(msg.chat.id, message, {
+    await sendMessage(msg.chat.id, message, {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
@@ -105,7 +105,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
         message += `/${command.command} - ${command.description}\n`;
     }
 
-    return sendMessage(msg.chat.id, message, {
+    await sendMessage(msg.chat.id, message, {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{

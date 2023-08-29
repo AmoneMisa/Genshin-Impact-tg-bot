@@ -8,7 +8,7 @@ module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
     }
 
     await deleteMessage(msg.chat.id, msg.message_id);
-    return sendMessage(msg.from.id, "/kill - Убить босса\n" +
+    await sendMessage(msg.from.id, "/kill - Убить босса\n" +
         "/receive_user_chest_timer - Сбросить таймер сундучка для пользователя\n" +
         "/add_crystals - Добавить кристаллов пользователю\n" +
         "/add_experience - Добавить опыт пользователю\n" +

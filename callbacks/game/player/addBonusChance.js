@@ -7,10 +7,10 @@ const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
-module.exports = [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
-    const [, chatId, userId] = callback.data.match(/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/);
+module.exports = [[/^add_bonus_chance\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
+    const [, chatId, userId] = callback.data.match(/^add_bonus_chance\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
-    sendMessage(callback.message.chat.id, `Сколько попыток грабежа добавить для ${getUserName(targetSession, "name")}?`, {
+    sendMessage(callback.message.chat.id, `Сколько попыток бонуса добавить для ${getUserName(targetSession, "name")}?`, {
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -20,30 +20,30 @@ module.exports = [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (s
         let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
             bot.removeReplyListener(id);
             let chanceToSteal = parseInt(replyMsg.text);
-            targetSession.game.chanceToSteal += chanceToSteal;
+            targetSession.game.bonusChances += chanceToSteal;
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
-            sendMessage(callback.message.chat.id, `Ты добавил ${chanceToSteal} попыток грабежа для ${getUserName(targetSession, "name")}.`, {
+            sendMessage(callback.message.chat.id, `Ты добавил ${chanceToSteal} попыток бонуса для ${getUserName(targetSession, "name")}.`, {
                 disable_notification: true
             });
         });
     }).catch(e => {
         console.error(e);
     });
-}], [/^add_steal_chance\.([\-0-9]+)_([^.]+)$/, async function (session, callback) {
-    let [, chatId, page] = callback.data.match(/^add_steal_chance\.([\-0-9]+)_([^.]+)$/);
+}], [/^add_bonus_chance\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
+    let [, chatId, page] = callback.data.match(/^add_bonus_chance\.([\-0-9]+)_([^.]+)$/);
     page = parseInt(page);
 
-    let buttons = buildKeyboard(chatId, `add_steal_chance.${chatId}`);
+    let buttons = buildKeyboard(chatId, `add_bonus_chance.${chatId}`);
 
-    await editMessageText(`Выбери интересующего тебя участника`, {
+    return editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons(`add_steal_chance.${chatId}`, buttons, page)
+                ...controlButtons(`add_bonus_chance.${chatId}`, buttons, page)
             ]
         }
     });

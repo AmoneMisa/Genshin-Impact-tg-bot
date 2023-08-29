@@ -10,7 +10,8 @@ module.exports = [[/\/get_file (.+)/, async (msg, regResult) => {
     if (msg.from.id !== myId) {
         return;
     }
-    deleteMessage(msg.chat.id, msg.message_id);
+
+    await deleteMessage(msg.chat.id, msg.message_id);
     let fileName = regResult[1];
     const directoryPath = './';
     fs.readdir(directoryPath, (err, files) => {

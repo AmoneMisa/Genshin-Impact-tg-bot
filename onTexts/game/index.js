@@ -15,6 +15,7 @@ const shop = require('./shop');
 const equipmentGacha = require('./equipmentGacha');
 const horoscopes = require('./horoscopes');
 const titles = require('./titles');
+const bonus = require('./bonus');
 
 module.exports = [
     ...sendGold,
@@ -33,5 +34,6 @@ module.exports = [
     ...equipmentGacha,
     ...shop,
     ...horoscopes,
-    ...titles
+    ...titles,
+    ...bonus
 ];

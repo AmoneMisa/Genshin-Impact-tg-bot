@@ -7,6 +7,7 @@ const classSkillsTemplate = require("../../templates/classSkillsTemplate");
 module.exports = function (session) {
     if (!session.game) {
         session.game = {
+            bonusChances: 1,
             equipmentStats: {},
             character: {
                 head: null,
@@ -157,5 +158,9 @@ module.exports = function (session) {
 
     if (!session.game.hasOwnProperty("respawnTime")) {
         session.game.respawnTime = 0;
+    }
+
+    if (!session.game.hasOwnProperty("bonusChances")) {
+        session.game.bonusChances = 1;
     }
 }

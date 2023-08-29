@@ -5,9 +5,8 @@ const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
 const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
 
-module.exports = [[/(?:^|\s)\/bowling\b/, async (msg) => {
+module.exports = [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    let session = await getSession(msg.chat.id, msg.from.id);
     let id;
 
     if (!session.game.hasOwnProperty('bowling')) {

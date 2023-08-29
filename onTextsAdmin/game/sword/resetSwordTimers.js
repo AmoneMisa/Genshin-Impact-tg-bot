@@ -11,5 +11,5 @@ module.exports = [[/(?:^|\s)\/reset_sword_timer\b/, async (msg) => {
     await getSession(msg.chat.id, msg.from.id);
     await deleteMessage(msg.chat.id, msg.message_id);
     await resetSwordTimer();
-    return sendMessage(myId, "Сессии сброшены.");
+    await sendMessage(myId, "Сессии сброшены.");
 }]];

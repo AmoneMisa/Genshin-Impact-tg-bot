@@ -8,7 +8,7 @@ module.exports = [[/(?:^|\s)\/creator_commands\b/, async (msg) => {
     }
 
     await deleteMessage(msg.chat.id, msg.message_id);
-    return sendMessage(msg.from.id, "/send_file - Отправить файл в корень с бэкапом старого\n" +
+    await sendMessage(msg.from.id, "/send_file - Отправить файл в корень с бэкапом старого\n" +
         "/get_file filename - Получить файл из корня проекта\n" +
         "/get_debug_log - Получить дебаг лог\n" +
         "/get_chat_data - Информация о чате\n" +

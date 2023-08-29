@@ -5,7 +5,7 @@ const updatePlayerSkills = require("../../../functions/game/player/updatePlayerS
 const data = require("../../../data");
 
 module.exports = [[/(?:^|\s)\/update_all_players_skills\b/, async (msg) => {
-    deleteMessage(msg.chat.id, msg.message_id);
+    await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {
         return;

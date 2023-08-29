@@ -22,5 +22,5 @@ module.exports = [[/(?:^|\s)\/update_all_players_characteristic\b/, async (msg) 
             setLevel(session);
         }
     }
-    return sendMessage(myId, "Все сессии обновлены. Убедиться в результате можно по команде /get_file sessions.json");
+    await sendMessage(myId, "Все сессии обновлены. Убедиться в результате можно по команде /get_file sessions.json");
 }]];

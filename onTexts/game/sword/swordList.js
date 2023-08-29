@@ -8,7 +8,7 @@ module.exports = [[/(?:^|\s)\/swords\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let members = getMembers(msg.chat.id);
 
-    return sendMessage(msg.chat.id, `${swordsMessage(members)}`, {
+    await sendMessage(msg.chat.id, `${swordsMessage(members)}`, {
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
