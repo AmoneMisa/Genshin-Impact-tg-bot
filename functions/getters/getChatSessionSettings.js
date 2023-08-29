@@ -22,7 +22,8 @@ module.exports = function (chatId) {
             titles: 1,
             whoami: 1,
             mute: 1,
-            horoscope: 1
+            horoscope: 1,
+            bonus: 1
         };
     }
 

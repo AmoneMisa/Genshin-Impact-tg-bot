@@ -14,6 +14,7 @@ module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         "/add_experience - Добавить опыт пользователю\n" +
         "/add_gold - Добавить золото пользователю\n" +
         "/add_steal_chance - Добавить попыток грабежа пользователю\n" +
+        "/add_bonus_chance - Добавить попыток бонуса пользователю\n" +
         "/update_characteristics - Пересчитать очки характеристик пользователю или всей группе\n" +
         "/add_iron_ore - Добавить железной руды пользователю\n" +
         "/reset_point_game - Сбросить игру в очко\n" +

@@ -44,14 +44,6 @@ function isTrusted(chatId) {
     return trustedChats.includes(chatId);
 }
 
-(function () {
-    for (let sessionId of Object.keys(sessions)) {
-        if (!isTrusted(sessionId)) {
-            delete sessions[sessionId];
-        }
-    }
-})();
-
 const commandMap = {
     "boss": "boss",
     "shop": "boss",
@@ -73,6 +65,7 @@ const commandMap = {
     "football": "football",
     "elements": "elements",
     "horoscope": "horoscope",
+    "bonus": "bonus",
     "chest": "chests",
     "title": "titles",
     "titles": "titles",
@@ -81,7 +74,7 @@ const commandMap = {
     "set[A-Z].*": "form"
 };
 
-let supergroupCommands = ["boss", "title", "titles", "info", "form", "sword", "swords", "shop", "send_gold", "mute", "steal_resources", "gacha", "exchange", "change_gender"];
+let supergroupCommands = ["boss", "title", "titles", "info", "form", "sword", "swords", "shop", "send_gold", "mute", "steal_resources", "gacha", "exchange", "change_gender", "bonus"];
 
 for (let [key, value] of onTexts) {
     bot.onText(key, async function (msg, regExp) {

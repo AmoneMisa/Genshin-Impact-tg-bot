@@ -20,6 +20,7 @@ const gamesCommands = [
     {command: "elements", description: "Элементы"},
     {command: "lucky_roll", description: "Гача"},
     {command: "horoscope", description: "Шуточный гороскоп"},
+    {command: "bonus", description: "Ежедневный бонус"},
     {command: "boss", description: "Меню босса"}
 ];
 
