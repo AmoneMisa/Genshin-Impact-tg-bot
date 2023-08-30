@@ -1,4 +1,3 @@
-const bot = require('../bot');
 const getMemberStatus = require("../functions/getters/getMemberStatus");
 const getChatSessionSettings = require("../functions/getters/getChatSessionSettings");
 const getChatSession = require("../functions/getters/getChatSession");
@@ -12,6 +11,7 @@ module.exports = [[/^settings\.([^.]+)\.([0-1]+)$/, async function (session, cal
     if (!getMemberStatus(callback.message.chat.id, chatSession.settingsMessageId)) {
         return;
     }
+
     let settings = getChatSessionSettings(callback.message.chat.id);
     settings[setting] = parseInt(flag);
 

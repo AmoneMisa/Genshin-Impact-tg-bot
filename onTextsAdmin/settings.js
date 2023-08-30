@@ -64,6 +64,9 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
     }], [{
         text: "Гороскоп",
         callback_data: "settings.horoscope"
+    }, {
+        text: "Бонус",
+        callback_data: "settings.bonus"
     }]];
 
     let settings = getChatSessionSettings(msg.chat.id);
