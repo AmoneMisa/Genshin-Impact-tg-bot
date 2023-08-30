@@ -93,4 +93,6 @@ module.exports = [
     {type: "immuneToUpSword", name: "Иммунитет к увеличению меча", emoji: "⤵", category: "text"},
     {type: "nothing", name: "Пустышка", emoji: "💩", category: "text"},
     {type: "separator", name: "Разделитель", emoji: "▻", category: "text"},
+    {type: "gearScore", name: "Рейтинг Снаряжения", emoji: "👑", category: "text"},
+    {type: "steal", name: "Воровство", emoji: "🌚", category: "text"},
 ];
