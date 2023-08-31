@@ -22,6 +22,7 @@ module.exports = async function (chatId) {
     boss.hp = await getBossHp(boss.skill, chatId);
     boss.currentHp = boss.hp;
     boss.listOfDamage = [];
+    boss.aliveTime = new Date().getTime() + 15 * 60 * 1000;
 
     let currentSummons = boss.stats.currentSummons || bossTemplate.stats.currentSummons;
     let needSummons = boss.stats.needSummons || bossTemplate.stats.needSummons;

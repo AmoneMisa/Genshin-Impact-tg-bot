@@ -3,6 +3,7 @@ const setHpRegen = require("./setHpRegen");
 const setCpRegen = require("./setCpRegen");
 const setMpRegen = require("./setMpRegen");
 const respawnPlayer = require("./respawnPlayer");
+const bossWin = require("./bossWin");
 
 module.exports = function () {
     cron.schedule("* * * * * *", () => {
@@ -11,6 +12,7 @@ module.exports = function () {
             setCpRegen();
             setMpRegen();
             respawnPlayer();
+            bossWin();
         } catch (e) {
             console.error(e);
         }

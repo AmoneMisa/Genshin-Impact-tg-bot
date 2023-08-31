@@ -16,11 +16,11 @@ module.exports = function (boss, loot) {
 Всего кристаллов: ${getEmoji("crystals")} ${playerLoot.inventory.crystals}\n`;
 
         if (playerLoot.firstPlaceEquipment) {
-            message += `Снаряжение за первое место: ${playerLoot.firstPlaceEquipment}`;
+            message += `Снаряжение за первое место: ${playerLoot.firstPlaceEquipment}\n`;
         }
 
         if (playerLoot.equipment) {
-            message += `Снаряжение: ${playerLoot.equipment}`;
+            message += `Снаряжение: ${playerLoot.equipment}\n`;
         }
     }
 
