@@ -14,7 +14,7 @@ module.exports = async function () {
             }
 
             for (let player of boss.listOfDamage) {
-                sessions[player.id].game.gameClass.stats.hp = 0;
+                sessions[chatId].members[player.id].game.gameClass.stats.hp = 0;
             }
 
             boss.skill = null;
