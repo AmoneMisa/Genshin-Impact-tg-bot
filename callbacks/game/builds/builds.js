@@ -277,4 +277,54 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
             })
         }
     }
+}], [/^builds\.([\-0-9]+)\.traineeArea(?:\.back)?$/, async function (session, callback, [, chatId]) {
+    const isBack = callback.data.includes("back");
+    let foundedSession = await getSession(chatId, callback.from.id);
+
+    if (!foundedSession.game.hasOwnProperty('builds')) {
+        return;
+    }
+
+    let messageId = callback.message.message_id;
+
+    let build = await getBuild(chatId, callback.from.id, 'traineeArea');
+    let keyboard = [[{
+        text: "Статус",
+        callback_data: `builds.${chatId}.traineeArea.status`,
+    }, {
+        text: getUpgradeButtonText(build.currentLvl),
+        callback_data: `builds.${chatId}.traineeArea.upgrade`,
+    }], [{
+        text: "Собрать прибыть",
+        callback_data: `builds.${chatId}.traineeArea.collect`,
+    }], [{
+        text: buttonsDictionary["ru"].close,
+        callback_data: "close"
+    }]];
+
+    if (isBack) {
+        await editMessageCaption(getCaption('traineeArea', "home", build), {
+            chat_id: callback.message.chat.id,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: keyboard
+            }
+        }, callback.message.photo);
+    } else {
+        let imagePath = getLocalImageByPath(build.currentLvl, 'builds/traineeArea');
+
+        if (imagePath) {
+            await sendPhoto(callback.message.chat.id, imagePath, {
+                caption: getCaption('traineeArea', "home", build), reply_markup: {
+                    inline_keyboard: keyboard
+                }
+            })
+        } else {
+            await sendMessage(callback.message.chat.id, getCaption('traineeArea', "home", build), {
+                reply_markup: {
+                    inline_keyboard: keyboard
+                }
+            })
+        }
+    }
 }]];

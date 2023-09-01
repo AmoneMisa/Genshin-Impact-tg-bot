@@ -4,6 +4,7 @@ const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMes
 const getCaption = require('../../../functions/game/builds/getCaption');
 const buildsTemplate = require("../../../templates/buildsTemplate");
 const getSession = require("../../../functions/getters/getSession");
+const setLevel = require("../../../functions/game/player/setLevel");
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 
 module.exports = [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (session, callback, [, chatId, buildName]) {
@@ -54,7 +55,14 @@ module.exports = [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (ses
     let foundedSession = await getSession(chatId, callback.from.id);
     let buildTemplate = buildsTemplate[buildName];
     let resourcesType = buildTemplate.resourcesType;
-    foundedSession.game.inventory[resourcesType] += Math.ceil(build.resourceCollected);
+
+    if (resourcesType === "experience") {
+        foundedSession.game.stats.currentExp += Math.ceil(build.resourceCollected);
+        setLevel(foundedSession);
+    } else {
+        foundedSession.game.inventory[resourcesType] += Math.ceil(build.resourceCollected);
+    }
+
     build.resourceCollected = 0;
 
     return editMessageCaption(getCaption(buildName, "home", build), {

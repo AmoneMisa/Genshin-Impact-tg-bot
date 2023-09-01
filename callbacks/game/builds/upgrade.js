@@ -36,6 +36,7 @@ async function errorUpdateMessage(buildName, build, chatId, messageId, callback,
 async function getUpgradeRequirementsMessage(buildName, currentLvl, chatId, userId) {
     let buildList = await getBuildList(chatId, userId);
     let upgrades = buildsTemplate[buildName].upgradeRequirements[currentLvl - 1];
+    console.log(upgrades.characterRequirements)
     let str = "";
     for (let upgradeKey of Object.keys(upgrades)) {
         if (upgradeKey === "buildRequirements") {
@@ -50,9 +51,11 @@ async function getUpgradeRequirementsMessage(buildName, currentLvl, chatId, user
         if (upgradeKey === "characterRequirements") {
             str += "\nТребования персонажа:\n"
             let session = await getSession(chatId, userId);
-            for (let characterRequirement of upgrades.characterRequirements) {
-                str += `Требуется: ${statsDictionary[characterRequirement.name]} - ${characterRequirement.level}\n`;
-                str += `Текущее: ${statsDictionary[characterRequirement.name]} - ${session.game.stats[characterRequirement.name] || session.game.gameClass.stats[characterRequirement.name]}`;
+            for (let requirement of upgrades.characterRequirements) {
+                for (let [key, value] of Object.entries(requirement)) {
+                    str += `Требуется: ${statsDictionary[key]} - ${value}\n`;
+                    str += `Текущее: ${statsDictionary[key]} - ${session.game.stats[key] || session.game.gameClass.stats[key]}`;
+                }
             }
         }
     }

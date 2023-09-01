@@ -50,8 +50,8 @@ module.exports = function (buildName, action, build) {
 function getBuildStatus(buildName, build) {
     let types = buildsTemplate[buildName]?.availableTypes;
 
-    if (buildName === "goldMine" || buildName === "ironDeposit" || buildName === "crystalLake") {
-        return `${getEmoji("buildResourcesAccumulated")} Текущие накопления: ${build.resourceCollected}\n${getEmoji("buildResourcesCollected")} Производство в час: ${buildsTemplate[buildName].productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl)}`;
+    if (buildName === "goldMine" || buildName === "ironDeposit" || buildName === "crystalLake" || buildName === "traineeArea") {
+        return `${getEmoji("buildResourcesAccumulated")} Текущие накопления: ${build.resourceCollected || 0}\n${getEmoji("buildResourcesCollected")} Производство в час: ${buildsTemplate[buildName].productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl)}`;
     } else if (buildName === "palace") {
         return `Тип дворца: ${types[build.type].name}\nНазвание дворца: ${build.customName || "Дворец"}`;
     }
