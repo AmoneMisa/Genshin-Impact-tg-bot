@@ -5,6 +5,16 @@ const classStatsTemplate = require("../../templates/classStatsTemplate");
 const classSkillsTemplate = require("../../templates/classSkillsTemplate");
 
 module.exports = function (session) {
+    if (!session.hasOwnProperty("whatsNewSettings")) {
+        session.whatsNewSettings = {
+            flag: 0,
+            button: {
+                text: "Выкл",
+                callback_data: "whatsNew.0"
+            }
+        };
+    }
+
     if (!session.game) {
         session.game = {
             bonusChances: 1,
