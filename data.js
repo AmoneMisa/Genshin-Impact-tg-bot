@@ -4,6 +4,7 @@ let sessions;
 let titles;
 let bosses;
 let trustedChats;
+let arenaRating;
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -33,6 +34,13 @@ try {
     trustedChats = [];
 }
 
+try {
+    let arenaRatingJson = fs.readFileSync("./arenaRating.json");
+    arenaRating = JSON.parse(arenaRatingJson);
+} catch (e) {
+    arenaRating = [];
+}
+
 function updTrustedChats() {
     let _trustedChats;
     try {
@@ -50,5 +58,6 @@ module.exports = {
     titles,
     bosses,
     trustedChats,
+    arenaRating,
     updTrustedChats
 };

@@ -17,6 +17,7 @@ const elements = require('./elements');
 const builds = require('./builds');
 const shop = require('./shop');
 const equipmentGacha = require('./equipmentGacha');
+const arena = require('./arena');
 
 module.exports = [
     ...bossCallback,
@@ -37,5 +38,6 @@ module.exports = [
     ...elements,
     ...builds,
     ...shop,
-    ...equipmentGacha
+    ...equipmentGacha,
+    ...arena
 ];

@@ -15,137 +15,25 @@ module.exports = function (session) {
         };
     }
 
-    if (!session.game) {
-        session.game = {
-            bonusChances: 1,
-            equipmentStats: {},
-            character: {
-                head: null,
-                hands: null,
-                leftHand: null,
-                rightHand: null,
-                legs: null,
-                leftEar: null,
-                rightEar: null,
-                leftRing: null,
-                rightRing: null,
-                necklace: null,
-                up: null,
-                down: null,
-                cloak: null
-            },
-            respawnTime: 0,
-            gacha: [],
-            dice: {
-                isStart: false,
-                bet: 0,
-                dice: 0,
-                counter: 0
-            },
-            basketball: {
-                bet: 0,
-                ball: 0,
-                counter: 0,
-                isStart: false
-            },
-            football: {
-                bet: 0,
-                ball: 0,
-                counter: 0,
-                isStart: false
-            },
-            bowling: {
-                bet: 0,
-                skittles: 0,
-                counter: 0,
-                isStart: false
-            },
-            darts: {
-                bet: 0,
-                dart: 0,
-                counter: 0,
-                isStart: false
-            },
-            stats: {
-                currentExp: 0,
-                needExp: 1500,
-                lvl: 1,
-                inFightTimer: 0
-            },
-            effects: [],
-            gameClass: {
-                stats: {...classStatsTemplate[0]},
-                skills: {...classSkillsTemplate.noClass}
-            },
-            shopTimers: {
-                swordImmune: 0,
-                swordAddMM: 0,
-                addBossDmg: 0,
-                addBossCritChance: 0,
-                addBossCritDmg: 0,
-                swordAdditionalTry: 0
-            },
-            inventory: {
-                gold: 0,
-                crystals: 0,
-                ironOre: 0,
-                potions: lodash.cloneDeep(potionsInInventoryTemplate),
-                gacha: [],
-                equipment: []
-            }
-        };
-    }
-
-
-    if (!session.game.hasOwnProperty("effects")) {
-        session.game.effects = [];
-    }
-
-    if (!session.game.hasOwnProperty("builds")) {
-        session.game.builds = getBuildFromTemplate();
-        session.game.stealImmuneTimer = 0;
-        session.game.chanceToSteal = 2;
-    }
-
-    if (!session.game.inventory.hasOwnProperty("crystals")) {
-        session.game.inventory.crystals = 0;
-    }
-
-    if (!session.game.inventory.hasOwnProperty("ironOre")) {
-        session.game.inventory.ironOre = 0;
-    }
-
-    session.game.inventory.potions.forEach(potion => {
-        if (!potion.bottleType || !potion.description) {
-            session.game.inventory.potions = lodash.cloneDeep(potionsInInventoryTemplate);
-        }
-    })
-
-    if (!session.game.hasOwnProperty("gameClass")) {
-        session.game.gameClass = {
-            stats: {...classStatsTemplate[0]},
-            skills: {...classSkillsTemplate.noClass}
-        };
-    }
-
-    if (!session.game.inventory.hasOwnProperty("gacha")) {
-        session.game.inventory.gacha = [];
-    }
-
-    if (lodash.isObject(session.game.inventory.gacha)) {
-        session.game.inventory.gacha = [];
-    }
-
-    if (!session.game.hasOwnProperty("gacha")) {
-        session.game.gacha = [];
-    }
-
-    if (!session.game.inventory.hasOwnProperty("equipment")) {
-        session.game.inventory.equipment = [];
-    }
-
-    if (!session.game.hasOwnProperty("character")) {
-        session.game.character = {
+    const sessionGameTemplate = {
+        arenaChances: 15,
+        arenaExpansionChances: 10,
+        basketball: {
+            bet: 0,
+            ball: 0,
+            counter: 0,
+            isStart: false
+        },
+        bonusChances: 1,
+        bowling: {
+            bet: 0,
+            skittles: 0,
+            counter: 0,
+            isStart: false
+        },
+        builds: getBuildFromTemplate(),
+        chanceToSteal: 2,
+        character: {
             head: null,
             hands: null,
             leftHand: null,
@@ -159,18 +47,57 @@ module.exports = function (session) {
             up: null,
             down: null,
             cloak: null
-        };
+        },
+        darts: {
+            bet: 0,
+            dart: 0,
+            counter: 0,
+            isStart: false
+        },
+        dice: {
+            isStart: false,
+            bet: 0,
+            dice: 0,
+            counter: 0
+        },
+        effects: [],
+        equipmentStats: {},
+        football: {
+            bet: 0,
+            ball: 0,
+            counter: 0,
+            isStart: false
+        },
+        gacha: [],
+        gameClass: {
+            stats: {...classStatsTemplate[0]},
+            skills: {...classSkillsTemplate.noClass}
+        },
+        inventory: {
+            gold: 0,
+            crystals: 0,
+            ironOre: 0,
+            potions: lodash.cloneDeep(potionsInInventoryTemplate),
+            gacha: [],
+            equipment: []
+        },
+        respawnTime: 0,
+        shopTimers: {
+            swordImmune: 0,
+            swordAddMM: 0,
+            addBossDmg: 0,
+            addBossCritChance: 0,
+            addBossCritDmg: 0,
+            swordAdditionalTry: 0
+        },
+        stats: {
+            currentExp: 0,
+            needExp: 1500,
+            lvl: 1,
+            inFightTimer: 0
+        },
+        stealImmuneTimer: 0
     }
 
-    if (!session.game.hasOwnProperty("equipmentStats")) {
-        session.game.equipmentStats = {};
-    }
-
-    if (!session.game.hasOwnProperty("respawnTime")) {
-        session.game.respawnTime = 0;
-    }
-
-    if (!session.game.hasOwnProperty("bonusChances")) {
-        session.game.bonusChances = 1;
-    }
+    session.game = Object.assign({}, sessionGameTemplate, session.game);
 }
