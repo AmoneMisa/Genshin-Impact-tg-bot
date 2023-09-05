@@ -1,6 +1,6 @@
 const {arenaRating} = require("../../../data");
 const arenaRanks = require("../../../dictionaries/arenaRanks");
-
+const getPlayerRating = require("./getPlayerRating");
 const ranksRating = [
     {minRating: 0, percentileRank: null},
     {minRating: 1000, percentileRank: null},
@@ -18,16 +18,8 @@ const ranksRating = [
     {minRating: 1580, percentileRank: 0}
 ].reverse();
 
-module.exports = function (userId, arenaType) {
-    let sortedRating = Array.from(Object.entries(arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
-    let playerIndex = sortedRating.findIndex(([playerId, rating]) => playerId === userId);
-
-    if (playerIndex === -1) {
-        throw new Error("Игрок не найден");
-    }
-
-    let playerRating = sortedRating[playerIndex][1];
-    let percentileRating = playerIndex / sortedRating.length;
+module.exports = function (userId, arenaType, chatId) {
+    let [playerRating, percentileRating] = getPlayerRating(userId, arenaType, chatId);
 
     for (let [i, rankRating] of ranksRating.entries()) {
         if (rankRating.minRating <= playerRating) {

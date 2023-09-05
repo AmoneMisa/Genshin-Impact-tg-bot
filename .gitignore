@@ -1,12 +1,9 @@
 # Project exclude paths
 /node_modules/
 config.js
-sessions*.json
-titles*.json
-bosses*.json
-trustedChats.json
-imagesIds.json
-arenaRating.json
+*.json
+!package-lock.json
+!package.json
 
 #on hold
 /templates/shopTemplate.js
