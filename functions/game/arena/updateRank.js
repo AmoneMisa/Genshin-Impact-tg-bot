@@ -1,35 +1,43 @@
 const {arenaRating} = require("../../../data");
+const arenaRanks = require("../../../dictionaries/arenaRanks");
 
-module.exports = function (userId, percentileRank, isFirst, arenaType) {
-    const user = arenaRating[arenaType][userId];
+const ranksRating = [
+    {minRating: 0, percentileRank: null},
+    {minRating: 1000, percentileRank: null},
+    {minRating: 1151, percentileRank: null},
+    {minRating: 1251, percentileRank: null},
+    {minRating: 1301, percentileRank: null},
+    {minRating: 1351, percentileRank: null},
+    {minRating: 1381, percentileRank: null},
+    {minRating: 1421, percentileRank: 0.25},
+    {minRating: 1421, percentileRank: 0.20},
+    {minRating: 1421, percentileRank: 0.15},
+    {minRating: 1500, percentileRank: 0.10},
+    {minRating: 1520, percentileRank: 0.07},
+    {minRating: 1520, percentileRank: 0.05},
+    {minRating: 1580, percentileRank: 0}
+].reverse();
 
-    if (isFirst) {
-        user.rank = 'Ruby 1';
-    } else if (user.rating >= 1520 && percentileRank <= 0.05) {
-        user.rank = 'Diamond 3';
-    } else if (user.rating >= 1520 && percentileRank <= 0.07) {
-        user.rank = 'Diamond 2';
-    } else if (user.rating >= 1500 && percentileRank <= 0.10) {
-        user.rank = 'Diamond 1';
-    } else if (user.rating >= 1420 && percentileRank <= 0.15) {
-        user.rank = 'Gold 3';
-    } else if (user.rating >= 1420 && percentileRank <= 0.20) {
-        user.rank = 'Gold 2';
-    } else if (user.rating >= 1420 && percentileRank <= 0.25) {
-        user.rank = 'Gold 1';
-    } else if (user.rating >= 1381 && user.rating <= 1420) {
-        user.rank = 'Silver 3';
-    } else if (user.rating >= 1351 && user.rating <= 1380) {
-        user.rank = 'Silver 2';
-    } else if (user.rating >= 1301 && user.rating <= 1350) {
-        user.rank = 'Silver 1';
-    } else if (user.rating >= 1251 && user.rating <= 1300) {
-        user.rank = 'Bronze 3';
-    } else if (user.rating >= 1151 && user.rating <= 1250) {
-        user.rank = 'Bronze 2';
-    } else if (user.rating >= 1000 && user.rating <= 1150) {
-        user.rank = 'Bronze 1';
+module.exports = function (userId, arenaType) {
+    let sortedRating = Array.from(Object.entries(arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+    let playerIndex = sortedRating.findIndex(([playerId, rating]) => playerId === userId);
+
+    if (playerIndex === -1) {
+        throw new Error("Игрок не найден");
     }
+
+    let playerRating = sortedRating[playerIndex][1];
+    let percentileRating = playerIndex / sortedRating.length;
+
+    for (let [i, rankRating] of ranksRating.entries()) {
+        if (rankRating.minRating <= playerRating) {
+            if (rankRating.percentileRank && rankRating.percentileRank >= percentileRating) {
+                return arenaRanks[i];
+            }
+        }
+    }
+
+    throw new Error("Ранг не найден");
 }
 
 

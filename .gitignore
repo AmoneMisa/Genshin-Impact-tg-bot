@@ -6,6 +6,7 @@ titles*.json
 bosses*.json
 trustedChats.json
 imagesIds.json
+arenaRating.json
 
 #on hold
 /templates/shopTemplate.js

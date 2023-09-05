@@ -3,13 +3,8 @@ const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage")
 const getFile = require("../../../functions/getters/getFile");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 
-module.exports = [[/(?:^|\s)\/arena\b/, async (msg, session) => {
+module.exports = [[/(?:^|\s)\/arena\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-
-    // if (session.game.arenaChances === 0) {
-    //     await sendMessage(msg.from.id, "Закончились попытки вызова.");
-    //     return;
-    // }
 
     const file = getFile("images/misc", "arena");
 
