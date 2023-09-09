@@ -1,5 +1,6 @@
+const getMaxHp = require("./getters/getMaxHp");
 module.exports = function (session, skill) {
-    let maxHp = session.game.gameClass.stats.maxHp;
+    let maxHp = getMaxHp(session, session.game.gameClass);
     let modifier = skill.shieldPower;
     let shield;
 

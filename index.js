@@ -5,7 +5,7 @@ const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
 const bot = require('./bot');
-const {sessions, trustedChats} = require('./data');
+const {sessions, trustedChats, arenaRating} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
@@ -223,6 +223,7 @@ function deleteBackup(array) {
     let sessionsBackups = [];
     let bossesBackups = [];
     let titlesBackups = [];
+    let arenaRatingBackups = [];
 
     fs.readdirSync("./").forEach(file => {
         let result = file.match(fileTemplate);
@@ -231,10 +232,12 @@ function deleteBackup(array) {
             validateBackup("sessions", sessionsBackups, result);
             validateBackup("bosses", bossesBackups, result);
             validateBackup("titles", titlesBackups, result);
+            validateBackup("arenaRating", arenaRatingBackups, result);
 
             deleteBackup(sessionsBackups);
             deleteBackup(bossesBackups);
             deleteBackup(titlesBackups);
+            deleteBackup(arenaRatingBackups);
         }
     })
 })();

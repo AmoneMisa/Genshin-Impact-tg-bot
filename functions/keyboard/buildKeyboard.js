@@ -1,5 +1,4 @@
 const getMembers = require('../getters/getMembers');
-const debugMessage = require('../tgBotFunctions/debugMessage');
 
 module.exports = function (chatId, name, includeHimself = true, callerId) {
     let buttons = [];

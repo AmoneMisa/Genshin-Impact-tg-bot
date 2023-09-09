@@ -3,8 +3,8 @@ const userDealDamage = require('../../../functions/game/player/userDealDamage');
 const setSkillCooldown = require('../../../functions/game/player/setSkillCooldown');
 const getCurrentHp = require('../../../functions/game/player/getters/getCurrentHp');
 const userDealDamageMessage = require('../../../functions/game/player/userDealDamageMessage');
-const userHealSkill = require('../../../functions/game/player/userHealSkill');
-const userShieldSkill = require('../../../functions/game/player/userShieldSkill');
+const useHealSkill = require('../../../functions/game/player/useHealSkill');
+const useShieldSkill = require('../../../functions/game/player/useShieldSkill');
 const isPlayerCanUseSkill = require('../../../functions/game/player/isPlayerCanUseSkill');
 const isPlayerCanUseSkillMessage = require('../../../functions/game/player/isPlayerCanUseSkillMessage');
 const bossSendLoot = require('../../../functions/game/boss/bossSendLoot');
@@ -17,6 +17,7 @@ const isBossAlive = require("../../../functions/game/boss/getBossStatus/isBossAl
 const skillUsagePayCost = require('../../../functions/game/player/skillUsagePayCost');
 const getTime = require("../../../functions/getters/getTime");
 const getChatSession = require("../../../functions/getters/getChatSession");
+const getMaxHp = require("../../../functions/game/player/getters/getMaxHp");
 
 module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, skillSlot]) {
     let foundSession = await getSession(chatId, callback.from.id);
@@ -61,12 +62,12 @@ module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, cal
                 }
             }
         } else if (skill.isHeal) {
-            let heal = userHealSkill(foundSession, skill);
-            foundSession.game.gameClass.stats.hp += heal;
+            let heal = useHealSkill(foundSession, skill);
+            foundSession.game.gameClass.stats.hp = Math.max(foundSession.game.gameClass.stats.hp + heal, getMaxHp(foundSession, foundSession.game.gameClass));
 
             await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(foundSession)}`, {}, 15 * 1000);
         } else if (skill.isShield) {
-            let shield = userShieldSkill(foundSession, skill);
+            let shield = useShieldSkill(foundSession, skill);
             let shieldEffect = foundSession.game.effects.find(effect => effect.name === "shield")
 
             if (!shieldEffect) {

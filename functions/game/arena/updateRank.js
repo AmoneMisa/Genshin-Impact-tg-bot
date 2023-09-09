@@ -1,4 +1,3 @@
-const {arenaRating} = require("../../../data");
 const arenaRanks = require("../../../dictionaries/arenaRanks");
 const getPlayerRating = require("./getPlayerRating");
 const ranksRating = [

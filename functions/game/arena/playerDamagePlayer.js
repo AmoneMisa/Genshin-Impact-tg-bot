@@ -22,60 +22,58 @@ const getDamageMultiplier = require("../player/getters/getDamageMultiplier");
 const getDefence = require("../player/getters/getDefence");
 const getAdditionalDamageMul = require("../player/getters/getAdditionalDamageMul");
 const getIncomingDamageModifier = require("../player/getters/getIncomingDamageModifier");
+const useHealSkill = require("../player/useHealSkill");
+const useShieldSkill = require("../player/useShieldSkill");
 const getRandom = require("../../getters/getRandom");
 const lodash = require("lodash");
 
 module.exports = function (attacker, defender) {
-    let skills = attacker.game.gameClass.skills;
-    skills.sort(compareSkills).reverse();
-    let cooldowns = skills.map(_ => 0);
-    let defenderHp = getMaxHp(defender);
-    let defenderMaxHp = getMaxHp(defender);
-    let defenderCp = getMaxCp(defender);
-    let defenderMaxCp = getMaxCp(defender);
-    let attackerHp = getCurrentHp(attacker);
-    let attackerMaxMp = getMaxMp(attacker);
-    let attackerMp = getCurrentMp(attacker);
-    let attackerMpRestoreSpeed = getMpRestoreSpeed(attacker);
+    let defenderObj = {
+        hp: getCurrentHp(defender, defender.game.gameClass),
+        maxHp: getMaxHp(defender, defender.game.gameClass),
+        cp: getMaxCp(defender, defender.game.gameClass),
+        maxCp: getMaxCp(defender, defender.game.gameClass),
+        maxMp: getMaxMp(defender, defender.game.gameClass),
+        mpRestoreSpeed: getMpRestoreSpeed(defender, defender.game.gameClass),
+        hpRestoreSpeed: getHpRestoreSpeed(defender, defender.game.gameClass),
+        cpRestoreSpeed: getCpRestoreSpeed(defender, defender.game.gameClass),
+        skills: defender.game.gameClass.skills.sort(compareSkills).reverse(),
+    };
 
-    // расчёт суммарного урона атакующего по защитнику за 5 минут.
+    defenderObj.cooldowns = defenderObj.skills.map(_ => 0);
+
+    let attackerObj = {
+        hp: getCurrentHp(attacker, attacker.game.gameClass),
+        maxHp: getMaxHp(attacker, attacker.game.gameClass),
+        cp: getMaxCp(attacker, attacker.game.gameClass),
+        maxCp: getMaxCp(attacker, attacker.game.gameClass),
+        mp: getCurrentMp(attacker, attacker.game.gameClass),
+        maxMp: getMaxMp(attacker, attacker.game.gameClass),
+        mpRestoreSpeed: getMpRestoreSpeed(attacker, attacker.game.gameClass),
+        hpRestoreSpeed: getHpRestoreSpeed(attacker, attacker.game.gameClass),
+        cpRestoreSpeed: getCpRestoreSpeed(attacker, attacker.game.gameClass),
+        skills: attacker.game.gameClass.skills.sort(compareSkills).reverse(),
+    };
+
+    attackerObj.cooldowns = attackerObj.skills.map(_ => 0);
+
+    // расчёт суммарного урона атакующего по противнику за 5 минут.
     for (let i = 0; i < 60 * 5; i++) {
-        for (let j = 0; j < skills.length; j++) {
-            let skill = skills[j];
-            if (cooldowns[j] <= 0 && attackerHp >= skill.costHp && attackerMp >= skill.cost) {
-                if (!skill.isHeal && !skill.isShield) {
-                    /** to do
-                     * Добавить использование хилла и щита для обороняющейся стороны
-                     * **/
-                    // считаем урон только от скиллов isDamage = true
-                    let damage = calculateDamage(attacker, defender, skill).damage;
-                    let damageCp = Math.min(defenderCp, damage);
-                    defenderCp -= damageCp;
-                    damage -= damageCp;
-                    let damageHp = Math.min(defenderHp, damage);
-                    defenderHp -= damageHp;
-                    damage -= damageHp;
+        useSkills(attacker, defender, attackerObj, defenderObj);
+        useSkills(defender, attacker, defenderObj, attackerObj);
 
-                    if (defenderHp === 0) {
-                        return 0;
-                    }
-                }
+        attackerObj.mp = Math.min(attackerObj.maxMp, attackerObj.mp + attackerObj.mpRestoreSpeed);
+        attackerObj.cooldowns = attackerObj.cooldowns.map(cooldown => Math.max(0, cooldown - 1));
+        attackerObj.hp = Math.min(attackerObj.maxHp, attackerObj.hp + attackerObj.hpRestoreSpeed);
+        attackerObj.cp = Math.min(attackerObj.maxCp, attackerObj.cp + attackerObj.cpRestoreSpeed);
 
-                cooldowns[j] = skill.cooldown;
-                attackerHp -= skill.costHp;
-                attackerMp -= skill.cost;
-
-                break;
-            }
-        }
-
-        attackerMp = Math.min(attackerMaxMp, attackerMp + attackerMpRestoreSpeed);
-        cooldowns = cooldowns.map(cooldown => Math.max(0, cooldown - 1));
-        defenderHp = Math.min(defenderMaxHp, defenderHp + getHpRestoreSpeed(defender));
-        defenderCp = Math.min(defenderMaxCp, defenderCp + getCpRestoreSpeed(defender));
+        defenderObj.mp = Math.min(defenderObj.maxMp, defenderObj.mp + defenderObj.mpRestoreSpeed);
+        defenderObj.cooldowns = defenderObj.cooldowns.map(cooldown => Math.max(0, cooldown - 1));
+        defenderObj.hp = Math.min(defenderObj.maxHp, defenderObj.hp + defenderObj.hpRestoreSpeed);
+        defenderObj.cp = Math.min(defenderObj.maxCp, defenderObj.cp + defenderObj.cpRestoreSpeed);
     }
 
-    return defenderHp;
+    return [attackerObj.hp, defenderObj.hp];
 }
 
 function compareSkills(skillA, skillB) {
@@ -181,4 +179,46 @@ function calcSkillDamage(attacker, defender, skill) {
     }
 
     return dmg;
+}
+
+function useSkills(attacker, defender, attackerObj, defenderObj) {
+    for (let j = 0; j < attackerObj.skills.length; j++) {
+        let skill = attackerObj.skills[j];
+        if (attackerObj.cooldowns[j] <= 0 && attackerObj.hp >= skill.costHp && attackerObj.mp >= skill.cost) {
+            let defenderCurrentHpPercent = defenderObj.hp / defenderObj.maxHp;
+
+            if (!skill.isHeal && !skill.isShield) {
+                // считаем урон только от скиллов isDamage = true
+                let damage = calculateDamage(attacker, defender, skill).damage;
+                let damageCp = Math.min(defenderObj.cp, damage);
+                defenderObj.cp -= damageCp;
+                damage -= damageCp;
+                let damageHp = Math.min(defenderObj.hp, damage);
+                defenderObj.hp -= damageHp;
+                damage -= damageHp;
+
+                if (defenderObj.hp === 0) {
+                    return 0;
+                }
+            } else if (skill.isShield && defenderCurrentHpPercent < 0.80) {
+                let shield = useShieldSkill(defender, skill);
+                let shieldEffect = defender.game.effects.find(effect => effect.name === "shield");
+
+                if (!shieldEffect) {
+                    defender.game.effects.push({name: "shield", value: shield, time: 0});
+                } else {
+                    shieldEffect.value = shield;
+                }
+
+            } else if (skill.isHeal && defenderCurrentHpPercent < 0.60) {
+                defender.game.gameClass.stats.hp = Math.max(getMaxHp(defender, defender.game.gameClass), defender.game.gameClass.stats.hp + useHealSkill(defender, skill));
+            }
+
+            attackerObj.cooldowns[j] = skill.cooldown;
+            attackerObj.hp -= skill.costHp;
+            attackerObj.mp -= skill.cost;
+
+            break;
+        }
+    }
 }

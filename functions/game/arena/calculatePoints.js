@@ -1,5 +1,5 @@
-const calcGearScore = require("../../../functions/game/player/calcGearScore");
-const getPlayerRating = require("../../../functions/game/arena/getPlayerRating");
+const calcGearScore = require("../player/calcGearScore");
+const getPlayerRating = require("./getPlayerRating");
 
 module.exports = function (attacker, defender, arenaType, chatId) {
     let winnerPoints = 10;
@@ -30,5 +30,5 @@ module.exports = function (attacker, defender, arenaType, chatId) {
         winnerPoints += 5;
     }
 
-    return Math.min(maxPoints, winnerPoints);
+    return Math.max(maxPoints, winnerPoints, 5);
 }

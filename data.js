@@ -38,7 +38,7 @@ try {
     let arenaRatingJson = fs.readFileSync("./arenaRating.json");
     arenaRating = JSON.parse(arenaRatingJson);
 } catch (e) {
-    arenaRating = [];
+    arenaRating = {};
 }
 
 function updTrustedChats() {
