@@ -1,6 +1,10 @@
 const data = require("../../../data");
 
-module.exports = function (userId, arenaType, chatId) {
+module.exports = function (userId, arenaType, chatId, arenaBot = null) {
+    if (arenaBot) {
+        return arenaBot.ratingKey;
+    }
+
     let sortedRating;
 
     if (!data.arenaRating["common"][chatId]) {

@@ -202,7 +202,7 @@ let setIntervalId = setInterval(() => {
     writeFiles(false);
 }, 30000);
 
-let fileTemplate = /^([a-z]+)-([0-9]+)\.json$/;
+let fileTemplate = /^([a-zA-Z]+)-([0-9]+)\.json$/;
 
 function validateBackup(name, array, result) {
     if (result[1].includes(name)) {
@@ -224,6 +224,7 @@ function deleteBackup(array) {
     let bossesBackups = [];
     let titlesBackups = [];
     let arenaRatingBackups = [];
+    let arenaTempBotsBackups = [];
 
     fs.readdirSync("./").forEach(file => {
         let result = file.match(fileTemplate);
@@ -233,11 +234,13 @@ function deleteBackup(array) {
             validateBackup("bosses", bossesBackups, result);
             validateBackup("titles", titlesBackups, result);
             validateBackup("arenaRating", arenaRatingBackups, result);
+            validateBackup("arenaTempBots", arenaTempBotsBackups, result);
 
             deleteBackup(sessionsBackups);
             deleteBackup(bossesBackups);
             deleteBackup(titlesBackups);
             deleteBackup(arenaRatingBackups);
+            deleteBackup(arenaTempBotsBackups);
         }
     })
 })();
