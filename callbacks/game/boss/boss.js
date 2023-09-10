@@ -102,7 +102,7 @@ module.exports = [["boss", async function (session, callback) {
     let imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
 
     if (imagePath) {
-        return sendPhoto(callback.message.chat.id, imagePath, {
+        await sendPhoto(callback.message.chat.id, imagePath, {
             caption: `${summonBossMessage(chatId, boss, false)}`,
             reply_markup: {
                 inline_keyboard: [...keyboard, [{
@@ -112,7 +112,7 @@ module.exports = [["boss", async function (session, callback) {
             }
         });
     } else {
-        return sendMessage(callback.message.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
+        await sendMessage(callback.message.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
             reply_markup: {
                 inline_keyboard: [...keyboard, [{
                     text: buttonsDictionary["ru"].close,

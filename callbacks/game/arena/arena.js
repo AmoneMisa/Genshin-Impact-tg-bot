@@ -1,4 +1,5 @@
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
 const getSession = require("../../../functions/getters/getSession");
 const bot = require('../../../bot');
@@ -13,6 +14,7 @@ const getDefendersList = require("../../../functions/game/arena/getDefendersList
 const updateRank = require("../../../functions/game/arena/updateRank");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const {arenaTempBots} = require("../../../data");
+const getFile = require("../../../functions/getters/getFile");
 
 module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
@@ -20,9 +22,10 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     let [message, showedPlayers] = await getDefendersList("common", chatId, callback.from.id);
     let [rating] = getPlayerRating(callback.from.id, "expansion", chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.common.${chatId}`, rating, "common", chatId, showedPlayers);
+    let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`;
 
     if (isBack) {
-        await editMessageText(`Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`, {
+        await editMessageText(fullMessage, {
             disable_notification: true,
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
@@ -33,14 +36,28 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             }
         });
     } else {
-        await sendMessage(callback.message.chat.id, `Мой рейтинг: ${getPlayerRating(callback.from.id, "common", chatId)[0]}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`, {
-            disable_notification: true,
-            reply_markup: {
-                inline_keyboard: [
-                    ...controlButtons(`arena.common.${chatId}`, buttons, 1)
-                ]
-            }
-        });
+        const file = getFile("images/misc", "commonArena");
+
+        if (file) {
+            await sendPhoto(callback.from.id, file, {
+                caption: fullMessage,
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [
+                        ...controlButtons(`arena.common.${chatId}`, buttons, 1)
+                    ]
+                }
+            });
+        } else {
+            await sendMessage(callback.message.chat.id, fullMessage, {
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [
+                        ...controlButtons(`arena.common.${chatId}`, buttons, 1)
+                    ]
+                }
+            });
+        }
     }
 }], [/^arena\.expansion\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
@@ -48,9 +65,10 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     let [message, showedPlayers] = await getDefendersList("expansion", chatId, callback.from.id);
     let [rating] = getPlayerRating(callback.from.id, "expansion", chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.expansion.${chatId}`, rating, "expansion", chatId, showedPlayers);
+    let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`;
 
     if (isBack) {
-        await editMessageText(`Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`, {
+        await editMessageText(fullMessage, {
             disable_notification: true,
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
@@ -61,14 +79,28 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             }
         });
     } else {
-        await sendMessage(callback.message.chat.id, `Мой рейтинг: ${getPlayerRating(callback.from.id, "expansion", chatId)[0]}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`, {
-            disable_notification: true,
-            reply_markup: {
-                inline_keyboard: [
-                    ...controlButtons(`arena.expansion.${chatId}`, buttons, 1)
-                ]
-            }
-        });
+        const file = getFile("images/misc", "expansionArena");
+
+        if (file) {
+            await sendPhoto(callback.from.id, file, {
+                caption: fullMessage,
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [
+                        ...controlButtons(`arena.expansion.${chatId}`, buttons, 1)
+                    ]
+                }
+            });
+        } else {
+            await sendMessage(callback.message.chat.id, fullMessage, {
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [
+                        ...controlButtons(`arena.expansion.${chatId}`, buttons, 1)
+                    ]
+                }
+            });
+        }
     }
 }], [/^arena\.(\w+)\.([\-0-9]+)_([^.]+)$/, async function (session, callback, [, arenaType, chatId, page]) {
     page = parseInt(page);
