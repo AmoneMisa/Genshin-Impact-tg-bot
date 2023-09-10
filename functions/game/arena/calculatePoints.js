@@ -1,11 +1,13 @@
 const calcGearScore = require("../player/calcGearScore");
 const getPlayerRating = require("./getPlayerRating");
 
-module.exports = function (attacker, defender, arenaType, chatId) {
+module.exports = function (attacker, defender, arenaType, chatId, isBot) {
+    let defenderLvl = isBot ? defender.stats.lvl : defender.game.stats.lvl;
+    let defenderStats = isBot ? defender : defender.game;
     let winnerPoints = 10;
     let maxPoints = 30;
 
-    let lvlDiff = defender.game.stats.lvl - attacker.game.stats.lvl;
+    let lvlDiff = defenderLvl - attacker.game.stats.lvl;
 
     if (lvlDiff >= 10) {
         winnerPoints += 6;
@@ -14,13 +16,13 @@ module.exports = function (attacker, defender, arenaType, chatId) {
     }
 
     let attackerGearScore = calcGearScore(attacker.game);
-    let defenderGearScore = calcGearScore(defender.game);
+    let defenderGearScore = calcGearScore(defenderStats);
     if (defenderGearScore / attackerGearScore * 100 - 100 >= 20) {
         winnerPoints += 15;
     }
 
     let [attackerRating] = getPlayerRating(attacker.userChatData.user.id, arenaType, chatId);
-    let [defenderRating] = getPlayerRating(defender.userChatData.user.id, arenaType, chatId);
+    let defenderRating = isBot ? defender.rating : getPlayerRating(defender.userChatData.user.id, arenaType, chatId)[0];
 
     if (defenderRating >= attackerRating) {
         winnerPoints -= 5;

@@ -45,7 +45,7 @@ try {
     let arenaTempBotsJson = fs.readFileSync("./arenaTempBots.json");
     arenaTempBots = JSON.parse(arenaTempBotsJson);
 } catch (e) {
-    arenaTempBots = {};
+    arenaTempBots = [];
 }
 
 function updTrustedChats() {
@@ -59,6 +59,17 @@ function updTrustedChats() {
     trustedChats.splice(0, trustedChats.length, ..._trustedChats);
 }
 
+function updArenaTempBots() {
+    let _arenaTempBots;
+    try {
+        let trustedChatsJson = fs.readFileSync("./arenaTempBots.json");
+        _arenaTempBots = JSON.parse(arenaTempBotsJson);
+    } catch (e) {
+        _arenaTempBots = [];
+    }
+    arenaTempBots.splice(0, arenaTempBots.length, ..._arenaTempBots);
+}
+
 module.exports = {
     chatId: null,
     sessions,
@@ -67,5 +78,6 @@ module.exports = {
     trustedChats,
     arenaRating,
     arenaTempBots,
-    updTrustedChats
+    updTrustedChats,
+    updArenaTempBots
 };

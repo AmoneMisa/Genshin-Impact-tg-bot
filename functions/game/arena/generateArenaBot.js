@@ -5,29 +5,30 @@ const getRandom = require("../../getters/getRandom");
 
 module.exports = function (rating) {
     let className = classStatsTemplate[getRandom(1, classStatsTemplate.length - 1)].name;
-    let ratingKey = Array.from(Object.keys(levelsMap)).findLast(ratingKey => rating >= parseInt(ratingKey));
-    let lvl = levelsMap[ratingKey];
-    let stats = getClassStatsFromTemplate(className, lvl);
+    let ratingObj = levelsMap.find(item => item.rating >= rating);
+    let stats = getClassStatsFromTemplate(className, ratingObj.lvl);
     let skills = getClassSkillsFromTemplate(className);
+    let currIndex = levelsMap.indexOf(ratingObj);
+    let nexIndex = levelsMap[currIndex + 1] !== undefined && levelsMap[currIndex + 1] !== null ? currIndex + 1 : currIndex;
 
     return {
         name: getRandom(1, 99999),
-        stats: {lvl},
+        stats: {lvl: ratingObj.lvl},
         gameClass: {skills, stats},
-        ratingKey: (parseInt(ratingKey) === 0) ? 1000 : ratingKey
+        rating: (ratingObj.rating === 0) ? 1000 : getRandom(ratingObj.rating, levelsMap[nexIndex].rating)
     };
 }
 
-const levelsMap = {
-    0: 15,
-    1000: 20,
-    1151: 25,
-    1251: 30,
-    1301: 30,
-    1351: 35,
-    1381: 35,
-    1421: 50,
-    1500: 65,
-    1550: 75
-}
+const levelsMap = [
+    {rating: 0, lvl: 15},
+    {rating: 1000, lvl: 20},
+    {rating: 1151, lvl: 25},
+    {rating: 1251, lvl: 30},
+    {rating: 1301, lvl: 30},
+    {rating: 1351, lvl: 35},
+    {rating: 1381, lvl: 35},
+    {rating: 1421, lvl: 50},
+    {rating: 1500, lvl: 65},
+    {rating: 1550, lvl: 75}
+];
 

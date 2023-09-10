@@ -27,40 +27,128 @@ const useShieldSkill = require("../player/useShieldSkill");
 const getRandom = require("../../getters/getRandom");
 const lodash = require("lodash");
 
-module.exports = function (attacker, defender) {
-    let defenderObj = {
-        hp: getCurrentHp(defender, defender.game.gameClass),
-        maxHp: getMaxHp(defender, defender.game.gameClass),
-        cp: getMaxCp(defender, defender.game.gameClass),
-        maxCp: getMaxCp(defender, defender.game.gameClass),
-        maxMp: getMaxMp(defender, defender.game.gameClass),
-        mpRestoreSpeed: getMpRestoreSpeed(defender, defender.game.gameClass),
-        hpRestoreSpeed: getHpRestoreSpeed(defender, defender.game.gameClass),
-        cpRestoreSpeed: getCpRestoreSpeed(defender, defender.game.gameClass),
-        skills: defender.game.gameClass.skills.sort(compareSkills).reverse(),
-    };
+module.exports = function (attacker, defender, defenderIsBot = false, attackerIsBot = false) {
+    let defenderObj;
+
+    if (defenderIsBot) {
+        defenderObj = {
+            className: defender.gameClass.name,
+            lvl: defender.stats.lvl,
+            effects: null,
+            randomWeaponDamage: getEquipStatByName(defender, "randomDamage"),
+            hp: getCurrentHp(defender, defender.gameClass),
+            maxHp: getMaxHp(defender, defender.gameClass),
+            cp: getMaxCp(defender, defender.gameClass),
+            maxCp: getMaxCp(defender, defender.gameClass),
+            maxMp: getMaxMp(defender, defender.gameClass),
+            mpRestoreSpeed: getMpRestoreSpeed(defender, defender.gameClass),
+            hpRestoreSpeed: getHpRestoreSpeed(defender, defender.gameClass),
+            cpRestoreSpeed: getCpRestoreSpeed(defender, defender.gameClass),
+            skills: defender.gameClass.skills.sort(compareSkills).reverse(),
+            evasion: getEvasion(defender, defender.gameClass),
+            block: getBlock(defender, defender.gameClass),
+            accuracy: getAccuracy(defender, defender.gameClass),
+            criticalChance: Math.min(getCriticalChance(defender, defender.gameClass) + getCriticalChanceMultiplier(defender), 100),
+            criticalDamage: getCriticalDamage(defender, defender.gameClass) * getCriticalDamageMultiplier(defender),
+            attack: getAttack(defender, defender.gameClass),
+            damageMultiplier: 1,
+            defence: getDefence(defender, defender.gameClass),
+            additionalDamageMul: getAdditionalDamageMul(defender, defender.gameClass),
+            incomingDamageModifier: getIncomingDamageModifier(defender, defender.gameClass)
+        };
+    } else {
+        defenderObj = {
+            className: defender.game.gameClass.name,
+            lvl: defender.game.stats.lvl,
+            effects: defender.game.effects,
+            randomWeaponDamage: getEquipStatByName(defender, "randomDamage"),
+            hp: getCurrentHp(defender, defender.game.gameClass),
+            maxHp: getMaxHp(defender, defender.game.gameClass),
+            cp: getMaxCp(defender, defender.game.gameClass),
+            maxCp: getMaxCp(defender, defender.game.gameClass),
+            maxMp: getMaxMp(defender, defender.game.gameClass),
+            mpRestoreSpeed: getMpRestoreSpeed(defender, defender.game.gameClass),
+            hpRestoreSpeed: getHpRestoreSpeed(defender, defender.game.gameClass),
+            cpRestoreSpeed: getCpRestoreSpeed(defender, defender.game.gameClass),
+            skills: defender.game.gameClass.skills.sort(compareSkills).reverse(),
+            evasion: getEvasion(defender, defender.game.gameClass),
+            block: getBlock(defender, defender.game.gameClass),
+            accuracy: getAccuracy(defender, defender.game.gameClass),
+            criticalChance: Math.min(getCriticalChance(defender, defender.game.gameClass) + getCriticalChanceMultiplier(defender), 100),
+            criticalDamage: getCriticalDamage(defender, defender.game.gameClass) * getCriticalDamageMultiplier(defender),
+            attack: getAttack(defender, defender.game.gameClass),
+            damageMultiplier: getDamageMultiplier(defender.game.effects),
+            defence: getDefence(defender, defender.game.gameClass),
+            additionalDamageMul: getAdditionalDamageMul(defender, defender.game.gameClass),
+            incomingDamageModifier: getIncomingDamageModifier(defender, defender.game.gameClass)
+        };
+    }
 
     defenderObj.cooldowns = defenderObj.skills.map(_ => 0);
 
-    let attackerObj = {
-        hp: getCurrentHp(attacker, attacker.game.gameClass),
-        maxHp: getMaxHp(attacker, attacker.game.gameClass),
-        cp: getMaxCp(attacker, attacker.game.gameClass),
-        maxCp: getMaxCp(attacker, attacker.game.gameClass),
-        mp: getCurrentMp(attacker, attacker.game.gameClass),
-        maxMp: getMaxMp(attacker, attacker.game.gameClass),
-        mpRestoreSpeed: getMpRestoreSpeed(attacker, attacker.game.gameClass),
-        hpRestoreSpeed: getHpRestoreSpeed(attacker, attacker.game.gameClass),
-        cpRestoreSpeed: getCpRestoreSpeed(attacker, attacker.game.gameClass),
-        skills: attacker.game.gameClass.skills.sort(compareSkills).reverse(),
-    };
+    let attackerObj;
+
+    if (attackerIsBot) {
+        attackerObj = {
+            className: attacker.gameClass.name,
+            lvl: attacker.stats.lvl,
+            effects: null,
+            randomWeaponDamage: getEquipStatByName(attacker, "randomDamage"),
+            hp: getCurrentHp(attacker, attacker.gameClass),
+            maxHp: getMaxHp(attacker, attacker.gameClass),
+            cp: getMaxCp(attacker, attacker.gameClass),
+            maxCp: getMaxCp(attacker, attacker.gameClass),
+            maxMp: getMaxMp(attacker, attacker.gameClass),
+            mpRestoreSpeed: getMpRestoreSpeed(attacker, attacker.gameClass),
+            hpRestoreSpeed: getHpRestoreSpeed(attacker, attacker.gameClass),
+            cpRestoreSpeed: getCpRestoreSpeed(attacker, attacker.gameClass),
+            skills: attacker.gameClass.skills.sort(compareSkills).reverse(),
+            evasion: getEvasion(attacker, attacker.gameClass),
+            block: getBlock(attacker, attacker.gameClass),
+            accuracy: getAccuracy(attacker, attacker.gameClass),
+            criticalChance: Math.min(getCriticalChance(attacker, attacker.gameClass) + getCriticalChanceMultiplier(attacker), 100),
+            criticalDamage: getCriticalDamage(attacker, attacker.gameClass) * getCriticalDamageMultiplier(attacker),
+            attack: getAttack(attacker, attacker.gameClass),
+            damageMultiplier: 1,
+            defence: getDefence(attacker, attacker.gameClass),
+            additionalDamageMul: getAdditionalDamageMul(attacker, attacker.gameClass),
+            incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.gameClass)
+        };
+    } else {
+        attackerObj = {
+            className: attacker.game.gameClass.name,
+            lvl: attacker.game.stats.lvl,
+            effects: attacker.game.effects,
+            randomWeaponDamage: getEquipStatByName(attacker, "randomDamage"),
+            hp: getCurrentHp(attacker, attacker.game.gameClass),
+            maxHp: getMaxHp(attacker, attacker.game.gameClass),
+            cp: getMaxCp(attacker, attacker.game.gameClass),
+            maxCp: getMaxCp(attacker, attacker.game.gameClass),
+            mp: getCurrentMp(attacker, attacker.game.gameClass),
+            maxMp: getMaxMp(attacker, attacker.game.gameClass),
+            mpRestoreSpeed: getMpRestoreSpeed(attacker, attacker.game.gameClass),
+            hpRestoreSpeed: getHpRestoreSpeed(attacker, attacker.game.gameClass),
+            cpRestoreSpeed: getCpRestoreSpeed(attacker, attacker.game.gameClass),
+            skills: attacker.game.gameClass.skills.sort(compareSkills).reverse(),
+            evasion: getEvasion(attacker, attacker.game.gameClass),
+            block: getBlock(attacker, attacker.game.gameClass),
+            accuracy: getAccuracy(attacker, attacker.game.gameClass),
+            criticalChance: Math.min(getCriticalChance(attacker, attacker.game.gameClass) + getCriticalChanceMultiplier(attacker), 100),
+            criticalDamage: getCriticalDamage(attacker, attacker.game.gameClass) * getCriticalDamageMultiplier(attacker),
+            attack: getAttack(attacker, attacker.game.gameClass),
+            damageMultiplier: getDamageMultiplier(attacker.game.effects),
+            defence: getDefence(attacker, attacker.game.gameClass),
+            additionalDamageMul: getAdditionalDamageMul(attacker, attacker.game.gameClass),
+            incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.game.gameClass)
+        };
+    }
 
     attackerObj.cooldowns = attackerObj.skills.map(_ => 0);
 
     // расчёт суммарного урона атакующего по противнику за 5 минут.
     for (let i = 0; i < 60 * 5; i++) {
-        useSkills(attacker, defender, attackerObj, defenderObj);
-        useSkills(defender, attacker, defenderObj, attackerObj);
+        useSkills(defender, attackerObj, defenderObj);
+        useSkills(attacker, defenderObj, attackerObj);
 
         attackerObj.mp = Math.min(attackerObj.maxMp, attackerObj.mp + attackerObj.mpRestoreSpeed);
         attackerObj.cooldowns = attackerObj.cooldowns.map(cooldown => Math.max(0, cooldown - 1));
@@ -83,17 +171,17 @@ function compareSkills(skillA, skillB) {
     return damageModifierA - damageModifierB;
 }
 
-function calculateDamage(attacker, defender, skill) {
-    const isMagicClass = ['mage', 'priest'].includes(attacker.game.gameClass.stats.name);
+function calculateDamage(skill, attackerObj, defenderObj) {
+    const isMagicClass = ['mage', 'priest'].includes(attackerObj.className);
     let damage = 1;
     let isHit = true;
     let isBlocked = false;
 
     // Расчет попадания и уворота. Магические классы (на данный момент - маг, прист) всегда попадают скиллами, но могут увернуться.
     // Так же, если уровень защитника на 8 и более, выше, чем уровень нападающего, защитник всегда уклоняется.
-    if (!isMagicClass || (defender.game.stats.lvl - attacker.game.stats.lvl < 8)) {
+    if (!isMagicClass || (defenderObj.lvl - attackerObj.lvl < 8)) {
         let diff = limit(
-            getAccuracy(attacker) - getEvasion(defender),
+            attackerObj.accuracy - defenderObj.evasion,
             -25, 10
         );
         let i = diff + 25;
@@ -103,9 +191,9 @@ function calculateDamage(attacker, defender, skill) {
     }
 
     if (isHit) {
-        damage = calcSkillDamage(attacker, defender, skill);
+        damage = calcSkillDamage(skill, attackerObj, defenderObj);
         // Проверка на блок урона
-        const blockRate = (getBlock(defender) - 1) / (135 - 1);
+        const blockRate = (defenderObj.block - 1) / (135 - 1);
         // Минимальный шанс заблокировать урон - 1.75%, максимальный - 65%.
         const blockChance = 0.0175 + (0.65 - 0.0175) * blockRate;
 
@@ -118,9 +206,8 @@ function calculateDamage(attacker, defender, skill) {
     }
 
     // Добавляем в расчёт рандомный разброс от оружия
-    let randomWeaponDamage = getEquipStatByName(attacker, "randomDamage");
-    let minDmg = 1 - randomWeaponDamage;
-    let maxDmg = 1 + randomWeaponDamage;
+    let minDmg = 1 - attackerObj.randomWeaponDamage;
+    let maxDmg = 1 + attackerObj.randomWeaponDamage;
     let rndDmg = getRandomWithoutFloor(minDmg, maxDmg);
 
     damage = Math.ceil(damage * rndDmg);
@@ -132,46 +219,28 @@ function calculateDamage(attacker, defender, skill) {
     };
 }
 
-function calcSkillDamage(attacker, defender, skill) {
-    let defenderGameClass = defender.game.gameClass;
-    let attackerGameClass = attacker.game.gameClass;
-
+function calcSkillDamage(skill, attackerObj, defenderObj) {
     let dmg;
     let modifier = skill.damageModifier || 1;
 
-    let criticalChanceMultiplier = getCriticalChanceMultiplier(attacker);
-    let criticalChance = getCriticalChance(attacker, attackerGameClass) + criticalChanceMultiplier;
+    dmg = 70 * attackerObj.attack / defenderObj.defence * modifier * attackerObj.additionalDamageMul;
+    dmg *= attackerObj.damageMultiplier;
 
-    if (criticalChance > 100) {
-        criticalChance = 100;
+    if (getRandom(1, 100) <= attackerObj.criticalChance) {
+        dmg *= attackerObj.criticalDamage;
     }
 
-    let criticalDamage = getCriticalDamage(attacker, attackerGameClass);
-    let criticalDamageMultiplier = getCriticalDamageMultiplier(attacker);
-    criticalDamage *= criticalDamageMultiplier;
+    if (attackerObj.effects) {
+        attackerObj.effects = attackerObj.effects.filter(effect => !effect.hasOwnProperty("count") || effect.count > 0);
 
-    let attack = getAttack(attacker, attackerGameClass);
-    let damageMultiplier = getDamageMultiplier(attacker.game.effects);
-    let defenderDefence = getDefence(defender, defenderGameClass);
-    let additionalDamageMul = getAdditionalDamageMul(attacker, attackerGameClass);
-    let incomingDamageModifier = getIncomingDamageModifier(defender, defenderGameClass);
-
-    dmg = 70 * attack / defenderDefence * modifier * additionalDamageMul;
-    dmg *= damageMultiplier;
-
-    if (getRandom(1, 100) <= criticalChance) {
-        dmg *= criticalDamage;
-    }
-
-    attacker.game.effects = attacker.game.effects.filter(effect => !effect.hasOwnProperty("count") || effect.count > 0);
-
-    for (let effect of attacker.game.effects) {
-        if (effect.count) {
-            effect.count--;
+        for (let effect of attackerObj.effects) {
+            if (effect.count) {
+                effect.count--;
+            }
         }
     }
 
-    dmg = dmg * incomingDamageModifier;
+    dmg = dmg * attackerObj.incomingDamageModifier;
     dmg = Math.ceil(dmg);
 
     if (lodash.isNaN(dmg) || lodash.isUndefined(dmg)) {
@@ -181,7 +250,7 @@ function calcSkillDamage(attacker, defender, skill) {
     return dmg;
 }
 
-function useSkills(attacker, defender, attackerObj, defenderObj) {
+function useSkills(defender, attackerObj, defenderObj) {
     for (let j = 0; j < attackerObj.skills.length; j++) {
         let skill = attackerObj.skills[j];
         if (attackerObj.cooldowns[j] <= 0 && attackerObj.hp >= skill.costHp && attackerObj.mp >= skill.cost) {
@@ -189,7 +258,7 @@ function useSkills(attacker, defender, attackerObj, defenderObj) {
 
             if (!skill.isHeal && !skill.isShield) {
                 // считаем урон только от скиллов isDamage = true
-                let damage = calculateDamage(attacker, defender, skill).damage;
+                let damage = calculateDamage(skill, attackerObj, defenderObj).damage;
                 let damageCp = Math.min(defenderObj.cp, damage);
                 defenderObj.cp -= damageCp;
                 damage -= damageCp;
@@ -202,16 +271,16 @@ function useSkills(attacker, defender, attackerObj, defenderObj) {
                 }
             } else if (skill.isShield && defenderCurrentHpPercent < 0.80) {
                 let shield = useShieldSkill(defender, skill);
-                let shieldEffect = defender.game.effects.find(effect => effect.name === "shield");
+                let shieldEffect = defenderObj.effects ? defenderObj.effects.find(effect => effect.name === "shield") : null;
 
                 if (!shieldEffect) {
-                    defender.game.effects.push({name: "shield", value: shield, time: 0});
+                    defenderObj.effects.push({name: "shield", value: shield, time: 0});
                 } else {
                     shieldEffect.value = shield;
                 }
 
             } else if (skill.isHeal && defenderCurrentHpPercent < 0.60) {
-                defender.game.gameClass.stats.hp = Math.max(getMaxHp(defender, defender.game.gameClass), defender.game.gameClass.stats.hp + useHealSkill(defender, skill));
+                defenderObj.hp = Math.max(defenderObj.maxHp, defenderObj.hp + useHealSkill(defender, skill));
             }
 
             attackerObj.cooldowns[j] = skill.cooldown;

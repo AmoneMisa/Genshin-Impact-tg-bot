@@ -12,16 +12,17 @@ const setPlayerRating = require("../../../functions/game/arena/setPlayerRating")
 const getDefendersList = require("../../../functions/game/arena/getDefendersList");
 const updateRank = require("../../../functions/game/arena/updateRank");
 const getEmoji = require("../../../functions/getters/getEmoji");
+const {arenaTempBots} = require("../../../data");
 
 module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
     let attacker = await getSession(chatId, callback.from.id);
-    let [message, arenaBots] = await getDefendersList("common", chatId, callback.from.id);
-    let buttons = buildArenaKeyboard(callback.from.id, `arena.common.${chatId}`, "common", arenaBots, chatId);
-
+    let [message, showedPlayers] = await getDefendersList("common", chatId, callback.from.id);
+    let [rating] = getPlayerRating(callback.from.id, "expansion", chatId);
+    let buttons = buildArenaKeyboard(callback.from.id, `arena.common.${chatId}`, rating, "common", chatId, showedPlayers);
 
     if (isBack) {
-        await editMessageText(`Мой рейтинг: ${getPlayerRating(callback.from.id, "common", chatId)[0]}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`, {
+        await editMessageText(`Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`, {
             disable_notification: true,
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
@@ -44,11 +45,12 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
 }], [/^arena\.expansion\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
     let attacker = await getSession(chatId, callback.from.id);
-    let [message, arenaBots] = await getDefendersList("expansion", chatId, callback.from.id);
-    let buttons = buildArenaKeyboard(callback.from.id, `arena.expansion.${chatId}`, "expansion", arenaBots, chatId);
+    let [message, showedPlayers] = await getDefendersList("expansion", chatId, callback.from.id);
+    let [rating] = getPlayerRating(callback.from.id, "expansion", chatId);
+    let buttons = buildArenaKeyboard(callback.from.id, `arena.expansion.${chatId}`, rating, "expansion", chatId, showedPlayers);
 
     if (isBack) {
-        await editMessageText(`Мой рейтинг: ${getPlayerRating(callback.from.id, "expansion", chatId)[0]}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`, {
+        await editMessageText(`Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`, {
             disable_notification: true,
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
@@ -70,8 +72,8 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     }
 }], [/^arena\.(\w+)\.([\-0-9]+)_([^.]+)$/, async function (session, callback, [, arenaType, chatId, page]) {
     page = parseInt(page);
-
-    let buttons = buildKeyboard(chatId, `arena.${arenaType}.${chatId}`, false, callback.from.id);
+    let rating = getPlayerRating(callback.from.id, arenaType, chatId);
+    let buttons = buildArenaKeyboard(callback.from.id, `arena.${arenaType}.${chatId}`, rating, arenaType, chatId);
 
     await bot.editMessageReplyMarkup({
         inline_keyboard: [
@@ -127,7 +129,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             }]]
         }
     });
-}], [/^arena\.(\w+)\.([\-0-9]+)\.bot$/, async function (session, callback, [, arenaType, chatId]) {
+}], [/^arena\.(\w+)\.([\-0-9]+)\.bot_([0-9]+)$/, async function (session, callback, [, arenaType, chatId, botNumber]) {
     let attacker = await getSession(chatId, callback.from.id);
 
     if (arenaType === "common") {
@@ -154,6 +156,8 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
         }
     }
 
+    let arenaBot = arenaTempBots.find(arenaBot => arenaBot.name === parseInt(botNumber));
+
     await editMessageText(`Рейтинг: ${getPlayerRating(null, arenaType, null, arenaBot)}\n\n${getDefenderDataString(arenaBot, true)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
@@ -161,7 +165,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
         reply_markup: {
             inline_keyboard: [[{
                 text: "Атаковать",
-                callback_data: `arena.${arenaType}.${chatId}.bot.0`
+                callback_data: `arena.${arenaType}.${chatId}.bot_${botNumber}.0`
             }], [{
                 text: "Назад",
                 callback_data: `arena.${arenaType}.${chatId}.back`
@@ -191,11 +195,11 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
         setPlayerRating(callback.from.id, arenaType, chatId, points);
         setPlayerRating(defenderId, arenaType, chatId, -points);
     } else if (battleResult === 1) {
-        message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent}%`;
+        message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
         setPlayerRating(callback.from.id, arenaType, chatId, -points);
         setPlayerRating(defenderId, arenaType, chatId, points);
     } else if (battleResult === 2) {
-        message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent}%`;
+        message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
     }
 
     await editMessageText(message, {
@@ -212,12 +216,11 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             }]]
         }
     });
-}], [/^arena\.(\w+)\.([\-0-9]+)\.bot\.0$/, async function (session, callback, [, arenaType, chatId]) {
-    let defender = arenaBot;
+}], [/^arena\.(\w+)\.([\-0-9]+)\.bot_([0-9]+)\.0$/, async function (session, callback, [, arenaType, chatId, botNumber]) {
+    let defender = arenaTempBots.find(arenaBot => arenaBot.name === parseInt(botNumber));
     let attacker = await getSession(chatId, callback.from.id);
-
-    let [battleResult, remainDefenderHpPercent] = getBattleResult(attacker, defender);
-    let points = calculatePoints(attacker, defender, arenaType, chatId);
+    let [battleResult, remainDefenderHpPercent] = getBattleResult(attacker, defender, true);
+    let points = calculatePoints(attacker, defender, arenaType, chatId, true);
     let message = "";
 
     if (arenaType === "common") {
@@ -232,10 +235,10 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
         message = `Победа!\nТы получил: ${points} очков рейтинга!`;
         setPlayerRating(callback.from.id, arenaType, chatId, points);
     } else if (battleResult === 1) {
-        message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent}%`;
+        message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
         setPlayerRating(callback.from.id, arenaType, chatId, -points);
     } else if (battleResult === 2) {
-        message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent}%`;
+        message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
     }
 
     await editMessageText(message, {

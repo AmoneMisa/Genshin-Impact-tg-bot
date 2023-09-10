@@ -7,8 +7,8 @@ module.exports = function () {
                 continue;
             }
 
-            session.game.arenaChances = Math.max(15, session.game.arenaChances + 1);
-            session.game.arenaExpansionChances = Math.max(10, session.game.arenaExpansionChances + 1);
+            session.game.arenaChances = Math.min(15, session.game.arenaChances + 1);
+            session.game.arenaExpansionChances = Math.min(10, session.game.arenaExpansionChances + 1);
         }
     }
 }

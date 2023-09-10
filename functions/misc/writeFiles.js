@@ -6,6 +6,7 @@ module.exports = function (backup) {
     writeFile("bosses", data.bosses, backup);
     writeFile("titles", data.titles, backup);
     writeFile("arenaRating", data.arenaRating, backup);
+    writeFile("arenaTempBots", data.arenaTempBots, backup);
 }
 
 function writeFile(name, data, backup) {

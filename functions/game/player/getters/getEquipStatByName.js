@@ -1,6 +1,6 @@
 module.exports = function (session, statName, isMul = false) {
     if (!session.game || !session.game.equipmentStats) {
-        return;
+        return 1;
     }
 
     let totalStatValue = (statName === "defencePower" || statName === "power") ? 1 : 0;

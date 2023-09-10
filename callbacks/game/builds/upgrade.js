@@ -36,8 +36,8 @@ async function errorUpdateMessage(buildName, build, chatId, messageId, callback,
 async function getUpgradeRequirementsMessage(buildName, currentLvl, chatId, userId) {
     let buildList = await getBuildList(chatId, userId);
     let upgrades = buildsTemplate[buildName].upgradeRequirements[currentLvl - 1];
-    console.log(upgrades.characterRequirements)
     let str = "";
+
     for (let upgradeKey of Object.keys(upgrades)) {
         if (upgradeKey === "buildRequirements") {
             str += "Требования построек:\n"

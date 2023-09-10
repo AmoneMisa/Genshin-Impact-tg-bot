@@ -7,7 +7,6 @@ module.exports = function (session, gameClass) {
         gameClass = session.game.gameClass;
     }
 
-
     let {stats} = getPlayerGameClass(gameClass);
     let totalValue = Math.min(255, stats.evasion + getEquipStatByName(session, "evasion"));
 

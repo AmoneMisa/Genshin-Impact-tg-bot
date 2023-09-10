@@ -6,5 +6,5 @@ module.exports = function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return Math.min( Math.round(stats.hp), getMaxHp(session, gameClass));
+    return Math.min(Math.round(stats.hp), getMaxHp(session, gameClass));
 };

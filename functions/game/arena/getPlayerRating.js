@@ -1,8 +1,8 @@
 const data = require("../../../data");
 
-module.exports = function (userId, arenaType, chatId, arenaBot = null) {
+module.exports = function (userId, arenaType, chatId, arenaBot) {
     if (arenaBot) {
-        return arenaBot.ratingKey;
+        return arenaBot.rating;
     }
 
     let sortedRating;
