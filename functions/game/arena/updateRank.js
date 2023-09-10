@@ -1,5 +1,6 @@
 const arenaRanks = require("../../../dictionaries/arenaRanks");
 const getPlayerRating = require("./getPlayerRating");
+
 const ranksRating = [
     {minRating: 0, percentileRank: null},
     {minRating: 1000, percentileRank: null},
@@ -22,7 +23,7 @@ module.exports = function (userId, arenaType, chatId) {
 
     for (let [i, rankRating] of ranksRating.entries()) {
         if (rankRating.minRating <= playerRating) {
-            if (rankRating.percentileRank && rankRating.percentileRank >= percentileRating) {
+            if (!rankRating.percentileRank || rankRating.percentileRank >= percentileRating) {
                 return arenaRanks[i];
             }
         }
@@ -30,7 +31,3 @@ module.exports = function (userId, arenaType, chatId) {
 
     throw new Error("Ранг не найден");
 }
-
-
-
-
