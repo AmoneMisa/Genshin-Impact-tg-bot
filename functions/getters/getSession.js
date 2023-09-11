@@ -1,7 +1,7 @@
 const userTemplate = require('../../templates/userTemplate');
 const bot = require('../../bot');
 const getMembers = require('./getMembers');
-const getLostedFieldsInSession = require('./getLostedFieldsInSession');
+const getLostFieldsInSession = require('./getLostFieldsInSession');
 const classStatsTemplate = require('../../templates/classStatsTemplate');
 const classSkillsTemplate = require('../../templates/classSkillsTemplate');
 
@@ -18,7 +18,7 @@ module.exports = async function (chatId, userId) {
     }
 
     members[userId].userChatData = Object.assign({}, getUpdatedData);
-    getLostedFieldsInSession(members[userId]);
+    getLostFieldsInSession(members[userId]);
 
     let className = members[userId].game.gameClass.stats.name || 'noClass';
 

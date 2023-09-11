@@ -1,6 +1,6 @@
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
+const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
 const getSession = require("../../../functions/getters/getSession");
 const bot = require('../../../bot');
 const controlButtons = require('../../../functions/keyboard/controlButtons');
@@ -25,7 +25,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`;
 
     if (isBack) {
-        await editMessageText(fullMessage, {
+        await editMessageCaption(fullMessage, {
             disable_notification: true,
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
@@ -34,7 +34,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                     ...controlButtons(`arena.common.${chatId}`, buttons, 1)
                 ]
             }
-        });
+        }, callback.message.photo);
     } else {
         const file = getFile("images/misc", "commonArena");
 
@@ -68,7 +68,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`;
 
     if (isBack) {
-        await editMessageText(fullMessage, {
+        await editMessageCaption(fullMessage, {
             disable_notification: true,
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
@@ -77,7 +77,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                     ...controlButtons(`arena.expansion.${chatId}`, buttons, 1)
                 ]
             }
-        });
+        }, callback.message.photo);
     } else {
         const file = getFile("images/misc", "expansionArena");
 
@@ -144,7 +144,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
         }
     }
 
-    await editMessageText(`Рейтинг: ${getPlayerRating(defenderId, arenaType, chatId)[0]}\n\n${getDefenderDataString(defender)}`, {
+    await editMessageCaption(`Рейтинг: ${getPlayerRating(defenderId, arenaType, chatId)[0]}\n\n${getDefenderDataString(defender)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -160,7 +160,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], [/^arena\.(\w+)\.([\-0-9]+)\.bot_([0-9]+)$/, async function (session, callback, [, arenaType, chatId, botNumber]) {
     let attacker = await getSession(chatId, callback.from.id);
 
@@ -190,7 +190,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
 
     let arenaBot = arenaTempBots.find(arenaBot => arenaBot.name === parseInt(botNumber));
 
-    await editMessageText(`Рейтинг: ${getPlayerRating(null, arenaType, null, arenaBot)}\n\n${getDefenderDataString(arenaBot, true)}`, {
+    await editMessageCaption(`Рейтинг: ${getPlayerRating(null, arenaType, null, arenaBot)}\n\n${getDefenderDataString(arenaBot, true)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -206,7 +206,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], [/^arena\.(\w+)\.([\-0-9]+)\.([0-9]+)\.0$/, async function (session, callback, [, arenaType, chatId, defenderId]) {
     let defender = await getSession(chatId, defenderId);
     let attacker = await getSession(chatId, callback.from.id);
@@ -234,7 +234,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
         message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
     }
 
-    await editMessageText(message, {
+    await editMessageCaption(message, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -247,7 +247,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }], [/^arena\.(\w+)\.([\-0-9]+)\.bot_([0-9]+)\.0$/, async function (session, callback, [, arenaType, chatId, botNumber]) {
     let defender = arenaTempBots.find(arenaBot => arenaBot.name === parseInt(botNumber));
     let attacker = await getSession(chatId, callback.from.id);
@@ -273,7 +273,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
         message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
     }
 
-    await editMessageText(message, {
+    await editMessageCaption(message, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -286,5 +286,5 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                 callback_data: "close"
             }]]
         }
-    });
+    }, callback.message.photo);
 }]];
