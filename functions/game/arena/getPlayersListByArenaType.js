@@ -16,8 +16,6 @@ module.exports = async function (arenaType, page = 1, chatId) {
         sortedRating = Array.from(Object.entries(data.arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
     } else {
         sortedRating = Array.from(Object.entries(data.arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
-
-
     }
 
     let requestedRating = sortedRating.slice(page === 1 ? 0 : page + pageSize, pageSize * page);
