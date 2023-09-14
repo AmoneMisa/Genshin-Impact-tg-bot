@@ -21,6 +21,7 @@ const evenTwoMinutes = require('./functions/shedullers/evenTwoMinutes');
 const evenFiveMinutes = require('./functions/shedullers/evenFiveMinutes');
 const evenHour = require('./functions/shedullers/evenHour');
 const evenDay = require('./functions/shedullers/evenDay');
+const evenWeek = require('./functions/shedullers/evenWeek');
 
 const log = intel.getLogger("genshin");
 const buttonsDictionary = require("./dictionaries/buttons");
@@ -197,6 +198,7 @@ evenTwoMinutes();
 evenFiveMinutes();
 evenHour();
 evenDay();
+evenWeek();
 
 let setIntervalId = setInterval(() => {
     writeFiles(false);

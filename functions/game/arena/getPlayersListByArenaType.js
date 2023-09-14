@@ -3,7 +3,6 @@ const getUserName = require('../../getters/getUserName');
 const updateRank = require('./updateRank');
 const data = require("../../../data");
 const {sessions} = require("../../../data");
-const getOffset = require("../../getters/getOffset");
 
 const pageSize = 25;
 
