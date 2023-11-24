@@ -5,7 +5,7 @@ const callbacks = require('./callbacks');
 const onTexts = require('./onTexts');
 const onTextsAdmin = require('./onTextsAdmin');
 const bot = require('./bot');
-const {sessions, trustedChats, arenaRating} = require('./data');
+const {trustedChats} = require('./data');
 const fs = require('fs');
 const intel = require('intel');
 intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
