@@ -6,7 +6,7 @@ const getMaxHp = require("../player/getters/getMaxHp");
 // 2 - ничья
 
 module.exports = function (attacker, defender, isBot = false) {
-    let [attackerHp, defenderHp] = playerDamagePlayer(attacker, defender, isBot);
+    let [attackerHp, defenderHp] = playerDamagePlayer(attacker, defender, isBot, false, 60, true);
     let defenderCurrentHpPercent;
 
     if (isBot) {

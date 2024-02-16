@@ -21,7 +21,12 @@ module.exports = async function (arenaType, chatId, userId) {
         arenaBots = getArenaBots(attackerRating);
     }
 
-    playersList = Array.from(Object.keys(playersList)).concat(arenaBots);
+    if (playersList) {
+        playersList = Array.from(Object.keys(playersList)).concat(arenaBots);
+    } else {
+        playersList = arenaBots;
+    }
+
     playersList = lodash.shuffle(playersList);
 
     let showedPlayers = [];

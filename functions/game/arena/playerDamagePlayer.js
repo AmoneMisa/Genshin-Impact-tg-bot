@@ -22,12 +22,13 @@ const getDamageMultiplier = require("../player/getters/getDamageMultiplier");
 const getDefence = require("../player/getters/getDefence");
 const getAdditionalDamageMul = require("../player/getters/getAdditionalDamageMul");
 const getIncomingDamageModifier = require("../player/getters/getIncomingDamageModifier");
+const getPvpSign = require("../arena/getPvpSign");
 const useHealSkill = require("../player/useHealSkill");
 const useShieldSkill = require("../player/useShieldSkill");
 const getRandom = require("../../getters/getRandom");
 const lodash = require("lodash");
 
-module.exports = function (attacker, defender, defenderIsBot = false, attackerIsBot = false) {
+module.exports = function (attacker, defender, defenderIsBot = false, attackerIsBot = false, battleTime = 5 * 60, isArena = false) {
     let defenderObj;
 
     if (defenderIsBot) {
@@ -54,7 +55,9 @@ module.exports = function (attacker, defender, defenderIsBot = false, attackerIs
             damageMultiplier: 1,
             defence: getDefence(defender, defender.gameClass),
             additionalDamageMul: getAdditionalDamageMul(defender, defender.gameClass),
-            incomingDamageModifier: getIncomingDamageModifier(defender, defender.gameClass)
+            incomingDamageModifier: getIncomingDamageModifier(defender, defender.gameClass),
+            increasePvpDamage: 1,
+            decreaseIncomingPvpDamage: 1
         };
     } else {
         defenderObj = {
@@ -80,7 +83,9 @@ module.exports = function (attacker, defender, defenderIsBot = false, attackerIs
             damageMultiplier: getDamageMultiplier(defender.game.effects),
             defence: getDefence(defender, defender.game.gameClass),
             additionalDamageMul: getAdditionalDamageMul(defender, defender.game.gameClass),
-            incomingDamageModifier: getIncomingDamageModifier(defender, defender.game.gameClass)
+            incomingDamageModifier: getIncomingDamageModifier(defender, defender.game.gameClass),
+            increasePvpDamage: isArena ? getPvpSign(defender).increasePvpDamage : 1,
+            decreaseIncomingPvpDamage: isArena ? getPvpSign(defender).decreaseIncomingPvpDamage : 1
         };
     }
 
@@ -112,7 +117,9 @@ module.exports = function (attacker, defender, defenderIsBot = false, attackerIs
             damageMultiplier: 1,
             defence: getDefence(attacker, attacker.gameClass),
             additionalDamageMul: getAdditionalDamageMul(attacker, attacker.gameClass),
-            incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.gameClass)
+            incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.gameClass),
+            increasePvpDamage: 1,
+            decreaseIncomingPvpDamage: 1
         };
     } else {
         attackerObj = {
@@ -139,16 +146,18 @@ module.exports = function (attacker, defender, defenderIsBot = false, attackerIs
             damageMultiplier: getDamageMultiplier(attacker.game.effects),
             defence: getDefence(attacker, attacker.game.gameClass),
             additionalDamageMul: getAdditionalDamageMul(attacker, attacker.game.gameClass),
-            incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.game.gameClass)
+            incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.game.gameClass),
+            increasePvpDamage: isArena ? getPvpSign(attacker).increasePvpDamage : 1,
+            decreaseIncomingPvpDamage: isArena ? getPvpSign(attacker).decreaseIncomingPvpDamage : 1
         };
     }
 
     attackerObj.cooldowns = attackerObj.skills.map(_ => 0);
 
-    // расчёт суммарного урона атакующего по противнику за 5 минут.
-    for (let i = 0; i < 60 * 5; i++) {
-        useSkills(defender, attackerObj, defenderObj);
-        useSkills(attacker, defenderObj, attackerObj);
+    // Расчёт суммарного урона атакующего по противнику за несколько минут. По умолчанию - 5.
+    for (let i = 0; i < battleTime; i++) {
+        useSkills(defender, attackerObj, defenderObj, isArena);
+        useSkills(attacker, defenderObj, attackerObj, isArena);
 
         attackerObj.mp = Math.min(attackerObj.maxMp, attackerObj.mp + attackerObj.mpRestoreSpeed);
         attackerObj.cooldowns = attackerObj.cooldowns.map(cooldown => Math.max(0, cooldown - 1));
@@ -171,7 +180,7 @@ function compareSkills(skillA, skillB) {
     return damageModifierA - damageModifierB;
 }
 
-function calculateDamage(skill, attackerObj, defenderObj) {
+function calculateDamage(skill, attackerObj, defenderObj, isArena) {
     const isMagicClass = ['mage', 'priest'].includes(attackerObj.className);
     let damage = 1;
     let isHit = true;
@@ -210,12 +219,18 @@ function calculateDamage(skill, attackerObj, defenderObj) {
     let maxDmg = 1 + attackerObj.randomWeaponDamage;
     let rndDmg = getRandomWithoutFloor(minDmg, maxDmg);
 
-    damage = Math.ceil(damage * rndDmg);
+    // Добавляем показатели от медали арены, если считаем урон для арены
+    if (isArena) {
+        damage = Math.ceil(damage * rndDmg * attackerObj.increasePvpDamage * defenderObj.decreaseIncomingPvpDamage);
+    } else {
+     // Расчёт по умолчанию
+        damage = Math.ceil(damage * rndDmg);
+    }
 
     return {
         damage,
         isHit,
-        isBlocked,
+        isBlocked
     };
 }
 
@@ -250,7 +265,7 @@ function calcSkillDamage(skill, attackerObj, defenderObj) {
     return dmg;
 }
 
-function useSkills(defender, attackerObj, defenderObj) {
+function useSkills(defender, attackerObj, defenderObj, isArena = false) {
     for (let j = 0; j < attackerObj.skills.length; j++) {
         let skill = attackerObj.skills[j];
         if (attackerObj.cooldowns[j] <= 0 && attackerObj.hp >= skill.costHp && attackerObj.mp >= skill.cost) {
@@ -258,7 +273,7 @@ function useSkills(defender, attackerObj, defenderObj) {
 
             if (!skill.isHeal && !skill.isShield) {
                 // считаем урон только от скиллов isDamage = true
-                let damage = calculateDamage(skill, attackerObj, defenderObj).damage;
+                let damage = calculateDamage(skill, attackerObj, defenderObj, isArena).damage;
                 let damageCp = Math.min(defenderObj.cp, damage);
                 defenderObj.cp -= damageCp;
                 damage -= damageCp;
