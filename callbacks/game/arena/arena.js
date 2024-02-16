@@ -287,4 +287,74 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             }]]
         }
     }, callback.message.photo);
+}], [/^arena\.shop\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
+    const isBack = callback.data.includes("back");
+
+    let pvpSign = session.game.inventory.arena.pvpSign;
+    // Добавить срок жизни
+    // Добавить статы после улучшения
+    let fullMessage = `${pvpSign.translatedName} - ур. ${pvpSign.lvl}\nУвеличение исходящего урона по противнику:  ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%\n\nКоличество токенов арены: ${session.game.inventory.arena.tokens}\nСтоимость улучшения на следующий уровень: ${pvpSign.upgrades[pvpSign.lvl + 1].cost}`;
+
+    if (isBack) {
+        await editMessageCaption(fullMessage, {
+            disable_notification: true,
+            chat_id: callback.message.chat.id,
+            message_id: callback.message.message_id,
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "Улучшить",
+                    callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
+                }], [{
+                    text: "Назад",
+                    callback_data: `arena.shop.${chatId}`
+                }],[{
+                    text: "Закрыть",
+                    callback_data: "close"
+                }]]
+            }
+        }, callback.message.photo);
+    } else {
+        const file = getFile("images/misc", "arenaShop");
+
+        if (file) {
+            await sendPhoto(callback.from.id, file, {
+                caption: fullMessage,
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Обычная",
+                        callback_data: `arena.common.${chatId}`
+                    }], [{
+                        text: "Мировая",
+                        callback_data: `arena.expansion.${chatId}`
+                    }], [{
+                        text: "Магазин арены",
+                        callback_data: `arena.shop.${chatId}`
+                    }],[{
+                        text: "Закрыть",
+                        callback_data: "close"
+                    }]]
+                }
+            });
+        } else {
+            await sendMessage(callback.message.chat.id, fullMessage, {
+                disable_notification: true,
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: "Обычная",
+                        callback_data: `arena.common.${chatId}`
+                    }], [{
+                        text: "Мировая",
+                        callback_data: `arena.expansion.${chatId}`
+                    }], [{
+                        text: "Магазин арены",
+                        callback_data: `arena.shop.${chatId}`
+                    }],[{
+                        text: "Закрыть",
+                        callback_data: "close"
+                    }]]
+                }
+            });
+        }
+    }
 }]];

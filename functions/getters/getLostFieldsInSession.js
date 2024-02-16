@@ -3,6 +3,7 @@ const lodash = require("lodash");
 const potionsInInventoryTemplate = require("../../templates/potionsInInventoryTemplate");
 const classStatsTemplate = require("../../templates/classStatsTemplate");
 const classSkillsTemplate = require("../../templates/classSkillsTemplate");
+const pvpSignTemplate = require("../../templates/pvpSignTemplate");
 
 module.exports = function (session) {
     if (!session.hasOwnProperty("whatsNewSettings")) {
@@ -74,6 +75,10 @@ module.exports = function (session) {
             skills: {...classSkillsTemplate.noClass}
         },
         inventory: {
+            arena: {
+                tokens: 0,
+                pvpSign: {...pvpSignTemplate}
+            },
             gold: 0,
             crystals: 0,
             ironOre: 0,

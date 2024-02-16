@@ -19,6 +19,9 @@ module.exports = [[/(?:^|\s)\/arena\b/, async (msg) => {
                 }], [{
                     text: "Мировая",
                     callback_data: `arena.expansion.${msg.chat.id}`
+                }], [{
+                    text: "Магазин арены",
+                    callback_data: `arena.shop.${msg.chat.id}`
                 }],[{
                     text: "Закрыть",
                     callback_data: "close"
