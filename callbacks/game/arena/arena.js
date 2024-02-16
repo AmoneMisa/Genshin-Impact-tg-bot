@@ -15,6 +15,7 @@ const updateRank = require("../../../functions/game/arena/updateRank");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const {arenaTempBots} = require("../../../data");
 const getFile = require("../../../functions/getters/getFile");
+const getTime = require("../../../functions/getters/getTime");
 
 module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
@@ -289,11 +290,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     }, callback.message.photo);
 }], [/^arena\.shop\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
-
-    let pvpSign = session.game.inventory.arena.pvpSign;
-    // Добавить срок жизни
-    // Добавить статы после улучшения
-    let fullMessage = `${pvpSign.translatedName} - ур. ${pvpSign.lvl}\nУвеличение исходящего урона по противнику:  ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%\n\nКоличество токенов арены: ${session.game.inventory.arena.tokens}\nСтоимость улучшения на следующий уровень: ${pvpSign.upgrades[pvpSign.lvl + 1].cost}`;
+    let fullMessage = `Количество токенов арены: ${session.game.inventory.arena.tokens}\n`;
 
     if (isBack) {
         await editMessageCaption(fullMessage, {
@@ -302,10 +299,13 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             message_id: callback.message.message_id,
             reply_markup: {
                 inline_keyboard: [[{
-                    text: "Улучшить",
-                    callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
+                    text: "Обычная",
+                    callback_data: `arena.common.${chatId}`
                 }], [{
-                    text: "Назад",
+                    text: "Мировая",
+                    callback_data: `arena.expansion.${chatId}`
+                }], [{
+                    text: "Магазин арены",
                     callback_data: `arena.shop.${chatId}`
                 }],[{
                     text: "Закрыть",
@@ -322,13 +322,10 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{
-                        text: "Обычная",
-                        callback_data: `arena.common.${chatId}`
+                        text: "Улучшить медаль",
+                        callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
                     }], [{
-                        text: "Мировая",
-                        callback_data: `arena.expansion.${chatId}`
-                    }], [{
-                        text: "Магазин арены",
+                        text: "Назад",
                         callback_data: `arena.shop.${chatId}`
                     }],[{
                         text: "Закрыть",
@@ -341,13 +338,10 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{
-                        text: "Обычная",
-                        callback_data: `arena.common.${chatId}`
+                        text: "Улучшить медаль",
+                        callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
                     }], [{
-                        text: "Мировая",
-                        callback_data: `arena.expansion.${chatId}`
-                    }], [{
-                        text: "Магазин арены",
+                        text: "Назад",
                         callback_data: `arena.shop.${chatId}`
                     }],[{
                         text: "Закрыть",
@@ -357,4 +351,44 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             });
         }
     }
+}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade$/, async function (session, callback, [chatId]) {
+    let pvpSign = session.game.inventory.arena.pvpSign;
+    let fullMessage = `Предмет исчезнет через: ${getTime(pvpSign.lifeTime)}\n${pvpSign.translatedName} - ур. ${pvpSign.lvl}\nУвеличение исходящего урона по противнику:  ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%\n\nКоличество токенов арены: ${session.game.inventory.arena.tokens}\n\nУвеличение исходящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value * 100}%\nСтоимость улучшения на следующий уровень: ${pvpSign.upgrades[pvpSign.lvl + 1].cost}`;
+
+    await editMessageCaption(`Ты уверен, что хочешь улучшить медаль?\n\n ${fullMessage}`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Подтвердить улучшение",
+                callback_data: `arena.shop.${chatId}.pvpSignUpgrade.0`
+            }],[{
+                text: "Магазин арены",
+                callback_data: `arena.shop.${chatId}.back`
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    }, callback.message.photo);
+}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade\.0$/, async function (session, callback, [chatId]) {
+    let pvpSign = session.game.inventory.arena.pvpSign;
+    pvpSign.lvl += 1;
+    pvpSign.effects = pvpSign.upgrades[pvpSign.lvl].effects;
+
+    await editMessageCaption(`Вы улучшили медаль до ур. ${session.game.inventory.arena.pvpSign.lvl}!\n\nУвеличение исходящего урона по противнику: ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%`, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            inline_keyboard: [[{
+                text: "Магазин арены",
+                callback_data: `arena.shop.${chatId}.back`
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    }, callback.message.photo);
 }]];

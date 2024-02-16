@@ -3,11 +3,8 @@ module.exports = {
     lvl: 1,
     translatedName: "Медаль Арены",
     lifeTime: 1000 * 60 * 60 * 24 * 30,
-    effects: [{name: "increasePvpDamage", value: 1}, {name: "decreaseIncomingPvpDamage", value: 1}],
+    effects: [{name: "increasePvpDamage", value: 1.05}, {name: "decreaseIncomingPvpDamage", value: 0.03}],
     upgrades: [{
-        cost: 0,
-        effects: [{name: "increasePvpDamage", value: 1.05}, {name: "decreaseIncomingPvpDamage", value: 0.03}]
-    },{
         cost: 180,
         effects: [{name: "increasePvpDamage", value: 1.07}, {name: "decreaseIncomingPvpDamage", value: 0.045}]
     }, {
