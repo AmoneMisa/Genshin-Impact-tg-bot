@@ -221,7 +221,7 @@ function calculateDamage(skill, attackerObj, defenderObj, isArena) {
 
     // Добавляем показатели от медали арены, если считаем урон для арены
     if (isArena) {
-        damage = Math.ceil(damage * rndDmg * attackerObj.increasePvpDamage * defenderObj.decreaseIncomingPvpDamage);
+        damage = Math.ceil(damage * rndDmg * attackerObj.increasePvpDamage * (1 - defenderObj.decreaseIncomingPvpDamage));
     } else {
      // Расчёт по умолчанию
         damage = Math.ceil(damage * rndDmg);
