@@ -1,6 +1,7 @@
 const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
 const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
 const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
+const editMessageMedia = require("../../../functions/tgBotFunctions/editMessageMedia");
 const getSession = require("../../../functions/getters/getSession");
 const bot = require('../../../bot');
 const controlButtons = require('../../../functions/keyboard/controlButtons');
@@ -293,11 +294,14 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     let fullMessage = `Количество токенов арены: ${session?.game?.inventory?.arena?.tokens || 0}\n`;
 
     if (isBack) {
-        await editMessageCaption(fullMessage, {
-            disable_notification: true,
+        let file = getFile(`images/misc`, "arena");
+
+        await editMessageMedia(file, "Какой тип арены тебя интересует?", {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
+            disable_notification: true,
             reply_markup: {
+                selective: true,
                 inline_keyboard: [[{
                     text: "Обычная",
                     callback_data: `arena.common.${chatId}`
@@ -312,47 +316,32 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
                     callback_data: "close"
                 }]]
             }
-        }, callback.message.photo);
+        });
     } else {
         const file = getFile("images/misc", "arenaShop");
 
-        if (file) {
-            await sendPhoto(callback.from.id, file, {
-                caption: fullMessage,
-                disable_notification: true,
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Улучшить медаль",
-                        callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
-                    }], [{
-                        text: "Назад",
-                        callback_data: `arena.shop.${chatId}`
-                    }],[{
-                        text: "Закрыть",
-                        callback_data: "close"
-                    }]]
-                }
-            });
-        } else {
-            await sendMessage(callback.message.chat.id, fullMessage, {
-                disable_notification: true,
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: "Улучшить медаль",
-                        callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
-                    }], [{
-                        text: "Назад",
-                        callback_data: `arena.shop.${chatId}`
-                    }],[{
-                        text: "Закрыть",
-                        callback_data: "close"
-                    }]]
-                }
-            });
-        }
+        await editMessageMedia(file, fullMessage, {
+            chat_id: callback.message.chat.id,
+            message_id: callback.message.message_id,
+            disable_notification: true,
+            reply_markup: {
+                selective: true,
+                inline_keyboard: [[{
+                    text: "Улучшить медаль",
+                    callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
+                }], [{
+                    text: "Назад",
+                    callback_data: `arena.shop.${chatId}.back`
+                }],[{
+                    text: "Закрыть",
+                    callback_data: "close"
+                }]]
+            }
+        });
     }
-}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade$/, async function (session, callback, [chatId]) {
+}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade$/, async function (session, callback, [,chatId]) {
     let pvpSign = session.game.inventory?.arena?.pvpSign || null;
+
     if (!pvpSign) {
         await editMessageCaption(`У тебя нет медали, чтобы её улучшать. Медаль выдаётся в конце каждой недели.`, {
             chat_id: callback.message.chat.id,
@@ -391,7 +380,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             }]]
         }
     }, callback.message.photo);
-}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade\.0$/, async function (session, callback, [chatId]) {
+}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade\.0$/, async function (session, callback, [,chatId]) {
     let pvpSign = session.game.inventory.arena.pvpSign;
     pvpSign.lvl += 1;
     pvpSign.effects = pvpSign.upgrades[pvpSign.lvl].effects;

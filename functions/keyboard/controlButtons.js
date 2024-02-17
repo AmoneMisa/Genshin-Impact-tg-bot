@@ -1,6 +1,6 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
 
-module.exports = function (name, buttonRows, page, homeName) {
+module.exports = function (name, buttonRows, page, homeName = null, homeButtonName = "Главная") {
     if (!buttonRows.length) {
         return [[{
             text: buttonsDictionary["ru"].close,
@@ -39,7 +39,7 @@ module.exports = function (name, buttonRows, page, homeName) {
 
     if (homeName) {
         controlButtons.push({
-           text: "Главная",
+           text: homeButtonName,
            callback_data: homeName
         });
     }
