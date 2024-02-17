@@ -8,6 +8,7 @@ let settings = require('./settings');
 let sendFile = require('./sendFile');
 let getFileAndBackup = require('./getFileAndBackup');
 let hideDeadSouls = require('./hideDeadSouls');
+let sendNewUpdates = require('./sendNewUpdates');
 // let testCommand = require('./testCommand');
 
 module.exports = [
@@ -21,5 +22,6 @@ module.exports = [
     ...sendFile,
     ...getFileAndBackup,
     // ...testCommand,
-    ...hideDeadSouls
+    ...hideDeadSouls,
+    ...sendNewUpdates
 ];
