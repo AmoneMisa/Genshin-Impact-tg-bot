@@ -35,6 +35,7 @@ bot.setMyCommands([
     {command: "reset_games_timers", description: "Сбросить таймеры для персональных игр"},
     {command: "self_mute", description: "Уйти в себя на две минуты"},
     {command: "admin_commands", description: "Список админ команд"},
+    {command: "whats_new", description: "Подписаться или отписаться от новостей от разработчика"},
     {command: "feedback", description: "Обратная связь с разработчиком (Работает в тестовом режиме)"},
 ], {
     scope: {type: "default"}
