@@ -28,6 +28,7 @@ module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: `Выбери три сундучка!`,
             disable_notification: true,
             reply_markup: {
@@ -38,6 +39,7 @@ module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
         });
     } else {
         await sendMessage(msg.from.id, `Выбери три сундучка!`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [

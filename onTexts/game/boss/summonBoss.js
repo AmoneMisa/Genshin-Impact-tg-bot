@@ -38,6 +38,7 @@ module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
     let imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
     if (imagePath) {
         sendPhoto(msg.chat.id, imagePath, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: `${summonBossMessage(chatId, boss, false)}`,
             reply_markup: {
                 inline_keyboard: [...keyboard, [{

@@ -10,6 +10,7 @@ module.exports = [[/(?:^|\s)\/arena\b/, async (msg) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: "Какой тип арены тебя интересует?",
             disable_notification: true,
             reply_markup: {

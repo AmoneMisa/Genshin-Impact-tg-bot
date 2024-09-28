@@ -165,6 +165,7 @@ module.exports = [["boss", async function (session, callback) {
     let imagePath = getLocalImageByPath(aliveBoss.stats.lvl, `bosses/${aliveBoss.name}`);
 
     await sendPhoto(callback.from.id, imagePath, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         caption: `Выбери скилл:\n${message}`,
         chat_id: chatId,
         message_id: messageId,

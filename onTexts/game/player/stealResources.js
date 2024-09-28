@@ -40,6 +40,7 @@ module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: text,
             disable_notification: true,
             reply_markup: {

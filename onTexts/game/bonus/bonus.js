@@ -60,6 +60,7 @@ module.exports = [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
 
     if (file) {
         await sendPhoto(msg.chat.id, file, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: `@${getUserName(session)}, твой выигрыш: ${getEmoji(randomPrize.name)} ${prizeValue} ${randomPrize.translatedName}!`,
             reply_markup: {
                 inline_keyboard: [[{

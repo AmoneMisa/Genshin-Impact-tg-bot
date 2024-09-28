@@ -105,6 +105,7 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
 
     if (imagePath) {
         await sendPhoto(callback.message.chat.id, imagePath, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
             caption: getCaption(buildName, "home", build),
             reply_markup: {
                 inline_keyboard: [[{

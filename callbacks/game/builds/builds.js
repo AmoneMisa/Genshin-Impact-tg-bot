@@ -59,6 +59,7 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
 
     if (file) {
         await sendPhoto(userId, file, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
             caption: `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`,
             disable_notification: true,
             reply_markup: {
@@ -117,6 +118,7 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
 
         if (imagePath) {
             await sendPhoto(callback.message.chat.id, imagePath, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 caption: getCaption('palace', "home", build), reply_markup: {
                     inline_keyboard: keyboard
                 }

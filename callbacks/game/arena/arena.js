@@ -42,6 +42,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
 
         if (file) {
             await sendPhoto(callback.from.id, file, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 caption: fullMessage,
                 disable_notification: true,
                 reply_markup: {

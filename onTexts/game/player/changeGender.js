@@ -10,6 +10,7 @@ module.exports = [[/(?:^|\s)\/select_gender\b/, async (msg, session) => {
     const file = getFile("images/misc", "gender");
 
     await sendPhoto(msg.chat.id, file, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         caption: `@${getUserName(session, "nickname")}, выбери свой пол`,
         disable_notification: true,
         reply_markup: {
