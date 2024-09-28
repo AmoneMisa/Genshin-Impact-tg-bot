@@ -60,7 +60,7 @@ module.exports = [[/(?:^|\s)\/dice\b/, async (msg, session) => {
 
     function startGame() {
         session.game.dice.isStart = true;
-        editMessageText('Кидай кубик. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 12, но меньше 18', {
+        editMessageText(`@${getUserName(session, "nickname")}, кидай кубик. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 12, но меньше 18`, {
             message_id: id,
             chat_id: msg.chat.id,
             disable_notification: true,
