@@ -61,7 +61,7 @@ module.exports = [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
 
     function startGame() {
         session.game.bowling.isStart = true;
-        editMessageText('Делай бросок. Ты выиграешь, если суммарное количество сбитых кеглей за 2 броска будет больше 8. При двух страйках, твоя ставка утроится.', {
+        editMessageText(`@${getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество сбитых кеглей за 2 броска будет больше 8. При двух страйках, твоя ставка утроится.`, {
             message_id: id,
             chat_id: msg.chat.id,
             disable_notification: true,

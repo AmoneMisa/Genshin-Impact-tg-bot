@@ -61,7 +61,7 @@ module.exports = [[/(?:^|\s)\/football\b/, async (msg, session) => {
 
     function startGame() {
         session.game.football.isStart = true;
-        editMessageText('Бей. Ты выиграешь, если суммарное количество очков за 3 удара будет больше 12.', {
+        editMessageText(`@${getUserName(session, "nickname")}, бей. Ты выиграешь, если суммарное количество очков за 3 удара будет больше 12.`, {
             message_id: id,
             chat_id: msg.chat.id,
             disable_notification: true,
