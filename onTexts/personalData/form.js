@@ -13,6 +13,7 @@ module.exports = [[/(?:^|\s)\/form/, async (msg, session) => {
     let name = getUserName(session, "nickname") !== undefined ? getUserName(session, "nickname") : getUserName(session, "name");
 
     sendMessage(msg.chat.id, `@${name}, ${dictionary["ru"].index}`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: JSON.stringify({
             selective: true,

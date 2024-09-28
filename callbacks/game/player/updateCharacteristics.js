@@ -12,6 +12,7 @@ module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async funct
     updatePlayerStats(targetSession);
 
     sendMessage(callback.message.chat.id, `Ты пересчитал характеристики для ${getUserName(targetSession, "name")}. Пожалуйста, проверьте их через /whoami`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true
     }).catch(e => {
         console.error(e);
@@ -25,6 +26,7 @@ module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async funct
     }
 
     sendMessage(callback.message.chat.id, `Ты пересчитал характеристики для всей группы. Пожалуйста, проверьте их через /whoami`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true
     }).catch(e => {
         console.error(e);

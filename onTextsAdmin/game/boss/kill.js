@@ -25,6 +25,7 @@ module.exports = [[/(?:^|\s)\/kill\b/, async (msg) => {
     boss.listOfDamage = [];
 
     return sendMessageWithDelete(msg.chat.id, "Босс убит админом.", {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true
     }, 5 * 1000);
 }]];

@@ -15,6 +15,7 @@ module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
 
     if (remain > 0) {
         await sendMessageWithDelete(msg.from.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${getStringRemainTime(remain)}`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             disable_notification: true,
         }, 6 * 1000);
 

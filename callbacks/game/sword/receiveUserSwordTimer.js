@@ -8,7 +8,9 @@ const getUserName = require('../../../functions/getters/getUserName');
 module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     targetSession.timerSwordCallback = 0;
-    return sendMessage(callback.message.chat.id, `Таймер меча для ${getUserName(targetSession, "name")} обнулён.`);
+    return sendMessage(callback.message.chat.id, `Таймер меча для ${getUserName(targetSession, "name")} обнулён.`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+    });
 }], [/^receive_sword_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback, [, chatId, page]) {
     page = parseInt(page);
 

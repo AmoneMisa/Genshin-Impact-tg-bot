@@ -100,7 +100,9 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
     let foundSession = await getSession(chatId, callback.from.id);
 
     if (foundSession.game.inventory.gold < item.cost) {
-        await sendMessageWithDelete(callback.message.chat.id, `Недостаточно золота`, {});
+        await sendMessageWithDelete(callback.message.chat.id, `Недостаточно золота`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
         return;
     }
 
@@ -129,10 +131,13 @@ module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , 
     let sellItem = shopSellItem(foundSession, item.command, item);
 
     if (typeof sellItem === "string") {
-        return sendMessageWithDelete(callback.message.chat.id, sellItem, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, sellItem, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     await editMessageCaption(`Поздравляем с покупкой ${item.name}!`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: messageId,
         disable_notification: true,

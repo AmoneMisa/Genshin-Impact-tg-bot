@@ -10,6 +10,7 @@ const editMessageText = require('../../../functions/tgBotFunctions/editMessageTe
 module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     sendMessage(callback.message.chat.id, `Сколько золота добавить для ${getUserName(targetSession, "name")}?`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -24,6 +25,7 @@ module.exports = [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(callback.message.chat.id, `Ты добавил ${gold} золота для ${getUserName(targetSession, "name")}.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });
         });

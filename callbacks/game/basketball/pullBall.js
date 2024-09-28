@@ -32,7 +32,9 @@ module.exports = [[/^basketball_pull$/, async function (session, callback) {
         let result = isWinPoints(session.game.basketball.ball, 12, 15);
         if (!result) {
             deleteMessage(chatId, callback.message.message_id)
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.basketball.ball}. Ставка: ${session.game.basketball.bet}`, {}, 7000);
+            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.basketball.ball}. Ставка: ${session.game.basketball.bet}`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            }, 7000);
             return endGame(session);
         }
 
@@ -46,7 +48,9 @@ module.exports = [[/^basketball_pull$/, async function (session, callback) {
         
         sendPrize(session, modifier, 'basketball');
         deleteMessage(chatId, callback.message.message_id)
-        await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.basketball.bet}\nВыигрыш: ${Math.round(session.game.basketball.bet * modifier)}\nСумма очков: ${session.game.basketball.ball}`, {}, 7000);
+        await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.basketball.bet}\nВыигрыш: ${Math.round(session.game.basketball.bet * modifier)}\nСумма очков: ${session.game.basketball.ball}`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 7000);
 
         return endGame(session);
     }

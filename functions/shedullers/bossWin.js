@@ -22,7 +22,8 @@ module.exports = async function () {
             boss.hp = 0;
             boss.listOfDamage = [];
 
-            await sendMessageWithDelete(chatId, "Время для убийства босса истекло. Босс убежал!", {disable_notifications: true}, 60 * 1000);
+            await sendMessageWithDelete(chatId, "Время для убийства босса истекло. Босс убежал!", {
+                disable_notifications: true}, 60 * 1000);
         }
     }
 }

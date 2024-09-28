@@ -50,6 +50,7 @@ module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
     }
 
     sendMessage(msg.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         reply_markup: {
             inline_keyboard: [...keyboard, [{
                 text: buttonsDictionary["ru"].close,

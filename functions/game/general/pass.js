@@ -24,7 +24,9 @@ module.exports = function (session, callback, gameName) {
         endGame(chatSession, callback.message.chat.id, callback.message.message_id, true, gameName);
         return;
     }
-    return sendMessage(callback.message.chat.id, `${getUserName(session, "nickname")}, ты спасовал. Больше что-либо делать в течении игры нельзя.`)
+    return sendMessage(callback.message.chat.id, `${getUserName(session, "nickname")}, ты спасовал. Больше что-либо делать в течении игры нельзя.`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+    })
         .then(message => {
             deleteMessageTimeout(callback.message.chat.id, message.message_id, 7000);
         });

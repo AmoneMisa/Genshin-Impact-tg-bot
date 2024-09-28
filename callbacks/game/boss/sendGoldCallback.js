@@ -12,6 +12,7 @@ module.exports = [[/^sendGoldRecipient\.([\-0-9]+)\.([^.]+)$/, async function (s
     const recipient = await getSession(chatId, recipientId);
 
     sendMessage(callback.message.chat.id, `Сколько хочешь передать? Можно вводить только цифры и целочисленные значения.`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -23,7 +24,9 @@ module.exports = [[/^sendGoldRecipient\.([\-0-9]+)\.([^.]+)$/, async function (s
             let gold = parseInt(replyMsg.text);
 
             if (foundSession.game.inventory.gold < gold) {
-                await sendMessageWithDelete(callback.message.chat.id, `У тебя столько нет. Посмотреть количество золота можно командой /whoami > Инвентарь.`, 10 * 1000);
+                await sendMessageWithDelete(callback.message.chat.id, `У тебя столько нет. Посмотреть количество золота можно командой /whoami > Инвентарь.`, {
+                    ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+                },10 * 1000);
                 return;
             }
 
@@ -31,6 +34,7 @@ module.exports = [[/^sendGoldRecipient\.([\-0-9]+)\.([^.]+)$/, async function (s
             foundSession.game.inventory.gold -= gold;
 
            await sendMessageWithDelete(msg.chat.id, `Ты успешно перевёл ${gold} золота. Посмотреть количество золота можно командой /whoami > Инвентарь.`, {
+               ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
                disable_notification: true
            }, 30 * 1000);
 

@@ -52,6 +52,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             });
         } else {
             await sendMessage(callback.message.chat.id, fullMessage, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [
@@ -85,6 +86,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
 
         if (file) {
             await sendPhoto(callback.from.id, file, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 caption: fullMessage,
                 disable_notification: true,
                 reply_markup: {
@@ -95,6 +97,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
             });
         } else {
             await sendMessage(callback.message.chat.id, fullMessage, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [
@@ -125,6 +128,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     if (arenaType === "common") {
         if (attacker.game.arenaChances < 1) {
             await sendMessage(callback.message.chat.id, `У тебя нет попыток для битв арене.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{text: "Закрыть", callback_data: "close"}]]
@@ -137,6 +141,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     if (arenaType === "expansion") {
         if (attacker.game.arenaExpansionChances < 1) {
             await sendMessage(callback.message.chat.id, `У тебя нет попыток для битв мировой арене.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{text: "Закрыть", callback_data: "close"}]]
@@ -169,6 +174,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     if (arenaType === "common") {
         if (attacker.game.arenaChances < 1) {
             await sendMessage(callback.message.chat.id, `У тебя нет попыток для битв арене.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{text: "Закрыть", callback_data: "close"}]]
@@ -181,6 +187,7 @@ module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (ses
     if (arenaType === "expansion") {
         if (attacker.game.arenaExpansionChances < 1) {
             await sendMessage(callback.message.chat.id, `У тебя нет попыток для битв мировой арене.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{text: "Закрыть", callback_data: "close"}]]

@@ -17,5 +17,7 @@ module.exports = [[/(?:^|\s)\/reset_elements_game\b/, (msg) => {
     chatSession.game.elements.currentRound = 1;
     chatSession.game.elements.countPresses = 0;
 
-    return sendMessage(msg.chat.id, `Сессия игры в элементы сброшена.`);
+    return sendMessage(msg.chat.id, `Сессия игры в элементы сброшена.`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
+    });
 }]];

@@ -19,12 +19,16 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
 
     if (chatSession.game.points.gameSessionIsStart) {
         if (new Date().getTime() - chatSession.game.points.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
-            return sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {}, 7 * 1000)
+            return sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {
+                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+            }, 7 * 1000)
         }
     }
 
     if (isMassGameAlreadyStarted(chatSession)) {
-        return sendMessageWithDelete(msg.chat.id, "Одна из игр на несколько человек уже запущена. Команду нельзя вызвать до окончания групповой игры.", {}, 7 * 1000);
+        return sendMessageWithDelete(msg.chat.id, "Одна из игр на несколько человек уже запущена. Команду нельзя вызвать до окончания групповой игры.", {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+        }, 7 * 1000);
     }
 
     if (!chatSession.hasOwnProperty("game")) {
@@ -60,6 +64,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
     }
 
     sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members, "points")}`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
@@ -81,7 +86,9 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         chatSession.game.points.isStart = true;
         endGameTimer(chatSession, 20 * 1000, msg.chat.id, "points");
 
-        return sendMessageWithDelete(msg.chat.id, `Игра началась. Ставки больше не принимаются.`, {}, 7 * 1000)
+        return sendMessageWithDelete(msg.chat.id, `Игра началась. Ставки больше не принимаются.`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+        }, 7 * 1000)
             .then(() => {
                 editMessageText(pointMessage(chatSession, userId), {
                     chat_id: msg.chat.id,
@@ -101,7 +108,9 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
 
     function startBet() {
         chatSession.game.points.startGameTimeout = +setTimeout(() => startGame(), 25 * 1000);
-        return sendMessageWithDelete(msg.chat.id, `Делайте ставки.`, {}, 7 * 1000)
+        return sendMessageWithDelete(msg.chat.id, `Делайте ставки.`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+        }, 7 * 1000)
             .then(() => {
                 editMessageText(betMessage(chatSession.game.points.players, members), {
                     chat_id: msg.chat.id,

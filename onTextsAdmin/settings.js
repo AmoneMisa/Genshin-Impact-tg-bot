@@ -81,7 +81,8 @@ module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
     chatSession.settingsButtons = buttons;
     await deleteMessage(msg.chat.id, msg.message_id);
     await sendMessage(msg.chat.id, "Нажми на кнопку, чтобы включить или отключить функцию.", {
-            reply_markup: {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
+        reply_markup: {
                 inline_keyboard: [...controlButtons("settings", chatSession.settingsButtons, 1)]
             }
         }

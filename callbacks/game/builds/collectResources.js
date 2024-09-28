@@ -48,7 +48,9 @@ module.exports = [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (ses
     let build = await getBuild(chatId, callback.from.id, buildName);
 
     if (build.upgradeStartedAt) {
-        return sendMessageWithDelete(callback.message.chat.id, "Вы не можете собирать ресурсы со здания, которое в данный момент улучшается", {}, 5000);
+        return sendMessageWithDelete(callback.message.chat.id, "Вы не можете собирать ресурсы со здания, которое в данный момент улучшается", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 5000);
     }
 
     build.lastCollectAt = new Date().getTime();

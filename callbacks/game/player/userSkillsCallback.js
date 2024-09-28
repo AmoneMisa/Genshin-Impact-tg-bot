@@ -27,7 +27,9 @@ module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, cal
     let isCanBeUsed = isPlayerCanUseSkill(foundSession, skill);
 
     if (isCanBeUsed !== 0) {
-        await sendMessageWithDelete(callback.message.chat.id, isPlayerCanUseSkillMessage(isCanBeUsed, skill), {}, 10 * 1000);
+        await sendMessageWithDelete(callback.message.chat.id, isPlayerCanUseSkillMessage(isCanBeUsed, skill), {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
         return;
     }
 
@@ -45,7 +47,9 @@ module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, cal
             let dealDamage = userDealDamage(foundSession, aliveBoss, skill);
             if (dealDamage) {
                 aliveBoss = getAliveBoss(chatId);
-                await sendMessageWithDelete(callback.message.chat.id, userDealDamageMessage(foundSession, aliveBoss, dealDamage), {}, 15 * 1000);
+                await sendMessageWithDelete(callback.message.chat.id, userDealDamageMessage(foundSession, aliveBoss, dealDamage), {
+                    ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+                }, 15 * 1000);
 
                 if (!isBossAlive(aliveBoss)) {
                     await deleteMessage(callback.message.chat.id, callback.message.message_id);
@@ -53,7 +57,9 @@ module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, cal
 
                     await deleteMessage(chatId, chatSession.bossMenuMessageId);
                     let loot = bossSendLoot(aliveBoss, members);
-                    await sendMessageWithDelete(chatId, bossLootMessage(aliveBoss, loot), {}, 25 * 1000);
+                    await sendMessageWithDelete(chatId, bossLootMessage(aliveBoss, loot), {
+                        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+                    }, 25 * 1000);
 
                     aliveBoss.skill = null;
                     aliveBoss.currentHp = 0;
@@ -65,7 +71,9 @@ module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, cal
             let heal = useHealSkill(foundSession, skill);
             foundSession.game.gameClass.stats.hp = Math.max(foundSession.game.gameClass.stats.hp + heal, getMaxHp(foundSession, foundSession.game.gameClass));
 
-            await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(foundSession)}`, {}, 15 * 1000);
+            await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(foundSession)}`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            }, 15 * 1000);
         } else if (skill.isShield) {
             let shield = useShieldSkill(foundSession, skill);
             let shieldEffect = foundSession.game.effects.find(effect => effect.name === "shield")
@@ -76,11 +84,15 @@ module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, cal
                 shieldEffect.value = shield;
             }
 
-            await sendMessageWithDelete(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`, {}, 15 * 1000);
+            await sendMessageWithDelete(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            }, 15 * 1000);
         }
 
         setSkillCooldown(skill, foundSession);
     } else {
-        await sendMessageWithDelete(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.", {}, 15 * 1000);
+        await sendMessageWithDelete(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 15 * 1000);
     }
 }]];

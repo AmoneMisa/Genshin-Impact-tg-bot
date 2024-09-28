@@ -20,7 +20,9 @@ module.exports = [[/(?:^|\s)\/send_gold\b/, async (msg, session) => {
         isGameStarted(session, 'basketball') ||
         isGameStarted(session, 'football') ||
         (session.game.hasOwnProperty("slots") && session.game.slots.hasOwnProperty("state") && session.game.slots.state === 'bets')) {
-        await sendMessage(msg.chat.id, "Ты не можешь переводить золото, играя в игру.");
+        await sendMessage(msg.chat.id, "Ты не можешь переводить золото, играя в игру.", {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
+        });
         return;
     }
 

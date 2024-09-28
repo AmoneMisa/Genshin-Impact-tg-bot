@@ -66,7 +66,9 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
     }
 
     if (!foundedSession.game.builds[buildName].availableTypes.includes(typeName)) {
-        return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 5 * 1000);
     }
 
     await editMessageCaption(getCaption(buildName, "changeType", build), {
@@ -91,7 +93,9 @@ module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sess
     let foundedSession = await getSession(chatId, callback.from.id);
 
     if (!foundedSession.game.builds[buildName].availableTypes.includes(typeName)) {
-        return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {}, 5 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 5 * 1000);
     }
     let build = await getBuild(chatId, callback.from.id, buildName);
     build.type = typeName;

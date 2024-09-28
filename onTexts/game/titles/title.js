@@ -35,6 +35,7 @@ module.exports = [[/(?:^|\s)\/title ([A-яА-яЁё]+)(?:\s|$)/, async (msg, ses
     }
 
     await sendMessageWithDelete(msg.chat.id, message, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{

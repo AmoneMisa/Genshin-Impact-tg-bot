@@ -103,6 +103,7 @@ module.exports = [["boss", async function (session, callback) {
 
     if (imagePath) {
         await sendPhoto(callback.message.chat.id, imagePath, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
             caption: `${summonBossMessage(chatId, boss, false)}`,
             reply_markup: {
                 inline_keyboard: [...keyboard, [{
@@ -113,6 +114,7 @@ module.exports = [["boss", async function (session, callback) {
         });
     } else {
         await sendMessage(callback.message.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
             reply_markup: {
                 inline_keyboard: [...keyboard, [{
                     text: buttonsDictionary["ru"].close,
@@ -127,7 +129,9 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
         return;
     }
 
@@ -178,7 +182,9 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
         return;
     }
 
@@ -202,7 +208,9 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
         return;
     }
 
@@ -252,7 +260,9 @@ module.exports = [["boss", async function (session, callback) {
     let aliveBoss = getAliveBoss(chatId);
 
     if (!aliveBoss) {
-        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {}, 10 * 1000);
+        await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
         return;
     }
 

@@ -15,12 +15,16 @@ async function bet(session, callback, calcFunc) {
     let newBet = calcFunc(session.game.darts.bet);
 
     if (newBet > session.game.inventory.gold) {
-        await sendMessageWithDelete(callback.message.chat.id, 'Нет денег для ставки', {}, 20 * 1000);
+        await sendMessageWithDelete(callback.message.chat.id, 'Нет денег для ставки', {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 20 * 1000);
         return;
     }
 
     if (newBet === 0) {
-        await sendMessageWithDelete(callback.message.chat.id, 'Ты не можешь умножить ставку равную 0', {}, 20 * 1000);
+        await sendMessageWithDelete(callback.message.chat.id, 'Ты не можешь умножить ставку равную 0', {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 20 * 1000);
         return;
     }
 

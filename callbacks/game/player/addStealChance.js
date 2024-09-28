@@ -11,6 +11,7 @@ module.exports = [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (s
     const [, chatId, userId] = callback.data.match(/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
     sendMessage(callback.message.chat.id, `Сколько попыток грабежа добавить для ${getUserName(targetSession, "name")}?`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -25,6 +26,7 @@ module.exports = [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (s
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
             sendMessage(callback.message.chat.id, `Ты добавил ${chanceToSteal} попыток грабежа для ${getUserName(targetSession, "name")}.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });
         });

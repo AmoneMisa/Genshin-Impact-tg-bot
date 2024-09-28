@@ -126,7 +126,9 @@ module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async functio
     if (foundedSession.game.gameClass.stats.name !== "noClass") {
         let [remain] = getTime(foundedSession.changeClassTimer);
         if (remain > 0) {
-            return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${getStringRemainTime(remain)}`, {}, 10 * 1000);
+            return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${getStringRemainTime(remain)}`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            }, 10 * 1000);
         }
     }
 

@@ -178,7 +178,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     }
 
     if (foundedItems.length <= 0) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems)}`, {
@@ -243,7 +245,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     }
 
     if (!foundedItem) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет такого предмета.`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет такого предмета.`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItem, true)}`, {
@@ -294,7 +298,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     }
 
     if (!foundedItem) {
-        return sendMessageWithDelete(callback.message.chat.id, `У тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `У тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     if (itemData.hasOwnProperty("bottleType")) {
@@ -369,14 +375,18 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     );
 
     if (!foundedItem) {
-        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке взаимодействия с (${inventoryTranslate[items]}).`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке взаимодействия с (${inventoryTranslate[items]}).`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     let equipResult = equipItem(foundedSession, foundedItem);
     if (equipResult === 1) {
         unequipItem(foundedSession, foundedItem);
     } else {
-        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке снять предмет (${foundedItem.name}).`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке снять предмет (${foundedItem.name}).`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, снаряжение снято: ${foundedItem.name}!`, {
@@ -417,7 +427,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     );
 
     if (!foundedItem) {
-        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке взаимодействия с (${inventoryTranslate[items]}).`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке взаимодействия с (${inventoryTranslate[items]}).`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     let equipResult = equipItem(foundedSession, foundedItem);
@@ -427,7 +439,9 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         foundedSession.game.inventory.gold += foundedItem.cost;
         foundedSession.game.inventory.equipment.splice(indexOf, 1);
     } else {
-        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке продать предмет (${foundedItem.name}).`, {}, 10 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке продать предмет (${foundedItem.name}).`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, снаряжение продано: ${foundedItem.name}! Получено золота: ${foundedItem.cost}. ${getEmoji("gold")} Твоё золото: ${foundedSession.game.inventory.gold}`, {

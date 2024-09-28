@@ -12,6 +12,7 @@ module.exports = [[/(?:^|\s)\/horoscope\b/, async (msg, session) => {
 
 
     return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, твоё шуточное предсказание: ${start} ${action} ${end}`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             selective: true,

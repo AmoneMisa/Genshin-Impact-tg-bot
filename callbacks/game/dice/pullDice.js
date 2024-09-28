@@ -34,10 +34,14 @@ module.exports = [[/^dice_pull$/, async function (session, callback) {
             let modifier = 1.2;
             sendPrize(session, modifier, 'dice');
             await deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.dice.bet}\nВыигрыш: ${Math.round(session.game.dice.bet * modifier)}\nВыигрышное число: ${session.game.dice.dice}`, {}, 7000);
+            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.dice.bet}\nВыигрыш: ${Math.round(session.game.dice.bet * modifier)}\nВыигрышное число: ${session.game.dice.dice}`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            }, 7000);
         } else {
             await deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма кубиков: ${session.game.dice.dice}. Ставка: ${session.game.dice.bet}`, {}, 7000);
+            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма кубиков: ${session.game.dice.dice}. Ставка: ${session.game.dice.bet}`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            }, 7000);
         }
 
         return endGame(session);

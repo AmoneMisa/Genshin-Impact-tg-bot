@@ -19,10 +19,13 @@ module.exports = [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
     }
 
     if (session.game.bowling.isStart) {
-        return await sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {}, 7000)
+        return await sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+        }, 7000)
     }
 
     sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, твоя ставка: 0`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{

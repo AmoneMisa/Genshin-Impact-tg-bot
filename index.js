@@ -82,7 +82,9 @@ for (let [key, value] of onTexts) {
     bot.onText(key, async function (msg, regExp) {
         if (!isTrusted(msg.chat.id)) {
             debugMessage(`${msg.chat.id} - попытка обратиться к боту.`);
-            return sendMessage(msg.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.");
+            return sendMessage(msg.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.", {
+                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+            });
         }
 
         if (msg.chat.type === "chanel") {
@@ -110,6 +112,7 @@ for (let [key, value] of onTexts) {
         if (commandStatus !== null && !commandStatus) {
             await deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(msg.chat.id, `Команда /${command} отключена. Чтобы её включить используйте /settings`, {
+                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: [[{
@@ -149,7 +152,9 @@ bot.on("left_chat_member", async (msg) => {
 bot.on("callback_query", async (callback) => {
     if (!isTrusted(callback.message.chat.id)) {
         debugMessage(`${callback.message.chat.id} - попытка обратиться к боту.`);
-        return sendMessage(callback.message.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.");
+        return sendMessage(callback.message.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        });
     }
 
     let session = await getSession(callback.message.chat.id, callback.from.id);

@@ -16,6 +16,7 @@ module.exports = [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session)
         }
 
         sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${getUserName(session, "nickname")}?`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             disable_notification: true,
             reply_markup: {
                 selective: true,

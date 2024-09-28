@@ -26,7 +26,9 @@ module.exports = [[/^stealResources\.([\-0-9]+)\.([0-9]+)$/, async function (ses
     }
 
     if (foundSession.game.chanceToSteal === 0) {
-        return sendMessageWithDelete(callback.message.chat.id, `У тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {}, 15 * 1000);
+        return sendMessageWithDelete(callback.message.chat.id, `У тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 15 * 1000);
     }
 
     let message;

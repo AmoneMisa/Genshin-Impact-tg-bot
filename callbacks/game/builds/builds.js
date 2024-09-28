@@ -123,6 +123,7 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
             });
         } else {
             await sendMessage(callback.message.chat.id, getCaption('palace', "home", build), {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 reply_markup: {
                     inline_keyboard: keyboard
                 }
@@ -166,12 +167,14 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
 
         if (imagePath) {
             await sendPhoto(callback.message.chat.id, imagePath, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 caption: getCaption('goldMine', "home", build), reply_markup: {
                     inline_keyboard: keyboard
                 }
             })
         } else {
             await sendMessage(callback.message.chat.id, getCaption('goldMine', "home", build), {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 reply_markup: {
                     inline_keyboard: keyboard
                 }
@@ -215,12 +218,14 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
 
         if (imagePath) {
             await sendPhoto(callback.message.chat.id, imagePath, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 caption: getCaption('crystalLake', "home", build), reply_markup: {
                     inline_keyboard: keyboard
                 }
             })
         } else {
             await sendMessage(callback.message.chat.id, getCaption('crystalLake', "home", build), {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 reply_markup: {
                     inline_keyboard: keyboard
                 }
@@ -265,12 +270,14 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
 
         if (imagePath) {
             await sendPhoto(callback.message.chat.id, imagePath, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 caption: getCaption('ironDeposit', "home", build), reply_markup: {
                     inline_keyboard: keyboard
                 }
             })
         } else {
             await sendMessage(callback.message.chat.id, getCaption('ironDeposit', "home", build), {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 reply_markup: {
                     inline_keyboard: keyboard
                 }
@@ -315,12 +322,14 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
 
         if (imagePath) {
             await sendPhoto(callback.message.chat.id, imagePath, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 caption: getCaption('traineeArea', "home", build), reply_markup: {
                     inline_keyboard: keyboard
                 }
             })
         } else {
             await sendMessage(callback.message.chat.id, getCaption('traineeArea', "home", build), {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 reply_markup: {
                     inline_keyboard: keyboard
                 }

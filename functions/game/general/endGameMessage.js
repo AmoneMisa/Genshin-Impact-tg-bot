@@ -7,5 +7,7 @@ module.exports = function (winners, chatId, messageId, isDefault = true, gameNam
         deleteMessage(chatId, messageId);
     }
 
-    return sendMessageWithDelete(chatId, getWinners(winners, gameName), {}, 60 * 1000);
+    return sendMessageWithDelete(chatId, getWinners(winners, gameName), {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+    }, 60 * 1000);
 };

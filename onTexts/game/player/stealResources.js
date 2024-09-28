@@ -20,7 +20,9 @@ module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     let [attackerRemain] = getTime(session.game.stealImmuneTimer);
 
     if (session.game.chanceToSteal === 0) {
-        return sendMessageWithDelete(msg.from.id, `У тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {}, 15 * 1000);
+        return sendMessageWithDelete(msg.from.id, `У тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+        }, 15 * 1000);
     }
 
     const file = getFile("images/misc", "stealResources");

@@ -7,5 +7,7 @@ module.exports = [[/(?:^|\s)\/reset_darts_game\b/, async (msg, session) => {
 
     endGame(session);
 
-    await sendMessageWithDelete(msg.chat.id, `Сессия игры в дартс сброшена.`, {}, 3000);
+    await sendMessageWithDelete(msg.chat.id, `Сессия игры в дартс сброшена.`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+    }, 3000);
 }]];

@@ -9,7 +9,9 @@ module.exports = [[/(?:^|\s)\/exchange ([0-9]+)\b/, async (msg, session, [ , amo
     let crystals = Math.round(parseInt(amount));
 
     if (session.game.inventory.gold < crystals * 1500) {
-        return sendMessageWithDelete(msg.from.id, `${getUserName(session, "nickname")}, у тебя не хватает ${crystals * 1500 - session.game.inventory.gold} золота для этой покупки`, {}, 10 * 1000);
+        return sendMessageWithDelete(msg.from.id, `${getUserName(session, "nickname")}, у тебя не хватает ${crystals * 1500 - session.game.inventory.gold} золота для этой покупки`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+        }, 10 * 1000);
     }
 
     session.game.inventory.gold -= crystals * 1500;
@@ -20,5 +22,7 @@ module.exports = [[/(?:^|\s)\/exchange ([0-9]+)\b/, async (msg, session, [ , amo
 
     session.game.inventory.crystals += crystals;
 
-    return sendMessageWithDelete(msg.from.id, `Ты купил ${getEmoji("crystals")} ${crystals} кристаллов.`, { disable_notification: true }, 10 * 1000);
+    return sendMessageWithDelete(msg.from.id, `Ты купил ${getEmoji("crystals")} ${crystals} кристаллов.`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
+        disable_notification: true }, 10 * 1000);
 }]];

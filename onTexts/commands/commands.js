@@ -54,6 +54,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     }
 
     await sendMessage(msg.chat.id, message, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
@@ -71,6 +72,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     }
 
     await sendMessage(msg.chat.id, message, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
@@ -107,6 +109,7 @@ module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
     }
 
     await sendMessage(msg.chat.id, message, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{

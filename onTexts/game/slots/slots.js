@@ -9,7 +9,9 @@ module.exports = [[/(?:^|\s)\/slots\b/, async (msg, session) => {
 
     if (session.game.hasOwnProperty('slots')) {
         if (new Date().getTime() - session.game.slots.startedAt <= 2 * 60 * 1000) {
-            await sendMessageWithDelete(msg.chat.id, `Игра в слоты уже идёт, @${getUserName(session, "nickname")}`, {}, 20 * 1000);
+            await sendMessageWithDelete(msg.chat.id, `Игра в слоты уже идёт, @${getUserName(session, "nickname")}`, {
+                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+            }, 20 * 1000);
             return;
         }
     }
@@ -21,6 +23,7 @@ module.exports = [[/(?:^|\s)\/slots\b/, async (msg, session) => {
     };
 
     const sentMessage = await sendMessage(msg.chat.id, `Ставка: ${session.game.slots.bet}`, {
+        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{

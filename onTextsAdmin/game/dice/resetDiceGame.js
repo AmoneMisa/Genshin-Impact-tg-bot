@@ -6,5 +6,6 @@ module.exports = [[/(?:^|\s)\/reset_dice_game\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     endGame(session);
 
-    await sendMessageWithDelete(msg.chat.id, `Сессия игры в кубик сброшена.`, {}, 3000);
+    await sendMessageWithDelete(msg.chat.id, `Сессия игры в кубик сброшена.`, {...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
+    }, 3000);
 }]];

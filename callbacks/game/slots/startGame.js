@@ -50,7 +50,9 @@ module.exports = [
             } while (isWinSpins(resultSpins));
         }
 
-        let sentMessage = await sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, ${resultSpins.slice(0, 1).join('')}`);
+        let sentMessage = await sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, ${resultSpins.slice(0, 1).join('')}`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        });
         setTimeout(async () => {
             if (!session.game.hasOwnProperty('slots')) {
                 return;

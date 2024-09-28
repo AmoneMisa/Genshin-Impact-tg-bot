@@ -11,6 +11,7 @@ const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage")
 module.exports = [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     sendMessage(callback.message.chat.id, `Сколько опыта добавить для ${getUserName(targetSession, "name")}?`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -26,6 +27,7 @@ module.exports = [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (ses
             deleteMessage(msg.chat.id, msg.message_id);
             setLevel(targetSession);
             return sendMessage(callback.message.chat.id, `Ты добавил ${exp} опыта для ${getUserName(targetSession, "name")}.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });
         })

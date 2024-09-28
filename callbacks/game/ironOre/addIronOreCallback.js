@@ -11,6 +11,7 @@ module.exports = [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
     const [, chatId, userId] = callback.data.match(/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
     sendMessage(callback.message.chat.id, `Сколько железной руды добавить для ${getUserName(targetSession, "name")}?`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -25,6 +26,7 @@ module.exports = [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(callback.message.chat.id, `Ты добавил ${ironOre} железной руды для ${getUserName(targetSession, "name")}.`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });
         });

@@ -18,11 +18,14 @@ module.exports = [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
     }).then(res => {
         if (res) {
             sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, получил мут на 2 минуты.`, {
-                disable_notification: true
+                disable_notification: true,
+                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
+
             })
         } else {
             sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, админу нельзя замутаться.`, {
-                disable_notification: true
+                disable_notification: true,
+                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
             });
             debugMessage(`${getUserName(session, "nickname")},\n\n${JSON.stringify(session.userChatData)},\n\nsuccess - ${success}`);
         }
