@@ -4,7 +4,6 @@ const getRandomChest = require('../../../functions/game/chest/getRandomChest');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
 const getFile = require("../../../functions/getters/getFile");
 
 module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {

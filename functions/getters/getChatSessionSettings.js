@@ -5,7 +5,7 @@ module.exports = function (chatId) {
     let settingsTemplate = {
         // 1 - on
         // 0 - off
-        dices: 1,
+        dice: 1,
         chests: 1,
         boss: 1,
         form: 1,

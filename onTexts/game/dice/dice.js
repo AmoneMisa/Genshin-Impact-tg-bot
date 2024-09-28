@@ -1,5 +1,4 @@
 const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const getSession = require('../../../functions/getters/getSession');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
 const getUserName = require('../../../functions/getters/getUserName');
 const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
