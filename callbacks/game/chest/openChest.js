@@ -63,6 +63,10 @@ let prizes = [{
 }];
 
 module.exports = [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callback, [, chatId, chest]) {
+    if (session.chestTries < 1) {
+        return;
+    }
+
     let foundSession = await getSession(chatId, callback.from.id);
     foundSession.chestCounter = foundSession.chestCounter || 0;
     foundSession.chosenChests = foundSession.chosenChests || [];

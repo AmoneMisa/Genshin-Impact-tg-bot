@@ -63,7 +63,7 @@ function check(session, command, item, isDaily) {
             session.chestCounter = 0;
             session.chosenChests = [];
             session.chestButtons = [];
-            session.timerOpenChestCallback = 0;
+            session.chestTries = 1;
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("palace") && command !== "palaceChangeName") {
             let buildType = shopTemplate.filter(item => item.command === command).map(item => item.type)[0];
