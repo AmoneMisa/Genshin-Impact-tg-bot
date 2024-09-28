@@ -29,7 +29,6 @@ module.exports = [[/(?:^|\s)\/shop\b/, async (msg, session) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`,
             disable_notification: true,
             reply_markup: {
@@ -38,7 +37,6 @@ module.exports = [[/(?:^|\s)\/shop\b/, async (msg, session) => {
         });
     } else {
         await sendMessage(msg.from.id, `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(msg.chat.id), 1)

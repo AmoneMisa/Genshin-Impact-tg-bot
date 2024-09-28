@@ -12,7 +12,6 @@ module.exports = [[/(?:^|\s)\/arena_leaderboard\b/, async (msg) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: playersList,
             disable_notification: true,
             reply_markup: {
@@ -41,7 +40,6 @@ module.exports = [[/(?:^|\s)\/arena_leaderboard\b/, async (msg) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: playersList,
             disable_notification: true,
             reply_markup: {

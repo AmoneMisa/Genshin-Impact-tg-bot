@@ -11,7 +11,6 @@ module.exports = [[/(?:^|\s)\/lucky_roll\b/, async (msg, session) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: `@${getUserName(session, "nickname")}, выбери спираль удачи`,
             disable_notification: true,
             reply_markup: {

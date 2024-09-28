@@ -63,7 +63,7 @@ module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
         chatSession.game.points.players[userId].usedItems = [];
     }
 
-    sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members, "points")}`, {
+    sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members, "point")}`, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {

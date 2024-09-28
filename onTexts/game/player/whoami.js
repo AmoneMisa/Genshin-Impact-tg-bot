@@ -14,7 +14,6 @@ module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
 
     if (file) {
         return sendPhoto(msg.from.id, file, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             caption: `${userGetStats(session)}`,
             disable_notification: true,
             reply_markup: {
@@ -41,7 +40,6 @@ module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
         });
     } else {
         await sendMessage(msg.from.id, `${userGetStats(session)}`, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
