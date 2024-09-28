@@ -17,6 +17,7 @@ const horoscopes = require('./horoscopes');
 const titles = require('./titles');
 const bonus = require('./bonus');
 const arena = require('./arena');
+const searchGame = require('./searchGame');
 
 module.exports = [
     ...sendGold,
@@ -37,5 +38,6 @@ module.exports = [
     ...horoscopes,
     ...titles,
     ...bonus,
-    ...arena
+    ...arena,
+    ...searchGame
 ];
