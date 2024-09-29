@@ -73,7 +73,6 @@ function getPotionsMessage(potions) {
 
     let message = `\n${getEmoji("potions")} ${inventoryDictionary["potions"]}:\n`;
     for (let potion of filteredPotions) {
-
         let findStr = `${potion.bottleType}.${potion.type}`;
         message += `${getEmoji(findStr)} ${potion.name}: ${potion.description}. Количество: ${potion.count}\n`;
     }

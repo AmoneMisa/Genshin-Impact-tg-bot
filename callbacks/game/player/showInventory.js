@@ -58,7 +58,6 @@ function buildInventoryCategoryItemKeyboard(foundedItems, userId, items, isAppro
     let i = 0;
 
     for (let [j, item] of foundedItems) {
-
         if (i % 2 === 0) {
             tempArray = [];
             buttons.push(tempArray);
@@ -94,17 +93,19 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
     let replyMarkup = {};
 
     let foundedItems = [];
-    for (let [key, value] of Object.entries(inventory)) {
+    for (let [itemType, item] of Object.entries(inventory)) {
 
-        if (typeof value === "string" || typeof value === "number" || key === "gacha") {
+        if (typeof item === "string" || typeof item === "number" || itemType === "gacha") {
             continue;
         }
 
-        for (let item of value) {
-            if (item.hasOwnProperty("bottleType")) {
-                foundedItems = [...foundedItems, ...value.filter(item => item.count > 0)];
-            } else {
-                foundedItems.push(item);
+        if (typeof item === "object") {
+            for (let [_key, _value] of Object.entries(item)) {
+                if (_key === "bottleType") {
+                    foundedItems = [...foundedItems, ...item.filter(_item => _item.count > 0)];
+                } else {
+                    foundedItems.push(item);
+                }
             }
         }
     }
@@ -173,11 +174,13 @@ module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (
         itemsWithIndex = foundedSession.game.inventory.potions.map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
     } else {
-        itemsWithIndex = foundedSession.game.inventory[items].map((item, i) => [i, item]);
-        foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
+        if (Array.isArray(foundedSession.game.inventory[items]) && foundedSession.game.inventory[items].length > 0) {
+            itemsWithIndex = foundedSession.game.inventory[items].map((item, i) => [i, item]);
+            foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
+        }
     }
 
-    if (foundedItems.length <= 0) {
+    if (!foundedItems || foundedItems.length <= 0) {
         return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);

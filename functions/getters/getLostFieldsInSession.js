@@ -75,15 +75,25 @@ module.exports = function (session) {
         },
         inventory: {
             arena: {
+                name: "Предметы арены",
                 tokens: 0,
                 pvpSign: null
             },
             gold: 0,
             crystals: 0,
             ironOre: 0,
-            potions: lodash.cloneDeep(potionsInInventoryTemplate),
-            gacha: [],
-            equipment: []
+            potions: {
+                name: "Зелья",
+                items: lodash.cloneDeep(potionsInInventoryTemplate)
+            },
+            gacha: {
+                name: "Предметы гачи",
+                items: []
+            },
+            equipment: {
+                name: "Экипировка",
+                items: []
+            }
         },
         respawnTime: 0,
         shopTimers: {
