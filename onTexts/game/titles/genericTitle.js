@@ -7,25 +7,42 @@ const getMembers = require("../../../functions/getters/getMembers");
 const getTime = require("../../../functions/getters/getTime");
 const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
 const data = require("../../../data");
+const {openAIApiKey} = require("../../../config");
+const axios = require("axios");
+const debugMessage = require("../../../functions/tgBotFunctions/debugMessage");
 
-module.exports = [[/(?:^|\s)\/title ([A-яА-яЁё]+)(?:\s|$)/, async (msg, session, [, title]) => {
+module.exports = [[/(?:^|\s)\/title/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-
-    if (!title) {
-        return sendMessageWithDelete(msg.chat.id, "Чтобы присвоить титул случайному участнику группы, необходимо использовать команду в виде: '/title текст' - команда принимает одно слово после ввода и устанавливает его в качестве титула", {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-            disable_notification: true
-        }, 30 * 1000);
-    }
 
     let message;
     let members = getMembers(msg.chat.id);
     let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided);
     let randomMember = filteredMembers[getRandom(0, filteredMembers.length - 1)];
 
+    async function getFunnyTitle() {
+        const response = await axios.post('https://api.openai.com/v1/completions', {
+            prompt: "Сгенерируй смешной титул 18+",
+            model: "davinci-002\t\n",
+            max_tokens: 50
+        }, {
+            headers: {
+                'Authorization': `Bearer ${openAIApiKey}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        return response.data.choices[0].text.trim();
+    }
+
+    let title = await getFunnyTitle();
+    if (!title) {
+        debugMessage("Произошла ошибка при попытке сгенерировать титул");
+        return;
+    }
+
     if (!session.timerTitleCallback || new Date().getTime() >= session.timerTitleCallback) {
         session.timerTitleCallback = new Date().getTime() + 10 * 60 * 1000;
-        message = `Сегодня ты, @${getUserName(randomMember, "nickname")} - ${title}`;
+        message = `Сегодня ты, @${getUserName(randomMember, "nickname")} - ${await getFunnyTitle()}`;
 
         if (!data.titles[msg.chat.id]) {
             data.titles[msg.chat.id] = [];

@@ -58,7 +58,7 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
     const file = getFile("images/misc", "builds");
 
     if (file) {
-        await sendPhoto(userId, file, {
+        sendPhoto(userId, file, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
             caption: `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`,
             disable_notification: true,
@@ -67,7 +67,7 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
             }
         }).then(message => id = message.message_id);
     } else {
-        await sendMessage(userId, `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`, {
+        sendMessage(userId, `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: buttons
