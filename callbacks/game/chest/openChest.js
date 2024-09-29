@@ -9,7 +9,8 @@ const editChest = require('../../../functions/game/chest/editChest');
 const bot = require('../../../bot');
 const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
 
-let prizes = [{
+let prizes = [
+    {
     value: {
         name: "experience",
         translatedName: "опыта",

@@ -2,6 +2,10 @@ const bot = require('../../../bot');
 const getEmoji = require("../../../functions/getters/getEmoji");
 
 module.exports = async function (prizeType, button, session, callback) {
+    if (session.chestTries < 1) {
+        return;
+    }
+
     session.chestCounter++;
 
     let foundButtonForChange;
