@@ -1,5 +1,3 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
 const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
 const editMessageMedia = require('../../../functions/tgBotFunctions/editMessageMedia');
 const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
@@ -13,7 +11,6 @@ const getPlayerGameClassMessage = require("../../../functions/game/player/getter
 const classes = require("../../../templates/classStatsTemplate");
 const getEmoji = require('../../../functions/getters/getEmoji');
 const getSession = require('../../../functions/getters/getSession');
-const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
 const checkUserCall = require("../../../functions/misc/checkUserCall");
 const updatePlayerStats = require("../../../functions/game/player/updatePlayerStats");
 const getFile = require("../../../functions/getters/getFile");

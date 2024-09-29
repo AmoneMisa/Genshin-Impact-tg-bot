@@ -24,6 +24,7 @@ module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, call
     let foundedSession = await getSession(chatId, callback.from.id);
     let userId = foundedSession.userChatData.user.id;
     let buildsList = await getBuildList(chatId, userId);
+
     let defaultBuilds = getBuildListFromTemplate();
 
     for (let [key, build] of Object.entries(defaultBuilds)) {

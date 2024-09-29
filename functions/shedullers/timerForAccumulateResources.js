@@ -11,6 +11,11 @@ module.exports = function () {
             for (let build of session.game.builds) {
                 let buildTemplate = buildsTemplate[build.name];
 
+
+                    if (!build.lastCollectAt) {
+                        build.lastCollectAt = Date.now();
+                    }
+
                 if (Date.now() - build.lastCollectedAt > buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000) {
                     build.isCollectedResources = false;
                 } else if (Date.now() - build.lastCollectedAt > 0) {
