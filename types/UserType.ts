@@ -1,6 +1,7 @@
 import {UserFormType} from "./UserFormType";
 import {ClassStatsType} from "./ClassStatsType";
 import {UserSkillType} from "./UserSkillType";
+import {CharacterType} from "./CharacterType";
 
 export type UserType = {
     isHided: boolean,
@@ -32,21 +33,7 @@ export type UserType = {
         },
         builds: object,
         chanceToSteal: number,
-        character: {
-            head: object,
-            hands: object,
-            leftHand: object,
-            rightHand: object,
-            legs: object,
-            leftEar: object,
-            rightEar: object,
-            leftRing: object,
-            rightRing: object,
-            necklace: object,
-            up: object,
-            down: object,
-            cloak: object
-        },
+        character: CharacterType,
         darts: {
             bet: number,
             dart: number,
@@ -59,8 +46,8 @@ export type UserType = {
             dice: number,
             counter: number
         },
-        effects: [],
-        equipmentStats: {},
+        effects: object[],
+        equipmentStats: object,
         football: {
             bet: number,
             ball: number,

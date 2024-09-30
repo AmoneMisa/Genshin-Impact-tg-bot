@@ -1,5 +1,6 @@
 const {sessions} = require("../../data");
 const buildsTemplate = require("../../template/buildsTemplate");
+const debugMessage = require("../tgBotFunctions/debugMessage");
 
 module.exports = function () {
     for (let chatSession of Object.values(sessions)) {
@@ -13,13 +14,14 @@ module.exports = function () {
 
                 if (!build.lastCollectAt) {
                     build.lastCollectAt = Date.now();
+                    debugMessage(`${session.game.builds[build.name].lastCollectAt} - попытка обратиться к боту.`);
                 }
 
-                if (Date.now() - build.lastCollectedAt > buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000) {
+                if (Date.now() - build.lastCollectAt > buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000) {
                     build.isCollectedResources = false;
-                } else if (Date.now() - build.lastCollectedAt > 0) {
+                } else if (Date.now() - build.lastCollectAt > 0) {
                     build.isCollectedResources = true;
-                    build.lastCollectedAt = Date.now();
+                    build.lastCollectAt = Date.now();
                 }
             }
         }
