@@ -22,6 +22,7 @@ export default [[/(?:^|\s)\/creator_commands\b/, async (msg) => {
         "/reset_sword_timer - Сбросить таймеры мечей у всех пользователей\n"+
         "/clear_titles - Очистить титулы от некорректных данных\n" +
         "/clear_boss_sessions - Очистить сессии боссов\n" +
-        "/send_new_updates - Отправить новости по поводу бота\n"
+        "/send_new_updates - Отправить новости по поводу бота\n" +
+        "/update_users - Обновить поля пользователей\n"
     );
 }]];

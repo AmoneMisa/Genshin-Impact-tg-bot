@@ -9,6 +9,7 @@ import sendFile from './sendFile.js';
 import getFileAndBackup from './getFileAndBackup.js';
 import hideDeadSouls from './hideDeadSouls.js';
 import sendNewUpdates from './sendNewUpdates.js';
+import updateUserFields from "./updateUserFields.js";
 // let testCommand = require('./testCommand');
 
 export default [
@@ -23,5 +24,6 @@ export default [
     ...getFileAndBackup,
     // ...testCommand,
     ...hideDeadSouls,
-    ...sendNewUpdates
+    ...sendNewUpdates,
+    ...updateUserFields
 ];
