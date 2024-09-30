@@ -1,13 +1,13 @@
-const getChatSession = require("../../getters/getChatSession");
-const validateGameSession = require("./validateGameSession");
-const endGameTimer = require("./endGameTimer");
-const checkAllPlayersPassed = require("./checkAllPlayersPassed");
-const endGame = require("./endGame");
-const sendMessage = require("../../tgBotFunctions/sendMessage");
-const getUserName = require("../../getters/getUserName");
-const deleteMessageTimeout = require("../../tgBotFunctions/deleteMessageTimeout");
+import getChatSession from '../../getters/getChatSession.js';
+import validateGameSession from './validateGameSession.js';
+import endGameTimer from './endGameTimer.js';
+import checkAllPlayersPassed from './checkAllPlayersPassed.js';
+import endGame from './endGame.js';
+import sendMessage from '../../tgBotFunctions/sendMessage.js';
+import getUserName from '../../getters/getUserName.js';
+import deleteMessageTimeout from '../../tgBotFunctions/deleteMessageTimeout.js';
 
-module.exports = function (session, callback, gameName) {
+export default function (session, callback, gameName) {
     let chatSession = getChatSession(callback.message.chat.id);
     let userId = callback.from.id;
     if (!validateGameSession(chatSession.game.points, userId, gameName)) {

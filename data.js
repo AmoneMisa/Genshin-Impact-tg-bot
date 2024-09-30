@@ -1,11 +1,11 @@
-const fs = require('fs');
+import fs from 'fs';
 
-let sessions;
-let titles;
-let bosses;
-let trustedChats;
-let arenaRating;
-let arenaTempBots;
+export let sessions;
+export let titles;
+export let bosses;
+export let trustedChats;
+export let arenaRating;
+export let arenaTempBots;
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -48,7 +48,7 @@ try {
     arenaTempBots = [];
 }
 
-function updTrustedChats() {
+export function updTrustedChats() {
     let _trustedChats;
     try {
         let trustedChatsJson = fs.readFileSync("./trustedChats.json");
@@ -59,7 +59,7 @@ function updTrustedChats() {
     trustedChats.splice(0, trustedChats.length, ..._trustedChats);
 }
 
-function updArenaTempBots() {
+export function updArenaTempBots() {
     let _arenaTempBots;
     try {
         let trustedChatsJson = fs.readFileSync("./arenaTempBots.json");
@@ -70,14 +70,4 @@ function updArenaTempBots() {
     arenaTempBots.splice(0, arenaTempBots.length, ..._arenaTempBots);
 }
 
-module.exports = {
-    chatId: null,
-    sessions,
-    titles,
-    bosses,
-    trustedChats,
-    arenaRating,
-    arenaTempBots,
-    updTrustedChats,
-    updArenaTempBots
-};
+export let chatId = null;

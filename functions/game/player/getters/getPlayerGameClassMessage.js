@@ -1,29 +1,29 @@
-const getAttack = require("./getAttack");
-const getDefence = require("./getDefence");
-const getCriticalChance = require("./getCriticalChance");
-const getCriticalDamage = require("./getCriticalDamage");
-const getIncomingDamageModifier = require("./getIncomingDamageModifier");
-const getAdditionalDamageMul = require("./getAdditionalDamageMul");
-const getMaxHp = require("./getMaxHp");
-const getMaxMp = require("./getMaxMp");
-const getMaxCp = require("./getMaxCp");
-const getCurrentCp = require("./getCurrentCp");
-const getCurrentMp = require("./getCurrentMp");
-const getCurrentHp = require("./getCurrentHp");
-const getHpRestoreSpeed = require("./getHpRestoreSpeed");
-const getCpRestoreSpeed = require("./getCpRestoreSpeed");
-const getMpRestoreSpeed = require("./getMpRestoreSpeed");
-const getBlock = require("./getBlock");
-const getEvasion = require("./getEvasion");
-const getAccuracy = require("./getAccuracy");
-const getDamageMultiplier = require("./getDamageMultiplier");
-const getEmoji = require('../../../getters/getEmoji');
-const statsDictionary = require("../../../../dictionaries/statsDictionary");
+import getAttack from './getAttack.js';
+import getDefence from './getDefence.js';
+import getCriticalChance from './getCriticalChance.js';
+import getCriticalDamage from './getCriticalDamage.js';
+import getIncomingDamageModifier from './getIncomingDamageModifier.js';
+import getAdditionalDamageMul from './getAdditionalDamageMul.js';
+import getMaxHp from './getMaxHp.js';
+import getMaxMp from './getMaxMp.js';
+import getMaxCp from './getMaxCp.js';
+import getCurrentCp from './getCurrentCp.js';
+import getCurrentMp from './getCurrentMp.js';
+import getCurrentHp from './getCurrentHp.js';
+import getHpRestoreSpeed from './getHpRestoreSpeed.js';
+import getCpRestoreSpeed from './getCpRestoreSpeed.js';
+import getMpRestoreSpeed from './getMpRestoreSpeed.js';
+import getBlock from './getBlock.js';
+import getEvasion from './getEvasion.js';
+import getAccuracy from './getAccuracy.js';
+import getDamageMultiplier from './getDamageMultiplier.js';
+import getEmoji from '../../../getters/getEmoji.js';
+import statsDictionary from '../../../../dictionaries/statsDictionary.js';
 
-const lodash = require("lodash");
-const isHasPenalty = require("../../equipment/isHasPenalty");
+import lodash from 'lodash';
+import isHasPenalty from '../../equipment/isHasPenalty.js';
 
-module.exports = function (session, baseStats, playerEffects, gameClassTemplate) {
+export default function (session, baseStats, playerEffects, gameClassTemplate) {
     let message = "";
     let gameClass = session.game.gameClass;
 

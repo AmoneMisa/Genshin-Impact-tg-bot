@@ -1,6 +1,6 @@
-const getSession = require('../../getters/getSession');
+import getSession from '../../getters/getSession.js';
 
-module.exports = async function (chatId, userId) {
+export default async function (chatId, userId) {
     const session = await getSession(chatId, userId);
     return session.game.builds;
 };

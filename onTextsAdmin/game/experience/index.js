@@ -1,3 +1,3 @@
-const addExperience = require('./addExperience');
+import addExperience from './addExperience.js';
 
-module.exports = [...addExperience];
+export default [...addExperience];

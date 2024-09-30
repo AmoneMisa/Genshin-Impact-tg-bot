@@ -1,11 +1,11 @@
-const getMembers = require("../getters/getMembers");
-const bossDealDamage = require("../game/boss/bossDealDamage");
-const getBossDealDamageMessage = require("../game/boss/getters/getBossDealDamageMessage");
-const isBossAlive = require("../game/boss/getBossStatus/isBossAlive");
-const sendMessageWithDelete = require('../tgBotFunctions/sendMessageWithDelete');
-const {bosses, sessions} = require("../../data");
+import getMembers from '../getters/getMembers.js';
+import bossDealDamage from '../game/boss/bossDealDamage.js';
+import getBossDealDamageMessage from '../game/boss/getters/getBossDealDamageMessage.js';
+import isBossAlive from '../game/boss/getBossStatus/isBossAlive.js';
+import sendMessageWithDelete from '../tgBotFunctions/sendMessageWithDelete.js';
+import { bosses, sessions } from '../../data.js';
 
-module.exports = async function () {
+export default async function () {
     for (let [chatId, bossesArray] of Object.entries(bosses)) {
         for (let boss of bossesArray) {
             if (!isBossAlive(boss)) {

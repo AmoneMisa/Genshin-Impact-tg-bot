@@ -1,9 +1,9 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getFile = require("../../../functions/getters/getFile");
-const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getFile from '../../../functions/getters/getFile.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
 
-module.exports = [[/(?:^|\s)\/pet\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/pet\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     const file = getFile("images/pet", session?.pet?.type || "default");

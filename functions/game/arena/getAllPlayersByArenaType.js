@@ -1,15 +1,14 @@
-const getSession = require("../../getters/getSession");
-import data from "../../../data";
-const {sessions} = data;
+import getSession from '../../getters/getSession.js';
+import {arenaRating, sessions} from "../../../data.js";
 
-module.exports = async function (arenaType, chatId, type = "rating") {
+export default async function (arenaType, chatId, type = "rating") {
     let currentRating;
     let players = [];
 
     if (arenaType === "common") {
-        currentRating = data.arenaRating[arenaType][chatId];
+        currentRating = arenaRating[arenaType][chatId];
     } else {
-        currentRating = data.arenaRating[arenaType];
+        currentRating = arenaRating[arenaType];
     }
 
     if (type === "rating") {

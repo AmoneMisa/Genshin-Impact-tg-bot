@@ -1,24 +1,24 @@
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
-const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
-const editMessageMedia = require("../../../functions/tgBotFunctions/editMessageMedia");
-const getSession = require("../../../functions/getters/getSession");
-const bot = require('../../../bot');
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const buildArenaKeyboard = require('../../../functions/game/arena/buildArenaKeyboard');
-const getDefenderDataString = require("../../../functions/game/arena/getDefenderDataString");
-const getPlayerRating = require("../../../functions/game/arena/getPlayerRating");
-const getBattleResult = require("../../../functions/game/arena/getBattleResult");
-const calculatePoints = require("../../../functions/game/arena/calculatePoints");
-const setPlayerRating = require("../../../functions/game/arena/setPlayerRating");
-const getDefendersList = require("../../../functions/game/arena/getDefendersList");
-const updateRank = require("../../../functions/game/arena/updateRank");
-const getEmoji = require("../../../functions/getters/getEmoji");
-const {arenaTempBots} = require("../../../data");
-const getFile = require("../../../functions/getters/getFile");
-const getTime = require("../../../functions/getters/getTime");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import editMessageMedia from '../../../functions/tgBotFunctions/editMessageMedia.js';
+import getSession from '../../../functions/getters/getSession.js';
+import bot from '../../../bot.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import buildArenaKeyboard from '../../../functions/game/arena/buildArenaKeyboard.js';
+import getDefenderDataString from '../../../functions/game/arena/getDefenderDataString.js';
+import getPlayerRating from '../../../functions/game/arena/getPlayerRating.js';
+import getBattleResult from '../../../functions/game/arena/getBattleResult.js';
+import calculatePoints from '../../../functions/game/arena/calculatePoints.js';
+import setPlayerRating from '../../../functions/game/arena/setPlayerRating.js';
+import getDefendersList from '../../../functions/game/arena/getDefendersList.js';
+import updateRank from '../../../functions/game/arena/updateRank.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import { arenaTempBots } from '../../../data.js';
+import getFile from '../../../functions/getters/getFile.js';
+import getTime from '../../../functions/getters/getTime.js';
 
-module.exports = [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
+export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
     let attacker = await getSession(chatId, callback.from.id);
     let [message, showedPlayers] = await getDefendersList("common", chatId, callback.from.id);

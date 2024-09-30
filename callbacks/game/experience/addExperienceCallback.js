@@ -1,14 +1,14 @@
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
-const getSession = require("../../../functions/getters/getSession");
-const setLevel = require('../../../functions/game/player/setLevel');
-const bot = require('../../../bot');
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getSession from '../../../functions/getters/getSession.js';
+import setLevel from '../../../functions/game/player/setLevel.js';
+import bot from '../../../bot.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
+export default [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     sendMessage(callback.message.chat.id, `Сколько опыта добавить для ${getUserName(targetSession, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),

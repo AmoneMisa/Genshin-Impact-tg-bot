@@ -1,5 +1,5 @@
-const slots = require('./slots');
+import slots from './slots.js';
 
-module.exports = [
+export default [
     ...slots
 ];

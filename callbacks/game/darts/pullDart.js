@@ -1,16 +1,16 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
-const isWinPoints = require('../../../functions/game/general/isWinByPoints');
-const sendPrize = require('../../../functions/game/general/sendPrize');
-const endGame = require('../../../functions/game/darts/endGame');
-const bot = require('../../../bot');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessageTimeout = require("../../../functions/tgBotFunctions/deleteMessageTimeout");
-const checkUserCall = require("../../../functions/misc/checkUserCall");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import isWinPoints from '../../../functions/game/general/isWinByPoints.js';
+import sendPrize from '../../../functions/game/general/sendPrize.js';
+import endGame from '../../../functions/game/darts/endGame.js';
+import bot from '../../../bot.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
+import checkUserCall from '../../../functions/misc/checkUserCall.js';
 
 let maxPulls = 3;
 
-module.exports = [[/^darts_pull$/, async function (session, callback) {
+export default [[/^darts_pull$/, async function (session, callback) {
     if (!checkUserCall(callback, session)) {
         return ;
     }

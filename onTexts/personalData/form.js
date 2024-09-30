@@ -1,12 +1,12 @@
-const dictionary = require('../../dictionaries/main');
-const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const deleteMessageTimeout = require('../../functions/tgBotFunctions/deleteMessageTimeout');
-const setButtons = require('../../functions/form/setButtons');
-const commands = require('../../dictionaries/commands');
-const getUserName = require('../../functions/getters/getUserName');
-const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
+import dictionary from '../../dictionaries/main.js';
+import sendMessage from '../../functions/tgBotFunctions/sendMessage.js';
+import deleteMessageTimeout from '../../functions/tgBotFunctions/deleteMessageTimeout.js';
+import setButtons from '../../functions/form/setButtons.js';
+import commands from '../../dictionaries/commands.js';
+import getUserName from '../../functions/getters/getUserName.js';
+import deleteMessage from '../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/form/, async (msg, session) => {
+export default [[/(?:^|\s)\/form/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let buttons = setButtons(commands);
 

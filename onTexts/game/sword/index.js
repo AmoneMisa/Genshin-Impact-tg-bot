@@ -1,7 +1,7 @@
-const sword = require('./sword');
-const swordList = require('./swordList');
+import sword from './sword.js';
+import swordList from './swordList.js';
 
-module.exports = [
+export default [
     ...sword,
     ...swordList
 ];

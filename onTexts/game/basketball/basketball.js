@@ -1,11 +1,11 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
-const getSession = require('../../../functions/getters/getSession');
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getSession from '../../../functions/getters/getSession.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/basketball\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/basketball\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let id;
 

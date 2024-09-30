@@ -1,8 +1,8 @@
-const title = require('./title');
-// const genericTitle = require('./genericTitle');
-const titlesList = require('./titlesList');
+import title from './title.js';
+// import genericTitle from './genericTitle.js';
+import titlesList from './titlesList.js';
 
-module.exports = [
+export default [
     ...title,
     ...titlesList,
     // ...genericTitle

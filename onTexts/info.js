@@ -1,9 +1,9 @@
-const dictionary = require('../dictionaries/main');
-const buttonsDictionary = require('../dictionaries/buttons');
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import dictionary from '../dictionaries/main.js';
+import buttonsDictionary from '../dictionaries/buttons.js';
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/info/, async (msg) => {
+export default [[/(?:^|\s)\/info/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     await sendMessage(msg.chat.id, `${dictionary["ru"].index}`, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),

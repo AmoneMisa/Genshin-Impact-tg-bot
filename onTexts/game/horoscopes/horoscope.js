@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getRandom = require("../../../functions/getters/getRandom");
-const horoscopes = require("../../../dictionaries/horoscopes");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getRandom from '../../../functions/getters/getRandom.js';
+import horoscopes from '../../../dictionaries/horoscopes.js';
 
-module.exports = [[/(?:^|\s)\/horoscope\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/horoscope\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let start = horoscopes.start[getRandom(0, horoscopes.start.length - 1)];
     let action = horoscopes.action[getRandom(0, horoscopes.action.length - 1)];

@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const getMembers = require('../../../functions/getters/getMembers');
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const swordsMessage = require('../../../functions/game/sword/swordsMessage');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getMembers from '../../../functions/getters/getMembers.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import swordsMessage from '../../../functions/game/sword/swordsMessage.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/swords\b/, async (msg) => {
+export default [[/(?:^|\s)\/swords\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let members = getMembers(msg.chat.id);
 

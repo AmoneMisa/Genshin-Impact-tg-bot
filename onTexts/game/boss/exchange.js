@@ -1,9 +1,9 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const getUserName = require('../../../functions/getters/getUserName');
-const getEmoji = require('../../../functions/getters/getEmoji');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/exchange ([0-9]+)\b/, async (msg, session, [ , amount]) => {
+export default [[/(?:^|\s)\/exchange ([0-9]+)\b/, async (msg, session, [ , amount]) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     let crystals = Math.round(parseInt(amount));

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     start: [
         "Под влиянием Архонов, вы",
         "Как бы Венти не пел, вы",

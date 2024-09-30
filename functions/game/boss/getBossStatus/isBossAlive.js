@@ -1,3 +1,3 @@
-module.exports = function (boss) {
+export default function (boss) {
     return boss.currentHp > 0;
 };

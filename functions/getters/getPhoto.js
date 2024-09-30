@@ -1,6 +1,6 @@
-const fs = require("fs");
+import fs from 'fs';
 
-module.exports = function (imageName) {
+export default function (imageName) {
     let imageData = fs.existsSync("imagesIds.json") ? JSON.parse(fs.readFileSync("imagesIds.json")) : {};
 
     if (imageData[imageName]) {

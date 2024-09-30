@@ -1,9 +1,9 @@
-const bet = require('./bet');
-const takeElement = require('./takeElement');
-const enter = require('./enter');
-const leave = require('./leave');
+import bet from './bet.js';
+import takeElement from './takeElement.js';
+import enter from './enter.js';
+import leave from './leave.js';
 
-module.exports = [
+export default [
     ...bet,
     ...takeElement,
     ...enter,

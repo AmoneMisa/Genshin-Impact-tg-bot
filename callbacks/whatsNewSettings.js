@@ -1,8 +1,8 @@
-const invertButtonCallbackData = require("../functions/keyboard/invertButtonCallbackData");
-const setButtonText = require("../functions/keyboard/setButtonText");
-const editMessageText = require('../functions/tgBotFunctions/editMessageText');
+import invertButtonCallbackData from '../functions/keyboard/invertButtonCallbackData.js';
+import setButtonText from '../functions/keyboard/setButtonText.js';
+import editMessageText from '../functions/tgBotFunctions/editMessageText.js';
 
-module.exports = [[/^whatsNew\.([0-1]+)$/, async function (session, callback, [, flag]) {
+export default [[/^whatsNew\.([0-1]+)$/, async function (session, callback, [, flag]) {
     if (session.whatsNewSettings.button.callback_data === callback.data) {
         session.whatsNewSettings.button.callback_data = invertButtonCallbackData(session.whatsNewSettings.button.callback_data);
         session.whatsNewSettings.flag = 1 - session.whatsNewSettings.flag;

@@ -1,3 +1,3 @@
-module.exports = function (session) {
+export default function (session) {
     return session.gender === "female";
 };

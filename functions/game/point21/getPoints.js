@@ -1,4 +1,4 @@
-const cardsDictionary = require('../../../dictionaries/pointCards');
+import cardsDictionary from '../../../dictionaries/pointCards.js';
 
 function getCardPoints(card, points) {
     for (let _card of cardsDictionary.values) {
@@ -14,7 +14,7 @@ function getCardPoints(card, points) {
     return 0;
 }
 
-module.exports = function (player) {
+export default function (player) {
     if (!player) {
         return ;
     }

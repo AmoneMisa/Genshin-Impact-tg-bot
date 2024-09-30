@@ -1,6 +1,6 @@
-const calculateRemainBuildTime = require('./calculateRemainBuildTime');
+import calculateRemainBuildTime from './calculateRemainBuildTime.js';
 // Рассчет оптимальной стоимости для ускорения построек
-module.exports = function (buildName, build) {
+export default function (buildName, build) {
     const modifier = 30; // Предполагаемая стоимость ускорения в кристаллах
     let buildUpgradeTime = calculateRemainBuildTime(buildName, build) / 1000 / 60;
 

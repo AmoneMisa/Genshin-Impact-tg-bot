@@ -1,9 +1,9 @@
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const bot = require('../bot');
-const {myId} = require('../config');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import bot from '../bot.js';
+import { myId } from '../config.js';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/get_chat_data\b/, async (msg) => {
+export default [[/(?:^|\s)\/get_chat_data\b/, async (msg) => {
     if (msg.from.id !== myId) {
         return;
     }

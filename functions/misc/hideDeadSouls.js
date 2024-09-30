@@ -1,8 +1,8 @@
-const data = require("../../data");
-const bot = require("../../bot");
+import {sessions} from '../../data.js';
+import bot from '../../bot.js';
 
-module.exports = async function () {
-    for (let [chatId, chatSession] of Object.entries(data.sessions)) {
+export default async function () {
+    for (let [chatId, chatSession] of Object.entries(sessions)) {
         for (let [userId, session] of Object.entries(chatSession.members)) {
             bot.getChatMember(chatId, parseInt(userId)).then(chatMember => {
                 session.isHided = chatMember.status === "left" || chatMember.status === "kicked" || chatMember.status === "banned";

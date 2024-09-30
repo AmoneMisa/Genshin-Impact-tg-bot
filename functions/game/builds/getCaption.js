@@ -1,14 +1,14 @@
-const buildsTemplate = require("../../../template/buildsTemplate");
-const getTime = require('../../getters/getTime');
-const getEmoji = require('../../getters/getEmoji');
-const getStringRemainTime = require('../../getters/getStringRemainTime');
-const calculateUpgradeCosts = require('../../../functions/game/builds/calculateUpgradeCosts');
-const calculateOptimalSpeedUpCost = require('../../../functions/game/builds/calculateOptimalSpeedUpCost');
-const calculateRemainBuildTime = require('./calculateRemainBuildTime');
-const calculateIncreaseInResourceExtraction = require("./calculateIncreaseInResourceExtraction");
-const calculateIncreaseGuardedResources = require("./calculateIncreaseGuardedResources");
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import getTime from '../../getters/getTime.js';
+import getEmoji from '../../getters/getEmoji.js';
+import getStringRemainTime from '../../getters/getStringRemainTime.js';
+import calculateUpgradeCosts from '../../../functions/game/builds/calculateUpgradeCosts.js';
+import calculateOptimalSpeedUpCost from '../../../functions/game/builds/calculateOptimalSpeedUpCost.js';
+import calculateRemainBuildTime from './calculateRemainBuildTime.js';
+import calculateIncreaseInResourceExtraction from './calculateIncreaseInResourceExtraction.js';
+import calculateIncreaseGuardedResources from './calculateIncreaseGuardedResources.js';
 
-module.exports = function (buildName, action, build) {
+export default function (buildName, action, build) {
     let buildTemplate = buildsTemplate[buildName];
     let [remain] = getTime(build.lastCollectAt + (buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000));
 

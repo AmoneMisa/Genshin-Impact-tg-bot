@@ -1,7 +1,7 @@
-const getSkillCooldown = require('./getters/getSkillCooldown');
-const isEnoughResourcesForUseSkill = require('./isEnoughResourcesForUseSkill');
+import getSkillCooldown from './getters/getSkillCooldown.js';
+import isEnoughResourcesForUseSkill from './isEnoughResourcesForUseSkill.js';
 
-module.exports = function (session, skill) {
+export default function (session, skill) {
     let enoughCostForUsage = isEnoughResourcesForUseSkill(session, skill);
 
     if (!enoughCostForUsage) {

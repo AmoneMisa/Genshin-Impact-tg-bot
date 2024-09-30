@@ -1,10 +1,10 @@
-const {titles} = require('../../../data');
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const titlesMessage = require('../../../functions/game/titles/titlesMessage');
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import { titles } from '../../../data.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import titlesMessage from '../../../functions/game/titles/titlesMessage.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/titles/, async (msg) => {
+export default [[/(?:^|\s)\/titles/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     await sendMessage(msg.chat.id, titlesMessage(titles[msg.chat.id]), {

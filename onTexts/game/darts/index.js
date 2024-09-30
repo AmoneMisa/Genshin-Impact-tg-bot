@@ -1,3 +1,3 @@
-const darts = require('./darts');
+import darts from './darts.js';
 
-module.exports = [...darts];
+export default [...darts];

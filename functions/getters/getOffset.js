@@ -1,4 +1,4 @@
-module.exports = function () {
+export default function () {
     let date = new Date();
     date.setDate(date.getDate() + 1);
     date.setHours(0);

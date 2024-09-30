@@ -1,3 +1,3 @@
-// const testCommand = require('./testCommand');
+// import testCommand from './testCommand';
 
-// module.exports = [...testCommand];
+// export default [...testCommand];

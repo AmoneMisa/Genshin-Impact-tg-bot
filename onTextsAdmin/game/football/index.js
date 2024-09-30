@@ -1,3 +1,3 @@
-const resetDiceGame = require('./resetFootballGame');
+import resetDiceGame from './resetFootballGame.js';
 
-module.exports = [...resetDiceGame];
+export default [...resetDiceGame];

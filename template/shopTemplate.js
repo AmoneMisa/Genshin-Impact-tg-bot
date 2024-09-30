@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     {name: "Иммунитет к уменьшению меча", cost: 3800, time: 1, command: "swordImmune", message: "ты получил одноразовый иммунитет к уменьшению меча", category: "sword"},
     {name: "Увеличить меч на 25 мм", cost: 5000, time: 1, command: "swordAddMm", message: "ты увеличил свой меч на 25 мм!", category: "sword"},
     {name: "Увеличить урон на 75% ", cost: 1500, time: 1, command: "bossAddDmg", message: "ты увеличил свой урон по боссу на 75%", category: "boss"},

@@ -1,7 +1,7 @@
-let receiveSwordTimerForUser = require('./receiveSwordTimerForUser');
-let resetSwordTimers = require('./resetSwordTimers');
+import receiveSwordTimerForUser from'./receiveSwordTimerForUser.js';
+import resetSwordTimers from'./resetSwordTimers.js';
 
-module.exports = [
+export default [
     ...receiveSwordTimerForUser,
     ...resetSwordTimers
 ];

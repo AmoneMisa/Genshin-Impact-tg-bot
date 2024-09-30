@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     gold: [{
         value: { maxAmount: 50000, minAmount: 17500 },
         chance: 0.03

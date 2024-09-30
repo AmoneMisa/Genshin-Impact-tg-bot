@@ -1,6 +1,6 @@
-const buildsTemplate = require("../../../template/buildsTemplate");
-const calculateUpgradeCosts = require("./calculateUpgradeCosts");
-module.exports = function (currentLvl, buildName, inventory) {
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import calculateUpgradeCosts from './calculateUpgradeCosts.js';
+export default function (currentLvl, buildName, inventory) {
     let buildTemplate = buildsTemplate[buildName];
     let nextLvl = currentLvl + 1;
     let currentUpgrade = calculateUpgradeCosts(buildTemplate.upgradeCosts, nextLvl);

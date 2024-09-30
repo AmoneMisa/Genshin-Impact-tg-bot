@@ -1,5 +1,5 @@
-const getBuildList = require('./getBuildList');
+import getBuildList from './getBuildList.js';
 
-module.exports = async function (chatId, userId, buildName) {
+export default async function (chatId, userId, buildName) {
     return (await getBuildList(chatId, userId))[buildName];
 };

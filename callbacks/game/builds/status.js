@@ -1,9 +1,9 @@
-const getBuild = require("../../../functions/game/builds/getBuild");
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
-const getCaption = require('../../../functions/game/builds/getCaption');
+import getBuild from '../../../functions/game/builds/getBuild.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import getCaption from '../../../functions/game/builds/getCaption.js';
 
-module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.status$/, async function (session, callback) {
+export default [[/^builds\.[\-0-9]+\.[^.]+\.status$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.status$/);
     let messageId = callback.message.message_id;
 

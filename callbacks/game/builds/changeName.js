@@ -1,14 +1,14 @@
-const getBuild = require("../../../functions/game/builds/getBuild");
-const bot = require("../../../bot");
-const getCaption = require("../../../functions/game/builds/getCaption");
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getSession = require("../../../functions/getters/getSession");
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
+import getBuild from '../../../functions/game/builds/getBuild.js';
+import bot from '../../../bot.js';
+import getCaption from '../../../functions/game/builds/getCaption.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getSession from '../../../functions/getters/getSession.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
-module.exports = [[/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/, async function (session, callback, [, chatId, buildName]) {
+export default [[/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/, async function (session, callback, [, chatId, buildName]) {
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);

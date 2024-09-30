@@ -1,8 +1,8 @@
-const calcBossDamage = require('./calcBossDamage');
-const getCurrentHp = require("../player/getters/getCurrentHp");
-const lodash = require("lodash");
+import calcBossDamage from './calcBossDamage.js';
+import getCurrentHp from '../player/getters/getCurrentHp.js';
+import lodash from 'lodash';
 
-module.exports = function (members, boss) {
+export default function (members, boss) {
     if (!boss) {
         throw new Error("Босс не найден!");
     }

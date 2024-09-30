@@ -1,5 +1,5 @@
-const commands = require('./commands');
+import commands from './commands.js';
 
-module.exports = [
+export default [
     ...commands,
 ];

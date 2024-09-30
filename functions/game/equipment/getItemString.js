@@ -1,8 +1,8 @@
-const statsDictionary = require("../../../dictionaries/statsDictionary");
-const equipmentTemplate = require("../../../template/equipmentTemplate");
-const inventory = require("../../../dictionaries/inventory");
-const getEmoji = require("../../../functions/getters/getEmoji");
-const isStatPenalty = require("../../game/equipment/isStatPenalty");
+import statsDictionary from '../../../dictionaries/statsDictionary.js';
+import equipmentTemplate from '../../../template/equipmentTemplate.js';
+import inventory from '../../../dictionaries/inventory.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import isStatPenalty from '../../game/equipment/isStatPenalty.js';
 
 function getStr(key, value) {
     let strValue;
@@ -21,7 +21,7 @@ function getStr(key, value) {
     return `${getEmoji(key)} ${statsDictionary[key]}: ${strValue}\n`;
 }
 
-module.exports = function (item) {
+export default function (item) {
     let str = `${item.name}\n\n`;
 
     str += `Класс: `;

@@ -1,8 +1,8 @@
-const getUserName = require("../../getters/getUserName");
-const getEmoji = require("../../getters/getEmoji");
-const calcGearScore = require("../../../functions/game/player/calcGearScore");
+import getUserName from '../../getters/getUserName.js';
+import getEmoji from '../../getters/getEmoji.js';
+import calcGearScore from '../../../functions/game/player/calcGearScore.js';
 
-module.exports = function (session, isBot) {
+export default function (session, isBot) {
     if (isBot) {
         return `Игрок №${session.name}
 ${getEmoji("lvl")} Уровень: ${session.stats.lvl}

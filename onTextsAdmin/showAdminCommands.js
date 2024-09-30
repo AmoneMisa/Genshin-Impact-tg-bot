@@ -1,8 +1,8 @@
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const getMemberStatus = require("../functions/getters/getMemberStatus");
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import getMemberStatus from '../functions/getters/getMemberStatus.js';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
+export default [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
     if (!getMemberStatus(msg.chat.id, msg.from.id)) {
         return;
     }

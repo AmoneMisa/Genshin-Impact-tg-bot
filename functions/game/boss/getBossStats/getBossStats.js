@@ -1,11 +1,11 @@
-const getBossAttack = require("./getBossAttack");
-const getBossDefence = require("./getBossDefence");
-const getBossMinDamage = require("./getBossMinDamage");
-const getBossMaxDamage = require("./getBossMaxDamage");
-const getBossCriticalChance = require("./getBossCriticalChance");
-const getBossCriticalDamage = require("./getBossCriticalDamage");
+import getBossAttack from './getBossAttack.js';
+import getBossDefence from './getBossDefence.js';
+import getBossMinDamage from './getBossMinDamage.js';
+import getBossMaxDamage from './getBossMaxDamage.js';
+import getBossCriticalChance from './getBossCriticalChance.js';
+import getBossCriticalDamage from './getBossCriticalDamage.js';
 
-module.exports = function (boss, bossTemplate) {
+export default function (boss, bossTemplate) {
     if (boss.skill.effect.includes("resistance")) {
         return {
             attack: getBossAttack(boss, bossTemplate, 1.4),

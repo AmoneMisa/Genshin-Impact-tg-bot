@@ -1,6 +1,6 @@
-const skills = require('./getGameClassSkillsFromTemplate');
-const stats = require('./getGameClassStatsFromTemplate');
+import skills from './getGameClassSkillsFromTemplate.js';
+import stats from './getGameClassStatsFromTemplate.js';
 
-module.exports = function (playerClass) {
+export default function (playerClass) {
     return {skills: skills(playerClass), stats: stats(playerClass)};
 };

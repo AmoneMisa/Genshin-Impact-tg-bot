@@ -1,4 +1,4 @@
-module.exports = function (session) {
+export default function (session) {
     return session.game.football = {
         bet: 0,
         ball: 0,

@@ -1,16 +1,16 @@
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const {myId} = require("../../../config");
-const data = require("../../../data");
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import { myId } from '../../../config.js';
+import {bosses, sessions} from '../../../data.js';
 
-module.exports = [[/(?:^|\s)\/clear_boss_sessions\b/, async (msg) => {
+export default [[/(?:^|\s)\/clear_boss_sessions\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {
         return;
     }
 
-    for (let [chatId, chatSession] of Object.entries(data.sessions)) {
+    for (let [chatId, chatSession] of Object.entries(sessions)) {
         if (Object.values(chatSession.members).length !== 1) {
             continue;
         }
@@ -19,16 +19,16 @@ module.exports = [[/(?:^|\s)\/clear_boss_sessions\b/, async (msg) => {
             continue;
         }
 
-        delete data.bosses[chatId];
+        delete bosses[chatId];
         delete chatSession.boss;
     }
 
-    for (let bossChatId of Object.keys(data.bosses)) {
-        if (data.sessions[bossChatId]) {
+    for (let bossChatId of Object.keys(bosses)) {
+        if (sessions[bossChatId]) {
             continue;
         }
 
-        delete data.bosses[bossChatId];
+        delete bosses[bossChatId];
     }
 
     await sendMessage(myId, "Все чат сессии очищены. Убедиться в результате можно по команде /get_file bosses.json");

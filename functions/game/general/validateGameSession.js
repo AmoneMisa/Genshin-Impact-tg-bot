@@ -1,4 +1,4 @@
-module.exports = function (game, userId, gameName) {
+export default function (game, userId, gameName) {
     if (!game.players[userId]) {
         return false;
     }

@@ -1,6 +1,6 @@
-const skills = require("../../../../template/classSkillsTemplate");
+import skills from '../../../../template/classSkillsTemplate.js';
 
-module.exports = function (className = "noClass") {
+export default function (className = "noClass") {
     if (!className) {
         console.error("Не указано имя класса при передаче в функцию!");
     }

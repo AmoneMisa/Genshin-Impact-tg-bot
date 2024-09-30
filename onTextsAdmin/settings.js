@@ -1,11 +1,11 @@
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const getMemberStatus = require("../functions/getters/getMemberStatus");
-const getChatSession = require("../functions/getters/getChatSession");
-const getChatSessionSettings = require("../functions/getters/getChatSessionSettings");
-const controlButtons = require("../functions/keyboard/controlButtons");
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import getMemberStatus from '../functions/getters/getMemberStatus.js';
+import getChatSession from '../functions/getters/getChatSession.js';
+import getChatSessionSettings from '../functions/getters/getChatSessionSettings.js';
+import controlButtons from '../functions/keyboard/controlButtons.js';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/settings\b/, async (msg) => {
+export default [[/(?:^|\s)\/settings\b/, async (msg) => {
     if (!getMemberStatus(msg.chat.id, msg.from.id)) {
         return;
     }

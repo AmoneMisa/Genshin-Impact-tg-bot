@@ -1,6 +1,6 @@
-const deleteMessage = require('./deleteMessage');
+import deleteMessage from './deleteMessage.js';
 
-module.exports = function (chatId, msg, milliseconds) {
+export default function (chatId, msg, milliseconds) {
     if (!msg) {
         return;
     }

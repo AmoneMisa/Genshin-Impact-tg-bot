@@ -1,3 +1,3 @@
-const dice = require('./dice');
+import dice from './dice.js';
 
-module.exports = [...dice];
+export default [...dice];

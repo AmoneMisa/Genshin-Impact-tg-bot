@@ -1,5 +1,5 @@
-const shop = require('./shop');
+import shop from './shop.js';
 
-module.exports = [
+export default [
     ...shop
 ];

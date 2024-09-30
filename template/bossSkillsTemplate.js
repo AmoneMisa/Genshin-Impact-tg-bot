@@ -1,4 +1,4 @@
-module.exports = [{
+export default [{
     name: "Зеркало",
     description: "Отражает 30% урона",
     effect: "reflect"

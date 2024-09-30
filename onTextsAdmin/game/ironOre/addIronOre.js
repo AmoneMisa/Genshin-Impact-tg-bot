@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const getMemberStatus = require('../../../functions/getters/getMemberStatus');
-const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getMemberStatus from '../../../functions/getters/getMemberStatus.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/add_iron_ore\b/, (msg) => {
+export default [[/(?:^|\s)\/add_iron_ore\b/, (msg) => {
     deleteMessage(msg.chat.id, msg.message_id);
     if (!getMemberStatus(msg.chat.id, msg.from.id)) {
         return;

@@ -1,11 +1,11 @@
-const userTemplate = require('../../template/userTemplate');
-const bot = require('../../bot');
-const getMembers = require('./getMembers');
-const getLostFieldsInSession = require('./getLostFieldsInSession');
-const classStatsTemplate = require('../../template/classStatsTemplate');
-const classSkillsTemplate = require('../../template/classSkillsTemplate');
+import userTemplate from '../../template/userTemplate.js';
+import bot from '../../bot.js';
+import getMembers from './getMembers.js';
+import getLostFieldsInSession from './getLostFieldsInSession.js';
+import classStatsTemplate from '../../template/classStatsTemplate.js';
+import classSkillsTemplate from '../../template/classSkillsTemplate.js';
 
-module.exports = async function (chatId, userId) {
+export default async function (chatId, userId) {
     let members = getMembers(chatId);
     let getUpdatedData = await bot.getChatMember(chatId, userId);
 

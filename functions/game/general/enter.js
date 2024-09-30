@@ -1,9 +1,9 @@
-const getChatSession = require("../../getters/getChatSession");
-const getMembers = require("../../getters/getMembers");
-const gameStatusMessage = require("./gameStatusMessage");
-const editMessageText = require("../../tgBotFunctions/editMessageText");
+import getChatSession from '../../getters/getChatSession.js';
+import getMembers from '../../getters/getMembers.js';
+import gameStatusMessage from './gameStatusMessage.js';
+import editMessageText from '../../tgBotFunctions/editMessageText.js';
 
-module.exports = function (session, callback, gameName) {
+export default function (session, callback, gameName) {
     let chatSession = getChatSession(callback.message.chat.id);
     let userId = callback.from.id;
     let players = chatSession.game[gameName].players;

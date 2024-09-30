@@ -1,6 +1,6 @@
-const getEmoji = require("../../getters/getEmoji");
+import getEmoji from '../../getters/getEmoji.js';
 
-module.exports = function (boss, loot) {
+export default function (boss, loot) {
     let players = boss.listOfDamage;
     players.sort((a, b) => b.damage - a.damage);
 

@@ -1,7 +1,7 @@
-const levelsTemplate = require('../../../template/levelsTemplate');
-const updatePlayerStats = require('./updatePlayerStats');
+import levelsTemplate from '../../../template/levelsTemplate.js';
+import updatePlayerStats from './updatePlayerStats.js';
 
-module.exports = function (session) {
+export default function (session) {
     for (let level of levelsTemplate) {
         if (level.lvl !== session.game.stats.lvl) {
             continue;

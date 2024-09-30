@@ -1,6 +1,6 @@
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const checkUserCall = require("../../../functions/misc/checkUserCall");
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import checkUserCall from '../../../functions/misc/checkUserCall.js';
 
 async function bet(session, callback, calcFunc) {
     if (!checkUserCall(callback, session)) {
@@ -72,7 +72,7 @@ async function updateMessage(session, callback) {
     });
 }
 
-module.exports = [
+export default [
     [/^slots_bet$/, async function (session, callback) {
         await bet(session, callback, (oldBet) => oldBet + 100);
     }],

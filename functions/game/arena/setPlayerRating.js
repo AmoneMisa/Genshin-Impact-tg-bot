@@ -1,6 +1,6 @@
-const {arenaRating} = require("../../../data");
+import { arenaRating } from '../../../data.js';
 
-module.exports =  function (userId, arenaType, chatId, points) {
+export default function (userId, arenaType, chatId, points) {
     if (arenaType === "common") {
         arenaRating[arenaType][chatId][userId] += points;
     } else {

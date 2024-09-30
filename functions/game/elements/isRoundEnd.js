@@ -1,6 +1,6 @@
-const isPlayerEndedRound = require('./isPlayerEndedRound');
+import isPlayerEndedRound from './isPlayerEndedRound.js';
 
-module.exports = function (players, currentRound) {
+export default function (players, currentRound) {
     for (let [playerId, player] of Object.entries(players)) {
         if (playerId === "bot") {
             continue;

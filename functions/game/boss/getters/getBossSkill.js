@@ -1,8 +1,8 @@
-const bossesTemplate = require("../../../../template/bossTemplate");
-const bossSkillsTemplate = require("../../../../template/bossSkillsTemplate");
-const getRandom = require("../../../getters/getRandom");
+import bossesTemplate from '../../../../template/bossTemplate.js';
+import bossSkillsTemplate from '../../../../template/bossSkillsTemplate.js';
+import getRandom from '../../../getters/getRandom.js';
 
-module.exports = function (bossName) {
+export default function (bossName) {
     let bossTemplate = bossesTemplate.find(boss => boss.name === bossName);
     if (!bossTemplate) {
         throw new Error(`Босса с таким именем не найдено: ${bossName}`);

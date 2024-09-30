@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "nickName": "Ник",
     "name": "Имя",
     "age": "Возвраст",

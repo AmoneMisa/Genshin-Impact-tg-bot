@@ -1,10 +1,10 @@
-const getBuildFromTemplate = require("../game/builds/getBuildFromTemplate");
-const lodash = require("lodash");
-const potionsInInventoryTemplate = require("../../template/potionsInInventoryTemplate");
-const classStatsTemplate = require("../../template/classStatsTemplate");
-const classSkillsTemplate = require("../../template/classSkillsTemplate");
+import getBuildFromTemplate from '../game/builds/getBuildFromTemplate.js';
+import lodash from 'lodash';
+import potionsInInventoryTemplate from '../../template/potionsInInventoryTemplate.js';
+import classStatsTemplate from '../../template/classStatsTemplate.js';
+import classSkillsTemplate from '../../template/classSkillsTemplate.js';
 
-module.exports = function (session) {
+export default function (session) {
     if (!session.hasOwnProperty("whatsNewSettings")) {
         session.whatsNewSettings = {
             flag: 0,
@@ -76,8 +76,9 @@ module.exports = function (session) {
         inventory: {
             arena: {
                 name: "Предметы арены",
-                tokens: 0,
-                pvpSign: null
+                items: [
+                    {tokens: 0},
+                    {pvpSign: null}],
             },
             gold: 0,
             crystals: 0,

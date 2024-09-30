@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   nickName: null,
   name: null,
   age: null,

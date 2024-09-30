@@ -1,30 +1,32 @@
-require('./errorHandler');
+import errorHandler from './errorHandler.js';
+errorHandler();
 
-const deleteMessage = require('./functions/tgBotFunctions/deleteMessage');
-const callbacks = require('./callbacks');
-const onTexts = require('./onTexts');
-const onTextsAdmin = require('./onTextsAdmin');
-const bot = require('./bot');
-const {trustedChats} = require('./data');
-const fs = require('fs');
-const intel = require('intel');
-intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
-const getSession = require('./functions/getters/getSession');
-const getChatSessionSettings = require('./functions/getters/getChatSessionSettings');
-const debugMessage = require('./functions/tgBotFunctions/debugMessage');
-const sendMessage = require('./functions/tgBotFunctions/sendMessage');
-const writeFiles = require('./functions/misc/writeFiles');
+import fs from 'fs';
+// import intel from 'intel/lib/index.js';
+// intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
 
-const evenSecond = require('./functions/shedullers/evenSecond');
-const evenMinute = require('./functions/shedullers/evenMinute');
-const evenTwoMinutes = require('./functions/shedullers/evenTwoMinutes');
-const evenFiveMinutes = require('./functions/shedullers/evenFiveMinutes');
-const evenHour = require('./functions/shedullers/evenHour');
-const evenDay = require('./functions/shedullers/evenDay');
-const evenWeek = require('./functions/shedullers/evenWeek');
+import deleteMessage from './functions/tgBotFunctions/deleteMessage.js';
+import callbacks from './callbacks/index.js';
+import onTexts from './onTexts/index.js';
+import onTextsAdmin from './onTextsAdmin/index.js';
+import bot from './bot.js';
+import { trustedChats } from './data.js';
+import getSession from './functions/getters/getSession.js';
+import getChatSessionSettings from './functions/getters/getChatSessionSettings.js';
+import debugMessage from './functions/tgBotFunctions/debugMessage.js';
+import sendMessage from './functions/tgBotFunctions/sendMessage.js';
+import writeFiles from './functions/misc/writeFiles.js';
 
-const log = intel.getLogger("genshin");
-const buttonsDictionary = require("./dictionaries/buttons");
+import evenSecond from './functions/shedullers/evenSecond.js';
+import evenMinute from './functions/shedullers/evenMinute.js';
+import evenTwoMinutes from './functions/shedullers/evenTwoMinutes.js';
+import evenFiveMinutes from './functions/shedullers/evenFiveMinutes.js';
+import evenHour from './functions/shedullers/evenHour.js';
+import evenDay from './functions/shedullers/evenDay.js';
+import evenWeek from './functions/shedullers/evenWeek.js';
+
+// const log = intel.getLogger("genshin");
+import buttonsDictionary from './dictionaries/buttons.js';
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},

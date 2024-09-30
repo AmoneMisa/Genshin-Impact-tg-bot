@@ -1,3 +1,3 @@
-const addCrystals = require('./addCrystals');
+import addCrystals from './addCrystals.js';
 
-module.exports = [...addCrystals];
+export default [...addCrystals];

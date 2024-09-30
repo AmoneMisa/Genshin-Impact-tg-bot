@@ -1,4 +1,4 @@
-module.exports = function (number, chances) {
+export default function (number, chances) {
     for (let {chance, value} of chances) {
         if (number < chance) {
             return value;

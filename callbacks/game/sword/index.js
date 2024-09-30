@@ -1,3 +1,3 @@
-const setUserSwordTimer = require('./receiveUserSwordTimer');
+import setUserSwordTimer from './receiveUserSwordTimer.js';
 
-module.exports = [...setUserSwordTimer];
+export default [...setUserSwordTimer];

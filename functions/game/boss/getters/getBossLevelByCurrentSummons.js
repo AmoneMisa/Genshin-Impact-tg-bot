@@ -1,6 +1,6 @@
-const bossLevels = require("../../../../template/bossLevelsTemplate");
+import bossLevels from '../../../../template/bossLevelsTemplate.js';
 
-module.exports = function (bossName, currentSummons) {
+export default function (bossName, currentSummons) {
     if (currentSummons === 0) {
         return 1;
     }

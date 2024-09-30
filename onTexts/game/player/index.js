@@ -1,8 +1,8 @@
-const whoami = require('./whoami');
-const changeGender = require('./changeGender');
-const stealResources = require('./stealResources');
+import whoami from './whoami.js';
+import changeGender from './changeGender.js';
+import stealResources from './stealResources.js';
 
-module.exports = [
+export default [
     ...whoami,
     ...stealResources,
     ...changeGender

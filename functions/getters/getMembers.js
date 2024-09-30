@@ -1,6 +1,6 @@
-let getChatSession = require('./getChatSession');
+import getChatSession from './getChatSession.js';
 
-module.exports = function (chatId) {
+export default function (chatId) {
     let chatSession = getChatSession(chatId);
 
     if (!chatSession['members']) {

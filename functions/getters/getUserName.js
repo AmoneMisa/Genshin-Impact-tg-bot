@@ -1,4 +1,4 @@
-module.exports = function (session, type = "nickname") {
+export default function (session, type = "nickname") {
     if (type === "nickname") {
         return session.userChatData.user.username ? session.userChatData.user.username : session.userChatData.user.id;
     }

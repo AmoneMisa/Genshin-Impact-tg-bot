@@ -1,6 +1,6 @@
-const getPlayerGameClass = require('./getGameClassFromTemplate');
+import getPlayerGameClass from './getGameClassFromTemplate.js';
 
-module.exports = function (player, skillNumber) {
+export default function (player, skillNumber) {
     let gameClass = getPlayerGameClass(player.game.gameClass.name);
 
     return gameClass.skills[skillNumber];

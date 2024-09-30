@@ -1,8 +1,8 @@
-const summonBoss = require('./summonBoss');
-const exchange = require('./exchange');
-const bossSettings = require('./bossSettings');
+import summonBoss from './summonBoss.js';
+import exchange from './exchange.js';
+import bossSettings from './bossSettings.js';
 
-module.exports = [
+export default [
     ...summonBoss,
     ...exchange,
     ...bossSettings

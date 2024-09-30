@@ -1,25 +1,25 @@
-const sendGold = require('./sendGold');
-const boss = require('./boss');
-const sword = require('./sword');
-const chest = require('./chest');
-const point21 = require('./point21');
-const player = require('./player');
-const slots = require('./slots');
-const dice = require('./dice');
-const bowling = require('./bowling');
-const darts = require('./darts');
-const basketball = require('./basketball');
-const football = require('./football');
-const elements = require('./elements');
-const shop = require('./shop');
-const equipmentGacha = require('./equipmentGacha');
-const horoscopes = require('./horoscopes');
-const titles = require('./titles');
-const bonus = require('./bonus');
-const arena = require('./arena');
-const searchGame = require('./searchGame');
+import sendGold from './sendGold.js';
+import boss from './boss/index.js';
+import sword from './sword/index.js';
+import chest from './chest/index.js';
+import point21 from './point21/index.js';
+import player from './player/index.js';
+import slots from './slots/index.js';
+import dice from './dice/index.js';
+import bowling from './bowling/index.js';
+import darts from './darts/index.js';
+import basketball from './basketball/index.js';
+import football from './football/index.js';
+import elements from './elements/index.js';
+import shop from './shop/index.js';
+import equipmentGacha from './equipmentGacha/index.js';
+import horoscopes from './horoscopes/index.js';
+import titles from './titles/index.js';
+import bonus from './bonus/index.js';
+import arena from './arena/index.js';
+// import searchGame from './searchGame/index.js';
 
-module.exports = [
+export default [
     ...sendGold,
     ...sword,
     ...boss,
@@ -39,5 +39,5 @@ module.exports = [
     ...titles,
     ...bonus,
     ...arena,
-    ...searchGame
+    // ...searchGame
 ];

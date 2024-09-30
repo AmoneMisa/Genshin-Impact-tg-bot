@@ -1,6 +1,6 @@
-const getRandomElement = require('./getRandomElement');
+import getRandomElement from './getRandomElement.js';
 
-module.exports = function (chatSession) {
+export default function (chatSession) {
     getRandomElement(chatSession, "bot");
     getRandomElement(chatSession, "bot");
     getRandomElement(chatSession, "bot");

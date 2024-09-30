@@ -1,5 +1,5 @@
-const horoscope = require('./horoscope');
+import horoscope from './horoscope.js';
 
-module.exports = [
+export default [
     ...horoscope
 ];

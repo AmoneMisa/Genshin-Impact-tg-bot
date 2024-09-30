@@ -1,4 +1,4 @@
-module.exports = function (playerEffects) {
+export default function (playerEffects) {
     let multiplier = 1;
 
     for (let effect of playerEffects) {

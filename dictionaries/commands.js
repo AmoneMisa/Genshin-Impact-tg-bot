@@ -1,1 +1,1 @@
-module.exports = ["nickName", "gameId", "rank", "bestCharacter", "favoriteCharacter", "inGameExp", "lvlOfWorld", "favoriteElement", "favoriteLocation", "mostWishesCharacter", "age", "gender", "mostHatedCharacter", "achievementsCount"];
+export default ["nickName", "gameId", "rank", "bestCharacter", "favoriteCharacter", "inGameExp", "lvlOfWorld", "favoriteElement", "favoriteLocation", "mostWishesCharacter", "age", "gender", "mostHatedCharacter", "achievementsCount"];

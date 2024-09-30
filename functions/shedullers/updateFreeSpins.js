@@ -1,7 +1,7 @@
-const {sessions} = require("../../data");
-const gachaTemplate = require("../../template/gachaTemplate");
+import { sessions } from '../../data.js';
+import gachaTemplate from '../../template/gachaTemplate.js';
 
-module.exports = function () {
+export default function () {
     for (let chatSession of Object.values(sessions)) {
         for (let session of Object.values(chatSession.members)) {
             if (session.userChatData.user.is_bot) {

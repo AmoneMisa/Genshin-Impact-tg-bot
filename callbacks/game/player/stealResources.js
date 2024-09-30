@@ -1,21 +1,21 @@
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
-const getUserName = require('../../../functions/getters/getUserName');
-const getMaxHp = require('../../../functions/game/player/getters/getMaxHp');
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const getSession = require('../../../functions/getters/getSession');
-const stealResources = require('../../../functions/game/builds/stealResources');
-const getEmoji = require("../../../functions/getters/getEmoji");
-const getTime = require("../../../functions/getters/getTime");
-const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
-const checkUserCall = require("../../../functions/misc/checkUserCall");
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import getMaxHp from '../../../functions/game/player/getters/getMaxHp.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getSession from '../../../functions/getters/getSession.js';
+import stealResources from '../../../functions/game/builds/stealResources.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import getTime from '../../../functions/getters/getTime.js';
+import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
+import checkUserCall from '../../../functions/misc/checkUserCall.js';
 
 function getRemainHpInPercent(maxHp, remainHp) {
     return (remainHp / maxHp * 100).toFixed(2);
 }
 
-module.exports = [[/^stealResources\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
+export default [[/^stealResources\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     let foundSession = await getSession(chatId, callback.from.id);
     let stealResult = stealResources(foundSession, targetSession);

@@ -1,7 +1,7 @@
-const getOffset = require('../../getters/getOffset');
-const {sessions} = require('../../../data');
+import getOffset from '../../getters/getOffset.js';
+import { sessions } from '../../../data.js';
 
-module.exports = function () {
+export default function () {
     let sessionsArray = Object.values(sessions);
 
     for (let chatSessions of sessionsArray) {

@@ -1,10 +1,10 @@
-const calculateRemainBuildTime = require("./calculateRemainBuildTime");
-const upgradeBuild = require("./upgradeBuild");
-const sendMessage = require("../../tgBotFunctions/sendMessage");
-const getUserName = require('../../getters/getUserName');
-const buildsTemplate = require("../../../template/buildsTemplate");
+import calculateRemainBuildTime from './calculateRemainBuildTime.js';
+import upgradeBuild from './upgradeBuild.js';
+import sendMessage from '../../tgBotFunctions/sendMessage.js';
+import getUserName from '../../getters/getUserName.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
 
-module.exports = function (buildName, build, chatId, session) {
+export default function (buildName, build, chatId, session) {
     let remain = calculateRemainBuildTime(buildName, build);
     let buildTemplate = buildsTemplate[buildName];
     build.upgradeTimerId = +setTimeout(() => {

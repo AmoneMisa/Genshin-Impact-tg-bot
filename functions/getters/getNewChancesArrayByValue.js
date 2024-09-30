@@ -1,4 +1,4 @@
-module.exports = function (chances, n) {
+export default function (chances, n) {
     let fullChance = 1;
     chances.slice(Math.max(0, chances.length - n) + 1, chances.length).forEach(({chance}) => fullChance -= chance);
 

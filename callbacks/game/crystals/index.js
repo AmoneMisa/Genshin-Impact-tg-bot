@@ -1,5 +1,5 @@
-const addCrystalsCallback = require('./addCrystalsCallback');
+import addCrystalsCallback from './addCrystalsCallback.js';
 
-module.exports = [
+export default [
     ...addCrystalsCallback
 ];

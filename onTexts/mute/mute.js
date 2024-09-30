@@ -1,10 +1,10 @@
-const bot = require('../../bot');
-const debugMessage = require('../../functions/tgBotFunctions/debugMessage');
-const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const getUserName = require('../../functions/getters/getUserName');
-const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
+import bot from '../../bot.js';
+import debugMessage from '../../functions/tgBotFunctions/debugMessage.js';
+import sendMessage from '../../functions/tgBotFunctions/sendMessage.js';
+import getUserName from '../../functions/getters/getUserName.js';
+import deleteMessage from '../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
+export default [[/(?:^|\s)\/self_mute\b/, (msg, session) => {
     deleteMessage(msg.chat.id, msg.message_id);
     bot.restrictChatMember(msg.chat.id, msg.from.id, {
         permissions: {

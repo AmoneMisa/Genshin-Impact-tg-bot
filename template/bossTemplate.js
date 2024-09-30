@@ -1,4 +1,4 @@
-module.exports = [{
+export default [{
     name: "kivaha",
     nameCall: "Киваху",
     description: "Огромная черепаха-монстр, которая управляет стихией молнии.",

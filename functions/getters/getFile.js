@@ -1,6 +1,6 @@
-const fs = require("fs");
+import fs from 'fs';
 
-module.exports = function (imagePath, fileName) {
+export default function (imagePath, fileName) {
     const files = fs.readdirSync(imagePath);
 
     let foundFile = files.find(_file => {

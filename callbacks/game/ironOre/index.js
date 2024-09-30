@@ -1,5 +1,5 @@
-const addIronOreCallback = require('./addIronOreCallback');
+import addIronOreCallback from './addIronOreCallback.js';
 
-module.exports = [
+export default [
     ...addIronOreCallback
 ];

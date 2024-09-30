@@ -1,4 +1,4 @@
-module.exports = function (chatId) {
+export default function (chatId) {
     let buttons = [];
     let tempArray = null;
     let i = 0;

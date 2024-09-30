@@ -1,7 +1,7 @@
-const bets = require('./bets');
-const pullBall = require('./pullBall');
+import bets from './bets.js';
+import pullBall from './pullBall.js';
 
-module.exports = [
+export default [
     ...bets,
     ...pullBall
 ];

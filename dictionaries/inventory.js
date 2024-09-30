@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     gold: "Золото",
     crystals: "Кристаллы",
     ironOre: "Железная руда",

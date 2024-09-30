@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     name: "pvpSign",
     lvl: 1,
     translatedName: "Медаль Арены",

@@ -1,3 +1,3 @@
-const basketball = require('./basketball');
+import basketball from './basketball.js';
 
-module.exports = [...basketball];
+export default [...basketball];

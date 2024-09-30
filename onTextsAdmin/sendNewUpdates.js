@@ -1,12 +1,10 @@
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
-const {myId, token} = require("../config");
-const {sessions} = require("../data");
-const bot = require("../bot");
-const fs = require("fs");
-const https = require("https");
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
+import { myId } from '../config.js';
+import { sessions } from '../data.js';
+import bot from '../bot.js';
 
-module.exports = [[/(?:^|\s)\/send_new_updates\b/, async (msg) => {
+export default [[/(?:^|\s)\/send_new_updates\b/, async (msg) => {
     if (msg.from.id !== myId) {
         return;
     }

@@ -1,13 +1,13 @@
-const getRandom = require('../../../functions/getters/getRandom');
-const getValueByChance = require('../../../functions/getters/getValueByChance');
-const getSession = require('../../../functions/getters/getSession');
-const setLevel = require('../../../functions/game/player/setLevel');
-const getRandomChest = require('../../../functions/game/chest/getRandomChest');
-const endChestSession = require('../../../functions/game/chest/endChestSession');
-const sendPrizeMessage = require('../../../functions/game/chest/sendPrizeMessage');
-const editChest = require('../../../functions/game/chest/editChest');
-const bot = require('../../../bot');
-const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+import getRandom from '../../../functions/getters/getRandom.js';
+import getValueByChance from '../../../functions/getters/getValueByChance.js';
+import getSession from '../../../functions/getters/getSession.js';
+import setLevel from '../../../functions/game/player/setLevel.js';
+import getRandomChest from '../../../functions/game/chest/getRandomChest.js';
+import endChestSession from '../../../functions/game/chest/endChestSession.js';
+import sendPrizeMessage from '../../../functions/game/chest/sendPrizeMessage.js';
+import editChest from '../../../functions/game/chest/editChest.js';
+import bot from '../../../bot.js';
+import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
 
 let prizes = [
     {
@@ -63,7 +63,7 @@ let prizes = [
     chance: 10
 }];
 
-module.exports = [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callback, [, chatId, chest]) {
+export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callback, [, chatId, chest]) {
     if (session.chestTries < 1) {
         return;
     }

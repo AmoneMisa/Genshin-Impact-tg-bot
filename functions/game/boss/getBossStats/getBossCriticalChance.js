@@ -1,3 +1,3 @@
-module.exports = function (boss, bossTemplate) {
+export default function (boss, bossTemplate) {
     return bossTemplate.stats.criticalChance;
 };

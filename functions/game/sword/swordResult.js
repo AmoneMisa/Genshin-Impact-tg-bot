@@ -1,10 +1,10 @@
-const getTime = require('../../getters/getTime');
-const getRandom = require('../../getters/getRandom');
-const getOffset = require('../../getters/getOffset');
-const getStringRemainTime = require('../../getters/getStringRemainTime');
-const getUserName = require('../../getters/getUserName');
+import getTime from '../../getters/getTime.js';
+import getRandom from '../../getters/getRandom.js';
+import getOffset from '../../getters/getOffset.js';
+import getStringRemainTime from '../../getters/getStringRemainTime.js';
+import getUserName from '../../getters/getUserName.js';
 
-module.exports = function (session) {
+export default function (session) {
     let [remain] = getTime(session.timerSwordCallback);
 
     if (remain > 0) {

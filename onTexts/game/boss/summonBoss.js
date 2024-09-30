@@ -1,15 +1,15 @@
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getBoss = require('../../../functions/game/boss/getBossStatus/getAliveBoss');
-const bossAlreadySummoned = require('../../../functions/game/boss/getBossStatus/bossAlreadySummoned');
-const summonBoss = require('../../../functions/game/boss/summonBoss');
-const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
-const summonBossMessage = require("../../../functions/game/boss/summonBossMessage");
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const getChatSession = require("../../../functions/getters/getChatSession");
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getBoss from '../../../functions/game/boss/getBossStatus/getAliveBoss.js';
+import bossAlreadySummoned from '../../../functions/game/boss/getBossStatus/bossAlreadySummoned.js';
+import summonBoss from '../../../functions/game/boss/summonBoss.js';
+import getLocalImageByPath from '../../../functions/getters/getLocalImageByPath.js';
+import summonBossMessage from '../../../functions/game/boss/summonBossMessage.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
 
-module.exports = [[/(?:^|\s)\/boss\b/, async (msg) => {
+export default [[/(?:^|\s)\/boss\b/, async (msg) => {
     let chatId = msg.chat.id;
     await deleteMessage(chatId, msg.message_id);
     let boss = getBoss(chatId);

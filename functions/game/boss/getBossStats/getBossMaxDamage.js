@@ -1,4 +1,4 @@
-module.exports = function (boss, bossTemplate) {
+export default function (boss, bossTemplate) {
     let maxDamage = bossTemplate.stats.maxDamage;
     let lvl = boss.stats.lvl;
 

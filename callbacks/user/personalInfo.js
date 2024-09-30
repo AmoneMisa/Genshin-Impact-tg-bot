@@ -1,10 +1,10 @@
-const buttonsDictionary = require('../../dictionaries/buttons');
-const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const userTemplate = require('../../template/userTemplate');
-const translation = require('../../dictionaries/translate');
-const getUserName = require('../../functions/getters/getUserName');
+import buttonsDictionary from '../../dictionaries/buttons.js';
+import sendMessage from '../../functions/tgBotFunctions/sendMessage.js';
+import userTemplate from '../../template/userTemplate.js';
+import translation from '../../dictionaries/translate.js';
+import getUserName from '../../functions/getters/getUserName.js';
 
-module.exports = [["personal_info", function (session, callback) {
+export default [["personal_info", function (session, callback) {
     function formatMessage() {
         let str = "";
         for (let key of Object.keys(session.user)) {

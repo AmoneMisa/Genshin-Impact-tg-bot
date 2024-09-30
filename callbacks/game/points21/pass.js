@@ -1,5 +1,5 @@
-const pass = require('../../../functions/game/general/pass');
+import pass from '../../../functions/game/general/pass.js';
 
-module.exports = [[/points_pass$/, async (session, callback) => {
+export default [[/points_pass$/, async (session, callback) => {
     await pass(session, callback, "points");
 }]];

@@ -1,7 +1,7 @@
-const getMaxHp = require("../game/player/getters/getMaxHp");
-const {sessions} = require("../../data");
+import getMaxHp from '../game/player/getters/getMaxHp.js';
+import { sessions } from '../../data.js';
 
-module.exports = function () {
+export default function () {
     for (let chatSession of Object.values(sessions)) {
         for (let session of Object.values(chatSession.members)) {
             if (session.userChatData.user.is_bot) {

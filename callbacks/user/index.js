@@ -1,7 +1,7 @@
-const infoCallbacks = require('./info');
-const personalInfoCallback = require('./personalInfo');
+import infoCallbacks from './info.js';
+import personalInfoCallback from './personalInfo.js';
 
-module.exports = [
+export default [
     ...personalInfoCallback,
     ...infoCallbacks
 ];

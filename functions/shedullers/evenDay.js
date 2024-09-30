@@ -1,12 +1,12 @@
-const cron = require("node-cron");
-const restoreChancesToSteal = require("./restoreChancesToSteal");
-const restoreChestChances = require("./restoreChestChances");
-const restoreBonusChances = require("./restoreBonusChances");
-const updateFreeSpins = require("./updateFreeSpins");
-const hideDeadSouls = require('../misc/hideDeadSouls');
-const restoreArenaDailyChances = require('./restoreArenaDailyChances');
+import cron from 'node-cron';
+import restoreChancesToSteal from './restoreChancesToSteal.js';
+import restoreChestChances from './restoreChestChances.js';
+import restoreBonusChances from './restoreBonusChances.js';
+import updateFreeSpins from './updateFreeSpins.js';
+import hideDeadSouls from '../misc/hideDeadSouls.js';
+import restoreArenaDailyChances from './restoreArenaDailyChances.js';
 
-module.exports = function () {
+export default function () {
     cron.schedule('59 23 * * *', async () => {
         try {
             restoreChancesToSteal();

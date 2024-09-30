@@ -1,5 +1,5 @@
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [["close", async function (session, callback) {
+export default [["close", async function (session, callback) {
     await deleteMessage(callback.message.chat.id, callback.message.message_id)
 }]];

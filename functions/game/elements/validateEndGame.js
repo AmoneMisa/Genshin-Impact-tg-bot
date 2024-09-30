@@ -1,3 +1,3 @@
-module.exports = function (currentRound, maxRounds) {
+export default function (currentRound, maxRounds) {
     return currentRound > maxRounds;
 };

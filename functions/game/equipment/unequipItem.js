@@ -1,4 +1,4 @@
-module.exports = function (session, item) {
+export default function (session, item) {
     item.isUsed = false;
 
     for (let _slot of item.slots) {

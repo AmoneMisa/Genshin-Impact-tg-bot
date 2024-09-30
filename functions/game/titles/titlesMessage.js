@@ -1,4 +1,4 @@
-module.exports =  function (titles) {
+export default function (titles) {
     if (!titles || !titles.length) {
         return "В группе ещё нет ни одного титула. Чтобы получить титул используйте команду /title [название титула, введённое вручную]";
     }

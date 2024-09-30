@@ -1,17 +1,17 @@
-let game = require('./game');
-let getChatData = require('./getChatData');
-let getDebugLog = require('./getDebugLog');
-let addTrustedChat = require('./addTrustedChat');
-let showAdminCommands = require('./showAdminCommands');
-let showCreatorCommands = require('./showCreatorCommands');
-let settings = require('./settings');
-let sendFile = require('./sendFile');
-let getFileAndBackup = require('./getFileAndBackup');
-let hideDeadSouls = require('./hideDeadSouls');
-let sendNewUpdates = require('./sendNewUpdates');
+import game from './game/index.js';
+import getChatData from './getChatData.js';
+import getDebugLog from './getDebugLog.js';
+import addTrustedChat from './addTrustedChat.js';
+import showAdminCommands from './showAdminCommands.js';
+import showCreatorCommands from './showCreatorCommands.js';
+import settings from './settings.js';
+import sendFile from './sendFile.js';
+import getFileAndBackup from './getFileAndBackup.js';
+import hideDeadSouls from './hideDeadSouls.js';
+import sendNewUpdates from './sendNewUpdates.js';
 // let testCommand = require('./testCommand');
 
-module.exports = [
+export default [
     ...game,
     ...getChatData,
     ...getDebugLog,

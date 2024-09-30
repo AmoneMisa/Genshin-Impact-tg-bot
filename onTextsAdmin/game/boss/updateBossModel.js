@@ -1,9 +1,9 @@
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const {myId} = require("../../../config");
-const updateBossModel = require("../../../functions/game/boss/updateBossModel");
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import { myId } from '../../../config.js';
+import updateBossModel from '../../../functions/game/boss/updateBossModel.js';
 
-module.exports = [[/(?:^|\s)\/update_boss_model\b/, async (msg) => {
+export default [[/(?:^|\s)\/update_boss_model\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {

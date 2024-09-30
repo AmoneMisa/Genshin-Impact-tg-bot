@@ -1,14 +1,14 @@
-const endGame = require('./endGame');
-const sendMessageWithDelete = require('../../tgBotFunctions/sendMessageWithDelete');
-const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
-const setEndGameTimer = require('./setEndGameTimer');
+import endGame from './endGame.js';
+import sendMessageWithDelete from '../../tgBotFunctions/sendMessageWithDelete.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import setEndGameTimer from './setEndGameTimer.js';
 
 const messagesMap = {
     points: "очко",
     elements: "элементы"
 }
 
-module.exports = function (chatSession, timer, chatId, gameName) {
+export default function (chatSession, timer, chatId, gameName) {
     setEndGameTimer(chatSession, timer, chatId, gameName, () => {
         endGame(chatSession, chatId, null, false, gameName);
         sendMessageWithDelete(chatId, `Игра в ${messagesMap[gameName]} была отменена из-за отсутствия активности участников. Начните новую игру.`, {

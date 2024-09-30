@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const {myId} = require("../../../config");
-const getSession = require("../../../functions/getters/getSession");
-const getMaxHp = require("../../../functions/game/player/getters/getMaxHp");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import { myId } from '../../../config.js';
+import getSession from '../../../functions/getters/getSession.js';
+import getMaxHp from '../../../functions/game/player/getters/getMaxHp.js';
 
-module.exports = [[/(?:^|\s)\/respawn\b/, async (msg) => {
+export default [[/(?:^|\s)\/respawn\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {

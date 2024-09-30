@@ -1,10 +1,10 @@
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const getMemberStatus = require("../../../functions/getters/getMemberStatus");
-const buildKeyboard = require("../../../functions/keyboard/buildKeyboard");
-const controlButtons = require("../../../functions/keyboard/controlButtons");
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getMemberStatus from '../../../functions/getters/getMemberStatus.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
 
-module.exports = [[/(?:^|\s)\/update_characteristics\b/, async (msg) => {
+export default [[/(?:^|\s)\/update_characteristics\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (!getMemberStatus(msg.chat.id, msg.from.id)) {

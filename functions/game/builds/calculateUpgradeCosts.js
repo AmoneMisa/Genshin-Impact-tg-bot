@@ -1,5 +1,5 @@
 // Расчет стоимости улучшения до заданного уровня
-module.exports = function (upgradeCostsArray, level) {
+export default function (upgradeCostsArray, level) {
     const upgradeCosts = [...upgradeCostsArray]; // Создаем копию массива стоимостей улучшений
 
     while (upgradeCosts.length < level) {

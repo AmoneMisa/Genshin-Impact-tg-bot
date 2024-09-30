@@ -1,11 +1,11 @@
-const getRandom = require('../../getters/getRandom');
-const generateRandomEquipment = require('../../game/equipment/generateRandomEquipment');
-const getValueByChance = require("../../getters/getValueByChance");
-const getBossLoot = require('./getters/getBossLoot');
-const setLevel = require('../player/setLevel');
-const lodash = require("lodash");
+import getRandom from '../../getters/getRandom.js';
+import generateRandomEquipment from '../../game/equipment/generateRandomEquipment.js';
+import getValueByChance from '../../getters/getValueByChance.js';
+import getBossLoot from './getters/getBossLoot.js';
+import setLevel from '../player/setLevel.js';
+import lodash from 'lodash';
 
-module.exports = function (boss, sessions) {
+export default function (boss, sessions) {
     if (boss.currentHp > 0) {
         return false;
     }

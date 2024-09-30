@@ -1,4 +1,4 @@
-module.exports = function (session) {
+export default function (session) {
     if (!session.hasOwnProperty("game")) {
         session.game = {};
     }

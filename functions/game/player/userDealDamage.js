@@ -1,9 +1,9 @@
-const bossReflectDamage = require('../boss/bossReflectDamage');
-const calcDamage = require('../boss/calcDamage');
-const userVampireSkill = require('./userVampireSkill');
-const getMaxHp = require("./getters/getMaxHp");
+import bossReflectDamage from '../boss/bossReflectDamage.js';
+import calcDamage from '../boss/calcDamage.js';
+import userVampireSkill from './userVampireSkill.js';
+import getMaxHp from './getters/getMaxHp.js';
 
-module.exports = function (session, boss, skill) {
+export default function (session, boss, skill) {
     if (!boss) {
         throw new Error("Босс не найден!");
     }

@@ -1,6 +1,6 @@
-const buttonsDictionary = require('../../dictionaries/buttons');
-const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
+import buttonsDictionary from '../../dictionaries/buttons.js';
+import sendMessage from '../../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../../functions/tgBotFunctions/deleteMessage.js';
 
 const gamesCommands = [
     {command: "title", description: "Получить случайный титул"},
@@ -44,7 +44,7 @@ const resetGamesCommands = [
     {command: "reset_football_game", description: "Сбросить игру в футбол"}
 ]
 
-module.exports = [[/(?:^|\s)\/games\b/, async (msg) => {
+export default [[/(?:^|\s)\/games\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let message = `Список игр бота:\n\n`;
     message += `‼️ Перед использованием некоторых команд, пожалуйста, убедитесь, что Вы начали диалог с ботом, иначе он не сможет присылать Вам сообщения. Это не прихоть разработчика, это ограничения телеграма с целью борьбы со спам-ботами.‼️\n\n`;

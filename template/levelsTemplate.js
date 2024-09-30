@@ -13,4 +13,4 @@ for (let i = 1; i < countLvls; i++) {
     }
 }
 
-module.exports = lvls;
+export default lvls;

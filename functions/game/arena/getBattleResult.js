@@ -1,11 +1,11 @@
-const playerDamagePlayer = require("./playerDamagePlayer");
-const getMaxHp = require("../player/getters/getMaxHp");
+import playerDamagePlayer from './playerDamagePlayer.js';
+import getMaxHp from '../player/getters/getMaxHp.js';
 
 // 0 - выигрыш атакующего
 // 1 - проигрыш атакующего
 // 2 - ничья
 
-module.exports = function (attacker, defender, isBot = false) {
+export default function (attacker, defender, isBot = false) {
     let [attackerHp, defenderHp] = playerDamagePlayer(attacker, defender, isBot, false, 60, true);
     let defenderCurrentHpPercent;
 

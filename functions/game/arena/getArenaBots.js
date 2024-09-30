@@ -1,8 +1,8 @@
-const {arenaTempBots} = require("../../../data");
+import { arenaTempBots } from '../../../data.js';
 
 const maxRatingDifference = 60; // В очках
 
-module.exports = function (rating) {
+export default function (rating) {
     return arenaTempBots.filter(arenaBot => {
         if (arenaBot.rating === 1000) {
             return arenaBot;

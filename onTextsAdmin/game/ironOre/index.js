@@ -1,3 +1,3 @@
-const addGold = require('../gold/addGold');
+import addGold from '../gold/addGold.js';
 
-module.exports = [...addGold];
+export default [...addGold];

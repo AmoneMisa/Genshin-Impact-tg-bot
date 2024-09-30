@@ -1,11 +1,11 @@
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const getSession = require("../../../functions/getters/getSession");
-const buildKeyboard = require("../../../functions/keyboard/buildKeyboard");
-const controlButtons = require("../../../functions/keyboard/controlButtons");
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
-const getUserName = require('../../../functions/getters/getUserName');
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getSession from '../../../functions/getters/getSession.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getUserName from '../../../functions/getters/getUserName.js';
 
-module.exports = [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
+export default [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
     targetSession.chestCounter = 0;

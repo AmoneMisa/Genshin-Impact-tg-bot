@@ -1,9 +1,9 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const getChatSession = require('../../../functions/getters/getChatSession');
-const getMemberStatus = require("../../../functions/getters/getMemberStatus");
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import getMemberStatus from '../../../functions/getters/getMemberStatus.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/reset_point_game\b/, (msg) => {
+export default [[/(?:^|\s)\/reset_point_game\b/, (msg) => {
     deleteMessage(msg.chat.id, msg.message_id);
 
     if (!getMemberStatus(msg.chat.id, msg.from.id)) {

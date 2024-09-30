@@ -1,7 +1,7 @@
-const getCard = require('./getCard');
-const getPoints = require('./getPoints');
+import getCard from './getCard.js';
+import getPoints from './getPoints.js';
 
-module.exports = function (chatSession) {
+export default function (chatSession) {
     let players = Object.entries(chatSession.game.points.players)
         .filter(([playerId,]) => playerId !== "bot")
         .map(([, player]) => player);

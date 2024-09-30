@@ -1,25 +1,25 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const userDealDamage = require('../../../functions/game/player/userDealDamage');
-const setSkillCooldown = require('../../../functions/game/player/setSkillCooldown');
-const getCurrentHp = require('../../../functions/game/player/getters/getCurrentHp');
-const userDealDamageMessage = require('../../../functions/game/player/userDealDamageMessage');
-const useHealSkill = require('../../../functions/game/player/useHealSkill');
-const useShieldSkill = require('../../../functions/game/player/useShieldSkill');
-const isPlayerCanUseSkill = require('../../../functions/game/player/isPlayerCanUseSkill');
-const isPlayerCanUseSkillMessage = require('../../../functions/game/player/isPlayerCanUseSkillMessage');
-const bossSendLoot = require('../../../functions/game/boss/bossSendLoot');
-const bossLootMessage = require('../../../functions/game/boss/bossLootMessage');
-const getAliveBoss = require('../../../functions/game/boss/getBossStatus/getAliveBoss');
-const getMembers = require('../../../functions/getters/getMembers');
-const getSession = require('../../../functions/getters/getSession');
-const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
-const isBossAlive = require("../../../functions/game/boss/getBossStatus/isBossAlive");
-const skillUsagePayCost = require('../../../functions/game/player/skillUsagePayCost');
-const getTime = require("../../../functions/getters/getTime");
-const getChatSession = require("../../../functions/getters/getChatSession");
-const getMaxHp = require("../../../functions/game/player/getters/getMaxHp");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import userDealDamage from '../../../functions/game/player/userDealDamage.js';
+import setSkillCooldown from '../../../functions/game/player/setSkillCooldown.js';
+import getCurrentHp from '../../../functions/game/player/getters/getCurrentHp.js';
+import userDealDamageMessage from '../../../functions/game/player/userDealDamageMessage.js';
+import useHealSkill from '../../../functions/game/player/useHealSkill.js';
+import useShieldSkill from '../../../functions/game/player/useShieldSkill.js';
+import isPlayerCanUseSkill from '../../../functions/game/player/isPlayerCanUseSkill.js';
+import isPlayerCanUseSkillMessage from '../../../functions/game/player/isPlayerCanUseSkillMessage.js';
+import bossSendLoot from '../../../functions/game/boss/bossSendLoot.js';
+import bossLootMessage from '../../../functions/game/boss/bossLootMessage.js';
+import getAliveBoss from '../../../functions/game/boss/getBossStatus/getAliveBoss.js';
+import getMembers from '../../../functions/getters/getMembers.js';
+import getSession from '../../../functions/getters/getSession.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import isBossAlive from '../../../functions/game/boss/getBossStatus/isBossAlive.js';
+import skillUsagePayCost from '../../../functions/game/player/skillUsagePayCost.js';
+import getTime from '../../../functions/getters/getTime.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import getMaxHp from '../../../functions/game/player/getters/getMaxHp.js';
 
-module.exports = [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, skillSlot]) {
+export default [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, skillSlot]) {
     let foundSession = await getSession(chatId, callback.from.id);
     const skill = foundSession.game.gameClass.skills[skillSlot];
     let members = getMembers(chatId);

@@ -1,7 +1,7 @@
-const getNeedSummons = require('../../../functions/game/boss/getters/getNeedSummons.js');
-const getBossLevelByCurrentSummons = require('../../../functions/game/boss/getters/getBossLevelByCurrentSummons');
+import getNeedSummons from '../../../functions/game/boss/getters/getNeedSummons.js';
+import getBossLevelByCurrentSummons from '../../../functions/game/boss/getters/getBossLevelByCurrentSummons.js';
 
-module.exports = function (boss) {
+export default function (boss) {
     boss.stats.lvl = getBossLevelByCurrentSummons(boss.name, boss.stats.currentSummons);
     boss.stats.needSummons = getNeedSummons(boss.name, boss.stats.lvl);
 }

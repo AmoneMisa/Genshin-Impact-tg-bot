@@ -1,3 +1,3 @@
-module.exports = function (build) {
+export default function (build) {
     build.currentLvl++;
 }

@@ -1,5 +1,5 @@
-const arena = require('./arena');
+import arena from './arena.js';
 
-module.exports = [
+export default [
     ...arena
 ];

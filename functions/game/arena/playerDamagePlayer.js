@@ -1,34 +1,34 @@
-const getMaxHp = require("../player/getters/getMaxHp");
-const getMaxCp = require("../player/getters/getMaxCp");
-const getCurrentHp = require("../player/getters/getCurrentHp");
-const getMaxMp = require("../player/getters/getMaxMp");
-const getCurrentMp = require("../player/getters/getCurrentMp");
-const getMpRestoreSpeed = require("../player/getters/getMpRestoreSpeed");
-const getHpRestoreSpeed = require("../player/getters/getHpRestoreSpeed");
-const getCpRestoreSpeed = require("../player/getters/getCpRestoreSpeed");
-const limit = require("../../misc/limit");
-const getAccuracy = require("../player/getters/getAccuracy");
-const getEvasion = require("../player/getters/getEvasion");
-const chanceToHitTemplate = require("../../../template/chanceToHitTemplate");
-const getBlock = require("../player/getters/getBlock");
-const getEquipStatByName = require("../player/getters/getEquipStatByName");
-const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
-const getCriticalChanceMultiplier = require("../player/getters/getCriticalChanceMultiplier");
-const getCriticalChance = require("../player/getters/getCriticalChance");
-const getCriticalDamage = require("../player/getters/getCriticalDamage");
-const getCriticalDamageMultiplier = require("../player/getters/getCriticalDamageMultiplier");
-const getAttack = require("../player/getters/getAttack");
-const getDamageMultiplier = require("../player/getters/getDamageMultiplier");
-const getDefence = require("../player/getters/getDefence");
-const getAdditionalDamageMul = require("../player/getters/getAdditionalDamageMul");
-const getIncomingDamageModifier = require("../player/getters/getIncomingDamageModifier");
-const getPvpSign = require("../arena/getPvpSign");
-const useHealSkill = require("../player/useHealSkill");
-const useShieldSkill = require("../player/useShieldSkill");
-const getRandom = require("../../getters/getRandom");
-const lodash = require("lodash");
+import getMaxHp from '../player/getters/getMaxHp.js';
+import getMaxCp from '../player/getters/getMaxCp.js';
+import getCurrentHp from '../player/getters/getCurrentHp.js';
+import getMaxMp from '../player/getters/getMaxMp.js';
+import getCurrentMp from '../player/getters/getCurrentMp.js';
+import getMpRestoreSpeed from '../player/getters/getMpRestoreSpeed.js';
+import getHpRestoreSpeed from '../player/getters/getHpRestoreSpeed.js';
+import getCpRestoreSpeed from '../player/getters/getCpRestoreSpeed.js';
+import limit from '../../misc/limit.js';
+import getAccuracy from '../player/getters/getAccuracy.js';
+import getEvasion from '../player/getters/getEvasion.js';
+import chanceToHitTemplate from '../../../template/chanceToHitTemplate.js';
+import getBlock from '../player/getters/getBlock.js';
+import getEquipStatByName from '../player/getters/getEquipStatByName.js';
+import getRandomWithoutFloor from '../../getters/getRandomWithoutFloor.js';
+import getCriticalChanceMultiplier from '../player/getters/getCriticalChanceMultiplier.js';
+import getCriticalChance from '../player/getters/getCriticalChance.js';
+import getCriticalDamage from '../player/getters/getCriticalDamage.js';
+import getCriticalDamageMultiplier from '../player/getters/getCriticalDamageMultiplier.js';
+import getAttack from '../player/getters/getAttack.js';
+import getDamageMultiplier from '../player/getters/getDamageMultiplier.js';
+import getDefence from '../player/getters/getDefence.js';
+import getAdditionalDamageMul from '../player/getters/getAdditionalDamageMul.js';
+import getIncomingDamageModifier from '../player/getters/getIncomingDamageModifier.js';
+import getPvpSign from '../arena/getPvpSign.js';
+import useHealSkill from '../player/useHealSkill.js';
+import useShieldSkill from '../player/useShieldSkill.js';
+import getRandom from '../../getters/getRandom.js';
+import lodash from 'lodash';
 
-module.exports = function (attacker, defender, defenderIsBot = false, attackerIsBot = false, battleTime = 5 * 60, isArena = false) {
+export default function (attacker, defender, defenderIsBot = false, attackerIsBot = false, battleTime = 5 * 60, isArena = false) {
     let defenderObj;
 
     if (defenderIsBot) {

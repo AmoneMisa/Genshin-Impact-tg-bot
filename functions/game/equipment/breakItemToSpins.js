@@ -1,6 +1,6 @@
-const getRandom = require("../../getters/getRandom");
+import getRandom from '../../getters/getRandom.js';
 
-module.exports = function (inventory, item, gachaType) {
+export default function (inventory, item, gachaType) {
     let result = getRandom(costSpins[gachaTypeMap[gachaType] - 1].min, costSpins[gachaTypeMap[gachaType] - 1].max);
 
     if (!inventory.gacha.find(gachaItem => gachaItem.name === gachaType)) {

@@ -1,7 +1,7 @@
-const upgradeBuild = require('./upgradeBuild');
-const calculateOptimalSpeedUpCost = require("./calculateOptimalSpeedUpCost");
+import upgradeBuild from './upgradeBuild.js';
+import calculateOptimalSpeedUpCost from './calculateOptimalSpeedUpCost.js';
 
-module.exports = function (buildName, build, inventory) {
+export default function (buildName, build, inventory) {
     let speedupCost = calculateOptimalSpeedUpCost(buildName, build)
     clearTimeout(build.upgradeTimerId);
     build.upgradeStartedAt = null;

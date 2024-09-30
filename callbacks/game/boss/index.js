@@ -1,8 +1,8 @@
-const sendGoldCallback = require('./sendGoldCallback');
-const boss = require('./boss');
-const bossSettings = require('./bossSettings');
+import sendGoldCallback from './sendGoldCallback.js';
+import boss from './boss.js';
+import bossSettings from './bossSettings.js';
 
-module.exports = [
+export default [
     ...sendGoldCallback,
     ...boss,
     ...bossSettings

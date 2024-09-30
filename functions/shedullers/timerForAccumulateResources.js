@@ -1,8 +1,8 @@
-const {sessions} = require("../../data");
-const buildsTemplate = require("../../template/buildsTemplate");
-const debugMessage = require("../tgBotFunctions/debugMessage");
+import { sessions } from '../../data.js';
+import buildsTemplate from '../../template/buildsTemplate.js';
+import debugMessage from '../tgBotFunctions/debugMessage.js';
 
-module.exports = function () {
+export default function () {
     for (let chatSession of Object.values(sessions)) {
         for (let session of Object.values(chatSession.members)) {
             if (session.userChatData.user.is_bot) {

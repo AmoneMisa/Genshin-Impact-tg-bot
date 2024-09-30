@@ -1,5 +1,5 @@
-const calculateIncreaseUpgradeTime = require('./calculateUpgradeTime');
-const buildsTemplate = require("../../../template/buildsTemplate");
+import calculateIncreaseUpgradeTime from './calculateUpgradeTime.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
 // Калькулятор оставшегося времени постройки
 const maxLvl = 30;
 
@@ -9,7 +9,7 @@ const maxLvl = 30;
  * @param build
  * @returns Время оставшееся до улучшения здания в миллисекундах
  */
-module.exports = function (buildName, build) {
+export default function (buildName, build) {
     if (build.currentLvl < 1 || build.currentLvl > maxLvl) {
         throw new Error("Указан некорректный уровень!");
     }

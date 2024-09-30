@@ -1,7 +1,7 @@
-const getOffset = require('../../getters/getOffset');
-const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
+import getOffset from '../../getters/getOffset.js';
+import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
 
-module.exports = function (session, callback) {
+export default function (session, callback) {
     if (session.chestCounter > 2) {
         session.chestCounter = 0;
         session.chosenChests = [];

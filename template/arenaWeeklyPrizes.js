@@ -1,4 +1,4 @@
-module.exports = [{
+export default [{
     rank: "Без ранга",
     reward: 5
 },{

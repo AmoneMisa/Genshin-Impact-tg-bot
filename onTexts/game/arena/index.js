@@ -1,7 +1,7 @@
-const arena = require('./arena');
-const arenaLeadersBoard = require('./arenaLeadersBoard');
+import arena from './arena.js';
+import arenaLeadersBoard from './arenaLeadersBoard.js';
 
-module.exports = [
+export default [
     ...arena,
     ...arenaLeadersBoard
 ];

@@ -1,9 +1,9 @@
-const cron = require("node-cron");
-const checkAccumulateTimer = require("../game/builds/checkAccumulateTimer");
-const restoreArenaChances = require("./restoreArenaChances");
-const generateArenaBots = require("./generateArenaBots");
+import cron from 'node-cron';
+import checkAccumulateTimer from '../game/builds/checkAccumulateTimer.js';
+import restoreArenaChances from './restoreArenaChances.js';
+import generateArenaBots from './generateArenaBots.js';
 
-module.exports = function () {
+export default function () {
     cron.schedule('0 * * * *', async () => {
         try {
             await checkAccumulateTimer();

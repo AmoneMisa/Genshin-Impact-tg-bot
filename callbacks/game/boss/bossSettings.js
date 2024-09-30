@@ -1,12 +1,12 @@
-const getChatSession = require("../../../functions/getters/getChatSession");
-const getMemberStatus = require("../../../functions/getters/getMemberStatus");
-const getChatSessionBossSettings = require("../../../functions/getters/getChatSessionBossSettings");
-const invertButtonCallbackData = require("../../../functions/keyboard/invertButtonCallbackData");
-const setButtonText = require("../../../functions/keyboard/setButtonText");
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
-const controlButtons = require("../../../functions/keyboard/controlButtons");
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import getMemberStatus from '../../../functions/getters/getMemberStatus.js';
+import getChatSessionBossSettings from '../../../functions/getters/getChatSessionBossSettings.js';
+import invertButtonCallbackData from '../../../functions/keyboard/invertButtonCallbackData.js';
+import setButtonText from '../../../functions/keyboard/setButtonText.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
 
-module.exports = [[/^bossSettings\.([^.]+)\.([0-1]+)$/, async function (session, callback, [, setting, flag]) {
+export default [[/^bossSettings\.([^.]+)\.([0-1]+)$/, async function (session, callback, [, setting, flag]) {
     let chatSession = getChatSession(callback.message.chat.id);
 
     if (!getMemberStatus(callback.message.chat.id, chatSession.bossSettingsMessageId)) {

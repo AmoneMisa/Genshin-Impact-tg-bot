@@ -1,6 +1,6 @@
-const getMembers = require('../getters/getMembers');
+import getMembers from '../getters/getMembers.js';
 
-module.exports = function (chatId, name, includeHimself = true, callerId) {
+export default function (chatId, name, includeHimself = true, callerId) {
     let buttons = [];
     let tempArray = null;
     let i = 0;

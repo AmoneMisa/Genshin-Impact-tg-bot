@@ -1,4 +1,4 @@
-const gachaTemplate = require("../../../template/gachaTemplate");
+import gachaTemplate from '../../../template/gachaTemplate.js';
 
 // 1 - уровень слишком низкий
 // 2 - недостаточно золота
@@ -7,7 +7,7 @@ const gachaTemplate = require("../../../template/gachaTemplate");
 // -1 - можно роллить за осколки
 // -2 - можно роллить за бесплатные попытки
 
-module.exports = function (session, gachaType) {
+export default function (session, gachaType) {
     let gacha = gachaTemplate.find(item => item.name === gachaType);
     let gachaItemInInventory = session.game.gacha.find(item => item.name === gachaType);
     let isFreeSpin = gachaItemInInventory?.freeSpins > 0;

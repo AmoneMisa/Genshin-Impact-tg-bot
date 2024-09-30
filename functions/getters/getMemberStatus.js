@@ -1,7 +1,7 @@
-const getMembers = require('./getMembers');
-const {myId} = require("../../config");
+import getMembers from './getMembers.js';
+import { myId } from '../../config.js';
 
-module.exports = function (chatId, userId) {
+export default function (chatId, userId) {
     let members = getMembers(chatId);
 
     if (members[userId]) {

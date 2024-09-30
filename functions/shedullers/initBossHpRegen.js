@@ -1,9 +1,9 @@
-const {bosses, sessions} = require("../../data");
-const sendMessage = require('../tgBotFunctions/sendMessage');
-const isBossAlive = require("../game/boss/getBossStatus/isBossAlive");
-const cron = require("node-cron");
+import { bosses, sessions } from '../../data.js';
+import sendMessage from '../tgBotFunctions/sendMessage.js';
+import isBossAlive from '../game/boss/getBossStatus/isBossAlive.js';
+import cron from 'node-cron';
 
-module.exports = async function () {
+export default async function () {
 
     for (let [chatId, bossesArray] of Object.entries(bosses)) {
         for (let boss of bossesArray) {

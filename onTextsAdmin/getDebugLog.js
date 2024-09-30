@@ -1,9 +1,9 @@
-const bot = require('../bot');
-const {myId} = require('../config');
-const fs = require('fs');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import bot from '../bot.js';
+import { myId } from '../config.js';
+import fs from 'fs';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/get_debug_log\b/, async (msg) => {
+export default [[/(?:^|\s)\/get_debug_log\b/, async (msg) => {
     if (msg.from.id !== myId) {
         return;
     }

@@ -1,5 +1,5 @@
-const getClassStatsFromTemplate = require("./getGameClassStatsFromTemplate");
-module.exports = function (gameClass) {
+import getClassStatsFromTemplate from './getGameClassStatsFromTemplate.js';
+export default function (gameClass) {
     if (!gameClass) {
         gameClass = getClassStatsFromTemplate("noClass");
     }

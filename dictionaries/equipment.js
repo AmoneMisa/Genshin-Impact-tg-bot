@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     whichList: ['огня',
         'яда',
         'проклятья',

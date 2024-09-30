@@ -1,12 +1,12 @@
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const getMembers = require('../functions/getters/getMembers');
-const bot = require('../bot');
-const {myId} = require('../config');
-const {updTrustedChats} = require('../data');
-const fs = require('fs');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import getMembers from '../functions/getters/getMembers.js';
+import bot from '../bot.js';
+import { myId } from '../config.js';
+import { updTrustedChats } from '../data.js';
+import fs from 'fs';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
+export default [[/(?:^|\s)\/mark_trusted\b/, async (msg) => {
     if (msg.from.id !== myId) {
         return;
     }

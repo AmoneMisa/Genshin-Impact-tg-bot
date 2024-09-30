@@ -1,4 +1,4 @@
-module.exports = function (callerId, name, rating, arenaType, chatId, showedPlayers) {
+export default function (callerId, name, rating, arenaType, chatId, showedPlayers) {
     let buttons = [];
     let tempArray = null;
     let i = 0;

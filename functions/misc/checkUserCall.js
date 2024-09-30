@@ -1,5 +1,5 @@
-const getUserName = require("../getters/getUserName");
-module.exports = function (callback, session) {
+import getUserName from '../getters/getUserName.js';
+export default function (callback, session) {
     if (callback.message?.text) {
         return callback.message.text.includes(getUserName(session, "nickname"));
     }

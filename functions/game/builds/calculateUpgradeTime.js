@@ -1,6 +1,6 @@
-const buildsTemplate = require("../../../template/buildsTemplate");
+import buildsTemplate from '../../../template/buildsTemplate.js';
 
-module.exports = function (buildName, lvl) {
+export default function (buildName, lvl) {
     const buildTemplate = buildsTemplate[buildName];
 
     if (!buildTemplate) {

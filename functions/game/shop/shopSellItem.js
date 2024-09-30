@@ -1,8 +1,8 @@
-const shopTemplate = require('../../../template/shopTemplate');
-const potionsInInventoryTemplate = require('../../../template/potionsInInventoryTemplate');
-const getOffsetToDay = require('../../getters/getOffsetToDay');
-const getOffset = require('../../getters/getOffset');
-const getUserName = require('../../getters/getUserName');
+import shopTemplate from '../../../template/shopTemplate.js';
+import potionsInInventoryTemplate from '../../../template/potionsInInventoryTemplate.js';
+import getOffsetToDay from '../../getters/getOffsetToDay.js';
+import getOffset from '../../getters/getOffset.js';
+import getUserName from '../../getters/getUserName.js';
 
 function getPotionCharacteristics(command) {
     const match = command.match(/^(potion|elixir)(Hp|Mp)(\d+)$/);
@@ -86,7 +86,7 @@ function check(session, command, item, isDaily) {
     return `${getUserName(session, "nickname")}, сначала нужно обзавестись золотишком, чтобы что-то купить.`
 }
 
-module.exports = function (session, command, item) {
+export default function (session, command, item) {
     if (!session.game) {
         return `${getUserName(session, "nickname")}, сначала нужно обзавестись золотишком, чтобы что-то купить.`
     }

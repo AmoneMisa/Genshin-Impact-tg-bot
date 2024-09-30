@@ -1,3 +1,3 @@
-const resetElementsGame = require('./resetElementsGame');
+import resetElementsGame from './resetElementsGame.js';
 
-module.exports = [...resetElementsGame];
+export default [...resetElementsGame];

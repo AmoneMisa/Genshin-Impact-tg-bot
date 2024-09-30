@@ -1,6 +1,6 @@
-const synergies = require("../../../template/elementsSynergy");
+import synergies from '../../../template/elementsSynergy.js';
 
-module.exports = function (winners, gameName) {
+export default function (winners, gameName) {
     let str = "Список игроков:\n\n";
 
     for (let winner of winners) {

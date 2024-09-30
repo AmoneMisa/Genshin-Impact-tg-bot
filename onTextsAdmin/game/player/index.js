@@ -1,13 +1,13 @@
-const updateUserStats = require('./updateUserStats');
-const updateUserStatsInAllChatSessions = require('./updateUserStatsInAllChatSessions');
-const updateUserSkillsInAllChatSessions = require('./updateUserSkillsInAllChatSessions');
-const addStealChance = require('./addStealChance');
-const addBonusChance = require('./addBonusChance');
-const clearSessionsInAllChatSessions = require('./clearSessionsInAllChatSessions');
-const respawn = require('./respawn');
-const clearChatSession = require('./clearBossSession');
+import updateUserStats from './updateUserStats.js';
+import updateUserStatsInAllChatSessions from './updateUserStatsInAllChatSessions.js';
+import updateUserSkillsInAllChatSessions from './updateUserSkillsInAllChatSessions.js';
+import addStealChance from './addStealChance.js';
+import addBonusChance from './addBonusChance.js';
+import clearSessionsInAllChatSessions from './clearSessionsInAllChatSessions.js';
+import respawn from './respawn.js';
+import clearChatSession from './clearBossSession.js';
 
-module.exports = [
+export default [
     ...updateUserStats,
     ...updateUserStatsInAllChatSessions,
     ...updateUserSkillsInAllChatSessions,

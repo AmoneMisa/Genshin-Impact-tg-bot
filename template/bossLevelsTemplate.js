@@ -1,6 +1,6 @@
-const bossTemplate = require("./bossTemplate");
+import bossTemplate from './bossTemplate.js';
 
-module.exports = function (bossName) {
+export default function (bossName) {
     let step = 1.15;
     let countLvls = 30;
     let template = bossTemplate.find((boss) => boss.name === bossName);

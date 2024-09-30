@@ -1,8 +1,8 @@
-const getBuildList = require("./getBuildList");
-const buildsTemplate = require("../../../template/buildsTemplate");
-const getSession = require("../../getters/getSession");
+import getBuildList from './getBuildList.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import getSession from '../../getters/getSession.js';
 
-module.exports = async function (buildName, build, chatId, userId) {
+export default async function (buildName, build, chatId, userId) {
     if (!buildsTemplate[buildName].hasOwnProperty("upgradeRequirements")) {
         return true;
     }

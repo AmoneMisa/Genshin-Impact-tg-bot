@@ -1,4 +1,4 @@
-module.exports = function (clan) {
+export default function (clan) {
     let points;
 
     //Количество рейтинговых очков клана -

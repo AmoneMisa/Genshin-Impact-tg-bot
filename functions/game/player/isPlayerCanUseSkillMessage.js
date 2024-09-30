@@ -1,8 +1,8 @@
-const getSkillCooldown = require("./getters/getSkillCooldown");
-const getStringRemainTime = require("../../getters/getStringRemainTime");
-const getTime = require("../../getters/getTime");
+import getSkillCooldown from './getters/getSkillCooldown.js';
+import getStringRemainTime from '../../getters/getStringRemainTime.js';
+import getTime from '../../getters/getTime.js';
 
-module.exports = function (errorCode, skill) {
+export default function (errorCode, skill) {
     if (errorCode === 1) {
         return "Недостаточно маны или хп для использования скилла. /whoami";
     }

@@ -1,3 +1,3 @@
-const bonus = require('./bonus');
+import bonus from './bonus.js';
 
-module.exports = [...bonus];
+export default [...bonus];

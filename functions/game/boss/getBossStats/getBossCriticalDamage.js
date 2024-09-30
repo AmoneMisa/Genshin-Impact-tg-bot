@@ -1,4 +1,4 @@
-module.exports = function (boss, bossTemplate) {
+export default function (boss, bossTemplate) {
     let criticalDamage = bossTemplate.stats.criticalDamage;
     let lvl = boss.stats.lvl;
 

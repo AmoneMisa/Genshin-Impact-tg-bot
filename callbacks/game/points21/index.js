@@ -1,10 +1,10 @@
-const takeCard = require('./takeCard');
-const bet = require('./bet');
-const enter = require('./enter');
-const leave = require('./leave');
-const pass = require('./pass');
+import takeCard from './takeCard.js';
+import bet from './bet.js';
+import enter from './enter.js';
+import leave from './leave.js';
+import pass from './pass.js';
 
-module.exports = [
+export default [
     ...takeCard,
     ...bet,
     ...enter,

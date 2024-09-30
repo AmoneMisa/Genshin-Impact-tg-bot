@@ -1,4 +1,4 @@
-// module.exports = function (chatSession, userId) {
+// export default function (chatSession, userId) {
 //     if (!chatSession.pointIsStart) {
 //         return false;
 //     }

@@ -1,9 +1,9 @@
-let data = require("../../../data");
-const bossesTemplate = require("../../../template/bossTemplate");
+import {bosses} from "../../../data.js";
+import bossesTemplate from '../../../template/bossTemplate.js';
 
-module.exports = function () {
+export default function () {
     let newBosses = {};
-    for (let [chatId, bossesArray] of Object.entries(data.bosses)) {
+    for (let [chatId, bossesArray] of Object.entries(bosses)) {
         if (Array.isArray(bossesArray)) {
             let newBossesArray = [];
             for (let boss of bossesArray) {
@@ -41,5 +41,5 @@ module.exports = function () {
         }
     }
 
-    data.bosses = newBosses;
+    bosses = newBosses;
 }

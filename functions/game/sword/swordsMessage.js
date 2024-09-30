@@ -1,6 +1,6 @@
-const getUserName = require('../../getters/getUserName');
+import getUserName from '../../getters/getUserName.js';
 
-module.exports = function (sessions) {
+export default function (sessions) {
     let arrSessions = Object.values(sessions);
 
     if (arrSessions.length === 0) {

@@ -1,8 +1,8 @@
-const dictionary = require('../dictionaries/main');
-const buttonsDictionary = require('../dictionaries/buttons');
-const editMessageText = require('../functions/tgBotFunctions/editMessageText');
+import dictionary from '../dictionaries/main.js';
+import buttonsDictionary from '../dictionaries/buttons.js';
+import editMessageText from '../functions/tgBotFunctions/editMessageText.js';
 
-module.exports = [["help", function (session, callback) {
+export default [["help", function (session, callback) {
     return editMessageText(`${dictionary.ru.help.main}`, {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,

@@ -1,4 +1,4 @@
-module.exports = [{
+export default [{
     name: "newbie",
     needLvl: 5,
     translatedName: "Спираль новичка",

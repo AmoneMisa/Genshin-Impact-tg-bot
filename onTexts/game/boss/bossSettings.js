@@ -1,10 +1,10 @@
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const getChatSession = require("../../../functions/getters/getChatSession");
-const getChatSessionBossSettings = require("../../../functions/getters/getChatSessionBossSettings");
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import getChatSessionBossSettings from '../../../functions/getters/getChatSessionBossSettings.js';
 
-module.exports = [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
+export default [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
     let chatId = msg.chat.id;
     let chatSession = getChatSession(chatId);
     await deleteMessage(chatId, msg.message_id);

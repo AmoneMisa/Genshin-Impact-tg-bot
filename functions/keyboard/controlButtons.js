@@ -1,6 +1,6 @@
-const buttonsDictionary = require('../../dictionaries/buttons');
+import buttonsDictionary from '../../dictionaries/buttons.js';
 
-module.exports = function (name, buttonRows, page, homeName = null, homeButtonName = "Главная") {
+export default function (name, buttonRows, page, homeName = null, homeButtonName = "Главная") {
     if (!buttonRows.length) {
         return [[{
             text: buttonsDictionary["ru"].close,

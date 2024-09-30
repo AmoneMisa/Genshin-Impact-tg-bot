@@ -1,12 +1,12 @@
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const bot = require('../bot');
-const {myId} = require('../config');
-const fs = require('fs');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import bot from '../bot.js';
+import { myId } from '../config.js';
+import fs from 'fs';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
 // Отправка ботом файла по имени пользователю
 
-module.exports = [[/\/get_file (.+)/, async (msg, regResult) => {
+export default [[/\/get_file (.+)/, async (msg, regResult) => {
     if (msg.from.id !== myId) {
         return;
     }

@@ -1,14 +1,14 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getUserName = require("../../../functions/getters/getUserName");
-const getRandom = require("../../../functions/getters/getRandom");
-const getMembers = require("../../../functions/getters/getMembers");
-const getTime = require("../../../functions/getters/getTime");
-const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
-const data = require("../../../data");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import getRandom from '../../../functions/getters/getRandom.js';
+import getMembers from '../../../functions/getters/getMembers.js';
+import getTime from '../../../functions/getters/getTime.js';
+import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
+import {titles} from '../../../data.js';
 
-module.exports = [[/(?:^|\s)\/title ([A-яА-яЁё]+)(?:\s|$)/, async (msg, session, [, title]) => {
+export default [[/(?:^|\s)\/title ([A-яА-яЁё]+)(?:\s|$)/, async (msg, session, [, title]) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (!title) {
@@ -27,14 +27,14 @@ module.exports = [[/(?:^|\s)\/title ([A-яА-яЁё]+)(?:\s|$)/, async (msg, ses
         session.timerTitleCallback = new Date().getTime() + 10 * 60 * 1000;
         message = `Сегодня ты, @${getUserName(randomMember, "nickname")} - ${title}`;
 
-        if (!data.titles[msg.chat.id]) {
-            data.titles[msg.chat.id] = [];
+        if (!titles[msg.chat.id]) {
+            titles[msg.chat.id] = [];
         }
 
-        data.titles[msg.chat.id].unshift(message.replace("@", ""));
+        titles[msg.chat.id].unshift(message.replace("@", ""));
 
-        while (data.titles[msg.chat.id].length > 15) {
-            data.titles[msg.chat.id].pop();
+        while (titles[msg.chat.id].length > 15) {
+            titles[msg.chat.id].pop();
         }
 
     } else {

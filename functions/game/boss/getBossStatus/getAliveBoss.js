@@ -1,7 +1,7 @@
-const bossAlreadySummoned = require("./bossAlreadySummoned");
-const getBossesByChatId = require("../getters/getBossesByChatId");
+import bossAlreadySummoned from './bossAlreadySummoned.js';
+import getBossesByChatId from '../getters/getBossesByChatId.js';
 
-module.exports = function (chatId) {
+export default function (chatId) {
     let chatBosses = getBossesByChatId(chatId);
 
     if (!Array.isArray(chatBosses)) {

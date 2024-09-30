@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getFile = require("../../../functions/getters/getFile");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getFile from '../../../functions/getters/getFile.js';
 
-module.exports = [[/(?:^|\s)\/lucky_roll\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/lucky_roll\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     let file = getFile(`images/gacha`, "choice");

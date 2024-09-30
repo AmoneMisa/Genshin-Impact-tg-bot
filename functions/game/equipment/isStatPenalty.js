@@ -1,4 +1,4 @@
-module.exports = function (name, value) {
+export default function (name, value) {
     if (name === "incomingDamageModifier") {
         return value > 1;
     }

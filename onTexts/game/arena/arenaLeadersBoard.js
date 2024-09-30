@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getFile = require("../../../functions/getters/getFile");
-const getPlayersListByArenaType = require("../../../functions/game/arena/getPlayersListByArenaType");
-const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getFile from '../../../functions/getters/getFile.js';
+import getPlayersListByArenaType from '../../../functions/game/arena/getPlayersListByArenaType.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
 
-module.exports = [[/(?:^|\s)\/arena_leaderboard\b/, async (msg) => {
+export default [[/(?:^|\s)\/arena_leaderboard\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let playersList = await getPlayersListByArenaType("common", 1, msg.chat.id);
 

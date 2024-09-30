@@ -1,9 +1,9 @@
-const getClassStatsFromTemplate = require("../player/getters/getGameClassStatsFromTemplate");
-const getClassSkillsFromTemplate = require("../player/getters/getGameClassSkillsFromTemplate");
-const classStatsTemplate = require("../../../template/classStatsTemplate");
-const getRandom = require("../../getters/getRandom");
+import getClassStatsFromTemplate from '../player/getters/getGameClassStatsFromTemplate.js';
+import getClassSkillsFromTemplate from '../player/getters/getGameClassSkillsFromTemplate.js';
+import classStatsTemplate from '../../../template/classStatsTemplate.js';
+import getRandom from '../../getters/getRandom.js';
 
-module.exports = function (rating) {
+export default function (rating) {
     let className = classStatsTemplate[getRandom(1, classStatsTemplate.length - 1)].name;
     let ratingObj = levelsMap.find(item => item.rating >= rating);
     let stats = getClassStatsFromTemplate(className, ratingObj.lvl);

@@ -1,9 +1,9 @@
-const pointsBotThink = require('../point21/botThink');
-const findWinners = require('./findWinners');
-const endGameMessage = require('./endGameMessage');
-const setEndGameTimer = require('./setEndGameTimer');
+import pointsBotThink from '../point21/botThink.js';
+import findWinners from './findWinners.js';
+import endGameMessage from './endGameMessage.js';
+import setEndGameTimer from './setEndGameTimer.js';
 
-module.exports = function (chatSession, chatId, messageId, isDefault = true, gameName) {
+export default function (chatSession, chatId, messageId, isDefault = true, gameName) {
     if (!chatSession.game[gameName]) {
         return;
     }

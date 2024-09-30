@@ -1,13 +1,13 @@
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const getSession = require("../../../functions/getters/getSession");
-const getMembers = require("../../../functions/getters/getMembers");
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
-const getUserName = require('../../../functions/getters/getUserName');
-const updatePlayerStats = require('../../../functions/game/player/updatePlayerStats');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getSession from '../../../functions/getters/getSession.js';
+import getMembers from '../../../functions/getters/getMembers.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import updatePlayerStats from '../../../functions/game/player/updatePlayerStats.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 
-module.exports = [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
+export default [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     updatePlayerStats(targetSession);
 

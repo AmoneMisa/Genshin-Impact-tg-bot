@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     values: [
         {name: "Т", point: 11},
         {name: "К", point: 4},

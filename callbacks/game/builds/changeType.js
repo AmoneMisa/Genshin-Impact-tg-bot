@@ -1,16 +1,16 @@
-const getBuild = require("../../../functions/game/builds/getBuild");
-const bot = require("../../../bot");
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
-const sendPhoto = require("../../../functions/tgBotFunctions/sendPhoto");
-const buildsTemplate = require("../../../template/buildsTemplate");
-const getCaption = require('../../../functions/game/builds/getCaption');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getSession = require("../../../functions/getters/getSession");
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
+import getBuild from '../../../functions/game/builds/getBuild.js';
+import bot from '../../../bot.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getLocalImageByPath from '../../../functions/getters/getLocalImageByPath.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import getCaption from '../../../functions/game/builds/getCaption.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getSession from '../../../functions/getters/getSession.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
-module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (session, callback) {
+export default [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType$/);
     let messageId = callback.message.message_id;
 

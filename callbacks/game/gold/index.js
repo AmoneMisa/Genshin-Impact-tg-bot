@@ -1,5 +1,5 @@
-const addGoldCallback = require('./addGoldCallback');
+import addGoldCallback from './addGoldCallback.js';
 
-module.exports = [
+export default [
     ...addGoldCallback
 ];

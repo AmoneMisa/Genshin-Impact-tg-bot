@@ -1,8 +1,8 @@
-const menu = require('./form');
-const setField = require('./setField');
-const removeKeyboard = require('./removeKeyboard');
+import menu from './form.js';
+import setField from './setField.js';
+import removeKeyboard from './removeKeyboard.js';
 
-module.exports = [
+export default [
     ...menu,
     ...setField,
     ...removeKeyboard

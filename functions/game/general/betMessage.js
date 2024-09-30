@@ -1,4 +1,4 @@
-module.exports = function (players, members) {
+export default function (players, members) {
     let str = "";
 
     for (let [id, player] of Object.entries(players)) {

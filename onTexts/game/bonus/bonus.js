@@ -1,11 +1,11 @@
-const getEmoji = require('../../../functions/getters/getEmoji');
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getRandom = require("../../../functions/getters/getRandom");
-const getValueByChance = require("../../../functions/getters/getValueByChance");
-const getFile = require("../../../functions/getters/getFile");
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getRandom from '../../../functions/getters/getRandom.js';
+import getValueByChance from '../../../functions/getters/getValueByChance.js';
+import getFile from '../../../functions/getters/getFile.js';
 
 let prizes = [{
     value: {
@@ -33,7 +33,7 @@ let prizes = [{
     chance: 20
 }];
 
-module.exports = [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (session.game.bonusChances <= 0) {

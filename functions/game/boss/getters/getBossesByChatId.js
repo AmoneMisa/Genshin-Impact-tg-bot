@@ -1,6 +1,6 @@
-const {bosses} = require("../../../../data");
+import { bosses } from '../../../../data.js';
 
-module.exports = function (chatId) {
+export default function (chatId) {
     if (!bosses[chatId]) {
         bosses[chatId] = [];
     }

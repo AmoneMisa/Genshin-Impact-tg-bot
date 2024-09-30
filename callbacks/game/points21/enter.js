@@ -1,5 +1,5 @@
-const enter = require('../../../functions/game/general/enter');
+import enter from '../../../functions/game/general/enter.js';
 
-module.exports = [[/points_enter$/, (session, callback) => {
+export default [[/points_enter$/, (session, callback) => {
     enter(session, callback, "points");
 }]];

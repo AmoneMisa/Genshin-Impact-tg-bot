@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     {type: "gold", name: "Золото", emoji: "💰", category: "resources"},
     {type: "ironOre", name: "Железная руда", emoji: "⛏️", category: "resources"},
     {type: "crystals", name: "Кристаллы", emoji: "💎", category: "resources"},

@@ -1,15 +1,15 @@
-const getDefenderDataString = require("./getDefenderDataString");
-const {arenaRating} = require("../../../data");
-const getPlayerRating = require("./getPlayerRating");
-const getArenaBots = require("./getArenaBots");
-const generateArenaBots = require("../../shedullers/generateArenaBots");
-const getSession = require("../../getters/getSession");
-const lodash = require("lodash");
+import getDefenderDataString from './getDefenderDataString.js';
+import { arenaRating } from '../../../data.js';
+import getPlayerRating from './getPlayerRating.js';
+import getArenaBots from './getArenaBots.js';
+import generateArenaBots from '../../shedullers/generateArenaBots.js';
+import getSession from '../../getters/getSession.js';
+import lodash from 'lodash';
 
 const maxDefenders = 6;
 const maxRatingDifference = 0.15; // 10%
 
-module.exports = async function (arenaType, chatId, userId) {
+export default async function (arenaType, chatId, userId) {
     let message = "";
     let playersList = arenaType === "common" ? arenaRating[arenaType][chatId] : arenaRating[arenaType];
     let [attackerRating] = getPlayerRating(userId, arenaType, chatId);

@@ -1,4 +1,4 @@
-const kill = require('./kill');
-const updateBossModel = require('./updateBossModel');
+import kill from './kill.js';
+import updateBossModel from './updateBossModel.js';
 
-module.exports = [...kill, ...updateBossModel];
+export default [...kill, ...updateBossModel];

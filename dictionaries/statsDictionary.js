@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     attack: "Атака",
     defence: "Защита",
     criticalDamage: "Крит. урон",

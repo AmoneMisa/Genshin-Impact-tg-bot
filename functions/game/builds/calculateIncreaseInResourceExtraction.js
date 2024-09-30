@@ -1,4 +1,4 @@
-module.exports = function (buildName, lvl) {
+export default function (buildName, lvl) {
         let increaseFactor;
 
         switch (buildName) {

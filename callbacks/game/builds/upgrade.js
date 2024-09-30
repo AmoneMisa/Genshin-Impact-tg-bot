@@ -1,21 +1,21 @@
-const getBuild = require("../../../functions/game/builds/getBuild");
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
-const getCaption = require('../../../functions/game/builds/getCaption');
-const calculateUpgradeCosts = require('../../../functions/game/builds/calculateUpgradeCosts');
-const calculateOptimalSpeedUpCost = require('../../../functions/game/builds/calculateOptimalSpeedUpCost');
-const speedupUpgradeBuild = require('../../../functions/game/builds/speedupUpgradeBuild');
-const payForUpgrade = require('../../../functions/game/builds/payForUpgrade');
-const upgradeBuildTimer = require('../../../functions/game/builds/upgradeBuildTimer');
-const isCanBeBuild = require('../../../functions/game/builds/isCanBeBuild');
-const calculateRemainBuildTime = require('../../../functions/game/builds/calculateRemainBuildTime');
-const buildsTemplate = require("../../../template/buildsTemplate");
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const getUserName = require('../../../functions/getters/getUserName');
-const getBuildList = require("../../../functions/game/builds/getBuildList");
-const getSession = require("../../../functions/getters/getSession");
-const statsDictionary = require("../../../dictionaries/statsDictionary");
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
+import getBuild from '../../../functions/game/builds/getBuild.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
+import getCaption from '../../../functions/game/builds/getCaption.js';
+import calculateUpgradeCosts from '../../../functions/game/builds/calculateUpgradeCosts.js';
+import calculateOptimalSpeedUpCost from '../../../functions/game/builds/calculateOptimalSpeedUpCost.js';
+import speedupUpgradeBuild from '../../../functions/game/builds/speedupUpgradeBuild.js';
+import payForUpgrade from '../../../functions/game/builds/payForUpgrade.js';
+import upgradeBuildTimer from '../../../functions/game/builds/upgradeBuildTimer.js';
+import isCanBeBuild from '../../../functions/game/builds/isCanBeBuild.js';
+import calculateRemainBuildTime from '../../../functions/game/builds/calculateRemainBuildTime.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import getBuildList from '../../../functions/game/builds/getBuildList.js';
+import getSession from '../../../functions/getters/getSession.js';
+import statsDictionary from '../../../dictionaries/statsDictionary.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
 async function errorUpdateMessage(buildName, build, chatId, messageId, callback, session) {
     return editMessageCaption(`@${getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
@@ -62,7 +62,7 @@ async function getUpgradeRequirementsMessage(buildName, currentLvl, chatId, user
     return str;
 }
 
-module.exports = [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, callback) {
+export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade$/);
     let messageId = callback.message.message_id;
 

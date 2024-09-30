@@ -1,3 +1,3 @@
-const football = require('./football');
+import football from './football.js';
 
-module.exports = [...football];
+export default [...football];

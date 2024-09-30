@@ -1,6 +1,6 @@
-const cron = require("node-cron");
+import cron from 'node-cron';
 
-module.exports = function () {
+export default function () {
     cron.schedule("* * * * *", () => {
         try {
 

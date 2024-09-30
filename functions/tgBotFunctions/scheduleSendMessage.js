@@ -1,7 +1,7 @@
-const sendMessage = require("./sendMessage");
-const retryBotRequest = require("./retryBotRequest");
+import sendMessage from './sendMessage.js';
+import retryBotRequest from './retryBotRequest.js';
 
-module.exports = function (chatId, text, form, timestamp) {
+export default function (chatId, text, form, timestamp) {
     if (timestamp <= new Date().getTime()) {
         return;
     }

@@ -1,8 +1,8 @@
-const cron = require("node-cron");
-const initBossHpRegen = require("./initBossHpRegen");
-const initBossDealDamage = require("./initBossDealDamage");
+import cron from 'node-cron';
+import initBossHpRegen from './initBossHpRegen.js';
+import initBossDealDamage from './initBossDealDamage.js';
 
-module.exports = function () {
+export default function () {
     try {
         cron.schedule('*/2 * * * *', async () => {
             await initBossDealDamage();

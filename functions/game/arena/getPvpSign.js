@@ -1,4 +1,4 @@
-module.exports = function (session) {
+export default function (session) {
     if (!session.game.inventory || !session.game.inventory.arena || !session.game.inventory.arena.pvpSign) {
         throw new Error(`Ошибка при попытке получить данные о 'Медали арены' у пользователя: ${session.userChatData.user.id}`);
     }

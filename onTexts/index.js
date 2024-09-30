@@ -1,14 +1,14 @@
-const info = require('./info');
-const start = require('./start');
-const help = require('./help');
-const personalData = require('./personalData');
-const game = require('./game');
-const mute = require('./mute');
-const commands = require('./commands');
-const feedback = require('./feedback');
-const whatsNew = require('./whatsNew');
+import info from './info.js';
+import start from './start.js';
+import help from './help.js';
+import personalData from './personalData/index.js';
+import game from './game/index.js';
+import mute from './mute/index.js';
+import commands from './commands/index.js';
+import feedback from './feedback.js';
+import whatsNew from './whatsNew.js';
 
-module.exports = [
+export default [
     ...start,
     ...info,
     ...help,

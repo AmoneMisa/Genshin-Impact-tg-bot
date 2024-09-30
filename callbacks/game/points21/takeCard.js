@@ -1,14 +1,14 @@
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
-const getChatSession = require('../../../functions/getters/getChatSession');
-const pointMessage = require('../../../functions/game/point21/pointMessage');
-const validateGameSession = require('../../../functions/game/general/validateGameSession');
-const checkAllPlayersPassed = require('../../../functions/game/general/checkAllPlayersPassed');
-const getCard = require('../../../functions/game/point21/getCard');
-const getPoints = require('../../../functions/game/point21/getPoints');
-const endGame = require('../../../functions/game/general/endGame');
-const endGameTimer = require('../../../functions/game/general/endGameTimer');
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import pointMessage from '../../../functions/game/point21/pointMessage.js';
+import validateGameSession from '../../../functions/game/general/validateGameSession.js';
+import checkAllPlayersPassed from '../../../functions/game/general/checkAllPlayersPassed.js';
+import getCard from '../../../functions/game/point21/getCard.js';
+import getPoints from '../../../functions/game/point21/getPoints.js';
+import endGame from '../../../functions/game/general/endGame.js';
+import endGameTimer from '../../../functions/game/general/endGameTimer.js';
 
-module.exports = [["points_card", function (session, callback) {
+export default [["points_card", function (session, callback) {
     let chatSession = getChatSession(callback.message.chat.id);
     let userId = session.userChatData.user.id;
 

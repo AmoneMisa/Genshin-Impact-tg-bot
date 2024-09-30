@@ -1,3 +1,3 @@
-const addGold = require('../ironOre/addIronOre');
+import addGold from '../ironOre/addIronOre.js';
 
-module.exports = [...addGold];
+export default [...addGold];

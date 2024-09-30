@@ -1,16 +1,16 @@
-const setPlayerClassCallback = require('./setPlayerClassCallback');
-const userSkillsCallback = require('./userSkillsCallback');
-const showInventory = require('./showInventory');
-const updateCharacteristics = require('./updateCharacteristics');
-const reloadWhoAmI = require('./reloadWhoAmI');
-const stealResources = require('./stealResources');
-const addStealChance = require('./addStealChance');
-const addBonusChance = require('./addBonusChance');
-const changeGender = require('./changeGender');
-const characterStatus = require('./characterStatus');
-const whoamiHome = require('./whoamiHome');
+import setPlayerClassCallback from './setPlayerClassCallback.js';
+import userSkillsCallback from './userSkillsCallback.js';
+import showInventory from './showInventory.js';
+import updateCharacteristics from './updateCharacteristics.js';
+import reloadWhoAmI from './reloadWhoAmI.js';
+import stealResources from './stealResources.js';
+import addStealChance from './addStealChance.js';
+import addBonusChance from './addBonusChance.js';
+import changeGender from './changeGender.js';
+import characterStatus from './characterStatus.js';
+import whoamiHome from './whoamiHome.js';
 
-module.exports = [
+export default [
     ...setPlayerClassCallback,
     ...userSkillsCallback,
     ...showInventory,

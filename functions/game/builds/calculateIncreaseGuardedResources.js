@@ -1,4 +1,4 @@
-module.exports = function (buildTemplate, currentLvl) {
+export default function (buildTemplate, currentLvl) {
         let increaseFactor = 1;
         let newResourcesCounter = {};
 

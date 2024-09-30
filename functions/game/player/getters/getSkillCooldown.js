@@ -1,3 +1,3 @@
-module.exports = function (skill) {
+export default function (skill) {
     return skill.cooldownReceive;
 }

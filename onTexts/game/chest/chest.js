@@ -1,12 +1,12 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const getRandomChest = require('../../../functions/game/chest/getRandomChest');
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getFile = require("../../../functions/getters/getFile");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import getRandomChest from '../../../functions/game/chest/getRandomChest.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getFile from '../../../functions/getters/getFile.js';
 
-module.exports = [[/(?:^|\s)\/chest\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/chest\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (session.chestTries < 1) {

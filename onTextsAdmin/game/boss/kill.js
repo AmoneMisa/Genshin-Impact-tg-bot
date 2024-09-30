@@ -1,9 +1,9 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const getMemberStatus = require("../../../functions/getters/getMemberStatus");
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getAliveBoss = require("../../../functions/game/boss/getBossStatus/getAliveBoss");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getMemberStatus from '../../../functions/getters/getMemberStatus.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getAliveBoss from '../../../functions/game/boss/getBossStatus/getAliveBoss.js';
 
-module.exports = [[/(?:^|\s)\/kill\b/, async (msg) => {
+export default [[/(?:^|\s)\/kill\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (!getMemberStatus(msg.chat.id, msg.from.id)) {

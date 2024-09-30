@@ -1,20 +1,20 @@
-const generateRandomEquipment = require('../../../functions/game/equipment/generateRandomEquipment');
-const getUserName = require('../../../functions/getters/getUserName');
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
-const editMessageMedia = require('../../../functions/tgBotFunctions/editMessageMedia');
-const getFile = require("../../../functions/getters/getFile");
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const gachaTemplate = require("../../../template/gachaTemplate");
-const inventory = require("../../../dictionaries/inventory");
-const getItemString = require("../../../functions/game/equipment/getItemString");
-const makeRoll = require("../../../functions/game/equipment/makeRoll");
-const isCanBeRolled = require("../../../functions/game/equipment/isCanBeRolled");
-const breakItemToSpins = require("../../../functions/game/equipment/breakItemToSpins");
-const addItemToUserInventory = require("../../../functions/game/equipment/addItemToUserInventory");
-const getEmoji = require("../../../functions/getters/getEmoji");
-const getSession = require("../../../functions/getters/getSession");
+import generateRandomEquipment from '../../../functions/game/equipment/generateRandomEquipment.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import editMessageMedia from '../../../functions/tgBotFunctions/editMessageMedia.js';
+import getFile from '../../../functions/getters/getFile.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import gachaTemplate from '../../../template/gachaTemplate.js';
+import inventory from '../../../dictionaries/inventory.js';
+import getItemString from '../../../functions/game/equipment/getItemString.js';
+import makeRoll from '../../../functions/game/equipment/makeRoll.js';
+import isCanBeRolled from '../../../functions/game/equipment/isCanBeRolled.js';
+import breakItemToSpins from '../../../functions/game/equipment/breakItemToSpins.js';
+import addItemToUserInventory from '../../../functions/game/equipment/addItemToUserInventory.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import getSession from '../../../functions/getters/getSession.js';
 
-module.exports = [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, [ , chatId]) {
+export default [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, [ , chatId]) {
     let file = getFile(`images/gacha`, "choice");
     let foundSession = await getSession(chatId, callback.from.id);
 

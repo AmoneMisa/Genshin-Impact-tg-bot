@@ -1,8 +1,8 @@
-const cron = require("node-cron");
-const renewArenaRating = require("./renewArenaRating");
-const sendArenaWeeklyPrizes = require("./sendArenaWeeklyPrizes");
+import cron from 'node-cron';
+import renewArenaRating from './renewArenaRating.js';
+import sendArenaWeeklyPrizes from './sendArenaWeeklyPrizes.js';
 
-module.exports = function () {
+export default function () {
     cron.schedule('0 0 * * 1', async () => {
         try {
             renewArenaRating();

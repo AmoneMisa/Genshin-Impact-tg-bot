@@ -1,8 +1,8 @@
-const getWinners = require('./getWinners');
-const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
-const sendMessageWithDelete = require('../../tgBotFunctions/sendMessageWithDelete');
+import getWinners from './getWinners.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import sendMessageWithDelete from '../../tgBotFunctions/sendMessageWithDelete.js';
 
-module.exports = function (winners, chatId, messageId, isDefault = true, gameName) {
+export default function (winners, chatId, messageId, isDefault = true, gameName) {
     if (isDefault) {
         deleteMessage(chatId, messageId);
     }

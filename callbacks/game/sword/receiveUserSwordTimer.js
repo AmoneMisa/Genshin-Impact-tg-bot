@@ -1,11 +1,11 @@
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
-const getSession = require("../../../functions/getters/getSession");
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
-const getUserName = require('../../../functions/getters/getUserName');
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getSession from '../../../functions/getters/getSession.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import getUserName from '../../../functions/getters/getUserName.js';
 
-module.exports = [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
+export default [[/^receive_sword_timer\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
     targetSession.timerSwordCallback = 0;
     return sendMessage(callback.message.chat.id, `Таймер меча для ${getUserName(targetSession, "name")} обнулён.`, {

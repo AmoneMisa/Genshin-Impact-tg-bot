@@ -1,13 +1,13 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const bot = require('../../../bot');
-const getSession = require('../../../functions/getters/getSession');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import bot from '../../../bot.js';
+import getSession from '../../../functions/getters/getSession.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 
-module.exports = [[/^sendGoldRecipient\.([\-0-9]+)\.([^.]+)$/, async function (session, callback, [, chatId, recipientId]) {
+export default [[/^sendGoldRecipient\.([\-0-9]+)\.([^.]+)$/, async function (session, callback, [, chatId, recipientId]) {
     const foundSession = await getSession(chatId, callback.from.id);
     const recipient = await getSession(chatId, recipientId);
 

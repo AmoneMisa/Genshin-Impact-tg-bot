@@ -1,4 +1,4 @@
-module.exports = function (gameSession) {
+export default function (gameSession) {
     let str = "Игра в элементы.\n\n";
     let players = gameSession.game.elements.players;
 

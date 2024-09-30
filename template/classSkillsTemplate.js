@@ -2,7 +2,7 @@
 //cost values is in crystals
 //cooldown - attack CD in seconds;
 
-module.exports = {
+export default {
     noClass: [{
         slot: 0,
         name: "Тык палкой",

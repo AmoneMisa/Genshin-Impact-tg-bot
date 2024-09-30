@@ -1,8 +1,8 @@
-const getPlayerGameClass = require("./getPlayerGameClass");
-const getEquipStatByName = require("./getEquipStatByName");
-const isHasPenalty = require("../../equipment/isHasPenalty");
+import getPlayerGameClass from './getPlayerGameClass.js';
+import getEquipStatByName from './getEquipStatByName.js';
+import isHasPenalty from '../../equipment/isHasPenalty.js';
 
-module.exports = function (session, gameClass) {
+export default function (session, gameClass) {
     if (!gameClass) {
         gameClass = session.game.gameClass;
     }

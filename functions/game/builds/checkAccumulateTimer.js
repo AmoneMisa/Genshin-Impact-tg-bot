@@ -1,10 +1,10 @@
-const {sessions} = require("../../../data");
-const getMembers = require("../../getters/getMembers");
-const getBuildsList = require("./getBuildList");
-const buildsTemplate = require("../../../template/buildsTemplate");
-const calculateIncreaseInResourceExtraction = require("./calculateIncreaseInResourceExtraction");
+import { sessions } from '../../../data.js';
+import getMembers from '../../getters/getMembers.js';
+import getBuildsList from './getBuildList.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import calculateIncreaseInResourceExtraction from './calculateIncreaseInResourceExtraction.js';
 
-module.exports = async function () {
+export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
             for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {

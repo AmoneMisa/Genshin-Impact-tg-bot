@@ -1,3 +1,3 @@
-const receiveUserTitleTimer = require('./receiveUserTitleTimer');
+import receiveUserTitleTimer from './receiveUserTitleTimer.js';
 
-module.exports = [...receiveUserTitleTimer];
+export default [...receiveUserTitleTimer];

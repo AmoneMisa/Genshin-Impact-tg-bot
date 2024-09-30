@@ -1,26 +1,26 @@
-const bossCallback = require('./boss');
-const chestCallback = require('./chest');
-const experienceCallback = require('./experience');
-const goldCallback = require('./gold');
-const ironOre = require('./ironOre');
-const crystalsCallback = require('./crystals');
-const points21 = require('./points21');
-const swordCallback = require('./sword');
-const player = require('./player');
-const slots = require('./slots');
-const dice = require('./dice');
-const bowling = require('./bowling');
-const darts = require('./darts');
-const basketball = require('./basketball');
-const football = require('./football');
-const elements = require('./elements');
-const builds = require('./builds');
-const shop = require('./shop');
-const equipmentGacha = require('./equipmentGacha');
-const arena = require('./arena');
-const title = require('./title');
+import bossCallback from './boss/index.js';
+import chestCallback from './chest/index.js';
+import experienceCallback from './experience/index.js';
+import goldCallback from './gold/index.js';
+import ironOre from './ironOre/index.js';
+import crystalsCallback from './crystals/index.js';
+import points21 from './points21/index.js';
+import swordCallback from './sword/index.js';
+import player from './player/index.js';
+import slots from './slots/index.js';
+import dice from './dice/index.js';
+import bowling from './bowling/index.js';
+import darts from './darts/index.js';
+import basketball from './basketball/index.js';
+import football from './football/index.js';
+import elements from './elements/index.js';
+import builds from './builds/index.js';
+import shop from './shop/index.js';
+import equipmentGacha from './equipmentGacha/index.js';
+import arena from './arena/index.js';
+import title from './title/index.js';
 
-module.exports = [
+export default [
     ...bossCallback,
     ...goldCallback,
     ...ironOre,

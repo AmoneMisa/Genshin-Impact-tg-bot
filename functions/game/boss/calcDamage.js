@@ -1,17 +1,17 @@
-const getRandom = require('../../getters/getRandom');
-const getRandomWithoutFloor = require('../../getters/getRandomWithoutFloor');
-const getAttack = require('../player/getters/getAttack');
-const getBossDefence = require('./getBossStats/getBossDefence');
-const getDamageMultiplier = require('../player/getters/getDamageMultiplier');
-const getCriticalChance = require('../player/getters/getCriticalChance');
-const getCriticalChanceMultiplier = require('../player/getters/getCriticalChanceMultiplier');
-const getCriticalDamage = require('../player/getters/getCriticalDamage');
-const getAdditionalDamageMul = require('../player/getters/getAdditionalDamageMul');
-const getCriticalDamageMultiplier = require('../player/getters/getCriticalDamageMultiplier');
-const bossesTemplate = require("../../../template/bossTemplate");
-const getEquipStatByName = require("../player/getters/getEquipStatByName");
+import getRandom from '../../getters/getRandom.js';
+import getRandomWithoutFloor from '../../getters/getRandomWithoutFloor.js';
+import getAttack from '../player/getters/getAttack.js';
+import getBossDefence from './getBossStats/getBossDefence.js';
+import getDamageMultiplier from '../player/getters/getDamageMultiplier.js';
+import getCriticalChance from '../player/getters/getCriticalChance.js';
+import getCriticalChanceMultiplier from '../player/getters/getCriticalChanceMultiplier.js';
+import getCriticalDamage from '../player/getters/getCriticalDamage.js';
+import getAdditionalDamageMul from '../player/getters/getAdditionalDamageMul.js';
+import getCriticalDamageMultiplier from '../player/getters/getCriticalDamageMultiplier.js';
+import bossesTemplate from '../../../template/bossTemplate.js';
+import getEquipStatByName from '../player/getters/getEquipStatByName.js';
 
-module.exports = function (session, skill, boss) {
+export default function (session, skill, boss) {
     let dmg;
     let template = bossesTemplate.find(bossTemplate => bossTemplate.name === boss.name);
     let modifier = skill.damageModifier || 1;

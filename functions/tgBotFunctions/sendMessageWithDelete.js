@@ -1,7 +1,7 @@
-const sendMessage = require("./sendMessage");
-const retryBotRequest = require("./retryBotRequest");
+import sendMessage from './sendMessage.js';
+import retryBotRequest from './retryBotRequest.js';
 
-module.exports = async function (chatId, text, form, timeout) {
+export default async function (chatId, text, form, timeout) {
     let message = await sendMessage(chatId, text, form);
     setTimeout(() => retryBotRequest(bot => bot.deleteMessage(message.chat.id, message.message_id)), timeout);
 };

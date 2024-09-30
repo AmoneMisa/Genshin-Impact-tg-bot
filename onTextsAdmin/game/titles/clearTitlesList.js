@@ -1,17 +1,17 @@
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const data = require("../../../data");
-const {myId} = require("../../../config");
-const lodash = require("lodash");
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import {titles} from '../../../data.js';
+import { myId } from '../../../config.js';
+import lodash from 'lodash';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
 
-module.exports = module.exports = [[/(?:^|\s)\/clear_titles/, async (msg) => {
+export default [[/(?:^|\s)\/clear_titles/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (msg.from.id !== myId) {
         return;
     }
 
-    for (let titleList of Object.values(data.titles)) {
+    for (let titleList of Object.values(titles)) {
         lodash.remove(titleList, lodash.isObject);
     }
 

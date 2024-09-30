@@ -1,6 +1,6 @@
-const splitRemainTime = require('./splitRemainTime');
+import splitRemainTime from './splitRemainTime.js';
 
-module.exports = function (remain) {
+export default function (remain) {
     let [hours, minutes, seconds] = splitRemainTime(remain);
 
     if (remain > 0) {

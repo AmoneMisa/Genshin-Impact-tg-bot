@@ -1,4 +1,4 @@
-module.exports = transliterate = function (text) {
+export default transliterate = function (text) {
     return text
         .replace(/\u0401/g, 'YO')
         .replace(/\u0419/g, 'I')

@@ -1,8 +1,8 @@
-const {sessions} = require("../../../data");
-const getMembers = require("../../getters/getMembers");
-const getArenaBots = require("./getArenaBots");
+import { sessions } from '../../../data.js';
+import getMembers from '../../getters/getMembers.js';
+import getArenaBots from './getArenaBots.js';
 
-module.exports = function (arenaType, chatId, callerId, withBots, rating) {
+export default function (arenaType, chatId, callerId, withBots, rating) {
     let members = {};
 
     if (arenaType === "expansion") {

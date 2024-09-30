@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const retryBotRequest = require("../../../functions/tgBotFunctions/retryBotRequest");
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import retryBotRequest from '../../../functions/tgBotFunctions/retryBotRequest.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/slots\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/slots\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (session.game.hasOwnProperty('slots')) {

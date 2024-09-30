@@ -1,6 +1,6 @@
-const getPlayerGameClass = require("./getPlayerGameClass");
-const getMaxHp = require("./getMaxHp");
-module.exports = function (session, gameClass) {
+import getPlayerGameClass from './getPlayerGameClass.js';
+import getMaxHp from './getMaxHp.js';
+export default function (session, gameClass) {
     if (!gameClass) {
         gameClass = session.game.gameClass;
     }

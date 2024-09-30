@@ -1,8 +1,8 @@
-const {sessions, bosses} = require("../../data");
-const isBossAlive = require("../game/boss/getBossStatus/isBossAlive");
-const sendMessageWithDelete = require("../tgBotFunctions/sendMessageWithDelete");
+import { sessions, bosses } from '../../data.js';
+import isBossAlive from '../game/boss/getBossStatus/isBossAlive.js';
+import sendMessageWithDelete from '../tgBotFunctions/sendMessageWithDelete.js';
 
-module.exports = async function () {
+export default async function () {
     for (let [chatId, bossesArray] of Object.entries(bosses)) {
         for (let boss of bossesArray) {
             if (!isBossAlive(boss)) {

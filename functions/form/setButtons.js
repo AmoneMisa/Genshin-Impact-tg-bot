@@ -1,4 +1,4 @@
-module.exports = function (commands) {
+export default function (commands) {
     let buttons = [];
     let tempArray = [];
     let button = {};

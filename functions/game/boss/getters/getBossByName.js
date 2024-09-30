@@ -1,6 +1,6 @@
-const getBossesByChatId = require("./getBossesByChatId");
+import getBossesByChatId from './getBossesByChatId.js';
 
-module.exports = function (chatId, bossName) {
+export default function (chatId, bossName) {
     let chatBosses = getBossesByChatId(chatId);
     return chatBosses.find(boss => boss.name === bossName);
 }

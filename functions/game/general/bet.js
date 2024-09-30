@@ -1,11 +1,11 @@
-const getChatSession = require("../../getters/getChatSession");
-const getTime = require("../../getters/getTime");
-const getMembers = require("../../getters/getMembers");
-const getUserName = require("../../getters/getUserName");
-const deleteMessageTimeout = require("../../tgBotFunctions/deleteMessageTimeout");
-const betMessage = require("./betMessage");
-const editMessageText = require("../../tgBotFunctions/editMessageText");
-const sendMessage = require("../../tgBotFunctions/sendMessage");
+import getChatSession from '../../getters/getChatSession.js';
+import getTime from '../../getters/getTime.js';
+import getMembers from '../../getters/getMembers.js';
+import getUserName from '../../getters/getUserName.js';
+import deleteMessageTimeout from '../../tgBotFunctions/deleteMessageTimeout.js';
+import betMessage from './betMessage.js';
+import editMessageText from '../../tgBotFunctions/editMessageText.js';
+import sendMessage from '../../tgBotFunctions/sendMessage.js';
 
 function getOffset() {
     return new Date().getTime() + 2 * 1000;
@@ -24,7 +24,7 @@ function errorMessage(chatId, errorCode = 0, messageId, username) {
 
 let maxCountMap = {points: 4, elements: 7};
 
-module.exports = function (callback, session, gameName, betType) {
+export default function (callback, session, gameName, betType) {
     let chatId = callback.message.chat.id;
     let chatSession = getChatSession(chatId);
     let userId = session.userChatData.user.id;

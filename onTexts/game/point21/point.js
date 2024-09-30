@@ -1,17 +1,17 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const getChatSession = require('../../../functions/getters/getChatSession');
-const getMembers = require('../../../functions/getters/getMembers');
-const pointMessage = require('../../../functions/game/point21/pointMessage');
-const betMessage = require('../../../functions/game/general/betMessage');
-const gameStatusMessage = require('../../../functions/game/general/gameStatusMessage');
-const getCard = require('../../../functions/game/point21/getCard');
-const endGameTimer = require('../../../functions/game/general/endGameTimer');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const isMassGameAlreadyStarted = require("../../../functions/game/general/isMassGameAlreadyStarted");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import getMembers from '../../../functions/getters/getMembers.js';
+import pointMessage from '../../../functions/game/point21/pointMessage.js';
+import betMessage from '../../../functions/game/general/betMessage.js';
+import gameStatusMessage from '../../../functions/game/general/gameStatusMessage.js';
+import getCard from '../../../functions/game/point21/getCard.js';
+import endGameTimer from '../../../functions/game/general/endGameTimer.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import isMassGameAlreadyStarted from '../../../functions/game/general/isMassGameAlreadyStarted.js';
 
-module.exports = [[/(?:^|\s)\/point\b/, (msg, session) => {
+export default [[/(?:^|\s)\/point\b/, (msg, session) => {
     deleteMessage(msg.chat.id, msg.message_id);
     let chatSession = getChatSession(msg.chat.id);
     let members = getMembers(msg.chat.id);

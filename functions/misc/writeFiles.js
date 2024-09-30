@@ -1,12 +1,12 @@
-const data = require("../../data");
-const fs = require("fs");
+import {sessions, arenaRating, titles, arenaTempBots, bosses} from '../../data.js';
+import fs from 'fs';
 
-module.exports = function (backup) {
-    writeFile("sessions", data.sessions, backup);
-    writeFile("bosses", data.bosses, backup);
-    writeFile("titles", data.titles, backup);
-    writeFile("arenaRating", data.arenaRating, backup);
-    writeFile("arenaTempBots", data.arenaTempBots, backup);
+export default function (backup) {
+    writeFile("sessions", sessions, backup);
+    writeFile("bosses", bosses, backup);
+    writeFile("titles", titles, backup);
+    writeFile("arenaRating", arenaRating, backup);
+    writeFile("arenaTempBots", arenaTempBots, backup);
 }
 
 function writeFile(name, data, backup) {

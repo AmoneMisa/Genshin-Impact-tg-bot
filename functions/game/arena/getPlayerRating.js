@@ -1,28 +1,28 @@
-const data = require("../../../data");
+import {arenaRating} from '../../../data.js';
 
-module.exports = function (userId, arenaType, chatId, arenaBot) {
+export default function (userId, arenaType, chatId, arenaBot) {
     if (arenaBot) {
         return arenaBot.rating;
     }
 
     let sortedRating;
 
-    if (!data.arenaRating["common"][chatId]) {
-        data.arenaRating.common[chatId] = {};
+    if (!arenaRating["common"][chatId]) {
+        arenaRating.common[chatId] = {};
     }
 
-    if (!data.arenaRating["common"][chatId][userId]) {
-        data.arenaRating.common[chatId][userId] = 1000;
+    if (!arenaRating["common"][chatId][userId]) {
+        arenaRating.common[chatId][userId] = 1000;
     }
 
-    if (!data.arenaRating["expansion"][userId]) {
-        data.arenaRating.expansion[userId] = 1000;
+    if (!arenaRating["expansion"][userId]) {
+        arenaRating.expansion[userId] = 1000;
     }
 
     if (arenaType === "common") {
-        sortedRating = Array.from(Object.entries(data.arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        sortedRating = Array.from(Object.entries(arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
     } else {
-        sortedRating = Array.from(Object.entries(data.arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        sortedRating = Array.from(Object.entries(arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
     }
 
     let playerIndex = sortedRating.findIndex(([playerId, rating]) => parseInt(playerId) === parseInt(userId));

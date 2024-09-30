@@ -1,5 +1,5 @@
-const addExperienceCallback = require('./addExperienceCallback');
+import addExperienceCallback from './addExperienceCallback.js';
 
-module.exports = [
+export default [
     ...addExperienceCallback
 ];

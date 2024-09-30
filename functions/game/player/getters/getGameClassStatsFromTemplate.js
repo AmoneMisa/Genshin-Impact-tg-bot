@@ -1,6 +1,6 @@
-const stats = require("../../../../template/classStatsTemplate");
+import stats from '../../../../template/classStatsTemplate.js';
 
-module.exports = function (className, lvl = 1) {
+export default function (className, lvl = 1) {
     if (!className) {
         className = "noClass";
         console.error("Не указано имя класса при передаче в функцию!");

@@ -1,10 +1,10 @@
-const getRandom = require('../../getters/getRandom');
-const getPlayerDefence = require('../player/getters/getDefence');
-const getIncomingDamageModifier = require('../player/getters/getIncomingDamageModifier');
-const getBossAttack = require('./getBossStats/getBossAttack');
-const bossesTemplate = require("../../../template/bossTemplate");
+import getRandom from '../../getters/getRandom.js';
+import getPlayerDefence from '../player/getters/getDefence.js';
+import getIncomingDamageModifier from '../player/getters/getIncomingDamageModifier.js';
+import getBossAttack from './getBossStats/getBossAttack.js';
+import bossesTemplate from '../../../template/bossTemplate.js';
 
-module.exports = function (boss, session) {
+export default function (boss, session) {
     let bossTemplate = bossesTemplate.find(boss => boss.name === boss.name);
     let attack = getBossAttack(boss, bossTemplate);
     let defence = getPlayerDefence(session, session.game.gameClass);

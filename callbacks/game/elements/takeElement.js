@@ -1,18 +1,18 @@
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
-const getChatSession = require('../../../functions/getters/getChatSession');
-const elementsMessage = require('../../../functions/game/elements/elementsMessage');
-const validateGameSession = require('../../../functions/game/general/validateGameSession');
-const getRandomElement = require('../../../functions/game/elements/getRandomElement');
-const isRoundEnd = require('../../../functions/game/elements/isRoundEnd');
-const isPlayerEndedRound = require('../../../functions/game/elements/isPlayerEndedRound');
-const validateEndGame = require('../../../functions/game/elements/validateEndGame');
-const updatePoints = require('../../../functions/game/elements/updatePoints');
-const endGame = require('../../../functions/game/general/endGame');
-const endGameTimer = require('../../../functions/game/general/endGameTimer');
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import elementsMessage from '../../../functions/game/elements/elementsMessage.js';
+import validateGameSession from '../../../functions/game/general/validateGameSession.js';
+import getRandomElement from '../../../functions/game/elements/getRandomElement.js';
+import isRoundEnd from '../../../functions/game/elements/isRoundEnd.js';
+import isPlayerEndedRound from '../../../functions/game/elements/isPlayerEndedRound.js';
+import validateEndGame from '../../../functions/game/elements/validateEndGame.js';
+import updatePoints from '../../../functions/game/elements/updatePoints.js';
+import endGame from '../../../functions/game/general/endGame.js';
+import endGameTimer from '../../../functions/game/general/endGameTimer.js';
 
 let maxCountRounds = 3;
 
-module.exports = [["elements_take", function (session, callback) {
+export default [["elements_take", function (session, callback) {
     let chatId = callback.message.chat.id;
 
     let chatSession = getChatSession(chatId);

@@ -1,5 +1,5 @@
-const chest = require('./chest');
+import chest from './chest.js';
 
-module.exports = [
+export default [
     ...chest
 ];

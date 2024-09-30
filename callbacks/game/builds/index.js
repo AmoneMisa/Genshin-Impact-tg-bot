@@ -1,11 +1,11 @@
-const builds = require('./builds');
-const changeType = require('./changeType');
-const collectResources = require('./collectResources');
-const status = require('./status');
-const upgrade = require('./upgrade');
-const changeName = require('./changeName');
+import builds from './builds.js';
+import changeType from './changeType.js';
+import collectResources from './collectResources.js';
+import status from './status.js';
+import upgrade from './upgrade.js';
+import changeName from './changeName.js';
 
-module.exports = [
+export default [
     ...builds,
     ...changeType,
     ...collectResources,

@@ -1,7 +1,7 @@
-const unequipItem = require("./unequipItem");
-const equipmentTemplate = require("../../../template/equipmentTemplate");
+import unequipItem from './unequipItem.js';
+import equipmentTemplate from '../../../template/equipmentTemplate.js';
 
-module.exports = function (session, item) {
+export default function (session, item) {
 
     if (item.isUsed) {
         return 1;

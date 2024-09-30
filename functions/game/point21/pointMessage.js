@@ -1,6 +1,6 @@
-const getPoints = require('./getPoints');
+import getPoints from './getPoints.js';
 
-module.exports = function (gameSession) {
+export default function (gameSession) {
     let str = "Игра в 21 очко.\n\n";
 
     for (let [playerId, player] of Object.entries(gameSession.game.points.players)) {

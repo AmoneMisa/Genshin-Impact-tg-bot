@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const {myId} = require("../../../config");
-const getSession = require("../../../functions/getters/getSession");
-const restoreChestChances = require("../../../functions/shedullers/restoreChestChances");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import { myId } from '../../../config.js';
+import getSession from '../../../functions/getters/getSession.js';
+import restoreChestChances from '../../../functions/shedullers/restoreChestChances.js';
 
-module.exports = [[/(?:^|\s)\/receive_all_chest\b/, async (msg) => {
+export default [[/(?:^|\s)\/receive_all_chest\b/, async (msg) => {
     if (msg.from.id !== myId) {
         return;
     }

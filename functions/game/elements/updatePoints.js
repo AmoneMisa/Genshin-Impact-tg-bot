@@ -1,6 +1,6 @@
-const synergies = require('../../../template/elementsSynergy');
+import synergies from '../../../template/elementsSynergy.js';
 
-module.exports = function (players) {
+export default function (players) {
     for (let player of Object.values(players)) {
         player.points = 0;
         let elements = player.usedItems;

@@ -1,8 +1,8 @@
-const retryBotRequest = require("./retryBotRequest");
-const editMessageText = require("./editMessageText");
-const lodash = require("lodash");
+import retryBotRequest from './retryBotRequest.js';
+import editMessageText from './editMessageText.js';
+import lodash from 'lodash';
 
-module.exports = function (text, form, hasPhoto) {
+export default function (text, form, hasPhoto) {
     if (!form.chat_id || !form.message_id) {
         return;
     }

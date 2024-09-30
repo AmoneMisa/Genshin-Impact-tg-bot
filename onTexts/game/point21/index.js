@@ -1,3 +1,3 @@
-const point = require('./point');
+import point from './point.js';
 
-module.exports = [...point];
+export default [...point];

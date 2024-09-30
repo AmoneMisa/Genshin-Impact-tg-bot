@@ -1,7 +1,7 @@
-const bot = require('../../../bot');
-const getEmoji = require("../../../functions/getters/getEmoji");
+import bot from '../../../bot.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
 
-module.exports = async function (prizeType, button, session, callback) {
+export default async function (prizeType, button, session, callback) {
     if (session.chestTries < 1) {
         return;
     }

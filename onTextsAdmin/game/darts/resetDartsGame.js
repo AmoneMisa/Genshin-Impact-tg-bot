@@ -1,8 +1,8 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const endGame = require('../../../functions/game/darts/endGame');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import endGame from '../../../functions/game/darts/endGame.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/reset_darts_game\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/reset_darts_game\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     endGame(session);

@@ -1,6 +1,6 @@
-const retryBotRequest = require('./retryBotRequest');
+import retryBotRequest from './retryBotRequest.js';
 
-module.exports = function (chatId, msg) {
+export default function (chatId, msg) {
     if (!msg) {
         return;
     }

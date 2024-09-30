@@ -1,5 +1,5 @@
-const pet = require('./pet');
+import pet from './pet.js';
 
-module.exports = [
+export default [
     ...pet
 ];

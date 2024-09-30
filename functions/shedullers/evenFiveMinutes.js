@@ -1,7 +1,7 @@
-const cron = require("node-cron");
-const timerForAccumulateResources = require("./timerForAccumulateResources");
+import cron from 'node-cron';
+import timerForAccumulateResources from './timerForAccumulateResources.js';
 
-module.exports = function () {
+export default function () {
     try {
         cron.schedule('5 * * * *', async () => {
             await timerForAccumulateResources();

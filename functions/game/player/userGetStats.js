@@ -1,11 +1,11 @@
-const getPlayerGameClassMessage = require("./getters/getPlayerGameClassMessage");
-const getUserName = require('../../getters/getUserName');
-const getEmoji = require('../../getters/getEmoji');
-const getTime = require("../../getters/getTime");
-const getStringRemainTime = require("../../getters/getStringRemainTime");
-const calcGearScore = require("./calcGearScore");
+import getPlayerGameClassMessage from './getters/getPlayerGameClassMessage.js';
+import getUserName from '../../getters/getUserName.js';
+import getEmoji from '../../getters/getEmoji.js';
+import getTime from '../../getters/getTime.js';
+import getStringRemainTime from '../../getters/getStringRemainTime.js';
+import calcGearScore from './calcGearScore.js';
 
-module.exports = function (session) {
+export default function (session) {
     let game = session.game;
     let baseStats = game.stats;
     let playerEffects = game.effects;

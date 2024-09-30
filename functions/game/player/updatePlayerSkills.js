@@ -1,7 +1,7 @@
-const getGameClassSkillsFromTemplate = require('./getters/getGameClassSkillsFromTemplate');
-const changePlayerClass = require("./changePlayerGameClass");
+import getGameClassSkillsFromTemplate from './getters/getGameClassSkillsFromTemplate.js';
+import changePlayerClass from './changePlayerGameClass.js';
 
-module.exports = function (session) {
+export default function (session) {
     let template = getGameClassSkillsFromTemplate(session?.game?.gameClass?.stats?.name);
 
     if (!session.game.hasOwnProperty("gameClass")) {

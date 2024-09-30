@@ -1,5 +1,5 @@
-const bossLootTemplate = require('../../../../template/bossLootTemplate');
-const lodash = require("lodash");
+import bossLootTemplate from '../../../../template/bossLootTemplate.js';
+import lodash from 'lodash';
 
 const modifiers = {
     kivaha: {gold: 1.03, crystals: 1.04, experience: 1.1},
@@ -9,7 +9,7 @@ const modifiers = {
     radjahal: {gold: 1.0155, crystals: 1.1, experience: 1.3}
 }
 
-module.exports = function (boss) {
+export default function (boss) {
     let newLootObj = {};
     for (let [lootType, lootArray] of Object.entries(bossLootTemplate)) {
         let newLootTypeArray = [];

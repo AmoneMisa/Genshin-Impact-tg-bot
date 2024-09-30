@@ -1,9 +1,9 @@
-const retryBotRequest = require("./retryBotRequest");
-const getPhoto = require("../getters/getPhoto");
-const savePhotoId = require("../getters/savePhotoId");
-const fs = require("fs");
+import retryBotRequest from './retryBotRequest.js';
+import getPhoto from '../getters/getPhoto.js';
+import savePhotoId from '../getters/savePhotoId.js';
+import fs from 'fs';
 
-module.exports = function (chatId, path, form) {
+export default function (chatId, path, form) {
     let photoId = getPhoto(path);
 
     if (photoId) {

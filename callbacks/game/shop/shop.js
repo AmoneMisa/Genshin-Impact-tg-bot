@@ -1,9 +1,9 @@
-const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
-const getSession = require("../../../functions/getters/getSession");
-const shopTemplate = require('../../../template/shopTemplate');
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const controlButtons = require("../../../functions/keyboard/controlButtons");
-const shopSellItem = require("../../../functions/game/shop/shopSellItem");
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import getSession from '../../../functions/getters/getSession.js';
+import shopTemplate from '../../../template/shopTemplate.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import shopSellItem from '../../../functions/game/shop/shopSellItem.js';
 
 function buildKeyboard(category, isBuy, chatId) {
     let buttons = [];
@@ -43,7 +43,7 @@ function buildCategoryKeyboard(chatId) {
     return buttons;
 }
 
-module.exports = [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , chatId]) {
+export default [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , chatId]) {
     let messageId = callback.message.message_id;
 
     await editMessageCaption(`Выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {

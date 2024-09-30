@@ -1,7 +1,7 @@
-const calcGearScore = require("../player/calcGearScore");
-const getPlayerRating = require("./getPlayerRating");
+import calcGearScore from '../player/calcGearScore.js';
+import getPlayerRating from './getPlayerRating.js';
 
-module.exports = function (attacker, defender, arenaType, chatId, isBot) {
+export default function (attacker, defender, arenaType, chatId, isBot) {
     let defenderLvl = isBot ? defender.stats.lvl : defender.game.stats.lvl;
     let defenderStats = isBot ? defender : defender.game;
     let winnerPoints = 10;

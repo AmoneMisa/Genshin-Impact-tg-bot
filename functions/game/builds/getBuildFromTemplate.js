@@ -1,6 +1,6 @@
-const buildsTemplate = require( "../../../template/buildsTemplate");
+import buildsTemplate from "../../../template/buildsTemplate.js";
 
-module.exports = function () {
+export default function () {
   let result = {};
 
   for (let [key, build] of Object.entries(buildsTemplate)) {

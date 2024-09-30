@@ -1,11 +1,11 @@
-const cron = require("node-cron");
-const setHpRegen = require("./setHpRegen");
-const setCpRegen = require("./setCpRegen");
-const setMpRegen = require("./setMpRegen");
-const respawnPlayer = require("./respawnPlayer");
-const bossWin = require("./bossWin");
+import cron from 'node-cron';
+import setHpRegen from './setHpRegen.js';
+import setCpRegen from './setCpRegen.js';
+import setMpRegen from './setMpRegen.js';
+import respawnPlayer from './respawnPlayer.js';
+import bossWin from './bossWin.js';
 
-module.exports = function () {
+export default function () {
     cron.schedule("* * * * * *", () => {
         try {
             setHpRegen();

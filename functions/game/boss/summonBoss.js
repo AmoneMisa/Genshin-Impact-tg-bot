@@ -1,13 +1,13 @@
-const getBossStats = require('./getBossStats/getBossStats');
-const getBossSkill = require('./getters/getBossSkill');
-const getBossHp = require('./getBossStats/getBossHp');
-const getRandomBoss = require("./getters/getRandomBoss");
-const getBossByName = require("./getters/getBossByName");
-const addBossIntoChatSession = require("./addBossIntoChatSession");
-const updateBossLevel = require("./updateBossLevel");
-const lodash = require("lodash");
+import getBossStats from './getBossStats/getBossStats.js';
+import getBossSkill from './getters/getBossSkill.js';
+import getBossHp from './getBossStats/getBossHp.js';
+import getRandomBoss from './getters/getRandomBoss.js';
+import getBossByName from './getters/getBossByName.js';
+import addBossIntoChatSession from './addBossIntoChatSession.js';
+import updateBossLevel from './updateBossLevel.js';
+import lodash from 'lodash';
 
-module.exports = async function (chatId) {
+export default async function (chatId) {
     let bossTemplate = getRandomBoss();
     let boss = getBossByName(chatId, bossTemplate.name);
 

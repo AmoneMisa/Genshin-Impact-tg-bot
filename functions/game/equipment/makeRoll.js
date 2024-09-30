@@ -1,6 +1,6 @@
-const getValueByChance = require("../../getters/getValueByChance");
+import getValueByChance from '../../getters/getValueByChance.js';
 
-module.exports = function (player, spin, isFree) {
+export default function (player, spin, isFree) {
     let chance = Math.random();
 
     if (isFree) {

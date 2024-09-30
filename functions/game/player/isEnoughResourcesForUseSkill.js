@@ -1,7 +1,7 @@
-const getCurrentMp = require("./getters/getCurrentMp");
-const getCurrentHp = require("./getters/getCurrentHp");
+import getCurrentMp from './getters/getCurrentMp.js';
+import getCurrentHp from './getters/getCurrentHp.js';
 
-module.exports = function (session, skill) {
+export default function (session, skill) {
     let userMp = getCurrentMp(session, session.game.gameClass);
     let userHp = getCurrentHp(session, session.game.gameClass);
 

@@ -1,9 +1,9 @@
-const getSession = require('../../../functions/getters/getSession');
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
-const getItemString = require("../../../functions/game/equipment/getItemString");
-const lodash = require("lodash");
-const inventoryTranslate = require("../../../dictionaries/inventory");
+import getSession from '../../../functions/getters/getSession.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import getItemString from '../../../functions/game/equipment/getItemString.js';
+import lodash from 'lodash';
+import inventoryTranslate from '../../../dictionaries/inventory.js';
 
 function getKeyboard(equipmentStats, userId) {
     let buttons = [];
@@ -39,7 +39,7 @@ function getKeyboard(equipmentStats, userId) {
     return buttons;
 }
 
-module.exports = [[/^player\.([\-0-9]+)\.character$/, async function (session, callback, [, userId]) {
+export default [[/^player\.([\-0-9]+)\.character$/, async function (session, callback, [, userId]) {
     const foundedSession = await getSession(userId, callback.from.id);
 
     await editMessageCaption("В этом меню можно посмотреть статистику снаряжения своего персонажа." +

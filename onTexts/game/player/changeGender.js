@@ -1,10 +1,10 @@
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getUserName = require("../../../functions/getters/getUserName");
-const getFile = require("../../../functions/getters/getFile");
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import getFile from '../../../functions/getters/getFile.js';
 
-module.exports = [[/(?:^|\s)\/select_gender\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/select_gender\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     const file = getFile("images/misc", "gender");

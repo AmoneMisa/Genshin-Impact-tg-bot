@@ -1,5 +1,5 @@
-const leave = require('../../../functions/game/general/leave');
+import leave from '../../../functions/game/general/leave.js';
 
-module.exports = [[/points_leave$/, async (session, callback) => {
+export default [[/points_leave$/, async (session, callback) => {
     await leave(session, callback, "points");
 }]];

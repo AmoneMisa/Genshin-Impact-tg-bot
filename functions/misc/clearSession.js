@@ -1,4 +1,4 @@
-module.exports = function (session) {
+export default function (session) {
     if (session.game.gameClass.hasOwnProperty("boss")) {
         if (session.game.gameClass.boss.hasOwnProperty("isDead")) {
             delete session.game.gameClass.boss.isDead;

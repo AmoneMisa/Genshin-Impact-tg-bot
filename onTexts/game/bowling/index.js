@@ -1,3 +1,3 @@
-const bowling = require('./bowling');
+import bowling from './bowling.js';
 
-module.exports = [...bowling];
+export default [...bowling];

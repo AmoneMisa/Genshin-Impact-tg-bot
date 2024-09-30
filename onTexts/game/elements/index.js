@@ -1,3 +1,3 @@
-const elements = require('./elements');
+import elements from './elements.js';
 
-module.exports = [...elements];
+export default [...elements];

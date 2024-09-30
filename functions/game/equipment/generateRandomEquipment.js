@@ -1,14 +1,14 @@
-const equipmentTemplate = require("../../../template/equipmentTemplate");
-const equipmentBonusStatsTemplate = require("../../../template/equipmentBonusStatsTemplate");
-const getRandom = require("../../getters/getRandom");
-const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
-const getValueByChance = require("../../getters/getValueByChance");
-const isStatPenalty = require("../../game/equipment/isStatPenalty");
-const getNewChancesArrayByValue = require("../../getters/getNewChancesArrayByValue");
-const equipmentDictionary = require("../../../dictionaries/equipment");
-const lodash = require("lodash");
+import equipmentTemplate from '../../../template/equipmentTemplate.js';
+import equipmentBonusStatsTemplate from '../../../template/equipmentBonusStatsTemplate.js';
+import getRandom from '../../getters/getRandom.js';
+import getRandomWithoutFloor from '../../getters/getRandomWithoutFloor.js';
+import getValueByChance from '../../getters/getValueByChance.js';
+import isStatPenalty from '../../game/equipment/isStatPenalty.js';
+import getNewChancesArrayByValue from '../../getters/getNewChancesArrayByValue.js';
+import equipmentDictionary from '../../../dictionaries/equipment.js';
+import lodash from 'lodash';
 
-module.exports = function (currentLvl, grade) {
+export default function (currentLvl, grade) {
     let buildItem = getItemData(currentLvl, grade);
     let cost = getItemCost(buildItem);
 

@@ -1,11 +1,11 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const buttonsDictionary = require('../../../dictionaries/buttons');
-const userGetStats = require('../../../functions/game/player/userGetStats');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const getFile = require("../../../functions/getters/getFile");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import userGetStats from '../../../functions/game/player/userGetStats.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import getFile from '../../../functions/getters/getFile.js';
 
-module.exports = [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let className = session.game.gameClass.stats.name || "noClass";
     let gender = session.gender || "male";

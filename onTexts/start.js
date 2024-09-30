@@ -1,9 +1,9 @@
-const bot = require('../bot');
-const buttonsDictionary = require('../dictionaries/buttons');
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
+import bot from '../bot.js';
+import buttonsDictionary from '../dictionaries/buttons.js';
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/start/, async (msg) => {
+export default [[/(?:^|\s)\/start/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     let commands = await bot.getMyCommands();
     let message = `Список команд бота:\n\n`;

@@ -1,5 +1,5 @@
-const arenaRanks = require("../../../dictionaries/arenaRanks");
-const getPlayerRating = require("./getPlayerRating");
+import arenaRanks from '../../../dictionaries/arenaRanks.js';
+import getPlayerRating from './getPlayerRating.js';
 
 const ranksRating = [
     {minRating: 0, percentileRank: null},
@@ -18,7 +18,7 @@ const ranksRating = [
     {minRating: 1580, percentileRank: 0}
 ].reverse();
 
-module.exports = function (userId, arenaType, chatId) {
+export default function (userId, arenaType, chatId) {
     let [playerRating, percentileRating] = getPlayerRating(userId, arenaType, chatId);
 
     for (let [i, rankRating] of ranksRating.entries()) {

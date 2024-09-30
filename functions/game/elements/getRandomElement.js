@@ -1,5 +1,5 @@
-const elementsTemplate = require('../../../template/elements');
-const getRandom = require('../../getters/getRandom');
+import elementsTemplate from '../../../template/elements.js';
+import getRandom from '../../getters/getRandom.js';
 
 function getElement(gameSession) {
     if (gameSession.currentRound === 1) {
@@ -16,7 +16,7 @@ function getElement(gameSession) {
     return elementsTemplate[getRandom(0, Object.keys(elementsTemplate).length - 1)];
 }
 
-module.exports = function (gameSession, userId) {
+export default function (gameSession, userId) {
     let players = gameSession.game.elements.players;
     let element = getElement(gameSession);
 

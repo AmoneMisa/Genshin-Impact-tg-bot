@@ -1,11 +1,11 @@
-const bot = require('../../bot');
-const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const commands = require('../../dictionaries/commands');
-const translation = require('../../dictionaries/translate');
-const getUserName = require('../../functions/getters/getUserName');
-const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
+import bot from '../../bot.js';
+import sendMessage from '../../functions/tgBotFunctions/sendMessage.js';
+import commands from '../../dictionaries/commands.js';
+import translation from '../../dictionaries/translate.js';
+import getUserName from '../../functions/getters/getUserName.js';
+import deleteMessage from '../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) => {
+export default [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) => {
     let regResultStr = regResult[1];
     await deleteMessage(session.keyboardMessage.chat.id, session.keyboardMessage.message_id);
     await deleteMessage(msg.chat.id, msg.message_id);

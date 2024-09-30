@@ -1,20 +1,19 @@
-const getSession = require("../../getters/getSession");
-const getUserName = require('../../getters/getUserName');
-const updateRank = require('./updateRank');
-const data = require("../../../data");
-const {sessions} = require("../../../data");
+import getSession from '../../getters/getSession.js';
+import getUserName from '../../getters/getUserName.js';
+import updateRank from './updateRank.js';
+import {arenaRating, sessions} from '../../../data.js';
 
 const pageSize = 25;
 
-module.exports = async function (arenaType, page = 1, chatId) {
+export default async function (arenaType, page = 1, chatId) {
     let message = "";
     let sortedRating;
     let counter = page === 1 ? 1 : pageSize * page;
 
     if (arenaType === "common") {
-        sortedRating = Array.from(Object.entries(data.arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        sortedRating = Array.from(Object.entries(arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
     } else {
-        sortedRating = Array.from(Object.entries(data.arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        sortedRating = Array.from(Object.entries(arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
     }
 
     let requestedRating = sortedRating.slice(page === 1 ? 0 : page + pageSize, pageSize * page);

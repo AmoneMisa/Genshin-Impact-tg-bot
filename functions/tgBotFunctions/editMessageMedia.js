@@ -1,8 +1,8 @@
-const retryBotRequest = require("./retryBotRequest");
-const getPhoto = require("../getters/getPhoto");
-const savePhotoId = require("../getters/savePhotoId");
+import retryBotRequest from './retryBotRequest.js';
+import getPhoto from '../getters/getPhoto.js';
+import savePhotoId from '../getters/savePhotoId.js';
 
-module.exports = function (path, caption, form) {
+export default function (path, caption, form) {
     form = form || {};
 
     if (!form.chat_id || !form.message_id) {

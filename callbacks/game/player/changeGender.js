@@ -1,14 +1,14 @@
-const getUserName = require('../../../functions/getters/getUserName');
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
-const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
-const checkUserCall = require("../../../functions/misc/checkUserCall");
+import getUserName from '../../../functions/getters/getUserName.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
+import checkUserCall from '../../../functions/misc/checkUserCall.js';
 
 const genderTranslateMap = {
     male: "Мужской",
     female: "Женский"
 }
 
-module.exports = [[/^gender\.([^.]+)$/, async function (session, callback, [, gender]) {
+export default [[/^gender\.([^.]+)$/, async function (session, callback, [, gender]) {
     if (!checkUserCall(callback, session)) {
         return ;
     }

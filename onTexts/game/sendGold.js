@@ -1,16 +1,16 @@
-const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const buttonsDictionary = require('../../dictionaries/buttons');
-const getMembers = require('../../functions/getters/getMembers');
-const getChatSession = require('../../functions/getters/getChatSession');
-const buildKeyboard = require('../../functions/keyboard/buildKeyboard');
-const controlButtons = require('../../functions/keyboard/controlButtons');
-const deleteMessage = require("../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../functions/tgBotFunctions/sendMessage.js';
+import buttonsDictionary from '../../dictionaries/buttons.js';
+import getMembers from '../../functions/getters/getMembers.js';
+import getChatSession from '../../functions/getters/getChatSession.js';
+import buildKeyboard from '../../functions/keyboard/buildKeyboard.js';
+import controlButtons from '../../functions/keyboard/controlButtons.js';
+import deleteMessage from '../../functions/tgBotFunctions/deleteMessage.js';
 
 function isGameStarted(session, gameName) {
     return session.game.hasOwnProperty(gameName) && session.game.dice.hasOwnProperty('isStart') && session.game[gameName].isStart;
 }
 
-module.exports = [[/(?:^|\s)\/send_gold\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/send_gold\b/, async (msg, session) => {
     let chatSession = getChatSession(msg.chat.id);
 
     if (chatSession.game.points.players && chatSession.game.points.players[session.userChatData.user.id] ||

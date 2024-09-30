@@ -1,7 +1,7 @@
-const {myId} = require('../../config');
-const sendMessage = require('./sendMessage');
+import { myId } from '../../config.js';
+import sendMessage from './sendMessage.js';
 
-module.exports = function (message) {
+export default function (message) {
     if (typeof message !== "string") {
         message = JSON.stringify(message, null, 4);
     }

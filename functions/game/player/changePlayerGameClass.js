@@ -1,5 +1,5 @@
-const getGameClass = require('./getters/getGameClassFromTemplate');
+import getGameClass from './getters/getGameClassFromTemplate.js';
 
-module.exports = function (session, classStats) {
+export default function (session, classStats) {
     session.game.gameClass = getGameClass(classStats.name || classStats);
 };

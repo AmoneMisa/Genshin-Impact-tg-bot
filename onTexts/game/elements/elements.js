@@ -1,19 +1,19 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
-const getRandomElement = require('../../../functions/game/elements/getRandomElement');
-const elementsMessage = require('../../../functions/game/elements/elementsMessage');
-const botThink = require('../../../functions/game/elements/botThink');
-const updatePoints = require('../../../functions/game/elements/updatePoints');
-const getChatSession = require('../../../functions/getters/getChatSession');
-const getMembers = require('../../../functions/getters/getMembers');
-const betMessage = require('../../../functions/game/general/betMessage');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const endGameTimer = require("../../../functions/game/general/endGameTimer");
-const gameStatusMessage = require("../../../functions/game/general/gameStatusMessage");
-const isMassGameAlreadyStarted = require("../../../functions/game/general/isMassGameAlreadyStarted");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getRandomElement from '../../../functions/game/elements/getRandomElement.js';
+import elementsMessage from '../../../functions/game/elements/elementsMessage.js';
+import botThink from '../../../functions/game/elements/botThink.js';
+import updatePoints from '../../../functions/game/elements/updatePoints.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
+import getMembers from '../../../functions/getters/getMembers.js';
+import betMessage from '../../../functions/game/general/betMessage.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import endGameTimer from '../../../functions/game/general/endGameTimer.js';
+import gameStatusMessage from '../../../functions/game/general/gameStatusMessage.js';
+import isMassGameAlreadyStarted from '../../../functions/game/general/isMassGameAlreadyStarted.js';
 
-module.exports = [[/(?:^|\s)\/elements\b/, (msg, session) => {
+export default [[/(?:^|\s)\/elements\b/, (msg, session) => {
     deleteMessage(msg.chat.id, msg.message_id);
     let chatSession = getChatSession(msg.chat.id);
     let members = getMembers(msg.chat.id);

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "ru": {
         language: "Язык",
         artifacts: "Артефакты",

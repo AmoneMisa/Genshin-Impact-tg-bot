@@ -1,7 +1,7 @@
-const clearTitlesList = require('./clearTitlesList');
-const receiveTitleTimerForUser = require('./receiveTitleTimerForUser');
+import clearTitlesList from './clearTitlesList.js';
+import receiveTitleTimerForUser from './receiveTitleTimerForUser.js';
 
-module.exports = [
+export default [
     ...clearTitlesList,
     ...receiveTitleTimerForUser
 ];

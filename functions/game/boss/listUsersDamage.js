@@ -1,6 +1,6 @@
-const getUserName = require('../../getters/getUserName');
+import getUserName from '../../getters/getUserName.js';
 
-module.exports = function (boss) {
+export default function (boss) {
     if (!boss) {
         return `Группа ещё не призвала босса. Призвать можно командой /boss`;
     }

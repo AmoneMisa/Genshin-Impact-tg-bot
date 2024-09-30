@@ -1,12 +1,12 @@
-const buttonsDictionary = require('../../dictionaries/buttons');
-const buildKeyboard = require('../../functions/keyboard/buildKeyboard');
-const controlButtons = require('../../functions/keyboard/controlButtons');
-const translation = require('../../dictionaries/translate');
-const userTemplate = require('../../template/userTemplate');
-const getMembers = require('../../functions/getters/getMembers');
-const editMessageText = require('../../functions/tgBotFunctions/editMessageText');
+import buttonsDictionary from '../../dictionaries/buttons.js';
+import buildKeyboard from '../../functions/keyboard/buildKeyboard.js';
+import controlButtons from '../../functions/keyboard/controlButtons.js';
+import translation from '../../dictionaries/translate.js';
+import userTemplate from '../../template/userTemplate.js';
+import getMembers from '../../functions/getters/getMembers.js';
+import editMessageText from '../../functions/tgBotFunctions/editMessageText.js';
 
-module.exports = [["info", function (session, callback) {
+export default [["info", function (session, callback) {
     let buttons = buildKeyboard(callback.message.chat.id, 'info');
 
     return editMessageText(`Выбери интересующего тебя участника`, {

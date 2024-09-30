@@ -1,10 +1,10 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const editMessageText = require('../../../functions/tgBotFunctions/editMessageText');
-const deleteMessage = require('../../../functions/tgBotFunctions/deleteMessage');
-const deleteMessageTimeout = require('../../../functions/tgBotFunctions/deleteMessageTimeout');
-const getUserName = require('../../../functions/getters/getUserName');
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
+import getUserName from '../../../functions/getters/getUserName.js';
 
-module.exports = [
+export default [
     [/^slots_start_game$/, async function (session, callback) {
         if (getUserName(session, "nickname") !== callback.from.username) {
             return;

@@ -1,8 +1,8 @@
-const isBossAlive = require("../boss/getBossStatus/isBossAlive");
-const bossReflectDamageMessage = require("../boss/bossReflectDamageMessage");
-const getUserName = require("../../getters/getUserName");
+import isBossAlive from '../boss/getBossStatus/isBossAlive.js';
+import bossReflectDamageMessage from '../boss/bossReflectDamageMessage.js';
+import getUserName from '../../getters/getUserName.js';
 
-module.exports = function (session, boss, {isHasCritical = false, dmg = 0, vampire = false, reflectDamage = false}) {
+export default function (session, boss, {isHasCritical = false, dmg = 0, vampire = false, reflectDamage = false}) {
     let message = "";
 
     if (vampire) {

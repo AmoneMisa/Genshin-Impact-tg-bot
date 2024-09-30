@@ -1,9 +1,9 @@
-const {sessions} = require("../../data");
-const isPlayerInFight = require("../game/player/isPlayerInFight");
-const getMaxHp = require("../game/player/getters/getMaxHp");
-const getCurrentHp = require("../game/player/getters/getCurrentHp");
+import { sessions } from '../../data.js';
+import isPlayerInFight from '../game/player/isPlayerInFight.js';
+import getMaxHp from '../game/player/getters/getMaxHp.js';
+import getCurrentHp from '../game/player/getters/getCurrentHp.js';
 
-module.exports = function () {
+export default function () {
     for (let chatSession of Object.values(sessions)) {
         for (let session of Object.values(chatSession.members)) {
             if (session.userChatData.user.is_bot) {

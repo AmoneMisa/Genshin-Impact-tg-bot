@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "skillCooltimeMul": [{
         chance: 0.005, value: {max: 1 - 0.2, min: 1 - 0.16}
     }, {

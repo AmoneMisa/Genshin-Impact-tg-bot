@@ -1,25 +1,25 @@
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
-const editMessageMedia = require('../../../functions/tgBotFunctions/editMessageMedia');
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const changePlayerClass = require('../../../functions/game/player/changePlayerGameClass');
-const getPlayerGameClass = require('../../../functions/game/player/getters/getPlayerGameClass');
-const getClassStatsFromTemplate = require('../../../functions/game/player/getters/getGameClassStatsFromTemplate');
-const getUserName = require('../../../functions/getters/getUserName');
-const getTime = require("../../../functions/getters/getTime");
-const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
-const getPlayerGameClassMessage = require("../../../functions/game/player/getters/getPlayerGameClassMessage");
-const classes = require("../../../template/classStatsTemplate");
-const getEmoji = require('../../../functions/getters/getEmoji');
-const getSession = require('../../../functions/getters/getSession');
-const checkUserCall = require("../../../functions/misc/checkUserCall");
-const updatePlayerStats = require("../../../functions/game/player/updatePlayerStats");
-const getFile = require("../../../functions/getters/getFile");
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import editMessageMedia from '../../../functions/tgBotFunctions/editMessageMedia.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import changePlayerClass from '../../../functions/game/player/changePlayerGameClass.js';
+import getPlayerGameClass from '../../../functions/game/player/getters/getPlayerGameClass.js';
+import getClassStatsFromTemplate from '../../../functions/game/player/getters/getGameClassStatsFromTemplate.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import getTime from '../../../functions/getters/getTime.js';
+import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
+import getPlayerGameClassMessage from '../../../functions/game/player/getters/getPlayerGameClassMessage.js';
+import classes from '../../../template/classStatsTemplate.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import getSession from '../../../functions/getters/getSession.js';
+import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import updatePlayerStats from '../../../functions/game/player/updatePlayerStats.js';
+import getFile from '../../../functions/getters/getFile.js';
 
 function getOffset() {
     return new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
 }
 
-module.exports = [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function (session, callback, [, chatId]) {
+export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function (session, callback, [, chatId]) {
     if (!checkUserCall(callback, session)) {
         return;
     }

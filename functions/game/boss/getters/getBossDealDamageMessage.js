@@ -1,4 +1,4 @@
-module.exports = function (dmgList) {
+export default function (dmgList) {
     let message = `Босс нанёс урон всей группе:\n\n`;
 
     for (let player of Object.values(dmgList)) {

@@ -1,7 +1,7 @@
-const getPlayerGameClass = require("./getPlayerGameClass");
-const getEquipStatByName = require("./getEquipStatByName");
+import getPlayerGameClass from './getPlayerGameClass.js';
+import getEquipStatByName from './getEquipStatByName.js';
 
-module.exports = function (session, gameClass) {
+export default function (session, gameClass) {
     if (!gameClass) {
         gameClass = session.game.gameClass;
     }

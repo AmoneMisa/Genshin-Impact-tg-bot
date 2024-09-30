@@ -1,9 +1,9 @@
-const getSession = require("../../../functions/getters/getSession");
-const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const userGetStats = require("../../../functions/game/player/userGetStats");
+import getSession from '../../../functions/getters/getSession.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import userGetStats from '../../../functions/game/player/userGetStats.js';
 
-module.exports = [[/^player\.([\-0-9]+)\.whoami$/, async function (session, callback, [, userId]) {
+export default [[/^player\.([\-0-9]+)\.whoami$/, async function (session, callback, [, userId]) {
     const foundedSession = await getSession(userId, callback.from.id);
     let newMessage = userGetStats(foundedSession);
 

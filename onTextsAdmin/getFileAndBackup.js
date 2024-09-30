@@ -1,12 +1,12 @@
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const bot = require('../bot');
-const {myId, token} = require('../config');
-const fs = require('fs');
-const https = require("https");
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import bot from '../bot.js';
+import { myId, token } from '../config.js';
+import fs from 'fs';
+import https from 'https';
 
 // Получение файла ботом. Если найден такой файл локально, делаем бекап старого и заменяем на новый
 
-module.exports = [[/\/send_file/, async (msg) => {
+export default [[/\/send_file/, async (msg) => {
     if (msg.from.id !== myId) {
         return;
     }

@@ -1,3 +1,3 @@
-const resetPointGame = require('./resetPointGame');
+import resetPointGame from './resetPointGame.js';
 
-module.exports = [...resetPointGame];
+export default [...resetPointGame];

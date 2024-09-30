@@ -1,6 +1,6 @@
-const {arenaRating} = require("../../data");
+import { arenaRating } from '../../data.js';
 
-module.exports = function () {
+export default function () {
     for (let ratingKey of Object.keys(arenaRating.expansion)) {
         arenaRating.expansion[ratingKey] = 1000;
     }

@@ -1,4 +1,4 @@
-module.exports = function (session) {
+export default function (session) {
     let multiplier = 1;
 
     if (!session.game || !session.game.effects) {

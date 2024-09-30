@@ -1,7 +1,7 @@
-const getEmoji = require("../../../getters/getEmoji");
-const statsDictionary = require("../../../../dictionaries/statsDictionary");
+import getEmoji from '../../../getters/getEmoji.js';
+import statsDictionary from '../../../../dictionaries/statsDictionary.js';
 
-module.exports = function (boss) {
+export default function (boss) {
     if (!boss) {
         throw new Error("Босс не найден");
     }

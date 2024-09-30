@@ -1,13 +1,13 @@
-const sendMessage = require("../../../functions/tgBotFunctions/sendMessage");
-const editMessageText = require("../../../functions/tgBotFunctions/editMessageText");
-const getSession = require("../../../functions/getters/getSession");
-const bot = require('../../../bot');
-const controlButtons = require('../../../functions/keyboard/controlButtons');
-const buildKeyboard = require('../../../functions/keyboard/buildKeyboard');
-const getUserName = require('../../../functions/getters/getUserName');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import getSession from '../../../functions/getters/getSession.js';
+import bot from '../../../bot.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
+export default [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
     sendMessage(callback.message.chat.id, `Сколько железной руды добавить для ${getUserName(targetSession, "name")}?`, {

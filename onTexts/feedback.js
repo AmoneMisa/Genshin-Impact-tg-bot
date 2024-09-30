@@ -1,11 +1,11 @@
-const bot = require('../bot');
-const sendMessage = require('../functions/tgBotFunctions/sendMessage');
-const deleteMessage = require("../functions/tgBotFunctions/deleteMessage");
-const getUserName = require("../functions/getters/getUserName");
-const getSession = require("../functions/getters/getSession");
-const {myId} = require("../config");
+import bot from '../bot.js';
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
+import getUserName from '../functions/getters/getUserName.js';
+import getSession from '../functions/getters/getSession.js';
+import { myId } from '../config.js';
 
-module.exports = [[/(?:^|\s)\/feedback/, async (msg, session) => {
+export default [[/(?:^|\s)\/feedback/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     sendMessage(msg.from.id, `${getUserName(session, "name")}, Возникли вопросы? Нашли баг? Есть предложения или пожелания? Можете написать Ваши мысли в ответ к этому сообщению.`, {

@@ -1,6 +1,6 @@
-const emoji = require("../../dictionaries/emoji");
+import emoji from '../../dictionaries/emoji.js';
 
-module.exports = function (emojiName) {
+export default function (emojiName) {
     // if (!emojiName) {
     //     throw new Error(`Название для эмодзи: ${emojiName}`);
     // }

@@ -1,10 +1,10 @@
-const {arenaRating, sessions} = require("../../data");
-const updateRank = require("../../functions/game/arena/updateRank");
-const arenaWeeklyPrize = require("../../template/arenaWeeklyPrizes");
-const pvpSignTemplate = require("../../template/pvpSignTemplate");
-const lodash = require("lodash");
+import { arenaRating, sessions } from '../../data.js';
+import updateRank from '../../functions/game/arena/updateRank.js';
+import arenaWeeklyPrize from '../../template/arenaWeeklyPrizes.js';
+import pvpSignTemplate from '../../template/pvpSignTemplate.js';
+import lodash from 'lodash';
 
-module.exports = function () {
+export default function () {
     for (let [chatSessionId, chatSession] of Object.entries(sessions)) {
         for (let [sessionId, session] of Object.entries(chatSession)) {
             if (session.userChatData.user.is_bot) {

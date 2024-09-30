@@ -1,5 +1,5 @@
-const mute = require('./mute');
+import mute from './mute.js';
 
-module.exports = [
+export default [
     ...mute
 ];

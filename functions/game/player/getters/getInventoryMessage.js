@@ -1,7 +1,7 @@
-const getEmoji = require('../../../getters/getEmoji');
-const inventoryDictionary = require('../../../../dictionaries/inventory');
+import getEmoji from '../../../getters/getEmoji.js';
+import inventoryDictionary from '../../../../dictionaries/inventory.js';
 
-module.exports = function (inventory, isSoloItem = false) {
+export default function (inventory, isSoloItem = false) {
     let message = `${getEmoji("inventory")} Инвентарь\n\n`;
 
     if (inventory.hasOwnProperty("gold") && inventory.hasOwnProperty("crystals") && inventory.hasOwnProperty("ironOre")) {
@@ -32,9 +32,9 @@ module.exports = function (inventory, isSoloItem = false) {
             } else if (key === "gacha") {
                 message += getGachaMessage(inventory[key]);
             } else if (key === "equipment") {
-                message += getEquipMessage(inventory[key].items);
-            } else {
-                message += `${getEmoji(key)} ${inventoryDictionary[key]}: ${item}\n`;
+                message += getEquipMessage(inventory[key])
+            } else if (key) {
+                message += getCommonMessage(key);
             }
         }
     }
@@ -57,7 +57,6 @@ function getPotionsMessage(potions) {
         let findStr = `${potion.bottleType}.${potion.type}`;
         message += `${getEmoji(findStr)} ${potion.name}: ${potion.description}. Количество: ${potion.count}\n`;
     }
-    console.log("potion", message)
 
     return message;
 }
@@ -94,7 +93,6 @@ function getEquipMessage(equipment) {
             }
         }
     }
-    console.log("equip", message)
 
     return message;
 }
@@ -109,7 +107,22 @@ function getGachaMessage(gacha) {
     for (let gachaItem of gacha.items) {
         message += `${inventoryDictionary[gachaItem.name]}: осколки для призыва. Количество: ${gachaItem.value}\n`;
     }
-    console.log("gacha", message)
+
+    return message;
+}
+
+function getCommonMessage(category) {
+    if (!category?.items?.length) {
+        return "";
+    }
+
+    let message = `\n${getEmoji(category.name)} ${category.name}:\n`;
+
+    for (let categoryItem of category.items) {
+        for (const [key, value] of Object.entries(categoryItem)) {
+            message += `${key}. Количество: ${value}\n`;
+        }
+    }
 
     return message;
 }

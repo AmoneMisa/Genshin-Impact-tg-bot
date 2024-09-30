@@ -1,11 +1,11 @@
-const userCallbacks = require('./user');
-const closeCallback = require('./close');
-const gameCallback = require('./game');
-const help = require('./help');
-const settings = require('./settings');
-const whatsNewSettings = require('./whatsNewSettings');
+import userCallbacks from './user/index.js';
+import closeCallback from './close.js';
+import gameCallback from './game/index.js';
+import help from './help.js';
+import settings from './settings.js';
+import whatsNewSettings from './whatsNewSettings.js';
 
-module.exports = [
+export default [
     ...userCallbacks,
     ...closeCallback,
     ...gameCallback,

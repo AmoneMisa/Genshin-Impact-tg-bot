@@ -1,17 +1,17 @@
-const getUserName = require("../../../functions/getters/getUserName");
-const getSession = require("../../../functions/getters/getSession");
-const getEmoji = require("../../../functions/getters/getEmoji");
-const getInventoryMessage = require("../../../functions/game/player/getters/getInventoryMessage");
-const equipItem = require("../../../functions/game/equipment/equipItem");
-const useHealPotion = require("../../../functions/game/player/useHealPotion");
-const editMessageMedia = require("../../../functions/tgBotFunctions/editMessageMedia");
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const inventoryTranslate = require("../../../dictionaries/inventory");
-const controlButtons = require("../../../functions/keyboard/controlButtons");
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
-const getFile = require("../../../functions/getters/getFile");
-const checkUserCall = require("../../../functions/misc/checkUserCall");
-const unequipItem = require("../../../functions/game/equipment/unequipItem");
+import getUserName from '../../../functions/getters/getUserName.js';
+import getSession from '../../../functions/getters/getSession.js';
+import getEmoji from '../../../functions/getters/getEmoji.js';
+import getInventoryMessage from '../../../functions/game/player/getters/getInventoryMessage.js';
+import equipItem from '../../../functions/game/equipment/equipItem.js';
+import useHealPotion from '../../../functions/game/player/useHealPotion.js';
+import editMessageMedia from '../../../functions/tgBotFunctions/editMessageMedia.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import inventoryTranslate from '../../../dictionaries/inventory.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import getFile from '../../../functions/getters/getFile.js';
+import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import unequipItem from '../../../functions/game/equipment/unequipItem.js';
 
 let equipmentNames = ["accessories", "armor", "weapon", "cloak", "shield"];
 
@@ -21,28 +21,22 @@ function buildInventoryKeyboard(inventory, userId) {
     let i = 0;
     let categoryList = new Set();
 
-    for (let value of Object.values(inventory)) {
+    for (let [key, value] of Object.entries(inventory)) {
         if (typeof value === "string" || typeof value === "number") {
             continue;
         }
 
-        if (value.hasOwnProperty("mainType")) {
-            categoryList.add(value.mainType);
-        } else if (value.hasOwnProperty("type")) {
-            categoryList.add(value.type);
-        } else {
-            categoryList.add(value.name);
-        }
+        categoryList.add({key, value});
     }
 
-    for (let category of categoryList) {
+    for (let [category, categoryName] of Object.entries(categoryList)) {
         if (i % 2 === 0) {
             tempArray = [];
             buttons.push(tempArray);
         }
 
         tempArray.push({
-            text: `${getEmoji(category)} ${category}`,
+            text: `${getEmoji(category)} ${categoryName}`,
             callback_data: `player.${userId}.inventory.${category}`
         });
 
@@ -81,7 +75,7 @@ function buildInventoryCategoryItemKeyboard(foundedItems, userId, items, isAppro
     return buttons;
 }
 
-module.exports = [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (session, callback, [, userId]) {
+export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (session, callback, [, userId]) {
     // Меню инвентаря
     if (!checkUserCall(callback, session)) {
         return;

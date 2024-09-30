@@ -1,4 +1,4 @@
-const getPoints = require('../point21/getPoints');
+import getPoints from '../point21/getPoints.js';
 
 function calcMaxPoints(players, gameName) {
     let maxPoints = 0;
@@ -120,7 +120,7 @@ function getWinners(players, maxPoints, gameName, members) {
 }
 
 
-module.exports = function (gameSession, gameName) {
+export default function (gameSession, gameName) {
     let members = gameSession.members;
     let players = gameSession.game[gameName].players;
     let maxPoints = calcMaxPoints(players, gameName);

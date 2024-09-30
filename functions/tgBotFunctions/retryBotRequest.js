@@ -1,6 +1,6 @@
-const bot = require("../../bot");
-const sleep = require("./sleep");
-const intel = require("intel");
+import bot from '../../bot.js';
+import sleep from './sleep.js';
+import intel from 'intel';
 
 const log = intel.getLogger("retryBotRequest");
 
@@ -21,7 +21,7 @@ function getRetryAfter(e) {
     return 1;
 }
 
-module.exports = async function retryBotRequest(request) {
+export default async function retryBotRequest(request) {
     let lastE = null;
 
     for (let i = 0; i < 5; i++) {

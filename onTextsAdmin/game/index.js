@@ -1,21 +1,21 @@
-const sword = require('./sword');
-const chest = require('./chest');
-const point = require('./point');
-const gold = require('./gold');
-const ironOre = require('./ironOre');
-const crystals = require('./crystals');
-const experience = require('./experience');
-const boss = require('./boss');
-const dice = require('./dice');
-const bowling = require('./bowling');
-const darts = require('./darts');
-const basketball = require('./basketball');
-const football = require('./football');
-const elements = require('./elements');
-const player = require('./player');
-const titles = require('./titles');
+import sword from './sword/index.js';
+import chest from './chest/index.js';
+import point from './point/index.js';
+import gold from './gold/index.js';
+import ironOre from './ironOre/index.js';
+import crystals from './crystals/index.js';
+import experience from './experience/index.js';
+import boss from './boss/index.js';
+import dice from './dice/index.js';
+import bowling from './bowling/index.js';
+import darts from './darts/index.js';
+import basketball from './basketball/index.js';
+import football from './football/index.js';
+import elements from './elements/index.js';
+import player from './player/index.js';
+import titles from './titles/index.js';
 
-module.exports = [
+export default [
     ...sword,
     ...chest,
     ...point,

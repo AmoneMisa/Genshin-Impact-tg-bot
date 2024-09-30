@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     "Без ранга",
     "Бронза I",
     "Бронза II",

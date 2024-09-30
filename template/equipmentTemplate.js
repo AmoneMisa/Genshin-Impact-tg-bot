@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 // Классы и соответствующие им цены и характеристики
     grades: [{
         name: 'noGrade',

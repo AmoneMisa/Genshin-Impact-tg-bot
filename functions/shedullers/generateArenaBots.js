@@ -1,11 +1,11 @@
-const generateArenaBot = require("../game/arena/generateArenaBot");
-const data = require("../../data");
-const {updArenaTempBots} = require("../../data");
-const fs = require("fs");
+import generateArenaBot from '../game/arena/generateArenaBot.js';
+import {arenaTempBots} from '../../data.js';
+import { updArenaTempBots } from '../../data.js';
+import fs from 'fs';
 
-module.exports = function () {
-    if (data.arenaTempBots.length) {
-        data.arenaTempBots = [];
+export default function () {
+    if (arenaTempBots.length) {
+        arenaTempBots = [];
     }
 
     let arenaTempBotsArray;
@@ -19,7 +19,7 @@ module.exports = function () {
     }
 
     arenaTempBotsArray = Array.from(unique);
-    data.arenaTempBots = arenaTempBotsArray;
+    arenaTempBots = arenaTempBotsArray;
     fs.writeFileSync('arenaTempBots.json', JSON.stringify(arenaTempBotsArray));
     updArenaTempBots();
 }

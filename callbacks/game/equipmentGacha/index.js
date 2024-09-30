@@ -1,5 +1,5 @@
-const equipmentGacha = require('./equipmentGacha');
+import equipmentGacha from './equipmentGacha.js';
 
-module.exports = [
+export default [
     ...equipmentGacha
 ];

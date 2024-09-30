@@ -1,4 +1,4 @@
-module.exports = function (boss, dmg) {
+export default function (boss, dmg) {
     let finalDmg = dmg;
     let modifier = 0;
 

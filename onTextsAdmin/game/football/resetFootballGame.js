@@ -1,8 +1,8 @@
-const sendMessageWithDelete = require('../../../functions/tgBotFunctions/sendMessageWithDelete');
-const endGame = require('../../../functions/game/football/endGame');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import endGame from '../../../functions/game/football/endGame.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-module.exports = [[/(?:^|\s)\/reset_football_game\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/reset_football_game\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
     endGame(session);
 

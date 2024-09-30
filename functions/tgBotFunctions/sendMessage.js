@@ -1,5 +1,5 @@
-const retryBotRequest = require("./retryBotRequest");
+import retryBotRequest from './retryBotRequest.js';
 
-module.exports = function (chatId, text, form) {
+export default function (chatId, text, form) {
     return retryBotRequest(bot => bot.sendMessage(chatId, text, form));
 };

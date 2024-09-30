@@ -1,16 +1,16 @@
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const editMessageCaption = require('../../../functions/tgBotFunctions/editMessageCaption');
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const getUserName = require('../../../functions/getters/getUserName');
-const getBuild = require('../../../functions/game/builds/getBuild');
-const getCaption = require('../../../functions/game/builds/getCaption');
-const getLocalImageByPath = require("../../../functions/getters/getLocalImageByPath");
-const buttonsDictionary = require("../../../dictionaries/buttons");
-const getBuildList = require("../../../functions/game/builds/getBuildList");
-const getBuildListFromTemplate = require("../../../functions/game/builds/getBuildFromTemplate");
-const buildsTemplate = require("../../../template/buildsTemplate");
-const getSession = require("../../../functions/getters/getSession");
-const getFile = require("../../../functions/getters/getFile");
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import getUserName from '../../../functions/getters/getUserName.js';
+import getBuild from '../../../functions/game/builds/getBuild.js';
+import getCaption from '../../../functions/game/builds/getCaption.js';
+import getLocalImageByPath from '../../../functions/getters/getLocalImageByPath.js';
+import buttonsDictionary from '../../../dictionaries/buttons.js';
+import getBuildList from '../../../functions/game/builds/getBuildList.js';
+import getBuildListFromTemplate from '../../../functions/game/builds/getBuildFromTemplate.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import getSession from '../../../functions/getters/getSession.js';
+import getFile from '../../../functions/getters/getFile.js';
 
 function getUpgradeButtonText(lvl) {
     if (lvl === 0) {
@@ -19,7 +19,7 @@ function getUpgradeButtonText(lvl) {
     return "Улучшить";
 }
 
-module.exports = [[/^player\.([\-0-9]+)\.builds$/, async function (session, callback, [, chatId]) {
+export default [[/^player\.([\-0-9]+)\.builds$/, async function (session, callback, [, chatId]) {
     let id;
     let foundedSession = await getSession(chatId, callback.from.id);
     let userId = foundedSession.userChatData.user.id;

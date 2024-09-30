@@ -1,8 +1,8 @@
-const getEquipStatByName = require("./getters/getEquipStatByName");
-const getMaxHp = require("./getters/getMaxHp");
-const getCurrentHp = require("./getters/getCurrentHp");
+import getEquipStatByName from './getters/getEquipStatByName.js';
+import getMaxHp from './getters/getMaxHp.js';
+import getCurrentHp from './getters/getCurrentHp.js';
 
-module.exports = function (session, potion) {
+export default function (session, potion) {
     let player = session.game.gameClass.stats;
 
     if (player.hp <= 0) {

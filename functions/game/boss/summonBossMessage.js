@@ -1,8 +1,8 @@
-const getEmoji = require("../../getters/getEmoji");
-const getStringRemainTime = require("../../getters/getStringRemainTime");
-const getTime = require("../../getters/getTime");
+import getEmoji from '../../getters/getEmoji.js';
+import getStringRemainTime from '../../getters/getStringRemainTime.js';
+import getTime from '../../getters/getTime.js';
 
-module.exports = function (chatId, boss, isAlreadyCalled) {
+export default function (chatId, boss, isAlreadyCalled) {
     let [remain] = getTime(boss.aliveTime);
 
     if (isAlreadyCalled) {

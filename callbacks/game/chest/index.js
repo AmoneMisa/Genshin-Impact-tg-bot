@@ -1,7 +1,7 @@
-const openChest = require('./openChest');
-const setUserChestTimer = require('./receiveUserChestTimer');
+import openChest from './openChest.js';
+import setUserChestTimer from './receiveUserChestTimer.js';
 
-module.exports = [
+export default [
     ...openChest,
     ...setUserChestTimer
 ];

@@ -1,4 +1,4 @@
-module.exports = function (player) {
+export default function (player) {
     let points = 0;
 
     for (let [stat, value] of Object.entries(gearScoreMap)) {

@@ -1,4 +1,4 @@
-module.exports = function (session) {
+export default function (session) {
     if (!session.game || !session.game.equipmentStats) {
         return false;
     }

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     entryType: 0, // Тип вступления: 0 - свободный, 1 - по заявкам, -1 - закрытый
     minGearScore: 0, // Минимальный Gear score
     allowedClass: "", // Допустимый класс

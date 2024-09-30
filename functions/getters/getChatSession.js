@@ -1,6 +1,6 @@
-const {sessions} = require('../../data');
+import { sessions } from '../../data.js';
 
-module.exports = function (chatId) {
+export default function (chatId) {
     if (!sessions[chatId]) {
         sessions[chatId] = {
             game: {

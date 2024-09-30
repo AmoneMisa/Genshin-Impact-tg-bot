@@ -1,14 +1,14 @@
-const sendMessage = require('../../../functions/tgBotFunctions/sendMessage');
-const sendPhoto = require('../../../functions/tgBotFunctions/sendPhoto');
-const deleteMessage = require("../../../functions/tgBotFunctions/deleteMessage");
-const controlButtons = require("../../../functions/keyboard/controlButtons");
-const buildKeyboard = require("../../../functions/keyboard/buildKeyboard");
-const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
-const getTime = require("../../../functions/getters/getTime");
-const getStringRemainTime = require("../../../functions/getters/getStringRemainTime");
-const getFile = require("../../../functions/getters/getFile");
+import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
+import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
+import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import controlButtons from '../../../functions/keyboard/controlButtons.js';
+import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
+import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
+import getTime from '../../../functions/getters/getTime.js';
+import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
+import getFile from '../../../functions/getters/getFile.js';
 
-module.exports = [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
+export default [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     let buttons = buildKeyboard(msg.chat.id, `stealResources.${msg.chat.id}`, false, msg.from.id);

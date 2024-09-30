@@ -1,10 +1,10 @@
-const calcDamagePlayerToPlayer = require('./calcDamagePlayerToPlayer');
-const calculateIncreaseGuardedResources = require('./calculateIncreaseGuardedResources');
-const buildsTemplate = require("../../../template/buildsTemplate");
-const setLevel = require("../player/setLevel");
-const getMaxHp = require("../player/getters/getMaxHp");
+import calcDamagePlayerToPlayer from './calcDamagePlayerToPlayer.js';
+import calculateIncreaseGuardedResources from './calculateIncreaseGuardedResources.js';
+import buildsTemplate from '../../../template/buildsTemplate.js';
+import setLevel from '../player/setLevel.js';
+import getMaxHp from '../player/getters/getMaxHp.js';
 
-module.exports = function (currentUser, targetUser) {
+export default function (currentUser, targetUser) {
     let remainHp = calcDamagePlayerToPlayer(currentUser, targetUser);
     let buildTemplate = buildsTemplate["palace"];
     let maxHp = getMaxHp(targetUser, targetUser.game.gameClass);
