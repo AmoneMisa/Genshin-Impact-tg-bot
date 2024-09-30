@@ -21,7 +21,7 @@ function buildInventoryKeyboard(inventory, userId) {
     let i = 0;
     let categoryList = new Set();
 
-    for (let value of inventory) {
+    for (let value of Object.values(inventory)) {
         if (typeof value === "string" || typeof value === "number") {
             continue;
         }
@@ -42,7 +42,7 @@ function buildInventoryKeyboard(inventory, userId) {
         }
 
         tempArray.push({
-            text: `${getEmoji(category)} ${inventoryTranslate[category]}`,
+            text: `${getEmoji(category)} ${category}`,
             callback_data: `player.${userId}.inventory.${category}`
         });
 

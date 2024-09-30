@@ -21,29 +21,6 @@ module.exports = function (inventory, isSoloItem = false) {
         }
 
         message += `${getEmoji(itemName)} ${inventory.name}: ${inventory.description}.`;
-    } else if (Array.isArray(inventory)) {
-        for (let item of inventory) {
-            if (typeof item === "string" || typeof item === "number") {
-                continue;
-            }
-
-            if (Array.isArray(item)) {
-                for (let itemObj of item) {
-
-                    if (typeof itemObj === "string" || typeof itemObj === "number") {
-                        continue;
-                    }
-
-                    message += `${getEmoji(itemObj.category)} ${itemObj.name}\n`;
-                }
-            }
-
-            if (item.hasOwnProperty("bottleType")) {
-                message += `${getEmoji(`${item.bottleType}.${item.type}`)} ${item.name}: ${item.description}.\nКоличество: ${item.count}\n\n`;
-            } else if (item.type) {
-                message += `${getEmoji(item.type)} ${inventoryDictionary[item.type]}: ${item.description}\n`;
-            }
-        }
     } else {
         for (let [key, item] of Object.entries(inventory)) {
             if (key === "gold" || key === "crystals" || key === "ironOre") {
@@ -55,7 +32,7 @@ module.exports = function (inventory, isSoloItem = false) {
             } else if (key === "gacha") {
                 message += getGachaMessage(inventory[key]);
             } else if (key === "equipment") {
-                message += getEquipMessage(inventory[key]);
+                message += getEquipMessage(inventory[key].items);
             } else {
                 message += `${getEmoji(key)} ${inventoryDictionary[key]}: ${item}\n`;
             }
@@ -66,25 +43,34 @@ module.exports = function (inventory, isSoloItem = false) {
 }
 
 function getPotionsMessage(potions) {
-    let filteredPotions = potions.filter(potion => potion.count > 0);
+    if (!potions?.items?.length) {
+        return "";
+    }
+
+    let filteredPotions = potions.items.filter(potion => potion.count > 0);
     if (filteredPotions.length <= 0) {
         return "";
     }
 
-    let message = `\n${getEmoji("potions")} ${inventoryDictionary["potions"]}:\n`;
+    let message = `\n${getEmoji("potions")} ${potions.name}:\n`;
     for (let potion of filteredPotions) {
         let findStr = `${potion.bottleType}.${potion.type}`;
         message += `${getEmoji(findStr)} ${potion.name}: ${potion.description}. Количество: ${potion.count}\n`;
     }
+    console.log("potion", message)
 
     return message;
 }
 
 function getEquipMessage(equipment) {
-    let message = `\n${inventoryDictionary["equipment"]}:\n`;
-    let newEquipment = equipment;
-    if (equipment.length >= 4) {
-        newEquipment = equipment.slice(0, 4);
+    if (!equipment?.items?.length) {
+        return "";
+    }
+
+    let message = `\n${equipment.name}:\n`;
+    let newEquipment = equipment.items;
+    if (equipment.items.length >= 4) {
+        newEquipment = equipment.items.slice(0, 4);
     }
 
     let equipmentByMainType = {};
@@ -108,20 +94,22 @@ function getEquipMessage(equipment) {
             }
         }
     }
+    console.log("equip", message)
 
     return message;
 }
 
 function getGachaMessage(gacha) {
-    if (!gacha.length) {
+    if (!gacha?.items?.length) {
         return "";
     }
 
-    let message = `\n${inventoryDictionary["gacha"]}:\n`;
+    let message = `\n${gacha.name}:\n`;
 
-    for (let gachaItem of gacha) {
+    for (let gachaItem of gacha.items) {
         message += `${inventoryDictionary[gachaItem.name]}: осколки для призыва. Количество: ${gachaItem.value}\n`;
     }
+    console.log("gacha", message)
 
     return message;
 }

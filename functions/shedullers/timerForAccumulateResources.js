@@ -13,15 +13,15 @@ module.exports = function () {
                 let buildTemplate = buildsTemplate[build.name];
 
                 if (!build.lastCollectAt) {
-                    build.lastCollectAt = Date.now();
+                    build.lastCollectAt = new Date().getTime();
                     debugMessage(`${session.game.builds[build.name].lastCollectAt} - попытка обратиться к боту.`);
                 }
 
-                if (Date.now() - build.lastCollectAt > buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000) {
+                if (new Date().getTime() - build.lastCollectAt > buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000) {
                     build.isCollectedResources = false;
-                } else if (Date.now() - build.lastCollectAt > 0) {
+                } else if (new Date().getTime() - build.lastCollectAt > 0) {
                     build.isCollectedResources = true;
-                    build.lastCollectAt = Date.now();
+                    build.lastCollectAt = new Date().getTime();
                 }
             }
         }
