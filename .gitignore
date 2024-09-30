@@ -6,4 +6,4 @@ config.js
 !package.json
 
 #on hold
-/templates/shopTemplate.js
+/template/shopTemplate.ts

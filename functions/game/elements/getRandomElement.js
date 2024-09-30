@@ -1,4 +1,4 @@
-const elementsTemplate = require('../../../templates/elements');
+const elementsTemplate = require('../../../template/elements');
 const getRandom = require('../../getters/getRandom');
 
 function getElement(gameSession) {

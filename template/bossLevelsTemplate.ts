@@ -1,12 +1,13 @@
 const bossTemplate = require("./bossTemplate");
 
-module.exports = function (bossName) {
+module.exports = function (bossName: string) {
     let step = 1.15;
     let countLvls = 30;
-    let template = bossTemplate.find(boss => boss.name === bossName);
+    let template = bossTemplate.find((boss: { name: string; }) => boss.name === bossName);
     if (!template) {
         throw new Error(`Босса с таким именем не найдено в шаблоне: ${bossName}`);
     }
+
     let needSummons = template?.stats?.needSummons;
     if (!needSummons) {
         throw new Error(`У шаблона босса с именем: ${bossName} - не найдено поле "needSummons"`);

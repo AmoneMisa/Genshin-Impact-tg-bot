@@ -1,4 +1,4 @@
-const bossesTemplate = require("../../../../templates/bossTemplate");
+const bossesTemplate = require("../../../../template/bossTemplate");
 const getRandom = require("../../../getters/getRandom");
 
 module.exports = function () {

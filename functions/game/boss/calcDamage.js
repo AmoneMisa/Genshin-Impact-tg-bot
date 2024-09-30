@@ -8,7 +8,7 @@ const getCriticalChanceMultiplier = require('../player/getters/getCriticalChance
 const getCriticalDamage = require('../player/getters/getCriticalDamage');
 const getAdditionalDamageMul = require('../player/getters/getAdditionalDamageMul');
 const getCriticalDamageMultiplier = require('../player/getters/getCriticalDamageMultiplier');
-const bossesTemplate = require("../../../templates/bossTemplate");
+const bossesTemplate = require("../../../template/bossTemplate");
 const getEquipStatByName = require("../player/getters/getEquipStatByName");
 
 module.exports = function (session, skill, boss) {

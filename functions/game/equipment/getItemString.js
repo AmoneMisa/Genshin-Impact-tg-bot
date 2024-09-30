@@ -1,5 +1,5 @@
 const statsDictionary = require("../../../dictionaries/statsDictionary");
-const equipmentTemplate = require("../../../templates/equipmentTemplate");
+const equipmentTemplate = require("../../../template/equipmentTemplate");
 const inventory = require("../../../dictionaries/inventory");
 const getEmoji = require("../../../functions/getters/getEmoji");
 const isStatPenalty = require("../../game/equipment/isStatPenalty");

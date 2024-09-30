@@ -1,5 +1,5 @@
 const {sessions} = require("../../data");
-const gachaTemplate = require("../../templates/gachaTemplate");
+const gachaTemplate = require("../../template/gachaTemplate");
 
 module.exports = function () {
     for (let chatSession of Object.values(sessions)) {

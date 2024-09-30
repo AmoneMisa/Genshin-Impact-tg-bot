@@ -1,4 +1,4 @@
-const synergies = require('../../../templates/elementsSynergy');
+const synergies = require('../../../template/elementsSynergy');
 
 module.exports = function (players) {
     for (let player of Object.values(players)) {

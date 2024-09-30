@@ -1,4 +1,4 @@
-const skills = require("../../../../templates/classSkillsTemplate");
+const skills = require("../../../../template/classSkillsTemplate");
 
 module.exports = function (className = "noClass") {
     if (!className) {

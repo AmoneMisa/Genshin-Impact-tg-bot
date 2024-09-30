@@ -1,7 +1,7 @@
 const {arenaRating, sessions} = require("../../data");
 const updateRank = require("../../functions/game/arena/updateRank");
-const arenaWeeklyPrize = require("../../templates/arenaWeeklyPrizes");
-const pvpSignTemplate = require("../../templates/pvpSignTemplate");
+const arenaWeeklyPrize = require("../../template/arenaWeeklyPrizes");
+const pvpSignTemplate = require("../../template/pvpSignTemplate");
 const lodash = require("lodash");
 
 module.exports = function () {

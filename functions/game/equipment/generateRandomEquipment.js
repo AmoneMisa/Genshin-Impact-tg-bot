@@ -1,5 +1,5 @@
-const equipmentTemplate = require("../../../templates/equipmentTemplate");
-const equipmentBonusStatsTemplate = require("../../../templates/equipmentBonusStatsTemplate");
+const equipmentTemplate = require("../../../template/equipmentTemplate");
+const equipmentBonusStatsTemplate = require("../../../template/equipmentBonusStatsTemplate");
 const getRandom = require("../../getters/getRandom");
 const getRandomWithoutFloor = require("../../getters/getRandomWithoutFloor");
 const getValueByChance = require("../../getters/getValueByChance");

@@ -1,5 +1,5 @@
 const unequipItem = require("./unequipItem");
-const equipmentTemplate = require("../../../templates/equipmentTemplate");
+const equipmentTemplate = require("../../../template/equipmentTemplate");
 
 module.exports = function (session, item) {
 

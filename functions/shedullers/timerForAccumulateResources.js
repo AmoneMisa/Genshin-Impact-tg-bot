@@ -1,5 +1,5 @@
 const {sessions} = require("../../data");
-const buildsTemplate = require("../../templates/buildsTemplate");
+const buildsTemplate = require("../../template/buildsTemplate");
 
 module.exports = function () {
     for (let chatSession of Object.values(sessions)) {
@@ -11,10 +11,9 @@ module.exports = function () {
             for (let build of session.game.builds) {
                 let buildTemplate = buildsTemplate[build.name];
 
-
-                    if (!build.lastCollectAt) {
-                        build.lastCollectAt = Date.now();
-                    }
+                if (!build.lastCollectAt) {
+                    build.lastCollectAt = Date.now();
+                }
 
                 if (Date.now() - build.lastCollectedAt > buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000) {
                     build.isCollectedResources = false;

@@ -1,4 +1,4 @@
-const levelsTemplate = require('../../../templates/levelsTemplate');
+const levelsTemplate = require('../../../template/levelsTemplate');
 const updatePlayerStats = require('./updatePlayerStats');
 
 module.exports = function (session) {

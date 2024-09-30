@@ -1,5 +1,5 @@
-const shopTemplate = require('../../../templates/shopTemplate');
-const potionsInInventoryTemplate = require('../../../templates/potionsInInventoryTemplate');
+const shopTemplate = require('../../../template/shopTemplate');
+const potionsInInventoryTemplate = require('../../../template/potionsInInventoryTemplate');
 const getOffsetToDay = require('../../getters/getOffsetToDay');
 const getOffset = require('../../getters/getOffset');
 const getUserName = require('../../getters/getUserName');

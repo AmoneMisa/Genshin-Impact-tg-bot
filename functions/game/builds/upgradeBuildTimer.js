@@ -2,7 +2,7 @@ const calculateRemainBuildTime = require("./calculateRemainBuildTime");
 const upgradeBuild = require("./upgradeBuild");
 const sendMessage = require("../../tgBotFunctions/sendMessage");
 const getUserName = require('../../getters/getUserName');
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 
 module.exports = function (buildName, build, chatId, session) {
     let remain = calculateRemainBuildTime(buildName, build);

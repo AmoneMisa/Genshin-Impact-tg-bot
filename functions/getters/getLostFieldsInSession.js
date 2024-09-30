@@ -1,8 +1,8 @@
 const getBuildFromTemplate = require("../game/builds/getBuildFromTemplate");
 const lodash = require("lodash");
-const potionsInInventoryTemplate = require("../../templates/potionsInInventoryTemplate");
-const classStatsTemplate = require("../../templates/classStatsTemplate");
-const classSkillsTemplate = require("../../templates/classSkillsTemplate");
+const potionsInInventoryTemplate = require("../../template/potionsInInventoryTemplate");
+const classStatsTemplate = require("../../template/classStatsTemplate");
+const classSkillsTemplate = require("../../template/classSkillsTemplate");
 
 module.exports = function (session) {
     if (!session.hasOwnProperty("whatsNewSettings")) {

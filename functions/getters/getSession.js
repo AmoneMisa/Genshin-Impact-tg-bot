@@ -1,9 +1,9 @@
-const userTemplate = require('../../templates/userTemplate');
+const userTemplate = require('../../template/userTemplate');
 const bot = require('../../bot');
 const getMembers = require('./getMembers');
 const getLostFieldsInSession = require('./getLostFieldsInSession');
-const classStatsTemplate = require('../../templates/classStatsTemplate');
-const classSkillsTemplate = require('../../templates/classSkillsTemplate');
+const classStatsTemplate = require('../../template/classStatsTemplate');
+const classSkillsTemplate = require('../../template/classSkillsTemplate');
 
 module.exports = async function (chatId, userId) {
     let members = getMembers(chatId);

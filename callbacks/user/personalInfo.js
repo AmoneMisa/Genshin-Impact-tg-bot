@@ -1,6 +1,6 @@
 const buttonsDictionary = require('../../dictionaries/buttons');
 const sendMessage = require('../../functions/tgBotFunctions/sendMessage');
-const userTemplate = require('../../templates/userTemplate');
+const userTemplate = require('../../template/userTemplate');
 const translation = require('../../dictionaries/translate');
 const getUserName = require('../../functions/getters/getUserName');
 

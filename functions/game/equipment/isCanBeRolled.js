@@ -1,4 +1,4 @@
-const gachaTemplate = require("../../../templates/gachaTemplate");
+const gachaTemplate = require("../../../template/gachaTemplate");
 
 // 1 - уровень слишком низкий
 // 2 - недостаточно золота

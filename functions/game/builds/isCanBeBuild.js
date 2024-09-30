@@ -1,5 +1,5 @@
 const getBuildList = require("./getBuildList");
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 const getSession = require("../../getters/getSession");
 
 module.exports = async function (buildName, build, chatId, userId) {

@@ -1,7 +1,7 @@
 const {sessions} = require("../../../data");
 const getMembers = require("../../getters/getMembers");
 const getBuildsList = require("./getBuildList");
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 const calculateIncreaseInResourceExtraction = require("./calculateIncreaseInResourceExtraction");
 
 module.exports = async function () {

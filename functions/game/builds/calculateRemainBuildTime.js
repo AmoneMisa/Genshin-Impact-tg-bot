@@ -1,5 +1,5 @@
 const calculateIncreaseUpgradeTime = require('./calculateUpgradeTime');
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 // Калькулятор оставшегося времени постройки
 const maxLvl = 30;
 

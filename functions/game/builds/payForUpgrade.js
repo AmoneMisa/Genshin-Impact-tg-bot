@@ -1,4 +1,4 @@
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 const calculateUpgradeCosts = require("./calculateUpgradeCosts");
 module.exports = function (currentLvl, buildName, inventory) {
     let buildTemplate = buildsTemplate[buildName];

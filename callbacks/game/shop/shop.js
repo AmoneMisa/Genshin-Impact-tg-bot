@@ -1,6 +1,6 @@
 const editMessageCaption = require("../../../functions/tgBotFunctions/editMessageCaption");
 const getSession = require("../../../functions/getters/getSession");
-const shopTemplate = require('../../../templates/shopTemplate');
+const shopTemplate = require('../../../template/shopTemplate');
 const sendMessageWithDelete = require("../../../functions/tgBotFunctions/sendMessageWithDelete");
 const controlButtons = require("../../../functions/keyboard/controlButtons");
 const shopSellItem = require("../../../functions/game/shop/shopSellItem");

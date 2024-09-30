@@ -1,6 +1,6 @@
 const calcDamagePlayerToPlayer = require('./calcDamagePlayerToPlayer');
 const calculateIncreaseGuardedResources = require('./calculateIncreaseGuardedResources');
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 const setLevel = require("../player/setLevel");
 const getMaxHp = require("../player/getters/getMaxHp");
 

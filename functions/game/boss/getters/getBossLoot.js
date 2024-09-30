@@ -1,4 +1,4 @@
-const bossLootTemplate = require('../../../../templates/bossLootTemplate');
+const bossLootTemplate = require('../../../../template/bossLootTemplate');
 const lodash = require("lodash");
 
 const modifiers = {

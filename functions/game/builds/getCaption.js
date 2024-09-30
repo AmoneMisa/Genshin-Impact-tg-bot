@@ -1,4 +1,4 @@
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 const getTime = require('../../getters/getTime');
 const getEmoji = require('../../getters/getEmoji');
 const getStringRemainTime = require('../../getters/getStringRemainTime');

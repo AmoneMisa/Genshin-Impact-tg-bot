@@ -1,5 +1,5 @@
 let data = require("../../../data");
-const bossesTemplate = require("../../../templates/bossTemplate");
+const bossesTemplate = require("../../../template/bossTemplate");
 
 module.exports = function () {
     let newBosses = {};

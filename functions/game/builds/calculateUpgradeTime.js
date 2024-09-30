@@ -1,4 +1,4 @@
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 
 module.exports = function (buildName, lvl) {
     const buildTemplate = buildsTemplate[buildName];

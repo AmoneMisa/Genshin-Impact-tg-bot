@@ -1,6 +1,6 @@
 const getClassStatsFromTemplate = require("../player/getters/getGameClassStatsFromTemplate");
 const getClassSkillsFromTemplate = require("../player/getters/getGameClassSkillsFromTemplate");
-const classStatsTemplate = require("../../../templates/classStatsTemplate");
+const classStatsTemplate = require("../../../template/classStatsTemplate");
 const getRandom = require("../../getters/getRandom");
 
 module.exports = function (rating) {

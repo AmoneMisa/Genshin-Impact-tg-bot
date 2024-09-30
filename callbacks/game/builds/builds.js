@@ -8,7 +8,7 @@ const getLocalImageByPath = require("../../../functions/getters/getLocalImageByP
 const buttonsDictionary = require("../../../dictionaries/buttons");
 const getBuildList = require("../../../functions/game/builds/getBuildList");
 const getBuildListFromTemplate = require("../../../functions/game/builds/getBuildFromTemplate");
-const buildsTemplate = require("../../../templates/buildsTemplate");
+const buildsTemplate = require("../../../template/buildsTemplate");
 const getSession = require("../../../functions/getters/getSession");
 const getFile = require("../../../functions/getters/getFile");
 

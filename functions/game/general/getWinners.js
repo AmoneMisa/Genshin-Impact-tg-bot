@@ -1,4 +1,4 @@
-const synergies = require("../../../templates/elementsSynergy");
+const synergies = require("../../../template/elementsSynergy");
 
 module.exports = function (winners, gameName) {
     let str = "Список игроков:\n\n";

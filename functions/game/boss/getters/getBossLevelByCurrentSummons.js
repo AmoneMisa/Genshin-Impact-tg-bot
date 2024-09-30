@@ -1,4 +1,4 @@
-const bossLevels = require("../../../../templates/bossLevelsTemplate");
+const bossLevels = require("../../../../template/bossLevelsTemplate");
 
 module.exports = function (bossName, currentSummons) {
     if (currentSummons === 0) {

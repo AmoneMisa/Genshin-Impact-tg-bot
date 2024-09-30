@@ -2,7 +2,7 @@ const getRandom = require('../../getters/getRandom');
 const getPlayerDefence = require('../player/getters/getDefence');
 const getIncomingDamageModifier = require('../player/getters/getIncomingDamageModifier');
 const getBossAttack = require('./getBossStats/getBossAttack');
-const bossesTemplate = require("../../../templates/bossTemplate");
+const bossesTemplate = require("../../../template/bossTemplate");
 
 module.exports = function (boss, session) {
     let bossTemplate = bossesTemplate.find(boss => boss.name === boss.name);

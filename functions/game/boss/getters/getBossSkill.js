@@ -1,5 +1,5 @@
-const bossesTemplate = require("../../../../templates/bossTemplate");
-const bossSkillsTemplate = require("../../../../templates/bossSkillsTemplate");
+const bossesTemplate = require("../../../../template/bossTemplate");
+const bossSkillsTemplate = require("../../../../template/bossSkillsTemplate");
 const getRandom = require("../../../getters/getRandom");
 
 module.exports = function (bossName) {

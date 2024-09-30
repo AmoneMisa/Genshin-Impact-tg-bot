@@ -2,7 +2,7 @@ const buttonsDictionary = require('../../dictionaries/buttons');
 const buildKeyboard = require('../../functions/keyboard/buildKeyboard');
 const controlButtons = require('../../functions/keyboard/controlButtons');
 const translation = require('../../dictionaries/translate');
-const userTemplate = require('../../templates/userTemplate');
+const userTemplate = require('../../template/userTemplate');
 const getMembers = require('../../functions/getters/getMembers');
 const editMessageText = require('../../functions/tgBotFunctions/editMessageText');
 
