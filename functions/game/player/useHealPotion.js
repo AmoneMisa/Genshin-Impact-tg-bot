@@ -15,6 +15,6 @@ export default function (session, potion) {
 
     potion.count--;
     session.game.gameClass.stats.hp = Math.min(potion.power * getEquipStatByName(session, "healPowerPotionsMul", true), getMaxHp(session, session.game.gameClass));
-    session.game.inventory.potions.find(_potion => _potion.bottleType === potion.bottleType && _potion.name === potion.name && _potion.power === potion.power).count = potion.count;
+    session.game.inventory.potions.items.find(_potion => _potion.bottleType === potion.bottleType && _potion.name === potion.name && _potion.power === potion.power).count = potion.count;
     return 0;
 };

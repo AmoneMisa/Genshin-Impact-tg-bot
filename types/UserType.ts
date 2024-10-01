@@ -62,8 +62,11 @@ export type UserType = {
         inventory: {
             arena: {
                 name: string | "Предметы арены",
-                tokens: number,
-                pvpSign: object
+                items: [
+                    {tokens: number},
+                    {pvpSign: object}
+                ]
+
             },
             gold: number,
             crystals: number,

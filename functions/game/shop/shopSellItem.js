@@ -49,14 +49,14 @@ function check(session, command, item, isDaily) {
             session.game.shopTimers[command] = getOffsetToDay();
         } else if (command.includes("potion") || command.includes("elixir")) {
             let potion = getPotionCharacteristics(command);
-            let foundedPotion = session.game.inventory.potions.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
+            let foundedPotion = session.game.inventory.potions.items.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
 
             if (foundedPotion) {
                 foundedPotion.count++;
             } else {
                 let potionTemplate = potionsInInventoryTemplate.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
-                session.game.inventory.potions.push(potionTemplate);
-                let foundedPotion = session.game.inventory.potions.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
+                session.game.inventory.potions.items.push(potionTemplate);
+                let foundedPotion = session.game.inventory.potions.items.find(_potion => _potion.bottleType === potion.bottleType && _potion.type === potion.type && _potion.power === potion.power);
                 foundedPotion.count++;
             }
         } else if (command.includes("chestAddTry")) {

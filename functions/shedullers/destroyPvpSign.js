@@ -7,11 +7,11 @@ export default async function () {
                 continue;
             }
 
-            if (new Date().getTime() < session.game.inventory.arena.pvpSign.lifeTime) {
+            if (new Date().getTime() < session.game.inventory.arena.items[1].lifeTime) {
                 continue;
             }
 
-            session.game.inventory.arena.pvpSign = null;
+            session.game.inventory.arena.items[1] = null;
         }
     }
 }

@@ -78,7 +78,8 @@ export default function (session) {
                 name: "Предметы арены",
                 items: [
                     {tokens: 0},
-                    {pvpSign: null}],
+                    {pvpSign: null}
+                ],
             },
             gold: 0,
             crystals: 0,

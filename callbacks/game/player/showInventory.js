@@ -21,15 +21,15 @@ function buildInventoryKeyboard(inventory, userId) {
     let i = 0;
     let categoryList = new Set();
 
-    for (let [key, value] of Object.entries(inventory)) {
+    for (let value of Object.values(inventory)) {
         if (typeof value === "string" || typeof value === "number") {
             continue;
         }
 
-        categoryList.add({key, value});
+        categoryList.add(value);
     }
-
-    for (let [category, categoryName] of Object.entries(categoryList)) {
+    // console.log(categoryList);
+    for (let category of Object.entries(categoryList)) {
         if (i % 2 === 0) {
             tempArray = [];
             buttons.push(tempArray);
@@ -93,15 +93,17 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
             continue;
         }
 
-        if (typeof item === "object") {
-            for (let [_key, _value] of Object.entries(item)) {
-                if (_key === "bottleType") {
-                    foundedItems = [...foundedItems, ...item.filter(_item => _item.count > 0)];
-                } else {
-                    foundedItems.push(item);
-                }
+        console.log(item)
+
+        for (let [_key, _value] of item.items) {
+            if (_key === "bottleType") {
+                foundedItems = [...foundedItems, ...item.items.filter(_item => _item.count > 0)];
+            } else {
+                foundedItems.push(item);
             }
         }
+
+        console.log(foundedItems);
     }
 
     if (foundedItems.length > 0) {
@@ -162,16 +164,11 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     let foundedItems;
 
     if (equipmentNames.includes(items)) {
-        itemsWithIndex = foundedSession.game.inventory.equipment.map((item, i) => [i, item]);
+        itemsWithIndex = foundedSession.game.inventory.equipment.items.map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, equip]) => equip.mainType === items);
     } else if (items === "hp" || items === "mp" || items === "cp") {
-        itemsWithIndex = foundedSession.game.inventory.potions.map((item, i) => [i, item]);
+        itemsWithIndex = foundedSession.game.inventory.potions.items.map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
-    } else {
-        if (Array.isArray(foundedSession.game.inventory[items]) && foundedSession.game.inventory[items].length > 0) {
-            itemsWithIndex = foundedSession.game.inventory[items].map((item, i) => [i, item]);
-            foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
-        }
     }
 
     if (!foundedItems || foundedItems.length <= 0) {
@@ -206,11 +203,9 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     let itemsList;
 
     if (equipmentNames.includes(items)) {
-        itemsList = foundedSession.game.inventory.equipment;
+        itemsList = foundedSession.game.inventory.equipment.items;
     } else if (items === "hp" || items === "mp" || items === "cp") {
-        itemsList = foundedSession.game.inventory.potions;
-    } else {
-        itemsList = foundedSession.game.inventory[items];
+        itemsList = foundedSession.game.inventory.potions.items;
     }
 
     let itemData = itemsList[i];
@@ -222,9 +217,9 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     }]
 
     if (items === "hp" || items === "mp" || items === "cp") {
-        foundedItem = foundedSession.game.inventory.potions.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
+        foundedItem = foundedSession.game.inventory.potions.items.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
     } else if (equipmentNames.includes(items)) {
-        foundedItem = foundedSession.game.inventory.equipment.find(_item =>
+        foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
             _item.grade === itemData.grade
             && _item.rarity === itemData.rarity
             && _item.mainType === itemData.mainType
@@ -273,20 +268,18 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     let itemsList;
 
     if (equipmentNames.includes(items)) {
-        itemsList = foundedSession.game.inventory.equipment;
+        itemsList = foundedSession.game.inventory.equipment.items;
     } else if (items === "hp" || items === "mp" || items === "cp") {
-        itemsList = foundedSession.game.inventory.potions;
-    } else {
-        itemsList = foundedSession.game.inventory[items];
+        itemsList = foundedSession.game.inventory.potions.items;
     }
 
     let itemData = itemsList[i];
     let foundedItem;
 
     if (items === "hp" || items === "mp" || items === "cp") {
-        foundedItem = foundedSession.game.inventory.potions.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
+        foundedItem = foundedSession.game.inventory.potions.items.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
     } else if (equipmentNames.includes(items)) {
-        foundedItem = foundedSession.game.inventory.equipment.find(_item =>
+        foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
             _item.grade === itemData.grade
             && _item.rarity === itemData.rarity
             && _item.mainType === itemData.mainType
@@ -362,9 +355,9 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     }
 
     let foundedSession = await getSession(userId, callback.from.id);
-    let itemsList = foundedSession.game.inventory.equipment;
+    let itemsList = foundedSession.game.inventory.equipment.items;
     let itemData = itemsList[i];
-    let foundedItem = foundedSession.game.inventory.equipment.find(_item =>
+    let foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
         _item.grade === itemData.grade
         && _item.rarity === itemData.rarity
         && _item.mainType === itemData.mainType
@@ -414,9 +407,9 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     }
 
     let foundedSession = await getSession(userId, callback.from.id);
-    let itemsList = foundedSession.game.inventory.equipment;
+    let itemsList = foundedSession.game.inventory.equipment.items;
     let itemData = itemsList[i];
-    let foundedItem = foundedSession.game.inventory.equipment.find(_item =>
+    let foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
         _item.grade === itemData.grade
         && _item.rarity === itemData.rarity
         && _item.mainType === itemData.mainType
@@ -432,9 +425,9 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     let equipResult = equipItem(foundedSession, foundedItem);
     if (equipResult === 1) {
         unequipItem(foundedSession.game, foundedItem);
-        let indexOf = foundedSession.game.inventory.equipment.indexOf(foundedItem);
+        let indexOf = foundedSession.game.inventory.equipment.items.indexOf(foundedItem);
         foundedSession.game.inventory.gold += foundedItem.cost;
-        foundedSession.game.inventory.equipment.splice(indexOf, 1);
+        foundedSession.game.inventory.equipment.items.splice(indexOf, 1);
     } else {
         return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке продать предмет (${foundedItem.name}).`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})

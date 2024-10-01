@@ -369,7 +369,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         return;
     }
 
-    let fullMessage = `Предмет исчезнет через: ${getTime(pvpSign.lifeTime)}\n${pvpSign.translatedName} - ур. ${pvpSign.lvl}\nУвеличение исходящего урона по противнику:  ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%\n\nКоличество токенов арены: ${session.game.inventory.arena.tokens}\n\nУвеличение исходящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value * 100}%\nСтоимость улучшения на следующий уровень: ${pvpSign.upgrades[pvpSign.lvl + 1].cost}`;
+    let fullMessage = `Предмет исчезнет через: ${getTime(pvpSign.lifeTime)}\n${pvpSign.translatedName} - ур. ${pvpSign.lvl}\nУвеличение исходящего урона по противнику:  ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%\n\nКоличество токенов арены: ${session.game.inventory.arena.items.tokens}\n\nУвеличение исходящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value * 100}%\nСтоимость улучшения на следующий уровень: ${pvpSign.upgrades[pvpSign.lvl + 1].cost}`;
 
     await editMessageCaption(`Ты уверен, что хочешь улучшить медаль?\n\n ${fullMessage}`, {
         chat_id: callback.message.chat.id,
@@ -389,11 +389,11 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }, callback.message.photo);
 }], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade\.0$/, async function (session, callback, [,chatId]) {
-    let pvpSign = session.game.inventory.arena.pvpSign;
+    let pvpSign = session.game.inventory.arena.items[1];
     pvpSign.lvl += 1;
     pvpSign.effects = pvpSign.upgrades[pvpSign.lvl].effects;
 
-    await editMessageCaption(`Вы улучшили медаль до ур. ${session.game.inventory.arena.pvpSign.lvl}!\n\nУвеличение исходящего урона по противнику: ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%`, {
+    await editMessageCaption(`Вы улучшили медаль до ур. ${session.game.inventory.arena.items[1].lvl}!\n\nУвеличение исходящего урона по противнику: ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

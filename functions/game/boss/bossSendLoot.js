@@ -39,7 +39,7 @@ export default function (boss, sessions) {
         session.game.inventory.crystals += gotCrystals;
 
         if (i === 1) {
-            session.game.inventory.equipment.push(generateRandomEquipment(session.game.stats.lvl));
+            session.game.inventory.equipment.items.push(generateRandomEquipment(session.game.stats.lvl));
         }
 
         setLevel(session);
@@ -59,7 +59,7 @@ export default function (boss, sessions) {
     for (let session of randomPlayedSessions) {
         let userId = session.userChatData.user.id;
         let item = generateRandomEquipment(session.game.stats.lvl);
-        session.game.inventory.equipment.push(item);
+        session.game.inventory.equipment.items.push(item);
         gotLoot[userId].equipment = item.name;
     }
 
@@ -67,7 +67,7 @@ export default function (boss, sessions) {
         let firstPlaceUserId = players[0].id;
         let session = sessions[firstPlaceUserId];
         let item = generateRandomEquipment(session.game.stats.lvl);
-        session.game.inventory.equipment.push(item);
+        session.game.inventory.equipment.items.push(item);
         gotLoot[firstPlaceUserId].firstPlaceEquipment = item.name;
     }
 
