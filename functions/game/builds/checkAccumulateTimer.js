@@ -11,33 +11,38 @@ export default async function () {
         for (let userId of Object.keys(getMembers(chatId))) {
             debugMessage(`checkAccumulate userId: ${userId}`);
 
-            for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {
-                let buildTemplate = buildsTemplate[buildName];
-                debugMessage(`checkAccumulate build: ${JSON.stringify(build)}`);
-                debugMessage(`checkAccumulate buildName: ${buildName}`);
+            try {
+                for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {
+                    let buildTemplate = buildsTemplate[buildName];
+                    debugMessage(`checkAccumulate build: ${JSON.stringify(build)}`);
+                    debugMessage(`checkAccumulate buildName: ${buildName}`);
 
-                if (build.upgradeStartedAt) {
-                    continue;
+                    if (build.upgradeStartedAt) {
+                        continue;
+                    }
+
+                    let currentTime = new Date().getTime();
+                    let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
+
+                    if (build.lastCollectAt && (build.lastCollectAt + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
+                        continue;
+                    }
+
+                    if (!build.lastCollectAt) {
+                        debugMessage(`checkAccumulate lastCollectAt - null: ${chatId}`);
+
+                        build.lastCollectAt = currentTime;
+                    }
+
+                    if (build.currentLvl === 1) {
+                        build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
+                    } else {
+                        build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
+                    }
                 }
-
-                let currentTime = new Date().getTime();
-                let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
-
-                if (build.lastCollectAt && (build.lastCollectAt + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
-                    continue;
-                }
-
-                if (!build.lastCollectAt) {
-                    debugMessage(`checkAccumulate lastCollectAt - null: ${chatId}`);
-
-                    build.lastCollectAt = currentTime;
-                }
-
-                if (build.currentLvl === 1) {
-                    build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
-                } else {
-                    build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
-                }
+            } catch (e) {
+                console.error(e);
+                debugMessage(`buildList getting error: ${e}`);
             }
         }
     }

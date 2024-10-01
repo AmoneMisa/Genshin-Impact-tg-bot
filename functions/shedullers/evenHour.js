@@ -4,7 +4,7 @@ import restoreArenaChances from './restoreArenaChances.js';
 import generateArenaBots from './generateArenaBots.js';
 
 export default function () {
-    cron.schedule('5 * * * *', async () => {
+    cron.schedule('20 * * * *', async () => {
         try {
             await checkAccumulateTimer();
             restoreArenaChances();

@@ -14,7 +14,6 @@ export default function () {
 
                 if (!build.lastCollectAt) {
                     build.lastCollectAt = new Date().getTime();
-                    debugMessage(`${session.game.builds[build.name].lastCollectAt} - попытка обратиться к боту.`);
                 }
 
                 if (new Date().getTime() - build.lastCollectAt > buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000) {
