@@ -83,9 +83,7 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
                 continue;
             }
 
-            debugMessage(session.game.inventory)
             session.game.inventory = migrateData(session.game.inventory);
-            debugMessage(session.game.inventory)
         }
     }
 
