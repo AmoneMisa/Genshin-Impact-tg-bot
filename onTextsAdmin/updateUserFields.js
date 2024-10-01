@@ -59,8 +59,20 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
         }
 
         newData.gacha.items = Array.isArray(oldData.gacha) ? oldData.gacha : [];
+
+        if (Array.isArray(oldData.gacha)) {
+            for (const gachaItem of oldData.gacha) {
+                newData.gacha.items.push(gachaItem);
+            }
+        }
+
         newData.equipment.items = Array.isArray(oldData.equipment) ? oldData.equipment : [];
 
+        if (Array.isArray(oldData.equipment)) {
+            for (const equipmentItem of oldData.equipment) {
+                newData.equipment.items.push(equipmentItem);
+            }
+        }
         return newData;
     }
 
@@ -76,5 +88,5 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
         }
     }
 
-    sendMessage(myId, "Введи id чата, чтобы добавить его в доверенные.");
+    sendMessage(myId, "Инвентарь обновлён.");
 }]];

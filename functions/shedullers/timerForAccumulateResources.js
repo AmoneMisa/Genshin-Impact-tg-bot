@@ -1,6 +1,5 @@
 import { sessions } from '../../data.js';
 import buildsTemplate from '../../template/buildsTemplate.js';
-import debugMessage from '../tgBotFunctions/debugMessage.js';
 
 export default function () {
     for (let chatSession of Object.values(sessions)) {
