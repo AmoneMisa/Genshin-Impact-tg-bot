@@ -3,7 +3,6 @@ import { myId } from '../config.js';
 import potionsInInventoryTemplate from '../template/potionsInInventoryTemplate.js';
 import { sessions } from '../data.js';
 import lodash from 'lodash';
-import debugMessage from "../functions/tgBotFunctions/debugMessage.js";
 
 export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
     if (msg.from.id !== myId) {
