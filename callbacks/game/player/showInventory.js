@@ -28,7 +28,6 @@ function buildInventoryKeyboard(inventory, userId) {
 
         categoryList.add(value);
     }
-    console.log("buildInventoryKB", categoryList);
     for (let category of Object.entries(categoryList)) {
         if (i % 2 === 0) {
             tempArray = [];

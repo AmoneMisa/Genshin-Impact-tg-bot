@@ -22,7 +22,7 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
         ironOre: 0,
         potions: {
             name: "Зелья",
-            items: lodash.cloneDeep(potionsInInventoryTemplate) // Клон шаблона, если требуется
+            items: lodash.cloneDeep(potionsInInventoryTemplate)
         },
         gacha: {
             name: "Предметы гачи",
@@ -35,13 +35,11 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
     };
 
     function migrateData(oldData) {
-        const newData = lodash.cloneDeep(newDataTemplate);  // Создаем копию шаблона
+        const newData = lodash.cloneDeep(newDataTemplate);
 
-        // Переносим значения для 'arena'
         newData.arena.items[0].tokens = oldData.arena.tokens || 0;
         newData.arena.items[1].pvpSign = oldData.arena.pvpSign || null;
 
-        // Переносим остальные поля, которые не требуют изменений
         newData.gold = oldData.gold;
         newData.crystals = oldData.crystals;
         newData.ironOre = oldData.ironOre;
@@ -57,27 +55,20 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
                 description: potion.description
             }));
             console.log("updateUserFields", newData.potions.items);
-
         }
 
-        newData.gacha.items = Array.isArray(oldData.gacha) ? oldData.gacha : [];
+        newData.gacha.items = [];
 
         if (Array.isArray(oldData.gacha)) {
-            for (const gachaItem of oldData.gacha) {
-                newData.gacha.items.push(gachaItem);
-                console.log("updateUserFields", newData.gacha.items);
-            }
+            newData.gacha.items = lodash.cloneDeep(oldData.gacha);
         }
 
-        newData.equipment.items = Array.isArray(oldData.equipment) ? oldData.equipment : [];
+        newData.equipment.items = [];
 
         if (Array.isArray(oldData.equipment)) {
-            for (const equipmentItem of oldData.equipment) {
-                newData.equipment.items.push(equipmentItem);
-                console.log("updateUserFields", newData.equipment.items);
-
-            }
+            newData.equipment.items = lodash.cloneDeep(oldData.equipment);
         }
+
         return newData;
     }
 
