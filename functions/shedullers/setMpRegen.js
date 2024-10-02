@@ -1,4 +1,4 @@
-import { sessions } from '../../data.js';
+import {sessions} from '../../data.js';
 import getMaxMp from '../game/player/getters/getMaxMp.js';
 import getCurrentMp from '../game/player/getters/getCurrentMp.js';
 
@@ -9,15 +9,16 @@ export default function () {
                 continue;
             }
 
-            let mpRegenSpeed = session.game.gameClass.stats.mpRestoreSpeed;
+            if (getCurrentMp(session) === getMaxMp(session)) {
+                continue;
+            }
+
             if (getCurrentMp(session) > getMaxMp(session)) {
                 session.game.gameClass.stats.mp = getMaxMp(session);
                 continue;
             }
 
-            if (getCurrentMp(session) === getMaxMp(session)) {
-                continue;
-            }
+            let mpRegenSpeed = session.game.gameClass.stats.mpRestoreSpeed;
 
             session.game.gameClass.stats.mp = Math.min(getMaxMp(session), getCurrentMp(session) + mpRegenSpeed);
         }

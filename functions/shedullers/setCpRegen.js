@@ -10,16 +10,16 @@ export default function () {
                 continue;
             }
 
-            let cpRegenSpeed = session.game.gameClass.stats.cpRestoreSpeed;
+            if (getCurrentCp(session) === getMaxCp(session)) {
+                continue;
+            }
 
             if (getCurrentCp(session) > getMaxCp(session)) {
                 session.game.gameClass.stats.cp = getMaxCp(session);
                 continue;
             }
 
-            if (getCurrentCp(session) === getMaxCp(session)) {
-                continue;
-            }
+            let cpRegenSpeed = session.game.gameClass.stats.cpRestoreSpeed;
 
             if (isPlayerInFight(session)) {
                 cpRegenSpeed *= 0.2;

@@ -10,20 +10,20 @@ export default function () {
                 continue;
             }
 
-            let hpRegenSpeed = session.game.gameClass.stats.hpRestoreSpeed;
+            if (getCurrentHp(session) === getMaxHp(session)) {
+                continue;
+            }
 
             if (getCurrentHp(session) > getMaxHp(session)) {
                 session.game.gameClass.stats.hp = getMaxHp(session);
                 continue;
             }
 
-            if (getCurrentHp(session) === getMaxHp(session)) {
-                continue;
-            }
-
             if (getCurrentHp(session) <= 0) {
                 continue;
             }
+
+            let hpRegenSpeed = session.game.gameClass.stats.hpRestoreSpeed;
 
             if (isPlayerInFight(session)) {
                 hpRegenSpeed *= 0.35;
