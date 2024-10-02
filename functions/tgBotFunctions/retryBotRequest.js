@@ -15,7 +15,6 @@ function getRetryAfter(e) {
     }
 
     if (e.response.body['error_code'] === 429) {
-        console.error(e);
         return e.response.body['parameters']['retry_after'];
     }
 
@@ -24,7 +23,7 @@ function getRetryAfter(e) {
 
 export default async function retryBotRequest(request) {
     let lastE = null;
-
+    console.log("retryBotRequest", request);
     for (let i = 0; i < 5; i++) {
         try {
             return await request(bot);
