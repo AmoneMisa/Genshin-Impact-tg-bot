@@ -15,6 +15,7 @@ function getRetryAfter(e) {
     }
 
     if (e.response.body['error_code'] === 429) {
+        console.error(e);
         return e.response.body['parameters']['retry_after'];
     }
 
