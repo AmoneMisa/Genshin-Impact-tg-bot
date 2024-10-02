@@ -58,4 +58,6 @@ export default {
     name: "Название",
     power: "Сила оружия",
     defencePower: "Сила брони",
+    pvpSign: "Медаль Арены",
+    tokens: "Токен Арены",
 };

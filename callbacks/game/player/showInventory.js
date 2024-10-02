@@ -21,22 +21,23 @@ function buildInventoryKeyboard(inventory, userId) {
     let i = 0;
     let categoryList = new Set();
 
-    for (let value of Object.values(inventory)) {
-        if (typeof value === "string" || typeof value === "number") {
+    for (let category of inventory) {
+        if (category.categoryName === "gold" || category.categoryName === "ironOre" || category.categoryName === "crystals") {
             continue;
         }
 
-        categoryList.add(value);
+        categoryList.add({categoryName: category.categoryName, name: category.name});
     }
-    for (let category of Object.entries(categoryList)) {
+
+    for (let category of categoryList) {
         if (i % 2 === 0) {
             tempArray = [];
             buttons.push(tempArray);
         }
 
         tempArray.push({
-            text: `${getEmoji(category)} ${categoryName}`,
-            callback_data: `player.${userId}.inventory.${category}`
+            text: `${getEmoji(category.categoryName)} ${category.name}`,
+            callback_data: `player.${userId}.inventory.${category.categoryName}`
         });
 
         i++;
@@ -45,12 +46,13 @@ function buildInventoryKeyboard(inventory, userId) {
     return buttons;
 }
 
-function buildInventoryCategoryItemKeyboard(foundedItems, userId, items, isApprove) {
+function buildInventoryCategoryItemKeyboard(foundedItems, chatId, items, isApprove) {
     let buttons = [];
     let tempArray = null;
     let i = 0;
 
-    for (let [j, item] of foundedItems) {
+    for (let j = 0; j < foundedItems.length; j++) {
+        let item = foundedItems[j];
         if (i % 2 === 0) {
             tempArray = [];
             buttons.push(tempArray);
@@ -59,12 +61,17 @@ function buildInventoryCategoryItemKeyboard(foundedItems, userId, items, isAppro
         if (isApprove) {
             tempArray.push({
                 text: `${getEmoji(item.type)} ${item.name}`,
-                callback_data: `player.${userId}.inventory.${items}.${j}.0`
+                callback_data: `player.${chatId}.inventory.${items}.${j}.0`
+            });
+        } else if (items === "equipment") {
+            tempArray.push({
+                text: `${getEmoji(item.type)} ${item.name}`,
+                callback_data: `player.${chatId}.inventory.${items}.${j}`
             });
         } else {
             tempArray.push({
-                text: `${getEmoji(item.type)} ${item.name}`,
-                callback_data: `player.${userId}.inventory.${items}.${j}`
+                text: `${getEmoji(items)} ${inventoryTranslate[Object.keys(item)[j]]}`,
+                callback_data: `player.${chatId}.inventory.${items}.${j}`
             });
         }
 
@@ -74,43 +81,34 @@ function buildInventoryCategoryItemKeyboard(foundedItems, userId, items, isAppro
     return buttons;
 }
 
-export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (session, callback, [, userId]) {
+export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (session, callback, [, chatId]) {
     // Меню инвентаря
     if (!checkUserCall(callback, session)) {
         return;
     }
 
     const isBack = callback.data.includes("back");
-    let foundedSession = await getSession(userId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
     let inventory = foundedSession.game.inventory;
     let replyMarkup = {};
 
     let foundedItems = [];
-    for (let [itemType, item] of Object.entries(inventory)) {
+    for (let [categoryName, category] of Object.entries(inventory)) {
 
-        if (typeof item === "string" || typeof item === "number" || itemType === "gacha") {
+        if (typeof category === "string" || typeof category === "number") {
             continue;
         }
 
-        console.log(item)
-
-        for (let [_key, _value] of item.items) {
-            if (_key === "bottleType") {
-                foundedItems = [...foundedItems, ...item.items.filter(_item => _item.count > 0)];
-            } else {
-                foundedItems.push(item);
-            }
+        if (category.items.length > 0) {
+            foundedItems.push({categoryName, name: category.name});
         }
-
-        console.log(foundedItems);
     }
-
     if (foundedItems.length > 0) {
         replyMarkup = {
             selective: true,
-            inline_keyboard: [...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedItems, userId), 1), [{
+            inline_keyboard: [...controlButtons(`player.${chatId}.inventory`, buildInventoryKeyboard(foundedItems, chatId), 1), [{
                 text: "Главная",
-                callback_data: `player.${userId}.whoami`
+                callback_data: `player.${chatId}.whoami`
             }]]
         };
     }
@@ -130,9 +128,9 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
             reply_markup: replyMarkup
         });
     }
-}], [/player\.[\-0-9]+\.inventory_([^.]+)$/, async function (session, callback, [, userId, page]) {
+}], [/player\.[\-0-9]+\.inventory_([^.]+)$/, async function (session, callback, [, chatId, page]) {
     page = parseInt(page);
-    let foundedSession = await getSession(userId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
     let inventory = foundedSession.game.inventory;
 
     await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
@@ -141,15 +139,15 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [
-                ...controlButtons(`player.${userId}.inventory`, buildInventoryKeyboard(foundedSession.game.inventory, userId), page),
+                ...controlButtons(`player.${chatId}.inventory`, buildInventoryKeyboard(foundedSession.game.inventory, userId), page),
                 [{
                     text: "Главная",
-                    callback_data: `player.${userId}.whoami`
+                    callback_data: `player.${chatId}.whoami`
                 }]
             ]
         }
     }, callback.message.photo);
-}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)$/, async function (session, callback, [, userId, items]) {
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)$/, async function (session, callback, [, chatId, items]) {
     if (callback.data.includes("back")) {
         return;
     }
@@ -158,7 +156,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         return;
     }
 
-    let foundedSession = await getSession(userId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
     let itemsWithIndex = [];
     let foundedItems;
 
@@ -168,10 +166,18 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     } else if (items === "hp" || items === "mp" || items === "cp") {
         itemsWithIndex = foundedSession.game.inventory.potions.items.map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
+    } else if (items === "gacha") {
+        foundedItems = foundedSession.game.inventory[items].items.filter(item => item.value !== null && item.value > 0);
+    } else if (items === "equipment") {
+        foundedItems = foundedSession.game.inventory[items].items;
+    } else {
+        foundedItems = foundedSession.game.inventory[items].items.filter((item) => {
+            return Object.values(item).every(value => value !== null && value > 0);
+        });
     }
 
     if (!foundedItems || foundedItems.length <= 0) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${foundedSession.game.inventory[items].name}), с которыми можно взаимодействовать.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
@@ -182,57 +188,40 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         disable_notification: true,
         reply_markup: {
             selective: true,
-            inline_keyboard: [...buildInventoryCategoryItemKeyboard(foundedItems, userId, items), [{
+            inline_keyboard: [...buildInventoryCategoryItemKeyboard(foundedItems, chatId, items), [{
                 text: "Главная",
-                callback_data: `player.${userId}.whoami`
+                callback_data: `player.${chatId}.whoami`
             }], [{
-                text: "Назад", callback_data: `player.${userId}.inventory.back`
+                text: "Назад", callback_data: `player.${chatId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
             }]]
         }
     }, callback.message.photo);
-}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)$/, async function (session, callback, [, userId, items, i]) {
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)$/, async function (session, callback, [, chatId, items, i]) {
     // Меню предмета инвентаря
     if (!checkUserCall(callback, session)) {
         return;
     }
 
-    let foundedSession = await getSession(userId, callback.from.id);
-    let itemsList;
-
-    if (equipmentNames.includes(items)) {
-        itemsList = foundedSession.game.inventory.equipment.items;
-    } else if (items === "hp" || items === "mp" || items === "cp") {
-        itemsList = foundedSession.game.inventory.potions.items;
-    }
-
-    let itemData = itemsList[i];
-    let foundedItem;
+    let foundedSession = await getSession(chatId, callback.from.id);
+    let itemsList = foundedSession.game.inventory[items].items;
+    let foundedItem = itemsList[i];
 
     let buttons = [{
         text: "Использовать",
-        callback_data: `player.${userId}.inventory.${items}.${i}.0`
+        callback_data: `player.${chatId}.inventory.${items}.${i}.0`
     }]
 
-    if (items === "hp" || items === "mp" || items === "cp") {
-        foundedItem = foundedSession.game.inventory.potions.items.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
-    } else if (equipmentNames.includes(items)) {
-        foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
-            _item.grade === itemData.grade
-            && _item.rarity === itemData.rarity
-            && _item.mainType === itemData.mainType
-            && _item.cost === itemData.cost
-        );
-
+    if (items === "equipment") {
         if (foundedItem.isUsed) {
             buttons[0].text = "Снять";
-            buttons[0].callback_data = `player.${userId}.inventory.${items}.${i}.1`;
+            buttons[0].callback_data = `player.${chatId}.inventory.${items}.${i}.1`;
         } else {
             buttons[0].text = "Надеть";
         }
 
-        buttons.push({text: "Продать", callback_data: `player.${userId}.inventory.${items}.${i}.2`})
+        buttons.push({text: "Продать", callback_data: `player.${chatId}.inventory.${items}.${i}.2`})
     }
 
     if (!foundedItem) {
@@ -249,42 +238,24 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
             selective: true,
             inline_keyboard: [buttons, [{
                 text: "Главная",
-                callback_data: `player.${userId}.whoami`
+                callback_data: `player.${chatId}.whoami`
             }], [{
-                text: "Назад", callback_data: `player.${userId}.inventory.back`
+                text: "Назад", callback_data: `player.${chatId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
             }]]
         }
     }, callback.message.photo);
-}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.0$/, async function (session, callback, [, userId, items, i]) {
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.0$/, async function (session, callback, [, chatId, items, i]) {
     // Меню подтверждения действия для предмета инвентаря
     if (!checkUserCall(callback, session)) {
         return;
     }
 
-    let foundedSession = await getSession(userId, callback.from.id);
-    let itemsList;
+    let foundedSession = await getSession(chatId, callback.from.id);
+    let itemsList = foundedSession.game.inventory[items].items;
 
-    if (equipmentNames.includes(items)) {
-        itemsList = foundedSession.game.inventory.equipment.items;
-    } else if (items === "hp" || items === "mp" || items === "cp") {
-        itemsList = foundedSession.game.inventory.potions.items;
-    }
-
-    let itemData = itemsList[i];
-    let foundedItem;
-
-    if (items === "hp" || items === "mp" || items === "cp") {
-        foundedItem = foundedSession.game.inventory.potions.items.find(_item => _item.type === itemData.type && _item.bottleType === itemData.bottleType && _item.power === itemData.power);
-    } else if (equipmentNames.includes(items)) {
-        foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
-            _item.grade === itemData.grade
-            && _item.rarity === itemData.rarity
-            && _item.mainType === itemData.mainType
-            && _item.cost === itemData.cost
-        );
-    }
+    let foundedItem = itemsList[i];
 
     if (!foundedItem) {
         return sendMessageWithDelete(callback.message.chat.id, `У тебя нет предметов в этом списке (${inventoryTranslate[items]}), с которыми можно взаимодействовать.`, {
@@ -292,12 +263,12 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }, 10 * 1000);
     }
 
-    if (itemData.hasOwnProperty("bottleType")) {
+    if (foundedItem.hasOwnProperty("bottleType")) {
         let healResult = useHealPotion(foundedSession, foundedItem);
-        return sendHealMessage(healResult, callback, foundedSession, foundedItem, userId);
+        return sendHealMessage(healResult, callback, foundedSession, foundedItem, chatId);
     }
 
-    if (equipmentNames.includes(itemData.mainType)) {
+    if (equipmentNames.includes(foundedItem.mainType)) {
         let equipResult = equipItem(foundedSession, foundedItem);
         let message;
 
@@ -315,10 +286,10 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
                 selective: true,
                 inline_keyboard: [[{
                     text: "Главная",
-                    callback_data: `player.${userId}.whoami`
+                    callback_data: `player.${chatId}.whoami`
                 }], [{
                     text: "Назад",
-                    callback_data: `player.${userId}.inventory.back`
+                    callback_data: `player.${chatId}.inventory.back`
                 }, {
                     text: "Закрыть", callback_data: "close"
                 }]]
@@ -334,34 +305,23 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
             selective: true,
             inline_keyboard: [[{
                 text: "Главная",
-                callback_data: `player.${userId}.whoami`
+                callback_data: `player.${chatId}.whoami`
             }], [{
                 text: "Назад",
-                callback_data: `player.${userId}.inventory.back`
+                callback_data: `player.${chatId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
             }]]
         }
     }, callback.message.photo);
-}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.1$/, async function (session, callback, [, userId, items, i]) {
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.1$/, async function (session, callback, [, chatId, items, i]) {
     // Меню подтверждения действия для предмета инвентаря
     if (!checkUserCall(callback, session)) {
         return;
     }
-
-    if (!equipmentNames.includes(items)) {
-        return;
-    }
-
-    let foundedSession = await getSession(userId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
     let itemsList = foundedSession.game.inventory.equipment.items;
-    let itemData = itemsList[i];
-    let foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
-        _item.grade === itemData.grade
-        && _item.rarity === itemData.rarity
-        && _item.mainType === itemData.mainType
-        && _item.cost === itemData.cost
-    );
+    let foundedItem = itemsList[i];
 
     if (!foundedItem) {
         return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке взаимодействия с (${inventoryTranslate[items]}).`, {
@@ -386,16 +346,16 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
             selective: true,
             inline_keyboard: [[{
                 text: "Главная",
-                callback_data: `player.${userId}.whoami`
+                callback_data: `player.${chatId}.whoami`
             }], [{
                 text: "Назад",
-                callback_data: `player.${userId}.inventory.back`
+                callback_data: `player.${chatId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
             }]]
         }
     }, callback.message.photo);
-}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.2$/, async function (session, callback, [, userId, items, i]) {
+}], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.2$/, async function (session, callback, [, chatId, items, i]) {
     // Меню подтверждения действия для предмета инвентаря
     if (!checkUserCall(callback, session)) {
         return;
@@ -405,15 +365,9 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         return;
     }
 
-    let foundedSession = await getSession(userId, callback.from.id);
+    let foundedSession = await getSession(chatId, callback.from.id);
     let itemsList = foundedSession.game.inventory.equipment.items;
-    let itemData = itemsList[i];
-    let foundedItem = foundedSession.game.inventory.equipment.items.find(_item =>
-        _item.grade === itemData.grade
-        && _item.rarity === itemData.rarity
-        && _item.mainType === itemData.mainType
-        && _item.cost === itemData.cost
-    );
+    let foundedItem = itemsList[i];
 
     if (!foundedItem) {
         return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке взаимодействия с (${inventoryTranslate[items]}).`, {
@@ -441,16 +395,16 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
             selective: true,
             inline_keyboard: [[{
                 text: "Главная",
-                callback_data: `player.${userId}.whoami`
+                callback_data: `player.${chatId}.whoami`
             }], [{
                 text: "Назад",
-                callback_data: `player.${userId}.inventory.back`
+                callback_data: `player.${chatId}.inventory.back`
             }, {text: "Закрыть", callback_data: "close"}]]
         }
     }, callback.message.photo);
 }]];
 
-async function sendHealMessage(result, callback, session, foundedItem, userId) {
+async function sendHealMessage(result, callback, session, foundedItem, chatId) {
     let message = "";
 
     if (result === 0) {
@@ -473,10 +427,10 @@ async function sendHealMessage(result, callback, session, foundedItem, userId) {
             selective: true,
             inline_keyboard: [[{
                 text: "Главная",
-                callback_data: `player.${userId}.whoami`
+                callback_data: `player.${chatId}.whoami`
             }], [{
                 text: "Назад",
-                callback_data: `player.${userId}.inventory.back`
+                callback_data: `player.${chatId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
             }]]

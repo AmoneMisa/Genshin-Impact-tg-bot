@@ -62,12 +62,10 @@ export function updTrustedChats() {
 export function updArenaTempBots() {
     let _arenaTempBots;
     try {
-        let trustedChatsJson = fs.readFileSync("./arenaTempBots.json");
+        let arenaTempBotsJson = fs.readFileSync("./arenaTempBots.json");
         _arenaTempBots = JSON.parse(arenaTempBotsJson);
     } catch (e) {
         _arenaTempBots = [];
     }
     arenaTempBots.splice(0, arenaTempBots.length, ..._arenaTempBots);
 }
-
-export let chatId = null;

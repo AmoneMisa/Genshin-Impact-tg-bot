@@ -4,10 +4,6 @@ import { updArenaTempBots } from '../../data.js';
 import fs from 'fs';
 
 export default function () {
-    if (arenaTempBots.length) {
-        arenaTempBots = [];
-    }
-
     let arenaTempBotsArray;
     let unique = new Set();
 
