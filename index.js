@@ -43,6 +43,8 @@ bot.setMyCommands([
     scope: {type: "default"}
 });
 
+console.log("Success Set Command");
+
 function isTrusted(chatId) {
     chatId = chatId + "";
     return trustedChats.includes(chatId);
@@ -135,9 +137,14 @@ for (let [key, value] of onTexts) {
     });
 }
 
+console.log("Success onText Init");
+
+
 for (let [key, value] of onTextsAdmin) {
     bot.onText(key, value);
 }
+
+console.log("Success onTextAdmin Init");
 
 bot.on("new_chat_members", async (msg) => {
     for (let newChatMember of msg.new_chat_members) {
@@ -146,10 +153,15 @@ bot.on("new_chat_members", async (msg) => {
     }
 });
 
+console.log("Success init new chat members");
+
 bot.on("left_chat_member", async (msg) => {
     let session = await getSession(msg.chat.id, msg.left_chat_participant.id);
     session.isHided = true;
 });
+
+console.log("Success init leave chat members");
+
 
 bot.on("callback_query", async (callback) => {
     if (!isTrusted(callback.message.chat.id)) {
@@ -200,13 +212,28 @@ bot.on("callback_query", async (callback) => {
     }
 });
 
+console.log("Success init callbacks");
+
+
 evenSecond();
+console.log("Success scheduller evenSecond");
+
 // evenMinute();
 evenTwoMinutes();
+console.log("Success scheduller evenTwoMinutes");
+
 evenFiveMinutes();
+console.log("Success scheduller evenFiveMinutes");
+
 evenHour();
+console.log("Success scheduller evenHour");
+
 evenDay();
+console.log("Success scheduller evenDay");
+
 evenWeek();
+console.log("Success scheduller evenWeek");
+
 
 let setIntervalId = setInterval(() => {
     writeFiles(false);
@@ -255,9 +282,14 @@ function deleteBackup(array) {
     })
 })();
 
+console.log("Success init backups");
+
+
 bot.on('polling_error', (error) => {
     console.error(error);
 });
+
+console.log("Success polling error");
 
 function shutdown() {
     clearInterval(setIntervalId);
