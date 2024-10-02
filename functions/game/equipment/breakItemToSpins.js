@@ -3,10 +3,10 @@ import getRandom from '../../getters/getRandom.js';
 export default function (inventory, item, gachaType) {
     let result = getRandom(costSpins[gachaTypeMap[gachaType] - 1].min, costSpins[gachaTypeMap[gachaType] - 1].max);
 
-    if (!inventory.gacha.find(gachaItem => gachaItem.name === gachaType)) {
-        inventory.gacha.push({name: gachaType, value: result});
+    if (!inventory.gacha.items.find(gachaItem => gachaItem.name === gachaType)) {
+        inventory.gacha.items.push({name: gachaType, value: result});
     } else {
-        inventory.gacha.find(gachaItem => gachaItem.name === gachaType).value += result;
+        inventory.gacha.items.find(gachaItem => gachaItem.name === gachaType).value += result;
     }
 
     return result;

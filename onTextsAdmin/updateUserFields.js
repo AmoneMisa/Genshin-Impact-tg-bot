@@ -56,6 +56,8 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
                 name: potion.name,
                 description: potion.description
             }));
+            console.log("updateUserFields", newData.potions.items);
+
         }
 
         newData.gacha.items = Array.isArray(oldData.gacha) ? oldData.gacha : [];
@@ -63,6 +65,7 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
         if (Array.isArray(oldData.gacha)) {
             for (const gachaItem of oldData.gacha) {
                 newData.gacha.items.push(gachaItem);
+                console.log("updateUserFields", newData.gacha.items);
             }
         }
 
@@ -71,6 +74,8 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
         if (Array.isArray(oldData.equipment)) {
             for (const equipmentItem of oldData.equipment) {
                 newData.equipment.items.push(equipmentItem);
+                console.log("updateUserFields", newData.equipment.items);
+
             }
         }
         return newData;
