@@ -10,7 +10,7 @@ export default [[/(?:^|\s)\/chest\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (session.chestTries < 1) {
-        await sendMessageWithDelete(msg.from.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Попытка обновляется в 00.00}`, {
+        await sendMessageWithDelete(msg.from.id, `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Попытка обновляется в 00.00`, {
             disable_notification: true,
         }, 6 * 1000);
 

@@ -34,6 +34,7 @@ export default [["points_card", function (session, callback) {
     }
 
     editMessageText(pointMessage(chatSession, userId), {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

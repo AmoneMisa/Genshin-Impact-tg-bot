@@ -49,6 +49,7 @@ export default [["elements_take", function (session, callback) {
     game.gameSessionLastUpdateAt = new Date().getTime();
 
     editMessageText(elementsMessage(chatSession, userId), {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: chatId,
         message_id: game.messageId,
         reply_markup: {

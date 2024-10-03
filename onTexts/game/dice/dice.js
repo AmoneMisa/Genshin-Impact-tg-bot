@@ -18,9 +18,9 @@ export default [[/(?:^|\s)\/dice\b/, async (msg, session) => {
     }
 
     if (session.game.dice.isStart) {
-        return await sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {
+        return sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-        }, 7000)
+        }, 7000);
     }
 
     sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, твоя ставка: 0`, {
@@ -61,6 +61,7 @@ export default [[/(?:^|\s)\/dice\b/, async (msg, session) => {
     function startGame() {
         session.game.dice.isStart = true;
         editMessageText(`@${getUserName(session, "nickname")}, кидай кубик. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 12, но меньше 18`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             message_id: id,
             chat_id: msg.chat.id,
             disable_notification: true,

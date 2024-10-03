@@ -26,6 +26,7 @@ export default [[/^bossSettings\.([^.]+)\.([0-1]+)$/, async function (session, c
     }
 
     await editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
         disable_notification: true,

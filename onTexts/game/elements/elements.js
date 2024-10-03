@@ -85,6 +85,7 @@ export default [[/(?:^|\s)\/elements\b/, (msg, session) => {
         }, 7 * 1000)
             .then(() => {
                 editMessageText(elementsMessage(chatSession, userId), {
+                    ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
                     chat_id: msg.chat.id,
                     message_id: chatSession.game.elements.messageId,
                     reply_markup: {
@@ -105,6 +106,7 @@ export default [[/(?:^|\s)\/elements\b/, (msg, session) => {
         }, 7 * 1000)
             .then(() => {
                 editMessageText(betMessage(chatSession.game.elements.players, members), {
+                    ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
                     chat_id: msg.chat.id,
                     message_id: chatSession.game.elements.messageId,
                     reply_markup: {

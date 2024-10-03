@@ -107,7 +107,6 @@ function getGachaMessage(gacha) {
     for (let gachaItem of gacha.items) {
         message += `${inventoryDictionary[gachaItem.name]}: осколки для призыва. Количество: ${gachaItem.value}\n`;
     }
-
     return message;
 }
 

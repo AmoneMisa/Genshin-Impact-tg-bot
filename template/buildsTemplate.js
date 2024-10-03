@@ -729,5 +729,59 @@ export default {
         maxLvl: 30,
         resourcesType: "ironOre",
         available: true
+    },
+    forge: {
+        name: "Кузня",
+        startLvl: 1,
+        description: "Кузня Вашего дворца - в зависимости от уровня, позволяет прокачивать, чинить, полировать, улучшать экипировку.",
+        upgradeRequirements: [
+            {
+                level: 2, buildRequirements: [{name: "palace", level: 2}]
+            },
+            {
+                level: 3, buildRequirements: [{name: "palace", level: 4}]
+            },
+            {
+                level: 4, buildRequirements: [{name: "palace", level: 5}]
+            },
+            {
+                level: 5, buildRequirements: [{name: "palace", level: 7}]
+            },
+            {
+                level: 6, buildRequirements: [{name: "palace", level: 10}]
+            },
+            {
+                level: 7, buildRequirements: [{name: "palace", level: 14}]
+            },
+            {
+                level: 8, buildRequirements: [{name: "palace", level: 17}]
+            },
+            {
+                level: 9, buildRequirements: [{name: "palace", level: 22}]
+            },
+            {
+                level: 10, buildRequirements: [{name: "palace", level: 25}]
+            },
+            {
+                level: 11, buildRequirements: [{name: "palace", level: 28}]
+            },
+            {
+                level: 12, buildRequirements: [{name: "palace", level: 30}]
+            }],
+        upgradeCosts: [
+            {level: 2, gold: 35800, ironOre: 240, crystals: 500},
+            {level: 3, gold: 58500, ironOre: 325, crystals: 640},
+            {level: 4, gold: 83780, ironOre: 385, crystals: 680},
+            {level: 5, gold: 155900, ironOre: 520, crystals: 795},
+            {level: 6, gold: 194250, ironOre: 585, crystals: 920},
+            {level: 7, gold: 250000, ironOre: 640, crystals: 1150},
+            {level: 8, gold: 320000, ironOre: 730, crystals: 2585},
+            {level: 9, gold: 535980, ironOre: 890, crystals: 3980},
+            {level: 10, gold: 620500, ironOre: 1000, crystals: 5450},
+            {level: 11, gold: 845000, ironOre: 1260, crystals: 7950},
+            {level: 12, gold: 1569000, ironOre: 2500, crystals: 15000},
+        ],
+        maxLvl: 12,
+        available: false
     }
 };

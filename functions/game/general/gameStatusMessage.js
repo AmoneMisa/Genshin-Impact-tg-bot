@@ -13,5 +13,5 @@ export default function (chatSession, members, gameName) {
 
 const gameNames = {
     elements: "Элементы",
-    point: "21 очко"
+    points: "21 очко"
 };

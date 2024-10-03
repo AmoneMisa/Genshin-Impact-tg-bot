@@ -136,6 +136,7 @@ export default function (callback, session, gameName, betType) {
     deleteMessageTimeout(chatId, messageId, 5000);
 
     editMessageText(`${betMessage(players, members)}`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: chatId,
         message_id: chatSession.game[gameName].messageId,
         reply_markup: {

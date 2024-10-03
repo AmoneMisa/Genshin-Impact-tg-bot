@@ -21,7 +21,9 @@ export default [[/^dice_pull$/, async function (session, callback) {
 
     let chatId = callback.message.chat.id;
 
-    await bot.sendDice(chatId).then(msg => {
+    await bot.sendDice(chatId, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
+    }).then(msg => {
         deleteMessageTimeout(chatId, msg.message_id, 10 * 1000);
         session.game.dice.dice += msg.dice.value;
     });

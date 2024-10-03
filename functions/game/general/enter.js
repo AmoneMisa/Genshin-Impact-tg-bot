@@ -31,6 +31,7 @@ export default function (session, callback, gameName) {
     let members = getMembers(callback.message.chat.id);
 
     return editMessageText(`${gameStatusMessage(chatSession, members, gameName)}`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: chatSession.game[gameName].messageId,
         disable_notification: true,

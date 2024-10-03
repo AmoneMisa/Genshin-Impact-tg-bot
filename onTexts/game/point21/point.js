@@ -63,7 +63,7 @@ export default [[/(?:^|\s)\/point\b/, (msg, session) => {
         chatSession.game.points.players[userId].usedItems = [];
     }
 
-    sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members, "point")}`, {
+    sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members, "points")}`, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
@@ -91,6 +91,7 @@ export default [[/(?:^|\s)\/point\b/, (msg, session) => {
         }, 7 * 1000)
             .then(() => {
                 editMessageText(pointMessage(chatSession, userId), {
+                    ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
                     chat_id: msg.chat.id,
                     message_id: chatSession.game.points.messageId,
                     reply_markup: {
@@ -113,6 +114,7 @@ export default [[/(?:^|\s)\/point\b/, (msg, session) => {
         }, 7 * 1000)
             .then(() => {
                 editMessageText(betMessage(chatSession.game.points.players, members), {
+                    ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
                     chat_id: msg.chat.id,
                     message_id: chatSession.game.points.messageId,
                     reply_markup: {

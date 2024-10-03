@@ -50,7 +50,7 @@ export default [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, 
     let foundSession = await getSession(chatId, callback.from.id);
 
     if (!foundSession.game.gacha.find(item => item.name === gachaType)) {
-        foundSession.game.gacha.push({name: gachaType, freeSpins: gacha.freeSpins, piecesForFleeCall: 0});
+        foundSession.game.gacha.push({name: gachaType, freeSpins: gacha.freeSpins, piecesForFleeCall: gacha.piecesForFleeCall});
     }
 
     let costMessage = "";

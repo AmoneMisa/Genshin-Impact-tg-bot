@@ -62,6 +62,7 @@ export default [[/(?:^|\s)\/basketball\b/, async (msg, session) => {
     function startGame() {
         session.game.basketball.isStart = true;
         editMessageText(`@${getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 12.`, {
+            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             message_id: id,
             chat_id: msg.chat.id,
             disable_notification: true,

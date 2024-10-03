@@ -21,7 +21,8 @@ export default [[/^bowling_pull$/, async function (session, callback) {
 
     let chatId = callback.message.chat.id;
 
-    await bot.sendDice(chatId, {emoji: '🎳'}).then(msg => {
+    await bot.sendDice(chatId, {emoji: '🎳',
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})}).then(msg => {
         deleteMessageTimeout(chatId, msg.message_id, 10 * 1000);
         session.game.bowling.skittles += msg.dice.value;
     });

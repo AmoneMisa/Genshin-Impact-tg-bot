@@ -10,6 +10,7 @@ export default [["info", function (session, callback) {
     let buttons = buildKeyboard(callback.message.chat.id, 'info');
 
     return editMessageText(`Выбери интересующего тебя участника`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -55,6 +56,7 @@ export default [["info", function (session, callback) {
     }
 
     return editMessageText(formatMessage(currentUser), {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

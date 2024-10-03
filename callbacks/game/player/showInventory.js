@@ -47,6 +47,10 @@ function buildInventoryKeyboard(inventory, userId) {
 }
 
 function buildInventoryCategoryItemKeyboard(foundedItems, chatId, items, isApprove) {
+    if (items === "gacha") {
+        return [];
+    }
+
     let buttons = [];
     let tempArray = null;
     let i = 0;
@@ -166,9 +170,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     } else if (items === "hp" || items === "mp" || items === "cp") {
         itemsWithIndex = foundedSession.game.inventory.potions.items.map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
-    } else if (items === "gacha") {
-        foundedItems = foundedSession.game.inventory[items].items.filter(item => item.value !== null && item.value > 0);
-    } else if (items === "equipment") {
+    } else if (items === "equipment" || items === "gacha") {
         foundedItems = foundedSession.game.inventory[items].items;
     } else {
         foundedItems = foundedSession.game.inventory[items].items.filter((item) => {

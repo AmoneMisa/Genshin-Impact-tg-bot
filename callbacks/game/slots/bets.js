@@ -37,6 +37,7 @@ async function bet(session, callback, calcFunc) {
 
 async function updateMessage(session, callback) {
     return editMessageText(`Ставка: ${session.game.slots.bet}`, {
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

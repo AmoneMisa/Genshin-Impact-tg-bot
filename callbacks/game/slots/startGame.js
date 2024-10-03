@@ -65,6 +65,7 @@ export default [
             session.game.slots.state = 'spin2';
 
             await editMessageText(`@${getUserName(session, "nickname")}, ${resultSpins.slice(0, 2).join('')}`, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 chat_id: sentMessage.chat.id,
                 message_id: sentMessage.message_id,
             });
@@ -89,6 +90,7 @@ export default [
                 }
 
                 await editMessageText(text, {
+                    ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                     chat_id: sentMessage.chat.id,
                     message_id: sentMessage.message_id,
                 });
