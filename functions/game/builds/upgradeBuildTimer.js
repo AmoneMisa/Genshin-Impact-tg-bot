@@ -4,12 +4,12 @@ import sendMessage from '../../tgBotFunctions/sendMessage.js';
 import getUserName from '../../getters/getUserName.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
 
-export default function (buildName, build, chatId, session) {
+export default function (buildName, build, chatId, session, userId) {
     let remain = calculateRemainBuildTime(buildName, build);
     let buildTemplate = buildsTemplate[buildName];
     build.upgradeTimerId = +setTimeout(() => {
         upgradeBuild(build);
         build.upgradeTimerId = null;
-        return sendMessage(chatId, `@${getUserName(session, "nickname")}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
+        return sendMessage(userId, `@${getUserName(session, "nickname")}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
     }, remain);
 }

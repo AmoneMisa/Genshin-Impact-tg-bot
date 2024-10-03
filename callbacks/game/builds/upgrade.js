@@ -256,7 +256,7 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
 
     build.upgradeStartedAt = new Date().getTime();
     payForUpgrade(build.currentLvl, buildName, foundedSession.game.inventory);
-    upgradeBuildTimer(buildName, build, chatId, foundedSession);
+    upgradeBuildTimer(buildName, build, chatId, foundedSession, callback.from.id);
 
     return editMessageCaption(getCaption(buildName, "upgrade.upgradeLvl.0", build), {
         chat_id: callback.message.chat.id,
