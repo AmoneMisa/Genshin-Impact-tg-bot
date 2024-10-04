@@ -8,11 +8,11 @@ const messagesMap = {
     elements: "элементы"
 }
 
-export default function (chatSession, timer, chatId, gameName) {
+export default function (chatSession, timer, chatId, gameName, threadId) {
     setEndGameTimer(chatSession, timer, chatId, gameName, () => {
         endGame(chatSession, chatId, null, false, gameName);
         sendMessageWithDelete(chatId, `Игра в ${messagesMap[gameName]} была отменена из-за отсутствия активности участников. Начните новую игру.`, {
-            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            ...(threadId ? {message_thread_id: threadId} : {})
         }, 7000);
         return deleteMessage(chatId, chatSession.game[gameName].messageId);
     })

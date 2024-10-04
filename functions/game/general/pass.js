@@ -14,7 +14,7 @@ export default function (session, callback, gameName) {
         return;
     }
 
-    endGameTimer(chatSession, 20 * 1000, callback.message.chat.id, gameName);
+    endGameTimer(chatSession, 20 * 1000, callback.message.chat.id, gameName, callback.message.message_thread_id);
     let players = chatSession.game[gameName].players;
     let player = players[userId];
 

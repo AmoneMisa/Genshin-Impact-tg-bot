@@ -84,7 +84,7 @@ export default [[/(?:^|\s)\/point\b/, (msg, session) => {
         }
 
         chatSession.game.points.isStart = true;
-        endGameTimer(chatSession, 20 * 1000, msg.chat.id, "points");
+        endGameTimer(chatSession, 20 * 1000, msg.chat.id, "points", msg.message_thread_id);
 
         return sendMessageWithDelete(msg.chat.id, `Игра началась. Ставки больше не принимаются.`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})

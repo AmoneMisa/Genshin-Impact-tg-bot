@@ -16,7 +16,7 @@ export default [["points_card", function (session, callback) {
         return;
     }
 
-    endGameTimer(chatSession, 20 * 1000, callback.message.chat.id, "points");
+    endGameTimer(chatSession, 20 * 1000, callback.message.chat.id, "points", callback.message.message_thread_id);
 
     getCard(chatSession.game.points, userId);
     chatSession.game.points.gameSessionLastUpdateAt = new Date().getTime();

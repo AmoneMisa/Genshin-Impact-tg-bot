@@ -35,7 +35,7 @@ export default [["elements_take", function (session, callback) {
         return;
     }
 
-    endGameTimer(chatSession, 20 * 1000, chatId, "elements");
+    endGameTimer(chatSession, 20 * 1000, chatId, "elements", callback.message.message_thread_id);
     getRandomElement(chatSession, userId);
     game.players[userId].counter++;
 

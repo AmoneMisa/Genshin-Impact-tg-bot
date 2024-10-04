@@ -78,7 +78,7 @@ export default [[/(?:^|\s)\/elements\b/, (msg, session) => {
 
         botThink(chatSession);
         updatePoints(chatSession.game.elements.players);
-        endGameTimer(chatSession, 20 * 1000, msg.chat.id, "elements");
+        endGameTimer(chatSession, 20 * 1000, msg.chat.id, "elements", msg.message_thread_id);
 
         return sendMessageWithDelete(msg.chat.id, `Игра началась. Ставки больше не принимаются.`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
