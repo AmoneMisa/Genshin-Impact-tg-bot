@@ -4,10 +4,19 @@ import getBuildsList from './getBuildList.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
 import calculateIncreaseInResourceExtraction from './calculateIncreaseInResourceExtraction.js';
 import debugMessage from "../../tgBotFunctions/debugMessage.js";
+import getSession from "../../getters/getSession.js";
 
 export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
+            let session = getSession(chatId, userId);
+            if (session.userChatData.user.is_bot) {
+                continue;
+            }
+
+            if (session.userChatData.status === "left") {
+                continue;
+            }
 
             try {
                 for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {
