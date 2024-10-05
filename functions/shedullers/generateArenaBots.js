@@ -1,5 +1,4 @@
 import generateArenaBot from '../game/arena/generateArenaBot.js';
-import {arenaTempBots} from '../../data.js';
 import { updArenaTempBots } from '../../data.js';
 import fs from 'fs';
 
@@ -15,7 +14,6 @@ export default function () {
     }
 
     arenaTempBotsArray = Array.from(unique);
-    arenaTempBots = arenaTempBotsArray;
     fs.writeFileSync('arenaTempBots.json', JSON.stringify(arenaTempBotsArray));
     updArenaTempBots();
 }
