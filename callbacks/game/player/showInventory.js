@@ -190,7 +190,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         disable_notification: true,
         reply_markup: {
             selective: true,
-            inline_keyboard: [...buildInventoryCategoryItemKeyboard(foundedItems, chatId, items), [{
+            inline_keyboard: [...controlButtons(`player.${chatId}.inventory.${items}`, ...buildInventoryCategoryItemKeyboard(foundedItems, chatId, items)), [{
                 text: "Главная",
                 callback_data: `player.${chatId}.whoami`
             }], [{

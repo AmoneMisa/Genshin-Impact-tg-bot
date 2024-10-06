@@ -10,6 +10,10 @@ export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
             let session = getSession(chatId, userId);
+            if (!session || !session.userChatData) {
+                continue;
+            }
+
             if (session.userChatData.user.is_bot) {
                 continue;
             }
