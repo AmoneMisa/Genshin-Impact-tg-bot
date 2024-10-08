@@ -54,8 +54,6 @@ export default async function () {
                     } else {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
                     }
-
-                    debugMessage(`Ресурсы накоплены: ${build.resourceCollected}, ${buildName}, ${build.currentLvl}, ${session.userChatData.user.name}`);
                 }
             } catch (e) {
                 console.error(e);

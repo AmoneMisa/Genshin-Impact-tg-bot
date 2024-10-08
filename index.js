@@ -269,8 +269,6 @@ function shutdown() {
 
 console.log("Оно живое");
 debugMessage("Оно живое");
-checkAccumulateTimer();
-
 
 process.on('SIGTERM', shutdown);
 
