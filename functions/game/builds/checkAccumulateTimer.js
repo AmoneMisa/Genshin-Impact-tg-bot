@@ -10,6 +10,7 @@ export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
             let session = await getSession(chatId, userId);
+            
             if (!session || !session.userChatData) {
                 continue;
             }
@@ -26,6 +27,10 @@ export default async function () {
                 for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {
                     let buildTemplate = buildsTemplate[buildName];
 
+                    if (buildName === "palace") {
+                        continue;
+                    }
+
                     if (build.upgradeStartedAt) {
                         continue;
                     }
@@ -41,11 +46,14 @@ export default async function () {
                         build.lastCollectAt = currentTime;
                     }
 
+                    debugMessage(build.resourceCollected, buildName, session.userChatData.user.name);
                     if (build.currentLvl === 1) {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
                     } else {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
                     }
+                    debugMessage(build.resourceCollected, buildName, build.currentLvl,  session.userChatData.user.name);
+
                 }
             } catch (e) {
                 console.error(e);
