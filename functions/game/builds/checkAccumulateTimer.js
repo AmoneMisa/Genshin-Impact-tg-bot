@@ -9,13 +9,16 @@ import getSession from "../../getters/getSession.js";
 export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
-            let session = await getSession(chatId, userId);
-            console.log(1, chatId, userId, session.userChatData);
-            if (!session || !session.userChatData) {
+            let session;
+
+            try {
+                session = await getSession(chatId, userId);
+            } catch (e) {
+                console.error(e);
                 continue;
             }
+            console.log(1, chatId, userId, session.userChatData);
 
-            console.log(2);
             if (session.userChatData.user.is_bot) {
                 continue;
             }
