@@ -4,10 +4,18 @@ import getMembers from './getMembers.js';
 import getLostFieldsInSession from './getLostFieldsInSession.js';
 import classStatsTemplate from '../../template/classStatsTemplate.js';
 import classSkillsTemplate from '../../template/classSkillsTemplate.js';
+import debugMessage from "../tgBotFunctions/debugMessage.js";
 
 export default async function (chatId, userId) {
     let members = getMembers(chatId);
-    let getUpdatedData = await bot.getChatMember(chatId, userId);
+    let getUpdatedData;
+
+    try {
+        getUpdatedData = await bot.getChatMember(chatId, userId);
+    } catch (e) {
+        debugMessage("getUpdatedData | getChatMember", e);
+        throw new Error(`getUpdatedData | getChatMember error: ${e}`);
+    }
 
     if (!members[userId]) {
         members[userId] = {
