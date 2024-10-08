@@ -5,5 +5,9 @@ export default function (chatId, msg) {
         return;
     }
 
-    return retryBotRequest(bot => bot.deleteMessage(chatId, msg));
+    try {
+        return retryBotRequest(bot => bot.deleteMessage(chatId, msg));
+    } catch (e) {
+        throw new Error(`Error while try to delete message: ${e}`);
+    }
 };
