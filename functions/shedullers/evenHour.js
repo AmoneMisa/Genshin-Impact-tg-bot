@@ -5,7 +5,7 @@ import generateArenaBots from './generateArenaBots.js';
 import debugMessage from "../tgBotFunctions/debugMessage.js";
 
 export default function () {
-    cron.schedule('31 * * * *', async () => {
+    cron.schedule('35 * * * *', async () => {
         try {
             await checkAccumulateTimer();
             restoreArenaChances();
