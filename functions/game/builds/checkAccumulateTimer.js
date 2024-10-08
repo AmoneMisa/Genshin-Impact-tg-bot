@@ -9,7 +9,8 @@ import getSession from "../../getters/getSession.js";
 export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
-            let session = getSession(chatId, userId);
+            let session = await getSession(chatId, userId);
+            console.log(session)
             if (!session || !session.userChatData) {
                 continue;
             }
