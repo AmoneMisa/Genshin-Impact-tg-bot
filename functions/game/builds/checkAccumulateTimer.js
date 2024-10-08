@@ -10,7 +10,8 @@ export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
             let session = await getSession(chatId, userId);
-            
+            debugMessage(`${userId}, ${JSON.stringify(session.userChatData)}, ${chatId}`);
+
             if (!session || !session.userChatData) {
                 continue;
             }
