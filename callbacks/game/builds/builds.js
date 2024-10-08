@@ -339,4 +339,65 @@ export default [[/^player\.([\-0-9]+)\.builds$/, async function (session, callba
             })
         }
     }
+}], [/^builds\.([\-0-9]+)\.forge(?:\.back)?$/, async function (session, callback, [, chatId]) {
+    const isBack = callback.data.includes("back");
+    let foundedSession = await getSession(chatId, callback.from.id);
+
+    if (!foundedSession.game.hasOwnProperty('builds')) {
+        return;
+    }
+
+    let messageId = callback.message.message_id;
+
+    let build = await getBuild(chatId, callback.from.id, 'forge');
+    let keyboard = [[{
+        text: "Статус",
+        callback_data: `builds.${chatId}.forge.status`,
+    }, {
+        text: getUpgradeButtonText(build.currentLvl),
+        callback_data: `builds.${chatId}.forge.upgrade`,
+    }], [{
+        text: "Улучшить снаряжение",
+        callback_data: `builds.${chatId}.forge.equipUpgrade`,
+    }, {
+        text: "Разобрать снаряжение",
+        callback_data: `builds.${chatId}.forge.equipDestroy`,
+    }], [{
+        text: "Полировка снаряжения",
+        callback_data: `builds.${chatId}.forge.equipPoly`,
+    }, {
+        text: "Починить снаряжение",
+        callback_data: `builds.${chatId}.forge.equipRepair`,
+    }], [{
+        text: buttonsDictionary["ru"].close,
+        callback_data: "close"
+    }]];
+
+    if (isBack) {
+        await editMessageCaption(getCaption('forge', "home", build), {
+            chat_id: callback.message.chat.id,
+            message_id: messageId,
+            reply_markup: {
+                inline_keyboard: keyboard
+            }
+        }, callback.message.photo);
+    } else {
+        let imagePath = getLocalImageByPath(build.currentLvl, 'builds/forge');
+
+        if (imagePath) {
+            await sendPhoto(callback.message.chat.id, imagePath, {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
+                caption: getCaption('forge', "home", build), reply_markup: {
+                    inline_keyboard: keyboard
+                }
+            })
+        } else {
+            await sendMessage(callback.message.chat.id, getCaption('forge', "home", build), {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
+                reply_markup: {
+                    inline_keyboard: keyboard
+                }
+            })
+        }
+    }
 }]];

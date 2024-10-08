@@ -2,7 +2,6 @@ import unequipItem from './unequipItem.js';
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
 
 export default function (session, item) {
-
     if (item.isUsed) {
         return 1;
     }

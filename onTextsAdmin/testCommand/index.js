@@ -1,3 +1,3 @@
-// import testCommand from './testCommand';
+// import testCommand from './testCommand.js';
 
 // export default [...testCommand];

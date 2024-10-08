@@ -4,6 +4,7 @@ import collectResources from './collectResources.js';
 import status from './status.js';
 import upgrade from './upgrade.js';
 import changeName from './changeName.js';
+import forge from './forge.js';
 
 export default [
     ...builds,
@@ -12,4 +13,5 @@ export default [
     ...status,
     ...upgrade,
     ...changeName,
+    ...forge
 ];

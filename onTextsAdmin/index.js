@@ -10,7 +10,7 @@ import getFileAndBackup from './getFileAndBackup.js';
 import hideDeadSouls from './hideDeadSouls.js';
 import sendNewUpdates from './sendNewUpdates.js';
 import updateUserFields from "./updateUserFields.js";
-// let testCommand = require('./testCommand');
+// import testCommand from './testCommand/index.js';
 
 export default [
     ...game,

@@ -19,6 +19,6 @@ export type BuildType = {
     }],
     resourcesType: string | "gold" | "crystals" | "ironOre",
     upgradeRequirements: [
-        { level: 2, buildRequirements: [{ name: "palace", level: 1 }], characterRequirements: [{ lvl: 1 }] }
+        { level: number, buildRequirements: [{ name: string, level: number }], characterRequirements: [{ lvl: number }] }
     ]
 }

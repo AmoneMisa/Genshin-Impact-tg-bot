@@ -782,6 +782,6 @@ export default {
             {level: 12, gold: 1569000, ironOre: 2500, crystals: 15000},
         ],
         maxLvl: 12,
-        available: false
+        available: true
     }
 };

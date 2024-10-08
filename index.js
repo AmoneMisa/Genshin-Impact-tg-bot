@@ -267,6 +267,7 @@ function shutdown() {
     bot.stopPolling();
 }
 
+checkAccumulateTimer();
 console.log("Оно живое");
 debugMessage("Оно живое");
 
