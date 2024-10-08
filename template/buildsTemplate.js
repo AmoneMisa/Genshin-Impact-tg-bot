@@ -770,18 +770,18 @@ export default {
             }],
         upgradeCosts: [
             {level: 2, gold: 35800, ironOre: 240, crystals: 500},
-            {level: 3, gold: 58500, ironOre: 325, crystals: 640},
-            {level: 4, gold: 83780, ironOre: 385, crystals: 680},
-            {level: 5, gold: 155900, ironOre: 520, crystals: 795},
-            {level: 6, gold: 194250, ironOre: 585, crystals: 920},
-            {level: 7, gold: 250000, ironOre: 640, crystals: 1150},
-            {level: 8, gold: 320000, ironOre: 730, crystals: 2585},
-            {level: 9, gold: 535980, ironOre: 890, crystals: 3980},
-            {level: 10, gold: 620500, ironOre: 1000, crystals: 5450},
-            {level: 11, gold: 845000, ironOre: 1260, crystals: 7950},
-            {level: 12, gold: 1569000, ironOre: 2500, crystals: 15000},
+            {level: 3, gold: 58500, ironOre: 425, crystals: 640},
+            {level: 4, gold: 83780, ironOre: 885, crystals: 680},
+            {level: 5, gold: 155900, ironOre: 1520, crystals: 795},
+            {level: 6, gold: 194250, ironOre: 2585, crystals: 920},
+            {level: 7, gold: 250000, ironOre: 2640, crystals: 1150},
+            {level: 8, gold: 320000, ironOre: 3730, crystals: 2585},
+            {level: 9, gold: 535980, ironOre: 3890, crystals: 3980},
+            {level: 10, gold: 620500, ironOre: 4400, crystals: 5450},
+            {level: 11, gold: 845000, ironOre: 6260, crystals: 7950},
+            {level: 12, gold: 1569000, ironOre: 72500, crystals: 15000},
         ],
         maxLvl: 12,
-        available: true
+        available: false
     }
 };
