@@ -266,6 +266,9 @@ function shutdown() {
     bot.stopPolling();
 }
 
+console.log("Оно живое");
+debugMessage("Оно живое");
+
 process.on('SIGTERM', shutdown);
 
 process.on('SIGINT', shutdown);
