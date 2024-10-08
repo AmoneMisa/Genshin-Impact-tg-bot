@@ -27,6 +27,7 @@ import evenWeek from './functions/shedullers/evenWeek.js';
 
 // const log = intel.getLogger("genshin");
 import buttonsDictionary from './dictionaries/buttons.js';
+import checkAccumulateTimer from "./functions/game/builds/checkAccumulateTimer.js";
 
 bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
@@ -268,6 +269,8 @@ function shutdown() {
 
 console.log("Оно живое");
 debugMessage("Оно живое");
+checkAccumulateTimer();
+
 
 process.on('SIGTERM', shutdown);
 
