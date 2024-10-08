@@ -31,6 +31,7 @@ export default async function () {
                         continue;
                     }
 
+                    debugMessage(`Начало цикла: ${buildName}, ${build.resourceCollected}, ${build.upgradeStartedAt}, ${build.lastCollectAt}, ${build.lastCollectAt + (buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000)}, ${build.lastCollectAt && (build.lastCollectAt + (buildTemplate.maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < new Date().getTime()}, ${new Date().getTime()}`)
                     if (build.upgradeStartedAt) {
                         continue;
                     }
@@ -46,14 +47,13 @@ export default async function () {
                         build.lastCollectAt = currentTime;
                     }
 
-                    debugMessage(build.resourceCollected, buildName, session.userChatData.user.name);
+                    debugMessage(`Попытка накопить ресурсы? ${build.resourceCollected}, ${buildName}, ${session.userChatData.user.name}`);
                     if (build.currentLvl === 1) {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
                     } else {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
                     }
-                    debugMessage(build.resourceCollected, buildName, build.currentLvl,  session.userChatData.user.name);
-
+                    debugMessage(`Ресурсы накоплены: ${build.resourceCollected}, ${buildName}, ${build.currentLvl}, ${session.userChatData.user.name}`);
                 }
             } catch (e) {
                 console.error(e);
