@@ -14,8 +14,7 @@ export default async function (chatId, userId) {
         getUpdatedData = await bot.getChatMember(chatId, userId);
     } catch (e) {
         debugMessage(`getUpdatedData | getChatMember error: ${e}`);
-        console.error(e);
-        return ;
+        throw new Error(`getUpdatedData | getChatMember error: ${e}`);
     }
 
     if (!members[userId]) {
