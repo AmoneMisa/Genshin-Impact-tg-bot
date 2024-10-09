@@ -51,6 +51,10 @@ export default async function () {
                         build.lastCollectAt = currentTime;
                     }
 
+                    if (userId.includes("808820899")) {
+                        console.log(build, buildName);
+                    }
+
                     if (build.currentLvl === 1) {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
                     } else {
