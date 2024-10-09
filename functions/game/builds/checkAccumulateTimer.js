@@ -31,12 +31,16 @@ export default async function () {
             try {
                 for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {
                     let buildTemplate = buildsTemplate[buildName];
+                    console.log(await getBuildsList(chatId, userId), buildTemplate);
 
                     if (buildName === "palace") {
                         continue;
                     }
 
                     if (build.upgradeStartedAt) {
+                        if (userId.includes("808820899")) {
+                            console.log(build.upgradeStartedAt);
+                        }
                         continue;
                     }
 
@@ -44,10 +48,16 @@ export default async function () {
                     let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
 
                     if (build.lastCollectAt && (build.lastCollectAt + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
+                        if (userId.includes("808820899")) {
+                            console.log(build, buildName);
+                        }
                         continue;
                     }
 
                     if (!build.lastCollectAt) {
+                        if (userId.includes("808820899")) {
+                            console.log(build, buildName);
+                        }
                         build.lastCollectAt = currentTime;
                     }
 
@@ -58,6 +68,9 @@ export default async function () {
                     if (build.currentLvl === 1) {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
                     } else {
+                        if (userId.includes("808820899")) {
+                            console.log(build, buildName);
+                        }
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
                     }
                 }
