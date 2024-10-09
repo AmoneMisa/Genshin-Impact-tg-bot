@@ -13,16 +13,13 @@ export default async function () {
             let session;
 
             i++;
-            debugMessage(i);
             try {
                 session = await getSession(chatId, userId);
             } catch (e) {
                 console.error(e);
-                debugMessage("continue")
                 continue;
             }
 
-            debugMessage("come")
             if (session.userChatData.user.is_bot) {
                 continue;
             }
