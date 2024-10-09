@@ -1,4 +1,4 @@
-import { sessions } from '../../../data.js';
+import {sessions} from '../../../data.js';
 import getMembers from '../../getters/getMembers.js';
 import getBuildsList from './getBuildList.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
@@ -6,18 +6,23 @@ import calculateIncreaseInResourceExtraction from './calculateIncreaseInResource
 import debugMessage from "../../tgBotFunctions/debugMessage.js";
 import getSession from "../../getters/getSession.js";
 
+let i = 0;
 export default async function () {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
             let session;
 
+            i++;
+            debugMessage(i);
             try {
                 session = await getSession(chatId, userId);
             } catch (e) {
                 console.error(e);
+                debugMessage("continue")
                 continue;
             }
 
+            debugMessage("come")
             if (session.userChatData.user.is_bot) {
                 continue;
             }
