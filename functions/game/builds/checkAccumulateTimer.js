@@ -44,7 +44,7 @@ export default async function () {
                     let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
 
                     //если последний сбор был более maxWorkHoursWithoutCollection, то НЕ накапливаем ресурсы
-                    if (build.lastCollectAt && (build.lastCollectAt + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) > currentTime) {
+                    if (build.lastCollectAt && (build.lastCollectAt + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
                         continue;
                     }
 
