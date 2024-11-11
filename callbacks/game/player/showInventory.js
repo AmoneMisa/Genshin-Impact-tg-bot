@@ -149,8 +149,8 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
-            inline_keyboard: [
-                ...controlButtons(`player.${chatId}.inventory`, buildInventoryKeyboard(foundedSession.game.inventory, chatId), page),
+            inline_keyboard: [...controlButtons(`player.${chatId}.inventory`,
+                buildInventoryKeyboard(foundedSession.game.inventory, chatId), page),
                 [{
                     text: "Главная",
                     callback_data: `player.${chatId}.whoami`
@@ -203,7 +203,6 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     let foundedSession = await getSession(chatId, callback.from.id);
     let itemsWithIndex = [];
     let foundedItems;
-
     if (items.includes("NaN")) {
         return;
     }
@@ -214,12 +213,10 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     } else if (items === "hp" || items === "mp" || items === "cp") {
         itemsWithIndex = foundedSession.game.inventory.potions.items.map((item, i) => [i, item]);
         foundedItems = itemsWithIndex.filter(([i, item]) => item.count > 0);
-    } else if (items === "equipment" || items === "gacha") {
+    } else if (items === "equipment") {
         foundedItems = foundedSession.game.inventory[items].items;
     } else {
-        foundedItems = foundedSession.game.inventory[items].items.filter((item) => {
-            return Object.values(item).every(value => value !== null && value > 0);
-        });
+        foundedItems = foundedSession.game.inventory[items].items.filter((item) => item.value !== null && item.value > 0);
     }
 
     if (!foundedItems || foundedItems.length <= 0) {
@@ -228,17 +225,17 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }, 10 * 1000);
     }
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems)}`, {
+    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems, false, items)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
             selective: true,
-            inline_keyboard: [...controlButtons(`player.${chatId}.inventory.${items}`, [...buildInventoryCategoryItemKeyboard(foundedItems, chatId, items), ...[{
+            inline_keyboard: [...controlButtons(`player.${chatId}.inventory.${items}`, ...buildInventoryCategoryItemKeyboard(foundedItems, chatId, items), ...[{
                 text: "Назад", callback_data: `player.${chatId}.inventory.back`
             }, {
                 text: "Закрыть", callback_data: "close"
-            }]], 1)]
+            }], 1)]
         }
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)$/, async function (session, callback, [, chatId, items, i]) {

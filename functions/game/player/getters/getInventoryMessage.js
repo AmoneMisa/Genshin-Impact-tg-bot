@@ -1,7 +1,8 @@
 import getEmoji from '../../../getters/getEmoji.js';
 import inventoryDictionary from '../../../../dictionaries/inventory.js';
+import lodash from 'lodash';
 
-export default function (inventory, isSoloItem = false) {
+export default function (inventory, isSoloItem = false, categoryName = "") {
     let message = `${getEmoji("inventory")} Инвентарь\n\n`;
 
     if (inventory.hasOwnProperty("gold") && inventory.hasOwnProperty("crystals") && inventory.hasOwnProperty("ironOre")) {
@@ -21,21 +22,33 @@ export default function (inventory, isSoloItem = false) {
         }
 
         message += `${getEmoji(itemName)} ${inventory.name}: ${inventory.description}.`;
-    } else {
-        for (let [key, item] of Object.entries(inventory)) {
-            if (key === "gold" || key === "crystals" || key === "ironOre") {
-                continue;
-            }
 
-            if (key === "potions") {
-                message += getPotionsMessage(inventory[key]);
-            } else if (key === "gacha") {
-                message += getGachaMessage(inventory[key]);
-            } else if (key === "equipment") {
-                message += getEquipMessage(inventory[key])
-            } else if (key) {
-                message += getCommonMessage(key);
+        return message
+    }
+
+    if (lodash.isArray(inventory)) {
+        for (let item of inventory) {
+            if (categoryName === "potions") {
+                message += getPotionsMessage(inventory);
+            } else if (categoryName === "gacha") {
+                message += getGachaMessage(inventory);
+            } else if (categoryName === "equipment") {
+                message += getEquipMessage(inventory)
+            } else if (categoryName) {
+                message += getCommonMessage(inventory);
             }
+        }
+
+        return message;
+    }
+
+    for (let [key, item] of Object.entries(inventory)) {
+        if (key === "gold" || key === "crystals" || key === "ironOre") {
+            continue;
+        }
+
+        if (key) {
+            message += getCommonMessage(key);
         }
     }
 
@@ -43,16 +56,16 @@ export default function (inventory, isSoloItem = false) {
 }
 
 function getPotionsMessage(potions) {
-    if (!potions?.items?.length) {
+    if (!potions?.length) {
         return "";
     }
 
-    let filteredPotions = potions.items.filter(potion => potion.count > 0);
+    let filteredPotions = potions.filter(potion => potion.count > 0);
     if (filteredPotions.length <= 0) {
         return "";
     }
 
-    let message = `\n${getEmoji("potions")} ${potions.name}:\n`;
+    let message = `\n${getEmoji("potions")} ${inventoryDictionary["potions"]}:\n`;
     for (let potion of filteredPotions) {
         let findStr = `${potion.bottleType}.${potion.type}`;
         message += `${getEmoji(findStr)} ${potion.name}: ${potion.description}. Количество: ${potion.count}\n`;
@@ -62,14 +75,14 @@ function getPotionsMessage(potions) {
 }
 
 function getEquipMessage(equipment) {
-    if (!equipment?.items?.length) {
+    if (!equipment?.length) {
         return "";
     }
 
-    let message = `\n${equipment.name}:\n`;
-    let newEquipment = equipment.items;
-    if (equipment.items.length >= 4) {
-        newEquipment = equipment.items.slice(0, 4);
+    let message = `\n${inventoryDictionary["equipment"]}:\n`;
+    let newEquipment = equipment;
+    if (equipment.length >= 4) {
+        newEquipment = equipment.slice(0, 4);
     }
 
     let equipmentByMainType = {};
@@ -98,26 +111,27 @@ function getEquipMessage(equipment) {
 }
 
 function getGachaMessage(gacha) {
-    if (!gacha?.items?.length) {
+    if (!gacha.length) {
         return "";
     }
 
-    let message = `\n${gacha.name}:\n`;
+    let message = `\n${inventoryDictionary["gacha"]}:\n`;
 
-    for (let gachaItem of gacha.items) {
+    for (let gachaItem of gacha) {
         message += `${inventoryDictionary[gachaItem.name]}: осколки для призыва. Количество: ${gachaItem.value}\n`;
     }
+
     return message;
 }
 
-function getCommonMessage(category) {
-    if (!category?.items?.length) {
+function getCommonMessage(category, categoryName) {
+    if (!category?.length) {
         return "";
     }
 
-    let message = `\n${getEmoji(category.name)} ${category.name}:\n`;
+    let message = `\n${getEmoji(categoryName)} ${inventoryDictionary[categoryName]}:\n`;
 
-    for (let categoryItem of category.items) {
+    for (let categoryItem of category) {
         for (const [key, value] of Object.entries(categoryItem)) {
             message += `${key}. Количество: ${value}\n`;
         }

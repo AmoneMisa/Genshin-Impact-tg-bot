@@ -10,7 +10,6 @@ export default [[/(?:^|\s)\/horoscope\b/, async (msg, session) => {
     let action = horoscopes.action[getRandom(0, horoscopes.action.length - 1)];
     let end = horoscopes.end[getRandom(0, horoscopes.end.length - 1)];
 
-
     return sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, твоё шуточное предсказание: ${start} ${action} ${end}`, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         disable_notification: true,
