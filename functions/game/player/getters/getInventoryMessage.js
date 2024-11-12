@@ -27,16 +27,14 @@ export default function (inventory, isSoloItem = false, categoryName = "") {
     }
 
     if (lodash.isArray(inventory)) {
-        for (let item of inventory) {
-            if (categoryName === "potions") {
-                message += getPotionsMessage(inventory);
-            } else if (categoryName === "gacha") {
-                message += getGachaMessage(inventory);
-            } else if (categoryName === "equipment") {
-                message += getEquipMessage(inventory)
-            } else if (categoryName) {
-                message += getCommonMessage(inventory);
-            }
+        if (categoryName === "potions") {
+            message += getPotionsMessage(inventory, categoryName);
+        } else if (categoryName === "gacha") {
+            message += getGachaMessage(inventory, categoryName);
+        } else if (categoryName === "equipment") {
+            message += getEquipMessage(inventory, categoryName);
+        } else if (categoryName) {
+            message += getCommonMessage(inventory, categoryName);
         }
 
         return message;
@@ -48,7 +46,7 @@ export default function (inventory, isSoloItem = false, categoryName = "") {
         }
 
         if (key) {
-            message += getCommonMessage(key);
+            message += getCommonMessage(item, key);
         }
     }
 

@@ -306,7 +306,7 @@ function getItemCost(item) {
     let qualityPrice = 300 + (item.quality / 100) * (100000 - 300);
     let persistencePrice = 90 + (item.persistence / 100) * (8900 - 90);
 
-    return Math.floor(gradePrice + rarityPrice + setPrice + qualityPrice + persistencePrice + penaltyPrice);
+    return Math.abs(Math.floor(gradePrice + rarityPrice + setPrice + qualityPrice + persistencePrice + penaltyPrice));
 
 //Стоимость в золоте:
 // Базовая стоимость класса снаряжения

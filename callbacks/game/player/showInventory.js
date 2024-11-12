@@ -231,11 +231,13 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         disable_notification: true,
         reply_markup: {
             selective: true,
-            inline_keyboard: [...controlButtons(`player.${chatId}.inventory.${items}`, ...buildInventoryCategoryItemKeyboard(foundedItems, chatId, items), ...[{
-                text: "Назад", callback_data: `player.${chatId}.inventory.back`
-            }, {
-                text: "Закрыть", callback_data: "close"
-            }], 1)]
+            inline_keyboard: [...controlButtons(`player.${chatId}.inventory.${items}`, buildInventoryCategoryItemKeyboard(foundedItems, chatId, items), 1),
+                [
+                    {
+                        text: "Назад", callback_data: `player.${chatId}.inventory.back`
+                    }, {
+                    text: "Закрыть", callback_data: "close"
+                }]]
         }
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)$/, async function (session, callback, [, chatId, items, i]) {
