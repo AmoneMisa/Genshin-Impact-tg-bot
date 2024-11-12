@@ -6,6 +6,7 @@ export let bosses;
 export let trustedChats;
 export let arenaRating;
 export let arenaTempBots;
+export let clans;
 
 try {
     let sessionsJson = fs.readFileSync("./sessions.json");
@@ -41,11 +42,19 @@ try {
 } catch (e) {
     arenaRating = {};
 }
+
 try {
     let arenaTempBotsJson = fs.readFileSync("./arenaTempBots.json");
     arenaTempBots = JSON.parse(arenaTempBotsJson);
 } catch (e) {
     arenaTempBots = [];
+}
+
+try {
+    let clansJson = fs.readFileSync("./clans.json");
+    clans = JSON.parse(clansJson);
+} catch (e) {
+    clans = [];
 }
 
 export function updTrustedChats() {
