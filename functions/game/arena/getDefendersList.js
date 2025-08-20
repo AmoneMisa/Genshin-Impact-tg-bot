@@ -11,6 +11,15 @@ const maxRatingDifference = 0.15; // 10%
 
 export default async function (arenaType, chatId, userId) {
     let message = "";
+
+    if (!arenaRating[arenaType]) {
+        arenaRating[arenaType] = {};
+    }
+
+    if (!arenaRating[arenaType].hasOwnProperty(chatId) && !arenaRating[arenaType][chatId]) {
+        arenaRating[arenaType][chatId] = {};
+    }
+
     let playersList = arenaType === "common" ? arenaRating[arenaType][chatId] : arenaRating[arenaType];
     let [attackerRating] = getPlayerRating(userId, arenaType, chatId);
     let countDefenders = 0;

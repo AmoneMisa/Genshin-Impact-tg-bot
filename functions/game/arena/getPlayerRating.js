@@ -7,16 +7,20 @@ export default function (userId, arenaType, chatId, arenaBot) {
 
     let sortedRating;
 
-    if (!arenaRating["common"][chatId]) {
+    if (!arenaRating["common"].hasOwnProperty(chatId) && !arenaRating["common"][chatId]) {
         arenaRating.common[chatId] = {};
     }
 
-    if (!arenaRating["common"][chatId][userId]) {
+    if (!arenaRating["common"][chatId].hasOwnProperty(userId) && !arenaRating["common"][chatId][userId]) {
         arenaRating.common[chatId][userId] = 1000;
     }
 
-    if (!arenaRating["expansion"][userId]) {
-        arenaRating.expansion[userId] = 1000;
+    if (!arenaRating.hasOwnProperty("expansion")) {
+        arenaRating["expansion"] = {};
+    }
+
+    if (!arenaRating["expansion"].hasOwnProperty(userId) && !arenaRating["expansion"][userId]) {
+        arenaRating["expansion"][userId] = 1000;
     }
 
     if (arenaType === "common") {

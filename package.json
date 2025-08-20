@@ -16,6 +16,7 @@
     "axios": "1.11.0",
     "intel": "^1.2.0",
     "lodash": "^4.17.21",
+    "mongoose": "^8.17.2",
     "node-cron": "^3.0.2",
     "node-schedule": "^2.1.0",
     "node-telegram-bot-api": "^0.63.0",
