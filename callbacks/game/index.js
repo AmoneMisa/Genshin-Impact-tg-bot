@@ -20,6 +20,7 @@ import equipmentGacha from './equipmentGacha/index.js';
 import arena from './arena/index.js';
 import title from './title/index.js';
 import clan from './clan/index.js';
+import horoscope from './horoscope/index.js';
 
 export default [
     ...bossCallback,
@@ -43,5 +44,6 @@ export default [
     ...equipmentGacha,
     ...arena,
     ...title,
-    ...clan
+    ...clan,
+    ...horoscope
 ];

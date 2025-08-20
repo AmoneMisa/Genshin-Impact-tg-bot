@@ -15,6 +15,13 @@ export default function (session) {
         };
     }
 
+    if (!session.hasOwnProperty("horoscope")) {
+        session.horoscope = {
+            sign: 'aries',
+            style: 'cheeky'
+        };
+    }
+
     const sessionGameTemplate = {
         arenaChances: 15,
         arenaExpansionChances: 10,
