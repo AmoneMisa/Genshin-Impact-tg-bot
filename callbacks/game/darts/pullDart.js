@@ -31,7 +31,7 @@ export default [[/^darts_pull$/, async function (session, callback) {
         let result = isWinPoints(session.game.darts.dart, 13, 18);
         if (!result) {
             await deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.darts.dart}. Ставка: ${session.game.darts.bet}`, {
+            await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.darts.dart}. Ставка: ${session.game.darts.bet}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 7000);
             return endGame(session);
@@ -47,7 +47,7 @@ export default [[/^darts_pull$/, async function (session, callback) {
         
         sendPrize(session, modifier, 'darts');
         await deleteMessage(chatId, callback.message.message_id);
-        await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.darts.bet}\nВыигрыш: ${Math.round(session.game.darts.bet * modifier)}\nСумма очков: ${session.game.darts.dart}`, {
+        await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.darts.bet}\nВыигрыш: ${Math.round(session.game.darts.bet * modifier)}\nСумма очков: ${session.game.darts.dart}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 7000);
 

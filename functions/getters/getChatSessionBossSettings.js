@@ -1,15 +1,15 @@
-import getChatSession from './getChatSession.js';
+import Chat from "../../db/models/Chat.js";
 
-export default function (chatId) {
-    let chatSession = getChatSession(chatId);
-    if (!chatSession.hasOwnProperty("bossSettings")) {
-        chatSession.bossSettings = {
-            // 1 - on
-            // 0 - off
+export default async function(chatId) {
+    const chat = await Chat.findOne({ chatId });
+
+    if (!chat.bossSettings) {
+        chat.bossSettings = {
             bossDealDamageMessage: 1,
             showHealMessage: 1
         };
+        await chat.save();
     }
 
-    return chatSession.bossSettings;
-};
+    return chat.bossSettings;
+}

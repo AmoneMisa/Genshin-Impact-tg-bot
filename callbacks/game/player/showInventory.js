@@ -125,14 +125,14 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     }
 
     if (isBack) {
-        await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
+        await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             reply_markup: replyMarkup
         }, callback.message.photo);
     } else {
         const file = getFile("images/misc", "inventory");
-        await editMessageMedia(file, `@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
+        await editMessageMedia(file, `@${await getUserName(foundedSession, "nickname")}, ${getInventoryMessage(inventory)}`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             disable_notification: true,
@@ -144,7 +144,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     page = parseInt(page);
     let foundedSession = await getSession(chatId, callback.from.id);
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedSession.game.inventory)}`, {
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedSession.game.inventory)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -179,7 +179,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         });
     }
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems)}`, {
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -220,12 +220,12 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     }
 
     if (!foundedItems || foundedItems.length <= 0) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${foundedSession.game.inventory[items].name}), с которыми можно взаимодействовать.`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, у тебя нет предметов в этом списке (${foundedSession.game.inventory[items].name}), с которыми можно взаимодействовать.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems, false, items)}`, {
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItems, false, items)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -267,12 +267,12 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
     }
 
     if (!foundedItem) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, у тебя нет такого предмета.`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, у тебя нет такого предмета.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItem, true)}`, {
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, ${getInventoryMessage(foundedItem, true)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -315,7 +315,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         let message;
 
         if (equipResult === 0) {
-            message = `@${getUserName(foundedSession, "nickname")}, ты надел предмет: ${foundedItem.name}!`;
+            message = `@${await getUserName(foundedSession, "nickname")}, ты надел предмет: ${foundedItem.name}!`;
         } else {
             return;
         }
@@ -339,7 +339,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }, callback.message.photo);
     }
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, ты использовал предмет: ${foundedItem.name}!`, {
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, ты использовал предмет: ${foundedItem.name}!`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -380,7 +380,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }, 10 * 1000);
     }
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, снаряжение снято: ${foundedItem.name}!`, {
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, снаряжение снято: ${foundedItem.name}!`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -429,7 +429,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }, 10 * 1000);
     }
 
-    await editMessageCaption(`@${getUserName(foundedSession, "nickname")}, снаряжение продано: ${foundedItem.name}! Получено золота: ${foundedItem.cost}. ${getEmoji("gold")} Твоё золото: ${foundedSession.game.inventory.gold}`, {
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, снаряжение продано: ${foundedItem.name}! Получено золота: ${foundedItem.cost}. ${getEmoji("gold")} Твоё золото: ${foundedSession.game.inventory.gold}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -450,15 +450,15 @@ async function sendHealMessage(result, callback, session, foundedItem, chatId) {
     let message = "";
 
     if (result === 0) {
-        message = `@${getUserName(session, "nickname")}, ты восстановил своё ${getEmoji("hp")} хп на ${foundedItem.power}.`;
+        message = `@${await getUserName(session, "nickname")}, ты восстановил своё ${getEmoji("hp")} хп на ${foundedItem.power}.`;
     }
 
     if (result === 1) {
-        message = `@${getUserName(session, "nickname")}, ты мёртв. Ты восстановишь ${getEmoji("hp")} хп после нового призыва босса.`;
+        message = `@${await getUserName(session, "nickname")}, ты мёртв. Ты восстановишь ${getEmoji("hp")} хп после нового призыва босса.`;
     }
 
     if (result === 2) {
-        message = `@${getUserName(session, "nickname")}, ты не ранен, нет нужды восстанавливать ${getEmoji("hp")} хп.`;
+        message = `@${await getUserName(session, "nickname")}, ты не ранен, нет нужды восстанавливать ${getEmoji("hp")} хп.`;
     }
 
     await editMessageCaption(message, {

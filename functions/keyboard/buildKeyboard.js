@@ -1,25 +1,45 @@
-import getMembers from '../getters/getMembers.js';
+import getMembers from "../getters/getMembers.js";
+import User from "../../db/models/User.js";
 
-export default function (chatId, name, includeHimself = true, callerId) {
+export default async function(chatId, name, includeHimself = true, callerId) {
+    const members = await getMembers(chatId);
+    if (!members || members.length === 0) {
+        return [];
+    }
+
+    const userIds = members.map(m => m.userId.toString());
+    const users = await User.find({ userId: { $in: userIds } });
+
     let buttons = [];
-    let tempArray = null;
-    let i = 0;
-    let members = getMembers(chatId);
-    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided);
+    let tempRow = [];
 
-    for (let member of filteredMembers) {
-        if (!includeHimself && member.userChatData.user.id === callerId) {
+    for (const member of members) {
+        const user = users.find(u => u.userId.toString() === member.userId.toString());
+        if (!user) {
             continue;
         }
 
-        if (i % 3 === 0) {
-            tempArray = [];
-            buttons.push(tempArray);
+        if (user.userChatData?.user?.is_bot || member.isHided) {
+            continue;
+        }
+        if (!includeHimself && user.userId.toString() === callerId.toString()) {
+            continue;
         }
 
-        tempArray.push({text: member.userChatData.user.first_name, callback_data: `${name}.${member.userChatData.user.id}`});
-        i++;
+        tempRow.push({
+            text: user.userChatData?.user?.first_name || "Без имени",
+            callback_data: `${name}.${user.userId}`
+        });
+
+        if (tempRow.length === 3) {
+            buttons.push(tempRow);
+            tempRow = [];
+        }
+    }
+
+    if (tempRow.length > 0) {
+        buttons.push(tempRow);
     }
 
     return buttons;
-};
+}

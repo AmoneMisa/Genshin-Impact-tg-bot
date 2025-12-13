@@ -33,7 +33,7 @@ async function bet(session, callback, calcFunc) {
 }
 
 async function updateMessage(session, callback) {
-    return editMessageText(`@${getUserName(session, "nickname")}, твоя ставка: ${session.game.darts.bet}`, {
+    return editMessageText(`@${await getUserName(session, "nickname")}, твоя ставка: ${session.game.darts.bet}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

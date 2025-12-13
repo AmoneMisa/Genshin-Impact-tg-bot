@@ -1,13 +1,12 @@
-export default function (titles) {
-    if (!titles || !titles.length) {
+/**
+ * Формирует строку со списком титулов
+ * @param {string[]} titles - массив титулов
+ * @returns {string}
+ */
+export default function formatTitles(titles) {
+    if (!Array.isArray(titles) || titles.length === 0) {
         return "В группе ещё нет ни одного титула. Чтобы получить титул используйте команду /title [название титула, введённое вручную]";
     }
 
-    let str = "";
-
-    for (let title of titles) {
-        str += `${title}\n`;
-    }
-
-    return str;
-};
+    return titles.join("\n");
+}

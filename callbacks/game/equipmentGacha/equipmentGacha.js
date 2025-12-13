@@ -18,7 +18,7 @@ export default [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, 
     let file = getFile(`images/gacha`, "choice");
     let foundSession = await getSession(chatId, callback.from.id);
 
-    await editMessageMedia(file, `@${getUserName(foundSession, "nickname")}, выбери спираль удачи`, {
+    await editMessageMedia(file, `@${await getUserName(foundSession, "nickname")}, выбери спираль удачи`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -58,21 +58,21 @@ export default [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, 
     let result = isCanBeRolled(foundSession, gachaType);
 
     if (result === 1) {
-        message = `@${getUserName(foundSession, "nickname")}, твой уровень слишком низкий. Текущий уровень: ${foundSession.game.stats.lvl}. Требуемый уровень: ${gacha.needLvl}`;
+        message = `@${await getUserName(foundSession, "nickname")}, твой уровень слишком низкий. Текущий уровень: ${foundSession.game.stats.lvl}. Требуемый уровень: ${gacha.needLvl}`;
     } else if (result === 2) {
-        message = `@${getUserName(foundSession, "nickname")}, недостаточно золота. Твоё золото: ${foundSession.game.inventory.gold}. Требуемое количество: ${gacha.spinCost.gold}`;
+        message = `@${await getUserName(foundSession, "nickname")}, недостаточно золота. Твоё золото: ${foundSession.game.inventory.gold}. Требуемое количество: ${gacha.spinCost.gold}`;
     } else if (result === 3) {
-        message = `@${getUserName(foundSession, "nickname")}, недостаточно кристаллов. Твои кристаллы: ${foundSession.game.inventory.crystals}. Требуемое количество: ${gacha.spinCost.crystals}`;
+        message = `@${await getUserName(foundSession, "nickname")}, недостаточно кристаллов. Твои кристаллы: ${foundSession.game.inventory.crystals}. Требуемое количество: ${gacha.spinCost.crystals}`;
     } else if (result === -2) {
-        message = `@${getUserName(foundSession, "nickname")}, бесплатные попытки! Количество: ${foundSession.game.gacha.find(item => item.name === gachaType).freeSpins}. (Обновляются каждый день)\n`;
+        message = `@${await getUserName(foundSession, "nickname")}, бесплатные попытки! Количество: ${foundSession.game.gacha.find(item => item.name === gachaType).freeSpins}. (Обновляются каждый день)\n`;
     } else if (result === -1) {
-        message = `@${getUserName(foundSession, "nickname")}, в первую очередь расходуются осколки. Твоё количество осколков: ${foundSession.game.gacha.find(item => item.name === gachaType).piecesForFleeCall}. Необходимое количество: ${gacha.piecesForFleeCall}\n`;
+        message = `@${await getUserName(foundSession, "nickname")}, в первую очередь расходуются осколки. Твоё количество осколков: ${foundSession.game.gacha.find(item => item.name === gachaType).piecesForFleeCall}. Необходимое количество: ${gacha.piecesForFleeCall}\n`;
     }  else if (result === 0) {
         for (let [costKey, costValue] of Object.entries(gacha.spinCost)) {
             costMessage += `${getEmoji(costKey)} ${inventory[costKey]} - ${costValue}\n`;
         }
 
-        message = `@${getUserName(foundSession, "nickname")}, ${gachaTemplate.find(item => item.name === gachaType).translatedName} - попытай свою удачу!\nСтоимость крутки: ${costMessage}`;
+        message = `@${await getUserName(foundSession, "nickname")}, ${gachaTemplate.find(item => item.name === gachaType).translatedName} - попытай свою удачу!\nСтоимость крутки: ${costMessage}`;
     } else {
         throw new Error("Что-то пошло не так при попытке проверить возможность крутить гачу.");
     }
@@ -139,7 +139,7 @@ export default [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, 
     let result = generateRandomEquipment(foundSession.game.stats.lvl, randomGrade);
     foundSession.game.gachaTempItem = result;
 
-    await editMessageCaption(`@${getUserName(foundSession, "nickname")}, твой выигрыш:\n${getItemString(result)}\nТы можешь оставить его или распылить на осколки для призыва.`, {
+    await editMessageCaption(`@${await getUserName(foundSession, "nickname")}, твой выигрыш:\n${getItemString(result)}\nТы можешь оставить его или распылить на осколки для призыва.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
@@ -156,7 +156,7 @@ export default [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, 
     let foundSession = await getSession(chatId, callback.from.id);
     addItemToUserInventory(foundSession, foundSession.game.gachaTempItem);
 
-    await editMessageCaption(`@${getUserName(foundSession, "nickname")}, предмет добавлен в инвентарь.`, {
+    await editMessageCaption(`@${await getUserName(foundSession, "nickname")}, предмет добавлен в инвентарь.`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
@@ -173,7 +173,7 @@ export default [[/^lucky_roll\.([\-0-9]+)$/, async function (session, callback, 
     let foundSession = await getSession(chatId, callback.from.id);
     let countItems = breakItemToSpins(foundSession.game.inventory, foundSession.game.gachaTempItem, gachaType);
 
-    await editMessageCaption(`@${getUserName(foundSession, "nickname")}, ты получил ${countItems} осколков для "${gachaTemplate.find(item => item.name === gachaType).translatedName}"!`, {
+    await editMessageCaption(`@${await getUserName(foundSession, "nickname")}, ты получил ${countItems} осколков для "${gachaTemplate.find(item => item.name === gachaType).translatedName}"!`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

@@ -1,26 +1,29 @@
-export default function (session, minGrade) {
-    let list = [];
-
-    if (!session.game.inventory) {
-        console.error(session.game);
-        throw new Error(`Error while try get inventory: ${session.userChatData.user.id}`);
+export default function getEquipmentByGrade(session, minGrade) {
+    if (!session?.game?.inventory?.equipment?.items) {
+        console.error("Инвентарь отсутствует:", session?.game);
+        return [];
     }
 
-    if (!session.game.inventory.equipment || !session.game.inventory.equipment.items.length) {
-        console.error(session.game.inventory);
-        throw new Error(`Error while try get equipment: ${session.userChatData.user.id}`);
+    const items = session.game.inventory.equipment.items;
+
+    if (!items.length) {
+        console.error("Нет предметов в инвентаре:", session.game.inventory);
+        return [];
     }
 
-    if (minGrade) {
-        list = session.game.inventory.equipment.items.filter((item) => getItemGradePower(item.grade) > getItemGradePower(minGrade));
-    } else {
-        list = session.game.inventory.equipment.items;
+    if (!minGrade) {
+        return items;
     }
 
-    return list;
+    return items.filter(item => getItemGradePower(item.grade) > getItemGradePower(minGrade));
 }
 
 function getItemGradePower(grade) {
     const allGrades = ["noGrade", "D", "C", "B", "A", "S", "SS", "SSS"];
-    return allGrades.indexOf(grade)
+    const index = allGrades.indexOf(grade);
+    if (index === -1) {
+        console.warn(`Неизвестный грейд: ${grade}`);
+        return 0; // считаем как самый низкий
+    }
+    return index;
 }

@@ -1,34 +1,27 @@
-import unequipItem from './unequipItem.js';
-import equipmentTemplate from '../../../template/equipmentTemplate.js';
+import unequipItem from "./unequipItem.js";
+import equipmentTemplate from "../../../template/equipmentTemplate.js";
 
-export default function (session, item) {
+export default function equipItem(session, item) {
     if (item.isUsed) {
-        return 1;
+        return 1; // предмет уже экипирован
     }
 
-    let isFirst = true;
-    let equipTemplateGrade = equipmentTemplate.grades.find(grade => grade.name === item.grade);
+    const equipTemplateGrade = equipmentTemplate.grades.find(
+        grade => grade.name === item.grade
+    );
+
+    // снимаем предыдущую экипировку
     unequipItem(session, item);
 
-    for (let slot of item.slots) {
-        if (!isFirst) {
-            session.game.equipmentStats[slot] = {
-                ...item,
-                minLvl: equipTemplateGrade.lvl.from,
-                isFilled: true
-            }
-        }
-
+    // записываем предмет во все слоты
+    for (const slot of item.slots) {
         session.game.equipmentStats[slot] = {
             ...item,
             minLvl: equipTemplateGrade.lvl.from,
             isFilled: true
-        }
-
-        isFirst = false;
+        };
     }
 
     item.isUsed = true;
-
     return 0;
 }

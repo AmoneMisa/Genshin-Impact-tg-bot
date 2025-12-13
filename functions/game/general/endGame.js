@@ -1,37 +1,48 @@
-import pointsBotThink from '../point21/botThink.js';
-import findWinners from './findWinners.js';
-import endGameMessage from './endGameMessage.js';
-import setEndGameTimer from './setEndGameTimer.js';
+import Chat from "../../../db/models/Chat.js";
+import pointsBotThink from "../point21/botThink.js";
+import findWinners from "./findWinners.js";
+import endGameMessage from "./endGameMessage.js";
+import setEndGameTimer from "./setEndGameTimer.js";
 
-export default function (chatSession, chatId, messageId, isDefault = true, gameName) {
-    if (!chatSession.game[gameName]) {
-        return;
-    }
+export default async function(chatId, messageId, isDefault = true, gameName) {
+    const chat = await Chat.findOne({ chatId });
+    if (!chat || !chat.game[gameName]) return;
 
-    let winners;
+    const game = chat.game[gameName];
 
+    // Логика для игры "points"
     if (gameName === "points") {
-        pointsBotThink(chatSession);
+        pointsBotThink(chat);
     }
 
-    winners = findWinners(chatSession, gameName);
+    const winners = findWinners(chat, gameName);
 
-    chatSession.game[gameName].isStart = false;
-    chatSession.game[gameName].gameSessionIsStart = false;
-    chatSession.game[gameName].players = {};
-    chatSession.game[gameName].usedItems = [];
+    // Сброс состояния игры
+    game.isStart = false;
+    game.gameSessionIsStart = false;
+    game.players = {};
+    game.usedItems = [];
 
+    // Дополнительный сброс для "elements"
     if (gameName === "elements") {
-        chatSession.game.elements.currentRound = 1;
-        chatSession.game.elements.countPresses = 0;
+        chat.game.elements.currentRound = 1;
+        chat.game.elements.countPresses = 0;
+
+        if (chat.game.elements.startGameTimeout) {
+            clearTimeout(chat.game.elements.startGameTimeout);
+            chat.game.elements.startGameTimeout = null;
+        }
+        if (chat.game.elements.startBetTimeout) {
+            clearTimeout(chat.game.elements.startBetTimeout);
+            chat.game.elements.startBetTimeout = null;
+        }
     }
 
+    // Сообщение о завершении
     endGameMessage(winners, chatId, messageId, isDefault, gameName);
 
-    clearTimeout(chatSession.game.elements.startGameTimeout);
-    chatSession.game[gameName].startGameTimeout = null;
-    clearTimeout(chatSession.game.elements.startBetTimeout);
-    chatSession.game[gameName].startBetTimeout = null;
+    // Таймер окончания
+    setEndGameTimer(chat, 0, chatId, gameName, null);
 
-    setEndGameTimer(chatSession, 0, chatId, gameName, null);
-};
+    await chat.save();
+}

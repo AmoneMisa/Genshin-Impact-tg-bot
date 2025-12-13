@@ -271,7 +271,7 @@ export default [["boss", async function (session, callback) {
     let message = `Текущее хп босса: ${aliveBoss.currentHp}\n\nСписок урона по боссу:\n`;
     let members = getMembers(chatId);
     for (let player of players) {
-        message += `${getUserName(members[player.id], "nickname")}: ${player.damage}\n`;
+        message += `${await getUserName(members[player.id], "nickname")}: ${player.damage}\n`;
     }
 
     await editMessageCaption(message, {

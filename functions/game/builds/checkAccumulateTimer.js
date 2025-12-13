@@ -7,7 +7,7 @@ import debugMessage from "../../tgBotFunctions/debugMessage.js";
 import getSession from "../../getters/getSession.js";
 
 let i = 0;
-export default async function () {
+export default async function() {
     for (let chatId of Object.keys(sessions)) {
         for (let userId of Object.keys(getMembers(chatId))) {
             let session;

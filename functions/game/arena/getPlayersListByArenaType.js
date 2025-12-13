@@ -1,39 +1,46 @@
-import getSession from '../../getters/getSession.js';
-import getUserName from '../../getters/getUserName.js';
-import updateRank from './updateRank.js';
-import {arenaRating, sessions} from '../../../data.js';
+import ArenaRating from "../../../db/models/ArenaRating.js";
+import getSession from "../../getters/getSession.js";
+import getUserName from "../../getters/getUserName.js";
+import updateRank from "./updateRank.js";
 
 const pageSize = 25;
 
-export default async function (arenaType, page = 1, chatId) {
+/**
+ * Формирует таблицу рейтинга арены
+ * @param {String} arenaType - "common" или "expansion"
+ * @param {Number} page - номер страницы
+ * @param {Number} chatId - ID чата (для common)
+ */
+export default async function(arenaType, page = 1, chatId) {
     let message = "";
-    let sortedRating;
     let counter = page === 1 ? 1 : pageSize * page;
 
+    // 1. Получаем список рейтингов из базы
+    let ratings;
     if (arenaType === "common") {
-        sortedRating = Array.from(Object.entries(arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        ratings = await ArenaRating.find({ chatId, mode: "common" });
     } else {
-        sortedRating = Array.from(Object.entries(arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        ratings = await ArenaRating.find({ mode: "expansion" });
     }
 
-    let requestedRating = sortedRating.slice(page === 1 ? 0 : page + pageSize, pageSize * page);
+    // 2. Сортируем по рейтингу
+    let sortedRating = ratings
+        .map(r => [r.userId, r.rating, r.chatId])
+        .sort((a, b) => b[1] - a[1]);
 
-    for (let [userId, rating] of requestedRating) {
-        let session;
+    // 3. Делаем постраничный вывод
+    let start = page === 1 ? 0 : (page - 1) * pageSize;
+    let end = page * pageSize;
+    let requestedRating = sortedRating.slice(start, end);
 
-        if (arenaType === "expansion") {
-            let sessionsArray = Object.entries(sessions);
+    // 4. Формируем сообщение
+    for (let [userId, rating, userChatId] of requestedRating) {
+        // для expansion берём chatId из записи
+        const session = await getSession(arenaType === "expansion" ? userChatId : chatId, userId);
+        const name = await getUserName(userId, "name");
+        const rank = await updateRank(userId, arenaType, chatId);
 
-            for (let [_chatId, chatSession] of sessionsArray) {
-                if (chatSession.members[userId]) {
-                    session = await getSession(_chatId, userId);
-                    break;
-                }
-            }
-        }
-
-        session = await getSession(chatId, userId);
-        message += `${counter}. ${getUserName(session, "name")} (Рейтинг ${rating} | Ранг: ${updateRank(userId, arenaType, chatId)})\n`;
+        message += `${counter}. ${name} (Рейтинг ${rating} | Ранг: ${rank})\n`;
         counter++;
     }
 

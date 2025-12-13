@@ -1,15 +1,32 @@
-import calculateRemainBuildTime from './calculateRemainBuildTime.js';
-import upgradeBuild from './upgradeBuild.js';
-import sendMessage from '../../tgBotFunctions/sendMessage.js';
-import getUserName from '../../getters/getUserName.js';
-import buildsTemplate from '../../../template/buildsTemplate.js';
+import calculateRemainBuildTime from "./calculateRemainBuildTime.js";
+import upgradeBuild from "./upgradeBuild.js";
+import sendMessage from "../../tgBotFunctions/sendMessage.js";
+import getUserName from "../../getters/getUserName.js";
+import buildsTemplate from "../../../template/buildsTemplate.js";
 
-export default function (buildName, build, chatId, session, userId) {
-    let remain = calculateRemainBuildTime(buildName, build);
-    let buildTemplate = buildsTemplate[buildName];
-    build.upgradeTimerId = +setTimeout(() => {
+/**
+ * Запускает таймер апгрейда постройки
+ * @param {string} buildName - название постройки
+ * @param {Object} build - объект постройки
+ * @param {string} chatId - идентификатор чата
+ * @param {Object} member - объект игрока (из Chat.members)
+ */
+export default function startUpgradeTimer(buildName, build, chatId, member) {
+    const remain = calculateRemainBuildTime(buildName, build);
+    const buildTemplate = buildsTemplate[buildName];
+    if (!buildTemplate) {
+        throw new Error(`Неизвестная постройка: ${buildName}`);
+    }
+
+    build.upgradeTimerId = setTimeout(() => {
         upgradeBuild(build);
         build.upgradeTimerId = null;
-        return sendMessage(userId, `@${getUserName(session, "nickname")}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
+
+        const username = getUserName(member, "nickname") || member.userId;
+        sendMessage(
+            chatId,
+            `@${username}, твоё здание "${buildTemplate.name}" успешно построено!`,
+            {}
+        );
     }, remain);
 }

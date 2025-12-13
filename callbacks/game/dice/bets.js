@@ -4,7 +4,7 @@ import getUserName from '../../../functions/getters/getUserName.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
 
 async function bet(session, callback, calcFunc) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
@@ -33,7 +33,7 @@ async function bet(session, callback, calcFunc) {
 }
 
 async function updateMessage(session, callback) {
-    return editMessageText(`@${getUserName(session, "nickname")}, твоя ставка: ${session.game.dice.bet}`, {
+    return editMessageText(`@${await getUserName(session, "nickname")}, твоя ставка: ${session.game.dice.bet}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

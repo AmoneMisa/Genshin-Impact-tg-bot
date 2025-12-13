@@ -11,7 +11,7 @@ export default [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async functio
     let targetSession = await getSession(chatId, userId);
     updatePlayerStats(targetSession);
 
-    sendMessage(callback.message.chat.id, `Ты пересчитал характеристики для ${getUserName(targetSession, "name")}. Пожалуйста, проверьте их через /whoami`, {
+    sendMessage(callback.message.chat.id, `Ты пересчитал характеристики для ${await getUserName(targetSession, "name")}. Пожалуйста, проверьте их через /whoami`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true
     }).catch(e => {

@@ -1,42 +1,51 @@
-import {arenaRating} from '../../../data.js';
+import ArenaRating from "../../../db/models/ArenaRating.js";
 
-export default function (userId, arenaType, chatId, arenaBot) {
+/**
+ * Получает рейтинг игрока и его процентиль в арене
+ * @param {Number} userId - ID игрока
+ * @param {String} arenaType - "common" или "expansion"
+ * @param {Number} chatId - ID чата
+ * @param {Object} arenaBot - если это бот арены, то берём его рейтинг напрямую
+ * @returns [playerRating, percentileRating]
+ */
+export default async function(userId, arenaType, chatId, arenaBot) {
     if (arenaBot) {
         return arenaBot.rating;
     }
 
-    let sortedRating;
+    // 1. Проверяем наличие записи
+    let ratingDoc = await ArenaRating.findOne({ userId, chatId, mode: arenaType });
 
-    if (!arenaRating["common"].hasOwnProperty(chatId) && !arenaRating["common"][chatId]) {
-        arenaRating.common[chatId] = {};
+    if (!ratingDoc) {
+        ratingDoc = await ArenaRating.create({
+            userId,
+            chatId,
+            mode: arenaType,
+            rating: 1000
+        });
     }
 
-    if (!arenaRating["common"][chatId].hasOwnProperty(userId) && !arenaRating["common"][chatId][userId]) {
-        arenaRating.common[chatId][userId] = 1000;
-    }
-
-    if (!arenaRating.hasOwnProperty("expansion")) {
-        arenaRating["expansion"] = {};
-    }
-
-    if (!arenaRating["expansion"].hasOwnProperty(userId) && !arenaRating["expansion"][userId]) {
-        arenaRating["expansion"][userId] = 1000;
-    }
-
+    // 2. Получаем все рейтинги для сортировки
+    let ratings;
     if (arenaType === "common") {
-        sortedRating = Array.from(Object.entries(arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        ratings = await ArenaRating.find({ chatId, mode: "common" });
     } else {
-        sortedRating = Array.from(Object.entries(arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
+        ratings = await ArenaRating.find({ mode: "expansion" });
     }
 
-    let playerIndex = sortedRating.findIndex(([playerId, rating]) => parseInt(playerId) === parseInt(userId));
+    // 3. Сортируем по рейтингу
+    const sortedRating = ratings
+        .map(r => [r.userId, r.rating])
+        .sort((a, b) => b[1] - a[1]);
 
+    // 4. Находим индекс игрока
+    const playerIndex = sortedRating.findIndex(([id]) => parseInt(id) === parseInt(userId));
     if (playerIndex === -1) {
         throw new Error("Игрок не найден");
     }
 
-    let playerRating = sortedRating[playerIndex][1];
-    let percentileRating = playerIndex / sortedRating.length;
+    const playerRating = sortedRating[playerIndex][1];
+    const percentileRating = playerIndex / sortedRating.length;
 
     return [playerRating, percentileRating];
 }
