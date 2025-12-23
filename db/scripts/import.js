@@ -52,83 +52,89 @@ import importCommandMap from "./commandMapImport.js";
 
 // 5. Импорт пользователей и чатов
 async function importSessions() {
-    await User.deleteMany({});
-    await Chat.deleteMany({});
-    await ChatSettings.deleteMany({});
+
 
     for (const [chatId, session] of Object.entries(sessions)) {
         const members = [];
 
         for (const [memberId, memberData] of Object.entries(session.members)) {
             // --- USERS ---
-            await User.updateOne(
-                {userId: Number(memberId)},
-                {
-                    $set: {
-                        userId: Number(memberId),
-                        nickName: memberData.user.nickName,
-                        name: memberData.user.name,
-                        age: memberData.user.age,
-                        gender: memberData.gender,
-                        userChatData: memberData.userChatData,
+            if (!(await isTemplateCollectionImported(User.collection.name))) {
+                await User.updateOne(
+                    {userId: Number(memberId)},
+                    {
+                        $set: {
+                            userId: Number(memberId),
+                            nickName: memberData.user.nickName,
+                            name: memberData.user.name,
+                            age: memberData.user.age,
+                            gender: memberData.gender,
+                            userChatData: memberData.userChatData,
+                        },
                     },
-                },
-                {upsert: true}
-            );
+                    {upsert: true}
+                );
+                console.log(`✅ Imported ${User.collection.name}`);
+            }
 
             // --- CHATS.members ---
-            members.push({
-                userId: Number(memberId),
-                isHided: memberData.isHided,
-                stats: memberData.game?.stats || {},
-                gameClass: memberData.game?.gameClass || {},
-                builds: memberData.game?.builds || {},
-                inventory: memberData.game?.inventory || {},
-                arenaChances: memberData.game?.arenaChances,
-                arenaExpansionChances: memberData.game?.arenaExpansionChances,
-            });
+            if (!(await isTemplateCollectionImported(Chat.collection.name))) {
+                members.push({
+                    userId: Number(memberId),
+                    isHided: memberData.isHided,
+                    stats: memberData.game?.stats || {},
+                    gameClass: memberData.game?.gameClass || {},
+                    builds: memberData.game?.builds || {},
+                    inventory: memberData.game?.inventory || {},
+                    arenaChances: memberData.game?.arenaChances,
+                    arenaExpansionChances: memberData.game?.arenaExpansionChances,
+                });
+                console.log(`✅ Imported ${Chat.collection.name}`);
+
+                // --- CHATS ---
+                await Chat.updateOne(
+                    {chatId: Number(chatId)},
+                    {
+                        $set: {
+                            chatId: Number(chatId),
+                            bossSettings: session.bossSettings,
+                            game: session.game,
+                            members: members,
+                        },
+                    },
+                    {upsert: true}
+                );
+            }
         }
 
-        // --- CHATS ---
-        await Chat.updateOne(
-            {chatId: Number(chatId)},
-            {
-                $set: {
-                    chatId: Number(chatId),
-                    bossSettings: session.bossSettings,
-                    game: session.game,
-                    members: members,
-                },
-            },
-            {upsert: true}
-        );
-
         // --- CHAT SETTINGS ---
-        const settingsTemplate = {
-            dice: 1, chests: 1, boss: 1, form: 1, sendGold: 1, points: 1, elements: 1,
-            bowling: 1, football: 1, basketball: 1, darts: 1, slots: 1, swords: 1,
-            titles: 1, whoami: 1, mute: 1, horoscope: 1, bonus: 1
-        };
+        if (!(await isTemplateCollectionImported(ChatSettings.collection.name))) {
+            const settingsTemplate = {
+                dice: 1, chests: 1, boss: 1, form: 1, sendGold: 1, points: 1, elements: 1,
+                bowling: 1, football: 1, basketball: 1, darts: 1, slots: 1, swords: 1,
+                titles: 1, whoami: 1, mute: 1, horoscope: 1, bonus: 1
+            };
 
-        await ChatSettings.updateOne(
-            {chatId: Number(chatId)},
-            {$set: {chatId: Number(chatId), settings: {...settingsTemplate, ...session.settings}}},
-            {upsert: true}
-        );
+            await ChatSettings.updateOne(
+                {chatId: Number(chatId)},
+                {$set: {chatId: Number(chatId), settings: {...settingsTemplate, ...session.settings}}},
+                {upsert: true}
+            );
+            console.log(`✅ Imported ${ChatSettings.collection.name}`);
+        }
     }
-
-    console.log("✅ Sessions, Users, Chats, ChatSettings imported");
 }
 
 // 6. Импорт боссов
 async function importBosses() {
-    await Boss.deleteMany({});
-    for (const [chatId, bossList] of Object.entries(bosses)) {
-        for (const boss of bossList) {
-            await Boss.insertOne({chatId: Number(chatId), ...boss});
+    if (!(await isTemplateCollectionImported(Boss.collection.name))) {
+        for (const [chatId, bossList] of Object.entries(bosses)) {
+            for (const boss of bossList) {
+                await Boss.insertOne({chatId: Number(chatId), ...boss});
+            }
         }
+        console.log(`✅ Imported ${Boss.collection.name}`);
     }
-    console.log("✅ Bosses imported");
 }
 
 // 7. Импорт классов, арены и игровых систем
@@ -256,6 +262,6 @@ async function isCollectionNotEmpty(name) {
     return count > 0;
 }
 
-async function isTemplateCollectionImported(name) {
+export async function isTemplateCollectionImported(name) {
     return await isCollectionExists(name) && await isCollectionNotEmpty(name);
 }

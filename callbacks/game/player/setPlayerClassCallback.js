@@ -20,7 +20,7 @@ function getOffset() {
 }
 
 export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function (session, callback, [, chatId]) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return;
     }
 
@@ -86,7 +86,7 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
 
     }
 }], [/^player\.([\-0-9]+)\.changeClass\.([^.]+)$/, async function (session, callback, [, userId, _class]) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return;
     }
 

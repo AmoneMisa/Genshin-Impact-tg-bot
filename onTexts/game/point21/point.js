@@ -20,7 +20,6 @@ export default [[/(?:^|\s)\/point\b/, async (msg, session) => {
     const members = await getMembers(msg.chat.id);
     const userId = session.userId;
 
-    console.log(chatSession)
     if (chatSession.game.points?.gameSessionIsStart) {
         if (Date.now() - chatSession.game.points.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
             return sendMessageWithDelete(
@@ -61,7 +60,7 @@ export default [[/(?:^|\s)\/point\b/, async (msg, session) => {
 
     const message = await sendMessage(
         msg.chat.id,
-        gameStatusMessage(chatSession, members, "points"),
+        await gameStatusMessage(chatSession, members, "points"),
         {
             ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
             disable_notification: true,

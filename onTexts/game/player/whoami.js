@@ -14,7 +14,7 @@ export default [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
 
     if (file) {
         return sendPhoto(msg.from.id, file, {
-            caption: `${userGetStats(session)}`,
+            caption: `${await userGetStats(session)}`,
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
@@ -39,7 +39,7 @@ export default [[/(?:^|\s)\/whoami\b/, async (msg, session) => {
             }
         });
     } else {
-        await sendMessage(msg.from.id, `${userGetStats(session)}`, {
+        await sendMessage(msg.from.id, `${await userGetStats(session)}`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{

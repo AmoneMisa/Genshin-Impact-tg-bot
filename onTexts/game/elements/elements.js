@@ -59,7 +59,7 @@ export default [[/(?:^|\s)\/elements\b/, async (msg, session) => {
 
     const message = await sendMessage(
         msg.chat.id,
-        gameStatusMessage(chatSession, members, "elements"),
+        await gameStatusMessage(chatSession, members, "elements"),
         {
             ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
             disable_notification: true,

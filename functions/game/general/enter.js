@@ -40,9 +40,9 @@ export default async function(callback, gameName) {
     chat.game[gameName].players = players;
     await chat.save();
 
-    const members = getMembers(chatId);
+    const members = await getMembers(chatId);
 
-    return editMessageText(`${gameStatusMessage(chat, members, gameName)}`, {
+    return editMessageText(`${await gameStatusMessage(chat, members, gameName)}`, {
         ...(callback.message.message_thread_id
             ? { message_thread_id: callback.message.message_thread_id }
             : {}),

@@ -5,8 +5,8 @@ import {generateShortHoroText, kbMain} from "../../../functions/game/horoscope/h
 export default [[/(?:^|\s)\/horoscope\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-
     const text = await generateShortHoroText(session);
+    console.log(text)
     return sendMessage(msg.chat.id, text, {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
         disable_notification: true,

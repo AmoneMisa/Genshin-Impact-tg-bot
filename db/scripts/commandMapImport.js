@@ -1,4 +1,5 @@
 import CommandMap from "../models/CommandMap.js";
+import {isTemplateCollectionImported} from "./import.js";
 
 const commandMap = {
     "boss": "boss",
@@ -37,13 +38,14 @@ const supergroupCommands = [
 ];
 
 export default async function importCommandMap() {
-    await CommandMap.deleteMany({});
-    const docs = Object.entries(commandMap).map(([command, settingKey]) => ({
-        command,
-        settingKey,
-        module: settingKey,
-        isSupergroupCommand: supergroupCommands.includes(command)
-    }));
-    await CommandMap.insertMany(docs);
-    console.log("✅ CommandMap imported with supergroup flags");
+    if (!(await isTemplateCollectionImported(CommandMap.collection.name))) {
+        const docs = Object.entries(commandMap).map(([command, settingKey]) => ({
+            command,
+            settingKey,
+            module: settingKey,
+            isSupergroupCommand: supergroupCommands.includes(command)
+        }));
+        await CommandMap.insertMany(docs);
+        console.log(`✅ Imported ${CommandMap.collection.name}`);
+    }
 }

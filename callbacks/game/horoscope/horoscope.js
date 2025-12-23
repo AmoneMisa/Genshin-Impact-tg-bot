@@ -7,6 +7,7 @@ import {
     kbSign,
     kbStyle
 } from "../../../functions/game/horoscope/horoscope.js";
+import getChatSession from "../../../functions/getters/getChatSession.js";
 
 export default [[/^horo\.menu\.sign$/, async (session, callback) => {
     const chatId = callback.message.chat.id;
@@ -32,14 +33,17 @@ export default [[/^horo\.menu\.sign$/, async (session, callback) => {
     });
 }], [/^horo\.set\.sign\.[^.]+$/, async (session, callback) => {
     const [, code] = callback.data.match(/^horo\.set\.sign\.([^.]+)$/) || [];
-    if (code) session.horoscope.sign = code;
+    if (code) {
+        session.horoscope.sign = code;
+    }
 
     const chatId = callback.message.chat.id;
+    const chat = await getChatSession(chatId);
     const msgId = callback.message.message_id;
     const text = await generateShortHoroText(session);
 
-    await deleteMessage(chatId, msgId).catch(() => {
-    });
+    await deleteMessage(chatId, msgId);
+    await chat.save();
     return sendMessage(chatId, text, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
@@ -50,11 +54,12 @@ export default [[/^horo\.menu\.sign$/, async (session, callback) => {
     if (key) session.horoscope.style = key;
 
     const chatId = callback.message.chat.id;
+    const chat = await getChatSession(chatId);
     const msgId = callback.message.message_id;
     const text = await generateShortHoroText(session);
 
-    await deleteMessage(chatId, msgId).catch(() => {
-    });
+    await deleteMessage(chatId, msgId);
+    await chat.save();
     return sendMessage(chatId, text, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
@@ -65,10 +70,11 @@ export default [[/^horo\.menu\.sign$/, async (session, callback) => {
     const style = getStyleByKey(session.horoscope.style);
 
     const chatId = callback.message.chat.id;
+    const chat = await getChatSession(chatId);
     const msgId = callback.message.message_id;
 
-    await deleteMessage(chatId, msgId).catch(() => {
-    });
+    await deleteMessage(chatId, msgId);
+    await chat.save();
     return sendMessage(chatId,
         `Сохранил настройки:\n• Знак: ${sign.icon} ${sign.name}\n• Характер ответа: ${style.label}`,
         {
@@ -89,11 +95,12 @@ export default [[/^horo\.menu\.sign$/, async (session, callback) => {
     session.horoscope = {sign: 'aries', style: 'cheeky'};
 
     const chatId = callback.message.chat.id;
+    const chat = await getChatSession(chatId);
     const msgId = callback.message.message_id;
     const text = await generateShortHoroText(session);
 
-    await deleteMessage(chatId, msgId).catch(() => {
-    });
+    await deleteMessage(chatId, msgId);
+    await chat.save();
     return sendMessage(chatId, `Сброс настроек.\n\n${text}`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
@@ -104,8 +111,7 @@ export default [[/^horo\.menu\.sign$/, async (session, callback) => {
     const msgId = callback.message.message_id;
     const text = await generateShortHoroText(session);
 
-    await deleteMessage(chatId, msgId).catch(() => {
-    });
+    await deleteMessage(chatId, msgId);
     return sendMessage(chatId, text, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
