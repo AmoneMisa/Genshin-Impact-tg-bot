@@ -9,12 +9,15 @@ export default function (session, potion) {
         return 1;
     }
 
-    if (getCurrentHp(session, session.game.gameClass) === getMaxHp(session, session.game.gameClass)) {
+    const currentHp = getCurrentHp(session, session.game.gameClass);
+    const maxHp = getMaxHp(session, session.game.gameClass);
+    if (currentHp >= maxHp) {
         return 2;
     }
 
     potion.count--;
-    session.game.gameClass.stats.hp = Math.min(potion.power * getEquipStatByName(session, "healPowerPotionsMul", true), getMaxHp(session, session.game.gameClass));
+    const heal = potion.power * getEquipStatByName(session, "healPowerPotionsMul", true);
+    session.game.gameClass.stats.hp = Math.min(currentHp + heal, maxHp);
     session.game.inventory.potions.items.find(_potion => _potion.bottleType === potion.bottleType && _potion.name === potion.name && _potion.power === potion.power).count = potion.count;
     return 0;
 };
