@@ -40,6 +40,7 @@ jobs:
           node --check miniapp/arena.js
           node --check miniapp/boss.js
           node --check miniapp/shop.js
+          node --check miniapp/sword.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
@@ -51,6 +52,8 @@ jobs:
           node --check functions/game/arena/calculatePoints.js
           node --check functions/game/arena/getPvpSign.js
           node --check functions/game/arena/generateArenaBot.js
+          node --check functions/game/sword/swordCore.js
+          node --check functions/game/sword/swordResult.js
           node --check functions/shedullers/bossWin.js
           node --check callbacks/game/shop/shop.js
           node --check webapp/app.js
@@ -61,4 +64,5 @@ jobs:
           node --check webapp/arena.js
           node --check webapp/boss.js
           node --check webapp/shop.js
+          node --check webapp/sword.js
           node --check webapp/renderer.js
