@@ -1,6 +1,7 @@
 import { startWebGL } from './renderer.js';
 import { openChestGame } from './chest.js';
 import { openGachaGame } from './gacha.js';
+import { openEquipmentGame } from './equipment.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -96,6 +97,22 @@ function render(state) {
         } catch (error) {
           console.error(error);
           status.textContent = `Гача: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'equipment' && feature.status === 'webgl') {
+        try {
+          await openEquipmentGame({
+            api,
+            renderState: render,
+            haptic,
+            statusElement: status,
+          });
+          status.textContent = 'Снаряжение работает через Mini App и сохраняется в Mongo.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Снаряжение: ${error.message}`;
         }
         return;
       }
