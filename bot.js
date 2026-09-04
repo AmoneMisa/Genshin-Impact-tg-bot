@@ -1,6 +1,7 @@
 import { token } from './config.js';
-import TelegramBot from 'node-telegram-bot-api';
+import LegacyTelegramBotAdapter from './telegram/legacyBotAdapter.js';
 
-// Polling is started explicitly from index.js after Mongo has connected and
-// every handler has been registered. This prevents updates from racing startup.
-export default new TelegramBot(token, {polling: false});
+// node-telegram-bot-api v2 has a new Bot/Context API. The adapter keeps the
+// existing game handlers working while all transport calls go through v2.1.
+// Polling still starts explicitly from index.js after Mongo is ready.
+export default new LegacyTelegramBotAdapter(token);
