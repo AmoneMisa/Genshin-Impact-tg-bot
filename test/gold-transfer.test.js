@@ -59,3 +59,19 @@ test('gold transfer rejects hidden or missing recipients', () => {
     missing.members.pop();
     assert.equal(transferGoldInChat(missing, 1, 2, 10).reason, 'recipient_not_found');
 });
+
+test('gold transfer rejects bots and members who left the chat', () => {
+    const botRecipient = chat();
+    botRecipient.members[1].userChatData = {
+        status: 'member',
+        user: { is_bot: true },
+    };
+    assert.equal(transferGoldInChat(botRecipient, 1, 2, 10).reason, 'recipient_not_found');
+
+    const leftRecipient = chat();
+    leftRecipient.members[1].userChatData = {
+        status: 'left',
+        user: { is_bot: false },
+    };
+    assert.equal(transferGoldInChat(leftRecipient, 1, 2, 10).reason, 'recipient_not_found');
+});
