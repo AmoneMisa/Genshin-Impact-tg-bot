@@ -29,11 +29,13 @@ export default async function() {
 
             try {
                 for (let [buildName, build] of Object.entries(builds)) {
-                    let buildTemplate = buildsTemplate[buildName];
+                    const buildTemplate = buildsTemplate[buildName];
+                    if (!buildTemplate) {
+                        continue;
+                    }
 
-                    // Завершаем улучшение, если время вышло (заменяет volatile setTimeout,
-                    // который не переживал перезапуск процесса). Проверяется для всех
-                    // построек, включая palace.
+                    // Завершаем улучшение по persisted timestamp. Это переживает
+                    // перезапуск процесса и не зависит от volatile setTimeout.
                     if (build.upgradeStartedAt) {
                         let remain;
                         try {
@@ -48,22 +50,28 @@ export default async function() {
                             build.upgradeTimerId = null;
                             updated = true;
 
-                            const username = getUserName(member, "nickname") || member.userId;
+                            const username = await getUserName(member, "nickname") || member.userId;
                             sendMessage(chat.chatId, `@${username}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
                         }
 
-                        continue; // ещё строится (или только что достроилось) — без накопления в этот тик
-                    }
-
-                    if (buildName === "palace") {
                         continue;
                     }
 
-                    let currentTime = new Date().getTime();
-                    let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
+                    if (buildName === "palace" || !Number.isFinite(Number(buildTemplate.productionPerHour))) {
+                        continue;
+                    }
 
-                    //если последний сбор был более maxWorkHoursWithoutCollection, то НЕ накапливаем ресурсы
-                    if (build.lastCollectAt && (build.lastCollectAt + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
+                    if (!Number.isFinite(Number(build.resourceCollected))) {
+                        build.resourceCollected = 0;
+                        updated = true;
+                    }
+
+                    const currentTime = Date.now();
+                    const maxWorkHoursWithoutCollection = Number(buildTemplate.maxWorkHoursWithoutCollection);
+
+                    // Если автономный лимит уже исчерпан, новые ресурсы не добавляем.
+                    if (build.lastCollectAt && Number.isFinite(maxWorkHoursWithoutCollection)
+                        && (Number(build.lastCollectAt) + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
                         continue;
                     }
 
@@ -71,10 +79,11 @@ export default async function() {
                         build.lastCollectAt = currentTime;
                     }
 
-                    if (build.currentLvl === 1) {
-                        build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
+                    if (Number(build.currentLvl) === 1) {
+                        build.resourceCollected += Math.ceil(Number(buildTemplate.productionPerHour));
                     } else {
-                        build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
+                        build.resourceCollected += Math.ceil(Number(buildTemplate.productionPerHour)
+                            * calculateIncreaseInResourceExtraction(buildName, Number(build.currentLvl)));
                     }
 
                     updated = true;
