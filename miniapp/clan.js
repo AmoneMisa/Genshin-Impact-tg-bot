@@ -4,6 +4,7 @@ import getClan from '../functions/game/clans/getClan.js';
 import getUserName from '../functions/getters/getUserName.js';
 import addClanXp from '../functions/game/clans/addClanXp.js';
 import clanQuiz from '../dictionaries/clanQuiz.js';
+import { getClanActivitiesState } from './clanActivities.js';
 
 const RESOURCES = new Set(['gold', 'crystals', 'ironOre']);
 const XP_PER_CONTRIBUTION = 10;
@@ -67,19 +68,10 @@ async function clanDto(clan, userId) {
     members: await Promise.all((clan.members || []).map(memberDto)),
     entryType: number(clan.entryConditions?.entryType),
     applications: Array.isArray(clan.applications) ? clan.applications.map(String) : [],
-    activities: {
-      quiz: true,
-      boss: Boolean(clan.boss),
-      shop: true,
-      upgrades: true,
-      pvp: true,
-      buildings: true,
-      war: true,
-    },
   };
 }
 
-export async function getClanDashboard(userId) {
+export async function getClanDashboard(userId, playerSession = null) {
   const clan = await getClan(userId);
   if (clan) {
     const quizPrepared = prepareClanQuiz(clan);
@@ -88,6 +80,7 @@ export async function getClanDashboard(userId) {
       clan: await clanDto(clan, userId),
       available: [],
       quiz: getClanQuizState(clan, userId),
+      activities: await getClanActivitiesState(clan, userId, playerSession),
     };
   }
 
@@ -105,6 +98,7 @@ export async function getClanDashboard(userId) {
       entryType: number(item.entryConditions?.entryType),
     })),
     quiz: null,
+    activities: null,
   };
 }
 
