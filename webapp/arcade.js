@@ -4,6 +4,7 @@ const REASONS = {
   already_started: 'Эта игра уже запущена.',
   not_started: 'Сначала запусти игру.',
   finished: 'Раунд уже завершён.',
+  reset_not_supported: 'Этот тип игры нельзя сбросить после списания ставки.',
 };
 
 function formatNumber(value) {
@@ -133,6 +134,9 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
       <button type="button" class="arcade-primary roll" data-arcade-roll>
         <span class="arcade-roll-icon">${game.icon}</span>
         <div><strong>Бросить</strong><small>Осталось: ${game.rollsLeft} · RNG выполняется на сервере</small></div>
+      </button>
+      <button type="button" class="arcade-secondary danger" data-arcade-reset>
+        <span>↺</span><div><strong>Сбросить сессию</strong><small>Счёт и текущая база обнулятся, баланс не изменится</small></div>
       </button>`;
   }
 
@@ -156,6 +160,7 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
     content.querySelector('[data-arcade-start]')?.addEventListener('click', start);
     content.querySelector('[data-arcade-roll]')?.addEventListener('click', roll);
+    content.querySelector('[data-arcade-reset]')?.addEventListener('click', reset);
     content.querySelector('[data-arcade-refresh]')?.addEventListener('click', refresh);
   }
 
@@ -188,6 +193,34 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
       if (error.payload?.arcade) state = error.payload.arcade;
       renderAll();
+    } finally {
+      pending = false;
+      overlay.classList.remove('busy');
+    }
+  }
+
+  async function reset() {
+    if (pending || currentGame().mode === 'slots') return;
+    pending = true;
+    overlay.classList.add('busy');
+    feedback.textContent = 'Сбрасываем текущую сессию…';
+    haptic('medium');
+    try {
+      const payload = await api('/api/arcade/reset', {
+        method: 'POST',
+        body: JSON.stringify({ gameId: selected }),
+      });
+      state = payload.arcade;
+      if (payload.state) renderState(payload.state);
+      lastResult = null;
+      feedback.textContent = 'Сессия сброшена. Можно начать заново.';
+      statusElement.textContent = `${currentGame().title}: сессия сброшена.`;
+      renderAll();
+    } catch (error) {
+      feedback.textContent = REASONS[error.payload?.reason] || error.message;
+      if (error.payload?.arcade) state = error.payload.arcade;
+      renderAll();
+      haptic('light');
     } finally {
       pending = false;
       overlay.classList.remove('busy');

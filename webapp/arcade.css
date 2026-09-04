@@ -45,3 +45,11 @@
 .arcade-overlay.rolling .arcade-roll-icon { animation:arcade-roll .42s ease; }
 @keyframes arcade-roll { 0%{transform:rotate(0) scale(1)} 35%{transform:rotate(-18deg) scale(1.15)} 70%{transform:rotate(20deg) scale(.95)} 100%{transform:rotate(0) scale(1)} }
 @media (max-width:390px) { .arcade-tabs { grid-template-columns:repeat(5,1fr); gap:3px; }.arcade-tab { padding-inline:2px; }.arcade-tab strong { font-size:6px; } }
+
+.arcade-secondary { width:100%; min-height:43px; margin-top:6px; padding:8px 12px; border:1px solid rgba(255,255,255,.07); border-radius:13px; background:rgba(255,255,255,.018); color:#b8b4c4; display:flex; align-items:center; gap:9px; text-align:left; }
+.arcade-secondary > span { width:28px; height:28px; display:grid; place-items:center; border-radius:9px; background:rgba(255,255,255,.03); font-size:14px; }
+.arcade-secondary > div { display:grid; gap:2px; }
+.arcade-secondary strong { font-size:9px; }
+.arcade-secondary small { color:var(--muted); font-size:7px; }
+.arcade-secondary.danger { border-color:rgba(214,108,126,.1); color:#c5aeb4; }
+.arcade-secondary.danger:hover { background:rgba(138,61,74,.04); }

@@ -26,6 +26,7 @@ import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
 import { getMiniAppSwordDashboard, rollMiniAppSword } from './sword.js';
 import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from './arcade.js';
+import { resetArcadeGame } from './arcadeReset.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
@@ -1079,6 +1080,23 @@ async function swordRoll(req, res) {
   }
 }
 
+async function arcadeReset(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    validateArcadeGameId(body.gameId);
+    const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const reset = resetArcadeGame(context.session, body.gameId);
+      if (reset.ok) await saveSession(context.session);
+      return reset;
+    });
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'arcade reset', error);
+  }
+}
+
 async function arcadeState(req, res) {
   try {
     const context = await authorize(req);
@@ -1184,6 +1202,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/sword/roll') return swordRoll(req, res);
     if (route === 'GET /api/arcade') return arcadeState(req, res);
     if (route === 'POST /api/arcade/start') return arcadeStart(req, res);
+    if (route === 'POST /api/arcade/reset') return arcadeReset(req, res);
     if (route === 'POST /api/arcade/roll') return arcadeRoll(req, res);
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
