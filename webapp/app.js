@@ -8,6 +8,7 @@ import { openBossGame } from './boss.js';
 import { openShopGame } from './shop.js';
 import { openSwordGame } from './sword.js';
 import { openArcadeGame } from './arcade.js';
+import { openGoldTransfer } from './gold-transfer.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -153,6 +154,17 @@ function render(state) {
         } catch (error) {
           console.error(error);
           status.textContent = `Магазин: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'transfer' && feature.status === 'webgl') {
+        try {
+          await openGoldTransfer({ api, renderState: render, haptic, statusElement: status });
+          status.textContent = 'Переводы золота работают через Mini App и сохраняются в Mongo.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Переводы: ${error.message}`;
         }
         return;
       }
