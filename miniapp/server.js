@@ -20,6 +20,7 @@ import {
   changeBuildType,
   renameBuild,
 } from './builds.js';
+import { getArenaState, attackArena } from './arena.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -381,6 +382,61 @@ async function buildsAction(req, res) {
   }
 }
 
+async function arenaState(req, res, requestUrl) {
+  try {
+    const context = await authorize(req);
+    const mode = requestUrl.searchParams.get('mode') || 'common';
+    const lockKey = `${context.chatId}:${context.userId}:arena`;
+
+    const arena = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getArenaState(context.session, context.chatId, context.userId, mode);
+    });
+
+    return sendJson(res, 200, arena);
+  } catch (error) {
+    return sendApiError(res, 'arena state', error);
+  }
+}
+
+async function arenaAttack(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (!['common', 'expansion'].includes(body.mode)) {
+      const error = new Error('mode must be common or expansion');
+      error.status = 400;
+      throw error;
+    }
+    if (typeof body.defenderId !== 'string' || !body.defenderId) {
+      const error = new Error('defenderId is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:${context.userId}:arena`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const battle = await attackArena(
+        context.session,
+        context.chatId,
+        context.userId,
+        body.mode,
+        body.defenderId
+      );
+      if (battle.ok) await saveSession(context.session);
+      return battle;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'arena attack', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -432,6 +488,14 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/builds/action') {
       return buildsAction(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/arena') {
+      return arenaState(req, res, requestUrl);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/arena/attack') {
+      return arenaAttack(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
