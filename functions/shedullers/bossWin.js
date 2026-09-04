@@ -1,44 +1,42 @@
+import Boss from "../../db/models/Boss.js";
 import Chat from "../../db/models/Chat.js";
-import isBossAlive from "../game/boss/getBossStatus/isBossAlive.js";
 import sendMessageWithDelete from "../tgBotFunctions/sendMessageWithDelete.js";
 
 /**
- * Проверяет всех боссов в базе и завершает их, если время жизни истекло
+ * Проверяет активных боссов в MongoDB и завершает бой по таймауту.
  */
 export default async function() {
-    const chats = await Chat.find({});
+    const expiredBosses = await Boss.find({
+        hp: { $gt: 0 },
+        currentHp: { $gt: 0 },
+        aliveTime: { $lte: Date.now() },
+    });
 
-    for (const chat of chats) {
-        const boss = chat.game?.gameClass?.boss;
-        if (!boss) continue;
-
-        // Проверяем, жив ли босс
-        if (!isBossAlive(boss)) continue;
-
-        // Если время жизни ещё не истекло — пропускаем
-        if (boss.aliveTime > Date.now()) continue;
-
-        // У всех игроков, кто бил босса, hp = 0
-        for (const player of boss.listOfDamage) {
-            const member = chat.members.find((m) => m.userId === player.id);
-            if (member?.game?.gameClass?.stats) {
-                member.game.gameClass.stats.hp = 0;
+    for (const boss of expiredBosses) {
+        const chat = await Chat.findOne({ chatId: boss.chatId });
+        if (chat) {
+            for (const player of boss.listOfDamage || []) {
+                const member = chat.members.find(m => String(m.userId) === String(player.id));
+                if (member?.game?.gameClass?.stats) {
+                    member.game.gameClass.stats.hp = 0;
+                    member.game.respawnTime = Date.now() + 60 * 1000;
+                }
             }
+            await chat.save();
         }
 
-        // Сбрасываем состояние босса
         boss.skill = null;
         boss.currentHp = 0;
         boss.hp = 0;
         boss.listOfDamage = [];
+        boss.markModified("skill");
+        boss.markModified("listOfDamage");
+        await boss.save();
 
-        await chat.save();
-
-        // Сообщение в чат
         await sendMessageWithDelete(
-            chat.chatId,
+            boss.chatId,
             "Время для убийства босса истекло. Босс убежал!",
-            { disable_notifications: true },
+            { disable_notification: true },
             60 * 1000
         );
     }
