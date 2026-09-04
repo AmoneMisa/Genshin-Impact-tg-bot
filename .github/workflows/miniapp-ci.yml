@@ -43,6 +43,7 @@ jobs:
           node --check miniapp/sword.js
           node --check miniapp/arcade.js
           node --check miniapp/goldTransfer.js
+          node --check miniapp/point21.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
@@ -57,6 +58,11 @@ jobs:
           node --check functions/game/sword/swordCore.js
           node --check functions/game/sword/swordResult.js
           node --check functions/game/gold/transferGold.js
+          node --check functions/game/point21/pointMessage.js
+          node --check functions/game/general/findWinners.js
+          node --check functions/game/general/endGame.js
+          node --check functions/game/general/pass.js
+          node --check functions/game/general/bet.js
           node --check functions/shedullers/bossWin.js
           node --check callbacks/game/shop/shop.js
           node --check callbacks/game/dice/pullDice.js
@@ -80,4 +86,5 @@ jobs:
           node --check webapp/sword.js
           node --check webapp/arcade.js
           node --check webapp/gold-transfer.js
+          node --check webapp/point21.js
           node --check webapp/renderer.js
