@@ -14,6 +14,7 @@ import { openElementsGame } from './elements.js';
 import { openBonusGame } from './bonus.js';
 import { openTitlesGame } from './titles.js';
 import { openHoroscopeGame } from './horoscope.js';
+import { openClanGame } from './clan.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
@@ -58,6 +59,7 @@ const launchers = {
   transfer: [openGoldTransfer, 'Переводы золота работают через Mini App и сохраняются в Mongo.'],
   point21: [openPoint21, '21 очко работает через общий серверный стол Mini App.'],
   elements: [openElementsGame, 'Стихии работают через общий серверный стол Mini App.'],
+  clan: [openClanGame, 'Кланы работают через Mini App; основное состояние хранится в Mongo.'],
   bonus: [openBonusGame, 'Ежедневный бонус работает через серверный RNG и сохраняется в Mongo.'],
   titles: [openTitlesGame, 'Титулы работают через Mongo и серверный выбор участника.'],
   horoscope: [openHoroscopeGame, 'Гороскоп работает через серверный FreeLLMAPI с локальным fallback.'],
