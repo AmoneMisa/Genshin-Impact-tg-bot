@@ -1,30 +1,20 @@
-import getSession from "../../getters/getSession.js";
-
 /**
- * Получает эффекты "Медали арены" для игрока
- * @param {Number} chatId - ID чата
- * @param {Number} userId - ID игрока
+ * Возвращает числовые PvP-модификаторы из уже загруженной сессии.
+ * Старый Mongo-порт сделал эту функцию async и заставил синхронный combat
+ * получать Promise вместо модификаторов. Здесь I/O не нужен: медаль уже лежит
+ * в инвентаре игрока.
  */
-export default async function(chatId, userId) {
-    const session = await getSession(chatId, userId);
+export default function getPvpSign(session) {
+    const arena = session?.game?.inventory?.arena;
+    const legacy = arena?.items?.[1];
+    const medal = arena?.pvpSign || legacy?.pvpSign || (legacy?.name === 'pvpSign' ? legacy : null);
+    const effects = Array.isArray(medal?.effects) ? medal.effects : [];
 
-    if (
-        !session?.game?.inventory?.arena ||
-        !session.game.inventory.arena.items[1]
-    ) {
-        throw new Error(
-            `Ошибка при попытке получить данные о 'Медали арены' у пользователя: ${userId}`
-        );
-    }
+    const increase = effects.find(stat => stat?.name === 'increasePvpDamage');
+    const decrease = effects.find(stat => stat?.name === 'decreaseIncomingPvpDamage');
 
-    const medal = session.game.inventory.arena.items[1];
-
-    const increasePvpDamage = medal.effects.find(
-        stat => stat.name === "increasePvpDamage"
-    );
-    const decreaseIncomingPvpDamage = medal.effects.find(
-        stat => stat.name === "decreaseIncomingPvpDamage"
-    );
-
-    return { increasePvpDamage, decreaseIncomingPvpDamage };
+    return {
+        increasePvpDamage: Number(increase?.value) || 1,
+        decreaseIncomingPvpDamage: Number(decrease?.value) || 0,
+    };
 }
