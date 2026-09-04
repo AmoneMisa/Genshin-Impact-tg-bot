@@ -15,6 +15,7 @@ import { openBonusGame } from './bonus.js';
 import { openTitlesGame } from './titles.js';
 import { openHoroscopeGame } from './horoscope.js';
 import { openClanGame } from './clan.js';
+import { openStealGame } from './steal.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
@@ -55,6 +56,7 @@ const launchers = {
   equipment: [openEquipmentGame, 'Снаряжение работает через Mini App и сохраняется в Mongo.'],
   builds: [openBuildsGame, 'Постройки работают через Mini App; улучшения и сбор ресурсов сохраняются в Mongo.'],
   arena: [openArenaGame, 'Арена работает через Mini App; бой и рейтинг считаются на сервере.'],
+  steal: [openStealGame, 'Ограбление работает через Mini App; бой и перенос ресурсов считаются на сервере.'],
   shop: [openShopGame, 'Магазин работает через Mini App и сохраняет покупки в Mongo.'],
   transfer: [openGoldTransfer, 'Переводы золота работают через Mini App и сохраняются в Mongo.'],
   point21: [openPoint21, '21 очко работает через общий серверный стол Mini App.'],
