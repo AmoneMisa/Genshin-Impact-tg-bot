@@ -6,6 +6,7 @@ import updateFreeSpins from './updateFreeSpins.js';
 import hideDeadSouls from '../misc/hideDeadSouls.js';
 import restoreArenaDailyChances from './restoreArenaDailyChances.js';
 import resetClanQuizzes from './resetClanQuizzes.js';
+import resetClanTasks from './resetClanTasks.js';
 
 export default function () {
     cron.schedule('59 23 * * *', async () => {
@@ -17,6 +18,7 @@ export default function () {
             await restoreArenaDailyChances();
             await hideDeadSouls();
             await resetClanQuizzes();
+            await resetClanTasks();
         } catch (e) {
             console.error(e);
         }
