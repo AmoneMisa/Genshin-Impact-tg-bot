@@ -12,10 +12,15 @@ import clanBossAttack from "../../../functions/game/clans/clanBossAttack.js";
 import giveClanShopPotion from "../../../functions/game/clans/giveClanShopPotion.js";
 import clanDuel from "../../../functions/game/clans/clanDuel.js";
 import getBuildingBonus from "../../../functions/game/clans/getBuildingBonus.js";
+import getInvestigationBonus from "../../../functions/game/clans/getInvestigationBonus.js";
+import calcReputationPoints from "../../../functions/game/clans/calcReputationPoints.js";
+import calcGearScore from "../../../functions/game/player/calcGearScore.js";
 import clanQuiz from "../../../dictionaries/clanQuiz.js";
 import clanUpgrades from "../../../dictionaries/clanUpgrades.js";
 import clanShop from "../../../dictionaries/clanShop.js";
 import clanBuildings from "../../../dictionaries/clanBuildings.js";
+import clanInvestigations from "../../../dictionaries/clanInvestigations.js";
+import clanTasks, { CLAN_TASKS_BONUS_XP } from "../../../dictionaries/clanTasks.js";
 import Clan from "../../../db/models/Clan.js";
 import bot from "../../../bot.js";
 
@@ -43,6 +48,11 @@ function upgradeCost(track, currentLevel) {
 // Clan shop config.
 const SHOP_COOLDOWN = 7 * 24 * 60 * 60 * 1000; // one purchase per member per week
 
+// The "tradeRoutes" investigation halves the wait, effectively ~2 purchases/week.
+function getShopCooldown(clan) {
+    return getInvestigationBonus(clan, "tradeRoutes") ? SHOP_COOLDOWN * 0.5 : SHOP_COOLDOWN;
+}
+
 // Renders a shop item's warehouse cost, e.g. "4000 🪙, 2 💎".
 function formatShopCost(cost) {
     return Object.entries(cost)
@@ -63,6 +73,53 @@ const WAR_WIN_GOLD_PER_LEVEL = 5000; // warehouse gold to the winning clan (× l
 const WAR_WIN_CRYSTALS = 20; // warehouse crystals to the winning clan
 const WAR_WIN_XP = 500; // clan xp to the winner
 const WAR_CONSOLATION_XP = 100; // clan xp to the loser / on a draw
+
+// Moderation config.
+const KICK_COOLDOWN = 5 * 60 * 1000; // between kicks performed by the same actor
+
+// Class options selectable as an entry requirement (see dictionaries/emoji.js).
+const CLAN_CLASS_LABELS = { noClass: "Бродяжка", priest: "Прист", mage: "Маг", archer: "Лучник", warrior: "Палладин", berserk: "Берсерк" };
+
+// Returns "owner" | "officer" | "member" | null for a userId in a clan.
+function getRole(clan, userId) {
+    return findMember(clan, userId)?.role || null;
+}
+
+// Owner and officers can manage members/applications/buildings/wars; only the
+// owner can promote/demote, disband, or edit entry conditions.
+function canManage(clan, userId) {
+    const role = getRole(clan, userId);
+    return role === "owner" || role === "officer";
+}
+
+// Checks a joining player's session against a clan's entryConditions, returning
+// a list of human-readable reasons they don't qualify (empty = eligible).
+function getEntryBlockReasons(clan, session) {
+    const cond = clan.entryConditions || {};
+    const reasons = [];
+
+    const level = session.game?.stats?.lvl || 1;
+    if (cond.minLevel && level < cond.minLevel) {
+        reasons.push(`• Минимальный уровень: ${cond.minLevel} (у тебя ${level})`);
+    }
+
+    if (cond.minGearScore) {
+        const gearScore = Number(calcGearScore(session.game)) || 0;
+        if (gearScore < cond.minGearScore) {
+            reasons.push(`• Минимальный рейтинг снаряжения: ${cond.minGearScore} (у тебя ${gearScore})`);
+        }
+    }
+
+    if (cond.allowedClass && session.game?.gameClass?.name !== cond.allowedClass) {
+        reasons.push(`• Требуемый класс: ${CLAN_CLASS_LABELS[cond.allowedClass] || cond.allowedClass}`);
+    }
+
+    if (cond.allowedGender && session.gender !== cond.allowedGender) {
+        reasons.push(`• Требуемый пол: ${cond.allowedGender === "male" ? "муж." : "жен."}`);
+    }
+
+    return reasons;
+}
 
 // A member can duel only if they have a battle-ready class (skills).
 function hasCombatClass(session) {
@@ -233,6 +290,30 @@ function ensureQuizState(clan) {
     return clanQuiz[clan.quiz.questionIndex] || clanQuiz[0];
 }
 
+// Lazily initialise today's task-checklist state before the first scheduler run.
+function ensureTaskState(clan) {
+    if (!clan.tasks || !clan.tasks.lastResetAt) {
+        clan.tasks = { lastResetAt: Date.now(), progress: {}, claimed: {} };
+    }
+    if (!clan.tasks.progress) {
+        clan.tasks.progress = {};
+    }
+    if (!clan.tasks.claimed) {
+        clan.tasks.claimed = {};
+    }
+}
+
+// Marks a daily task as done today for a member (idempotent). Caller is
+// responsible for clan.save() (clan.tasks is Mixed).
+function markTaskProgress(clan, userId, taskKey) {
+    ensureTaskState(clan);
+    const key = String(userId);
+    if (!clan.tasks.progress[key]) {
+        clan.tasks.progress[key] = {};
+    }
+    clan.tasks.progress[key][taskKey] = true;
+}
+
 function editCaption(callback, message, keyboard = []) {
     return editMessageCaption(message, {
         chat_id: callback.message.chat.id,
@@ -351,7 +432,13 @@ export default [
             return editCaption(callback, `Заявка на вступление в ${clan.name} отправлена.`);
         }
 
+        const reasons = getEntryBlockReasons(clan, session);
+        if (reasons.length) {
+            return editCaption(callback, `Ты не соответствуешь условиям вступления в ${clan.name}:\n${reasons.join("\n")}`);
+        }
+
         clan.members.push({ userId, role: "member" });
+        clan.reputation = calcReputationPoints(clan);
         await clan.save();
         return editCaption(callback, `Ты вступил в клан ${clan.name}!`);
     }],
@@ -369,6 +456,7 @@ export default [
         }
 
         clan.members = clan.members.filter(m => m.userId !== userId);
+        clan.reputation = calcReputationPoints(clan);
         await clan.save();
         return editCaption(callback, `Ты покинул клан ${clan.name}.`);
     }],
@@ -476,6 +564,7 @@ export default [
             }
 
             const { leveledUp, level } = addClanXp(freshClan, Math.floor(amount / XP_PER_CONTRIBUTION));
+            markTaskProgress(freshClan, userId, "contribute");
 
             await chat.save();
             await freshClan.save();
@@ -537,6 +626,7 @@ export default [
         const correct = chosen === question.answer;
 
         clan.quiz.participants[userId] = { correct, answeredAt: Date.now() };
+        markTaskProgress(clan, userId, "quizAnswer");
 
         let message;
         if (correct) {
@@ -651,7 +741,9 @@ export default [
         if (!boss.cooldowns) {
             boss.cooldowns = {};
         }
-        boss.cooldowns[userKey] = now + BOSS_ATTACK_COOLDOWN;
+        const bossCooldown = getInvestigationBonus(clan, "swiftStrikes") ? BOSS_ATTACK_COOLDOWN * 0.7 : BOSS_ATTACK_COOLDOWN;
+        boss.cooldowns[userKey] = now + bossCooldown;
+        markTaskProgress(clan, callback.from.id, "bossAttack");
 
         let message = `Ты нанёс ${result.dmg}${result.isCrit ? " (крит!) 💥" : ""} урона боссу ${boss.name}.`;
 
@@ -816,6 +908,7 @@ export default [
             if (member) {
                 member.contribution = (member.contribution || 0) + PVP_WIN_CONTRIBUTION;
             }
+            markTaskProgress(clan, userId, "duelWin");
             message = `Победа! 🏆 Ты одолел ${oppName}. +${PVP_WIN_CONTRIBUTION} к вкладу в клан.`;
         } else if (result === 1) {
             myRecord.losses++;
@@ -847,7 +940,8 @@ export default [
         const member = findMember(clan, callback.from.id);
         const wh = clan.warehouse || {};
         const now = Date.now();
-        const onCooldown = member && (now - (member.lastShopAt || 0) < SHOP_COOLDOWN);
+        const shopCooldown = getShopCooldown(clan);
+        const onCooldown = member && (now - (member.lastShopAt || 0) < shopCooldown);
 
         let message = "Клановый магазин (оплата из хранилища клана)\n\n";
         for (const item of clanShop) {
@@ -857,7 +951,7 @@ export default [
 
         let keyboard;
         if (onCooldown) {
-            const remain = Math.ceil((SHOP_COOLDOWN - (now - member.lastShopAt)) / (60 * 60 * 1000));
+            const remain = Math.ceil((shopCooldown - (now - member.lastShopAt)) / (60 * 60 * 1000));
             message += `\n\nТы уже покупал на этой неделе. Следующая покупка через ~${remain} ч.`;
             keyboard = [];
         } else {
@@ -890,7 +984,7 @@ export default [
         }
 
         const now = Date.now();
-        if (now - (member.lastShopAt || 0) < SHOP_COOLDOWN) {
+        if (now - (member.lastShopAt || 0) < getShopCooldown(clan)) {
             return editCaption(callback, "Ты уже покупал в клановом магазине на этой неделе.");
         }
 
@@ -994,6 +1088,7 @@ export default [
 
         playerSession.game.inventory.gold = gold - cost;
         member.upgrades[trackKey] = level + 1;
+        clan.reputation = calcReputationPoints(clan);
 
         await chat.save();
         await clan.save();
@@ -1011,7 +1106,7 @@ export default [
             return editCaption(callback, "Ты не состоишь в клане.");
         }
 
-        const isOwner = clan.owner === userId;
+        const canManageBuildings = canManage(clan, userId);
         const wh = clan.warehouse || {};
 
         let message = `Постройки клана ${clan.name}\n\n`;
@@ -1021,7 +1116,7 @@ export default [
             message += `🏛️ ${b.label} — ур. ${level}/${b.maxLevel}\n${b.description}\n${b.effectLabel}.\n`;
             if (level < b.maxLevel) {
                 message += `Улучшение: ${formatShopCost(b.cost(level))}\n\n`;
-                if (isOwner) {
+                if (canManageBuildings) {
                     keyboard.push([{
                         text: `Улучшить: ${b.label} → ур. ${level + 1}`,
                         callback_data: `clan.building_${b.key}`
@@ -1032,8 +1127,8 @@ export default [
             }
         }
         message += `В хранилище: ${wh.gold || 0} ${getEmoji("gold")}, ${wh.crystals || 0} ${getEmoji("crystals")}, ${wh.ironOre || 0} ${getEmoji("ironOre")}`;
-        if (!isOwner) {
-            message += `\n\nУлучшать постройки может только глава клана.`;
+        if (!canManageBuildings) {
+            message += `\n\nУлучшать постройки может только глава или офицер клана.`;
         }
 
         return editCaption(callback, message, keyboard);
@@ -1045,8 +1140,8 @@ export default [
         if (!clan) {
             return editCaption(callback, "Ты не состоишь в клане.");
         }
-        if (clan.owner !== userId) {
-            return editCaption(callback, "Улучшать постройки может только глава клана.");
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Улучшать постройки может только глава или офицер клана.");
         }
 
         const def = clanBuildings.find(b => b.key === key);
@@ -1084,6 +1179,7 @@ export default [
         }
 
         clan.buildings[key] = { level: level + 1 };
+        clan.reputation = calcReputationPoints(clan);
         await clan.save();
 
         return editCaption(callback, `${def.label} улучшена до уровня ${level + 1}! Эффект: ${def.effectLabel}.`, [[{
@@ -1102,18 +1198,17 @@ export default [
         }
 
         const war = clan.guildWar;
-        const isOwner = clan.owner === userId;
 
-        // No active war → offer to declare one (owner only).
+        // No active war → offer to declare one (owner/officer only).
         if (!war) {
             const message = `Войны кланов — ${clan.name}\n\nСейчас клан не участвует в войне.`;
-            if (isOwner) {
+            if (canManage(clan, userId)) {
                 return editCaption(callback, message + "\n\nОбъяви войну другому клану!", [[{
                     text: "Объявить войну",
                     callback_data: "clan.war.declare"
                 }]]);
             }
-            return editCaption(callback, message + "\n\nОбъявить войну может только глава клана.");
+            return editCaption(callback, message + "\n\nОбъявить войну может только глава или офицер клана.");
         }
 
         // War window elapsed → resolve it and show the outcome.
@@ -1144,8 +1239,8 @@ export default [
         if (!clan) {
             return editCaption(callback, "Ты не состоишь в клане.");
         }
-        if (clan.owner !== userId) {
-            return editCaption(callback, "Только глава клана может объявлять войну.");
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Только глава или офицер клана может объявлять войну.");
         }
         if (clan.guildWar) {
             return editCaption(callback, "Твой клан уже участвует в войне.");
@@ -1173,8 +1268,8 @@ export default [
         if (!clan) {
             return editCaption(callback, "Ты не состоишь в клане.");
         }
-        if (clan.owner !== userId) {
-            return editCaption(callback, "Только глава клана может объявлять войну.");
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Только глава или офицер клана может объявлять войну.");
         }
         if (clan.guildWar) {
             return editCaption(callback, "Твой клан уже участвует в войне.");
@@ -1275,7 +1370,8 @@ export default [
             war.participants = {};
         }
         war.participants[key] = (war.participants[key] || 0) + points;
-        war.cooldowns[key] = now + WAR_ATTACK_COOLDOWN;
+        const warCooldown = getInvestigationBonus(clan, "warTactics") ? WAR_ATTACK_COOLDOWN * 0.7 : WAR_ATTACK_COOLDOWN;
+        war.cooldowns[key] = now + warCooldown;
 
         const member = findMember(clan, userId);
         if (member) {
@@ -1291,6 +1387,959 @@ export default [
         }], [{
             text: "К войне",
             callback_data: "clan.war"
+        }]]);
+    }],
+
+    // ---- Applications review (owner/officer) ----
+    [/^clan\.applications$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Заявки может рассматривать только глава или офицер клана.");
+        }
+
+        const applications = clan.applications || [];
+        if (!applications.length) {
+            return editCaption(callback, "Нет новых заявок на вступление.");
+        }
+
+        let message = `Заявки на вступление в ${clan.name}:\n\n`;
+        const keyboard = [];
+        for (const applicantId of applications) {
+            const name = (await getUserName(applicantId, "name")) || String(applicantId);
+            message += `• ${name}\n`;
+            keyboard.push([{
+                text: `✅ ${name}`,
+                callback_data: `clan.applications.accept_${applicantId}`
+            }, {
+                text: `❌ ${name}`,
+                callback_data: `clan.applications.reject_${applicantId}`
+            }]);
+        }
+
+        return editCaption(callback, message, keyboard);
+    }],
+
+    [/^clan\.applications\.accept_([0-9]+)$/, async function (session, callback, [, rawId]) {
+        const userId = callback.from.id;
+        const applicantId = Number(rawId);
+
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Заявки может рассматривать только глава или офицер клана.");
+        }
+
+        clan.applications = (clan.applications || []).filter(id => id !== applicantId);
+
+        if (await getClan(applicantId)) {
+            await clan.save();
+            return editCaption(callback, "Игрок уже состоит в другом клане.", [[{
+                text: "К заявкам",
+                callback_data: "clan.applications"
+            }]]);
+        }
+
+        clan.members.push({ userId: applicantId, role: "member" });
+        clan.reputation = calcReputationPoints(clan);
+        await clan.save();
+
+        const name = (await getUserName(applicantId, "name")) || String(applicantId);
+        return editCaption(callback, `${name} принят(а) в клан!`, [[{
+            text: "К заявкам",
+            callback_data: "clan.applications"
+        }]]);
+    }],
+
+    [/^clan\.applications\.reject_([0-9]+)$/, async function (session, callback, [, rawId]) {
+        const userId = callback.from.id;
+        const applicantId = Number(rawId);
+
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Заявки может рассматривать только глава или офицер клана.");
+        }
+
+        clan.applications = (clan.applications || []).filter(id => id !== applicantId);
+        await clan.save();
+
+        return editCaption(callback, "Заявка отклонена.", [[{
+            text: "К заявкам",
+            callback_data: "clan.applications"
+        }]]);
+    }],
+
+    // ---- Invite (owner/officer) ----
+    [/^clan\.invite$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Приглашать может только глава или офицер клана.");
+        }
+
+        const chat = await getChatSession(callback.message.chat.id);
+        const clanMemberIds = new Set(clan.members.map(m => m.userId));
+        const candidates = chat.members.filter(m => m.userId !== userId && !clanMemberIds.has(m.userId));
+
+        const alreadyInClan = await Promise.all(candidates.map(m => getClan(m.userId)));
+        const eligible = candidates.filter((m, i) => !alreadyInClan[i]).slice(0, 20);
+
+        if (!eligible.length) {
+            return editCaption(callback, "В этом чате нет игроков без клана, которых можно пригласить.");
+        }
+
+        const keyboard = [];
+        for (const m of eligible) {
+            const name = (await getUserName(m.userId, "name")) || String(m.userId);
+            keyboard.push([{ text: name, callback_data: `clan.invite_${m.userId}` }]);
+        }
+
+        return editCaption(callback, "Кого пригласить в клан?", keyboard);
+    }],
+
+    [/^clan\.invite_([0-9]+)$/, async function (session, callback, [, rawId]) {
+        const userId = callback.from.id;
+        const targetId = Number(rawId);
+
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Приглашать может только глава или офицер клана.");
+        }
+        if (await getClan(targetId)) {
+            return editCaption(callback, "Игрок уже состоит в клане.", [[{
+                text: "К приглашению",
+                callback_data: "clan.invite"
+            }]]);
+        }
+
+        clan.members.push({ userId: targetId, role: "member" });
+        clan.reputation = calcReputationPoints(clan);
+        await clan.save();
+
+        const name = (await getUserName(targetId, "name")) || String(targetId);
+        return editCaption(callback, `${name} добавлен(а) в клан ${clan.name}!`, [[{
+            text: "Ещё пригласить",
+            callback_data: "clan.invite"
+        }]]);
+    }],
+
+    // ---- Kick (owner/officer; officer can't kick another officer or the owner) ----
+    [/^clan\.kick$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Исключать может только глава или офицер клана.");
+        }
+
+        const myRole = getRole(clan, userId);
+        const kickable = clan.members.filter(m =>
+            m.userId !== userId && m.role !== "owner" && (myRole === "owner" || m.role !== "officer")
+        );
+
+        if (!kickable.length) {
+            return editCaption(callback, "Некого исключить.");
+        }
+
+        const keyboard = [];
+        for (const m of kickable) {
+            const name = (await getUserName(m.userId, "name")) || String(m.userId);
+            keyboard.push([{ text: name, callback_data: `clan.kick_${m.userId}` }]);
+        }
+
+        return editCaption(callback, "Кого исключить из клана?", keyboard);
+    }],
+
+    [/^clan\.kick_([0-9]+)$/, async function (session, callback, [, rawId]) {
+        const userId = callback.from.id;
+        const targetId = Number(rawId);
+
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Исключать может только глава или офицер клана.");
+        }
+
+        const target = findMember(clan, targetId);
+        if (!target) {
+            return editCaption(callback, "Этот игрок не состоит в клане.");
+        }
+
+        const myRole = getRole(clan, userId);
+        if (target.role === "owner" || (target.role === "officer" && myRole !== "owner")) {
+            return editCaption(callback, "Недостаточно прав, чтобы исключить этого участника.");
+        }
+
+        if (!clan.moderation) {
+            clan.moderation = {};
+        }
+        if (!clan.moderation.kickCooldowns) {
+            clan.moderation.kickCooldowns = {};
+        }
+
+        const now = Date.now();
+        const actorKey = String(userId);
+        if (clan.moderation.kickCooldowns[actorKey] > now) {
+            const remain = Math.ceil((clan.moderation.kickCooldowns[actorKey] - now) / 1000);
+            return editCaption(callback, `Подожди перед следующим исключением: ${remain} сек.`);
+        }
+        clan.moderation.kickCooldowns[actorKey] = now + KICK_COOLDOWN;
+
+        clan.members = clan.members.filter(m => m.userId !== targetId);
+        clan.reputation = calcReputationPoints(clan);
+        await clan.save();
+
+        const name = (await getUserName(targetId, "name")) || String(targetId);
+        return editCaption(callback, `${name} исключён(а) из клана.`, [[{
+            text: "К списку",
+            callback_data: "clan.kick"
+        }]]);
+    }],
+
+    // ---- Officer promotion (owner only) ----
+    [/^clan\.roles$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (clan.owner !== userId) {
+            return editCaption(callback, "Управлять ролями может только глава клана.");
+        }
+
+        let message = `Роли клана ${clan.name}\n\n`;
+        const keyboard = [];
+        for (const m of clan.members) {
+            if (m.userId === userId) {
+                continue;
+            }
+            const name = (await getUserName(m.userId, "name")) || String(m.userId);
+            const roleLabel = m.role === "officer" ? "офицер" : "участник";
+            message += `• ${name} — ${roleLabel}\n`;
+            keyboard.push([{
+                text: m.role === "officer" ? `${name}: разжаловать` : `${name}: сделать офицером`,
+                callback_data: m.role === "officer" ? `clan.demote_${m.userId}` : `clan.promote_${m.userId}`
+            }]);
+        }
+
+        if (!keyboard.length) {
+            message += "В клане пока нет других участников.";
+        }
+
+        return editCaption(callback, message, keyboard);
+    }],
+
+    [/^clan\.promote_([0-9]+)$/, async function (session, callback, [, rawId]) {
+        const userId = callback.from.id;
+        const targetId = Number(rawId);
+
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (clan.owner !== userId) {
+            return editCaption(callback, "Управлять ролями может только глава клана.");
+        }
+
+        const member = findMember(clan, targetId);
+        if (!member || member.role === "owner") {
+            return editCaption(callback, "Нельзя изменить роль этого участника.");
+        }
+
+        member.role = "officer";
+        await clan.save();
+
+        return editCaption(callback, "Участник назначен офицером.", [[{
+            text: "К ролям",
+            callback_data: "clan.roles"
+        }]]);
+    }],
+
+    [/^clan\.demote_([0-9]+)$/, async function (session, callback, [, rawId]) {
+        const userId = callback.from.id;
+        const targetId = Number(rawId);
+
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (clan.owner !== userId) {
+            return editCaption(callback, "Управлять ролями может только глава клана.");
+        }
+
+        const member = findMember(clan, targetId);
+        if (!member || member.role === "owner") {
+            return editCaption(callback, "Нельзя изменить роль этого участника.");
+        }
+
+        member.role = "member";
+        await clan.save();
+
+        return editCaption(callback, "Участник разжалован.", [[{
+            text: "К ролям",
+            callback_data: "clan.roles"
+        }]]);
+    }],
+
+    // ---- Clan settings (owner only edits; owner/officer can view) ----
+    [/^clan\.settings$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Настройки доступны главе и офицерам клана.");
+        }
+
+        const cond = clan.entryConditions || {};
+        const entryLabel = cond.entryType === -1 ? "Закрытый" : cond.entryType === 1 ? "По заявке" : "Свободный";
+        const genderLabel = cond.allowedGender === "male" ? "муж." : cond.allowedGender === "female" ? "жен." : "любой";
+
+        let message = `Настройки клана ${clan.name}\n\n`
+            + `Тег: ${clan.tag || "—"}\n`
+            + `Описание: ${clan.description || "—"}\n\n`
+            + `Тип вступления: ${entryLabel}\n`
+            + `Мин. уровень: ${cond.minLevel || 0}\n`
+            + `Мин. рейтинг снаряжения: ${cond.minGearScore || 0}\n`
+            + `Требуемый класс: ${cond.allowedClass ? (CLAN_CLASS_LABELS[cond.allowedClass] || cond.allowedClass) : "любой"}\n`
+            + `Требуемый пол: ${genderLabel}\n`
+            + `\nРепутация: ${clan.reputation || 0} 🎖️`;
+
+        const isOwner = clan.owner === userId;
+        const keyboard = [];
+        if (isOwner) {
+            keyboard.push([{ text: "Тег", callback_data: "clan.settings.tag" }, { text: "Описание", callback_data: "clan.settings.description" }]);
+            keyboard.push([{ text: "Тип вступления", callback_data: "clan.settings.entry" }]);
+            keyboard.push([{ text: "Мин. уровень", callback_data: "clan.settings.minlevel" }, { text: "Мин. рейтинг", callback_data: "clan.settings.mingearscore" }]);
+            keyboard.push([{ text: "Класс", callback_data: "clan.settings.class" }, { text: "Пол", callback_data: "clan.settings.gender" }]);
+        } else {
+            message += "\n\nИзменять настройки может только глава клана.";
+        }
+
+        return editCaption(callback, message, keyboard);
+    }],
+
+    [/^clan\.settings\.tag$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять тег может только глава клана.");
+        }
+
+        const prompt = await sendMessage(callback.message.chat.id, "Введи новый тег клана (до 6 символов, в ответ на это сообщение). Пустое сообщение уберёт тег:", {
+            reply_markup: { selective: true, force_reply: true }
+        });
+
+        const listenerId = bot.onReplyToMessage(prompt.chat.id, prompt.message_id, async (replyMsg) => {
+            bot.removeReplyListener(listenerId);
+            if (replyMsg.from.id !== userId) {
+                return;
+            }
+
+            const freshClan = await getClan(userId);
+            if (!freshClan || freshClan.owner !== userId) {
+                return sendMessage(callback.message.chat.id, "Ты больше не глава клана.");
+            }
+
+            const tag = (replyMsg.text || "").trim().slice(0, 6);
+            freshClan.tag = tag;
+            await freshClan.save();
+
+            return sendMessage(callback.message.chat.id, tag ? `Тег клана обновлён: ${tag}` : "Тег клана убран.");
+        });
+    }],
+
+    [/^clan\.settings\.description$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять описание может только глава клана.");
+        }
+
+        const prompt = await sendMessage(callback.message.chat.id, "Введи новое описание клана (до 200 символов, в ответ на это сообщение):", {
+            reply_markup: { selective: true, force_reply: true }
+        });
+
+        const listenerId = bot.onReplyToMessage(prompt.chat.id, prompt.message_id, async (replyMsg) => {
+            bot.removeReplyListener(listenerId);
+            if (replyMsg.from.id !== userId) {
+                return;
+            }
+
+            const freshClan = await getClan(userId);
+            if (!freshClan || freshClan.owner !== userId) {
+                return sendMessage(callback.message.chat.id, "Ты больше не глава клана.");
+            }
+
+            const description = (replyMsg.text || "").trim().slice(0, 200);
+            freshClan.description = description;
+            await freshClan.save();
+
+            return sendMessage(callback.message.chat.id, "Описание клана обновлено.");
+        });
+    }],
+
+    [/^clan\.settings\.minlevel$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять требования может только глава клана.");
+        }
+
+        const prompt = await sendMessage(callback.message.chat.id, "Введи минимальный уровень для вступления (0 — без ограничения), ответом на это сообщение:", {
+            reply_markup: { selective: true, force_reply: true }
+        });
+
+        const listenerId = bot.onReplyToMessage(prompt.chat.id, prompt.message_id, async (replyMsg) => {
+            bot.removeReplyListener(listenerId);
+            if (replyMsg.from.id !== userId) {
+                return;
+            }
+
+            const value = parseInt(replyMsg.text, 10);
+            if (!Number.isFinite(value) || value < 0) {
+                return sendMessage(callback.message.chat.id, "Введи неотрицательное число.");
+            }
+
+            const freshClan = await getClan(userId);
+            if (!freshClan || freshClan.owner !== userId) {
+                return sendMessage(callback.message.chat.id, "Ты больше не глава клана.");
+            }
+
+            if (!freshClan.entryConditions) {
+                freshClan.entryConditions = {};
+            }
+            freshClan.entryConditions.minLevel = value;
+            await freshClan.save();
+
+            return sendMessage(callback.message.chat.id, `Минимальный уровень для вступления: ${value}.`);
+        });
+    }],
+
+    [/^clan\.settings\.mingearscore$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять требования может только глава клана.");
+        }
+
+        const prompt = await sendMessage(callback.message.chat.id, "Введи минимальный рейтинг снаряжения для вступления (0 — без ограничения), ответом на это сообщение:", {
+            reply_markup: { selective: true, force_reply: true }
+        });
+
+        const listenerId = bot.onReplyToMessage(prompt.chat.id, prompt.message_id, async (replyMsg) => {
+            bot.removeReplyListener(listenerId);
+            if (replyMsg.from.id !== userId) {
+                return;
+            }
+
+            const value = parseInt(replyMsg.text, 10);
+            if (!Number.isFinite(value) || value < 0) {
+                return sendMessage(callback.message.chat.id, "Введи неотрицательное число.");
+            }
+
+            const freshClan = await getClan(userId);
+            if (!freshClan || freshClan.owner !== userId) {
+                return sendMessage(callback.message.chat.id, "Ты больше не глава клана.");
+            }
+
+            if (!freshClan.entryConditions) {
+                freshClan.entryConditions = {};
+            }
+            freshClan.entryConditions.minGearScore = value;
+            await freshClan.save();
+
+            return sendMessage(callback.message.chat.id, `Минимальный рейтинг снаряжения для вступления: ${value}.`);
+        });
+    }],
+
+    [/^clan\.settings\.entry$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять тип вступления может только глава клана.");
+        }
+
+        return editCaption(callback, "Выбери тип вступления в клан:", [
+            [{ text: "Свободный", callback_data: "clan.settings.entry_0" }],
+            [{ text: "По заявке", callback_data: "clan.settings.entry_1" }],
+            [{ text: "Закрытый", callback_data: "clan.settings.entry_-1" }]
+        ]);
+    }],
+
+    [/^clan\.settings\.entry_(-1|0|1)$/, async function (session, callback, [, rawType]) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять тип вступления может только глава клана.");
+        }
+
+        if (!clan.entryConditions) {
+            clan.entryConditions = {};
+        }
+        clan.entryConditions.entryType = Number(rawType);
+        await clan.save();
+
+        return editCaption(callback, "Тип вступления обновлён.", [[{
+            text: "К настройкам",
+            callback_data: "clan.settings"
+        }]]);
+    }],
+
+    [/^clan\.settings\.class$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять требования по классу может только глава клана.");
+        }
+
+        const keyboard = [[{ text: "любой", callback_data: "clan.settings.class_any" }]];
+        for (const [key, label] of Object.entries(CLAN_CLASS_LABELS)) {
+            keyboard.push([{ text: label, callback_data: `clan.settings.class_${key}` }]);
+        }
+
+        return editCaption(callback, "Выбери требуемый класс для вступления:", keyboard);
+    }],
+
+    [/^clan\.settings\.class_(any|noClass|priest|mage|archer|warrior|berserk)$/, async function (session, callback, [, key]) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять требования по классу может только глава клана.");
+        }
+
+        if (!clan.entryConditions) {
+            clan.entryConditions = {};
+        }
+        clan.entryConditions.allowedClass = key === "any" ? "" : key;
+        await clan.save();
+
+        return editCaption(callback, "Требование по классу обновлено.", [[{
+            text: "К настройкам",
+            callback_data: "clan.settings"
+        }]]);
+    }],
+
+    [/^clan\.settings\.gender$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять требования по полу может только глава клана.");
+        }
+
+        return editCaption(callback, "Выбери требуемый пол для вступления:", [
+            [{ text: "любой", callback_data: "clan.settings.gender_any" }],
+            [{ text: "муж.", callback_data: "clan.settings.gender_male" }],
+            [{ text: "жен.", callback_data: "clan.settings.gender_female" }]
+        ]);
+    }],
+
+    [/^clan\.settings\.gender_(any|male|female)$/, async function (session, callback, [, key]) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan || clan.owner !== userId) {
+            return editCaption(callback, "Изменять требования по полу может только глава клана.");
+        }
+
+        if (!clan.entryConditions) {
+            clan.entryConditions = {};
+        }
+        clan.entryConditions.allowedGender = key === "any" ? "" : key;
+        await clan.save();
+
+        return editCaption(callback, "Требование по полу обновлено.", [[{
+            text: "К настройкам",
+            callback_data: "clan.settings"
+        }]]);
+    }],
+
+    // ---- Investigations: cooperative, multi-day research (dictionaries/clanInvestigations.js) ----
+    [/^clan\.investigations$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+
+        if (!clan.investigations) {
+            clan.investigations = { active: null, completed: [] };
+        }
+        const { active, completed } = clan.investigations;
+
+        let message = `Исследования клана ${clan.name}\n\n`;
+
+        if (completed?.length) {
+            message += "Завершено:\n";
+            for (const key of completed) {
+                const def = clanInvestigations.find(i => i.key === key);
+                if (def) {
+                    message += `• ${def.label} — ${def.effectLabel}\n`;
+                }
+            }
+            message += "\n";
+        }
+
+        if (active) {
+            const def = clanInvestigations.find(i => i.key === active.key);
+            if (!def) {
+                clan.investigations.active = null;
+                await clan.save();
+                return editCaption(callback, "Активное исследование больше не существует. Начни новое.", [[{
+                    text: "К исследованиям",
+                    callback_data: "clan.investigations"
+                }]]);
+            }
+
+            message += `Активно: ${def.label}\n${def.description}\nЭффект: ${def.effectLabel}\n\n`;
+            for (const [res, need] of Object.entries(def.cost)) {
+                const have = active.progress?.[res] || 0;
+                message += `${getEmoji(res)} ${RESOURCE_LABELS[res]}: ${have} / ${need}\n`;
+            }
+
+            const fullyFunded = Object.entries(def.cost).every(([res, need]) => (active.progress?.[res] || 0) >= need);
+            const durationDone = Date.now() - active.startedAt >= def.durationMs;
+
+            if (!durationDone) {
+                const remainMs = def.durationMs - (Date.now() - active.startedAt);
+                message += `\nОсталось минимум: ~${Math.ceil(remainMs / (60 * 60 * 1000))} ч.`;
+            } else if (!fullyFunded) {
+                message += `\nВремя вышло, ждём финансирования.`;
+            }
+
+            const keyboard = [[{ text: "Пополнить из хранилища", callback_data: "clan.investigations.fund" }]];
+            if (fullyFunded && durationDone) {
+                keyboard.push([{ text: "Завершить исследование", callback_data: "clan.investigations.complete" }]);
+            }
+            if (canManage(clan, userId)) {
+                keyboard.push([{ text: "Отменить (вернуть ресурсы)", callback_data: "clan.investigations.cancel" }]);
+            }
+
+            return editCaption(callback, message, keyboard);
+        }
+
+        const startable = clanInvestigations.filter(i => !completed?.includes(i.key));
+        if (!startable.length) {
+            message += "Все доступные исследования завершены.";
+            return editCaption(callback, message);
+        }
+
+        message += "Нет активного исследования.";
+        const keyboard = [];
+        if (canManage(clan, userId)) {
+            for (const def of startable) {
+                keyboard.push([{
+                    text: `${def.label} (${formatShopCost(def.cost)})`,
+                    callback_data: `clan.investigations.start_${def.key}`
+                }]);
+            }
+        } else {
+            message += "\n\nНачать исследование может только глава или офицер клана.";
+        }
+
+        return editCaption(callback, message, keyboard);
+    }],
+
+    [/^clan\.investigations\.start_([a-zA-Z]+)$/, async function (session, callback, [, key]) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Начать исследование может только глава или офицер клана.");
+        }
+
+        const def = clanInvestigations.find(i => i.key === key);
+        if (!def) {
+            return editCaption(callback, "Неизвестное исследование.");
+        }
+
+        if (!clan.investigations) {
+            clan.investigations = { active: null, completed: [] };
+        }
+        if (clan.investigations.active) {
+            return editCaption(callback, "Уже идёт другое исследование.");
+        }
+        if (clan.investigations.completed?.includes(key)) {
+            return editCaption(callback, "Это исследование уже завершено.");
+        }
+
+        clan.investigations.active = {
+            key,
+            progress: { gold: 0, crystals: 0, ironOre: 0 },
+            startedAt: Date.now()
+        };
+        await clan.save();
+
+        return editCaption(callback, `Начато исследование: ${def.label}!`, [[{
+            text: "К исследованиям",
+            callback_data: "clan.investigations"
+        }]]);
+    }],
+
+    [/^clan\.investigations\.fund$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+
+        const active = clan.investigations?.active;
+        if (!active) {
+            return editCaption(callback, "Сейчас нет активного исследования.");
+        }
+
+        const def = clanInvestigations.find(i => i.key === active.key);
+        if (!def) {
+            return editCaption(callback, "Активное исследование больше не существует.");
+        }
+
+        if (!clan.warehouse) {
+            clan.warehouse = { gold: 0, crystals: 0, ironOre: 0 };
+        }
+        if (!active.progress) {
+            active.progress = { gold: 0, crystals: 0, ironOre: 0 };
+        }
+
+        const moved = {};
+        for (const [res, need] of Object.entries(def.cost)) {
+            const remaining = Math.max(0, need - (active.progress[res] || 0));
+            const available = clan.warehouse[res] || 0;
+            const take = Math.min(remaining, available);
+            if (take > 0) {
+                clan.warehouse[res] = available - take;
+                active.progress[res] = (active.progress[res] || 0) + take;
+                moved[res] = take;
+            }
+        }
+
+        if (!Object.keys(moved).length) {
+            return editCaption(callback, "В хранилище нет ресурсов для пополнения.", [[{
+                text: "К исследованиям",
+                callback_data: "clan.investigations"
+            }]]);
+        }
+
+        await clan.save();
+
+        const movedText = Object.entries(moved).map(([res, amt]) => `${amt} ${getEmoji(res)}`).join(", ");
+        return editCaption(callback, `Из хранилища вложено: ${movedText}.`, [[{
+            text: "К исследованиям",
+            callback_data: "clan.investigations"
+        }]]);
+    }],
+
+    [/^clan\.investigations\.complete$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+
+        const active = clan.investigations?.active;
+        if (!active) {
+            return editCaption(callback, "Сейчас нет активного исследования.");
+        }
+
+        const def = clanInvestigations.find(i => i.key === active.key);
+        if (!def) {
+            return editCaption(callback, "Активное исследование больше не существует.");
+        }
+
+        const fullyFunded = Object.entries(def.cost).every(([res, need]) => (active.progress?.[res] || 0) >= need);
+        if (!fullyFunded) {
+            return editCaption(callback, "Исследование ещё не полностью профинансировано.");
+        }
+        if (Date.now() - active.startedAt < def.durationMs) {
+            const remainMs = def.durationMs - (Date.now() - active.startedAt);
+            return editCaption(callback, `Исследование ещё не готово. Осталось ~${Math.ceil(remainMs / (60 * 60 * 1000))} ч.`);
+        }
+
+        if (!clan.investigations.completed) {
+            clan.investigations.completed = [];
+        }
+        clan.investigations.completed.push(def.key);
+        clan.investigations.active = null;
+        clan.reputation = calcReputationPoints(clan);
+        await clan.save();
+
+        return editCaption(callback, `Исследование завершено: ${def.label}!\nЭффект: ${def.effectLabel}`, [[{
+            text: "К исследованиям",
+            callback_data: "clan.investigations"
+        }]]);
+    }],
+
+    [/^clan\.investigations\.cancel$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+        if (!canManage(clan, userId)) {
+            return editCaption(callback, "Отменить исследование может только глава или офицер клана.");
+        }
+
+        const active = clan.investigations?.active;
+        if (!active) {
+            return editCaption(callback, "Сейчас нет активного исследования.");
+        }
+
+        if (!clan.warehouse) {
+            clan.warehouse = { gold: 0, crystals: 0, ironOre: 0 };
+        }
+        for (const [res, amt] of Object.entries(active.progress || {})) {
+            clan.warehouse[res] = (clan.warehouse[res] || 0) + amt;
+        }
+        clan.investigations.active = null;
+        await clan.save();
+
+        return editCaption(callback, "Исследование отменено, вложенные ресурсы возвращены в хранилище.", [[{
+            text: "К исследованиям",
+            callback_data: "clan.investigations"
+        }]]);
+    }],
+
+    // ---- Daily tasks: checklist separate from the quiz (dictionaries/clanTasks.js) ----
+    [/^clan\.tasks$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+
+        ensureTaskState(clan);
+        await clan.save(); // persist lazy state init
+
+        const key = String(userId);
+        const progress = clan.tasks.progress[key] || {};
+        const claimed = clan.tasks.claimed[key] || [];
+
+        let message = "Ежедневные задания клана\n\n";
+        const keyboard = [];
+        for (const task of clanTasks) {
+            const done = Boolean(progress[task.key]);
+            const isClaimed = claimed.includes(task.key);
+            const status = isClaimed ? "🏆 получено" : done ? "✅ выполнено" : "⬜ не выполнено";
+            message += `${task.label} — ${status}\n`;
+            if (done && !isClaimed) {
+                keyboard.push([{
+                    text: `Забрать: ${task.label}`,
+                    callback_data: `clan.tasks.claim_${task.key}`
+                }]);
+            }
+        }
+
+        const allClaimed = clanTasks.every(t => claimed.includes(t.key));
+        if (allClaimed && !claimed.includes("__bonus__")) {
+            message += `\nВсе задания выполнены! Бонус: +${CLAN_TASKS_BONUS_XP} XP клана.`;
+            keyboard.push([{ text: "Забрать бонус", callback_data: "clan.tasks.claimBonus" }]);
+        }
+
+        message += "\n\nОбновляется каждый день.";
+        return editCaption(callback, message, keyboard);
+    }],
+
+    [/^clan\.tasks\.claim_([a-zA-Z]+)$/, async function (session, callback, [, taskKey]) {
+        const userId = callback.from.id;
+        const task = clanTasks.find(t => t.key === taskKey);
+        if (!task) {
+            return editCaption(callback, "Неизвестное задание.");
+        }
+
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+
+        ensureTaskState(clan);
+        const key = String(userId);
+        const progress = clan.tasks.progress[key] || {};
+        if (!progress[task.key]) {
+            return editCaption(callback, "Это задание ещё не выполнено.");
+        }
+
+        if (!clan.tasks.claimed[key]) {
+            clan.tasks.claimed[key] = [];
+        }
+        if (clan.tasks.claimed[key].includes(task.key)) {
+            return editCaption(callback, "Награда уже получена.", [[{
+                text: "К заданиям",
+                callback_data: "clan.tasks"
+            }]]);
+        }
+
+        const { chat, member: playerSession } = await loadPlayer(callback.message.chat.id, userId);
+        playerSession.game.inventory.gold = (playerSession.game.inventory.gold || 0) + task.goldReward;
+
+        const member = findMember(clan, userId);
+        if (member) {
+            member.contribution = (member.contribution || 0) + task.contributionReward;
+        }
+
+        clan.tasks.claimed[key].push(task.key);
+
+        await chat.save();
+        await clan.save();
+
+        return editCaption(callback, `Награда получена: +${task.goldReward} ${getEmoji("gold")}, +${task.contributionReward} к вкладу.`, [[{
+            text: "К заданиям",
+            callback_data: "clan.tasks"
+        }]]);
+    }],
+
+    [/^clan\.tasks\.claimBonus$/, async function (session, callback) {
+        const userId = callback.from.id;
+        const clan = await getClan(userId);
+        if (!clan) {
+            return editCaption(callback, "Ты не состоишь в клане.");
+        }
+
+        ensureTaskState(clan);
+        const key = String(userId);
+        const claimed = clan.tasks.claimed[key] || [];
+
+        const allClaimed = clanTasks.every(t => claimed.includes(t.key));
+        if (!allClaimed) {
+            return editCaption(callback, "Сначала забери награды за все задания.");
+        }
+        if (claimed.includes("__bonus__")) {
+            return editCaption(callback, "Бонус уже получен.", [[{
+                text: "К заданиям",
+                callback_data: "clan.tasks"
+            }]]);
+        }
+
+        const { leveledUp, level } = addClanXp(clan, CLAN_TASKS_BONUS_XP);
+        clan.tasks.claimed[key].push("__bonus__");
+        await clan.save();
+
+        let message = `Бонус получен: +${CLAN_TASKS_BONUS_XP} XP клана!`;
+        if (leveledUp) {
+            message += `\nКлан достиг уровня ${level}!`;
+        }
+
+        return editCaption(callback, message, [[{
+            text: "К заданиям",
+            callback_data: "clan.tasks"
         }]]);
     }]
 ];

@@ -9,23 +9,7 @@ export default [[/(?:^|\s)\/clan\b/, async (msg) => {
     let chatId = msg.chat.id;
     await deleteMessage(chatId, msg.message_id);
     let clan = await getClan(msg.from.id);
-
-    let keyboard = [[{
-        text: "Участники",
-        callback_data: "clan.listMembers"
-    }, {
-        text: "Исследования",
-        callback_data: "clan.listInvestigations"
-    }, {
-        text: "Задания",
-        callback_data: "clan.listTasks"
-    }], [{
-        text: "Хранилище",
-        callback_data: "clan.warehouse"
-    }, {
-        text: "Постройки",
-        callback_data: "clan.buildings"
-    }]];
+    let keyboard;
 
     if (clan) {
         const activityRow = [[{
@@ -52,15 +36,59 @@ export default [[/(?:^|\s)\/clan\b/, async (msg) => {
         }, {
             text: "Войны кланов",
             callback_data: "clan.war"
+        }], [{
+            text: "Исследования",
+            callback_data: "clan.investigations"
+        }, {
+            text: "Задания",
+            callback_data: "clan.tasks"
         }]];
+
+        const role = clan.members.find(m => m.userId === msg.from.id)?.role;
+        const canManageClan = role === "owner" || role === "officer";
 
         if (clan.owner === msg.from.id) {
             keyboard = [[{
                 text: "Участники",
                 callback_data: "clan.listMembers"
             }], ...activityRow, [{
+                text: "Заявки",
+                callback_data: "clan.applications"
+            }, {
+                text: "Пригласить",
+                callback_data: "clan.invite"
+            }], [{
+                text: "Исключить",
+                callback_data: "clan.kick"
+            }, {
+                text: "Роли",
+                callback_data: "clan.roles"
+            }], [{
+                text: "Настройки",
+                callback_data: "clan.settings"
+            }], [{
                 text: "Расформировать клан",
                 callback_data: "clan.reconstruct"
+            }]];
+        } else if (canManageClan) {
+            keyboard = [[{
+                text: "Участники",
+                callback_data: "clan.listMembers"
+            }], ...activityRow, [{
+                text: "Заявки",
+                callback_data: "clan.applications"
+            }, {
+                text: "Пригласить",
+                callback_data: "clan.invite"
+            }], [{
+                text: "Исключить",
+                callback_data: "clan.kick"
+            }, {
+                text: "Настройки",
+                callback_data: "clan.settings"
+            }], [{
+                text: "Покинуть клан",
+                callback_data: "clan.leave"
             }]];
         } else if (clan.members.some(m => m.userId === msg.from.id)) {
             keyboard = [[{

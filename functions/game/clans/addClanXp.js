@@ -1,4 +1,5 @@
 import getBuildingBonus from "./getBuildingBonus.js";
+import calcReputationPoints from "./calcReputationPoints.js";
 
 /**
  * Adds experience to a clan and recomputes its level.
@@ -19,6 +20,7 @@ export default function (clan, amount) {
     const gained = Math.floor(Math.max(0, amount) * (1 + getBuildingBonus(clan, "mainHall")));
     clan.xp = (clan.xp || 0) + gained;
     clan.level = 1 + Math.floor(clan.xp / XP_PER_LEVEL);
+    clan.reputation = calcReputationPoints(clan);
 
     return { leveledUp: clan.level > previousLevel, level: clan.level };
 }

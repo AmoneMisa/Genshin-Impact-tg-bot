@@ -92,6 +92,30 @@ const clanSchema = new mongoose.Schema({
     guildWar: {
         type: Object,
         default: null // { opponentClanId, startedAt, scores: {} }
+    },
+
+    // Cooperative, multi-day research: the clan funds one project at a time from
+    // the shared warehouse; completing it (full cost funded + duration elapsed)
+    // unlocks a permanent clan-wide bonus (see dictionaries/clanInvestigations.js).
+    investigations: {
+        type: Object,
+        default: { active: null, completed: [] }
+        // active: { key, progress: { gold, crystals, ironOre }, startedAt }
+    },
+
+    // Daily per-member task checklist, separate from the quiz (see
+    // dictionaries/clanTasks.js). Reset once a day by resetClanTasks.js.
+    tasks: {
+        type: Object,
+        default: { lastResetAt: 0, progress: {}, claimed: {} }
+        // progress[userId] = { taskKey: true }; claimed[userId] = [taskKey, ...]
+    },
+
+    // Moderation bookkeeping (e.g. per-actor kick cooldowns) that doesn't belong
+    // to any single activity above.
+    moderation: {
+        type: Object,
+        default: {}
     }
 }, { timestamps: true });
 
@@ -110,6 +134,9 @@ clanSchema.pre("save", function () {
     this.markModified("shop");
     this.markModified("upgrades");
     this.markModified("guildWar");
+    this.markModified("investigations");
+    this.markModified("tasks");
+    this.markModified("moderation");
 });
 
 export default mongoose.model("Clan", clanSchema);
