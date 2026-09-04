@@ -131,7 +131,7 @@ async function authorize(req) {
 
   const session = await getSession(chatId, validated.user.id);
   const isGroupContext = String(chatId) !== String(validated.user.id);
-  const membershipStatus = session.$locals?.telegramMembership?.status;
+  const membershipStatus = session.userChatData?.status || session.$locals?.telegramMembership?.status;
   if (isGroupContext && ['left', 'kicked'].includes(membershipStatus)) {
     const error = new Error('User is not a member of this game chat');
     error.status = 403;
@@ -184,7 +184,6 @@ async function chestOpen(req, res) {
     const lockKey = `${context.chatId}:${context.userId}:chest`;
 
     const result = await withPlayerLock(lockKey, async () => {
-      // Re-read after acquiring the lock so two fast taps cannot race the same state.
       context.session = await getSession(context.chatId, context.userId);
       const opened = openChest(context.session, context.chatId, body.chestId);
       if (opened.ok) await saveSession(context.session);
