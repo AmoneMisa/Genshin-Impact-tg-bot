@@ -102,6 +102,7 @@ jobs:
           node --check onTexts/game/clan/clan.js
           node --check webapp/app.js
           node --check webapp/forms.js
+          node --check webapp/help.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
           node --check webapp/equipment.js
