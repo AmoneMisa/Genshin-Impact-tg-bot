@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { token } from '../config.js';
 import { trustedChats } from '../data.js';
 import getSession from '../functions/getters/getSession.js';
+import saveSession from '../functions/getters/saveSession.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
 import { getChestState, openChest } from './chest.js';
@@ -130,7 +131,7 @@ async function authorize(req) {
 
   const session = await getSession(chatId, validated.user.id);
   const isGroupContext = String(chatId) !== String(validated.user.id);
-  const membershipStatus = session.userChatData?.status;
+  const membershipStatus = session.$locals?.telegramMembership?.status;
   if (isGroupContext && ['left', 'kicked'].includes(membershipStatus)) {
     const error = new Error('User is not a member of this game chat');
     error.status = 403;
@@ -185,7 +186,9 @@ async function chestOpen(req, res) {
     const result = await withPlayerLock(lockKey, async () => {
       // Re-read after acquiring the lock so two fast taps cannot race the same state.
       context.session = await getSession(context.chatId, context.userId);
-      return openChest(context.session, context.chatId, body.chestId);
+      const opened = openChest(context.session, context.chatId, body.chestId);
+      if (opened.ok) await saveSession(context.session);
+      return opened;
     });
 
     return sendJson(res, result.ok ? 200 : 409, {
