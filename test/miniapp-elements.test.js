@@ -37,9 +37,9 @@ test('elements preserves 15s join and 25s betting windows', () => {
 test('elements freezes joins after join phase and validates exact bets', () => {
   const chat = makeChat(500);
   startElements(chat, 1, { now: 0 });
+
   assert.equal(joinElements(chat, 2, { now: 1 }).ok, true);
   syncElements(chat, { now: 15_000, randomInt: zero });
-
   assert.equal(joinElements(chat, 3, { now: 15_001 }).reason, 'not_join_phase');
   assert.equal(setElementsBet(chat, 1, 500, { now: 15_002 }).ok, true);
   assert.equal(setElementsBet(chat, 1, 501, { now: 15_003 }).reason, 'not_enough_gold');
@@ -87,7 +87,7 @@ test('elements preserves legacy x1.75 winner payout and loser bet loss', () => {
     currentRound: 3,
     turnEndsAt: 100_000,
     players: {
-      bot: { id: 'bot', bet: 0, usedItems: ['🔥 Пиро', '❄️ Крио', '💨 Анемо', '⚡️ Электро'], points: 0, draws: 3 },
+      bot: { id: 'bot', bet: 0, usedItems: ['🗿 Гео', '🌿 Дендро', '💨 Анемо', '💧 Гидро'], points: 0, draws: 3 },
       '1': { id: '1', bet: 100, usedItems: ['🔥 Пиро', '🔥 Пиро', '🔥 Пиро'], points: 0, draws: 2 },
       '2': { id: '2', bet: 200, usedItems: ['🔥 Пиро', '❄️ Крио', '💨 Анемо'], points: 0, draws: 2 },
     },
