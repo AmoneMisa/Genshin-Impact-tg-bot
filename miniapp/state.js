@@ -45,6 +45,7 @@ export function createMiniAppState(session, context) {
       { id: 'shop', title: 'Магазин', subtitle: 'Покупки и усиления', icon: '🛒', status: 'webgl' },
       { id: 'transfer', title: 'Переводы', subtitle: 'Передать золото игроку', icon: '🪙', status: 'webgl' },
       { id: 'point21', title: '21 очко', subtitle: 'Общий карточный стол', icon: '🃏', status: 'webgl' },
+      { id: 'elements', title: 'Стихии', subtitle: 'Реакции и комбинации', icon: '✦', status: 'webgl' },
       { id: 'sword', title: 'Меч', subtitle: 'Ежедневная удача', icon: '🗡️', status: 'webgl' },
       { id: 'arcade', title: 'Аркада', subtitle: 'Кубики, спорт и слоты', icon: '🎲', status: 'webgl' },
     ],
