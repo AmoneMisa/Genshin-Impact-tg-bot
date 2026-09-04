@@ -12,7 +12,8 @@ export default [[/(?:^|\s)\/send_gold\b/, async (msg) => {
         return sendMessage(msg.chat.id, "Чат не найден в базе.");
     }
 
-    let usersList = await getMembers(msg.chat.id).filter(member =>
+    const members = await getMembers(msg.chat.id);
+    const usersList = members.filter(member =>
         member.userId !== msg.from.id &&
         !member.isHided
     );
@@ -30,7 +31,7 @@ export default [[/(?:^|\s)\/send_gold\b/, async (msg) => {
         return;
     }
 
-    const buttons = buildKeyboard(msg.chat.id, `sendGoldRecipient.${msg.chat.id}`, false, msg.from.id);
+    const buttons = await buildKeyboard(msg.chat.id, `sendGoldRecipient.${msg.chat.id}`, false, msg.from.id);
 
     await sendMessage(msg.from.id, "Выбери, кому хочешь перевести золото.", {
         disable_notification: true,
