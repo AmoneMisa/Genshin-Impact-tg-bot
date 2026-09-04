@@ -197,11 +197,12 @@ export function contributeToClan(clan, playerSession, userId, resource, rawAmoun
   };
 }
 
-export async function contributeForMiniApp(userId, playerSession, resource, rawAmount) {
+export async function prepareClanContribution(userId, playerSession, resource, rawAmount) {
   const clan = await getClan(userId);
-  const result = contributeToClan(clan, playerSession, userId, resource, rawAmount);
-  if (result.ok) await clan.save();
-  return result;
+  return {
+    clan,
+    result: contributeToClan(clan, playerSession, userId, resource, rawAmount),
+  };
 }
 
 function randomQuestionIndex() {
@@ -278,10 +279,11 @@ export function answerClanQuiz(clan, playerSession, userId, rawIndex) {
   };
 }
 
-export async function answerClanQuizForMiniApp(userId, playerSession, rawIndex) {
+export async function prepareClanQuizAnswer(userId, playerSession, rawIndex) {
   const clan = await getClan(userId);
-  if (!clan) return { ok: false, reason: 'not_in_clan' };
-  const result = answerClanQuiz(clan, playerSession, userId, rawIndex);
-  if (result.ok) await clan.save();
-  return result;
+  if (!clan) return { clan: null, result: { ok: false, reason: 'not_in_clan' } };
+  return {
+    clan,
+    result: answerClanQuiz(clan, playerSession, userId, rawIndex),
+  };
 }
