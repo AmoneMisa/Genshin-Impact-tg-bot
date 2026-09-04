@@ -1,0 +1,29 @@
+name: Run sword ranking patch
+
+on:
+  push:
+    branches:
+      - feature/telegram-miniapp-webgl
+    paths:
+      - .github/scripts/patch-sword-ranking.py
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/telegram-miniapp-webgl
+      - name: Apply sword ranking patch
+        run: python .github/scripts/patch-sword-ranking.py
+      - name: Commit sword ranking wiring
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add miniapp/server.js webapp/sword.js webapp/sword.css
+          git diff --cached --check
+          git commit -m "feat: add sword group ranking to Mini App"
+          git push origin HEAD:feature/telegram-miniapp-webgl
