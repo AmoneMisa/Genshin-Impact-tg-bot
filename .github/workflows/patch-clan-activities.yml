@@ -1,4 +1,4 @@
-name: Patch clan activities API
+name: Patch clan shop cooldown
 
 on:
   push:
@@ -17,79 +17,28 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: feature/telegram-miniapp-webgl
-      - name: Patch Mini App server
+      - name: Fix never-purchased cooldown state
         run: |
           python - <<'PY'
           from pathlib import Path
-
-          path = Path('miniapp/server.js')
+          path = Path('miniapp/clanActivities.js')
           text = path.read_text()
+          old_state = "  const lastShopAt = Math.max(0, number(member?.lastShopAt));\n  const shopCooldownRemainingMs = Math.max(0, lastShopAt + CLAN_SHOP_COOLDOWN - now);"
+          new_state = "  const lastShopAt = Math.max(0, number(member?.lastShopAt));\n  const shopCooldownRemainingMs = lastShopAt > 0\n    ? Math.max(0, lastShopAt + CLAN_SHOP_COOLDOWN - now)\n    : 0;"
+          assert old_state in text, 'shop state cooldown anchor not found'
+          text = text.replace(old_state, new_state, 1)
 
-          import_anchor = "  prepareClanQuizAnswer,\n} from './clan.js';\n"
-          assert import_anchor in text, 'clan import anchor not found'
-          text = text.replace(
-              import_anchor,
-              import_anchor + "import { prepareClanActivity } from './clanActivities.js';\n",
-              1,
-          )
-
-          text = text.replace('getClanDashboard(context.userId)', 'getClanDashboard(context.userId, context.session)')
-
-          function_anchor = "async function chestState(req, res) {\n"
-          assert function_anchor in text, 'chest function anchor not found'
-          clan_activity = '''async function clanActivity(req, res) {
-            try {
-              const context = await authorize(req);
-              const body = await readJsonBody(req);
-              const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building']);
-              if (!allowed.has(body.action)) {
-                const error = new Error('Unknown clan activity');
-                error.status = 400;
-                throw error;
-              }
-
-              const payload = await withLock('clan:global', async () => {
-                context.session = await getSession(context.chatId, context.userId);
-                const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
-                const result = prepared.result;
-
-                if (result.ok) {
-                  if (prepared.savePlayer) await saveSession(context.session);
-                  if (prepared.clan) await prepared.clan.save();
-                }
-
-                const dashboard = await getClanDashboard(context.userId, context.session);
-                return { result, dashboard };
-              });
-
-              return sendJson(res, payload.result.ok ? 200 : 409, {
-                ...payload.result,
-                dashboard: payload.dashboard,
-                state: stateFor(context),
-              });
-            } catch (error) {
-              return sendApiError(res, 'clan activity', error);
-            }
-          }
-
-          '''
-          text = text.replace(function_anchor, clan_activity + function_anchor, 1)
-
-          route_anchor = "    if (route === 'POST /api/clan/quiz') return clanQuiz(req, res);\n"
-          assert route_anchor in text, 'clan route anchor not found'
-          text = text.replace(
-              route_anchor,
-              route_anchor + "    if (route === 'POST /api/clan/activity') return clanActivity(req, res);\n",
-              1,
-          )
-
+          old_buy = "  const nextAllowed = Math.max(0, number(member.lastShopAt)) + CLAN_SHOP_COOLDOWN;\n  if (nextAllowed > now) {\n    return { ok: false, reason: 'shop_cooldown', cooldownRemainingMs: nextAllowed - now };\n  }"
+          new_buy = "  const lastShopAt = Math.max(0, number(member.lastShopAt));\n  const nextAllowed = lastShopAt > 0 ? lastShopAt + CLAN_SHOP_COOLDOWN : 0;\n  if (nextAllowed > now) {\n    return { ok: false, reason: 'shop_cooldown', cooldownRemainingMs: nextAllowed - now };\n  }"
+          assert old_buy in text, 'shop buy cooldown anchor not found'
+          text = text.replace(old_buy, new_buy, 1)
           path.write_text(text)
           PY
-      - name: Commit patch
+      - name: Commit fix
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add miniapp/server.js
+          git add miniapp/clanActivities.js
           git diff --cached --check
-          git commit -m "feat: wire clan activity API"
+          git commit -m "fix: treat zero clan shop timestamp as unused"
           git push origin HEAD:feature/telegram-miniapp-webgl
