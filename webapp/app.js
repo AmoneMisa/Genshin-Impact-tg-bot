@@ -1,8 +1,10 @@
 import { startWebGL } from './renderer.js';
+import { openChestGame } from './chest.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
 const status = $('status');
+let currentState = null;
 
 function haptic(type = 'light') {
   try { tg?.HapticFeedback?.impactOccurred(type); } catch {}
@@ -15,7 +17,28 @@ function formatNumber(value) {
   }).format(value || 0);
 }
 
+async function api(path, options = {}) {
+  if (!tg?.initData) throw new Error('Telegram initData отсутствует');
+
+  const headers = {
+    ...(options.headers || {}),
+    'x-telegram-init-data': tg.initData,
+  };
+  if (options.body && !headers['content-type']) headers['content-type'] = 'application/json';
+
+  const response = await fetch(path, { ...options, headers });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(payload.error || payload.reason || `HTTP ${response.status}`);
+    error.payload = payload;
+    error.status = response.status;
+    throw error;
+  }
+  return payload;
+}
+
 function render(state) {
+  currentState = state;
   const firstName = state.context.user.firstName || state.context.user.username || 'Путешественник';
   $('hello').textContent = `Привет, ${firstName}`;
   $('level').textContent = state.player.level;
@@ -32,11 +55,34 @@ function render(state) {
   grid.replaceChildren(...state.features.map((feature) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'game-card';
-    button.innerHTML = `<span class="game-icon">${feature.icon}</span><h3>${feature.title}</h3><p>${feature.subtitle}</p><span class="arrow">↗</span>`;
-    button.addEventListener('click', () => {
+    button.className = `game-card ${feature.status === 'webgl' ? 'migrated' : ''}`;
+    button.innerHTML = `
+      <span class="game-icon">${feature.icon}</span>
+      ${feature.status === 'webgl' ? '<span class="mode-badge">PLAY</span>' : '<span class="mode-badge legacy">TEXT</span>'}
+      <h3>${feature.title}</h3>
+      <p>${feature.subtitle}</p>
+      <span class="arrow">↗</span>`;
+
+    button.addEventListener('click', async () => {
       haptic('medium');
-      status.textContent = `${feature.title}: перенос игровой логики в Mini App будет следующим слоем. Текстовая команда пока остаётся рабочим fallback.`;
+
+      if (feature.id === 'chest' && feature.status === 'webgl') {
+        try {
+          await openChestGame({
+            api,
+            renderState: render,
+            haptic,
+            statusElement: status,
+          });
+          status.textContent = 'Сундуки работают через Mini App и используют ту же игровую сессию.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Сундуки: ${error.message}`;
+        }
+        return;
+      }
+
+      status.textContent = `${feature.title}: пока используется текстовый fallback. Перенесём этот режим следующим.`;
     });
     return button;
   }));
@@ -45,15 +91,7 @@ function render(state) {
 }
 
 async function loadState() {
-  if (!tg?.initData) {
-    throw new Error('Открой Mini App из Telegram — initData отсутствует.');
-  }
-
-  const response = await fetch('/api/bootstrap', {
-    headers: { 'x-telegram-init-data': tg.initData },
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+  const payload = await api('/api/bootstrap');
   render(payload);
 }
 
