@@ -129,9 +129,11 @@ export default [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , ch
     let item = shopTemplate.filter(_item => _item.command === itemName);
     item = item[0];
     let { chat, member } = await loadPlayer(chatId, callback.from.id);
-    let sellItem = shopSellItem(member, item.command, item);
+    const beforeGold = Number(member.game.inventory.gold) || 0;
+    const sellItem = await shopSellItem(member, item.command, item);
+    const afterGold = Number(member.game.inventory.gold) || 0;
 
-    if (typeof sellItem === "string") {
+    if (afterGold !== beforeGold - Number(item.cost || 0)) {
         return sendMessageWithDelete(callback.message.chat.id, sellItem, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
