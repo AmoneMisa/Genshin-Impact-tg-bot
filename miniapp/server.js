@@ -11,6 +11,15 @@ import { createMiniAppState } from './state.js';
 import { getChestState, openChest } from './chest.js';
 import { getGachaState, rollGacha, resolveGacha } from './gacha.js';
 import { getEquipmentState, performEquipmentAction } from './equipment.js';
+import {
+  prepareBuilds,
+  getBuildsState,
+  startBuildUpgrade,
+  speedupBuildUpgrade,
+  collectBuildResources,
+  changeBuildType,
+  renameBuild,
+} from './builds.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -306,6 +315,72 @@ async function equipmentAction(req, res) {
   }
 }
 
+async function buildsState(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:${context.userId}:builds`;
+
+    const builds = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const changed = prepareBuilds(context.session);
+      if (changed) await saveSession(context.session);
+      return getBuildsState(context.session);
+    });
+
+    return sendJson(res, 200, builds);
+  } catch (error) {
+    return sendApiError(res, 'builds state', error);
+  }
+}
+
+async function buildsAction(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.buildName !== 'string' || !body.buildName) {
+      const error = new Error('buildName is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const actions = new Set(['upgrade', 'speedup', 'collect', 'change_type', 'rename']);
+    if (!actions.has(body.action)) {
+      const error = new Error('Unknown building action');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:${context.userId}:builds`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const prepared = prepareBuilds(context.session);
+      let updated;
+
+      if (body.action === 'upgrade') {
+        updated = startBuildUpgrade(context.session, body.buildName);
+      } else if (body.action === 'speedup') {
+        updated = speedupBuildUpgrade(context.session, body.buildName);
+      } else if (body.action === 'collect') {
+        updated = collectBuildResources(context.session, body.buildName);
+      } else if (body.action === 'change_type') {
+        updated = changeBuildType(context.session, body.buildName, body.typeName);
+      } else {
+        updated = renameBuild(context.session, body.buildName, body.name);
+      }
+
+      if (prepared || updated.ok) await saveSession(context.session);
+      return updated;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'builds action', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -349,6 +424,14 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/equipment/action') {
       return equipmentAction(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/builds') {
+      return buildsState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/builds/action') {
+      return buildsAction(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
