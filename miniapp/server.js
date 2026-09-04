@@ -30,6 +30,7 @@ import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js'
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
 import { getInventoryState, useInventoryPotion } from './inventory.js';
+import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
 import {
   getPoint21State,
   syncPoint21,
@@ -321,6 +322,35 @@ async function inventoryUse(req, res) {
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'inventory use', error);
+  }
+}
+
+async function exchangeState(req, res) {
+  try {
+    const context = await authorize(req);
+    const exchange = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getExchangeState(context.session);
+    });
+    return sendJson(res, 200, exchange);
+  } catch (error) {
+    return sendApiError(res, 'exchange state', error);
+  }
+}
+
+async function exchangeBuy(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const result = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const purchase = buyCrystalsForMiniApp(context.session, body.amount);
+      if (purchase.ok) await saveSession(context.session);
+      return purchase;
+    });
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'exchange buy', error);
   }
 }
 
@@ -1108,6 +1138,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
     if (route === 'GET /api/inventory') return inventoryState(req, res);
     if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
+    if (route === 'GET /api/exchange') return exchangeState(req, res);
+    if (route === 'POST /api/exchange/buy') return exchangeBuy(req, res);
     if (route === 'GET /api/gold-transfer') return goldTransferState(req, res);
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
     if (route === 'GET /api/steal') return stealState(req, res);

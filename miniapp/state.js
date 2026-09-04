@@ -39,6 +39,7 @@ export function createMiniAppState(session, context) {
     features: [
       { id: 'profile', title: 'Персонаж', subtitle: 'Класс, пол и характеристики', icon: '🧙', status: 'webgl' },
       { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
+      { id: 'exchange', title: 'Обменник', subtitle: 'Золото в кристаллы', icon: '💱', status: 'webgl' },
       { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
       { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'webgl' },
       { id: 'gacha', title: 'Гача', subtitle: 'Коллекция и редкости', icon: '✨', status: 'webgl' },

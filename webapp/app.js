@@ -18,6 +18,7 @@ import { openClanGame } from './clan.js';
 import { openStealGame } from './steal.js';
 import { openPlayerProfile } from './profile.js';
 import { openInventoryGame } from './inventory.js';
+import { openExchangeGame } from './exchange.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
@@ -54,6 +55,7 @@ async function api(path, options = {}) {
 const launchers = {
   profile: [openPlayerProfile, 'Профиль персонажа работает через Mini App и сохраняется в Mongo.'],
   inventory: [openInventoryGame, 'Инвентарь работает через Mini App; расходники сохраняются в Mongo.'],
+  exchange: [openExchangeGame, 'Обменник работает через Mini App и сохраняет покупку в Mongo.'],
   boss: [openBossGame, 'Босс работает через Mini App; общий рейд хранится в Mongo.'],
   chest: [openChestGame, 'Сундуки работают через Mini App и сохраняют награды в Mongo.'],
   gacha: [openGachaGame, 'Гача работает через Mini App; RNG и списание ресурсов остаются серверными.'],
