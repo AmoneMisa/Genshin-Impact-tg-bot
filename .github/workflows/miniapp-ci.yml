@@ -39,6 +39,7 @@ jobs:
           node --check miniapp/builds.js
           node --check miniapp/arena.js
           node --check miniapp/boss.js
+          node --check miniapp/shop.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
@@ -51,6 +52,7 @@ jobs:
           node --check functions/game/arena/getPvpSign.js
           node --check functions/game/arena/generateArenaBot.js
           node --check functions/shedullers/bossWin.js
+          node --check callbacks/game/shop/shop.js
           node --check webapp/app.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
@@ -58,4 +60,5 @@ jobs:
           node --check webapp/builds.js
           node --check webapp/arena.js
           node --check webapp/boss.js
+          node --check webapp/shop.js
           node --check webapp/renderer.js
