@@ -7,10 +7,12 @@ import { trustedChats } from '../data.js';
 import getSession from '../functions/getters/getSession.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
+import { getChestState, openChest } from './chest.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
 const GAME_ASSETS_DIR = path.resolve(__dirname, '../images');
+const playerLocks = new Map();
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -67,25 +69,124 @@ function getInitData(req) {
   return auth.startsWith('tma ') ? auth.slice(4) : '';
 }
 
+async function readJsonBody(req, maxBytes = 8192) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let size = 0;
+
+    req.on('data', (chunk) => {
+      size += chunk.length;
+      if (size > maxBytes) {
+        const error = new Error('Request body is too large');
+        error.status = 413;
+        reject(error);
+        req.destroy();
+        return;
+      }
+      chunks.push(chunk);
+    });
+
+    req.on('end', () => {
+      if (!chunks.length) return resolve({});
+      try {
+        resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+      } catch {
+        const error = new Error('Invalid JSON body');
+        error.status = 400;
+        reject(error);
+      }
+    });
+
+    req.on('error', reject);
+  });
+}
+
+async function withPlayerLock(key, action) {
+  const previous = playerLocks.get(key) || Promise.resolve();
+  let release;
+  const gate = new Promise((resolve) => { release = resolve; });
+  const tail = previous.catch(() => {}).then(() => gate);
+  playerLocks.set(key, tail);
+
+  await previous.catch(() => {});
+  try {
+    return await action();
+  } finally {
+    release();
+    if (playerLocks.get(key) === tail) playerLocks.delete(key);
+  }
+}
+
+async function authorize(req) {
+  const validated = validateTelegramInitData(getInitData(req), token);
+  if (!validated.user?.id) throw new Error('Telegram user is missing');
+
+  const chatId = resolveGameChatId(validated);
+  if (!trustedChats.includes(String(chatId))) {
+    const error = new Error('This chat is not trusted');
+    error.status = 403;
+    throw error;
+  }
+
+  const session = await getSession(chatId, validated.user.id);
+  return {
+    validated,
+    chatId,
+    userId: validated.user.id,
+    session,
+  };
+}
+
+function stateFor(context) {
+  return createMiniAppState(context.session, {
+    chatId: context.chatId,
+    chatType: context.validated.chatType,
+    user: context.validated.user,
+  });
+}
+
+function sendApiError(res, scope, error) {
+  console.error(`[miniapp] ${scope}:`, error);
+  return sendJson(res, error.status || 401, { error: error.message || 'Unauthorized' });
+}
+
 async function bootstrap(req, res) {
   try {
-    const validated = validateTelegramInitData(getInitData(req), token);
-    if (!validated.user?.id) throw new Error('Telegram user is missing');
-
-    const chatId = resolveGameChatId(validated);
-    if (!trustedChats.includes(String(chatId))) {
-      return sendJson(res, 403, { error: 'This chat is not trusted' });
-    }
-
-    const session = await getSession(chatId, validated.user.id);
-    return sendJson(res, 200, createMiniAppState(session, {
-      chatId,
-      chatType: validated.chatType,
-      user: validated.user,
-    }));
+    const context = await authorize(req);
+    return sendJson(res, 200, stateFor(context));
   } catch (error) {
-    console.error('[miniapp] bootstrap:', error);
-    return sendJson(res, 401, { error: error.message || 'Unauthorized' });
+    return sendApiError(res, 'bootstrap', error);
+  }
+}
+
+async function chestState(req, res) {
+  try {
+    const context = await authorize(req);
+    return sendJson(res, 200, getChestState(context.session));
+  } catch (error) {
+    return sendApiError(res, 'chest state', error);
+  }
+}
+
+async function chestOpen(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const lockKey = `${context.chatId}:${context.userId}:chest`;
+
+    const result = await withPlayerLock(lockKey, async () => {
+      // Re-read after acquiring the lock so two fast taps cannot race the same state.
+      context.session = await getSession(context.chatId, context.userId);
+      return openChest(context.session, context.chatId, body.chestId);
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    if (!error.status && /Chest id/.test(error.message || '')) error.status = 400;
+    return sendApiError(res, 'open chest', error);
   }
 }
 
@@ -104,6 +205,14 @@ export default function startMiniAppServer() {
 
     if (req.method === 'GET' && requestUrl.pathname === '/api/bootstrap') {
       return bootstrap(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/chest') {
+      return chestState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/chest/open') {
+      return chestOpen(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
