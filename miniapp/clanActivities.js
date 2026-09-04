@@ -95,7 +95,9 @@ export async function getClanActivitiesState(clan, userId, playerSession = null,
   } : null;
 
   const lastShopAt = Math.max(0, number(member?.lastShopAt));
-  const shopCooldownRemainingMs = Math.max(0, lastShopAt + CLAN_SHOP_COOLDOWN - now);
+  const shopCooldownRemainingMs = lastShopAt > 0
+    ? Math.max(0, lastShopAt + CLAN_SHOP_COOLDOWN - now)
+    : 0;
 
   return {
     boss: bossState,
@@ -198,7 +200,8 @@ export function buyClanShopItem(clan, playerSession, userId, itemKey, options = 
 
   const now = Number.isFinite(Number(options.now)) ? Number(options.now) : Date.now();
   const member = findMember(clan, userId);
-  const nextAllowed = Math.max(0, number(member.lastShopAt)) + CLAN_SHOP_COOLDOWN;
+  const lastShopAt = Math.max(0, number(member.lastShopAt));
+  const nextAllowed = lastShopAt > 0 ? lastShopAt + CLAN_SHOP_COOLDOWN : 0;
   if (nextAllowed > now) {
     return { ok: false, reason: 'shop_cooldown', cooldownRemainingMs: nextAllowed - now };
   }
