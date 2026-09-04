@@ -1,0 +1,55 @@
+.gold-transfer-panel { overflow-x: hidden; }
+.gold-transfer-summary { margin: 16px 0 12px; padding: 14px 15px; border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: linear-gradient(145deg, rgba(255,220,119,.08), rgba(255,255,255,.025)); display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.gold-transfer-summary div { display: grid; gap: 3px; }
+.gold-transfer-summary small { font-size: 9px; letter-spacing: .12em; color: var(--muted); }
+.gold-transfer-summary strong { font-size: 22px; }
+.gold-transfer-summary button { width: 40px; height: 40px; border-radius: 13px; border: 1px solid rgba(255,255,255,.09); color: var(--text); background: rgba(255,255,255,.045); font-size: 20px; }
+.gold-transfer-columns { display: grid; gap: 12px; }
+.gold-section-title { margin: 0 2px 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #d9d5eb; }
+.gold-section-title small { min-width: 22px; padding: 3px 7px; border-radius: 999px; text-align: center; background: rgba(255,255,255,.06); color: var(--muted); }
+.gold-recipient-list { display: grid; gap: 8px; max-height: 290px; overflow-y: auto; padding-right: 2px; }
+.gold-recipient { width: 100%; display: grid; grid-template-columns: 44px minmax(0,1fr) 24px; align-items: center; gap: 11px; padding: 10px; border: 1px solid rgba(255,255,255,.08); border-radius: 17px; color: var(--text); text-align: left; background: rgba(255,255,255,.035); transition: transform .12s ease, border-color .12s ease, background .12s ease; }
+.gold-recipient:active { transform: scale(.985); }
+.gold-recipient.active { border-color: rgba(255,218,112,.32); background: linear-gradient(145deg, rgba(255,218,112,.09), rgba(255,255,255,.035)); }
+.gold-avatar { width: 44px; height: 44px; border-radius: 15px; display: grid; place-items: center; font-size: 13px; font-weight: 900; letter-spacing: .03em; color: #fff2c4; background: radial-gradient(circle at 35% 25%, rgba(255,255,255,.25), transparent 35%), linear-gradient(145deg, #8b6d37, #4b3f35); border: 1px solid rgba(255,255,255,.13); }
+.gold-recipient-copy { min-width: 0; display: grid; gap: 3px; }
+.gold-recipient-copy strong, .gold-recipient-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gold-recipient-copy strong { font-size: 13px; }
+.gold-recipient-copy small { font-size: 10px; color: var(--muted); }
+.gold-recipient i { font-style: normal; text-align: center; color: #d6bf7b; }
+.gold-transfer-form { margin-top: 12px; padding: 14px; border: 1px solid rgba(255,255,255,.08); border-radius: 20px; background: rgba(255,255,255,.03); }
+.gold-balance-row, .gold-to-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 11px; }
+.gold-balance-row { color: var(--muted); }
+.gold-balance-row strong { color: var(--text); font-size: 14px; }
+.gold-to-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.06); color: var(--muted); }
+.gold-to-row strong { max-width: 65%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efe9ff; }
+.gold-amount-field { display: grid; gap: 7px; margin-top: 14px; font-size: 10px; color: var(--muted); }
+.gold-amount-field > div { display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid rgba(255,255,255,.09); border-radius: 15px; background: rgba(8,10,20,.42); }
+.gold-amount-field b { font-size: 15px; }
+.gold-amount-field input { width: 100%; min-width: 0; padding: 13px 0; border: 0; outline: 0; color: var(--text); background: transparent; font: inherit; font-size: 16px; font-weight: 800; appearance: textfield; }
+.gold-amount-field input::-webkit-outer-spin-button, .gold-amount-field input::-webkit-inner-spin-button { margin: 0; appearance: none; }
+.gold-quick-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+.gold-quick-row button { padding: 7px 10px; border: 1px solid rgba(255,255,255,.08); border-radius: 11px; color: #ded8ef; background: rgba(255,255,255,.04); font-size: 10px; }
+.gold-send-button { width: 100%; margin-top: 13px; padding: 12px 14px; border: 1px solid rgba(255,219,116,.26); border-radius: 17px; color: #fff7db; background: linear-gradient(135deg, rgba(168,125,45,.50), rgba(102,73,37,.56)); display: flex; align-items: center; gap: 12px; text-align: left; box-shadow: inset 0 0 26px rgba(255,226,136,.05); }
+.gold-send-button:disabled { opacity: .42; }
+.gold-send-button > span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 12px; background: rgba(255,255,255,.08); font-size: 19px; }
+.gold-send-button div { display: grid; gap: 2px; }
+.gold-send-button strong { font-size: 13px; }
+.gold-send-button small { color: rgba(255,247,219,.66); font-size: 10px; }
+.gold-success { margin-bottom: 12px; padding: 11px 12px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(114,235,194,.22); border-radius: 16px; background: rgba(88,190,155,.08); }
+.gold-success > span { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; background: rgba(100,224,181,.12); color: #a9f2d7; font-weight: 900; }
+.gold-success div { min-width: 0; display: grid; gap: 2px; }
+.gold-success strong { font-size: 12px; color: #c4f3df; }
+.gold-success small { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gold-empty { min-height: 150px; padding: 20px; border: 1px dashed rgba(255,255,255,.10); border-radius: 18px; display: grid; place-items: center; align-content: center; gap: 6px; text-align: center; background: rgba(255,255,255,.02); }
+.gold-empty > span { font-size: 28px; opacity: .72; }
+.gold-empty strong { font-size: 13px; }
+.gold-empty p { max-width: 280px; font-size: 10px; line-height: 1.5; color: var(--muted); }
+.gold-transfer-feedback { min-height: 18px; margin-top: 10px; text-align: center; font-size: 10px; color: var(--muted); }
+.gold-transfer-overlay.busy .gold-send-button, .gold-transfer-overlay.busy .gold-recipient, .gold-transfer-overlay.busy .gold-quick-row button { pointer-events: none; opacity: .65; }
+
+@media (min-width: 680px) {
+  .gold-transfer-columns { grid-template-columns: minmax(0, 1.05fr) minmax(270px, .95fr); align-items: start; }
+  .gold-transfer-form { margin-top: 27px; position: sticky; top: 0; }
+  .gold-recipient-list { max-height: 420px; }
+}
