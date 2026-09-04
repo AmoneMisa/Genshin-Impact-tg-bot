@@ -9,6 +9,7 @@ import { openShopGame } from './shop.js';
 import { openSwordGame } from './sword.js';
 import { openArcadeGame } from './arcade.js';
 import { openGoldTransfer } from './gold-transfer.js';
+import { openPoint21 } from './point21.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -165,6 +166,17 @@ function render(state) {
         } catch (error) {
           console.error(error);
           status.textContent = `Переводы: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'point21' && feature.status === 'webgl') {
+        try {
+          await openPoint21({ api, renderState: render, haptic, statusElement: status });
+          status.textContent = '21 очко работает через общий серверный стол Mini App.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `21 очко: ${error.message}`;
         }
         return;
       }
