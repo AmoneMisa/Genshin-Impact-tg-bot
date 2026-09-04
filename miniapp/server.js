@@ -32,6 +32,7 @@ import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
 import { getInventoryState, useInventoryPotion } from './inventory.js';
 import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
+import { getFormsState, savePersonalForm } from './forms.js';
 import {
   getPoint21State,
   syncPoint21,
@@ -228,6 +229,37 @@ async function bootstrap(req, res) {
     return sendJson(res, 200, stateFor(context));
   } catch (error) {
     return sendApiError(res, 'bootstrap', error);
+  }
+}
+
+async function formsState(req, res) {
+  try {
+    const context = await authorize(req);
+    const forms = await withLock(`${context.chatId}:forms`, async () => {
+      const chat = await getChatSession(context.chatId);
+      refreshContextSession(context, chat);
+      return getFormsState(chat, context.userId);
+    });
+    return sendJson(res, 200, forms);
+  } catch (error) {
+    return sendApiError(res, 'forms state', error);
+  }
+}
+
+async function formsSave(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const result = await withLock(`${context.chatId}:forms`, async () => {
+      const chat = await getChatSession(context.chatId);
+      refreshContextSession(context, chat);
+      const saved = savePersonalForm(chat, context.userId, body.fields);
+      if (saved.ok) await chat.save();
+      return saved;
+    });
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'forms save', error);
   }
 }
 
@@ -1156,6 +1188,8 @@ export default function startMiniAppServer() {
 
     if (route === 'GET /healthz') return sendJson(res, 200, { ok: true });
     if (route === 'GET /api/bootstrap') return bootstrap(req, res);
+    if (route === 'GET /api/forms') return formsState(req, res);
+    if (route === 'POST /api/forms/save') return formsSave(req, res);
     if (route === 'GET /api/profile') return playerProfileState(req, res);
     if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
