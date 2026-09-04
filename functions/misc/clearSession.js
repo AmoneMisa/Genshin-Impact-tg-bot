@@ -1,41 +1,26 @@
-export default function (session) {
-    if (session.game.gameClass.hasOwnProperty("boss")) {
-        if (session.game.gameClass.boss.hasOwnProperty("isDead")) {
-            delete session.game.gameClass.boss.isDead;
+/**
+ * Очищает временные поля в игровом объекте
+ * @param {Object} session - объект игровой сессии
+ */
+export default function clearTemporaryFields(session) {
+    const safeDelete = (obj, keys) => {
+        if (!obj) return;
+        for (const key of keys) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                delete obj[key];
+            }
         }
+    };
 
-        if (session.game.gameClass.boss.hasOwnProperty("damagedHp")) {
-            delete session.game.gameClass.boss.damagedHp;
-        }
+    // Очистка данных босса
+    safeDelete(session?.game?.gameClass?.boss, ["isDead", "damagedHp", "hp", "damage"]);
 
-        if (session.game.gameClass.boss.hasOwnProperty("hp")) {
-            delete session.game.gameClass.boss.hp;
-        }
+    // Очистка данных построек
+    safeDelete(session?.game?.builds, ["stealImmuneTimer", "chanceToSteal", "stealChance"]);
 
-        if (session.game.gameClass.boss.hasOwnProperty("damage")) {
-            delete session.game.gameClass.boss.damage;
-        }
-    }
+    // Очистка reddit
+    safeDelete(session?.game, ["reddit"]);
 
-    if (session.game.hasOwnProperty("builds")) {
-        if (session.game.builds.hasOwnProperty("stealImmuneTimer")) {
-            delete session.game.builds.stealImmuneTimer;
-        }
-
-        if (session.game.builds.hasOwnProperty("chanceToSteal")) {
-            delete session.game.builds.chanceToSteal;
-        }
-
-        if (session.game.builds.hasOwnProperty("stealChance")) {
-            delete session.game.builds.stealChance;
-        }
-    }
-
-    if (session.game.hasOwnProperty("reddit")) {
-        delete session.reddit;
-    }
-
-    if (session.game.hasOwnProperty("timerBossCallback")) {
-        delete session.timerBossCallback;
-    }
+    // Очистка таймера босса
+    safeDelete(session?.game, ["timerBossCallback"]);
 }

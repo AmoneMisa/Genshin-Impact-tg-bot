@@ -37,7 +37,7 @@ export default [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     if (session.game.bonusChances <= 0) {
-        await sendMessageWithDelete(msg.chat.id, `@${getUserName(session)}, твои попытки получения бонуса на сегодня исчерпаны. Попытки восстанавливаются после 00:00`, {
+        await sendMessageWithDelete(msg.chat.id, `@${await getUserName(session)}, твои попытки получения бонуса на сегодня исчерпаны. Попытки восстанавливаются после 00:00`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             reply_markup: {
                 inline_keyboard: [[{
@@ -61,7 +61,7 @@ export default [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
     if (file) {
         await sendPhoto(msg.chat.id, file, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-            caption: `@${getUserName(session)}, твой выигрыш: ${getEmoji(randomPrize.name)} ${prizeValue} ${randomPrize.translatedName}!`,
+            caption: `@${await getUserName(session)}, твой выигрыш: ${getEmoji(randomPrize.name)} ${prizeValue} ${randomPrize.translatedName}!`,
             reply_markup: {
                 inline_keyboard: [[{
                     text: "Закрыть",
@@ -70,7 +70,7 @@ export default [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
             }
         });
     } else {
-        await sendMessageWithDelete(msg.chat.id, `@${getUserName(session)}, твой выигрыш: ${getEmoji(randomPrize.name)} ${prizeValue} ${randomPrize.translatedName}!`, {
+        await sendMessageWithDelete(msg.chat.id, `@${await getUserName(session)}, твой выигрыш: ${getEmoji(randomPrize.name)} ${prizeValue} ${randomPrize.translatedName}!`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             reply_markup: {
                 inline_keyboard: [[{

@@ -1,62 +1,96 @@
-import calcDamagePlayerToPlayer from './calcDamagePlayerToPlayer.js';
-import calculateIncreaseGuardedResources from './calculateIncreaseGuardedResources.js';
-import buildsTemplate from '../../../template/buildsTemplate.js';
-import setLevel from '../player/setLevel.js';
-import getMaxHp from '../player/getters/getMaxHp.js';
+import calcDamagePlayerToPlayer from "./calcDamagePlayerToPlayer.js";
+import calculateIncreaseGuardedResources from "./calculateIncreaseGuardedResources.js";
+import buildsTemplate from "../../../template/buildsTemplate.js";
+import setLevel from "../player/setLevel.js";
+import getMaxHp from "../player/getters/getMaxHp.js";
 
-export default function (currentUser, targetUser) {
-    let remainHp = calcDamagePlayerToPlayer(currentUser, targetUser);
-    let buildTemplate = buildsTemplate["palace"];
-    let maxHp = getMaxHp(targetUser, targetUser.game.gameClass);
+export default function stealResources(currentUser, targetUser) {
+    const remainHp = calcDamagePlayerToPlayer(currentUser, targetUser);
+    const buildTemplate = buildsTemplate["palace"];
+    const maxHp = getMaxHp(targetUser, targetUser.game.gameClass);
 
     if (!targetUser.game.stealImmuneTimer) {
         targetUser.game.stealImmuneTimer = 0;
     }
 
     if (!canSteal(targetUser)) {
-        return {resultCode: 1};
+        return { resultCode: 1 }; // иммунитет
     }
 
     if (remainHp / maxHp > 0.6) {
-        return {resultCode: 2, remainHp};
+        return { resultCode: 2, remainHp }; // защитник слишком живой
     }
 
-    let defenderInventory = targetUser.game.inventory;
-    if (!defenderInventory.gold) {
-        defenderInventory.gold = 0;
-    }
+    const defenderInventory = normalizeInventory(targetUser.game.inventory);
 
-    if (!defenderInventory.crystals) {
-        defenderInventory.crystals = 0;
-    }
+    const stealPercentage = remainHp >= maxHp ? 0.3 : 0.13;
+    const guardedResources = calculateIncreaseGuardedResources(
+        buildTemplate,
+        targetUser.game.builds.palace.currentLvl
+    );
 
-    if (!defenderInventory.ironOre) {
-        defenderInventory.ironOre = 0;
-    }
+    const goldToSteal = Math.ceil(
+        Math.max(0, defenderInventory.gold - guardedResources.guardedGold) *
+        stealPercentage
+    );
+    const ironOreToSteal = Math.ceil(
+        Math.max(0, defenderInventory.ironOre - guardedResources.guardedIronOre) *
+        stealPercentage
+    );
+    const crystalsToSteal = Math.ceil(
+        Math.max(0, defenderInventory.crystals - guardedResources.guardedCrystals) *
+        stealPercentage
+    );
 
-    let stealPercentage = (remainHp >= maxHp) ? 0.3 : 0.13;
-    let guardedResources = calculateIncreaseGuardedResources(buildTemplate, targetUser.game.builds.palace.currentLvl);
-    let goldToSteal = Math.ceil(Math.max(0, defenderInventory.gold - guardedResources.guardedGold) * stealPercentage);
-    let ironOreToSteal = Math.ceil(Math.max(0, defenderInventory.ironOre - guardedResources.guardedIronOre) * stealPercentage);
-    let crystalsToSteal = Math.ceil(Math.max(0, defenderInventory.crystals - guardedResources.guardedCrystals) * stealPercentage);
-
+    // Добавляем атакующему
     currentUser.game.inventory.gold += goldToSteal;
     currentUser.game.inventory.ironOre += ironOreToSteal;
     currentUser.game.inventory.crystals += crystalsToSteal;
 
-    defenderInventory.gold -= goldToSteal;
-    defenderInventory.ironOre -= ironOreToSteal;
-    defenderInventory.crystals -= crystalsToSteal;
+    // Списываем у защитника (с защитой от отрицательных значений)
+    defenderInventory.gold = Math.max(0, defenderInventory.gold - goldToSteal);
+    defenderInventory.ironOre = Math.max(
+        0,
+        defenderInventory.ironOre - ironOreToSteal
+    );
+    defenderInventory.crystals = Math.max(
+        0,
+        defenderInventory.crystals - crystalsToSteal
+    );
 
-    targetUser.game.stealImmuneTimer = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 часа иммунитета от воровства
+    // Иммунитет на 2 часа
+    targetUser.game.stealImmuneTimer = Date.now() + 2 * 60 * 60 * 1000;
 
-    let gainedExp = Math.ceil(Math.max(9500, (currentUser.game.stats.currentExp * 0.077 * (targetUser.game.stats.lvl - currentUser.game.stats.lvl) + 9500)));
+    // Опыт
+    const gainedExp = Math.ceil(
+        Math.max(
+            9500,
+            currentUser.game.stats.currentExp * 0.077 *
+            (targetUser.game.stats.lvl - currentUser.game.stats.lvl) +
+            9500
+        )
+    );
     currentUser.game.stats.currentExp += gainedExp;
     setLevel(currentUser);
 
-    return {resultCode: 0, goldToSteal, ironOreToSteal, crystalsToSteal, gainedExp, remainHp};
+    return {
+        resultCode: 0,
+        goldToSteal,
+        ironOreToSteal,
+        crystalsToSteal,
+        gainedExp,
+        remainHp,
+    };
 }
 
 function canSteal(targetUser) {
-    return new Date().getTime() >= targetUser.game.stealImmuneTimer;
+    return Date.now() >= targetUser.game.stealImmuneTimer;
+}
+
+function normalizeInventory(inventory) {
+    return {
+        gold: inventory.gold || 0,
+        crystals: inventory.crystals || 0,
+        ironOre: inventory.ironOre || 0,
+    };
 }

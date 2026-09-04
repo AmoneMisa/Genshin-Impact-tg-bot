@@ -1,43 +1,44 @@
-import gachaTemplate from '../../../template/gachaTemplate.js';
-import { ensureGachaEntry, getGachaShardEntry } from './normalizeGachaState.js';
+import gachaTemplate from "../../../template/gachaTemplate.js";
 
-// 1 - уровень слишком низкий
-// 2 - недостаточно золота
-// 3 - недостаточно кристаллов
-// 0 - можно роллить за деньги
-// -1 - можно роллить за осколки
-// -2 - можно роллить за бесплатные попытки
+// Коды возврата
+const RESULT = {
+    LEVEL_TOO_LOW: 1,
+    NOT_ENOUGH_GOLD: 2,
+    NOT_ENOUGH_CRYSTALS: 3,
+    CAN_ROLL_FOR_MONEY: 0,
+    CAN_ROLL_FOR_PIECES: -1,
+    CAN_ROLL_FOR_FREE: -2,
+};
 
-export default function (session, gachaType) {
-    let gacha = gachaTemplate.find(item => item.name === gachaType);
+export default function canRollGacha(session, gachaType) {
+    const gacha = gachaTemplate.find(item => item.name === gachaType);
     if (!gacha) {
-        throw new Error(`Не найдена гача: ${gachaType}`);
+        throw new Error(`Неизвестный тип гачи: ${gachaType}`);
     }
 
-    let gachaItemInInventory = ensureGachaEntry(session, gachaType);
-    let shardEntry = getGachaShardEntry(session, gachaType);
-    let isFreeSpin = gachaItemInInventory.freeSpins > 0;
-    let isLevelEnough = session.game.stats.lvl >= gacha.needLvl;
+    const gachaItemInInventory = session.game.gacha.find(item => item.name === gachaType);
+    const isFreeSpin = gachaItemInInventory?.freeSpins > 0;
+    const isLevelEnough = session.game.stats.lvl >= gacha.needLvl;
 
     if (!isLevelEnough) {
-        return 1;
+        return RESULT.LEVEL_TOO_LOW;
     }
 
     if (isFreeSpin) {
-        return -2;
+        return RESULT.CAN_ROLL_FOR_FREE;
     }
 
-    if ((shardEntry?.value || 0) >= gacha.piecesForFleeCall) {
-        return -1;
+    if (gachaItemInInventory?.piecesForFleeCall >= gacha.piecesForFleeCall) {
+        return RESULT.CAN_ROLL_FOR_PIECES;
     }
 
-    if ((gacha.spinCost.gold || 0) > session.game.inventory.gold) {
-        return 2;
+    if (gacha.spinCost.gold > session.game.inventory.gold) {
+        return RESULT.NOT_ENOUGH_GOLD;
     }
 
-    if ((gacha.spinCost.crystals || 0) > session.game.inventory.crystals) {
-        return 3;
+    if (gacha.spinCost.crystals > session.game.inventory.crystals) {
+        return RESULT.NOT_ENOUGH_CRYSTALS;
     }
 
-    return 0;
+    return RESULT.CAN_ROLL_FOR_MONEY;
 }

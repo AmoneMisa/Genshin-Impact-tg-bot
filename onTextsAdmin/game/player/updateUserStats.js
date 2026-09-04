@@ -11,7 +11,7 @@ export default [[/(?:^|\s)\/update_characteristics\b/, async (msg) => {
         return;
     }
 
-    let buttons = [...buildKeyboard(msg.chat.id, `update_characteristics.${msg.chat.id}`), [{text: "Все", callback_data: `update_characteristics.${msg.chat.id}.all`}]];
+    let buttons = [...await buildKeyboard(msg.chat.id, `update_characteristics.${msg.chat.id}`, true, msg.from.id), [{text: "Все", callback_data: `update_characteristics.${msg.chat.id}.all`}]];
 
     await sendMessage(msg.from.id, "Выбери, кому ты хочешь пересчитать характеристики", {
         disable_notification: true,

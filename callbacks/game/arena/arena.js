@@ -110,7 +110,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
     }
 }], [/^arena\.(\w+)\.([\-0-9]+)_([^.]+)$/, async function (session, callback, [, arenaType, chatId, page]) {
     page = parseInt(page);
-    let rating = getPlayerRating(callback.from.id, arenaType, chatId);
+    let rating = await getPlayerRating(callback.from.id, arenaType, chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.${arenaType}.${chatId}`, rating, arenaType, chatId);
 
     await bot.editMessageReplyMarkup({
@@ -152,7 +152,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }
 
-    await editMessageCaption(`Рейтинг: ${getPlayerRating(defenderId, arenaType, chatId)[0]}\n\n${getDefenderDataString(defender)}`, {
+    await editMessageCaption(`Рейтинг: ${await getPlayerRating(defenderId, arenaType, chatId)[0]}\n\n${getDefenderDataString(defender)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -200,7 +200,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
 
     let arenaBot = arenaTempBots.find(arenaBot => arenaBot.name === parseInt(botNumber));
 
-    await editMessageCaption(`Рейтинг: ${getPlayerRating(null, arenaType, null, arenaBot)}\n\n${getDefenderDataString(arenaBot, true)}`, {
+    await editMessageCaption(`Рейтинг: ${await getPlayerRating(null, arenaType, null, arenaBot)}\n\n${getDefenderDataString(arenaBot, true)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

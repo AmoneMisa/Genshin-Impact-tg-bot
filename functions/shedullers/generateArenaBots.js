@@ -1,60 +1,27 @@
-import generateArenaBot from '../game/arena/generateArenaBot.js';
-import { updArenaTempBots } from '../../data.js';
-import fs from 'fs';
+import ArenaTempBot from "../../db/models/ArenaTempBot.js";
+import ArenaRating from "../../db/models/ArenaRating.js";
+import generateArenaBot from "../game/arena/generateArenaBot.js";
 
-export default function () {
-    let arenaTempBotsArray;
-    let unique = new Set();
+/**
+ * Генерация временных арен-ботов и сохранение их в MongoDB
+ */
+export default async function generateArenaTempBots() {
+    // Загружаем конфигурацию рейтингов из базы
+    const ratings = await ArenaRating.find({});
+    const bots = [];
 
-    for (let arenaBot of botsMap) {
-        for (let i = 0; i < arenaBot.count; i++) {
-            let generatedBot = generateArenaBot(arenaBot.rating);
-            unique.add(generatedBot);
+    for (const { rating, count } of ratings) {
+        for (let i = 0; i < count; i++) {
+            const bot = generateArenaBot(rating);
+            bots.push(bot);
         }
     }
 
-    arenaTempBotsArray = Array.from(unique);
-    fs.writeFileSync('arenaTempBots.json', JSON.stringify(arenaTempBotsArray));
-    updArenaTempBots();
-}
+    // Очищаем старых ботов
+    await ArenaTempBot.deleteMany({});
 
-const botsMap = [
-    {
-        rating: 0,
-        count: 25
-    },
-    {
-        rating: 1000,
-        count: 55
-    },
-    {
-        rating: 1151,
-        count: 25
-    },
-    {
-        rating: 1251,
-        count: 25
-    },
-    {
-        rating: 1301,
-        count: 25
-    },
-    {
-        rating: 1351,
-        count: 25
-    },
-    {
-        rating: 1381,
-        count: 25
-    },
-    {
-        rating: 1421,
-        count: 25
-    }, {
-        rating: 1500,
-        count: 15
-    }, {
-        rating: 1550,
-        count: 10
-    }
-]
+    // Сохраняем новых
+    await ArenaTempBot.insertMany(bots);
+
+    return bots;
+}

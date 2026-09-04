@@ -10,7 +10,7 @@ import editMessageText from '../../../functions/tgBotFunctions/editMessageText.j
 export default [[/^add_crystals\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_crystals\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
-    sendMessage(callback.message.chat.id, `Сколько кристаллов добавить для ${getUserName(targetSession, "name")}?`, {
+    sendMessage(callback.message.chat.id, `Сколько кристаллов добавить для ${await getUserName(targetSession, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
@@ -18,14 +18,14 @@ export default [[/^add_crystals\.([\-0-9]+)\.([0-9]+)$/, async function (session
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let crystals = parseInt(replyMsg.text);
             targetSession.game.inventory.crystals += crystals;
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
-            return sendMessage(callback.message.chat.id, `Ты добавил ${crystals} кристаллов для ${getUserName(targetSession, "name")}.`, {
+            return sendMessage(callback.message.chat.id, `Ты добавил ${crystals} кристаллов для ${await getUserName(targetSession, "name")}.`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });

@@ -7,7 +7,7 @@ import addBossIntoChatSession from './addBossIntoChatSession.js';
 import updateBossLevel from './updateBossLevel.js';
 import lodash from 'lodash';
 
-export default async function (chatId) {
+export default async function(chatId) {
     let bossTemplate = getRandomBoss();
     let boss = getBossByName(chatId, bossTemplate.name);
 

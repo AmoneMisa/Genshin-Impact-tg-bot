@@ -1,17 +1,29 @@
-import { sessions } from '../../data.js';
+import Chat from "../../db/models/Chat.js";
 
-export default async function () {
-    for (let chatSession of Object.values(sessions)) {
-        for (let session of Object.values(chatSession.members)) {
-            if (session.userChatData.user.is_bot) {
-                continue;
+/**
+ * Проверяет арену у всех игроков и очищает предметы с истёкшим сроком жизни
+ */
+export default async function() {
+    const chats = await Chat.find({});
+
+    for (const chat of chats) {
+        let updated = false;
+
+        for (const member of chat.members) {
+            if (member.userChatData?.user?.is_bot) continue;
+
+            const arenaItems = member.game?.inventory?.arena?.items;
+            if (!arenaItems || !arenaItems[1]) continue;
+
+            const item = arenaItems[1];
+            if (Date.now() >= item.lifeTime) {
+                arenaItems[1] = null;
+                updated = true;
             }
+        }
 
-            if (new Date().getTime() < session.game.inventory.arena.items[1].lifeTime) {
-                continue;
-            }
-
-            session.game.inventory.arena.items[1] = null;
+        if (updated) {
+            await chat.save();
         }
     }
 }

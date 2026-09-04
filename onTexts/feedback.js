@@ -8,7 +8,7 @@ import { myId } from '../config.js';
 export default [[/(?:^|\s)\/feedback/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    sendMessage(msg.from.id, `${getUserName(session, "name")}, Возникли вопросы? Нашли баг? Есть предложения или пожелания? Можете написать Ваши мысли в ответ к этому сообщению.`, {
+    sendMessage(msg.from.id, `${await getUserName(session, "name")}, Возникли вопросы? Нашли баг? Есть предложения или пожелания? Можете написать Ваши мысли в ответ к этому сообщению.`, {
         disable_notification: true,
         reply_markup: {
             selective: true,
@@ -17,7 +17,7 @@ export default [[/(?:^|\s)\/feedback/, async (msg, session) => {
     }).then(message => {
         let id = bot.onReplyToMessage(message.chat.id, message.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
-            return sendMessage(myId, `Фидбек от ${msg.from.id} ${getUserName(session, "name")} (@${getUserName(session, "nickname")}): ${replyMsg.text}`, {
+            return sendMessage(myId, `Фидбек от ${msg.from.id} ${await getUserName(session, "name")} (@${await getUserName(session, "nickname")}): ${replyMsg.text}`, {
                 disable_notification: true,
                 reply_markup: {
                     selective: true,

@@ -37,5 +37,6 @@ export default [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
                 callback_data: "close"
             }]]
         }
-    })
+    });
+    await chatSession.save();
 }]];

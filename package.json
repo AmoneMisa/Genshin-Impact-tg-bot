@@ -2,23 +2,23 @@
   "name": "tg-bot",
   "version": "1.0.0",
   "description": "The bot created by WhitesLove and Baros",
-  "main": "miniapp-entry.js",
+  "main": "./index.js",
   "type": "module",
   "scripts": {
-    "run": "node miniapp-entry.js",
-    "run:legacy": "node index.js",
-    "test": "node --test"
+    "run": "node ./index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^22.7.4",
-    "axios": "^1.6.0",
+    "axios": "1.11.0",
     "intel": "^1.2.0",
     "lodash": "^4.17.21",
+    "mongoose": "^8.17.2",
     "node-cron": "^3.0.2",
     "node-schedule": "^2.1.0",
-    "node-telegram-bot-api": "^0.63.0"
+    "node-telegram-bot-api": "^0.63.0",
+    "ollama": "^0.5.17"
   }
 }

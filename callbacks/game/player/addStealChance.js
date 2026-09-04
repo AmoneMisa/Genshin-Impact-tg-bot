@@ -10,7 +10,7 @@ import editMessageText from '../../../functions/tgBotFunctions/editMessageText.j
 export default [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
-    sendMessage(callback.message.chat.id, `Сколько попыток грабежа добавить для ${getUserName(targetSession, "name")}?`, {
+    sendMessage(callback.message.chat.id, `Сколько попыток грабежа добавить для ${await getUserName(targetSession, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
@@ -18,14 +18,14 @@ export default [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (ses
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let chanceToSteal = parseInt(replyMsg.text);
             targetSession.game.chanceToSteal += chanceToSteal;
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
-            sendMessage(callback.message.chat.id, `Ты добавил ${chanceToSteal} попыток грабежа для ${getUserName(targetSession, "name")}.`, {
+            sendMessage(callback.message.chat.id, `Ты добавил ${chanceToSteal} попыток грабежа для ${await getUserName(targetSession, "name")}.`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });

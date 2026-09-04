@@ -29,14 +29,14 @@ export default [[/(?:^|\s)\/shop\b/, async (msg, session) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
-            caption: `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`,
+            caption: `@${await getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`,
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(msg.chat.id), 1)
             }
         });
     } else {
-        await sendMessage(msg.from.id, `@${getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
+        await sendMessage(msg.from.id, `@${await getUserName(session, "nickname")}, выбери категорию для покупки в магазине.\nВсе товары доступны раз в неделю. Таймер обновляется в 00.00 понедельника.`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: controlButtons(`shop.${msg.chat.id}`, buildKeyboard(msg.chat.id), 1)

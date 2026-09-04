@@ -50,7 +50,7 @@ export default [
             } while (isWinSpins(resultSpins));
         }
 
-        let sentMessage = await sendMessage(callback.message.chat.id, `@${getUserName(session, "nickname")}, ${resultSpins.slice(0, 1).join('')}`, {
+        let sentMessage = await sendMessage(callback.message.chat.id, `@${await getUserName(session, "nickname")}, ${resultSpins.slice(0, 1).join('')}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         });
         setTimeout(async () => {
@@ -64,7 +64,7 @@ export default [
 
             session.game.slots.state = 'spin2';
 
-            await editMessageText(`@${getUserName(session, "nickname")}, ${resultSpins.slice(0, 2).join('')}`, {
+            await editMessageText(`@${await getUserName(session, "nickname")}, ${resultSpins.slice(0, 2).join('')}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 chat_id: sentMessage.chat.id,
                 message_id: sentMessage.message_id,
@@ -84,9 +84,9 @@ export default [
                 if (isWin) {
                     let prize = session.game.slots.bet * 1.5;
                     session.game.inventory.gold += prize;
-                    text = `@${getUserName(session, "nickname")}, ${resultSpins.join('')} - ты выиграл. Выигрыш: ${prize}`;
+                    text = `@${await getUserName(session, "nickname")}, ${resultSpins.join('')} - ты выиграл. Выигрыш: ${prize}`;
                 } else {
-                    text = `@${getUserName(session, "nickname")}, ${resultSpins.join('')} - ты проиграл. Проигрыш: ${session.game.slots.bet}`;
+                    text = `@${await getUserName(session, "nickname")}, ${resultSpins.join('')} - ты проиграл. Проигрыш: ${session.game.slots.bet}`;
                 }
 
                 await editMessageText(text, {

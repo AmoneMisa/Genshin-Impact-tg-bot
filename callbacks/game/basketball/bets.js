@@ -4,7 +4,7 @@ import getUserName from '../../../functions/getters/getUserName.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
 
 async function bet(session, callback, calcFunc) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
@@ -13,7 +13,8 @@ async function bet(session, callback, calcFunc) {
     }
 
     let newBet = calcFunc(session.game.basketball.bet);
-
+    console.log(newBet);
+    console.log(session.game.inventory.gold);
     if (newBet > session.game.inventory.gold) {
         await sendMessageWithDelete(callback.message.chat.id, 'Нет денег для ставки', {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
@@ -33,7 +34,7 @@ async function bet(session, callback, calcFunc) {
 }
 
 async function updateMessage(session, callback) {
-    return editMessageText(`@${getUserName(session, "nickname")}, твоя ставка: ${session.game.basketball.bet}`, {
+    return editMessageText(`@${await getUserName(session, "nickname")}, твоя ставка: ${session.game.basketball.bet}`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,

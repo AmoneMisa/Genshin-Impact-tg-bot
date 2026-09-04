@@ -18,7 +18,7 @@ import statsDictionary from '../../../dictionaries/statsDictionary.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
 async function errorUpdateMessage(buildName, build, chatId, messageId, callback, session) {
-    return editMessageCaption(`@${getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
+    return editMessageCaption(`@${await getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
@@ -89,7 +89,7 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
             callback_data: "close"
         }]];
 
-        await sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, здание на данный момент улучшается.\n\nВы можете ускорить постройку, нажав на кнопку "Ускорить"\n\nОставшееся время улучшения: ${getStringRemainTime(remain)}`, {
+        await sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, здание на данный момент улучшается.\n\nВы можете ускорить постройку, нажав на кнопку "Ускорить"\n\nОставшееся время улучшения: ${getStringRemainTime(remain)}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
         caption = "upgrade.speedup";
@@ -131,19 +131,19 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
     let playerInventory = foundedSession.game.inventory;
 
     if (playerInventory.gold < currentUpgrade.gold) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, недостаточно золота.\n\nВ наличии: ${playerInventory.gold}.\n\nНеобходимо: ${currentUpgrade.gold}`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, недостаточно золота.\n\nВ наличии: ${playerInventory.gold}.\n\nНеобходимо: ${currentUpgrade.gold}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
 
     if (playerInventory.crystals < currentUpgrade.crystals) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, недостаточно кристаллов.\n\nВ наличии: ${playerInventory.crystals}.\n\nНеобходимо: ${currentUpgrade.crystals}`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, недостаточно кристаллов.\n\nВ наличии: ${playerInventory.crystals}.\n\nНеобходимо: ${currentUpgrade.crystals}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
 
     if (playerInventory.ironOre < currentUpgrade.ironOre) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, недостаточно железной руды.\n\nВ наличии: ${playerInventory.ironOre}.\n\nНеобходимо: ${currentUpgrade.ironOre}`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, недостаточно железной руды.\n\nВ наличии: ${playerInventory.ironOre}.\n\nНеобходимо: ${currentUpgrade.ironOre}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
@@ -176,13 +176,13 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
     }
 
     if (!build.upgradeStartedAt) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
 
     if (foundedSession.game.inventory.crystals < calculateOptimalSpeedUpCost(buildName, build)) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
@@ -211,7 +211,7 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
     let build = await getBuild(chatId, callback.from.id, buildName);
 
     if (!build.upgradeStartedAt) {
-        return sendMessageWithDelete(chatId, `@${getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
+        return sendMessageWithDelete(chatId, `@${await getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
@@ -222,7 +222,7 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
     let speedupCost = calculateOptimalSpeedUpCost(buildName, build);
 
     if (foundedSession.game.inventory.crystals < speedupCost) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }

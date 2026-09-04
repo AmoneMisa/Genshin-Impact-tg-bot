@@ -12,7 +12,7 @@ export default [[/^receive_chest_timer\.([\-0-9]+)\.([0-9]+)$/, async function (
     targetSession.chosenChests = [];
     targetSession.chestButtons = [];
     targetSession.chestTries = 1;
-    return sendMessage(callback.message.chat.id, `Таймер сундука для ${getUserName(targetSession, "name")} обнулён.`, {
+    return sendMessage(callback.message.chat.id, `Таймер сундука для ${await getUserName(targetSession, "name")} обнулён.`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
     });
 }], [/^receive_chest_timer\.([\-0-9]+)_([^.]+)$/, function (session, callback, [, chatId, page]) {

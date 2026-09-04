@@ -15,7 +15,7 @@ export default [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) =
             continue;
         }
 
-        sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${getUserName(session, "nickname")}?`, {
+        sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${await getUserName(session, "nickname")}?`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             disable_notification: true,
             reply_markup: {

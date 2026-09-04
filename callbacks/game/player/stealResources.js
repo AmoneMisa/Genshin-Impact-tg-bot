@@ -47,7 +47,7 @@ ${getEmoji("crystals")} ${stealResult.crystalsToSteal} кристаллов.
         foundSession.game.stealImmuneTimer = 0;
     }
 
-    await editMessageCaption(`Твоя попытка ограбить @${getUserName(targetSession, "nickname")}: ${message}`, {
+    await editMessageCaption(`Твоя попытка ограбить @${await getUserName(targetSession, "nickname")}: ${message}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true

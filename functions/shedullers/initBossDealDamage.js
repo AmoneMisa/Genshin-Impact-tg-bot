@@ -5,7 +5,7 @@ import isBossAlive from '../game/boss/getBossStatus/isBossAlive.js';
 import sendMessageWithDelete from '../tgBotFunctions/sendMessageWithDelete.js';
 import { bosses, sessions } from '../../data.js';
 
-export default async function () {
+export default async function() {
     for (let [chatId, bossesArray] of Object.entries(bosses)) {
         for (let boss of bossesArray) {
             if (!isBossAlive(boss)) {
