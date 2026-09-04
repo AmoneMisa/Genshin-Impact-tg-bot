@@ -10,47 +10,34 @@ import updatePoints from '../../../functions/game/elements/updatePoints.js';
 import endGame from '../../../functions/game/general/endGame.js';
 import endGameTimer from '../../../functions/game/general/endGameTimer.js';
 
-let maxCountRounds = 3;
+const maxCountRounds = 3;
 
 export default [["elements_take", async function (session, callback) {
-    let chatId = callback.message.chat.id;
+    const chatId = callback.message.chat.id;
+    const chatSession = await getChatSession(chatId);
+    const userId = session.userChatData.user.id;
+    const game = chatSession.game.elements;
 
-    let chatSession = await getChatSession(chatId);
-    let userId = session.userChatData.user.id;
-    let game = chatSession.game.elements;
+    if (!validateGameSession(game, userId, "elements")) return;
 
-    if (!validateGameSession(game, userId, "elements")) {
-        return;
-    }
-
-    if (!game.players[userId].hasOwnProperty("counter")) {
-        game.players[userId].counter = 0;
-    }
-
-    if (!game.hasOwnProperty("currentRound")) {
-        game.currentRound = 1;
-    }
-
-    if (isPlayerEndedRound(game.players[userId], game.currentRound)) {
-        return;
-    }
+    if (!game.players[userId].hasOwnProperty("counter")) game.players[userId].counter = 0;
+    if (!game.hasOwnProperty("currentRound")) game.currentRound = 1;
+    if (isPlayerEndedRound(game.players[userId], game.currentRound)) return;
 
     endGameTimer(chatSession, 20 * 1000, chatId, "elements", callback.message.message_thread_id);
     getRandomElement(chatSession, userId);
     game.players[userId].counter++;
 
-    let roundEnd = isRoundEnd(game.players, game.currentRound);
-
+    const roundEnd = isRoundEnd(game.players, game.currentRound);
     if (roundEnd) {
         game.currentRound++;
         updatePoints(game.players);
     }
 
-    game.gameSessionLastUpdateAt = new Date().getTime();
-
+    game.gameSessionLastUpdateAt = Date.now();
     await chatSession.save();
 
-    editMessageText(elementsMessage(chatSession, userId), {
+    await editMessageText(await elementsMessage(chatSession), {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: chatId,
         message_id: game.messageId,
