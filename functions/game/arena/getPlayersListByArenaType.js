@@ -1,47 +1,45 @@
-import ArenaRating from "../../../db/models/ArenaRating.js";
+import Chat from "../../../db/models/Chat.js";
 import getSession from "../../getters/getSession.js";
 import getUserName from "../../getters/getUserName.js";
 import updateRank from "./updateRank.js";
+import { getArenaRatingTable } from "./ratingStore.js";
 
 const pageSize = 25;
 
+async function resolveExpansionChat(userId, preferredChatId) {
+    if (preferredChatId != null) {
+        const chat = await Chat.findOne({chatId: Number(preferredChatId), 'members.userId': Number(userId)});
+        if (chat) return chat.chatId;
+    }
+    const chat = await Chat.findOne({'members.userId': Number(userId)}).sort({updatedAt: -1});
+    return chat?.chatId ?? null;
+}
+
 /**
- * Формирует таблицу рейтинга арены
- * @param {String} arenaType - "common" или "expansion"
- * @param {Number} page - номер страницы
- * @param {Number} chatId - ID чата (для common)
+ * Формирует таблицу рейтинга арены.
  */
 export default async function(arenaType, page = 1, chatId) {
+    const rows = await getArenaRatingTable(arenaType, chatId);
+    const start = Math.max(0, (Number(page) - 1) * pageSize);
+    const requested = rows.slice(start, start + pageSize);
+    let counter = start + 1;
     let message = "";
-    let counter = page === 1 ? 1 : pageSize * page;
 
-    // 1. Получаем список рейтингов из базы
-    let ratings;
-    if (arenaType === "common") {
-        ratings = await ArenaRating.find({ chatId, mode: "common" });
-    } else {
-        ratings = await ArenaRating.find({ mode: "expansion" });
-    }
+    for (const row of requested) {
+        const sourceChatId = arenaType === 'common'
+            ? chatId
+            : await resolveExpansionChat(row.userId, row.chatId);
+        if (sourceChatId == null) continue;
 
-    // 2. Сортируем по рейтингу
-    let sortedRating = ratings
-        .map(r => [r.userId, r.rating, r.chatId])
-        .sort((a, b) => b[1] - a[1]);
-
-    // 3. Делаем постраничный вывод
-    let start = page === 1 ? 0 : (page - 1) * pageSize;
-    let end = page * pageSize;
-    let requestedRating = sortedRating.slice(start, end);
-
-    // 4. Формируем сообщение
-    for (let [userId, rating, userChatId] of requestedRating) {
-        // для expansion берём chatId из записи
-        const session = await getSession(arenaType === "expansion" ? userChatId : chatId, userId);
-        const name = await getUserName(userId, "name");
-        const rank = await updateRank(userId, arenaType, chatId);
-
-        message += `${counter}. ${name} (Рейтинг ${rating} | Ранг: ${rank})\n`;
-        counter++;
+        try {
+            await getSession(sourceChatId, row.userId);
+            const name = await getUserName(row.userId, "name");
+            const rank = await updateRank(row.userId, arenaType, sourceChatId);
+            message += `${counter}. ${name || row.userId} (Рейтинг ${row.rating} | Ранг: ${rank})\n`;
+            counter++;
+        } catch {
+            // Пропускаем устаревшую рейтинговую запись без живой сессии.
+        }
     }
 
     return message;
