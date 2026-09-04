@@ -2,10 +2,11 @@
   "name": "tg-bot",
   "version": "1.0.0",
   "description": "The bot created by WhitesLove and Baros",
-  "main": "index.js",
+  "main": "miniapp-entry.js",
   "type": "module",
   "scripts": {
-    "run": "node index.js",
+    "run": "node miniapp-entry.js",
+    "run:legacy": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
