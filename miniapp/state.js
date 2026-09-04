@@ -46,6 +46,7 @@ export function createMiniAppState(session, context) {
       { id: 'transfer', title: 'Переводы', subtitle: 'Передать золото игроку', icon: '🪙', status: 'webgl' },
       { id: 'point21', title: '21 очко', subtitle: 'Общий карточный стол', icon: '🃏', status: 'webgl' },
       { id: 'elements', title: 'Стихии', subtitle: 'Реакции и комбинации', icon: '✦', status: 'webgl' },
+      { id: 'clan', title: 'Кланы', subtitle: 'Гильдия и активности', icon: '🏰', status: 'webgl' },
       { id: 'bonus', title: 'Бонус', subtitle: 'Ежедневная награда', icon: '🎁', status: 'webgl' },
       { id: 'titles', title: 'Титулы', subtitle: 'Случайный титул игроку', icon: '🏷️', status: 'webgl' },
       { id: 'horoscope', title: 'Гороскоп', subtitle: 'Шуточное предсказание', icon: '🔮', status: 'webgl' },
