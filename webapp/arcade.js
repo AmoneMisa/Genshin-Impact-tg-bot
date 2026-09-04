@@ -7,7 +7,7 @@ const REASONS = {
 };
 
 function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
+  return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(Number(value) || 0);
 }
 
 function escapeHtml(value) {
@@ -17,6 +17,11 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
+}
+
+function signedNumber(value) {
+  const number = Number(value) || 0;
+  return `${number > 0 ? '+' : ''}${formatNumber(number)}`;
 }
 
 export async function openArcadeGame({ api, renderState, haptic, statusElement }) {
@@ -54,6 +59,18 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
   function resultBanner(result) {
     if (!result) return '';
+
+    if (result.mode === 'slots') {
+      return `
+        <section class="arcade-result ${result.won ? 'win' : 'lose'}">
+          <span>${result.won ? '🎰' : '🫥'}</span>
+          <div>
+            <strong>${result.won ? `Джекпот · выплата ${formatNumber(result.reward)} золота` : 'Комбинация не сыграла'}</strong>
+            <small>${result.reels.map(escapeHtml).join(' ')} · ставка ${formatNumber(result.bet)} · итог баланса ${signedNumber(result.net)}</small>
+          </div>
+        </section>`;
+    }
+
     return `
       <section class="arcade-result ${result.won ? 'win' : 'lose'}">
         <span>${result.won ? '🏆' : '🫥'}</span>
@@ -73,19 +90,39 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
   function betControls(game) {
     const suggested = [100, 1000, 5000].filter(value => value <= state.gold);
+    const slots = game.mode === 'slots';
     return `
       <div class="arcade-bet-box">
-        <label><span>База выигрыша</span><input type="number" min="0" step="1" max="${Math.floor(state.gold)}" value="${Math.min(100, Math.floor(state.gold))}" data-arcade-bet /></label>
+        <label><span>${slots ? 'Ставка' : 'База выигрыша'}</span><input type="number" min="0" step="1" max="${Math.floor(state.gold)}" value="${Math.min(100, Math.floor(state.gold))}" data-arcade-bet /></label>
         <div class="arcade-bet-chips">
           ${suggested.map(value => `<button type="button" data-bet-value="${value}">${formatNumber(value)}</button>`).join('')}
           <button type="button" data-bet-value="${Math.floor(state.gold)}">Всё</button>
         </div>
-        <small>Сохраняем экономику старого бота: сумма ограничена балансом, но не списывается; при победе начисляется награда от этой суммы.</small>
+        <small>${slots
+          ? `Как в старом боте: ставка списывается при запуске спина. Шанс трёх одинаковых символов — ${Math.round(game.winChance * 100)}%, выплата — ×${game.payoutMultiplier}.`
+          : 'Сохраняем экономику старого бота: сумма ограничена балансом, но не списывается; при победе начисляется награда от этой суммы.'}</small>
       </div>
-      <button type="button" class="arcade-primary" data-arcade-start><span>${game.icon}</span><div><strong>Начать раунд</strong><small>${game.maxRolls} ${game.maxRolls === 2 ? 'броска' : 'броска'} · победа при ${game.winRange.min}–${game.winRange.max}</small></div></button>`;
+      <button type="button" class="arcade-primary" data-arcade-start><span>${game.icon}</span><div><strong>${slots ? 'Поставить и запустить' : 'Начать раунд'}</strong><small>${slots
+        ? `1 спин · шанс ${Math.round(game.winChance * 100)}% · выплата ×${game.payoutMultiplier}`
+        : `${game.maxRolls} ${game.maxRolls === 1 ? 'бросок' : game.maxRolls < 5 ? 'броска' : 'бросков'} · победа при ${game.winRange.min}–${game.winRange.max}`}</small></div></button>`;
   }
 
   function activeControls(game) {
+    if (game.mode === 'slots') {
+      const reels = game.reels?.length ? game.reels : ['❔', '❔', '❔'];
+      return `
+        <section class="arcade-score-card">
+          <div><small>БАРАБАНЫ</small><strong>${reels.map(escapeHtml).join(' ')}</strong></div>
+          <div><small>СТАВКА</small><strong>${formatNumber(game.bet)}</strong></div>
+          <div><small>ШАНС</small><strong>${Math.round(game.winChance * 100)}%</strong></div>
+        </section>
+        <div class="arcade-progress"><span style="width:0%"></span></div>
+        <button type="button" class="arcade-primary roll" data-arcade-roll>
+          <span class="arcade-roll-icon">🎰</span>
+          <div><strong>Крутить барабаны</strong><small>Комбинация генерируется только на сервере</small></div>
+        </button>`;
+    }
+
     return `
       <section class="arcade-score-card">
         <div><small>СЧЁТ</small><strong>${formatNumber(game.score)}</strong></div>
@@ -145,7 +182,7 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
       state = payload.arcade;
       if (payload.state) renderState(payload.state);
       lastResult = null;
-      feedback.textContent = 'Раунд начат.';
+      feedback.textContent = currentGame().mode === 'slots' ? 'Ставка принята. Крути барабаны.' : 'Раунд начат.';
       renderAll();
     } catch (error) {
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
@@ -161,7 +198,7 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
     if (pending) return;
     pending = true;
     overlay.classList.add('busy', 'rolling');
-    feedback.textContent = 'Генерируем результат на сервере…';
+    feedback.textContent = currentGame().mode === 'slots' ? 'Крутим барабаны на сервере…' : 'Генерируем результат на сервере…';
     haptic('heavy');
     try {
       const payload = await api('/api/arcade/roll', {
@@ -171,10 +208,18 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
       state = payload.arcade;
       if (payload.state) renderState(payload.state);
       lastResult = payload.result || null;
-      feedback.textContent = payload.finished
-        ? (payload.result.won ? `Победа: +${formatNumber(payload.result.reward)} золота.` : 'Раунд завершён без выигрыша.')
-        : `Выпало ${payload.value}.`;
-      statusElement.textContent = payload.finished ? `Аркада: ${feedback.textContent}` : `Аркада: выпало ${payload.value}.`;
+
+      if (payload.result?.mode === 'slots') {
+        feedback.textContent = payload.result.won
+          ? `Джекпот ${payload.result.reels.join(' ')} · выплата ${formatNumber(payload.result.reward)} золота.`
+          : `${payload.result.reels.join(' ')} · ставка проиграна.`;
+      } else {
+        feedback.textContent = payload.finished
+          ? (payload.result.won ? `Победа: +${formatNumber(payload.result.reward)} золота.` : 'Раунд завершён без выигрыша.')
+          : `Выпало ${payload.value}.`;
+      }
+
+      statusElement.textContent = `Аркада: ${feedback.textContent}`;
       renderAll();
     } catch (error) {
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
@@ -189,12 +234,15 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
   function renderAll() {
     const game = currentGame();
+    const slots = game.mode === 'slots';
     content.innerHTML = `
       <div class="arcade-tabs">${gameTabs()}</div>
       ${resultBanner(lastResult)}
       <section class="arcade-hero">
         <div class="arcade-big-icon">${game.icon}</div>
-        <div><small>${escapeHtml(game.title).toUpperCase()}</small><strong>${game.active ? 'Раунд идёт' : 'Готов к игре'}</strong><p>Победный итог: ${game.winRange.min}–${game.winRange.max}. За один бросок выпадает 1–${game.maxValue}.</p></div>
+        <div><small>${escapeHtml(game.title).toUpperCase()}</small><strong>${game.active ? 'Раунд идёт' : 'Готов к игре'}</strong><p>${slots
+          ? `Три одинаковых символа дают выплату ×${game.payoutMultiplier}. Шанс джекпота — ${Math.round(game.winChance * 100)}%.`
+          : `Победный итог: ${game.winRange.min}–${game.winRange.max}. За один бросок выпадает 1–${game.maxValue}.`}</p></div>
         <button type="button" data-arcade-refresh aria-label="Обновить">↻</button>
       </section>
       <div class="arcade-balance"><span>Доступный баланс</span><strong>🪙 ${formatNumber(state.gold)}</strong></div>
