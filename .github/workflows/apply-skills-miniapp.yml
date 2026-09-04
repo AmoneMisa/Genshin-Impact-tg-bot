@@ -6,6 +6,7 @@ on:
       - feature/telegram-miniapp-webgl
     paths:
       - .github/scripts/apply-skills-miniapp.mjs
+      - .github/workflows/apply-skills-miniapp.yml
 
 permissions:
   contents: write
