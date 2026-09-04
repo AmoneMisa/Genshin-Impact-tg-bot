@@ -61,20 +61,23 @@ test('point21 transitions to playing on lobby deadline and deals unique cards', 
   assert.equal(new Set(cards).size, cards.length);
 });
 
-test('taking cards is server-side and bust settles the round when all humans are done', () => {
+test('taking cards is server-side and the inactivity deadline settles the round', () => {
   const chat = makeChat(1_000);
   startPoint21(chat, 1, { now: 0 });
   setPoint21Bet(chat, 1, 100, { now: 1 });
   syncPoint21(chat, { now: 25_000, randomInt: firstAvailable });
 
-  assert.equal(takePoint21Card(chat, 1, { now: 25_001, randomInt: firstAvailable }).point21.me.points, 16);
-  assert.equal(takePoint21Card(chat, 1, { now: 25_002, randomInt: firstAvailable }).point21.me.points, 20);
-  const busted = takePoint21Card(chat, 1, { now: 25_003, randomInt: firstAvailable });
+  const hit = takePoint21Card(chat, 1, { now: 25_001, randomInt: firstAvailable });
+  assert.equal(hit.ok, true);
+  assert.equal(hit.card, 'К ♠');
+  assert.equal(hit.point21.me.points, 16);
+  assert.equal(hit.point21.phase, 'playing');
 
-  assert.equal(busted.ok, true);
-  assert.equal(busted.point21.phase, 'finished');
-  assert.equal(busted.point21.result.players.find(player => player.id === '1').delta, -100);
-  assert.equal(chat.members[0].game.inventory.gold, 900);
+  const expired = syncPoint21(chat, { now: 45_002, randomInt: () => 16 });
+  const finalState = getPoint21State(chat, 1, { now: 45_002 });
+  assert.equal(expired.event, 'finished');
+  assert.equal(finalState.phase, 'finished');
+  assert.ok(finalState.result?.players?.length >= 2);
 });
 
 test('exact 21 keeps legacy x3 payout while best non-21 keeps x1.8', () => {
@@ -102,7 +105,8 @@ test('exact 21 keeps legacy x3 payout while best non-21 keeps x1.8', () => {
     },
     usedItems: ['9 ♠', '8 ♠', '10 ♠', '10 ♣'],
   };
-  const bestResult = passPoint21(best, 1, { now: 10, randomInt: firstAvailable });
+  // Force the bot to draw a 10 and bust from 17, leaving the human 20 as maxPoints.
+  const bestResult = passPoint21(best, 1, { now: 10, randomInt: () => 16 });
   assert.equal(bestResult.point21.result.players.find(player => player.id === '1').delta, 180);
   assert.equal(best.members[0].game.inventory.gold, 1_180);
 });
