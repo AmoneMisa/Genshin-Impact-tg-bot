@@ -36,7 +36,7 @@ export function createMiniAppState(session, context) {
     },
     features: [
       { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'legacy' },
-      { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'legacy' },
+      { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'webgl' },
       { id: 'gacha', title: 'Гача', subtitle: 'Коллекция и редкости', icon: '✨', status: 'legacy' },
       { id: 'equipment', title: 'Снаряжение', subtitle: 'Билд персонажа', icon: '🛡️', status: 'legacy' },
       { id: 'builds', title: 'Постройки', subtitle: 'Ресурсы и развитие', icon: '🏛️', status: 'legacy' },
