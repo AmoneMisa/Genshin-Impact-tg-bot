@@ -2,6 +2,7 @@ import { startWebGL } from './renderer.js';
 import { openChestGame } from './chest.js';
 import { openGachaGame } from './gacha.js';
 import { openEquipmentGame } from './equipment.js';
+import { openBuildsGame } from './builds.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -70,12 +71,7 @@ function render(state) {
 
       if (feature.id === 'chest' && feature.status === 'webgl') {
         try {
-          await openChestGame({
-            api,
-            renderState: render,
-            haptic,
-            statusElement: status,
-          });
+          await openChestGame({ api, renderState: render, haptic, statusElement: status });
           status.textContent = 'Сундуки работают через Mini App и сохраняют награды в Mongo.';
         } catch (error) {
           console.error(error);
@@ -103,16 +99,22 @@ function render(state) {
 
       if (feature.id === 'equipment' && feature.status === 'webgl') {
         try {
-          await openEquipmentGame({
-            api,
-            renderState: render,
-            haptic,
-            statusElement: status,
-          });
+          await openEquipmentGame({ api, renderState: render, haptic, statusElement: status });
           status.textContent = 'Снаряжение работает через Mini App и сохраняется в Mongo.';
         } catch (error) {
           console.error(error);
           status.textContent = `Снаряжение: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'builds' && feature.status === 'webgl') {
+        try {
+          await openBuildsGame({ api, renderState: render, haptic, statusElement: status });
+          status.textContent = 'Постройки работают через Mini App; улучшения и сбор ресурсов сохраняются в Mongo.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Постройки: ${error.message}`;
         }
         return;
       }
