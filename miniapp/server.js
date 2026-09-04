@@ -10,6 +10,7 @@ import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
 import { getChestState, openChest } from './chest.js';
 import { getGachaState, rollGacha, resolveGacha } from './gacha.js';
+import { getEquipmentState, performEquipmentAction } from './equipment.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -264,6 +265,47 @@ async function gachaResolve(req, res) {
   }
 }
 
+async function equipmentState(req, res) {
+  try {
+    const context = await authorize(req);
+    return sendJson(res, 200, getEquipmentState(context.session));
+  } catch (error) {
+    return sendApiError(res, 'equipment state', error);
+  }
+}
+
+async function equipmentAction(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.key !== 'string' || !body.key) {
+      const error = new Error('equipment key is required');
+      error.status = 400;
+      throw error;
+    }
+    if (!['equip', 'unequip', 'sell'].includes(body.action)) {
+      const error = new Error('action must be equip, unequip or sell');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:${context.userId}:equipment`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const updated = performEquipmentAction(context.session, body.key, body.action);
+      if (updated.ok) await saveSession(context.session);
+      return updated;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'equipment action', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -299,6 +341,14 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/gacha/resolve') {
       return gachaResolve(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/equipment') {
+      return equipmentState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/equipment/action') {
+      return equipmentAction(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
