@@ -60,6 +60,19 @@ function buildKeyboard(chatId, buildName, buildTemplate, build) {
         }]);
     }
 
+    // Forge item crafting/upgrading (functions/game/equipment/craftItem.js /
+    // upgradeItem.js) — currently the only building that acts on the player's
+    // equipment rather than its own resource production.
+    if (buildName === "forge") {
+        rows.push([{
+            text: "Выковать",
+            callback_data: `builds.${chatId}.forge.craft`,
+        }, {
+            text: "Улучшить снаряжение",
+            callback_data: `builds.${chatId}.forge.itemUpgrade`,
+        }]);
+    }
+
     rows.push([{
         text: buttonsDictionary["ru"].close,
         callback_data: "close"
