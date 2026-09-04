@@ -26,13 +26,32 @@
 .clan-warehouse strong { display:block; margin-top:3px; font-size:10px; }
 .clan-contribute { display:grid; grid-template-columns:1fr 1fr auto; gap:7px; margin-top:9px; }
 .clan-contribute select,.clan-contribute input { min-width:0; padding:9px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(8,10,20,.5); color:var(--text); }
-.clan-contribute button,.clan-create button,.clan-join-button,.clan-danger { padding:9px 11px; border-radius:12px; border:1px solid rgba(176,143,255,.22); background:rgba(112,78,177,.42); color:var(--text); font-weight:800; }
+.clan-contribute button,.clan-create button,.clan-join-button,.clan-danger,.clan-activity-card button,.clan-activity-row button,.clan-building-row button { padding:9px 11px; border-radius:12px; border:1px solid rgba(176,143,255,.22); background:rgba(112,78,177,.42); color:var(--text); font-weight:800; }
 .clan-create { display:grid; grid-template-columns:1fr auto; gap:8px; margin-top:10px; }
 .clan-create input { min-width:0; padding:10px 11px; border-radius:13px; border:1px solid rgba(255,255,255,.08); background:rgba(8,10,20,.5); color:var(--text); }
 .clan-join-button { font-size:9px; }
 .clan-quiz-options { display:grid; gap:7px; margin-top:9px; }
 .clan-quiz-options button { padding:10px; border-radius:13px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.035); color:var(--text); text-align:left; font-size:10px; }
+.clan-activities { display:grid; gap:10px; }
+.clan-activity-card,.clan-activity-row,.clan-building-row { padding:11px; border-radius:14px; border:1px solid rgba(255,255,255,.07); background:rgba(255,255,255,.035); }
+.clan-activity-card { display:grid; gap:9px; }
+.clan-activity-card > div:first-child,.clan-activity-row,.clan-building-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.clan-activity-card strong,.clan-activity-row strong,.clan-building-row strong { display:block; font-size:10px; }
+.clan-activity-card small,.clan-activity-row small,.clan-building-row small,.clan-muted { display:block; margin-top:3px; color:var(--muted); font-size:8px; }
+.clan-activity-group { padding:12px; border-radius:15px; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.055); }
+.clan-activity-group h4 { margin-bottom:8px; }
+.clan-activity-list { display:grid; gap:7px; }
+.clan-activity-row button,.clan-building-row button { flex:0 0 auto; font-size:8px; }
+.clan-activity-row button:disabled,.clan-building-row button:disabled,.clan-activity-card button:disabled { opacity:.42; cursor:not-allowed; }
+.clan-building-row > div { min-width:0; }
+.clan-activity-title { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.clan-activity-title > span { flex:0 0 auto; padding:4px 7px; border-radius:999px; background:rgba(255,255,255,.05); font-size:8px; color:#ddd0ff; }
+.clan-boss-hp { height:7px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.07); }
+.clan-boss-hp span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg, rgba(218,76,112,.85), rgba(255,143,128,.9)); }
+.clan-damage-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+.clan-damage-list span { display:flex; justify-content:space-between; gap:8px; padding:6px 7px; border-radius:10px; background:rgba(255,255,255,.025); font-size:8px; color:var(--muted); }
+.clan-damage-list b { color:var(--text); }
 .clan-coming { opacity:.58; display:grid; grid-template-columns:repeat(2,1fr); gap:7px; }
 .clan-coming article { padding:10px; border-radius:13px; background:rgba(255,255,255,.025); border:1px dashed rgba(255,255,255,.08); font-size:9px; }
 .clan-danger { width:100%; margin-top:10px; border-color:rgba(255,112,130,.2); background:rgba(146,49,66,.26); }
-@media (max-width:520px){.clan-contribute{grid-template-columns:1fr 1fr}.clan-contribute button{grid-column:1/-1}.clan-stats{grid-template-columns:1fr 1fr}.clan-stats article:last-child{grid-column:1/-1}}
+@media (max-width:520px){.clan-contribute{grid-template-columns:1fr 1fr}.clan-contribute button{grid-column:1/-1}.clan-stats{grid-template-columns:1fr 1fr}.clan-stats article:last-child{grid-column:1/-1}.clan-activity-row,.clan-building-row{align-items:flex-start;flex-direction:column}.clan-activity-row button,.clan-building-row button{width:100%}.clan-damage-list{grid-template-columns:1fr}}
