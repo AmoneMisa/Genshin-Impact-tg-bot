@@ -12,7 +12,7 @@ import loadPlayer from '../../../functions/getters/loadPlayer.js';
 let maxPulls = 2;
 
 export default [[/^bowling_pull$/, async function (session, callback) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
@@ -39,7 +39,7 @@ export default [[/^bowling_pull$/, async function (session, callback) {
     if (bowling.counter === maxPulls) {
         let result = isWinPoints(bowling.skittles, 8, 12);
         if (!result) {
-            deleteMessage(chatId, callback.message.message_id);
+            await deleteMessage(chatId, callback.message.message_id);
             await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты проиграл. Твоя сумма сбитых кеглей: ${bowling.skittles}. Ставка: ${bowling.bet}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 7000);
@@ -54,7 +54,7 @@ export default [[/^bowling_pull$/, async function (session, callback) {
         }
 
         await sendPrize(chatId, session.userId, 'bowling', modifier);
-        deleteMessage(chatId, callback.message.message_id);
+        await deleteMessage(chatId, callback.message.message_id);
         await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${bowling.bet}\nВыигрыш: ${Math.round(bowling.bet * modifier)}\nСбитое число кеглей: ${bowling.skittles}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 7000);
