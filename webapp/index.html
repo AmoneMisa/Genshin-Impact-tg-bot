@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#111426" />
+  <title>WhitesLove Game</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+</head>
+<body>
+  <canvas id="webgl" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+  <main id="app" class="app-shell">
+    <section class="topbar">
+      <div>
+        <div class="eyebrow">WHITESLOVE · GAME HUB</div>
+        <h1 id="hello">Загрузка профиля…</h1>
+      </div>
+      <button id="fullscreen" class="icon-button" type="button" aria-label="Полный экран">⛶</button>
+    </section>
+
+    <section class="hero-card glass">
+      <div class="level-orb"><span id="level">1</span><small>LVL</small></div>
+      <div class="hero-copy">
+        <div class="hero-row"><strong id="class-name">Путешественник</strong><span id="chat-badge">Telegram</span></div>
+        <div class="xp-track"><span id="xp-fill"></span></div>
+        <div class="xp-copy"><span id="xp-text">0 / 1 XP</span><span id="arena-text">Арена: 0</span></div>
+      </div>
+    </section>
+
+    <section class="resources" aria-label="Ресурсы">
+      <article class="resource glass"><span>🪙</span><div><small>Мора</small><strong id="gold">0</strong></div></article>
+      <article class="resource glass"><span>💎</span><div><small>Кристаллы</small><strong id="crystals">0</strong></div></article>
+      <article class="resource glass"><span>⛏️</span><div><small>Руда</small><strong id="ore">0</strong></div></article>
+    </section>
+
+    <section class="section-head">
+      <div><div class="eyebrow">РЕЖИМЫ</div><h2>Куда идём?</h2></div>
+      <span class="live-pill">WEBGL</span>
+    </section>
+
+    <section id="game-grid" class="game-grid"></section>
+
+    <section class="migration-note glass">
+      <strong>Новый интерфейс уже живой.</strong>
+      <p>Игровые данные берутся из существующих сессий. Боевые действия пока остаются в текстовом fallback, чтобы не сломать экономику во время миграции.</p>
+    </section>
+
+    <div id="status" class="status">Подключаем Telegram…</div>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
