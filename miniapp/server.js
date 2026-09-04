@@ -28,6 +28,7 @@ import { getMiniAppSwordState, rollMiniAppSword } from './sword.js';
 import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from './arcade.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
+import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
 import {
   getPoint21State,
   syncPoint21,
@@ -224,6 +225,65 @@ async function bootstrap(req, res) {
     return sendJson(res, 200, stateFor(context));
   } catch (error) {
     return sendApiError(res, 'bootstrap', error);
+  }
+}
+
+async function playerProfileState(req, res) {
+  try {
+    const context = await authorize(req);
+    const profile = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getPlayerProfileState(context.session);
+    });
+    return sendJson(res, 200, profile);
+  } catch (error) {
+    return sendApiError(res, 'player profile state', error);
+  }
+}
+
+async function playerProfileClass(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.className !== 'string' || !body.className) {
+      const error = new Error('className is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const changed = changePlayerClassForMiniApp(context.session, body.className);
+      if (changed.ok) await saveSession(context.session);
+      return changed;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'player profile class', error);
+  }
+}
+
+async function playerProfileGender(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.gender !== 'string' || !body.gender) {
+      const error = new Error('gender is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const changed = changePlayerGenderForMiniApp(context.session, body.gender);
+      if (changed.ok) await saveSession(context.session);
+      return changed;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'player profile gender', error);
   }
 }
 
@@ -1006,6 +1066,9 @@ export default function startMiniAppServer() {
 
     if (route === 'GET /healthz') return sendJson(res, 200, { ok: true });
     if (route === 'GET /api/bootstrap') return bootstrap(req, res);
+    if (route === 'GET /api/profile') return playerProfileState(req, res);
+    if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
+    if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
     if (route === 'GET /api/gold-transfer') return goldTransferState(req, res);
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
     if (route === 'GET /api/steal') return stealState(req, res);
