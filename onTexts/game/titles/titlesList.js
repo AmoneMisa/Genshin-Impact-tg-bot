@@ -1,4 +1,4 @@
-import Titles from "../../../db/models/Titles.js";
+import Title from "../../../db/models/Title.js";
 import sendMessage from "../../../functions/tgBotFunctions/sendMessage.js";
 import titlesMessage from "../../../functions/game/titles/titlesMessage.js";
 import buttonsDictionary from "../../../dictionaries/buttons.js";
@@ -7,11 +7,11 @@ import deleteMessage from "../../../functions/tgBotFunctions/deleteMessage.js";
 export default [[/(?:^|\s)\/titles/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    const chatTitles = await Titles.findOne({ chatId: msg.chat.id });
-
-    const messageText = chatTitles && chatTitles.list?.length
-        ? titlesMessage(chatTitles.list)
-        : "Нет доступных титулов.";
+    const titles = await Title.find({ chatId: String(msg.chat.id) })
+        .sort({ obtainedAt: -1 })
+        .limit(15);
+    const list = titles.map(title => `${title.nickname} — ${title.titleName}`);
+    const messageText = list.length ? titlesMessage(list) : "Нет доступных титулов.";
 
     await sendMessage(msg.chat.id, messageText, {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
