@@ -46,6 +46,13 @@ import {
   setElementsBet,
   drawElement,
 } from './elements.js';
+import { getBonusState, claimBonus } from './bonus.js';
+import { getTitlesState, assignTitle } from './titles.js';
+import {
+  getHoroscopeState,
+  updateHoroscopeSettings,
+  generateHoroscopeForMiniApp,
+} from './horoscope.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -333,6 +340,105 @@ async function elementsAction(req, res) {
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'elements action', error);
+  }
+}
+
+async function bonusState(req, res) {
+  try {
+    const context = await authorize(req);
+    return sendJson(res, 200, getBonusState(context.session));
+  } catch (error) {
+    return sendApiError(res, 'bonus state', error);
+  }
+}
+
+async function bonusClaim(req, res) {
+  try {
+    const context = await authorize(req);
+    const result = await withLock(`${context.chatId}:${context.userId}:bonus`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const claimed = claimBonus(context.session);
+      if (claimed.ok) await saveSession(context.session);
+      return claimed;
+    });
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'bonus claim', error);
+  }
+}
+
+async function titlesState(req, res) {
+  try {
+    const context = await authorize(req);
+    const titles = await withLock(`${context.chatId}:titles`, async () => {
+      const chat = await getChatSession(context.chatId);
+      refreshContextSession(context, chat);
+      return getTitlesState(context.chatId, context.userId, chat);
+    });
+    return sendJson(res, 200, titles);
+  } catch (error) {
+    return sendApiError(res, 'titles state', error);
+  }
+}
+
+async function titlesAssign(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const payload = await withLock(`${context.chatId}:titles`, async () => {
+      const chat = await getChatSession(context.chatId);
+      refreshContextSession(context, chat);
+      const result = await assignTitle(chat, context.userId, body.title);
+      const titles = await getTitlesState(context.chatId, context.userId, chat);
+      refreshContextSession(context, chat);
+      return { result, titles };
+    });
+
+    return sendJson(res, payload.result.ok ? 200 : 409, {
+      ...payload.result,
+      titles: payload.titles,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'titles assign', error);
+  }
+}
+
+async function horoscopeState(req, res) {
+  try {
+    const context = await authorize(req);
+    return sendJson(res, 200, getHoroscopeState(context.session));
+  } catch (error) {
+    return sendApiError(res, 'horoscope state', error);
+  }
+}
+
+async function horoscopeSettings(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const result = await withLock(`${context.chatId}:${context.userId}:horoscope`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const updated = updateHoroscopeSettings(context.session, body);
+      if (updated.ok) await saveSession(context.session);
+      return updated;
+    });
+    return sendJson(res, result.ok ? 200 : 400, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'horoscope settings', error);
+  }
+}
+
+async function horoscopeGenerate(req, res) {
+  try {
+    const context = await authorize(req);
+    const result = await withLock(`${context.chatId}:${context.userId}:horoscope`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return generateHoroscopeForMiniApp(context.session);
+    });
+    return sendJson(res, 200, result);
+  } catch (error) {
+    return sendApiError(res, 'horoscope generate', error);
   }
 }
 
@@ -711,6 +817,13 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/point21/action') return point21Action(req, res);
     if (route === 'GET /api/elements') return elementsState(req, res);
     if (route === 'POST /api/elements/action') return elementsAction(req, res);
+    if (route === 'GET /api/bonus') return bonusState(req, res);
+    if (route === 'POST /api/bonus/claim') return bonusClaim(req, res);
+    if (route === 'GET /api/titles') return titlesState(req, res);
+    if (route === 'POST /api/titles/assign') return titlesAssign(req, res);
+    if (route === 'GET /api/horoscope') return horoscopeState(req, res);
+    if (route === 'POST /api/horoscope/settings') return horoscopeSettings(req, res);
+    if (route === 'POST /api/horoscope/generate') return horoscopeGenerate(req, res);
     if (route === 'GET /api/chest') return chestState(req, res);
     if (route === 'POST /api/chest/open') return chestOpen(req, res);
     if (route === 'GET /api/gacha') return gachaState(req, res);
