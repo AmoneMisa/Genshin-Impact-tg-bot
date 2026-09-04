@@ -62,6 +62,7 @@ import {
   prepareClanContribution,
   prepareClanQuizAnswer,
 } from './clan.js';
+import { prepareClanActivity } from './clanActivities.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -454,7 +455,7 @@ async function horoscopeGenerate(req, res) {
 async function clanState(req, res) {
   try {
     const context = await authorize(req);
-    const dashboard = await withLock('clan:global', () => getClanDashboard(context.userId));
+    const dashboard = await withLock('clan:global', () => getClanDashboard(context.userId, context.session));
     return sendJson(res, 200, dashboard);
   } catch (error) {
     return sendApiError(res, 'clan state', error);
@@ -499,7 +500,7 @@ async function clanAction(req, res) {
         }
       }
 
-      const dashboard = await getClanDashboard(context.userId);
+      const dashboard = await getClanDashboard(context.userId, context.session);
       return { result, dashboard };
     });
 
@@ -529,7 +530,7 @@ async function clanQuiz(req, res) {
         if (result.correct) await saveSession(context.session);
       }
 
-      const dashboard = await getClanDashboard(context.userId);
+      const dashboard = await getClanDashboard(context.userId, context.session);
       return { result, dashboard };
     });
 
@@ -540,6 +541,41 @@ async function clanQuiz(req, res) {
     });
   } catch (error) {
     return sendApiError(res, 'clan quiz', error);
+  }
+}
+
+async function clanActivity(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building']);
+    if (!allowed.has(body.action)) {
+      const error = new Error('Unknown clan activity');
+      error.status = 400;
+      throw error;
+    }
+
+    const payload = await withLock('clan:global', async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
+      const result = prepared.result;
+
+      if (result.ok) {
+        if (prepared.savePlayer) await saveSession(context.session);
+        if (prepared.clan) await prepared.clan.save();
+      }
+
+      const dashboard = await getClanDashboard(context.userId, context.session);
+      return { result, dashboard };
+    });
+
+    return sendJson(res, payload.result.ok ? 200 : 409, {
+      ...payload.result,
+      dashboard: payload.dashboard,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'clan activity', error);
   }
 }
 
@@ -928,6 +964,7 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/clan') return clanState(req, res);
     if (route === 'POST /api/clan/action') return clanAction(req, res);
     if (route === 'POST /api/clan/quiz') return clanQuiz(req, res);
+    if (route === 'POST /api/clan/activity') return clanActivity(req, res);
     if (route === 'GET /api/chest') return chestState(req, res);
     if (route === 'POST /api/chest/open') return chestOpen(req, res);
     if (route === 'GET /api/gacha') return gachaState(req, res);
