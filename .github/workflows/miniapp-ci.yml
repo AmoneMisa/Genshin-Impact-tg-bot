@@ -57,6 +57,11 @@ jobs:
           node --check functions/game/sword/swordResult.js
           node --check functions/shedullers/bossWin.js
           node --check callbacks/game/shop/shop.js
+          node --check callbacks/game/dice/pullDice.js
+          node --check callbacks/game/bowling/pullSkittle.js
+          node --check callbacks/game/darts/pullDart.js
+          node --check callbacks/game/football/pullBall.js
+          node --check callbacks/game/basketball/pullBall.js
           node --check webapp/app.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
