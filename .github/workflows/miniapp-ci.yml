@@ -42,6 +42,7 @@ jobs:
           node --check miniapp/shop.js
           node --check miniapp/sword.js
           node --check miniapp/arcade.js
+          node --check miniapp/goldTransfer.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
@@ -78,4 +79,5 @@ jobs:
           node --check webapp/shop.js
           node --check webapp/sword.js
           node --check webapp/arcade.js
+          node --check webapp/gold-transfer.js
           node --check webapp/renderer.js
