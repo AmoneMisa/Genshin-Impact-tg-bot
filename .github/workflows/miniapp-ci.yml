@@ -37,13 +37,22 @@ jobs:
           node --check miniapp/gacha.js
           node --check miniapp/equipment.js
           node --check miniapp/builds.js
+          node --check miniapp/arena.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
           node --check functions/game/builds/checkAccumulateTimer.js
+          node --check functions/game/arena/ratingStore.js
+          node --check functions/game/arena/getPlayerRating.js
+          node --check functions/game/arena/setPlayerRating.js
+          node --check functions/game/arena/updateRank.js
+          node --check functions/game/arena/calculatePoints.js
+          node --check functions/game/arena/getPvpSign.js
+          node --check functions/game/arena/generateArenaBot.js
           node --check webapp/app.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
           node --check webapp/equipment.js
           node --check webapp/builds.js
+          node --check webapp/arena.js
           node --check webapp/renderer.js
