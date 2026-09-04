@@ -1,0 +1,29 @@
+name: Apply skills Mini App wiring
+
+on:
+  push:
+    branches:
+      - feature/telegram-miniapp-webgl
+    paths:
+      - .github/scripts/apply-skills-miniapp.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/telegram-miniapp-webgl
+      - name: Apply wiring
+        run: node .github/scripts/apply-skills-miniapp.mjs
+      - name: Commit wiring
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add miniapp/server.js miniapp/state.js webapp/app.js webapp/index.html .github/workflows/miniapp-ci.yml
+          git diff --cached --check
+          git commit -m "feat: wire skills into Mini App"
+          git push origin HEAD:feature/telegram-miniapp-webgl
