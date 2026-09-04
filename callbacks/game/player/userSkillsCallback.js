@@ -82,7 +82,7 @@ export default [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callb
         return;
     } else if (skill.isHeal) {
         let heal = useHealSkill(member, skill);
-        member.game.gameClass.stats.hp = Math.max(member.game.gameClass.stats.hp + heal, getMaxHp(member, member.game.gameClass));
+        member.game.gameClass.stats.hp = Math.min(member.game.gameClass.stats.hp + heal, getMaxHp(member, member.game.gameClass));
 
         await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(member)}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
