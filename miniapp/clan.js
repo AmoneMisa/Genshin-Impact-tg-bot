@@ -82,9 +82,12 @@ async function clanDto(clan, userId) {
 export async function getClanDashboard(userId) {
   const clan = await getClan(userId);
   if (clan) {
+    const quizPrepared = prepareClanQuiz(clan);
+    if (quizPrepared.changed) await clan.save();
     return {
       clan: await clanDto(clan, userId),
       available: [],
+      quiz: getClanQuizState(clan, userId),
     };
   }
 
@@ -101,6 +104,7 @@ export async function getClanDashboard(userId) {
       members: item.members?.length || 0,
       entryType: number(item.entryConditions?.entryType),
     })),
+    quiz: null,
   };
 }
 
@@ -164,7 +168,7 @@ export async function disbandClanForMiniApp(userId) {
   return { ok: true, clanName };
 }
 
-export async function contributeToClan(clan, playerSession, userId, resource, rawAmount) {
+export function contributeToClan(clan, playerSession, userId, resource, rawAmount) {
   if (!clan || !findMember(clan, userId)) return { ok: false, reason: 'not_in_clan' };
   if (!RESOURCES.has(resource)) return { ok: false, reason: 'invalid_resource' };
   const amount = parseClanAmount(rawAmount);
@@ -191,6 +195,13 @@ export async function contributeToClan(clan, playerSession, userId, resource, ra
     leveledUp: level.leveledUp,
     level: level.level,
   };
+}
+
+export async function contributeForMiniApp(userId, playerSession, resource, rawAmount) {
+  const clan = await getClan(userId);
+  const result = contributeToClan(clan, playerSession, userId, resource, rawAmount);
+  if (result.ok) await clan.save();
+  return result;
 }
 
 function randomQuestionIndex() {
@@ -265,4 +276,12 @@ export function answerClanQuiz(clan, playerSession, userId, rawIndex) {
     level,
     quiz: getClanQuizState(clan, userId),
   };
+}
+
+export async function answerClanQuizForMiniApp(userId, playerSession, rawIndex) {
+  const clan = await getClan(userId);
+  if (!clan) return { ok: false, reason: 'not_in_clan' };
+  const result = answerClanQuiz(clan, playerSession, userId, rawIndex);
+  if (result.ok) await clan.save();
+  return result;
 }
