@@ -41,6 +41,7 @@ export function createMiniAppState(session, context) {
       { id: 'equipment', title: 'Снаряжение', subtitle: 'Билд персонажа', icon: '🛡️', status: 'webgl' },
       { id: 'builds', title: 'Постройки', subtitle: 'Ресурсы и развитие', icon: '🏛️', status: 'webgl' },
       { id: 'arena', title: 'Арена', subtitle: 'PvP и рейтинг', icon: '🏆', status: 'webgl' },
+      { id: 'shop', title: 'Магазин', subtitle: 'Покупки и усиления', icon: '🛒', status: 'webgl' },
     ],
   };
 }
