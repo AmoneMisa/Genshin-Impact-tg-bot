@@ -53,6 +53,15 @@ import {
   updateHoroscopeSettings,
   generateHoroscopeForMiniApp,
 } from './horoscope.js';
+import {
+  getClanDashboard,
+  createClanForMiniApp,
+  joinClanForMiniApp,
+  leaveClanForMiniApp,
+  disbandClanForMiniApp,
+  prepareClanContribution,
+  prepareClanQuizAnswer,
+} from './clan.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -442,6 +451,98 @@ async function horoscopeGenerate(req, res) {
   }
 }
 
+async function clanState(req, res) {
+  try {
+    const context = await authorize(req);
+    const dashboard = await withLock('clan:global', () => getClanDashboard(context.userId));
+    return sendJson(res, 200, dashboard);
+  } catch (error) {
+    return sendApiError(res, 'clan state', error);
+  }
+}
+
+async function clanAction(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const allowed = new Set(['create', 'join', 'leave', 'disband', 'contribute']);
+    if (!allowed.has(body.action)) {
+      const error = new Error('Unknown clan action');
+      error.status = 400;
+      throw error;
+    }
+
+    const payload = await withLock('clan:global', async () => {
+      let result;
+      if (body.action === 'create') {
+        result = await createClanForMiniApp(context.userId, body.name);
+      } else if (body.action === 'join') {
+        result = await joinClanForMiniApp(context.userId, body.clanId);
+      } else if (body.action === 'leave') {
+        result = await leaveClanForMiniApp(context.userId);
+      } else if (body.action === 'disband') {
+        result = await disbandClanForMiniApp(context.userId);
+      } else {
+        context.session = await getSession(context.chatId, context.userId);
+        const prepared = await prepareClanContribution(
+          context.userId,
+          context.session,
+          body.resource,
+          body.amount
+        );
+        result = prepared.result;
+        if (result.ok) {
+          // Keep the legacy safety ordering: debit the player first, then credit
+          // the shared clan document. A failed second save cannot duplicate funds.
+          await saveSession(context.session);
+          await prepared.clan.save();
+        }
+      }
+
+      const dashboard = await getClanDashboard(context.userId);
+      return { result, dashboard };
+    });
+
+    return sendJson(res, payload.result.ok ? 200 : 409, {
+      ...payload.result,
+      dashboard: payload.dashboard,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'clan action', error);
+  }
+}
+
+async function clanQuiz(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const payload = await withLock('clan:global', async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const prepared = await prepareClanQuizAnswer(context.userId, context.session, body.answer);
+      const result = prepared.result;
+
+      if (result.ok) {
+        // Mark the answer in the clan first. A failed personal reward save cannot
+        // leave an answer replayable for duplicate rewards.
+        await prepared.clan.save();
+        if (result.correct) await saveSession(context.session);
+      }
+
+      const dashboard = await getClanDashboard(context.userId);
+      return { result, dashboard };
+    });
+
+    return sendJson(res, payload.result.ok ? 200 : 409, {
+      ...payload.result,
+      dashboard: payload.dashboard,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'clan quiz', error);
+  }
+}
+
 async function chestState(req, res) {
   try {
     const context = await authorize(req);
@@ -824,6 +925,9 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/horoscope') return horoscopeState(req, res);
     if (route === 'POST /api/horoscope/settings') return horoscopeSettings(req, res);
     if (route === 'POST /api/horoscope/generate') return horoscopeGenerate(req, res);
+    if (route === 'GET /api/clan') return clanState(req, res);
+    if (route === 'POST /api/clan/action') return clanAction(req, res);
+    if (route === 'POST /api/clan/quiz') return clanQuiz(req, res);
     if (route === 'GET /api/chest') return chestState(req, res);
     if (route === 'POST /api/chest/open') return chestOpen(req, res);
     if (route === 'GET /api/gacha') return gachaState(req, res);
