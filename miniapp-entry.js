@@ -25,15 +25,8 @@ bot.onText(/^\/play(?:@\w+)?$/, async (msg) => {
   return sendMiniAppLauncher(msg);
 });
 
-bot.getMyCommands()
-  .then((commands) => {
-    if (commands.some(({ command }) => command === 'play')) return;
-    return bot.setMyCommands([
-      { command: 'play', description: 'Открыть новый игровой интерфейс' },
-      ...commands,
-    ]);
-  })
-  .catch((error) => console.error('[miniapp] unable to register /play:', error));
+// The Main Mini App is configured in BotFather, so it remains discoverable
+// without racing index.js over setMyCommands. /play still works when typed.
 
 function closeMiniAppServer() {
   if (miniAppServer?.listening) miniAppServer.close();
