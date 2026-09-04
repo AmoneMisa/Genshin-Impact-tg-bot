@@ -1,8 +1,7 @@
 import Chat from '../../../db/models/Chat.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
 import calculateIncreaseInResourceExtraction from './calculateIncreaseInResourceExtraction.js';
-import calculateRemainBuildTime from './calculateRemainBuildTime.js';
-import upgradeBuild from './upgradeBuild.js';
+import settleBuildUpgrade from './settleBuildUpgrade.js';
 import debugMessage from "../../tgBotFunctions/debugMessage.js";
 import getUserName from "../../getters/getUserName.js";
 import sendMessage from "../../tgBotFunctions/sendMessage.js";
@@ -36,18 +35,12 @@ export default async function() {
 
                     // Завершаем улучшение по persisted timestamp. Это переживает
                     // перезапуск процесса и не зависит от volatile setTimeout.
+                    // This is now also settled inline on every bot read (see
+                    // getBuild.js) — this hourly pass is a safety net for
+                    // players who don't reopen the bot menu, so the "здание
+                    // построено" notification still fires without them asking.
                     if (build.upgradeStartedAt) {
-                        let remain;
-                        try {
-                            remain = calculateRemainBuildTime(buildName, build);
-                        } catch (e) {
-                            continue;
-                        }
-
-                        if (remain <= 0) {
-                            upgradeBuild(build, buildName);
-                            build.upgradeStartedAt = null;
-                            build.upgradeTimerId = null;
+                        if (settleBuildUpgrade(build, buildName)) {
                             updated = true;
 
                             const username = await getUserName(member, "nickname") || member.userId;

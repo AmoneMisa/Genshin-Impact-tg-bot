@@ -1,6 +1,7 @@
 import buildsTemplate from '../template/buildsTemplate.js';
 import getBuildFromTemplate from '../functions/game/builds/getBuildFromTemplate.js';
 import calculateUpgradeCosts from '../functions/game/builds/calculateUpgradeCosts.js';
+import calculateIncreaseUpgradeTime from '../functions/game/builds/calculateUpgradeTime.js';
 import calculateIncreaseInResourceExtraction from '../functions/game/builds/calculateIncreaseInResourceExtraction.js';
 import calculateIncreaseGuardedResources from '../functions/game/builds/calculateIncreaseGuardedResources.js';
 import setLevel from '../functions/game/player/setLevel.js';
@@ -45,6 +46,10 @@ function getMaxLevel(template) {
   return Math.max(1, asNumber(template?.maxLvl, DEFAULT_MAX_LEVEL));
 }
 
+// Delegates the beyond-the-template extrapolation to the same
+// functions/game/builds/calculateUpgradeTime.js the bot uses, instead of a
+// hand-copied formula, so a future balance tweak can't silently desync the
+// Mini App's countdown from the bot's.
 function getUpgradeDurationHours(buildName, build) {
   const template = buildsTemplate[buildName];
   const nextLevel = asNumber(build?.currentLvl, 1) + 1;
@@ -53,9 +58,11 @@ function getUpgradeDurationHours(buildName, build) {
   if (exact) return Math.max(0, asNumber(exact.time));
   if (!upgradeTimes.length) return 0;
 
-  const last = [...upgradeTimes].sort((a, b) => Number(a.level) - Number(b.level)).at(-1);
-  const levelDelta = Math.max(0, nextLevel - asNumber(last.level, nextLevel));
-  return Math.max(0, asNumber(last.time) * Math.pow(1.15, levelDelta));
+  try {
+    return Math.max(0, asNumber(calculateIncreaseUpgradeTime(buildName, nextLevel)));
+  } catch (e) {
+    return 0;
+  }
 }
 
 function getRemainingMs(buildName, build, now = Date.now()) {
