@@ -129,6 +129,14 @@ async function authorize(req) {
   }
 
   const session = await getSession(chatId, validated.user.id);
+  const isGroupContext = String(chatId) !== String(validated.user.id);
+  const membershipStatus = session.userChatData?.status;
+  if (isGroupContext && ['left', 'kicked'].includes(membershipStatus)) {
+    const error = new Error('User is not a member of this game chat');
+    error.status = 403;
+    throw error;
+  }
+
   return {
     validated,
     chatId,
