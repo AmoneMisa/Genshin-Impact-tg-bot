@@ -29,11 +29,23 @@ function chat() {
         userChatData: { user: { id: 13, first_name: 'Bot', is_bot: true } },
         user: { rank: '1' },
       },
+      {
+        userId: 14,
+        isHided: false,
+        userChatData: { status: 'left', user: { id: 14, first_name: 'Left' } },
+        user: { rank: '55' },
+      },
+      {
+        userId: 15,
+        isHided: false,
+        userChatData: { status: 'kicked', user: { id: 15, first_name: 'Kicked' } },
+        user: { rank: '56' },
+      },
     ],
   };
 }
 
-test('forms state exposes legacy editable fields and visible group profiles', () => {
+test('forms state exposes legacy editable fields and visible active group profiles', () => {
   const state = getFormsState(chat(), 10);
 
   assert.equal(state.fields.find(field => field.key === 'nickName').value, 'Traveler');
