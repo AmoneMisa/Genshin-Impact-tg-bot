@@ -1,7 +1,11 @@
 import calcGearScore from '../player/calcGearScore.js';
-import getPlayerRating from './getPlayerRating.js';
 
-export default async function (attacker, defender, arenaType, chatId, isBot = false) {
+/**
+ * Рассчитывает изменение рейтинга синхронно.
+ * Рейтинги можно передать последним аргументом, чтобы вызывающий код сам
+ * выполнил Mongo I/O до расчёта и не получил Promise вместо числа.
+ */
+export default function (attacker, defender, arenaType, chatId, isBot = false, ratings = null) {
     const defenderLvl = Number(isBot ? defender.stats.lvl : defender.game.stats.lvl) || 1;
     const defenderStats = isBot ? defender : defender.game;
     let winnerPoints = 10;
@@ -22,18 +26,18 @@ export default async function (attacker, defender, arenaType, chatId, isBot = fa
         winnerPoints += 15;
     }
 
-    const [attackerRating] = await getPlayerRating(attacker.userChatData.user.id, arenaType, chatId);
-    const defenderRating = isBot
-        ? Number(defender.rating) || 1000
-        : (await getPlayerRating(defender.userChatData.user.id, arenaType, chatId))[0];
+    if (ratings && Number.isFinite(Number(ratings.attacker)) && Number.isFinite(Number(ratings.defender))) {
+        const attackerRating = Math.max(1, Number(ratings.attacker));
+        const defenderRating = Number(ratings.defender);
+        const ratingDiffPercent = ((defenderRating - attackerRating) / attackerRating) * 100;
 
-    const ratingDiffPercent = ((defenderRating - attackerRating) / Math.max(1, attackerRating)) * 100;
-    if (ratingDiffPercent >= 12) {
-        winnerPoints += 17;
-    } else if (ratingDiffPercent >= 3) {
-        winnerPoints += 5;
-    } else if (ratingDiffPercent < 0) {
-        winnerPoints -= 5;
+        if (ratingDiffPercent >= 12) {
+            winnerPoints += 17;
+        } else if (ratingDiffPercent >= 3) {
+            winnerPoints += 5;
+        } else if (ratingDiffPercent < 0) {
+            winnerPoints -= 5;
+        }
     }
 
     return Math.min(maxPoints, Math.max(minPoints, winnerPoints));
