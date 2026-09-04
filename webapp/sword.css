@@ -35,3 +35,18 @@
 .sword-result span { font-size:20px; }
 .sword-result strong { font-size:11px; }
 @keyframes sword-pulse { 0%{transform:rotate(0)} 35%{transform:rotate(-7deg) scale(1.04)} 70%{transform:rotate(6deg) scale(1.03)} 100%{transform:rotate(0)} }
+
+.sword-ranking { margin-top:12px; padding:12px; border:1px solid rgba(255,255,255,.065); border-radius:16px; background:rgba(255,255,255,.018); }
+.sword-ranking-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.sword-ranking-head > div { display:grid; gap:2px; }
+.sword-ranking-head small { color:var(--muted); font-size:8px; letter-spacing:.09em; }
+.sword-ranking-head strong { font-size:12px; }
+.sword-ranking-head > span { min-width:28px; height:28px; padding:0 8px; display:grid; place-items:center; border-radius:9px; background:rgba(255,255,255,.04); color:#c8c5d4; font-size:9px; }
+.sword-ranking-list { display:grid; gap:5px; max-height:190px; overflow:auto; scrollbar-width:thin; }
+.sword-ranking-row { display:grid; grid-template-columns:30px minmax(0,1fr) auto; align-items:center; gap:8px; min-height:36px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.018); }
+.sword-ranking-row.current { background:linear-gradient(90deg,rgba(89,120,193,.13),rgba(126,75,158,.08)); outline:1px solid rgba(139,171,235,.12); }
+.sword-ranking-rank { color:#aaa8b8; font-size:10px; text-align:center; }
+.sword-ranking-name { overflow:hidden; color:#ccc9d7; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.sword-ranking-row strong { color:#f1f2f8; font-size:10px; font-variant-numeric:tabular-nums; }
+.sword-ranking-row strong small { color:var(--muted); font-size:7px; font-weight:500; }
+.sword-ranking-empty { padding:12px 8px; color:var(--muted); font-size:9px; text-align:center; }

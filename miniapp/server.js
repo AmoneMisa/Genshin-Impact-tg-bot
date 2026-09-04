@@ -24,7 +24,7 @@ import {
 import { getArenaState, attackArena } from './arena.js';
 import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
-import { getMiniAppSwordState, rollMiniAppSword } from './sword.js';
+import { getMiniAppSwordDashboard, rollMiniAppSword } from './sword.js';
 import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from './arcade.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
@@ -1049,9 +1049,10 @@ async function shopBuy(req, res) {
 async function swordState(req, res) {
   try {
     const context = await authorize(req);
-    const sword = await withLock(`${context.chatId}:${context.userId}:sword`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getMiniAppSwordState(context.session);
+    const sword = await withLock(`${context.chatId}:sword`, async () => {
+      const chat = await getChatSession(context.chatId);
+      refreshContextSession(context, chat);
+      return getMiniAppSwordDashboard(chat, context.userId);
     });
     return sendJson(res, 200, sword);
   } catch (error) {
@@ -1062,11 +1063,15 @@ async function swordState(req, res) {
 async function swordRoll(req, res) {
   try {
     const context = await authorize(req);
-    const result = await withLock(`${context.chatId}:${context.userId}:sword`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
+    const result = await withLock(`${context.chatId}:sword`, async () => {
+      const chat = await getChatSession(context.chatId);
+      refreshContextSession(context, chat);
       const rolled = rollMiniAppSword(context.session);
-      if (rolled.ok) await saveSession(context.session);
-      return rolled;
+      if (rolled.ok) await chat.save();
+      return {
+        ...rolled,
+        sword: getMiniAppSwordDashboard(chat, context.userId),
+      };
     });
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {

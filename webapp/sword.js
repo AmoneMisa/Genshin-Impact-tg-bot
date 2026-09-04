@@ -6,6 +6,30 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function rankingHtml(ranking) {
+  if (!Array.isArray(ranking) || ranking.length === 0) {
+    return '<div class="sword-ranking-empty">Ещё никто не отрастил свой меч.</div>';
+  }
+
+  return ranking.map(entry => {
+    const medal = entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`;
+    return `<div class="sword-ranking-row ${entry.isCurrent ? 'current' : ''}">
+      <span class="sword-ranking-rank">${medal}</span>
+      <span class="sword-ranking-name">${escapeHtml(entry.name)}</span>
+      <strong>${formatNumber(entry.length)} <small>мм</small></strong>
+    </div>`;
+  }).join('');
+}
+
 function duration(ms) {
   const total = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));
   const hours = Math.floor(total / 3600);
@@ -136,6 +160,14 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
         <span>⚔️</span>
         <div><strong>${canRoll ? 'Испытать удачу' : 'Попытка использована'}</strong><small>${canRoll ? '−10…+15 мм, модификаторы учитываются сервером' : 'Новая попытка будет в 00:00'}</small></div>
       </button>
+
+      <section class="sword-ranking">
+        <div class="sword-ranking-head">
+          <div><small>ГРУППОВОЙ РЕЙТИНГ</small><strong>Мечи группы</strong></div>
+          <span>${Array.isArray(state.ranking) ? state.ranking.length : 0}</span>
+        </div>
+        <div class="sword-ranking-list">${rankingHtml(state.ranking)}</div>
+      </section>
 
       <div class="sword-rules">
         <span>🛡️ Иммунитет к уменьшению расходуется на одну попытку.</span>
