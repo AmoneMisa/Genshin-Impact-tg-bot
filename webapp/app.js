@@ -6,6 +6,7 @@ import { openBuildsGame } from './builds.js';
 import { openArenaGame } from './arena.js';
 import { openBossGame } from './boss.js';
 import { openShopGame } from './shop.js';
+import { openSwordGame } from './sword.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -151,6 +152,17 @@ function render(state) {
         } catch (error) {
           console.error(error);
           status.textContent = `Магазин: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'sword' && feature.status === 'webgl') {
+        try {
+          await openSwordGame({ api, renderState: render, haptic, statusElement: status });
+          status.textContent = 'Меч работает через Mini App; бросок и дневной таймер считаются на сервере.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Меч: ${error.message}`;
         }
         return;
       }
