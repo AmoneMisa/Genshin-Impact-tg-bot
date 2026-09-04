@@ -21,6 +21,7 @@ import {
   renameBuild,
 } from './builds.js';
 import { getArenaState, attackArena } from './arena.js';
+import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -437,6 +438,71 @@ async function arenaAttack(req, res) {
   }
 }
 
+async function bossState(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:boss`;
+    const boss = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getBossState(context.session, context.chatId);
+    });
+    return sendJson(res, 200, boss);
+  } catch (error) {
+    return sendApiError(res, 'boss state', error);
+  }
+}
+
+async function bossSummon(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:boss`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return summonBossForMiniApp(context.session, context.chatId);
+    });
+
+    context.session = await getSession(context.chatId, context.userId);
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'boss summon', error);
+  }
+}
+
+async function bossSkill(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const skillIndex = Number(body.skillIndex);
+    if (!Number.isInteger(skillIndex) || skillIndex < 0) {
+      const error = new Error('skillIndex must be a non-negative integer');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:boss`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return useBossSkill(
+        context.session,
+        context.chatId,
+        context.userId,
+        skillIndex
+      );
+    });
+
+    context.session = await getSession(context.chatId, context.userId);
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'boss skill', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -496,6 +562,18 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/arena/attack') {
       return arenaAttack(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/boss') {
+      return bossState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/boss/summon') {
+      return bossSummon(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/boss/skill') {
+      return bossSkill(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
