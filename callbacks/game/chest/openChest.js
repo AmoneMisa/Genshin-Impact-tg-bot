@@ -51,8 +51,8 @@ let prizes = [
     value: {
         name: "brokenSword",
         translatedName: "мм меча",
-        minAmount: -1,
-        maxAmount: -10,
+        minAmount: -10,
+        maxAmount: -1,
     },
     chance: 5
 }, {
@@ -72,7 +72,8 @@ export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callba
     foundSession.chestCounter = foundSession.chestCounter || 0;
     foundSession.chosenChests = foundSession.chosenChests || [];
 
-    if (foundSession.chosenChests.includes(chest)) {
+    const chestKey = `chest.${chatId}_${chest}`;
+    if (foundSession.chosenChests.includes(chestKey)) {
         return;
     }
 
@@ -104,7 +105,7 @@ export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callba
         await sendPrizeMessage(callback, foundSession, gold, randomPrize.translatedName);
     }
 
-    if (randomPrize.name === "crystal") {
+    if (randomPrize.name === "crystals") {
         let crystal = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
         foundSession.game.inventory.crystals += crystal;
         await sendPrizeMessage(callback, foundSession, crystal, randomPrize.translatedName);
