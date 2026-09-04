@@ -12,7 +12,7 @@ import loadPlayer from '../../../functions/getters/loadPlayer.js';
 let maxPulls = 3;
 
 export default [[/^football_pull$/, async function (session, callback) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
