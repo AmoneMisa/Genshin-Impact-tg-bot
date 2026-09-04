@@ -20,6 +20,7 @@ import { openPlayerProfile } from './profile.js';
 import { openFormsGame } from './forms.js';
 import { openInventoryGame } from './inventory.js';
 import { openExchangeGame } from './exchange.js';
+import { openHelpGame } from './help.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
@@ -75,6 +76,7 @@ const launchers = {
   horoscope: [openHoroscopeGame, 'Гороскоп работает через серверный FreeLLMAPI с локальным fallback.'],
   sword: [openSwordGame, 'Меч работает через Mini App; бросок и дневной таймер считаются на сервере.'],
   arcade: [openArcadeGame, 'Аркада работает через Mini App; результаты генерируются на сервере.'],
+  help: [openHelpGame, 'Справка и каталог fallback-команд открыты в Mini App.'],
 };
 
 async function launchFeature(feature, render) {
