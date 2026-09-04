@@ -5,7 +5,9 @@ import getUserName from '../functions/getters/getUserName.js';
 import clanDuel from '../functions/game/clans/clanDuel.js';
 import clanBossAttack from '../functions/game/clans/clanBossAttack.js';
 import getBuildingBonus from '../functions/game/clans/getBuildingBonus.js';
+import getInvestigationBonus from '../functions/game/clans/getInvestigationBonus.js';
 import addClanXp from '../functions/game/clans/addClanXp.js';
+import { markTaskProgress } from './clanProgression.js';
 
 export const CLAN_PVP_COOLDOWN = 60_000;
 export const CLAN_WAR_DURATION = 24 * 60 * 60 * 1000;
@@ -80,6 +82,7 @@ export function resolveClanDuel(clan, userId, opponentId, attackerSession, defen
     theirs.losses += 1;
     const member = findMember(clan, userId);
     member.contribution = Math.max(0, number(member.contribution)) + PVP_WIN_CONTRIBUTION;
+    markTaskProgress(clan, userId, 'duelWin');
     result = 'win';
   } else if (outcome.result === 1) {
     mine.losses += 1;
@@ -237,7 +240,8 @@ export function strikeClanWar(clan, playerSession, userId, opponentLevel, option
   const points = Math.max(0, number(strike.dmg));
   war.score = Math.max(0, number(war.score)) + points;
   war.participants[key] = Math.max(0, number(war.participants[key])) + points;
-  war.cooldowns[key] = now + CLAN_WAR_ATTACK_COOLDOWN;
+  const warCooldown = getInvestigationBonus(clan, 'warTactics') ? CLAN_WAR_ATTACK_COOLDOWN * 0.7 : CLAN_WAR_ATTACK_COOLDOWN;
+  war.cooldowns[key] = now + warCooldown;
   member.contribution = Math.max(0, number(member.contribution)) + WAR_ATTACK_CONTRIBUTION;
 
   return {

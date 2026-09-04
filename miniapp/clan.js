@@ -3,9 +3,12 @@ import Clan from '../db/models/Clan.js';
 import getClan from '../functions/game/clans/getClan.js';
 import getUserName from '../functions/getters/getUserName.js';
 import addClanXp from '../functions/game/clans/addClanXp.js';
+import calcGearScore from '../functions/game/player/calcGearScore.js';
 import clanQuiz from '../dictionaries/clanQuiz.js';
 import { getClanActivitiesState } from './clanActivities.js';
 import { getClanCompetitionState } from './clanCompetition.js';
+import { getClanManagementState } from './clanManagement.js';
+import { getClanProgressionState, markTaskProgress } from './clanProgression.js';
 
 const RESOURCES = new Set(['gold', 'crystals', 'ironOre']);
 const XP_PER_CONTRIBUTION = 10;
@@ -35,6 +38,47 @@ function findMember(clan, userId) {
   return clan?.members?.find(member => String(member.userId) === String(userId)) || null;
 }
 
+export function getClanRole(clan, userId) {
+  return findMember(clan, userId)?.role || null;
+}
+
+export function clanCanManage(clan, userId) {
+  const role = getClanRole(clan, userId);
+  return role === 'owner' || role === 'officer';
+}
+
+const CLASS_LABELS = { noClass: 'Бродяжка', priest: 'Прист', mage: 'Маг', archer: 'Лучник', warrior: 'Палладин', berserk: 'Берсерк' };
+
+// Mirrors callbacks/game/clan/clanCallback.js#getEntryBlockReasons — kept in
+// sync manually since the bot and Mini App read the same Clan document but
+// have separate session shapes.
+export function getEntryBlockReasons(clan, playerSession) {
+  const cond = clan?.entryConditions || {};
+  const reasons = [];
+
+  const level = number(playerSession?.game?.stats?.lvl, 1);
+  if (cond.minLevel && level < cond.minLevel) {
+    reasons.push(`Минимальный уровень: ${cond.minLevel} (у тебя ${level})`);
+  }
+
+  if (cond.minGearScore) {
+    const gearScore = number(calcGearScore(playerSession?.game));
+    if (gearScore < cond.minGearScore) {
+      reasons.push(`Минимальный рейтинг снаряжения: ${cond.minGearScore} (у тебя ${gearScore})`);
+    }
+  }
+
+  if (cond.allowedClass && playerSession?.game?.gameClass?.name !== cond.allowedClass) {
+    reasons.push(`Требуемый класс: ${CLASS_LABELS[cond.allowedClass] || cond.allowedClass}`);
+  }
+
+  if (cond.allowedGender && playerSession?.gender !== cond.allowedGender) {
+    reasons.push(`Требуемый пол: ${cond.allowedGender === 'male' ? 'муж.' : 'жен.'}`);
+  }
+
+  return reasons;
+}
+
 async function memberDto(member) {
   const name = await getUserName(member.userId, 'name');
   return {
@@ -44,6 +88,11 @@ async function memberDto(member) {
     contribution: Math.max(0, number(member.contribution)),
     upgrades: member.upgrades || {},
   };
+}
+
+async function applicationDto(userId) {
+  const name = await getUserName(Number(userId), 'name');
+  return { userId: String(userId), name: name || `Игрок ${userId}` };
 }
 
 async function clanDto(clan, userId) {
@@ -57,6 +106,7 @@ async function clanDto(clan, userId) {
     ownerId: String(clan.owner),
     isOwner: String(clan.owner) === String(userId),
     myRole: me?.role || null,
+    canManage: clanCanManage(clan, userId),
     myContribution: Math.max(0, number(me?.contribution)),
     level: Math.max(1, number(clan.level, 1)),
     xp: Math.max(0, number(clan.xp)),
@@ -68,7 +118,14 @@ async function clanDto(clan, userId) {
     },
     members: await Promise.all((clan.members || []).map(memberDto)),
     entryType: number(clan.entryConditions?.entryType),
-    applications: Array.isArray(clan.applications) ? clan.applications.map(String) : [],
+    entryConditions: {
+      entryType: number(clan.entryConditions?.entryType),
+      minLevel: Math.max(0, number(clan.entryConditions?.minLevel)),
+      minGearScore: Math.max(0, number(clan.entryConditions?.minGearScore)),
+      allowedClass: clan.entryConditions?.allowedClass || '',
+      allowedGender: clan.entryConditions?.allowedGender || '',
+    },
+    applications: await Promise.all((Array.isArray(clan.applications) ? clan.applications : []).map(applicationDto)),
   };
 }
 
@@ -83,6 +140,8 @@ export async function getClanDashboard(userId, playerSession = null) {
       quiz: getClanQuizState(clan, userId),
       activities: await getClanActivitiesState(clan, userId, playerSession),
       competition: await getClanCompetitionState(clan, playerSession, userId),
+      management: await getClanManagementState(clan, userId, playerSession),
+      progression: getClanProgressionState(clan, userId),
     };
   }
 
@@ -102,6 +161,8 @@ export async function getClanDashboard(userId, playerSession = null) {
     quiz: null,
     activities: null,
     competition: null,
+    management: null,
+    progression: null,
   };
 }
 
@@ -123,7 +184,7 @@ export async function createClanForMiniApp(userId, rawName) {
   }
 }
 
-export async function joinClanForMiniApp(userId, clanId) {
+export async function joinClanForMiniApp(userId, clanId, playerSession = null) {
   if (await getClan(userId)) return { ok: false, reason: 'already_in_clan' };
   if (typeof clanId !== 'string' || !/^[a-f0-9]{24}$/i.test(clanId)) {
     return { ok: false, reason: 'invalid_clan' };
@@ -138,6 +199,11 @@ export async function joinClanForMiniApp(userId, clanId) {
     if (!clan.applications.includes(Number(userId))) clan.applications.push(Number(userId));
     await clan.save();
     return { ok: true, applied: true, clanName: clan.name };
+  }
+
+  const reasons = getEntryBlockReasons(clan, playerSession);
+  if (reasons.length) {
+    return { ok: false, reason: 'entry_conditions_not_met', reasons };
   }
 
   clan.members.push({ userId: Number(userId), role: 'member' });
@@ -183,6 +249,7 @@ export function contributeToClan(clan, playerSession, userId, resource, rawAmoun
   const member = findMember(clan, userId);
   member.contribution = Math.max(0, number(member.contribution)) + amount;
   const level = addClanXp(clan, Math.floor(amount / XP_PER_CONTRIBUTION));
+  markTaskProgress(clan, userId, 'contribute');
 
   return {
     ok: true,
@@ -253,6 +320,7 @@ export function answerClanQuiz(clan, playerSession, userId, rawIndex) {
 
   const correct = index === question.answer;
   clan.quiz.participants[String(userId)] = { correct, answeredAt: Date.now() };
+  markTaskProgress(clan, userId, 'quizAnswer');
   let leveledUp = false;
   let level = clan.level || 1;
 

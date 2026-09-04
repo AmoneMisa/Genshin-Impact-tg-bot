@@ -5,13 +5,25 @@ import summonClanBoss from '../functions/game/clans/summonClanBoss.js';
 import clanBossAttack from '../functions/game/clans/clanBossAttack.js';
 import giveClanShopPotion from '../functions/game/clans/giveClanShopPotion.js';
 import getBuildingBonus from '../functions/game/clans/getBuildingBonus.js';
+import getInvestigationBonus from '../functions/game/clans/getInvestigationBonus.js';
 import clanShop from '../dictionaries/clanShop.js';
 import clanUpgrades from '../dictionaries/clanUpgrades.js';
 import clanBuildings from '../dictionaries/clanBuildings.js';
+import { markTaskProgress } from './clanProgression.js';
 
 export const CLAN_BOSS_ATTACK_COOLDOWN = 30_000;
 export const CLAN_SHOP_COOLDOWN = 7 * 24 * 60 * 60 * 1000;
 const BOSS_CONTRIBUTION_PER_DAMAGE = 100;
+
+// The "swiftStrikes"/"tradeRoutes" investigations (dictionaries/clanInvestigations.js)
+// shorten these cooldowns once completed — mirrors clanCallback.js's bot-side logic.
+function getBossCooldown(clan) {
+  return getInvestigationBonus(clan, 'swiftStrikes') ? CLAN_BOSS_ATTACK_COOLDOWN * 0.7 : CLAN_BOSS_ATTACK_COOLDOWN;
+}
+
+function getShopCooldown(clan) {
+  return getInvestigationBonus(clan, 'tradeRoutes') ? CLAN_SHOP_COOLDOWN * 0.5 : CLAN_SHOP_COOLDOWN;
+}
 
 function number(value, fallback = 0) {
   const parsed = Number(value);
@@ -94,9 +106,10 @@ export async function getClanActivitiesState(clan, userId, playerSession = null,
     damage: await damageBoard(boss),
   } : null;
 
+  const shopCooldown = getShopCooldown(clan);
   const lastShopAt = Math.max(0, number(member?.lastShopAt));
   const shopCooldownRemainingMs = lastShopAt > 0
-    ? Math.max(0, lastShopAt + CLAN_SHOP_COOLDOWN - now)
+    ? Math.max(0, lastShopAt + shopCooldown - now)
     : 0;
 
   return {
@@ -170,7 +183,8 @@ export function attackClanBossForMiniApp(clan, playerSession, userId, options = 
   if (attack.error === 'noClass') return { ok: false, reason: 'no_combat_class' };
 
   if (!clan.boss.cooldowns) clan.boss.cooldowns = {};
-  clan.boss.cooldowns[userKey] = now + CLAN_BOSS_ATTACK_COOLDOWN;
+  clan.boss.cooldowns[userKey] = now + getBossCooldown(clan);
+  markTaskProgress(clan, userId, 'bossAttack');
 
   if (attack.defeated) {
     const reward = grantBossRewards(clan, clan.boss);
@@ -201,7 +215,7 @@ export function buyClanShopItem(clan, playerSession, userId, itemKey, options = 
   const now = Number.isFinite(Number(options.now)) ? Number(options.now) : Date.now();
   const member = findMember(clan, userId);
   const lastShopAt = Math.max(0, number(member.lastShopAt));
-  const nextAllowed = lastShopAt > 0 ? lastShopAt + CLAN_SHOP_COOLDOWN : 0;
+  const nextAllowed = lastShopAt > 0 ? lastShopAt + getShopCooldown(clan) : 0;
   if (nextAllowed > now) {
     return { ok: false, reason: 'shop_cooldown', cooldownRemainingMs: nextAllowed - now };
   }

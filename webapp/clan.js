@@ -41,6 +41,31 @@ const REASONS = {
   war_expired: 'Война уже завершилась.',
   war_cooldown: 'Военная атака ещё на перезарядке.',
   unknown_clan_competition: 'Неизвестное соревновательное действие.',
+  entry_conditions_not_met: 'Ты не соответствуешь условиям вступления.',
+  applicant_already_in_clan: 'Игрок уже состоит в другом клане.',
+  target_already_in_clan: 'Игрок уже состоит в клане.',
+  target_not_in_clan: 'Этот игрок не состоит в клане.',
+  kick_insufficient_role: 'Недостаточно прав, чтобы исключить этого участника.',
+  kick_cooldown: 'Подожди перед следующим исключением.',
+  invalid_role_target: 'Нельзя изменить роль этого участника.',
+  invalid_min_level: 'Введи неотрицательное число.',
+  invalid_min_gear_score: 'Введи неотрицательное число.',
+  invalid_class: 'Неизвестный класс.',
+  invalid_gender: 'Неизвестный пол.',
+  unknown_clan_management: 'Неизвестное действие управления кланом.',
+  unknown_investigation: 'Неизвестное исследование.',
+  investigation_already_active: 'Уже идёт другое исследование.',
+  investigation_already_completed: 'Это исследование уже завершено.',
+  investigation_not_active: 'Сейчас нет активного исследования.',
+  investigation_no_resources: 'В хранилище нет ресурсов для пополнения.',
+  investigation_not_funded: 'Исследование ещё не полностью профинансировано.',
+  investigation_not_ready: 'Исследование ещё не готово.',
+  unknown_task: 'Неизвестное задание.',
+  task_not_done: 'Это задание ещё не выполнено.',
+  task_already_claimed: 'Награда уже получена.',
+  tasks_not_all_claimed: 'Сначала забери награды за все задания.',
+  bonus_already_claimed: 'Бонус уже получен.',
+  unknown_clan_progression: 'Неизвестное действие прогресса клана.',
 };
 
 function escapeHtml(value) {
@@ -118,6 +143,9 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     } catch (error) {
       if (error.payload?.dashboard) dashboard = error.payload.dashboard;
       feedbackText = REASONS[error.payload?.reason] || error.message;
+      if (error.payload?.reason === 'entry_conditions_not_met' && error.payload?.reasons?.length) {
+        feedbackText += ` ${error.payload.reasons.join('; ')}`;
+      }
       haptic('light');
       return null;
     } finally {
@@ -192,8 +220,13 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <button type="button" data-clan-tab="warehouse" class="${tab === 'warehouse' ? 'active' : ''}">Хранилище</button>
         <button type="button" data-clan-tab="quiz" class="${tab === 'quiz' ? 'active' : ''}">Викторина</button>
         <button type="button" data-clan-tab="activities" class="${tab === 'activities' ? 'active' : ''}">Активности</button>
+        ${clan.canManage ? `<button type="button" data-clan-tab="management" class="${tab === 'management' ? 'active' : ''}">Управление</button>` : ''}
       </nav>
-      ${tab === 'warehouse' ? warehouseHtml(clan) : tab === 'quiz' ? quizHtml() : tab === 'activities' ? activitiesHtml(clan) : membersHtml(clan)}
+      ${tab === 'warehouse' ? warehouseHtml(clan)
+        : tab === 'quiz' ? quizHtml()
+        : tab === 'activities' ? activitiesHtml(clan)
+        : tab === 'management' && clan.canManage ? managementHtml(clan)
+        : membersHtml(clan)}
       <button type="button" class="clan-danger" data-clan-exit>${clan.isOwner ? 'Расформировать клан' : 'Покинуть клан'}</button>`;
   }
 
@@ -322,6 +355,42 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
+  function investigationsHtml() {
+    const investigations = dashboard.progression?.investigations;
+    if (!investigations) return '';
+    const { active, completed, startable } = investigations;
+    return `
+      <section class="clan-activity-group"><h4>🔬 Исследования</h4>
+        ${completed.length ? `<div class="clan-activity-list">${completed.map(item => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.effectLabel)} · завершено</small></div></article>`).join('')}</div>` : ''}
+        ${active ? `
+          <article class="clan-activity-card">
+            <div><strong>${escapeHtml(active.label)}</strong><small>${escapeHtml(active.description)}</small><small>${escapeHtml(active.effectLabel)}</small></div>
+            <div class="clan-activity-list">${Object.entries(active.cost).map(([resource, need]) => `
+              <span class="clan-muted">${resource === 'gold' ? '🪙' : resource === 'crystals' ? '💎' : '⛏️'} ${formatNumber(active.progress[resource] || 0)} / ${formatNumber(need)}</span>`).join('')}</div>
+            ${!active.durationDone ? `<small class="clan-muted">Осталось минимум: ${formatDuration(active.remainingMs)}</small>` : ''}
+            <div class="clan-activity-list">
+              <button type="button" data-clan-investigation-fund>Пополнить из хранилища</button>
+              ${active.readyToComplete ? '<button type="button" data-clan-investigation-complete>Завершить</button>' : ''}
+              ${dashboard.clan?.canManage ? '<button type="button" data-clan-investigation-cancel>Отменить</button>' : ''}
+            </div>
+          </article>` : `
+          <div class="clan-activity-list">${startable.map(item => `
+            <article class="clan-activity-row"><div><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.effectLabel)}</small><small>${formatCost(item.cost)}</small></div>${dashboard.clan?.canManage ? `<button type="button" data-clan-investigation-start="${item.key}">Начать</button>` : ''}</article>`).join('') || '<p class="clan-muted">Все доступные исследования завершены.</p>'}</div>`}
+      </section>`;
+  }
+
+  function tasksHtml() {
+    const tasks = dashboard.progression?.tasks;
+    if (!tasks) return '';
+    return `
+      <section class="clan-activity-group"><h4>📋 Ежедневные задания</h4>
+        <div class="clan-activity-list">${tasks.items.map(task => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(task.label)}</strong><small>${task.claimed ? '🏆 получено' : task.done ? '✅ выполнено' : '⬜ не выполнено'}</small></div>${task.done && !task.claimed ? `<button type="button" data-clan-task-claim="${task.key}">Забрать</button>` : ''}</article>`).join('')}</div>
+        ${tasks.bonusAvailable ? `<button type="button" data-clan-task-bonus>Забрать бонус: +${tasks.bonusXp} XP клана</button>` : ''}
+      </section>`;
+  }
+
   function activitiesHtml(clan) {
     const activities = dashboard.activities;
     if (!activities) return '<section class="clan-section"><p>Активности недоступны.</p></section>';
@@ -334,7 +403,90 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         ${buildingsHtml(clan, activities)}
         ${pvpHtml()}
         ${warHtml(clan)}
+        ${investigationsHtml()}
+        ${tasksHtml()}
       </section>`;
+  }
+
+  function applicationsHtml(clan) {
+    return `
+      <section class="clan-activity-group"><h4>📨 Заявки</h4>
+        ${clan.applications.length ? `<div class="clan-activity-list">${clan.applications.map(app => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(app.name)}</strong></div><div class="clan-activity-list">
+            <button type="button" data-clan-application-accept="${app.userId}">✅</button>
+            <button type="button" data-clan-application-reject="${app.userId}">❌</button>
+          </div></article>`).join('')}</div>` : '<p class="clan-muted">Нет новых заявок.</p>'}
+      </section>`;
+  }
+
+  function inviteKickHtml() {
+    const management = dashboard.management;
+    if (!management) return '';
+    return `
+      <section class="clan-activity-group"><h4>➕ Пригласить</h4>
+        ${management.inviteCandidates.length ? `<div class="clan-activity-list">${management.inviteCandidates.map(member => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(member.name)}</strong></div><button type="button" data-clan-invite="${member.userId}">Пригласить</button></article>`).join('')}</div>` : '<p class="clan-muted">Нет игроков без клана в этом чате.</p>'}
+      </section>
+      <section class="clan-activity-group"><h4>➖ Исключить</h4>
+        ${management.kickable.length ? `<div class="clan-activity-list">${management.kickable.map(member => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(member.name)}</strong></div><button type="button" data-clan-kick="${member.userId}">Исключить</button></article>`).join('')}</div>` : '<p class="clan-muted">Некого исключить.</p>'}
+      </section>`;
+  }
+
+  function rolesHtml() {
+    const management = dashboard.management;
+    if (!management?.isOwner) return '';
+    return `
+      <section class="clan-activity-group"><h4>⭐ Роли</h4>
+        ${management.roleTargets.length ? `<div class="clan-activity-list">${management.roleTargets.map(member => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(member.name)}</strong><small>${member.role === 'officer' ? 'офицер' : 'участник'}</small></div>
+            <button type="button" data-clan-${member.role === 'officer' ? 'demote' : 'promote'}="${member.userId}">${member.role === 'officer' ? 'Разжаловать' : 'В офицеры'}</button>
+          </article>`).join('')}</div>` : '<p class="clan-muted">В клане пока нет других участников.</p>'}
+      </section>`;
+  }
+
+  function settingsHtml(clan) {
+    const management = dashboard.management;
+    if (!management?.isOwner) return '';
+    const cond = clan.entryConditions || {};
+    return `
+      <section class="clan-activity-group"><h4>⚙️ Настройки</h4>
+        <div class="clan-activity-list">
+          <label class="clan-muted">Тег (до 6 символов)<input type="text" maxlength="6" value="${escapeHtml(clan.tag)}" data-clan-settings-tag /></label>
+          <label class="clan-muted">Описание<input type="text" maxlength="200" value="${escapeHtml(clan.description)}" data-clan-settings-description /></label>
+          <label class="clan-muted">Тип вступления
+            <select data-clan-settings-entry>
+              <option value="0" ${cond.entryType === 0 ? 'selected' : ''}>Свободный</option>
+              <option value="1" ${cond.entryType === 1 ? 'selected' : ''}>По заявке</option>
+              <option value="-1" ${cond.entryType === -1 ? 'selected' : ''}>Закрытый</option>
+            </select>
+          </label>
+          <label class="clan-muted">Мин. уровень<input type="number" min="0" step="1" value="${Number(cond.minLevel) || 0}" data-clan-settings-minlevel /></label>
+          <label class="clan-muted">Мин. рейтинг снаряжения<input type="number" min="0" step="1" value="${Number(cond.minGearScore) || 0}" data-clan-settings-mingearscore /></label>
+          <label class="clan-muted">Требуемый класс
+            <select data-clan-settings-class>
+              <option value="">любой</option>
+              ${(management.classOptions || []).map(opt => `<option value="${opt.key}" ${cond.allowedClass === opt.key ? 'selected' : ''}>${escapeHtml(opt.label)}</option>`).join('')}
+            </select>
+          </label>
+          <label class="clan-muted">Требуемый пол
+            <select data-clan-settings-gender>
+              <option value="">любой</option>
+              <option value="male" ${cond.allowedGender === 'male' ? 'selected' : ''}>муж.</option>
+              <option value="female" ${cond.allowedGender === 'female' ? 'selected' : ''}>жен.</option>
+            </select>
+          </label>
+          <button type="button" data-clan-settings-save>Сохранить</button>
+        </div>
+      </section>`;
+  }
+
+  function managementHtml(clan) {
+    return `
+      ${applicationsHtml(clan)}
+      ${inviteKickHtml()}
+      ${rolesHtml()}
+      ${settingsHtml(clan)}`;
   }
 
   function bind() {
@@ -387,6 +539,30 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-pvp]').forEach(button => button.addEventListener('click', () => activity({ action: 'pvp_fight', opponentId: button.dataset.clanPvp })));
     content.querySelectorAll('[data-clan-war-declare]').forEach(button => button.addEventListener('click', () => activity({ action: 'war_declare', targetId: button.dataset.clanWarDeclare })));
     content.querySelector('[data-clan-war-attack]')?.addEventListener('click', () => activity({ action: 'war_attack' }));
+    content.querySelectorAll('[data-clan-application-accept]').forEach(button => button.addEventListener('click', () => activity({ action: 'application_accept', applicantId: button.dataset.clanApplicationAccept })));
+    content.querySelectorAll('[data-clan-application-reject]').forEach(button => button.addEventListener('click', () => activity({ action: 'application_reject', applicantId: button.dataset.clanApplicationReject })));
+    content.querySelectorAll('[data-clan-invite]').forEach(button => button.addEventListener('click', () => activity({ action: 'invite', targetId: button.dataset.clanInvite })));
+    content.querySelectorAll('[data-clan-kick]').forEach(button => button.addEventListener('click', () => activity({ action: 'kick', targetId: button.dataset.clanKick })));
+    content.querySelectorAll('[data-clan-promote]').forEach(button => button.addEventListener('click', () => activity({ action: 'promote', targetId: button.dataset.clanPromote })));
+    content.querySelectorAll('[data-clan-demote]').forEach(button => button.addEventListener('click', () => activity({ action: 'demote', targetId: button.dataset.clanDemote })));
+    content.querySelector('[data-clan-settings-save]')?.addEventListener('click', () => {
+      const changes = {
+        tag: content.querySelector('[data-clan-settings-tag]')?.value ?? '',
+        description: content.querySelector('[data-clan-settings-description]')?.value ?? '',
+        entryType: Number(content.querySelector('[data-clan-settings-entry]')?.value ?? 0),
+        minLevel: Number(content.querySelector('[data-clan-settings-minlevel]')?.value ?? 0),
+        minGearScore: Number(content.querySelector('[data-clan-settings-mingearscore]')?.value ?? 0),
+        allowedClass: content.querySelector('[data-clan-settings-class]')?.value ?? '',
+        allowedGender: content.querySelector('[data-clan-settings-gender]')?.value ?? '',
+      };
+      activity({ action: 'settings_update', changes });
+    });
+    content.querySelectorAll('[data-clan-investigation-start]').forEach(button => button.addEventListener('click', () => activity({ action: 'investigation_start', key: button.dataset.clanInvestigationStart })));
+    content.querySelector('[data-clan-investigation-fund]')?.addEventListener('click', () => activity({ action: 'investigation_fund' }));
+    content.querySelector('[data-clan-investigation-complete]')?.addEventListener('click', () => activity({ action: 'investigation_complete' }));
+    content.querySelector('[data-clan-investigation-cancel]')?.addEventListener('click', () => activity({ action: 'investigation_cancel' }));
+    content.querySelectorAll('[data-clan-task-claim]').forEach(button => button.addEventListener('click', () => activity({ action: 'task_claim', taskKey: button.dataset.clanTaskClaim })));
+    content.querySelector('[data-clan-task-bonus]')?.addEventListener('click', () => activity({ action: 'task_claim_bonus' }));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {
       const actionName = dashboard.clan?.isOwner ? 'disband' : 'leave';
       if (!window.confirm(actionName === 'disband' ? 'Расформировать клан?' : 'Покинуть клан?')) return;

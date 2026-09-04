@@ -73,6 +73,8 @@ import {
 } from './clan.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { performClanCompetitionAction } from './clanCompetition.js';
+import { performClanManagementAction } from './clanManagement.js';
+import { prepareClanProgressionAction } from './clanProgression.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -764,7 +766,8 @@ async function clanAction(req, res) {
       if (body.action === 'create') {
         result = await createClanForMiniApp(context.userId, body.name);
       } else if (body.action === 'join') {
-        result = await joinClanForMiniApp(context.userId, body.clanId);
+        context.session = await getSession(context.chatId, context.userId);
+        result = await joinClanForMiniApp(context.userId, body.clanId, context.session);
       } else if (body.action === 'leave') {
         result = await leaveClanForMiniApp(context.userId);
       } else if (body.action === 'disband') {
@@ -835,7 +838,9 @@ async function clanActivity(req, res) {
     const context = await authorize(req);
     const body = await readJsonBody(req);
     const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
-    const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions]);
+    const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'settings_update']);
+    const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus']);
+    const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
     if (!allowed.has(body.action)) {
       const error = new Error('Unknown clan activity');
       error.status = 400;
@@ -850,6 +855,17 @@ async function clanActivity(req, res) {
         // Competition actions persist only clan documents. Player combat state is
         // treated as a read-only snapshot, matching the legacy duel/war behavior.
         result = await performClanCompetitionAction(context.userId, context.session, body.action, body);
+      } else if (managementActions.has(body.action)) {
+        const prepared = await performClanManagementAction(context.userId, context.session, body.action, body);
+        result = prepared.result;
+        if (result.ok && prepared.clan) await prepared.clan.save();
+      } else if (progressionActions.has(body.action)) {
+        const prepared = await prepareClanProgressionAction(context.userId, context.session, body.action, body);
+        result = prepared.result;
+        if (result.ok) {
+          if (prepared.savePlayer) await saveSession(context.session);
+          if (prepared.clan) await prepared.clan.save();
+        }
       } else {
         const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
         result = prepared.result;
