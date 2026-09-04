@@ -1,8 +1,9 @@
+import { fromPath } from 'node-telegram-bot-api/node';
 import retryBotRequest from './retryBotRequest.js';
 import getPhoto from '../getters/getPhoto.js';
 import savePhotoId from '../getters/savePhotoId.js';
 
-export default function (path, caption, form) {
+export default async function (path, caption, form) {
     form = form || {};
 
     if (!form.chat_id || !form.message_id) {
@@ -20,9 +21,10 @@ export default function (path, caption, form) {
     }
 
     if (path) {
+        let photoFile = await fromPath(path);
         return retryBotRequest(bot => bot.editMessageMedia({
             type: "photo",
-            media: `attach://${path}`,
+            media: photoFile,
             caption: caption
         }, form)).then(msg => savePhotoId(path, msg.photo[0].file_id));
     }
