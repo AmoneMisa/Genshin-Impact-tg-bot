@@ -7,12 +7,17 @@ on:
     paths:
       - package.json
 
+permissions:
+  contents: write
+
 jobs:
   lock:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: feature/telegram-miniapp-webgl
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -22,6 +27,18 @@ jobs:
 
       - name: Regenerate package lock
         run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Commit package lock
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            echo "package-lock.json is already current"
+            exit 0
+          fi
+          git commit -m "chore: refresh package lock"
+          git push origin HEAD:feature/telegram-miniapp-webgl
 
       - name: Upload package lock
         uses: actions/upload-artifact@v4
