@@ -163,3 +163,5 @@ styles = """
 if styles.strip() in text:
     raise RuntimeError('Sword ranking styles are already present')
 path.write_text(text.rstrip() + '\n' + styles)
+
+# Trigger the temporary patch workflow after it has been installed.
