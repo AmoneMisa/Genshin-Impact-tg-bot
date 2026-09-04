@@ -1,6 +1,6 @@
 import { sessions } from '../../data.js';
 import gachaTemplate from '../../template/gachaTemplate.js';
-import { ensureGachaEntry, normalizeGachaState } from '../game/equipment/normalizeGachaState.js';
+import normalizeGachaState, { ensureGachaEntry } from '../game/equipment/normalizeGachaState.js';
 
 export default function () {
     for (let chatSession of Object.values(sessions)) {
