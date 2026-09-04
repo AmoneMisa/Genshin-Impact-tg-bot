@@ -113,3 +113,5 @@ styles = """
 if '.arcade-secondary {' in text:
     raise RuntimeError('Arcade reset styles are already present')
 path.write_text(text.rstrip() + '\n' + styles)
+
+# Trigger the temporary workflow after it has been installed.
