@@ -44,6 +44,7 @@ jobs:
           node --check miniapp/arcade.js
           node --check miniapp/goldTransfer.js
           node --check miniapp/point21.js
+          node --check miniapp/elements.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
@@ -59,6 +60,8 @@ jobs:
           node --check functions/game/sword/swordResult.js
           node --check functions/game/gold/transferGold.js
           node --check functions/game/point21/pointMessage.js
+          node --check functions/game/elements/getRandomElement.js
+          node --check functions/game/elements/elementsMessage.js
           node --check functions/game/general/findWinners.js
           node --check functions/game/general/endGame.js
           node --check functions/game/general/pass.js
@@ -73,8 +76,10 @@ jobs:
           node --check callbacks/game/slots/bets.js
           node --check callbacks/game/slots/startGame.js
           node --check callbacks/game/boss/sendGoldCallback.js
+          node --check callbacks/game/elements/takeElement.js
           node --check onTexts/game/slots/slots.js
           node --check onTexts/game/sendGold.js
+          node --check onTexts/game/elements/elements.js
           node --check webapp/app.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
@@ -87,4 +92,5 @@ jobs:
           node --check webapp/arcade.js
           node --check webapp/gold-transfer.js
           node --check webapp/point21.js
+          node --check webapp/elements.js
           node --check webapp/renderer.js
