@@ -1,4 +1,3 @@
-import Boss from '../db/models/Boss.js';
 import Chat from '../db/models/Chat.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import summonBoss from '../functions/game/boss/summonBoss.js';
@@ -256,6 +255,6 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex) {
     killed,
     loot: loot?.[userId] || null,
     refreshPlayer: killed,
-    boss: killed ? null : await getBossState(session, chatId),
+    boss: await getBossState(session, chatId),
   };
 }
