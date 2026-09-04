@@ -1,0 +1,65 @@
+.boss-panel { max-height:min(92vh,920px); }
+.boss-empty-state { margin:18px 0 2px; padding:30px 18px; border:1px solid rgba(255,255,255,.08); border-radius:20px; background:linear-gradient(145deg,rgba(128,83,182,.09),rgba(255,255,255,.018)); display:grid; justify-items:center; text-align:center; gap:8px; }
+.boss-empty-icon { width:68px; height:68px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.09); border-radius:21px; background:rgba(255,255,255,.035); font-size:34px; }
+.boss-empty-state strong { margin-top:3px; font-size:15px; }
+.boss-empty-state p { max-width:360px; color:var(--muted); font-size:10px; line-height:1.5; }
+.boss-summon { width:min(260px,100%); min-height:40px; margin-top:5px; border:1px solid rgba(192,139,255,.24); border-radius:12px; color:#f2eaff; background:linear-gradient(135deg,rgba(156,93,226,.2),rgba(176,76,109,.11)); font-size:10px; font-weight:900; }
+.boss-hero { position:relative; overflow:hidden; margin:16px 0 10px; padding:14px; border:1px solid rgba(225,118,154,.16); border-radius:19px; background:linear-gradient(145deg,rgba(148,62,98,.11),rgba(86,64,151,.075)); }
+.boss-hero::after { content:""; position:absolute; width:170px; height:170px; top:-95px; right:-65px; border-radius:50%; background:radial-gradient(circle,rgba(226,92,137,.16),transparent 68%); pointer-events:none; }
+.boss-name-row { position:relative; z-index:1; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.boss-name-row > div { min-width:0; display:grid; gap:2px; }
+.boss-name-row small { color:#c9a7b9; font-size:8px; letter-spacing:.08em; }
+.boss-name-row strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:17px; }
+.boss-name-row button { width:30px; height:30px; border:1px solid rgba(255,255,255,.08); border-radius:10px; background:rgba(255,255,255,.035); color:var(--muted); }
+.boss-hero p { position:relative; z-index:1; margin:8px 0 10px; color:#bdb5c9; font-size:9px; line-height:1.45; }
+.boss-hp-copy { position:relative; z-index:1; display:flex; justify-content:space-between; gap:12px; font-size:9px; }
+.boss-hp-copy span { color:#d6a5b7; font-weight:900; }
+.boss-hp-copy strong { font-size:10px; }
+.boss-hp-track { position:relative; z-index:1; height:8px; margin-top:5px; overflow:hidden; border:1px solid rgba(255,255,255,.07); border-radius:999px; background:rgba(0,0,0,.16); }
+.boss-hp-track span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,rgba(202,75,116,.86),rgba(235,123,105,.88)); box-shadow:0 0 16px rgba(216,82,118,.23); transition:width .3s ease; }
+.boss-timer { position:relative; z-index:1; display:flex; justify-content:space-between; margin-top:8px; font-size:9px; }
+.boss-timer span { color:var(--muted); }
+.boss-timer strong { color:#ddc6d0; }
+.boss-timer strong.expired { color:#ffaaa0; }
+.boss-player-bars { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.boss-player-bars > div { min-width:0; padding:10px; border:1px solid rgba(255,255,255,.07); border-radius:13px; background:rgba(255,255,255,.025); display:grid; gap:4px; }
+.boss-player-bars small { color:var(--muted); font-size:8px; text-transform:uppercase; letter-spacing:.06em; }
+.boss-player-bars strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:10px; }
+.boss-player-bars > div > span { height:4px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.055); }
+.boss-player-bars i { display:block; height:100%; border-radius:inherit; background:rgba(129,207,181,.72); }
+.boss-player-bars > div:last-child i { background:rgba(128,158,235,.75); }
+.boss-dead { margin:-2px 0 12px; padding:8px 10px; border:1px solid rgba(235,108,93,.16); border-radius:11px; color:#eab2aa; background:rgba(156,57,48,.07); text-align:center; font-size:9px; }
+.boss-section-title { display:flex; align-items:end; justify-content:space-between; gap:12px; margin:12px 2px 7px; }
+.boss-section-title strong { font-size:12px; }
+.boss-section-title small { color:var(--muted); font-size:8px; text-align:right; }
+.boss-skills { display:grid; gap:7px; }
+.boss-skill { min-width:0; padding:11px; border:1px solid rgba(255,255,255,.075); border-radius:14px; background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018)); color:#e8e4f2; text-align:left; }
+.boss-skill.damage { border-color:rgba(230,112,130,.14); }
+.boss-skill.heal { border-color:rgba(104,218,170,.14); }
+.boss-skill.shield { border-color:rgba(114,164,239,.15); }
+.boss-skill:disabled { opacity:.46; }
+.boss-skill-top { display:flex; justify-content:space-between; gap:10px; }
+.boss-skill-top strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
+.boss-skill-top span { flex:0 0 auto; color:#c4bfd0; font-size:9px; }
+.boss-skill p { margin:5px 0 7px; color:var(--muted); font-size:8px; line-height:1.4; }
+.boss-skill-foot { display:flex; justify-content:space-between; gap:8px; color:#aaa5b8; font-size:8px; }
+.boss-loot { display:flex; flex-wrap:wrap; gap:6px; min-height:28px; padding:9px; border:1px solid rgba(255,208,117,.09); border-radius:12px; background:rgba(159,115,41,.035); }
+.boss-loot span { padding:5px 7px; border-radius:8px; background:rgba(255,255,255,.03); color:#d4c9b5; font-size:8px; }
+.boss-damage-list { display:grid; gap:5px; }
+.boss-damage-row { display:grid; grid-template-columns:26px 1fr auto; align-items:center; gap:7px; padding:7px 9px; border:1px solid rgba(255,255,255,.06); border-radius:10px; background:rgba(255,255,255,.02); }
+.boss-damage-row span { color:var(--muted); font-size:8px; }
+.boss-damage-row strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; }
+.boss-damage-row em { color:#dfc2cb; font-size:9px; font-style:normal; font-weight:800; }
+.boss-feedback { min-height:18px; margin:11px 2px 1px; color:var(--muted); font-size:10px; text-align:center; }
+.boss-empty { padding:16px 12px; border:1px dashed rgba(255,255,255,.08); border-radius:12px; color:var(--muted); text-align:center; font-size:9px; }
+.boss-empty.compact { padding:10px; }
+.boss-overlay.busy .boss-skill, .boss-overlay.busy .boss-summon, .boss-overlay.busy [data-boss-refresh] { pointer-events:none; opacity:.5; }
+.boss-overlay.fighting .boss-hp-track span { filter:brightness(1.18); }
+.boss-result { position:sticky; top:0; z-index:22; margin:-2px 0 9px; padding:10px 12px; border:1px solid rgba(255,255,255,.1); border-radius:14px; background:rgba(16,18,34,.95); backdrop-filter:blur(18px); display:flex; align-items:center; gap:9px; opacity:0; transform:translateY(-10px); transition:.18s ease; }
+.boss-result.visible { opacity:1; transform:translateY(0); }
+.boss-result.leaving { opacity:0; transform:translateY(-7px); }
+.boss-result.victory { border-color:rgba(246,205,105,.23); box-shadow:0 0 28px rgba(228,181,75,.06); }
+.boss-result span { font-size:20px; }
+.boss-result strong { font-size:10px; line-height:1.4; }
+@media (min-width:720px) { .boss-skills { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:390px) { .boss-player-bars { grid-template-columns:1fr; }.boss-section-title small { display:none; } }
