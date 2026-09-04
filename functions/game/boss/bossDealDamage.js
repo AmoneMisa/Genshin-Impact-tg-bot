@@ -1,5 +1,6 @@
 import calcBossDamage from './calcBossDamage.js';
 import getCurrentHp from '../player/getters/getCurrentHp.js';
+import getMaxHp from '../player/getters/getMaxHp.js';
 import lodash from 'lodash';
 
 export default function (members, boss) {
@@ -21,6 +22,10 @@ export default function (members, boss) {
 
     for (let member of filteredMembers) {
         let player = member.game;
+        // Defensively clamp a possibly-corrupted stored hp (see userSkillsCallback.js's
+        // heal-skill fix) before using it in damage math, so a stale inflated value
+        // never makes a player effectively unkillable.
+        player.gameClass.stats.hp = Math.min(player.gameClass.stats.hp, getMaxHp(member, player.gameClass));
         let dmg = Math.ceil(calcBossDamage(boss, member));
         let playerShield = player.effects.find(effect => effect.name === "shield");
         let shield;

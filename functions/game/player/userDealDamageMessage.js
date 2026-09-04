@@ -1,6 +1,7 @@
 import isBossAlive from '../boss/getBossStatus/isBossAlive.js';
 import bossReflectDamageMessage from '../boss/bossReflectDamageMessage.js';
 import getUserName from '../../getters/getUserName.js';
+import getCurrentHp from './getters/getCurrentHp.js';
 
 export default async function (session, boss, {
     isHasCritical = false,
@@ -9,13 +10,14 @@ export default async function (session, boss, {
     reflectDamage = false
 }) {
     let message = "";
+    let currentHp = getCurrentHp(session);
 
     if (vampire) {
-        message += `Ты отвампирил себе ${vampire} хп. Твоё текущее хп: ${session.game.gameClass.stats.hp}\n`;
+        message += `Ты отвампирил себе ${vampire} хп. Твоё текущее хп: ${currentHp}\n`;
     }
 
     if (reflectDamage) {
-        message += bossReflectDamageMessage(reflectDamage, session.game.gameClass.stats.hp);
+        message += bossReflectDamageMessage(reflectDamage, currentHp);
     }
 
     if (!isBossAlive(boss)) {

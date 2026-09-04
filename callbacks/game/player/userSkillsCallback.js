@@ -17,6 +17,7 @@ import skillUsagePayCost from '../../../functions/game/player/skillUsagePayCost.
 import getTime from '../../../functions/getters/getTime.js';
 import getChatSession from '../../../functions/getters/getChatSession.js';
 import getMaxHp from '../../../functions/game/player/getters/getMaxHp.js';
+import { getEffectiveSkillCost } from '../../../functions/game/player/skillEnchant.js';
 
 export default [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, skillSlot]) {
     const { chat, member } = await loadPlayer(chatId, callback.from.id);
@@ -39,8 +40,9 @@ export default [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callb
         return;
     }
 
-    let costCount = skill.costHp > 0 ? skill.costHp : skill.cost;
-    let costType = skill.costHp > 0 ? "hp" : "mp";
+    let { cost, costHp } = getEffectiveSkillCost(skill);
+    let costCount = costHp > 0 ? costHp : cost;
+    let costType = costHp > 0 ? "hp" : "mp";
 
     skillUsagePayCost(member, costType, costCount);
 
@@ -82,7 +84,7 @@ export default [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callb
         return;
     } else if (skill.isHeal) {
         let heal = useHealSkill(member, skill);
-        member.game.gameClass.stats.hp = Math.max(member.game.gameClass.stats.hp + heal, getMaxHp(member, member.game.gameClass));
+        member.game.gameClass.stats.hp = Math.min(member.game.gameClass.stats.hp + heal, getMaxHp(member, member.game.gameClass));
 
         await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(member)}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
