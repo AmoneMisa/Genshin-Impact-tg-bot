@@ -2,11 +2,12 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { token } from '../config.js';
+import { token, myId } from '../config.js';
 import { trustedChats } from '../data.js';
 import getSession from '../functions/getters/getSession.js';
 import getChatSession from '../functions/getters/getChatSession.js';
 import saveSession from '../functions/getters/saveSession.js';
+import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
 import { getChestState, openChest } from './chest.js';
@@ -33,6 +34,8 @@ import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderF
 import { getInventoryState, useInventoryPotion } from './inventory.js';
 import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
 import { getFormsState, savePersonalForm } from './forms.js';
+import { getUpdatesState, setUpdatesEnabled } from './updates.js';
+import { normalizeFeedbackMessage, formatFeedbackForDeveloper } from './feedback.js';
 import {
   getPoint21State,
   syncPoint21,
@@ -75,6 +78,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
 const GAME_ASSETS_DIR = path.resolve(__dirname, '../images');
 const locks = new Map();
+const feedbackCooldowns = new Map();
+const FEEDBACK_COOLDOWN_MS = 30_000;
 const ARCADE_GAMES = new Set(Object.keys(getArcadeConfig()));
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -229,6 +234,77 @@ async function bootstrap(req, res) {
     return sendJson(res, 200, stateFor(context));
   } catch (error) {
     return sendApiError(res, 'bootstrap', error);
+  }
+}
+
+async function updatesState(req, res) {
+  try {
+    const context = await authorize(req);
+    context.session = await getSession(context.chatId, context.userId);
+    return sendJson(res, 200, getUpdatesState(context.session));
+  } catch (error) {
+    return sendApiError(res, 'updates state', error);
+  }
+}
+
+async function updatesSettings(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.enabled !== 'boolean') {
+      const error = new Error('enabled must be boolean');
+      error.status = 400;
+      throw error;
+    }
+
+    const result = await withLock(`${context.chatId}:${context.userId}:updates`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const changed = setUpdatesEnabled(context.session, body.enabled);
+      if (changed.ok) await saveSession(context.session);
+      return changed;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      updates: getUpdatesState(context.session),
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'updates settings', error);
+  }
+}
+
+async function feedbackSubmit(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const normalized = normalizeFeedbackMessage(body.message);
+    if (!normalized.ok) {
+      const error = new Error(normalized.reason);
+      error.status = 400;
+      throw error;
+    }
+
+    const cooldownKey = String(context.userId);
+    const now = Date.now();
+    const lastSentAt = feedbackCooldowns.get(cooldownKey) || 0;
+    const waitMs = FEEDBACK_COOLDOWN_MS - (now - lastSentAt);
+    if (waitMs > 0) {
+      const error = new Error(`Подождите ${Math.ceil(waitMs / 1000)} сек. перед следующим сообщением`);
+      error.status = 429;
+      throw error;
+    }
+
+    await sendMessage(myId, formatFeedbackForDeveloper({
+      message: normalized.message,
+      user: context.validated.user,
+      chatId: context.chatId,
+    }), { disable_notification: true });
+    feedbackCooldowns.set(cooldownKey, now);
+
+    return sendJson(res, 200, { ok: true });
+  } catch (error) {
+    return sendApiError(res, 'feedback submit', error);
   }
 }
 
@@ -1188,6 +1264,9 @@ export default function startMiniAppServer() {
 
     if (route === 'GET /healthz') return sendJson(res, 200, { ok: true });
     if (route === 'GET /api/bootstrap') return bootstrap(req, res);
+    if (route === 'GET /api/updates') return updatesState(req, res);
+    if (route === 'POST /api/updates/settings') return updatesSettings(req, res);
+    if (route === 'POST /api/feedback') return feedbackSubmit(req, res);
     if (route === 'GET /api/forms') return formsState(req, res);
     if (route === 'POST /api/forms/save') return formsSave(req, res);
     if (route === 'GET /api/profile') return playerProfileState(req, res);
