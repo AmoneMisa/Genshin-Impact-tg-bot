@@ -11,6 +11,9 @@ import { openArcadeGame } from './arcade.js';
 import { openGoldTransfer } from './gold-transfer.js';
 import { openPoint21 } from './point21.js';
 import { openElementsGame } from './elements.js';
+import { openBonusGame } from './bonus.js';
+import { openTitlesGame } from './titles.js';
+import { openHoroscopeGame } from './horoscope.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
@@ -55,6 +58,9 @@ const launchers = {
   transfer: [openGoldTransfer, 'Переводы золота работают через Mini App и сохраняются в Mongo.'],
   point21: [openPoint21, '21 очко работает через общий серверный стол Mini App.'],
   elements: [openElementsGame, 'Стихии работают через общий серверный стол Mini App.'],
+  bonus: [openBonusGame, 'Ежедневный бонус работает через серверный RNG и сохраняется в Mongo.'],
+  titles: [openTitlesGame, 'Титулы работают через Mongo и серверный выбор участника.'],
+  horoscope: [openHoroscopeGame, 'Гороскоп работает через серверный FreeLLMAPI с локальным fallback.'],
   sword: [openSwordGame, 'Меч работает через Mini App; бросок и дневной таймер считаются на сервере.'],
   arcade: [openArcadeGame, 'Аркада работает через Mini App; результаты генерируются на сервере.'],
 };
