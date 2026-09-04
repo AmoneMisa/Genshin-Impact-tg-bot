@@ -1,4 +1,5 @@
 import gachaTemplate from '../../../template/gachaTemplate.js';
+import { ensureGachaEntry, getGachaShardEntry } from './normalizeGachaState.js';
 
 // 1 - уровень слишком низкий
 // 2 - недостаточно золота
@@ -9,8 +10,13 @@ import gachaTemplate from '../../../template/gachaTemplate.js';
 
 export default function (session, gachaType) {
     let gacha = gachaTemplate.find(item => item.name === gachaType);
-    let gachaItemInInventory = session.game.gacha.find(item => item.name === gachaType);
-    let isFreeSpin = gachaItemInInventory?.freeSpins > 0;
+    if (!gacha) {
+        throw new Error(`Не найдена гача: ${gachaType}`);
+    }
+
+    let gachaItemInInventory = ensureGachaEntry(session, gachaType);
+    let shardEntry = getGachaShardEntry(session, gachaType);
+    let isFreeSpin = gachaItemInInventory.freeSpins > 0;
     let isLevelEnough = session.game.stats.lvl >= gacha.needLvl;
 
     if (!isLevelEnough) {
@@ -21,16 +27,16 @@ export default function (session, gachaType) {
         return -2;
     }
 
-    if (gachaItemInInventory.piecesForFleeCall >= gacha.piecesForFleeCall) {
+    if ((shardEntry?.value || 0) >= gacha.piecesForFleeCall) {
         return -1;
     }
 
-    if (gacha.spinCost.gold > session.game.inventory.gold) {
-        return 2
+    if ((gacha.spinCost.gold || 0) > session.game.inventory.gold) {
+        return 2;
     }
 
-    if (gacha.spinCost.crystals > session.game.inventory.crystals) {
-        return 3
+    if ((gacha.spinCost.crystals || 0) > session.game.inventory.crystals) {
+        return 3;
     }
 
     return 0;
