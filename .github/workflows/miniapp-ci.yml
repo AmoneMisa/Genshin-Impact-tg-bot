@@ -33,6 +33,7 @@ jobs:
           node --check miniapp/server.js
           node --check miniapp/telegramAuth.js
           node --check miniapp/state.js
+          node --check miniapp/forms.js
           node --check miniapp/chest.js
           node --check miniapp/gacha.js
           node --check miniapp/equipment.js
@@ -100,6 +101,7 @@ jobs:
           node --check onTexts/game/horoscopes/horoscope.js
           node --check onTexts/game/clan/clan.js
           node --check webapp/app.js
+          node --check webapp/forms.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
           node --check webapp/equipment.js
