@@ -1,26 +1,19 @@
-import Chat from "../../../db/models/Chat.js";
-import getChatSession from "../../getters/getChatSession.js";
-import getSession from "../../getters/getSession.js";
+import loadPlayer from "../../getters/loadPlayer.js";
 
 /**
- * Начисляет золото игроку после завершения игры
+ * Начисляет золото игроку после завершения одиночной игры (кубики/баскетбол/
+ * боулинг/дартс/футбол). Ставка хранится на самом игроке в member.game[gameName].bet.
  * @param {string} chatId - идентификатор чата
  * @param {string} userId - идентификатор игрока
  * @param {string} gameName - название игры
  * @param {number} modifier - множитель выигрыша
- * @returns {number} amount - сколько золота начислено
+ * @returns {number} reward - сколько золота начислено
  */
 export default async function(chatId, userId, gameName, modifier) {
-    const chat = await getChatSession(chatId);
-    if (!chat || !chat.game[gameName]) return 0;
-
-    const player = chat.game[gameName].players[userId];
-    if (!player) return 0;
-
-    const member = await getSession(chatId, userId);
+    const { chat, member } = await loadPlayer(chatId, userId);
     if (!member) return 0;
 
-    const bet = player.bet || 0;
+    const bet = member.game?.[gameName]?.bet || 0;
     const reward = Math.round(bet * modifier);
 
     if (!member.game.inventory) {

@@ -30,7 +30,8 @@ export default async function(chatId, userId) {
         member.userId = userId;
     }
 
-    await getUser(chatId, userId);
+    const user = await getUser(chatId, userId);
+    member.userChatData = user.userChatData;
 
     getLostFieldsInSession(member);
     chat.members[memberIndex].set(member);

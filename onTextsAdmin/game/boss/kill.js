@@ -1,16 +1,18 @@
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import getMemberStatus from '../../../functions/getters/getMemberStatus.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
-import getAliveBoss from '../../../functions/game/boss/getBossStatus/getAliveBoss.js';
+import getBossesByChatId from '../../../functions/game/boss/getters/getBossesByChatId.js';
+import bossAlreadySummoned from '../../../functions/game/boss/getBossStatus/bossAlreadySummoned.js';
 
 export default [[/(?:^|\s)\/kill\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    if (!getMemberStatus(msg.chat.id, msg.from.id)) {
+    if (!await getMemberStatus(msg.chat.id, msg.from.id)) {
         return;
     }
 
-    let boss = getAliveBoss(msg.chat.id);
+    const bosses = await getBossesByChatId(msg.chat.id);
+    let boss = Array.isArray(bosses) ? bosses.find(bossAlreadySummoned) : null;
     if (!boss) {
         throw new Error(`Не найден босс для команды kill в чате: ${msg.chat.id}`);
     }
@@ -23,6 +25,7 @@ export default [[/(?:^|\s)\/kill\b/, async (msg) => {
     boss.currentHp = 0;
     boss.hp = 0;
     boss.listOfDamage = [];
+    await boss.save();
 
     return sendMessageWithDelete(msg.chat.id, "Босс убит админом.", {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),

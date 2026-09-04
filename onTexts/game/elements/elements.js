@@ -91,23 +91,31 @@ export default [[/(?:^|\s)\/elements\b/, async (msg, session) => {
     // запуск игры через 25 секунд после ставок
     await sleep(25000);
 
-    for (const playerId of Object.keys(chatSession.game.elements.players)) {
+    // Перезагружаем чат, чтобы учесть игроков, присоединившихся во время ставок.
+    const freshChat = await getChatSession(msg.chat.id);
+    if (!freshChat.game.elements || !freshChat.game.elements.gameSessionIsStart) {
+        return;
+    }
+
+    for (const playerId of Object.keys(freshChat.game.elements.players)) {
         if (playerId !== "bot") {
-            getRandomElement(chatSession, playerId);
+            getRandomElement(freshChat, playerId);
         }
     }
-    botThink(chatSession);
-    updatePoints(chatSession.game.elements.players);
-    endGameTimer(chatSession, 20000, msg.chat.id, "elements", msg.message_thread_id);
+    botThink(freshChat);
+    updatePoints(freshChat.game.elements.players);
+    await freshChat.save();
+
+    endGameTimer(freshChat, 20000, msg.chat.id, "elements", msg.message_thread_id);
 
     await sendMessageWithDelete(msg.chat.id, "Игра началась. Ставки больше не принимаются.", {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {})
     }, 7000);
 
-    await editMessageText(elementsMessage(chatSession, userId), {
+    await editMessageText(elementsMessage(freshChat, userId), {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
         chat_id: msg.chat.id,
-        message_id: chatSession.game.elements.messageId,
+        message_id: freshChat.game.elements.messageId,
         reply_markup: {
             inline_keyboard: [[{ text: "Стихия!", callback_data: "elements_take" }]]
         }

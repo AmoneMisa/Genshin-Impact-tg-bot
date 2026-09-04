@@ -21,7 +21,9 @@ export default function stealResources(currentUser, targetUser) {
         return { resultCode: 2, remainHp }; // защитник слишком живой
     }
 
-    const defenderInventory = normalizeInventory(targetUser.game.inventory);
+    const defenderGold = targetUser.game.inventory.gold || 0;
+    const defenderIronOre = targetUser.game.inventory.ironOre || 0;
+    const defenderCrystals = targetUser.game.inventory.crystals || 0;
 
     const stealPercentage = remainHp >= maxHp ? 0.3 : 0.13;
     const guardedResources = calculateIncreaseGuardedResources(
@@ -30,15 +32,15 @@ export default function stealResources(currentUser, targetUser) {
     );
 
     const goldToSteal = Math.ceil(
-        Math.max(0, defenderInventory.gold - guardedResources.guardedGold) *
+        Math.max(0, defenderGold - guardedResources.guardedGold) *
         stealPercentage
     );
     const ironOreToSteal = Math.ceil(
-        Math.max(0, defenderInventory.ironOre - guardedResources.guardedIronOre) *
+        Math.max(0, defenderIronOre - guardedResources.guardedIronOre) *
         stealPercentage
     );
     const crystalsToSteal = Math.ceil(
-        Math.max(0, defenderInventory.crystals - guardedResources.guardedCrystals) *
+        Math.max(0, defenderCrystals - guardedResources.guardedCrystals) *
         stealPercentage
     );
 
@@ -47,16 +49,10 @@ export default function stealResources(currentUser, targetUser) {
     currentUser.game.inventory.ironOre += ironOreToSteal;
     currentUser.game.inventory.crystals += crystalsToSteal;
 
-    // Списываем у защитника (с защитой от отрицательных значений)
-    defenderInventory.gold = Math.max(0, defenderInventory.gold - goldToSteal);
-    defenderInventory.ironOre = Math.max(
-        0,
-        defenderInventory.ironOre - ironOreToSteal
-    );
-    defenderInventory.crystals = Math.max(
-        0,
-        defenderInventory.crystals - crystalsToSteal
-    );
+    // Списываем у защитника из реального инвентаря (с защитой от отрицательных значений)
+    targetUser.game.inventory.gold = Math.max(0, defenderGold - goldToSteal);
+    targetUser.game.inventory.ironOre = Math.max(0, defenderIronOre - ironOreToSteal);
+    targetUser.game.inventory.crystals = Math.max(0, defenderCrystals - crystalsToSteal);
 
     // Иммунитет на 2 часа
     targetUser.game.stealImmuneTimer = Date.now() + 2 * 60 * 60 * 1000;
@@ -85,12 +81,4 @@ export default function stealResources(currentUser, targetUser) {
 
 function canSteal(targetUser) {
     return Date.now() >= targetUser.game.stealImmuneTimer;
-}
-
-function normalizeInventory(inventory) {
-    return {
-        gold: inventory.gold || 0,
-        crystals: inventory.crystals || 0,
-        ironOre: inventory.ironOre || 0,
-    };
 }

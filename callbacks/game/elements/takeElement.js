@@ -12,10 +12,10 @@ import endGameTimer from '../../../functions/game/general/endGameTimer.js';
 
 let maxCountRounds = 3;
 
-export default [["elements_take", function (session, callback) {
+export default [["elements_take", async function (session, callback) {
     let chatId = callback.message.chat.id;
 
-    let chatSession = getChatSession(chatId);
+    let chatSession = await getChatSession(chatId);
     let userId = session.userChatData.user.id;
     let game = chatSession.game.elements;
 
@@ -48,6 +48,8 @@ export default [["elements_take", function (session, callback) {
 
     game.gameSessionLastUpdateAt = new Date().getTime();
 
+    await chatSession.save();
+
     editMessageText(elementsMessage(chatSession, userId), {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: chatId,
@@ -61,6 +63,6 @@ export default [["elements_take", function (session, callback) {
     });
 
     if (roundEnd && validateEndGame(game.currentRound, maxCountRounds)) {
-        endGame(chatSession, chatId, game.messageId, true, "elements");
+        await endGame(chatId, game.messageId, true, "elements");
     }
 }]];

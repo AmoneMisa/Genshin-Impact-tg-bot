@@ -7,6 +7,7 @@ import bot from '../../../bot.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 let maxPulls = 3;
 
@@ -20,37 +21,43 @@ export default [[/^darts_pull$/, async function (session, callback) {
     }
 
     let chatId = callback.message.chat.id;
-    await bot.sendDice(chatId, {emoji: '🎯', ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})}).then(msg => {
-        deleteMessageTimeout(chatId, msg.message_id, 10 * 1000);
-        session.game.darts.dart += msg.dice.value;
-    });
+    const diceMsg = await bot.sendDice(chatId, {emoji: '🎯', ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})});
+    deleteMessageTimeout(chatId, diceMsg.message_id, 10 * 1000);
 
-    session.game.darts.counter++;
+    const { chat, member } = await loadPlayer(chatId, session.userId);
+    if (!member.game.hasOwnProperty('darts')) {
+        return;
+    }
+    member.game.darts.dart += diceMsg.dice.value;
+    member.game.darts.counter++;
+    await chat.save();
 
-    if (session.game.darts.counter === maxPulls) {
-        let result = isWinPoints(session.game.darts.dart, 13, 18);
+    let darts = member.game.darts;
+
+    if (darts.counter === maxPulls) {
+        let result = isWinPoints(darts.dart, 13, 18);
         if (!result) {
             await deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.darts.dart}. Ставка: ${session.game.darts.bet}`, {
+            await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${darts.dart}. Ставка: ${darts.bet}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 7000);
-            return endGame(session);
+            return endGame(chatId, session.userId);
         }
 
         let modifier;
-        
-        if (session.game.darts.dart === 18) {
+
+        if (darts.dart === 18) {
             modifier = 2;
         } else {
             modifier = 1.4;
         }
-        
-        sendPrize(session, modifier, 'darts');
+
+        await sendPrize(chatId, session.userId, 'darts', modifier);
         await deleteMessage(chatId, callback.message.message_id);
-        await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.darts.bet}\nВыигрыш: ${Math.round(session.game.darts.bet * modifier)}\nСумма очков: ${session.game.darts.dart}`, {
+        await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${darts.bet}\nВыигрыш: ${Math.round(darts.bet * modifier)}\nСумма очков: ${darts.dart}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 7000);
 
-        return endGame(session);
+        return endGame(chatId, session.userId);
     }
 }]];

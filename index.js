@@ -156,7 +156,7 @@ async function loadCommands() {
         }
 
         if (results.length > 0) {
-            Promise.all(results).then(() => {
+            Promise.allSettled(results).then(() => {
                 bot.answerCallbackQuery(callback.id);
             });
         } else {

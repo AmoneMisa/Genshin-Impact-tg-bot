@@ -11,6 +11,7 @@ import getPlayerGameClassMessage from '../../../functions/game/player/getters/ge
 import classes from '../../../template/classStatsTemplate.js';
 import getEmoji from '../../../functions/getters/getEmoji.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
 import updatePlayerStats from '../../../functions/game/player/updatePlayerStats.js';
 import getFile from '../../../functions/getters/getFile.js';
@@ -118,7 +119,7 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
         return;
     }
 
-    const foundedSession = await getSession(chatId, callback.from.id);
+    const { chat, member: foundedSession } = await loadPlayer(chatId, callback.from.id);
 
     if (foundedSession.game.gameClass.stats.name !== "noClass") {
         let [remain] = getTime(foundedSession.changeClassTimer);
@@ -134,6 +135,7 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
     let classStatsTemplate = getClassStatsFromTemplate(_class);
     changePlayerClass(foundedSession, classStatsTemplate);
     updatePlayerStats(foundedSession);
+    await chat.save();
 
     let {stats} = getPlayerGameClass(foundedSession.game.gameClass);
     let gender = session.gender || "male";

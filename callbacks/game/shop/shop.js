@@ -1,5 +1,6 @@
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import shopTemplate from '../../../template/shopTemplate.js';
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import controlButtons from '../../../functions/keyboard/controlButtons.js';
@@ -127,14 +128,16 @@ export default [[/^shop\.([\-0-9]+)$/, async function (session, callback, [ , ch
     let messageId = callback.message.message_id;
     let item = shopTemplate.filter(_item => _item.command === itemName);
     item = item[0];
-    let foundSession = await getSession(chatId, callback.from.id);
-    let sellItem = shopSellItem(foundSession, item.command, item);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
+    let sellItem = shopSellItem(member, item.command, item);
 
     if (typeof sellItem === "string") {
         return sendMessageWithDelete(callback.message.chat.id, sellItem, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
+
+    await chat.save();
 
     await editMessageCaption(`Поздравляем с покупкой ${item.name}!`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),

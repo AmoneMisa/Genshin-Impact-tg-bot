@@ -6,15 +6,9 @@ const userSchema = new mongoose.Schema({
     name: String,
     age: Number,
     gender: String,
-    userChatData: {
-        user: {
-            id: Number,
-            username: String,
-            first_name: String,
-            language_code: String
-        },
-        status: String // "member", "administrator", "creator"
-    }
+    // Raw Telegram getChatMember payload ({ user: {...}, status }). Stored as Mixed
+    // so fields like user.is_bot survive instead of being stripped by strict mode.
+    userChatData: { type: Object, default: {} }
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

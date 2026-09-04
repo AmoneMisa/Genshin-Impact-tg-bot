@@ -45,7 +45,7 @@ export default async function(arenaType, chatId, userId) {
 
         if (lodash.isObject(player)) {
             // бот
-            message += `${getDefenderDataString(player, true)}\nРейтинг: ${player.rating}\n\n`;
+            message += `${await getDefenderDataString(player, true)}\nРейтинг: ${player.rating}\n\n`;
         } else {
             // живой игрок
             if (parseInt(player) === parseInt(userId)) continue;
@@ -56,7 +56,10 @@ export default async function(arenaType, chatId, userId) {
             if (percentileDiffRating > maxRatingDifference) continue;
 
             const session = await getSession(chatId, player);
-            message += `${getDefenderDataString(session)}\nРейтинг: ${playerRating}\n\n`;
+            message += `${await getDefenderDataString(session)}\nРейтинг: ${playerRating}\n\n`;
+            showedPlayers.push(session);
+            countDefenders++;
+            continue;
         }
 
         showedPlayers.push(player);

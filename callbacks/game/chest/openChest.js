@@ -1,6 +1,6 @@
 import getRandom from '../../../functions/getters/getRandom.js';
 import getValueByChance from '../../../functions/getters/getValueByChance.js';
-import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import setLevel from '../../../functions/game/player/setLevel.js';
 import getRandomChest from '../../../functions/game/chest/getRandomChest.js';
 import endChestSession from '../../../functions/game/chest/endChestSession.js';
@@ -68,7 +68,7 @@ export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callba
         return;
     }
 
-    let foundSession = await getSession(chatId, callback.from.id);
+    let { chat, member: foundSession } = await loadPlayer(chatId, callback.from.id);
     foundSession.chestCounter = foundSession.chestCounter || 0;
     foundSession.chosenChests = foundSession.chosenChests || [];
 
@@ -153,4 +153,5 @@ export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callba
 
     await editChest(randomPrize.name, button, foundSession, callback);
     await endChestSession(foundSession, callback);
+    await chat.save();
 }]];
