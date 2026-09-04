@@ -43,7 +43,8 @@ export function getFormsState(chat, userId) {
   const current = members.find(member => String(member.userId) === String(userId));
   const visibleMembers = members.filter(member => {
     const user = telegramUser(member);
-    return !member?.isHided && !user.is_bot;
+    const status = member?.userChatData?.status;
+    return !member?.isHided && !user.is_bot && status !== 'left' && status !== 'kicked';
   });
 
   return {
