@@ -7,7 +7,7 @@ import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [
     [/^slots_start_game$/, async function (session, callback) {
-        if (getUserName(session, "nickname") !== callback.from.username) {
+        if (String(session.userId) !== String(callback.from.id)) {
             return;
         }
 
