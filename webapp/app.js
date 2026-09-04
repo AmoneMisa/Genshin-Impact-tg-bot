@@ -10,9 +10,10 @@ import { openSwordGame } from './sword.js';
 import { openArcadeGame } from './arcade.js';
 import { openGoldTransfer } from './gold-transfer.js';
 import { openPoint21 } from './point21.js';
+import { openElementsGame } from './elements.js';
 
 const tg = window.Telegram?.WebApp;
-const $ = (id) => document.getElementById(id);
+const $ = id => document.getElementById(id);
 const status = $('status');
 let currentState = null;
 
@@ -29,11 +30,7 @@ function formatNumber(value) {
 
 async function api(path, options = {}) {
   if (!tg?.initData) throw new Error('Telegram initData отсутствует');
-
-  const headers = {
-    ...(options.headers || {}),
-    'x-telegram-init-data': tg.initData,
-  };
+  const headers = { ...(options.headers || {}), 'x-telegram-init-data': tg.initData };
   if (options.body && !headers['content-type']) headers['content-type'] = 'application/json';
 
   const response = await fetch(path, { ...options, headers });
@@ -45,6 +42,44 @@ async function api(path, options = {}) {
     throw error;
   }
   return payload;
+}
+
+const launchers = {
+  boss: [openBossGame, 'Босс работает через Mini App; общий рейд хранится в Mongo.'],
+  chest: [openChestGame, 'Сундуки работают через Mini App и сохраняют награды в Mongo.'],
+  gacha: [openGachaGame, 'Гача работает через Mini App; RNG и списание ресурсов остаются серверными.'],
+  equipment: [openEquipmentGame, 'Снаряжение работает через Mini App и сохраняется в Mongo.'],
+  builds: [openBuildsGame, 'Постройки работают через Mini App; улучшения и сбор ресурсов сохраняются в Mongo.'],
+  arena: [openArenaGame, 'Арена работает через Mini App; бой и рейтинг считаются на сервере.'],
+  shop: [openShopGame, 'Магазин работает через Mini App и сохраняет покупки в Mongo.'],
+  transfer: [openGoldTransfer, 'Переводы золота работают через Mini App и сохраняются в Mongo.'],
+  point21: [openPoint21, '21 очко работает через общий серверный стол Mini App.'],
+  elements: [openElementsGame, 'Стихии работают через общий серверный стол Mini App.'],
+  sword: [openSwordGame, 'Меч работает через Mini App; бросок и дневной таймер считаются на сервере.'],
+  arcade: [openArcadeGame, 'Аркада работает через Mini App; результаты генерируются на сервере.'],
+};
+
+async function launchFeature(feature, render) {
+  const entry = launchers[feature.id];
+  if (!entry || feature.status !== 'webgl') {
+    status.textContent = `${feature.title}: пока используется текстовый fallback.`;
+    return;
+  }
+
+  const [open, successText] = entry;
+  try {
+    await open({
+      api,
+      renderState: render,
+      haptic,
+      statusElement: status,
+      ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
+    });
+    status.textContent = successText;
+  } catch (error) {
+    console.error(error);
+    status.textContent = `${feature.title}: ${error.message}`;
+  }
 }
 
 function render(state) {
@@ -61,8 +96,7 @@ function render(state) {
   $('xp-text').textContent = `${formatNumber(state.player.currentExp)} / ${formatNumber(state.player.needExp)} XP`;
   $('xp-fill').style.width = `${Math.min(100, Math.max(0, state.player.currentExp / state.player.needExp * 100))}%`;
 
-  const grid = $('game-grid');
-  grid.replaceChildren(...state.features.map((feature) => {
+  const cards = state.features.map(feature => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `game-card ${feature.status === 'webgl' ? 'migrated' : ''}`;
@@ -72,148 +106,18 @@ function render(state) {
       <h3>${feature.title}</h3>
       <p>${feature.subtitle}</p>
       <span class="arrow">↗</span>`;
-
-    button.addEventListener('click', async () => {
+    button.addEventListener('click', () => {
       haptic('medium');
-
-      if (feature.id === 'boss' && feature.status === 'webgl') {
-        try {
-          await openBossGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Босс работает через Mini App; общий рейд хранится в Mongo.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Босс: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'chest' && feature.status === 'webgl') {
-        try {
-          await openChestGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Сундуки работают через Mini App и сохраняют награды в Mongo.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Сундуки: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'gacha' && feature.status === 'webgl') {
-        try {
-          await openGachaGame({
-            api,
-            renderState: render,
-            haptic,
-            statusElement: status,
-            playerLevel: currentState?.player?.level || 1,
-          });
-          status.textContent = 'Гача работает через Mini App; RNG и списание ресурсов остаются серверными.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Гача: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'equipment' && feature.status === 'webgl') {
-        try {
-          await openEquipmentGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Снаряжение работает через Mini App и сохраняется в Mongo.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Снаряжение: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'builds' && feature.status === 'webgl') {
-        try {
-          await openBuildsGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Постройки работают через Mini App; улучшения и сбор ресурсов сохраняются в Mongo.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Постройки: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'arena' && feature.status === 'webgl') {
-        try {
-          await openArenaGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Арена работает через Mini App; бой и рейтинг считаются на сервере.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Арена: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'shop' && feature.status === 'webgl') {
-        try {
-          await openShopGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Магазин работает через Mini App и сохраняет покупки в Mongo.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Магазин: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'transfer' && feature.status === 'webgl') {
-        try {
-          await openGoldTransfer({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Переводы золота работают через Mini App и сохраняются в Mongo.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Переводы: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'point21' && feature.status === 'webgl') {
-        try {
-          await openPoint21({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = '21 очко работает через общий серверный стол Mini App.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `21 очко: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'sword' && feature.status === 'webgl') {
-        try {
-          await openSwordGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Меч работает через Mini App; бросок и дневной таймер считаются на сервере.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Меч: ${error.message}`;
-        }
-        return;
-      }
-
-      if (feature.id === 'arcade' && feature.status === 'webgl') {
-        try {
-          await openArcadeGame({ api, renderState: render, haptic, statusElement: status });
-          status.textContent = 'Аркада работает через Mini App; результаты генерируются на сервере.';
-        } catch (error) {
-          console.error(error);
-          status.textContent = `Аркада: ${error.message}`;
-        }
-        return;
-      }
-
-      status.textContent = `${feature.title}: пока используется текстовый fallback. Перенесём этот режим следующим.`;
+      launchFeature(feature, render);
     });
     return button;
-  }));
-
+  });
+  $('game-grid').replaceChildren(...cards);
   status.textContent = 'Mini App подключён к Mongo-сессии игрока.';
 }
 
 async function loadState() {
-  const payload = await api('/api/bootstrap');
-  render(payload);
+  render(await api('/api/bootstrap'));
 }
 
 async function boot() {
