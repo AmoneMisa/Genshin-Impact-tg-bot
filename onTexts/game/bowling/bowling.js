@@ -5,12 +5,18 @@ import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 import sleep from "../../../functions/tgBotFunctions/sleep.js";
 import betKeyboard from "../../../functions/game/general/betKeyboard.js";
+import loadPlayer from "../../../functions/getters/loadPlayer.js";
 
 export default [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    if (!session.game.bowling) {
-        session.game.bowling = {
+    let { chat, member } = await loadPlayer(msg.chat.id, session.userId);
+    if (!member) {
+        return;
+    }
+
+    if (!member.game.bowling) {
+        member.game.bowling = {
             bet: 0,
             skittles: 0,
             counter: 0,
@@ -18,7 +24,7 @@ export default [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
         };
     }
 
-    if (session.game.bowling.isStart) {
+    if (member.game.bowling.isStart) {
         return sendMessageWithDelete(
             msg.chat.id,
             "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.",
@@ -26,6 +32,8 @@ export default [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
             7000
         );
     }
+
+    await chat.save();
 
     const message = await sendMessage(
         msg.chat.id,
@@ -41,8 +49,13 @@ export default [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
 
     await sleep(20000);
 
-    session.game.bowling.isStart = true;
-    await session.save();
+    ({ chat, member } = await loadPlayer(msg.chat.id, session.userId));
+    if (!member || !member.game.bowling) {
+        return;
+    }
+
+    member.game.bowling.isStart = true;
+    await chat.save();
 
     await editMessageText(
         `@${await getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество сбитых кеглей за 2 броска будет больше 8. При двух страйках, твоя ставка утроится.`,

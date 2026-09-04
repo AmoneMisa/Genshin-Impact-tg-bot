@@ -6,6 +6,7 @@ import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessage
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
 export default [[/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/, async function (session, callback, [, chatId, buildName]) {
@@ -39,7 +40,6 @@ export default [[/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/, async function (se
 }], [/^builds\.([\-0-9]+)\.([^.]+)\.changeName\.0$/, async function (session, callback, [, chatId, buildName]) {
     let messageId = callback.message.message_id;
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let foundedSession = await getSession(chatId, callback.from.id);
 
     sendMessage(callback.message.chat.id, getCaption(buildName, "changeName.0", build), {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
@@ -49,13 +49,16 @@ export default [[/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/, async function (se
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
-            foundedSession.game.builds[buildName].customName = replyMsg.text;
+            const { chat, member } = await loadPlayer(chatId, callback.from.id);
+            member.game.builds[buildName].customName = replyMsg.text;
+            member.game.builds.palace.canChangeName = false;
+            await chat.save();
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
 
-            editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${foundedSession.game.builds[buildName].customName}`, {
+            editMessageCaption(`Ты успешно сменил название для здания! Новое название: ${member.game.builds[buildName].customName}`, {
                 chat_id: callback.message.chat.id,
                 message_id: messageId,
                 disable_notification: true,
@@ -73,6 +76,4 @@ export default [[/^builds\.([\-0-9]+)\.([^.]+)\.changeName$/, async function (se
     }).catch(e => {
         console.error(e);
     });
-
-    foundedSession.game.builds.palace.canChangeName = false;
 }]];

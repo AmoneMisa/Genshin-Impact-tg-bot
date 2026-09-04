@@ -6,6 +6,7 @@ import controlButtons from '../../../functions/keyboard/controlButtons.js';
 import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/);
@@ -21,7 +22,9 @@ export default [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (session
         let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let ironOre = parseInt(replyMsg.text);
-            targetSession.game.inventory.ironOre += ironOre;
+            const { chat, member } = await loadPlayer(chatId, userId);
+            member.game.inventory.ironOre += ironOre;
+            await chat.save();
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);

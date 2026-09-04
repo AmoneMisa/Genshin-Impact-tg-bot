@@ -20,6 +20,11 @@ export default function canRollGacha(session, gachaType) {
     const isFreeSpin = gachaItemInInventory?.freeSpins > 0;
     const isLevelEnough = session.game.stats.lvl >= gacha.needLvl;
 
+    // Shards live in inventory.gacha.items[].value (where breakItemToSpins deposits
+    // them and the inventory UI shows them) — this is the single source of truth.
+    const shardItem = session.game.inventory?.gacha?.items?.find(item => item.name === gachaType);
+    const shardCount = shardItem?.value || 0;
+
     if (!isLevelEnough) {
         return RESULT.LEVEL_TOO_LOW;
     }
@@ -28,7 +33,7 @@ export default function canRollGacha(session, gachaType) {
         return RESULT.CAN_ROLL_FOR_FREE;
     }
 
-    if (gachaItemInInventory?.piecesForFleeCall >= gacha.piecesForFleeCall) {
+    if (shardCount >= gacha.piecesForFleeCall) {
         return RESULT.CAN_ROLL_FOR_PIECES;
     }
 

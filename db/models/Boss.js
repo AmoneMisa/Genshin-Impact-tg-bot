@@ -6,8 +6,10 @@ const bossSchema = new mongoose.Schema({
     nameCall: { type: String },
     description: String,
     stats: Object,
+    skill: Object,
     hp: Number,
     currentHp: Number,
+    listOfDamage: { type: Array, default: [] },
     aliveTime: Number
 }, { timestamps: true });
 

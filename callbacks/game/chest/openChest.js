@@ -1,6 +1,6 @@
 import getRandom from '../../../functions/getters/getRandom.js';
 import getValueByChance from '../../../functions/getters/getValueByChance.js';
-import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import setLevel from '../../../functions/game/player/setLevel.js';
 import getRandomChest from '../../../functions/game/chest/getRandomChest.js';
 import endChestSession from '../../../functions/game/chest/endChestSession.js';
@@ -51,8 +51,8 @@ let prizes = [
     value: {
         name: "brokenSword",
         translatedName: "мм меча",
-        minAmount: -10,
-        maxAmount: -1,
+        minAmount: -1,
+        maxAmount: -10,
     },
     chance: 5
 }, {
@@ -68,12 +68,11 @@ export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callba
         return;
     }
 
-    let foundSession = await getSession(chatId, callback.from.id);
+    let { chat, member: foundSession } = await loadPlayer(chatId, callback.from.id);
     foundSession.chestCounter = foundSession.chestCounter || 0;
     foundSession.chosenChests = foundSession.chosenChests || [];
 
-    const chestKey = `chest.${chatId}_${chest}`;
-    if (foundSession.chosenChests.includes(chestKey)) {
+    if (foundSession.chosenChests.includes(chest)) {
         return;
     }
 
@@ -105,7 +104,7 @@ export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callba
         await sendPrizeMessage(callback, foundSession, gold, randomPrize.translatedName);
     }
 
-    if (randomPrize.name === "crystals") {
+    if (randomPrize.name === "crystal") {
         let crystal = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
         foundSession.game.inventory.crystals += crystal;
         await sendPrizeMessage(callback, foundSession, crystal, randomPrize.translatedName);
@@ -154,4 +153,5 @@ export default [[/^chest\.([\-0-9]+)_([0-9]+)$/, async function (session, callba
 
     await editChest(randomPrize.name, button, foundSession, callback);
     await endChestSession(foundSession, callback);
+    await chat.save();
 }]];

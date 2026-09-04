@@ -6,11 +6,10 @@ import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
-import getChatSession from "../../../functions/getters/getChatSession.js";
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
-    let chat = await getChatSession(chatId);
     sendMessage(callback.message.chat.id, `Сколько золота добавить для ${await getUserName(targetSession, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
@@ -22,10 +21,9 @@ export default [[/^add_gold\.([\-0-9]+)\.([0-9]+)$/, async function (session, ca
         let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let gold = parseInt(replyMsg.text);
-            targetSession.game.inventory.gold += gold;
-            console.log(gold);
-            console.log(targetSession);
-            chat.save();
+            const { chat, member } = await loadPlayer(chatId, userId);
+            member.game.inventory.gold += gold;
+            await chat.save();
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
             return sendMessage(callback.message.chat.id, `Ты добавил ${gold} золота для ${await getUserName(targetSession, "name")}.`, {

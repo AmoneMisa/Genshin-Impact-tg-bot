@@ -1,6 +1,6 @@
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
-import getSession from '../../../functions/getters/getSession.js';
-import getMembers from '../../../functions/getters/getMembers.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
+import getChatSession from '../../../functions/getters/getChatSession.js';
 import controlButtons from '../../../functions/keyboard/controlButtons.js';
 import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
@@ -8,22 +8,25 @@ import updatePlayerStats from '../../../functions/game/player/updatePlayerStats.
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 
 export default [[/^update_characteristics\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
-    let targetSession = await getSession(chatId, userId);
-    updatePlayerStats(targetSession);
+    let { chat, member } = await loadPlayer(chatId, userId);
+    updatePlayerStats(member);
+    await chat.save();
 
-    sendMessage(callback.message.chat.id, `Ты пересчитал характеристики для ${await getUserName(targetSession, "name")}. Пожалуйста, проверьте их через /whoami`, {
+    sendMessage(callback.message.chat.id, `Ты пересчитал характеристики для ${await getUserName(member, "name")}. Пожалуйста, проверьте их через /whoami`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true
     }).catch(e => {
         console.error(e);
     });
 }], [/^update_characteristics\.([\-0-9]+)\.all$/, async function (session, callback, [, chatId]) {
-    let targetMembers = getMembers(chatId);
-    let filteredMembers = Object.values(targetMembers).filter(member => !member.userChatData.user.is_bot && !member.isHided);
+    let chat = await getChatSession(chatId);
+    let filteredMembers = chat.members.filter(member => !member.userChatData?.user?.is_bot && !member.isHided);
 
     for (let member of filteredMembers) {
         updatePlayerStats(member);
     }
+
+    await chat.save();
 
     sendMessage(callback.message.chat.id, `Ты пересчитал характеристики для всей группы. Пожалуйста, проверьте их через /whoami`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),

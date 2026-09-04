@@ -1,7 +1,7 @@
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import { myId } from '../../../config.js';
-import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import getMaxHp from '../../../functions/game/player/getters/getMaxHp.js';
 
 export default [[/(?:^|\s)\/respawn\b/, async (msg) => {
@@ -11,8 +11,13 @@ export default [[/(?:^|\s)\/respawn\b/, async (msg) => {
         return;
     }
 
-    let session = await getSession(msg.chat.id, myId);
-    session.game.gameClass.stats.hp = getMaxHp(session, session.game.gameClass);
+    const { chat, member } = await loadPlayer(msg.chat.id, myId);
+    if (!member) {
+        return;
+    }
+
+    member.game.gameClass.stats.hp = getMaxHp(member, member.game.gameClass);
+    await chat.save();
 
     await sendMessage(msg.from.id, "Ты воскрес", { disable_notification: true});
 }]];

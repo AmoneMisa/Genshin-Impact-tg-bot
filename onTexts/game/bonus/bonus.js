@@ -6,6 +6,7 @@ import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import getRandom from '../../../functions/getters/getRandom.js';
 import getValueByChance from '../../../functions/getters/getValueByChance.js';
 import getFile from '../../../functions/getters/getFile.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 let prizes = [{
     value: {
@@ -36,7 +37,12 @@ let prizes = [{
 export default [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
-    if (session.game.bonusChances <= 0) {
+    const { chat, member } = await loadPlayer(msg.chat.id, session.userId);
+    if (!member) {
+        return;
+    }
+
+    if (member.game.bonusChances <= 0) {
         await sendMessageWithDelete(msg.chat.id, `@${await getUserName(session)}, твои попытки получения бонуса на сегодня исчерпаны. Попытки восстанавливаются после 00:00`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             reply_markup: {
@@ -49,12 +55,13 @@ export default [[/(?:^|\s)\/bonus\b/, async (msg, session) => {
         return;
     }
 
-    session.game.bonusChances--;
+    member.game.bonusChances--;
     let randomInt = getRandom(0, 99);
     let randomPrize = getValueByChance(randomInt, prizes);
     let prizeValue = getRandom(randomPrize.minAmount, randomPrize.maxAmount);
 
-    session.game.inventory[randomPrize.name] += prizeValue;
+    member.game.inventory[randomPrize.name] += prizeValue;
+    await chat.save();
 
     const file = getFile("images/misc", "chest");
 

@@ -1,42 +1,61 @@
-import {sessions} from '../../../data.js';
-import getMembers from '../../getters/getMembers.js';
-import getBuildsList from './getBuildList.js';
+import Chat from '../../../db/models/Chat.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
 import calculateIncreaseInResourceExtraction from './calculateIncreaseInResourceExtraction.js';
+import calculateRemainBuildTime from './calculateRemainBuildTime.js';
+import upgradeBuild from './upgradeBuild.js';
 import debugMessage from "../../tgBotFunctions/debugMessage.js";
-import getSession from "../../getters/getSession.js";
+import getUserName from "../../getters/getUserName.js";
+import sendMessage from "../../tgBotFunctions/sendMessage.js";
 
-let i = 0;
 export default async function() {
-    for (let chatId of Object.keys(sessions)) {
-        for (let userId of Object.keys(getMembers(chatId))) {
-            let session;
+    const chats = await Chat.find({});
 
-            i++;
+    for (const chat of chats) {
+        let updated = false;
+
+        for (const member of chat.members) {
+            if (member.userChatData?.user?.is_bot) {
+                continue;
+            }
+
+            if (member.userChatData?.status === "left") {
+                continue;
+            }
+
+            const builds = member.game?.builds;
+            if (!builds) {
+                continue;
+            }
+
             try {
-                session = await getSession(chatId, userId);
-            } catch (e) {
-                console.error(e);
-                continue;
-            }
-
-            if (session.userChatData.user.is_bot) {
-                continue;
-            }
-
-            if (session.userChatData.status === "left") {
-                continue;
-            }
-
-            try {
-                for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {
+                for (let [buildName, build] of Object.entries(builds)) {
                     let buildTemplate = buildsTemplate[buildName];
 
-                    if (buildName === "palace") {
-                        continue;
+                    // Завершаем улучшение, если время вышло (заменяет volatile setTimeout,
+                    // который не переживал перезапуск процесса). Проверяется для всех
+                    // построек, включая palace.
+                    if (build.upgradeStartedAt) {
+                        let remain;
+                        try {
+                            remain = calculateRemainBuildTime(buildName, build);
+                        } catch (e) {
+                            continue;
+                        }
+
+                        if (remain <= 0) {
+                            upgradeBuild(build, buildName);
+                            build.upgradeStartedAt = null;
+                            build.upgradeTimerId = null;
+                            updated = true;
+
+                            const username = getUserName(member, "nickname") || member.userId;
+                            sendMessage(chat.chatId, `@${username}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
+                        }
+
+                        continue; // ещё строится (или только что достроилось) — без накопления в этот тик
                     }
 
-                    if (build.upgradeStartedAt) {
+                    if (buildName === "palace") {
                         continue;
                     }
 
@@ -57,11 +76,17 @@ export default async function() {
                     } else {
                         build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
                     }
+
+                    updated = true;
                 }
             } catch (e) {
                 console.error(e);
                 debugMessage(`buildList getting error: ${e}`);
             }
+        }
+
+        if (updated) {
+            await chat.save();
         }
     }
 }

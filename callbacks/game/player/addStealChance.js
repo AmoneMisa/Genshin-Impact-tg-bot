@@ -6,6 +6,7 @@ import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/);
@@ -21,7 +22,9 @@ export default [[/^add_steal_chance\.([\-0-9]+)\.([0-9]+)$/, async function (ses
         let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let chanceToSteal = parseInt(replyMsg.text);
-            targetSession.game.chanceToSteal += chanceToSteal;
+            const { chat, member } = await loadPlayer(chatId, userId);
+            member.game.chanceToSteal += chanceToSteal;
+            await chat.save();
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);

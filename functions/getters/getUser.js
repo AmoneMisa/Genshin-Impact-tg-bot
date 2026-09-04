@@ -27,5 +27,5 @@ export default async function(chatId, userId) {
         { upsert: true }
     );
 
-    return User.findOne({userId: userIdStr});
+    return await User.findOne({userId: userIdStr});
 }

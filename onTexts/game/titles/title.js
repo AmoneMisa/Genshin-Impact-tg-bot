@@ -7,6 +7,7 @@ import getMembers from '../../../functions/getters/getMembers.js';
 import getTime from '../../../functions/getters/getTime.js';
 import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
 import Title from "../../../db/models/Title.js";
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/(?:^|\s)\/title ([А-Яа-яЁёA-Za-z]+)(?:\s|$)/, async (msg, session, [, title]) => {
     await deleteMessage(msg.chat.id, msg.message_id);
@@ -27,8 +28,11 @@ export default [[/(?:^|\s)\/title ([А-Яа-яЁёA-Za-z]+)(?:\s|$)/, async (msg
     let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided);
     let randomMember = filteredMembers[getRandom(0, filteredMembers.length - 1)];
 
-    if (!session.timerTitleCallback || Date.now() >= session.timerTitleCallback) {
-        session.timerTitleCallback = Date.now() + 10 * 60 * 1000;
+    const { chat, member } = await loadPlayer(msg.chat.id, session.userId);
+
+    if (!member.timerTitleCallback || Date.now() >= member.timerTitleCallback) {
+        member.timerTitleCallback = Date.now() + 10 * 60 * 1000;
+        await chat.save();
         message = `Сегодня ты, @${await getUserName(randomMember, "nickname")} - ${title}`;
 
         await Title.create({
@@ -46,7 +50,7 @@ export default [[/(?:^|\s)\/title ([А-Яа-яЁёA-Za-z]+)(?:\s|$)/, async (msg
         }
 
     } else {
-        let [remain] = getTime(session.timerTitleCallback);
+        let [remain] = getTime(member.timerTitleCallback);
         message = `@${await getUserName(session, "nickname")}, команду можно вызывать раз в 10 минут. Осталось: ${getStringRemainTime(remain)}`;
     }
 

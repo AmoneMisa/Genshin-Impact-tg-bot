@@ -6,7 +6,6 @@ import calculateUpgradeCosts from '../../../functions/game/builds/calculateUpgra
 import calculateOptimalSpeedUpCost from '../../../functions/game/builds/calculateOptimalSpeedUpCost.js';
 import speedupUpgradeBuild from '../../../functions/game/builds/speedupUpgradeBuild.js';
 import payForUpgrade from '../../../functions/game/builds/payForUpgrade.js';
-import upgradeBuildTimer from '../../../functions/game/builds/upgradeBuildTimer.js';
 import isCanBeBuild from '../../../functions/game/builds/isCanBeBuild.js';
 import calculateRemainBuildTime from '../../../functions/game/builds/calculateRemainBuildTime.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
@@ -14,6 +13,7 @@ import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessage
 import getUserName from '../../../functions/getters/getUserName.js';
 import getBuildList from '../../../functions/game/builds/getBuildList.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import statsDictionary from '../../../dictionaries/statsDictionary.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
@@ -206,28 +206,29 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
 }], [/^builds\.[\-0-9]+\.[^.]+\.upgrade\.speedup\.0$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade\.speedup\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = await getSession(chatId, callback.from.id);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
 
-    let build = await getBuild(chatId, callback.from.id, buildName);
+    let build = member.game.builds[buildName];
 
     if (!build.upgradeStartedAt) {
-        return sendMessageWithDelete(chatId, `@${await getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
+        return sendMessageWithDelete(chatId, `@${await getUserName(member, "nickname")}, ошибка ускорения постройки`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
 
     if (!await isCanBeBuild(buildName, build, chatId, callback.from.id)) {
-        return errorUpdateMessage(buildName, build, chatId, messageId, callback, foundedSession);
+        return errorUpdateMessage(buildName, build, chatId, messageId, callback, member);
     }
     let speedupCost = calculateOptimalSpeedUpCost(buildName, build);
 
-    if (foundedSession.game.inventory.crystals < speedupCost) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
+    if (member.game.inventory.crystals < speedupCost) {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(member, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
 
-    speedupUpgradeBuild(buildName, build, foundedSession.game.inventory);
+    speedupUpgradeBuild(buildName, build, member.game.inventory);
+    await chat.save();
 
     return editMessageCaption(getCaption(buildName, "upgrade.speedup.1", build), {
         chat_id: callback.message.chat.id,
@@ -246,17 +247,17 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
 }], [/^builds\.[\-0-9]+\.[^.]+\.upgrade\.upgradeLvl\.0$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade\.upgradeLvl\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = await getSession(chatId, callback.from.id);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
 
-    let build = await getBuild(chatId, callback.from.id, buildName);
+    let build = member.game.builds[buildName];
 
     if (!await isCanBeBuild(buildName, build, chatId, callback.from.id)) {
-        return errorUpdateMessage(buildName, build, chatId, messageId, callback, foundedSession);
+        return errorUpdateMessage(buildName, build, chatId, messageId, callback, member);
     }
 
     build.upgradeStartedAt = new Date().getTime();
-    payForUpgrade(build.currentLvl, buildName, foundedSession.game.inventory);
-    upgradeBuildTimer(buildName, build, chatId, foundedSession, callback.from.id);
+    payForUpgrade(build.currentLvl, buildName, member.game.inventory);
+    await chat.save();
 
     return editMessageCaption(getCaption(buildName, "upgrade.upgradeLvl.0", build), {
         chat_id: callback.message.chat.id,

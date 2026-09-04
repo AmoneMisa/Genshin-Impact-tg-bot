@@ -35,7 +35,7 @@ export default async function(callback, gameName) {
 
     // Проверка: все ли игроки спасовали
     if (checkAllPlayersPassed(chat, gameName)) {
-        endGame(chat, chatId, callback.message.message_id, true, gameName);
+        await endGame(chatId, callback.message.message_id, true, gameName);
         return;
     }
 

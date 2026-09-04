@@ -1,7 +1,7 @@
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 import { myId } from '../config.js';
-import { sessions } from '../data.js';
+import Chat from '../db/models/Chat.js';
 import bot from '../bot.js';
 
 export default [[/(?:^|\s)\/send_new_updates\b/, async (msg) => {
@@ -15,37 +15,32 @@ export default [[/(?:^|\s)\/send_new_updates\b/, async (msg) => {
             selective: true,
             force_reply: true
         }
-    }).then(msg => {
-            let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+    }).then(promptMsg => {
+            let id = bot.onReplyToMessage(promptMsg.chat.id, promptMsg.message_id, async (replyMsg) => {
                 bot.removeReplyListener(id);
-                let foundedSessionsId = new Set();
 
-                for (let chatSession of Object.values(sessions)) {
-                    for (let session of Object.values(chatSession.members)) {
-                        let sessionId = session.userChatData.user.id;
+                // Collect the telegram user ids of every subscribed (opted-in) member.
+                const recipients = new Set();
+                const chats = await Chat.find({});
 
-                        if (!sessions[sessionId]) {
+                for (const chat of chats) {
+                    for (const member of chat.members) {
+                        if (member.userChatData?.user?.is_bot) {
                             continue;
                         }
 
-                        if (session.userChatData.user.is_bot) {
+                        if (!member.whatsNewSettings?.flag) {
                             continue;
                         }
 
-                        if (!sessions[sessionId].members[sessionId].whatsNewSettings.flag) {
-                            continue;
-                        }
-
-                        foundedSessionsId.add(sessionId);
+                        recipients.add(member.userId);
                     }
                 }
 
-                for (let sessionId of foundedSessionsId) {
-                    sendMessage(sessionId, `Новости: ${replyMsg.text}`, {
-                        reply_markup: {
-                            disable_notification: true
-                        }
-                    })
+                for (const userId of recipients) {
+                    await sendMessage(userId, `Новости: ${replyMsg.text}`, {
+                        disable_notification: true
+                    });
                 }
             })
         }

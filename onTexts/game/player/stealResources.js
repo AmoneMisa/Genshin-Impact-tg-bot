@@ -7,21 +7,27 @@ import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessage
 import getTime from '../../../functions/getters/getTime.js';
 import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
 import getFile from '../../../functions/getters/getFile.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/(?:^|\s)\/steal_resources\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
 
     const buttons = buildKeyboard(msg.chat.id, `stealResources.${msg.chat.id}`, false, msg.from.id);
 
-    // инициализация попыток
-    if (session.game.chanceToSteal === undefined || session.game.chanceToSteal === null) {
-        session.game.chanceToSteal = 2;
-        await session.save();
+    const { chat, member } = await loadPlayer(msg.chat.id, session.userId);
+    if (!member) {
+        return;
     }
 
-    const [attackerRemain] = getTime(session.game.stealImmuneTimer);
+    // инициализация попыток
+    if (member.game.chanceToSteal === undefined || member.game.chanceToSteal === null) {
+        member.game.chanceToSteal = 2;
+        await chat.save();
+    }
 
-    if (session.game.chanceToSteal === 0) {
+    const [attackerRemain] = getTime(member.game.stealImmuneTimer);
+
+    if (member.game.chanceToSteal === 0) {
         return sendMessageWithDelete(
             msg.from.id,
             `У тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`,

@@ -3,6 +3,7 @@ import editMessageText from '../../../functions/tgBotFunctions/editMessageText.j
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
 import getUserName from '../../../functions/getters/getUserName.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [
     [/^slots_start_game$/, async function (session, callback) {
@@ -81,13 +82,23 @@ export default [
                 session.game.slots.state = 'end_game';
                 let text;
 
+                const { chat, member } = await loadPlayer(callback.message.chat.id, session.userId);
+                if (!member || !member.game.hasOwnProperty('slots')) {
+                    return;
+                }
+
+                let bet = member.game.slots.bet;
+
                 if (isWin) {
-                    let prize = session.game.slots.bet * 1.5;
-                    session.game.inventory.gold += prize;
+                    let prize = bet * 1.5;
+                    member.game.inventory.gold += prize;
                     text = `@${await getUserName(session, "nickname")}, ${resultSpins.join('')} - ты выиграл. Выигрыш: ${prize}`;
                 } else {
-                    text = `@${await getUserName(session, "nickname")}, ${resultSpins.join('')} - ты проиграл. Проигрыш: ${session.game.slots.bet}`;
+                    text = `@${await getUserName(session, "nickname")}, ${resultSpins.join('')} - ты проиграл. Проигрыш: ${bet}`;
                 }
+
+                delete member.game.slots;
+                await chat.save();
 
                 await editMessageText(text, {
                     ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),

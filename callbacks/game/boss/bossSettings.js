@@ -1,20 +1,24 @@
 import getChatSession from '../../../functions/getters/getChatSession.js';
 import getMemberStatus from '../../../functions/getters/getMemberStatus.js';
-import getChatSessionBossSettings from '../../../functions/getters/getChatSessionBossSettings.js';
 import invertButtonCallbackData from '../../../functions/keyboard/invertButtonCallbackData.js';
 import setButtonText from '../../../functions/keyboard/setButtonText.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 import controlButtons from '../../../functions/keyboard/controlButtons.js';
 
 export default [[/^bossSettings\.([^.]+)\.([0-1]+)$/, async function (session, callback, [, setting, flag]) {
-    let chatSession = getChatSession(callback.message.chat.id);
+    let chatSession = await getChatSession(callback.message.chat.id);
 
-    if (!getMemberStatus(callback.message.chat.id, chatSession.bossSettingsMessageId)) {
+    if (!await getMemberStatus(callback.message.chat.id, callback.from.id)) {
         return;
     }
 
-    let settings = getChatSessionBossSettings(callback.message.chat.id);
-    settings[setting] = parseInt(flag);
+    if (!chatSession.bossSettings) {
+        chatSession.bossSettings = {
+            bossDealDamageMessage: 1,
+            showHealMessage: 1
+        };
+    }
+    chatSession.bossSettings[setting] = parseInt(flag);
 
     for (const buttonLine of chatSession.bossSettingsButtons) {
         for (const button of buttonLine) {
@@ -24,6 +28,10 @@ export default [[/^bossSettings\.([^.]+)\.([0-1]+)$/, async function (session, c
             }
         }
     }
+
+    chatSession.markModified("bossSettings");
+    chatSession.markModified("bossSettingsButtons");
+    await chatSession.save();
 
     await editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
@@ -35,8 +43,8 @@ export default [[/^bossSettings\.([^.]+)\.([0-1]+)$/, async function (session, c
         }
     });
 }], [/^bossSettings_([^.]+)$/, async function (session, callback, [, page]) {
-    let chatSession = getChatSession(callback.message.chat.id);
-    if (!getMemberStatus(callback.message.chat.id, chatSession.bossSettingsMessageId)) {
+    let chatSession = await getChatSession(callback.message.chat.id);
+    if (!await getMemberStatus(callback.message.chat.id, callback.from.id)) {
         return;
     }
 

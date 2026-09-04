@@ -2,7 +2,7 @@ import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
 import { myId } from '../../../config.js';
 import updatePlayerStats from '../../../functions/game/player/updatePlayerStats.js';
-import {sessions} from '../../../data.js';
+import Chat from '../../../db/models/Chat.js';
 import setLevel from '../../../functions/game/player/setLevel.js';
 
 export default [[/(?:^|\s)\/update_all_players_characteristic\b/, async (msg) => {
@@ -12,15 +12,17 @@ export default [[/(?:^|\s)\/update_all_players_characteristic\b/, async (msg) =>
         return;
     }
 
-    for (let chatSession of Object.values(sessions)) {
-        for (let session of Object.values(chatSession.members)) {
-            if (session.userChatData.user.is_bot) {
+    const chats = await Chat.find({});
+    for (let chat of chats) {
+        for (let session of chat.members) {
+            if (session.userChatData?.user?.is_bot) {
                 continue;
             }
 
             updatePlayerStats(session);
             setLevel(session);
         }
+        await chat.save();
     }
-    await sendMessage(myId, "Все сессии обновлены. Убедиться в результате можно по команде /get_file sessions.json");
+    await sendMessage(myId, "Все сессии обновлены.");
 }]];
