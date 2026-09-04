@@ -1,46 +1,46 @@
 import bot from '../../bot.js';
 import sleep from './sleep.js';
-import intel from 'intel';
-
-const log = intel.getLogger("retryBotRequest");
 
 function getRetryAfter(e) {
     if (e.code !== 'ETELEGRAM') {
         return 1;
     }
 
-    if (e.response.body['error_code'] === 400) {
-        console.error(Object.fromEntries(new URLSearchParams(e.response.request.body).entries()));
+    if (e.response?.body?.error_code === 400) {
+        const requestBody = e.response?.request?.body;
+        if (requestBody) {
+            console.error('[telegram] invalid request:', Object.fromEntries(new URLSearchParams(requestBody).entries()));
+        }
         return -1;
     }
 
-    if (e.response.body['error_code'] === 429) {
-        return e.response.body['parameters']['retry_after'];
+    if (e.response?.body?.error_code === 429) {
+        return Number(e.response.body?.parameters?.retry_after) || 1;
     }
 
     return 1;
 }
 
 export default async function(request) {
-    let lastE = null;
+    let lastError = null;
 
-    for (let i = 0; i < 5; i++) {
+    for (let attempt = 1; attempt <= 5; attempt++) {
         try {
             return await request(bot);
-        } catch (e) {
-            lastE = e;
-            log.info(`Try: %s`, i);
-            let retryAfter = getRetryAfter(e);
-            if (retryAfter === -1) {
-                break;
-            }
-            log.info('Retry after: %s', retryAfter);
-            if (e.response) {
-                log.info('Body: %:2j', e.response.body);
-            }
+        } catch (error) {
+            lastError = error;
+            const retryAfter = getRetryAfter(error);
+
+            console.warn(`[telegram] request failed, attempt ${attempt}/5`, {
+                code: error?.code,
+                errorCode: error?.response?.body?.error_code,
+                retryAfter,
+            });
+
+            if (retryAfter === -1) break;
             await sleep(retryAfter * 1000);
         }
     }
 
-    throw lastE;
-};
+    throw lastError;
+}
