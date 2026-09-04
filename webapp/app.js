@@ -4,6 +4,7 @@ import { openGachaGame } from './gacha.js';
 import { openEquipmentGame } from './equipment.js';
 import { openBuildsGame } from './builds.js';
 import { openArenaGame } from './arena.js';
+import { openBossGame } from './boss.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -69,6 +70,17 @@ function render(state) {
 
     button.addEventListener('click', async () => {
       haptic('medium');
+
+      if (feature.id === 'boss' && feature.status === 'webgl') {
+        try {
+          await openBossGame({ api, renderState: render, haptic, statusElement: status });
+          status.textContent = 'Босс работает через Mini App; общий рейд хранится в Mongo.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Босс: ${error.message}`;
+        }
+        return;
+      }
 
       if (feature.id === 'chest' && feature.status === 'webgl') {
         try {
