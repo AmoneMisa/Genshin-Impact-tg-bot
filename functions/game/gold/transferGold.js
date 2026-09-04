@@ -16,6 +16,16 @@ export function parseGoldAmount(value) {
     return Number.isSafeInteger(amount) && amount > 0 ? amount : null;
 }
 
+function isUnavailableRecipient(member) {
+    const status = member?.userChatData?.status;
+    return Boolean(
+        member?.isHided ||
+        member?.userChatData?.user?.is_bot ||
+        status === 'left' ||
+        status === 'kicked'
+    );
+}
+
 export function transferGoldInChat(chat, senderId, recipientId, rawAmount) {
     if (!chat?.members || !Array.isArray(chat.members)) {
         return { ok: false, reason: 'chat_not_found' };
@@ -36,7 +46,7 @@ export function transferGoldInChat(chat, senderId, recipientId, rawAmount) {
     if (!sender) {
         return { ok: false, reason: 'sender_not_found' };
     }
-    if (!recipient || recipient.isHided) {
+    if (!recipient || isUnavailableRecipient(recipient)) {
         return { ok: false, reason: 'recipient_not_found' };
     }
 
