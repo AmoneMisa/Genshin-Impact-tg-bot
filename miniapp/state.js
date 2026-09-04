@@ -35,7 +35,7 @@ export function createMiniAppState(session, context) {
       chestTries: number(session?.chestTries),
     },
     features: [
-      { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'legacy' },
+      { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
       { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'webgl' },
       { id: 'gacha', title: 'Гача', subtitle: 'Коллекция и редкости', icon: '✨', status: 'webgl' },
       { id: 'equipment', title: 'Снаряжение', subtitle: 'Билд персонажа', icon: '🛡️', status: 'webgl' },
