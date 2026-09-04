@@ -25,9 +25,9 @@ export function ratingScope(mode, chatId) {
  * Возвращает одну фактическую рейтинговую запись игрока.
  *
  * В старых импортированных данных expansion мог содержать chatId, хотя сама
- * мировая арена является глобальной. Поэтому для expansion намеренно ищем
- * запись игрока независимо от chatId и выбираем самую свежую. Новые записи
- * создаются без chatId.
+ * мировая арена является глобальной. Для expansion ищем запись независимо от
+ * chatId, а chatId в документе используем только как ссылку на чат, из которого
+ * можно загрузить боевой профиль игрока.
  */
 export async function getArenaRatingDoc(userId, mode, chatId, { create = true } = {}) {
     validateMode(mode);
@@ -40,10 +40,13 @@ export async function getArenaRatingDoc(userId, mode, chatId, { create = true } 
     if (!doc && create) {
         doc = await ArenaRating.create({
             userId: numericUserId,
-            ...(mode === 'common' ? { chatId: id(chatId) } : {}),
+            chatId: id(chatId),
             mode,
             rating: START_RATING,
         });
+    } else if (doc && mode === 'expansion' && doc.chatId == null && chatId != null) {
+        doc.chatId = id(chatId);
+        await doc.save();
     }
     return doc;
 }
@@ -51,7 +54,7 @@ export async function getArenaRatingDoc(userId, mode, chatId, { create = true } 
 /**
  * Возвращает рейтинг без дублей userId. Старые expansion-записи могли быть
  * продублированы по чатам; для таблиц/процентилей один игрок должен считаться
- * ровно один раз.
+ * ровно один раз. Предпочитаем наиболее свежую запись.
  */
 export async function getArenaRatingTable(mode, chatId) {
     validateMode(mode);
