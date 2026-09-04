@@ -9,6 +9,7 @@ import saveSession from '../functions/getters/saveSession.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
 import { getChestState, openChest } from './chest.js';
+import { getGachaState, rollGacha, resolveGacha } from './gacha.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -200,6 +201,69 @@ async function chestOpen(req, res) {
   }
 }
 
+async function gachaState(req, res) {
+  try {
+    const context = await authorize(req);
+    return sendJson(res, 200, getGachaState(context.session));
+  } catch (error) {
+    return sendApiError(res, 'gacha state', error);
+  }
+}
+
+async function gachaRoll(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.gachaType !== 'string' || !body.gachaType) {
+      const error = new Error('gachaType is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:${context.userId}:gacha`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const rolled = rollGacha(context.session, body.gachaType);
+      if (rolled.ok) await saveSession(context.session);
+      return rolled;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'gacha roll', error);
+  }
+}
+
+async function gachaResolve(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (!['save', 'break'].includes(body.action)) {
+      const error = new Error('action must be save or break');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:${context.userId}:gacha`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const resolved = resolveGacha(context.session, body.action);
+      if (resolved.ok) await saveSession(context.session);
+      return resolved;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'gacha resolve', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -223,6 +287,18 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/chest/open') {
       return chestOpen(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/gacha') {
+      return gachaState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/gacha/roll') {
+      return gachaRoll(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/gacha/resolve') {
+      return gachaResolve(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
