@@ -1,0 +1,46 @@
+function number(value, fallback = 0) {
+  return Number.isFinite(Number(value)) ? Number(value) : fallback;
+}
+
+export function createMiniAppState(session, context) {
+  const game = session?.game || {};
+  const inventory = game.inventory || {};
+  const stats = game.stats || {};
+  const gameClass = game.gameClass?.stats || {};
+
+  return {
+    context: {
+      chatId: context.chatId,
+      chatType: context.chatType || null,
+      user: {
+        id: context.user?.id || null,
+        firstName: context.user?.first_name || '',
+        lastName: context.user?.last_name || '',
+        username: context.user?.username || '',
+      },
+    },
+    player: {
+      level: number(stats.lvl, 1),
+      currentExp: number(stats.currentExp),
+      needExp: Math.max(1, number(stats.needExp, 1)),
+      className: gameClass.name || 'noClass',
+      hp: number(gameClass.hp ?? gameClass.health),
+      attack: number(gameClass.damage ?? gameClass.attack),
+      defense: number(gameClass.defense),
+      gold: number(inventory.gold),
+      crystals: number(inventory.crystals),
+      ironOre: number(inventory.ironOre),
+      arenaChances: number(game.arenaChances),
+      bonusChances: number(game.bonusChances),
+      chestTries: number(session?.chestTries),
+    },
+    features: [
+      { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'legacy' },
+      { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'legacy' },
+      { id: 'gacha', title: 'Гача', subtitle: 'Коллекция и редкости', icon: '✨', status: 'legacy' },
+      { id: 'equipment', title: 'Снаряжение', subtitle: 'Билд персонажа', icon: '🛡️', status: 'legacy' },
+      { id: 'builds', title: 'Постройки', subtitle: 'Ресурсы и развитие', icon: '🏛️', status: 'legacy' },
+      { id: 'arena', title: 'Арена', subtitle: 'PvP и рейтинг', icon: '🏆', status: 'legacy' },
+    ],
+  };
+}
