@@ -3,29 +3,62 @@ import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 import editMessageMedia from '../../../functions/tgBotFunctions/editMessageMedia.js';
 import getSession from '../../../functions/getters/getSession.js';
-import loadPlayer from '../../../functions/getters/loadPlayer.js';
+import saveSession from '../../../functions/getters/saveSession.js';
 import bot from '../../../bot.js';
 import controlButtons from '../../../functions/keyboard/controlButtons.js';
 import buildArenaKeyboard from '../../../functions/game/arena/buildArenaKeyboard.js';
 import getDefenderDataString from '../../../functions/game/arena/getDefenderDataString.js';
 import getPlayerRating from '../../../functions/game/arena/getPlayerRating.js';
-import getBattleResult from '../../../functions/game/arena/getBattleResult.js';
-import calculatePoints from '../../../functions/game/arena/calculatePoints.js';
-import setPlayerRating from '../../../functions/game/arena/setPlayerRating.js';
 import getDefendersList from '../../../functions/game/arena/getDefendersList.js';
 import updateRank from '../../../functions/game/arena/updateRank.js';
 import getEmoji from '../../../functions/getters/getEmoji.js';
 import ArenaTempBot from '../../../db/models/ArenaTempBot.js';
 import getFile from '../../../functions/getters/getFile.js';
 import getTime from '../../../functions/getters/getTime.js';
+import Chat from '../../../db/models/Chat.js';
+import { getArenaRatingDoc } from '../../../functions/game/arena/ratingStore.js';
+import { normalizeArenaInventory, getArenaMedalUpgradeState, upgradeArenaMedal } from '../../../functions/game/arena/arenaInventory.js';
+import { attackArena } from '../../../miniapp/arena.js';
+
+async function resolveArenaDefenderSession(arenaType, chatId, defenderId) {
+    if (arenaType === 'common') return getSession(chatId, defenderId);
+
+    const ratingDoc = await getArenaRatingDoc(defenderId, 'expansion', chatId, {create: false});
+    if (!ratingDoc) return null;
+
+    if (ratingDoc.chatId != null) {
+        const preferred = await Chat.findOne({chatId: Number(ratingDoc.chatId), 'members.userId': Number(defenderId)});
+        if (preferred) return getSession(preferred.chatId, defenderId);
+    }
+
+    const fallback = await Chat.findOne({'members.userId': Number(defenderId)}).sort({updatedAt: -1});
+    return fallback ? getSession(fallback.chatId, defenderId) : null;
+}
+
+function arenaBattleMessage(result) {
+    if (!result.ok) {
+        if (result.reason === 'no_chances') return 'У тебя нет попыток для битвы на арене.';
+        if (result.reason === 'self_attack') return 'Нельзя атаковать самого себя.';
+        return 'Соперник больше недоступен. Обнови список противников.';
+    }
+
+    if (result.result === 'win') return `Победа!\nТы получил: ${result.points} очков рейтинга!`;
+    if (result.result === 'lose') return `Проигрыш!\nТы потерял: ${result.points} очков рейтинга.\nОсталось ${getEmoji('hp')} хп у защитника: ${result.defenderHpPercent.toFixed(2)}%`;
+    return `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji('hp')} хп у защитника: ${result.defenderHpPercent.toFixed(2)}%`;
+}
+
+function medalEffect(medal, name, fallback = 0) {
+    return Number(medal?.effects?.find(stat => stat?.name === name)?.value) || fallback;
+}
 
 export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
     let attacker = await getSession(chatId, callback.from.id);
     let [message, showedPlayers] = await getDefendersList("common", chatId, callback.from.id);
     let [rating] = await getPlayerRating(callback.from.id, "common", chatId);
+    let rank = await updateRank(callback.from.id, "common", chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.common.${chatId}`, rating, "common", chatId, showedPlayers);
-    let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`;
+    let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${rank}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`;
 
     if (isBack) {
         await editMessageCaption(fullMessage, {
@@ -69,8 +102,9 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
     let attacker = await getSession(chatId, callback.from.id);
     let [message, showedPlayers] = await getDefendersList("expansion", chatId, callback.from.id);
     let [rating] = await getPlayerRating(callback.from.id, "expansion", chatId);
+    let rank = await updateRank(callback.from.id, "expansion", chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.expansion.${chatId}`, rating, "expansion", chatId, showedPlayers);
-    let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`;
+    let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${rank}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`;
 
     if (isBack) {
         await editMessageCaption(fullMessage, {
@@ -112,7 +146,8 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
 }], [/^arena\.(\w+)\.([\-0-9]+)_([^.]+)$/, async function (session, callback, [, arenaType, chatId, page]) {
     page = parseInt(page);
     let [rating] = await getPlayerRating(callback.from.id, arenaType, chatId);
-    let buttons = buildArenaKeyboard(callback.from.id, `arena.${arenaType}.${chatId}`, rating, arenaType, chatId);
+    let [, showedPlayers] = await getDefendersList(arenaType, chatId, callback.from.id);
+    let buttons = buildArenaKeyboard(callback.from.id, `arena.${arenaType}.${chatId}`, rating, arenaType, chatId, showedPlayers);
 
     await bot.editMessageReplyMarkup({
         inline_keyboard: [
@@ -124,8 +159,15 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         disable_notification: true
     });
 }], [/^arena\.(\w+)\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, arenaType, chatId, defenderId]) {
-    let defender = await getSession(chatId, defenderId);
+    let defender = await resolveArenaDefenderSession(arenaType, chatId, defenderId);
     let attacker = await getSession(chatId, callback.from.id);
+
+    if (!defender) {
+        return sendMessage(callback.message.chat.id, 'Соперник больше недоступен. Обнови список противников.', {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
+            disable_notification: true
+        });
+    }
 
     if (arenaType === "common") {
         if (attacker.game.arenaChances < 1) {
@@ -201,7 +243,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
 
     let arenaBot = await ArenaTempBot.findOne({ name: parseInt(botNumber) });
 
-    await editMessageCaption(`Рейтинг: ${await getPlayerRating(null, arenaType, null, arenaBot)}\n\n${await getDefenderDataString(arenaBot, true)}`, {
+    await editMessageCaption(`Рейтинг: ${(await getPlayerRating(null, arenaType, null, arenaBot))[0]}\n\n${await getDefenderDataString(arenaBot, true)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -219,38 +261,11 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }, callback.message.photo);
 }], [/^arena\.(\w+)\.([\-0-9]+)\.([0-9]+)\.0$/, async function (session, callback, [, arenaType, chatId, defenderId]) {
-    let defender = await getSession(chatId, defenderId);
-    let { chat, member: attacker } = await loadPlayer(chatId, callback.from.id);
-    if (!attacker) {
-        return;
-    }
-    let [battleResult, remainDefenderHpPercent] = getBattleResult(attacker, defender);
-    let points = calculatePoints(attacker, defender, arenaType, chatId);
-    let message = "";
+    const attacker = await getSession(chatId, callback.from.id);
+    const result = await attackArena(attacker, chatId, callback.from.id, arenaType, `player:${defenderId}`);
+    if (result.ok) await saveSession(attacker);
 
-    if (arenaType === "common") {
-        attacker.game.arenaChances = Math.max(0, attacker.game.arenaChances - 1);
-    }
-
-    if (arenaType === "expansion") {
-        attacker.game.arenaExpansionChances = Math.max(0, attacker.game.arenaExpansionChances - 1);
-    }
-
-    await chat.save();
-
-    if (battleResult === 0) {
-        message = `Победа!\nТы получил: ${points} очков рейтинга!`;
-        await setPlayerRating(callback.from.id, arenaType, chatId, points);
-        await setPlayerRating(defenderId, arenaType, chatId, -points);
-    } else if (battleResult === 1) {
-        message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
-        await setPlayerRating(callback.from.id, arenaType, chatId, -points);
-        await setPlayerRating(defenderId, arenaType, chatId, points);
-    } else if (battleResult === 2) {
-        message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
-    }
-
-    await editMessageCaption(message, {
+    await editMessageCaption(arenaBattleMessage(result), {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -265,36 +280,14 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }, callback.message.photo);
 }], [/^arena\.(\w+)\.([\-0-9]+)\.bot_([0-9]+)\.0$/, async function (session, callback, [, arenaType, chatId, botNumber]) {
-    let defender = await ArenaTempBot.findOne({ name: parseInt(botNumber) });
-    let { chat, member: attacker } = await loadPlayer(chatId, callback.from.id);
-    if (!attacker) {
-        return;
-    }
-    let [battleResult, remainDefenderHpPercent] = getBattleResult(attacker, defender, true);
-    let points = calculatePoints(attacker, defender, arenaType, chatId, true);
-    let message = "";
+    const defender = await ArenaTempBot.findOne({ name: parseInt(botNumber) });
+    const attacker = await getSession(chatId, callback.from.id);
+    const result = defender
+        ? await attackArena(attacker, chatId, callback.from.id, arenaType, `bot:${defender._id}`)
+        : {ok: false, reason: 'stale_defender'};
+    if (result.ok) await saveSession(attacker);
 
-    if (arenaType === "common") {
-        attacker.game.arenaChances = Math.max(0, attacker.game.arenaChances - 1);
-    }
-
-    if (arenaType === "expansion") {
-        attacker.game.arenaExpansionChances = Math.max(0, attacker.game.arenaExpansionChances - 1);
-    }
-
-    await chat.save();
-
-    if (battleResult === 0) {
-        message = `Победа!\nТы получил: ${points} очков рейтинга!`;
-        await setPlayerRating(callback.from.id, arenaType, chatId, points);
-    } else if (battleResult === 1) {
-        message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
-        await setPlayerRating(callback.from.id, arenaType, chatId, -points);
-    } else if (battleResult === 2) {
-        message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
-    }
-
-    await editMessageCaption(message, {
+    await editMessageCaption(arenaBattleMessage(result), {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -310,11 +303,13 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
     }, callback.message.photo);
 }], [/^arena\.shop\.([\-0-9]+)(?:\.back)?$/, async function (session, callback, [, chatId]) {
     const isBack = callback.data.includes("back");
-    let fullMessage = `Количество токенов арены: ${session?.game?.inventory?.arena?.tokens || 0}\n`;
+    const member = await getSession(chatId, callback.from.id);
+    const arenaInventory = normalizeArenaInventory(member.game);
+    const fullMessage = `Количество токенов арены: ${arenaInventory.tokens}
+`;
 
     if (isBack) {
-        let file = getFile(`images/misc`, "arena");
-
+        const file = getFile(`images/misc`, "arena");
         await editMessageMedia(file, "Какой тип арены тебя интересует?", {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
@@ -330,67 +325,86 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
                 }], [{
                     text: "Магазин арены",
                     callback_data: `arena.shop.${chatId}`
-                }],[{
-                    text: "Закрыть",
-                    callback_data: "close"
-                }]]
-            }
-        });
-    } else {
-        const file = getFile("images/misc", "arenaShop");
-
-        await editMessageMedia(file, fullMessage, {
-            chat_id: callback.message.chat.id,
-            message_id: callback.message.message_id,
-            disable_notification: true,
-            reply_markup: {
-                selective: true,
-                inline_keyboard: [[{
-                    text: "Улучшить медаль",
-                    callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
                 }], [{
-                    text: "Назад",
-                    callback_data: `arena.shop.${chatId}.back`
-                }],[{
                     text: "Закрыть",
                     callback_data: "close"
                 }]]
             }
         });
+        return;
     }
-}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade$/, async function (session, callback, [,chatId]) {
-    let pvpSign = session.game.inventory?.arena?.pvpSign || null;
+
+    const file = getFile("images/misc", "arenaShop");
+    await editMessageMedia(file, fullMessage, {
+        chat_id: callback.message.chat.id,
+        message_id: callback.message.message_id,
+        disable_notification: true,
+        reply_markup: {
+            selective: true,
+            inline_keyboard: [[{
+                text: "Улучшить медаль",
+                callback_data: `arena.shop.${chatId}.pvpSignUpgrade`
+            }], [{
+                text: "Назад",
+                callback_data: `arena.shop.${chatId}.back`
+            }], [{
+                text: "Закрыть",
+                callback_data: "close"
+            }]]
+        }
+    });
+}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade$/, async function (session, callback, [, chatId]) {
+    const member = await getSession(chatId, callback.from.id);
+    const arenaInventory = normalizeArenaInventory(member.game);
+    const pvpSign = arenaInventory.pvpSign;
 
     if (!pvpSign) {
         await editMessageCaption(`У тебя нет медали, чтобы её улучшать. Медаль выдаётся в конце каждой недели.`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             disable_notification: true,
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: "Магазин арены",
-                    callback_data: `arena.shop.${chatId}.back`
-                }], [{
-                    text: "Закрыть",
-                    callback_data: "close"
-                }]]
-            }
+            reply_markup: { inline_keyboard: [[{text: "Магазин арены", callback_data: `arena.shop.${chatId}.back`}], [{text: "Закрыть", callback_data: "close"}]] }
         }, callback.message.photo);
-
         return;
     }
 
-    let fullMessage = `Предмет исчезнет через: ${getTime(pvpSign.lifeTime)}\n${pvpSign.translatedName} - ур. ${pvpSign.lvl}\nУвеличение исходящего урона по противнику:  ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%\n\nКоличество токенов арены: ${session.game.inventory.arena.items.tokens}\n\nУвеличение исходящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона после улучшения: ${pvpSign.upgrades[pvpSign.lvl + 1].effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value * 100}%\nСтоимость улучшения на следующий уровень: ${pvpSign.upgrades[pvpSign.lvl + 1].cost}`;
+    const upgrade = getArenaMedalUpgradeState(member.game);
+    if (!upgrade.ok) {
+        const reason = upgrade.reason === 'max_level' ? 'Медаль уже улучшена до максимального уровня.' : 'Медаль сейчас нельзя улучшить.';
+        await editMessageCaption(reason, {
+            chat_id: callback.message.chat.id,
+            message_id: callback.message.message_id,
+            disable_notification: true,
+            reply_markup: { inline_keyboard: [[{text: "Магазин арены", callback_data: `arena.shop.${chatId}.back`}], [{text: "Закрыть", callback_data: "close"}]] }
+        }, callback.message.photo);
+        return;
+    }
 
-    await editMessageCaption(`Ты уверен, что хочешь улучшить медаль?\n\n ${fullMessage}`, {
+    const nextDamage = Number(upgrade.effects.find(stat => stat.name === 'increasePvpDamage')?.value) || 1;
+    const nextDefense = Number(upgrade.effects.find(stat => stat.name === 'decreaseIncomingPvpDamage')?.value) || 0;
+    const fullMessage = `Предмет исчезнет через: ${getTime(pvpSign.lifeTime)}
+${pvpSign.translatedName} - ур. ${pvpSign.lvl}
+Увеличение исходящего урона по противнику: ${medalEffect(pvpSign, 'increasePvpDamage', 1) * 100}%
+Уменьшение входящего урона по себе: ${medalEffect(pvpSign, 'decreaseIncomingPvpDamage', 0) * 100}%
+
+Количество токенов арены: ${arenaInventory.tokens}
+
+Уровень после улучшения: ${upgrade.nextLevel}
+Увеличение исходящего урона после улучшения: ${nextDamage * 100}%
+Уменьшение входящего урона после улучшения: ${nextDefense * 100}%
+Стоимость улучшения: ${upgrade.cost}`;
+
+    await editMessageCaption(`Ты уверен, что хочешь улучшить медаль?
+
+${fullMessage}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{
-                text: "Подтвердить улучшение",
-                callback_data: `arena.shop.${chatId}.pvpSignUpgrade.0`
-            }],[{
+                text: upgrade.canAfford ? "Подтвердить улучшение" : "Недостаточно токенов",
+                callback_data: upgrade.canAfford ? `arena.shop.${chatId}.pvpSignUpgrade.0` : `arena.shop.${chatId}`
+            }], [{
                 text: "Магазин арены",
                 callback_data: `arena.shop.${chatId}.back`
             }], [{
@@ -399,18 +413,31 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
             }]]
         }
     }, callback.message.photo);
-}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade\.0$/, async function (session, callback, [,chatId]) {
-    let { chat, member } = await loadPlayer(chatId, callback.from.id);
-    if (!member) {
+}], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade\.0$/, async function (session, callback, [, chatId]) {
+    const member = await getSession(chatId, callback.from.id);
+    const result = upgradeArenaMedal(member.game);
+
+    if (!result.ok) {
+        const reason = result.reason === 'not_enough_tokens'
+            ? 'Недостаточно токенов арены для улучшения.'
+            : result.reason === 'max_level'
+                ? 'Медаль уже улучшена до максимального уровня.'
+                : 'Медаль сейчас нельзя улучшить.';
+        await editMessageCaption(reason, {
+            chat_id: callback.message.chat.id,
+            message_id: callback.message.message_id,
+            disable_notification: true,
+            reply_markup: { inline_keyboard: [[{text: "Магазин арены", callback_data: `arena.shop.${chatId}.back`}], [{text: "Закрыть", callback_data: "close"}]] }
+        }, callback.message.photo);
         return;
     }
-    let pvpSign = member.game.inventory.arena.items[1];
-    pvpSign.lvl += 1;
-    pvpSign.effects = pvpSign.upgrades[pvpSign.lvl].effects;
-    member.markModified("game");
-    await chat.save();
 
-    await editMessageCaption(`Вы улучшили медаль до ур. ${member.game.inventory.arena.items[1].lvl}!\n\nУвеличение исходящего урона по противнику: ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%`, {
+    await saveSession(member);
+    const pvpSign = result.medal;
+    await editMessageCaption(`Вы улучшили медаль до ур. ${result.level}! Потрачено токенов: ${result.spent}. Осталось: ${result.tokens}.
+
+Увеличение исходящего урона по противнику: ${medalEffect(pvpSign, 'increasePvpDamage', 1) * 100}%
+Уменьшение входящего урона по себе: ${medalEffect(pvpSign, 'decreaseIncomingPvpDamage', 0) * 100}%`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

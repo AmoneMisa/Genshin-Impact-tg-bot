@@ -1,5 +1,6 @@
 import getUserName from '../../../functions/getters/getUserName.js';
 import getSession from '../../../functions/getters/getSession.js';
+import saveSession from '../../../functions/getters/saveSession.js';
 import getEmoji from '../../../functions/getters/getEmoji.js';
 import getInventoryMessage from '../../../functions/game/player/getters/getInventoryMessage.js';
 import equipItem from '../../../functions/game/equipment/equipItem.js';
@@ -307,6 +308,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
 
     if (foundedItem.hasOwnProperty("bottleType")) {
         let healResult = useHealPotion(foundedSession, foundedItem);
+        if (healResult === 0) await saveSession(foundedSession);
         return sendHealMessage(healResult, callback, foundedSession, foundedItem, chatId);
     }
 
@@ -315,6 +317,7 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         let message;
 
         if (equipResult === 0) {
+            await saveSession(foundedSession);
             message = `@${await getUserName(foundedSession, "nickname")}, ты надел предмет: ${foundedItem.name}!`;
         } else {
             return;
@@ -371,14 +374,13 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }, 10 * 1000);
     }
 
-    let equipResult = equipItem(foundedSession, foundedItem);
-    if (equipResult === 1) {
-        unequipItem(foundedSession, foundedItem);
-    } else {
+    let unequipResult = unequipItem(foundedSession, foundedItem);
+    if (unequipResult !== 0) {
         return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке снять предмет (${foundedItem.name}).`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
+    await saveSession(foundedSession);
 
     await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, снаряжение снято: ${foundedItem.name}!`, {
         chat_id: callback.message.chat.id,
@@ -398,12 +400,12 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }
     }, callback.message.photo);
 }], [/^player\.([\-0-9]+)\.inventory\.([^.]+)\.([^.]+)\.2$/, async function (session, callback, [, chatId, items, i]) {
-    // Меню подтверждения действия для предмета инвентаря
+    // Продажа снаряжения
     if (!checkUserCall(callback, session)) {
         return;
     }
 
-    if (!equipmentNames.includes(items)) {
+    if (items !== "equipment") {
         return;
     }
 
@@ -417,19 +419,22 @@ export default [[/player\.([\-0-9]+)\.inventory(?:\.back)?$/, async function (se
         }, 10 * 1000);
     }
 
-    let equipResult = equipItem(foundedSession, foundedItem);
-    if (equipResult === 1) {
-        unequipItem(foundedSession.game, foundedItem);
-        let indexOf = foundedSession.game.inventory.equipment.items.indexOf(foundedItem);
-        foundedSession.game.inventory.gold += foundedItem.cost;
-        foundedSession.game.inventory.equipment.items.splice(indexOf, 1);
-    } else {
-        return sendMessageWithDelete(callback.message.chat.id, `Произошла ошибка при попытке продать предмет (${foundedItem.name}).`, {
+    // Всегда пробуем очистить slot snapshots перед удалением. Это также лечит
+    // старые случаи, где isUsed уже расходился с equipmentStats.
+    unequipItem(foundedSession, foundedItem);
+    const soldGold = Math.max(0, Number(foundedItem.cost) || 0);
+    const indexOf = itemsList.indexOf(foundedItem);
+    if (indexOf < 0) {
+        return sendMessageWithDelete(callback.message.chat.id, `Предмет больше недоступен для продажи.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
 
-    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, снаряжение продано: ${foundedItem.name}! Получено золота: ${foundedItem.cost}. ${getEmoji("gold")} Твоё золото: ${foundedSession.game.inventory.gold}`, {
+    foundedSession.game.inventory.gold = (Number(foundedSession.game.inventory.gold) || 0) + soldGold;
+    itemsList.splice(indexOf, 1);
+    await saveSession(foundedSession);
+
+    await editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, снаряжение продано: ${foundedItem.name}! Получено золота: ${soldGold}. ${getEmoji("gold")} Твоё золото: ${foundedSession.game.inventory.gold}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
