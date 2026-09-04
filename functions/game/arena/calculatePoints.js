@@ -1,36 +1,40 @@
 import calcGearScore from '../player/calcGearScore.js';
 import getPlayerRating from './getPlayerRating.js';
 
-export default function (attacker, defender, arenaType, chatId, isBot) {
-    let defenderLvl = isBot ? defender.stats.lvl : defender.game.stats.lvl;
-    let defenderStats = isBot ? defender : defender.game;
+export default async function (attacker, defender, arenaType, chatId, isBot = false) {
+    const defenderLvl = Number(isBot ? defender.stats.lvl : defender.game.stats.lvl) || 1;
+    const defenderStats = isBot ? defender : defender.game;
     let winnerPoints = 10;
-    let maxPoints = 30;
+    const minPoints = 5;
+    const maxPoints = 30;
 
-    let lvlDiff = defenderLvl - attacker.game.stats.lvl;
-
+    const attackerLvl = Number(attacker.game.stats.lvl) || 1;
+    const lvlDiff = defenderLvl - attackerLvl;
     if (lvlDiff >= 10) {
         winnerPoints += 6;
     } else if (lvlDiff < 0) {
         winnerPoints -= 4;
     }
 
-    let attackerGearScore = calcGearScore(attacker.game);
-    let defenderGearScore = calcGearScore(defenderStats);
-    if (defenderGearScore / attackerGearScore * 100 - 100 >= 20) {
+    const attackerGearScore = Math.max(1, Number(calcGearScore(attacker.game)) || 1);
+    const defenderGearScore = Math.max(1, Number(calcGearScore(defenderStats)) || 1);
+    if ((defenderGearScore / attackerGearScore * 100) - 100 >= 20) {
         winnerPoints += 15;
     }
 
-    let [attackerRating] = getPlayerRating(attacker.userChatData.user.id, arenaType, chatId);
-    let defenderRating = isBot ? defender.rating : getPlayerRating(defender.userChatData.user.id, arenaType, chatId)[0];
+    const [attackerRating] = await getPlayerRating(attacker.userChatData.user.id, arenaType, chatId);
+    const defenderRating = isBot
+        ? Number(defender.rating) || 1000
+        : (await getPlayerRating(defender.userChatData.user.id, arenaType, chatId))[0];
 
-    if (defenderRating >= attackerRating) {
-        winnerPoints -= 5;
-    } else if (defenderRating / attackerRating * 100 - 100 >= 12) {
+    const ratingDiffPercent = ((defenderRating - attackerRating) / Math.max(1, attackerRating)) * 100;
+    if (ratingDiffPercent >= 12) {
         winnerPoints += 17;
-    } else if (defenderRating / attackerRating * 100 - 100 >= 3) {
+    } else if (ratingDiffPercent >= 3) {
         winnerPoints += 5;
+    } else if (ratingDiffPercent < 0) {
+        winnerPoints -= 5;
     }
 
-    return Math.max(maxPoints, winnerPoints, 5);
+    return Math.min(maxPoints, Math.max(minPoints, winnerPoints));
 }
