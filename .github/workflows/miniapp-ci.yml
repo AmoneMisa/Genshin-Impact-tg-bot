@@ -35,7 +35,11 @@ jobs:
           node --check miniapp/state.js
           node --check miniapp/chest.js
           node --check miniapp/gacha.js
+          node --check miniapp/equipment.js
+          node --check functions/game/equipment/equipItem.js
+          node --check functions/game/equipment/unequipItem.js
           node --check webapp/app.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
+          node --check webapp/equipment.js
           node --check webapp/renderer.js
