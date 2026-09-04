@@ -22,6 +22,7 @@ import {
 } from './builds.js';
 import { getArenaState, attackArena } from './arena.js';
 import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
+import { getShopState, buyShopItem } from './shop.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -503,6 +504,47 @@ async function bossSkill(req, res) {
   }
 }
 
+async function shopState(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:${context.userId}:shop`;
+    const shop = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getShopState(context.session);
+    });
+    return sendJson(res, 200, shop);
+  } catch (error) {
+    return sendApiError(res, 'shop state', error);
+  }
+}
+
+async function shopBuy(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.command !== 'string' || !body.command) {
+      const error = new Error('command is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:${context.userId}:shop`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const purchase = await buyShopItem(context.session, body.command);
+      if (purchase.ok) await saveSession(context.session);
+      return purchase;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'shop buy', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -574,6 +616,14 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/boss/skill') {
       return bossSkill(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/shop') {
+      return shopState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/shop/buy') {
+      return shopBuy(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
