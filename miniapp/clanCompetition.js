@@ -322,6 +322,11 @@ export async function performClanCompetitionAction(userId, playerSession, action
     if (result.ok) {
       const name = await getUserName(Number(opponentId), 'name');
       result.opponentName = name || `Игрок ${opponentId}`;
+      result.message = result.result === 'win'
+        ? `Победа над ${result.opponentName}! +${result.contributionReward} к вкладу.`
+        : result.result === 'loss'
+          ? `${result.opponentName} победил в дуэли.`
+          : `Ничья с ${result.opponentName}.`;
     }
     return result;
   }
@@ -337,6 +342,7 @@ export async function performClanCompetitionAction(userId, playerSession, action
       await clan.save();
       await target.save();
       result.opponentName = target.name;
+      result.message = `Война объявлена: ${clan.name} против ${target.name}.`;
     }
     return result;
   }
@@ -349,7 +355,10 @@ export async function performClanCompetitionAction(userId, playerSession, action
     }
     const opponent = await Clan.findById(clan.guildWar.opponentClanId);
     const result = strikeClanWar(clan, playerSession, userId, opponent?.level || 1);
-    if (result.ok) await clan.save();
+    if (result.ok) {
+      await clan.save();
+      result.message = `Атака принесла ${result.points} очков войны${result.isCrit ? ' — крит!' : '.'}`;
+    }
     return result;
   }
 

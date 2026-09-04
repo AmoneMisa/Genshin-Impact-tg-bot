@@ -5,6 +5,7 @@ import getUserName from '../functions/getters/getUserName.js';
 import addClanXp from '../functions/game/clans/addClanXp.js';
 import clanQuiz from '../dictionaries/clanQuiz.js';
 import { getClanActivitiesState } from './clanActivities.js';
+import { getClanCompetitionState } from './clanCompetition.js';
 
 const RESOURCES = new Set(['gold', 'crystals', 'ironOre']);
 const XP_PER_CONTRIBUTION = 10;
@@ -81,6 +82,7 @@ export async function getClanDashboard(userId, playerSession = null) {
       available: [],
       quiz: getClanQuizState(clan, userId),
       activities: await getClanActivitiesState(clan, userId, playerSession),
+      competition: await getClanCompetitionState(clan, playerSession, userId),
     };
   }
 
@@ -99,6 +101,7 @@ export async function getClanDashboard(userId, playerSession = null) {
     })),
     quiz: null,
     activities: null,
+    competition: null,
   };
 }
 

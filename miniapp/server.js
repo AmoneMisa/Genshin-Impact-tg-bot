@@ -63,6 +63,7 @@ import {
   prepareClanQuizAnswer,
 } from './clan.js';
 import { prepareClanActivity } from './clanActivities.js';
+import { performClanCompetitionAction } from './clanCompetition.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -548,7 +549,8 @@ async function clanActivity(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
-    const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building']);
+    const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
+    const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions]);
     if (!allowed.has(body.action)) {
       const error = new Error('Unknown clan activity');
       error.status = 400;
@@ -557,12 +559,19 @@ async function clanActivity(req, res) {
 
     const payload = await withLock('clan:global', async () => {
       context.session = await getSession(context.chatId, context.userId);
-      const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
-      const result = prepared.result;
+      let result;
 
-      if (result.ok) {
-        if (prepared.savePlayer) await saveSession(context.session);
-        if (prepared.clan) await prepared.clan.save();
+      if (competitionActions.has(body.action)) {
+        // Competition actions persist only clan documents. Player combat state is
+        // treated as a read-only snapshot, matching the legacy duel/war behavior.
+        result = await performClanCompetitionAction(context.userId, context.session, body.action, body);
+      } else {
+        const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
+        result = prepared.result;
+        if (result.ok) {
+          if (prepared.savePlayer) await saveSession(context.session);
+          if (prepared.clan) await prepared.clan.save();
+        }
       }
 
       const dashboard = await getClanDashboard(context.userId, context.session);

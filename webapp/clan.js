@@ -28,6 +28,19 @@ const REASONS = {
   unknown_building: 'Неизвестная постройка.',
   building_maxed: 'Постройка уже максимального уровня.',
   unknown_clan_activity: 'Неизвестное клановое действие.',
+  pvp_self: 'Нельзя вызвать на дуэль самого себя.',
+  pvp_not_clan_member: 'Игрок не состоит в твоём клане.',
+  pvp_opponent_not_in_chat: 'Соперник должен находиться в этом игровом чате.',
+  pvp_opponent_no_class: 'У соперника нет боевого класса.',
+  pvp_cooldown: 'После дуэли нужно восстановиться.',
+  war_target_missing: 'Клан-противник не найден.',
+  war_self: 'Нельзя объявить войну своему клану.',
+  war_already_active: 'Твой клан уже участвует в войне.',
+  war_target_busy: 'Клан-противник уже участвует в войне.',
+  war_not_active: 'Клан сейчас не участвует в войне.',
+  war_expired: 'Война уже завершилась.',
+  war_cooldown: 'Военная атака ещё на перезарядке.',
+  unknown_clan_competition: 'Неизвестное соревновательное действие.',
 };
 
 function escapeHtml(value) {
@@ -270,6 +283,45 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
+  function pvpHtml() {
+    const pvp = dashboard.competition?.pvp;
+    if (!pvp) return '';
+    const record = pvp.record || { wins: 0, losses: 0, draws: 0 };
+    return `
+      <section class="clan-activity-group"><h4>⚔️ Дружеские дуэли</h4>
+        <p class="clan-muted">${record.wins} побед · ${record.losses} поражений · ${record.draws} ничьих</p>
+        ${!pvp.ready ? '<p class="clan-muted">Сначала выбери боевой класс.</p>' : ''}
+        ${pvp.cooldownRemainingMs > 0 ? `<p class="clan-muted">Следующая дуэль через ${formatDuration(pvp.cooldownRemainingMs)}.</p>` : ''}
+        <div class="clan-activity-list">${pvp.opponents?.length ? pvp.opponents.map(opponent => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(opponent.name)}</strong><small>Участник твоего клана в этом чате</small></div><button type="button" data-clan-pvp="${opponent.userId}" ${pvp.ready && pvp.cooldownRemainingMs === 0 ? '' : 'disabled'}>Вызвать</button></article>`).join('') : '<p class="clan-muted">Нет доступных соперников в этом чате.</p>'}</div>
+      </section>`;
+  }
+
+  function warResultHtml(result) {
+    if (!result) return '';
+    const label = result.outcome === 'win' ? 'Победа 🏆' : result.outcome === 'loss' ? 'Поражение' : result.outcome === 'draw' ? 'Ничья' : 'Война отменена';
+    return `<p class="clan-war-result"><strong>${label}</strong> · ${formatNumber(result.myScore)} : ${formatNumber(result.opponentScore)}</p>`;
+  }
+
+  function warHtml(clan) {
+    const war = dashboard.competition?.war;
+    if (!war) return '';
+    if (!war.active) {
+      return `
+        <section class="clan-activity-group"><h4>🏳️ Войны кланов</h4>
+          ${warResultHtml(war.lastResult)}
+          ${war.canDeclare ? `<div class="clan-activity-list">${war.targets?.length ? war.targets.map(target => `
+            <article class="clan-activity-row"><div><strong>${escapeHtml(target.name)}</strong><small>Ур. ${target.level} · ${target.members} участников</small></div><button type="button" data-clan-war-declare="${target.id}">Объявить войну</button></article>`).join('') : '<p class="clan-muted">Нет свободных кланов-противников.</p>'}</div>` : '<p class="clan-muted">Объявлять войну может только глава клана.</p>'}
+        </section>`;
+    }
+    return `
+      <section class="clan-activity-group clan-war-card"><h4>🏳️ Война с ${escapeHtml(war.opponentName)}</h4>
+        <div class="clan-war-score"><strong>${formatNumber(war.score)}</strong><span>:</span><strong>${formatNumber(war.opponentScore)}</strong></div>
+        <p class="clan-muted">Твой вклад в войну: ${formatNumber(war.myPoints)} · осталось ${formatDuration(war.remainingMs)}</p>
+        <button type="button" data-clan-war-attack ${war.cooldownRemainingMs > 0 ? 'disabled' : ''}>${war.cooldownRemainingMs > 0 ? `Перезарядка · ${formatDuration(war.cooldownRemainingMs)}` : 'Атаковать 🗡️'}</button>
+      </section>`;
+  }
+
   function activitiesHtml(clan) {
     const activities = dashboard.activities;
     if (!activities) return '<section class="clan-section"><p>Активности недоступны.</p></section>';
@@ -280,7 +332,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         ${shopHtml(activities)}
         ${upgradesHtml(activities)}
         ${buildingsHtml(clan, activities)}
-        <div class="clan-coming"><article>⚔️ Дуэли · следующий этап</article><article>🏳️ Войны кланов · следующий этап</article></div>
+        ${pvpHtml()}
+        ${warHtml(clan)}
       </section>`;
   }
 
@@ -331,6 +384,9 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-shop-buy]').forEach(button => button.addEventListener('click', () => activity({ action: 'shop_buy', itemKey: button.dataset.clanShopBuy })));
     content.querySelectorAll('[data-clan-upgrade]').forEach(button => button.addEventListener('click', () => activity({ action: 'upgrade_member', trackKey: button.dataset.clanUpgrade })));
     content.querySelectorAll('[data-clan-building]').forEach(button => button.addEventListener('click', () => activity({ action: 'upgrade_building', buildingKey: button.dataset.clanBuilding })));
+    content.querySelectorAll('[data-clan-pvp]').forEach(button => button.addEventListener('click', () => activity({ action: 'pvp_fight', opponentId: button.dataset.clanPvp })));
+    content.querySelectorAll('[data-clan-war-declare]').forEach(button => button.addEventListener('click', () => activity({ action: 'war_declare', targetId: button.dataset.clanWarDeclare })));
+    content.querySelector('[data-clan-war-attack]')?.addEventListener('click', () => activity({ action: 'war_attack' }));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {
       const actionName = dashboard.clan?.isOwner ? 'disband' : 'leave';
       if (!window.confirm(actionName === 'disband' ? 'Расформировать клан?' : 'Покинуть клан?')) return;
