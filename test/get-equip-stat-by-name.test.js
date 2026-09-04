@@ -62,3 +62,27 @@ test('non-power multiplicative stats (already stored as ~1.x factors) are unaffe
 
   assert.equal(getEquipStatByName(s, 'incomingDamageModifier', true), 1.05);
 });
+
+test('rolled item.stats (gacha/crafted bonus rolls) are now actually applied, additive and multiplicative', () => {
+  const slot = weaponSlot('heavy', ['up'], {});
+  slot.stats = [
+    { name: 'attack', value: 40 },
+    { name: 'attackMul', value: 1.08 },
+    { name: 'criticalChance', value: 5 },
+  ];
+  const s = session({ up: slot });
+
+  assert.equal(getEquipStatByName(s, 'attack'), 40);
+  assert.equal(getEquipStatByName(s, 'attackMul', true), 1.08);
+  assert.equal(getEquipStatByName(s, 'criticalChance'), 5);
+});
+
+test('rolled item.stats stack additively across multiple equipped slots', () => {
+  const helmet = weaponSlot('heavy', ['helmet'], {});
+  helmet.stats = [{ name: 'defence', value: 20 }];
+  const boots = weaponSlot('boots', ['boots'], {});
+  boots.stats = [{ name: 'defence', value: 15 }];
+  const s = session({ helmet, boots });
+
+  assert.equal(getEquipStatByName(s, 'defence'), 35);
+});

@@ -54,6 +54,27 @@ export default function (session, statName, isMul = false) {
                 totalStatValue += statValue;
             }
         }
+
+        // Random bonus (and penalty) rolls from generateRandomEquipment.js —
+        // template/equipmentBonusStatsTemplate.js already stores every one of
+        // these keys in the same convention getEquipStatByName expects ("Mul"
+        // stats as a ready-to-multiply factor near 1, everything else as a flat
+        // point value), so no percentage conversion is needed here, only for
+        // "power"/"defencePower" above. Previously these rolled stats were
+        // generated and displayed but never actually applied to combat.
+        if (Array.isArray(slot.stats)) {
+            for (let {name: statKey, value: statValue} of slot.stats) {
+                if (statKey !== statName || typeof statValue !== "number") {
+                    continue;
+                }
+
+                if (isMul) {
+                    totalStatValue *= statValue;
+                } else {
+                    totalStatValue += statValue;
+                }
+            }
+        }
     }
     return totalStatValue;
 }
