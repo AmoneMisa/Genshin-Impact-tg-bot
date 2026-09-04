@@ -7,11 +7,15 @@ import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import setLevel from '../../../functions/game/player/setLevel.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
+function getResourceType(buildTemplate) {
+    return buildTemplate.resourcesType || (buildTemplate.type === 'experience' ? 'experience' : null);
+}
+
 export default [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (session, callback, [, chatId, buildName]) {
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let resourcesCount = Math.ceil(build.resourceCollected);
+    let resourcesCount = Math.ceil(Number(build.resourceCollected) || 0);
 
     let keyboard;
     if (resourcesCount > 0) {
@@ -55,17 +59,29 @@ export default [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (sessi
     }
 
     let buildTemplate = buildsTemplate[buildName];
-    let resourcesType = buildTemplate.resourcesType;
+    let resourcesType = getResourceType(buildTemplate);
+    if (!resourcesType) {
+        return sendMessageWithDelete(callback.message.chat.id, "Это здание не производит собираемые ресурсы.", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 5000);
+    }
+
+    const resourcesCount = Math.max(0, Math.ceil(Number(build.resourceCollected) || 0));
+    if (resourcesCount <= 0) {
+        return sendMessageWithDelete(callback.message.chat.id, "Пока нечего собирать.", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 5000);
+    }
 
     if (resourcesType === "experience") {
-        member.game.stats.currentExp += Math.ceil(build.resourceCollected);
+        member.game.stats.currentExp += resourcesCount;
         setLevel(member);
     } else {
-        member.game.inventory[resourcesType] += Math.ceil(build.resourceCollected);
+        member.game.inventory[resourcesType] += resourcesCount;
     }
 
     build.resourceCollected = 0;
-    build.lastCollectAt = new Date().getTime();
+    build.lastCollectAt = Date.now();
     await chat.save();
 
     return editMessageCaption(getCaption(buildName, "home", build), {
