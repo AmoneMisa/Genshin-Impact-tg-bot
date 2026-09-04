@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getSwordState, rollSword } from '../functions/game/sword/swordCore.js';
+import { getMiniAppSwordDashboard, getSwordRanking } from '../miniapp/sword.js';
 
 const NOW = 1_800_000_000_000;
 const RESET = NOW + 60_000;
@@ -80,4 +81,44 @@ test('sword state safely normalizes legacy missing values', () => {
     decreaseImmune: false,
     forceDecrease: false,
   });
+});
+
+test('sword ranking preserves legacy group list semantics and sorts descending', () => {
+  const chat = {
+    members: [
+      { userId: 3, sword: -5, userChatData: { user: { first_name: 'Третий' } } },
+      { userId: 1, sword: 42, userChatData: { user: { username: 'leader' } } },
+      { userId: 2, sword: 42, userChatData: { user: { first_name: 'Второй' } } },
+      { userId: 4, userChatData: { user: { first_name: 'Без меча' } } },
+    ],
+  };
+
+  assert.deepEqual(getSwordRanking(chat, 2), [
+    { userId: 1, name: 'leader', length: 42, isCurrent: false, rank: 1 },
+    { userId: 2, name: 'Второй', length: 42, isCurrent: true, rank: 2 },
+    { userId: 3, name: 'Третий', length: -5, isCurrent: false, rank: 3 },
+  ]);
+});
+
+test('Mini App sword dashboard combines personal cooldown with group ranking', () => {
+  const chat = {
+    members: [
+      {
+        userId: 10,
+        sword: 15,
+        timerSwordCallback: RESET,
+        swordImmune: true,
+        immuneToUpSword: false,
+        userChatData: { user: { first_name: 'Игрок' } },
+      },
+      { userId: 11, sword: 20, userChatData: { user: { first_name: 'Лидер' } } },
+    ],
+  };
+
+  const dashboard = getMiniAppSwordDashboard(chat, 10, NOW);
+  assert.equal(dashboard.length, 15);
+  assert.equal(dashboard.canRoll, false);
+  assert.equal(dashboard.remainMs, 60_000);
+  assert.equal(dashboard.ranking[0].name, 'Лидер');
+  assert.equal(dashboard.ranking[1].isCurrent, true);
 });
