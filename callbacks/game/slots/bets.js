@@ -4,7 +4,7 @@ import checkUserCall from '../../../functions/misc/checkUserCall.js';
 import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 async function bet(session, callback, calcFunc) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
