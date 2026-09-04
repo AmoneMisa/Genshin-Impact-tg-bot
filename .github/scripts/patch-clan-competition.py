@@ -215,7 +215,8 @@ text += "\n.clan-war-score{display:flex;align-items:center;justify-content:cente
 path.write_text(text)
 
 
-# Keep syntax checks aligned with the new backend module.
+# Keep syntax checks aligned with the new backend module. This local edit is intentionally
+# not staged by the runtime-only workflow because its token cannot update workflow files.
 path = Path(".github/workflows/miniapp-ci.yml")
 text = path.read_text()
 anchor = "          node --check miniapp/clanActivities.js\n"
@@ -223,3 +224,5 @@ text = replace_once(text, anchor, anchor + "          node --check miniapp/clanC
 anchor = "          node --check functions/game/clans/clanBossAttack.js\n"
 text = replace_once(text, anchor, anchor + "          node --check functions/game/clans/clanDuel.js\n", "duel syntax check")
 path.write_text(text)
+
+# trigger runtime-only retry after separating workflow-file staging
