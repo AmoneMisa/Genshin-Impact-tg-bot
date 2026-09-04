@@ -48,6 +48,7 @@ jobs:
           node --check miniapp/bonus.js
           node --check miniapp/titles.js
           node --check miniapp/horoscope.js
+          node --check miniapp/clan.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
@@ -70,6 +71,8 @@ jobs:
           node --check functions/game/general/pass.js
           node --check functions/game/general/bet.js
           node --check functions/game/horoscope/horoscope.js
+          node --check functions/game/clans/getClan.js
+          node --check functions/game/clans/addClanXp.js
           node --check functions/shedullers/bossWin.js
           node --check callbacks/game/shop/shop.js
           node --check callbacks/game/dice/pullDice.js
@@ -82,6 +85,7 @@ jobs:
           node --check callbacks/game/boss/sendGoldCallback.js
           node --check callbacks/game/elements/takeElement.js
           node --check callbacks/game/horoscope/horoscope.js
+          node --check callbacks/game/clan/clanCallback.js
           node --check onTexts/game/slots/slots.js
           node --check onTexts/game/sendGold.js
           node --check onTexts/game/elements/elements.js
@@ -89,6 +93,7 @@ jobs:
           node --check onTexts/game/titles/titlesList.js
           node --check onTexts/game/bonus/bonus.js
           node --check onTexts/game/horoscopes/horoscope.js
+          node --check onTexts/game/clan/clan.js
           node --check webapp/app.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
@@ -105,4 +110,5 @@ jobs:
           node --check webapp/bonus.js
           node --check webapp/titles.js
           node --check webapp/horoscope.js
+          node --check webapp/clan.js
           node --check webapp/renderer.js
