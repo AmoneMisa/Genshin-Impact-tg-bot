@@ -29,6 +29,7 @@ import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
+import { getInventoryState, useInventoryPotion } from './inventory.js';
 import {
   getPoint21State,
   syncPoint21,
@@ -284,6 +285,42 @@ async function playerProfileGender(req, res) {
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'player profile gender', error);
+  }
+}
+
+async function inventoryState(req, res) {
+  try {
+    const context = await authorize(req);
+    const inventory = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getInventoryState(context.session);
+    });
+    return sendJson(res, 200, inventory);
+  } catch (error) {
+    return sendApiError(res, 'inventory state', error);
+  }
+}
+
+async function inventoryUse(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (!['string', 'number'].includes(typeof body.key) || String(body.key).trim() === '') {
+      const error = new Error('key is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const used = useInventoryPotion(context.session, body.key);
+      if (used.ok) await saveSession(context.session);
+      return used;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'inventory use', error);
   }
 }
 
@@ -1069,6 +1106,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/profile') return playerProfileState(req, res);
     if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
+    if (route === 'GET /api/inventory') return inventoryState(req, res);
+    if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
     if (route === 'GET /api/gold-transfer') return goldTransferState(req, res);
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
     if (route === 'GET /api/steal') return stealState(req, res);
