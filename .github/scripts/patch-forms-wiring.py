@@ -87,3 +87,5 @@ text = replace_once(text, anchor, anchor + "          node --check miniapp/forms
 anchor = "          node --check webapp/app.js\n"
 text = replace_once(text, anchor, anchor + "          node --check webapp/forms.js\n", 'forms client syntax')
 path.write_text(text)
+
+# Trigger temporary runner after workflow installation.
