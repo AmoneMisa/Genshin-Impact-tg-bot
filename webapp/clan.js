@@ -14,6 +14,20 @@ const REASONS = {
   not_enough_resource: 'Недостаточно ресурса.',
   already_answered: 'Ты уже отвечал на сегодняшнюю викторину.',
   invalid_answer: 'Некорректный вариант ответа.',
+  boss_already_summoned: 'Клановый босс уже призван.',
+  boss_not_summoned: 'Сначала призови кланового босса.',
+  boss_cooldown: 'Боец ещё восстанавливается после удара.',
+  no_combat_class: 'Для атаки нужен выбранный боевой класс.',
+  unknown_shop_item: 'Неизвестный товар кланового магазина.',
+  shop_cooldown: 'На этой неделе покупка уже была.',
+  warehouse_insufficient: 'В клановом хранилище недостаточно ресурсов.',
+  shop_delivery_failed: 'Не удалось выдать предмет в инвентарь.',
+  unknown_upgrade: 'Неизвестное улучшение персонажа.',
+  upgrade_maxed: 'Это улучшение уже максимального уровня.',
+  not_enough_gold: 'Недостаточно личного золота.',
+  unknown_building: 'Неизвестная постройка.',
+  building_maxed: 'Постройка уже максимального уровня.',
+  unknown_clan_activity: 'Неизвестное клановое действие.',
 };
 
 function escapeHtml(value) {
@@ -27,6 +41,22 @@ function escapeHtml(value) {
 
 function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
+}
+
+function formatDuration(ms) {
+  const totalSeconds = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));
+  if (totalSeconds < 60) return `${totalSeconds} сек.`;
+  const totalMinutes = Math.ceil(totalSeconds / 60);
+  if (totalMinutes < 60) return `${totalMinutes} мин.`;
+  const totalHours = Math.ceil(totalMinutes / 60);
+  if (totalHours < 48) return `${totalHours} ч.`;
+  return `${Math.ceil(totalHours / 24)} дн.`;
+}
+
+function formatCost(cost) {
+  if (!cost) return 'MAX';
+  const icons = { gold: '🪙', crystals: '💎', ironOre: '⛏️' };
+  return Object.entries(cost).map(([resource, amount]) => `${icons[resource] || resource} ${formatNumber(amount)}`).join(' · ');
 }
 
 export async function openClanGame({ api, renderState, haptic, statusElement }) {
@@ -44,7 +74,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <div><div class="eyebrow">CLANS · MONGO</div><h2>Клан</h2></div>
         <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
       </header>
-      <p class="overlay-copy">Основной клановый контур уже перенесён в Mini App. Создание, вступление, выход, хранилище и викторина работают через сервер и Mongo.</p>
+      <p class="overlay-copy">Клановые данные и игровые действия выполняются на сервере и сохраняются в Mongo.</p>
       <div data-clan-content></div>
       <div class="utility-feedback" data-clan-feedback aria-live="polite"></div>
     </div>`;
@@ -57,12 +87,6 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-
-  async function refresh() {
-    dashboard = await api('/api/clan');
-    if (!dashboard.clan) tab = 'discover';
-    render();
-  }
 
   async function action(body) {
     if (pending) return null;
@@ -81,6 +105,33 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     } catch (error) {
       if (error.payload?.dashboard) dashboard = error.payload.dashboard;
       feedbackText = REASONS[error.payload?.reason] || error.message;
+      haptic('light');
+      return null;
+    } finally {
+      pending = false;
+      render();
+    }
+  }
+
+  async function activity(body) {
+    if (pending) return null;
+    pending = true;
+    feedback.textContent = 'Выполняем действие…';
+    try {
+      const payload = await api('/api/clan/activity', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      dashboard = payload.dashboard;
+      if (payload.state) renderState(payload.state);
+      feedbackText = payload.message || '';
+      haptic(payload.ok ? 'medium' : 'light');
+      return payload;
+    } catch (error) {
+      if (error.payload?.dashboard) dashboard = error.payload.dashboard;
+      const base = REASONS[error.payload?.reason] || error.message;
+      const cooldown = error.payload?.cooldownRemainingMs ? ` Осталось: ${formatDuration(error.payload.cooldownRemainingMs)}` : '';
+      feedbackText = `${base}${cooldown}`;
       haptic('light');
       return null;
     } finally {
@@ -129,7 +180,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <button type="button" data-clan-tab="quiz" class="${tab === 'quiz' ? 'active' : ''}">Викторина</button>
         <button type="button" data-clan-tab="activities" class="${tab === 'activities' ? 'active' : ''}">Активности</button>
       </nav>
-      ${tab === 'warehouse' ? warehouseHtml(clan) : tab === 'quiz' ? quizHtml() : tab === 'activities' ? activitiesHtml() : membersHtml(clan)}
+      ${tab === 'warehouse' ? warehouseHtml(clan) : tab === 'quiz' ? quizHtml() : tab === 'activities' ? activitiesHtml(clan) : membersHtml(clan)}
       <button type="button" class="clan-danger" data-clan-exit>${clan.isOwner ? 'Расформировать клан' : 'Покинуть клан'}</button>`;
   }
 
@@ -178,15 +229,58 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
-  function activitiesHtml() {
+  function bossHtml(activities) {
+    const boss = activities?.boss;
+    if (!boss) {
+      return `<article class="clan-activity-card"><div><strong>👹 Клановый босс</strong><small>Общий босс с наградой в хранилище.</small></div><button type="button" data-clan-boss-summon>Призвать</button></article>`;
+    }
+    const hpPercent = Math.max(0, Math.min(100, boss.currentHp / boss.maxHp * 100));
     return `
-      <section class="clan-section">
-        <h4>Следующие фазы миграции</h4>
-        <div class="clan-coming">
-          <article>👹 Клановый босс</article><article>🛒 Магазин</article>
-          <article>⚔️ Дуэли</article><article>🏗️ Постройки</article>
-          <article>⬆️ Улучшения</article><article>🏳️ Войны кланов</article>
-        </div>
+      <article class="clan-activity-card clan-boss-card">
+        <div class="clan-activity-title"><div><strong>👹 ${escapeHtml(boss.name)}</strong><small>Уровень ${boss.level} · защита ${boss.defence}</small></div><span>${formatNumber(boss.currentHp)} / ${formatNumber(boss.maxHp)} HP</span></div>
+        <div class="clan-boss-hp"><span style="width:${hpPercent}%"></span></div>
+        ${boss.damage.length ? `<div class="clan-damage-list">${boss.damage.slice(0, 5).map(row => `<span>${escapeHtml(row.name)} <b>${formatNumber(row.damage)}</b></span>`).join('')}</div>` : '<small>Пока никто не атаковал.</small>'}
+        <button type="button" data-clan-boss-attack ${boss.cooldownRemainingMs > 0 ? 'disabled' : ''}>${boss.cooldownRemainingMs > 0 ? `Восстановление · ${formatDuration(boss.cooldownRemainingMs)}` : 'Атаковать'}</button>
+      </article>`;
+  }
+
+  function shopHtml(activities) {
+    const shop = activities?.shop;
+    return `
+      <section class="clan-activity-group"><h4>🛒 Клановый магазин</h4>
+        ${shop?.cooldownRemainingMs > 0 ? `<p class="clan-muted">Следующая покупка через ${formatDuration(shop.cooldownRemainingMs)}.</p>` : ''}
+        <div class="clan-activity-list">${(shop?.items || []).map(item => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(item.label)}</strong><small>${formatCost(item.cost)}</small></div><button type="button" data-clan-shop-buy="${item.key}" ${item.available ? '' : 'disabled'}>Получить</button></article>`).join('')}</div>
+      </section>`;
+  }
+
+  function upgradesHtml(activities) {
+    return `
+      <section class="clan-activity-group"><h4>⬆️ Улучшения персонажа</h4>
+        <div class="clan-activity-list">${(activities?.upgrades || []).map(item => `
+          <article class="clan-activity-row"><div><strong>${escapeHtml(item.label)} · ${item.level}/${item.maxLevel}</strong><small>${escapeHtml(item.description)} · ${item.cost === null ? 'MAX' : `🪙 ${formatNumber(item.cost)}`}</small></div><button type="button" data-clan-upgrade="${item.key}" ${item.cost !== null && item.affordable ? '' : 'disabled'}>${item.cost === null ? 'MAX' : 'Улучшить'}</button></article>`).join('')}</div>
+      </section>`;
+  }
+
+  function buildingsHtml(clan, activities) {
+    return `
+      <section class="clan-activity-group"><h4>🏗️ Постройки</h4>
+        <div class="clan-activity-list">${(activities?.buildings || []).map(item => `
+          <article class="clan-building-row"><div><strong>${escapeHtml(item.label)} · ${item.level}/${item.maxLevel}</strong><small>${escapeHtml(item.description)}</small><small>${escapeHtml(item.effectLabel)}</small><small>${formatCost(item.cost)}</small></div><button type="button" data-clan-building="${item.key}" ${item.canUpgrade ? '' : 'disabled'}>${item.cost === null ? 'MAX' : clan.isOwner ? 'Улучшить' : 'Только глава'}</button></article>`).join('')}</div>
+      </section>`;
+  }
+
+  function activitiesHtml(clan) {
+    const activities = dashboard.activities;
+    if (!activities) return '<section class="clan-section"><p>Активности недоступны.</p></section>';
+    return `
+      <section class="clan-section clan-activities">
+        <h4>Клановые активности</h4>
+        ${bossHtml(activities)}
+        ${shopHtml(activities)}
+        ${upgradesHtml(activities)}
+        ${buildingsHtml(clan, activities)}
+        <div class="clan-coming"><article>⚔️ Дуэли · следующий этап</article><article>🏳️ Войны кланов · следующий этап</article></div>
       </section>`;
   }
 
@@ -232,6 +326,11 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         render();
       }
     }));
+    content.querySelector('[data-clan-boss-summon]')?.addEventListener('click', () => activity({ action: 'boss_summon' }));
+    content.querySelector('[data-clan-boss-attack]')?.addEventListener('click', () => activity({ action: 'boss_attack' }));
+    content.querySelectorAll('[data-clan-shop-buy]').forEach(button => button.addEventListener('click', () => activity({ action: 'shop_buy', itemKey: button.dataset.clanShopBuy })));
+    content.querySelectorAll('[data-clan-upgrade]').forEach(button => button.addEventListener('click', () => activity({ action: 'upgrade_member', trackKey: button.dataset.clanUpgrade })));
+    content.querySelectorAll('[data-clan-building]').forEach(button => button.addEventListener('click', () => activity({ action: 'upgrade_building', buildingKey: button.dataset.clanBuilding })));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {
       const actionName = dashboard.clan?.isOwner ? 'disband' : 'leave';
       if (!window.confirm(actionName === 'disband' ? 'Расформировать клан?' : 'Покинуть клан?')) return;
