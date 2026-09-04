@@ -7,6 +7,7 @@ import { openArenaGame } from './arena.js';
 import { openBossGame } from './boss.js';
 import { openShopGame } from './shop.js';
 import { openSwordGame } from './sword.js';
+import { openArcadeGame } from './arcade.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -163,6 +164,17 @@ function render(state) {
         } catch (error) {
           console.error(error);
           status.textContent = `Меч: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'arcade' && feature.status === 'webgl') {
+        try {
+          await openArcadeGame({ api, renderState: render, haptic, statusElement: status });
+          status.textContent = 'Аркада работает через Mini App; результаты генерируются на сервере.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Аркада: ${error.message}`;
         }
         return;
       }
