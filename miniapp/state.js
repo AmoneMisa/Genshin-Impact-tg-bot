@@ -33,6 +33,7 @@ export function createMiniAppState(session, context) {
       arenaChances: number(game.arenaChances),
       bonusChances: number(game.bonusChances),
       chestTries: number(session?.chestTries),
+      sword: number(session?.sword),
     },
     features: [
       { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
@@ -42,6 +43,7 @@ export function createMiniAppState(session, context) {
       { id: 'builds', title: 'Постройки', subtitle: 'Ресурсы и развитие', icon: '🏛️', status: 'webgl' },
       { id: 'arena', title: 'Арена', subtitle: 'PvP и рейтинг', icon: '🏆', status: 'webgl' },
       { id: 'shop', title: 'Магазин', subtitle: 'Покупки и усиления', icon: '🛒', status: 'webgl' },
+      { id: 'sword', title: 'Меч', subtitle: 'Ежедневная удача', icon: '🗡️', status: 'webgl' },
     ],
   };
 }
