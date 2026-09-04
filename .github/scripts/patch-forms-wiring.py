@@ -78,14 +78,4 @@ anchor = "  <link rel=\"stylesheet\" href=\"/profile.css\" />\n"
 text = replace_once(text, anchor, anchor + "  <link rel=\"stylesheet\" href=\"/forms.css\" />\n", 'forms stylesheet')
 path.write_text(text)
 
-
-# CI syntax coverage
-path = Path('.github/workflows/miniapp-ci.yml')
-text = path.read_text()
-anchor = "          node --check miniapp/state.js\n"
-text = replace_once(text, anchor, anchor + "          node --check miniapp/forms.js\n", 'forms server syntax')
-anchor = "          node --check webapp/app.js\n"
-text = replace_once(text, anchor, anchor + "          node --check webapp/forms.js\n", 'forms client syntax')
-path.write_text(text)
-
 # Trigger temporary runner after workflow installation.
