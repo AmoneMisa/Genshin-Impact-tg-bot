@@ -89,3 +89,19 @@ test('selling equipped gear unequips it, removes it and credits gold', () => {
   assert.equal(player.game.inventory.equipment.items.length, 0);
   assert.equal(player.game.equipmentStats.rightHand, null);
 });
+
+test('unequipped gear can be sold without touching occupied combat slots', () => {
+  const equipped = item({ name: 'Keep me', isUsed: true, cost: 1000 });
+  const spare = item({ name: 'Spare', kind: 'dagger', cost: 700, isUsed: false });
+  const player = session([equipped, spare], 25);
+  player.game.equipmentStats.rightHand = { ...equipped, minLvl: 21, isFilled: true };
+
+  const key = getEquipmentState(player).items[1].key;
+  const result = performEquipmentAction(player, key, 'sell');
+
+  assert.equal(result.ok, true);
+  assert.equal(player.game.inventory.gold, 725);
+  assert.equal(player.game.inventory.equipment.items.length, 1);
+  assert.equal(player.game.inventory.equipment.items[0].name, 'Keep me');
+  assert.equal(player.game.equipmentStats.rightHand.name, 'Keep me');
+});
