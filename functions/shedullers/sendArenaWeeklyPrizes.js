@@ -2,14 +2,13 @@ import Chat from "../../db/models/Chat.js";
 import ArenaRating from "../../db/models/ArenaRating.js";
 import updateRank from "../../functions/game/arena/updateRank.js";
 import arenaWeeklyPrize from "../../template/arenaWeeklyPrizes.js";
-import pvpSignTemplate from "../../template/pvpSignTemplate.js";
-import lodash from "lodash";
+import { addArenaTokens, grantArenaMedal, normalizeArenaInventory } from "../game/arena/arenaInventory.js";
 
 /**
  * Еженедельный ресет арены:
  * - начисляет токены за ранги
- * - выдаёт PvP знак
- * - сбрасывает рейтинги до 1000
+ * - выдаёт PvP-медаль, если её ещё нет
+ * - сбрасывает все рейтинги до 1000
  */
 export default async function() {
     const chats = await Chat.find({});
@@ -19,26 +18,18 @@ export default async function() {
 
         for (const member of chat.members) {
             if (member.userChatData?.user?.is_bot) continue;
-
             const game = member.game;
-            if (!game?.inventory?.arena) continue;
+            if (!game) continue;
 
-            // Получаем ранги игрока
-            const playerRankCommon = updateRank(member.userId, "common", chat.chatId);
-            const playerRankExpansion = updateRank(member.userId, "expansion", chat.chatId);
+            normalizeArenaInventory(game);
 
-            // Начисляем токены за оба ранга
+            const playerRankCommon = await updateRank(member.userId, "common", chat.chatId);
+            const playerRankExpansion = await updateRank(member.userId, "expansion", chat.chatId);
             const rewardCommon = arenaWeeklyPrize.find(r => r.rank === playerRankCommon)?.reward || 0;
             const rewardExpansion = arenaWeeklyPrize.find(r => r.rank === playerRankExpansion)?.reward || 0;
 
-            game.inventory.arena.tokens += rewardCommon + rewardExpansion;
-
-            // Выдаём PvP знак, если его нет
-            if (lodash.isNull(game.inventory.arena.pvpSign)) {
-                game.inventory.arena.pvpSign = { ...pvpSignTemplate };
-                game.inventory.arena.pvpSign.lifeTime = Date.now() + pvpSignTemplate.lifeTime;
-            }
-
+            addArenaTokens(game, rewardCommon + rewardExpansion);
+            grantArenaMedal(game);
             updated = true;
         }
 
@@ -47,7 +38,8 @@ export default async function() {
         }
     }
 
-    // Сброс рейтингов в коллекции ArenaRating
-    await ArenaRating.updateMany({ type: "expansion" }, { $set: { value: 1000 } });
-    await ArenaRating.updateMany({ type: "common" }, { $set: { value: 1000 } });
+    await ArenaRating.updateMany(
+        { mode: { $in: ["common", "expansion"] } },
+        { $set: { rating: 1000 } }
+    );
 }
