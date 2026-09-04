@@ -3,6 +3,7 @@ import { openChestGame } from './chest.js';
 import { openGachaGame } from './gacha.js';
 import { openEquipmentGame } from './equipment.js';
 import { openBuildsGame } from './builds.js';
+import { openArenaGame } from './arena.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -115,6 +116,17 @@ function render(state) {
         } catch (error) {
           console.error(error);
           status.textContent = `Постройки: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'arena' && feature.status === 'webgl') {
+        try {
+          await openArenaGame({ api, renderState: render, haptic, statusElement: status });
+          status.textContent = 'Арена работает через Mini App; бой и рейтинг считаются на сервере.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Арена: ${error.message}`;
         }
         return;
       }
