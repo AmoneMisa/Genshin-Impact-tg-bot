@@ -12,7 +12,7 @@ import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
 import { getChestState, openChest } from './chest.js';
 import { getGachaState, rollGacha, resolveGacha } from './gacha.js';
-import { getEquipmentState, performEquipmentAction } from './equipment.js';
+import { getEquipmentState, performEquipmentAction, craftEquipmentItem } from './equipment.js';
 import {
   prepareBuilds,
   getBuildsState,
@@ -984,8 +984,8 @@ async function equipmentAction(req, res) {
       error.status = 400;
       throw error;
     }
-    if (!['equip', 'unequip', 'sell'].includes(body.action)) {
-      const error = new Error('action must be equip, unequip or sell');
+    if (!['equip', 'unequip', 'sell', 'upgrade'].includes(body.action)) {
+      const error = new Error('action must be equip, unequip, sell or upgrade');
       error.status = 400;
       throw error;
     }
@@ -998,6 +998,27 @@ async function equipmentAction(req, res) {
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'equipment action', error);
+  }
+}
+
+async function equipmentCraft(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (typeof body.grade !== 'string' || !body.grade) {
+      const error = new Error('grade is required');
+      error.status = 400;
+      throw error;
+    }
+    const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const updated = craftEquipmentItem(context.session, body.grade);
+      if (updated.ok) await saveSession(context.session);
+      return updated;
+    });
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'equipment craft', error);
   }
 }
 
@@ -1318,6 +1339,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/gacha/resolve') return gachaResolve(req, res);
     if (route === 'GET /api/equipment') return equipmentState(req, res);
     if (route === 'POST /api/equipment/action') return equipmentAction(req, res);
+    if (route === 'POST /api/equipment/craft') return equipmentCraft(req, res);
     if (route === 'GET /api/builds') return buildsState(req, res);
     if (route === 'POST /api/builds/action') return buildsAction(req, res);
     if (route === 'GET /api/arena') return arenaState(req, res, requestUrl);

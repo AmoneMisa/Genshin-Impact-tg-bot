@@ -2,8 +2,10 @@ import { createHash } from 'node:crypto';
 import equipmentTemplate from '../template/equipmentTemplate.js';
 import equipItem from '../functions/game/equipment/equipItem.js';
 import unequipItem from '../functions/game/equipment/unequipItem.js';
+import craftItem, { getCraftableGrades, CRAFT_COSTS } from '../functions/game/equipment/craftItem.js';
+import upgradeItem, { getItemUpgradeLevel, getItemUpgradeCost } from '../functions/game/equipment/upgradeItem.js';
 
-const ACTIONS = new Set(['equip', 'unequip', 'sell']);
+const ACTIONS = new Set(['equip', 'unequip', 'sell', 'upgrade']);
 
 function asNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -83,7 +85,25 @@ function sanitizeItem(session, item, index) {
       max: asNumber(item.persistence.max),
     } : null,
     stats: sanitizeStats(item?.stats),
+    forgeLevel: getItemUpgradeLevel(item),
+    upgradeCost: getItemUpgradeCost(item),
   };
+}
+
+// Mirrors callbacks/game/builds/forge.js's equipmentStats sync: equipItem.js
+// shallow-copies the item into equipmentStats per slot, so `stats` is the
+// SAME array reference only until the next DB round-trip — after a reload,
+// an in-place upgrade needs to be re-applied to the equipped snapshot too.
+function syncEquippedSnapshot(session, item) {
+  if (!item?.slots?.length) return;
+  for (const slot of item.slots) {
+    const equipped = session?.game?.equipmentStats?.[slot];
+    if (equipped && equipped.kind === item.kind && Array.isArray(equipped.slots)
+      && equipped.slots.join(',') === item.slots.join(',')) {
+      equipped.stats = item.stats;
+      equipped.forgeLevel = item.forgeLevel;
+    }
+  }
 }
 
 function getItems(session) {
@@ -124,6 +144,7 @@ export function getEquipmentState(session) {
     equippedCount: sanitized.filter((item) => item.isUsed).length,
     equippedSlots,
     items: sanitized,
+    craftableGrades: getCraftableGradesState(session),
   };
 }
 
@@ -166,6 +187,22 @@ export function performEquipmentAction(session, key, action) {
     return { ok: true, action, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
   }
 
+  if (action === 'upgrade') {
+    const result = upgradeItem(item, session.game.inventory);
+    if (!result.ok) {
+      return { ok: false, reason: result.reason, cost: result.cost, equipment: getEquipmentState(session) };
+    }
+
+    syncEquippedSnapshot(session, item);
+    return {
+      ok: true,
+      action,
+      level: result.level,
+      item: sanitizeItem(session, item, index),
+      equipment: getEquipmentState(session),
+    };
+  }
+
   if (isEquipped || item.isUsed) unequipItem(session, item);
   const soldGold = Math.max(0, asNumber(item.cost));
   session.game.inventory.gold = asNumber(session.game.inventory.gold) + soldGold;
@@ -177,4 +214,34 @@ export function performEquipmentAction(session, key, action) {
     soldGold,
     equipment: getEquipmentState(session),
   };
+}
+
+// Craft has no existing item to key against (it creates one), so it's a
+// separate export rather than another performEquipmentAction() branch.
+export function craftEquipmentItem(session, grade) {
+  if (!session?.game?.inventory) {
+    return { ok: false, reason: 'player_not_found', equipment: getEquipmentState(session) };
+  }
+
+  const playerLevel = asNumber(session.game.stats?.lvl, 1);
+  const result = craftItem(session.game.inventory, grade, playerLevel);
+  if (!result.ok) {
+    return { ok: false, reason: result.reason, requiredLevel: result.requiredLevel, cost: result.cost, equipment: getEquipmentState(session) };
+  }
+
+  const index = getItems(session).length - 1;
+  return {
+    ok: true,
+    action: 'craft',
+    item: sanitizeItem(session, result.item, index),
+    equipment: getEquipmentState(session),
+  };
+}
+
+export function getCraftableGradesState(session) {
+  return getCraftableGrades(asNumber(session?.game?.stats?.lvl, 1)).map(grade => ({
+    name: grade.name,
+    minLevel: grade.lvl.from,
+    cost: CRAFT_COSTS[grade.name],
+  }));
 }

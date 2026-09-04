@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getEquipmentState, performEquipmentAction } from '../miniapp/equipment.js';
+import { getEquipmentState, performEquipmentAction, craftEquipmentItem } from '../miniapp/equipment.js';
+import { CRAFT_COSTS } from '../functions/game/equipment/craftItem.js';
 
 function item(overrides = {}) {
   return {
@@ -31,6 +32,8 @@ function session(items = [], gold = 100) {
       equipmentStats: {},
       inventory: {
         gold,
+        crystals: 100_000,
+        ironOre: 100_000,
         equipment: { name: 'Экипировка', items },
       },
     },
@@ -104,4 +107,53 @@ test('unequipped gear can be sold without touching occupied combat slots', () =>
   assert.equal(player.game.inventory.equipment.items.length, 1);
   assert.equal(player.game.inventory.equipment.items[0].name, 'Keep me');
   assert.equal(player.game.equipmentStats.rightHand.name, 'Keep me');
+});
+
+test('craftEquipmentItem spends resources and adds a real item to inventory', () => {
+  const player = session([], 1_000_000);
+  const state = getEquipmentState(player);
+  assert.ok(state.craftableGrades.some(g => g.name === 'D'));
+
+  const result = craftEquipmentItem(player, 'D');
+
+  assert.equal(result.ok, true);
+  assert.equal(player.game.inventory.gold, 1_000_000 - CRAFT_COSTS.D.gold);
+  assert.equal(player.game.inventory.equipment.items.length, 1);
+  assert.equal(result.item.grade, 'D');
+});
+
+test('craftEquipmentItem refuses a grade above the player level', () => {
+  const player = session([], 1_000_000);
+  player.game.stats.lvl = 5;
+
+  const result = craftEquipmentItem(player, 'S');
+
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, 'level_too_low');
+  assert.equal(player.game.inventory.equipment.items.length, 0);
+});
+
+test('upgrade action scales stats, syncs the equipped snapshot, and reports the new level', () => {
+  const equipped = item({ name: 'My sword', isUsed: true, stats: [{ name: 'attack', value: 40 }] });
+  const player = session([equipped], 1_000_000);
+  player.game.equipmentStats.rightHand = { ...equipped, minLvl: 21, isFilled: true, stats: [{ name: 'attack', value: 40 }] };
+
+  const key = getEquipmentState(player).items[0].key;
+  const result = performEquipmentAction(player, key, 'upgrade');
+
+  assert.equal(result.ok, true);
+  assert.equal(result.level, 1);
+  assert.equal(equipped.stats[0].value, 40 * 1.08);
+  assert.equal(player.game.equipmentStats.rightHand.stats[0].value, 40 * 1.08);
+});
+
+test('upgrade action rejects an item with nothing to upgrade', () => {
+  const bareItem = item({ stats: [] });
+  const player = session([bareItem], 1_000_000);
+  const key = getEquipmentState(player).items[0].key;
+
+  const result = performEquipmentAction(player, key, 'upgrade');
+
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, 'nothing_to_upgrade');
 });
