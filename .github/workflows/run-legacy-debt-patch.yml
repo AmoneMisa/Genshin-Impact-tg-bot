@@ -6,6 +6,7 @@ on:
       - feature/telegram-miniapp-webgl
     paths:
       - .github/scripts/patch-legacy-debt.py
+      - .github/scripts/fix-legacy-debt-output.py
 
 permissions:
   contents: write
@@ -28,7 +29,9 @@ jobs:
         run: npm ci
 
       - name: Apply legacy debt patch
-        run: python .github/scripts/patch-legacy-debt.py
+        run: |
+          python .github/scripts/patch-legacy-debt.py
+          python .github/scripts/fix-legacy-debt-output.py
 
       - name: Verify patch
         run: |
