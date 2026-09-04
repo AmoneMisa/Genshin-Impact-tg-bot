@@ -33,6 +33,7 @@ jobs:
           node --check miniapp/server.js
           node --check miniapp/telegramAuth.js
           node --check miniapp/state.js
+          node --check miniapp/skills.js
           node --check miniapp/forms.js
           node --check miniapp/updates.js
           node --check miniapp/feedback.js
@@ -87,6 +88,7 @@ jobs:
           node --check functions/shedullers/bossWin.js
           node --check callbacks/game/arena/arena.js
           node --check callbacks/game/player/showInventory.js
+          node --check callbacks/game/player/skillsCallback.js
           node --check callbacks/game/player/userSkillsCallback.js
           node --check callbacks/game/shop/shop.js
           node --check callbacks/game/dice/pullDice.js
@@ -114,6 +116,7 @@ jobs:
           node --check onTextsAdmin/sendNewUpdates.js
           node --check webapp/app.js
           node --check webapp/forms.js
+          node --check webapp/skills.js
           node --check webapp/help.js
           node --check webapp/updates.js
           node --check webapp/feedback.js
