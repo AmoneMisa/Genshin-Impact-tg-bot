@@ -1,0 +1,37 @@
+.sword-panel { max-height:min(92vh,760px); }
+.sword-hero { position:relative; overflow:hidden; margin:16px 0 10px; padding:18px; border:1px solid rgba(150,178,239,.15); border-radius:20px; background:linear-gradient(145deg,rgba(73,91,148,.12),rgba(255,255,255,.018)); text-align:center; }
+.sword-hero::after { content:""; position:absolute; inset:auto -55px -90px auto; width:190px; height:190px; border-radius:50%; background:radial-gradient(circle,rgba(122,160,235,.14),transparent 70%); pointer-events:none; }
+.sword-blade { position:relative; width:92px; height:150px; margin:0 auto 10px; filter:drop-shadow(0 0 18px rgba(141,178,238,.13)); }
+.sword-blade span { position:absolute; left:50%; top:5px; width:17px; height:105px; transform:translateX(-50%); clip-path:polygon(50% 0,100% 13%,82% 100%,18% 100%,0 13%); background:linear-gradient(90deg,rgba(109,133,189,.62),rgba(226,235,255,.92) 50%,rgba(104,126,183,.65)); }
+.sword-blade i { position:absolute; left:50%; bottom:13px; width:66px; height:8px; transform:translateX(-50%); border-radius:999px; background:linear-gradient(90deg,#66517e,#b9a7da,#66517e); box-shadow:0 18px 0 -1px #786657; }
+.sword-blade::after { content:""; position:absolute; left:50%; bottom:17px; width:8px; height:35px; transform:translate(-50%,100%); border-radius:4px; background:linear-gradient(#8e785e,#54483e); }
+.sword-length { position:relative; z-index:1; display:grid; gap:2px; }
+.sword-length small { color:var(--muted); font-size:8px; letter-spacing:.12em; }
+.sword-length strong { font-size:31px; line-height:1; }
+.sword-length em { color:#aeb8d0; font-size:12px; font-style:normal; }
+.sword-hero p { position:relative; z-index:1; margin:9px 0 0; color:#bbb9c9; font-size:9px; line-height:1.5; }
+.sword-action-card { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:10px 0; padding:11px 12px; border:1px solid rgba(255,255,255,.07); border-radius:14px; background:rgba(255,255,255,.025); }
+.sword-action-card > div { display:grid; gap:2px; }
+.sword-action-card small { color:var(--muted); font-size:8px; letter-spacing:.08em; }
+.sword-action-card strong { font-size:12px; }
+.sword-action-card button { width:31px; height:31px; border:1px solid rgba(255,255,255,.08); border-radius:10px; background:rgba(255,255,255,.035); color:#c9c5d5; }
+.sword-roll { width:100%; min-height:58px; padding:11px 13px; border:1px solid rgba(140,174,239,.2); border-radius:16px; background:linear-gradient(135deg,rgba(82,111,181,.18),rgba(125,75,160,.1)); color:#eef1fa; display:flex; align-items:center; gap:11px; text-align:left; }
+.sword-roll > span { width:34px; height:34px; display:grid; place-items:center; border-radius:11px; background:rgba(255,255,255,.045); font-size:19px; }
+.sword-roll > div { min-width:0; display:grid; gap:3px; }
+.sword-roll strong { font-size:11px; }
+.sword-roll small { color:var(--muted); font-size:8px; line-height:1.35; }
+.sword-roll:disabled { opacity:.48; }
+.sword-rules { display:grid; gap:5px; margin-top:10px; color:#aaa6b8; font-size:8px; }
+.sword-rules span { padding:7px 9px; border:1px solid rgba(255,255,255,.055); border-radius:10px; background:rgba(255,255,255,.018); }
+.sword-feedback { min-height:18px; margin:11px 2px 1px; color:var(--muted); font-size:10px; text-align:center; }
+.sword-overlay.busy .sword-roll, .sword-overlay.busy [data-sword-refresh] { pointer-events:none; opacity:.52; }
+.sword-overlay.rolling .sword-blade { animation:sword-pulse .55s ease; }
+.sword-result { position:sticky; top:0; z-index:22; margin:-2px 0 9px; padding:10px 12px; border:1px solid rgba(255,255,255,.1); border-radius:14px; background:rgba(16,18,34,.95); backdrop-filter:blur(18px); display:flex; align-items:center; gap:9px; opacity:0; transform:translateY(-10px); transition:.18s ease; }
+.sword-result.visible { opacity:1; transform:translateY(0); }
+.sword-result.leaving { opacity:0; transform:translateY(-7px); }
+.sword-result.positive { border-color:rgba(100,211,164,.2); }
+.sword-result.negative { border-color:rgba(231,111,128,.2); }
+.sword-result.neutral { border-color:rgba(184,187,205,.16); }
+.sword-result span { font-size:20px; }
+.sword-result strong { font-size:11px; }
+@keyframes sword-pulse { 0%{transform:rotate(0)} 35%{transform:rotate(-7deg) scale(1.04)} 70%{transform:rotate(6deg) scale(1.03)} 100%{transform:rotate(0)} }
