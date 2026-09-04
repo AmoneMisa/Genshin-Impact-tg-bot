@@ -49,6 +49,7 @@ jobs:
           node --check miniapp/titles.js
           node --check miniapp/horoscope.js
           node --check miniapp/clan.js
+          node --check miniapp/clanActivities.js
           node --check functions/game/equipment/equipItem.js
           node --check functions/game/equipment/unequipItem.js
           node --check functions/game/builds/calculateRemainBuildTime.js
@@ -73,6 +74,10 @@ jobs:
           node --check functions/game/horoscope/horoscope.js
           node --check functions/game/clans/getClan.js
           node --check functions/game/clans/addClanXp.js
+          node --check functions/game/clans/summonClanBoss.js
+          node --check functions/game/clans/clanBossAttack.js
+          node --check functions/game/clans/giveClanShopPotion.js
+          node --check functions/game/clans/getBuildingBonus.js
           node --check functions/shedullers/bossWin.js
           node --check callbacks/game/shop/shop.js
           node --check callbacks/game/dice/pullDice.js
