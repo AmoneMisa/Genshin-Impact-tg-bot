@@ -5,25 +5,25 @@ import endGameMessage from "./endGameMessage.js";
 import setEndGameTimer from "./setEndGameTimer.js";
 
 export default async function(chatId, messageId, isDefault = true, gameName) {
-    const chat = await Chat.findOne({ chatId });
+    let chat = await Chat.findOne({ chatId });
     if (!chat || !chat.game[gameName]) return;
 
-    const game = chat.game[gameName];
-
-    // Логика для игры "points"
+    // Бот меняет ту же Mongo-сессию. Дожидаемся его хода и перечитываем чат,
+    // иначе победители могли считаться до завершения botThink().
     if (gameName === "points") {
-        pointsBotThink(chat);
+        await pointsBotThink(chatId);
+        chat = await Chat.findOne({ chatId });
+        if (!chat || !chat.game[gameName]) return;
     }
 
+    const game = chat.game[gameName];
     const winners = findWinners(chat, gameName);
 
-    // Сброс состояния игры
     game.isStart = false;
     game.gameSessionIsStart = false;
     game.players = {};
     game.usedItems = [];
 
-    // Дополнительный сброс для "elements"
     if (gameName === "elements") {
         chat.game.elements.currentRound = 1;
         chat.game.elements.countPresses = 0;
@@ -38,11 +38,7 @@ export default async function(chatId, messageId, isDefault = true, gameName) {
         }
     }
 
-    // Сообщение о завершении
-    endGameMessage(winners, chatId, messageId, isDefault, gameName);
-
-    // Таймер окончания
+    await endGameMessage(winners, chatId, messageId, isDefault, gameName);
     setEndGameTimer(chat, 0, chatId, gameName, null);
-
     await chat.save();
 }
