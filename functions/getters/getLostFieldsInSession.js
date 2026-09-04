@@ -91,6 +91,7 @@ export default function (session) {
             gold: 0,
             crystals: 0,
             ironOre: 0,
+            sp: 0, // skill points, earned on level-up — spent enchanting skills (see skillEnchant.js)
             potions: {
                 name: "Зелья",
                 items: lodash.cloneDeep(potionsInInventoryTemplate)
@@ -123,4 +124,18 @@ export default function (session) {
     }
 
     session.game = Object.assign({}, sessionGameTemplate, session.game);
+
+    // Object.assign above is shallow: an existing player's `game.builds` object
+    // wins wholesale over the template's, so a newly-added building would never
+    // backfill for existing bot players otherwise (miniapp/builds.js already
+    // backfills per-key via ensureBuildDefaults — this mirrors that for the bot).
+    if (!session.game.builds || typeof session.game.builds !== "object") {
+        session.game.builds = sessionGameTemplate.builds;
+    } else {
+        for (const [key, defaultBuild] of Object.entries(sessionGameTemplate.builds)) {
+            if (!session.game.builds[key]) {
+                session.game.builds[key] = defaultBuild;
+            }
+        }
+    }
 }
