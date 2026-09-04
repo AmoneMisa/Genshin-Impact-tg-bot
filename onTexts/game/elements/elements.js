@@ -21,6 +21,8 @@ export default [[/(?:^|\s)\/elements\b/, async (msg, session) => {
     const members = await getMembers(msg.chat.id);
     const userId = session.userChatData.user.id;
 
+    chatSession.game.elements = chatSession.game.elements || {};
+
     if (chatSession.game.elements.gameSessionIsStart) {
         if (Date.now() - chatSession.game.elements.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
             return sendMessageWithDelete(
@@ -44,7 +46,8 @@ export default [[/(?:^|\s)\/elements\b/, async (msg, session) => {
     chatSession.game.elements.players = {
         bot: { usedItems: [], points: 0, id: "bot" }
     };
-
+    chatSession.game.elements.usedItems = [];
+    chatSession.game.elements.currentRound = 1;
     chatSession.game.elements.gameSessionIsStart = true;
     chatSession.game.elements.gameSessionLastUpdateAt = Date.now();
 
@@ -79,7 +82,7 @@ export default [[/(?:^|\s)\/elements\b/, async (msg, session) => {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {})
     }, 7000);
 
-    await editMessageText(betMessage(chatSession.game.elements.players, members), {
+    await editMessageText(await betMessage(chatSession.game.elements.players, members), {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
         chat_id: msg.chat.id,
         message_id: chatSession.game.elements.messageId,
@@ -88,19 +91,13 @@ export default [[/(?:^|\s)\/elements\b/, async (msg, session) => {
         }
     });
 
-    // запуск игры через 25 секунд после ставок
     await sleep(25000);
 
-    // Перезагружаем чат, чтобы учесть игроков, присоединившихся во время ставок.
     const freshChat = await getChatSession(msg.chat.id);
-    if (!freshChat.game.elements || !freshChat.game.elements.gameSessionIsStart) {
-        return;
-    }
+    if (!freshChat.game.elements || !freshChat.game.elements.gameSessionIsStart) return;
 
     for (const playerId of Object.keys(freshChat.game.elements.players)) {
-        if (playerId !== "bot") {
-            getRandomElement(freshChat, playerId);
-        }
+        if (playerId !== "bot") getRandomElement(freshChat, playerId);
     }
     botThink(freshChat);
     updatePoints(freshChat.game.elements.players);
@@ -112,7 +109,7 @@ export default [[/(?:^|\s)\/elements\b/, async (msg, session) => {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {})
     }, 7000);
 
-    await editMessageText(elementsMessage(freshChat, userId), {
+    await editMessageText(await elementsMessage(freshChat, userId), {
         ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
         chat_id: msg.chat.id,
         message_id: freshChat.game.elements.messageId,
