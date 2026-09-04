@@ -37,6 +37,15 @@ import {
   takePoint21Card,
   passPoint21,
 } from './point21.js';
+import {
+  getElementsState,
+  syncElements,
+  startElements,
+  joinElements,
+  leaveElements,
+  setElementsBet,
+  drawElement,
+} from './elements.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -230,7 +239,6 @@ async function goldTransferSend(req, res) {
       refreshContextSession(context, chat);
       return moved;
     });
-
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'gold transfer send', error);
@@ -257,8 +265,7 @@ async function point21Action(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
-    const actions = new Set(['start', 'join', 'leave', 'bet', 'card', 'pass']);
-    if (!actions.has(body.action)) {
+    if (!new Set(['start', 'join', 'leave', 'bet', 'card', 'pass']).has(body.action)) {
       const error = new Error('Unknown point21 action');
       error.status = 400;
       throw error;
@@ -274,16 +281,58 @@ async function point21Action(req, res) {
       else if (body.action === 'card') updated = takePoint21Card(chat, context.userId);
       else updated = passPoint21(chat, context.userId);
 
-      // A failed action can still advance an expired lobby/round during sync,
-      // so persist the chat after every serialized point21 action.
       await chat.save();
       refreshContextSession(context, chat);
       return updated;
     });
-
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'point21 action', error);
+  }
+}
+
+async function elementsState(req, res) {
+  try {
+    const context = await authorize(req);
+    const elements = await withLock(`${context.chatId}:elements`, async () => {
+      const chat = await getChatSession(context.chatId);
+      const synced = syncElements(chat);
+      if (synced.changed) await chat.save();
+      refreshContextSession(context, chat);
+      return getElementsState(chat, context.userId);
+    });
+    return sendJson(res, 200, elements);
+  } catch (error) {
+    return sendApiError(res, 'elements state', error);
+  }
+}
+
+async function elementsAction(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (!new Set(['start', 'join', 'leave', 'bet', 'draw']).has(body.action)) {
+      const error = new Error('Unknown elements action');
+      error.status = 400;
+      throw error;
+    }
+
+    const result = await withLock(`${context.chatId}:elements`, async () => {
+      const chat = await getChatSession(context.chatId);
+      let updated;
+      if (body.action === 'start') updated = startElements(chat, context.userId);
+      else if (body.action === 'join') updated = joinElements(chat, context.userId);
+      else if (body.action === 'leave') updated = leaveElements(chat, context.userId);
+      else if (body.action === 'bet') updated = setElementsBet(chat, context.userId, body.bet);
+      else updated = drawElement(chat, context.userId);
+
+      await chat.save();
+      refreshContextSession(context, chat);
+      return updated;
+    });
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'elements action', error);
   }
 }
 
@@ -660,6 +709,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
     if (route === 'GET /api/point21') return point21State(req, res);
     if (route === 'POST /api/point21/action') return point21Action(req, res);
+    if (route === 'GET /api/elements') return elementsState(req, res);
+    if (route === 'POST /api/elements/action') return elementsAction(req, res);
     if (route === 'GET /api/chest') return chestState(req, res);
     if (route === 'POST /api/chest/open') return chestOpen(req, res);
     if (route === 'GET /api/gacha') return gachaState(req, res);
