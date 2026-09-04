@@ -2,32 +2,26 @@ import upgradeBuild from "./upgradeBuild.js";
 import calculateOptimalSpeedUpCost from "./calculateOptimalSpeedUpCost.js";
 
 /**
- * Ускоряет апгрейд постройки, списывая кристаллы
- * @param {string} buildName - название постройки
- * @param {Object} build - объект постройки
- * @param {Object} inventory - инвентарь игрока
- * @returns {boolean} true если ускорение прошло успешно, false если ресурсов недостаточно
+ * Ускоряет апгрейд постройки, списывая кристаллы.
  */
 export default function speedUpBuild(buildName, build, inventory) {
     const speedupCost = calculateOptimalSpeedUpCost(buildName, build);
 
-    // Проверка на достаточность кристаллов
     if (inventory.crystals < speedupCost) {
-        return false; // недостаточно ресурсов
+        return false;
     }
 
-    // Сброс таймера
     if (build.upgradeTimerId) {
         clearTimeout(build.upgradeTimerId);
         build.upgradeTimerId = null;
     }
 
+    const upgraded = upgradeBuild(build, buildName);
+    if (!upgraded) {
+        return false;
+    }
+
     build.upgradeStartedAt = null;
-
-    // Завершаем апгрейд
-    upgradeBuild(build);
-
-    // Списываем кристаллы
     inventory.crystals -= speedupCost;
 
     return true;
