@@ -1,5 +1,6 @@
 import { startWebGL } from './renderer.js';
 import { openChestGame } from './chest.js';
+import { openGachaGame } from './gacha.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = (id) => document.getElementById(id);
@@ -74,10 +75,27 @@ function render(state) {
             haptic,
             statusElement: status,
           });
-          status.textContent = 'Сундуки работают через Mini App и используют ту же игровую сессию.';
+          status.textContent = 'Сундуки работают через Mini App и сохраняют награды в Mongo.';
         } catch (error) {
           console.error(error);
           status.textContent = `Сундуки: ${error.message}`;
+        }
+        return;
+      }
+
+      if (feature.id === 'gacha' && feature.status === 'webgl') {
+        try {
+          await openGachaGame({
+            api,
+            renderState: render,
+            haptic,
+            statusElement: status,
+            playerLevel: currentState?.player?.level || 1,
+          });
+          status.textContent = 'Гача работает через Mini App; RNG и списание ресурсов остаются серверными.';
+        } catch (error) {
+          console.error(error);
+          status.textContent = `Гача: ${error.message}`;
         }
         return;
       }
@@ -87,7 +105,7 @@ function render(state) {
     return button;
   }));
 
-  status.textContent = 'Mini App подключён к существующей игровой сессии.';
+  status.textContent = 'Mini App подключён к Mongo-сессии игрока.';
 }
 
 async function loadState() {
