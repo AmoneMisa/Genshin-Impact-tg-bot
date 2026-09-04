@@ -17,6 +17,7 @@ import { openHoroscopeGame } from './horoscope.js';
 import { openClanGame } from './clan.js';
 import { openStealGame } from './steal.js';
 import { openPlayerProfile } from './profile.js';
+import { openSkillsGame } from './skills.js';
 import { openFormsGame } from './forms.js';
 import { openInventoryGame } from './inventory.js';
 import { openExchangeGame } from './exchange.js';
@@ -58,6 +59,7 @@ async function api(path, options = {}) {
 
 const launchers = {
   profile: [openPlayerProfile, 'Профиль персонажа работает через Mini App и сохраняется в Mongo.'],
+  skills: [openSkillsGame, 'Навыки и их улучшения работают через Mini App и сохраняются в Mongo.'],
   forms: [openFormsGame, 'Анкеты работают через Mini App и сохраняются в Mongo.'],
   inventory: [openInventoryGame, 'Инвентарь работает через Mini App; расходники сохраняются в Mongo.'],
   exchange: [openExchangeGame, 'Обменник работает через Mini App и сохраняет покупку в Mongo.'],

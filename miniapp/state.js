@@ -38,6 +38,7 @@ export function createMiniAppState(session, context) {
     },
     features: [
       { id: 'profile', title: 'Персонаж', subtitle: 'Класс, пол и характеристики', icon: '🧙', status: 'webgl' },
+      { id: 'skills', title: 'Навыки', subtitle: 'Прокачка умений и ОП', icon: '⚡', status: 'webgl' },
       { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
       { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
       { id: 'exchange', title: 'Обменник', subtitle: 'Золото в кристаллы', icon: '💱', status: 'webgl' },

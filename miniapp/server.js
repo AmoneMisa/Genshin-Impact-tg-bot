@@ -31,6 +31,7 @@ import { resetArcadeGame } from './arcadeReset.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
+import { getSkillsState, enchantSkillForMiniApp } from './skills.js';
 import { getInventoryState, useInventoryPotion } from './inventory.js';
 import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
 import { getFormsState, savePersonalForm } from './forms.js';
@@ -397,6 +398,43 @@ async function playerProfileGender(req, res) {
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'player profile gender', error);
+  }
+}
+
+async function playerSkillsState(req, res) {
+  try {
+    const context = await authorize(req);
+    const skills = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getSkillsState(context.session);
+    });
+    return sendJson(res, 200, skills);
+  } catch (error) {
+    return sendApiError(res, 'player skills state', error);
+  }
+}
+
+async function playerSkillsEnchant(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    const slot = Number(body.slot);
+    if (!Number.isInteger(slot) || slot < 0) {
+      const error = new Error('slot must be a non-negative integer');
+      error.status = 400;
+      throw error;
+    }
+
+    const result = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const enchanted = enchantSkillForMiniApp(context.session, slot);
+      if (enchanted.ok) await saveSession(context.session);
+      return enchanted;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+  } catch (error) {
+    return sendApiError(res, 'player skills enchant', error);
   }
 }
 
@@ -1309,6 +1347,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/profile') return playerProfileState(req, res);
     if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
+    if (route === 'GET /api/skills') return playerSkillsState(req, res);
+    if (route === 'POST /api/skills/enchant') return playerSkillsEnchant(req, res);
     if (route === 'GET /api/inventory') return inventoryState(req, res);
     if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
     if (route === 'GET /api/exchange') return exchangeState(req, res);
