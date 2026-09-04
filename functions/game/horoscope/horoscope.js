@@ -1,33 +1,30 @@
 import getUserName from "../../getters/getUserName.js";
-import { Ollama } from 'ollama';
-
-export const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b-instruct';
-const client = new Ollama({ host: process.env.OLLAMA_HOST || 'http://127.0.0.1:11434' });
+import { generateFunnyLine } from '../../llm/freeLlmClient.js';
 
 const HORO_SYSTEM = {
     superShort: `
-Ты астролог.
-Правила: ровно ОДНО предложение в стиле гадалки и предсказания, ≤120 символов. Формат: "<ICON> <SIGN>: <текст>".
-Без эмодзи. Максимально сохраняй логику сказанного. Только итоговая строка. Текст только на русском`.trim(),
+Ты русскоязычный астролог для игровой Telegram-тусовки.
+Дай ровно ОДНО короткое шуточное предсказание. Формат: "<ICON> <SIGN>: <текст>".
+Не добавляй другие эмодзи, списки, переносы и дисклеймеры. До 120 символов.`.trim(),
 
     cheeky: `
-Ты астролог с иронией.
-Ровно ОДНО предложение в стиле предсказания, ≤120 символов. Формат: "<ICON> <SIGN>: <текст>".
-Разрешены умеренные грубости/мат, сексуальный подтекст, без оскорблений пользователя. Без эмодзи.  Максимально сохраняй логику сказанного. Текст только на русском`.trim(),
+Ты русскоязычный астролог с иронией для компании друзей.
+Дай ровно ОДНО короткое дерзкое предсказание. Формат: "<ICON> <SIGN>: <текст>".
+Можно умеренную грубость, мат и лёгкий сексуальный подтекст, но без оскорбления пользователя. Без переносов. До 120 символов.`.trim(),
 
     sweet: `
-Ты тёплый и ободряющий астролог.
-Ровно ОДНО предложение в стиле игр, аниме, манги, фильмов, сериалов с упоминанием событий или персонажей из них в стиле предсказания, ≤120 символов. Формат: "<ICON> <SIGN>: <текст>".
-Без переносов, без эмодзи. Только итоговая строка. Максимально сохраняй логику сказанного. Текст только на русском`.trim(),
+Ты тёплый русскоязычный астролог-гик.
+Дай ровно ОДНО смешное доброе предсказание с лёгкой отсылкой к игре, аниме, манге, фильму или сериалу.
+Формат: "<ICON> <SIGN>: <текст>". Без переносов и лишних эмодзи. До 120 символов.`.trim(),
 
     sarcastic: `
-Ты саркастичный астролог: грубо, но по делу.
-Ровно ОДНО предложение в стиле предсказания, ≤120 символов. Формат: "<ICON> <SIGN>: <текст>".
-Допускаются грубые слова и маты, сексуальный контент и подтекст, но без оскорблений. Без эмодзи. Максимально сохраняй логику сказанного. Текст только на русском`.trim()
+Ты саркастичный русскоязычный астролог для компании друзей.
+Дай ровно ОДНО едкое, но не злое предсказание. Формат: "<ICON> <SIGN>: <текст>".
+Допускаются мат, грубость и взрослый подтекст без травли и оскорбления пользователя. Без переносов. До 120 символов.`.trim()
 };
 
 const HORO_USER = ({ signName, signIcon }) =>
-    `Сгенерируй итог в формате: "${signIcon} ${signName}: <одно короткое предложение>" (≤100 символов, без переносов).`;
+    `Сгенерируй новое предсказание для ${signName}. Начни строго с "${signIcon} ${signName}:".`;
 
 const SIGNS = [
     ['Овен','aries','♈'], ['Телец','taurus','♉'], ['Близнецы','gemini','♊'],
@@ -43,6 +40,29 @@ const STYLES = [
     ['sarcastic','Саркастичный']
 ];
 
+const FALLBACKS = {
+    superShort: [
+        'Сегодня удача придёт туда, где ты уже перестал её ждать.',
+        'Не спорь с рандомом: сегодня он явно знает о тебе больше.',
+        'День хорош для риска, если потом не делать вид, что так и было задумано.'
+    ],
+    cheeky: [
+        'Сегодня судьба даст шанс — постарайся хотя бы не проебать его красиво.',
+        'Рандом на твоей стороне, но он тоже немного бухой.',
+        'К вечеру всё сложится, хотя сначала будет выглядеть как полный бардак.'
+    ],
+    sweet: [
+        'Сегодня у тебя сюжетная броня: иди туда, куда обычно страшно нажимать.',
+        'Твой день похож на редкий дроп: шанс небольшой, а радости будет много.',
+        'Вселенная сегодня играет саппорта — не убегай от её баффов.'
+    ],
+    sarcastic: [
+        'Звёзды обещают успех; удивительно, но даже без инструкции на три страницы.',
+        'Сегодня можно быть гением, главное — не проверять это слишком тщательно.',
+        'Судьба приготовила подарок. Чек внутри, как обычно, отсутствует.'
+    ]
+};
+
 export function getSignByCode(code) {
     const item = SIGNS.find(s => s[1] === code);
     return item ? { name: item[0], code: item[1], icon: item[2] } : { name: 'Овен', code: 'aries', icon: '♈' };
@@ -53,37 +73,15 @@ export function getStyleByKey(key) {
     return item ? { key: item[0], label: item[1] } : { key: 'cheeky', label: 'Ироничный' };
 }
 
-function oneSentenceClamp(s, max = 100) {
-    let t = String(s).replace(/\s+/g, ' ').replace(/\n/g, ' ').trim();
-    t = t.split(/(?<=[.!?])\s/)[0] || t;
-    if (t.length > max) {
-        const cut = t.lastIndexOf(',', max);
-        t = (cut > 40 ? t.slice(0, cut) : t.slice(0, max - 1)).trimEnd() + '…';
-    }
-    return t;
+function withSignPrefix(line, sign) {
+    const prefix = `${sign.icon} ${sign.name}:`;
+    const normalized = String(line || '').trim();
+    if (normalized.startsWith(prefix)) return normalized;
+    return `${prefix} ${normalized.replace(/^[♈♉♊♋♌♍♎♏♐♑♒♓]\s*[^:]{1,20}:\s*/, '')}`;
 }
 
-async function askLocalLLM(systemPrompt, userPrompt = '') {
-    try {
-        const res = await client.chat({
-            model: OLLAMA_MODEL,
-            messages: [
-                { role: 'system', content: String(systemPrompt) },
-                { role: 'user',   content: String(userPrompt) }
-            ],
-            stream: false,
-            options: {
-                temperature: 0.55,
-                top_p: 0.85,
-                num_predict: 60,
-                stop: ['\n']
-            }
-        });
-        return oneSentenceClamp(res?.message?.content ?? '', 100);
-    } catch (e) {
-        console.error('ollama chat error:', e);
-        return '★ Звёзды заняты — попробуй ещё раз позже.';
-    }
+function fallbacksFor(style, sign) {
+    return (FALLBACKS[style] || FALLBACKS.cheeky).map((line) => `${sign.icon} ${sign.name}: ${line}`);
 }
 
 export function kbMain(session) {
@@ -135,11 +133,19 @@ export function kbStyle(selectedKey) {
 export async function generateShortHoroText(session) {
     const handle = await getUserName(session, 'nickname');
     const { horoscope } = session;
-    const sign  = getSignByCode(horoscope?.sign || 'aries');
+    const sign = getSignByCode(horoscope?.sign || 'aries');
     const style = getStyleByKey(horoscope?.style || 'cheeky');
     const system = HORO_SYSTEM[style.key] || HORO_SYSTEM.cheeky;
-    const user   = HORO_USER({ signName: sign.name, signIcon: sign.icon });
+    const user = HORO_USER({ signName: sign.name, signIcon: sign.icon });
 
-    const line = await askLocalLLM(system, user);
+    const generated = await generateFunnyLine({
+        system,
+        user,
+        maxLength: 120,
+        temperature: style.key === 'sweet' ? 0.7 : 0.85,
+        fallbacks: fallbacksFor(style.key, sign)
+    });
+
+    const line = withSignPrefix(generated, sign);
     return `@${handle}, твой шуточный гороскоп:\n\n${line}`;
 }

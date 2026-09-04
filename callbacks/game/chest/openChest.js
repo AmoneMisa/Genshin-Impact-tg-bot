@@ -9,8 +9,7 @@ import editChest from '../../../functions/game/chest/editChest.js';
 import bot from '../../../bot.js';
 import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
 
-let prizes = [
-    {
+let prizes = [{
     value: {
         name: "experience",
         translatedName: "опыта",

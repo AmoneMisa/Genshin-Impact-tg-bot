@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#111426" />
   <title>WhitesLove Game</title>
   <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/gacha.css" />
   <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
 </head>
 <body>
@@ -44,7 +45,7 @@
 
     <section class="migration-note glass">
       <strong>Новый интерфейс уже живой.</strong>
-      <p>Игровые данные берутся из существующих сессий. Боевые действия пока остаются в текстовом fallback, чтобы не сломать экономику во время миграции.</p>
+      <p>Игровые данные берутся из существующих Mongo-сессий. Механики переносим по одной, оставляя текстовый fallback для ещё не мигрированных режимов.</p>
     </section>
 
     <div id="status" class="status">Подключаем Telegram…</div>
