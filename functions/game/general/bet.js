@@ -5,7 +5,6 @@ import getMembers from "../../getters/getMembers.js";
 import betMessage from "./betMessage.js";
 import editMessageText from "../../tgBotFunctions/editMessageText.js";
 import sendMessage from "../../tgBotFunctions/sendMessage.js";
-import deleteMessageTimeout from "../../tgBotFunctions/deleteMessageTimeout.js";
 
 function getOffset() {
     return Date.now() + 2000;
@@ -37,67 +36,53 @@ const betConfig = {
 };
 
 /**
- * Обновление ставки игрока в MongoDB
+ * Обновление ставки игрока в MongoDB.
  */
 export default async function(callback, chatId, userId, gameName, betType) {
     const chat = await Chat.findOne({ chatId });
     if (!chat) throw new Error(`Чат ${chatId} не найден`);
 
-    const member = chat.members.find(m => m.userId === userId);
+    const member = chat.members.find(m => String(m.userId) === String(userId));
     if (!member) throw new Error(`Игрок ${userId} не найден`);
 
-    const players = chat.game[gameName].players;
-    if (!players[userId]) return;
+    const players = chat.game?.[gameName]?.players;
+    if (!players?.[userId]) return;
 
-    if (!member.game[gameName]) {
-        member.game[gameName] = {};
-    }
-
-    if (!member.game[gameName].pressButtonTimer) {
-        member.game[gameName].pressButtonTimer = 0;
-    }
+    if (!member.game[gameName]) member.game[gameName] = {};
+    if (!member.game[gameName].pressButtonTimer) member.game[gameName].pressButtonTimer = 0;
 
     const [remain] = getTime(member.game[gameName].pressButtonTimer);
     if (remain > 0) return;
 
-    const members = getMembers(chatId);
-    const gold = member.game.inventory.gold;
-    const username = getUserName(member, "nickname") || member.userChatData.user.id;
-    let bet = players[userId].bet;
+    const members = await getMembers(chatId);
+    const gold = Number(member.game.inventory.gold) || 0;
+    const username = await getUserName(userId, "nickname") || member.userChatData?.user?.id || userId;
+    const bet = Number(players[userId].bet) || 0;
 
-    if (Object.values(players).length >= maxCountMap[gameName]) {
-        if (!players[userId]) {
-            return errorMessage(chatId, 3, username);
-        }
+    if (Object.values(players).length >= maxCountMap[gameName] && !players[userId]) {
+        return errorMessage(chatId, 3, username);
     }
 
-    if (chat.game[gameName].isStart) {
-        return errorMessage(chatId, 2, username);
-    }
+    if (chat.game[gameName].isStart) return errorMessage(chatId, 2, username);
 
     const config = betConfig[betType];
     if (config) {
         if (config.type === "add") {
-            if (gold < bet + config.value) {
-                return errorMessage(chatId, 0, username);
-            }
-            players[userId].bet += config.value;
+            if (gold < bet + config.value) return errorMessage(chatId, 0, username);
+            players[userId].bet = bet + config.value;
         } else if (config.type === "mult") {
-            if (bet === 0) {
-                return errorMessage(chatId, 1, username);
-            }
-            if (gold < bet * config.value) {
-                return errorMessage(chatId, 0, username);
-            }
-            players[userId].bet *= config.value;
+            if (bet === 0) return errorMessage(chatId, 1, username);
+            if (gold < bet * config.value) return errorMessage(chatId, 0, username);
+            players[userId].bet = bet * config.value;
         } else if (config.type === "allin") {
             players[userId].bet = gold;
         }
     }
 
-    deleteMessageTimeout(chatId, null, 5000);
+    member.game[gameName].pressButtonTimer = getOffset();
+    await chat.save();
 
-    editMessageText(`${betMessage(players, members)}`, {
+    await editMessageText(await betMessage(players, members), {
         ...(callback.message.message_thread_id
             ? { message_thread_id: callback.message.message_thread_id }
             : {}),
@@ -127,7 +112,4 @@ export default async function(callback, chatId, userId, gameName, betType) {
             ],
         },
     });
-
-    member.game[gameName].pressButtonTimer = getOffset();
-    await chat.save();
 }
