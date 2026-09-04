@@ -1,5 +1,7 @@
 from pathlib import Path
 
+# Follow-up normalizer for the temporary patch runner. The main patch replaces
+# a span whose retained boundary duplicates the helper function prefix.
 path = Path('callbacks/game/player/showInventory.js')
 text = path.read_text()
 
