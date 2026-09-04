@@ -5,7 +5,7 @@ import userGetStats from '../../../functions/game/player/userGetStats.js';
 
 export default [[/^player\.([\-0-9]+)\.whoami$/, async function (session, callback, [, userId]) {
     const foundedSession = await getSession(userId, callback.from.id);
-    let newMessage = userGetStats(foundedSession);
+    let newMessage = await userGetStats(foundedSession);
 
     if (callback?.message?.text?.trim() === newMessage.trim() || callback?.message?.caption?.trim() === newMessage.trim()) {
         return;

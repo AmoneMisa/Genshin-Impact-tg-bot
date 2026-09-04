@@ -1,56 +1,65 @@
-import getDefenderDataString from './getDefenderDataString.js';
-import { arenaRating } from '../../../data.js';
-import getPlayerRating from './getPlayerRating.js';
-import getArenaBots from './getArenaBots.js';
-import generateArenaBots from '../../shedullers/generateArenaBots.js';
-import getSession from '../../getters/getSession.js';
-import lodash from 'lodash';
+import getDefenderDataString from "./getDefenderDataString.js";
+import ArenaRating from "../../../db/models/ArenaRating.js";
+import getPlayerRating from "./getPlayerRating.js";
+import getArenaBots from "./getArenaBots.js";
+import generateArenaBots from "../../shedullers/generateArenaBots.js";
+import getSession from "../../getters/getSession.js";
+import lodash from "lodash";
 
 const maxDefenders = 6;
-const maxRatingDifference = 0.15; // 10%
+const maxRatingDifference = 0.15; // 15%
 
-export default async function (arenaType, chatId, userId) {
+export default async function(arenaType, chatId, userId) {
     let message = "";
-    let playersList = arenaType === "common" ? arenaRating[arenaType][chatId] : arenaRating[arenaType];
-    let [attackerRating] = getPlayerRating(userId, arenaType, chatId);
-    let countDefenders = 0;
-    let arenaBots = getArenaBots(attackerRating);
 
-    if (!arenaBots.length) {
-        generateArenaBots();
-        arenaBots = getArenaBots(attackerRating);
-    }
+    // 1. Получаем рейтинг атакующего
+    const [attackerRating] = await getPlayerRating(userId, arenaType, chatId);
 
-    if (playersList) {
-        playersList = Array.from(Object.keys(playersList)).concat(arenaBots);
+    // 2. Получаем список игроков из базы
+    let ratings;
+    if (arenaType === "common") {
+        ratings = await ArenaRating.find({ chatId, mode: "common" });
     } else {
-        playersList = arenaBots;
+        ratings = await ArenaRating.find({ mode: "expansion" });
     }
 
+    // 3. Получаем ботов
+    let arenaBots = await getArenaBots(attackerRating);
+    if (!arenaBots.length) {
+        await generateArenaBots();
+        arenaBots = await getArenaBots(attackerRating);
+    }
+
+    // 4. Формируем список игроков + боты
+    let playersList = ratings.map(r => r.userId).concat(arenaBots);
+
+    // 5. Перемешиваем
     playersList = lodash.shuffle(playersList);
 
+    // 6. Выбираем защитников
     let showedPlayers = [];
+    let countDefenders = 0;
+
     for (let player of playersList) {
-        if (countDefenders >= maxDefenders) {
-            break;
-        }
+        if (countDefenders >= maxDefenders) break;
 
         if (lodash.isObject(player)) {
-            message += `${getDefenderDataString(player, true)}\nРейтинг: ${player.rating}\n\n`;
+            // бот
+            message += `${await getDefenderDataString(player, true)}\nРейтинг: ${player.rating}\n\n`;
         } else {
-            if (parseInt(player) === parseInt(userId)) {
-                continue;
-            }
+            // живой игрок
+            if (parseInt(player) === parseInt(userId)) continue;
 
-            let [playerRating] = getPlayerRating(player, arenaType, chatId);
-            let percentileDiffRating = attackerRating / playerRating;
+            const [playerRating] = await getPlayerRating(player, arenaType, chatId);
+            const percentileDiffRating = attackerRating / playerRating;
 
-            if (percentileDiffRating > maxRatingDifference) {
-                continue;
-            }
+            if (percentileDiffRating > maxRatingDifference) continue;
 
-            let session = await getSession(chatId, player);
-            message += `${getDefenderDataString(session)}\nРейтинг: ${playerRating}\n\n`;
+            const session = await getSession(chatId, player);
+            message += `${await getDefenderDataString(session)}\nРейтинг: ${playerRating}\n\n`;
+            showedPlayers.push(session);
+            countDefenders++;
+            continue;
         }
 
         showedPlayers.push(player);

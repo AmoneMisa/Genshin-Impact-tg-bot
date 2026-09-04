@@ -5,11 +5,11 @@ import generateArenaBots from './generateArenaBots.js';
 import debugMessage from "../tgBotFunctions/debugMessage.js";
 
 export default function () {
-    cron.schedule('0 * * * *', () => {
+    cron.schedule('0 * * * *', async () => {
         try {
-            checkAccumulateTimer();
-            restoreArenaChances();
-            generateArenaBots();
+            await checkAccumulateTimer();
+            await restoreArenaChances();
+            await generateArenaBots();
         } catch (e) {
             console.error(e);
             debugMessage(`evenHour schedule error: ${e}`);

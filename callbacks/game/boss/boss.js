@@ -24,7 +24,7 @@ export default [["boss", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
     let keyboard = [];
-    let boss = getAliveBoss(chatId);
+    let boss = await getAliveBoss(chatId);
     let message = "";
 
     if (!boss) {
@@ -64,7 +64,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.summon", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (aliveBoss) {
         await sendMessage(chatId, summonBossMessage(chatId, aliveBoss, true), {
@@ -80,8 +80,9 @@ export default [["boss", async function (session, callback) {
 
     let boss = await summonBoss(chatId);
 
-    let chatSession = getChatSession(chatId);
+    let chatSession = await getChatSession(chatId);
     chatSession.bossMenuMessageId = callback.message.message_id;
+    await chatSession.save();
 
     let keyboard = [[{
         text: "Нанести удар",
@@ -126,7 +127,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.dealDamage", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -179,7 +180,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.status", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -205,7 +206,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.lootList", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -257,7 +258,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.damageList", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -269,9 +270,10 @@ export default [["boss", async function (session, callback) {
     let players = aliveBoss.listOfDamage;
     players.sort((a, b) => b.damage - a.damage);
     let message = `Текущее хп босса: ${aliveBoss.currentHp}\n\nСписок урона по боссу:\n`;
-    let members = getMembers(chatId);
+    let members = await getMembers(chatId);
     for (let player of players) {
-        message += `${getUserName(members[player.id], "nickname")}: ${player.damage}\n`;
+        let member = members.find(m => m.userId === player.id);
+        message += `${await getUserName(member, "nickname")}: ${player.damage}\n`;
     }
 
     await editMessageCaption(message, {

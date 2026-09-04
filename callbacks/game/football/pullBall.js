@@ -7,6 +7,7 @@ import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 let maxPulls = 3;
 
@@ -21,37 +22,43 @@ export default [[/^football_pull$/, async function (session, callback) {
 
     let chatId = callback.message.chat.id;
 
-    await bot.sendDice(chatId, {emoji: '⚽', ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})}).then(msg => {
-        deleteMessageTimeout(chatId, msg.message_id, 10 * 1000);
-        session.game.football.ball += msg.dice.value;
-    });
+    const diceMsg = await bot.sendDice(chatId, {emoji: '⚽', ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})});
+    deleteMessageTimeout(chatId, diceMsg.message_id, 10 * 1000);
 
-    session.game.football.counter++;
+    const { chat, member } = await loadPlayer(chatId, session.userId);
+    if (!member.game.hasOwnProperty('football')) {
+        return;
+    }
+    member.game.football.ball += diceMsg.dice.value;
+    member.game.football.counter++;
+    await chat.save();
 
-    if (session.game.football.counter === maxPulls) {
-        let result = isWinPoints(session.game.football.ball, 12, 15);
+    let football = member.game.football;
+
+    if (football.counter === maxPulls) {
+        let result = isWinPoints(football.ball, 12, 15);
         if (!result) {
             await deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${session.game.football.ball}. Ставка: ${session.game.football.bet}`, {
+            await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты проиграл. Твоя сумма очков: ${football.ball}. Ставка: ${football.bet}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 7000);
-            return endGame(session);
+            return endGame(chatId, session.userId);
         }
 
         let modifier;
-        
-        if (session.game.football.ball === 15) {
+
+        if (football.ball === 15) {
             modifier = 1.7;
         } else {
             modifier = 1.25;
         }
-        
-        sendPrize(session, modifier, 'football');
+
+        await sendPrize(chatId, session.userId, 'football', modifier);
         await deleteMessage(chatId, callback.message.message_id);
-        await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.football.bet}\nВыигрыш: ${Math.round(session.game.football.bet * modifier)}\nСумма очков: ${session.game.football.ball}`, {
+        await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${football.bet}\nВыигрыш: ${Math.round(football.bet * modifier)}\nСумма очков: ${football.ball}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 7000);
 
-        return endGame(session);
+        return endGame(chatId, session.userId);
     }
 }]];

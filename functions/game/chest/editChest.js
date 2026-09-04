@@ -1,28 +1,37 @@
-import bot from '../../../bot.js';
-import getEmoji from '../../../functions/getters/getEmoji.js';
+import bot from "../../../bot.js";
+import getEmoji from "../../../functions/getters/getEmoji.js";
 
-export default async function (prizeType, button, session, callback) {
+export default async function(prizeType, button, session, callback) {
     if (session.chestTries < 1) {
         return;
     }
 
     session.chestCounter++;
 
-    let foundButtonForChange;
-    for (let buttonsArray of session.chestButtons) {
-        for (let _button of buttonsArray) {
-            if (_button.callback_data === button.callback_data) {
-                foundButtonForChange = _button;
-                break;
-            }
-        }
+    // ищем кнопку через flatMap + find
+    const foundButtonForChange = session.chestButtons
+        .flatMap(arr => arr)
+        .find(_button => _button.callback_data === button.callback_data);
+
+    if (!foundButtonForChange) {
+        throw new Error(`Кнопка с callback_data=${button.callback_data} не найдена`);
     }
 
     foundButtonForChange.text = getEmoji(prizeType);
-    session.chosenChests.push(button.callback_data);
 
-    await bot.editMessageReplyMarkup({inline_keyboard: session.chestButtons}, {
-        chat_id: callback.message.chat.id,
-        message_id: callback.message.message_id
-    });
-};
+    if (!session.chosenChests.includes(button.callback_data)) {
+        session.chosenChests.push(button.callback_data);
+    }
+
+    try {
+        await bot.editMessageReplyMarkup(
+            { inline_keyboard: session.chestButtons },
+            {
+                chat_id: callback.message.chat.id,
+                message_id: callback.message.message_id,
+            }
+        );
+    } catch (err) {
+        console.error("Ошибка при обновлении клавиатуры сундука:", err);
+    }
+}

@@ -6,7 +6,7 @@ import getChatSessionBossSettings from '../../../functions/getters/getChatSessio
 
 export default [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
     let chatId = msg.chat.id;
-    let chatSession = getChatSession(chatId);
+    let chatSession = await getChatSession(chatId);
     await deleteMessage(chatId, msg.message_id);
     chatSession.bossSettingsMessageId = msg.from.id;
 
@@ -18,7 +18,7 @@ export default [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
         callback_data: `bossSettings.showHealMessage`
     }]];
 
-    let settings = getChatSessionBossSettings(msg.chat.id);
+    let settings = await getChatSessionBossSettings(msg.chat.id);
 
     for (const buttonLine of buttons) {
         for (const button of buttonLine) {
@@ -29,6 +29,7 @@ export default [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
     }
 
     chatSession.bossSettingsButtons = buttons;
+    chatSession.markModified("bossSettingsButtons");
     await sendMessage(msg.chat.id, `Глобальные настройки всех боссов в этом чате`, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
         reply_markup: {
@@ -37,5 +38,6 @@ export default [[/(?:^|\s)\/boss_settings\b/, async (msg) => {
                 callback_data: "close"
             }]]
         }
-    })
+    });
+    await chatSession.save();
 }]];

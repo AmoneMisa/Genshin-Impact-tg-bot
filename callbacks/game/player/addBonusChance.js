@@ -6,11 +6,12 @@ import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/^add_bonus_chance\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_bonus_chance\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
-    sendMessage(callback.message.chat.id, `Сколько попыток бонуса добавить для ${getUserName(targetSession, "name")}?`, {
+    sendMessage(callback.message.chat.id, `Сколько попыток бонуса добавить для ${await getUserName(targetSession, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
@@ -18,14 +19,16 @@ export default [[/^add_bonus_chance\.([\-0-9]+)\.([0-9]+)$/, async function (ses
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let chanceToSteal = parseInt(replyMsg.text);
-            targetSession.game.bonusChances += chanceToSteal;
+            const { chat, member } = await loadPlayer(chatId, userId);
+            member.game.bonusChances += chanceToSteal;
+            await chat.save();
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
-            sendMessage(callback.message.chat.id, `Ты добавил ${chanceToSteal} попыток бонуса для ${getUserName(targetSession, "name")}.`, {
+            sendMessage(callback.message.chat.id, `Ты добавил ${chanceToSteal} попыток бонуса для ${await getUserName(targetSession, "name")}.`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });

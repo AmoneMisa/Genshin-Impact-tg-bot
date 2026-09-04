@@ -9,8 +9,8 @@ const messagesMap = {
 }
 
 export default function (chatSession, timer, chatId, gameName, threadId) {
-    setEndGameTimer(chatSession, timer, chatId, gameName, () => {
-        endGame(chatSession, chatId, null, false, gameName);
+    setEndGameTimer(chatSession, timer, chatId, gameName, async () => {
+        await endGame(chatId, null, false, gameName);
         sendMessageWithDelete(chatId, `Игра в ${messagesMap[gameName]} была отменена из-за отсутствия активности участников. Начните новую игру.`, {
             ...(threadId ? {message_thread_id: threadId} : {})
         }, 7000);

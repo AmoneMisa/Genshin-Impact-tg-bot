@@ -1,38 +1,24 @@
-import sendMessage from '../../functions/tgBotFunctions/sendMessage.js';
+import Chat from "../../db/models/Chat.js";
+import sendMessage from "../../functions/tgBotFunctions/sendMessage.js";
+import getMembers from "../../functions/getters/getMembers.js";
 import buttonsDictionary from '../../dictionaries/buttons.js';
-import getMembers from '../../functions/getters/getMembers.js';
-import getChatSession from '../../functions/getters/getChatSession.js';
-import buildKeyboard from '../../functions/keyboard/buildKeyboard.js';
-import controlButtons from '../../functions/keyboard/controlButtons.js';
-import deleteMessage from '../../functions/tgBotFunctions/deleteMessage.js';
+import controlButtons from "../../functions/keyboard/controlButtons.js";
+import buildKeyboard from "../../functions/keyboard/buildKeyboard.js";
 
-function isGameStarted(session, gameName) {
-    return session.game.hasOwnProperty(gameName) && session.game.dice.hasOwnProperty('isStart') && session.game[gameName].isStart;
-}
+export default [[/(?:^|\s)\/send_gold\b/, async (msg) => {
+    const chatSession = await Chat.findOne({ chatId: msg.chat.id });
 
-export default [[/(?:^|\s)\/send_gold\b/, async (msg, session) => {
-    let chatSession = getChatSession(msg.chat.id);
-
-    if (chatSession.game.points.players && chatSession.game.points.players[session.userChatData.user.id] ||
-        isGameStarted(session, 'dice') ||
-        isGameStarted(session, 'bowling') ||
-        isGameStarted(session, 'darts') ||
-        isGameStarted(session, 'basketball') ||
-        isGameStarted(session, 'football') ||
-        (session.game.hasOwnProperty("slots") && session.game.slots.hasOwnProperty("state") && session.game.slots.state === 'bets')) {
-        await sendMessage(msg.chat.id, "Ты не можешь переводить золото, играя в игру.", {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-        });
-        return;
+    if (!chatSession) {
+        return sendMessage(msg.chat.id, "Чат не найден в базе.");
     }
 
-    await deleteMessage(msg.chat.id, msg.message_id);
-    let usersList = getMembers(msg.chat.id);
-
-    usersList = Object.values(usersList).filter(item => !item.userChatData.user.is_bot && (item.userChatData.user.id !== msg.from.id) && !item.isHided);
+    let usersList = await getMembers(msg.chat.id).filter(member =>
+        member.userId !== msg.from.id &&
+        !member.isHided
+    );
 
     if (!usersList.length) {
-        await sendMessage(msg.from.id, `Нет никого, кому ты мог бы перевести золото.`, {
+        await sendMessage(msg.from.id, "Нет никого, кому ты мог бы перевести золото.", {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: [[{
@@ -41,17 +27,16 @@ export default [[/(?:^|\s)\/send_gold\b/, async (msg, session) => {
                 }]]
             }
         });
-
         return;
     }
 
-    let buttons = buildKeyboard(msg.chat.id, `sendGoldRecipient.${msg.chat.id}`, false, msg.from.id);
+    const buttons = buildKeyboard(msg.chat.id, `sendGoldRecipient.${msg.chat.id}`, false, msg.from.id);
 
-    await sendMessage(msg.from.id, `Выбери, кому хочешь перевести золото.`, {
+    await sendMessage(msg.from.id, "Выбери, кому хочешь перевести золото.", {
         disable_notification: true,
         reply_markup: {
             selective: true,
             inline_keyboard: controlButtons(`sendGoldRecipient.${msg.chat.id}`, buttons, 1)
         }
-    })
+    });
 }]];

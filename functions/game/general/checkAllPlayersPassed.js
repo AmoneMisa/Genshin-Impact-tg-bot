@@ -1,5 +1,8 @@
-export default function (chatSession, gameName) {
-    let players = Object.entries(chatSession.game[gameName].players);
-    let passedPlayers = players.filter(([playerId, player]) => playerId === "bot" || player.isPass);
-    return players.length === passedPlayers.length;
-};
+export default function areAllPlayersPassed(chatSession, gameName) {
+    const game = chatSession?.game?.[gameName];
+    if (!game?.players) return false;
+
+    return Object.entries(game.players).every(
+        ([playerId, player]) => playerId === "bot" || player.isPass
+    );
+}

@@ -8,8 +8,8 @@ import getPoints from '../../../functions/game/point21/getPoints.js';
 import endGame from '../../../functions/game/general/endGame.js';
 import endGameTimer from '../../../functions/game/general/endGameTimer.js';
 
-export default [["points_card", function (session, callback) {
-    let chatSession = getChatSession(callback.message.chat.id);
+export default [["points_card", async function (session, callback) {
+    let chatSession = await getChatSession(callback.message.chat.id);
     let userId = session.userChatData.user.id;
 
     if (!validateGameSession(chatSession.game.points, userId, "points")) {
@@ -29,9 +29,12 @@ export default [["points_card", function (session, callback) {
     }
 
     if (checkAllPlayersPassed(chatSession, "points")) {
-        endGame(chatSession, callback.message.chat.id, callback.message.message_id, true, "points");
+        await chatSession.save();
+        await endGame(callback.message.chat.id, callback.message.message_id, true, "points");
         return;
     }
+
+    await chatSession.save();
 
     editMessageText(pointMessage(chatSession, userId), {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),

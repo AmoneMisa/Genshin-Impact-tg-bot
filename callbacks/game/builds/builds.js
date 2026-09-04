@@ -61,14 +61,14 @@ export default [[/^player\.([\-0-9]+)\.builds$/, async function (session, callba
     if (file) {
         sendPhoto(userId, file, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
-            caption: `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`,
+            caption: `@${await getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`,
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: buttons
             }
         }).then(message => id = message.message_id);
     } else {
-        sendMessage(userId, `@${getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`, {
+        sendMessage(userId, `@${await getUserName(session, "nickname")}, выбери здание, с которым хочешь взаимодействовать`, {
             disable_notification: true,
             reply_markup: {
                 inline_keyboard: buttons

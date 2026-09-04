@@ -6,11 +6,12 @@ import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/^add_crystals\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_crystals\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
-    sendMessage(callback.message.chat.id, `Сколько кристаллов добавить для ${getUserName(targetSession, "name")}?`, {
+    sendMessage(callback.message.chat.id, `Сколько кристаллов добавить для ${await getUserName(targetSession, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
@@ -18,14 +19,16 @@ export default [[/^add_crystals\.([\-0-9]+)\.([0-9]+)$/, async function (session
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let crystals = parseInt(replyMsg.text);
-            targetSession.game.inventory.crystals += crystals;
+            const { chat, member } = await loadPlayer(chatId, userId);
+            member.game.inventory.crystals += crystals;
+            await chat.save();
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
-            return sendMessage(callback.message.chat.id, `Ты добавил ${crystals} кристаллов для ${getUserName(targetSession, "name")}.`, {
+            return sendMessage(callback.message.chat.id, `Ты добавил ${crystals} кристаллов для ${await getUserName(targetSession, "name")}.`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });

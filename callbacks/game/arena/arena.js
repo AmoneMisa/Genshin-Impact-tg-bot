@@ -3,6 +3,7 @@ import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 import editMessageMedia from '../../../functions/tgBotFunctions/editMessageMedia.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import bot from '../../../bot.js';
 import controlButtons from '../../../functions/keyboard/controlButtons.js';
 import buildArenaKeyboard from '../../../functions/game/arena/buildArenaKeyboard.js';
@@ -14,7 +15,7 @@ import setPlayerRating from '../../../functions/game/arena/setPlayerRating.js';
 import getDefendersList from '../../../functions/game/arena/getDefendersList.js';
 import updateRank from '../../../functions/game/arena/updateRank.js';
 import getEmoji from '../../../functions/getters/getEmoji.js';
-import { arenaTempBots } from '../../../data.js';
+import ArenaTempBot from '../../../db/models/ArenaTempBot.js';
 import getFile from '../../../functions/getters/getFile.js';
 import getTime from '../../../functions/getters/getTime.js';
 
@@ -22,7 +23,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
     const isBack = callback.data.includes("back");
     let attacker = await getSession(chatId, callback.from.id);
     let [message, showedPlayers] = await getDefendersList("common", chatId, callback.from.id);
-    let [rating] = getPlayerRating(callback.from.id, "expansion", chatId);
+    let [rating] = await getPlayerRating(callback.from.id, "common", chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.common.${chatId}`, rating, "common", chatId, showedPlayers);
     let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "common", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaChances}\n\n(Обычная арена) Список соперников:\n\n${message}`;
 
@@ -67,7 +68,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
     const isBack = callback.data.includes("back");
     let attacker = await getSession(chatId, callback.from.id);
     let [message, showedPlayers] = await getDefendersList("expansion", chatId, callback.from.id);
-    let [rating] = getPlayerRating(callback.from.id, "expansion", chatId);
+    let [rating] = await getPlayerRating(callback.from.id, "expansion", chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.expansion.${chatId}`, rating, "expansion", chatId, showedPlayers);
     let fullMessage = `Мой рейтинг: ${rating}\nРанг: ${updateRank(callback.from.id, "expansion", chatId)}\nКоличество попыток для атаки: ${attacker.game.arenaExpansionChances}\n\n(Мировая арена) Список соперников:\n\n${message}`;
 
@@ -110,7 +111,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
     }
 }], [/^arena\.(\w+)\.([\-0-9]+)_([^.]+)$/, async function (session, callback, [, arenaType, chatId, page]) {
     page = parseInt(page);
-    let rating = getPlayerRating(callback.from.id, arenaType, chatId);
+    let [rating] = await getPlayerRating(callback.from.id, arenaType, chatId);
     let buttons = buildArenaKeyboard(callback.from.id, `arena.${arenaType}.${chatId}`, rating, arenaType, chatId);
 
     await bot.editMessageReplyMarkup({
@@ -152,7 +153,7 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }
 
-    await editMessageCaption(`Рейтинг: ${getPlayerRating(defenderId, arenaType, chatId)[0]}\n\n${getDefenderDataString(defender)}`, {
+    await editMessageCaption(`Рейтинг: ${(await getPlayerRating(defenderId, arenaType, chatId))[0]}\n\n${getDefenderDataString(defender)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -198,9 +199,9 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }
 
-    let arenaBot = arenaTempBots.find(arenaBot => arenaBot.name === parseInt(botNumber));
+    let arenaBot = await ArenaTempBot.findOne({ name: parseInt(botNumber) });
 
-    await editMessageCaption(`Рейтинг: ${getPlayerRating(null, arenaType, null, arenaBot)}\n\n${getDefenderDataString(arenaBot, true)}`, {
+    await editMessageCaption(`Рейтинг: ${await getPlayerRating(null, arenaType, null, arenaBot)}\n\n${await getDefenderDataString(arenaBot, true)}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,
@@ -219,27 +220,32 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
     }, callback.message.photo);
 }], [/^arena\.(\w+)\.([\-0-9]+)\.([0-9]+)\.0$/, async function (session, callback, [, arenaType, chatId, defenderId]) {
     let defender = await getSession(chatId, defenderId);
-    let attacker = await getSession(chatId, callback.from.id);
+    let { chat, member: attacker } = await loadPlayer(chatId, callback.from.id);
+    if (!attacker) {
+        return;
+    }
     let [battleResult, remainDefenderHpPercent] = getBattleResult(attacker, defender);
     let points = calculatePoints(attacker, defender, arenaType, chatId);
     let message = "";
 
     if (arenaType === "common") {
-        attacker.game.arenaChances = Math.max(1, attacker.game.arenaChances - 1);
+        attacker.game.arenaChances = Math.max(0, attacker.game.arenaChances - 1);
     }
 
     if (arenaType === "expansion") {
-        attacker.game.arenaExpansionChances = Math.max(1, attacker.game.arenaChances - 1);
+        attacker.game.arenaExpansionChances = Math.max(0, attacker.game.arenaExpansionChances - 1);
     }
+
+    await chat.save();
 
     if (battleResult === 0) {
         message = `Победа!\nТы получил: ${points} очков рейтинга!`;
-        setPlayerRating(callback.from.id, arenaType, chatId, points);
-        setPlayerRating(defenderId, arenaType, chatId, -points);
+        await setPlayerRating(callback.from.id, arenaType, chatId, points);
+        await setPlayerRating(defenderId, arenaType, chatId, -points);
     } else if (battleResult === 1) {
         message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
-        setPlayerRating(callback.from.id, arenaType, chatId, -points);
-        setPlayerRating(defenderId, arenaType, chatId, points);
+        await setPlayerRating(callback.from.id, arenaType, chatId, -points);
+        await setPlayerRating(defenderId, arenaType, chatId, points);
     } else if (battleResult === 2) {
         message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
     }
@@ -259,26 +265,31 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }, callback.message.photo);
 }], [/^arena\.(\w+)\.([\-0-9]+)\.bot_([0-9]+)\.0$/, async function (session, callback, [, arenaType, chatId, botNumber]) {
-    let defender = arenaTempBots.find(arenaBot => arenaBot.name === parseInt(botNumber));
-    let attacker = await getSession(chatId, callback.from.id);
+    let defender = await ArenaTempBot.findOne({ name: parseInt(botNumber) });
+    let { chat, member: attacker } = await loadPlayer(chatId, callback.from.id);
+    if (!attacker) {
+        return;
+    }
     let [battleResult, remainDefenderHpPercent] = getBattleResult(attacker, defender, true);
     let points = calculatePoints(attacker, defender, arenaType, chatId, true);
     let message = "";
 
     if (arenaType === "common") {
-        attacker.game.arenaChances = Math.max(1, attacker.game.arenaChances - 1);
+        attacker.game.arenaChances = Math.max(0, attacker.game.arenaChances - 1);
     }
 
     if (arenaType === "expansion") {
-        attacker.game.arenaExpansionChances = Math.max(1, attacker.game.arenaChances - 1);
+        attacker.game.arenaExpansionChances = Math.max(0, attacker.game.arenaExpansionChances - 1);
     }
+
+    await chat.save();
 
     if (battleResult === 0) {
         message = `Победа!\nТы получил: ${points} очков рейтинга!`;
-        setPlayerRating(callback.from.id, arenaType, chatId, points);
+        await setPlayerRating(callback.from.id, arenaType, chatId, points);
     } else if (battleResult === 1) {
         message = `Проигрыш!\nТы потерял: ${points} очков рейтинга.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
-        setPlayerRating(callback.from.id, arenaType, chatId, -points);
+        await setPlayerRating(callback.from.id, arenaType, chatId, -points);
     } else if (battleResult === 2) {
         message = `Ничья!\nРейтинг остаётся таким же.\nОсталось ${getEmoji("hp")} хп у защитника: ${remainDefenderHpPercent.toFixed(2)}%`;
     }
@@ -389,11 +400,17 @@ export default [[/^arena\.common\.([\-0-9]+)(?:\.back)?$/, async function (sessi
         }
     }, callback.message.photo);
 }], [/^arena\.shop\.([\-0-9]+)\.pvpSignUpgrade\.0$/, async function (session, callback, [,chatId]) {
-    let pvpSign = session.game.inventory.arena.items[1];
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
+    if (!member) {
+        return;
+    }
+    let pvpSign = member.game.inventory.arena.items[1];
     pvpSign.lvl += 1;
     pvpSign.effects = pvpSign.upgrades[pvpSign.lvl].effects;
+    member.markModified("game");
+    await chat.save();
 
-    await editMessageCaption(`Вы улучшили медаль до ур. ${session.game.inventory.arena.items[1].lvl}!\n\nУвеличение исходящего урона по противнику: ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%`, {
+    await editMessageCaption(`Вы улучшили медаль до ур. ${member.game.inventory.arena.items[1].lvl}!\n\nУвеличение исходящего урона по противнику: ${pvpSign.effects.find(stat => stat.name === "increasePvpDamage").value * 100}%\nУменьшение входящего урона по себе: ${(1 - pvpSign.effects.find(stat => stat.name === "decreaseIncomingPvpDamage").value) * 100}%`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true,

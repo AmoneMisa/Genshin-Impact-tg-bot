@@ -1,41 +1,50 @@
-import getTime from '../../getters/getTime.js';
-import getRandom from '../../getters/getRandom.js';
-import getOffset from '../../getters/getOffset.js';
-import getStringRemainTime from '../../getters/getStringRemainTime.js';
-import getUserName from '../../getters/getUserName.js';
+import getTime from "../../getters/getTime.js";
+import getRandom from "../../getters/getRandom.js";
+import getOffset from "../../getters/getOffset.js";
+import getStringRemainTime from "../../getters/getStringRemainTime.js";
+import getUserName from "../../getters/getUserName.js";
+import getChatSession from "../../getters/getChatSession.js";
+import getSession from "../../getters/getSession.js";
 
-export default function (session) {
-    let [remain] = getTime(session.timerSwordCallback);
+/**
+ * Логика команды "меч" — можно вызывать раз в сутки
+ * @param {string} chatId - идентификатор чата
+ * @param {string} userId - идентификатор игрока
+ * @returns {string} сообщение для игрока
+ */
+export default async function(chatId, userId) {
+    const chat = await getChatSession(chatId);
+    const member = await getSession(chatId, userId);
+    const [remain] = getTime(member.timerSwordCallback);
 
     if (remain > 0) {
-        return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${getStringRemainTime(remain)}`;
+        return `@${await getUserName(userId, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${getStringRemainTime(remain)}`;
     }
 
-    session.timerSwordCallback = getOffset();
+    member.timerSwordCallback = getOffset();
 
-    if (!session.sword) {
-        session.sword = 0;
+    if (!member.sword) {
+        member.sword = 0;
     }
 
-    let result;
     let int;
-
-    if (session.swordImmune) {
+    if (member.swordImmune) {
         int = getRandom(0, 15);
-        session.swordImmune = false;
-    } else if (session.immuneToUpSword) {
+        member.swordImmune = false;
+    } else if (member.immuneToUpSword) {
         int = getRandom(-10, -1);
-        session.immuneToUpSword = false;
+        member.immuneToUpSword = false;
     } else {
         int = getRandom(-10, 15);
     }
 
-    session.sword += int;
-    if (int > 0) {
-        result = `@${getUserName(session, "nickname")}, твой меч увеличился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
-    } else {
-        result = `@${getUserName(session, "nickname")}, твой меч укоротился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
-    }
+    member.sword += int;
 
-    return result;
-};
+    await chat.save();
+
+    if (int > 0) {
+        return `@${await getUserName(member, "nickname")}, твой меч увеличился на ${int} мм. Сейчас он равен: ${member.sword} мм`;
+    } else {
+        return `@${await getUserName(member, "nickname")}, твой меч укоротился на ${int} мм. Сейчас он равен: ${member.sword} мм`;
+    }
+}

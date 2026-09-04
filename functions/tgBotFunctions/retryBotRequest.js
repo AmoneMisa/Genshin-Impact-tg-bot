@@ -21,7 +21,7 @@ function getRetryAfter(e) {
     return 1;
 }
 
-export default async function retryBotRequest(request) {
+export default async function(request) {
     let lastE = null;
 
     for (let i = 0; i < 5; i++) {

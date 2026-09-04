@@ -1,35 +1,54 @@
-import { sessions } from '../../data.js';
-import isPlayerInFight from '../game/player/isPlayerInFight.js';
-import getMaxHp from '../game/player/getters/getMaxHp.js';
-import getCurrentHp from '../game/player/getters/getCurrentHp.js';
+import Chat from "../../db/models/Chat.js";
+import isPlayerInFight from "../game/player/isPlayerInFight.js";
+import getMaxHp from "../game/player/getters/getMaxHp.js";
+import getCurrentHp from "../game/player/getters/getCurrentHp.js";
 
-export default function () {
-    for (let chatSession of Object.values(sessions)) {
-        for (let session of Object.values(chatSession.members)) {
-            if (session.userChatData.user.is_bot) {
+/**
+ * Регенерация HP у игроков
+ */
+export default async function regenHp() {
+    const chats = await Chat.find({});
+
+    for (const chat of chats) {
+        let updated = false;
+
+        for (const member of chat.members) {
+            if (member.userChatData?.user?.is_bot) continue;
+
+            const gameClass = member.game?.gameClass;
+            if (!gameClass?.stats) continue;
+
+            const currentHp = getCurrentHp(member);
+            const maxHp = getMaxHp(member);
+
+            // Если HP уже на максимуме
+            if (currentHp === maxHp) continue;
+
+            // Если HP выше максимума — обрезаем
+            if (currentHp > maxHp) {
+                gameClass.stats.hp = maxHp;
+                updated = true;
                 continue;
             }
 
-            if (getCurrentHp(session) === getMaxHp(session)) {
-                continue;
-            }
+            // Если игрок мёртв — не регеним
+            if (currentHp <= 0) continue;
 
-            if (getCurrentHp(session) > getMaxHp(session)) {
-                session.game.gameClass.stats.hp = getMaxHp(session);
-                continue;
-            }
+            // Скорость регена
+            let hpRegenSpeed = gameClass.stats.hpRestoreSpeed || 0;
 
-            if (getCurrentHp(session) <= 0) {
-                continue;
-            }
-
-            let hpRegenSpeed = session.game.gameClass.stats.hpRestoreSpeed;
-
-            if (isPlayerInFight(session)) {
+            // В бою реген медленнее
+            if (isPlayerInFight(member)) {
                 hpRegenSpeed *= 0.35;
             }
 
-            session.game.gameClass.stats.hp = Math.min(getMaxHp(session), getCurrentHp(session) + hpRegenSpeed);
+            // Применяем реген
+            gameClass.stats.hp = Math.min(maxHp, currentHp + hpRegenSpeed);
+            updated = true;
+        }
+
+        if (updated) {
+            await chat.save();
         }
     }
 }

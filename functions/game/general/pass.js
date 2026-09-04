@@ -1,33 +1,55 @@
-import getChatSession from '../../getters/getChatSession.js';
-import validateGameSession from './validateGameSession.js';
-import endGameTimer from './endGameTimer.js';
-import checkAllPlayersPassed from './checkAllPlayersPassed.js';
-import endGame from './endGame.js';
-import sendMessage from '../../tgBotFunctions/sendMessage.js';
-import getUserName from '../../getters/getUserName.js';
-import deleteMessageTimeout from '../../tgBotFunctions/deleteMessageTimeout.js';
+import Chat from "../../../db/models/Chat.js";
+import validateGameSession from "./validateGameSession.js";
+import endGameTimer from "./endGameTimer.js";
+import checkAllPlayersPassed from "./checkAllPlayersPassed.js";
+import endGame from "./endGame.js";
+import sendMessage from "../../tgBotFunctions/sendMessage.js";
+import getUserName from "../../getters/getUserName.js";
+import deleteMessageTimeout from "../../tgBotFunctions/deleteMessageTimeout.js";
 
-export default function (session, callback, gameName) {
-    let chatSession = getChatSession(callback.message.chat.id);
-    let userId = callback.from.id;
-    if (!validateGameSession(chatSession.game.points, userId, gameName)) {
+/**
+ * Игрок пасует (отказывается от дальнейших действий в игре)
+ */
+export default async function(callback, gameName) {
+    const chatId = callback.message.chat.id;
+    const userId = callback.from.id;
+
+    const chat = await Chat.findOne({ chatId });
+    if (!chat || !chat.game[gameName]) return;
+
+    // Проверка валидности игровой сессии
+    if (!validateGameSession(chat.game[gameName], userId, gameName)) {
         return;
     }
 
-    endGameTimer(chatSession, 20 * 1000, callback.message.chat.id, gameName, callback.message.message_thread_id);
-    let players = chatSession.game[gameName].players;
-    let player = players[userId];
+    // Таймер окончания игры (20 секунд)
+    endGameTimer(chat, 20 * 1000, chatId, gameName, callback.message.message_thread_id);
 
+    const players = chat.game[gameName].players;
+    const player = players[userId];
+    if (!player) return;
+
+    // Игрок пасует
     player.isPass = true;
+    await chat.save();
 
-    if (checkAllPlayersPassed(chatSession, gameName)) {
-        endGame(chatSession, callback.message.chat.id, callback.message.message_id, true, gameName);
+    // Проверка: все ли игроки спасовали
+    if (checkAllPlayersPassed(chat, gameName)) {
+        await endGame(chatId, callback.message.message_id, true, gameName);
         return;
     }
-    return sendMessage(callback.message.chat.id, `${getUserName(session, "nickname")}, ты спасовал. Больше что-либо делать в течении игры нельзя.`, {
-        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
-    })
-        .then(message => {
-            deleteMessageTimeout(callback.message.chat.id, message.message_id, 7000);
-        });
+
+    // Сообщение игроку
+    const username = getUserName({ userChatData: { user: { id: userId } } }, "nickname") || userId;
+    return sendMessage(
+        chatId,
+        `@${username}, ты спасовал. Больше что-либо делать в течении игры нельзя.`,
+        {
+            ...(callback.message.message_thread_id
+                ? { message_thread_id: callback.message.message_thread_id }
+                : {}),
+        }
+    ).then((message) => {
+        deleteMessageTimeout(chatId, message.message_id, 7000);
+    });
 }

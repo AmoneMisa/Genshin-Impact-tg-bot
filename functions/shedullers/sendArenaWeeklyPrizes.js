@@ -1,35 +1,53 @@
-import { arenaRating, sessions } from '../../data.js';
-import updateRank from '../../functions/game/arena/updateRank.js';
-import arenaWeeklyPrize from '../../template/arenaWeeklyPrizes.js';
-import pvpSignTemplate from '../../template/pvpSignTemplate.js';
-import lodash from 'lodash';
+import Chat from "../../db/models/Chat.js";
+import ArenaRating from "../../db/models/ArenaRating.js";
+import updateRank from "../../functions/game/arena/updateRank.js";
+import arenaWeeklyPrize from "../../template/arenaWeeklyPrizes.js";
+import pvpSignTemplate from "../../template/pvpSignTemplate.js";
+import lodash from "lodash";
 
-export default function () {
-    for (let [chatSessionId, chatSession] of Object.entries(sessions)) {
-        for (let [sessionId, session] of Object.entries(chatSession)) {
-            if (session.userChatData.user.is_bot) {
-                continue;
+/**
+ * Еженедельный ресет арены:
+ * - начисляет токены за ранги
+ * - выдаёт PvP знак
+ * - сбрасывает рейтинги до 1000
+ */
+export default async function() {
+    const chats = await Chat.find({});
+
+    for (const chat of chats) {
+        let updated = false;
+
+        for (const member of chat.members) {
+            if (member.userChatData?.user?.is_bot) continue;
+
+            const game = member.game;
+            if (!game?.inventory?.arena) continue;
+
+            // Получаем ранги игрока
+            const playerRankCommon = updateRank(member.userId, "common", chat.chatId);
+            const playerRankExpansion = updateRank(member.userId, "expansion", chat.chatId);
+
+            // Начисляем токены за оба ранга
+            const rewardCommon = arenaWeeklyPrize.find(r => r.rank === playerRankCommon)?.reward || 0;
+            const rewardExpansion = arenaWeeklyPrize.find(r => r.rank === playerRankExpansion)?.reward || 0;
+
+            game.inventory.arena.tokens += rewardCommon + rewardExpansion;
+
+            // Выдаём PvP знак, если его нет
+            if (lodash.isNull(game.inventory.arena.pvpSign)) {
+                game.inventory.arena.pvpSign = { ...pvpSignTemplate };
+                game.inventory.arena.pvpSign.lifeTime = Date.now() + pvpSignTemplate.lifeTime;
             }
 
-            let playerRankCommon = updateRank(sessionId, "common", chatSessionId);
-            let playerRankExpansion = updateRank(sessionId, "expansion", chatSessionId);
-            session.game.inventory["arena"]["tokens"] += arenaWeeklyPrize.find(reward => reward.rank === playerRankCommon).reward;
-            session.game.inventory["arena"]["tokens"] += arenaWeeklyPrize.find(reward => reward.rank === playerRankExpansion).reward;
+            updated = true;
+        }
 
-            if (lodash.isNull(session.game?.inventory?.arena?.pvpSign)) {
-                session.game.inventory["arena"].pvpSign = pvpSignTemplate;
-                session.game.inventory["arena"].pvpSign.lifeTime = new Date().getTime() + pvpSignTemplate.lifeTime;
-            }
+        if (updated) {
+            await chat.save();
         }
     }
 
-    for (let ratingKey of Object.keys(arenaRating.expansion)) {
-        arenaRating.expansion[ratingKey] = 1000;
-    }
-
-    for (let chatRating of Object.values(arenaRating.common)) {
-        for (let ratingKey of Object.keys(chatRating)) {
-            chatRating[ratingKey] = 1000;
-        }
-    }
+    // Сброс рейтингов в коллекции ArenaRating
+    await ArenaRating.updateMany({ type: "expansion" }, { $set: { value: 1000 } });
+    await ArenaRating.updateMany({ type: "common" }, { $set: { value: 1000 } });
 }
