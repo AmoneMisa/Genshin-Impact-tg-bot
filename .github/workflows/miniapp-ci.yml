@@ -34,6 +34,8 @@ jobs:
           node --check miniapp/telegramAuth.js
           node --check miniapp/state.js
           node --check miniapp/forms.js
+          node --check miniapp/updates.js
+          node --check miniapp/feedback.js
           node --check miniapp/chest.js
           node --check miniapp/gacha.js
           node --check miniapp/equipment.js
@@ -92,6 +94,7 @@ jobs:
           node --check callbacks/game/elements/takeElement.js
           node --check callbacks/game/horoscope/horoscope.js
           node --check callbacks/game/clan/clanCallback.js
+          node --check callbacks/whatsNewSettings.js
           node --check onTexts/game/slots/slots.js
           node --check onTexts/game/sendGold.js
           node --check onTexts/game/elements/elements.js
@@ -100,9 +103,14 @@ jobs:
           node --check onTexts/game/bonus/bonus.js
           node --check onTexts/game/horoscopes/horoscope.js
           node --check onTexts/game/clan/clan.js
+          node --check onTexts/whatsNew.js
+          node --check onTexts/feedback.js
+          node --check onTextsAdmin/sendNewUpdates.js
           node --check webapp/app.js
           node --check webapp/forms.js
           node --check webapp/help.js
+          node --check webapp/updates.js
+          node --check webapp/feedback.js
           node --check webapp/chest.js
           node --check webapp/gacha.js
           node --check webapp/equipment.js
