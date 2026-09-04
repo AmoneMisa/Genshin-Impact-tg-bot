@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getArcadeState, startArcadeGame, rollArcadeGame } from '../miniapp/arcade.js';
+import { getResettableArcadeGames, resetArcadeGame } from '../miniapp/arcadeReset.js';
 
 function session(gold = 10_000) {
   return { game: { inventory: { gold, crystals: 0, ironOre: 0 } } };
@@ -86,6 +87,43 @@ test('score games keep legacy economy: bet is not deducted on loss', () => {
   assert.equal(final.result.won, false);
   assert.equal(final.result.reward, 0);
   assert.equal(s.game.inventory.gold, 1000);
+});
+
+test('legacy reset commands map to the five score games without changing gold', () => {
+  assert.deepEqual(getResettableArcadeGames(), ['dice', 'bowling', 'darts', 'football', 'basketball']);
+
+  for (const gameId of getResettableArcadeGames()) {
+    const s = session(1000);
+    startArcadeGame(s, gameId, 700);
+    rollArcadeGame(s, gameId, { randomInt: () => 1 });
+    const beforeGold = s.game.inventory.gold;
+
+    const reset = resetArcadeGame(s, gameId);
+    const game = reset.arcade.games.find(item => item.id === gameId);
+
+    assert.equal(reset.ok, true, gameId);
+    assert.equal(reset.action, 'reset', gameId);
+    assert.equal(game.active, false, gameId);
+    assert.equal(game.bet, 0, gameId);
+    assert.equal(game.rolls, 0, gameId);
+    assert.equal(s.game.inventory.gold, beforeGold, gameId);
+
+    // Legacy reset commands were safe to call even after the state was clear.
+    assert.equal(resetArcadeGame(s, gameId).ok, true, gameId);
+  }
+});
+
+test('Mini App reset refuses slots so a deducted slot bet cannot be silently refunded or erased', () => {
+  const s = session(1000);
+  startArcadeGame(s, 'slots', 100);
+  const before = structuredClone(s.game.slotsMiniApp);
+
+  const reset = resetArcadeGame(s, 'slots');
+
+  assert.equal(reset.ok, false);
+  assert.equal(reset.reason, 'reset_not_supported');
+  assert.equal(s.game.inventory.gold, 900);
+  assert.deepEqual(s.game.slotsMiniApp, before);
 });
 
 test('slots preserve legacy 20% jackpot path, deduct the bet and pay x1.5', () => {
