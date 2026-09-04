@@ -24,11 +24,13 @@ import { getArenaState, attackArena } from './arena.js';
 import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
 import { getMiniAppSwordState, rollMiniAppSword } from './sword.js';
+import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from './arcade.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
 const GAME_ASSETS_DIR = path.resolve(__dirname, '../images');
 const playerLocks = new Map();
+const ARCADE_GAMES = new Set(Object.keys(getArcadeConfig()));
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -172,6 +174,14 @@ function stateFor(context) {
 function sendApiError(res, scope, error) {
   console.error(`[miniapp] ${scope}:`, error);
   return sendJson(res, error.status || 401, { error: error.message || 'Unauthorized' });
+}
+
+function validateArcadeGameId(gameId) {
+  if (typeof gameId !== 'string' || !ARCADE_GAMES.has(gameId)) {
+    const error = new Error('Unknown arcade game');
+    error.status = 400;
+    throw error;
+  }
 }
 
 async function bootstrap(req, res) {
@@ -580,6 +590,66 @@ async function swordRoll(req, res) {
   }
 }
 
+async function arcadeState(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:${context.userId}:arcade`;
+    const arcade = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getArcadeState(context.session);
+    });
+    return sendJson(res, 200, arcade);
+  } catch (error) {
+    return sendApiError(res, 'arcade state', error);
+  }
+}
+
+async function arcadeStart(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    validateArcadeGameId(body.gameId);
+
+    const lockKey = `${context.chatId}:${context.userId}:arcade`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const started = startArcadeGame(context.session, body.gameId, body.bet);
+      if (started.ok) await saveSession(context.session);
+      return started;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'arcade start', error);
+  }
+}
+
+async function arcadeRoll(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    validateArcadeGameId(body.gameId);
+
+    const lockKey = `${context.chatId}:${context.userId}:arcade`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const rolled = rollArcadeGame(context.session, body.gameId);
+      if (rolled.ok) await saveSession(context.session);
+      return rolled;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'arcade roll', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -667,6 +737,18 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/sword/roll') {
       return swordRoll(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/arcade') {
+      return arcadeState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/arcade/start') {
+      return arcadeStart(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/arcade/roll') {
+      return arcadeRoll(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
