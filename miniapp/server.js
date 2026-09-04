@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { token } from '../config.js';
 import { trustedChats } from '../data.js';
 import getSession from '../functions/getters/getSession.js';
+import getChatSession from '../functions/getters/getChatSession.js';
 import saveSession from '../functions/getters/saveSession.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
@@ -25,6 +26,7 @@ import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
 import { getMiniAppSwordState, rollMiniAppSword } from './sword.js';
 import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from './arcade.js';
+import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -190,6 +192,59 @@ async function bootstrap(req, res) {
     return sendJson(res, 200, stateFor(context));
   } catch (error) {
     return sendApiError(res, 'bootstrap', error);
+  }
+}
+
+async function goldTransferState(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:gold-transfer`;
+
+    const transfer = await withPlayerLock(lockKey, async () => {
+      const chat = await getChatSession(context.chatId);
+      const sender = chat.members.find(member => String(member.userId) === String(context.userId));
+      if (sender) context.session = sender;
+      return getGoldTransferState(chat, context.userId);
+    });
+
+    return sendJson(res, 200, transfer);
+  } catch (error) {
+    return sendApiError(res, 'gold transfer state', error);
+  }
+}
+
+async function goldTransferSend(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (!['string', 'number'].includes(typeof body.recipientId) || String(body.recipientId).trim() === '') {
+      const error = new Error('recipientId is required');
+      error.status = 400;
+      throw error;
+    }
+
+    const lockKey = `${context.chatId}:gold-transfer`;
+    const result = await withPlayerLock(lockKey, async () => {
+      const chat = await getChatSession(context.chatId);
+      const moved = transferGoldForMiniApp(
+        chat,
+        context.userId,
+        body.recipientId,
+        body.amount
+      );
+
+      if (moved.ok) await chat.save();
+      const sender = chat.members.find(member => String(member.userId) === String(context.userId));
+      if (sender) context.session = sender;
+      return moved;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'gold transfer send', error);
   }
 }
 
@@ -665,6 +720,14 @@ export default function startMiniAppServer() {
 
     if (req.method === 'GET' && requestUrl.pathname === '/api/bootstrap') {
       return bootstrap(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/gold-transfer') {
+      return goldTransferState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/gold-transfer/send') {
+      return goldTransferSend(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname === '/api/chest') {
