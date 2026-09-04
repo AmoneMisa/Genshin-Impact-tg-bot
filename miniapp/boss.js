@@ -15,6 +15,7 @@ import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getUserName from '../functions/getters/getUserName.js';
 import saveSession from '../functions/getters/saveSession.js';
+import { getEffectiveSkillCost } from '../functions/game/player/skillEnchant.js';
 
 function number(value, fallback = 0) {
   const parsed = Number(value);
@@ -30,8 +31,9 @@ function skillDto(session, skill, index, now = Date.now()) {
   const cooldownMs = Math.max(0, cooldownUntil - now);
   const hp = getCurrentHp(session, session.game.gameClass);
   const mp = getCurrentMp(session, session.game.gameClass);
-  const costHp = Math.max(0, number(skill?.costHp));
-  const costMp = Math.max(0, number(skill?.cost));
+  const effectiveCost = getEffectiveSkillCost(skill);
+  const costHp = Math.max(0, number(effectiveCost.costHp));
+  const costMp = Math.max(0, number(effectiveCost.cost));
 
   return {
     slot: Number.isFinite(Number(skill?.slot)) ? Number(skill.slot) : index,
@@ -41,6 +43,7 @@ function skillDto(session, skill, index, now = Date.now()) {
     isDamage: Boolean(skill?.isDealDamage),
     isHeal: Boolean(skill?.isHeal),
     isShield: Boolean(skill?.isShield),
+    enchantLevel: Math.max(0, number(skill?.enchantLevel)),
     costHp,
     costMp,
     cooldownMs,
@@ -202,8 +205,9 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex) {
     return { ok: false, reason: 'cooldown', boss: await getBossState(session, chatId) };
   }
 
-  const costCount = number(skill.costHp) > 0 ? number(skill.costHp) : number(skill.cost);
-  const costType = number(skill.costHp) > 0 ? 'hp' : 'mp';
+  const { cost, costHp } = getEffectiveSkillCost(skill);
+  const costCount = costHp > 0 ? costHp : cost;
+  const costType = costHp > 0 ? 'hp' : 'mp';
   skillUsagePayCost(session, costType, costCount);
 
   let result = { type: 'utility' };

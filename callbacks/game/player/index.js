@@ -1,5 +1,6 @@
 import setPlayerClassCallback from './setPlayerClassCallback.js';
 import userSkillsCallback from './userSkillsCallback.js';
+import skillsCallback from './skillsCallback.js';
 import showInventory from './showInventory.js';
 import updateCharacteristics from './updateCharacteristics.js';
 import reloadWhoAmI from './reloadWhoAmI.js';
@@ -13,6 +14,7 @@ import whoamiHome from './whoamiHome.js';
 export default [
     ...setPlayerClassCallback,
     ...userSkillsCallback,
+    ...skillsCallback,
     ...showInventory,
     ...updateCharacteristics,
     ...reloadWhoAmI,

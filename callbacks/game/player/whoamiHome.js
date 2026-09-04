@@ -23,6 +23,9 @@ export default [[/^player\.([\-0-9]+)\.whoami$/, async function (session, callba
                 text: "Состояние персонажа",
                 callback_data: `player.${userId}.character`
             }], [{
+                text: "Навыки",
+                callback_data: `player.${userId}.skills`
+            }], [{
                 text: "Показать инвентарь",
                 callback_data: `player.${userId}.inventory`
             }], [{

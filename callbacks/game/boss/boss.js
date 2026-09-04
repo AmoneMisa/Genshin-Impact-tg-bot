@@ -18,6 +18,7 @@ import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCap
 import getLocalImageByPath from '../../../functions/getters/getLocalImageByPath.js';
 import inventoryDictionary from '../../../dictionaries/inventory.js';
 import getTime from '../../../functions/getters/getTime.js';
+import { getEffectiveSkillCost } from '../../../functions/game/player/skillEnchant.js';
 import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
 
 export default [["boss", async function (session, callback) {
@@ -145,7 +146,7 @@ export default [["boss", async function (session, callback) {
 
     let buttonsSkills = [];
     for (let skill of session.game.gameClass.skills) {
-        let skillName = skill.name;
+        let skillName = skill.enchantLevel > 0 ? `${skill.name} +${skill.enchantLevel}` : skill.name;
 
         if (getSkillCooldown(skill) > new Date().getTime()) {
             skillName += " (В откате)";
@@ -157,10 +158,12 @@ export default [["boss", async function (session, callback) {
     let message = "";
 
     for (let skill of session.game.gameClass.skills) {
-        let costCount = skill.costHp > 0 ? skill.costHp : skill.cost;
-        let costType = skill.costHp > 0 ? "hp" : "mp";
+        let { cost, costHp } = getEffectiveSkillCost(skill);
+        let costCount = costHp > 0 ? costHp : cost;
+        let costType = costHp > 0 ? "hp" : "mp";
+        let enchantLabel = skill.enchantLevel > 0 ? ` (+${skill.enchantLevel})` : "";
 
-        message += `${skill.name} - ${skill.description} Стоимость использования: ${getEmoji(costType)} ${costCount}\n\n`;
+        message += `${skill.name}${enchantLabel} - ${skill.description} Стоимость использования: ${getEmoji(costType)} ${costCount}\n\n`;
     }
 
     let imagePath = getLocalImageByPath(aliveBoss.stats.lvl, `bosses/${aliveBoss.name}`);

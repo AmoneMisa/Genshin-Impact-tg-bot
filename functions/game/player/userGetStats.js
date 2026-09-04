@@ -13,7 +13,8 @@ export default async function (session) {
     let message = `Статистика @${await getUserName(session, "nickname")}:\n`;
     message += `${getEmoji("lvl")} Уровень: ${baseStats.lvl}\n`;
     message += `${getEmoji("currentExp")} Текущее количество опыта: ${baseStats.currentExp}\n`;
-    message += `${getEmoji("needExp")} Требуемое количество опыта до следующего уровня: ${baseStats.needExp}\n\n`;
+    message += `${getEmoji("needExp")} Требуемое количество опыта до следующего уровня: ${baseStats.needExp}\n`;
+    message += `🔮 Очки прокачки навыков (ОП): ${session.game.inventory?.sp || 0}\n\n`;
 
     message += `${getEmoji("gearScore")} Рейтинг снаряжения: ${calcGearScore(session.game)}\n\n`;
 
