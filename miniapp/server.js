@@ -23,6 +23,7 @@ import {
 import { getArenaState, attackArena } from './arena.js';
 import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
+import { getMiniAppSwordState, rollMiniAppSword } from './sword.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
@@ -545,6 +546,40 @@ async function shopBuy(req, res) {
   }
 }
 
+async function swordState(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:${context.userId}:sword`;
+    const sword = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      return getMiniAppSwordState(context.session);
+    });
+    return sendJson(res, 200, sword);
+  } catch (error) {
+    return sendApiError(res, 'sword state', error);
+  }
+}
+
+async function swordRoll(req, res) {
+  try {
+    const context = await authorize(req);
+    const lockKey = `${context.chatId}:${context.userId}:sword`;
+    const result = await withPlayerLock(lockKey, async () => {
+      context.session = await getSession(context.chatId, context.userId);
+      const rolled = rollMiniAppSword(context.session);
+      if (rolled.ok) await saveSession(context.session);
+      return rolled;
+    });
+
+    return sendJson(res, result.ok ? 200 : 409, {
+      ...result,
+      state: stateFor(context),
+    });
+  } catch (error) {
+    return sendApiError(res, 'sword roll', error);
+  }
+}
+
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
 
@@ -624,6 +659,14 @@ export default function startMiniAppServer() {
 
     if (req.method === 'POST' && requestUrl.pathname === '/api/shop/buy') {
       return shopBuy(req, res);
+    }
+
+    if (req.method === 'GET' && requestUrl.pathname === '/api/sword') {
+      return swordState(req, res);
+    }
+
+    if (req.method === 'POST' && requestUrl.pathname === '/api/sword/roll') {
+      return swordRoll(req, res);
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
