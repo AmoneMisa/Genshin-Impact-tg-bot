@@ -63,7 +63,10 @@ jobs:
           node --check functions/game/arena/updateRank.js
           node --check functions/game/arena/calculatePoints.js
           node --check functions/game/arena/getPvpSign.js
+          node --check functions/game/arena/arenaInventory.js
           node --check functions/game/arena/generateArenaBot.js
+          node --check functions/game/player/useHealPotion.js
+          node --check functions/game/player/userDealDamage.js
           node --check functions/game/sword/swordCore.js
           node --check functions/game/sword/swordResult.js
           node --check functions/game/gold/transferGold.js
@@ -82,6 +85,9 @@ jobs:
           node --check functions/game/clans/giveClanShopPotion.js
           node --check functions/game/clans/getBuildingBonus.js
           node --check functions/shedullers/bossWin.js
+          node --check callbacks/game/arena/arena.js
+          node --check callbacks/game/player/showInventory.js
+          node --check callbacks/game/player/userSkillsCallback.js
           node --check callbacks/game/shop/shop.js
           node --check callbacks/game/dice/pullDice.js
           node --check callbacks/game/bowling/pullSkittle.js
