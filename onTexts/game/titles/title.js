@@ -24,21 +24,25 @@ export default [[/(?:^|\s)\/title ([А-Яа-яЁёA-Za-z]+)(?:\s|$)/, async (msg
     }
 
     let message;
-    let members = await getMembers(msg.chat.id);
-    let filteredMembers = Object.values(members).filter(member => !member.userChatData.user.is_bot && !member.isHided);
-    let randomMember = filteredMembers[getRandom(0, filteredMembers.length - 1)];
+    const members = await getMembers(msg.chat.id);
+    const filteredMembers = Object.values(members).filter(member => {
+        const status = member?.userChatData?.status;
+        return !member.userChatData.user.is_bot && !member.isHided && status !== 'left' && status !== 'kicked';
+    });
+    const randomMember = filteredMembers[getRandom(0, filteredMembers.length - 1)];
 
     const { chat, member } = await loadPlayer(msg.chat.id, session.userId);
 
     if (!member.timerTitleCallback || Date.now() >= member.timerTitleCallback) {
         member.timerTitleCallback = Date.now() + 10 * 60 * 1000;
         await chat.save();
-        message = `Сегодня ты, @${await getUserName(randomMember, "nickname")} - ${title}`;
+        const nickname = await getUserName(randomMember, "nickname");
+        message = `Сегодня ты, @${nickname} - ${title}`;
 
         await Title.create({
             chatId: msg.chat.id.toString(),
             userId: randomMember.userChatData.user.id.toString(),
-            nickname: getUserName(randomMember, "nickname"),
+            nickname,
             titleName: title
         });
 
@@ -50,7 +54,7 @@ export default [[/(?:^|\s)\/title ([А-Яа-яЁёA-Za-z]+)(?:\s|$)/, async (msg
         }
 
     } else {
-        let [remain] = getTime(member.timerTitleCallback);
+        const [remain] = getTime(member.timerTitleCallback);
         message = `@${await getUserName(session, "nickname")}, команду можно вызывать раз в 10 минут. Осталось: ${getStringRemainTime(remain)}`;
     }
 
