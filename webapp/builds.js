@@ -1,332 +1,58 @@
+import { attachTownParallax, renderTownBuildingArt, renderTownWorld } from './town-art.js';
+
 const RESOURCE_META = {
   gold: { label: 'Золото', icon: '🪙' },
   crystals: { label: 'Кристаллы', icon: '💎' },
   ironOre: { label: 'Руда', icon: '⛏️' },
   experience: { label: 'Опыт', icon: '✦' },
+  sp: { label: 'ОП', icon: '✧' },
 };
 
 const BUILD_ICONS = {
-  palace: '🏛️',
-  goldMine: '🪙',
-  crystalLake: '💎',
-  traineeArea: '⚔️',
-  ironDeposit: '⛏️',
+  palace: '🏛️', academy: '✦', forge: '⚒️', goldMine: '🪙', crystalLake: '💎', traineeArea: '⚔️', ironDeposit: '⛏️',
 };
 
 const REASONS = {
-  max_level: 'Постройка уже максимального уровня.',
-  already_upgrading: 'Постройка уже улучшается.',
-  requirements: 'Сначала выполни требования следующего уровня.',
-  resources: 'Недостаточно ресурсов.',
-  upgrade_unavailable: 'Для этой постройки улучшение сейчас недоступно.',
-  unknown_build: 'Постройка больше не найдена в сессии.',
-  not_upgrading: 'Улучшение уже завершилось или не было запущено.',
-  no_production: 'Эта постройка не производит собираемые ресурсы.',
-  upgrading: 'Во время улучшения ресурсы собирать нельзя.',
-  nothing_to_collect: 'Пока нечего собирать.',
-  type_unavailable: 'У этой постройки нельзя менять тип.',
-  unknown_type: 'Неизвестный тип постройки.',
-  type_not_owned: 'Этот тип ещё не куплен.',
-  invalid_name: 'Название должно содержать от 1 до 40 символов.',
-  rename_card_required: 'Нужна карточка смены названия из магазина.',
+  max_level: 'Постройка уже максимального уровня.', already_upgrading: 'Постройка уже улучшается.', requirements: 'Сначала выполни требования следующего уровня.', resources: 'Недостаточно ресурсов.', upgrade_unavailable: 'Для этой постройки улучшение сейчас недоступно.', unknown_build: 'Постройка больше не найдена в сессии.', not_upgrading: 'Улучшение уже завершилось или не было запущено.', no_production: 'Эта постройка не производит собираемые ресурсы.', upgrading: 'Во время улучшения ресурсы собирать нельзя.', nothing_to_collect: 'Пока нечего собирать.', type_unavailable: 'У этой постройки нельзя менять тип.', unknown_type: 'Неизвестный тип постройки.', type_not_owned: 'Этот тип ещё не куплен.', invalid_name: 'Название должно содержать от 1 до 40 символов.', rename_card_required: 'Нужна карточка смены названия из магазина.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
-
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-function formatDuration(milliseconds) {
-  const totalSeconds = Math.max(0, Math.ceil((Number(milliseconds) || 0) / 1000));
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  if (hours) return `${hours}ч ${minutes}м`;
-  if (minutes) return `${minutes}м ${seconds}с`;
-  return `${seconds}с`;
-}
-
-function resourceLabel(resource) {
-  return RESOURCE_META[resource] || { label: resource, icon: '•' };
-}
-
-function costHtml(cost) {
-  if (!cost) return '<span class="build-muted">—</span>';
-  return Object.entries(cost)
-    .filter(([, value]) => Number(value) > 0)
-    .map(([resource, value]) => {
-      const meta = resourceLabel(resource);
-      return `<span>${meta.icon} ${formatNumber(value)}</span>`;
-    }).join('') || '<span>Бесплатно</span>';
-}
-
-function requirementsHtml(requirements) {
-  const rows = [];
-  for (const requirement of requirements?.buildings || []) {
-    rows.push(`<span class="${requirement.met ? 'met' : 'missing'}">${requirement.met ? '✓' : '×'} ${escapeHtml(requirement.title)} ${requirement.current}/${requirement.required}</span>`);
-  }
-  for (const requirement of requirements?.character || []) {
-    const label = requirement.key === 'lvl' ? 'Уровень героя' : requirement.key;
-    rows.push(`<span class="${requirement.met ? 'met' : 'missing'}">${requirement.met ? '✓' : '×'} ${escapeHtml(label)} ${requirement.current}/${requirement.required}</span>`);
-  }
-  return rows.length ? rows.join('') : '<span class="met">✓ Дополнительных требований нет</span>';
-}
-
-function treasuryHtml(treasury) {
-  if (!treasury) return '';
-  return `
-    <div class="build-treasury">
-      <small>Защита казны</small>
-      <div>
-        <span>🪙 ${formatNumber(treasury.guardedGold)}</span>
-        <span>💎 ${formatNumber(treasury.guardedCrystals)}</span>
-        <span>⛏️ ${formatNumber(treasury.guardedIronOre)}</span>
-      </div>
-    </div>`;
-}
-
-function typesHtml(build) {
-  if (!build.availableTypes?.length) return '';
-  return `
-    <div class="build-types">
-      <small>Облик</small>
-      <div>${build.availableTypes.map((type) => `
-        <button type="button"
-          class="build-type ${type.selected ? 'active' : ''} ${!type.owned ? 'locked' : ''}"
-          data-build-type="${escapeHtml(type.id)}"
-          data-build="${escapeHtml(build.id)}"
-          ${type.selected || !type.owned ? 'disabled' : ''}
-          title="${escapeHtml(type.bonus || (type.owned ? '' : 'Сначала купи этот облик'))}">
-          ${type.owned ? '' : '🔒 '}${escapeHtml(type.name)}
-        </button>`).join('')}</div>
-    </div>`;
-}
+function formatNumber(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0); }
+function escapeHtml(value) { return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;'); }
+function formatDuration(milliseconds) { const totalSeconds = Math.max(0, Math.ceil((Number(milliseconds) || 0) / 1000)); const hours = Math.floor(totalSeconds / 3600); const minutes = Math.floor((totalSeconds % 3600) / 60); const seconds = totalSeconds % 60; if (hours) return `${hours}ч ${minutes}м`; if (minutes) return `${minutes}м ${seconds}с`; return `${seconds}с`; }
+function resourceLabel(resource) { return RESOURCE_META[resource] || { label: resource, icon: '•' }; }
+function costHtml(cost) { if (!cost) return '<span class="build-muted">—</span>'; return Object.entries(cost).filter(([, value]) => Number(value) > 0).map(([resource, value]) => { const meta = resourceLabel(resource); return `<span>${meta.icon} ${formatNumber(value)}</span>`; }).join('') || '<span>Бесплатно</span>'; }
+function requirementsHtml(requirements) { const rows = []; for (const requirement of requirements?.buildings || []) rows.push(`<span class="${requirement.met ? 'met' : 'missing'}">${requirement.met ? '✓' : '×'} ${escapeHtml(requirement.title)} ${requirement.current}/${requirement.required}</span>`); for (const requirement of requirements?.character || []) { const label = requirement.key === 'lvl' ? 'Уровень героя' : requirement.key; rows.push(`<span class="${requirement.met ? 'met' : 'missing'}">${requirement.met ? '✓' : '×'} ${escapeHtml(label)} ${requirement.current}/${requirement.required}</span>`); } return rows.length ? rows.join('') : '<span class="met">✓ Дополнительных требований нет</span>'; }
+function treasuryHtml(treasury) { if (!treasury) return ''; return `<div class="build-treasury"><small>Защита казны</small><div><span>🪙 ${formatNumber(treasury.guardedGold)}</span><span>💎 ${formatNumber(treasury.guardedCrystals)}</span><span>⛏️ ${formatNumber(treasury.guardedIronOre)}</span></div></div>`; }
+function typesHtml(build) { if (!build.availableTypes?.length) return ''; return `<div class="build-types"><small>Облик</small><div>${build.availableTypes.map((type) => `<button type="button" class="build-type ${type.selected ? 'active' : ''} ${!type.owned ? 'locked' : ''}" data-build-type="${escapeHtml(type.id)}" data-build="${escapeHtml(build.id)}" ${type.selected || !type.owned ? 'disabled' : ''} title="${escapeHtml(type.bonus || (type.owned ? '' : 'Сначала купи этот облик'))}">${type.owned ? '' : '🔒 '}${escapeHtml(type.name)}</button>`).join('')}</div></div>`; }
 
 function buildingCard(build) {
   const resource = build.resourceType ? resourceLabel(build.resourceType) : null;
   const endAt = build.upgrading ? Date.now() + Number(build.remainingMs || 0) : 0;
-  const upgradeLabel = build.currentLevel >= build.maxLevel
-    ? 'Максимальный уровень'
-    : build.upgrading
-      ? `Ускорить · ${formatNumber(build.speedupCost)} 💎`
-      : `Улучшить до ${build.nextLevel}`;
-
-  return `
-    <article class="build-card ${build.upgrading ? 'upgrading' : ''}" data-build-card="${escapeHtml(build.id)}">
-      <div class="build-top">
-        <div class="build-title">
-          <span class="build-icon">${BUILD_ICONS[build.id] || '🏗️'}</span>
-          <div>
-            <strong>${escapeHtml(build.name)}</strong>
-            ${build.customName ? `<small>${escapeHtml(build.defaultName)}</small>` : '<small>Постройка</small>'}
-          </div>
-        </div>
-        <div class="build-level"><strong>${build.currentLevel}</strong><span>/ ${build.maxLevel}</span></div>
-      </div>
-
-      <p class="build-description">${escapeHtml(build.description)}</p>
-
-      ${build.upgrading ? `
-        <div class="build-progress-line">
-          <span>Улучшение до ${build.nextLevel} уровня</span>
-          <strong data-remain data-end="${endAt}">${formatDuration(build.remainingMs)}</strong>
-        </div>` : ''}
-
-      ${resource ? `
-        <div class="build-production">
-          <div><small>Производство / час</small><strong>${resource.icon} ${formatNumber(build.productionPerHour)}</strong></div>
-          <div><small>Накоплено</small><strong>${resource.icon} ${formatNumber(build.resourceCollected)}</strong></div>
-          ${build.maxWorkHoursWithoutCollection ? `<div><small>Автономность</small><strong>${build.maxWorkHoursWithoutCollection}ч</strong></div>` : ''}
-        </div>` : ''}
-
-      ${treasuryHtml(build.treasury)}
-      ${typesHtml(build)}
-
-      ${build.currentLevel < build.maxLevel ? `
-        <div class="build-upgrade-box">
-          <div class="build-upgrade-head"><small>Следующее улучшение</small><div class="build-cost">${costHtml(build.upgradeCost)}</div></div>
-          <div class="build-requirements">${requirementsHtml(build.requirements)}</div>
-        </div>` : ''}
-
-      <div class="build-actions">
-        ${resource ? `<button type="button" class="build-action collect" data-build-action="collect" data-build="${escapeHtml(build.id)}" ${build.canCollect ? '' : 'disabled'}>Собрать ${resource.icon} ${formatNumber(build.resourceCollected)}</button>` : ''}
-        <button type="button" class="build-action primary" data-build-action="${build.upgrading ? 'speedup' : 'upgrade'}" data-build="${escapeHtml(build.id)}"
-          data-price="${build.upgrading ? Number(build.speedupCost || 0) : ''}"
-          ${build.currentLevel >= build.maxLevel || (build.upgrading ? !build.canSpeedup : !build.canUpgrade) ? 'disabled' : ''}>${upgradeLabel}</button>
-        ${build.canRename ? `<button type="button" class="build-action secondary" data-build-action="rename" data-build="${escapeHtml(build.id)}">Переименовать</button>` : ''}
-      </div>
-    </article>`;
+  const upgradeLabel = build.currentLevel >= build.maxLevel ? 'Максимальный уровень' : build.upgrading ? `Ускорить · ${formatNumber(build.speedupCost)} 💎` : `Улучшить до ${build.nextLevel}`;
+  return `<article class="build-card ${build.upgrading ? 'upgrading' : ''}" data-build-card="${escapeHtml(build.id)}">${renderTownBuildingArt(build.id)}<div class="build-top"><div class="build-title"><span class="build-icon">${BUILD_ICONS[build.id] || '🏗️'}</span><div><strong>${escapeHtml(build.name)}</strong>${build.customName ? `<small>${escapeHtml(build.defaultName)}</small>` : '<small>Постройка</small>'}</div></div><div class="build-level"><strong>${build.currentLevel}</strong><span>/ ${build.maxLevel}</span></div></div><p class="build-description">${escapeHtml(build.description)}</p>${build.upgrading ? `<div class="build-progress-line"><span>Улучшение до ${build.nextLevel} уровня</span><strong data-remain data-end="${endAt}">${formatDuration(build.remainingMs)}</strong></div>` : ''}${resource ? `<div class="build-production"><div><small>Производство / час</small><strong>${resource.icon} ${formatNumber(build.productionPerHour)}</strong></div><div><small>Накоплено</small><strong>${resource.icon} ${formatNumber(build.resourceCollected)}</strong></div>${build.maxWorkHoursWithoutCollection ? `<div><small>Автономность</small><strong>${build.maxWorkHoursWithoutCollection}ч</strong></div>` : ''}</div>` : ''}${treasuryHtml(build.treasury)}${typesHtml(build)}${build.currentLevel < build.maxLevel ? `<div class="build-upgrade-box"><div class="build-upgrade-head"><small>Следующее улучшение</small><div class="build-cost">${costHtml(build.upgradeCost)}</div></div><div class="build-requirements">${requirementsHtml(build.requirements)}</div></div>` : ''}<div class="build-actions">${resource ? `<button type="button" class="build-action collect" data-build-action="collect" data-build="${escapeHtml(build.id)}" ${build.canCollect ? '' : 'disabled'}>Собрать ${resource.icon} ${formatNumber(build.resourceCollected)}</button>` : ''}<button type="button" class="build-action primary" data-build-action="${build.upgrading ? 'speedup' : 'upgrade'}" data-build="${escapeHtml(build.id)}" data-price="${build.upgrading ? Number(build.speedupCost || 0) : ''}" ${build.currentLevel >= build.maxLevel || (build.upgrading ? !build.canSpeedup : !build.canUpgrade) ? 'disabled' : ''}>${upgradeLabel}</button>${build.canRename ? `<button type="button" class="build-action secondary" data-build-action="rename" data-build="${escapeHtml(build.id)}">Переименовать</button>` : ''}</div></article>`;
 }
 
 export async function openBuildsGame({ api, renderState, haptic, statusElement }) {
-  let state = await api('/api/builds');
-  let pending = false;
-  let timer = null;
-
-  const overlay = document.createElement('section');
-  overlay.className = 'game-overlay builds-overlay';
-  overlay.innerHTML = `
-    <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass builds-panel">
-      <header class="overlay-head">
-        <div>
-          <div class="eyebrow">ПОСТРОЙКИ · WEBGL MODE</div>
-          <h2>Владения</h2>
-        </div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
-      </header>
-
-      <div class="builds-summary">
-        <div><small>Золото</small><strong>🪙 <span data-build-gold>0</span></strong></div>
-        <div><small>Кристаллы</small><strong>💎 <span data-build-crystals>0</span></strong></div>
-        <div><small>Руда</small><strong>⛏️ <span data-build-ore>0</span></strong></div>
-      </div>
-
-      <div class="builds-list" data-builds-list></div>
-      <div class="build-feedback" data-build-feedback aria-live="polite"></div>
-    </div>`;
-
-  const list = overlay.querySelector('[data-builds-list]');
-  const feedback = overlay.querySelector('[data-build-feedback]');
-
-  const close = () => {
-    if (timer) window.clearInterval(timer);
-    overlay.classList.add('closing');
-    window.setTimeout(() => overlay.remove(), 180);
-  };
-  overlay.querySelector('.overlay-close').addEventListener('click', close);
-  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-
-  async function refreshFromServer() {
-    state = await api('/api/builds');
-    renderAll();
-  }
-
+  let state = await api('/api/builds'); let pending = false; let timer = null; let detachParallax = () => {};
+  const overlay = document.createElement('section'); overlay.className = 'game-overlay builds-overlay';
+  overlay.innerHTML = `<div class="overlay-backdrop"></div><div class="overlay-panel glass builds-panel"><header class="overlay-head"><div><div class="eyebrow">ВЛАДЕНИЯ · FANTASY TOWN</div><h2>Королевство</h2></div><button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button></header><div class="builds-summary"><div><small>Золото</small><strong>🪙 <span data-build-gold>0</span></strong></div><div><small>Кристаллы</small><strong>💎 <span data-build-crystals>0</span></strong></div><div><small>Руда</small><strong>⛏️ <span data-build-ore>0</span></strong></div></div><div class="builds-list" data-builds-list></div><div class="build-feedback" data-build-feedback aria-live="polite"></div></div>`;
+  const list = overlay.querySelector('[data-builds-list]'); const feedback = overlay.querySelector('[data-build-feedback]');
+  const close = () => { if (timer) window.clearInterval(timer); detachParallax(); overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
+  overlay.querySelector('.overlay-close').addEventListener('click', close); overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  async function refreshFromServer() { state = await api('/api/builds'); renderAll(); }
   async function runAction(buildName, action, extra = {}) {
-    if (pending) return;
-    pending = true;
-    overlay.classList.add('busy');
-    feedback.textContent = action === 'collect'
-      ? 'Собираем ресурсы…'
-      : action === 'speedup'
-        ? 'Ускоряем строительство…'
-        : action === 'rename'
-          ? 'Сохраняем название…'
-          : action === 'change_type'
-            ? 'Меняем облик…'
-            : 'Запускаем улучшение…';
-
+    if (pending) return; pending = true; overlay.classList.add('busy'); feedback.textContent = action === 'collect' ? 'Собираем ресурсы…' : action === 'speedup' ? 'Ускоряем строительство…' : action === 'rename' ? 'Сохраняем название…' : action === 'change_type' ? 'Меняем облик…' : 'Запускаем улучшение…';
     try {
-      const payload = await api('/api/builds/action', {
-        method: 'POST',
-        body: JSON.stringify({ buildName, action, ...extra }),
-      });
-      state = payload.builds;
-      if (payload.state) renderState(payload.state);
-
-      if (action === 'collect') {
-        const meta = resourceLabel(payload.resourceType);
-        feedback.textContent = `Собрано: ${meta.icon} ${formatNumber(payload.amount)} ${meta.label.toLowerCase()}.`;
-      } else if (action === 'speedup') {
-        feedback.textContent = `Улучшение завершено. Потрачено 💎 ${formatNumber(payload.spentCrystals)}.`;
-      } else if (action === 'upgrade') {
-        feedback.textContent = 'Улучшение запущено.';
-      } else if (action === 'change_type') {
-        feedback.textContent = 'Облик постройки изменён.';
-      } else {
-        feedback.textContent = 'Название изменено.';
-      }
-      haptic(action === 'collect' ? 'light' : 'medium');
-      renderAll();
-    } catch (error) {
-      const reason = error.payload?.reason;
-      feedback.textContent = REASONS[reason] || error.message;
-      statusElement.textContent = `Постройки: ${feedback.textContent}`;
-      if (error.payload?.builds) {
-        state = error.payload.builds;
-        renderAll();
-      } else if (reason === 'not_upgrading' || reason === 'unknown_build') {
-        try { await refreshFromServer(); } catch {}
-      }
-      haptic('light');
-    } finally {
-      pending = false;
-      overlay.classList.remove('busy');
-    }
+      const payload = await api('/api/builds/action', { method: 'POST', body: JSON.stringify({ buildName, action, ...extra }) }); state = payload.builds; if (payload.state) renderState(payload.state);
+      if (action === 'collect') { const meta = resourceLabel(payload.resourceType); feedback.textContent = `Собрано: ${meta.icon} ${formatNumber(payload.amount)} ${meta.label.toLowerCase()}.`; } else if (action === 'speedup') feedback.textContent = `Улучшение завершено. Потрачено 💎 ${formatNumber(payload.spentCrystals)}.`; else if (action === 'upgrade') feedback.textContent = 'Улучшение запущено.'; else if (action === 'change_type') feedback.textContent = 'Облик постройки изменён.'; else feedback.textContent = 'Название изменено.';
+      haptic(action === 'collect' ? 'light' : 'medium'); renderAll();
+    } catch (error) { const reason = error.payload?.reason; feedback.textContent = REASONS[reason] || error.message; statusElement.textContent = `Постройки: ${feedback.textContent}`; if (error.payload?.builds) { state = error.payload.builds; renderAll(); } else if (reason === 'not_upgrading' || reason === 'unknown_build') { try { await refreshFromServer(); } catch {} } haptic('light'); } finally { pending = false; overlay.classList.remove('busy'); }
   }
-
   function bindActions() {
-    list.querySelectorAll('[data-build-action]').forEach((button) => {
-      button.addEventListener('click', async () => {
-        const action = button.dataset.buildAction;
-        const buildName = button.dataset.build;
-
-        if ((action === 'upgrade' || action === 'speedup') && button.dataset.confirm !== 'yes') {
-          button.dataset.confirm = 'yes';
-          const oldText = button.textContent;
-          button.dataset.oldText = oldText;
-          button.textContent = action === 'speedup' ? 'Подтвердить ускорение' : 'Подтвердить улучшение';
-          button.classList.add('confirming');
-          haptic('medium');
-          window.setTimeout(() => {
-            if (!button.isConnected || button.dataset.confirm !== 'yes') return;
-            button.dataset.confirm = '';
-            button.classList.remove('confirming');
-            button.textContent = button.dataset.oldText || oldText;
-          }, 2800);
-          return;
-        }
-
-        if (action === 'rename') {
-          const current = state.buildings.find((build) => build.id === buildName)?.name || '';
-          const name = window.prompt('Новое название постройки (до 40 символов):', current);
-          if (name === null) return;
-          haptic('medium');
-          await runAction(buildName, 'rename', { name });
-          return;
-        }
-
-        haptic(action === 'collect' ? 'light' : 'medium');
-        await runAction(buildName, action);
-      });
-    });
-
-    list.querySelectorAll('[data-build-type]').forEach((button) => {
-      button.addEventListener('click', async () => {
-        haptic('medium');
-        await runAction(button.dataset.build, 'change_type', { typeName: button.dataset.buildType });
-      });
-    });
+    list.querySelectorAll('[data-build-action]').forEach((button) => button.addEventListener('click', async () => { const action = button.dataset.buildAction; const buildName = button.dataset.build; if ((action === 'upgrade' || action === 'speedup') && button.dataset.confirm !== 'yes') { button.dataset.confirm = 'yes'; const oldText = button.textContent; button.dataset.oldText = oldText; button.textContent = action === 'speedup' ? 'Подтвердить ускорение' : 'Подтвердить улучшение'; button.classList.add('confirming'); haptic('medium'); window.setTimeout(() => { if (!button.isConnected || button.dataset.confirm !== 'yes') return; button.dataset.confirm = ''; button.classList.remove('confirming'); button.textContent = button.dataset.oldText || oldText; }, 2800); return; } if (action === 'rename') { const current = state.buildings.find((build) => build.id === buildName)?.name || ''; const name = window.prompt('Новое название постройки (до 40 символов):', current); if (name === null) return; haptic('medium'); await runAction(buildName, 'rename', { name }); return; } haptic(action === 'collect' ? 'light' : 'medium'); await runAction(buildName, action); }));
+    list.querySelectorAll('[data-build-type]').forEach((button) => button.addEventListener('click', async () => { haptic('medium'); await runAction(button.dataset.build, 'change_type', { typeName: button.dataset.buildType }); }));
   }
-
-  function renderAll() {
-    overlay.querySelector('[data-build-gold]').textContent = formatNumber(state.resources?.gold);
-    overlay.querySelector('[data-build-crystals]').textContent = formatNumber(state.resources?.crystals);
-    overlay.querySelector('[data-build-ore]').textContent = formatNumber(state.resources?.ironOre);
-    list.innerHTML = state.buildings?.length
-      ? state.buildings.map(buildingCard).join('')
-      : '<div class="build-empty">Постройки пока не найдены.</div>';
-    bindActions();
-  }
-
-  function updateCountdowns() {
-    overlay.querySelectorAll('[data-remain]').forEach((element) => {
-      const remaining = Math.max(0, Number(element.dataset.end || 0) - Date.now());
-      element.textContent = formatDuration(remaining);
-      if (remaining === 0) element.classList.add('done');
-    });
-  }
-
-  renderAll();
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('visible'));
-  timer = window.setInterval(updateCountdowns, 1000);
+  function renderAll() { overlay.querySelector('[data-build-gold]').textContent = formatNumber(state.resources?.gold); overlay.querySelector('[data-build-crystals]').textContent = formatNumber(state.resources?.crystals); overlay.querySelector('[data-build-ore]').textContent = formatNumber(state.resources?.ironOre); list.innerHTML = state.buildings?.length ? `${renderTownWorld()}${state.buildings.map(buildingCard).join('')}` : '<div class="build-empty">Постройки пока не найдены.</div>'; bindActions(); }
+  function updateCountdowns() { overlay.querySelectorAll('[data-remain]').forEach((element) => { const remaining = Math.max(0, Number(element.dataset.end || 0) - Date.now()); element.textContent = formatDuration(remaining); if (remaining === 0) element.classList.add('done'); }); }
+  renderAll(); document.body.appendChild(overlay); requestAnimationFrame(() => overlay.classList.add('visible')); detachParallax = attachTownParallax(list); timer = window.setInterval(updateCountdowns, 1000);
 }

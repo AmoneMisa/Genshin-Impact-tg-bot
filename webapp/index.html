@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/equipment.css" />
   <link rel="stylesheet" href="/builds.css" />
   <link rel="stylesheet" href="/town.css" />
+  <link rel="stylesheet" href="/town-art.css" />
   <link rel="stylesheet" href="/arena.css" />
   <link rel="stylesheet" href="/boss.css" />
   <link rel="stylesheet" href="/shop.css" />
@@ -40,84 +41,14 @@
   <canvas id="webgl" aria-hidden="true"></canvas>
   <div class="noise" aria-hidden="true"></div>
   <main id="app" class="app-shell">
-    <section class="topbar">
-      <div>
-        <div class="eyebrow">WHITESLOVE · GAME HUB</div>
-        <h1 id="hello">Загрузка профиля…</h1>
-      </div>
-      <button id="fullscreen" class="icon-button" type="button" aria-label="Полный экран">⛶</button>
-    </section>
-
-    <section class="hero-card mmo-hud glass" aria-label="Состояние персонажа">
-      <div class="hero-crest" aria-hidden="true">
-        <div class="hero-portrait-shell">
-          <span id="class-sigil" class="hero-sigil">◇</span>
-          <div class="level-orb"><span id="level">1</span><small>LVL</small></div>
-        </div>
-      </div>
-
-      <div class="hero-copy">
-        <div class="hero-row">
-          <div class="hero-identity"><small>ПЕРСОНАЖ</small><strong id="class-name">Путешественник</strong></div>
-          <span id="chat-badge">Telegram</span>
-        </div>
-
-        <div class="hud-stack">
-          <div class="hud-meter hp">
-            <span class="hud-label">HP</span>
-            <div class="hud-track"><i id="hp-fill"></i><b></b></div>
-            <strong id="hp-text">0 / 1</strong>
-          </div>
-          <div class="hud-meter mp">
-            <span class="hud-label">MP</span>
-            <div class="hud-track"><i id="mp-fill"></i><b></b></div>
-            <strong id="mp-text">0 / 1</strong>
-          </div>
-          <div class="hud-meter cp">
-            <span class="hud-label">CP</span>
-            <div class="hud-track"><i id="cp-fill"></i><b></b></div>
-            <strong id="cp-text">0 / 1</strong>
-          </div>
-          <div class="hud-meter sp">
-            <span class="hud-label">SP</span>
-            <div class="hud-track sp-track"><i></i><b></b></div>
-            <strong id="sp-text">0</strong>
-          </div>
-          <div class="hud-meter exp">
-            <span class="hud-label">EXP</span>
-            <div class="hud-track"><i id="xp-fill"></i><b></b></div>
-            <strong id="xp-text">0 / 1</strong>
-          </div>
-        </div>
-
-        <div class="hud-footer">
-          <span id="arena-text">Арена: 0</span>
-          <span class="hud-status-dot">ONLINE</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="resources" aria-label="Ресурсы">
-      <article class="resource glass"><span>🪙</span><div><small>Мора</small><strong id="gold">0</strong></div></article>
-      <article class="resource glass"><span>💎</span><div><small>Кристаллы</small><strong id="crystals">0</strong></div></article>
-      <article class="resource glass"><span>⛏️</span><div><small>Руда</small><strong id="ore">0</strong></div></article>
-    </section>
-
-    <section class="section-head">
-      <div><div class="eyebrow">РЕЖИМЫ</div><h2>Куда идём?</h2></div>
-      <span class="live-pill">WEBGL</span>
-    </section>
-
+    <section class="topbar"><div><div class="eyebrow">WHITESLOVE · GAME HUB</div><h1 id="hello">Загрузка профиля…</h1></div><button id="fullscreen" class="icon-button" type="button" aria-label="Полный экран">⛶</button></section>
+    <section class="hero-card mmo-hud glass" aria-label="Состояние персонажа"><div class="hero-crest" aria-hidden="true"><div class="hero-portrait-shell"><span id="class-sigil" class="hero-sigil">◇</span><div class="level-orb"><span id="level">1</span><small>LVL</small></div></div></div><div class="hero-copy"><div class="hero-row"><div class="hero-identity"><small>ПЕРСОНАЖ</small><strong id="class-name">Путешественник</strong></div><span id="chat-badge">Telegram</span></div><div class="hud-stack"><div class="hud-meter hp"><span class="hud-label">HP</span><div class="hud-track"><i id="hp-fill"></i><b></b></div><strong id="hp-text">0 / 1</strong></div><div class="hud-meter mp"><span class="hud-label">MP</span><div class="hud-track"><i id="mp-fill"></i><b></b></div><strong id="mp-text">0 / 1</strong></div><div class="hud-meter cp"><span class="hud-label">CP</span><div class="hud-track"><i id="cp-fill"></i><b></b></div><strong id="cp-text">0 / 1</strong></div><div class="hud-meter sp"><span class="hud-label">SP</span><div class="hud-track sp-track"><i></i><b></b></div><strong id="sp-text">0</strong></div><div class="hud-meter exp"><span class="hud-label">EXP</span><div class="hud-track"><i id="xp-fill"></i><b></b></div><strong id="xp-text">0 / 1</strong></div></div><div class="hud-footer"><span id="arena-text">Арена: 0</span><span class="hud-status-dot">ONLINE</span></div></div></section>
+    <section class="resources" aria-label="Ресурсы"><article class="resource glass"><span>🪙</span><div><small>Мора</small><strong id="gold">0</strong></div></article><article class="resource glass"><span>💎</span><div><small>Кристаллы</small><strong id="crystals">0</strong></div></article><article class="resource glass"><span>⛏️</span><div><small>Руда</small><strong id="ore">0</strong></div></article></section>
+    <section class="section-head"><div><div class="eyebrow">РЕЖИМЫ</div><h2>Куда идём?</h2></div><span class="live-pill">WEBGL</span></section>
     <section id="game-grid" class="game-grid"></section>
-
-    <section class="migration-note glass">
-      <strong>Новый интерфейс уже живой.</strong>
-      <p>Игровые данные берутся из существующих Mongo-сессий. Механики переносим по одной, оставляя текстовый fallback для ещё не мигрированных режимов.</p>
-    </section>
-
+    <section class="migration-note glass"><strong>Новый интерфейс уже живой.</strong><p>Игровые данные берутся из существующих Mongo-сессий. Механики переносим по одной, оставляя текстовый fallback для ещё не мигрированных режимов.</p></section>
     <div id="status" class="status">Подключаем Telegram…</div>
   </main>
-
   <script type="module" src="/app.js"></script>
 </body>
 </html>
