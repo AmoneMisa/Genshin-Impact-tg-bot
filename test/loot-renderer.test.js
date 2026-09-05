@@ -41,25 +41,35 @@ test('grade and rarity select stable visual tones', () => {
   assert.equal(lootTone({ rarity: 'common' }), 'mist');
 });
 
-test('loot renderer stylesheet is wired before VFX/design system and stays mobile safe', () => {
+test('loot styles are wired before VFX/design system and stay mobile safe', () => {
   const index = fs.readFileSync(path.join(root, 'webapp/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(root, 'webapp/loot-renderer.css'), 'utf8');
+  const equipmentCss = fs.readFileSync(path.join(root, 'webapp/loot-equipment.css'), 'utf8');
   const stylesheets = [...index.matchAll(/href="\/([^\"]+\.css)"/g)].map(match => match[1]);
   assert.ok(stylesheets.includes('loot-renderer.css'));
+  assert.ok(stylesheets.includes('loot-equipment.css'));
   assert.ok(stylesheets.indexOf('loot-renderer.css') < stylesheets.indexOf('vfx.css'));
-  assert.ok(stylesheets.indexOf('loot-renderer.css') < stylesheets.indexOf('design-system.css'));
+  assert.ok(stylesheets.indexOf('loot-equipment.css') < stylesheets.indexOf('vfx.css'));
   assert.equal(stylesheets.at(-1), 'design-system.css');
   assert.ok(css.includes('@media(max-width:390px)'));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(css.includes('pointer-events:none'));
+  assert.ok(equipmentCss.includes('.equipment-loot-preview'));
+  assert.ok(equipmentCss.includes('.forge-loot-reveal'));
+  assert.ok(equipmentCss.includes('@media(prefers-reduced-motion:reduce)'));
 });
 
-test('daily sword and equipment gacha render the shared art layer', () => {
+test('daily sword, equipment gacha, arsenal and forge share the loot renderer', () => {
   const sword = fs.readFileSync(path.join(root, 'webapp/sword.js'), 'utf8');
   const gacha = fs.readFileSync(path.join(root, 'webapp/gacha.js'), 'utf8');
+  const equipment = fs.readFileSync(path.join(root, 'webapp/equipment.js'), 'utf8');
   assert.ok(sword.includes("import { renderDailySwordArt } from './loot-renderer.js'"));
   assert.ok(sword.includes('renderDailySwordArt(state.length'));
   assert.ok(gacha.includes("import { renderLootArt } from './loot-renderer.js'"));
   assert.ok(gacha.includes('gacha-loot-stage'));
   assert.ok(gacha.includes('renderLootArt(item,{reveal:true})'));
+  assert.ok(equipment.includes("import { renderLootArt } from './loot-renderer.js'"));
+  assert.ok(equipment.includes('equipment-loot-preview'));
+  assert.ok(equipment.includes('forge-mini-loot'));
+  assert.ok(equipment.includes('showForgeReveal(payload.item'));
 });
