@@ -1,0 +1,519 @@
+/*
+ * WhitesLove Mini App design system.
+ *
+ * Feature stylesheets own layout and mode-specific artwork. This file is loaded
+ * last and owns the shared visual grammar: surfaces, controls, semantic states,
+ * focus, motion and per-mode accent variables.
+ */
+:root {
+  --surface-page: #0b0d17;
+  --surface-panel: rgba(16, 18, 34, .94);
+  --surface-glass: rgba(18, 20, 37, .68);
+  --surface-card: rgba(255, 255, 255, .035);
+  --surface-card-strong: rgba(255, 255, 255, .055);
+  --surface-control: rgba(255, 255, 255, .045);
+  --surface-input: rgba(8, 10, 20, .52);
+  --surface-card-gradient: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.018)), var(--surface-card);
+
+  --text: #f6f5ff;
+  --text-soft: #d8d4e8;
+  --muted: #aaa9c1;
+  --text-faint: #858397;
+
+  --accent: #bc9cff;
+  --accent-2: #75d8ff;
+  --accent-rgb: 188 156 255;
+  --accent-2-rgb: 117 216 255;
+  --success: #a8f4d8;
+  --success-rgb: 126 232 208;
+  --warning: #f2d395;
+  --warning-rgb: 242 198 111;
+  --danger: #ffb5ac;
+  --danger-rgb: 238 117 104;
+
+  --border-subtle: rgba(255, 255, 255, .065);
+  --border-soft: rgba(255, 255, 255, .09);
+  --border-strong: rgba(255, 255, 255, .14);
+
+  --radius-xs: 8px;
+  --radius-sm: 11px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-sheet: 28px;
+
+  --shadow-card: 0 14px 34px rgba(0, 0, 0, .17);
+  --shadow-panel: 0 28px 80px rgba(0, 0, 0, .38);
+  --shadow-accent: 0 14px 34px rgb(var(--accent-rgb) / .10);
+
+  --blur-card: 18px;
+  --blur-panel: 24px;
+  --control-height: 42px;
+
+  --motion-fast: 140ms;
+  --motion-medium: 220ms;
+  --ease-game: cubic-bezier(.2, .8, .2, 1);
+}
+
+html,
+body {
+  background: var(--surface-page);
+  color: var(--text);
+}
+
+.glass {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.018)),
+    var(--surface-glass);
+  border-color: var(--border-soft);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(var(--blur-card)) saturate(1.15);
+}
+
+.game-overlay {
+  --screen-accent-rgb: var(--accent-rgb);
+  --screen-accent-2-rgb: var(--accent-2-rgb);
+}
+
+.boss-overlay {
+  --screen-accent-rgb: 225 118 154;
+  --screen-accent-2-rgb: 235 123 105;
+}
+
+.arena-overlay {
+  --screen-accent-rgb: 165 126 240;
+  --screen-accent-2-rgb: 85 160 205;
+}
+
+.equipment-overlay {
+  --screen-accent-rgb: 224 174 101;
+  --screen-accent-2-rgb: 188 156 255;
+}
+
+.gacha-overlay {
+  --screen-accent-rgb: 188 156 255;
+  --screen-accent-2-rgb: 117 216 255;
+}
+
+.point21-overlay {
+  --screen-accent-rgb: 156 119 225;
+  --screen-accent-2-rgb: 91 147 211;
+}
+
+.overlay-backdrop {
+  background: rgba(4, 5, 12, .72);
+  backdrop-filter: blur(10px) saturate(.9);
+}
+
+.overlay-panel {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background:
+    linear-gradient(155deg, rgb(var(--screen-accent-rgb) / .045), transparent 32%),
+    linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.012)),
+    var(--surface-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(var(--blur-panel)) saturate(1.12);
+}
+
+.overlay-head {
+  min-height: 48px;
+}
+
+.overlay-head h2 {
+  font-size: 24px;
+  letter-spacing: -.025em;
+}
+
+.overlay-copy {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+button,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  transition:
+    transform var(--motion-fast) var(--ease-game),
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease,
+    opacity var(--motion-fast) ease;
+}
+
+button:not(:disabled):active {
+  transform: scale(.98);
+}
+
+button:disabled {
+  opacity: .46;
+  cursor: default;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgb(var(--screen-accent-rgb, 188 156 255) / .72);
+  outline-offset: 2px;
+}
+
+.overlay-panel input:not([type="checkbox"]):not([type="radio"]),
+.overlay-panel select,
+.overlay-panel textarea {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  background: var(--surface-input);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.overlay-panel input:not([type="checkbox"]):not([type="radio"]):focus,
+.overlay-panel select:focus,
+.overlay-panel textarea:focus {
+  border-color: rgb(var(--screen-accent-rgb) / .36);
+  box-shadow: 0 0 0 3px rgb(var(--screen-accent-rgb) / .07);
+}
+
+.game-card {
+  border-color: var(--border-soft);
+  border-radius: var(--radius-xl);
+  background: var(--surface-card-gradient);
+  box-shadow: var(--shadow-card);
+}
+
+.game-card::after {
+  background: radial-gradient(circle, rgb(var(--accent-rgb) / .30), transparent 68%);
+}
+
+.game-icon {
+  border-color: var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface-control);
+}
+
+.hero-card {
+  border-radius: var(--radius-xl);
+}
+
+.resource {
+  border-radius: var(--radius-lg);
+}
+
+/* Shared secondary surfaces. Feature-specific state selectors keep their own accents. */
+.utility-card,
+.chat-setting-row,
+.self-mute-card,
+.self-mute-message,
+.profile-current,
+.profile-gender,
+.profile-class-card,
+.equipment-summary > div,
+.loadout-slot,
+.equipment-item,
+.forge-card,
+.point-balance,
+.point-phase-card,
+.point-player,
+.point-bet-box,
+.point-my-status,
+.point-result-row {
+  border-color: var(--border-subtle);
+  background: var(--surface-card-gradient);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.018);
+}
+
+.utility-card,
+.self-mute-card,
+.self-mute-message {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.utility-card::after,
+.self-mute-card::after,
+.self-mute-message::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -78px;
+  top: -86px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--screen-accent-rgb, 188 156 255) / .12), transparent 70%);
+  pointer-events: none;
+}
+
+.utility-card > *,
+.self-mute-card > *,
+.self-mute-message > * {
+  position: relative;
+  z-index: 1;
+}
+
+.utility-card h3 {
+  font-size: 13px;
+  letter-spacing: -.01em;
+}
+
+.utility-card p {
+  color: var(--muted);
+}
+
+/* Tabs and segmented controls share one container treatment. */
+.equipment-tabs,
+.arena-tabs {
+  border-color: var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,.022);
+}
+
+.equipment-tabs button,
+.arena-tabs button {
+  border-radius: var(--radius-sm);
+}
+
+.equipment-tabs button.active,
+.arena-tabs button.active {
+  color: var(--text);
+  background:
+    linear-gradient(135deg, rgb(var(--screen-accent-rgb) / .18), rgb(var(--screen-accent-2-rgb) / .10)),
+    var(--surface-control);
+  box-shadow: inset 0 0 20px rgb(var(--screen-accent-rgb) / .045);
+}
+
+/* Pills/chips. */
+.live-pill,
+.equipped-pill,
+.gacha-payment.free {
+  color: var(--success);
+  border-color: rgb(var(--success-rgb) / .22);
+  background: rgb(var(--success-rgb) / .08);
+}
+
+.mode-badge,
+.equipment-filter,
+.chat-setting-toggle,
+.point-bet-chips button,
+.point-player-head > span,
+.point-phase-card > span,
+.gacha-payment,
+.gacha-probabilities span,
+.equipment-meta span,
+.equipment-stats span,
+.forge-cost,
+.boss-loot span,
+.arena-opponent-meta span {
+  border-radius: 999px;
+}
+
+.equipment-filter,
+.chat-setting-toggle,
+.point-bet-chips button {
+  border-color: var(--border-soft);
+  background: var(--surface-control);
+  color: var(--muted);
+}
+
+.equipment-filter.active,
+.chat-setting-toggle.active {
+  color: var(--text);
+  border-color: rgb(var(--screen-accent-rgb) / .32);
+  background: rgb(var(--screen-accent-rgb) / .15);
+}
+
+/* Primary calls to action. Mode accents come from the overlay theme variables. */
+.utility-action,
+.self-mute-action,
+.point-primary,
+.point-actions button:not(.ghost),
+.gacha-roll,
+.gacha-action,
+.arena-attack,
+.equipment-action.primary,
+.forge-action,
+.boss-summon {
+  min-height: var(--control-height);
+  border: 1px solid rgb(var(--screen-accent-rgb, 188 156 255) / .28);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  background:
+    linear-gradient(
+      135deg,
+      rgb(var(--screen-accent-rgb, 188 156 255) / .34),
+      rgb(var(--screen-accent-2-rgb, 117 216 255) / .18)
+    ),
+    var(--surface-control);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 12px 26px rgb(var(--screen-accent-rgb, 188 156 255) / .08);
+  font-weight: 800;
+}
+
+.utility-action:not(:disabled):active,
+.self-mute-action:not(:disabled):active,
+.point-primary:not(:disabled):active,
+.point-actions button:not(.ghost):not(:disabled):active,
+.gacha-roll:not(:disabled):active,
+.gacha-action:not(:disabled):active,
+.arena-attack:not(:disabled):active,
+.equipment-action.primary:not(:disabled):active,
+.forge-action:not(:disabled):active,
+.boss-summon:not(:disabled):active {
+  transform: translateY(1px) scale(.985);
+}
+
+.point-actions button.ghost,
+.equipment-action:not(.primary),
+.arena-refresh,
+.boss-name-row button {
+  border-color: var(--border-soft);
+  color: var(--text-soft);
+  background: var(--surface-control);
+}
+
+.arena-refresh {
+  border-radius: 999px;
+}
+
+.equipment-action,
+.point-actions button,
+.arena-attack,
+.boss-summon {
+  min-height: 38px;
+}
+
+/* Feedback and empty states use the same hierarchy across modes. */
+.equipment-feedback,
+.arena-feedback,
+.boss-feedback,
+.point-feedback,
+.gacha-status,
+.utility-feedback {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.equipment-empty,
+.arena-empty,
+.boss-empty,
+.point-watch {
+  border-color: var(--border-soft);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  background: rgba(255,255,255,.015);
+}
+
+/* Semantic states. */
+.point-result-row.win,
+.arena-result.win,
+.equipment-item.equipped {
+  border-color: rgb(var(--success-rgb) / .24);
+}
+
+.point-result-row.lose,
+.arena-result.lose,
+.forge-cost.missing,
+.equipment-action.sell.confirming {
+  border-color: rgb(var(--danger-rgb) / .24);
+}
+
+.forge-cost.missing,
+.equipment-action.sell.confirming {
+  color: var(--danger);
+}
+
+.bonus-win,
+.arena-result.victory,
+.boss-result.victory {
+  box-shadow: 0 16px 40px rgb(var(--warning-rgb) / .06);
+}
+
+/* Utility screens get the same visual density as the large game modes. */
+.utility-grid {
+  gap: 10px;
+}
+
+.utility-card {
+  padding: 15px;
+}
+
+.utility-action {
+  margin-top: 13px;
+}
+
+.bonus-balance article,
+.bonus-prize,
+.title-row,
+.horo-result {
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-card);
+}
+
+.bonus-balance article,
+.bonus-prize,
+.title-row {
+  border-radius: var(--radius-md);
+}
+
+.horo-result {
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+}
+
+.horo-sign,
+.horo-style {
+  border-color: var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-control);
+}
+
+.horo-sign.active,
+.horo-style.active {
+  border-color: rgb(var(--accent-rgb) / .34);
+  background: rgb(var(--accent-rgb) / .16);
+}
+
+.chat-setting-row {
+  border-radius: var(--radius-md);
+}
+
+.chat-setting-row.enabled {
+  border-color: rgb(var(--accent-rgb) / .20);
+  background:
+    linear-gradient(145deg, rgb(var(--accent-rgb) / .075), transparent),
+    var(--surface-card);
+}
+
+.chat-setting-toggle {
+  min-height: 34px;
+}
+
+.self-mute-action {
+  min-height: 46px;
+}
+
+/* Respect users who disable motion without making the UI feel broken. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    animation-duration: .001ms;
+    animation-iteration-count: 1;
+    transition-duration: .001ms;
+  }
+}
+
+@media (min-width: 680px) {
+  .overlay-panel {
+    border-radius: var(--radius-sheet);
+  }
+}
