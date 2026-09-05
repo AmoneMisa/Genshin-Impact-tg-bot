@@ -1,4 +1,4 @@
-import { startLootWebGL } from './loot-webgl.js';
+import { startLootWebGL } from './loot-webgl-v2.js';
 
 const VERTEX_SHADER = `
 attribute vec2 a_position;
