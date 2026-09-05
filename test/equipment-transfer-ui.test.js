@@ -40,8 +40,10 @@ test('multi-slot transfer target uses the combined visual center', () => {
 
 test('equipment UI only plays transfer after successful action state is rendered', () => {
   const equipmentJs = fs.readFileSync(path.join(root, 'webapp/equipment.js'), 'utf8');
+  const paperDollJs = fs.readFileSync(path.join(root, 'webapp/equipment-paper-doll.js'), 'utf8');
   assert.ok(equipmentJs.includes("import { captureEquipmentTransfer, playEquipmentTransfer } from './equipment-transfer.js'"));
-  assert.ok(equipmentJs.includes('data-slot="${escapeHtml(slot)}"'));
+  assert.ok(equipmentJs.includes("import { renderEquipmentPaperDoll } from './equipment-paper-doll.js'"));
+  assert.ok(paperDollJs.includes('data-slot="${escapeHtml(slot)}"'));
   assert.ok(equipmentJs.includes("captureEquipmentTransfer(action,item,{list,loadout,equipment})"));
   assert.ok(equipmentJs.includes('equipment=payload.equipment'));
   assert.ok(equipmentJs.includes('renderAll();if(transfer&&payload.item)requestAnimationFrame(()=>playEquipmentTransfer'));
@@ -57,7 +59,8 @@ test('transfer layer is viewport anchored, non-interactive and reduced-motion sa
   assert.ok(css.includes('@media(max-width:390px)'));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(stylesheets.includes('equipment-transfer.css'));
-  assert.ok(stylesheets.indexOf('loot-equipment.css') < stylesheets.indexOf('equipment-transfer.css'));
+  assert.ok(stylesheets.indexOf('loot-equipment.css') < stylesheets.indexOf('equipment-paper-doll.css'));
+  assert.ok(stylesheets.indexOf('equipment-paper-doll.css') < stylesheets.indexOf('equipment-transfer.css'));
   assert.ok(stylesheets.indexOf('equipment-transfer.css') < stylesheets.indexOf('vfx.css'));
   assert.equal(stylesheets.at(-1), 'design-system.css');
 });
