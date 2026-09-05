@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { forgeVisualProfile, renderForgeLootArt } from '../webapp/loot-forge.js';
 import { lootConditionProfile, lootTone, lootVisualProfile, normalizeLootKind, renderDailySwordArt, renderLootArt, swordShapeForLength } from '../webapp/loot-renderer.js';
 
 const root = process.cwd();
@@ -109,14 +110,57 @@ test('missing condition metrics stay neutral instead of inventing wear', () => {
   assert.match(art, /quality-unknown wear-unknown/);
 });
 
+test('forge level evolves visible runes without rerolling the base item identity', () => {
+  const base = {
+    name: 'Kingsguard Edge',
+    kind: 'oneHandedSword',
+    category: 'sword',
+    mainType: 'weapon',
+    grade: 'S',
+    rarity: 'rare',
+    cost: 88000,
+    quality: { current: 92, max: 100 },
+    persistence: { current: 180, max: 190 },
+    maxForgeLevel: 10,
+  };
+  const identity = lootVisualProfile(base);
+  for (const forgeLevel of [0, 3, 6, 9, 10]) {
+    assert.deepEqual(lootVisualProfile({ ...base, forgeLevel }), identity);
+  }
+
+  assert.deepEqual(forgeVisualProfile({ ...base, forgeLevel: 0 }), {
+    level: 0, maxLevel: 10, progress: 0, tier: 'dormant', activeSegments: 0, wear: 'pristine',
+  });
+  assert.equal(forgeVisualProfile({ ...base, forgeLevel: 3 }).tier, 'tempered');
+  assert.equal(forgeVisualProfile({ ...base, forgeLevel: 6 }).tier, 'etched');
+  assert.equal(forgeVisualProfile({ ...base, forgeLevel: 9 }).tier, 'radiant');
+  assert.equal(forgeVisualProfile({ ...base, forgeLevel: 10 }).tier, 'ascendant');
+  assert.equal(forgeVisualProfile({ ...base, forgeLevel: 10 }).activeSegments, 10);
+  assert.equal(forgeVisualProfile({ ...base, forgeLevel: 999 }).level, 10);
+
+  const ascendant = renderForgeLootArt({ ...base, forgeLevel: 10 }, { reveal: true });
+  assert.match(ascendant, /forge-ascendant/);
+  assert.match(ascendant, /data-forge-level="10"/);
+  assert.match(ascendant, /data-forge-segments="10"/);
+  assert.match(ascendant, /forge-rune-wheel/);
+  assert.match(ascendant, /forge-level-mark[^>]*[^]*\+10/);
+  assert.match(ascendant, /motion-spin/);
+
+  const critical = renderForgeLootArt({ ...base, forgeLevel: 10, persistence: { current: 20, max: 190 } });
+  assert.match(critical, /forge-ascendant condition-wear-critical/);
+});
+
 test('loot styles are wired before VFX/design system and stay mobile safe', () => {
   const index = fs.readFileSync(path.join(root, 'webapp/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(root, 'webapp/loot-renderer.css'), 'utf8');
+  const forgeCss = fs.readFileSync(path.join(root, 'webapp/loot-forge.css'), 'utf8');
   const equipmentCss = fs.readFileSync(path.join(root, 'webapp/loot-equipment.css'), 'utf8');
   const stylesheets = [...index.matchAll(/href="\/([^\"]+\.css)"/g)].map(match => match[1]);
   assert.ok(stylesheets.includes('loot-renderer.css'));
+  assert.ok(stylesheets.includes('loot-forge.css'));
   assert.ok(stylesheets.includes('loot-equipment.css'));
-  assert.ok(stylesheets.indexOf('loot-renderer.css') < stylesheets.indexOf('vfx.css'));
+  assert.ok(stylesheets.indexOf('loot-renderer.css') < stylesheets.indexOf('loot-forge.css'));
+  assert.ok(stylesheets.indexOf('loot-forge.css') < stylesheets.indexOf('vfx.css'));
   assert.ok(stylesheets.indexOf('loot-equipment.css') < stylesheets.indexOf('vfx.css'));
   assert.equal(stylesheets.at(-1), 'design-system.css');
   assert.ok(css.includes('.material-obsidian'));
@@ -126,6 +170,12 @@ test('loot styles are wired before VFX/design system and stay mobile safe', () =
   assert.ok(css.includes('.loot-wear-marks'));
   assert.ok(css.includes('.quality-masterwork'));
   assert.ok(css.includes('.wear-critical'));
+  assert.ok(forgeCss.includes('.forge-ascendant'));
+  assert.ok(forgeCss.includes('.forge-rune-wheel'));
+  assert.ok(forgeCss.includes('.condition-wear-critical'));
+  assert.ok(forgeCss.includes('@media(max-width:390px)'));
+  assert.ok(forgeCss.includes('@media(prefers-reduced-motion:reduce)'));
+  assert.ok(forgeCss.includes('pointer-events:none'));
   assert.ok(css.includes('@media(max-width:390px)'));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(css.includes('pointer-events:none'));
@@ -143,8 +193,9 @@ test('daily sword, equipment gacha, arsenal and forge share the loot renderer', 
   assert.ok(gacha.includes("import { renderLootArt } from './loot-renderer.js'"));
   assert.ok(gacha.includes('gacha-loot-stage'));
   assert.ok(gacha.includes('renderLootArt(item,{reveal:true})'));
-  assert.ok(equipment.includes("import { renderLootArt } from './loot-renderer.js'"));
+  assert.ok(equipment.includes("import { renderForgeLootArt } from './loot-forge.js'"));
   assert.ok(equipment.includes('equipment-loot-preview'));
   assert.ok(equipment.includes('forge-mini-loot'));
+  assert.ok(equipment.includes('renderForgeLootArt(item,{reveal:true})'));
   assert.ok(equipment.includes('showForgeReveal(payload.item'));
 });
