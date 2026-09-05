@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { lootTone, lootVisualProfile, normalizeLootKind, renderDailySwordArt, renderLootArt, swordShapeForLength } from '../webapp/loot-renderer.js';
+import { lootConditionProfile, lootTone, lootVisualProfile, normalizeLootKind, renderDailySwordArt, renderLootArt, swordShapeForLength } from '../webapp/loot-renderer.js';
 
 const root = process.cwd();
 
@@ -60,6 +60,55 @@ test('grade and rarity select stable visual tones', () => {
   assert.equal(lootTone({ rarity: 'common' }), 'mist');
 });
 
+test('same item keeps identity while quality and persistence change visible condition', () => {
+  const base = {
+    name: 'Moon breaker',
+    kind: 'twoHandedSword',
+    category: 'sword',
+    mainType: 'weapon',
+    grade: 'S',
+    rarity: 'rare',
+    cost: 120000,
+  };
+  const pristine = {
+    ...base,
+    quality: { current: 96, max: 100 },
+    persistence: { current: 188, max: 190 },
+  };
+  const battered = {
+    ...base,
+    quality: { current: 18, max: 100 },
+    persistence: { current: 35, max: 190 },
+  };
+
+  assert.deepEqual(lootVisualProfile(pristine), lootVisualProfile(battered));
+  assert.equal(lootConditionProfile(pristine).quality, 'masterwork');
+  assert.equal(lootConditionProfile(pristine).wear, 'pristine');
+  assert.equal(lootConditionProfile(battered).quality, 'rough');
+  assert.equal(lootConditionProfile(battered).wear, 'critical');
+  assert.equal(lootConditionProfile(pristine).qualityRatio, .96);
+  assert.equal(lootConditionProfile(pristine).durabilityRatio, 188 / 190);
+
+  const pristineArt = renderLootArt(pristine, { reveal: true });
+  const batteredArt = renderLootArt(battered, { reveal: true });
+  assert.match(pristineArt, /quality-masterwork wear-pristine/);
+  assert.match(batteredArt, /quality-rough wear-critical/);
+  assert.match(batteredArt, /loot-wear-marks/);
+  assert.match(batteredArt, /data-loot-wear="critical"/);
+});
+
+test('missing condition metrics stay neutral instead of inventing wear', () => {
+  const condition = lootConditionProfile({ grade: 'A', kind: 'helmet' });
+  assert.deepEqual(condition, {
+    quality: 'unknown',
+    wear: 'unknown',
+    qualityRatio: null,
+    durabilityRatio: null,
+  });
+  const art = renderLootArt({ grade: 'A', kind: 'helmet' });
+  assert.match(art, /quality-unknown wear-unknown/);
+});
+
 test('loot styles are wired before VFX/design system and stay mobile safe', () => {
   const index = fs.readFileSync(path.join(root, 'webapp/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(root, 'webapp/loot-renderer.css'), 'utf8');
@@ -74,6 +123,9 @@ test('loot styles are wired before VFX/design system and stay mobile safe', () =
   assert.ok(css.includes('.material-moonsteel'));
   assert.ok(css.includes('.ornament-royal'));
   assert.ok(css.includes('.ornament-crystal'));
+  assert.ok(css.includes('.loot-wear-marks'));
+  assert.ok(css.includes('.quality-masterwork'));
+  assert.ok(css.includes('.wear-critical'));
   assert.ok(css.includes('@media(max-width:390px)'));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(css.includes('pointer-events:none'));
