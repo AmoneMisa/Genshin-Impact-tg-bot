@@ -1,4 +1,5 @@
 import { renderForgeLootArt } from './loot-forge.js';
+import { renderPaperDollAvatar } from './equipment-paper-doll-avatar.js';
 
 export const PAPER_DOLL_SLOTS = [
   ['head','Голова',50,8],
@@ -40,7 +41,21 @@ export function equippedItemForSlot(state={},slot){
   return candidates.find(item=>sameSnapshot(item,slotItem))||candidates[0]||null;
 }
 
-function figureMarkup(){
+export function avatarItemsForState(state={}){
+  return {
+    head:equippedItemForSlot(state,'head'),
+    up:equippedItemForSlot(state,'up'),
+    cloak:equippedItemForSlot(state,'cloak'),
+    hands:equippedItemForSlot(state,'hands'),
+    down:equippedItemForSlot(state,'down'),
+    legs:equippedItemForSlot(state,'legs'),
+    leftHand:equippedItemForSlot(state,'leftHand'),
+    rightHand:equippedItemForSlot(state,'rightHand'),
+  };
+}
+
+function figureMarkup(state){
+  const avatarItems=avatarItemsForState(state);
   return `<div class="paper-doll-figure" aria-hidden="true">
     <svg viewBox="0 0 180 360" role="presentation">
       <defs>
@@ -53,6 +68,7 @@ function figureMarkup(){
       <path d="M52 113 90 139 128 113M50 211h80M68 332h44" fill="none" stroke="#cfc5ff" stroke-opacity=".18" stroke-width="2" stroke-dasharray="5 8"/>
       <circle cx="90" cy="178" r="55" fill="none" stroke="#b8a7ef" stroke-opacity=".08" stroke-width="1" stroke-dasharray="4 7"/>
     </svg>
+    ${renderPaperDollAvatar(avatarItems)}
     <span class="paper-doll-core"></span>
   </div>`;
 }
@@ -77,7 +93,7 @@ export function renderEquipmentPaperDoll(container,state={}){
   container.className='loadout-grid paper-doll-loadout';
   container.innerHTML=`<div class="paper-doll-stage" data-paper-doll-stage>
     <div class="paper-doll-circuit" aria-hidden="true"></div>
-    ${figureMarkup()}
+    ${figureMarkup(state)}
     ${PAPER_DOLL_SLOTS.map(([slot,label,x,y])=>slotMarkup(state,slot,label,x,y)).join('')}
     <div class="paper-doll-caption"><strong>${occupied}</strong><span>активных слотов</span></div>
   </div>`;
