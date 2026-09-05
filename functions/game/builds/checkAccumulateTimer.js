@@ -1,50 +1,70 @@
-import {sessions} from '../../../data.js';
-import getMembers from '../../getters/getMembers.js';
-import getBuildsList from './getBuildList.js';
+import Chat from '../../../db/models/Chat.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
 import calculateIncreaseInResourceExtraction from './calculateIncreaseInResourceExtraction.js';
+import settleBuildUpgrade from './settleBuildUpgrade.js';
 import debugMessage from "../../tgBotFunctions/debugMessage.js";
-import getSession from "../../getters/getSession.js";
+import getUserName from "../../getters/getUserName.js";
+import sendMessage from "../../tgBotFunctions/sendMessage.js";
 
-let i = 0;
-export default async function () {
-    for (let chatId of Object.keys(sessions)) {
-        for (let userId of Object.keys(getMembers(chatId))) {
-            let session;
+export default async function() {
+    const chats = await Chat.find({});
 
-            i++;
+    for (const chat of chats) {
+        let updated = false;
+
+        for (const member of chat.members) {
+            if (member.userChatData?.user?.is_bot) {
+                continue;
+            }
+
+            if (member.userChatData?.status === "left") {
+                continue;
+            }
+
+            const builds = member.game?.builds;
+            if (!builds) {
+                continue;
+            }
+
             try {
-                session = await getSession(chatId, userId);
-            } catch (e) {
-                console.error(e);
-                continue;
-            }
-
-            if (session.userChatData.user.is_bot) {
-                continue;
-            }
-
-            if (session.userChatData.status === "left") {
-                continue;
-            }
-
-            try {
-                for (let [buildName, build] of Object.entries(await getBuildsList(chatId, userId))) {
-                    let buildTemplate = buildsTemplate[buildName];
-
-                    if (buildName === "palace") {
+                for (let [buildName, build] of Object.entries(builds)) {
+                    const buildTemplate = buildsTemplate[buildName];
+                    if (!buildTemplate) {
                         continue;
                     }
 
+                    // Завершаем улучшение по persisted timestamp. Это переживает
+                    // перезапуск процесса и не зависит от volatile setTimeout.
+                    // This is now also settled inline on every bot read (see
+                    // getBuild.js) — this hourly pass is a safety net for
+                    // players who don't reopen the bot menu, so the "здание
+                    // построено" notification still fires without them asking.
                     if (build.upgradeStartedAt) {
+                        if (settleBuildUpgrade(build, buildName)) {
+                            updated = true;
+
+                            const username = await getUserName(member, "nickname") || member.userId;
+                            sendMessage(chat.chatId, `@${username}, твоё здание "${buildTemplate.name}" успешно построено!`, {});
+                        }
+
                         continue;
                     }
 
-                    let currentTime = new Date().getTime();
-                    let maxWorkHoursWithoutCollection = buildTemplate.maxWorkHoursWithoutCollection;
+                    if (buildName === "palace" || !Number.isFinite(Number(buildTemplate.productionPerHour))) {
+                        continue;
+                    }
 
-                    //если последний сбор был более maxWorkHoursWithoutCollection, то НЕ накапливаем ресурсы
-                    if (build.lastCollectAt && (build.lastCollectAt + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
+                    if (!Number.isFinite(Number(build.resourceCollected))) {
+                        build.resourceCollected = 0;
+                        updated = true;
+                    }
+
+                    const currentTime = Date.now();
+                    const maxWorkHoursWithoutCollection = Number(buildTemplate.maxWorkHoursWithoutCollection);
+
+                    // Если автономный лимит уже исчерпан, новые ресурсы не добавляем.
+                    if (build.lastCollectAt && Number.isFinite(maxWorkHoursWithoutCollection)
+                        && (Number(build.lastCollectAt) + (maxWorkHoursWithoutCollection * 60 * 60 * 1000)) < currentTime) {
                         continue;
                     }
 
@@ -52,16 +72,23 @@ export default async function () {
                         build.lastCollectAt = currentTime;
                     }
 
-                    if (build.currentLvl === 1) {
-                        build.resourceCollected += Math.ceil(buildTemplate.productionPerHour);
+                    if (Number(build.currentLvl) === 1) {
+                        build.resourceCollected += Math.ceil(Number(buildTemplate.productionPerHour));
                     } else {
-                        build.resourceCollected += Math.ceil(buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl));
+                        build.resourceCollected += Math.ceil(Number(buildTemplate.productionPerHour)
+                            * calculateIncreaseInResourceExtraction(buildName, Number(build.currentLvl)));
                     }
+
+                    updated = true;
                 }
             } catch (e) {
                 console.error(e);
                 debugMessage(`buildList getting error: ${e}`);
             }
+        }
+
+        if (updated) {
+            await chat.save();
         }
     }
 }

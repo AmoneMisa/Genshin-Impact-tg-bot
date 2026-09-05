@@ -1,0 +1,11 @@
+.self-mute-panel { max-width: 560px; }
+.self-mute-content { padding: 4px 0 8px; }
+.self-mute-loading { padding: 20px; color: var(--muted); text-align: center; font-size: 11px; }
+.self-mute-card, .self-mute-message { display: grid; gap: 12px; text-align: center; }
+.self-mute-icon { display: block; font-size: 42px; line-height: 1; }
+.self-mute-card h3, .self-mute-message h3 { margin: 0; font-size: 15px; }
+.self-mute-card p, .self-mute-message p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.self-mute-message.active { border-color: rgba(185,156,255,.24); background: radial-gradient(circle at top, rgba(139,99,213,.16), rgba(255,255,255,.03)); }
+.self-mute-action { width: 100%; padding: 13px 16px; border: 1px solid rgba(185,156,255,.28); border-radius: 16px; color: #f8f3ff; background: linear-gradient(135deg, rgba(116,76,190,.74), rgba(72,54,128,.76)); font-weight: 800; }
+.self-mute-action:disabled { opacity: .45; }
+@media (min-width: 680px) { .self-mute-card { grid-template-columns: 52px 1fr; text-align: left; align-items: center; } .self-mute-card .self-mute-action { grid-column: 1 / -1; } }

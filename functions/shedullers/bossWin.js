@@ -1,29 +1,43 @@
-import { sessions, bosses } from '../../data.js';
-import isBossAlive from '../game/boss/getBossStatus/isBossAlive.js';
-import sendMessageWithDelete from '../tgBotFunctions/sendMessageWithDelete.js';
+import Boss from "../../db/models/Boss.js";
+import Chat from "../../db/models/Chat.js";
+import sendMessageWithDelete from "../tgBotFunctions/sendMessageWithDelete.js";
 
-export default async function () {
-    for (let [chatId, bossesArray] of Object.entries(bosses)) {
-        for (let boss of bossesArray) {
-            if (!isBossAlive(boss)) {
-                continue;
+/**
+ * Проверяет активных боссов в MongoDB и завершает бой по таймауту.
+ */
+export default async function() {
+    const expiredBosses = await Boss.find({
+        hp: { $gt: 0 },
+        currentHp: { $gt: 0 },
+        aliveTime: { $lte: Date.now() },
+    });
+
+    for (const boss of expiredBosses) {
+        const chat = await Chat.findOne({ chatId: boss.chatId });
+        if (chat) {
+            for (const player of boss.listOfDamage || []) {
+                const member = chat.members.find(m => String(m.userId) === String(player.id));
+                if (member?.game?.gameClass?.stats) {
+                    member.game.gameClass.stats.hp = 0;
+                    member.game.respawnTime = Date.now() + 60 * 1000;
+                }
             }
-
-            if (boss.aliveTime > new Date().getTime()) {
-                return;
-            }
-
-            for (let player of boss.listOfDamage) {
-                sessions[chatId].members[player.id].game.gameClass.stats.hp = 0;
-            }
-
-            boss.skill = null;
-            boss.currentHp = 0;
-            boss.hp = 0;
-            boss.listOfDamage = [];
-
-            await sendMessageWithDelete(chatId, "Время для убийства босса истекло. Босс убежал!", {
-                disable_notifications: true}, 60 * 1000);
+            await chat.save();
         }
+
+        boss.skill = null;
+        boss.currentHp = 0;
+        boss.hp = 0;
+        boss.listOfDamage = [];
+        boss.markModified("skill");
+        boss.markModified("listOfDamage");
+        await boss.save();
+
+        await sendMessageWithDelete(
+            boss.chatId,
+            "Время для убийства босса истекло. Босс убежал!",
+            { disable_notification: true },
+            60 * 1000
+        );
     }
 }

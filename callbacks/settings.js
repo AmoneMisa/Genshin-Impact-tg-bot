@@ -1,19 +1,22 @@
 import getMemberStatus from '../functions/getters/getMemberStatus.js';
-import getChatSessionSettings from '../functions/getters/getChatSessionSettings.js';
 import getChatSession from '../functions/getters/getChatSession.js';
+import ChatSettings from '../db/models/ChatSettings.js';
 import invertButtonCallbackData from '../functions/keyboard/invertButtonCallbackData.js';
 import setButtonText from '../functions/keyboard/setButtonText.js';
 import controlButtons from '../functions/keyboard/controlButtons.js';
 import editMessageText from '../functions/tgBotFunctions/editMessageText.js';
 
 export default [[/^settings\.([^.]+)\.([0-1]+)$/, async function (session, callback, [, setting, flag]) {
-    let chatSession = getChatSession(callback.message.chat.id);
-    if (!getMemberStatus(callback.message.chat.id, chatSession.settingsMessageId)) {
+    let chatSession = await getChatSession(callback.message.chat.id);
+    if (!await getMemberStatus(callback.message.chat.id, callback.from.id)) {
         return;
     }
 
-    let settings = getChatSessionSettings(callback.message.chat.id);
-    settings[setting] = parseInt(flag);
+    await ChatSettings.updateOne(
+        { chatId: callback.message.chat.id },
+        { $set: { [`settings.${setting}`]: parseInt(flag) } },
+        { upsert: true }
+    );
 
     for (const buttonLine of chatSession.settingsButtons) {
         for (const button of buttonLine) {
@@ -24,6 +27,9 @@ export default [[/^settings\.([^.]+)\.([0-1]+)$/, async function (session, callb
         }
     }
 
+    chatSession.markModified("settingsButtons");
+    await chatSession.save();
+
     await editMessageText("Нажми на кнопку, чтобы включить или отключить функцию.", {
         message_id: callback.message.message_id,
         chat_id: callback.message.chat.id,
@@ -33,8 +39,8 @@ export default [[/^settings\.([^.]+)\.([0-1]+)$/, async function (session, callb
         }
     });
 }], [/^settings_([^.]+)$/, async function (session, callback, [, page]) {
-    let chatSession = getChatSession(callback.message.chat.id);
-    if (!getMemberStatus(callback.message.chat.id, chatSession.settingsMessageId)) {
+    let chatSession = await getChatSession(callback.message.chat.id);
+    if (!await getMemberStatus(callback.message.chat.id, callback.from.id)) {
         return;
     }
     page = parseInt(page);

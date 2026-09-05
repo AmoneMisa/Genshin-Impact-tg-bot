@@ -14,7 +14,10 @@ export default function (session, boss, skill) {
 
     if (skill.effect.includes("vampire")) {
         vampire = userVampireSkill(skill, dmg);
-        playerStats.hp = Math.ceil(Math.min(vampire, getMaxHp(session, session.game.gameClass)));
+        playerStats.hp = Math.ceil(Math.min(
+            playerStats.hp + vampire,
+            getMaxHp(session, session.game.gameClass)
+        ));
     }
 
     boss.currentHp -= dmg;

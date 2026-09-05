@@ -1,0 +1,34 @@
+/* Visual paper-doll loadout. Existing .loadout-slot/data-slot contract is preserved for equip transfer targeting. */
+.paper-doll-loadout{display:block!important}
+.paper-doll-stage{position:relative;min-height:430px;border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 50% 43%,rgba(151,126,221,.11),transparent 31%),linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.014));isolation:isolate}
+.paper-doll-stage::before{content:"";position:absolute;inset:9% 24%;border:1px solid rgba(190,174,242,.08);border-radius:48%;box-shadow:0 0 45px rgba(134,111,206,.06),inset 0 0 34px rgba(134,111,206,.035);pointer-events:none}
+.paper-doll-circuit{position:absolute;inset:0;pointer-events:none;opacity:.32;background:linear-gradient(90deg,transparent 49.85%,rgba(201,192,239,.14) 50%,transparent 50.15%),linear-gradient(0deg,transparent 49.85%,rgba(201,192,239,.07) 50%,transparent 50.15%)}
+.paper-doll-circuit::before,.paper-doll-circuit::after{content:"";position:absolute;left:50%;top:43%;border:1px dashed rgba(194,179,239,.12);border-radius:50%;transform:translate(-50%,-50%)}
+.paper-doll-circuit::before{width:250px;height:250px}.paper-doll-circuit::after{width:170px;height:170px}
+.paper-doll-figure{position:absolute;z-index:1;left:50%;top:47%;width:150px;height:300px;transform:translate(-50%,-50%);filter:drop-shadow(0 0 20px rgba(165,140,235,.1));pointer-events:none}
+.paper-doll-figure svg{display:block;width:100%;height:100%}
+.paper-doll-core{position:absolute;left:50%;top:48%;width:24px;height:24px;border:1px solid rgba(231,221,255,.2);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 18px rgba(179,153,245,.16);animation:paper-doll-core 3.4s ease-in-out infinite}
+.paper-doll-slot{position:absolute!important;z-index:3;left:var(--slot-x);top:var(--slot-y);width:78px;min-width:0;height:78px;padding:5px!important;transform:translate(-50%,-50%);display:block!important;border-radius:15px!important;background:linear-gradient(145deg,rgba(17,19,34,.94),rgba(31,28,49,.86))!important;box-shadow:0 8px 22px rgba(0,0,0,.18);overflow:visible!important;transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+.paper-doll-slot::after{content:"";position:absolute;inset:6px;border:1px solid rgba(255,255,255,.045);border-radius:11px;pointer-events:none}
+.paper-doll-slot.empty{border-style:dashed!important;border-color:rgba(255,255,255,.08)!important;background:rgba(18,20,34,.62)!important;box-shadow:none}
+.paper-doll-slot.occupied{border-color:rgba(185,159,245,.24)!important;box-shadow:0 8px 22px rgba(0,0,0,.2),0 0 18px rgba(157,129,230,.08),inset 0 0 18px rgba(157,129,230,.025)}
+.paper-doll-slot-art{position:absolute;inset:4px;display:grid;place-items:center;overflow:hidden;border-radius:11px}
+.paper-doll-slot-art>.loot-forge-state{width:100%;height:100%;transform:scale(.79)}
+.paper-doll-slot-art .loot-art{width:100%;height:100%}
+.paper-doll-slot-art .forge-level-mark{font-size:8px;right:1px;bottom:1px}
+.paper-doll-slot-art .forge-rune-wheel,.paper-doll-slot-art .forge-aura-boost{opacity:.48}
+.paper-doll-empty-rune{font-size:25px;color:rgba(208,199,232,.18);text-shadow:0 0 15px rgba(176,156,226,.08)}
+.paper-doll-slot-copy{position:absolute;z-index:5;left:50%;top:calc(100% + 5px);width:92px;display:grid;gap:1px;transform:translateX(-50%);text-align:center;pointer-events:none}
+.paper-doll-slot-copy small{color:#8f8a9e!important;font-size:7px!important;line-height:1.1;text-transform:uppercase;letter-spacing:.045em}
+.paper-doll-slot-copy strong{font-size:8px!important;line-height:1.1;color:#d5caef}
+.paper-doll-slot-copy>span{display:block!important;font-size:7px!important;line-height:1.15;color:#a8a3b5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.paper-doll-slot.empty .paper-doll-slot-copy strong,.paper-doll-slot.empty .paper-doll-slot-copy>span{display:none!important}
+.paper-doll-caption{position:absolute;z-index:2;left:50%;top:72%;display:grid;place-items:center;gap:1px;transform:translateX(-50%);pointer-events:none;text-align:center}
+.paper-doll-caption strong{font-size:22px;color:#ded5f6;text-shadow:0 0 18px rgba(179,153,245,.2)}
+.paper-doll-caption span{font-size:7px;text-transform:uppercase;letter-spacing:.09em;color:#858093}
+.paper-doll-slot.equipment-transfer-target{transform:translate(-50%,-50%) scale(1.08);border-color:rgba(166,244,218,.52)!important;box-shadow:0 0 24px rgba(102,223,187,.22),inset 0 0 22px rgba(102,223,187,.08)}
+@keyframes paper-doll-core{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.9)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}}
+@media(min-width:680px){.paper-doll-stage{min-height:470px}.paper-doll-figure{width:168px;height:330px}.paper-doll-slot{width:84px;height:84px}.paper-doll-slot-copy{width:104px}.paper-doll-circuit::before{width:286px;height:286px}.paper-doll-circuit::after{width:196px;height:196px}}
+@media(max-width:390px){.paper-doll-stage{min-height:392px;border-radius:18px}.paper-doll-stage::before{inset:10% 21%}.paper-doll-figure{width:120px;height:254px;top:48%}.paper-doll-slot{width:62px;height:62px;padding:3px!important;border-radius:12px!important}.paper-doll-slot-art{inset:2px}.paper-doll-slot-copy{top:calc(100% + 3px);width:72px}.paper-doll-slot-copy small{font-size:6px!important}.paper-doll-slot-copy strong,.paper-doll-slot-copy>span{font-size:6px!important}.paper-doll-caption{top:71%}.paper-doll-caption strong{font-size:18px}.paper-doll-circuit::before{width:205px;height:205px}.paper-doll-circuit::after{width:138px;height:138px}}
+@media(max-width:340px){.paper-doll-stage{min-height:370px}.paper-doll-slot{width:56px;height:56px}.paper-doll-slot-copy{width:64px}.paper-doll-figure{width:108px;height:238px}.paper-doll-caption{top:70%}}
+@media(prefers-reduced-motion:reduce){.paper-doll-core{animation:none}.paper-doll-slot{transition:none}}

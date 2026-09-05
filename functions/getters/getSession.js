@@ -1,47 +1,40 @@
-import userTemplate from '../../template/userTemplate.js';
-import bot from '../../bot.js';
-import getMembers from './getMembers.js';
-import getLostFieldsInSession from './getLostFieldsInSession.js';
-import classStatsTemplate from '../../template/classStatsTemplate.js';
-import classSkillsTemplate from '../../template/classSkillsTemplate.js';
-import debugMessage from "../tgBotFunctions/debugMessage.js";
+import getLostFieldsInSession from "./getLostFieldsInSession.js";
+import getChatSession from "./getChatSession.js";
+import getUser from "./getUser.js";
 
-export default async function (chatId, userId) {
-    let members = getMembers(chatId);
-    let getUpdatedData;
+/**
+ * Гарантированно возвращает участника чата:
+ * - если чата нет — создаёт
+ * - если участника нет — добавляет
+ * - обновляет User.userChatData
+ * - не допускает дублей в Chat.members
+ * - возвращает Mongoose subdocument, пригодный для сохранения
+ */
+export default async function(chatId, userId) {
+    const userIdStr = userId.toString();
+    const chat = await getChatSession(chatId);
 
-    try {
-        getUpdatedData = await bot.getChatMember(chatId, userId);
-    } catch (e) {
-        throw new Error(`${chatId} ${userId} - getChatMember error: ${e}`);
-    }
+    let memberIndex = chat.members.findIndex(m => m.userId?.toString() === userIdStr);
 
-    if (!members[userId]) {
-        members[userId] = {
+    if (memberIndex < 0) {
+        chat.members.push({
+            userId,
             isHided: false,
-            user: {...userTemplate},
-            gender: "male"
-        };
+            gender: "male",
+            game: {}
+        });
+        memberIndex = chat.members.length - 1;
     }
 
-    members[userId].userChatData = Object.assign({}, getUpdatedData);
-    getLostFieldsInSession(members[userId]);
+    const member = chat.members[memberIndex];
+    member.userId = userId;
 
-    let className = members[userId].game.gameClass.stats.name || 'noClass';
+    const user = await getUser(chatId, userId);
+    member.userChatData = user.userChatData;
 
-    if (!classSkillsTemplate[className]) {
-        throw new Error("Not found skills for class " + className);
-    }
+    getLostFieldsInSession(member);
+    chat.markModified(`members.${memberIndex}`);
+    await chat.save();
 
-    let foundedClassSkills = classSkillsTemplate[className];
-    let foundedClassStats = classStatsTemplate.find(_class => _class.name === className);
-
-    if (!foundedClassStats) {
-        throw new Error("Not found stats for class " + className);
-    }
-
-    members[userId].game.gameClass.stats = Object.assign({}, foundedClassStats, members[userId].game.gameClass.stats);
-    members[userId].game.gameClass.skills = [...foundedClassSkills];
-
-    return members[userId];
-};
+    return member;
+}

@@ -10,11 +10,12 @@ import getAdditionalDamageMul from '../player/getters/getAdditionalDamageMul.js'
 import getCriticalDamageMultiplier from '../player/getters/getCriticalDamageMultiplier.js';
 import bossesTemplate from '../../../template/bossTemplate.js';
 import getEquipStatByName from '../player/getters/getEquipStatByName.js';
+import { getSkillPowerMultiplier } from '../player/skillEnchant.js';
 
 export default function (session, skill, boss) {
     let dmg;
     let template = bossesTemplate.find(bossTemplate => bossTemplate.name === boss.name);
-    let modifier = skill.damageModifier || 1;
+    let modifier = (skill.damageModifier || 1) * getSkillPowerMultiplier(skill);
 
     let criticalChanceMultiplier = getCriticalChanceMultiplier(session);
     let criticalChance = getCriticalChance(session) + criticalChanceMultiplier;

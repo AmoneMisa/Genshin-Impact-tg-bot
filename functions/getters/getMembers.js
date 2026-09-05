@@ -1,11 +1,11 @@
-import getChatSession from './getChatSession.js';
+import Chat from "../../db/models/Chat.js";
 
-export default function (chatId) {
-    let chatSession = getChatSession(chatId);
+export default async function(chatId) {
+    const chat = await Chat.findOne({ chatId });
 
-    if (!chatSession['members']) {
-        chatSession['members'] = {};
+    if (!chat) {
+        return [];
     }
 
-    return chatSession['members'];
-};
+    return chat.members || [];
+}

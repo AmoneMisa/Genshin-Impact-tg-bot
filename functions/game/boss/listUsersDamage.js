@@ -19,7 +19,7 @@ export default function (boss) {
     players.sort((a, b) => b.damage - a.damage);
 
     for (let player of players) {
-        message += `${getUserName(player, "nickname")}: ${players[player.id]}\n`;
+        message += `${await getUserName(player, "nickname")}: ${players[player.id]}\n`;
     }
 
     return message;

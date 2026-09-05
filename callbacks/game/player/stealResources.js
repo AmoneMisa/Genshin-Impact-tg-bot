@@ -5,6 +5,7 @@ import getMaxHp from '../../../functions/game/player/getters/getMaxHp.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import stealResources from '../../../functions/game/builds/stealResources.js';
 import getEmoji from '../../../functions/getters/getEmoji.js';
 import getTime from '../../../functions/getters/getTime.js';
@@ -16,10 +17,9 @@ function getRemainHpInPercent(maxHp, remainHp) {
 }
 
 export default [[/^stealResources\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
-    let targetSession = await getSession(chatId, userId);
-    let foundSession = await getSession(chatId, callback.from.id);
-    let stealResult = stealResources(foundSession, targetSession);
-    let [remain] = getTime(targetSession.game.stealImmuneTimer);
+    await getSession(chatId, userId);
+    const { chat, member: foundSession } = await loadPlayer(chatId, callback.from.id);
+    const targetSession = chat.members.find(m => m.userId?.toString() === userId.toString());
 
     if (!foundSession.game.chanceToSteal && foundSession.game.chanceToSteal !== 0) {
         foundSession.game.chanceToSteal = 2;
@@ -30,6 +30,9 @@ export default [[/^stealResources\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 15 * 1000);
     }
+
+    let stealResult = stealResources(foundSession, targetSession);
+    let [remain] = getTime(targetSession.game.stealImmuneTimer);
 
     let message;
     if (stealResult.resultCode === 1) {
@@ -47,7 +50,9 @@ ${getEmoji("crystals")} ${stealResult.crystalsToSteal} кристаллов.
         foundSession.game.stealImmuneTimer = 0;
     }
 
-    await editMessageCaption(`Твоя попытка ограбить @${getUserName(targetSession, "nickname")}: ${message}`, {
+    await chat.save();
+
+    await editMessageCaption(`Твоя попытка ограбить @${await getUserName(targetSession, "nickname")}: ${message}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true

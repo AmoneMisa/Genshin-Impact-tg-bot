@@ -5,15 +5,16 @@ import getTime from '../../getters/getTime.js';
 import getStringRemainTime from '../../getters/getStringRemainTime.js';
 import calcGearScore from './calcGearScore.js';
 
-export default function (session) {
+export default async function (session) {
     let game = session.game;
     let baseStats = game.stats;
     let playerEffects = game.effects;
 
-    let message = `Статистика @${getUserName(session, "nickname")}:\n`;
+    let message = `Статистика @${await getUserName(session, "nickname")}:\n`;
     message += `${getEmoji("lvl")} Уровень: ${baseStats.lvl}\n`;
     message += `${getEmoji("currentExp")} Текущее количество опыта: ${baseStats.currentExp}\n`;
-    message += `${getEmoji("needExp")} Требуемое количество опыта до следующего уровня: ${baseStats.needExp}\n\n`;
+    message += `${getEmoji("needExp")} Требуемое количество опыта до следующего уровня: ${baseStats.needExp}\n`;
+    message += `🔮 Очки прокачки навыков (ОП): ${session.game.inventory?.sp || 0}\n\n`;
 
     message += `${getEmoji("gearScore")} Рейтинг снаряжения: ${calcGearScore(session.game)}\n\n`;
 

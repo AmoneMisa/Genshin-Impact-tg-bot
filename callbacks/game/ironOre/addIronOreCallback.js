@@ -6,11 +6,12 @@ import controlButtons from '../../../functions/keyboard/controlButtons.js';
 import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback) {
     const [, chatId, userId] = callback.data.match(/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/);
     let targetSession = await getSession(chatId, userId);
-    sendMessage(callback.message.chat.id, `Сколько железной руды добавить для ${getUserName(targetSession, "name")}?`, {
+    sendMessage(callback.message.chat.id, `Сколько железной руды добавить для ${await getUserName(targetSession.userId, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
@@ -18,14 +19,16 @@ export default [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (session
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let ironOre = parseInt(replyMsg.text);
-            targetSession.game.inventory.ironOre += ironOre;
+            const { chat, member } = await loadPlayer(chatId, userId);
+            member.game.inventory.ironOre += ironOre;
+            await chat.save();
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
-            return sendMessage(callback.message.chat.id, `Ты добавил ${ironOre} железной руды для ${getUserName(targetSession, "name")}.`, {
+            return sendMessage(callback.message.chat.id, `Ты добавил ${ironOre} железной руды для ${await getUserName(targetSession, "name")}.`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });
@@ -33,11 +36,11 @@ export default [[/^add_iron_ore\.([\-0-9]+)\.([0-9]+)$/, async function (session
     }).catch(e => {
         console.error(e);
     });
-}], [/^add_iron_ore\.([\-0-9]+)_([^.]+)$/, function (session, callback) {
+}], [/^add_iron_ore\.([\-0-9]+)_([^.]+)$/, async function (session, callback) {
     let [, chatId, page] = callback.data.match(/^add_iron_ore\.([\-0-9]+)_([^.]+)$/);
     page = parseInt(page);
 
-    let buttons = buildKeyboard(chatId, `add_iron_ore.${chatId}`);
+    let buttons = await buildKeyboard(chatId, `add_iron_ore.${chatId}`, true, session.userId);
 
     return editMessageText(`Выбери интересующего тебя участника`, {
         chat_id: callback.message.chat.id,

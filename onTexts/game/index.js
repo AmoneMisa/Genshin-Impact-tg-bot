@@ -17,6 +17,7 @@ import horoscopes from './horoscopes/index.js';
 import titles from './titles/index.js';
 import bonus from './bonus/index.js';
 import arena from './arena/index.js';
+import clan from './clan/index.js';
 // import searchGame from './searchGame/index.js';
 
 export default [
@@ -39,5 +40,6 @@ export default [
     ...titles,
     ...bonus,
     ...arena,
+    ...clan,
     // ...searchGame
 ];

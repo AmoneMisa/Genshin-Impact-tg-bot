@@ -2,9 +2,10 @@ import editMessageText from '../../../functions/tgBotFunctions/editMessageText.j
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 async function bet(session, callback, calcFunc) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
@@ -12,9 +13,13 @@ async function bet(session, callback, calcFunc) {
         return;
     }
 
-    let newBet = calcFunc(session.game.basketball.bet);
+    const { chat, member } = await loadPlayer(callback.message.chat.id, session.userId);
+    if (!member.game.hasOwnProperty('basketball')) {
+        return;
+    }
 
-    if (newBet > session.game.inventory.gold) {
+    let newBet = calcFunc(member.game.basketball.bet);
+    if (newBet > member.game.inventory.gold) {
         await sendMessageWithDelete(callback.message.chat.id, 'Нет денег для ставки', {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 20 * 1000);
@@ -28,12 +33,13 @@ async function bet(session, callback, calcFunc) {
         return;
     }
 
-    session.game.basketball.bet = newBet;
-    await updateMessage(session, callback);
+    member.game.basketball.bet = newBet;
+    await chat.save();
+    await updateMessage(member, callback);
 }
 
 async function updateMessage(session, callback) {
-    return editMessageText(`@${getUserName(session, "nickname")}, твоя ставка: ${session.game.basketball.bet}`, {
+    return editMessageText(`@${await getUserName(session, "nickname")}, твоя ставка: ${session.game.basketball.bet}`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,

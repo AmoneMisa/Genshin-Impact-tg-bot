@@ -1,14 +1,38 @@
-import {sessions} from '../../data.js';
-import bot from '../../bot.js';
+import Chat from "../../db/models/Chat.js";
+import bot from "../../bot.js";
 
-export default async function () {
-    for (let [chatId, chatSession] of Object.entries(sessions)) {
-        for (let [userId, session] of Object.entries(chatSession.members)) {
-            bot.getChatMember(chatId, parseInt(userId)).then(chatMember => {
-                session.isHided = chatMember.status === "left" || chatMember.status === "kicked" || chatMember.status === "banned";
-            }).catch(reason => {
-                session.isHided = true;
-            });
+/**
+ * Обновляет статус участников (isHided) в базе,
+ * если они покинули чат, были кикнуты или забанены.
+ */
+export default async function() {
+    const chats = await Chat.find({});
+
+    for (const chat of chats) {
+        const chatId = chat.chatId;
+        let updated = false;
+
+        for (const member of chat.members) {
+            try {
+                const chatMember = await bot.getChatMember(chatId, parseInt(member.userId));
+                const status = chatMember.status;
+
+                const shouldHide =
+                    status === "left" || status === "kicked" || status === "banned";
+
+                if (member.isHided !== shouldHide) {
+                    member.isHided = shouldHide;
+                    updated = true;
+                }
+            } catch (err) {
+                // Если не удалось получить статус — считаем, что игрок скрыт
+                member.isHided = true;
+                updated = true;
+            }
+        }
+
+        if (updated) {
+            await chat.save();
         }
     }
 }

@@ -1,0 +1,38 @@
+.paper-doll-avatar-gear{position:absolute;inset:0;width:100%;height:100%;z-index:2;overflow:visible;pointer-events:none;filter:drop-shadow(0 0 7px rgba(155,133,222,.12))}
+.paper-avatar-piece{--avatar-fill:rgba(198,191,222,.28);--avatar-edge:rgba(232,227,247,.58);--avatar-glow:rgba(170,151,230,.18);opacity:.88;filter:drop-shadow(0 0 5px var(--avatar-glow));transition:opacity .2s ease,filter .2s ease}
+.paper-avatar-piece .avatar-gear-fill{fill:var(--avatar-fill);stroke:var(--avatar-edge);stroke-width:1.8;stroke-linejoin:round}
+.paper-avatar-piece .avatar-gear-edge{fill:none;stroke:var(--avatar-edge);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.paper-avatar-piece .avatar-gear-ornament{fill:none;stroke:var(--avatar-edge);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.72}
+.paper-avatar-piece.avatar-tone-mist{--avatar-fill:rgba(185,192,202,.27);--avatar-edge:rgba(224,228,234,.58);--avatar-glow:rgba(184,195,207,.13)}
+.paper-avatar-piece.avatar-tone-aqua{--avatar-fill:rgba(100,198,218,.28);--avatar-edge:rgba(166,235,244,.68);--avatar-glow:rgba(89,216,230,.22)}
+.paper-avatar-piece.avatar-tone-arcane{--avatar-fill:rgba(156,119,225,.3);--avatar-edge:rgba(205,177,255,.72);--avatar-glow:rgba(171,123,247,.25)}
+.paper-avatar-piece.avatar-tone-gold{--avatar-fill:rgba(220,164,81,.3);--avatar-edge:rgba(255,220,159,.74);--avatar-glow:rgba(240,178,82,.25)}
+.paper-avatar-piece.avatar-tone-rose{--avatar-fill:rgba(216,102,155,.3);--avatar-edge:rgba(255,182,216,.72);--avatar-glow:rgba(238,116,174,.24)}
+.paper-avatar-piece.avatar-tone-prismatic{--avatar-fill:rgba(195,151,236,.31);--avatar-edge:rgba(240,221,255,.78);--avatar-glow:rgba(193,148,249,.29)}
+.paper-avatar-piece.avatar-material-bronze{--avatar-fill:rgba(181,123,72,.34)}
+.paper-avatar-piece.avatar-material-moonsteel{--avatar-fill:rgba(174,199,222,.34)}
+.paper-avatar-piece.avatar-material-obsidian{--avatar-fill:rgba(74,68,92,.48);--avatar-edge:rgba(205,193,233,.62)}
+.paper-avatar-piece.avatar-ornament-runic .avatar-gear-ornament{stroke-dasharray:4 3;opacity:.9}
+.paper-avatar-piece.avatar-ornament-royal .avatar-gear-ornament{stroke-width:2.4;opacity:.95}
+.paper-avatar-piece.avatar-ornament-crystal .avatar-gear-ornament{filter:drop-shadow(0 0 4px var(--avatar-glow));opacity:1}
+.paper-avatar-piece.avatar-quality-rough{opacity:.67;filter:saturate(.65) drop-shadow(0 0 2px var(--avatar-glow))}
+.paper-avatar-piece.avatar-quality-fine{opacity:.94}
+.paper-avatar-piece.avatar-quality-masterwork{opacity:1;filter:drop-shadow(0 0 7px var(--avatar-glow)) brightness(1.08)}
+.paper-avatar-piece.avatar-wear-worn{opacity:.75}
+.paper-avatar-piece.avatar-wear-damaged{opacity:.58;filter:saturate(.7) drop-shadow(0 0 2px var(--avatar-glow))}
+.paper-avatar-piece.avatar-wear-critical,.paper-avatar-piece.avatar-wear-broken{opacity:.4;filter:grayscale(.22) saturate(.5)}
+.paper-avatar-piece.avatar-wear-damaged .avatar-gear-edge,.paper-avatar-piece.avatar-wear-critical .avatar-gear-edge,.paper-avatar-piece.avatar-wear-broken .avatar-gear-edge{stroke-dasharray:5 4}
+.paper-avatar-piece.avatar-forge-tempered{filter:drop-shadow(0 0 5px var(--avatar-glow))}
+.paper-avatar-piece.avatar-forge-etched{filter:drop-shadow(0 0 7px var(--avatar-glow))}
+.paper-avatar-piece.avatar-forge-radiant{filter:drop-shadow(0 0 10px var(--avatar-glow)) brightness(1.08)}
+.paper-avatar-piece.avatar-forge-ascendant{filter:drop-shadow(0 0 13px var(--avatar-glow)) brightness(1.13)}
+.paper-avatar-piece.avatar-forge-radiant .avatar-gear-ornament,.paper-avatar-piece.avatar-forge-ascendant .avatar-gear-ornament{animation:paper-avatar-rune 2.7s ease-in-out infinite}
+.paper-avatar-piece.avatar-role-cloak{opacity:.62}
+.paper-avatar-piece.avatar-role-cloak .avatar-cloak-fill{fill-opacity:.46}
+.paper-avatar-piece.avatar-role-weapon{opacity:.92}
+.paper-avatar-piece .avatar-staff-shaft{stroke-width:6}
+.paper-avatar-piece .avatar-bow{stroke-width:5}
+.paper-avatar-piece.avatar-two-hand{filter:drop-shadow(0 0 8px var(--avatar-glow))}
+@keyframes paper-avatar-rune{0%,100%{opacity:.54}50%{opacity:1}}
+@media(max-width:390px){.paper-doll-avatar-gear{filter:drop-shadow(0 0 5px rgba(155,133,222,.1))}.paper-avatar-piece .avatar-gear-edge{stroke-width:2.4}.paper-avatar-piece.avatar-forge-radiant,.paper-avatar-piece.avatar-forge-ascendant{filter:drop-shadow(0 0 7px var(--avatar-glow))}}
+@media(prefers-reduced-motion:reduce){.paper-avatar-piece,.paper-avatar-piece .avatar-gear-ornament{transition:none!important;animation:none!important}}

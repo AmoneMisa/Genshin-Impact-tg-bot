@@ -1,0 +1,55 @@
+.arcade-panel { max-height:min(92vh,880px); }
+.arcade-tabs { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; margin:14px 0 10px; }
+.arcade-tab { min-width:0; min-height:54px; padding:7px 4px; border:1px solid rgba(255,255,255,.06); border-radius:12px; background:rgba(255,255,255,.022); color:#c8c4d3; display:grid; justify-items:center; gap:2px; position:relative; }
+.arcade-tab span { font-size:20px; }
+.arcade-tab strong { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:7px; }
+.arcade-tab i { position:absolute; top:4px; right:4px; padding:2px 3px; border-radius:4px; color:#9de2bf; background:rgba(73,159,113,.1); font-size:5px; font-style:normal; font-weight:900; }
+.arcade-tab.active { border-color:rgba(142,155,237,.22); background:linear-gradient(145deg,rgba(102,117,201,.13),rgba(255,255,255,.025)); color:#f0edfa; }
+.arcade-hero { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:11px; padding:13px; border:1px solid rgba(255,255,255,.07); border-radius:17px; background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015)); }
+.arcade-big-icon { width:48px; height:48px; display:grid; place-items:center; border-radius:15px; background:rgba(255,255,255,.04); font-size:28px; }
+.arcade-hero > div:nth-child(2) { min-width:0; display:grid; gap:2px; }
+.arcade-hero small { color:var(--muted); font-size:7px; letter-spacing:.09em; }
+.arcade-hero strong { font-size:12px; }
+.arcade-hero p { margin:1px 0 0; color:#a9a5b6; font-size:8px; line-height:1.4; }
+.arcade-hero > button { width:30px; height:30px; border:1px solid rgba(255,255,255,.07); border-radius:10px; background:rgba(255,255,255,.025); color:#bbb7c8; }
+.arcade-balance { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:9px 0; padding:9px 11px; border:1px solid rgba(238,193,97,.08); border-radius:12px; background:rgba(157,115,39,.03); font-size:9px; }
+.arcade-balance span { color:var(--muted); }
+.arcade-balance strong { color:#dfd1ad; }
+.arcade-bet-box { padding:12px; border:1px solid rgba(255,255,255,.065); border-radius:14px; background:rgba(255,255,255,.02); }
+.arcade-bet-box label { display:grid; gap:5px; color:#b8b4c4; font-size:8px; }
+.arcade-bet-box input { width:100%; height:37px; padding:0 11px; border:1px solid rgba(255,255,255,.09); border-radius:10px; outline:none; background:rgba(4,6,14,.28); color:#f0edf6; font:inherit; font-size:11px; }
+.arcade-bet-box input:focus { border-color:rgba(135,151,230,.27); }
+.arcade-bet-chips { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
+.arcade-bet-chips button { min-height:27px; padding:0 9px; border:1px solid rgba(255,255,255,.065); border-radius:8px; background:rgba(255,255,255,.025); color:#bbb7c9; font-size:8px; }
+.arcade-bet-box > small { display:block; margin-top:8px; color:#8f8b9d; font-size:7px; line-height:1.45; }
+.arcade-primary { width:100%; min-height:55px; margin-top:9px; padding:10px 13px; border:1px solid rgba(132,154,237,.2); border-radius:15px; background:linear-gradient(135deg,rgba(77,100,183,.18),rgba(119,72,158,.1)); color:#eeecf8; display:flex; align-items:center; gap:10px; text-align:left; }
+.arcade-primary > span { width:34px; height:34px; display:grid; place-items:center; border-radius:11px; background:rgba(255,255,255,.04); font-size:20px; }
+.arcade-primary > div { display:grid; gap:2px; }
+.arcade-primary strong { font-size:10px; }
+.arcade-primary small { color:#aaa6b7; font-size:8px; }
+.arcade-score-card { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:9px; }
+.arcade-score-card > div { min-width:0; padding:10px; border:1px solid rgba(255,255,255,.06); border-radius:12px; background:rgba(255,255,255,.02); display:grid; gap:3px; text-align:center; }
+.arcade-score-card small { color:var(--muted); font-size:7px; }
+.arcade-score-card strong { overflow:hidden; text-overflow:ellipsis; font-size:12px; }
+.arcade-progress { height:5px; margin:7px 1px 0; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.045); }
+.arcade-progress span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,rgba(102,130,223,.8),rgba(156,114,211,.8)); transition:width .2s ease; }
+.arcade-result { margin:8px 0; padding:10px 11px; border:1px solid rgba(255,255,255,.07); border-radius:13px; display:flex; gap:9px; align-items:center; background:rgba(255,255,255,.02); }
+.arcade-result.win { border-color:rgba(92,205,155,.15); background:rgba(55,133,98,.045); }
+.arcade-result.lose { border-color:rgba(222,104,124,.12); background:rgba(132,58,70,.035); }
+.arcade-result > span { font-size:21px; }
+.arcade-result > div { display:grid; gap:2px; }
+.arcade-result strong { font-size:9px; }
+.arcade-result small { color:var(--muted); font-size:7px; line-height:1.35; }
+.arcade-feedback { min-height:18px; margin:10px 2px 1px; color:var(--muted); text-align:center; font-size:9px; }
+.arcade-overlay.busy button, .arcade-overlay.busy input { pointer-events:none; opacity:.55; }
+.arcade-overlay.rolling .arcade-roll-icon { animation:arcade-roll .42s ease; }
+@keyframes arcade-roll { 0%{transform:rotate(0) scale(1)} 35%{transform:rotate(-18deg) scale(1.15)} 70%{transform:rotate(20deg) scale(.95)} 100%{transform:rotate(0) scale(1)} }
+@media (max-width:390px) { .arcade-tabs { grid-template-columns:repeat(5,1fr); gap:3px; }.arcade-tab { padding-inline:2px; }.arcade-tab strong { font-size:6px; } }
+
+.arcade-secondary { width:100%; min-height:43px; margin-top:6px; padding:8px 12px; border:1px solid rgba(255,255,255,.07); border-radius:13px; background:rgba(255,255,255,.018); color:#b8b4c4; display:flex; align-items:center; gap:9px; text-align:left; }
+.arcade-secondary > span { width:28px; height:28px; display:grid; place-items:center; border-radius:9px; background:rgba(255,255,255,.03); font-size:14px; }
+.arcade-secondary > div { display:grid; gap:2px; }
+.arcade-secondary strong { font-size:9px; }
+.arcade-secondary small { color:var(--muted); font-size:7px; }
+.arcade-secondary.danger { border-color:rgba(214,108,126,.1); color:#c5aeb4; }
+.arcade-secondary.danger:hover { background:rgba(138,61,74,.04); }

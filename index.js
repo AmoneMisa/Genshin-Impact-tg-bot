@@ -1,35 +1,50 @@
-import errorHandler from './errorHandler.js';
+import errorHandler from '../Genshin-Impact-tg-bot/errorHandler.js';
 errorHandler();
 
-import fs from 'fs';
-// import intel from 'intel/lib/index.js';
-// intel.basicConfig({'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s'});
+import deleteMessage from '../Genshin-Impact-tg-bot/functions/tgBotFunctions/deleteMessage.js';
+import callbacks from '../Genshin-Impact-tg-bot/callbacks/index.js';
+import onTexts from '../Genshin-Impact-tg-bot/onTexts/index.js';
+import onTextsAdmin from '../Genshin-Impact-tg-bot/onTextsAdmin/index.js';
+import bot from '../Genshin-Impact-tg-bot/bot.js';
+import getSession from '../Genshin-Impact-tg-bot/functions/getters/getSession.js';
+import saveSession from '../Genshin-Impact-tg-bot/functions/getters/saveSession.js';
+import getChatSessionSettings from '../Genshin-Impact-tg-bot/functions/getters/getChatSessionSettings.js';
+import debugMessage from '../Genshin-Impact-tg-bot/functions/tgBotFunctions/debugMessage.js';
+import sendMessage from '../Genshin-Impact-tg-bot/functions/tgBotFunctions/sendMessage.js';
 
-import deleteMessage from './functions/tgBotFunctions/deleteMessage.js';
-import callbacks from './callbacks/index.js';
-import onTexts from './onTexts/index.js';
-import onTextsAdmin from './onTextsAdmin/index.js';
-import bot from './bot.js';
-import { trustedChats } from './data.js';
-import getSession from './functions/getters/getSession.js';
-import getChatSessionSettings from './functions/getters/getChatSessionSettings.js';
-import debugMessage from './functions/tgBotFunctions/debugMessage.js';
-import sendMessage from './functions/tgBotFunctions/sendMessage.js';
-import writeFiles from './functions/misc/writeFiles.js';
+import evenSecond from '../Genshin-Impact-tg-bot/functions/shedullers/evenSecond.js';
+import evenTwoMinutes from '../Genshin-Impact-tg-bot/functions/shedullers/evenTwoMinutes.js';
+import evenFiveMinutes from '../Genshin-Impact-tg-bot/functions/shedullers/evenFiveMinutes.js';
+import evenHour from '../Genshin-Impact-tg-bot/functions/shedullers/evenHour.js';
+import evenDay from '../Genshin-Impact-tg-bot/functions/shedullers/evenDay.js';
+import evenWeek from '../Genshin-Impact-tg-bot/functions/shedullers/evenWeek.js';
 
-import evenSecond from './functions/shedullers/evenSecond.js';
-import evenMinute from './functions/shedullers/evenMinute.js';
-import evenTwoMinutes from './functions/shedullers/evenTwoMinutes.js';
-import evenFiveMinutes from './functions/shedullers/evenFiveMinutes.js';
-import evenHour from './functions/shedullers/evenHour.js';
-import evenDay from './functions/shedullers/evenDay.js';
-import evenWeek from './functions/shedullers/evenWeek.js';
+import buttonsDictionary from '../Genshin-Impact-tg-bot/dictionaries/buttons.js';
+import Command from "./db/models/CommandMap.js";
+import {connectMongo} from "./db/db.js";
 
-// const log = intel.getLogger("genshin");
-import buttonsDictionary from './dictionaries/buttons.js';
-import checkAccumulateTimer from "./functions/game/builds/checkAccumulateTimer.js";
+// Do not accept Telegram updates until Mongo is connected and migration/import
+// has completed. This also makes importing index.js safe for the Mini App entry.
+await connectMongo();
 
-bot.setMyCommands([
+async function loadCommands() {
+    const commands = await Command.find({});
+    const commandMap = {};
+    const supergroupCommands = [];
+
+    for (const cmd of commands) {
+        commandMap[cmd.command] = cmd.settingKey;
+        if (cmd.supergroupOnly) {
+            supergroupCommands.push(cmd.command);
+        }
+    }
+
+    return { commandMap, supergroupCommands };
+}
+
+const { commandMap, supergroupCommands } = await loadCommands();
+
+await bot.setMyCommands([
     {command: "start", description: "Список всех основных команд"},
     {command: "help", description: "Помощь"},
     {command: "games", description: "Список игр"},
@@ -44,53 +59,9 @@ bot.setMyCommands([
     scope: {type: "default"}
 });
 
-function isTrusted(chatId) {
-    chatId = chatId + "";
-    return trustedChats.includes(chatId);
-}
-
-const commandMap = {
-    "boss": "boss",
-    "shop": "boss",
-    "exchange": "boss",
-    "gacha": "whoami",
-    "steal_resources": "whoami",
-    "whoami": "whoami",
-    "change_gender": "whoami",
-    "send_gold": "sendGold",
-    "sword": "swords",
-    "swords": "swords",
-    "mute": "mute",
-    "slots": "slots",
-    "point": "points",
-    "dice": "dice",
-    "darts": "darts",
-    "bowling": "bowling",
-    "basketball": "basketball",
-    "football": "football",
-    "elements": "elements",
-    "horoscope": "horoscope",
-    "bonus": "bonus",
-    "chest": "chests",
-    "title": "titles",
-    "titles": "titles",
-    "info": "form",
-    "form": "form",
-    "set[A-Z].*": "form"
-};
-
-let supergroupCommands = ["boss", "title", "titles", "info", "form", "sword", "swords", "shop", "send_gold", "mute", "steal_resources", "gacha", "exchange", "change_gender", "bonus"];
-
 for (let [key, value] of onTexts) {
     bot.onText(key, async function (msg, regExp) {
-        if (!isTrusted(msg.chat.id)) {
-            debugMessage(`${msg.chat.id} - попытка обратиться к боту.`);
-            return sendMessage(msg.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.", {
-                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-            });
-        }
-
-        if (msg.chat.type === "chanel") {
+        if (msg.chat.type === "channel") {
             return sendMessage(msg.chat.id, "Этот бот не доступен для использования в каналах.");
         }
 
@@ -99,7 +70,7 @@ for (let [key, value] of onTexts) {
         }
 
         let command = regExp[0].replace(/^\//, '');
-        let settings = getChatSessionSettings(msg.chat.id);
+        let settings = await getChatSessionSettings(msg.chat.id);
         let foundSettingKey = null;
 
         for (let [commandRegexp, settingKey] of Object.entries(commandMap)) {
@@ -126,13 +97,13 @@ for (let [key, value] of onTexts) {
             });
         }
 
-        let session = await getSession(msg.chat.id, msg.from.id);
+        const session = await getSession(msg.chat.id, msg.from.id);
+        const result = regExp.length > 1
+            ? await value(msg, session, regExp)
+            : await value(msg, session);
 
-        if (regExp.length > 1) {
-            return value(msg, session, regExp);
-        } else {
-            return value(msg, session);
-        }
+        await saveSession(session);
+        return result;
     });
 }
 
@@ -142,134 +113,80 @@ for (let [key, value] of onTextsAdmin) {
 
 bot.on("new_chat_members", async (msg) => {
     for (let newChatMember of msg.new_chat_members) {
-        let session = await getSession(msg.chat.id, newChatMember.id);
+        const session = await getSession(msg.chat.id, newChatMember.id);
         session.isHided = false;
+        await saveSession(session);
     }
 });
 
 bot.on("left_chat_member", async (msg) => {
-    let session = await getSession(msg.chat.id, msg.left_chat_participant.id);
+    const session = await getSession(msg.chat.id, msg.left_chat_participant.id);
     session.isHided = true;
+    await saveSession(session);
 });
 
 bot.on("callback_query", async (callback) => {
-    if (!isTrusted(callback.message.chat.id)) {
-        debugMessage(`${callback.message.chat.id} - попытка обратиться к боту.`);
-        return sendMessage(callback.message.chat.id, "К сожалению, этот чат не входит в список доверенных чатов. За разрешением на использование, можете обратиться в личку @WhitesLove.", {
-            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
-        });
-    }
-
-    let session = await getSession(callback.message.chat.id, callback.from.id);
-    let results = [];
+    const session = await getSession(callback.message.chat.id, callback.from.id);
+    const results = [];
 
     for (let [key, value] of callbacks) {
-
         let result = null;
 
         if (key instanceof RegExp) {
-            let match = callback.data.match(key);
-
+            const match = callback.data.match(key);
             if (match) {
-                result = value(session, callback, match) || Promise.resolve();
+                result = Promise.resolve(value(session, callback, match));
             }
         } else if (callback.data === key) {
-            result = value(session, callback) || Promise.resolve();
+            result = Promise.resolve(value(session, callback));
         }
 
-        if (result === null) {
-            continue;
-        }
-
-        result.catch(e => {
-            console.error(callback.data);
-            console.error(e);
-            debugMessage(`Произошла ошибка: ${callback.data} - ${e}`);
-        });
+        if (result === null) continue;
         results.push(result);
     }
 
-    if (results.length > 0) {
-        Promise.all(results).then(() => {
-            bot.answerCallbackQuery(callback.id);
-            // log.info('%:2j', session);
-        });
-    } else {
+    if (results.length === 0) {
         console.error(callback.data);
         console.error("Нет ни одного обработчика");
         debugMessage(`Произошла ошибка: ${callback.data} - Нет ни одного обработчика`);
+        return;
+    }
+
+    try {
+        await Promise.all(results);
+        await saveSession(session);
+        await bot.answerCallbackQuery(callback.id);
+    } catch (e) {
+        console.error(callback.data);
+        console.error(e);
+        debugMessage(`Произошла ошибка: ${callback.data} - ${e}`);
     }
 });
 
 evenSecond();
-// evenMinute();
 evenTwoMinutes();
 evenFiveMinutes();
 evenHour();
 evenDay();
 evenWeek();
 
-let setIntervalId = setInterval(() => {
-    writeFiles(false);
-}, 30000);
-
-let fileTemplate = /^([a-zA-Z]+)-([0-9]+)\.json$/;
-
-function validateBackup(name, array, result) {
-    if (result[1].includes(name)) {
-        array.push(result[0]);
-    }
-}
-
-function deleteBackup(array) {
-    let countBackups = 2;
-
-    if (array.length > countBackups) {
-        fs.unlinkSync(`./${array[0]}`);
-        array.shift();
-    }
-}
-
-(function () {
-    let sessionsBackups = [];
-    let bossesBackups = [];
-    let titlesBackups = [];
-    let arenaRatingBackups = [];
-    let arenaTempBotsBackups = [];
-
-    fs.readdirSync("./").forEach(file => {
-        let result = file.match(fileTemplate);
-
-        if (result !== null) {
-            validateBackup("sessions", sessionsBackups, result);
-            validateBackup("bosses", bossesBackups, result);
-            validateBackup("titles", titlesBackups, result);
-            validateBackup("arenaRating", arenaRatingBackups, result);
-            validateBackup("arenaTempBots", arenaTempBotsBackups, result);
-
-            deleteBackup(sessionsBackups);
-            deleteBackup(bossesBackups);
-            deleteBackup(titlesBackups);
-            deleteBackup(arenaRatingBackups);
-            deleteBackup(arenaTempBotsBackups);
-        }
-    })
-})();
-
 bot.on('polling_error', (error) => {
     console.error(error);
 });
 
 function shutdown() {
-    clearInterval(setIntervalId);
     debugMessage("Я отключился");
-    writeFiles(true);
     bot.stopPolling();
 }
 
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+// startPolling() keeps its own loop alive; do not await it at module scope,
+// otherwise miniapp-entry.js would never continue to the HTTP server startup.
+bot.startPolling().catch(error => {
+    console.error('Telegram polling failed to start:', error);
+});
+
 console.log("Оно живое");
 debugMessage("Оно живое");
-
-process.on('SIGTERM', shutdown);
-
-process.on('SIGINT', shutdown);

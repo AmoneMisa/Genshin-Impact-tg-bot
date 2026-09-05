@@ -1,16 +1,22 @@
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
-import getSession from '../../../functions/getters/getSession.js';
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import sleep from "../../../functions/tgBotFunctions/sleep.js";
+import betKeyboard from "../../../functions/game/general/betKeyboard.js";
+import loadPlayer from "../../../functions/getters/loadPlayer.js";
 
 export default [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    let id;
 
-    if (!session.game.hasOwnProperty('bowling')) {
-        session.game.bowling = {
+    let { chat, member } = await loadPlayer(msg.chat.id, session.userId);
+    if (!member) {
+        return;
+    }
+
+    if (!member.game.bowling) {
+        member.game.bowling = {
             bet: 0,
             skittles: 0,
             counter: 0,
@@ -18,62 +24,49 @@ export default [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
         };
     }
 
-    if (session.game.bowling.isStart) {
-        return sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-        }, 7000);
+    if (member.game.bowling.isStart) {
+        return sendMessageWithDelete(
+            msg.chat.id,
+            "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.",
+            { ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}) },
+            7000
+        );
     }
 
-    sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, твоя ставка: 0`, {
-        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: "Ставка (+100)",
-                callback_data: "bowling_bet"
-            }, {
-                text: "Ставка (х2)",
-                callback_data: "bowling_double_bet"
-            }], [{
-                text: "Ставка (+1000)",
-                callback_data: "bowling_thousand_bet"
-            }, {
-                text: "Ставка (х5)",
-                callback_data: "bowling_xfive_bet"
-            }], [{
-                text: "Ставка (+10000)",
-                callback_data: "bowling_10t_bet"
-            }, {
-                text: "Ставка (x10)",
-                callback_data: "bowling_xten_bet"
-            }], [{
-                text: "Ставка (x20)",
-                callback_data: "bowling_x20_bet"
-            }, {
-                text: "Ставка (x50)",
-                callback_data: "bowling_x50_bet"
-            }], [{
-                text: "Всё или ничего",
-                callback_data: "bowling_allin_bet"
-            }]]
-        }
-    }).then(message => id = message.message_id);
+    await chat.save();
 
-    function startGame() {
-        session.game.bowling.isStart = true;
-        editMessageText(`@${getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество сбитых кеглей за 2 броска будет больше 8. При двух страйках, твоя ставка утроится.`, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-            message_id: id,
-            chat_id: msg.chat.id,
+    const message = await sendMessage(
+        msg.chat.id,
+        `@${await getUserName(session, "nickname")}, твоя ставка: 0`,
+        {
+            ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: [[{
-                    text: "Сделать бросок",
-                    callback_data: "bowling_pull"
-                }]]
+                inline_keyboard: betKeyboard("bowling")
             }
-        });
+        }
+    );
+
+    await sleep(20000);
+
+    ({ chat, member } = await loadPlayer(msg.chat.id, session.userId));
+    if (!member || !member.game.bowling) {
+        return;
     }
 
-    setTimeout(() => startGame(), 20 * 1000);
+    member.game.bowling.isStart = true;
+    await chat.save();
+
+    await editMessageText(
+        `@${await getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество сбитых кеглей за 2 броска будет больше 8. При двух страйках, твоя ставка утроится.`,
+        {
+            ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
+            chat_id: msg.chat.id,
+            message_id: message.message_id,
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{ text: "Сделать бросок", callback_data: "bowling_pull" }]]
+            }
+        }
+    );
 }]];

@@ -1,7 +1,8 @@
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
 import { myId } from '../../../config.js';
-import {bosses, sessions} from '../../../data.js';
+import Boss from '../../../db/models/Boss.js';
+import Chat from '../../../db/models/Chat.js';
 
 export default [[/(?:^|\s)\/clear_boss_sessions\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
@@ -10,26 +11,19 @@ export default [[/(?:^|\s)\/clear_boss_sessions\b/, async (msg) => {
         return;
     }
 
-    for (let [chatId, chatSession] of Object.entries(sessions)) {
-        if (Object.values(chatSession.members).length !== 1) {
-            continue;
-        }
+    let removed = 0;
+    const bosses = await Boss.find({});
 
-        if (chatId !== Object.keys(chatSession.members)[0]) {
-            continue;
-        }
+    for (const boss of bosses) {
+        const chat = await Chat.findOne({ chatId: boss.chatId });
 
-        delete bosses[chatId];
-        delete chatSession.boss;
+        // Remove bosses whose chat no longer exists or which have no real player base
+        // (e.g. a private/DM session with a single member).
+        if (!chat || chat.members.length <= 1) {
+            await boss.deleteOne();
+            removed++;
+        }
     }
 
-    for (let bossChatId of Object.keys(bosses)) {
-        if (sessions[bossChatId]) {
-            continue;
-        }
-
-        delete bosses[bossChatId];
-    }
-
-    await sendMessage(myId, "Все чат сессии очищены. Убедиться в результате можно по команде /get_file bosses.json");
+    await sendMessage(myId, `Очищено boss-сессий: ${removed}.`);
 }]];

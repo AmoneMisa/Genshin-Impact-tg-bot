@@ -1,41 +1,30 @@
-import getTime from '../../getters/getTime.js';
-import getRandom from '../../getters/getRandom.js';
-import getOffset from '../../getters/getOffset.js';
-import getStringRemainTime from '../../getters/getStringRemainTime.js';
-import getUserName from '../../getters/getUserName.js';
+import getStringRemainTime from "../../getters/getStringRemainTime.js";
+import getUserName from "../../getters/getUserName.js";
+import getChatSession from "../../getters/getChatSession.js";
+import getSession from "../../getters/getSession.js";
+import { rollSword } from "./swordCore.js";
 
-export default function (session) {
-    let [remain] = getTime(session.timerSwordCallback);
+/**
+ * Логика команды "меч" — можно вызывать раз в сутки.
+ * Правила изменения длины общие для legacy-команды и Mini App.
+ */
+export default async function(chatId, userId) {
+    const chat = await getChatSession(chatId);
+    const member = await getSession(chatId, userId);
+    const result = rollSword(member);
 
-    if (remain > 0) {
-        return `@${getUserName(session, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${getStringRemainTime(remain)}`;
+    if (!result.ok) {
+        return `@${await getUserName(userId, "nickname")}, команду можно вызывать раз в сутки. Обновляется попытка в 00.00. Осталось: ${getStringRemainTime(result.sword.remainMs)}`;
     }
 
-    session.timerSwordCallback = getOffset();
+    await chat.save();
 
-    if (!session.sword) {
-        session.sword = 0;
+    const username = await getUserName(member, "nickname");
+    if (result.delta > 0) {
+        return `@${username}, твой меч увеличился на ${result.delta} мм. Сейчас он равен: ${result.sword.length} мм`;
     }
-
-    let result;
-    let int;
-
-    if (session.swordImmune) {
-        int = getRandom(0, 15);
-        session.swordImmune = false;
-    } else if (session.immuneToUpSword) {
-        int = getRandom(-10, -1);
-        session.immuneToUpSword = false;
-    } else {
-        int = getRandom(-10, 15);
+    if (result.delta < 0) {
+        return `@${username}, твой меч укоротился на ${Math.abs(result.delta)} мм. Сейчас он равен: ${result.sword.length} мм`;
     }
-
-    session.sword += int;
-    if (int > 0) {
-        result = `@${getUserName(session, "nickname")}, твой меч увеличился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
-    } else {
-        result = `@${getUserName(session, "nickname")}, твой меч укоротился на ${int} мм. Сейчас он равен: ${session.sword} мм`;
-    }
-
-    return result;
-};
+    return `@${username}, твой меч сегодня не изменился. Сейчас он равен: ${result.sword.length} мм`;
+}

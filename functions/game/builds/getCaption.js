@@ -48,12 +48,16 @@ export default function (buildName, action, build) {
 }
 
 function getBuildStatus(buildName, build) {
-    let types = buildsTemplate[buildName]?.availableTypes;
+    const buildTemplate = buildsTemplate[buildName];
+    const types = buildTemplate?.availableTypes;
 
-    if (buildName === "goldMine" || buildName === "ironDeposit" || buildName === "crystalLake" || buildName === "traineeArea") {
-        return `${getEmoji("buildResourcesAccumulated")} Текущие накопления: ${build.resourceCollected || 0}\n${getEmoji("buildResourcesCollected")} Производство в час: ${buildsTemplate[buildName].productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl)}`;
-    } else if (buildName === "palace") {
-        return `Тип дворца: ${types[build.type].name}\nНазвание дворца: ${build.customName || "Дворец"}`;
+    // Data-driven instead of a hardcoded building-name whitelist, so a newly
+    // added resource-producing building (e.g. academy) gets a status line for
+    // free instead of silently returning undefined.
+    if (buildTemplate?.resourcesType || buildTemplate?.type === "experience") {
+        return `${getEmoji("buildResourcesAccumulated")} Текущие накопления: ${build.resourceCollected || 0}\n${getEmoji("buildResourcesCollected")} Производство в час: ${buildTemplate.productionPerHour * calculateIncreaseInResourceExtraction(buildName, build.currentLvl)}`;
+    } else if (types) {
+        return `Тип: ${types[build.type]?.name || build.type}\nНазвание: ${build.customName || buildTemplate.name}`;
     }
 }
 

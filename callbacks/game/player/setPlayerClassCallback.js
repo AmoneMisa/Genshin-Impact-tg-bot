@@ -11,6 +11,7 @@ import getPlayerGameClassMessage from '../../../functions/game/player/getters/ge
 import classes from '../../../template/classStatsTemplate.js';
 import getEmoji from '../../../functions/getters/getEmoji.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
 import updatePlayerStats from '../../../functions/game/player/updatePlayerStats.js';
 import getFile from '../../../functions/getters/getFile.js';
@@ -20,7 +21,7 @@ function getOffset() {
 }
 
 export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function (session, callback, [, chatId]) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return;
     }
 
@@ -58,7 +59,7 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
     }
 
     if (isBack) {
-        return editMessageCaption(`@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
+        return editMessageCaption(`@${await getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             disable_notification: true,
@@ -75,7 +76,7 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
         let gender = foundedSession.gender || "male";
         const file = getFile(`images/classes/${className}/${gender}`, className);
 
-        await editMessageMedia(file, `@${getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
+        await editMessageMedia(file, `@${await getUserName(foundedSession, "nickname")}, выбери свой класс.\nТвой текущий класс: ${foundedSession.game.gameClass.stats.translateName}\n\n${info}`, {
             chat_id: callback.message.chat.id,
             message_id: callback.message.message_id,
             disable_notification: true,
@@ -86,7 +87,7 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
 
     }
 }], [/^player\.([\-0-9]+)\.changeClass\.([^.]+)$/, async function (session, callback, [, userId, _class]) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return;
     }
 
@@ -94,7 +95,7 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
     let classTemplate = getClassStatsFromTemplate(_class, foundedSession.game.stats.lvl);
     let info = `Информация о классе ${getEmoji(classTemplate.name)} ${classTemplate.translateName}\n\n${getPlayerGameClassMessage(foundedSession, foundedSession.game.stats, foundedSession.game.effects, classTemplate)}\n`;
 
-    return editMessageCaption(`${getUserName(foundedSession, "nickname")}, ${info}`, {
+    return editMessageCaption(`${await getUserName(foundedSession, "nickname")}, ${info}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {
@@ -118,12 +119,12 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
         return;
     }
 
-    const foundedSession = await getSession(chatId, callback.from.id);
+    const { chat, member: foundedSession } = await loadPlayer(chatId, callback.from.id);
 
     if (foundedSession.game.gameClass.stats.name !== "noClass") {
         let [remain] = getTime(foundedSession.changeClassTimer);
         if (remain > 0) {
-            return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${getStringRemainTime(remain)}`, {
+            return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, команду можно вызывать раз в неделю. Осталось: ${getStringRemainTime(remain)}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 10 * 1000);
         }
@@ -134,12 +135,13 @@ export default [[/^player\.([\-0-9]+)\.changeClass(?:\.back)?$/, async function 
     let classStatsTemplate = getClassStatsFromTemplate(_class);
     changePlayerClass(foundedSession, classStatsTemplate);
     updatePlayerStats(foundedSession);
+    await chat.save();
 
     let {stats} = getPlayerGameClass(foundedSession.game.gameClass);
     let gender = session.gender || "male";
     let file = getFile(`images/classes/${_class}/${gender}`, _class);
 
-    return editMessageMedia(file, `@${getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`, {
+    return editMessageMedia(file, `@${await getUserName(foundedSession, "nickname")}, ты успешно сменил класс на ${getEmoji(_class)} ${stats.translateName}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         reply_markup: {

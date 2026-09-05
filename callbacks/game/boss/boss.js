@@ -18,13 +18,14 @@ import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCap
 import getLocalImageByPath from '../../../functions/getters/getLocalImageByPath.js';
 import inventoryDictionary from '../../../dictionaries/inventory.js';
 import getTime from '../../../functions/getters/getTime.js';
+import { getEffectiveSkillCost } from '../../../functions/game/player/skillEnchant.js';
 import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
 
 export default [["boss", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
     let keyboard = [];
-    let boss = getAliveBoss(chatId);
+    let boss = await getAliveBoss(chatId);
     let message = "";
 
     if (!boss) {
@@ -64,7 +65,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.summon", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (aliveBoss) {
         await sendMessage(chatId, summonBossMessage(chatId, aliveBoss, true), {
@@ -80,8 +81,9 @@ export default [["boss", async function (session, callback) {
 
     let boss = await summonBoss(chatId);
 
-    let chatSession = getChatSession(chatId);
+    let chatSession = await getChatSession(chatId);
     chatSession.bossMenuMessageId = callback.message.message_id;
+    await chatSession.save();
 
     let keyboard = [[{
         text: "Нанести удар",
@@ -126,7 +128,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.dealDamage", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -144,7 +146,7 @@ export default [["boss", async function (session, callback) {
 
     let buttonsSkills = [];
     for (let skill of session.game.gameClass.skills) {
-        let skillName = skill.name;
+        let skillName = skill.enchantLevel > 0 ? `${skill.name} +${skill.enchantLevel}` : skill.name;
 
         if (getSkillCooldown(skill) > new Date().getTime()) {
             skillName += " (В откате)";
@@ -156,10 +158,12 @@ export default [["boss", async function (session, callback) {
     let message = "";
 
     for (let skill of session.game.gameClass.skills) {
-        let costCount = skill.costHp > 0 ? skill.costHp : skill.cost;
-        let costType = skill.costHp > 0 ? "hp" : "mp";
+        let { cost, costHp } = getEffectiveSkillCost(skill);
+        let costCount = costHp > 0 ? costHp : cost;
+        let costType = costHp > 0 ? "hp" : "mp";
+        let enchantLabel = skill.enchantLevel > 0 ? ` (+${skill.enchantLevel})` : "";
 
-        message += `${skill.name} - ${skill.description} Стоимость использования: ${getEmoji(costType)} ${costCount}\n\n`;
+        message += `${skill.name}${enchantLabel} - ${skill.description} Стоимость использования: ${getEmoji(costType)} ${costCount}\n\n`;
     }
 
     let imagePath = getLocalImageByPath(aliveBoss.stats.lvl, `bosses/${aliveBoss.name}`);
@@ -179,7 +183,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.status", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -205,7 +209,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.lootList", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -257,7 +261,7 @@ export default [["boss", async function (session, callback) {
 }], ["boss.damageList", async function (session, callback) {
     let messageId = callback.message.message_id;
     let chatId = callback.message.chat.id;
-    let aliveBoss = getAliveBoss(chatId);
+    let aliveBoss = await getAliveBoss(chatId);
 
     if (!aliveBoss) {
         await sendMessageWithDelete(chatId, "Группа ещё не призвала босса. Призвать босса можно через меню /boss", {
@@ -269,9 +273,10 @@ export default [["boss", async function (session, callback) {
     let players = aliveBoss.listOfDamage;
     players.sort((a, b) => b.damage - a.damage);
     let message = `Текущее хп босса: ${aliveBoss.currentHp}\n\nСписок урона по боссу:\n`;
-    let members = getMembers(chatId);
+    let members = await getMembers(chatId);
     for (let player of players) {
-        message += `${getUserName(members[player.id], "nickname")}: ${player.damage}\n`;
+        let member = members.find(m => m.userId === player.id);
+        message += `${await getUserName(member, "nickname")}: ${player.damage}\n`;
     }
 
     await editMessageCaption(message, {

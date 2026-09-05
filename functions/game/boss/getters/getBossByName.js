@@ -1,6 +1,6 @@
 import getBossesByChatId from './getBossesByChatId.js';
 
-export default function (chatId, bossName) {
-    let chatBosses = getBossesByChatId(chatId);
+export default async function (chatId, bossName) {
+    let chatBosses = await getBossesByChatId(chatId);
     return chatBosses.find(boss => boss.name === bossName);
 }

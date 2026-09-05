@@ -1,38 +1,14 @@
-import {arenaRating} from '../../../data.js';
+import { getArenaRatingSnapshot } from './ratingStore.js';
 
-export default function (userId, arenaType, chatId, arenaBot) {
+/**
+ * Получает рейтинг игрока и его процентиль в арене.
+ * Для мировой арены рейтинг глобальный и не привязан к текущему чату.
+ */
+export default async function(userId, arenaType, chatId, arenaBot) {
     if (arenaBot) {
-        return arenaBot.rating;
+        return [Number(arenaBot.rating) || 1000, null];
     }
 
-    let sortedRating;
-
-    if (!arenaRating["common"][chatId]) {
-        arenaRating.common[chatId] = {};
-    }
-
-    if (!arenaRating["common"][chatId][userId]) {
-        arenaRating.common[chatId][userId] = 1000;
-    }
-
-    if (!arenaRating["expansion"][userId]) {
-        arenaRating.expansion[userId] = 1000;
-    }
-
-    if (arenaType === "common") {
-        sortedRating = Array.from(Object.entries(arenaRating[arenaType][chatId])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
-    } else {
-        sortedRating = Array.from(Object.entries(arenaRating[arenaType])).sort(([playerId1, rating1], [playerId2, rating2]) => rating2 - rating1);
-    }
-
-    let playerIndex = sortedRating.findIndex(([playerId, rating]) => parseInt(playerId) === parseInt(userId));
-
-    if (playerIndex === -1) {
-        throw new Error("Игрок не найден");
-    }
-
-    let playerRating = sortedRating[playerIndex][1];
-    let percentileRating = playerIndex / sortedRating.length;
-
-    return [playerRating, percentileRating];
+    const snapshot = await getArenaRatingSnapshot(userId, arenaType, chatId);
+    return [snapshot.rating, snapshot.percentile];
 }

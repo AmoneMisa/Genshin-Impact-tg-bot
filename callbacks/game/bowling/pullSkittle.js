@@ -7,11 +7,12 @@ import bot from '../../../bot.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 let maxPulls = 2;
 
 export default [[/^bowling_pull$/, async function (session, callback) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
@@ -21,37 +22,43 @@ export default [[/^bowling_pull$/, async function (session, callback) {
 
     let chatId = callback.message.chat.id;
 
-    await bot.sendDice(chatId, {emoji: '🎳',
-        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})}).then(msg => {
-        deleteMessageTimeout(chatId, msg.message_id, 10 * 1000);
-        session.game.bowling.skittles += msg.dice.value;
-    });
+    const diceMsg = await bot.sendDice(chatId, {emoji: '🎳',
+        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})});
+    deleteMessageTimeout(chatId, diceMsg.message_id, 10 * 1000);
 
-    session.game.bowling.counter++;
+    const { chat, member } = await loadPlayer(chatId, session.userId);
+    if (!member.game.hasOwnProperty('bowling')) {
+        return;
+    }
+    member.game.bowling.skittles += diceMsg.dice.value;
+    member.game.bowling.counter++;
+    await chat.save();
 
-    if (session.game.bowling.counter === maxPulls) {
-        let result = isWinPoints(session.game.bowling.skittles, 8, 12);
+    let bowling = member.game.bowling;
+
+    if (bowling.counter === maxPulls) {
+        let result = isWinPoints(bowling.skittles, 8, 12);
         if (!result) {
-            deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма сбитых кеглей: ${session.game.bowling.skittles}. Ставка: ${session.game.bowling.bet}`, {
+            await deleteMessage(chatId, callback.message.message_id);
+            await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты проиграл. Твоя сумма сбитых кеглей: ${bowling.skittles}. Ставка: ${bowling.bet}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 7000);
-            return endGame(session);
+            return endGame(chatId, session.userId);
         }
 
         let modifier;
-        if (session.game.bowling.skittles === 12) {
+        if (bowling.skittles === 12) {
             modifier = 3;
         } else {
             modifier = 1.2;
         }
-        
-        sendPrize(session, modifier, 'bowling');
-        deleteMessage(chatId, callback.message.message_id);
-        await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.bowling.bet}\nВыигрыш: ${Math.round(session.game.bowling.bet * modifier)}\nСбитое число кеглей: ${session.game.bowling.skittles}`, {
+
+        await sendPrize(chatId, session.userId, 'bowling', modifier);
+        await deleteMessage(chatId, callback.message.message_id);
+        await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${bowling.bet}\nВыигрыш: ${Math.round(bowling.bet * modifier)}\nСбитое число кеглей: ${bowling.skittles}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 7000);
 
-        return endGame(session);
+        return endGame(chatId, session.userId);
     }
 }]];

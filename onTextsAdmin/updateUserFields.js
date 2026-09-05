@@ -1,7 +1,7 @@
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import { myId } from '../config.js';
 import potionsInInventoryTemplate from '../template/potionsInInventoryTemplate.js';
-import { sessions } from '../data.js';
+import Chat from '../db/models/Chat.js';
 import lodash from 'lodash';
 
 export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
@@ -72,14 +72,16 @@ export default [[/(?:^|\s)\/update_users\b/, async (msg) => {
         return newData;
     }
 
-    for (let chatSession of Object.values(sessions)) {
-        for (let session of Object.values(chatSession.members)) {
-            if (session.userChatData.user.is_bot) {
+    const chats = await Chat.find({});
+    for (let chat of chats) {
+        for (let session of chat.members) {
+            if (session.userChatData?.user?.is_bot) {
                 continue;
             }
 
             session.game.inventory = migrateData(session.game.inventory);
         }
+        await chat.save();
     }
 
     sendMessage(myId, "Модель Инвентаря обновлена.");

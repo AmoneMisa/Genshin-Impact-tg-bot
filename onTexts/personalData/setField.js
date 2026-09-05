@@ -4,6 +4,7 @@ import commands from '../../dictionaries/commands.js';
 import translation from '../../dictionaries/translate.js';
 import getUserName from '../../functions/getters/getUserName.js';
 import deleteMessage from '../../functions/tgBotFunctions/deleteMessage.js';
+import loadPlayer from '../../functions/getters/loadPlayer.js';
 
 export default [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) => {
     let regResultStr = regResult[1];
@@ -15,7 +16,7 @@ export default [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) =
             continue;
         }
 
-        sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${getUserName(session, "nickname")}?`, {
+        sendMessage(msg.chat.id, `Твой(-я) ${translation[command].toLowerCase()}, @${await getUserName(session, "nickname")}?`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             disable_notification: true,
             reply_markup: {
@@ -23,9 +24,16 @@ export default [[/(?:^|\s)\/set[A-Z][A-z]*\b/, async (msg, regResult, session) =
                 force_reply: true
             }
         }).then((msg) => {
-            let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+            let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
                 bot.removeReplyListener(id);
-                session.user[command] = replyMsg.text;
+                const { chat, member } = await loadPlayer(replyMsg.chat.id, session.userId);
+                if (member) {
+                    if (!member.user) {
+                        member.user = {};
+                    }
+                    member.user[command] = replyMsg.text;
+                    await chat.save();
+                }
                 deleteMessage(replyMsg.chat.id, replyMsg.message_id);
                 deleteMessage(msg.chat.id, msg.message_id);
             });

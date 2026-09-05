@@ -1,46 +1,47 @@
 import bot from '../../bot.js';
 import sleep from './sleep.js';
-import intel from 'intel';
 
-const log = intel.getLogger("retryBotRequest");
+function getTelegramErrorCode(error) {
+    return Number(error?.errorCode ?? error?.response?.body?.error_code) || null;
+}
 
-function getRetryAfter(e) {
-    if (e.code !== 'ETELEGRAM') {
-        return 1;
+function getRetryAfter(error) {
+    const errorCode = getTelegramErrorCode(error);
+
+    // Telegram API request validation errors are deterministic; retrying them
+    // only spams the API. v2 exposes errorCode directly on TelegramApiError.
+    if (errorCode === 400) return -1;
+
+    if (errorCode === 429) {
+        return Number(error?.retryAfter ?? error?.parameters?.retry_after ?? error?.response?.body?.parameters?.retry_after) || 1;
     }
 
-    if (e.response.body['error_code'] === 400) {
-        console.error(Object.fromEntries(new URLSearchParams(e.response.request.body).entries()));
-        return -1;
-    }
-
-    if (e.response.body['error_code'] === 429) {
-        return e.response.body['parameters']['retry_after'];
-    }
-
+    // NetworkError (EFETCH), TimeoutError (ETIMEOUT) and 5xx errors are safe to
+    // retry with the legacy short backoff.
     return 1;
 }
 
-export default async function retryBotRequest(request) {
-    let lastE = null;
+export default async function(request) {
+    let lastError = null;
 
-    for (let i = 0; i < 5; i++) {
+    for (let attempt = 1; attempt <= 5; attempt++) {
         try {
             return await request(bot);
-        } catch (e) {
-            lastE = e;
-            log.info(`Try: %s`, i);
-            let retryAfter = getRetryAfter(e);
-            if (retryAfter === -1) {
-                break;
-            }
-            log.info('Retry after: %s', retryAfter);
-            if (e.response) {
-                log.info('Body: %:2j', e.response.body);
-            }
+        } catch (error) {
+            lastError = error;
+            const retryAfter = getRetryAfter(error);
+            const errorCode = getTelegramErrorCode(error);
+
+            console.warn(`[telegram] request failed, attempt ${attempt}/5`, {
+                code: error?.code,
+                errorCode,
+                retryAfter,
+            });
+
+            if (retryAfter === -1) break;
             await sleep(retryAfter * 1000);
         }
     }
 
-    throw lastE;
-};
+    throw lastError;
+}

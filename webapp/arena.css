@@ -1,0 +1,55 @@
+.arena-panel { max-height:min(92vh,900px); }
+.arena-tabs { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin:16px 0 10px; padding:4px; border:1px solid rgba(255,255,255,.07); border-radius:14px; background:rgba(255,255,255,.025); }
+.arena-tabs button { min-height:34px; border:0; border-radius:10px; background:transparent; color:var(--muted); font-size:10px; font-weight:800; }
+.arena-tabs button.active { color:#efeaff; background:linear-gradient(135deg,rgba(165,126,240,.18),rgba(85,160,205,.1)); box-shadow:inset 0 0 18px rgba(165,126,240,.05); }
+.arena-hero { position:relative; overflow:hidden; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:15px; border:1px solid rgba(171,144,244,.16); border-radius:18px; background:linear-gradient(145deg,rgba(122,91,196,.12),rgba(255,255,255,.025)); }
+.arena-hero::after { content:""; position:absolute; width:160px; height:160px; right:-70px; top:-88px; border-radius:50%; background:radial-gradient(circle,rgba(173,133,255,.18),transparent 66%); pointer-events:none; }
+.arena-hero > div:first-child { position:relative; z-index:1; min-width:0; display:grid; gap:3px; }
+.arena-hero small { color:var(--muted); font-size:9px; text-transform:uppercase; letter-spacing:.08em; }
+.arena-hero strong { font-size:18px; }
+.arena-hero span { color:#a9a4bb; font-size:9px; line-height:1.35; }
+.arena-score { position:relative; z-index:1; min-width:76px; padding:10px; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(255,255,255,.035); display:grid; place-items:center; }
+.arena-score strong { font-size:18px; }
+.arena-score small { font-size:8px; }
+.arena-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:10px 0 14px; }
+.arena-summary > div { min-width:0; padding:10px 11px; border:1px solid rgba(255,255,255,.07); border-radius:13px; background:rgba(255,255,255,.025); display:grid; gap:3px; }
+.arena-summary small { color:var(--muted); font-size:8px; text-transform:uppercase; letter-spacing:.07em; }
+.arena-summary strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+.arena-section-title { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 2px 8px; }
+.arena-section-title strong { font-size:13px; }
+.arena-refresh { border:1px solid rgba(255,255,255,.07); border-radius:999px; padding:6px 9px; background:rgba(255,255,255,.025); color:var(--muted); font-size:9px; }
+.arena-opponents { display:grid; gap:9px; }
+.arena-opponent { position:relative; overflow:hidden; padding:12px; border:1px solid rgba(255,255,255,.075); border-radius:17px; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)); }
+.arena-opponent::after { content:""; position:absolute; width:110px; height:110px; right:-55px; bottom:-58px; border-radius:50%; background:radial-gradient(circle,rgba(89,166,211,.09),transparent 68%); pointer-events:none; }
+.arena-opponent-head { position:relative; z-index:1; display:flex; align-items:center; gap:9px; }
+.arena-avatar { width:38px; height:38px; flex:0 0 auto; display:grid; place-items:center; border:1px solid rgba(255,255,255,.09); border-radius:12px; background:rgba(255,255,255,.035); font-size:18px; }
+.arena-opponent-title { min-width:0; display:grid; gap:2px; flex:1; }
+.arena-opponent-title strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+.arena-opponent-title small { color:var(--muted); font-size:8px; }
+.arena-rating { flex:0 0 auto; display:grid; justify-items:end; }
+.arena-rating strong { font-size:12px; }
+.arena-rating small { color:var(--muted); font-size:7px; }
+.arena-opponent-meta { position:relative; z-index:1; display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.arena-opponent-meta span { padding:4px 6px; border-radius:7px; background:rgba(255,255,255,.03); color:#bbb6ca; font-size:8px; }
+.arena-attack { position:relative; z-index:1; width:100%; min-height:36px; margin-top:9px; border:1px solid rgba(178,145,248,.2); border-radius:11px; color:#eee8ff; background:linear-gradient(135deg,rgba(165,126,240,.16),rgba(91,130,208,.1)); font-size:10px; font-weight:850; }
+.arena-attack.confirming { border-color:rgba(255,190,116,.3); color:#ffe0b3; background:rgba(169,105,45,.11); }
+.arena-feedback { min-height:18px; margin:11px 2px 1px; color:var(--muted); font-size:10px; text-align:center; }
+.arena-empty { padding:22px 14px; border:1px dashed rgba(255,255,255,.09); border-radius:16px; color:var(--muted); text-align:center; font-size:10px; }
+.arena-overlay.busy .arena-tabs button, .arena-overlay.busy .arena-refresh, .arena-overlay.busy .arena-attack { pointer-events:none; opacity:.5; }
+.arena-overlay.fighting .arena-opponent { animation:arenaPulse .55s ease-in-out infinite alternate; }
+.arena-result { position:sticky; top:0; z-index:20; margin:-2px 0 10px; padding:11px 12px; border:1px solid rgba(255,255,255,.1); border-radius:15px; background:rgba(16,18,34,.94); backdrop-filter:blur(18px); display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px; opacity:0; transform:translateY(-12px) scale(.98); transition:.2s ease; }
+.arena-result.visible { opacity:1; transform:translateY(0) scale(1); }
+.arena-result.leaving { opacity:0; transform:translateY(-8px) scale(.985); }
+.arena-result > span { font-size:22px; }
+.arena-result > div:nth-child(2) { min-width:0; display:grid; gap:1px; }
+.arena-result > div:nth-child(2) strong { font-size:12px; }
+.arena-result > div:nth-child(2) small { color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:8px; }
+.arena-result.win { border-color:rgba(100,223,173,.22); }
+.arena-result.lose { border-color:rgba(238,117,104,.22); }
+.arena-result.draw { border-color:rgba(204,191,135,.2); }
+.arena-result-delta { font-size:10px; font-weight:900; }
+.arena-result-delta.positive { color:#a8f4d8; }
+.arena-result-delta.negative { color:#ffb5ac; }
+@keyframes arenaPulse { from { transform:scale(1); } to { transform:scale(.997); opacity:.83; } }
+@media (min-width:720px) { .arena-opponents { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:390px) { .arena-summary > div { padding:9px 8px; }.arena-hero { align-items:flex-start; }.arena-result { grid-template-columns:auto 1fr; }.arena-result-delta { grid-column:2; } }

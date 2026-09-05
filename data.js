@@ -41,6 +41,7 @@ try {
 } catch (e) {
     arenaRating = {};
 }
+
 try {
     let arenaTempBotsJson = fs.readFileSync("./arenaTempBots.json");
     arenaTempBots = JSON.parse(arenaTempBotsJson);

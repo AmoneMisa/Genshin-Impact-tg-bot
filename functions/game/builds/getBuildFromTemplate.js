@@ -14,7 +14,7 @@ export default function () {
 
     result[key] = {currentLvl: build.startLvl, upgradeStartedAt: null, lastCollectAt: null};
 
-    if (build.hasOwnProperty('resourcesType')) {
+    if (build.hasOwnProperty('resourcesType') || build.type === 'experience') {
       result[key].resourceCollected = 0;
     }
 
@@ -26,5 +26,5 @@ export default function () {
     }
   }
 
-    return result;
-};
+  return result;
+}
