@@ -61,8 +61,39 @@ function damageList(rows) {
     </div>`).join('');
 }
 
+// Legacy /boss is an entry action, not a passive status read: when no boss is
+// alive it summons one immediately. Preserve that behavior without mutating a
+// GET endpoint. The POST race case is expected when two players open the Mini
+// App at the same time, so reuse the boss returned by already_summoned.
+export async function loadBossEntryState(api) {
+  const current = await api('/api/boss');
+  if (current?.active) {
+    return { boss: current, summoned: false, state: null };
+  }
+
+  try {
+    const payload = await api('/api/boss/summon', { method: 'POST' });
+    return {
+      boss: payload.boss,
+      summoned: true,
+      state: payload.state || null,
+    };
+  } catch (error) {
+    if (error?.payload?.reason === 'already_summoned' && error.payload.boss) {
+      return {
+        boss: error.payload.boss,
+        summoned: false,
+        state: error.payload.state || null,
+      };
+    }
+    throw error;
+  }
+}
+
 export async function openBossGame({ api, renderState, haptic, statusElement }) {
-  let state = await api('/api/boss');
+  const entry = await loadBossEntryState(api);
+  let state = entry.boss;
+  if (entry.state) renderState(entry.state);
   let pending = false;
   let timer = null;
 
@@ -81,6 +112,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
 
   const content = overlay.querySelector('[data-boss-content]');
   const feedback = overlay.querySelector('[data-boss-feedback]');
+  if (entry.summoned) feedback.textContent = 'Босс призван. Таймер рейда запущен.';
 
   const close = () => {
     if (timer) window.clearInterval(timer);
