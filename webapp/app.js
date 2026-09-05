@@ -1,4 +1,5 @@
 import { startWebGL } from './renderer.js';
+import { startGameVfx } from './vfx.js';
 import { renderPlayerHud } from './hud.js';
 import { openChestGame } from './chest.js';
 import { openGachaGame } from './gacha.js';
@@ -32,6 +33,7 @@ const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
 const status = $('status');
 let currentState = null;
+let webglFx = null;
 
 function haptic(type = 'light') {
   try { tg?.HapticFeedback?.impactOccurred(type); } catch {}
@@ -105,6 +107,7 @@ async function launchFeature(feature, render) {
 
   const [open, successText] = entry;
   try {
+    webglFx?.transition?.(feature.id);
     await open({
       api,
       renderState: render,
@@ -162,11 +165,13 @@ async function loadState() {
 
 async function boot() {
   try {
-    startWebGL($('webgl'));
+    webglFx = startWebGL($('webgl'));
   } catch (error) {
     console.warn(error);
     document.body.style.background = 'radial-gradient(circle at top, #241842, #0b0d17 60%)';
   }
+
+  startGameVfx();
 
   try {
     tg?.ready();

@@ -9,6 +9,8 @@ precision highp float;
 uniform vec2 u_resolution;
 uniform float u_time;
 uniform vec2 u_pointer;
+uniform float u_transition;
+uniform vec3 u_transition_color;
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -44,10 +46,33 @@ void main() {
   s += stars(uv * 1.7 - vec2(t * .02, t * .01), 11.0, u_time * .8) * .5;
   color += vec3(.65, .72, 1.0) * s * .42;
 
+  float transitionRadius = .12 + (1.0 - u_transition) * 1.55;
+  float transitionDistance = length(uv - pointer * .10);
+  float transitionRing = exp(-abs(transitionDistance - transitionRadius) * 14.0) * u_transition;
+  float transitionWash = smoothstep(1.45, .0, transitionDistance) * u_transition * .24;
+  float transitionMix = clamp(transitionRing * .72 + transitionWash, 0.0, .72);
+  color = mix(color, u_transition_color, transitionMix);
+  color += u_transition_color * transitionRing * .12;
+
   float vignette = smoothstep(1.65, .15, length(uv * vec2(.72, .85)));
   color *= .55 + vignette * .62;
   gl_FragColor = vec4(color, 1.0);
 }`;
+
+const TRANSITION_COLORS = Object.freeze({
+  builds: [0.86, 0.63, 0.27],
+  boss: [1.0, 0.22, 0.22],
+  arena: [0.48, 0.38, 1.0],
+  gacha: [0.78, 0.42, 1.0],
+  chest: [0.42, 0.78, 1.0],
+  equipment: [0.92, 0.68, 0.33],
+  profile: [0.62, 0.50, 1.0],
+  default: [0.54, 0.68, 1.0],
+});
+
+export function transitionColorForMode(mode) {
+  return TRANSITION_COLORS[mode] || TRANSITION_COLORS.default;
+}
 
 function shader(gl, type, source) {
   const item = gl.createShader(type);
@@ -81,7 +106,11 @@ export function startWebGL(canvas) {
   const resolution = gl.getUniformLocation(program, 'u_resolution');
   const time = gl.getUniformLocation(program, 'u_time');
   const pointerUniform = gl.getUniformLocation(program, 'u_pointer');
+  const transitionUniform = gl.getUniformLocation(program, 'u_transition');
+  const transitionColorUniform = gl.getUniformLocation(program, 'u_transition_color');
   const pointer = { x: .5, y: .5 };
+  let transitionStarted = -Infinity;
+  let transitionColor = TRANSITION_COLORS.default;
 
   const updatePointer = (x, y) => {
     pointer.x = x / Math.max(1, window.innerWidth);
@@ -103,11 +132,25 @@ export function startWebGL(canvas) {
   const started = performance.now();
   function frame(now) {
     resize();
+    const transitionProgress = Math.min(1, Math.max(0, (now - transitionStarted) / 720));
+    const transitionValue = transitionStarted === -Infinity ? 0 : Math.pow(1 - transitionProgress, 1.55);
     gl.uniform2f(resolution, canvas.width, canvas.height);
     gl.uniform1f(time, (now - started) / 1000);
     gl.uniform2f(pointerUniform, pointer.x, pointer.y);
+    gl.uniform1f(transitionUniform, transitionValue);
+    gl.uniform3f(transitionColorUniform, transitionColor[0], transitionColor[1], transitionColor[2]);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  return {
+    transition(mode = 'default') {
+      try {
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+      } catch {}
+      transitionColor = transitionColorForMode(mode);
+      transitionStarted = performance.now();
+    },
+  };
 }
