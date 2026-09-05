@@ -44,7 +44,7 @@ test('stance-aware runtime keeps one bounded paper-doll scene and existing fallb
   assert.ok(source.includes("[data-paper-doll-stage]"));
   assert.ok(!source.includes(".equipment-loot-preview .loot-art"));
   assert.ok(source.includes("(prefers-reduced-motion: reduce)"));
-  assert.ok(renderer.startsWith("import { startLootWebGL } from './loot-webgl-v3.js';"));
+  assert.ok(renderer.startsWith("import { startLootWebGL } from './loot-webgl-v4.js';"));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
 });
 
