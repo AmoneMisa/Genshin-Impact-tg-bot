@@ -9,7 +9,13 @@ function number(value, fallback = 0) {
   return Number.isFinite(Number(value)) ? Number(value) : fallback;
 }
 
-function safeCombatValue(getter, session, fallback = 0) {
+// Older player documents predate equipmentStats. The combat max getters assume
+// that snapshot exists, while their shared equipment helper historically
+// returns 1 when it does not, which doubles additive max HP/MP/CP modifiers.
+// Use raw class stats for those legacy documents; once an equipment snapshot is
+// present, the canonical getters remain the source of truth for gear bonuses.
+function combatValue(getter, session, fallback = 0) {
+  if (!session?.game?.equipmentStats) return number(fallback);
   try {
     return number(getter(session, session?.game?.gameClass), fallback);
   } catch {
@@ -90,12 +96,19 @@ export function createMiniAppState(session, context) {
   const stats = game.stats || {};
   const gameClassStats = game.gameClass?.stats || {};
 
-  const maxHp = Math.max(1, safeCombatValue(getMaxHp, session, gameClassStats.maxHp ?? gameClassStats.hp ?? gameClassStats.health ?? 1));
-  const maxMp = Math.max(1, safeCombatValue(getMaxMp, session, gameClassStats.maxMp ?? gameClassStats.mp ?? 1));
-  const maxCp = Math.max(1, safeCombatValue(getMaxCp, session, gameClassStats.maxCp ?? gameClassStats.cp ?? 1));
-  const hp = Math.max(0, Math.min(maxHp, safeCombatValue(getCurrentHp, session, gameClassStats.hp ?? gameClassStats.health)));
-  const mp = Math.max(0, Math.min(maxMp, safeCombatValue(getCurrentMp, session, gameClassStats.mp)));
-  const cp = Math.max(0, Math.min(maxCp, safeCombatValue(getCurrentCp, session, gameClassStats.cp)));
+  const rawMaxHp = gameClassStats.maxHp ?? gameClassStats.hp ?? gameClassStats.health ?? 1;
+  const rawMaxMp = gameClassStats.maxMp ?? gameClassStats.mp ?? 1;
+  const rawMaxCp = gameClassStats.maxCp ?? gameClassStats.cp ?? 1;
+  const rawHp = gameClassStats.hp ?? gameClassStats.health ?? 0;
+  const rawMp = gameClassStats.mp ?? 0;
+  const rawCp = gameClassStats.cp ?? 0;
+
+  const maxHp = Math.max(1, combatValue(getMaxHp, session, rawMaxHp));
+  const maxMp = Math.max(1, combatValue(getMaxMp, session, rawMaxMp));
+  const maxCp = Math.max(1, combatValue(getMaxCp, session, rawMaxCp));
+  const hp = Math.max(0, Math.min(maxHp, combatValue(getCurrentHp, session, rawHp)));
+  const mp = Math.max(0, Math.min(maxMp, combatValue(getCurrentMp, session, rawMp)));
+  const cp = Math.max(0, Math.min(maxCp, combatValue(getCurrentCp, session, rawCp)));
 
   return {
     context: {
