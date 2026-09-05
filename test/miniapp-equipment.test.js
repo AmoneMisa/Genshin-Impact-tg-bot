@@ -141,7 +141,8 @@ test('craftEquipmentItem spends all quoted resources and adds a real item to inv
   assert.equal(player.game.inventory.crystals, beforeCrystals - CRAFT_COSTS.D.crystals);
   assert.equal(player.game.inventory.ironOre, beforeOre - CRAFT_COSTS.D.ironOre);
   assert.equal(player.game.inventory.equipment.items.length, 1);
-  assert.equal(result.item.grade, 'D');
+  // Legacy forge has a 5% one-grade bonus roll, so a requested D craft may legitimately become C.
+  assert.ok(['D', 'C'].includes(result.item.grade));
 });
 
 test('craftEquipmentItem refuses a grade above the player level', () => {
