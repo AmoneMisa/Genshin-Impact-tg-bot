@@ -8,10 +8,10 @@
 .paper-avatar-webgl-ready .paper-avatar-webgl-canvas{display:block;z-index:4}
 .paper-avatar-webgl-ready .paper-doll-figure>svg,.paper-avatar-webgl-ready .paper-doll-avatar-gear{opacity:0}
 .paper-avatar-webgl-ready .paper-doll-core{z-index:5;opacity:.62}
-.paper-avatar-interactive .paper-doll-figure{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.paper-avatar-interactive .paper-doll-figure{pointer-events:auto;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .paper-avatar-interactive.is-character-dragging .paper-doll-figure{cursor:grabbing}
 .paper-avatar-interactive .paper-doll-slot{transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}
 .paper-avatar-interactive .paper-doll-slot.preview-focused{transform:translate(-50%,-50%) scale(1.055);box-shadow:0 0 0 1px rgba(225,214,255,.46),0 0 22px rgba(166,132,255,.30),0 10px 26px rgba(0,0,0,.26);filter:brightness(1.10)}
 .paper-avatar-interactive[data-avatar-focus="cloak"] .paper-doll-core{opacity:.42}
 @media(max-width:390px){.paper-avatar-webgl-ready .paper-doll-figure{perspective:560px}.loot-art.loot-webgl-ready{perspective:420px}.paper-avatar-interactive .paper-doll-slot.preview-focused{transform:translate(-50%,-50%) scale(1.035)}}
-@media(prefers-reduced-motion:reduce){.loot-webgl-canvas,.paper-avatar-webgl-canvas{display:none!important}.loot-art>svg,.paper-doll-figure>svg,.paper-doll-avatar-gear{opacity:1!important}.paper-avatar-interactive .paper-doll-slot{transition:none!important}.paper-avatar-interactive .paper-doll-slot.preview-focused{transform:translate(-50%,-50%)!important;filter:none!important}}
+@media(prefers-reduced-motion:reduce){.loot-webgl-canvas,.paper-avatar-webgl-canvas{display:none!important}.loot-art>svg,.paper-doll-figure>svg,.paper-doll-avatar-gear{opacity:1!important}.paper-avatar-interactive .paper-doll-figure{pointer-events:none!important;cursor:default}.paper-avatar-interactive .paper-doll-slot{transition:none!important}.paper-avatar-interactive .paper-doll-slot.preview-focused{transform:translate(-50%,-50%)!important;filter:none!important}}
