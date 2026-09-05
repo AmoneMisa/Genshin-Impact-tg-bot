@@ -29,10 +29,18 @@ const REASONS = {
   invalid_item: 'Предмет повреждён и не может быть экипирован.',
   equip_failed: 'Не удалось надеть предмет.',
   invalid_action: 'Неизвестное действие.',
+  unknown_grade: 'Неизвестный грейд.',
+  level_too_low: 'Уровень персонажа слишком низкий для этого грейда.',
+  not_enough_resources: 'Недостаточно ресурсов для ковки.',
+  not_enough_gold: 'Недостаточно золота для улучшения.',
+  not_enough_crystals: 'Недостаточно кристаллов для улучшения.',
+  not_enough_iron_ore: 'Недостаточно руды для улучшения.',
+  nothing_to_upgrade: 'У предмета нет дополнительных характеристик для улучшения.',
+  max_level: 'Предмет уже улучшен до максимума.',
 };
 
 function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
+  return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 3 }).format(Number(value) || 0);
 }
 
 function escapeHtml(value) {
@@ -53,6 +61,19 @@ function statText(stat) {
   return `${value > 0 ? '+' : ''}${formatNumber(value)} ${stat.name || 'stat'}`;
 }
 
+function costMarkup(cost, missing = {}) {
+  if (!cost) return '<span class="forge-cost maxed">MAX</span>';
+  const entries = [
+    ['gold', '🪙', cost.gold],
+    ['crystals', '💎', cost.crystals],
+    ['ironOre', '⛏️', cost.ironOre],
+  ];
+  return entries.map(([key, icon, value]) => `
+    <span class="forge-cost ${(Number(missing?.[key]) || 0) > 0 ? 'missing' : ''}">
+      ${icon} ${formatNumber(value)}
+    </span>`).join('');
+}
+
 function renderSlots(container, state) {
   const entries = Object.entries(state.equippedSlots || {});
   if (!entries.length) {
@@ -63,7 +84,7 @@ function renderSlots(container, state) {
   container.innerHTML = entries.map(([slot, item]) => `
     <article class="loadout-slot">
       <small>${escapeHtml(SLOT_LABELS[slot] || slot)}</small>
-      <strong class="${gradeClass(item.grade)}">${escapeHtml(item.grade)}</strong>
+      <strong class="${gradeClass(item.grade)}">${escapeHtml(item.grade)}${item.forgeLevel ? ` +${item.forgeLevel}` : ''}</strong>
       <span>${escapeHtml(item.translatedName || item.name)}</span>
     </article>`).join('');
 }
@@ -87,7 +108,10 @@ function itemCard(item) {
             <small>${escapeHtml(item.rarityTranslated || TYPE_LABELS[item.mainType] || item.mainType)}</small>
           </div>
         </div>
-        ${item.isUsed ? '<span class="equipped-pill">НАДЕТО</span>' : ''}
+        <div class="equipment-badges">
+          ${item.forgeLevel ? `<span class="forge-level-pill">+${item.forgeLevel}</span>` : ''}
+          ${item.isUsed ? '<span class="equipped-pill">НАДЕТО</span>' : ''}
+        </div>
       </div>
 
       <p class="equipment-full-name">${escapeHtml(item.name)}</p>
@@ -114,9 +138,63 @@ function itemCard(item) {
     </article>`;
 }
 
+function craftCard(grade) {
+  return `
+    <article class="forge-card craft-card ${grade.affordable ? '' : 'unaffordable'}">
+      <div class="forge-card-head">
+        <span class="equipment-grade ${gradeClass(grade.name)}">${escapeHtml(grade.name)}</span>
+        <div>
+          <strong>Случайное снаряжение</strong>
+          <small>Доступно с LVL ${formatNumber(grade.minLevel)}</small>
+        </div>
+      </div>
+      <div class="forge-costs">${costMarkup(grade.cost, grade.missingResources)}</div>
+      <button class="equipment-action forge-action" type="button" data-craft-grade="${escapeHtml(grade.name)}" ${grade.affordable ? '' : 'disabled'}>
+        ${grade.affordable ? 'Выковать' : 'Не хватает ресурсов'}
+      </button>
+    </article>`;
+}
+
+function upgradeCard(item) {
+  const maxed = !item.upgradeCost && item.forgeLevel >= item.maxForgeLevel;
+  const noStats = !(item.stats || []).length;
+  let buttonText = `Улучшить до +${item.forgeLevel + 1}`;
+  let disabled = false;
+
+  if (maxed) {
+    buttonText = `Максимум +${item.maxForgeLevel}`;
+    disabled = true;
+  } else if (noStats) {
+    buttonText = 'Нет улучшаемых статов';
+    disabled = true;
+  } else if (!item.canAffordUpgrade) {
+    buttonText = 'Не хватает ресурсов';
+    disabled = true;
+  }
+
+  return `
+    <article class="forge-card upgrade-card ${item.canAffordUpgrade ? '' : 'unaffordable'}">
+      <div class="forge-card-head">
+        <span class="equipment-grade ${gradeClass(item.grade)}">${escapeHtml(item.grade)}</span>
+        <div>
+          <strong>${escapeHtml(item.translatedName)}</strong>
+          <small>${item.isUsed ? '⭐ Надето · ' : ''}Улучшение +${item.forgeLevel} / +${item.maxForgeLevel}</small>
+        </div>
+      </div>
+      <div class="forge-stat-preview">
+        ${(item.stats || []).slice(0, 4).map((stat) => `<span>${escapeHtml(statText(stat))}</span>`).join('') || '<span>Нет дополнительных статов</span>'}
+      </div>
+      <div class="forge-costs">${costMarkup(item.upgradeCost, item.missingUpgradeResources)}</div>
+      <button class="equipment-action forge-action" type="button" data-upgrade-key="${escapeHtml(item.key)}" ${disabled ? 'disabled' : ''}>
+        ${buttonText}
+      </button>
+    </article>`;
+}
+
 export async function openEquipmentGame({ api, renderState, haptic, statusElement }) {
   let equipment = await api('/api/equipment');
   let activeType = 'all';
+  let activeView = 'inventory';
   let pending = false;
 
   const overlay = document.createElement('section');
@@ -127,24 +205,44 @@ export async function openEquipmentGame({ api, renderState, haptic, statusElemen
       <header class="overlay-head">
         <div>
           <div class="eyebrow">СНАРЯЖЕНИЕ · WEBGL MODE</div>
-          <h2>Арсенал</h2>
+          <h2>Арсенал и кузница</h2>
         </div>
         <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
       </header>
 
       <div class="equipment-summary">
         <div><small>Предметов</small><strong data-equipment-count>0</strong></div>
-        <div><small>Экипировано</small><strong data-equipped-count>0</strong></div>
-        <div><small>Золото</small><strong data-equipment-gold>0</strong></div>
+        <div><small>Надето</small><strong data-equipped-count>0</strong></div>
+        <div><small>Мора</small><strong data-equipment-gold>0</strong></div>
+        <div><small>Кристаллы</small><strong data-equipment-crystals>0</strong></div>
+        <div><small>Руда</small><strong data-equipment-ore>0</strong></div>
       </div>
 
-      <section class="loadout-section">
-        <div class="equipment-section-title"><strong>Активные слоты</strong><small>Боевые статы берутся отсюда</small></div>
-        <div class="loadout-grid" data-loadout></div>
+      <div class="equipment-tabs" role="tablist" aria-label="Раздел снаряжения">
+        <button type="button" data-equipment-view="inventory">Арсенал</button>
+        <button type="button" data-equipment-view="forge">Кузница</button>
+      </div>
+
+      <section data-equipment-panel="inventory">
+        <section class="loadout-section">
+          <div class="equipment-section-title"><strong>Активные слоты</strong><small>Боевые статы берутся отсюда</small></div>
+          <div class="loadout-grid" data-loadout></div>
+        </section>
+        <div class="equipment-filters" data-filters></div>
+        <div class="equipment-list" data-equipment-list></div>
       </section>
 
-      <div class="equipment-filters" data-filters></div>
-      <div class="equipment-list" data-equipment-list></div>
+      <section class="forge-view" data-equipment-panel="forge" hidden>
+        <section class="forge-section">
+          <div class="equipment-section-title"><strong>Ковка</strong><small>Вид предмета и характеристики выбирает сервер</small></div>
+          <div class="forge-grid" data-craft-list></div>
+        </section>
+        <section class="forge-section">
+          <div class="equipment-section-title"><strong>Улучшение</strong><small>Постоянно усиливает дополнительные характеристики предмета</small></div>
+          <div class="forge-grid" data-upgrade-list></div>
+        </section>
+      </section>
+
       <div class="equipment-feedback" data-equipment-feedback aria-live="polite"></div>
     </div>`;
 
@@ -158,7 +256,50 @@ export async function openEquipmentGame({ api, renderState, haptic, statusElemen
   const list = overlay.querySelector('[data-equipment-list]');
   const filters = overlay.querySelector('[data-filters]');
   const loadout = overlay.querySelector('[data-loadout]');
+  const craftList = overlay.querySelector('[data-craft-list]');
+  const upgradeList = overlay.querySelector('[data-upgrade-list]');
   const feedback = overlay.querySelector('[data-equipment-feedback]');
+
+  function armConfirmation(button, label) {
+    if (button.dataset.confirm === 'yes') return true;
+    button.dataset.confirm = 'yes';
+    button.dataset.originalLabel = button.textContent.trim();
+    button.textContent = label;
+    button.classList.add('confirming');
+    haptic('medium');
+    window.setTimeout(() => {
+      if (!button.isConnected || button.dataset.confirm !== 'yes') return;
+      button.dataset.confirm = '';
+      button.classList.remove('confirming');
+      button.textContent = button.dataset.originalLabel || 'Подтвердить';
+    }, 2800);
+    return false;
+  }
+
+  function beginMutation(message, hapticType = 'medium') {
+    pending = true;
+    overlay.classList.add('busy');
+    feedback.textContent = message;
+    haptic(hapticType);
+  }
+
+  function finishMutation() {
+    pending = false;
+    overlay.classList.remove('busy');
+  }
+
+  async function handleError(error, scope = 'Снаряжение') {
+    const reason = error.payload?.reason;
+    if (error.payload?.equipment) equipment = error.payload.equipment;
+    feedback.textContent = REASONS[reason] || error.message;
+    statusElement.textContent = `${scope}: ${feedback.textContent}`;
+
+    if (reason === 'stale_item') {
+      try { equipment = await api('/api/equipment'); } catch {}
+    }
+    haptic('light');
+    renderAll();
+  }
 
   function renderFilters() {
     const types = [...new Set((equipment.items || []).map((item) => item.mainType).filter(Boolean))];
@@ -177,32 +318,16 @@ export async function openEquipmentGame({ api, renderState, haptic, statusElemen
     });
   }
 
-  function bindActions() {
+  function bindInventoryActions() {
     list.querySelectorAll('[data-action]').forEach((button) => {
       button.addEventListener('click', async () => {
         if (pending) return;
         const action = button.dataset.action;
         const key = button.dataset.key;
 
-        if (action === 'sell' && button.dataset.confirm !== 'yes') {
-          button.dataset.confirm = 'yes';
-          button.textContent = `Подтвердить · ${formatNumber(button.dataset.price)} 🪙`;
-          button.classList.add('confirming');
-          haptic('medium');
-          window.setTimeout(() => {
-            if (!button.isConnected || button.dataset.confirm !== 'yes') return;
-            button.dataset.confirm = '';
-            button.classList.remove('confirming');
-            button.textContent = `Продать · ${formatNumber(button.dataset.price)} 🪙`;
-          }, 2800);
-          return;
-        }
+        if (action === 'sell' && !armConfirmation(button, `Подтвердить · ${formatNumber(button.dataset.price)} 🪙`)) return;
 
-        pending = true;
-        overlay.classList.add('busy');
-        feedback.textContent = action === 'sell' ? 'Продаём предмет…' : 'Обновляем экипировку…';
-        haptic(action === 'sell' ? 'heavy' : 'medium');
-
+        beginMutation(action === 'sell' ? 'Продаём предмет…' : 'Обновляем экипировку…', action === 'sell' ? 'heavy' : 'medium');
         try {
           const payload = await api('/api/equipment/action', {
             method: 'POST',
@@ -211,30 +336,67 @@ export async function openEquipmentGame({ api, renderState, haptic, statusElemen
 
           equipment = payload.equipment;
           if (payload.state) renderState(payload.state);
-
-          if (action === 'sell') {
-            feedback.textContent = `Продано. Получено ${formatNumber(payload.soldGold)} золота.`;
-          } else if (action === 'equip') {
-            feedback.textContent = 'Предмет экипирован. Конфликтующие слоты сняты автоматически.';
-          } else {
-            feedback.textContent = 'Предмет снят.';
-          }
+          if (action === 'sell') feedback.textContent = `Продано. Получено ${formatNumber(payload.soldGold)} золота.`;
+          else if (action === 'equip') feedback.textContent = 'Предмет экипирован. Конфликтующие слоты сняты автоматически.';
+          else feedback.textContent = 'Предмет снят.';
           haptic('light');
           renderAll();
         } catch (error) {
-          const reason = error.payload?.reason;
-          feedback.textContent = REASONS[reason] || error.message;
-          statusElement.textContent = `Снаряжение: ${feedback.textContent}`;
-          if (reason === 'stale_item') {
-            try {
-              equipment = await api('/api/equipment');
-              renderAll();
-            } catch {}
-          }
-          haptic('light');
+          await handleError(error);
         } finally {
-          pending = false;
-          overlay.classList.remove('busy');
+          finishMutation();
+        }
+      });
+    });
+  }
+
+  function bindForgeActions() {
+    craftList.querySelectorAll('[data-craft-grade]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        if (pending || button.disabled) return;
+        const grade = button.dataset.craftGrade;
+        if (!armConfirmation(button, `Подтвердить ковку ${grade}`)) return;
+
+        beginMutation(`Куем предмет грейда ${grade}…`, 'heavy');
+        try {
+          const payload = await api('/api/equipment/craft', {
+            method: 'POST',
+            body: JSON.stringify({ grade }),
+          });
+          equipment = payload.equipment;
+          if (payload.state) renderState(payload.state);
+          feedback.textContent = `Готово: ${payload.item?.translatedName || payload.item?.name || `предмет ${grade}`} выкован.`;
+          haptic('heavy');
+          renderAll();
+        } catch (error) {
+          await handleError(error, 'Кузница');
+        } finally {
+          finishMutation();
+        }
+      });
+    });
+
+    upgradeList.querySelectorAll('[data-upgrade-key]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        if (pending || button.disabled) return;
+        const key = button.dataset.upgradeKey;
+        if (!armConfirmation(button, 'Подтвердить улучшение')) return;
+
+        beginMutation('Улучшаем предмет…', 'heavy');
+        try {
+          const payload = await api('/api/equipment/action', {
+            method: 'POST',
+            body: JSON.stringify({ key, action: 'upgrade' }),
+          });
+          equipment = payload.equipment;
+          if (payload.state) renderState(payload.state);
+          feedback.textContent = `${payload.item?.translatedName || 'Предмет'} улучшен до +${payload.level}.`;
+          haptic('heavy');
+          renderAll();
+        } catch (error) {
+          await handleError(error, 'Кузница');
+        } finally {
+          finishMutation();
         }
       });
     });
@@ -243,15 +405,42 @@ export async function openEquipmentGame({ api, renderState, haptic, statusElemen
   function renderAll() {
     overlay.querySelector('[data-equipment-count]').textContent = equipment.count || 0;
     overlay.querySelector('[data-equipped-count]').textContent = equipment.equippedCount || 0;
-    overlay.querySelector('[data-equipment-gold]').textContent = formatNumber(equipment.gold);
+    overlay.querySelector('[data-equipment-gold]').textContent = formatNumber(equipment.resources?.gold ?? equipment.gold);
+    overlay.querySelector('[data-equipment-crystals]').textContent = formatNumber(equipment.resources?.crystals ?? equipment.crystals);
+    overlay.querySelector('[data-equipment-ore]').textContent = formatNumber(equipment.resources?.ironOre ?? equipment.ironOre);
+
+    overlay.querySelectorAll('[data-equipment-view]').forEach((button) => {
+      button.classList.toggle('active', button.dataset.equipmentView === activeView);
+      button.onclick = () => {
+        if (pending || activeView === button.dataset.equipmentView) return;
+        activeView = button.dataset.equipmentView;
+        haptic('light');
+        renderAll();
+      };
+    });
+    overlay.querySelectorAll('[data-equipment-panel]').forEach((panel) => {
+      panel.hidden = panel.dataset.equipmentPanel !== activeView;
+    });
+
     renderSlots(loadout, equipment);
     renderFilters();
-
     const visible = (equipment.items || []).filter((item) => activeType === 'all' || item.mainType === activeType);
     list.innerHTML = visible.length
       ? visible.map(itemCard).join('')
       : '<div class="equipment-empty">В этой категории пока нет предметов.</div>';
-    bindActions();
+
+    const grades = equipment.craftableGrades || [];
+    craftList.innerHTML = grades.length
+      ? grades.map(craftCard).join('')
+      : '<div class="equipment-empty">Пока нет доступных грейдов для ковки.</div>';
+
+    const items = equipment.items || [];
+    upgradeList.innerHTML = items.length
+      ? items.map(upgradeCard).join('')
+      : '<div class="equipment-empty">Сначала добудь или выкуй снаряжение.</div>';
+
+    bindInventoryActions();
+    bindForgeActions();
   }
 
   renderAll();
