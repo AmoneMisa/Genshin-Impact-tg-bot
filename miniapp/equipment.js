@@ -2,14 +2,46 @@ import { createHash } from 'node:crypto';
 import equipmentTemplate from '../template/equipmentTemplate.js';
 import equipItem from '../functions/game/equipment/equipItem.js';
 import unequipItem from '../functions/game/equipment/unequipItem.js';
-import craftItem, { getCraftableGrades, CRAFT_COSTS } from '../functions/game/equipment/craftItem.js';
-import upgradeItem, { getItemUpgradeLevel, getItemUpgradeCost } from '../functions/game/equipment/upgradeItem.js';
+import craftItem, {
+  getCraftableGrades,
+  CRAFT_COSTS,
+  canAffordCraft,
+} from '../functions/game/equipment/craftItem.js';
+import upgradeItem, {
+  getItemUpgradeLevel,
+  getItemUpgradeCost,
+  MAX_UPGRADE_LEVEL,
+} from '../functions/game/equipment/upgradeItem.js';
 
 const ACTIONS = new Set(['equip', 'unequip', 'sell', 'upgrade']);
 
 function asNumber(value, fallback = 0) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function getResources(session) {
+  const inventory = session?.game?.inventory || {};
+  return {
+    gold: Math.max(0, asNumber(inventory.gold)),
+    crystals: Math.max(0, asNumber(inventory.crystals)),
+    ironOre: Math.max(0, asNumber(inventory.ironOre)),
+  };
+}
+
+function canAffordCost(resources, cost) {
+  if (!cost) return false;
+  return resources.gold >= asNumber(cost.gold)
+    && resources.crystals >= asNumber(cost.crystals)
+    && resources.ironOre >= asNumber(cost.ironOre);
+}
+
+function missingResources(resources, cost) {
+  return {
+    gold: Math.max(0, asNumber(cost?.gold) - resources.gold),
+    crystals: Math.max(0, asNumber(cost?.crystals) - resources.crystals),
+    ironOre: Math.max(0, asNumber(cost?.ironOre) - resources.ironOre),
+  };
 }
 
 function gradeMinLevel(gradeName) {
@@ -41,6 +73,10 @@ function itemFingerprint(item, index) {
     slots: Array.isArray(item?.slots) ? item.slots : [],
     cost: asNumber(item?.cost),
     isUsed: Boolean(item?.isUsed),
+    forgeLevel: getItemUpgradeLevel(item),
+    stats: Array.isArray(item?.stats)
+      ? item.stats.map((stat) => ({ name: String(stat?.name || ''), value: asNumber(stat?.value) }))
+      : [],
   });
 
   return createHash('sha256').update(stable).digest('hex').slice(0, 16);
@@ -59,6 +95,11 @@ function sanitizeStats(stats) {
 }
 
 function sanitizeItem(session, item, index) {
+  const resources = getResources(session);
+  const forgeLevel = getItemUpgradeLevel(item);
+  const upgradeCost = getItemUpgradeCost(item);
+  const hasUpgradeableStats = Array.isArray(item?.stats) && item.stats.length > 0;
+
   return {
     key: itemKey(item, index),
     index,
@@ -85,24 +126,27 @@ function sanitizeItem(session, item, index) {
       max: asNumber(item.persistence.max),
     } : null,
     stats: sanitizeStats(item?.stats),
-    forgeLevel: getItemUpgradeLevel(item),
-    upgradeCost: getItemUpgradeCost(item),
+    forgeLevel,
+    maxForgeLevel: MAX_UPGRADE_LEVEL,
+    upgradeCost,
+    canUpgrade: hasUpgradeableStats && Boolean(upgradeCost),
+    canAffordUpgrade: hasUpgradeableStats && canAffordCost(resources, upgradeCost),
+    missingUpgradeResources: upgradeCost ? missingResources(resources, upgradeCost) : null,
   };
 }
 
-// Mirrors callbacks/game/builds/forge.js's equipmentStats sync: equipItem.js
-// shallow-copies the item into equipmentStats per slot, so `stats` is the
-// SAME array reference only until the next DB round-trip — after a reload,
-// an in-place upgrade needs to be re-applied to the equipped snapshot too.
+// equipItem.js shallow-copies the item into equipmentStats per slot. After a
+// Mongo round-trip the arrays are no longer shared, so an in-place forge
+// upgrade must refresh the live combat snapshot — but only for THIS exact
+// equipped item, not another spare item of the same kind.
 function syncEquippedSnapshot(session, item) {
-  if (!item?.slots?.length) return;
+  if (!item?.slots?.length || !actuallyEquipped(session, item)) return;
+
   for (const slot of item.slots) {
     const equipped = session?.game?.equipmentStats?.[slot];
-    if (equipped && equipped.kind === item.kind && Array.isArray(equipped.slots)
-      && equipped.slots.join(',') === item.slots.join(',')) {
-      equipped.stats = item.stats;
-      equipped.forgeLevel = item.forgeLevel;
-    }
+    if (!sameSnapshot(equipped, item)) continue;
+    equipped.stats = item.stats;
+    equipped.forgeLevel = item.forgeLevel;
   }
 }
 
@@ -126,6 +170,7 @@ export function getEquipmentState(session) {
   const items = getItems(session);
   const sanitized = items.map((item, index) => sanitizeItem(session, item, index));
   const equippedSlots = {};
+  const resources = getResources(session);
 
   for (const [slot, equipped] of Object.entries(session?.game?.equipmentStats || {})) {
     if (!equipped) continue;
@@ -135,13 +180,16 @@ export function getEquipmentState(session) {
       grade: equipped.grade || 'noGrade',
       mainType: equipped.mainType || 'equipment',
       kind: equipped.kind || null,
+      forgeLevel: getItemUpgradeLevel(equipped),
     };
   }
 
   return {
-    gold: asNumber(session?.game?.inventory?.gold),
+    ...resources,
+    resources,
     count: sanitized.length,
     equippedCount: sanitized.filter((item) => item.isUsed).length,
+    maxForgeLevel: MAX_UPGRADE_LEVEL,
     equippedSlots,
     items: sanitized,
     craftableGrades: getCraftableGradesState(session),
@@ -198,6 +246,7 @@ export function performEquipmentAction(session, key, action) {
       ok: true,
       action,
       level: result.level,
+      spent: result.cost,
       item: sanitizeItem(session, item, index),
       equipment: getEquipmentState(session),
     };
@@ -226,22 +275,37 @@ export function craftEquipmentItem(session, grade) {
   const playerLevel = asNumber(session.game.stats?.lvl, 1);
   const result = craftItem(session.game.inventory, grade, playerLevel);
   if (!result.ok) {
-    return { ok: false, reason: result.reason, requiredLevel: result.requiredLevel, cost: result.cost, equipment: getEquipmentState(session) };
+    return {
+      ok: false,
+      reason: result.reason,
+      requiredLevel: result.requiredLevel,
+      cost: result.cost,
+      equipment: getEquipmentState(session),
+    };
   }
 
   const index = getItems(session).length - 1;
   return {
     ok: true,
     action: 'craft',
+    spent: result.cost,
     item: sanitizeItem(session, result.item, index),
     equipment: getEquipmentState(session),
   };
 }
 
 export function getCraftableGradesState(session) {
-  return getCraftableGrades(asNumber(session?.game?.stats?.lvl, 1)).map(grade => ({
-    name: grade.name,
-    minLevel: grade.lvl.from,
-    cost: CRAFT_COSTS[grade.name],
-  }));
+  const inventory = session?.game?.inventory || {};
+  const resources = getResources(session);
+
+  return getCraftableGrades(asNumber(session?.game?.stats?.lvl, 1)).map((grade) => {
+    const cost = CRAFT_COSTS[grade.name];
+    return {
+      name: grade.name,
+      minLevel: grade.lvl.from,
+      cost,
+      affordable: canAffordCraft(inventory, grade.name),
+      missingResources: missingResources(resources, cost),
+    };
+  });
 }
