@@ -40,10 +40,13 @@ function stat(label, value, icon) {
   return `<article><span>${icon}</span><div><small>${label}</small><strong>${formatNumber(value)}</strong></div></article>`;
 }
 
-export async function openPlayerProfile({ api, renderState, haptic, statusElement }) {
+export async function openPlayerProfile({ api, renderState, haptic, statusElement, context }) {
   let profile = await api('/api/profile');
   let pending = false;
   let selected = profile.currentClass.name === 'noClass' ? profile.classes[0]?.name : null;
+  const isPrivateContext = context?.chatId != null
+    && context?.user?.id != null
+    && String(context.chatId) === String(context.user.id);
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay profile-overlay';
@@ -93,6 +96,9 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
     const cooldown = profile.classChangeRemainingMs > 0
       ? `Следующая смена через ${formatDuration(profile.classChangeRemainingMs)}`
       : current.name === 'noClass' ? 'Первый класс можно выбрать сразу' : 'Класс можно сменить сейчас';
+    const genderHint = isPrivateContext
+      ? 'Смена пола доступна только из группового чата'
+      : 'Используется для классовых артов и старого профиля';
 
     content.innerHTML = `
       <section class="profile-current">
@@ -108,10 +114,10 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
         ${stat('Скорость', current.stats.speed, '⚡')}
       </section>
       <section class="profile-gender">
-        <div><strong>Пол персонажа</strong><small>Используется для классовых артов и старого профиля</small></div>
+        <div><strong>Пол персонажа</strong><small>${genderHint}</small></div>
         <div>
-          <button type="button" data-profile-gender="male" class="${profile.gender === 'male' ? 'active' : ''}" ${pending ? 'disabled' : ''}>♂ Мужской</button>
-          <button type="button" data-profile-gender="female" class="${profile.gender === 'female' ? 'active' : ''}" ${pending ? 'disabled' : ''}>♀ Женский</button>
+          <button type="button" data-profile-gender="male" class="${profile.gender === 'male' ? 'active' : ''}" ${pending || isPrivateContext ? 'disabled' : ''}>♂ Мужской</button>
+          <button type="button" data-profile-gender="female" class="${profile.gender === 'female' ? 'active' : ''}" ${pending || isPrivateContext ? 'disabled' : ''}>♀ Женский</button>
         </div>
       </section>
       <section class="profile-classes">
@@ -168,6 +174,11 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
   }
 
   async function changeGender(gender) {
+    if (isPrivateContext) {
+      feedback.textContent = 'Смена пола доступна только из группового чата.';
+      haptic('light');
+      return;
+    }
     if (pending || gender === profile.gender) return;
     pending = true;
     overlay.classList.add('busy');

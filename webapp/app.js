@@ -90,6 +90,12 @@ const launchers = {
 };
 
 async function launchFeature(feature, render) {
+  if (feature.available === false) {
+    status.textContent = `${feature.title}: доступно только в групповом чате.`;
+    haptic('light');
+    return;
+  }
+
   const entry = launchers[feature.id];
   if (!entry || feature.status !== 'webgl') {
     status.textContent = `${feature.title}: пока используется текстовый fallback.`;
@@ -103,6 +109,7 @@ async function launchFeature(feature, render) {
       renderState: render,
       haptic,
       statusElement: status,
+      context: currentState?.context || null,
       ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
     });
     status.textContent = successText;
@@ -127,19 +134,28 @@ function render(state) {
   $('xp-fill').style.width = `${Math.min(100, Math.max(0, state.player.currentExp / state.player.needExp * 100))}%`;
 
   const cards = state.features.map(feature => {
+    const unavailable = feature.available === false;
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `game-card ${feature.status === 'webgl' ? 'migrated' : ''}`;
+    button.disabled = unavailable;
+    button.className = `game-card ${feature.status === 'webgl' ? 'migrated' : ''} ${unavailable ? 'unavailable' : ''}`.trim();
+    button.setAttribute('aria-disabled', String(unavailable));
     button.innerHTML = `
       <span class="game-icon">${feature.icon}</span>
-      ${feature.status === 'webgl' ? '<span class="mode-badge">PLAY</span>' : '<span class="mode-badge legacy">TEXT</span>'}
+      ${unavailable
+        ? '<span class="mode-badge group-only">GROUP</span>'
+        : feature.status === 'webgl'
+          ? '<span class="mode-badge">PLAY</span>'
+          : '<span class="mode-badge legacy">TEXT</span>'}
       <h3>${feature.title}</h3>
-      <p>${feature.subtitle}</p>
-      <span class="arrow">↗</span>`;
-    button.addEventListener('click', () => {
-      haptic('medium');
-      launchFeature(feature, render);
-    });
+      <p>${unavailable ? 'Доступно только в групповом чате' : feature.subtitle}</p>
+      <span class="arrow">${unavailable ? '🔒' : '↗'}</span>`;
+    if (!unavailable) {
+      button.addEventListener('click', () => {
+        haptic('medium');
+        launchFeature(feature, render);
+      });
+    }
     return button;
   });
   $('game-grid').replaceChildren(...cards);

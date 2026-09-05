@@ -2,6 +2,73 @@ function number(value, fallback = 0) {
   return Number.isFinite(Number(value)) ? Number(value) : fallback;
 }
 
+export const GROUP_ONLY_FEATURE_IDS = Object.freeze([
+  'forms',
+  'exchange',
+  'boss',
+  'gacha',
+  'steal',
+  'shop',
+  'transfer',
+  'bonus',
+  'titles',
+  'sword',
+  'selfMute',
+  'chatSettings',
+]);
+
+const GROUP_ONLY_FEATURE_SET = new Set(GROUP_ONLY_FEATURE_IDS);
+
+const FEATURE_CATALOG = Object.freeze([
+  { id: 'profile', title: 'Персонаж', subtitle: 'Класс, пол и характеристики', icon: '🧙', status: 'webgl' },
+  { id: 'skills', title: 'Навыки', subtitle: 'Прокачка умений и ОП', icon: '⚡', status: 'webgl' },
+  { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
+  { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
+  { id: 'exchange', title: 'Обменник', subtitle: 'Золото в кристаллы', icon: '💱', status: 'webgl' },
+  { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
+  { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'webgl' },
+  { id: 'gacha', title: 'Гача', subtitle: 'Коллекция и редкости', icon: '✨', status: 'webgl' },
+  { id: 'equipment', title: 'Снаряжение', subtitle: 'Билд персонажа', icon: '🛡️', status: 'webgl' },
+  { id: 'builds', title: 'Постройки', subtitle: 'Ресурсы и развитие', icon: '🏛️', status: 'webgl' },
+  { id: 'arena', title: 'Арена', subtitle: 'PvP и рейтинг', icon: '🏆', status: 'webgl' },
+  { id: 'steal', title: 'Ограбление', subtitle: 'Украсть ресурсы у игрока', icon: '🦹', status: 'webgl' },
+  { id: 'shop', title: 'Магазин', subtitle: 'Покупки и усиления', icon: '🛒', status: 'webgl' },
+  { id: 'transfer', title: 'Переводы', subtitle: 'Передать золото игроку', icon: '🪙', status: 'webgl' },
+  { id: 'point21', title: '21 очко', subtitle: 'Общий карточный стол', icon: '🃏', status: 'webgl' },
+  { id: 'elements', title: 'Стихии', subtitle: 'Реакции и комбинации', icon: '✦', status: 'webgl' },
+  { id: 'clan', title: 'Кланы', subtitle: 'Гильдия и активности', icon: '🏰', status: 'webgl' },
+  { id: 'bonus', title: 'Бонус', subtitle: 'Ежедневная награда', icon: '🎁', status: 'webgl' },
+  { id: 'titles', title: 'Титулы', subtitle: 'Случайный титул игроку', icon: '🏷️', status: 'webgl' },
+  { id: 'horoscope', title: 'Гороскоп', subtitle: 'Шуточное предсказание', icon: '🔮', status: 'webgl' },
+  { id: 'sword', title: 'Меч', subtitle: 'Ежедневная удача', icon: '🗡️', status: 'webgl' },
+  { id: 'arcade', title: 'Аркада', subtitle: 'Кубики, спорт и слоты', icon: '🎲', status: 'webgl' },
+  { id: 'selfMute', title: 'Само-мут', subtitle: 'Тишина на две минуты', icon: '🤫', status: 'webgl' },
+  { id: 'chatSettings', title: 'Настройки чата', subtitle: 'Доступность команд для группы', icon: '⚙️', status: 'webgl' },
+  { id: 'updates', title: 'Что нового', subtitle: 'Уведомления об обновлениях', icon: '🔔', status: 'webgl' },
+  { id: 'feedback', title: 'Написать разработчику', subtitle: 'Баг, идея или вопрос', icon: '💬', status: 'webgl' },
+  { id: 'help', title: 'Справка', subtitle: 'Гайд и fallback-команды', icon: '❔', status: 'webgl' },
+]);
+
+export function isPrivateMiniAppContext(context) {
+  const chatId = context?.chatId;
+  const userId = context?.user?.id;
+  return chatId != null && userId != null && String(chatId) === String(userId);
+}
+
+export function createMiniAppFeatures(context) {
+  const isPrivate = isPrivateMiniAppContext(context);
+  return FEATURE_CATALOG.map(feature => {
+    const groupOnly = GROUP_ONLY_FEATURE_SET.has(feature.id);
+    const available = !groupOnly || !isPrivate;
+    return {
+      ...feature,
+      groupOnly,
+      available,
+      unavailableReason: available ? null : 'group_only',
+    };
+  });
+}
+
 export function createMiniAppState(session, context) {
   const game = session?.game || {};
   const inventory = game.inventory || {};
@@ -36,34 +103,6 @@ export function createMiniAppState(session, context) {
       chestTries: number(session?.chestTries),
       sword: number(session?.sword),
     },
-    features: [
-      { id: 'profile', title: 'Персонаж', subtitle: 'Класс, пол и характеристики', icon: '🧙', status: 'webgl' },
-      { id: 'skills', title: 'Навыки', subtitle: 'Прокачка умений и ОП', icon: '⚡', status: 'webgl' },
-      { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
-      { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
-      { id: 'exchange', title: 'Обменник', subtitle: 'Золото в кристаллы', icon: '💱', status: 'webgl' },
-      { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
-      { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'webgl' },
-      { id: 'gacha', title: 'Гача', subtitle: 'Коллекция и редкости', icon: '✨', status: 'webgl' },
-      { id: 'equipment', title: 'Снаряжение', subtitle: 'Билд персонажа', icon: '🛡️', status: 'webgl' },
-      { id: 'builds', title: 'Постройки', subtitle: 'Ресурсы и развитие', icon: '🏛️', status: 'webgl' },
-      { id: 'arena', title: 'Арена', subtitle: 'PvP и рейтинг', icon: '🏆', status: 'webgl' },
-      { id: 'steal', title: 'Ограбление', subtitle: 'Украсть ресурсы у игрока', icon: '🦹', status: 'webgl' },
-      { id: 'shop', title: 'Магазин', subtitle: 'Покупки и усиления', icon: '🛒', status: 'webgl' },
-      { id: 'transfer', title: 'Переводы', subtitle: 'Передать золото игроку', icon: '🪙', status: 'webgl' },
-      { id: 'point21', title: '21 очко', subtitle: 'Общий карточный стол', icon: '🃏', status: 'webgl' },
-      { id: 'elements', title: 'Стихии', subtitle: 'Реакции и комбинации', icon: '✦', status: 'webgl' },
-      { id: 'clan', title: 'Кланы', subtitle: 'Гильдия и активности', icon: '🏰', status: 'webgl' },
-      { id: 'bonus', title: 'Бонус', subtitle: 'Ежедневная награда', icon: '🎁', status: 'webgl' },
-      { id: 'titles', title: 'Титулы', subtitle: 'Случайный титул игроку', icon: '🏷️', status: 'webgl' },
-      { id: 'horoscope', title: 'Гороскоп', subtitle: 'Шуточное предсказание', icon: '🔮', status: 'webgl' },
-      { id: 'sword', title: 'Меч', subtitle: 'Ежедневная удача', icon: '🗡️', status: 'webgl' },
-      { id: 'arcade', title: 'Аркада', subtitle: 'Кубики, спорт и слоты', icon: '🎲', status: 'webgl' },
-      { id: 'selfMute', title: 'Само-мут', subtitle: 'Тишина на две минуты', icon: '🤫', status: 'webgl' },
-      { id: 'chatSettings', title: 'Настройки чата', subtitle: 'Доступность команд для группы', icon: '⚙️', status: 'webgl' },
-      { id: 'updates', title: 'Что нового', subtitle: 'Уведомления об обновлениях', icon: '🔔', status: 'webgl' },
-      { id: 'feedback', title: 'Написать разработчику', subtitle: 'Баг, идея или вопрос', icon: '💬', status: 'webgl' },
-      { id: 'help', title: 'Справка', subtitle: 'Гайд и fallback-команды', icon: '❔', status: 'webgl' },
-    ],
+    features: createMiniAppFeatures(context),
   };
 }
