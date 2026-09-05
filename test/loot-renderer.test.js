@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { lootTone, normalizeLootKind, renderDailySwordArt, renderLootArt, swordShapeForLength } from '../webapp/loot-renderer.js';
+import { lootTone, lootVisualProfile, normalizeLootKind, renderDailySwordArt, renderLootArt, swordShapeForLength } from '../webapp/loot-renderer.js';
 
 const root = process.cwd();
 
@@ -21,6 +21,7 @@ test('daily sword geometry changes with real length instead of scaling one icon'
   const art = renderDailySwordArt(180);
   assert.match(art, /data-sword-size="large"/);
   assert.match(art, /data-sword-length="180"/);
+  assert.match(art, /data-loot-variant="3"/);
 });
 
 test('equipment kinds map to distinct original loot silhouettes and motion presets', () => {
@@ -32,6 +33,24 @@ test('equipment kinds map to distinct original loot silhouettes and motion prese
   assert.match(renderLootArt({ kind: 'twoHandedSword', grade: 'S' }, { reveal: true }), /motion-spin/);
   assert.match(renderLootArt({ category: 'helmet', grade: 'A' }, { reveal: true }), /motion-wobble/);
   assert.match(renderLootArt({ category: 'ring', grade: 'SSS' }, { reveal: true }), /motion-orbit/);
+});
+
+test('loot visual identity is deterministic but gives same-type items different geometry and materials', () => {
+  const base = { kind: 'oneHandedSword', category: 'sword', mainType: 'weapon', grade: 'S', rarity: 'rare', cost: 25000 };
+  const first = { ...base, name: 'Ashen Fang' };
+  assert.deepEqual(lootVisualProfile(first), lootVisualProfile({ ...first }));
+
+  const profiles = ['Ashen Fang', 'Moon Crown', 'Iron Hymn', 'Starfall', 'Kingsguard']
+    .map(name => lootVisualProfile({ ...base, name }));
+  assert.ok(new Set(profiles.map(profile => profile.variant)).size >= 3);
+  assert.ok(new Set(profiles.map(profile => profile.material)).size >= 3);
+  assert.ok(new Set(profiles.map(profile => profile.ornament)).size >= 2);
+
+  const art = renderLootArt(first, { reveal: true });
+  const profile = lootVisualProfile(first);
+  assert.match(art, new RegExp(`data-loot-variant="${profile.variant}"`));
+  assert.match(art, new RegExp(`data-loot-material="${profile.material}"`));
+  assert.match(art, new RegExp(`data-loot-ornament="${profile.ornament}"`));
 });
 
 test('grade and rarity select stable visual tones', () => {
@@ -51,6 +70,10 @@ test('loot styles are wired before VFX/design system and stay mobile safe', () =
   assert.ok(stylesheets.indexOf('loot-renderer.css') < stylesheets.indexOf('vfx.css'));
   assert.ok(stylesheets.indexOf('loot-equipment.css') < stylesheets.indexOf('vfx.css'));
   assert.equal(stylesheets.at(-1), 'design-system.css');
+  assert.ok(css.includes('.material-obsidian'));
+  assert.ok(css.includes('.material-moonsteel'));
+  assert.ok(css.includes('.ornament-royal'));
+  assert.ok(css.includes('.ornament-crystal'));
   assert.ok(css.includes('@media(max-width:390px)'));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(css.includes('pointer-events:none'));
