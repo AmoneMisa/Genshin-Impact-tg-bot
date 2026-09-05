@@ -1,5 +1,20 @@
+import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
+import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
+import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
+import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
+import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
+import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
+
 function number(value, fallback = 0) {
   return Number.isFinite(Number(value)) ? Number(value) : fallback;
+}
+
+function safeCombatValue(getter, session, fallback = 0) {
+  try {
+    return number(getter(session, session?.game?.gameClass), fallback);
+  } catch {
+    return number(fallback);
+  }
 }
 
 export const GROUP_ONLY_FEATURE_IDS = Object.freeze([
@@ -73,7 +88,14 @@ export function createMiniAppState(session, context) {
   const game = session?.game || {};
   const inventory = game.inventory || {};
   const stats = game.stats || {};
-  const gameClass = game.gameClass?.stats || {};
+  const gameClassStats = game.gameClass?.stats || {};
+
+  const maxHp = Math.max(1, safeCombatValue(getMaxHp, session, gameClassStats.maxHp ?? gameClassStats.hp ?? gameClassStats.health ?? 1));
+  const maxMp = Math.max(1, safeCombatValue(getMaxMp, session, gameClassStats.maxMp ?? gameClassStats.mp ?? 1));
+  const maxCp = Math.max(1, safeCombatValue(getMaxCp, session, gameClassStats.maxCp ?? gameClassStats.cp ?? 1));
+  const hp = Math.max(0, Math.min(maxHp, safeCombatValue(getCurrentHp, session, gameClassStats.hp ?? gameClassStats.health)));
+  const mp = Math.max(0, Math.min(maxMp, safeCombatValue(getCurrentMp, session, gameClassStats.mp)));
+  const cp = Math.max(0, Math.min(maxCp, safeCombatValue(getCurrentCp, session, gameClassStats.cp)));
 
   return {
     context: {
@@ -90,10 +112,17 @@ export function createMiniAppState(session, context) {
       level: number(stats.lvl, 1),
       currentExp: number(stats.currentExp),
       needExp: Math.max(1, number(stats.needExp, 1)),
-      className: gameClass.name || 'noClass',
-      hp: number(gameClass.hp ?? gameClass.health),
-      attack: number(gameClass.damage ?? gameClass.attack),
-      defense: number(gameClass.defense),
+      className: gameClassStats.name || 'noClass',
+      classTitle: gameClassStats.translateName || gameClassStats.name || 'Без класса',
+      hp,
+      maxHp,
+      mp,
+      maxMp,
+      cp,
+      maxCp,
+      sp: number(inventory.sp),
+      attack: number(gameClassStats.damage ?? gameClassStats.attack),
+      defense: number(gameClassStats.defense ?? gameClassStats.defence),
       gold: number(inventory.gold),
       crystals: number(inventory.crystals),
       ironOre: number(inventory.ironOre),

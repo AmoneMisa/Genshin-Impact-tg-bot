@@ -6,10 +6,12 @@
   <meta name="theme-color" content="#111426" />
   <title>WhitesLove Game</title>
   <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/hud.css" />
   <link rel="stylesheet" href="/feature-availability.css" />
   <link rel="stylesheet" href="/gacha.css" />
   <link rel="stylesheet" href="/equipment.css" />
   <link rel="stylesheet" href="/builds.css" />
+  <link rel="stylesheet" href="/town.css" />
   <link rel="stylesheet" href="/arena.css" />
   <link rel="stylesheet" href="/boss.css" />
   <link rel="stylesheet" href="/shop.css" />
@@ -46,12 +48,52 @@
       <button id="fullscreen" class="icon-button" type="button" aria-label="Полный экран">⛶</button>
     </section>
 
-    <section class="hero-card glass">
-      <div class="level-orb"><span id="level">1</span><small>LVL</small></div>
+    <section class="hero-card mmo-hud glass" aria-label="Состояние персонажа">
+      <div class="hero-crest" aria-hidden="true">
+        <div class="hero-portrait-shell">
+          <span id="class-sigil" class="hero-sigil">◇</span>
+          <div class="level-orb"><span id="level">1</span><small>LVL</small></div>
+        </div>
+      </div>
+
       <div class="hero-copy">
-        <div class="hero-row"><strong id="class-name">Путешественник</strong><span id="chat-badge">Telegram</span></div>
-        <div class="xp-track"><span id="xp-fill"></span></div>
-        <div class="xp-copy"><span id="xp-text">0 / 1 XP</span><span id="arena-text">Арена: 0</span></div>
+        <div class="hero-row">
+          <div class="hero-identity"><small>ПЕРСОНАЖ</small><strong id="class-name">Путешественник</strong></div>
+          <span id="chat-badge">Telegram</span>
+        </div>
+
+        <div class="hud-stack">
+          <div class="hud-meter hp">
+            <span class="hud-label">HP</span>
+            <div class="hud-track"><i id="hp-fill"></i><b></b></div>
+            <strong id="hp-text">0 / 1</strong>
+          </div>
+          <div class="hud-meter mp">
+            <span class="hud-label">MP</span>
+            <div class="hud-track"><i id="mp-fill"></i><b></b></div>
+            <strong id="mp-text">0 / 1</strong>
+          </div>
+          <div class="hud-meter cp">
+            <span class="hud-label">CP</span>
+            <div class="hud-track"><i id="cp-fill"></i><b></b></div>
+            <strong id="cp-text">0 / 1</strong>
+          </div>
+          <div class="hud-meter sp">
+            <span class="hud-label">SP</span>
+            <div class="hud-track sp-track"><i></i><b></b></div>
+            <strong id="sp-text">0</strong>
+          </div>
+          <div class="hud-meter exp">
+            <span class="hud-label">EXP</span>
+            <div class="hud-track"><i id="xp-fill"></i><b></b></div>
+            <strong id="xp-text">0 / 1</strong>
+          </div>
+        </div>
+
+        <div class="hud-footer">
+          <span id="arena-text">Арена: 0</span>
+          <span class="hud-status-dot">ONLINE</span>
+        </div>
       </div>
     </section>
 

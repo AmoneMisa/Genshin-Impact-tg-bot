@@ -1,4 +1,5 @@
 import { startWebGL } from './renderer.js';
+import { renderPlayerHud } from './hud.js';
 import { openChestGame } from './chest.js';
 import { openGachaGame } from './gacha.js';
 import { openEquipmentGame } from './equipment.js';
@@ -121,17 +122,10 @@ async function launchFeature(feature, render) {
 
 function render(state) {
   currentState = state;
-  const firstName = state.context.user.firstName || state.context.user.username || 'Путешественник';
-  $('hello').textContent = `Привет, ${firstName}`;
-  $('level').textContent = state.player.level;
-  $('class-name').textContent = state.player.className === 'noClass' ? 'Без класса' : state.player.className;
-  $('chat-badge').textContent = state.context.chatType || (state.context.chatId === state.context.user.id ? 'private' : 'group');
+  renderPlayerHud({ state, getElement: $, formatNumber });
   $('gold').textContent = formatNumber(state.player.gold);
   $('crystals').textContent = formatNumber(state.player.crystals);
   $('ore').textContent = formatNumber(state.player.ironOre);
-  $('arena-text').textContent = `Арена: ${state.player.arenaChances}`;
-  $('xp-text').textContent = `${formatNumber(state.player.currentExp)} / ${formatNumber(state.player.needExp)} XP`;
-  $('xp-fill').style.width = `${Math.min(100, Math.max(0, state.player.currentExp / state.player.needExp * 100))}%`;
 
   const cards = state.features.map(feature => {
     const unavailable = feature.available === false;
