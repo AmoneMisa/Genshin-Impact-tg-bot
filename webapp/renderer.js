@@ -1,3 +1,5 @@
+import { startLootWebGL } from './loot-webgl.js';
+
 const VERTEX_SHADER = `
 attribute vec2 a_position;
 void main() {
@@ -129,6 +131,7 @@ export function startWebGL(canvas) {
     }
   }
 
+  startLootWebGL();
   const started = performance.now();
   function frame(now) {
     resize();
