@@ -75,6 +75,6 @@ test('refined WebGL runtime uses depth PBR-like material controls and bounded mo
   assert.ok(css.includes('.loot-art.loot-webgl-ready>svg{opacity:0}'));
   assert.ok(css.includes('.paper-avatar-webgl-ready .paper-doll-avatar-gear{opacity:0}'));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
-  assert.ok(renderer.startsWith("import { startLootWebGL } from './loot-webgl-v3.js';"));
+  assert.ok(renderer.startsWith("import { startLootWebGL } from './loot-webgl-v4.js';"));
   assert.ok(renderer.includes('startLootWebGL();'));
 });
