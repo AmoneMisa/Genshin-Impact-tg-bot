@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { forgeVisualProfile, renderForgeLootArt } from '../webapp/loot-forge.js';
+import { forgeImpactKind, forgeVisualProfile, renderForgeLootArt } from '../webapp/loot-forge.js';
 import { lootConditionProfile, lootTone, lootVisualProfile, normalizeLootKind, renderDailySwordArt, renderLootArt, swordShapeForLength } from '../webapp/loot-renderer.js';
 
 const root = process.cwd();
@@ -177,17 +177,50 @@ test('successful forge upgrade gets a one-shot impact sequence only when level i
   assert.doesNotMatch(unchanged, /forge-hammer-strike/);
 });
 
+test('forge upgrade impact preset follows canonical loot kind', () => {
+  assert.equal(forgeImpactKind({ kind: 'twoHandedSword' }), 'blade');
+  assert.equal(forgeImpactKind({ kind: 'dagger' }), 'blade');
+  assert.equal(forgeImpactKind({ category: 'shield' }), 'shield');
+  assert.equal(forgeImpactKind({ category: 'helmet' }), 'plates');
+  assert.equal(forgeImpactKind({ category: 'boots' }), 'plates');
+  assert.equal(forgeImpactKind({ category: 'ring' }), 'arcane');
+  assert.equal(forgeImpactKind({ kind: 'staff' }), 'arcane');
+  assert.equal(forgeImpactKind({ kind: 'crossbow' }), 'heavy');
+  assert.equal(forgeImpactKind({ kind: 'blunt' }), 'heavy');
+  assert.equal(forgeImpactKind({ kind: 'unknown' }), 'generic');
+
+  const base = { forgeLevel: 4, maxForgeLevel: 10, grade: 'A' };
+  const blade = renderForgeLootArt({ ...base, kind: 'oneHandedSword' }, { forgeImpact: true, previousLevel: 3 });
+  const shield = renderForgeLootArt({ ...base, category: 'shield' }, { forgeImpact: true, previousLevel: 3 });
+  const plates = renderForgeLootArt({ ...base, category: 'helmet' }, { forgeImpact: true, previousLevel: 3 });
+  const arcane = renderForgeLootArt({ ...base, category: 'ring' }, { forgeImpact: true, previousLevel: 3 });
+  const heavy = renderForgeLootArt({ ...base, kind: 'crossbow' }, { forgeImpact: true, previousLevel: 3 });
+  assert.match(blade, /forge-impact-blade/);
+  assert.match(blade, /forge-blade-charge/);
+  assert.match(shield, /forge-impact-shield/);
+  assert.match(shield, /forge-shield-wave/);
+  assert.match(plates, /forge-impact-plates/);
+  assert.match(plates, /forge-plate-assembly/);
+  assert.match(arcane, /forge-impact-arcane/);
+  assert.match(arcane, /forge-arcane-orbit/);
+  assert.match(heavy, /forge-impact-heavy/);
+  assert.match(heavy, /forge-heavy-shock/);
+});
+
 test('loot styles are wired before VFX/design system and stay mobile safe', () => {
   const index = fs.readFileSync(path.join(root, 'webapp/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(root, 'webapp/loot-renderer.css'), 'utf8');
   const forgeCss = fs.readFileSync(path.join(root, 'webapp/loot-forge.css'), 'utf8');
+  const impactCss = fs.readFileSync(path.join(root, 'webapp/loot-forge-impact.css'), 'utf8');
   const equipmentCss = fs.readFileSync(path.join(root, 'webapp/loot-equipment.css'), 'utf8');
   const stylesheets = [...index.matchAll(/href="\/([^\"]+\.css)"/g)].map(match => match[1]);
   assert.ok(stylesheets.includes('loot-renderer.css'));
   assert.ok(stylesheets.includes('loot-forge.css'));
+  assert.ok(stylesheets.includes('loot-forge-impact.css'));
   assert.ok(stylesheets.includes('loot-equipment.css'));
   assert.ok(stylesheets.indexOf('loot-renderer.css') < stylesheets.indexOf('loot-forge.css'));
-  assert.ok(stylesheets.indexOf('loot-forge.css') < stylesheets.indexOf('vfx.css'));
+  assert.ok(stylesheets.indexOf('loot-forge.css') < stylesheets.indexOf('loot-forge-impact.css'));
+  assert.ok(stylesheets.indexOf('loot-forge-impact.css') < stylesheets.indexOf('vfx.css'));
   assert.ok(stylesheets.indexOf('loot-equipment.css') < stylesheets.indexOf('vfx.css'));
   assert.equal(stylesheets.at(-1), 'design-system.css');
   assert.ok(css.includes('.material-obsidian'));
@@ -203,6 +236,14 @@ test('loot styles are wired before VFX/design system and stay mobile safe', () =
   assert.ok(forgeCss.includes('.forge-hammer-strike'));
   assert.ok(forgeCss.includes('.forge-level-burst'));
   assert.ok(forgeCss.includes('@keyframes forge-hammer-impact'));
+  assert.ok(impactCss.includes('.forge-blade-charge'));
+  assert.ok(impactCss.includes('.forge-shield-wave'));
+  assert.ok(impactCss.includes('.forge-plate-assembly'));
+  assert.ok(impactCss.includes('.forge-arcane-orbit'));
+  assert.ok(impactCss.includes('.forge-heavy-shock'));
+  assert.ok(impactCss.includes('@media(max-width:390px)'));
+  assert.ok(impactCss.includes('@media(prefers-reduced-motion:reduce)'));
+  assert.ok(impactCss.includes('pointer-events:none'));
   assert.ok(forgeCss.includes('@media(max-width:390px)'));
   assert.ok(forgeCss.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(forgeCss.includes('pointer-events:none'));
