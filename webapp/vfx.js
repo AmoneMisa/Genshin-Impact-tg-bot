@@ -57,12 +57,18 @@ function effectHost(target) {
   return target?.closest?.('.overlay-panel') || target?.closest?.('.game-card') || target;
 }
 
-function pointInHost(target, host) {
+// Overlay panels are scroll containers on mobile. getBoundingClientRect() reports
+// viewport coordinates, while absolutely-positioned VFX use the host's scroll
+// content coordinates. Include the host scroll offset so effects stay anchored
+// to the tapped/result element after a long Boss/Builds sheet has been scrolled.
+export function pointInHost(target, host) {
   const targetRect = target.getBoundingClientRect();
   const hostRect = host.getBoundingClientRect();
+  const scrollLeft = Number(host.scrollLeft) || 0;
+  const scrollTop = Number(host.scrollTop) || 0;
   return {
-    x: targetRect.left - hostRect.left + targetRect.width / 2,
-    y: targetRect.top - hostRect.top + targetRect.height / 2,
+    x: targetRect.left - hostRect.left + scrollLeft + targetRect.width / 2,
+    y: targetRect.top - hostRect.top + scrollTop + targetRect.height / 2,
   };
 }
 
@@ -208,8 +214,12 @@ function successfulBuildFeedback(feedback) {
 
 export function startGameVfx(rootDocument = globalThis.document) {
   if (!rootDocument?.body || rootDocument.body.dataset.vfxRuntime === 'yes') return () => {};
-  rootDocument.body.dataset.vfxRuntime = 'yes';
   const win = rootDocument.defaultView;
+  // On reduced-motion clients skip the global observer entirely rather than
+  // keeping a dormant mutation listener alive for every cooldown/timer update.
+  if (!win || !motionAllowed(win) || typeof win.MutationObserver !== 'function') return () => {};
+
+  rootDocument.body.dataset.vfxRuntime = 'yes';
   let lastBuildAction = null;
 
   const onPointerDown = (event) => {
