@@ -150,6 +150,33 @@ test('forge level evolves visible runes without rerolling the base item identity
   assert.match(critical, /forge-ascendant condition-wear-critical/);
 });
 
+test('successful forge upgrade gets a one-shot impact sequence only when level increased', () => {
+  const item = {
+    name: 'Kingsguard Edge',
+    kind: 'oneHandedSword',
+    category: 'sword',
+    mainType: 'weapon',
+    grade: 'S',
+    rarity: 'rare',
+    cost: 88000,
+    forgeLevel: 7,
+    maxForgeLevel: 10,
+    quality: { current: 92, max: 100 },
+    persistence: { current: 180, max: 190 },
+  };
+  const impact = renderForgeLootArt(item, { reveal: true, forgeImpact: true, previousLevel: 6 });
+  assert.match(impact, /is-forge-impact/);
+  assert.match(impact, /data-forge-previous-level="6"/);
+  assert.match(impact, /forge-hammer-strike/);
+  assert.match(impact, /forge-impact-flash/);
+  assert.match(impact, /forge-rune-surge/);
+  assert.match(impact, /forge-level-burst[^>]*[^]*\+7/);
+
+  const unchanged = renderForgeLootArt(item, { reveal: true, forgeImpact: true, previousLevel: 7 });
+  assert.doesNotMatch(unchanged, /is-forge-impact/);
+  assert.doesNotMatch(unchanged, /forge-hammer-strike/);
+});
+
 test('loot styles are wired before VFX/design system and stay mobile safe', () => {
   const index = fs.readFileSync(path.join(root, 'webapp/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(root, 'webapp/loot-renderer.css'), 'utf8');
@@ -173,6 +200,9 @@ test('loot styles are wired before VFX/design system and stay mobile safe', () =
   assert.ok(forgeCss.includes('.forge-ascendant'));
   assert.ok(forgeCss.includes('.forge-rune-wheel'));
   assert.ok(forgeCss.includes('.condition-wear-critical'));
+  assert.ok(forgeCss.includes('.forge-hammer-strike'));
+  assert.ok(forgeCss.includes('.forge-level-burst'));
+  assert.ok(forgeCss.includes('@keyframes forge-hammer-impact'));
   assert.ok(forgeCss.includes('@media(max-width:390px)'));
   assert.ok(forgeCss.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(forgeCss.includes('pointer-events:none'));
@@ -196,6 +226,7 @@ test('daily sword, equipment gacha, arsenal and forge share the loot renderer', 
   assert.ok(equipment.includes("import { renderForgeLootArt } from './loot-forge.js'"));
   assert.ok(equipment.includes('equipment-loot-preview'));
   assert.ok(equipment.includes('forge-mini-loot'));
-  assert.ok(equipment.includes('renderForgeLootArt(item,{reveal:true})'));
+  assert.ok(equipment.includes('renderForgeLootArt(item,{reveal:true,...options})'));
+  assert.ok(equipment.includes('forgeImpact:true,previousLevel'));
   assert.ok(equipment.includes('showForgeReveal(payload.item'));
 });
