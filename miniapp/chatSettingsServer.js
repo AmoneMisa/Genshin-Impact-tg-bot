@@ -11,6 +11,7 @@ import {
   getArcadeSettingKey,
   getMiniAppRouteSettingKey,
   isArcadeSettingRoute,
+  isMiniAppGroupOnlyRoute,
 } from './featureAccess.js';
 import startMiniAppServer from './server.js';
 
@@ -158,8 +159,9 @@ async function handleUtilityRequest(req, res) {
 async function checkFeatureGate(req, res) {
   const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   let settingKey = getMiniAppRouteSettingKey(req.method, requestUrl.pathname);
+  const groupOnly = isMiniAppGroupOnlyRoute(req.method, requestUrl.pathname);
   const arcadeRoute = isArcadeSettingRoute(req.method, requestUrl.pathname);
-  if (!settingKey && !arcadeRoute) return { handled: false, request: req };
+  if (!settingKey && !groupOnly && !arcadeRoute) return { handled: false, request: req };
 
   try {
     const context = await authorize(req);
@@ -176,7 +178,7 @@ async function checkFeatureGate(req, res) {
       request = replayRequest(req, rawBody);
     }
 
-    const access = await checkMiniAppFeatureAccess({ ...context, settingKey });
+    const access = await checkMiniAppFeatureAccess({ ...context, settingKey, groupOnly });
     if (!access.ok) {
       sendJson(res, access.status || 403, access);
       return { handled: true, request: null };

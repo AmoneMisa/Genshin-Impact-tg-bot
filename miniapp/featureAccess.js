@@ -53,6 +53,36 @@ export const MINI_APP_ROUTE_SETTINGS = Object.freeze({
   'POST /api/sword/roll': 'swords',
 });
 
+// This is intentionally route-specific instead of setting-specific.
+// In legacy, /whoami was allowed in private while /gacha, /steal_resources
+// and /change_gender shared the same setting key but were supergroup-only.
+// Likewise shop/exchange shared the boss setting but had their own group rule.
+export const MINI_APP_GROUP_ONLY_ROUTES = Object.freeze(new Set([
+  'GET /api/forms',
+  'POST /api/forms/save',
+  'POST /api/profile/gender',
+  'GET /api/gacha',
+  'POST /api/gacha/roll',
+  'POST /api/gacha/resolve',
+  'GET /api/steal',
+  'POST /api/steal/attack',
+  'GET /api/boss',
+  'POST /api/boss/summon',
+  'POST /api/boss/skill',
+  'GET /api/shop',
+  'POST /api/shop/buy',
+  'GET /api/exchange',
+  'POST /api/exchange/buy',
+  'GET /api/gold-transfer',
+  'POST /api/gold-transfer/send',
+  'GET /api/bonus',
+  'POST /api/bonus/claim',
+  'GET /api/titles',
+  'POST /api/titles/assign',
+  'GET /api/sword',
+  'POST /api/sword/roll',
+]));
+
 export const ARCADE_GAME_SETTINGS = Object.freeze({
   dice: 'dice',
   bowling: 'bowling',
@@ -72,6 +102,10 @@ export function getMiniAppRouteSettingKey(method, pathname) {
   return MINI_APP_ROUTE_SETTINGS[`${method} ${pathname}`] || null;
 }
 
+export function isMiniAppGroupOnlyRoute(method, pathname) {
+  return MINI_APP_GROUP_ONLY_ROUTES.has(`${method} ${pathname}`);
+}
+
 export function getArcadeSettingKey(gameId) {
   return typeof gameId === 'string' ? ARCADE_GAME_SETTINGS[gameId] || null : null;
 }
@@ -80,8 +114,26 @@ export function isArcadeSettingRoute(method, pathname) {
   return ARCADE_ACTION_ROUTES.has(`${method} ${pathname}`);
 }
 
-export function evaluateMiniAppFeatureAccess({ chatId, userId, settingKey, settings = {} }) {
-  if (!settingKey || String(chatId) === String(userId)) {
+export function evaluateMiniAppFeatureAccess({
+  chatId,
+  userId,
+  settingKey,
+  groupOnly = false,
+  settings = {},
+}) {
+  const isPrivate = String(chatId) === String(userId);
+
+  if (groupOnly && isPrivate) {
+    return {
+      ok: false,
+      status: 409,
+      reason: 'group_only',
+      settingKey: settingKey || null,
+      error: 'Эта функция доступна только в групповом чате.',
+    };
+  }
+
+  if (!settingKey || isPrivate) {
     return { ok: true, settingKey: settingKey || null };
   }
 
@@ -97,11 +149,16 @@ export function evaluateMiniAppFeatureAccess({ chatId, userId, settingKey, setti
   };
 }
 
-export async function checkMiniAppFeatureAccess({ chatId, userId, settingKey }) {
+export async function checkMiniAppFeatureAccess({
+  chatId,
+  userId,
+  settingKey,
+  groupOnly = false,
+}) {
   if (!settingKey || String(chatId) === String(userId)) {
-    return evaluateMiniAppFeatureAccess({ chatId, userId, settingKey });
+    return evaluateMiniAppFeatureAccess({ chatId, userId, settingKey, groupOnly });
   }
 
   const settings = await getChatSessionSettings(chatId);
-  return evaluateMiniAppFeatureAccess({ chatId, userId, settingKey, settings });
+  return evaluateMiniAppFeatureAccess({ chatId, userId, settingKey, groupOnly, settings });
 }

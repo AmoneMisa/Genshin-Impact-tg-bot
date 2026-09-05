@@ -2,10 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   ARCADE_GAME_SETTINGS,
+  MINI_APP_GROUP_ONLY_ROUTES,
   evaluateMiniAppFeatureAccess,
   getArcadeSettingKey,
   getMiniAppRouteSettingKey,
   isArcadeSettingRoute,
+  isMiniAppGroupOnlyRoute,
 } from '../miniapp/featureAccess.js';
 
 test('Mini App routes preserve the legacy shared setting matrix', () => {
@@ -44,6 +46,45 @@ test('Mini App feature gate covers mutations as well as read endpoints', () => {
   assert.equal(getMiniAppRouteSettingKey('POST', '/api/sword/roll'), 'swords');
 });
 
+test('Mini App preserves the legacy supergroup-only route matrix', () => {
+  assert.equal(MINI_APP_GROUP_ONLY_ROUTES.size, 23);
+
+  for (const [method, pathname] of [
+    ['GET', '/api/forms'],
+    ['POST', '/api/forms/save'],
+    ['POST', '/api/profile/gender'],
+    ['GET', '/api/gacha'],
+    ['POST', '/api/gacha/resolve'],
+    ['GET', '/api/steal'],
+    ['GET', '/api/boss'],
+    ['GET', '/api/shop'],
+    ['GET', '/api/exchange'],
+    ['GET', '/api/gold-transfer'],
+    ['GET', '/api/bonus'],
+    ['GET', '/api/titles'],
+    ['GET', '/api/sword'],
+  ]) {
+    assert.equal(isMiniAppGroupOnlyRoute(method, pathname), true, `${method} ${pathname}`);
+  }
+
+  // These all sit behind legacy setting keys, but their entry commands were
+  // explicitly allowed in private chats.
+  for (const [method, pathname] of [
+    ['GET', '/api/profile'],
+    ['POST', '/api/profile/class'],
+    ['GET', '/api/skills'],
+    ['GET', '/api/inventory'],
+    ['GET', '/api/equipment'],
+    ['GET', '/api/builds'],
+    ['GET', '/api/chest'],
+    ['GET', '/api/point21'],
+    ['GET', '/api/elements'],
+    ['GET', '/api/horoscope'],
+  ]) {
+    assert.equal(isMiniAppGroupOnlyRoute(method, pathname), false, `${method} ${pathname}`);
+  }
+});
+
 test('arcade actions map every game to its independent legacy toggle', () => {
   assert.deepEqual(Object.keys(ARCADE_GAME_SETTINGS).sort(), [
     'basketball', 'bowling', 'darts', 'dice', 'football', 'slots',
@@ -76,17 +117,45 @@ test('disabled group setting is rejected with a stable feature_disabled payload'
   );
 });
 
-test('enabled, missing and private settings do not block Mini App access', () => {
+test('private group-only routes are rejected before chat settings are considered', () => {
+  assert.deepEqual(
+    evaluateMiniAppFeatureAccess({
+      chatId: 7,
+      userId: 7,
+      settingKey: 'whoami',
+      groupOnly: true,
+      settings: { whoami: 1 },
+    }),
+    {
+      ok: false,
+      status: 409,
+      reason: 'group_only',
+      settingKey: 'whoami',
+      error: 'Эта функция доступна только в групповом чате.',
+    },
+  );
+});
+
+test('private-capable routes still bypass group chat settings', () => {
+  assert.deepEqual(
+    evaluateMiniAppFeatureAccess({
+      chatId: 7,
+      userId: 7,
+      settingKey: 'whoami',
+      groupOnly: false,
+      settings: { whoami: 0 },
+    }),
+    { ok: true, settingKey: 'whoami' },
+  );
+});
+
+test('enabled and missing group settings do not block Mini App access', () => {
   assert.deepEqual(
     evaluateMiniAppFeatureAccess({ chatId: -1, userId: 7, settingKey: 'boss', settings: { boss: 1 } }),
     { ok: true, settingKey: 'boss' },
   );
   assert.deepEqual(
     evaluateMiniAppFeatureAccess({ chatId: -1, userId: 7, settingKey: 'boss', settings: {} }),
-    { ok: true, settingKey: 'boss' },
-  );
-  assert.deepEqual(
-    evaluateMiniAppFeatureAccess({ chatId: 7, userId: 7, settingKey: 'boss', settings: { boss: 0 } }),
     { ok: true, settingKey: 'boss' },
   );
   assert.deepEqual(

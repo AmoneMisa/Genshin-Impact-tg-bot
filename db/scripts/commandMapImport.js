@@ -1,7 +1,6 @@
 import CommandMap from "../models/CommandMap.js";
-import {isTemplateCollectionImported} from "./import.js";
 
-const commandMap = {
+export const COMMAND_MAP = Object.freeze({
     "boss": "boss",
     "shop": "boss",
     "exchange": "boss",
@@ -12,7 +11,7 @@ const commandMap = {
     "send_gold": "sendGold",
     "sword": "swords",
     "swords": "swords",
-    "mute": "mute",
+    "self_mute": "mute",
     "slots": "slots",
     "point": "points",
     "dice": "dice",
@@ -29,23 +28,41 @@ const commandMap = {
     "info": "form",
     "form": "form",
     "set[A-Z].*": "form"
-};
+});
 
-const supergroupCommands = [
+export const SUPERGROUP_COMMANDS = Object.freeze([
     "boss", "title", "titles", "info", "form", "sword", "swords",
-    "shop", "send_gold", "mute", "steal_resources", "gacha",
+    "shop", "send_gold", "self_mute", "steal_resources", "gacha",
     "exchange", "change_gender", "bonus"
-];
+]);
+
+const SUPERGROUP_COMMAND_SET = new Set(SUPERGROUP_COMMANDS);
+
+export function buildCommandMapDocuments() {
+    return Object.entries(COMMAND_MAP).map(([command, settingKey]) => ({
+        command,
+        settingKey,
+        supergroupOnly: SUPERGROUP_COMMAND_SET.has(command)
+    }));
+}
 
 export default async function importCommandMap() {
-    if (!(await isTemplateCollectionImported(CommandMap.collection.name))) {
-        const docs = Object.entries(commandMap).map(([command, settingKey]) => ({
-            command,
-            settingKey,
-            module: settingKey,
-            isSupergroupCommand: supergroupCommands.includes(command)
-        }));
-        await CommandMap.insertMany(docs);
-        console.log(`✅ Imported ${CommandMap.collection.name}`);
-    }
+    const docs = buildCommandMapDocuments();
+
+    // Sync on every startup rather than only on first import. Older imports wrote
+    // `isSupergroupCommand`, while the schema/runtime read `supergroupOnly`.
+    // Idempotent upserts repair existing installations without replacing any
+    // unrelated per-command fields such as `enabled` or `description`.
+    await CommandMap.bulkWrite(docs.map(({ command, settingKey, supergroupOnly }) => ({
+        updateOne: {
+            filter: { command },
+            update: {
+                $set: { settingKey, supergroupOnly },
+                $setOnInsert: { enabled: true }
+            },
+            upsert: true
+        }
+    })));
+
+    console.log(`✅ Synced ${CommandMap.collection.name}`);
 }
