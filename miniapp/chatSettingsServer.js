@@ -1,8 +1,10 @@
 import { token, myId } from '../config.js';
 import { trustedChats } from '../data.js';
+import bot from '../bot.js';
 import getSession from '../functions/getters/getSession.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { getChatSettingsState, updateChatSettingForMiniApp } from './chatSettings.js';
+import { getSelfMuteStateForMiniApp, performSelfMuteForMiniApp } from './selfMute.js';
 import startMiniAppServer from './server.js';
 
 function sendJson(res, status, payload) {
@@ -75,30 +77,49 @@ async function authorize(req) {
   return { chatId, userId, session };
 }
 
-async function handleChatSettingsRequest(req, res) {
+async function handleUtilityRequest(req, res) {
   const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const route = `${req.method} ${requestUrl.pathname}`;
-  if (route !== 'GET /api/chat-settings' && route !== 'POST /api/chat-settings/update') return false;
+  const supported = new Set([
+    'GET /api/chat-settings',
+    'POST /api/chat-settings/update',
+    'GET /api/self-mute',
+    'POST /api/self-mute/activate',
+  ]);
+  if (!supported.has(route)) return false;
 
   try {
     const context = await authorize(req);
+
     if (route === 'GET /api/chat-settings') {
       const chatSettings = await getChatSettingsState({ ...context, ownerId: myId });
       sendJson(res, 200, chatSettings);
       return true;
     }
 
-    const body = await readJsonBody(req);
-    const result = await updateChatSettingForMiniApp({
-      ...context,
-      ownerId: myId,
-      key: body.key,
-      enabled: body.enabled,
-    });
+    if (route === 'POST /api/chat-settings/update') {
+      const body = await readJsonBody(req);
+      const result = await updateChatSettingForMiniApp({
+        ...context,
+        ownerId: myId,
+        key: body.key,
+        enabled: body.enabled,
+      });
+      sendJson(res, result.ok ? 200 : result.status || 409, result);
+      return true;
+    }
+
+    if (route === 'GET /api/self-mute') {
+      const selfMute = await getSelfMuteStateForMiniApp({ ...context, bot });
+      sendJson(res, 200, selfMute);
+      return true;
+    }
+
+    const result = await performSelfMuteForMiniApp({ ...context, bot });
     sendJson(res, result.ok ? 200 : result.status || 409, result);
     return true;
   } catch (error) {
-    console.error('[miniapp] chat settings:', error);
+    console.error('[miniapp] utility route:', error);
     sendJson(res, error.status || 401, { error: error.message || 'Unauthorized' });
     return true;
   }
@@ -109,7 +130,7 @@ export function installChatSettingsRoutes(server) {
   const baseListeners = server.listeners('request');
   server.removeAllListeners('request');
   server.on('request', async (req, res) => {
-    if (await handleChatSettingsRequest(req, res)) return;
+    if (await handleUtilityRequest(req, res)) return;
     for (const listener of baseListeners) {
       await listener.call(server, req, res);
       if (res.writableEnded) break;
