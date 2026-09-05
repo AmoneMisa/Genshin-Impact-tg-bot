@@ -59,6 +59,7 @@ export function createMiniAppState(session, context) {
       { id: 'horoscope', title: 'Гороскоп', subtitle: 'Шуточное предсказание', icon: '🔮', status: 'webgl' },
       { id: 'sword', title: 'Меч', subtitle: 'Ежедневная удача', icon: '🗡️', status: 'webgl' },
       { id: 'arcade', title: 'Аркада', subtitle: 'Кубики, спорт и слоты', icon: '🎲', status: 'webgl' },
+      { id: 'chatSettings', title: 'Настройки чата', subtitle: 'Доступность команд для группы', icon: '⚙️', status: 'webgl' },
       { id: 'updates', title: 'Что нового', subtitle: 'Уведомления об обновлениях', icon: '🔔', status: 'webgl' },
       { id: 'feedback', title: 'Написать разработчику', subtitle: 'Баг, идея или вопрос', icon: '💬', status: 'webgl' },
       { id: 'help', title: 'Справка', subtitle: 'Гайд и fallback-команды', icon: '❔', status: 'webgl' },

@@ -4,7 +4,7 @@ import { trustedChats } from './data.js';
 import debugMessage from './functions/tgBotFunctions/debugMessage.js';
 import sendMessage from './functions/tgBotFunctions/sendMessage.js';
 import sendMiniAppLauncher from './miniapp/launcher.js';
-import startMiniAppServer from './miniapp/server.js';
+import startMiniAppServer from './miniapp/chatSettingsServer.js';
 
 function isTrusted(chatId) {
   return trustedChats.includes(String(chatId));

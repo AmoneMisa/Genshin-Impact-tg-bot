@@ -36,7 +36,7 @@ export default [[/(?:^|\s)\/settings\b/, async (msg) => {
         callback_data: "settings.swords"
     }, {
         text: "Сундуки",
-        callback_data: "settings.chest"
+        callback_data: "settings.chests"
     }, {
         text: "Само-мут",
         callback_data: "settings.mute"
