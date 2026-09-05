@@ -53,3 +53,13 @@ test('loot renderer stylesheet is wired before VFX/design system and stays mobil
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
   assert.ok(css.includes('pointer-events:none'));
 });
+
+test('daily sword and equipment gacha render the shared art layer', () => {
+  const sword = fs.readFileSync(path.join(root, 'webapp/sword.js'), 'utf8');
+  const gacha = fs.readFileSync(path.join(root, 'webapp/gacha.js'), 'utf8');
+  assert.ok(sword.includes("import { renderDailySwordArt } from './loot-renderer.js'"));
+  assert.ok(sword.includes('renderDailySwordArt(state.length'));
+  assert.ok(gacha.includes("import { renderLootArt } from './loot-renderer.js'"));
+  assert.ok(gacha.includes('gacha-loot-stage'));
+  assert.ok(gacha.includes('renderLootArt(item,{reveal:true})'));
+});
