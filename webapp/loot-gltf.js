@@ -107,9 +107,9 @@ export function revealScale(seconds, duration = 0.7) {
 }
 
 /** Item turn per motion preset; mirrors the procedural renderer so both paths feel alike. */
-// Flat pieces designed to be seen from the front (bows, shields, tiaras, pendants, earrings) sway
+// Pieces designed to be seen from the front (bows, shields, rings, tiaras, pendants, earrings) sway
 // instead of spinning, so they're never shown as an edge-on sliver.
-const FRONT_FACING = new Set(['tiara', 'amulet', 'earring', 'bow', 'shield']);
+const FRONT_FACING = new Set(['tiara', 'amulet', 'earring', 'ring', 'bow', 'shield']);
 
 export function itemRotation(kind, seconds) {
   const motion = motionForKind(kind);

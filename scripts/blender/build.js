@@ -19,6 +19,7 @@ const OUT_DIR = path.resolve(HERE, '../../webapp/models');
 export const BLENDER_MODELS = Object.freeze({
   'sword.glb': 'sun_sword.py',
   'helmet.glb': 'great_helm.py',
+  'ring-winged.glb': 'winged_ring.py',
 });
 
 export function findBlender(env = process.env) {
