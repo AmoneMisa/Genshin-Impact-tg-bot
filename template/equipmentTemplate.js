@@ -568,6 +568,47 @@ export default {
                 accuracy: -2
             }
         }]
+    }, {
+        name: "jewelry",
+        translatedName: 'Украшение',
+        // Бижутерия: небольшие бонусы для всех классов. Кольца и серьги
+        // надеваются в свободную пару слотов (см. equipItem.js, pairSlots).
+        kind: [{
+            type: "ring",
+            category: "ring",
+            classOwner: ["warrior", "assassin", "archer", "priest", "mage"],
+            typeTranslatedName: "Кольцо",
+            translatedName: "Кольцо",
+            slots: ["leftRing"],
+            pairSlots: ["leftRing", "rightRing"],
+            characteristics: {
+                accuracy: 3,
+                maxMpMul: 1 + 0.012
+            }
+        }, {
+            type: "earring",
+            category: "earring",
+            classOwner: ["warrior", "assassin", "archer", "priest", "mage"],
+            typeTranslatedName: "Серьга",
+            translatedName: "Серьга",
+            slots: ["leftEar"],
+            pairSlots: ["leftEar", "rightEar"],
+            characteristics: {
+                evasion: 2,
+                mpRestoreSpeed: 0.012
+            }
+        }, {
+            type: "necklace",
+            category: "necklace",
+            classOwner: ["warrior", "assassin", "archer", "priest", "mage"],
+            typeTranslatedName: "Ожерелье",
+            translatedName: "Ожерелье",
+            slots: ["necklace"],
+            characteristics: {
+                defence: 1,
+                maxHpMul: 1 + 0.014
+            }
+        }]
     }
         // , {
         //     translatedName: "Плащ", name: "cloak", slots: ["cloak"]

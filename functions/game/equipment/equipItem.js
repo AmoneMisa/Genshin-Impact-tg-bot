@@ -25,6 +25,13 @@ export default function equipItem(session, item) {
     session.game.equipmentStats ||= {};
     const inventory = session.game.inventory?.equipment?.items || [];
 
+    // Rings and earrings fit either side: take the first free one, and only
+    // replace the first side when both are taken.
+    if (Array.isArray(item.pairSlots) && item.pairSlots.length) {
+        const free = item.pairSlots.find(slot => !session.game.equipmentStats[slot]);
+        item.slots = [free || item.pairSlots[0]];
+    }
+
     // One slot can belong to only one equipped item. The old implementation
     // cleared the new item's slots but left the displaced inventory item marked
     // as isUsed=true. Unequip every overlapping item first so inventory and the
