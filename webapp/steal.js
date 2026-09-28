@@ -1,3 +1,5 @@
+import { menuArtFor } from './menu-art.js';
+
 const REASONS = {
   attacker_not_found: 'Не удалось найти твоего персонажа в этом чате.',
   target_not_found: 'Цель больше недоступна. Обнови список.',
@@ -37,6 +39,17 @@ function initials(name) {
     .join('') || '?';
 }
 
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
+/** Coin/gem/ore pieces thrown out of the vault, a few per looted resource. */
+export function lootBurst(result) {
+  const pieces = [];
+  if (Number(result?.gold) > 0) pieces.push('🪙', '🪙', '🪙', '🪙');
+  if (Number(result?.crystals) > 0) pieces.push('💎', '💎');
+  if (Number(result?.ironOre) > 0) pieces.push('⛏️');
+  return pieces.length ? pieces : ['✦'];
+}
+
 export async function openStealGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/steal');
   let pending = false;
@@ -47,11 +60,12 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass steal-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">RAID · MONGO</div><h2>Ограбление</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="steal-head">
+        <button class="overlay-close steal-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Ограбление</h2>
+        <button class="steal-round" type="button" data-steal-refresh aria-label="Обновить">↻</button>
       </header>
-      <p class="overlay-copy">Выбери игрока из этого чата. Бой, щиты, добыча и опыт рассчитываются только на сервере.</p>
+      <section class="steal-heist" hidden aria-hidden="true"></section>
       <div data-steal-content></div>
       <div class="utility-feedback" data-steal-feedback aria-live="polite"></div>
     </div>`;
@@ -64,6 +78,37 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.querySelector('[data-steal-refresh]').addEventListener('click', () => refresh());
+  const heist = overlay.querySelector('.steal-heist');
+
+  // Thief creeps to the vault; then it bursts with loot or a shield throws him back.
+  function startHeist(target) {
+    heist.className = 'steal-heist';
+    heist.innerHTML = `
+      <div class="heist-vault"><span class="heist-door"><i></i></span></div>
+      <div class="heist-thief">🦹</div>
+      <div class="heist-shield">🛡️</div>
+      <div class="heist-loot"></div>
+      <strong class="heist-title">${escapeHtml(target?.name || 'Цель')}</strong>`;
+    heist.hidden = false;
+    requestAnimationFrame(() => heist.classList.add('sneak'));
+  }
+  async function finishHeist(payload) {
+    if (payload.outcome === 'stolen') {
+      heist.querySelector('.heist-loot').innerHTML = lootBurst(payload).map((piece, i) => `<i style="--a:${-70 + i * 22}deg;--d:${i * 50}ms">${piece}</i>`).join('');
+      heist.querySelector('.heist-title').textContent = 'Добыча!';
+      heist.classList.add('success');
+    } else {
+      heist.querySelector('.heist-title').textContent = `${payload.targetName || 'Цель'} отбился`;
+      heist.classList.add('defended');
+    }
+    await wait(1300);
+    heist.classList.add('leaving');
+    await wait(250);
+    heist.hidden = true;
+    heist.innerHTML = '';
+  }
+  function abortHeist() { heist.hidden = true; heist.innerHTML = ''; }
 
   function resultHtml() {
     if (!result) return '';
@@ -90,7 +135,7 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
     const disabled = pending || state.attempts <= 0 || !state.combatReady || shielded;
     return `
       <article class="steal-target ${shielded ? 'shielded' : ''}">
-        <span class="steal-avatar">${escapeHtml(initials(target.name))}</span>
+        <span class="steal-avatar" style="--art:url('${menuArtFor('profile', { className: target.className })}')">${escapeHtml(initials(target.name))}</span>
         <div class="steal-target-copy">
           <strong>${escapeHtml(target.name)}</strong>
           <small>LVL ${target.level} · ${escapeHtml(target.className === 'noClass' ? 'без класса' : target.className)}</small>
@@ -101,7 +146,6 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
   }
 
   function bind() {
-    content.querySelector('[data-steal-refresh]')?.addEventListener('click', refresh);
     content.querySelectorAll('[data-steal-target]').forEach(button => {
       button.addEventListener('click', () => attack(button.dataset.stealTarget));
     });
@@ -112,10 +156,11 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
       ? `🛡️ Твой щит: ${formatDuration(state.shieldRemainingMs)}`
       : 'Щит не активен';
     content.innerHTML = `
-      <section class="steal-summary">
-        <article><small>ПОПЫТКИ</small><strong>${state.attempts} / 2</strong></article>
-        <article><small>ЗАЩИТА</small><strong>${shield}</strong></article>
-        <button type="button" data-steal-refresh aria-label="Обновить">↻</button>
+      <section class="steal-hero">
+        <div class="steal-chips">
+          <span>🗝️ Попытки <b>${state.attempts} / 2</b></span>
+          <span class="${state.shieldRemainingMs > 0 ? 'on' : ''}">${shield}</span>
+        </div>
       </section>
       ${state.shieldRemainingMs > 0 ? '<p class="steal-warning">После собственной попытки ограбления твой щит исчезнет.</p>' : ''}
       ${!state.combatReady ? '<p class="steal-warning">Выбери боевой класс, чтобы нападать на других игроков.</p>' : ''}
@@ -149,13 +194,16 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
     if (pending) return;
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Идёт бой…';
+    feedback.textContent = '';
     haptic('heavy');
+    startHeist(state.targets.find(target => String(target.id) === String(targetId)));
     try {
-      const payload = await api('/api/steal/attack', {
-        method: 'POST',
-        body: JSON.stringify({ targetId }),
-      });
+      const [payload] = await Promise.all([
+        api('/api/steal/attack', { method: 'POST', body: JSON.stringify({ targetId }) }),
+        wait(1200),
+      ]);
+      haptic(payload.outcome === 'stolen' ? 'heavy' : 'light');
+      await finishHeist(payload);
       state = payload.steal;
       result = payload;
       if (payload.state) renderState(payload.state);
@@ -166,6 +214,7 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
       haptic(payload.outcome === 'stolen' ? 'medium' : 'light');
       render();
     } catch (error) {
+      abortHeist();
       if (error.payload?.steal) state = error.payload.steal;
       const base = REASONS[error.payload?.reason] || error.message;
       const shield = error.payload?.shieldRemainingMs ? ` Осталось: ${formatDuration(error.payload.shieldRemainingMs)}` : '';

@@ -11,3 +11,10 @@ test('every server element has its own colour and appears on the altar ring', ()
   assert.equal(elementTone('??'), 'neutral');
   assert.match(elementChip('🔥 Пиро', 'large'), /el-chip tone-pyro large/);
 });
+
+import { lootBurst } from '../webapp/steal.js';
+test('heist loot burst shows what was actually stolen', () => {
+  assert.deepEqual(lootBurst({ gold: 10, crystals: 0, ironOre: 0 }), ['🪙', '🪙', '🪙', '🪙']);
+  assert.ok(lootBurst({ gold: 0, crystals: 5, ironOre: 1 }).includes('⛏️'));
+  assert.deepEqual(lootBurst({}), ['✦']);
+});
