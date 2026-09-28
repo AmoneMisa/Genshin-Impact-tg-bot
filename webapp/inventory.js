@@ -24,27 +24,36 @@ function percent(value, max) {
   return max > 0 ? Math.min(100, Math.max(0, Number(value) / Number(max) * 100)) : 0;
 }
 
-function potionIcon(item) {
-  if (item.type === 'mp') return '🔵';
-  if (item.bottleType === 'elixir') return '💗';
-  return '❤️';
+/** Liquid colour of a potion flask. */
+export function potionTone(item) {
+  if (item?.bottleType === 'elixir') return 'elixir';
+  return item?.type === 'mp' ? 'mp' : 'hp';
 }
+
+export function flaskHtml(item) {
+  return `<span class="inv-flask tone-${potionTone(item)}" aria-hidden="true"><i class="inv-liquid"></i><i class="inv-bubbles"></i></span>`;
+}
+
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
 
 export async function openInventoryGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/inventory');
   let pending = false;
   let lastResult = null;
+  let selectedKey = null;
+  let previousPlayer = null; // vitals before the last potion, to animate the fill
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay inventory-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass inventory-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">INVENTORY · MONGO</div><h2>Инвентарь</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="inv-head">
+        <button class="overlay-close inv-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Инвентарь</h2>
+        <button class="inv-round" type="button" data-inventory-refresh aria-label="Обновить">↻</button>
       </header>
-      <p class="overlay-copy">Ресурсы и предметы читаются из той же Mongo-сессии. Снаряжение и гача уже имеют отдельные экраны; здесь можно использовать расходники.</p>
+      <p class="overlay-copy" hidden>Ресурсы и предметы читаются из той же Mongo-сессии. Снаряжение и гача уже имеют отдельные экраны; здесь можно использовать расходники.</p>
       <div data-inventory-content></div>
       <div class="utility-feedback" data-inventory-feedback aria-live="polite"></div>
     </div>`;
@@ -57,65 +66,86 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.querySelector('[data-inventory-refresh]').addEventListener('click', () => refresh());
 
   function vitalsHtml() {
+    const before = previousPlayer || state.player;
+    const bar = (key, label, value, max, prev) => `
+      <article class="inv-vital ${key}">
+        <div><span>${label}</span><strong>${formatNumber(value)} / ${formatNumber(max)}</strong></div>
+        <i><b data-fill="${percent(value, max)}" style="width:${percent(prev, max)}%"></b></i>
+      </article>`;
     return `
       <section class="inventory-vitals">
-        <article>
-          <div><span>❤ HP</span><strong>${formatNumber(state.player.hp)} / ${formatNumber(state.player.maxHp)}</strong></div>
-          <i><b style="width:${percent(state.player.hp, state.player.maxHp)}%"></b></i>
-        </article>
-        <article>
-          <div><span>🔹 MP</span><strong>${formatNumber(state.player.mp)} / ${formatNumber(state.player.maxMp)}</strong></div>
-          <i><b style="width:${percent(state.player.mp, state.player.maxMp)}%"></b></i>
-        </article>
+        ${bar('hp', '❤ HP', state.player.hp, state.player.maxHp, before.hp)}
+        ${bar('mp', '🔹 MP', state.player.mp, state.player.maxMp, before.mp)}
       </section>`;
   }
 
-  function potionHtml(item) {
-    const usable = item.count > 0 && !pending;
-    const power = item.bottleType === 'elixir' ? `${item.power}%` : formatNumber(item.power);
+  function slotHtml(item) {
     return `
-      <article class="inventory-potion ${item.count <= 0 ? 'empty' : ''}">
-        <span>${potionIcon(item)}</span>
+      <button type="button" class="inv-slot ${item.count <= 0 ? 'empty' : ''} ${item.key === selectedKey ? 'selected' : ''}" data-inventory-select="${escapeHtml(item.key)}" aria-label="${escapeHtml(item.name)} ×${formatNumber(item.count)}">
+        ${flaskHtml(item)}
+        <em>${formatNumber(item.count)}</em>
+      </button>`;
+  }
+
+  function detailHtml() {
+    const item = state.potions.find(potion => potion.key === selectedKey);
+    if (!item) return '<p class="inv-hint">Выбери предмет в сумке.</p>';
+    const power = item.bottleType === 'elixir' ? `${item.power}%` : formatNumber(item.power);
+    const usable = item.count > 0;
+    return `
+      <section class="inv-detail tone-${potionTone(item)}">
+        ${flaskHtml(item)}
         <div>
           <strong>${escapeHtml(item.name)}</strong>
           <small>${escapeHtml(item.description)}</small>
-          <em>${item.type.toUpperCase()} · сила ${power} · ×${formatNumber(item.count)}</em>
+          <em>${item.type.toUpperCase()} · сила ${power} · осталось ${formatNumber(item.count)}</em>
         </div>
-        <button type="button" data-inventory-potion="${escapeHtml(item.key)}" ${usable ? '' : 'disabled'}>Использовать</button>
-      </article>`;
+        <button type="button" data-inventory-potion="${escapeHtml(item.key)}" ${usable ? '' : 'disabled'}>Выпить</button>
+      </section>`;
   }
 
   function resultHtml() {
     if (!lastResult) return '';
     const resource = lastResult.resource === 'mp' ? 'MP' : 'HP';
-    return `<section class="inventory-result"><span>✓</span><div><strong>Восстановлено ${formatNumber(lastResult.restored)} ${resource}</strong><small>${escapeHtml(lastResult.potion?.name || '')}</small></div></section>`;
+    return `<section class="inventory-result ${lastResult.resource === 'mp' ? 'mp' : 'hp'}"><span>+</span><div><strong>${formatNumber(lastResult.restored)} ${resource}</strong><small>${escapeHtml(lastResult.potion?.name || '')}</small></div></section>`;
   }
 
   function render() {
+    if (!selectedKey || !state.potions.some(potion => potion.key === selectedKey)) {
+      selectedKey = state.potions.find(potion => potion.count > 0)?.key || state.potions[0]?.key || null;
+    }
+    const emptySlots = Math.max(0, 8 - state.potions.length);
     content.innerHTML = `
-      <section class="inventory-resources">
-        <article><span>🪙</span><small>Золото</small><strong>${formatNumber(state.resources.gold)}</strong></article>
-        <article><span>💎</span><small>Кристаллы</small><strong>${formatNumber(state.resources.crystals)}</strong></article>
-        <article><span>⛏️</span><small>Руда</small><strong>${formatNumber(state.resources.ironOre)}</strong></article>
-      </section>
       ${vitalsHtml()}
       ${resultHtml()}
-      <section class="inventory-meta">
-        <article><span>🛡️</span><div><small>Снаряжение</small><strong>${formatNumber(state.counts.equipment)} предметов</strong></div></article>
-        <article><span>✨</span><div><small>Гача</small><strong>${formatNumber(state.counts.gacha)} предметов</strong></div></article>
-        <article><span>🏆</span><div><small>Арена</small><strong>${formatNumber(state.arena.tokens)} жетонов${state.arena.pvpSign ? ` · ${escapeHtml(state.arena.pvpSign)}` : ''}</strong></div></article>
-      </section>
       <section class="inventory-section">
-        <div class="inventory-title"><div><strong>Зелья</strong><small>${formatNumber(state.counts.potions)} шт.</small></div><button type="button" data-inventory-refresh aria-label="Обновить">↻</button></div>
-        <div class="inventory-potions">${state.potions.length ? state.potions.map(potionHtml).join('') : '<p class="inventory-empty">Зелий пока нет.</p>'}</div>
+        <div class="inventory-title"><strong>Сумка</strong><small>${formatNumber(state.counts.potions)} зелий</small></div>
+        <div class="inv-bag">${state.potions.map(slotHtml).join('')}${'<span class="inv-slot blank" aria-hidden="true"></span>'.repeat(emptySlots)}</div>
+        ${detailHtml()}
+      </section>
+      <section class="inventory-resources">
+        <article><span>🪙</span><strong>${formatNumber(state.resources.gold)}</strong></article>
+        <article><span>💎</span><strong>${formatNumber(state.resources.crystals)}</strong></article>
+        <article><span>⛏️</span><strong>${formatNumber(state.resources.ironOre)}</strong></article>
+      </section>
+      <section class="inventory-meta">
+        <article><span>🛡️</span><div><small>Снаряжение</small><strong>${formatNumber(state.counts.equipment)}</strong></div></article>
+        <article><span>✨</span><div><small>Гача</small><strong>${formatNumber(state.counts.gacha)}</strong></div></article>
+        <article><span>🏆</span><div><small>Жетоны арены</small><strong>${formatNumber(state.arena.tokens)}${state.arena.pvpSign ? ` · ${escapeHtml(state.arena.pvpSign)}` : ''}</strong></div></article>
       </section>`;
     bind();
+    // Vitals glide from the pre-potion value to the new one.
+    requestAnimationFrame(() => content.querySelectorAll('[data-fill]').forEach(fill => { fill.style.width = `${fill.dataset.fill}%`; }));
+    previousPlayer = null;
   }
 
   function bind() {
-    content.querySelector('[data-inventory-refresh]')?.addEventListener('click', refresh);
+    content.querySelectorAll('[data-inventory-select]').forEach(button => {
+      button.addEventListener('click', () => { selectedKey = button.dataset.inventorySelect; haptic('light'); render(); });
+    });
     content.querySelectorAll('[data-inventory-potion]').forEach(button => {
       button.addEventListener('click', () => usePotion(button.dataset.inventoryPotion));
     });
@@ -141,13 +171,16 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     if (pending) return;
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Используем предмет…';
+    feedback.textContent = '';
     haptic('medium');
+    const flask = content.querySelector('.inv-detail .inv-flask');
+    flask?.classList.add('drinking');
     try {
-      const payload = await api('/api/inventory/use', {
-        method: 'POST',
-        body: JSON.stringify({ key }),
-      });
+      const [payload] = await Promise.all([
+        api('/api/inventory/use', { method: 'POST', body: JSON.stringify({ key }) }),
+        wait(650),
+      ]);
+      previousPlayer = { ...state.player };
       state = payload.inventory;
       lastResult = payload;
       if (payload.state) renderState(payload.state);
@@ -157,6 +190,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       haptic('light');
       render();
     } catch (error) {
+      flask?.classList.remove('drinking');
       if (error.payload?.inventory) state = error.payload.inventory;
       lastResult = null;
       feedback.textContent = REASONS[error.payload?.reason] || error.message;

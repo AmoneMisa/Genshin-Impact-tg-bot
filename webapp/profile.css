@@ -9,7 +9,7 @@
 .profile-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
 .profile-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
 .profile-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
-.profile-panel [data-profile-content] { display: grid; gap: 10px; }
+.profile-panel [data-profile-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 
 .profile-hero {
   position: relative; overflow: hidden; isolation: isolate;

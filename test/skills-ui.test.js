@@ -11,3 +11,11 @@ test('enchant pips fill up to the level and mark the newest one', () => {
   assert.equal((enchantPips(9, 3).match(/class="on/g) || []).length, 3);
   for (const kind of ['damage', 'heal', 'shield', 'utility']) assert.ok(SKILL_RUNES[kind]);
 });
+
+import { flaskHtml, potionTone } from '../webapp/inventory.js';
+test('potion flasks are tinted by what they restore', () => {
+  assert.equal(potionTone({ type: 'hp', bottleType: 'small' }), 'hp');
+  assert.equal(potionTone({ type: 'mp', bottleType: 'small' }), 'mp');
+  assert.equal(potionTone({ type: 'hp', bottleType: 'elixir' }), 'elixir');
+  assert.match(flaskHtml({ type: 'mp' }), /inv-flask tone-mp/);
+});

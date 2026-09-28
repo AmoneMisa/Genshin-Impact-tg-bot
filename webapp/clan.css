@@ -11,7 +11,7 @@
 .clan-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
 .clan-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
 .clan-round[hidden] { visibility: hidden; display: grid; }
-.clan-panel [data-clan-content] { display: grid; gap: 12px; }
+.clan-panel [data-clan-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 
 .clan-hero { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; }
 .clan-banner {

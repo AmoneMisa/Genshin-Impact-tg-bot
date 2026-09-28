@@ -8,7 +8,7 @@
 .bonus-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
 .bonus-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
 .bonus-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
-.bonus-panel [data-bonus-content] { display: grid; gap: 12px; }
+.bonus-panel [data-bonus-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 
 .bonus-wheel-wrap { position: relative; width: min(78vw, 300px); aspect-ratio: 1; margin: 6px auto 0; }
 .bonus-wheel-wrap::before {
