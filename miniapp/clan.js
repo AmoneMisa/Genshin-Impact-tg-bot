@@ -110,6 +110,8 @@ async function clanDto(clan, userId) {
     myContribution: Math.max(0, number(me?.contribution)),
     level: Math.max(1, number(clan.level, 1)),
     xp: Math.max(0, number(clan.xp)),
+    // addClanXp.js: a flat 1000 xp per level.
+    levelProgress: { current: Math.max(0, number(clan.xp)) % 1000, needed: 1000 },
     reputation: Math.max(0, number(clan.reputation)),
     warehouse: {
       gold: Math.max(0, number(clan.warehouse?.gold)),

@@ -108,11 +108,11 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass clan-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">CLANS · MONGO</div><h2>Клан</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="clan-head">
+        <button class="overlay-close clan-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Клан</h2>
+        <button class="clan-round" type="button" data-clan-gear aria-label="Управление" hidden>⚙</button>
       </header>
-      <p class="overlay-copy">Клановые данные и игровые действия выполняются на сервере и сохраняются в Mongo.</p>
       <div data-clan-content></div>
       <div class="utility-feedback" data-clan-feedback aria-live="polite"></div>
     </div>`;
@@ -125,6 +125,11 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.querySelector('[data-clan-gear]').addEventListener('click', () => {
+    tab = tab === 'management' ? 'overview' : 'management';
+    haptic('light');
+    render();
+  });
 
   async function action(body) {
     if (pending) return null;
@@ -202,31 +207,80 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
-  function overviewHtml(clan) {
+  const TABS = [['overview', 'Обзор'], ['members', 'Участники'], ['tasks', 'Задания'], ['wars', 'Войны']];
+
+  // Prototype header: waving banner, name, level, members, XP bar.
+  function bannerHtml(clan) {
+    const progress = clan.levelProgress || { current: 0, needed: 1000 };
+    const percent = Math.min(100, progress.current / Math.max(1, progress.needed) * 100);
     return `
-      <section class="clan-summary">
-        <div class="clan-summary-head">
-          <div><h3>${escapeHtml(clan.name)}</h3><p>${escapeHtml(clan.description || 'Описание пока не задано')}</p></div>
-          <div class="clan-level"><strong>${clan.level}</strong><small>LEVEL</small></div>
+      <section class="clan-hero">
+        <div class="clan-banner" aria-hidden="true"><span>🌳</span></div>
+        <div class="clan-hero-info">
+          <h3>${escapeHtml(clan.name)}${clan.tag ? ` <small>[${escapeHtml(clan.tag)}]</small>` : ''}</h3>
+          <div class="clan-hero-row"><span>Ур. ${clan.level}</span><span>👥 ${clan.members.length}</span><span>✦ ${formatNumber(clan.reputation)}</span></div>
+          <div class="clan-xp"><i style="width:${percent}%"></i></div>
+          <small>${formatNumber(progress.current)} / ${formatNumber(progress.needed)} XP</small>
         </div>
-        <div class="clan-stats">
-          <article><small>XP</small><strong>${formatNumber(clan.xp)}</strong></article>
-          <article><small>РЕПУТАЦИЯ</small><strong>${formatNumber(clan.reputation)}</strong></article>
-          <article><small>ТВОЙ ВКЛАД</small><strong>${formatNumber(clan.myContribution)}</strong></article>
+      </section>`;
+  }
+
+  function overviewTabHtml(clan) {
+    const quiz = dashboard.quiz;
+    const tasks = dashboard.progression?.tasks;
+    const done = tasks ? tasks.items.filter(task => task.done).length : 0;
+    return `
+      <button type="button" class="clan-card clan-treasury" data-clan-tab="warehouse">
+        <h4>Клановое хранилище</h4>
+        <div><span>🪙 ${formatNumber(clan.warehouse.gold)}</span><span>💎 ${formatNumber(clan.warehouse.crystals)}</span><span>⛏️ ${formatNumber(clan.warehouse.ironOre)}</span><b>›</b></div>
+      </button>
+      <section class="clan-card clan-daily">
+        <h4>Ежедневное задание</h4>
+        <div class="clan-daily-row">
+          <span class="clan-daily-icon">📜</span>
+          <div><strong>Викторина</strong><small>${quiz?.answered ? (quiz.correct ? 'Сегодня отвечено верно ✅' : 'Сегодня уже отвечено') : quiz?.available ? '+золото, опыт и вклад' : 'Недоступна'}</small></div>
+          <button type="button" class="clan-play" data-clan-tab="quiz" ${quiz?.available && !quiz.answered ? '' : 'disabled'}>Играть</button>
         </div>
+        ${tasks ? `<div class="clan-daily-row"><span class="clan-daily-icon">📋</span><div><strong>Задания дня</strong><small>${done} / ${tasks.items.length} выполнено</small></div><button type="button" class="clan-play ghost" data-clan-tab="tasks">Открыть</button></div>` : ''}
       </section>
-      <nav class="clan-tabs">
-        <button type="button" data-clan-tab="overview" class="${tab === 'overview' ? 'active' : ''}">Обзор</button>
-        <button type="button" data-clan-tab="warehouse" class="${tab === 'warehouse' ? 'active' : ''}">Хранилище</button>
-        <button type="button" data-clan-tab="quiz" class="${tab === 'quiz' ? 'active' : ''}">Викторина</button>
-        <button type="button" data-clan-tab="activities" class="${tab === 'activities' ? 'active' : ''}">Активности</button>
-        ${clan.canManage ? `<button type="button" data-clan-tab="management" class="${tab === 'management' ? 'active' : ''}">Управление</button>` : ''}
-      </nav>
+      <section class="clan-card">
+        <h4>Твой вклад</h4>
+        <div class="clan-contrib"><strong>${formatNumber(clan.myContribution)}</strong><small>${clan.myRole === 'owner' ? '👑 глава клана' : clan.myRole === 'officer' ? '⭐ офицер' : 'участник'}</small></div>
+      </section>
+      ${clan.description ? `<p class="clan-motto">«${escapeHtml(clan.description)}»</p>` : ''}`;
+  }
+
+  function tasksTabHtml(clan) {
+    const activities = dashboard.activities;
+    return `
+      <section class="clan-section clan-activities">
+        ${tasksHtml()}
+        ${activities ? `${bossHtml(activities)}${shopHtml(activities)}${upgradesHtml(activities)}${buildingsHtml(clan, activities)}` : ''}
+        ${investigationsHtml()}
+      </section>`;
+  }
+
+  function warsTabHtml(clan) {
+    return `<section class="clan-section clan-activities">${warHtml(clan)}${pvpHtml()}</section>`;
+  }
+
+  function overviewHtml(clan) {
+    const gear = overlay.querySelector('[data-clan-gear]');
+    if (gear) gear.hidden = !clan.canManage;
+    const main = TABS.some(([id]) => id === tab) ? tab : null;
+    return `
+      ${bannerHtml(clan)}
+      <nav class="clan-tabs">${TABS.map(([id, label]) => `<button type="button" data-clan-tab="${id}" class="${main === id ? 'active' : ''}">${label}</button>`).join('')}</nav>
+      ${main ? '' : `<button type="button" class="clan-backlink" data-clan-tab="overview">‹ Обзор</button>`}
+      <div class="clan-tab-body">
       ${tab === 'warehouse' ? warehouseHtml(clan)
         : tab === 'quiz' ? quizHtml()
-        : tab === 'activities' ? activitiesHtml(clan)
+        : tab === 'members' ? membersHtml(clan)
+        : tab === 'tasks' ? tasksTabHtml(clan)
+        : tab === 'wars' ? warsTabHtml(clan)
         : tab === 'management' && clan.canManage ? managementHtml(clan)
-        : membersHtml(clan)}
+        : overviewTabHtml(clan)}
+      </div>
       <button type="button" class="clan-danger" data-clan-exit>${clan.isOwner ? 'Расформировать клан' : 'Покинуть клан'}</button>`;
   }
 
@@ -237,6 +291,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <div class="clan-members">
           ${clan.members.map(member => `
             <article class="clan-member">
+              <span class="clan-avatar" aria-hidden="true">${escapeHtml(String(member.name || '?').trim().charAt(0).toUpperCase())}</span>
               <div><strong>${escapeHtml(member.name)}</strong><small>Вклад: ${formatNumber(member.contribution)}</small></div>
               <span class="clan-role">${member.role === 'owner' ? '👑 глава' : member.role === 'officer' ? '⭐ офицер' : 'участник'}</span>
             </article>`).join('')}
@@ -388,23 +443,6 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <div class="clan-activity-list">${tasks.items.map(task => `
           <article class="clan-activity-row"><div><strong>${escapeHtml(task.label)}</strong><small>${task.claimed ? '🏆 получено' : task.done ? '✅ выполнено' : '⬜ не выполнено'}</small></div>${task.done && !task.claimed ? `<button type="button" data-clan-task-claim="${task.key}">Забрать</button>` : ''}</article>`).join('')}</div>
         ${tasks.bonusAvailable ? `<button type="button" data-clan-task-bonus>Забрать бонус: +${tasks.bonusXp} XP клана</button>` : ''}
-      </section>`;
-  }
-
-  function activitiesHtml(clan) {
-    const activities = dashboard.activities;
-    if (!activities) return '<section class="clan-section"><p>Активности недоступны.</p></section>';
-    return `
-      <section class="clan-section clan-activities">
-        <h4>Клановые активности</h4>
-        ${bossHtml(activities)}
-        ${shopHtml(activities)}
-        ${upgradesHtml(activities)}
-        ${buildingsHtml(clan, activities)}
-        ${pvpHtml()}
-        ${warHtml(clan)}
-        ${investigationsHtml()}
-        ${tasksHtml()}
       </section>`;
   }
 
