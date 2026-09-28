@@ -1,120 +1,13 @@
 import { motionForKind, sceneRecipeForKind } from './loot-webgl-v2.js';
-
-const TONE_COLORS=Object.freeze({mist:[.58,.62,.70],aqua:[.25,.78,.92],arcane:[.58,.38,.96],gold:[.95,.68,.25],rose:[.98,.42,.62],prismatic:[.58,.86,1]});
-const MATERIALS=Object.freeze({
-  iron:{color:[.52,.57,.63],metallic:.82,roughness:.48},
-  bronze:{color:[.62,.39,.20],metallic:.78,roughness:.38},
-  moonsteel:{color:[.62,.72,.88],metallic:.96,roughness:.20},
-  obsidian:{color:[.12,.11,.18],metallic:.44,roughness:.13},
-  unknown:{color:[.48,.50,.58],metallic:.65,roughness:.46},
-});
-
-const VERTEX_SHADER=`
-attribute vec3 a_position;
-attribute vec3 a_normal;
-uniform mat4 u_mvp;
-uniform mat4 u_model;
-varying vec3 v_normal;
-varying vec3 v_world;
-void main(){
-  vec4 world=u_model*vec4(a_position,1.0);
-  v_world=world.xyz;
-  v_normal=normalize(mat3(u_model)*a_normal);
-  gl_Position=u_mvp*vec4(a_position,1.0);
-}`;
-
-const FRAGMENT_SHADER=`
-precision mediump float;
-uniform vec3 u_base;
-uniform vec3 u_emissive;
-uniform float u_quality;
-uniform float u_wear;
-uniform float u_metallic;
-uniform float u_roughness;
-varying vec3 v_normal;
-varying vec3 v_world;
-float hash(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
-void main(){
-  vec3 n=normalize(v_normal);
-  vec3 key=normalize(vec3(-.48,.78,.62));
-  vec3 fill=normalize(vec3(.58,.20,.78));
-  vec3 view=normalize(vec3(0.0,.08,1.0));
-  float ndl=max(dot(n,key),0.0);
-  float fillLight=max(dot(n,fill),0.0)*.18;
-  float fresnel=pow(1.0-max(dot(n,view),0.0),2.8);
-  float rough=clamp(u_roughness+(1.0-u_quality)*.28+(1.0-u_wear)*.25,.04,.88);
-  float shininess=mix(42.0,7.0,rough);
-  float spec=pow(max(dot(reflect(-key,n),view),0.0),shininess)*mix(.18,.82,u_metallic)*(1.0-rough*.55);
-  float wearDark=mix(.58,1.0,u_wear);
-  float micro=hash(floor(v_world*18.0));
-  float wearNoise=(1.0-u_wear)*smoothstep(.74,.96,micro)*.22;
-  vec3 color=u_base*(.22+ndl*.68+fillLight)*wearDark;
-  color*=1.0-wearNoise;
-  color+=u_emissive*(.035+fresnel*.25+spec*.12);
-  color+=vec3(spec);
-  gl_FragColor=vec4(color,1.0);
-}`;
+import { createRenderer } from './loot-webgl-v2.js';
 
 function clamp(v,min,max){return Math.min(max,Math.max(min,v));}
 function radians(deg){return deg*Math.PI/180;}
-function identity(){return[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];}
-function multiply(a,b){const o=new Array(16).fill(0);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let k=0;k<4;k++)o[c*4+r]+=a[k*4+r]*b[c*4+k];return o;}
-function translation(x,y,z){const m=identity();m[12]=x;m[13]=y;m[14]=z;return m;}
-function scaling(x,y,z){const m=identity();m[0]=x;m[5]=y;m[10]=z;return m;}
-function rotationX(a){const c=Math.cos(a),s=Math.sin(a);return[1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1];}
-function rotationY(a){const c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1];}
-function rotationZ(a){const c=Math.cos(a),s=Math.sin(a);return[c,s,0,0,-s,c,0,0,0,1,0,0,0,0,1];}
-function perspective(fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(near-far);return[f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0];}
-function compose(position=[0,0,0],scale=[1,1,1],rotation=[0,0,0]){return multiply(translation(...position),multiply(rotationY(rotation[1]),multiply(rotationX(rotation[0]),multiply(rotationZ(rotation[2]),scaling(...scale)))));}
 function primitive(type,position,scale,rotation=[0,0,0],profile=null){return{type,position,scale,rotation,profile};}
 function transformed(part,group={}){return{...part,group};}
-
-function flatNormal(a,b,c){const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;return[nx/l,ny/l,nz/l];}
-function meshFromTriangles(tris){const p=[],n=[];for(const tri of tris){const normal=flatNormal(...tri);for(const v of tri){p.push(...v);n.push(...normal);}}return{positions:new Float32Array(p),normals:new Float32Array(n),count:p.length/3};}
-function extrudedPolygon(points,depth=.5){const z=depth/2,tris=[];for(let i=1;i<points.length-1;i++){tris.push([[points[0][0],points[0][1],z],[points[i][0],points[i][1],z],[points[i+1][0],points[i+1][1],z]]);tris.push([[points[0][0],points[0][1],-z],[points[i+1][0],points[i+1][1],-z],[points[i][0],points[i][1],-z]]);}for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];tris.push([[a[0],a[1],z],[a[0],a[1],-z],[b[0],b[1],-z]],[[a[0],a[1],z],[b[0],b[1],-z],[b[0],b[1],z]]);}return meshFromTriangles(tris);}
-function cylinderMesh(segments=10){const tris=[],r=.5,y=.5;for(let i=0;i<segments;i++){const a=i/segments*Math.PI*2,b=(i+1)/segments*Math.PI*2;const a0=[Math.cos(a)*r,-y,Math.sin(a)*r],a1=[Math.cos(a)*r,y,Math.sin(a)*r],b0=[Math.cos(b)*r,-y,Math.sin(b)*r],b1=[Math.cos(b)*r,y,Math.sin(b)*r];tris.push([a0,b0,b1],[a0,b1,a1],[[0,y,0],a1,b1],[[0,-y,0],b0,a0]);}return meshFromTriangles(tris);}
-
-const CUBE=extrudedPolygon([[-.5,-.5],[.5,-.5],[.5,.5],[-.5,.5]],1);
-const BEVEL=extrudedPolygon([[-.34,-.5],[.34,-.5],[.5,-.32],[.5,.32],[.34,.5],[-.34,.5],[-.5,.32],[-.5,-.32]],1);
-const WEDGE=extrudedPolygon([[-.5,-.5],[.5,-.5],[0,.5]],1);
-const DIAMOND=extrudedPolygon([[0,-.6],[.55,0],[0,.6],[-.55,0]],1);
-const CYLINDER=cylinderMesh(10);
-const OCTA=(()=>{const t=[0,.6,0],d=[0,-.6,0],r=[[.6,0,0],[0,0,.6],[-.6,0,0],[0,0,-.6]],tris=[];for(let i=0;i<4;i++){const a=r[i],b=r[(i+1)%4];tris.push([t,a,b],[d,b,a]);}return meshFromTriangles(tris);})();
-
-function shader(gl,type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s)||'Character 3D shader failed');return s;}
-function makeProgram(gl){const p=gl.createProgram();gl.attachShader(p,shader(gl,gl.VERTEX_SHADER,VERTEX_SHADER));gl.attachShader(p,shader(gl,gl.FRAGMENT_SHADER,FRAGMENT_SHADER));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p)||'Character 3D link failed');return p;}
-function meshBuffer(gl,mesh){const position=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,position);gl.bufferData(gl.ARRAY_BUFFER,mesh.positions,gl.STATIC_DRAW);const normal=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,normal);gl.bufferData(gl.ARRAY_BUFFER,mesh.normals,gl.STATIC_DRAW);return{position,normal,count:mesh.count};}
 function classToken(node,prefix,fallback='unknown'){const match=[...(node?.classList||[])].find(value=>value.startsWith(prefix));return match?match.slice(prefix.length):fallback;}
-function mixColor(a,b,t){return[0,1,2].map(i=>a[i]*(1-t)+b[i]*t);}
-function materialForProfile(profile={}){const material=MATERIALS[profile.material]||MATERIALS.unknown,tone=TONE_COLORS[profile.tone]||TONE_COLORS.arcane;return{base:mixColor(material.color,tone,profile.accent?.42:.16),emissive:tone,metallic:profile.accent?1:material.metallic,roughness:profile.accent?.10:material.roughness};}
 function profileFromLootNode(node){return{kind:node.dataset.lootKind||(node.classList.contains('daily-sword-art')?'sword':'relic'),variant:Number(node.dataset.lootVariant)||0,material:node.dataset.lootMaterial||classToken(node,'material-','iron'),tone:node.dataset.lootTone||classToken(node,'tone-','aqua'),quality:clamp(Number(node.style.getPropertyValue('--loot-quality'))||.65,0,1),durability:clamp(Number(node.style.getPropertyValue('--loot-durability'))||1,0,1),swordLength:Number(node.dataset.swordLength)||0};}
 function profileFromAvatarPiece(piece){const q=classToken(piece,'avatar-quality-','standard'),wear=classToken(piece,'avatar-wear-','pristine');return{kind:classToken(piece,'avatar-kind-','relic'),material:classToken(piece,'avatar-material-','iron'),tone:classToken(piece,'avatar-tone-','arcane'),quality:q==='masterwork'?1:q==='fine'?.84:q==='rough'?.35:.68,durability:wear==='broken'?0:wear==='critical'?.22:wear==='damaged'?.48:wear==='worn'?.72:.96,variant:0};}
-
-function createRenderer(canvas){
-  const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,powerPreference:'high-performance'});
-  if(!gl)throw new Error('Character WebGL unavailable');
-  const p=makeProgram(gl);gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.clearColor(0,0,0,0);
-  const attrs={position:gl.getAttribLocation(p,'a_position'),normal:gl.getAttribLocation(p,'a_normal')};
-  const uniforms={mvp:gl.getUniformLocation(p,'u_mvp'),model:gl.getUniformLocation(p,'u_model'),base:gl.getUniformLocation(p,'u_base'),emissive:gl.getUniformLocation(p,'u_emissive'),quality:gl.getUniformLocation(p,'u_quality'),wear:gl.getUniformLocation(p,'u_wear'),metallic:gl.getUniformLocation(p,'u_metallic'),roughness:gl.getUniformLocation(p,'u_roughness')};
-  const meshes={box:meshBuffer(gl,CUBE),bevel:meshBuffer(gl,BEVEL),wedge:meshBuffer(gl,WEDGE),diamond:meshBuffer(gl,DIAMOND),cylinder:meshBuffer(gl,CYLINDER),octa:meshBuffer(gl,OCTA)};
-  function bind(mesh){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.position);gl.enableVertexAttribArray(attrs.position);gl.vertexAttribPointer(attrs.position,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,mesh.normal);gl.enableVertexAttribArray(attrs.normal);gl.vertexAttribPointer(attrs.normal,3,gl.FLOAT,false,0,0);}
-  function resize(){const dpr=Math.min(window.devicePixelRatio||1,1.6),w=Math.max(2,Math.floor(canvas.clientWidth*dpr)),h=Math.max(2,Math.floor(canvas.clientHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}return w/h;}
-  function draw(recipe,{rotation=[0,0,0],position=[0,0,0],rootScale=[1,1,1],camera=5.2,globalProfile=null}={}){
-    const aspect=resize();gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-    const projection=perspective(radians(34),aspect,.1,50),view=translation(0,0,-camera),root=compose(position,rootScale,rotation);
-    for(const part of recipe){
-      const local=compose(part.position,part.scale,part.rotation);
-      const group=part.group?compose(part.group.position||[0,0,0],part.group.scale||[1,1,1],part.group.rotation||[0,0,0]):identity();
-      const model=multiply(root,multiply(group,local)),mvp=multiply(projection,multiply(view,model));
-      gl.uniformMatrix4fv(uniforms.model,false,new Float32Array(model));gl.uniformMatrix4fv(uniforms.mvp,false,new Float32Array(mvp));
-      const profile=part.profile||globalProfile||{},mat=materialForProfile(profile);
-      gl.uniform3fv(uniforms.base,new Float32Array(mat.base));gl.uniform3fv(uniforms.emissive,new Float32Array(mat.emissive));
-      gl.uniform1f(uniforms.quality,clamp(profile.quality??.7,0,1));gl.uniform1f(uniforms.wear,clamp(profile.durability??1,0,1));gl.uniform1f(uniforms.metallic,mat.metallic);gl.uniform1f(uniforms.roughness,mat.roughness);
-      const mesh=meshes[part.type]||meshes.box;bind(mesh);gl.drawArrays(gl.TRIANGLES,0,mesh.count);
-    }
-  }
-  return{draw};
-}
 
 export function characterPoseForLoadout({leftKind=null,rightKind=null,twoHanded=false}={}){
   const left=leftKind||null,right=rightKind||null,kinds=[left,right].filter(Boolean);

@@ -1,108 +1,17 @@
 import { motionForKind, sceneRecipeForKind } from './loot-webgl-v2.js';
 import { characterIdleTransform, characterPoseForLoadout } from './loot-webgl-v3.js';
-
-const TONE_COLORS=Object.freeze({mist:[.58,.62,.70],aqua:[.25,.78,.92],arcane:[.58,.38,.96],gold:[.95,.68,.25],rose:[.98,.42,.62],prismatic:[.58,.86,1]});
-const MATERIALS=Object.freeze({
-  iron:{color:[.52,.57,.63],metallic:.82,roughness:.48},
-  bronze:{color:[.62,.39,.20],metallic:.78,roughness:.38},
-  moonsteel:{color:[.62,.72,.88],metallic:.96,roughness:.20},
-  obsidian:{color:[.12,.11,.18],metallic:.44,roughness:.13},
-  unknown:{color:[.48,.50,.58],metallic:.65,roughness:.46},
-});
-
-const VERTEX_SHADER=`
-attribute vec3 a_position;
-attribute vec3 a_normal;
-uniform mat4 u_mvp;
-uniform mat4 u_model;
-varying vec3 v_normal;
-varying vec3 v_world;
-void main(){
-  vec4 world=u_model*vec4(a_position,1.0);
-  v_world=world.xyz;
-  v_normal=normalize(mat3(u_model)*a_normal);
-  gl_Position=u_mvp*vec4(a_position,1.0);
-}`;
-
-const FRAGMENT_SHADER=`
-precision mediump float;
-uniform vec3 u_base;
-uniform vec3 u_emissive;
-uniform float u_quality;
-uniform float u_wear;
-uniform float u_metallic;
-uniform float u_roughness;
-varying vec3 v_normal;
-varying vec3 v_world;
-float hash(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
-void main(){
-  vec3 n=normalize(v_normal);
-  vec3 key=normalize(vec3(-.48,.78,.62));
-  vec3 fill=normalize(vec3(.58,.20,.78));
-  vec3 view=normalize(vec3(0.0,.08,1.0));
-  float ndl=max(dot(n,key),0.0);
-  float fillLight=max(dot(n,fill),0.0)*.18;
-  float fresnel=pow(1.0-max(dot(n,view),0.0),2.8);
-  float rough=clamp(u_roughness+(1.0-u_quality)*.28+(1.0-u_wear)*.25,.04,.88);
-  float shininess=mix(42.0,7.0,rough);
-  float spec=pow(max(dot(reflect(-key,n),view),0.0),shininess)*mix(.18,.82,u_metallic)*(1.0-rough*.55);
-  float wearDark=mix(.58,1.0,u_wear);
-  float micro=hash(floor(v_world*18.0));
-  float wearNoise=(1.0-u_wear)*smoothstep(.74,.96,micro)*.22;
-  vec3 color=u_base*(.22+ndl*.68+fillLight)*wearDark;
-  color*=1.0-wearNoise;
-  color+=u_emissive*(.035+fresnel*.25+spec*.12);
-  color+=vec3(spec);
-  gl_FragColor=vec4(color,1.0);
-}`;
+import { createRenderer, recipeBounds } from './loot-webgl-v2.js';
+import { getGltfStage, loadModelManifest, resolveModelEntry } from './loot-gltf.js';
 
 function clamp(v,min,max){return Math.min(max,Math.max(min,v));}
 function radians(deg){return deg*Math.PI/180;}
-function identity(){return[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];}
-function multiply(a,b){const o=new Array(16).fill(0);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let k=0;k<4;k++)o[c*4+r]+=a[k*4+r]*b[c*4+k];return o;}
-function translation(x,y,z){const m=identity();m[12]=x;m[13]=y;m[14]=z;return m;}
-function scaling(x,y,z){const m=identity();m[0]=x;m[5]=y;m[10]=z;return m;}
-function rotationX(a){const c=Math.cos(a),s=Math.sin(a);return[1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1];}
-function rotationY(a){const c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1];}
-function rotationZ(a){const c=Math.cos(a),s=Math.sin(a);return[c,s,0,0,-s,c,0,0,0,1,0,0,0,0,1];}
-function perspective(fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(near-far);return[f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0];}
-function compose(position=[0,0,0],scale=[1,1,1],rotation=[0,0,0]){return multiply(translation(...position),multiply(rotationY(rotation[1]),multiply(rotationX(rotation[0]),multiply(rotationZ(rotation[2]),scaling(...scale)))));}
 function primitive(type,position,scale,rotation=[0,0,0],profile=null){return{type,position,scale,rotation,profile};}
 function transformed(part,group={}){return{...part,group};}
 function lerp(a,b,t){return a+(b-a)*t;}
 function lerp3(a,b,t){return[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];}
-
-function flatNormal(a,b,c){const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;return[nx/l,ny/l,nz/l];}
-function meshFromTriangles(tris){const p=[],n=[];for(const tri of tris){const normal=flatNormal(...tri);for(const v of tri){p.push(...v);n.push(...normal);}}return{positions:new Float32Array(p),normals:new Float32Array(n),count:p.length/3};}
-function extrudedPolygon(points,depth=.5){const z=depth/2,tris=[];for(let i=1;i<points.length-1;i++){tris.push([[points[0][0],points[0][1],z],[points[i][0],points[i][1],z],[points[i+1][0],points[i+1][1],z]]);tris.push([[points[0][0],points[0][1],-z],[points[i+1][0],points[i+1][1],-z],[points[i][0],points[i][1],-z]]);}for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];tris.push([[a[0],a[1],z],[a[0],a[1],-z],[b[0],b[1],-z]],[[a[0],a[1],z],[b[0],b[1],-z],[b[0],b[1],z]]);}return meshFromTriangles(tris);}
-function cylinderMesh(segments=10){const tris=[],r=.5,y=.5;for(let i=0;i<segments;i++){const a=i/segments*Math.PI*2,b=(i+1)/segments*Math.PI*2;const a0=[Math.cos(a)*r,-y,Math.sin(a)*r],a1=[Math.cos(a)*r,y,Math.sin(a)*r],b0=[Math.cos(b)*r,-y,Math.sin(b)*r],b1=[Math.cos(b)*r,y,Math.sin(b)*r];tris.push([a0,b0,b1],[a0,b1,a1],[[0,y,0],a1,b1],[[0,-y,0],b0,a0]);}return meshFromTriangles(tris);}
-const CUBE=extrudedPolygon([[-.5,-.5],[.5,-.5],[.5,.5],[-.5,.5]],1);
-const BEVEL=extrudedPolygon([[-.34,-.5],[.34,-.5],[.5,-.32],[.5,.32],[.34,.5],[-.34,.5],[-.5,.32],[-.5,-.32]],1);
-const WEDGE=extrudedPolygon([[-.5,-.5],[.5,-.5],[0,.5]],1);
-const DIAMOND=extrudedPolygon([[0,-.6],[.55,0],[0,.6],[-.55,0]],1);
-const CYLINDER=cylinderMesh(10);
-const OCTA=(()=>{const t=[0,.6,0],d=[0,-.6,0],r=[[.6,0,0],[0,0,.6],[-.6,0,0],[0,0,-.6]],tris=[];for(let i=0;i<4;i++){const a=r[i],b=r[(i+1)%4];tris.push([t,a,b],[d,b,a]);}return meshFromTriangles(tris);})();
-
-function shader(gl,type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s)||'Interactive character 3D shader failed');return s;}
-function makeProgram(gl){const p=gl.createProgram();gl.attachShader(p,shader(gl,gl.VERTEX_SHADER,VERTEX_SHADER));gl.attachShader(p,shader(gl,gl.FRAGMENT_SHADER,FRAGMENT_SHADER));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p)||'Interactive character 3D link failed');return p;}
-function meshBuffer(gl,mesh){const position=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,position);gl.bufferData(gl.ARRAY_BUFFER,mesh.positions,gl.STATIC_DRAW);const normal=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,normal);gl.bufferData(gl.ARRAY_BUFFER,mesh.normals,gl.STATIC_DRAW);return{position,normal,count:mesh.count};}
 function classToken(node,prefix,fallback='unknown'){const match=[...(node?.classList||[])].find(value=>value.startsWith(prefix));return match?match.slice(prefix.length):fallback;}
-function mixColor(a,b,t){return[0,1,2].map(i=>a[i]*(1-t)+b[i]*t);}
-function materialForProfile(profile={}){const material=MATERIALS[profile.material]||MATERIALS.unknown,tone=TONE_COLORS[profile.tone]||TONE_COLORS.arcane;return{base:mixColor(material.color,tone,profile.accent?.42:.16),emissive:tone,metallic:profile.accent?1:material.metallic,roughness:profile.accent?.10:material.roughness};}
 function profileFromLootNode(node){return{kind:node.dataset.lootKind||(node.classList.contains('daily-sword-art')?'sword':'relic'),variant:Number(node.dataset.lootVariant)||0,material:node.dataset.lootMaterial||classToken(node,'material-','iron'),tone:node.dataset.lootTone||classToken(node,'tone-','aqua'),quality:clamp(Number(node.style.getPropertyValue('--loot-quality'))||.65,0,1),durability:clamp(Number(node.style.getPropertyValue('--loot-durability'))||1,0,1),swordLength:Number(node.dataset.swordLength)||0};}
 function profileFromAvatarPiece(piece){const q=classToken(piece,'avatar-quality-','standard'),wear=classToken(piece,'avatar-wear-','pristine');return{kind:classToken(piece,'avatar-kind-','relic'),material:classToken(piece,'avatar-material-','iron'),tone:classToken(piece,'avatar-tone-','arcane'),quality:q==='masterwork'?1:q==='fine'?.84:q==='rough'?.35:.68,durability:wear==='broken'?0:wear==='critical'?.22:wear==='damaged'?.48:wear==='worn'?.72:.96,variant:0};}
-
-function createRenderer(canvas){
-  const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,powerPreference:'high-performance'});if(!gl)throw new Error('Interactive character WebGL unavailable');
-  const p=makeProgram(gl);gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.clearColor(0,0,0,0);
-  const attrs={position:gl.getAttribLocation(p,'a_position'),normal:gl.getAttribLocation(p,'a_normal')};
-  const uniforms={mvp:gl.getUniformLocation(p,'u_mvp'),model:gl.getUniformLocation(p,'u_model'),base:gl.getUniformLocation(p,'u_base'),emissive:gl.getUniformLocation(p,'u_emissive'),quality:gl.getUniformLocation(p,'u_quality'),wear:gl.getUniformLocation(p,'u_wear'),metallic:gl.getUniformLocation(p,'u_metallic'),roughness:gl.getUniformLocation(p,'u_roughness')};
-  const meshes={box:meshBuffer(gl,CUBE),bevel:meshBuffer(gl,BEVEL),wedge:meshBuffer(gl,WEDGE),diamond:meshBuffer(gl,DIAMOND),cylinder:meshBuffer(gl,CYLINDER),octa:meshBuffer(gl,OCTA)};
-  function bind(mesh){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.position);gl.enableVertexAttribArray(attrs.position);gl.vertexAttribPointer(attrs.position,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,mesh.normal);gl.enableVertexAttribArray(attrs.normal);gl.vertexAttribPointer(attrs.normal,3,gl.FLOAT,false,0,0);}
-  function resize(){const dpr=Math.min(window.devicePixelRatio||1,1.6),w=Math.max(2,Math.floor(canvas.clientWidth*dpr)),h=Math.max(2,Math.floor(canvas.clientHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}return w/h;}
-  function draw(recipe,{rotation=[0,0,0],position=[0,0,0],rootScale=[1,1,1],camera=5.2,globalProfile=null}={}){const aspect=resize();gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);const projection=perspective(radians(34),aspect,.1,50),view=translation(0,0,-camera),root=compose(position,rootScale,rotation);for(const part of recipe){const local=compose(part.position,part.scale,part.rotation),group=part.group?compose(part.group.position||[0,0,0],part.group.scale||[1,1,1],part.group.rotation||[0,0,0]):identity(),model=multiply(root,multiply(group,local)),mvp=multiply(projection,multiply(view,model));gl.uniformMatrix4fv(uniforms.model,false,new Float32Array(model));gl.uniformMatrix4fv(uniforms.mvp,false,new Float32Array(mvp));const profile=part.profile||globalProfile||{},mat=materialForProfile(profile);gl.uniform3fv(uniforms.base,new Float32Array(mat.base));gl.uniform3fv(uniforms.emissive,new Float32Array(mat.emissive));gl.uniform1f(uniforms.quality,clamp(profile.quality??.7,0,1));gl.uniform1f(uniforms.wear,clamp(profile.durability??1,0,1));gl.uniform1f(uniforms.metallic,mat.metallic);gl.uniform1f(uniforms.roughness,mat.roughness);const mesh=meshes[part.type]||meshes.box;bind(mesh);gl.drawArrays(gl.TRIANGLES,0,mesh.count);}}
-  return{draw};
-}
 
 const DEFAULT_FOCUS=Object.freeze({position:[0,0,0],camera:6.25,yaw:0});
 const SLOT_FOCUS=Object.freeze({
@@ -113,6 +22,9 @@ const SLOT_FOCUS=Object.freeze({
 });
 export function characterFocusForSlot(slot=''){const f=SLOT_FOCUS[String(slot||'')]||DEFAULT_FOCUS;return{position:[...f.position],camera:f.camera,yaw:f.yaw};}
 export function characterDragRotation(current={yaw:0,pitch:0},deltaX=0,deltaY=0,pointerType='mouse'){return{yaw:clamp((Number(current.yaw)||0)+Number(deltaX||0)*.008,-1.45,1.45),pitch:clamp((Number(current.pitch)||0)+(pointerType==='touch'?0:Number(deltaY||0)*.0045),-.28,.20)};}
+// Converts a per-frame lerp factor tuned at 60 fps into a time-based one, so easing
+// feels identical on 60/90/120 Hz screens and doesn't lurch after a dropped frame.
+export function dampFactor(perFrameAt60,dtSeconds){const rate=-Math.log(1-clamp(Number(perFrameAt60)||0,0,.999))*60;return 1-Math.exp(-rate*clamp(Number(dtSeconds)||0,0,.25));}
 export function characterReturnRotation(current={yaw:0,pitch:0},strength=.08){const t=clamp(Number(strength)||0,0,1);return{yaw:lerp(Number(current.yaw)||0,0,t),pitch:lerp(Number(current.pitch)||0,0,t)};}
 
 function weaponDescriptors(stage){return[...stage.querySelectorAll('.paper-avatar-piece[data-avatar-role="weapon"]')].map(piece=>({piece,profile:profileFromAvatarPiece(piece),side:piece.dataset.avatarSide||'center',twoHanded:piece.classList.contains('avatar-two-hand')}));}
@@ -123,7 +35,7 @@ function weaponGroup(weapon,stance){const kind=weapon.profile.kind,side=weapon.s
 function avatarRecipe(stage){const weapons=weaponDescriptors(stage),stance=stanceContext(weapons),recipe=baseBodyRecipe(stance);for(const piece of[...stage.querySelectorAll('.paper-avatar-piece')]){const profile=profileFromAvatarPiece(piece),role=piece.dataset.avatarRole||'torso';if(role==='helmet')recipe.push(...sceneRecipeForKind('helmet',{profile}).map(p=>transformed(p,{position:[0,1.47,.05],scale:[.37,.37,.37]})));else if(role==='torso')recipe.push(...sceneRecipeForKind('armor',{profile}).map(p=>transformed(p,{position:[0,.48,.14],scale:[.50,.50,.50]})));else if(role==='cloak')recipe.push(...sceneRecipeForKind('cloak',{profile}).map(p=>transformed(p,{position:[0,.12,-.36],scale:[.56,.56,.56]})));else if(role==='gloves')recipe.push(...sceneRecipeForKind('gloves',{profile}).map(p=>transformed(p,{position:[0,.20,.18],scale:[.44,.44,.44]})));else if(role==='lower')recipe.push(...sceneRecipeForKind('greaves',{profile}).map(p=>transformed(p,{position:[0,-.91,.12],scale:[.47,.47,.47]})));}for(const weapon of weapons){const group=weaponGroup(weapon,stance);recipe.push(...sceneRecipeForKind(weapon.profile.kind,{profile:weapon.profile}).map(p=>transformed(p,group)));}return{recipe,pose:stance.pose};}
 
 function animatedRotation(kind,seconds,reveal=false){const motion=motionForKind(kind);if(motion==='heavy-turn')return[radians(-7),seconds*.38,radians(2)];if(motion==='wobble')return[radians(-6+Math.sin(seconds*1.3)*4),seconds*.28,radians(Math.sin(seconds*.8)*2)];if(motion==='orbit')return[radians(-12),seconds*.55,radians(Math.sin(seconds)*5)];if(motion==='float')return[radians(-8),seconds*.24,radians(Math.sin(seconds*.7)*2)];return[radians(-7),seconds*(reveal?1.15:.62),radians(2)];}
-function mountLootNode(node){if(node.dataset.webglMounted==='yes')return null;node.dataset.webglMounted='yes';const canvas=document.createElement('canvas');canvas.className='loot-webgl-canvas';canvas.setAttribute('aria-hidden','true');node.prepend(canvas);try{const renderer=createRenderer(canvas),profile=profileFromLootNode(node),recipe=sceneRecipeForKind(profile.kind,{variant:profile.variant,swordLength:profile.swordLength,profile});node.classList.add('loot-webgl-ready');return{canvas,node,draw:seconds=>renderer.draw(recipe,{rotation:animatedRotation(profile.kind,seconds,node.classList.contains('is-reveal')),camera:['ring','amulet'].includes(profile.kind)?4.6:5.2,globalProfile:profile})};}catch(error){canvas.remove();node.dataset.webglMounted='failed';console.warn(error);return null;}}
+function mountLootNode(node){if(node.dataset.webglMounted==='yes')return null;node.dataset.webglMounted='yes';const canvas=document.createElement('canvas');canvas.className='loot-webgl-canvas';canvas.setAttribute('aria-hidden','true');node.prepend(canvas);try{const renderer=createRenderer(canvas),profile=profileFromLootNode(node),recipe=sceneRecipeForKind(profile.kind,{variant:profile.variant,swordLength:profile.swordLength,profile});const bounds=recipeBounds(recipe);node.classList.add('loot-webgl-ready');return{canvas,node,destroy:renderer.destroy,draw:seconds=>renderer.draw(recipe,{rotation:animatedRotation(profile.kind,seconds,node.classList.contains('is-reveal')),bounds,globalProfile:profile})};}catch(error){canvas.remove();node.dataset.webglMounted='failed';console.warn(error);return null;}}
 
 function mountAvatarStage(stage){
   if(stage.dataset.avatarWebglMounted==='yes')return null;stage.dataset.avatarWebglMounted='yes';
@@ -137,9 +49,59 @@ function mountAvatarStage(stage){
     const up=event=>{if(event.pointerId!==interaction.pointerId)return;interaction.dragging=false;interaction.pointerId=null;interaction.lastInput=performance.now();stage.classList.remove('is-character-dragging');try{figure?.releasePointerCapture?.(event.pointerId);}catch{}};
     const click=event=>{const slot=event.target.closest?.('.paper-doll-slot[data-slot]');if(slot&&stage.contains(slot))selectFocus(slot.dataset.slot||'');};
     figure?.addEventListener('pointerdown',down);figure?.addEventListener('pointermove',move);figure?.addEventListener('pointerup',up);figure?.addEventListener('pointercancel',up);stage.addEventListener('click',click);
-    return{canvas,node:stage,draw:(seconds,now)=>{if(!interaction.dragging&&now-interaction.lastInput>1100)interaction.manual=characterReturnRotation(interaction.manual,.055);interaction.currentFocus.position=lerp3(interaction.currentFocus.position,interaction.focus.position,.09);interaction.currentFocus.camera=lerp(interaction.currentFocus.camera,interaction.focus.camera,.09);interaction.currentFocus.yaw=lerp(interaction.currentFocus.yaw,interaction.focus.yaw,.09);const idle=characterIdleTransform(avatar.pose,seconds),rotation=[idle.rotation[0]+interaction.manual.pitch,idle.rotation[1]+interaction.currentFocus.yaw+interaction.manual.yaw,idle.rotation[2]],position=[idle.position[0]+interaction.currentFocus.position[0],idle.position[1]+interaction.currentFocus.position[1],idle.position[2]+interaction.currentFocus.position[2]];renderer.draw(avatar.recipe,{rotation,position,rootScale:idle.scale,camera:interaction.currentFocus.camera});},destroy:()=>{figure?.removeEventListener('pointerdown',down);figure?.removeEventListener('pointermove',move);figure?.removeEventListener('pointerup',up);figure?.removeEventListener('pointercancel',up);stage.removeEventListener('click',click);}};
+    return{canvas,node:stage,draw:(seconds,now,dt=1/60)=>{if(!interaction.dragging&&now-interaction.lastInput>1100)interaction.manual=characterReturnRotation(interaction.manual,dampFactor(.055,dt));const ease=dampFactor(.09,dt);interaction.currentFocus.position=lerp3(interaction.currentFocus.position,interaction.focus.position,ease);interaction.currentFocus.camera=lerp(interaction.currentFocus.camera,interaction.focus.camera,ease);interaction.currentFocus.yaw=lerp(interaction.currentFocus.yaw,interaction.focus.yaw,ease);const idle=characterIdleTransform(avatar.pose,seconds),rotation=[idle.rotation[0]+interaction.manual.pitch,idle.rotation[1]+interaction.currentFocus.yaw+interaction.manual.yaw,idle.rotation[2]],position=[idle.position[0]+interaction.currentFocus.position[0],idle.position[1]+interaction.currentFocus.position[1],idle.position[2]+interaction.currentFocus.position[2]];renderer.draw(avatar.recipe,{rotation,position,rootScale:idle.scale,camera:interaction.currentFocus.camera});},destroy:()=>{figure?.removeEventListener('pointerdown',down);figure?.removeEventListener('pointermove',move);figure?.removeEventListener('pointerup',up);figure?.removeEventListener('pointercancel',up);stage.removeEventListener('click',click);renderer.destroy();}};
   }catch(error){canvas.remove();stage.dataset.avatarWebglMounted='failed';console.warn(error);return null;}
 }
 function reducedMotion(){try{return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches||false;}catch{return false;}}
 function ensureStylesheet(){if(document.getElementById('loot-webgl-styles'))return;const link=document.createElement('link');link.id='loot-webgl-styles';link.rel='stylesheet';link.href='/loot-webgl.css';document.head.appendChild(link);}
-export function startLootWebGL(root=document){if(typeof window==='undefined'||typeof document==='undefined'||reducedMotion())return()=>{};ensureStylesheet();const scenes=new Set(),scan=(scope=root)=>{const loot=[...(scope.querySelectorAll?.('.loot-art.is-reveal,.daily-sword-art')||[])];if(scope.matches?.('.loot-art.is-reveal,.daily-sword-art'))loot.unshift(scope);for(const node of loot){const scene=mountLootNode(node);if(scene)scenes.add(scene);}const stages=[...(scope.querySelectorAll?.('[data-paper-doll-stage]')||[])];if(scope.matches?.('[data-paper-doll-stage]'))stages.unshift(scope);for(const stage of stages){const scene=mountAvatarStage(stage);if(scene)scenes.add(scene);}};scan();const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node.nodeType===1)scan(node);});observer.observe(document.body,{childList:true,subtree:true});const started=performance.now();let raf=0;const frame=now=>{const seconds=(now-started)/1000;for(const scene of[...scenes]){if(!scene.node.isConnected){scene.destroy?.();scenes.delete(scene);continue;}scene.draw(seconds,now);}raf=requestAnimationFrame(frame);};raf=requestAnimationFrame(frame);return()=>{observer.disconnect();cancelAnimationFrame(raf);for(const scene of scenes){scene.destroy?.();scene.canvas.remove();}scenes.clear();};}
+// Mobile browsers allow ~8 live WebGL contexts and evict the oldest (the page
+// background) past that. Scenes beyond this budget keep their SVG art instead.
+export const MAX_LIVE_SCENES=4;
+// glTF previews share one context, so they get their own (draw-cost) budget.
+export const MAX_GLTF_SCENES=10;
+const ownContexts=scenes=>[...scenes].filter(scene=>!scene.sharedContext).length;
+const sharedContexts=scenes=>[...scenes].filter(scene=>scene.sharedContext).length;
+export function startLootWebGL(root=document){
+  if(typeof window==='undefined'||typeof document==='undefined'||reducedMotion())return()=>{};
+  ensureStylesheet();
+  const scenes=new Set();
+  // Offscreen scenes (scrolled-away paper doll, reveal behind a sheet) skip their
+  // GPU work entirely; this is most of the battery cost on phones.
+  const visibility=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{for(const entry of entries)for(const scene of scenes)if(scene.node===entry.target)scene.visible=entry.isIntersecting;}):null;
+  const add=scene=>{if(!scene)return;scene.visible=true;scene.started=performance.now();scenes.add(scene);visibility?.observe(scene.node);};
+  const prune=()=>{for(const scene of[...scenes])if(!scene.node.isConnected)release(scene);};
+  // The paper doll is mounted first: it's the interactive centrepiece, loot previews are decoration.
+  const scan=(scope=root)=>{prune();const stages=[...(scope.querySelectorAll?.('[data-paper-doll-stage]')||[])];if(scope.matches?.('[data-paper-doll-stage]'))stages.unshift(scope);for(const stage of stages){if(ownContexts(scenes)>=MAX_LIVE_SCENES)break;add(mountAvatarStage(stage));}const loot=[...(scope.querySelectorAll?.('.loot-art.is-reveal,.daily-sword-art')||[])];if(scope.matches?.('.loot-art.is-reveal,.daily-sword-art'))loot.unshift(scope);for(const node of loot)mountLoot(node);};
+  // Prefer an artist-made glTF model for the item's kind; keep the SVG visible
+  // while it downloads and fall back to the procedural mesh if there's none or it fails.
+  const pending=new WeakSet();
+  const procedural=node=>{if(ownContexts(scenes)<MAX_LIVE_SCENES)add(mountLootNode(node));};
+  const mountLoot=node=>{
+    if(pending.has(node)||node.dataset.webglMounted)return;pending.add(node);
+    const profile=profileFromLootNode(node);
+    loadModelManifest().then(manifest=>{
+      const entry=resolveModelEntry(manifest,{kind:profile.kind,grade:node.dataset.lootGrade});
+      if(!entry||sharedContexts(scenes)>=MAX_GLTF_SCENES)return procedural(node);
+      node.dataset.webglMounted='gltf';
+      return getGltfStage().then(stage=>stage.mount(node,{...profile,grade:node.dataset.lootGrade||'noGrade'},entry)).then(add).catch(error=>{console.warn(error);delete node.dataset.webglMounted;procedural(node);});
+    }).finally(()=>pending.delete(node));
+  };
+  const release=scene=>{visibility?.unobserve(scene.node);scene.destroy?.();scenes.delete(scene);};
+  scan();
+  const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node.nodeType===1)scan(node);});
+  observer.observe(document.body,{childList:true,subtree:true});
+  let raf=0,last=performance.now();
+  const frame=now=>{
+    const dt=Math.min(.1,Math.max(0,(now-last)/1000));last=now;
+    for(const scene of[...scenes]){
+      if(!scene.node.isConnected){release(scene);continue;}
+      if(!scene.visible||document.hidden)continue;
+      // Each scene has its own clock so a freshly revealed item starts its spin
+      // from the front instead of mid-rotation.
+      scene.draw((now-scene.started)/1000,now,dt);
+    }
+    raf=requestAnimationFrame(frame);
+  };
+  raf=requestAnimationFrame(frame);
+  return()=>{observer.disconnect();visibility?.disconnect();cancelAnimationFrame(raf);for(const scene of[...scenes]){release(scene);scene.canvas.remove();}};
+}

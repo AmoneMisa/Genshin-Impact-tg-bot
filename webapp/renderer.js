@@ -90,27 +90,43 @@ export function startWebGL(canvas) {
   const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'high-performance' });
   if (!gl) throw new Error('WebGL is not supported by this Telegram client');
 
-  const program = gl.createProgram();
-  gl.attachShader(program, shader(gl, gl.VERTEX_SHADER, VERTEX_SHADER));
-  gl.attachShader(program, shader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER));
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
-  gl.useProgram(program);
+  let resolution, time, pointerUniform, transitionUniform, transitionColorUniform;
+  // GPU resources are (re)built here so the background can come back after the
+  // browser drops the context (GPU reset, backgrounded app, too many contexts).
+  function setup() {
+    const program = gl.createProgram();
+    gl.attachShader(program, shader(gl, gl.VERTEX_SHADER, VERTEX_SHADER));
+    gl.attachShader(program, shader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+    gl.useProgram(program);
 
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
 
-  const position = gl.getAttribLocation(program, 'a_position');
-  gl.enableVertexAttribArray(position);
-  gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+    const position = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
-  const resolution = gl.getUniformLocation(program, 'u_resolution');
-  const time = gl.getUniformLocation(program, 'u_time');
-  const pointerUniform = gl.getUniformLocation(program, 'u_pointer');
-  const transitionUniform = gl.getUniformLocation(program, 'u_transition');
-  const transitionColorUniform = gl.getUniformLocation(program, 'u_transition_color');
+    resolution = gl.getUniformLocation(program, 'u_resolution');
+    time = gl.getUniformLocation(program, 'u_time');
+    pointerUniform = gl.getUniformLocation(program, 'u_pointer');
+    transitionUniform = gl.getUniformLocation(program, 'u_transition');
+    transitionColorUniform = gl.getUniformLocation(program, 'u_transition_color');
+  }
+  setup();
+  let contextLost = false;
+  canvas.addEventListener('webglcontextlost', (event) => { event.preventDefault(); contextLost = true; });
+  canvas.addEventListener('webglcontextrestored', () => {
+    contextLost = false;
+    canvas.width = 0; // force resize() to re-apply the viewport on the fresh context
+    try { setup(); } catch (error) { console.warn(error); }
+  });
   const pointer = { x: .5, y: .5 };
+  // The shader follows an eased copy of the pointer: on touch screens pointermove
+  // only fires while a finger is down, so the raw value teleports on every tap.
+  const smoothPointer = { x: .5, y: .5 };
   let transitionStarted = -Infinity;
   let transitionColor = TRANSITION_COLORS.default;
 
@@ -121,7 +137,9 @@ export function startWebGL(canvas) {
   window.addEventListener('pointermove', (event) => updatePointer(event.clientX, event.clientY), { passive: true });
 
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Soft gradients + small stars: 1.5x is visually indistinguishable from 2x but
+    // shades ~44% fewer full-screen fragments on high-DPI phones.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const width = Math.floor(canvas.clientWidth * dpr);
     const height = Math.floor(canvas.clientHeight * dpr);
     if (canvas.width !== width || canvas.height !== height) {
@@ -133,13 +151,20 @@ export function startWebGL(canvas) {
 
   startLootWebGL();
   const started = performance.now();
+  let last = started;
   function frame(now) {
+    const dt = Math.min(.1, Math.max(0, (now - last) / 1000));
+    last = now;
+    const ease = 1 - Math.exp(-dt * 4.5);
+    smoothPointer.x += (pointer.x - smoothPointer.x) * ease;
+    smoothPointer.y += (pointer.y - smoothPointer.y) * ease;
+    if (contextLost) { requestAnimationFrame(frame); return; }
     resize();
     const transitionProgress = Math.min(1, Math.max(0, (now - transitionStarted) / 720));
     const transitionValue = transitionStarted === -Infinity ? 0 : Math.pow(1 - transitionProgress, 1.55);
     gl.uniform2f(resolution, canvas.width, canvas.height);
     gl.uniform1f(time, (now - started) / 1000);
-    gl.uniform2f(pointerUniform, pointer.x, pointer.y);
+    gl.uniform2f(pointerUniform, smoothPointer.x, smoothPointer.y);
     gl.uniform1f(transitionUniform, transitionValue);
     gl.uniform3f(transitionColorUniform, transitionColor[0], transitionColor[1], transitionColor[2]);
     gl.drawArrays(gl.TRIANGLES, 0, 6);

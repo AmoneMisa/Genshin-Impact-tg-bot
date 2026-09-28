@@ -216,12 +216,13 @@
 .build-progress-line::after {
   content: "";
   position: absolute;
-  left: -34%;
+  left: 0;
   top: 0;
   width: 28%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(181,202,255,.14), transparent);
-  transform: skewX(-20deg);
+  transform: translateX(-121%) skewX(-20deg);
+  will-change: transform, opacity;
   animation: town-build-shine 2.8s ease-in-out infinite;
 }
 
@@ -310,11 +311,13 @@
 [data-build-card="traineeArea"] .build-icon { font-size: 0; }
 [data-build-card="traineeArea"] .build-icon::after { content: "⚔"; font: 25px/1 Georgia,serif; color:#d9c8ae; }
 
+/* Percent translate is relative to the 28%-wide sheen: -121% / 400% of it equals
+   the old left:-34% / left:112% of the bar, but runs on the compositor. */
 @keyframes town-build-shine {
-  0%, 20% { left: -34%; opacity: 0; }
+  0%, 20% { transform: translateX(-121%) skewX(-20deg); opacity: 0; }
   35% { opacity: 1; }
-  70% { left: 112%; opacity: .5; }
-  100% { left: 112%; opacity: 0; }
+  70% { transform: translateX(400%) skewX(-20deg); opacity: .5; }
+  100% { transform: translateX(400%) skewX(-20deg); opacity: 0; }
 }
 
 @media (min-width: 600px) {

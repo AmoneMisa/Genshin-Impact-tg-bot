@@ -80,6 +80,11 @@ import { prepareClanProgressionAction } from './clanProgression.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP_DIR = path.resolve(__dirname, '../webapp');
 const GAME_ASSETS_DIR = path.resolve(__dirname, '../images');
+// three.js is served from node_modules (pinned in package.json) instead of a CDN:
+// Telegram clients in some regions can't reliably reach public CDNs. Only the
+// browser runtime folders are exposed.
+const THREE_DIR = path.resolve(__dirname, '../node_modules/three');
+const THREE_PUBLIC_PREFIXES = ['build/', 'examples/jsm/'];
 const locks = new Map();
 const feedbackCooldowns = new Map();
 const FEEDBACK_COOLDOWN_MS = 30_000;
@@ -95,6 +100,11 @@ const MIME = {
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
   '.webp': 'image/webp',
+  '.glb': 'model/gltf-binary',
+  '.gltf': 'model/gltf+json',
+  '.bin': 'application/octet-stream',
+  '.wasm': 'application/wasm',
+  '.ktx2': 'image/ktx2',
 };
 
 function sendJson(res, status, payload) {
@@ -1402,7 +1412,16 @@ export default function startMiniAppServer() {
       return sendJson(res, 404, { error: 'Asset not found' });
     }
 
+    if (req.method === 'GET' && requestUrl.pathname.startsWith('/vendor/three/')) {
+      const vendorPath = requestUrl.pathname.slice('/vendor/three/'.length);
+      if (THREE_PUBLIC_PREFIXES.some(prefix => vendorPath.startsWith(prefix)) && serveFile(res, THREE_DIR, vendorPath)) return;
+      return sendJson(res, 404, { error: 'Asset not found' });
+    }
+
     if (req.method === 'GET' && serveFile(res, WEBAPP_DIR, requestUrl.pathname)) return;
+    // A missing model must 404: the SPA fallback below would hand the glTF
+    // loader an HTML page with status 200.
+    if (req.method === 'GET' && requestUrl.pathname.startsWith('/models/')) return sendJson(res, 404, { error: 'Model not found' });
     if (req.method === 'GET' && serveFile(res, WEBAPP_DIR, '/index.html')) return;
     return sendJson(res, 404, { error: 'Not found' });
   });

@@ -228,9 +228,11 @@
   position: absolute;
   top: -4px;
   bottom: -4px;
+  left: 0;
   width: 28px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
-  transform: skewX(-18deg);
+  transform: translateX(-34px) skewX(-18deg);
+  will-change: transform, opacity;
   animation: hud-sheen 4.8s ease-in-out infinite;
 }
 
@@ -278,11 +280,13 @@
   box-shadow: 0 0 8px rgba(128,223,189,.6);
 }
 
+/* The track is at most ~300px wide; translating 340px clears it on every layout
+   without reading the container width, keeping the sweep on the compositor. */
 @keyframes hud-sheen {
-  0%, 65% { left: -34px; opacity: 0; }
+  0%, 65% { transform: translateX(-34px) skewX(-18deg); opacity: 0; }
   72% { opacity: 1; }
-  88% { left: calc(100% + 20px); opacity: .35; }
-  100% { left: calc(100% + 20px); opacity: 0; }
+  88% { transform: translateX(340px) skewX(-18deg); opacity: .35; }
+  100% { transform: translateX(340px) skewX(-18deg); opacity: 0; }
 }
 
 @media (min-width: 680px) {
