@@ -39,13 +39,12 @@ function finiteArray(value, length, fallback) {
 function normalizeEntry(raw) {
   const entry = typeof raw === 'string' ? { file: raw } : raw;
   if (!entry || typeof entry.file !== 'string' || !MODEL_FILE.test(entry.file)) return null;
-  const variants = {};
-  for (const [grade, file] of Object.entries(entry.variants || {})) {
-    if (typeof file === 'string' && MODEL_FILE.test(file)) variants[grade] = file;
-  }
+  const safeFiles = map => Object.fromEntries(Object.entries(map || {}).filter(([, file]) => typeof file === 'string' && MODEL_FILE.test(file)));
   return {
     file: entry.file,
-    variants,
+    variants: safeFiles(entry.variants),
+    // Per item type (the template's kind.type, e.g. "robe", "twoHandedSword").
+    types: safeFiles(entry.types),
     // Degrees in the manifest (friendlier for artists), radians internally.
     rotation: finiteArray(entry.rotation, 3, [0, 0, 0]).map(deg => (deg * Math.PI) / 180),
     offset: finiteArray(entry.offset, 3, [0, 0, 0]),
@@ -65,11 +64,14 @@ export function normalizeManifest(raw) {
   return { version: Number(raw?.version) || 1, models };
 }
 
-/** Picks the model for a loot item: grade-specific variant first, then the kind's default. */
-export function resolveModelEntry(manifest, { kind, grade } = {}) {
+/**
+ * Picks the model for a loot item. The item's type wins (a two-handed sword must
+ * never show a one-handed silhouette), then its grade, then the kind's default.
+ */
+export function resolveModelEntry(manifest, { kind, grade, type } = {}) {
   const entry = manifest?.models?.[kind];
   if (!entry) return null;
-  const file = entry.variants[canonicalGrade(grade)] || entry.file;
+  const file = (type && entry.types?.[type]) || entry.variants[canonicalGrade(grade)] || entry.file;
   return { ...entry, url: MODEL_BASE_URL + file };
 }
 

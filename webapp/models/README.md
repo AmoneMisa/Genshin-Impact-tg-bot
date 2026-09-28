@@ -24,6 +24,7 @@ Optional fields per entry:
 | `offset`   | `[x, y, z]` nudge after centring                                        |
 | `tint`     | `false` to keep the file's colours untouched by the item's rarity tone  |
 | `variants` | per-grade files, e.g. `{ "S": "sword-s.glb", "SSS": "sword-sss.glb" }`  |
+| `types`    | per item type (template `kind.type`), e.g. `{ "robe": "bracers.glb" }`; wins over `variants` |
 
 Kinds: `sword`, `dagger`, `staff`, `bow`, `crossbow`, `hammer`, `shield`,
 `gauntlets` (fists), `helmet`, `tiara` (priest/mage robe helmets), `armor`, `gloves`, `greaves`, `boots`,

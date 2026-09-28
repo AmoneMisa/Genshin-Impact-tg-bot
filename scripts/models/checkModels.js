@@ -58,7 +58,7 @@ export function checkModels(dir = MODELS_DIR) {
 
   for (const [kind, entry] of Object.entries(manifest.models)) {
     if (!KNOWN_KINDS.includes(kind)) warnings.push(`${kind}: not a loot kind the game renders (${KNOWN_KINDS.join(', ')})`);
-    for (const file of new Set([entry.file, ...Object.values(entry.variants)])) {
+    for (const file of new Set([entry.file, ...Object.values(entry.variants), ...Object.values(entry.types)])) {
       const filePath = path.join(dir, file);
       if (!fs.existsSync(filePath)) { errors.push(`${kind}: ${file} does not exist`); continue; }
       if (file.endsWith('.gltf')) { rows.push({ kind, file, bytes: fs.statSync(filePath).size }); continue; }

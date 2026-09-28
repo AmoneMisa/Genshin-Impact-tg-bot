@@ -80,7 +80,7 @@ export function startLootWebGL(root=document){
     if(pending.has(node)||node.dataset.webglMounted)return;pending.add(node);
     const profile=profileFromLootNode(node);
     loadModelManifest().then(manifest=>{
-      const entry=resolveModelEntry(manifest,{kind:profile.kind,grade:node.dataset.lootGrade});
+      const entry=resolveModelEntry(manifest,{kind:profile.kind,grade:node.dataset.lootGrade,type:node.dataset.lootType});
       if(!entry||sharedContexts(scenes)>=MAX_GLTF_SCENES)return procedural(node);
       node.dataset.webglMounted='gltf';
       return getGltfStage().then(stage=>stage.mount(node,{...profile,grade:node.dataset.lootGrade||'noGrade'},entry)).then(add).catch(error=>{console.warn(error);delete node.dataset.webglMounted;procedural(node);});

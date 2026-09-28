@@ -6,7 +6,7 @@
 
 import * as THREE from 'three';
 import { Layer, fbm, rng, scratches } from './texture.js';
-import { leatherWrapMaps, planarUV, texturedMaterial } from './weapons.js';
+import { leatherWrapMaps, loftBlade, planarUV, pointTaper, texturedMaterial } from './weapons.js';
 import { crystal, extrude, faceted, gold, merged, mesh, mirrorX, scroll, silver, wingShape } from './jewelry.js';
 
 /**
@@ -46,7 +46,7 @@ function woodMaps(width, height, seed, tone = [0.42, 0.24, 0.13]) {
 }
 
 /** Worked steel: gentle hammer dents and fine scratches (brass tarnish reads as granite on steel). */
-function steelMaps(size, seed, tone = [0.62, 0.64, 0.68]) {
+export function steelMaps(size, seed, tone = [0.62, 0.64, 0.68]) {
   const r = rng(seed + 1);
   const height = new Layer(size).paint((u, v) => [0.6 + (fbm(u, v, { frequency: 6, seed }) - 0.5) * 0.25, 0, 0, 1]);
   for (const line of scratches(r, 40, { angle: r() * Math.PI, spread: 1, length: [0.02, 0.1] })) height.stroke(line, 0.0014, (px, c) => [px[0] - 0.08 * c, 0, 0, 1]);
@@ -256,5 +256,33 @@ export function spikedKnuckles() {
   gem.scale(1, 1, 0.6);
   gem.translate(0, 0.19, 0.11);
   group.add(mesh(faceted(gem), crystal(0xff3d5a, { glow: 2 }), 'gem'));
+  return group;
+}
+
+export function greatsword() {
+  const group = new THREE.Group();
+  group.name = 'greatsword';
+  const L = 3.9, W = 0.3, TH = 0.07;
+  // Diamond cross-section with a raised central ridge.
+  const blade = loftBlade({
+    length: L, maxWidth: W, section: t => {
+      const w = W * pointTaper(t, 0.84), th = TH * (1 - t * 0.4);
+      return [[w, 0], [w * 0.55, th * 0.75], [0, th], [-w * 0.55, th * 0.75], [-w, 0]];
+    },
+  });
+  group.add(mesh(blade, texturedMaterial('greatswordSteel', steelMaps(128, 91, [0.72, 0.74, 0.78]), { normalStrength: 3 }), 'blade'));
+  // Winged guard sweeping upward, with a diamond centre block and a gem.
+  const wings = [-1, 1].map(side => taperedTube([[0, -0.02], [0.35, -0.06], [0.62, 0.06], [0.74, 0.3], [0.7, 0.42]].map(([x, y]) => new THREE.Vector3(side * x, y, 0)), 0.065, 0.018, { radial: 12, thin: 1 }));
+  const block = new THREE.Shape();
+  block.moveTo(0, 0.26); block.lineTo(0.22, 0); block.lineTo(0, -0.3); block.lineTo(-0.22, 0); block.closePath();
+  const blockGeo = extrude(block, 0.12, 0.03, 3);
+  const collars = [-0.36, -1.28].map(y => { const c = new THREE.TorusGeometry(0.075, 0.02, 10, 32); c.rotateX(Math.PI / 2); c.translate(0, y, 0); return c; });
+  const pommel = new THREE.LatheGeometry([[0, -1.3], [0.08, -1.32], [0.11, -1.4], [0.09, -1.48], [0.05, -1.52], [0, -1.53]].map(([x, y]) => new THREE.Vector2(x, y)), 36);
+  group.add(merged([...wings, blockGeo, ...collars, pommel], gold(), 'guard'));
+  const gems = [[0, 0, 0.08, 0.075], [0, -1.41, 0.1, 0.045]].map(([x, y, z, r]) => { const g = new THREE.OctahedronGeometry(r, 0); g.scale(0.9, 1.3, 0.6); g.translate(x, y, z); return faceted(g); });
+  group.add(merged(gems, crystal(0xff4d5e, { glow: 2 }), 'gems'));
+  const grip = new THREE.CylinderGeometry(0.066, 0.07, 0.9, 32, 1, true);
+  grip.translate(0, -0.82, 0);
+  group.add(mesh(grip, texturedMaterial('greatswordGrip', leatherWrapMaps(128, 256, 62, [0.32, 0.08, 0.1], 14), { normalStrength: 5 }), 'grip'));
   return group;
 }

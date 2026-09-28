@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import equipmentTemplate from '../template/equipmentTemplate.js';
 import equipItem from '../functions/game/equipment/equipItem.js';
 import unequipItem from '../functions/game/equipment/unequipItem.js';
-import { normalizeLootKind } from '../webapp/loot-renderer.js';
+import { normalizeLootKind, renderLootArt as renderLootArtForTest } from '../webapp/loot-renderer.js';
 import { itemRotation, normalizeManifest, resolveModelEntry } from '../webapp/loot-gltf.js';
 import { dollSlotFor, equippedItemForSlot } from '../webapp/equipment-paper-doll.js';
 import fs from 'node:fs';
@@ -76,4 +76,22 @@ test('the paper doll shows helmets, gloves and boots in head, hands and legs', (
   const helm = { name: 'Helm', grade: 'D', mainType: 'armor', kind: 'heavy', slots: ['helmet'], isUsed: true };
   const state = { items: [helm], equippedSlots: { helmet: { name: 'Helm', grade: 'D', mainType: 'armor', kind: 'heavy' } } };
   assert.equal(equippedItemForSlot(state, 'head'), helm);
+});
+
+test('item type picks its own model and wins over grade variants', () => {
+  const manifest = normalizeManifest(JSON.parse(fs.readFileSync('webapp/models/manifest.json', 'utf8')));
+  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'sss', type: 'twoHandedSword' }).url, '/models/greatsword.glb');
+  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'sss', type: 'oneHandedSword' }).url, '/models/sword-sss.glb');
+  for (const [kind, file] of [['armor', 'mantle.glb'], ['gloves', 'bracers.glb'], ['boots', 'anklets.glb'], ['greaves', 'leg-wraps.glb']]) {
+    assert.equal(resolveModelEntry(manifest, { kind, type: 'robe' }).url, `/models/${file}`);
+    assert.equal(resolveModelEntry(manifest, { kind, type: 'heavy' }).url, `/models/${kind}.glb`);
+  }
+  assert.equal(resolveModelEntry(manifest, { kind: 'shield', type: 'sigill' }).url, '/models/sigil.glb');
+  const unsafe = normalizeManifest({ models: { sword: { file: 'sword.glb', types: { robe: '../x.glb' } } } });
+  assert.deepEqual(unsafe.models.sword.types, {});
+});
+
+test('loot art exposes the raw item type for model lookup', () => {
+  const html = renderLootArtForTest({ kind: 'robe', category: 'gloves', grade: 'A' });
+  assert.match(html, /data-loot-type="robe"/);
 });

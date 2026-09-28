@@ -15,7 +15,8 @@ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { installCanvasShim } from './texture.js';
 import { runeDagger, sunSword, voidBlade } from './weapons.js';
 import { butterflyNecklace, crescentEarring, filigreeRing, flowerTiara, wingedRing } from './jewelry.js';
-import { celestialBow, runeCrossbow, spikedKnuckles, warHammer } from './arsenal.js';
+import { celestialBow, greatsword, runeCrossbow, spikedKnuckles, warHammer } from './arsenal.js';
+import { charmAnklets, embroideredMantle, goldBracers, legWraps, runeSigil } from './vestments.js';
 import { greatHelm, plateGauntlets, plateGreaves, sabatons, sunCuirass } from './armor.js';
 
 installCanvasShim();
@@ -206,6 +207,7 @@ function triangleCount(object) {
 export const SAMPLE_MODELS = {
   sword: sunSword, dagger: runeDagger, 'sword-sss': voidBlade, shield, staff, ring,
   helmet: greatHelm, armor: sunCuirass, gloves: plateGauntlets, greaves: plateGreaves, boots: sabatons,
+  mantle: embroideredMantle, bracers: goldBracers, anklets: charmAnklets, 'leg-wraps': legWraps, sigil: runeSigil, greatsword,
   bow: celestialBow, crossbow: runeCrossbow, hammer: warHammer, knuckles: spikedKnuckles,
   'ring-filigree': filigreeRing, 'ring-winged': wingedRing, necklace: butterflyNecklace, earring: crescentEarring, tiara: flowerTiara,
 };

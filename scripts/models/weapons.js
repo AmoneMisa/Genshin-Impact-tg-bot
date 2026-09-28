@@ -59,7 +59,7 @@ export function planarUV(geometry) {
 }
 
 /** Faceted look: split vertices so each flat face gets its own crisp normal. */
-function faceted(geometry) {
+export function faceted(geometry) {
   const g = geometry.index ? geometry.toNonIndexed() : geometry;
   g.computeVertexNormals();
   return g;
@@ -112,7 +112,7 @@ export function leatherWrapMaps(width, height, seed, tone = [0.26, 0.15, 0.1], t
  * section(t) → [[x, z], ...] for the FRONT half from +edge to −edge; the back half
  * is mirrored. UVs: u across the blade (x / maxWidth), v along its length.
  */
-function loftBlade({ length, segments = 90, maxWidth, section }) {
+export function loftBlade({ length, segments = 90, maxWidth, section }) {
   const positions = [], uvs = [], indices = [];
   let ring = 0;
   for (let s = 0; s <= segments; s++) {
@@ -138,7 +138,7 @@ function loftBlade({ length, segments = 90, maxWidth, section }) {
 }
 
 /** Point taper: full width until `start`, then a curved point to 0 at t = 1. */
-const pointTaper = (t, start = 0.86) => (t < start ? 1 - 0.1 * (t / start) : 0.9 * Math.sqrt(Math.max(0, 1 - (t - start) / (1 - start))) ** 1.35);
+export const pointTaper = (t, start = 0.86) => (t < start ? 1 - 0.1 * (t / start) : 0.9 * Math.sqrt(Math.max(0, 1 - (t - start) / (1 - start))) ** 1.35);
 
 // ---------------------------------------------------------------------------
 // 1. Sun-guard longsword

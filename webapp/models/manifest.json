@@ -6,13 +6,19 @@
       "variants": {
         "SS": "sword-sss.glb",
         "SSS": "sword-sss.glb"
+      },
+      "types": {
+        "twoHandedSword": "greatsword.glb"
       }
     },
     "dagger": {
       "file": "dagger.glb"
     },
     "shield": {
-      "file": "shield.glb"
+      "file": "shield.glb",
+      "types": {
+        "sigill": "sigil.glb"
+      }
     },
     "staff": {
       "file": "staff.glb"
@@ -62,16 +68,28 @@
       "file": "helmet.glb"
     },
     "armor": {
-      "file": "armor.glb"
+      "file": "armor.glb",
+      "types": {
+        "robe": "mantle.glb"
+      }
     },
     "gloves": {
-      "file": "gloves.glb"
+      "file": "gloves.glb",
+      "types": {
+        "robe": "bracers.glb"
+      }
     },
     "greaves": {
-      "file": "greaves.glb"
+      "file": "greaves.glb",
+      "types": {
+        "robe": "leg-wraps.glb"
+      }
     },
     "boots": {
-      "file": "boots.glb"
+      "file": "boots.glb",
+      "types": {
+        "robe": "anklets.glb"
+      }
     }
   }
 }
