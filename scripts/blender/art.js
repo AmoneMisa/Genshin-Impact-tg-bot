@@ -19,6 +19,7 @@ const OUT = path.join(ROOT, 'webapp/art');
 
 export const BOSSES = ['kivaha', 'avrora', 'fjorina', 'radjahal', 'carnevorusIsse'];
 export const CLASSES = ['noClass', 'warrior', 'archer', 'mage', 'priest'];
+export const GACHA_BANNERS = ['newbie', 'common', 'rare', 'royal', 'goddess'];
 
 /** Main-menu feature id → painting. Features without one keep their icon. */
 export const MENU_ART = Object.freeze({
@@ -95,6 +96,7 @@ export function artJobs() {
   for (const [feature, src] of Object.entries(MENU_ART)) jobs.push({ src, dst: `menu/${feature}.webp`, size: 480, quality: 78 });
   for (const cls of CLASSES) for (const gender of ['male', 'female']) jobs.push({ src: `classes/${cls}/${gender}/${cls}.png`, dst: `classes/${cls}-${gender}.webp`, size: 640, quality: 80 });
   jobs.push({ src: 'misc/chestsGame.png', dst: 'chests/backdrop.webp', size: 960, quality: 80 });
+  for (const banner of GACHA_BANNERS) jobs.push({ src: `gacha/${banner}.png`, dst: `gacha/${banner}.webp`, size: 720, quality: 80 });
   return jobs;
 }
 
