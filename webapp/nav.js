@@ -5,7 +5,7 @@ export const NAV_TABS = Object.freeze([
   { id: 'city', label: 'Город', icon: '🏰' },
   { id: 'hero', label: 'Персонаж', icon: '🧙', features: ['profile', 'skills', 'equipment', 'inventory', 'titles', 'horoscope'] },
   { id: 'battle', label: 'Арена', icon: '⚔️', features: ['boss', 'arena', 'steal', 'chest', 'gacha', 'sword', 'arcade', 'point21', 'elements', 'bonus'] },
-  { id: 'clan', label: 'Клан', icon: '🛡️', features: ['clan', 'forms', 'transfer'] },
+  { id: 'clan', label: 'Клан', icon: '🛡️', features: ['clan', 'friends', 'forms', 'transfer'] },
   { id: 'more', label: 'Ещё', icon: '☰' },
 ]);
 

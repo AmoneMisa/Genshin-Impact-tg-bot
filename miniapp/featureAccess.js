@@ -24,6 +24,10 @@ export const MINI_APP_ROUTE_SETTINGS = Object.freeze({
   'POST /api/gacha/resolve': 'whoami',
   'GET /api/steal': 'whoami',
   'POST /api/steal/attack': 'whoami',
+  // Friends, clanmates and player cards extend the same player hub.
+  'GET /api/social': 'whoami',
+  'POST /api/social/friend': 'whoami',
+  'GET /api/player': 'whoami',
 
   // Legacy commandMap intentionally grouped shop and exchange under boss.
   'GET /api/boss': 'boss',
@@ -66,6 +70,9 @@ export const MINI_APP_GROUP_ONLY_ROUTES = Object.freeze(new Set([
   'POST /api/gacha/resolve',
   'GET /api/steal',
   'POST /api/steal/attack',
+  'GET /api/social',
+  'POST /api/social/friend',
+  'GET /api/player',
   'GET /api/boss',
   'POST /api/boss/summon',
   'POST /api/boss/skill',

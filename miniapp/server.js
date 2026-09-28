@@ -7,6 +7,8 @@ import { trustedChats } from '../data.js';
 import getSession from '../functions/getters/getSession.js';
 import getChatSession from '../functions/getters/getChatSession.js';
 import saveSession from '../functions/getters/saveSession.js';
+import getClan from '../functions/game/clans/getClan.js';
+import { getPlayerCard, getSocialState, setFriend, stampLastSeen } from './social.js';
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
@@ -244,6 +246,10 @@ function validateArcadeGameId(gameId) {
 async function bootstrap(req, res) {
   try {
     const context = await authorize(req);
+    // Presence for friends lists; throttled inside stampLastSeen.
+    if (stampLastSeen(context.session)) {
+      try { await saveSession(context.session); } catch (error) { console.warn('last seen stamp failed', error.message); }
+    }
     return sendJson(res, 200, stateFor(context));
   } catch (error) {
     return sendApiError(res, 'bootstrap', error);
@@ -547,6 +553,66 @@ async function goldTransferSend(req, res) {
     return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
   } catch (error) {
     return sendApiError(res, 'gold transfer send', error);
+  }
+}
+
+const SOCIAL_REASONS_STATUS = { not_member: 403, unknown_player: 404 };
+
+async function clanInfo(userId) {
+  try {
+    const clan = await getClan(Number(userId));
+    return clan ? { name: clan.name, memberIds: (clan.members || []).map(member => String(member.userId)) } : { name: null, memberIds: [] };
+  } catch {
+    return { name: null, memberIds: [] };
+  }
+}
+
+async function socialState(req, res) {
+  try {
+    const context = await authorize(req);
+    const chat = await getChatSession(context.chatId);
+    const clan = await clanInfo(context.userId);
+    return sendJson(res, 200, getSocialState(chat, context.userId, { clanMemberIds: clan.memberIds, clanName: clan.name }));
+  } catch (error) {
+    return sendApiError(res, 'social state', error);
+  }
+}
+
+async function socialFriend(req, res) {
+  try {
+    const context = await authorize(req);
+    const body = await readJsonBody(req);
+    if (!['string', 'number'].includes(typeof body.userId) || !['add', 'remove'].includes(body.action)) {
+      const error = new Error('userId and action (add | remove) are required');
+      error.status = 400;
+      throw error;
+    }
+    const result = await withLock(`${context.chatId}:social`, async () => {
+      const chat = await getChatSession(context.chatId);
+      const updated = setFriend(chat, context.userId, String(body.userId), body.action);
+      if (updated.ok) await chat.save();
+      return { updated, chat };
+    });
+    const clan = await clanInfo(context.userId);
+    const social = getSocialState(result.chat, context.userId, { clanMemberIds: clan.memberIds, clanName: clan.name });
+    const status = result.updated.ok ? 200 : (SOCIAL_REASONS_STATUS[result.updated.reason] || 409);
+    return sendJson(res, status, { ...result.updated, social });
+  } catch (error) {
+    return sendApiError(res, 'social friend', error);
+  }
+}
+
+async function playerCard(req, res, requestUrl) {
+  try {
+    const context = await authorize(req);
+    const targetId = requestUrl.searchParams.get('userId') || String(context.userId);
+    const chat = await getChatSession(context.chatId);
+    const clan = await clanInfo(targetId);
+    const card = getPlayerCard(chat, targetId, context.userId, { clanName: clan.name });
+    if (!card) return sendJson(res, 404, { error: 'Игрок не найден в этом чате', reason: 'unknown_player' });
+    return sendJson(res, 200, card);
+  } catch (error) {
+    return sendApiError(res, 'player card', error);
   }
 }
 
@@ -1365,6 +1431,9 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/exchange/buy') return exchangeBuy(req, res);
     if (route === 'GET /api/gold-transfer') return goldTransferState(req, res);
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
+    if (route === 'GET /api/social') return socialState(req, res);
+    if (route === 'POST /api/social/friend') return socialFriend(req, res);
+    if (route === 'GET /api/player') return playerCard(req, res, requestUrl);
     if (route === 'GET /api/steal') return stealState(req, res);
     if (route === 'POST /api/steal/attack') return stealAttack(req, res);
     if (route === 'GET /api/point21') return point21State(req, res);

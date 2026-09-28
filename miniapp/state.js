@@ -36,6 +36,7 @@ export const GROUP_ONLY_FEATURE_IDS = Object.freeze([
   'sword',
   'selfMute',
   'chatSettings',
+  'friends',
 ]);
 
 const GROUP_ONLY_FEATURE_SET = new Set(GROUP_ONLY_FEATURE_IDS);
@@ -58,6 +59,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'point21', title: '21 очко', subtitle: 'Общий карточный стол', icon: '🃏', status: 'webgl' },
   { id: 'elements', title: 'Стихии', subtitle: 'Реакции и комбинации', icon: '✦', status: 'webgl' },
   { id: 'clan', title: 'Кланы', subtitle: 'Гильдия и активности', icon: '🏰', status: 'webgl' },
+  { id: 'friends', title: 'Друзья', subtitle: 'Друзья и соклановцы', icon: '🤝', status: 'webgl' },
   { id: 'bonus', title: 'Бонус', subtitle: 'Ежедневная награда', icon: '🎁', status: 'webgl' },
   { id: 'titles', title: 'Титулы', subtitle: 'Случайный титул игроку', icon: '🏷️', status: 'webgl' },
   { id: 'horoscope', title: 'Гороскоп', subtitle: 'Шуточное предсказание', icon: '🔮', status: 'webgl' },
