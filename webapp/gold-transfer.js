@@ -1,3 +1,5 @@
+import { menuArtFor } from './menu-art.js';
+
 const REASONS = {
   invalid_amount: 'Введи целое положительное количество золота.',
   self_transfer: 'Нельзя перевести золото самому себе.',
@@ -26,6 +28,8 @@ function initials(name) {
   return parts.slice(0, 2).map(part => part[0]?.toUpperCase() || '').join('');
 }
 
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
 export async function openGoldTransfer({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/gold-transfer');
   let selectedId = state.recipients[0]?.id || null;
@@ -37,11 +41,12 @@ export async function openGoldTransfer({ api, renderState, haptic, statusElement
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass gold-transfer-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">TRANSFER · MONGO</div><h2>Передать золото</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="gt-head">
+        <button class="overlay-close gt-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Передать золото</h2>
+        <button class="gt-round" type="button" data-transfer-refresh aria-label="Обновить список">↻</button>
       </header>
-      <p class="overlay-copy">Перевод выполняется на сервере одной операцией над отправителем и получателем. Отрицательные суммы, дроби и недоступные участники блокируются.</p>
+      <p class="overlay-copy" hidden>Перевод выполняется на сервере одной операцией над отправителем и получателем. Отрицательные суммы, дроби и недоступные участники блокируются.</p>
       <div data-transfer-content></div>
       <div class="gold-transfer-feedback" data-transfer-feedback aria-live="polite"></div>
     </div>`;
@@ -55,6 +60,7 @@ export async function openGoldTransfer({ api, renderState, haptic, statusElement
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.querySelector('[data-transfer-refresh]').addEventListener('click', () => refresh());
 
   function selectedRecipient() {
     return state.recipients.find(recipient => recipient.id === selectedId) || null;
@@ -74,7 +80,7 @@ export async function openGoldTransfer({ api, renderState, haptic, statusElement
       <div class="gold-recipient-list">
         ${state.recipients.map(recipient => `
           <button type="button" class="gold-recipient ${recipient.id === selectedId ? 'active' : ''}" data-recipient="${escapeHtml(recipient.id)}">
-            <span class="gold-avatar">${escapeHtml(initials(recipient.name))}</span>
+            <span class="gold-avatar" style="--art:url('${menuArtFor('profile', recipient)}')">${escapeHtml(initials(recipient.name))}</span>
             <span class="gold-recipient-copy">
               <strong>${escapeHtml(recipient.name)}</strong>
               <small>${recipient.username ? `@${escapeHtml(recipient.username)}` : `ID ${escapeHtml(recipient.id)}`}</small>
@@ -138,7 +144,6 @@ export async function openGoldTransfer({ api, renderState, haptic, statusElement
     });
 
     content.querySelector('[data-transfer-send]')?.addEventListener('click', send);
-    content.querySelector('[data-transfer-refresh]')?.addEventListener('click', refresh);
   }
 
   async function refresh() {
@@ -168,14 +173,15 @@ export async function openGoldTransfer({ api, renderState, haptic, statusElement
 
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Выполняем перевод…';
+    feedback.textContent = '';
     haptic('heavy');
+    content.querySelector('[data-transfer-courier]')?.classList.add('sending');
 
     try {
-      const payload = await api('/api/gold-transfer/send', {
-        method: 'POST',
-        body: JSON.stringify({ recipientId: recipient.id, amount }),
-      });
+      const [payload] = await Promise.all([
+        api('/api/gold-transfer/send', { method: 'POST', body: JSON.stringify({ recipientId: recipient.id, amount }) }),
+        wait(900),
+      ]);
       state = payload.transfer;
       lastSuccess = { amount: payload.amount, recipientName: recipient.name };
       feedback.textContent = `Осталось ${formatNumber(state.gold)} золота.`;
@@ -184,6 +190,7 @@ export async function openGoldTransfer({ api, renderState, haptic, statusElement
       haptic('medium');
       renderAll();
     } catch (error) {
+      content.querySelector('[data-transfer-courier]')?.classList.remove('sending');
       if (error.payload?.transfer) state = error.payload.transfer;
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
       haptic('light');
@@ -196,9 +203,10 @@ export async function openGoldTransfer({ api, renderState, haptic, statusElement
 
   function renderAll() {
     content.innerHTML = `
-      <section class="gold-transfer-summary">
-        <div><small>ДОСТУПНО</small><strong>🪙 ${formatNumber(state.gold)}</strong></div>
-        <button type="button" data-transfer-refresh aria-label="Обновить список">↻</button>
+      <section class="gold-courier" data-transfer-courier>
+        <div class="gt-end me"><span class="gt-coins" aria-hidden="true">🪙</span><small>Твой баланс</small><strong>${formatNumber(state.gold)}</strong></div>
+        <div class="gt-road" aria-hidden="true"><i></i><span class="gt-pouch">💰</span></div>
+        <div class="gt-end to">${selectedRecipient() ? `<span class="gold-avatar big" style="--art:url('${menuArtFor('profile', selectedRecipient())}')"></span><small>Получатель</small><strong>${escapeHtml(selectedRecipient().name)}</strong>` : '<small>Выбери получателя</small>'}</div>
       </section>
       ${successBanner()}
       <div class="gold-transfer-columns">

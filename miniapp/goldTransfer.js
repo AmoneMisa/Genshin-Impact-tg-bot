@@ -30,6 +30,9 @@ function recipientDto(member) {
     id: String(member.userId),
     name: fullName || (username ? `@${username}` : `Игрок ${member.userId}`),
     username,
+    // For the class portrait next to the name.
+    className: member?.game?.gameClass?.stats?.name || 'noClass',
+    gender: member?.gender === 'female' ? 'female' : 'male',
   };
 }
 

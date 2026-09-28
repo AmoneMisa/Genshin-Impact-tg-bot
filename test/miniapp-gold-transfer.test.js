@@ -35,7 +35,7 @@ function chat() {
 test('Mini App transfer state exposes only eligible recipients', () => {
   const state = getGoldTransferState(chat(), 1);
   assert.equal(state.gold, 1000);
-  assert.deepEqual(state.recipients, [{ id: '2', name: 'Beta', username: 'beta' }]);
+  assert.deepEqual(state.recipients, [{ id: '2', name: 'Beta', username: 'beta', className: 'noClass', gender: 'male' }]);
 });
 
 test('Mini App transfer returns updated sender balance and recipient list', () => {
