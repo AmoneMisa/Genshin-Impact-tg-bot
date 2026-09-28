@@ -173,7 +173,7 @@ export async function openArenaGame({ api, renderState, haptic, statusElement, p
     return `
       <button type="button" class="arena-btn ghost" data-arena-board>${showBoard ? 'Скрыть таблицу' : 'Таблица лидеров'}</button>
       ${showBoard ? `<ol class="arena-board">${rows.map(row => `
-        <li class="${row.isCurrentUser ? 'me' : ''} ${row.position <= 3 ? `top top${row.position}` : ''}">
+        <li class="${row.isCurrentUser ? 'me' : ''} ${row.position <= 3 ? `top top${row.position}` : ''}" ${row.isCurrentUser || arena.mode !== 'common' ? '' : `data-player-card="${escapeHtml(row.userId)}"`}>
           <span>${row.position <= 3 ? ['🥇', '🥈', '🥉'][row.position - 1] : row.position}</span>
           <strong>${escapeHtml(row.name || `Игрок ${row.userId}`)}</strong>
           <em>${formatNumber(row.rating)}</em>

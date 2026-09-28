@@ -290,7 +290,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <h4>Участники · ${clan.members.length}</h4>
         <div class="clan-members">
           ${clan.members.map(member => `
-            <article class="clan-member">
+            <article class="clan-member" data-player-card="${escapeHtml(member.userId)}">
               <span class="clan-avatar" aria-hidden="true">${escapeHtml(String(member.name || '?').trim().charAt(0).toUpperCase())}</span>
               <div><strong>${escapeHtml(member.name)}</strong><small>Вклад: ${formatNumber(member.contribution)}</small></div>
               <span class="clan-role">${member.role === 'owner' ? '👑 глава' : member.role === 'officer' ? '⭐ офицер' : 'участник'}</span>

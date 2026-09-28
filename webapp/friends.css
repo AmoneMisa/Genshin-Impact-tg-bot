@@ -65,3 +65,7 @@
 @keyframes fr-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes fr-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
 @media (prefers-reduced-motion: reduce) { .fr-row, .pc-tab { animation: none; } }
+
+/* Names elsewhere that open a player card. */
+[data-player-card] { cursor: pointer; }
+[data-player-card]:active { filter: brightness(1.2); }

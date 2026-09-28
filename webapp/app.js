@@ -30,7 +30,7 @@ import { openHelpGame } from './help.js';
 import { openChatSettings } from './chat-settings.js';
 import { openSelfMute } from './self-mute.js';
 import { mountCity } from './city.js';
-import { openFriendsGame } from './friends.js';
+import { openFriendsGame, openPlayerCard } from './friends.js';
 import { featuresForTab, navHtml, NAV_TABS } from './nav.js';
 
 const tg = window.Telegram?.WebApp;
@@ -238,6 +238,18 @@ async function boot() {
   });
   document.querySelectorAll('[data-open-feature]').forEach(button => {
     button.addEventListener('click', () => { haptic('light'); openFeatureById(button.dataset.openFeature); });
+  });
+  // Any player name marked data-player-card (boss party, clan, rankings…) opens their card.
+  document.addEventListener('click', async event => {
+    const target = event.target.closest?.('[data-player-card]');
+    if (!target || event.target.closest('button:not([data-player-card])')) return;
+    event.preventDefault();
+    haptic('light');
+    try {
+      await openPlayerCard({ api, haptic, userId: target.dataset.playerCard });
+    } catch (error) {
+      status.textContent = error.status === 404 ? 'Этот игрок не из текущего чата.' : error.message;
+    }
   });
   document.querySelectorAll('[data-nav-jump]').forEach(button => {
     button.addEventListener('click', () => switchTab(button.dataset.navJump));

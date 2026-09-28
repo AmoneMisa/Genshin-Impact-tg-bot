@@ -82,7 +82,7 @@ export function partyStrip(rows = []) {
   <section class="mmo-party" aria-label="Участники рейда">
     <div class="mmo-section-title"><strong>В бою</strong><small>${rows.length}</small></div>
     <div class="mmo-party-row">${rows.map(row => `
-      <div class="mmo-party-member ${row.isYou ? 'you' : ''}" title="${escapeHtml(row.name)} · ${formatNumber(row.damage)}">
+      <div class="mmo-party-member ${row.isYou ? 'you' : ''}" ${row.isYou ? '' : `data-player-card="${escapeHtml(row.userId)}"`} title="${escapeHtml(row.name)} · ${formatNumber(row.damage)}">
         <span class="mmo-ring" style="--hp:${row.hpPercent == null ? 100 : clampPercent(row.hpPercent)};--class:${CLASS_COLORS[row.className] || CLASS_COLORS.noClass}">
           <span class="mmo-portrait mini" style="--portrait:url('${classArtUrl(row.className, row.gender)}')"></span>
         </span>
@@ -119,7 +119,7 @@ export function damageMeter(rows = []) {
   if (!rows.length) return '<div class="boss-empty compact">Пока никто не атаковал.</div>';
   const top = Math.max(...rows.map(row => Number(row.damage) || 0), 1);
   return `<div class="mmo-meter">${rows.map((row, index) => `
-    <div class="mmo-meter-row ${row.isYou ? 'you' : ''}" style="--fill:${((Number(row.damage) || 0) / top) * 100}%;--class:${CLASS_COLORS[row.className] || CLASS_COLORS.noClass}">
+    <div class="mmo-meter-row ${row.isYou ? 'you' : ''}" ${row.isYou ? '' : `data-player-card="${escapeHtml(row.userId)}"`} style="--fill:${((Number(row.damage) || 0) / top) * 100}%;--class:${CLASS_COLORS[row.className] || CLASS_COLORS.noClass}">
       <span class="rank">${index + 1}</span>
       <strong>${escapeHtml(row.isYou ? `${row.name} (ты)` : row.name)}</strong>
       <em>${formatNumber(row.damage)} · ${row.share ?? 0}%</em>

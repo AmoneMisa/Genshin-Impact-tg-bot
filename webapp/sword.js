@@ -29,7 +29,7 @@ function rankingHtml(ranking) {
   if (!Array.isArray(ranking) || ranking.length === 0) return '<div class="sword-ranking-empty">Ещё никто не отрастил свой меч.</div>';
   return ranking.map(entry => {
     const medal = entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`;
-    return `<div class="sword-ranking-row ${entry.isCurrent ? 'current' : ''}"><span class="sword-ranking-rank">${medal}</span><span class="sword-ranking-name">${escapeHtml(entry.name)}</span><strong>${formatNumber(entry.length)} <small>мм</small></strong></div>`;
+    return `<div class="sword-ranking-row ${entry.isCurrent ? 'current' : ''}" ${entry.isCurrent ? '' : `data-player-card="${escapeHtml(entry.userId)}"`}><span class="sword-ranking-rank">${medal}</span><span class="sword-ranking-name">${escapeHtml(entry.name)}</span><strong>${formatNumber(entry.length)} <small>мм</small></strong></div>`;
   }).join('');
 }
 

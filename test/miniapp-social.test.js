@@ -77,3 +77,14 @@ test('player card shows public stats and gear, never private inventory', () => {
   assert.equal(getPlayerCard(chat(), 4, 1), null);
   assert.equal(getPlayerCard(chat(), 1, 1).isSelf, true);
 });
+
+import { damageMeter, partyStrip } from '../webapp/boss-hud.js';
+test('raid party and damage rows open other players’ cards, not your own', () => {
+  const rows = [{ userId: 2, name: 'Lana', damage: 10, share: 60, className: 'mage', isYou: false }, { userId: 1, name: 'Me', damage: 5, share: 40, className: 'warrior', isYou: true }];
+  const party = partyStrip(rows);
+  const meter = damageMeter(rows);
+  for (const html of [party, meter]) {
+    assert.match(html, /data-player-card="2"/);
+    assert.doesNotMatch(html, /data-player-card="1"/);
+  }
+});
