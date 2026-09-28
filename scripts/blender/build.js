@@ -22,6 +22,7 @@ export const BLENDER_MODELS = Object.freeze({
   'ring-winged.glb': 'winged_ring.py',
   'armor.glb': 'sun_cuirass.py',
   'bow.glb': 'celestial_bow.py',
+  'tiara.glb': 'flower_tiara.py',
 });
 
 export function findBlender(env = process.env) {

@@ -227,6 +227,31 @@ def flat_curve(name, points, width, thickness, taper=(1.0, 0.35), resolution=6):
     return result
 
 
+def bezier_leaf(name, length, width, depth=0.008, bevel=0.006):
+    """Filled, extruded and bevelled leaf/petal in the XZ plane, tip along +Z, facing -Y."""
+    data = bpy.data.curves.new(name, "CURVE")
+    data.dimensions = "2D"
+    data.fill_mode = "BOTH"
+    data.extrude = depth
+    data.bevel_depth = bevel
+    data.bevel_resolution = 1
+    data.resolution_u = 10
+    spline = data.splines.new("BEZIER")
+    spline.bezier_points.add(1)
+    a, b = spline.bezier_points
+    a.co, a.handle_left, a.handle_right = (0, 0, 0), (-width, length * 0.3, 0), (width, length * 0.3, 0)
+    b.co, b.handle_left, b.handle_right = (0, length, 0), (width * 0.8, length * 0.75, 0), (-width * 0.8, length * 0.75, 0)
+    spline.use_cyclic_u = True
+    obj = bpy.data.objects.new(name, data)
+    bpy.context.collection.objects.link(obj)
+    activate(obj)
+    bpy.ops.object.convert(target="MESH")
+    obj = bpy.context.active_object
+    obj.rotation_euler = (math.pi / 2, 0, 0)  # XY drawing -> XZ plane
+    bpy.ops.object.transform_apply(rotation=True)
+    return obj
+
+
 def helix_wrap(name, radius, height, turns, strip, z0=0.0):
     """Leather strip wound around a cylinder along Z (a real 3D grip wrap)."""
     pts = []

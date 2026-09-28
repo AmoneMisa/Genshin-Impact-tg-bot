@@ -59,34 +59,10 @@ for z_sign in (1, -1):
         gold.append(c.curve_tube("scroll", pts, 0.008, taper=(1.0, 0.5)))
 
 
-def leaf(name, length, width):
-    """Filled bezier leaf, extruded and bevelled; tip along +Z."""
-    data = bpy.data.curves.new(name, "CURVE")
-    data.dimensions = "2D"
-    data.fill_mode = "BOTH"
-    data.extrude = 0.008
-    data.bevel_depth = 0.006
-    data.resolution_u = 12
-    spline = data.splines.new("BEZIER")
-    spline.bezier_points.add(1)
-    a, b = spline.bezier_points
-    a.co, a.handle_left, a.handle_right = (0, 0, 0), (-width, length * 0.3, 0), (width, length * 0.3, 0)
-    b.co, b.handle_left, b.handle_right = (0, length, 0), (width * 0.8, length * 0.75, 0), (-width * 0.8, length * 0.75, 0)
-    spline.use_cyclic_u = True
-    obj = bpy.data.objects.new(name, data)
-    bpy.context.collection.objects.link(obj)
-    c.activate(obj)
-    bpy.ops.object.convert(target="MESH")
-    obj = bpy.context.active_object
-    obj.rotation_euler = (math.pi / 2, 0, 0)  # XY drawing → XZ plane
-    bpy.ops.object.transform_apply(rotation=True)
-    return obj
-
-
 leaves = []
 for z_sign in (1, -1):
     for (x, z), tilt, size in (((-0.06, 1.64), -0.5, 0.36), ((0.56, 0.62), 0.9, 0.24), ((0.2, 1.2), -0.2, 0.18)):
-        lf = leaf("leaf", size, size * 0.35)
+        lf = c.bezier_leaf("leaf", size, size * 0.35)
         lf.rotation_euler = (0, tilt if z_sign > 0 else math.pi - tilt, 0)
         lf.location = (x, -0.01, z_sign * z)
         c.activate(lf)
