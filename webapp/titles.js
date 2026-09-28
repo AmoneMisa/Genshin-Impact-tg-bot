@@ -23,6 +23,15 @@ function remain(until) {
   return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
+/** Names that flicker past before the roulette stops on the recipient. */
+export function rouletteNames(recent = [], recipient = '', count = 12) {
+  const pool = [...new Set(recent.map(item => item.nickname).filter(Boolean))].filter(name => name !== recipient);
+  const filler = pool.length ? pool : ['???', '✦', '???'];
+  return [...Array.from({ length: count }, (_, i) => filler[i % filler.length]), recipient];
+}
+
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
 export async function openTitlesGame({ api, haptic, statusElement }) {
   let state = await api('/api/titles');
   let pending = false;
@@ -32,12 +41,14 @@ export async function openTitlesGame({ api, haptic, statusElement }) {
   overlay.className = 'game-overlay titles-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass utility-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">SOCIAL · MONGO</div><h2>Титулы</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+    <div class="overlay-panel glass utility-panel titles-panel">
+      <header class="tt-head">
+        <button class="overlay-close tt-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Титулы</h2>
+        <span class="tt-round" aria-hidden="true">🏷️</span>
       </header>
-      <p class="overlay-copy">Одно слово попадёт случайному доступному участнику чата. Выбор получателя происходит на сервере.</p>
+      <p class="tt-rules">Одно слово достанется случайному участнику чата — судьба решает на сервере.</p>
+      <section class="tt-stage" data-title-stage hidden aria-live="polite"></section>
       <div data-titles-content></div>
       <div class="utility-feedback" data-titles-feedback aria-live="polite"></div>
     </div>`;
@@ -60,7 +71,6 @@ export async function openTitlesGame({ api, haptic, statusElement }) {
       <section class="utility-card">
         <h3>Случайный титул</h3>
         <p>${state.eligibleCount} доступных участников · перезарядка: <b data-title-cooldown>${remain(state.cooldown?.until)}</b></p>
-        ${success ? `<div class="bonus-win"><span>🏷️</span><strong>${escapeHtml(success.name)} — ${escapeHtml(success.title)}</strong></div>` : ''}
         <div class="title-form">
           <input type="text" maxlength="32" autocomplete="off" placeholder="Например: Архонт" data-title-input ${locked || pending ? 'disabled' : ''} />
           <button type="button" data-title-assign ${locked || pending ? 'disabled' : ''}>Назначить</button>
@@ -84,6 +94,29 @@ export async function openTitlesGame({ api, haptic, statusElement }) {
     });
   }
 
+  // Names flicker past, slow down, stop on the recipient; then the ribbon unfurls.
+  async function playRoulette(recipient, title) {
+    const stage = overlay.querySelector('[data-title-stage]');
+    if (!stage) return;
+    const names = rouletteNames(state.recent, recipient);
+    stage.hidden = false;
+    stage.className = 'tt-stage spinning';
+    stage.innerHTML = `<div class="tt-wheel"><span data-title-name></span></div><div class="tt-ribbon"><strong>«${escapeHtml(title)}»</strong></div>`;
+    const node = stage.querySelector('[data-title-name]');
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    for (let i = reduced ? names.length - 1 : 0; i < names.length; i += 1) {
+      node.textContent = names[i];
+      node.classList.remove('tick');
+      void node.offsetWidth;
+      node.classList.add('tick');
+      haptic('light');
+      await wait(60 + i * i * 2.2);
+    }
+    stage.className = 'tt-stage landed';
+    haptic('heavy');
+    await wait(900);
+  }
+
   async function assign() {
     if (pending) return;
     const input = content.querySelector('[data-title-input]');
@@ -98,6 +131,7 @@ export async function openTitlesGame({ api, haptic, statusElement }) {
         method: 'POST',
         body: JSON.stringify({ title }),
       });
+      await playRoulette(payload.recipient.name, payload.assigned.title);
       state = payload.titles;
       success = { name: payload.recipient.name, title: payload.assigned.title };
       feedback.textContent = `${payload.recipient.name} получает титул «${payload.assigned.title}».`;

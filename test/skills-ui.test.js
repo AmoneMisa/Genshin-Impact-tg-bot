@@ -28,3 +28,12 @@ test('exchange amount stays a whole number within what you can afford', () => {
   assert.equal(clampAmount(2.7, 120), 2);
   assert.equal(clampAmount(5, 0), 0);
 });
+
+import { rouletteNames } from '../webapp/titles.js';
+test('title roulette flickers through other names and stops on the recipient', () => {
+  const names = rouletteNames([{ nickname: 'Lana' }, { nickname: 'Seth' }, { nickname: 'Lana' }, { nickname: 'Kira' }], 'Kira', 6);
+  assert.equal(names.at(-1), 'Kira');
+  assert.equal(names.length, 7);
+  assert.ok(names.slice(0, -1).every(name => name !== 'Kira'));
+  assert.equal(rouletteNames([], 'Nero', 3).at(-1), 'Nero');
+});

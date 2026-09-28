@@ -33,3 +33,32 @@
 .horo-styles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; margin-top: 10px; }
 .horo-result { min-height: 84px; margin-top: 12px; padding: 14px; border-radius: 17px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.035); white-space: pre-wrap; font-size: 12px; line-height: 1.55; }
 @media (min-width: 680px) { .utility-grid.two { grid-template-columns: 1fr 1fr; } .horo-signs { grid-template-columns: repeat(4, 1fr); } }
+
+/* Titles (titles.js): prototype header, a name roulette and an unfurling ribbon. */
+.overlay-panel.titles-panel { --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif; display: grid; gap: 10px; padding-top: 12px; color: #eee4cf; }
+.tt-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.tt-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.tt-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
+.tt-rules { margin: -2px 0 0; text-align: center; font: 400 12px/1.4 var(--serif); color: rgba(238, 228, 207, .75); }
+.tt-stage { display: grid; justify-items: center; gap: 10px; padding: 16px 10px; border-radius: 10px; border: 1px solid var(--gold-dim); background: radial-gradient(ellipse 60% 70% at 50% 40%, rgba(216, 179, 106, .16), transparent 70%), linear-gradient(180deg, #1a1520, #0c0a10); }
+.tt-stage[hidden] { display: none; }
+.tt-wheel { width: min(100%, 260px); padding: 10px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(6, 5, 9, .85); box-shadow: inset 0 0 14px rgba(0, 0, 0, .8), 0 0 16px rgba(216, 179, 106, .25); text-align: center; overflow: hidden; }
+.tt-wheel span { display: block; font: 700 22px/1.2 var(--serif); color: #f3dca6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tt-wheel span.tick { animation: tt-tick .12s ease-out; }
+.tt-stage.landed .tt-wheel { border-color: #ffd36a; box-shadow: inset 0 0 14px rgba(0, 0, 0, .8), 0 0 26px rgba(255, 211, 106, .6); }
+.tt-stage.landed .tt-wheel span { color: #ffd36a; animation: tt-land .5s cubic-bezier(.2, 1.4, .4, 1); }
+.tt-ribbon { position: relative; padding: 8px 28px; background: linear-gradient(180deg, #8a1d25, #5a0f16); clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%, 8% 50%); transform: scaleX(0); transform-origin: 50% 50%; }
+.tt-ribbon strong { font: 700 18px/1.2 var(--serif); color: #fbeccb; text-shadow: 0 1px 0 #000; }
+.tt-stage.landed .tt-ribbon { animation: tt-unfurl .55s cubic-bezier(.2, 1.2, .4, 1) .2s forwards; }
+.titles-panel .utility-card { border-radius: 8px; border-color: rgba(216, 179, 106, .2); background: linear-gradient(180deg, rgba(26, 21, 30, .92), rgba(12, 10, 16, .92)); }
+.titles-panel .utility-card h3 { font: 700 15px/1.1 var(--serif); color: #f3dca6; }
+.titles-panel .title-form input { border-radius: 6px; border-color: var(--gold-dim); background: rgba(6, 5, 9, .8); }
+.titles-panel .title-form button { border-radius: 6px; border: 1px solid var(--gold); background: linear-gradient(180deg, #6a4f1f, #3a2a10); color: #fbeccb; font: 700 14px/1 var(--serif); }
+.titles-panel .title-row { border-radius: 6px; }
+.titles-panel .title-row strong { display: block; font: 600 13px/1.2 var(--serif); color: #f3dca6; }
+.titles-panel .title-row small { display: block; margin-top: 2px; }
+.titles-panel .title-row b { padding: 3px 10px; border-radius: 3px; background: linear-gradient(180deg, #8a1d25, #5a0f16); color: #fbeccb; font: 700 12px/1.2 var(--serif); }
+@keyframes tt-tick { from { transform: translateY(-60%); opacity: .3; } to { transform: none; opacity: 1; } }
+@keyframes tt-land { 0% { transform: scale(1); } 40% { transform: scale(1.2); } 100% { transform: none; } }
+@keyframes tt-unfurl { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .tt-wheel span, .tt-ribbon { animation: none !important; transform: none; } }
