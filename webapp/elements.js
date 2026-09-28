@@ -33,6 +33,21 @@ function elementIcon(element) {
   return String(element || '').split(' ')[0] || '✦';
 }
 
+const ELEMENT_TONES = { 'Пиро': 'pyro', 'Крио': 'cryo', 'Анемо': 'anemo', 'Электро': 'electro', 'Гидро': 'hydro', 'Гео': 'geo', 'Дендро': 'dendro' };
+export const ELEMENT_RING = ['🔥 Пиро', '❄️ Крио', '💨 Анемо', '⚡️ Электро', '💧 Гидро', '🗿 Гео', '🌿 Дендро'];
+
+/** Colour family of an element string like "🔥 Пиро". */
+export function elementTone(element) {
+  const name = String(element || '').replace(/^\S+\s*/, '').trim();
+  return ELEMENT_TONES[name] || 'neutral';
+}
+
+export function elementChip(element, extra = '') {
+  return `<span class="el-chip tone-${elementTone(element)} ${extra}" title="${escapeHtml(element)}">${escapeHtml(elementIcon(element))}</span>`;
+}
+
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
 export async function openElementsGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/elements');
   let pending = false;
@@ -43,16 +58,40 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass elements-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">ELEMENTS · SHARED TABLE</div><h2>Стихии</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="elements-head">
+        <button class="overlay-close elements-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Стихии</h2>
+        <span class="elements-round" aria-hidden="true">✦</span>
       </header>
-      <p class="overlay-copy">Собирай четыре стихии за три раунда. Повторы и реакции дают очки; RNG и выплаты считаются только на сервере.</p>
+      <p class="elements-rules">Собери стихии за три раунда: повторы и реакции дают очки.</p>
+      <section class="elements-altar" hidden aria-hidden="true"></section>
       <div data-elements-content></div>
       <div class="elements-feedback" data-elements-feedback aria-live="polite"></div>
     </div>`;
 
   const content = overlay.querySelector('[data-elements-content]');
+  const altar = overlay.querySelector('.elements-altar');
+
+  // The seven runes race around the altar, the drawn one lands in the centre.
+  async function playDraw(element) {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    altar.className = `elements-altar tone-${elementTone(element)}`;
+    altar.innerHTML = `
+      <div class="el-ring">${ELEMENT_RING.map((rune, i) => `<span class="tone-${elementTone(rune)}" style="--i:${i}">${elementIcon(rune)}</span>`).join('')}</div>
+      <div class="el-core">${elementChip(element, 'huge')}</div>
+      <div class="el-burst"></div>
+      <strong class="el-name">${escapeHtml(String(element).replace(/^\S+\s*/, ''))}</strong>`;
+    altar.hidden = false;
+    requestAnimationFrame(() => altar.classList.add('spinning'));
+    await wait(1100);
+    altar.classList.add('landed');
+    haptic('heavy');
+    await wait(1000);
+    altar.classList.add('leaving');
+    await wait(250);
+    altar.hidden = true;
+    altar.innerHTML = '';
+  }
   const feedback = overlay.querySelector('[data-elements-feedback]');
 
   const close = () => {
@@ -70,7 +109,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
           <article class="elements-player ${player.isBot ? 'bot' : ''} ${player.drewThisRound ? 'done' : ''}">
             <header><div><strong>${escapeHtml(player.name)}</strong><small>${player.isBot ? 'BOT' : `ставка ${formatNumber(player.bet)}`}</small></div><b>${player.points} pt</b></header>
             <div class="elements-hand">
-              ${player.elements.length ? player.elements.map(element => `<span title="${escapeHtml(element)}">${escapeHtml(elementIcon(element))}</span>`).join('') : '<em>—</em>'}
+              ${player.elements.length ? player.elements.map(element => elementChip(element)).join('') : '<em>—</em>'}
             </div>
           </article>`).join('')}
       </div>`;
@@ -79,7 +118,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
   function idleView() {
     return `
       <section class="elements-hero">
-        <div class="elements-orbit"><span>🔥</span><span>❄️</span><span>⚡️</span><strong>✦</strong></div>
+        <div class="elements-orbit">${ELEMENT_RING.map((element, i) => `<span class="tone-${elementTone(element)}" style="--i:${i}">${elementIcon(element)}</span>`).join('')}<strong>✦</strong></div>
         <div><small>МУЛЬТИПЛЕЕР</small><strong>Новый стол стихий</strong><p>15 секунд на вход, затем 25 секунд на ставки. После старта у каждого будет три хода.</p></div>
       </section>
       <div class="elements-balance"><span>Твой баланс</span><strong>🪙 ${formatNumber(state.gold)}</strong></div>
@@ -117,7 +156,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
       ${state.me.joined ? `
         <section class="elements-me">
           <div><span>Твои очки</span><strong>${state.me.points}</strong></div>
-          <div class="elements-me-hand">${state.me.elements.map(element => `<span><b>${escapeHtml(elementIcon(element))}</b><small>${escapeHtml(String(element).replace(/^\S+\s*/, ''))}</small></span>`).join('')}</div>
+          <div class="elements-me-hand">${state.me.elements.map(element => `<span class="tone-${elementTone(element)}">${elementChip(element, 'large')}<small>${escapeHtml(String(element).replace(/^\S+\s*/, ''))}</small></span>`).join('')}</div>
         </section>
         <button class="elements-primary draw" type="button" data-elements-action="draw" ${canDraw ? '' : 'disabled'}><span>✦</span><div><strong>${canDraw ? 'Получить стихию' : 'Ход сделан'}</strong><small>${canDraw ? 'Результат определит сервер' : 'Ждём остальных игроков'}</small></div></button>` : '<div class="elements-watch">Ты наблюдаешь за партией.</div>'}`;
   }
@@ -129,7 +168,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
       <div class="elements-results">
         ${players.sort((a, b) => b.points - a.points).map(player => `
           <article class="elements-result ${player.won ? 'win' : ''}">
-            <div><strong>${escapeHtml(player.name)}</strong><span>${player.elements.map(element => escapeHtml(elementIcon(element))).join(' ')}</span></div>
+            <div><strong>${escapeHtml(player.name)}</strong><span class="elements-hand">${player.elements.map(element => elementChip(element)).join('')}</span></div>
             <div><b>${player.points}</b>${player.isBot ? '<small>BOT</small>' : `<small>${player.delta >= 0 ? '+' : ''}${formatNumber(player.delta)} 🪙</small>`}</div>
           </article>`).join('')}
       </div>
@@ -160,6 +199,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
     haptic(name === 'draw' ? 'heavy' : 'medium');
     try {
       const payload = await api('/api/elements/action', { method: 'POST', body: JSON.stringify(body) });
+      if (name === 'draw' && payload.element) await playDraw(payload.element);
       state = payload.elements;
       if (payload.state) renderState(payload.state);
       feedback.textContent = name === 'draw' && payload.element ? `Твоя стихия: ${payload.element}` : '';
