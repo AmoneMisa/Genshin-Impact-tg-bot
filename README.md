@@ -108,3 +108,60 @@ Baros
 15. Добавить магазин - постройку, в котором можно покупать ресурсы, редко - хорошее снаряжение, расходки и продавать уже имеющийся мусор за небольшое количество золота
 16. Добавить академию - постройку, в которой можно улучшать своего персонажа
 17. Добавить полигон - постройку, в которой можно копить опыт для своего персонажа (Сделано)
+---
+
+## Запуск в Docker
+
+В контейнере работают бот и сервер Mini App (`node miniapp-entry.js`), рядом — MongoDB.
+Токен в образ не попадает: `config.js` и `.env` исключены через `.dockerignore`,
+а `docker/entrypoint.sh` создаёт `config.js` из переменных окружения при старте.
+
+**1. Настройки.** Скопируй пример и заполни:
+
+```bash
+cp .env.example .env
+```
+
+- `BOT_TOKEN` — токен бота от @BotFather;
+- `ADMIN_ID` — твой Telegram user id (админ-команды);
+- `MINI_APP_URL` — публичный HTTPS-адрес Mini App;
+- `TRUSTED_CHATS` — (необязательно) id доверенных чатов через запятую, записываются при первом запуске;
+- `DOCKER_MONGO_URL` — (необязательно) внешняя MongoDB; по умолчанию — встроенная `mongo`.
+
+> Внутри контейнера `localhost` — это сам контейнер. Для сервисов на хосте
+> (например, FreeLLMAPI) используй `http://host.docker.internal:3001/v1`.
+
+**2. Запуск:**
+
+```bash
+docker compose up -d --build
+docker compose logs -f bot
+```
+
+**Cloudflare Tunnel** для публичного адреса Mini App (токен туннеля — в `TUNNEL_TOKEN`,
+в панели Cloudflare направь hostname на `http://bot:8080`):
+
+```bash
+docker compose --profile tunnel up -d
+```
+
+**Внешняя MongoDB** (например, Atlas) — задай `DOCKER_MONGO_URL` и запусти только бота:
+
+```bash
+docker compose up -d --build --no-deps bot
+```
+
+**Данные.** Доверенные чаты, кэш id фотографий и лог ошибок хранятся в томе `bot-state`,
+база — в томе `mongo-data`; оба переживают пересборку и перезапуск.
+Чтобы перенести текущие файлы с компьютера в том:
+
+```bash
+docker compose exec -T bot sh -c 'cat > /app/state/trustedChats.json' < trustedChats.json
+docker compose exec -T bot sh -c 'cat > /app/state/imagesIds.json' < imagesIds.json
+docker compose restart bot
+```
+
+(Так файлы записываются от пользователя контейнера `node`, и бот сможет их обновлять.)
+
+> Не запускай контейнер с тем же `BOT_TOKEN`, пока бот работает на компьютере:
+> два экземпляра одного бота мешают друг другу получать обновления.

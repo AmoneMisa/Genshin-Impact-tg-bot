@@ -1,25 +1,25 @@
-import errorHandler from '../Genshin-Impact-tg-bot/errorHandler.js';
+import errorHandler from './errorHandler.js';
 errorHandler();
 
-import deleteMessage from '../Genshin-Impact-tg-bot/functions/tgBotFunctions/deleteMessage.js';
-import callbacks from '../Genshin-Impact-tg-bot/callbacks/index.js';
-import onTexts from '../Genshin-Impact-tg-bot/onTexts/index.js';
-import onTextsAdmin from '../Genshin-Impact-tg-bot/onTextsAdmin/index.js';
-import bot from '../Genshin-Impact-tg-bot/bot.js';
-import getSession from '../Genshin-Impact-tg-bot/functions/getters/getSession.js';
-import saveSession from '../Genshin-Impact-tg-bot/functions/getters/saveSession.js';
-import getChatSessionSettings from '../Genshin-Impact-tg-bot/functions/getters/getChatSessionSettings.js';
-import debugMessage from '../Genshin-Impact-tg-bot/functions/tgBotFunctions/debugMessage.js';
-import sendMessage from '../Genshin-Impact-tg-bot/functions/tgBotFunctions/sendMessage.js';
+import deleteMessage from './functions/tgBotFunctions/deleteMessage.js';
+import callbacks from './callbacks/index.js';
+import onTexts from './onTexts/index.js';
+import onTextsAdmin from './onTextsAdmin/index.js';
+import bot from './bot.js';
+import getSession from './functions/getters/getSession.js';
+import saveSession from './functions/getters/saveSession.js';
+import getChatSessionSettings from './functions/getters/getChatSessionSettings.js';
+import debugMessage from './functions/tgBotFunctions/debugMessage.js';
+import sendMessage from './functions/tgBotFunctions/sendMessage.js';
 
-import evenSecond from '../Genshin-Impact-tg-bot/functions/shedullers/evenSecond.js';
-import evenTwoMinutes from '../Genshin-Impact-tg-bot/functions/shedullers/evenTwoMinutes.js';
-import evenFiveMinutes from '../Genshin-Impact-tg-bot/functions/shedullers/evenFiveMinutes.js';
-import evenHour from '../Genshin-Impact-tg-bot/functions/shedullers/evenHour.js';
-import evenDay from '../Genshin-Impact-tg-bot/functions/shedullers/evenDay.js';
-import evenWeek from '../Genshin-Impact-tg-bot/functions/shedullers/evenWeek.js';
+import evenSecond from './functions/shedullers/evenSecond.js';
+import evenTwoMinutes from './functions/shedullers/evenTwoMinutes.js';
+import evenFiveMinutes from './functions/shedullers/evenFiveMinutes.js';
+import evenHour from './functions/shedullers/evenHour.js';
+import evenDay from './functions/shedullers/evenDay.js';
+import evenWeek from './functions/shedullers/evenWeek.js';
 
-import buttonsDictionary from '../Genshin-Impact-tg-bot/dictionaries/buttons.js';
+import buttonsDictionary from './dictionaries/buttons.js';
 import Command from "./db/models/CommandMap.js";
 import {connectMongo} from "./db/db.js";
 

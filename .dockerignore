@@ -1,0 +1,23 @@
+# Secrets: provided at runtime (see docker/entrypoint.sh).
+.env
+config.js
+
+# Runtime state and legacy data dumps: kept in the /app/state volume.
+*.json
+!package.json
+!package-lock.json
+!webapp/models/manifest.json
+*.log
+
+# Not needed to run the bot.
+node_modules
+.git
+.github
+.idea
+.claude
+test
+scripts/blender
+scripts/models
+Dockerfile
+docker-compose.yml
+.dockerignore
