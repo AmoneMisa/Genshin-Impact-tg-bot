@@ -6,11 +6,11 @@ import controlButtons from '../functions/keyboard/controlButtons.js';
 import deleteMessage from '../functions/tgBotFunctions/deleteMessage.js';
 
 export default [[/(?:^|\s)\/settings\b/, async (msg) => {
-    if (!getMemberStatus(msg.chat.id, msg.from.id)) {
+    if (!await getMemberStatus(msg.chat.id, msg.from.id)) {
         return;
     }
 
-    let chatSession = getChatSession(msg.chat.id);
+    let chatSession = await getChatSession(msg.chat.id);
     chatSession.settingsMessageId = msg.from.id;
 
     const buttons = [[{
@@ -36,7 +36,7 @@ export default [[/(?:^|\s)\/settings\b/, async (msg) => {
         callback_data: "settings.swords"
     }, {
         text: "Сундуки",
-        callback_data: "settings.chest"
+        callback_data: "settings.chests"
     }, {
         text: "Само-мут",
         callback_data: "settings.mute"
@@ -69,7 +69,7 @@ export default [[/(?:^|\s)\/settings\b/, async (msg) => {
         callback_data: "settings.bonus"
     }]];
 
-    let settings = getChatSessionSettings(msg.chat.id);
+    let settings = await getChatSessionSettings(msg.chat.id);
     for (const buttonLine of buttons) {
         for (const button of buttonLine) {
             let flag = settings[button.callback_data.replace(/^settings\./, '')];
@@ -79,6 +79,8 @@ export default [[/(?:^|\s)\/settings\b/, async (msg) => {
     }
 
     chatSession.settingsButtons = buttons;
+    chatSession.markModified("settingsButtons");
+    await chatSession.save();
     await deleteMessage(msg.chat.id, msg.message_id);
     await sendMessage(msg.chat.id, "Нажми на кнопку, чтобы включить или отключить функцию.", {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),

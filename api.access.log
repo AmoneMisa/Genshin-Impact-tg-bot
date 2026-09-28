@@ -1,0 +1,5 @@
+newMessage.trim is not a function
+
+TypeError: newMessage.trim is not a function
+    at file:///C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/callbacks/game/player/whoamiHome.js:10:56
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

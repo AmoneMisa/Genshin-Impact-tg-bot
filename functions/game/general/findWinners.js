@@ -4,20 +4,15 @@ function calcMaxPoints(players, gameName) {
     let maxPoints = 0;
 
     if (gameName === "points") {
-        for (let player of Object.values(players)) {
-            let points = getPoints(player);
-
-            if (maxPoints < points && points <= 21) {
-                maxPoints = points;
-            }
+        for (const player of Object.values(players)) {
+            const points = getPoints(player) || 0;
+            if (maxPoints < points && points <= 21) maxPoints = points;
         }
     }
 
     if (gameName === "elements") {
-        for (let player of Object.values(players)) {
-            if (player.points > maxPoints) {
-                maxPoints = player.points;
-            }
+        for (const player of Object.values(players)) {
+            if ((player.points || 0) > maxPoints) maxPoints = player.points;
         }
     }
 
@@ -25,105 +20,75 @@ function calcMaxPoints(players, gameName) {
 }
 
 function getBet(id, player) {
-    let bet;
+    return String(id) === "bot" ? 0 : Number(player.bet) || 0;
+}
 
-    if (id === "bot") {
-        bet = 0;
-    } else {
-        bet = player.bet;
-    }
-
-    return bet;
+function findMember(members, id) {
+    if (!Array.isArray(members)) return null;
+    return members.find(member => String(member.userId) === String(id)) || null;
 }
 
 function getName(id, members) {
-    let name;
+    if (String(id) === "bot") return "Всемогущий";
+    const member = findMember(members, id);
+    const user = member?.userChatData?.user || {};
+    return user.username || user.first_name || user.id || id;
+}
 
-    if (id === "bot") {
-        name = "Всемогущий"
-    } else {
-        name = members[id].userChatData.user.username;
-    }
-
-    return name;
+function applyGoldDelta(members, id, diffGold) {
+    if (!diffGold || String(id) === "bot") return;
+    const member = findMember(members, id);
+    if (!member?.game?.inventory) return;
+    const current = Number(member.game.inventory.gold) || 0;
+    member.game.inventory.gold = Math.round(current + diffGold);
 }
 
 function getWinners(players, maxPoints, gameName, members) {
-    let isWining;
-    let diffGold;
-    let winners = [];
+    const winners = [];
 
     if (gameName === "points") {
-        for (let [id, player] of Object.entries(players)) {
-            let points = getPoints(player);
-            let cards = player.usedItems;
-            let name = getName(id, members);
-            let bet = getBet(id, player);
+        for (const [id, player] of Object.entries(players)) {
+            const points = getPoints(player) || 0;
+            const cards = player.usedItems || [];
+            const name = getName(id, members);
+            const bet = getBet(id, player);
+            let isWining = false;
+            let diffGold = -bet;
 
             if (points === 21) {
                 isWining = true;
                 diffGold = bet * 3;
-            } else if (points === maxPoints) {
+            } else if (points === maxPoints && points <= 21) {
                 isWining = true;
                 diffGold = bet * 1.8;
-            } else {
-                isWining = false;
-                diffGold = -bet;
             }
 
-            if (diffGold !== 0) {
-                members[id].game.inventory.gold = Math.round(members[id].game.inventory.gold + diffGold);
-            }
-
-            winners.push({
-                name,
-                bet,
-                points,
-                diffGold,
-                cards,
-                isWining
-            })
+            applyGoldDelta(members, id, diffGold);
+            winners.push({ name, bet, points, diffGold, cards, isWining });
         }
     }
 
     if (gameName === "elements") {
-        for (let player of Object.values(players)) {
-            let name = getName(player.id, members);
-            let bet = getBet(player.id, player);
-            let points = player.points;
-            let elements = player.usedItems;
+        for (const [key, player] of Object.entries(players)) {
+            const id = player.id ?? key;
+            const name = getName(id, members);
+            const bet = getBet(id, player);
+            const points = Number(player.points) || 0;
+            const elements = player.usedItems || [];
+            const isWining = points === maxPoints;
+            const diffGold = isWining ? bet * 1.75 : -bet;
 
-            if (points === maxPoints) {
-                isWining = true;
-                diffGold = bet * 1.75;
-            } else {
-                isWining = false;
-                diffGold = -bet;
-            }
-
-            if (diffGold !== 0) {
-                members[player.id].game.inventory.gold = Math.round(members[player.id].game.inventory.gold + diffGold);
-            }
-
-            winners.push({
-                name,
-                bet,
-                points,
-                diffGold,
-                isWining,
-                elements
-            })
+            applyGoldDelta(members, id, diffGold);
+            winners.push({ name, bet, points, diffGold, isWining, elements });
         }
     }
 
     return winners;
 }
 
-
 export default function (gameSession, gameName) {
-    let members = gameSession.members;
-    let players = gameSession.game[gameName].players;
-    let maxPoints = calcMaxPoints(players, gameName);
-
+    const members = gameSession.members;
+    const players = gameSession.game[gameName].players;
+    const maxPoints = calcMaxPoints(players, gameName);
     return getWinners(players, maxPoints, gameName, members);
-};
+}

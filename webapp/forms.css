@@ -1,0 +1,39 @@
+.forms-panel { max-height:min(92vh,900px); }
+.forms-tabs { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin:13px 0 10px; }
+.forms-tabs button { min-height:38px; border:1px solid rgba(255,255,255,.065); border-radius:11px; background:rgba(255,255,255,.02); color:#aaa6b7; font-size:9px; }
+.forms-tabs button.active { border-color:rgba(133,154,235,.2); background:linear-gradient(135deg,rgba(85,105,187,.13),rgba(125,78,159,.08)); color:#efedf7; }
+.forms-intro { display:flex; align-items:center; gap:10px; margin-bottom:9px; padding:11px; border:1px solid rgba(255,255,255,.06); border-radius:14px; background:rgba(255,255,255,.018); }
+.forms-intro > span { width:38px; height:38px; display:grid; place-items:center; border-radius:12px; background:rgba(255,255,255,.035); font-size:20px; }
+.forms-intro > div { display:grid; gap:2px; min-width:0; }
+.forms-intro strong { font-size:10px; }
+.forms-intro small { color:var(--muted); font-size:7px; line-height:1.45; }
+.forms-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; max-height:410px; overflow:auto; padding-right:2px; scrollbar-width:thin; }
+.forms-field { min-width:0; display:grid; gap:4px; padding:8px; border:1px solid rgba(255,255,255,.055); border-radius:11px; background:rgba(255,255,255,.016); }
+.forms-field > span { overflow:hidden; color:#9d99aa; font-size:7px; text-overflow:ellipsis; white-space:nowrap; }
+.forms-field input { width:100%; min-width:0; height:34px; padding:0 9px; border:1px solid rgba(255,255,255,.075); border-radius:9px; outline:none; background:rgba(4,6,14,.25); color:#eceaf3; font:inherit; font-size:9px; }
+.forms-field input:focus { border-color:rgba(129,151,235,.26); background:rgba(12,17,34,.34); }
+.forms-save { width:100%; min-height:52px; margin-top:9px; padding:9px 12px; border:1px solid rgba(105,184,144,.14); border-radius:14px; background:linear-gradient(135deg,rgba(57,135,96,.12),rgba(84,101,178,.07)); color:#e7f3ec; display:flex; align-items:center; gap:10px; text-align:left; }
+.forms-save > span { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background:rgba(255,255,255,.035); font-size:16px; }
+.forms-save > div { display:grid; gap:2px; }
+.forms-save strong { font-size:9px; }
+.forms-save small { color:#9baea2; font-size:7px; }
+.forms-feedback { min-height:18px; margin:8px 2px 0; color:var(--muted); font-size:8px; text-align:center; }
+.forms-members { display:flex; gap:5px; overflow:auto; padding:1px 0 7px; scrollbar-width:thin; }
+.forms-member { flex:0 0 auto; min-width:110px; min-height:43px; padding:7px 9px; border:1px solid rgba(255,255,255,.06); border-radius:11px; background:rgba(255,255,255,.017); color:#b5b1c1; display:grid; grid-template-columns:13px 1fr; grid-template-rows:auto auto; column-gap:5px; text-align:left; }
+.forms-member > span { grid-row:1 / 3; align-self:center; color:#a49bc9; font-size:8px; }
+.forms-member strong { max-width:95px; overflow:hidden; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
+.forms-member small { color:var(--muted); font-size:6px; }
+.forms-member.active { border-color:rgba(136,155,231,.18); background:rgba(89,106,178,.09); color:#efedf6; }
+.forms-profile-card { padding:12px; border:1px solid rgba(255,255,255,.065); border-radius:15px; background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.012)); }
+.forms-profile-card > header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+.forms-profile-card > header > div { min-width:0; display:grid; gap:2px; }
+.forms-profile-card header small { color:var(--muted); font-size:7px; letter-spacing:.08em; }
+.forms-profile-card header strong { overflow:hidden; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+.forms-profile-card header > span { flex:0 0 auto; padding:4px 7px; border-radius:8px; background:rgba(98,133,201,.1); color:#b9caec; font-size:6px; }
+.forms-profile-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; max-height:430px; overflow:auto; scrollbar-width:thin; }
+.forms-profile-field { min-width:0; padding:9px; border-radius:10px; background:rgba(255,255,255,.018); display:grid; gap:3px; }
+.forms-profile-field small { color:#8e8a9b; font-size:6px; }
+.forms-profile-field strong { overflow-wrap:anywhere; color:#d6d3dd; font-size:8px; font-weight:600; line-height:1.35; }
+.forms-empty { padding:18px 10px; color:var(--muted); font-size:8px; text-align:center; }
+.forms-overlay.busy button, .forms-overlay.busy input { pointer-events:none; opacity:.58; }
+@media (max-width:390px) { .forms-grid, .forms-profile-fields { grid-template-columns:1fr; }.forms-grid { max-height:470px; } }

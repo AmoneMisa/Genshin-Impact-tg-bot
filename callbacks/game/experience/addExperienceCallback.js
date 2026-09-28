@@ -7,10 +7,11 @@ import controlButtons from '../../../functions/keyboard/controlButtons.js';
 import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 export default [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, userId]) {
     let targetSession = await getSession(chatId, userId);
-    sendMessage(callback.message.chat.id, `Сколько опыта добавить для ${getUserName(targetSession, "name")}?`, {
+    sendMessage(callback.message.chat.id, `Сколько опыта добавить для ${await getUserName(targetSession, "name")}?`, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
         disable_notification: true,
         reply_markup: {
@@ -18,15 +19,17 @@ export default [[/^add_experience\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
             force_reply: true
         }
     }).then((msg) => {
-        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, (replyMsg) => {
+        let id = bot.onReplyToMessage(msg.chat.id, msg.message_id, async (replyMsg) => {
             bot.removeReplyListener(id);
             let exp = parseInt(replyMsg.text);
-            targetSession.game.stats.currentExp += exp;
+            const { chat, member } = await loadPlayer(chatId, userId);
+            member.game.stats.currentExp += exp;
+            setLevel(member);
+            await chat.save();
 
             deleteMessage(replyMsg.chat.id, replyMsg.message_id);
             deleteMessage(msg.chat.id, msg.message_id);
-            setLevel(targetSession);
-            return sendMessage(callback.message.chat.id, `Ты добавил ${exp} опыта для ${getUserName(targetSession, "name")}.`, {
+            return sendMessage(callback.message.chat.id, `Ты добавил ${exp} опыта для ${await getUserName(targetSession, "name")}.`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
                 disable_notification: true
             });

@@ -1,0 +1,22 @@
+.game-card.unavailable {
+  opacity: .48;
+  filter: saturate(.45);
+  border-color: rgba(255,255,255,.07);
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+}
+
+.game-card.unavailable:active { transform: none; }
+.game-card.unavailable::after { opacity: .22; }
+.game-card.unavailable .game-icon { filter: grayscale(.2); }
+.game-card.unavailable .arrow { color: var(--muted); font-size: 11px; }
+
+.mode-badge.group-only {
+  color: #d2cfdf;
+  border-color: rgba(255,255,255,.10);
+  background: rgba(255,255,255,.045);
+}
+
+.profile-gender button:disabled {
+  opacity: .48;
+  filter: saturate(.5);
+}

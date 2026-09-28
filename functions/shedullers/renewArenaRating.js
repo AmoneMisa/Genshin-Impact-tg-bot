@@ -1,13 +1,18 @@
-import { arenaRating } from '../../data.js';
+import ArenaRating from "../../db/models/ArenaRating.js";
 
-export default function () {
-    for (let ratingKey of Object.keys(arenaRating.expansion)) {
-        arenaRating.expansion[ratingKey] = 1000;
-    }
+/**
+ * Сбрасывает все значения рейтингов до 1000 в базе
+ */
+export default async function resetArenaRatings() {
+    // Сбрасываем expansion
+    await ArenaRating.updateMany(
+        { type: "expansion" },
+        { $set: { value: 1000 } }
+    );
 
-    for (let chatRating of Object.values(arenaRating.common)) {
-        for (let ratingKey of Object.keys(chatRating)) {
-            chatRating[ratingKey] = 1000;
-        }
-    }
+    // Сбрасываем common
+    await ArenaRating.updateMany(
+        { type: "common" },
+        { $set: { value: 1000 } }
+    );
 }

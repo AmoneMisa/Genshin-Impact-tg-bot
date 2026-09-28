@@ -1,13 +1,26 @@
-import { sessions } from '../../data.js';
+import Chat from "../../db/models/Chat.js";
 
-export default function () {
-    for (let chatSession of Object.values(sessions)) {
-        for (let session of Object.values(chatSession.members)) {
-            if (session.userChatData.user.is_bot) {
-                continue;
-            }
+/**
+ * Сбрасывает бонусные шансы игроков до 1
+ */
+export default async function() {
+    const chats = await Chat.find({});
 
-            session.game.bonusChances = 1;
+    for (const chat of chats) {
+        let updated = false;
+
+        for (const member of chat.members) {
+            if (member.userChatData?.user?.is_bot) continue;
+
+            const game = member.game;
+            if (!game) continue;
+
+            game.bonusChances = 1;
+            updated = true;
+        }
+
+        if (updated) {
+            await chat.save();
         }
     }
 }

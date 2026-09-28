@@ -4,13 +4,13 @@ import buildKeyboard from '../../../functions/keyboard/buildKeyboard.js';
 import controlButtons from '../../../functions/keyboard/controlButtons.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
-export default [[/(?:^|\s)\/add_gold\b/, (msg) => {
+export default [[/(?:^|\s)\/add_gold\b/, async (msg) => {
     deleteMessage(msg.chat.id, msg.message_id);
-    if (!getMemberStatus(msg.chat.id, msg.from.id)) {
+    if (!await getMemberStatus(msg.chat.id, msg.from.id)) {
         return;
     }
 
-    let buttons = buildKeyboard(msg.chat.id, `add_gold.${msg.chat.id}`);
+    let buttons = await buildKeyboard(msg.chat.id, `add_gold.${msg.chat.id}`);
 
     sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить золота", {
         disable_notification: true,

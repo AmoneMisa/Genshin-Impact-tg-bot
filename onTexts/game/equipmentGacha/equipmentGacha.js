@@ -11,7 +11,7 @@ export default [[/(?:^|\s)\/lucky_roll\b/, async (msg, session) => {
 
     if (file) {
         await sendPhoto(msg.from.id, file, {
-            caption: `@${getUserName(session, "nickname")}, выбери спираль удачи`,
+            caption: `@${await getUserName(session, "nickname")}, выбери спираль удачи`,
             disable_notification: true,
             reply_markup: {
                 selective: true,
@@ -37,7 +37,7 @@ export default [[/(?:^|\s)\/lucky_roll\b/, async (msg, session) => {
             }
         });
     } else {
-        return sendMessage(msg.from.id, `@${getUserName(session, "nickname")}, выбери спираль удачи`, {
+        return sendMessage(msg.from.id, `@${await getUserName(session, "nickname")}, выбери спираль удачи`, {
             disable_notification: true,
             reply_markup: {
                 selective: true,

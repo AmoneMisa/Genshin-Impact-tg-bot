@@ -1,21 +1,37 @@
-import getCard from './getCard.js';
-import getPoints from './getPoints.js';
+import Chat from "../../../db/models/Chat.js";
+import getCard from "./getCard.js";
+import getPoints from "./getPoints.js";
 
-export default function (chatSession) {
-    let players = Object.entries(chatSession.game.points.players)
-        .filter(([playerId,]) => playerId !== "bot")
+/**
+ * Логика принятия решений ботом в игре 21
+ * @param {string} chatId - идентификатор чата
+ */
+export default async function(chatId) {
+    const chat = await Chat.findOne({ chatId });
+    if (!chat || !chat.game.points) return;
+
+    const players = Object.entries(chat.game.points.players)
+        .filter(([playerId]) => playerId !== "bot")
         .map(([, player]) => player);
-    let points = players.map(player => getPoints(player)).filter(points => points <= 21);
-    let maxPoints = Math.max.apply(null, points) || 0;
 
-    while (true) {
-       let points = getPoints(chatSession.game.points.players["bot"]);
+    const playerPoints = players
+        .map(player => getPoints(player))
+        .filter(p => p <= 21);
 
-       if (points === 21 || points > maxPoints) {
-           chatSession.game.points.players['bot'].isPass = true;
-           break;
-       }
+    const maxPoints = playerPoints.length ? Math.max(...playerPoints) : 0;
 
-        getCard(chatSession.game.points, "bot");
+    const bot = chat.game.points.players["bot"];
+    if (!bot) return;
+
+    let botPoints = getPoints(bot);
+
+    // Бот берёт карты, пока не достигнет условий выхода
+    while (botPoints < 21 && botPoints <= maxPoints) {
+        getCard(chat.game.points, "bot");
+        botPoints = getPoints(bot);
     }
-};
+
+    bot.isPass = true;
+
+    await chat.save();
+}

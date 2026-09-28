@@ -3,15 +3,19 @@ import buttonsDictionary from '../../../dictionaries/buttons.js';
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import getCaption from '../../../functions/game/builds/getCaption.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
-import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import setLevel from '../../../functions/game/player/setLevel.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
+
+function getResourceType(buildTemplate) {
+    return buildTemplate.resourcesType || (buildTemplate.type === 'experience' ? 'experience' : null);
+}
 
 export default [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (session, callback, [, chatId, buildName]) {
     let messageId = callback.message.message_id;
 
     let build = await getBuild(chatId, callback.from.id, buildName);
-    let resourcesCount = Math.ceil(build.resourceCollected);
+    let resourcesCount = Math.ceil(Number(build.resourceCollected) || 0);
 
     let keyboard;
     if (resourcesCount > 0) {
@@ -45,7 +49,8 @@ export default [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (sessi
 }], [/^builds\.([\-0-9]+)\.([^.]+)\.collect\.0$/, async function (session, callback, [, chatId, buildName]) {
     let messageId = callback.message.message_id;
 
-    let build = await getBuild(chatId, callback.from.id, buildName);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
+    let build = member.game.builds[buildName];
 
     if (build.upgradeStartedAt) {
         return sendMessageWithDelete(callback.message.chat.id, "Вы не можете собирать ресурсы со здания, которое в данный момент улучшается", {
@@ -53,19 +58,31 @@ export default [[/^builds\.([\-0-9]+)\.([^.]+)\.collect$/, async function (sessi
         }, 5000);
     }
 
-    build.lastCollectAt = new Date().getTime();
-    let foundedSession = await getSession(chatId, callback.from.id);
     let buildTemplate = buildsTemplate[buildName];
-    let resourcesType = buildTemplate.resourcesType;
+    let resourcesType = getResourceType(buildTemplate);
+    if (!resourcesType) {
+        return sendMessageWithDelete(callback.message.chat.id, "Это здание не производит собираемые ресурсы.", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 5000);
+    }
+
+    const resourcesCount = Math.max(0, Math.ceil(Number(build.resourceCollected) || 0));
+    if (resourcesCount <= 0) {
+        return sendMessageWithDelete(callback.message.chat.id, "Пока нечего собирать.", {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 5000);
+    }
 
     if (resourcesType === "experience") {
-        foundedSession.game.stats.currentExp += Math.ceil(build.resourceCollected);
-        setLevel(foundedSession);
+        member.game.stats.currentExp += resourcesCount;
+        setLevel(member);
     } else {
-        foundedSession.game.inventory[resourcesType] += Math.ceil(build.resourceCollected);
+        member.game.inventory[resourcesType] += resourcesCount;
     }
 
     build.resourceCollected = 0;
+    build.lastCollectAt = Date.now();
+    await chat.save();
 
     return editMessageCaption(getCaption(buildName, "home", build), {
         message_id: messageId,

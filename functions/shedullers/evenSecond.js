@@ -6,15 +6,24 @@ import respawnPlayer from './respawnPlayer.js';
 import bossWin from './bossWin.js';
 
 export default function () {
-    cron.schedule("* * * * * *", () => {
+    let isRunning = false;
+
+    cron.schedule("* * * * * *", async () => {
+        if (isRunning) {
+            return;
+        }
+        isRunning = true;
+
         try {
-            setHpRegen();
-            setCpRegen();
-            setMpRegen();
-            respawnPlayer();
-            bossWin();
+            await setHpRegen();
+            await setCpRegen();
+            await setMpRegen();
+            await respawnPlayer();
+            await bossWin();
         } catch (e) {
             console.error(e);
+        } finally {
+            isRunning = false;
         }
     })
 }

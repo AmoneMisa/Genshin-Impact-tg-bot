@@ -1,0 +1,178 @@
+/* Lightweight game-feel layer. Effects never participate in document flow. */
+.vfx-host { position: relative; }
+.vfx-control { position: relative; overflow: hidden; isolation: isolate; }
+
+.vfx-screen-wash,
+.vfx-flash,
+.vfx-burst,
+.vfx-float-label,
+.vfx-rarity-beam,
+.vfx-press-ring {
+  pointer-events: none;
+  user-select: none;
+}
+
+.vfx-screen-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(203,183,255,.22), transparent 25%),
+    linear-gradient(135deg, rgba(115,87,201,.16), rgba(62,161,195,.10), transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: vfx-screen-enter 620ms cubic-bezier(.16,.84,.34,1) both;
+}
+
+.vfx-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 78;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 44%, rgb(var(--vfx-rgb) / .30), transparent 42%);
+  mix-blend-mode: screen;
+  animation: vfx-flash 420ms ease-out both;
+}
+
+.vfx-burst {
+  --vfx-rgb: 185 156 255;
+  position: absolute;
+  left: var(--vfx-x);
+  top: var(--vfx-y);
+  z-index: 82;
+  width: 1px;
+  height: 1px;
+}
+
+.vfx-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: rgb(var(--vfx-rgb));
+  box-shadow: 0 0 9px rgb(var(--vfx-rgb) / .85), 0 0 18px rgb(var(--vfx-rgb) / .35);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.6);
+  animation: vfx-particle-flight 720ms cubic-bezier(.12,.75,.25,1) var(--delay) both;
+}
+
+.vfx-float-label {
+  --vfx-rgb: 185 156 255;
+  position: absolute;
+  left: var(--vfx-x);
+  top: var(--vfx-y);
+  z-index: 84;
+  max-width: min(240px, 72%);
+  padding: 4px 8px;
+  border: 1px solid rgb(var(--vfx-rgb) / .26);
+  border-radius: 999px;
+  color: rgb(var(--vfx-rgb));
+  background: rgba(7,9,16,.78);
+  box-shadow: 0 5px 18px rgba(0,0,0,.28), 0 0 16px rgb(var(--vfx-rgb) / .12);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translate(-50%, -40%);
+  animation: vfx-float-label 860ms cubic-bezier(.18,.8,.28,1) both;
+}
+
+.vfx-rarity-beam {
+  --vfx-rgb: 185 156 255;
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: -12%;
+  width: 72%;
+  height: 130%;
+  transform: translateX(-50%) perspective(200px) rotateX(8deg) scaleX(.30);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  background:
+    linear-gradient(90deg, transparent, rgb(var(--vfx-rgb) / .12) 25%, rgb(var(--vfx-rgb) / .38) 50%, rgb(var(--vfx-rgb) / .12) 75%, transparent),
+    radial-gradient(ellipse at 50% 90%, rgb(var(--vfx-rgb) / .40), transparent 62%);
+  filter: blur(1px);
+  mix-blend-mode: screen;
+  animation: vfx-rarity-beam 1100ms cubic-bezier(.15,.82,.26,1) both;
+}
+
+.vfx-press-ring {
+  position: absolute;
+  z-index: 20;
+  left: var(--press-x);
+  top: var(--press-y);
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(255,255,255,.38);
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  box-shadow: 0 0 12px rgba(187,160,255,.22);
+  transform: translate(-50%, -50%) scale(.2);
+  opacity: .8;
+  animation: vfx-press 420ms ease-out both;
+}
+
+.tone-gold { --vfx-rgb: 242 198 104; }
+.tone-aqua { --vfx-rgb: 111 219 239; }
+.tone-arcane { --vfx-rgb: 185 156 255; }
+.tone-rose { --vfx-rgb: 255 132 197; }
+.tone-prismatic { --vfx-rgb: 232 201 255; }
+.tone-danger { --vfx-rgb: 255 103 105; }
+.tone-mist { --vfx-rgb: 160 169 186; }
+
+@keyframes vfx-screen-enter {
+  0% { opacity: 0; transform: scale(.94); }
+  22% { opacity: .8; }
+  100% { opacity: 0; transform: scale(1.06); }
+}
+
+@keyframes vfx-flash {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes vfx-particle-flight {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.45); }
+  16% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.08); }
+}
+
+@keyframes vfx-float-label {
+  0% { opacity: 0; transform: translate(-50%, -20%) scale(.92); }
+  18% { opacity: 1; transform: translate(-50%, -55%) scale(1); }
+  72% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -125%) scale(.98); }
+}
+
+@keyframes vfx-rarity-beam {
+  0% { opacity: 0; transform: translateX(-50%) perspective(200px) rotateX(8deg) scaleX(.12) scaleY(.4); }
+  22% { opacity: .95; }
+  65% { opacity: .55; transform: translateX(-50%) perspective(200px) rotateX(8deg) scaleX(.62) scaleY(1); }
+  100% { opacity: 0; transform: translateX(-50%) perspective(200px) rotateX(8deg) scaleX(.84) scaleY(1.06); }
+}
+
+@keyframes vfx-press {
+  0% { opacity: .7; transform: translate(-50%, -50%) scale(.2); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(7); }
+}
+
+@media (max-width: 390px) {
+  .vfx-particle { box-shadow: 0 0 7px rgb(var(--vfx-rgb) / .7); }
+  .vfx-float-label { max-width: 66%; font-size: 9px; }
+  .vfx-rarity-beam { width: 62%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vfx-screen-wash,
+  .vfx-flash,
+  .vfx-burst,
+  .vfx-float-label,
+  .vfx-rarity-beam,
+  .vfx-press-ring { display: none; }
+}

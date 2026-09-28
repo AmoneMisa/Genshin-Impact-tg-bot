@@ -1,14 +1,28 @@
 export default {
     academy: {
         name: "Академия",
-        description: "Основное место для добычи золота. Работает до 36 часов автономно. Если вы не соберёте золото после 36 часов непрерывной работы шахты, оно перестанет накапливаться.",
-        startLvl: 0,
-        updateCostGold: 500,
-        updateCostCrystal: 100,
-        timeForUpdate: 10,
-        maxLvl: 20,
-        type: "academy",
-        available: false
+        description: "Место обучения боевому искусству. Производит очки прокачки навыков (ОП), которые тратятся на усиление скиллов персонажа. Работает до 36 часов автономно. Если вы не соберёте ОП после 36 часов непрерывной работы академии, они перестанут накапливаться.",
+        startLvl: 1,
+        upgradeTime: [{
+            level: 2, time: 0.5,
+        }, {
+            level: 3, time: 0.5,
+        }, {
+            level: 4, time: 0.75,
+        }, {
+            level: 5, time: 0.75,
+        }], // часы
+        maxLvl: 30,
+        productionPerHour: 5,
+        available: true,
+        maxWorkHoursWithoutCollection: 36,
+        upgradeCosts: [{
+            level: 2,
+            gold: 500,
+            crystals: 15,
+            ironOre: 20
+        }],
+        resourcesType: "sp"
     },
     goldMine: {
         name: "Золотая шахта",
@@ -398,7 +412,7 @@ export default {
             royal: {
                 name: "Королевский",
                 isPayment: true,
-                cost: 30000,
+                cost: 33000,
                 bonus: {
                     description: "Даёт +5% к атаке персонажа",
                     name: "Рыцарская доблесть",
@@ -411,7 +425,7 @@ export default {
             elven: {
                 name: "Эльфийский",
                 isPayment: true,
-                cost: 33000,
+                cost: 30000,
                 bonus: {
                     description: "Даёт +7% к атаке персонажа",
                     name: "Эльфийская точность",
@@ -782,6 +796,6 @@ export default {
             {level: 12, gold: 1569000, ironOre: 72500, crystals: 15000},
         ],
         maxLvl: 12,
-        available: false
+        available: true
     }
 };

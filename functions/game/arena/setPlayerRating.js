@@ -1,9 +1,8 @@
-import { arenaRating } from '../../../data.js';
+import { adjustArenaRating } from './ratingStore.js';
 
-export default function (userId, arenaType, chatId, points) {
-    if (arenaType === "common") {
-        arenaRating[arenaType][chatId][userId] += points;
-    } else {
-        arenaRating[arenaType][userId] += points;
-    }
+/**
+ * Атомарно добавляет/вычитает очки рейтинга.
+ */
+export default async function(userId, arenaType, chatId, points) {
+    return adjustArenaRating(userId, arenaType, chatId, points);
 }

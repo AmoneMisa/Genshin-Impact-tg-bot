@@ -1,12 +1,17 @@
-import getBossByName from './getters/getBossByName.js';
-import getBossesByChatId from './getters/getBossesByChatId.js';
+import Boss from "../../../db/models/Boss.js";
 
-export default function (chatId, boss) {
-    let chatBosses = getBossesByChatId(chatId);
-
-    if (getBossByName(chatId, boss.name)) {
+/**
+ * Добавляет босса в чат
+ * @param {Number} chatId - ID чата
+ * @param {Object} boss - объект босса { name, hp, attack, defense, ... }
+ */
+export default async function(chatId, boss) {
+    // Проверяем, есть ли уже босс с таким именем в этом чате
+    const existingBoss = await Boss.findOne({ chatId, name: boss.name });
+    if (existingBoss) {
         throw new Error(`Босс с таким именем: ${boss.name} уже есть в чате с айди: ${chatId}`);
     }
 
-    chatBosses.push(boss);
+    // Создаём нового босса
+    return await Boss.create({chatId, ...boss});
 }

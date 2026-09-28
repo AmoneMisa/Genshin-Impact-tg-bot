@@ -1,0 +1,236 @@
+/* Arcade (arcade.js + arcade-stage.js), prototype "Баскетбол" style: a painted
+   hall stage beside stat panels, a bet stepper and one big gold button. */
+.overlay-panel.arcade-panel {
+  --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
+  display: grid; gap: 10px;
+  padding-top: 12px;
+  border: 1px solid var(--gold-dim);
+  background: radial-gradient(ellipse 90% 40% at 50% 0%, rgba(70, 60, 100, .25), transparent 70%), linear-gradient(180deg, rgba(20, 16, 26, .98), rgba(9, 8, 13, .99));
+  color: #eee4cf;
+}
+.arcade-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.arcade-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.arcade-round {
+  position: static; width: 34px; height: 34px; padding: 0;
+  display: grid; place-items: center;
+  border-radius: 50%; border: 1px solid var(--gold-dim);
+  background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif);
+}
+
+.arcade-tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .7); overflow: hidden; }
+.arcade-tab { position: relative; min-height: 40px; padding: 0; border: 0; border-right: 1px solid rgba(107, 83, 38, .45); background: transparent; font-size: 20px; filter: grayscale(.7); opacity: .75; transition: filter .2s ease, opacity .2s ease; }
+.arcade-tab:last-child { border-right: 0; }
+.arcade-tab.active { filter: none; opacity: 1; background: linear-gradient(180deg, #6a4f1f, #3a2a10); box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), inset 0 0 0 1px var(--gold); }
+.arcade-tab.active span { display: inline-block; animation: arcade-tab-pop .4s cubic-bezier(.2, 1.4, .4, 1); }
+.arcade-tab i { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: #7fe07e; box-shadow: 0 0 6px #7fe07e; }
+.arcade-rules { margin: 0; text-align: center; font: 400 12px/1.4 var(--serif); color: rgba(238, 228, 207, .75); }
+
+.arcade-arena { display: grid; grid-template-columns: minmax(0, 1fr) 84px; gap: 8px; }
+.arcade-stats { display: grid; gap: 8px; align-content: stretch; }
+.arcade-stat {
+  display: grid; place-content: center; justify-items: center; gap: 6px;
+  padding: 8px 4px;
+  border-radius: 6px; border: 1px solid var(--gold-dim);
+  background: rgba(6, 5, 9, .75);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .06);
+}
+.arcade-stat small { font: 400 11px/1 var(--serif); color: rgba(238, 228, 207, .7); }
+.arcade-stat strong { font: 700 20px/1 system-ui, sans-serif; color: #fff; font-variant-numeric: tabular-nums; }
+.arcade-stat.good strong { color: #9fe39a; }
+.arcade-stat.bad strong { color: #ff8a80; }
+
+.arcade-verdict { display: grid; justify-items: center; gap: 2px; animation: arcade-verdict .6s cubic-bezier(.2, 1.3, .4, 1) both; }
+.arcade-verdict strong { font: 700 24px/1 var(--serif); }
+.arcade-verdict.win strong { color: #f3dca6; text-shadow: 0 0 18px rgba(232, 193, 90, .7); }
+.arcade-verdict.lose strong { color: #ff9a90; }
+.arcade-verdict small { font-size: 13px; color: #fff; }
+
+.arcade-bet { display: grid; gap: 8px; }
+.arcade-stepper { display: grid; grid-template-columns: 44px 1fr 44px; gap: 8px; }
+.arcade-stepper button, .arcade-chips button {
+  min-height: 38px; padding: 0;
+  border-radius: 6px; border: 1px solid var(--gold-dim);
+  background: linear-gradient(180deg, #2a2233, #120f18);
+  color: #f3dca6; font: 700 18px/1 var(--serif);
+}
+.arcade-stepper input { min-width: 0; min-height: 38px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .8); color: #fff; font: 700 18px/1 system-ui, sans-serif; text-align: center; }
+.arcade-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.arcade-chips button { font: 600 13px/1 system-ui, sans-serif; color: #eee4cf; }
+.arcade-chips button:disabled { opacity: .4; }
+.arcade-note { text-align: center; font-size: 11px; color: rgba(238, 228, 207, .6); }
+
+.arcade-btn {
+  width: 100%; min-height: 48px; padding: 8px 14px;
+  border-radius: 6px; border: 1px solid var(--gold);
+  background: linear-gradient(180deg, #6a4f1f, #3a2a10);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), 0 6px 14px rgba(0, 0, 0, .5), 0 0 16px rgba(216, 179, 106, .18);
+  color: #fbeccb; font: 700 17px/1 var(--serif);
+}
+.arcade-btn.ghost { background: transparent; border-color: var(--gold-dim); color: rgba(243, 220, 166, .85); box-shadow: none; }
+.arcade-btn.small { min-height: 36px; font-size: 13px; }
+.arcade-btn:not(:disabled):active { transform: translateY(1px); }
+.arcade-overlay.busy .arcade-btn, .arcade-overlay.busy .arcade-tab { pointer-events: none; }
+.arcade-overlay.rolling .arcade-btn { opacity: .6; }
+.arcade-feedback { min-height: 16px; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .75); }
+
+/* ------------------------------------------------------------------ */
+/* Stage                                                              */
+/* ------------------------------------------------------------------ */
+.arcade-stage {
+  position: relative; overflow: hidden; isolation: isolate;
+  aspect-ratio: 1 / 1.05;
+  border-radius: 8px; border: 1px solid var(--gold-dim);
+  /* A torch-lit stone hall drawn in CSS: brick courses, stone floor. */
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 36%, rgba(255, 190, 110, .12), transparent 70%),
+    linear-gradient(180deg, transparent 74%, rgba(0, 0, 0, .55) 74%, #17130f 76%, #0d0a08),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .35) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .28) 0 1px, transparent 1px 36px),
+    linear-gradient(180deg, #2a2530, #1c1820 60%, #141117);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, .85);
+}
+.arcade-stage::before {
+  /* Two moonlit arched windows. */
+  content: ""; position: absolute; z-index: -1; top: 6%; left: 8%; right: 8%; height: 42%;
+  background:
+    radial-gradient(ellipse 50% 22% at 50% 22%, rgba(140, 170, 230, .5) 0 98%, transparent 100%) 0 0 / 22% 100% no-repeat,
+    linear-gradient(rgba(140, 170, 230, .5), rgba(60, 80, 130, .35)) 0 22% / 22% 78% no-repeat,
+    radial-gradient(ellipse 50% 22% at 50% 22%, rgba(140, 170, 230, .5) 0 98%, transparent 100%) 100% 0 / 22% 100% no-repeat,
+    linear-gradient(rgba(140, 170, 230, .5), rgba(60, 80, 130, .35)) 100% 22% / 22% 78% no-repeat;
+  filter: blur(.4px);
+  opacity: .55;
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 42%, transparent 42% 46%);
+  mask-image: repeating-linear-gradient(90deg, #000 0 42%, transparent 42% 46%);
+}
+.arcade-stage::after {
+  /* Wall torches: flickering warm pools of light at both sides. */
+  content: ""; position: absolute; z-index: -1; inset: 0;
+  background:
+    radial-gradient(circle at 4% 52%, rgba(255, 170, 70, .55), rgba(255, 120, 40, .15) 12%, transparent 26%),
+    radial-gradient(circle at 96% 52%, rgba(255, 170, 70, .55), rgba(255, 120, 40, .15) 12%, transparent 26%);
+  animation: as-torch 2.6s ease-in-out infinite alternate;
+}
+.as-flash { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+.as-flash.win.on { background: radial-gradient(circle at 50% 40%, rgba(255, 220, 140, .55), transparent 60%); animation: as-flash .9s ease-out; }
+
+/* Projectile: x on the wrapper, y/scale/spin on the ball (individual transform props). */
+.as-shot { position: absolute; left: 50%; bottom: 7%; width: 40px; height: 40px; margin-left: -20px; z-index: 3; }
+.as-shot > * { position: relative; top: 0; left: 0; display: block; }
+.as-shot.fly { animation: as-x var(--dur) linear forwards; }
+.as-shot.fly > * { animation: as-y var(--dur) forwards, as-scale var(--dur) ease-in forwards; }
+.as-shot.fly > .spin { animation: as-y var(--dur) forwards, as-scale var(--dur) ease-in forwards, as-spin .45s linear infinite; }
+.as-shot.after-hit > * { animation: as-y var(--dur) forwards, as-scale var(--dur) ease-in forwards, as-spin .45s linear infinite, as-drop .5s ease-in forwards; }
+.as-shot.after-rim > *, .as-shot.after-post > * { animation: as-y var(--dur) forwards, as-scale var(--dur) ease-in forwards, as-spin .45s linear infinite, as-bounce .55s ease-out forwards; }
+.as-shot.after-miss > * { animation: as-y var(--dur) forwards, as-scale var(--dur) ease-in forwards, as-spin .45s linear infinite, as-fall .55s ease-in forwards; }
+
+.as-ball { width: 40px; height: 40px; border-radius: 50%; box-shadow: inset -6px -8px 12px rgba(0, 0, 0, .45), 0 6px 10px rgba(0, 0, 0, .5); }
+.as-ball.basket {
+  background:
+    linear-gradient(90deg, transparent 47%, #3a1a08 47% 53%, transparent 53%),
+    linear-gradient(0deg, transparent 47%, #3a1a08 47% 53%, transparent 53%),
+    radial-gradient(circle at 35% 30%, #ffb070, #e0661c 55%, #8a3a0c);
+}
+.as-ball.soccer { background: radial-gradient(circle at 50% 50%, #111 0 16%, transparent 17%), radial-gradient(circle at 18% 30%, #111 0 10%, transparent 11%), radial-gradient(circle at 82% 30%, #111 0 10%, transparent 11%), radial-gradient(circle at 30% 85%, #111 0 10%, transparent 11%), radial-gradient(circle at 70% 85%, #111 0 10%, transparent 11%), radial-gradient(circle at 35% 30%, #fff, #d6d6d6 70%); }
+.as-ball.bowling { width: 36px; height: 36px; background: radial-gradient(circle at 60% 30%, #1a1a1a 0 5%, transparent 6%), radial-gradient(circle at 45% 28%, #1a1a1a 0 5%, transparent 6%), radial-gradient(circle at 52% 42%, #1a1a1a 0 5%, transparent 6%), radial-gradient(circle at 35% 30%, #9a6ae0, #4a2a8a 60%, #1e103e); }
+
+/* Basketball */
+.as-board { position: absolute; left: 50%; top: 8%; width: 46%; height: 30%; translate: -50% 0; border: 3px solid rgba(240, 240, 240, .85); border-radius: 4px; background: rgba(220, 230, 255, .12); box-shadow: 0 6px 16px rgba(0, 0, 0, .5); }
+.as-board-square { position: absolute; left: 34%; right: 34%; bottom: 10%; height: 34%; border: 2px solid rgba(240, 240, 240, .85); }
+.as-hoop { position: absolute; left: 50%; top: 36%; width: 24%; translate: -50% 0; z-index: 4; }
+.as-rim { display: block; height: 8px; border-radius: 50%; border: 3px solid #e8561c; box-shadow: 0 0 8px rgba(232, 86, 28, .5); }
+.as-net { display: block; height: 30px; margin: -3px 8% 0; clip-path: polygon(0 0, 100% 0, 82% 100%, 18% 100%); background: repeating-linear-gradient(60deg, rgba(255, 255, 255, .8) 0 1.5px, transparent 1.5px 7px), repeating-linear-gradient(-60deg, rgba(255, 255, 255, .8) 0 1.5px, transparent 1.5px 7px); transform-origin: 50% 0; }
+.as-hoop.swish .as-net { animation: as-swish .6s ease-out .1s; }
+.as-hoop.clank { animation: as-clank .35s ease-out; }
+
+/* Football */
+.as-goal { position: absolute; left: 50%; top: 10%; width: 74%; height: 40%; translate: -50% 0; border: 5px solid #eee; border-bottom: 0; border-radius: 3px 3px 0 0; box-shadow: 0 6px 16px rgba(0, 0, 0, .4); }
+.as-goal-net { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .28) 0 1px, transparent 1px 9px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .28) 0 1px, transparent 1px 9px); }
+.as-goal.goal .as-goal-net { animation: as-net .6s ease-out; }
+.as-keeper { position: absolute; left: 50%; bottom: 0; width: 18px; height: 42px; margin-left: -9px; border-radius: 8px 8px 3px 3px; background: linear-gradient(180deg, #f0c090 0 26%, #d8b36a 26% 70%, #222 70%); transition: translate .45s cubic-bezier(.2, .8, .3, 1), rotate .45s ease; }
+.as-goal.dive .as-keeper { translate: calc(var(--dive, 1) * 150%) -10%; rotate: calc(var(--dive, 1) * 70deg); }
+.as-pitch { position: absolute; left: -10%; right: -10%; bottom: -30%; height: 60%; border-radius: 50%; background: radial-gradient(ellipse at 50% 30%, #2f7a3a, #133a1a 70%); opacity: .85; }
+
+/* Darts */
+.as-dartboard {
+  position: absolute; left: 50%; top: 8%; width: 62%; aspect-ratio: 1; translate: -50% 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 7%, #1a7a3a 7% 13%, transparent 13%),
+    repeating-conic-gradient(#111 0 9deg, #efe2c0 9deg 18deg),
+    #111;
+  box-shadow: 0 0 0 5px #2a1a10, 0 0 0 7px #6b5326, 0 10px 24px rgba(0, 0, 0, .6);
+  -webkit-mask-image: radial-gradient(circle, #000 70%, transparent 71%);
+  mask-image: radial-gradient(circle, #000 70%, transparent 71%);
+}
+.as-dartboard::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, transparent 0 40%, rgba(200, 30, 40, .85) 40% 45%, transparent 45% 64%, rgba(200, 30, 40, .85) 64% 69%, transparent 69%); }
+.as-bull { position: absolute; left: 50%; top: 50%; width: 9%; height: 9%; translate: -50% -50%; border-radius: 50%; background: #c81e28; box-shadow: 0 0 0 3px #1a7a3a; }
+.as-dartboard.thud { animation: as-thud .25s ease-out; }
+.as-shot.dart { left: 80%; bottom: 4%; width: 10px; height: 44px; margin-left: -5px; }
+.as-dart { width: 6px; height: 44px; margin: 0 auto; rotate: -24deg; background: linear-gradient(180deg, #ccc 0 30%, #d8b36a 30% 62%, transparent 62%), linear-gradient(90deg, transparent, transparent); border-radius: 2px; filter: drop-shadow(0 4px 4px rgba(0, 0, 0, .6)); }
+.as-dart::after { content: ""; position: absolute; left: -5px; right: -5px; bottom: 0; height: 16px; background: linear-gradient(180deg, #c81e28, #7a0f16); clip-path: polygon(50% 0, 100% 100%, 50% 75%, 0 100%); }
+.as-shot.dart.stuck > * { animation: as-y var(--dur) forwards, as-scale var(--dur) ease-in forwards, as-wobble .4s ease-out; }
+
+/* Bowling */
+.as-lane { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; clip-path: polygon(34% 0, 66% 0, 100% 100%, 0 100%); background: repeating-linear-gradient(90deg, rgba(0, 0, 0, .12) 0 2px, transparent 2px 16px), linear-gradient(180deg, #5a3a1c, #b07a40); opacity: .9; }
+.as-pins { position: absolute; left: 50%; top: 10%; width: 30%; height: 26%; translate: -50% 0; }
+.as-pin { position: absolute; width: 11px; height: 30px; margin-left: -5.5px; border-radius: 45% 45% 30% 30% / 30% 30% 20% 20%; background: linear-gradient(180deg, #fff 0 30%, #c81e28 30% 38%, #fff 38%); box-shadow: 0 4px 5px rgba(0, 0, 0, .5); transform-origin: 50% 100%; }
+.as-pin.p1 { left: 15%; top: 0; } .as-pin.p2 { left: 50%; top: 0; } .as-pin.p3 { left: 85%; top: 0; }
+.as-pin.p4 { left: 32%; top: 30%; } .as-pin.p5 { left: 68%; top: 30%; } .as-pin.p6 { left: 50%; top: 60%; }
+.as-pin.down { animation: as-pin-fall .55s cubic-bezier(.3, .6, .4, 1) forwards; }
+.as-shot.bowl { bottom: 5%; }
+
+/* Dice */
+.as-die-wrap { position: absolute; left: 50%; top: 50%; width: 68px; height: 68px; margin: -46px 0 0 -34px; perspective: 500px; }
+.as-die { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+.as-die.tumble { animation: as-tumble 1s cubic-bezier(.2, .7, .3, 1) forwards; }
+.die-face { position: absolute; inset: 0; display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); padding: 9px; border-radius: 12px; background: radial-gradient(circle at 35% 30%, #fffaf0, #e6dcc6); box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .12), inset 0 -4px 8px rgba(0, 0, 0, .15); backface-visibility: hidden; }
+.die-face i { width: 11px; height: 11px; margin: auto; border-radius: 50%; }
+.die-face i.on { background: radial-gradient(circle at 40% 35%, #555, #111); }
+.die-face.f1 i.on { background: radial-gradient(circle at 40% 35%, #e04a4a, #8a1010); width: 15px; height: 15px; }
+.die-face.f1 { transform: translateZ(34px); }
+.die-face.f6 { transform: rotateY(180deg) translateZ(34px); }
+.die-face.f2 { transform: rotateY(90deg) translateZ(34px); }
+.die-face.f5 { transform: rotateY(-90deg) translateZ(34px); }
+.die-face.f3 { transform: rotateX(90deg) translateZ(34px); }
+.die-face.f4 { transform: rotateX(-90deg) translateZ(34px); }
+.as-die-shadow { position: absolute; left: 50%; top: 66%; width: 70px; height: 14px; margin-left: -35px; border-radius: 50%; background: radial-gradient(ellipse, rgba(0, 0, 0, .6), transparent 70%); }
+
+/* Slots */
+.as-machine { position: absolute; left: 50%; top: 50%; translate: -50% -50%; display: flex; gap: 8px; padding: 10px; border-radius: 10px; border: 2px solid var(--gold); background: linear-gradient(180deg, #2a1f10, #120c05); box-shadow: 0 0 0 4px #1a1209, 0 0 24px rgba(216, 179, 106, .3), 0 12px 24px rgba(0, 0, 0, .6); }
+.as-reel { width: clamp(40px, 15vw, 58px); height: 72px; overflow: hidden; border-radius: 6px; background: linear-gradient(180deg, #d8d0c0, #fffaf0 30% 70%, #d8d0c0); box-shadow: inset 0 6px 8px rgba(0, 0, 0, .35), inset 0 -6px 8px rgba(0, 0, 0, .35); }
+.as-strip { display: grid; }
+.as-strip span { height: 72px; display: grid; place-items: center; font-size: 36px; }
+.as-strip.spin { animation: as-reel var(--dur) cubic-bezier(.15, .6, .3, 1.08) forwards; }
+.as-slots-line { position: absolute; left: 12%; right: 12%; top: 50%; height: 2px; background: rgba(200, 30, 40, .7); box-shadow: 0 0 6px rgba(200, 30, 40, .8); }
+
+@keyframes as-x { to { translate: var(--tx) 0; } }
+@keyframes as-y {
+  0% { translate: 0 0; animation-timing-function: cubic-bezier(.3, .7, .6, 1); }
+  50% { translate: 0 var(--peak); animation-timing-function: cubic-bezier(.4, 0, .7, .3); }
+  100% { translate: 0 var(--ty); }
+}
+@keyframes as-scale { to { scale: var(--scale, 1); } }
+@keyframes as-spin { to { rotate: 360deg; } }
+@keyframes as-drop { to { top: 42px; opacity: 0; } }
+@keyframes as-bounce { 40% { top: -16px; left: 22px; } to { top: 60px; left: 60px; opacity: 0; } }
+@keyframes as-fall { to { top: 140px; opacity: 0; } }
+@keyframes as-swish { 0% { scale: 1 1; } 30% { scale: .85 1.25; } 60% { scale: 1.05 .95; } 100% { scale: 1 1; } }
+@keyframes as-clank { 0%, 100% { rotate: 0deg; } 30% { rotate: 4deg; } 60% { rotate: -3deg; } }
+@keyframes as-net { 0% { scale: 1; } 30% { scale: 1.06 .94; } 100% { scale: 1; } }
+@keyframes as-thud { 0% { scale: 1; } 40% { scale: .97; } 100% { scale: 1; } }
+@keyframes as-wobble { 0%, 100% { rotate: 0deg; } 25% { rotate: 6deg; } 60% { rotate: -4deg; } }
+@keyframes as-pin-fall { to { rotate: var(--fall); translate: 0 -6px; opacity: .15; } }
+@keyframes as-tumble {
+  0% { transform: translateY(-110px) rotateX(0) rotateY(0); }
+  55% { transform: translateY(0) rotateX(calc(var(--rx) * .8)) rotateY(calc(var(--ry) * .8)); }
+  72% { transform: translateY(-18px) rotateX(calc(var(--rx) * .95)) rotateY(calc(var(--ry) * .95)); }
+  100% { transform: translateY(0) rotateX(var(--rx)) rotateY(var(--ry)); }
+}
+@keyframes as-reel { to { transform: translateY(calc(var(--stop) * -72px)); } }
+@keyframes as-torch { 0% { opacity: .75; } 35% { opacity: 1; } 60% { opacity: .82; } 100% { opacity: .95; } }
+@keyframes as-flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes arcade-tab-pop { from { transform: scale(.6); } to { transform: none; } }
+@keyframes arcade-verdict { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 360px) { .arcade-arena { grid-template-columns: minmax(0, 1fr) 72px; } .arcade-stat strong { font-size: 17px; } }
+@media (prefers-reduced-motion: reduce) { .arcade-tab.active span, .arcade-verdict, .arcade-stage::after { animation: none !important; } }

@@ -1,6 +1,6 @@
 import getUserName from '../../getters/getUserName.js';
 
-export default function (sessions) {
+export default async function (sessions) {
     let arrSessions = Object.values(sessions);
 
     if (arrSessions.length === 0) {
@@ -12,7 +12,7 @@ export default function (sessions) {
     arrSessions.sort((a, b) => b.sword - a.sword);
 
     for (let session of arrSessions) {
-        message += `${getUserName(session, "name")}: ${session.sword} мм.\n`;
+        message += `${await getUserName(session, "name")}: ${session.sword} мм.\n`;
     }
 
     return message;

@@ -1,22 +1,36 @@
-import getMaxHp from '../game/player/getters/getMaxHp.js';
-import { sessions } from '../../data.js';
+import Chat from "../../db/models/Chat.js";
+import getMaxHp from "../game/player/getters/getMaxHp.js";
 
-export default function () {
-    for (let chatSession of Object.values(sessions)) {
-        for (let session of Object.values(chatSession.members)) {
-            if (session.userChatData.user.is_bot) {
-                continue;
-            }
+/**
+ * Проверяет всех игроков и респаунит их, если время прошло и HP = 0
+ */
+export default async function() {
+    const chats = await Chat.find({});
 
-            if (new Date().getTime() < session.game.respawnTime) {
-                continue;
-            }
+    for (const chat of chats) {
+        let updated = false;
 
-            if (session.game.gameClass.stats.hp !== 0) {
-                continue;
-            }
+        for (const member of chat.members) {
+            if (member.userChatData?.user?.is_bot) continue;
 
-            session.game.gameClass.stats.hp = getMaxHp(session, session.game.gameClass) * 0.5;
+            const game = member.game;
+            if (!game) continue;
+
+            // Если время респауна ещё не прошло
+            if (Date.now() < game.respawnTime) continue;
+
+            // Если игрок живой (hp != 0)
+            if (game.gameClass?.stats?.hp !== 0) continue;
+
+            // Восстанавливаем половину максимального HP
+            const maxHp = getMaxHp(member, game.gameClass);
+            game.gameClass.stats.hp = Math.floor(maxHp * 0.5);
+
+            updated = true;
+        }
+
+        if (updated) {
+            await chat.save();
         }
     }
 }

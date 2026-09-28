@@ -1,16 +1,22 @@
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
-import getSession from '../../../functions/getters/getSession.js';
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
+import sleep from "../../../functions/tgBotFunctions/sleep.js";
+import betKeyboard from "../../../functions/game/general/betKeyboard.js";
+import loadPlayer from "../../../functions/getters/loadPlayer.js";
 
 export default [[/(?:^|\s)\/darts\b/, async (msg, session) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    let id;
 
-    if (!session.game.hasOwnProperty('darts')) {
-        session.game.darts = {
+    let { chat, member } = await loadPlayer(msg.chat.id, session.userId);
+    if (!member) {
+        return;
+    }
+
+    if (!member.game.darts) {
+        member.game.darts = {
             bet: 0,
             dart: 0,
             counter: 0,
@@ -18,61 +24,50 @@ export default [[/(?:^|\s)\/darts\b/, async (msg, session) => {
         };
     }
 
-    if (session.game.darts.isStart) {
-        return await sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-        }, 7000)
+    if (member.game.darts.isStart) {
+        return sendMessageWithDelete(
+            msg.chat.id,
+            "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.",
+            { ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}) },
+            7000
+        );
     }
 
-    sendMessage(msg.chat.id, `@${getUserName(session, "nickname")}, твоя ставка: 0`, {
-        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-        disable_notification: true,
-        reply_markup: {
-            inline_keyboard: [[{
-                text: "Ставка (+100)",
-                callback_data: "darts_bet"
-            }, {
-                text: "Ставка (х2)",
-                callback_data: "darts_double_bet"
-            }], [{
-                text: "Ставка (+1000)",
-                callback_data: "darts_thousand_bet"
-            }, {
-                text: "Ставка (х5)",
-                callback_data: "darts_xfive_bet"
-            }], [{
-                text: "Ставка (+10000)",
-                callback_data: "darts_10t_bet"
-            }, {
-                text: "Ставка (x10)",
-                callback_data: "darts_xten_bet"
-            }], [{
-                text: "Ставка (x20)",
-                callback_data: "darts_x20_bet"
-            }, {
-                text: "Ставка (x50)",
-                callback_data: "darts_x50_bet"
-            }], [{
-                text: "Всё или ничего",
-                callback_data: "darts_allin_bet"
-            }]]
-        }
-    }).then(message => id = message.message_id);
+    await chat.save();
 
-    function startGame() {
-        session.game.darts.isStart = true;
-        editMessageText(`@${getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 13. При трёх "яблочках", твоя ставка удвоится.`, {
-            message_id: id,
-            chat_id: msg.chat.id,
+    const message = await sendMessage(
+        msg.chat.id,
+        `@${await getUserName(session, "nickname")}, твоя ставка: 0`,
+        {
+            ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
             disable_notification: true,
             reply_markup: {
-                inline_keyboard: [[{
-                    text: "Сделать бросок",
-                    callback_data: "darts_pull"
-                }]]
+                inline_keyboard: betKeyboard("darts")
             }
-        });
+        }
+    );
+
+    // Жёсткая пауза 20 секунд для ставок
+    await sleep(20000);
+
+    ({ chat, member } = await loadPlayer(msg.chat.id, session.userId));
+    if (!member || !member.game.darts) {
+        return;
     }
 
-    setTimeout(() => startGame(), 20 * 1000);
+    // Автоматический старт игры
+    member.game.darts.isStart = true;
+    await chat.save();
+
+    await editMessageText(
+        `@${await getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 13. При трёх "яблочках", твоя ставка удвоится.`,
+        {
+            chat_id: msg.chat.id,
+            message_id: message.message_id,
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [[{ text: "Сделать бросок", callback_data: "darts_pull" }]]
+            }
+        }
+    );
 }]];

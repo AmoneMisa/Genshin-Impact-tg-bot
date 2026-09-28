@@ -9,46 +9,45 @@ import getCard from '../../../functions/game/point21/getCard.js';
 import endGameTimer from '../../../functions/game/general/endGameTimer.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
-import isMassGameAlreadyStarted from '../../../functions/game/general/isMassGameAlreadyStarted.js';
+import sleep from "../../../functions/tgBotFunctions/sleep.js";
+import betKeyboard from "../../../functions/game/general/betKeyboard.js";
+import isMassGameAlreadyStarted from "../../../functions/game/general/isMassGameAlreadyStarted.js";
 
-export default [[/(?:^|\s)\/point\b/, (msg, session) => {
-    deleteMessage(msg.chat.id, msg.message_id);
-    let chatSession = getChatSession(msg.chat.id);
-    let members = getMembers(msg.chat.id);
-    let userId = session.userChatData.user.id;
+export default [[/(?:^|\s)\/point\b/, async (msg, session) => {
+    await deleteMessage(msg.chat.id, msg.message_id);
 
-    if (chatSession.game.points.gameSessionIsStart) {
-        if (new Date().getTime() - chatSession.game.points.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
-            return sendMessageWithDelete(msg.chat.id, "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.", {
-                ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-            }, 7 * 1000)
+    const chatSession = await getChatSession(msg.chat.id);
+    const members = await getMembers(msg.chat.id);
+    const userId = session.userId;
+
+    if (chatSession.game.points?.gameSessionIsStart) {
+        if (Date.now() - chatSession.game.points.gameSessionLastUpdateAt <= 2 * 60 * 1000) {
+            return sendMessageWithDelete(
+                msg.chat.id,
+                "Игра уже идёт. Команду нельзя вызвать повторно до окончания игры.",
+                { ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}) },
+                7000
+            );
         }
     }
 
     if (isMassGameAlreadyStarted(chatSession)) {
-        return sendMessageWithDelete(msg.chat.id, "Одна из игр на несколько человек уже запущена. Команду нельзя вызвать до окончания групповой игры.", {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-        }, 7 * 1000);
+        return sendMessageWithDelete(
+            msg.chat.id,
+            "Одна из игр на несколько человек уже запущена. Команду нельзя вызвать до окончания групповой игры.",
+            { ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}) },
+            7000
+        );
     }
 
-    if (!chatSession.hasOwnProperty("game")) {
-        chatSession.game = {};
-    }
-
-    if (!chatSession.game.hasOwnProperty("points")) {
-        chatSession.game.points = {};
-    }
+    chatSession.game = chatSession.game || {};
+    chatSession.game.points = chatSession.game.points || {};
 
     chatSession.game.points.gameSessionIsStart = true;
-    chatSession.game.points.gameSessionLastUpdateAt = new Date().getTime();
-
+    chatSession.game.points.gameSessionLastUpdateAt = Date.now();
     chatSession.game.points.players = {
-        bot: {
-            isPass: false,
-            usedItems: []
-        }
+        bot: { isPass: false, usedItems: [] }
     };
-
     chatSession.game.points.usedItems = [];
 
     if (!chatSession.game.points.players[userId]) {
@@ -59,97 +58,62 @@ export default [[/(?:^|\s)\/point\b/, (msg, session) => {
         };
     }
 
-    if (!chatSession.game.points.players[userId].hasOwnProperty("usedItems")) {
-        chatSession.game.points.players[userId].usedItems = [];
-    }
+    const message = await sendMessage(
+        msg.chat.id,
+        await gameStatusMessage(chatSession, members, "points"),
+        {
+            ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
+            disable_notification: true,
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Участвовать", callback_data: "points_enter" }],
+                    [{ text: "Покинуть игру", callback_data: "points_leave" }]
+                ]
+            }
+        }
+    );
 
-    sendMessage(msg.chat.id, `${gameStatusMessage(chatSession, members, "points")}`, {
-        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-        disable_notification: true,
+    chatSession.game.points.messageId = message.message_id;
+    await chatSession.save();
+
+    await sendMessageWithDelete(msg.chat.id, "Делайте ставки.", {
+        ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {})
+    }, 7000);
+
+    await editMessageText(betMessage(chatSession.game.points.players, members), {
+        ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
+        chat_id: msg.chat.id,
+        message_id: chatSession.game.points.messageId,
         reply_markup: {
-            inline_keyboard: [[{
-                text: "Участвовать",
-                callback_data: "points_enter"
-            }], [{
-                text: "Покинуть игру",
-                callback_data: "points_leave"
-            }]]
+            inline_keyboard: betKeyboard("points")
         }
-    }).then(message => chatSession.game.points.messageId = message.message_id);
+    });
 
-    function startGame() {
-        for (let playerId of Object.keys(chatSession.game.points.players)) {
-            getCard(chatSession.game.points, playerId);
-            getCard(chatSession.game.points, playerId);
-        }
+    await sleep(25000);
 
-        chatSession.game.points.isStart = true;
-        endGameTimer(chatSession, 20 * 1000, msg.chat.id, "points", msg.message_thread_id);
-
-        return sendMessageWithDelete(msg.chat.id, `Игра началась. Ставки больше не принимаются.`, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-        }, 7 * 1000)
-            .then(() => {
-                editMessageText(pointMessage(chatSession, userId), {
-                    ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-                    chat_id: msg.chat.id,
-                    message_id: chatSession.game.points.messageId,
-                    reply_markup: {
-                        inline_keyboard: [[{
-                            text: "Взять карту",
-                            callback_data: "points_card"
-                        }, {
-                            text: "Пас",
-                            callback_data: "points_pass"
-                        }]]
-                    }
-                });
-            });
+    for (const playerId of Object.keys(chatSession.game.points.players)) {
+        getCard(chatSession.game.points, playerId);
+        getCard(chatSession.game.points, playerId);
     }
 
-    function startBet() {
-        chatSession.game.points.startGameTimeout = +setTimeout(() => startGame(), 25 * 1000);
-        return sendMessageWithDelete(msg.chat.id, `Делайте ставки.`, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {})
-        }, 7 * 1000)
-            .then(() => {
-                editMessageText(betMessage(chatSession.game.points.players, members), {
-                    ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-                    chat_id: msg.chat.id,
-                    message_id: chatSession.game.points.messageId,
-                    reply_markup: {
-                        inline_keyboard: [[{
-                            text: "Ставка (+100)",
-                            callback_data: "points_bet"
-                        }, {
-                            text: "Ставка (х2)",
-                            callback_data: "points_double_bet"
-                        }], [{
-                            text: "Ставка (+1000)",
-                            callback_data: "points_thousand_bet"
-                        }, {
-                            text: "Ставка (х5)",
-                            callback_data: "points_xfive_bet"
-                        }], [{
-                            text: "Ставка (+10000)",
-                            callback_data: "points_10t_bet"
-                        }, {
-                            text: "Ставка (x10)",
-                            callback_data: "points_xten_bet"
-                        }], [{
-                            text: "Ставка (x20)",
-                            callback_data: "points_x20_bet"
-                        }, {
-                            text: "Ставка (x50)",
-                            callback_data: "points_x50_bet"
-                        }], [{
-                            text: "Всё или ничего",
-                            callback_data: "points_allin_bet"
-                        }]]
-                    }
-                });
-            });
-    }
+    chatSession.game.points.isStart = true;
+    await chatSession.save();
 
-    chatSession.game.points.startBetTimeout = +setTimeout(() => startBet(), 15 * 1000);
+    endGameTimer(chatSession, 20000, msg.chat.id, "points", msg.message_thread_id);
+
+    await sendMessageWithDelete(msg.chat.id, "Игра началась. Ставки больше не принимаются.", {
+        ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {})
+    }, 7000);
+
+    await editMessageText(pointMessage(chatSession), {
+        ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
+        chat_id: msg.chat.id,
+        message_id: chatSession.game.points.messageId,
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: "Взять карту", callback_data: "points_card" },
+                    { text: "Пас", callback_data: "points_pass" }]
+            ]
+        }
+    });
 }]];

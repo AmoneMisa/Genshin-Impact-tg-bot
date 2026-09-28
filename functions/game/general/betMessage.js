@@ -1,4 +1,6 @@
-export default function (players, members) {
+import getUserName from "../../getters/getUserName.js";
+
+export default async function (players, members) {
     let str = "";
 
     for (let [id, player] of Object.entries(players)) {
@@ -6,7 +8,7 @@ export default function (players, members) {
             continue;
         }
 
-        str += `Ставка ${members[id].userChatData.user.username} - ${player.bet}\n`;
+        str += `Ставка ${await getUserName(id)} - ${player.bet}\n`;
     }
     return str;
 };

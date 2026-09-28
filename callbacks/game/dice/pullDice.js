@@ -7,11 +7,12 @@ import getUserName from '../../../functions/getters/getUserName.js';
 import deleteMessageTimeout from '../../../functions/tgBotFunctions/deleteMessageTimeout.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 let maxPulls = 3;
 
 export default [[/^dice_pull$/, async function (session, callback) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
@@ -21,31 +22,37 @@ export default [[/^dice_pull$/, async function (session, callback) {
 
     let chatId = callback.message.chat.id;
 
-    await bot.sendDice(chatId, {
+    const diceMsg = await bot.sendDice(chatId, {
         ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {}),
-    }).then(msg => {
-        deleteMessageTimeout(chatId, msg.message_id, 10 * 1000);
-        session.game.dice.dice += msg.dice.value;
     });
+    deleteMessageTimeout(chatId, diceMsg.message_id, 10 * 1000);
 
-    session.game.dice.counter++;
+    const { chat, member } = await loadPlayer(chatId, session.userId);
+    if (!member.game.hasOwnProperty('dice')) {
+        return;
+    }
+    member.game.dice.dice += diceMsg.dice.value;
+    member.game.dice.counter++;
+    await chat.save();
 
-    if (session.game.dice.counter === maxPulls) {
-        let result = isWinPoints(session.game.dice.dice, 12, 18);
+    let dice = member.game.dice;
+
+    if (dice.counter === maxPulls) {
+        let result = isWinPoints(dice.dice, 12, 18);
         if (result) {
             let modifier = 1.2;
-            sendPrize(session, modifier, 'dice');
+            await sendPrize(chatId, session.userId, 'dice', modifier);
             await deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${session.game.dice.bet}\nВыигрыш: ${Math.round(session.game.dice.bet * modifier)}\nВыигрышное число: ${session.game.dice.dice}`, {
+            await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты выиграл!\nСтавка: ${dice.bet}\nВыигрыш: ${Math.round(dice.bet * modifier)}\nВыигрышное число: ${dice.dice}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 7000);
         } else {
             await deleteMessage(chatId, callback.message.message_id);
-            await sendMessageWithDelete(chatId, `@${getUserName(session, "nickname")}, ты проиграл. Твоя сумма кубиков: ${session.game.dice.dice}. Ставка: ${session.game.dice.bet}`, {
+            await sendMessageWithDelete(chatId, `@${await getUserName(session, "nickname")}, ты проиграл. Твоя сумма кубиков: ${dice.dice}. Ставка: ${dice.bet}`, {
                 ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
             }, 7000);
         }
 
-        return endGame(session);
+        return endGame(chatId, session.userId);
     }
 }]];

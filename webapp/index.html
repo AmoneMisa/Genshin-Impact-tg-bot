@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#111426" />
+  <title>WhitesLove Game</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/hud.css" />
+  <link rel="stylesheet" href="/feature-availability.css" />
+  <link rel="stylesheet" href="/gacha.css" />
+  <link rel="stylesheet" href="/equipment.css" />
+  <link rel="stylesheet" href="/builds.css" />
+  <link rel="stylesheet" href="/town.css" />
+  <link rel="stylesheet" href="/town-art.css" />
+  <link rel="stylesheet" href="/arena.css" />
+  <link rel="stylesheet" href="/boss.css" />
+  <link rel="stylesheet" href="/shop.css" />
+  <link rel="stylesheet" href="/sword.css" />
+  <link rel="stylesheet" href="/arcade.css" />
+  <link rel="stylesheet" href="/gold-transfer.css" />
+  <link rel="stylesheet" href="/point21.css" />
+  <link rel="stylesheet" href="/elements.css" />
+  <link rel="stylesheet" href="/social.css" />
+  <link rel="stylesheet" href="/clan.css" />
+  <link rel="stylesheet" href="/steal.css" />
+  <link rel="stylesheet" href="/profile.css" />
+  <link rel="stylesheet" href="/skills.css" />
+  <link rel="stylesheet" href="/forms.css" />
+  <link rel="stylesheet" href="/help.css" />
+  <link rel="stylesheet" href="/updates.css" />
+  <link rel="stylesheet" href="/feedback.css" />
+  <link rel="stylesheet" href="/inventory.css" />
+  <link rel="stylesheet" href="/exchange.css" />
+  <link rel="stylesheet" href="/chat-settings.css" />
+  <link rel="stylesheet" href="/self-mute.css" />
+  <link rel="stylesheet" href="/loot-renderer.css" />
+  <link rel="stylesheet" href="/loot-forge.css" />
+  <link rel="stylesheet" href="/loot-forge-impact.css" />
+  <link rel="stylesheet" href="/loot-forge-milestone.css" />
+  <link rel="stylesheet" href="/loot-equipment.css" />
+  <link rel="stylesheet" href="/equipment-paper-doll.css" />
+  <link rel="stylesheet" href="/equipment-paper-doll-avatar.css" />
+  <link rel="stylesheet" href="/equipment-transfer.css" />
+  <link rel="stylesheet" href="/vfx.css" />
+  <link rel="stylesheet" href="/chest.css" />
+  <link rel="stylesheet" href="/bonus.css" />
+  <link rel="stylesheet" href="/friends.css" />
+  <link rel="stylesheet" href="/city.css" />
+  <link rel="stylesheet" href="/design-system.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+  <script type="importmap">{"imports":{"three":"/vendor/three/build/three.module.min.js","three/addons/":"/vendor/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <canvas id="webgl" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+  <main id="app" class="app-shell">
+    <header class="top-hud" aria-label="Состояние персонажа">
+      <div class="top-hud-hero">
+        <div class="hero-portrait-shell top-portrait" data-open-feature="profile" role="button" tabindex="0" aria-label="Персонаж"><span id="class-sigil" class="hero-sigil">◇</span><span class="top-level" id="level">1</span></div>
+        <div class="top-hud-stats">
+          <div class="top-hud-name"><strong id="hello">Загрузка…</strong><small id="class-name">Путешественник</small></div>
+          <div class="top-bar hp"><span>HP</span><div class="top-bar-track"><i id="hp-fill"></i><b id="hp-text">0 / 1</b></div></div>
+          <div class="top-bar mp"><span>MP</span><div class="top-bar-track"><i id="mp-fill"></i><b id="mp-text">0 / 1</b></div></div>
+          <div class="top-bar cp"><span>CP</span><div class="top-bar-track"><i id="cp-fill"></i><b id="cp-text">0 / 1</b></div></div>
+          <div class="top-bar sp"><span>SP</span><div class="top-bar-track"><i style="width:100%"></i><b id="sp-text">0</b></div></div>
+          <div class="top-bar exp"><span>EXP</span><div class="top-bar-track"><i id="xp-fill"></i><b id="xp-text">0 / 1</b></div></div>
+        </div>
+      </div>
+      <div class="top-hud-side">
+        <div class="top-resources">
+          <div class="top-res"><span aria-hidden="true">🪙</span><strong id="gold" aria-label="Мора">0</strong><button type="button" class="resource-plus" data-open-feature="shop" aria-label="Пополнить: Мора">+</button></div>
+          <div class="top-res"><span aria-hidden="true">💎</span><strong id="crystals" aria-label="Кристаллы">0</strong><button type="button" class="resource-plus" data-open-feature="exchange" aria-label="Пополнить: Кристаллы">+</button></div>
+          <div class="top-res"><span aria-hidden="true">⛏️</span><strong id="ore" aria-label="Руда">0</strong><i></i></div>
+        </div>
+        <div class="top-hud-rail">
+          <button type="button" class="top-banner" data-open-feature="clan" aria-label="Клан"><span aria-hidden="true">🌳</span><small>Сила<br>в единстве</small></button>
+          <div class="top-icons">
+            <button type="button" class="top-icon" data-open-feature="updates" aria-label="Уведомления">✉</button>
+            <button type="button" class="top-icon" data-nav-jump="more" aria-label="Ещё">⚙</button>
+            <button id="fullscreen" type="button" class="top-icon" aria-label="Полный экран">⛶</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <section id="city" class="city-host" data-tab-panel="city" aria-label="Город"></section>
+    <section class="section-head" data-tab-panel="features"><div><div class="eyebrow">РЕЖИМЫ</div><h2 id="tab-title">Куда идём?</h2></div><span class="live-pill">WEBGL</span></section>
+    <section id="game-grid" class="game-grid" data-tab-panel="features"></section>
+    <div id="status" class="status">Подключаем Telegram…</div>
+  </main>
+  <nav id="bottom-nav" class="bottom-nav" aria-label="Разделы"></nav>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

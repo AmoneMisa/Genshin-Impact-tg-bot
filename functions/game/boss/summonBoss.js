@@ -7,13 +7,12 @@ import addBossIntoChatSession from './addBossIntoChatSession.js';
 import updateBossLevel from './updateBossLevel.js';
 import lodash from 'lodash';
 
-export default async function (chatId) {
+export default async function(chatId) {
     let bossTemplate = getRandomBoss();
-    let boss = getBossByName(chatId, bossTemplate.name);
+    let boss = await getBossByName(chatId, bossTemplate.name);
 
     if (!boss) {
-        boss = lodash.cloneDeep(bossTemplate);
-        addBossIntoChatSession(chatId, boss);
+        boss = await addBossIntoChatSession(chatId, lodash.cloneDeep(bossTemplate));
     }
 
     updateBossLevel(boss);
@@ -30,6 +29,11 @@ export default async function (chatId) {
 
     boss.stats = {...getBossStats(boss, bossTemplate), currentSummons, needSummons, lvl};
     boss.stats.currentSummons++;
+
+    boss.markModified("skill");
+    boss.markModified("stats");
+    boss.markModified("listOfDamage");
+    await boss.save();
 
     return boss;
 };

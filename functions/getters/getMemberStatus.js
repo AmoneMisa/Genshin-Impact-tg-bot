@@ -1,15 +1,11 @@
-import getMembers from './getMembers.js';
-import { myId } from '../../config.js';
+import {myId} from "../../config.js";
+import getUser from "./getUser.js";
 
-export default function (chatId, userId) {
-    let members = getMembers(chatId);
-
-    if (members[userId]) {
-        if (members[userId].userChatData.status === "administrator") {
-            return true;
-        }
-
-        if (members[userId].userChatData.status === "creator") {
+export default async function(chatId, userId) {
+    const user = await getUser(chatId, userId);
+    if (user) {
+        const status = user.userChatData?.status;
+        if (status === "administrator" || status === "creator") {
             return true;
         }
     }

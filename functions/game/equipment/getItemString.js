@@ -44,7 +44,7 @@ export default function (item) {
         for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
             str += getStr(characteristicKey, characteristicValue);
         }
-    } else if (item.mainType === "armor") {
+    } else if (item.mainType === "armor" || item.mainType === "jewelry") {
         for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
             str += getStr(characteristicKey, characteristicValue);
         }

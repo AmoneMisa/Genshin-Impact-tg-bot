@@ -15,7 +15,7 @@ export default [[/^gender\.([^.]+)$/, async function (session, callback, [, gend
 
     session.gender = gender;
 
-    await editMessageCaption(`@${getUserName(session, "nickname")}, твой пол: ${genderTranslateMap[gender]}`, {
+    await editMessageCaption(`@${await getUserName(session, "nickname")}, твой пол: ${genderTranslateMap[gender]}`, {
         chat_id: callback.message.chat.id,
         message_id: callback.message.message_id,
         disable_notification: true

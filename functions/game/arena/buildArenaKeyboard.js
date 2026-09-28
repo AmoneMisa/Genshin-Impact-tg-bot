@@ -9,7 +9,7 @@ export default function (callerId, name, rating, arenaType, chatId, showedPlayer
             buttons.push(tempArray);
         }
 
-        if (member.hasOwnProperty("rating")) {
+        if (member.rating !== undefined) {
             tempArray.push({text: `Игрок №${member.name}`, callback_data: `${name}.bot_${member.name}`});
         } else {
             tempArray.push({

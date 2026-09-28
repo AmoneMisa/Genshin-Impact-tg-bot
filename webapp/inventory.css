@@ -1,0 +1,79 @@
+/* Inventory (inventory.js): an RPG bag of potion flasks, vitals that glide
+   when a potion is drunk, and resource chips. */
+.overlay-panel.inventory-panel {
+  --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
+  display: grid; gap: 10px;
+  padding-top: 12px;
+  color: #eee4cf;
+}
+.inv-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.inv-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.inv-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
+.inventory-panel [data-inventory-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+
+.inventory-vitals { display: grid; gap: 6px; }
+.inv-vital { display: grid; gap: 4px; }
+.inv-vital > div { display: flex; justify-content: space-between; font-size: 12px; }
+.inv-vital span { font: 700 12px/1 var(--serif); color: rgba(243, 220, 166, .85); }
+.inv-vital strong { font: 700 12px/1 system-ui, sans-serif; color: #fff; }
+.inv-vital > i { position: relative; display: block; height: 14px; overflow: hidden; border-radius: 4px; border: 1px solid rgba(0, 0, 0, .85); background: linear-gradient(180deg, #07070b, #16151d); box-shadow: 0 0 0 1px rgba(216, 179, 106, .25), inset 0 2px 4px rgba(0, 0, 0, .8); }
+.inv-vital b { position: absolute; inset: 0 auto 0 0; transition: width .9s cubic-bezier(.2, .8, .3, 1); }
+.inv-vital b::after { content: ""; position: absolute; inset: 0 0 50% 0; background: linear-gradient(180deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, .04)); }
+.inv-vital.hp b { background: linear-gradient(180deg, #e0484c, #8b1d25); }
+.inv-vital.mp b { background: linear-gradient(180deg, #4a90e2, #1f4f9c); }
+
+.inventory-result { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px; border-radius: 8px; animation: inv-pop .5s cubic-bezier(.2, 1.4, .4, 1) both; }
+.inventory-result.hp { border: 1px solid rgba(224, 72, 76, .5); background: radial-gradient(ellipse, rgba(224, 72, 76, .25), rgba(12, 10, 16, .9)); }
+.inventory-result.mp { border: 1px solid rgba(74, 144, 226, .5); background: radial-gradient(ellipse, rgba(74, 144, 226, .25), rgba(12, 10, 16, .9)); }
+.inventory-result > span { font: 800 24px/1 var(--serif); color: #fff; }
+.inventory-result strong { display: block; font: 700 18px/1 var(--serif); color: #fff; }
+.inventory-result small { font-size: 11px; color: rgba(238, 228, 207, .7); }
+
+.inventory-section { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.inventory-title { display: flex; justify-content: space-between; align-items: baseline; }
+.inventory-title strong { font: 700 15px/1 var(--serif); color: #f3dca6; }
+.inventory-title small { font-size: 12px; color: rgba(238, 228, 207, .6); }
+.inv-bag { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 8px; border-radius: 8px; border: 1px solid var(--gold-dim); background: linear-gradient(180deg, #1c1611, #0e0b08); box-shadow: inset 0 0 20px rgba(0, 0, 0, .7); }
+.inv-slot { position: relative; aspect-ratio: 1; padding: 0; display: grid; place-items: center; border-radius: 6px; border: 1px solid #3a3440; background: radial-gradient(circle at 50% 40%, #2a2233, #0e0c12); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .6); }
+.inv-slot.blank { opacity: .45; }
+.inv-slot.selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 12px rgba(216, 179, 106, .45); }
+.inv-slot.empty { filter: grayscale(1); opacity: .5; }
+.inv-slot em { position: absolute; right: 4px; bottom: 3px; font: 800 11px/1 system-ui, sans-serif; font-style: normal; color: #fff; text-shadow: 0 0 3px #000, 0 0 3px #000; }
+
+/* CSS flask: rounded body, neck, cork; liquid colour by potion tone. */
+.inv-flask { --liquid: #e0484c; --liquid-rgb: 224 72 76; position: relative; width: 30px; height: 38px; display: block; }
+.inv-flask.tone-mp { --liquid: #4a90e2; --liquid-rgb: 74 144 226; }
+.inv-flask.tone-elixir { --liquid: #ff6ab8; --liquid-rgb: 255 106 184; }
+.inv-flask::before { content: ""; position: absolute; left: 50%; top: 0; width: 10px; height: 6px; margin-left: -5px; border-radius: 2px; background: #8a5a2c; }
+.inv-flask::after { content: ""; position: absolute; left: 50%; top: 5px; width: 8px; height: 8px; margin-left: -4px; background: rgba(220, 230, 255, .35); }
+.inv-liquid { position: absolute; left: 0; right: 0; bottom: 0; height: 26px; border-radius: 50% 50% 45% 45% / 40% 40% 60% 60%; border: 1.5px solid rgba(220, 230, 255, .55); background: linear-gradient(180deg, transparent 22%, var(--liquid) 22%), rgba(220, 230, 255, .12); box-shadow: 0 0 10px rgb(var(--liquid-rgb) / .5), inset -3px -4px 6px rgba(0, 0, 0, .35); overflow: hidden; }
+.inv-liquid::after { content: ""; position: absolute; left: 20%; top: 25%; width: 20%; height: 35%; border-radius: 50%; background: rgba(255, 255, 255, .45); }
+.inv-bubbles { position: absolute; left: 30%; bottom: 6px; width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, .7); opacity: 0; }
+.inv-slot:not(.empty) .inv-bubbles { animation: inv-bubble 2.4s ease-in infinite; }
+.inv-flask.drinking { animation: inv-drink .65s ease-in-out forwards; }
+.inv-flask.drinking .inv-liquid { background: linear-gradient(180deg, transparent 70%, var(--liquid) 70%), rgba(220, 230, 255, .12); transition: background .6s ease; }
+
+.inv-detail { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 10px; border-radius: 8px; border: 1px solid rgba(216, 179, 106, .25); background: linear-gradient(180deg, rgba(26, 21, 30, .94), rgba(12, 10, 16, .94)); animation: inv-in .25s ease both; }
+.inv-detail .inv-flask { width: 36px; height: 46px; margin: 0 auto; }
+.inv-detail .inv-liquid { height: 32px; }
+.inv-detail strong { display: block; font: 700 14px/1.2 var(--serif); color: #f3dca6; }
+.inv-detail small { display: block; font-size: 11px; line-height: 1.35; color: rgba(238, 228, 207, .7); }
+.inv-detail em { display: block; margin-top: 3px; font-style: normal; font-size: 11px; color: rgba(243, 220, 166, .8); }
+.inv-detail button { min-height: 40px; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--gold); background: linear-gradient(180deg, #6a4f1f, #3a2a10); color: #fbeccb; font: 700 14px/1 var(--serif); }
+.inv-detail button:disabled { opacity: .45; }
+.inv-hint { margin: 0; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .6); }
+
+.inventory-resources { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.inventory-resources article { display: flex; justify-content: center; align-items: center; gap: 6px; padding: 8px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .16); background: #0f0c15; }
+.inventory-resources strong { font: 700 13px/1 system-ui, sans-serif; color: #fff; }
+.inventory-meta { display: grid; gap: 6px; }
+.inventory-meta article { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .12); background: #0f0c15; }
+.inventory-meta small { display: block; font-size: 10px; color: rgba(238, 228, 207, .6); }
+.inventory-meta strong { font-size: 13px; color: #fff; }
+.inventory-overlay.busy button { pointer-events: none; }
+
+@keyframes inv-pop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+@keyframes inv-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes inv-bubble { 0%, 60% { opacity: 0; transform: translateY(0); } 70% { opacity: .9; } 100% { opacity: 0; transform: translateY(-16px); } }
+@keyframes inv-drink { 0% { transform: rotate(0); } 40% { transform: rotate(-35deg) translateY(-4px); } 80% { transform: rotate(-35deg) translateY(-4px); } 100% { transform: rotate(0); } }
+@media (prefers-reduced-motion: reduce) { .inv-bubbles, .inv-flask.drinking, .inventory-result, .inv-detail { animation: none !important; } .inv-vital b { transition: none; } }

@@ -6,7 +6,7 @@ import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 
 export default [[/(?:^|\s)\/swords\b/, async (msg) => {
     await deleteMessage(msg.chat.id, msg.message_id);
-    let members = getMembers(msg.chat.id);
+    let members = await getMembers(msg.chat.id);
 
     await sendMessage(msg.chat.id, `${swordsMessage(members)}`, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),

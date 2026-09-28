@@ -7,7 +7,7 @@ import sendPhoto from '../../../functions/tgBotFunctions/sendPhoto.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
 import getCaption from '../../../functions/game/builds/getCaption.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
-import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
 export default [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (session, callback) {
@@ -56,16 +56,17 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sessio
 }], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+$/, async function (session, callback) {
     const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)$/);
     let messageId = callback.message.message_id;
-    let foundedSession = await getSession(chatId, callback.from.id);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
 
-    let build = await getBuild(chatId, callback.from.id, buildName);
-    if (!foundedSession.game.builds[buildName].availableTypes) {
-        foundedSession.game.builds[buildName].availableTypes = Object.entries(buildsTemplate[buildName].availableTypes)
+    let build = member.game.builds[buildName];
+    if (!build.availableTypes) {
+        build.availableTypes = Object.entries(buildsTemplate[buildName].availableTypes)
             .filter(([key, value]) => !value.isPayment)
             .map(([key, value]) => key);
+        await chat.save();
     }
 
-    if (!foundedSession.game.builds[buildName].availableTypes.includes(typeName)) {
+    if (!build.availableTypes.includes(typeName)) {
         return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5 * 1000);
@@ -90,16 +91,18 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.changeType$/, async function (sessio
 }], [/^builds\.[\-0-9]+\.[^.]+\.changeType\.[^.]+\.0$/, async function (session, callback) {
     const [, chatId, buildName, typeName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.changeType\.([^.]+)\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = await getSession(chatId, callback.from.id);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
+    let build = member.game.builds[buildName];
 
-    if (!foundedSession.game.builds[buildName].availableTypes.includes(typeName)) {
+    if (!build.availableTypes || !build.availableTypes.includes(typeName)) {
         return sendMessageWithDelete(callback.message.chat.id, "У тебя нет этого типа здания в наличии. Чтобы его получить, зайди в магазин: /shop", {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5 * 1000);
     }
-    let build = await getBuild(chatId, callback.from.id, buildName);
+
     build.type = typeName;
-    
+    await chat.save();
+
     let imagePath = getLocalImageByPath(build.currentLvl, `builds/${buildName}/${typeName}`);
     await deleteMessage(callback.message.chat.id, messageId);
 

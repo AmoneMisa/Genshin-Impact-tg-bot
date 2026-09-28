@@ -1,0 +1,126 @@
+/* Clan (clan.js), prototype style: banner header with XP, gold segmented tabs,
+   treasury / daily task cards and gold-framed activity rows. */
+.overlay-panel.clan-panel {
+  --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
+  overflow-x: hidden;
+  display: grid; gap: 12px;
+  padding-top: 12px;
+  color: #eee4cf;
+}
+.clan-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.clan-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.clan-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
+.clan-round[hidden] { visibility: hidden; display: grid; }
+.clan-panel [data-clan-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+
+.clan-hero { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; }
+.clan-banner {
+  width: 64px; height: 88px;
+  display: grid; place-items: start center; padding-top: 14px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(180deg, #3b2b5e, #1e1533);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, .6);
+  transform-origin: 50% 0;
+  animation: clan-banner-sway 5s ease-in-out infinite;
+}
+.clan-banner span { font-size: 30px; filter: sepia(1) saturate(2) hue-rotate(5deg) drop-shadow(0 0 6px rgba(216, 179, 106, .5)); }
+.clan-hero-info { display: grid; gap: 4px; min-width: 0; }
+.clan-hero-info h3 { margin: 0; font: 700 20px/1.1 var(--serif); color: #f3dca6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.clan-hero-info h3 small { font-size: 12px; color: rgba(243, 220, 166, .6); }
+.clan-hero-row { display: flex; gap: 12px; font-size: 12px; color: #eee4cf; }
+.clan-xp { position: relative; height: 10px; overflow: hidden; border-radius: 3px; border: 1px solid rgba(0, 0, 0, .8); background: linear-gradient(180deg, #07070b, #16151d); box-shadow: 0 0 0 1px rgba(216, 179, 106, .25); }
+.clan-xp i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, #2d4f86, #6fa2e8); transition: width .6s ease; }
+.clan-hero-info > small { font-size: 11px; color: rgba(238, 228, 207, .7); }
+
+.clan-tabs { display: grid; grid-template-columns: repeat(4, 1fr); border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .7); overflow: hidden; }
+.clan-tabs button { min-height: 36px; padding: 0 4px; border: 0; border-right: 1px solid rgba(107, 83, 38, .45); background: transparent; color: rgba(238, 228, 207, .7); font: 600 12px/1 var(--serif); }
+.clan-tabs button:last-child { border-right: 0; }
+.clan-tabs button.active { color: #fbeccb; background: linear-gradient(180deg, #6a4f1f, #3a2a10); box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), inset 0 0 0 1px var(--gold); }
+.clan-backlink { justify-self: start; padding: 0; border: 0; background: none; color: var(--gold); font: 600 13px/1 var(--serif); }
+.clan-tab-body { display: grid; gap: 10px; animation: clan-in .3s ease both; }
+
+.clan-card, .clan-section, .clan-activity-group {
+  display: grid; gap: 8px;
+  padding: 12px;
+  border-radius: 8px; border: 1px solid rgba(216, 179, 106, .2);
+  background: linear-gradient(180deg, rgba(26, 21, 30, .92), rgba(12, 10, 16, .92));
+  text-align: left; color: inherit;
+}
+.clan-card h4, .clan-section h4, .clan-activity-group h4 { margin: 0; font: 700 14px/1.1 var(--serif); color: #f3dca6; }
+.clan-treasury > div { display: flex; align-items: center; gap: 14px; font: 600 13px/1 system-ui, sans-serif; color: #fff; }
+.clan-treasury b { margin-left: auto; font-size: 20px; color: var(--gold); }
+.clan-daily-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; }
+.clan-daily-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 6px; border: 1px solid var(--gold-dim); background: radial-gradient(circle at 50% 40%, #2c2436, #0e0c12); font-size: 22px; }
+.clan-daily-row strong { display: block; font: 600 14px/1.2 var(--serif); color: #e9b86a; }
+.clan-daily-row small { font-size: 11px; color: rgba(238, 228, 207, .65); }
+.clan-play { min-height: 36px; padding: 6px 16px; border-radius: 6px; border: 1px solid var(--gold); background: linear-gradient(180deg, #6a4f1f, #3a2a10); color: #fbeccb; font: 700 13px/1 var(--serif); }
+.clan-play.ghost { background: transparent; border-color: var(--gold-dim); color: rgba(243, 220, 166, .85); }
+.clan-contrib { display: flex; align-items: baseline; gap: 10px; }
+.clan-contrib strong { font: 700 22px/1 system-ui, sans-serif; color: #fff; }
+.clan-contrib small { font-size: 12px; color: rgba(238, 228, 207, .7); }
+.clan-motto { margin: 0; text-align: center; font: italic 400 13px/1.4 var(--serif); color: rgba(243, 220, 166, .75); }
+
+.clan-members, .clan-list, .clan-activities, .clan-activity-list { display: grid; gap: 6px; }
+.clan-member, .clan-list-row, .clan-activity-row, .clan-building-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 10px;
+  border-radius: 6px; border: 1px solid rgba(216, 179, 106, .14);
+  background: #0f0c15;
+}
+.clan-member > div, .clan-building-row > div, .clan-activity-row > div { min-width: 0; flex: 1; }
+.clan-avatar { flex: 0 0 auto; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold); background: radial-gradient(circle at 40% 35%, #3a2d45, #120d18); font: 700 15px/1 var(--serif); color: #f3dca6; }
+.clan-member strong, .clan-list-row strong, .clan-activity-row strong, .clan-building-row strong, .clan-activity-card strong { display: block; font: 600 13px/1.2 var(--serif); color: #f3dca6; }
+.clan-member small, .clan-list-row small, .clan-activity-row small, .clan-building-row small, .clan-activity-card small, .clan-muted { display: block; margin-top: 2px; font-size: 11px; color: rgba(238, 228, 207, .65); }
+.clan-role { flex: 0 0 auto; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--gold-dim); font-size: 11px; color: #f3dca6; }
+
+.clan-activity-card { display: grid; gap: 8px; padding: 10px; border-radius: 6px; border: 1px solid rgba(224, 106, 106, .35); background: linear-gradient(90deg, rgba(90, 20, 24, .3), #0f0c15); }
+.clan-activity-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.clan-activity-title > span { flex: 0 0 auto; font-size: 11px; color: #fff; }
+.clan-boss-hp { height: 10px; overflow: hidden; border-radius: 3px; border: 1px solid rgba(0, 0, 0, .8); background: #0a0a0e; }
+.clan-boss-hp span { display: block; height: 100%; background: linear-gradient(180deg, #e0484c, #8b1d25); transition: width .5s ease; }
+.clan-damage-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+.clan-damage-list span { display: flex; justify-content: space-between; gap: 8px; padding: 5px 7px; border-radius: 4px; background: rgba(0, 0, 0, .3); font-size: 11px; color: rgba(238, 228, 207, .75); }
+.clan-damage-list b { color: #fff; }
+
+/* Buttons inside rows and cards: gold plates; danger in red. */
+.clan-contribute button, .clan-create button, .clan-join-button, .clan-activity-card button, .clan-activity-row button, .clan-building-row button, .clan-war-card > button, .clan-activity-group > button {
+  flex: 0 0 auto;
+  min-height: 34px; padding: 6px 12px;
+  border-radius: 6px; border: 1px solid var(--gold);
+  background: linear-gradient(180deg, #6a4f1f, #3a2a10);
+  color: #fbeccb; font: 700 12px/1 var(--serif);
+}
+.clan-activity-row button:disabled, .clan-building-row button:disabled, .clan-activity-card button:disabled { opacity: .45; cursor: not-allowed; }
+.clan-danger { width: 100%; min-height: 38px; border-radius: 6px; border: 1px solid rgba(224, 106, 106, .45); background: rgba(90, 20, 24, .35); color: #ffb0a8; font: 600 13px/1 var(--serif); }
+
+.clan-warehouse { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.clan-warehouse article { padding: 10px 6px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .14); background: #0f0c15; text-align: center; }
+.clan-warehouse span { display: block; font-size: 20px; }
+.clan-warehouse strong { display: block; margin-top: 4px; font: 700 13px/1 system-ui, sans-serif; color: #fff; }
+.clan-contribute, .clan-create { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; }
+.clan-create { grid-template-columns: 1fr auto; }
+.clan-contribute select, .clan-contribute input, .clan-create input, .clan-activity-list label input, .clan-activity-list label select { min-width: 0; padding: 9px; border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .8); color: #fff; font-size: 13px; }
+.clan-activity-list label { display: grid; gap: 4px; font-size: 11px; color: rgba(238, 228, 207, .75); }
+.clan-activity-row .clan-activity-list { display: flex; gap: 6px; }
+.clan-quiz-options { display: grid; gap: 6px; }
+.clan-quiz-options button { padding: 11px; border-radius: 6px; border: 1px solid var(--gold-dim); background: linear-gradient(180deg, #2a2233, #120f18); color: #eee4cf; text-align: left; font: 400 13px/1.3 var(--serif); }
+.clan-quiz-options button:active { border-color: var(--gold); }
+
+.clan-war-score { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 12px; border-radius: 6px; background: rgba(0, 0, 0, .3); }
+.clan-war-score strong { font: 700 26px/1 var(--serif); color: #f3dca6; }
+.clan-war-score span { color: rgba(238, 228, 207, .6); }
+.clan-war-result { margin: 0; padding: 8px 10px; border-radius: 6px; background: rgba(0, 0, 0, .3); font-size: 12px; }
+.clan-war-result strong { color: #f3dca6; }
+.clan-war-card > button { width: 100%; }
+
+@media (max-width: 520px) {
+  .clan-contribute { grid-template-columns: 1fr 1fr; }
+  .clan-contribute button { grid-column: 1 / -1; }
+  .clan-activity-row, .clan-building-row { align-items: stretch; flex-direction: column; }
+  .clan-activity-row button, .clan-building-row button { width: 100%; }
+  .clan-damage-list { grid-template-columns: 1fr; }
+}
+@keyframes clan-banner-sway { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(1.5deg); } }
+@keyframes clan-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .clan-banner, .clan-tab-body { animation: none !important; } }

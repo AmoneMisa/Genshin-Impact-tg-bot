@@ -5,7 +5,7 @@ import translation from '../../dictionaries/translate.js';
 import getUserName from '../../functions/getters/getUserName.js';
 
 export default [["personal_info", function (session, callback) {
-    function formatMessage() {
+    async function formatMessage() {
         let str = "";
         for (let key of Object.keys(session.user)) {
             if ((userTemplate.hasOwnProperty(key)) && session.user[key] !== null && session.user[key] !== undefined) {
@@ -15,7 +15,7 @@ export default [["personal_info", function (session, callback) {
         str += "\n\n";
 
         if (!str.trim().length) {
-            str = `@${getUserName(session, "nickname")}, ещё нет никакой информации о тебе. Заполни её через бота командой /form`
+            str = `@${await getUserName(session, "nickname")}, ещё нет никакой информации о тебе. Заполни её через бота командой /form`
         }
         return str;
     }

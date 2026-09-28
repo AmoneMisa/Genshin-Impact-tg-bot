@@ -3,19 +3,27 @@ import getClassSkillsFromTemplate from '../player/getters/getGameClassSkillsFrom
 import classStatsTemplate from '../../../template/classStatsTemplate.js';
 import getRandom from '../../getters/getRandom.js';
 
-export default function (rating) {
-    let className = classStatsTemplate[getRandom(1, classStatsTemplate.length - 1)].name;
-    let ratingObj = levelsMap.find(item => item.rating >= rating);
-    let stats = getClassStatsFromTemplate(className, ratingObj.lvl);
-    let skills = getClassSkillsFromTemplate(className);
-    let currIndex = levelsMap.indexOf(ratingObj);
-    let nexIndex = levelsMap[currIndex + 1] !== undefined && levelsMap[currIndex + 1] !== null ? currIndex + 1 : currIndex;
+export default function (rating = 1000) {
+    const availableClasses = classStatsTemplate.filter(item => item?.name && item.name !== 'noClass');
+    const classTemplate = availableClasses.length
+        ? availableClasses[getRandom(0, availableClasses.length - 1)]
+        : classStatsTemplate[0];
+    const className = classTemplate?.name || 'noClass';
+
+    const normalizedRating = Math.max(0, Number(rating) || 1000);
+    const ratingObj = levelsMap.find(item => item.rating >= normalizedRating) || levelsMap.at(-1);
+    const stats = getClassStatsFromTemplate(className, ratingObj.lvl);
+    const skills = getClassSkillsFromTemplate(className);
+    const currentIndex = levelsMap.indexOf(ratingObj);
+    const next = levelsMap[Math.min(currentIndex + 1, levelsMap.length - 1)];
+    const minRating = ratingObj.rating === 0 ? 1000 : ratingObj.rating;
+    const maxRating = Math.max(minRating, Number(next.rating) || minRating);
 
     return {
         name: getRandom(1, 99999),
         stats: {lvl: ratingObj.lvl},
         gameClass: {skills, stats},
-        rating: (ratingObj.rating === 0) ? 1000 : getRandom(ratingObj.rating, levelsMap[nexIndex].rating)
+        rating: getRandom(minRating, maxRating)
     };
 }
 
@@ -31,4 +39,3 @@ const levelsMap = [
     {rating: 1500, lvl: 65},
     {rating: 1550, lvl: 75}
 ];
-

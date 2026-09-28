@@ -11,7 +11,7 @@ export default [[/(?:^|\s)\/select_gender\b/, async (msg, session) => {
 
     await sendPhoto(msg.chat.id, file, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-        caption: `@${getUserName(session, "nickname")}, выбери свой пол`,
+        caption: `@${await getUserName(session, "nickname")}, выбери свой пол`,
         disable_notification: true,
         reply_markup: {
             inline_keyboard: [[{

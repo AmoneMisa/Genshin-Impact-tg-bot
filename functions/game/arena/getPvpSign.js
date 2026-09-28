@@ -1,9 +1,22 @@
-export default function (session) {
-    if (!session.game.inventory || !session.game.inventory.arena || !session.game.inventory.arena.items[1]) {
-        throw new Error(`Ошибка при попытке получить данные о 'Медали арены' у пользователя: ${session.userChatData.user.id}`);
+import { normalizeArenaInventory } from './arenaInventory.js';
+
+/**
+ * Возвращает числовые PvP-модификаторы из уже загруженной сессии.
+ * I/O здесь не нужен: медаль хранится в инвентаре игрока.
+ */
+export default function getPvpSign(session) {
+    const game = session?.game;
+    if (!game) {
+        return { increasePvpDamage: 1, decreaseIncomingPvpDamage: 0 };
     }
 
-    let increasePvpDamage = session.game.inventory.arena.items[1].effects.find(stat => stat.name === "increasePvpDamage");
-    let decreaseIncomingPvpDamage = session.game.inventory.arena.items[1].effects.find(stat => stat.name === "decreaseIncomingPvpDamage");
-    return {increasePvpDamage, decreaseIncomingPvpDamage};
-};
+    const medal = normalizeArenaInventory(game).pvpSign;
+    const effects = Array.isArray(medal?.effects) ? medal.effects : [];
+    const increase = effects.find(stat => stat?.name === 'increasePvpDamage');
+    const decrease = effects.find(stat => stat?.name === 'decreaseIncomingPvpDamage');
+
+    return {
+        increasePvpDamage: Number(increase?.value) || 1,
+        decreaseIncomingPvpDamage: Number(decrease?.value) || 0,
+    };
+}

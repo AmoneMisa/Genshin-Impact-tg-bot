@@ -11,7 +11,7 @@ export default [[/(?:^|\s)\/add_bonus_chance\b/, async (msg) => {
         return;
     }
 
-    let buttons = buildKeyboard(msg.chat.id, `add_bonus_chance.${msg.chat.id}`);
+    let buttons = buildKeyboard(msg.chat.id, `add_bonus_chance.${msg.chat.id}`, true, msg.from.id);
 
     await sendMessage(msg.from.id, "Выбери, кому ты хочешь добавить попытку бонуса", {
         disable_notification: true,

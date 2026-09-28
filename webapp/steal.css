@@ -1,0 +1,80 @@
+/* Steal (steal.js): painted header, target rows with class portraits and a
+   heist scene (sneak -> vault bursts with loot, or a shield repels). */
+.overlay-panel.steal-panel {
+  --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
+  position: relative; overflow-x: hidden;
+  display: grid; gap: 10px;
+  max-width: 760px;
+  padding-top: 12px;
+  color: #eee4cf;
+}
+.steal-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.steal-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.steal-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
+.steal-panel [data-steal-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+
+.steal-hero { position: relative; overflow: hidden; min-height: 150px; display: grid; align-content: end; padding: 12px; border-radius: 8px; border: 1px solid var(--gold-dim); background: linear-gradient(180deg, rgba(10, 8, 14, .1) 30%, rgba(10, 8, 14, .9)), url("/art/menu/steal.webp") center 35% / cover no-repeat; box-shadow: inset 0 0 30px rgba(0, 0, 0, .6); }
+.steal-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.steal-chips span { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .8); font-size: 12px; color: rgba(238, 228, 207, .85); }
+.steal-chips span b { color: #fff; }
+.steal-chips span.on { border-color: #6fa2e8; color: #cfe2ff; }
+.steal-warning { margin: 0; padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(224, 160, 90, .35); background: rgba(90, 50, 20, .25); font-size: 12px; color: #ffcf9a; }
+
+.steal-result { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 8px; animation: steal-in .5s cubic-bezier(.2, 1.3, .4, 1) both; }
+.steal-result > span { font-size: 30px; text-align: center; }
+.steal-result strong { display: block; font: 700 16px/1.2 var(--serif); }
+.steal-result small { font-size: 12px; color: rgba(238, 228, 207, .75); }
+.steal-result p { margin: 4px 0 0; font: 700 13px/1.2 system-ui, sans-serif; color: #fff; }
+.steal-result.success { border: 1px solid var(--gold); background: radial-gradient(ellipse at 20% 50%, rgba(216, 179, 106, .25), rgba(12, 10, 16, .92)); }
+.steal-result.success strong { color: #f3dca6; }
+.steal-result.defended { border: 1px solid rgba(111, 162, 232, .5); background: radial-gradient(ellipse at 20% 50%, rgba(60, 100, 170, .3), rgba(12, 10, 16, .92)); }
+.steal-result.defended strong { color: #cfe2ff; }
+
+.steal-section { display: grid; gap: 8px; }
+.steal-section-title { display: flex; justify-content: space-between; align-items: baseline; }
+.steal-section-title strong { font: 700 15px/1 var(--serif); color: #f3dca6; }
+.steal-section-title span { font-size: 12px; color: rgba(238, 228, 207, .6); }
+.steal-targets { display: grid; gap: 6px; }
+.steal-target { display: grid; grid-template-columns: 48px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .16); background: linear-gradient(180deg, rgba(26, 21, 30, .92), rgba(12, 10, 16, .92)); }
+.steal-target.shielded { opacity: .7; }
+.steal-avatar { width: 48px; height: 48px; display: grid; place-items: end center; overflow: hidden; border-radius: 50%; border: 1px solid var(--gold); background: var(--art) center 18% / cover no-repeat, #1a1420; color: transparent; font-size: 0; box-shadow: 0 0 0 2px #120e16; }
+.steal-target.shielded .steal-avatar { border-color: #6fa2e8; box-shadow: 0 0 0 2px #120e16, 0 0 12px rgba(111, 162, 232, .6); }
+.steal-target-copy { display: grid; gap: 2px; min-width: 0; }
+.steal-target-copy strong { font: 600 14px/1.2 var(--serif); color: #f3dca6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.steal-target-copy small { font-size: 11px; color: rgba(238, 228, 207, .65); }
+.steal-target-copy em { font-style: normal; font-size: 11px; color: rgba(207, 226, 255, .85); }
+.steal-target button { min-height: 36px; padding: 6px 12px; border-radius: 6px; border: 1px solid #e06a6a; background: linear-gradient(180deg, #a02a2d, #5a1316); color: #ffecec; font: 700 13px/1 var(--serif); }
+.steal-target button:disabled { opacity: .45; filter: grayscale(.5); }
+.steal-empty { padding: 14px; border-radius: 6px; border: 1px dashed rgba(216, 179, 106, .25); text-align: center; font-size: 12px; color: rgba(238, 228, 207, .6); }
+.steal-overlay.busy .steal-target button { pointer-events: none; }
+
+/* Heist scene. */
+.steal-heist { position: absolute; inset: 0; z-index: 20; overflow: hidden; background: radial-gradient(ellipse at 50% 60%, rgba(60, 50, 80, .4), transparent 70%), #07060b; opacity: 0; transition: opacity .2s ease; }
+.steal-heist[hidden] { display: none; }
+.steal-heist.sneak { opacity: 1; }
+.steal-heist.leaving { opacity: 0; }
+.heist-vault { position: absolute; right: 12%; top: 50%; width: 150px; height: 150px; margin-top: -90px; border-radius: 50%; background: radial-gradient(circle, #3a3440 0 55%, #1a171d 56% 64%, #5a5560 65% 70%, #1a171d 71%); box-shadow: 0 10px 30px rgba(0, 0, 0, .8); }
+.heist-door { position: absolute; inset: 18%; border-radius: 50%; background: radial-gradient(circle, #6a6470 0 12%, #3a3440 13% 60%, #2a262e 61%); transition: transform .8s cubic-bezier(.3, .8, .3, 1); }
+.heist-door i { position: absolute; left: 50%; top: 50%; width: 80%; height: 6px; margin: -3px 0 0 -40%; border-radius: 3px; background: #8a8490; box-shadow: 0 0 0 1px #1a171d; }
+.heist-door i::after { content: ""; position: absolute; inset: 0; rotate: 90deg; border-radius: 3px; background: #8a8490; }
+.heist-thief { position: absolute; left: -70px; top: 50%; margin-top: -40px; font-size: 64px; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .8)) brightness(.8); }
+.sneak .heist-thief { animation: heist-sneak 1.2s cubic-bezier(.4, 0, .4, 1) forwards; }
+.heist-shield { position: absolute; right: 18%; top: 50%; margin-top: -60px; font-size: 90px; opacity: 0; filter: drop-shadow(0 0 20px rgba(111, 162, 232, .9)); }
+.heist-loot { position: absolute; right: calc(12% + 75px); top: calc(50% - 15px); }
+.heist-loot i { position: absolute; font-size: 26px; font-style: normal; opacity: 0; transform: rotate(var(--a)) translateY(0); }
+.heist-title { position: absolute; left: 0; right: 0; bottom: 18%; text-align: center; font: 700 26px/1.1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.success .heist-door { transform: rotate(540deg) scale(.2); opacity: .2; }
+.success .heist-vault { box-shadow: 0 0 40px rgba(255, 210, 100, .7), 0 10px 30px rgba(0, 0, 0, .8); }
+.success .heist-loot i { animation: heist-loot .9s cubic-bezier(.2, .7, .3, 1) forwards; animation-delay: calc(.3s + var(--d)); }
+.success .heist-title { color: #ffd36a; text-shadow: 0 0 18px rgba(255, 210, 100, .7), 0 2px 0 #000; }
+.defended .heist-shield { animation: heist-shield .8s ease-out forwards; }
+.defended .heist-thief { left: calc(88% - var(--vault, 150px) - 56px); animation: heist-repel .6s ease-in .1s forwards; }
+.defended .heist-title { color: #cfe2ff; }
+
+@keyframes steal-in { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes heist-sneak { 0% { left: -70px; transform: none; } 30% { transform: translateY(-6px); } 45% { transform: none; } 75% { transform: translateY(-6px); } 100% { left: calc(88% - var(--vault, 150px) - 56px); transform: none; } }
+@keyframes heist-repel { to { left: calc(88% - var(--vault, 150px) - 120px); transform: rotate(-30deg); opacity: .4; } }
+@keyframes heist-shield { 0% { opacity: 0; transform: scale(.4); } 40% { opacity: 1; transform: scale(1.15); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes heist-loot { 0% { opacity: 1; transform: rotate(var(--a)) translateY(0) scale(.5); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(-150px) scale(1.2); } }
+@media (max-width: 420px) { .steal-heist { --vault: 120px; } .heist-vault { width: 120px; height: 120px; margin-top: -75px; } .heist-loot { right: calc(12% + 60px); } }
+@media (prefers-reduced-motion: reduce) { .steal-heist *, .steal-result { animation: none !important; transition: none !important; } }

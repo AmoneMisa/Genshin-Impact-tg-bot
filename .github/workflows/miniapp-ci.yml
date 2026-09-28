@@ -1,0 +1,139 @@
+name: Mini App CI
+
+on:
+  push:
+    branches:
+      - feature/telegram-miniapp-webgl
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Check Mini App syntax
+        run: |
+          node --check miniapp-entry.js
+          node --check miniapp/server.js
+          node --check miniapp/telegramAuth.js
+          node --check miniapp/state.js
+          node --check miniapp/skills.js
+          node --check miniapp/forms.js
+          node --check miniapp/updates.js
+          node --check miniapp/feedback.js
+          node --check miniapp/chest.js
+          node --check miniapp/gacha.js
+          node --check miniapp/equipment.js
+          node --check miniapp/builds.js
+          node --check miniapp/arena.js
+          node --check miniapp/boss.js
+          node --check miniapp/shop.js
+          node --check miniapp/sword.js
+          node --check miniapp/arcade.js
+          node --check miniapp/goldTransfer.js
+          node --check miniapp/point21.js
+          node --check miniapp/elements.js
+          node --check miniapp/bonus.js
+          node --check miniapp/titles.js
+          node --check miniapp/horoscope.js
+          node --check miniapp/clan.js
+          node --check miniapp/clanActivities.js
+          node --check functions/game/equipment/equipItem.js
+          node --check functions/game/equipment/unequipItem.js
+          node --check functions/game/builds/calculateRemainBuildTime.js
+          node --check functions/game/builds/checkAccumulateTimer.js
+          node --check functions/game/arena/ratingStore.js
+          node --check functions/game/arena/getPlayerRating.js
+          node --check functions/game/arena/setPlayerRating.js
+          node --check functions/game/arena/updateRank.js
+          node --check functions/game/arena/calculatePoints.js
+          node --check functions/game/arena/getPvpSign.js
+          node --check functions/game/arena/arenaInventory.js
+          node --check functions/game/arena/generateArenaBot.js
+          node --check functions/game/player/useHealPotion.js
+          node --check functions/game/player/userDealDamage.js
+          node --check functions/game/sword/swordCore.js
+          node --check functions/game/sword/swordResult.js
+          node --check functions/game/gold/transferGold.js
+          node --check functions/game/point21/pointMessage.js
+          node --check functions/game/elements/getRandomElement.js
+          node --check functions/game/elements/elementsMessage.js
+          node --check functions/game/general/findWinners.js
+          node --check functions/game/general/endGame.js
+          node --check functions/game/general/pass.js
+          node --check functions/game/general/bet.js
+          node --check functions/game/horoscope/horoscope.js
+          node --check functions/game/clans/getClan.js
+          node --check functions/game/clans/addClanXp.js
+          node --check functions/game/clans/summonClanBoss.js
+          node --check functions/game/clans/clanBossAttack.js
+          node --check functions/game/clans/giveClanShopPotion.js
+          node --check functions/game/clans/getBuildingBonus.js
+          node --check functions/shedullers/bossWin.js
+          node --check callbacks/game/arena/arena.js
+          node --check callbacks/game/player/showInventory.js
+          node --check callbacks/game/player/skillsCallback.js
+          node --check callbacks/game/player/userSkillsCallback.js
+          node --check callbacks/game/shop/shop.js
+          node --check callbacks/game/dice/pullDice.js
+          node --check callbacks/game/bowling/pullSkittle.js
+          node --check callbacks/game/darts/pullDart.js
+          node --check callbacks/game/football/pullBall.js
+          node --check callbacks/game/basketball/pullBall.js
+          node --check callbacks/game/slots/bets.js
+          node --check callbacks/game/slots/startGame.js
+          node --check callbacks/game/boss/sendGoldCallback.js
+          node --check callbacks/game/elements/takeElement.js
+          node --check callbacks/game/horoscope/horoscope.js
+          node --check callbacks/game/clan/clanCallback.js
+          node --check callbacks/whatsNewSettings.js
+          node --check onTexts/game/slots/slots.js
+          node --check onTexts/game/sendGold.js
+          node --check onTexts/game/elements/elements.js
+          node --check onTexts/game/titles/title.js
+          node --check onTexts/game/titles/titlesList.js
+          node --check onTexts/game/bonus/bonus.js
+          node --check onTexts/game/horoscopes/horoscope.js
+          node --check onTexts/game/clan/clan.js
+          node --check onTexts/whatsNew.js
+          node --check onTexts/feedback.js
+          node --check onTextsAdmin/sendNewUpdates.js
+          node --check webapp/app.js
+          node --check webapp/forms.js
+          node --check webapp/skills.js
+          node --check webapp/help.js
+          node --check webapp/updates.js
+          node --check webapp/feedback.js
+          node --check webapp/chest.js
+          node --check webapp/gacha.js
+          node --check webapp/equipment.js
+          node --check webapp/builds.js
+          node --check webapp/arena.js
+          node --check webapp/boss.js
+          node --check webapp/shop.js
+          node --check webapp/sword.js
+          node --check webapp/arcade.js
+          node --check webapp/gold-transfer.js
+          node --check webapp/point21.js
+          node --check webapp/elements.js
+          node --check webapp/bonus.js
+          node --check webapp/titles.js
+          node --check webapp/horoscope.js
+          node --check webapp/clan.js
+          node --check webapp/renderer.js

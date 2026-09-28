@@ -4,6 +4,7 @@ config.js
 *.json
 !package-lock.json
 !package.json
+!webapp/models/manifest.json
 .env
 
 #on hold

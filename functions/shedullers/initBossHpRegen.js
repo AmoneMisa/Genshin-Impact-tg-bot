@@ -1,31 +1,33 @@
-import { bosses, sessions } from '../../data.js';
-import sendMessage from '../tgBotFunctions/sendMessage.js';
-import isBossAlive from '../game/boss/getBossStatus/isBossAlive.js';
-import cron from 'node-cron';
+import Boss from "../../db/models/Boss.js";
+import sendMessage from "../tgBotFunctions/sendMessage.js";
+import isBossAlive from "../game/boss/getBossStatus/isBossAlive.js";
 
-export default async function () {
+export default async function regenBossHp() {
+    const bosses = await Boss.find({});
 
-    for (let [chatId, bossesArray] of Object.entries(bosses)) {
-        for (let boss of bossesArray) {
-            if (boss.skill.effect !== "hp_regen") {
-                continue;
-            }
+    for (const boss of bosses) {
+        if (!boss?.skill || boss.skill.effect !== "hp_regen") continue;
 
-            if (boss.currentHp === boss.hp) {
-                continue;
-            }
+        // Если HP уже на максимуме — пропускаем
+        if (boss.currentHp >= boss.hp) continue;
 
-            if (isBossAlive(boss)) {
-                boss.currentHp = 0;
-                continue;
-            }
-            boss.currentHp = Math.max(boss.hp, boss.currentHp + Math.ceil(boss.hp * 1.08));
+        // Если босс мёртв — пропускаем
+        if (!isBossAlive(boss)) continue;
 
-            if (sessions[chatId].bossSettings.showHealMessage === 0) {
-                continue;
-            }
+        // Восстанавливаем HP (на 8% от максимального)
+        boss.currentHp = Math.min(
+            boss.hp,
+            boss.currentHp + Math.ceil(boss.hp * 0.08)
+        );
 
-            await sendMessage(chatId, `Босс восстановил себе хп. Его текущее хп: ${boss.currentHp}`);
+        await boss.save();
+
+        // Сообщение в чат
+        if (boss.showHealMessage !== 0) {
+            await sendMessage(
+                boss.chatId,
+                `Босс восстановил себе хп. Его текущее хп: ${boss.currentHp}`
+            );
         }
     }
-};
+}

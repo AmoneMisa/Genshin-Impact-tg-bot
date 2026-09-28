@@ -27,6 +27,7 @@ export default function (currentLvl, grade) {
         characteristics: buildItem.kind.characteristics,
         translatedName: buildItem.kind.translatedName,
         slots: buildItem.kind.slots,
+        ...(buildItem.kind.pairSlots ? {pairSlots: buildItem.kind.pairSlots} : {}),
         stats: [...buildItem.stats, ...buildItem.penalty],
         cost: cost
     }
@@ -85,7 +86,9 @@ function getItemGrade(currentLvl, calledGrade) {
 
     let currentGradeIndex = equipmentTemplate.grades.indexOf(currentGrade);
 
-    if (chanceForUpgradedGrade >= chance) {
+    // Lucky roll bumps the item one grade up — but never past the top grade,
+    // which would leave currentGrade undefined and crash the generator.
+    if (chanceForUpgradedGrade >= chance && currentGradeIndex < equipmentTemplate.grades.length - 1) {
         currentGradeIndex++;
         currentGrade = equipmentTemplate.grades[currentGradeIndex];
     }

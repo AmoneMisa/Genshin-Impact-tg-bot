@@ -1,11 +1,9 @@
-import {clans} from "../../../data.js";
+import Clan from "../../../db/models/Clan.js";
 
-export default function (userId) {
-    for (let clan of Object.values(clans)) {
-        if (clan.members.includes(userId)) {
-            return clan;
-        }
-    }
-
-    return null;
+/**
+ * Returns the clan the given user belongs to, or null.
+ * @param {Number} userId - telegram user id
+ */
+export default async function (userId) {
+    return await Clan.findOne({ "members.userId": userId });
 }

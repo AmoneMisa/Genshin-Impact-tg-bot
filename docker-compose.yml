@@ -1,0 +1,63 @@
+# Bot + Mini App server with a local MongoDB.
+#
+#   cp .env.example .env        # fill in BOT_TOKEN, ADMIN_ID, MINI_APP_URL, ...
+#   docker compose up -d --build
+#   docker compose logs -f bot
+#
+# Optional Cloudflare tunnel for the Mini App's public HTTPS URL:
+#   docker compose --profile tunnel up -d      (needs TUNNEL_TOKEN in .env)
+#
+# Using an external MongoDB (e.g. Atlas)? Set DOCKER_MONGO_URL in .env and
+# start only the bot:  docker compose up -d --build --no-deps bot
+
+services:
+  bot:
+    build: .
+    image: genshin-tg-bot:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Inside Docker "localhost" is the container itself, so the bot gets its
+      # own setting: the bundled database by default, DOCKER_MONGO_URL to override.
+      MONGO_URL: ${DOCKER_MONGO_URL:-mongodb://mongo:27017/genshin_bot}
+      MINI_APP_HOST: 0.0.0.0
+      MINI_APP_PORT: ${MINI_APP_PORT:-8080}
+    ports:
+      - "${MINI_APP_PORT:-8080}:${MINI_APP_PORT:-8080}"
+    volumes:
+      - bot-state:/app/state
+    # Lets the container reach services on the host (e.g. a FreeLLMAPI proxy):
+    # use http://host.docker.internal:3001/v1 as FREE_LLM_API_BASE_URL.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    stop_grace_period: 20s
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    profiles: ["tunnel"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      # From Cloudflare Zero Trust -> Tunnels; route its public hostname to http://bot:8080.
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    depends_on:
+      - bot
+
+volumes:
+  bot-state:
+  mongo-data:

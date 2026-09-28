@@ -10,53 +10,49 @@ import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
 import getChatSession from '../../../functions/getters/getChatSession.js';
 
 export default [[/(?:^|\s)\/boss\b/, async (msg) => {
-    let chatId = msg.chat.id;
+    const chatId = msg.chat.id;
     await deleteMessage(chatId, msg.message_id);
-    let boss = getBoss(chatId);
 
-    let keyboard = [[{
-        text: "Нанести удар",
-        callback_data: "boss.dealDamage"
-    }, {
-        text: "Статистика босса",
-        callback_data: "boss.status"
-    }], [{
-        text: "Возможный дроп",
-        callback_data: "boss.lootList"
-    }, {
-        text: "Список урона",
-        callback_data: "boss.damageList"
-    }]];
-
+    let boss = await getBoss(chatId);
     if (!bossAlreadySummoned(boss)) {
         boss = await summonBoss(chatId);
     }
 
-    let chatSession = getChatSession(chatId);
+    const keyboard = [
+        [
+            { text: "Нанести удар", callback_data: "boss.dealDamage" },
+            { text: "Статистика босса", callback_data: "boss.status" }
+        ],
+        [
+            { text: "Возможный дроп", callback_data: "boss.lootList" },
+            { text: "Список урона", callback_data: "boss.damageList" }
+        ]
+    ];
 
+    const chatSession = await getChatSession(chatId);
 
-    let imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
+    const imagePath = getLocalImageByPath(boss.stats.lvl, `bosses/${boss.name}`);
+    const replyMarkup = {
+        inline_keyboard: [
+            ...keyboard,
+            [{ text: buttonsDictionary["ru"].close, callback_data: "close" }]
+        ]
+    };
+
+    let sentMessage;
     if (imagePath) {
-        sendPhoto(msg.chat.id, imagePath, {
-            ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-            caption: `${summonBossMessage(chatId, boss, false)}`,
-            reply_markup: {
-                inline_keyboard: [...keyboard, [{
-                    text: buttonsDictionary["ru"].close,
-                    callback_data: "close"
-                }]]
-            }
-        }).then(message => chatSession.bossMenuMessageId = message.message_id);
-        return;
+        sentMessage = await sendPhoto(chatId, imagePath, {
+            ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
+            caption: summonBossMessage(chatId, boss, false),
+            reply_markup: replyMarkup
+        });
+    } else {
+        sentMessage = await sendMessage(chatId, summonBossMessage(chatId, boss, false), {
+            ...(msg.message_thread_id ? { message_thread_id: msg.message_thread_id } : {}),
+            reply_markup: replyMarkup
+        });
     }
 
-    sendMessage(msg.chat.id, `${summonBossMessage(chatId, boss, false)}`, {
-        ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
-        reply_markup: {
-            inline_keyboard: [...keyboard, [{
-                text: buttonsDictionary["ru"].close,
-                callback_data: "close"
-            }]]
-        }
-    }).then(message => chatSession.bossMenuMessageId = message.message_id);
+    chatSession.bossMenuMessageId = sentMessage.message_id;
+    await chatSession.save();
 }]];

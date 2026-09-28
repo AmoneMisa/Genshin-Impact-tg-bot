@@ -1,0 +1,167 @@
+/* 21 (point21.js), prototype style: a green felt table with real playing
+   cards dealt from the deck, a bet stepper and blue/red action buttons. */
+.overlay-panel.point21-panel {
+  --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
+  display: grid; gap: 12px;
+  padding-top: 12px;
+  border: 1px solid var(--gold-dim);
+  background: radial-gradient(ellipse 90% 40% at 50% 0%, rgba(70, 60, 100, .25), transparent 70%), linear-gradient(180deg, rgba(20, 16, 26, .98), rgba(9, 8, 13, .99));
+  color: #eee4cf;
+}
+.point-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.point-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.point-round {
+  position: static; width: 34px; height: 34px; padding: 0;
+  display: grid; place-items: center;
+  border-radius: 50%; border: 1px solid var(--gold-dim);
+  background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif);
+}
+.point-rules { margin: -4px 0 0; text-align: center; font: 400 12px/1.4 var(--serif); color: rgba(238, 228, 207, .75); }
+.point-rules.open { color: #f3dca6; }
+
+.point-timer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px; border: 1px solid var(--gold-dim);
+  background: rgba(6, 5, 9, .7);
+}
+.point-timer small { font: 400 12px/1 var(--serif); color: rgba(238, 228, 207, .75); }
+.point-timer strong { font: 700 18px/1 system-ui, sans-serif; color: #fff; font-variant-numeric: tabular-nums; }
+
+.point-felt {
+  position: relative; overflow: hidden;
+  display: grid; gap: 12px;
+  padding: 14px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--gold-dim);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(60, 130, 90, .5), transparent 75%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .012) 0 2px, transparent 2px 4px),
+    linear-gradient(180deg, #16382a, #0b2118);
+  box-shadow: inset 0 0 0 4px rgba(8, 20, 14, .8), inset 0 0 0 5px rgba(216, 179, 106, .35), inset 0 0 40px rgba(0, 0, 0, .7), 0 10px 26px rgba(0, 0, 0, .5);
+}
+.point-felt.idle { justify-items: center; text-align: center; padding: 26px 16px; }
+.point-felt.idle strong { font: 700 18px/1 var(--serif); color: #f3dca6; }
+.point-felt.idle p { margin: 0; font-size: 12px; color: rgba(238, 228, 207, .75); }
+
+.point-seat { display: grid; gap: 8px; padding: 8px; border-radius: 8px; background: rgba(0, 0, 0, .18); }
+.point-seat.mine { background: rgba(0, 0, 0, .28); box-shadow: inset 0 0 0 1px rgba(216, 179, 106, .25); }
+.point-seat.passed { opacity: .8; }
+.point-seat header, .point-result header { display: flex; justify-content: space-between; align-items: center; }
+.point-seat header strong, .point-result header strong { font: 700 15px/1 var(--serif); color: #f3dca6; text-shadow: 0 1px 2px #000; }
+.point-score { min-width: 30px; padding: 3px 7px; border-radius: 999px; background: rgba(0, 0, 0, .45); text-align: center; font: 700 15px/1 system-ui, sans-serif; color: #fff; }
+.point-score.exact { background: linear-gradient(180deg, #e8c15a, #a87a22); color: #1a1206; box-shadow: 0 0 12px rgba(232, 193, 90, .7); }
+.point-score.bust { background: #7a1b22; }
+
+.point-hand { display: flex; justify-content: center; gap: 0; min-height: 86px; perspective: 600px; }
+.point-hand-empty { align-self: center; font-size: 12px; color: rgba(238, 228, 207, .6); }
+.point-card {
+  position: relative;
+  width: 58px; height: 84px; margin: 0 -6px;
+  display: grid; place-items: center;
+  border-radius: 6px;
+  background: linear-gradient(160deg, #ffffff, #ece6dc);
+  box-shadow: 0 1px 0 #fff inset, 0 6px 12px rgba(0, 0, 0, .45), 0 0 0 1px rgba(0, 0, 0, .25);
+  color: #1a1a22;
+  transform: rotate(calc((var(--n, 0) - 1) * 3deg));
+}
+.point-hand .point-card:nth-child(1) { --n: 0; }
+.point-hand .point-card:nth-child(2) { --n: 1; }
+.point-hand .point-card:nth-child(3) { --n: 2; }
+.point-hand .point-card:nth-child(4) { --n: 3; }
+.point-hand .point-card:nth-child(5) { --n: 4; }
+.point-card.red { color: #c0202c; }
+.point-card > b { position: absolute; display: grid; justify-items: center; font: 700 14px/1 Georgia, serif; }
+.point-card > b i { font-style: normal; font-size: 11px; }
+.point-card > b:first-child { top: 4px; left: 5px; }
+.point-card > b:last-child { bottom: 4px; right: 5px; transform: rotate(180deg); }
+.point-card > em { font-style: normal; font-size: 28px; }
+.point-card.back {
+  background: repeating-linear-gradient(45deg, #2a2352 0 4px, #231d45 4px 8px);
+  box-shadow: inset 0 0 0 3px #d8b36a, inset 0 0 0 5px #1a1535, 0 6px 12px rgba(0, 0, 0, .45);
+}
+.point-card.back em { font-size: 22px; filter: sepia(1) saturate(2); }
+.point-card.fresh { animation: point-deal .5s cubic-bezier(.2, .9, .3, 1.1) both; animation-delay: var(--d, 0ms); }
+.point-seat.mine .point-card { width: 64px; height: 92px; }
+.point-seat.mine .point-card > em { font-size: 32px; }
+.point-hand.mini { min-height: 0; justify-content: flex-start; }
+.point-hand.mini .point-card { width: 34px; height: 48px; margin: 0 -3px; }
+.point-hand.mini .point-card > em { font-size: 16px; }
+.point-hand.mini .point-card > b { font-size: 9px; }
+.point-hand.mini .point-card > b i { font-size: 7px; }
+
+.point-others, .point-lobby-seats { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.point-other { display: grid; padding: 5px 9px; border-radius: 6px; background: rgba(0, 0, 0, .35); border: 1px solid rgba(216, 179, 106, .2); text-align: center; }
+.point-other strong { font: 600 12px/1.2 var(--serif); color: #f3dca6; }
+.point-other small { font-size: 10px; color: rgba(238, 228, 207, .7); }
+.point-other.passed { opacity: .6; }
+.point-other.me { border-color: var(--gold); }
+.point-watch { text-align: center; font-size: 12px; color: rgba(238, 228, 207, .75); }
+
+.point-deck-stack { position: relative; width: 58px; height: 84px; margin-bottom: 6px; }
+.point-deck-stack span {
+  position: absolute; inset: 0; border-radius: 6px;
+  background: repeating-linear-gradient(45deg, #2a2352 0 4px, #231d45 4px 8px);
+  box-shadow: inset 0 0 0 3px #d8b36a, inset 0 0 0 5px #1a1535, 0 4px 10px rgba(0, 0, 0, .5);
+}
+.point-deck-stack span:nth-child(2) { transform: translate(3px, -3px); }
+.point-deck-stack span:nth-child(3) { transform: translate(6px, -6px); animation: point-deck-bob 2.4s ease-in-out infinite; }
+
+.point-bet { display: grid; gap: 8px; }
+.point-stepper { display: grid; grid-template-columns: 44px 1fr 44px; gap: 8px; }
+.point-stepper button, .point-chips button {
+  min-height: 38px; padding: 0;
+  border-radius: 6px; border: 1px solid var(--gold-dim);
+  background: linear-gradient(180deg, #2a2233, #120f18);
+  color: #f3dca6; font: 700 18px/1 var(--serif);
+}
+.point-stepper input {
+  min-width: 0; min-height: 38px; padding: 0 8px;
+  border-radius: 6px; border: 1px solid var(--gold-dim);
+  background: rgba(6, 5, 9, .8);
+  color: #fff; font: 700 18px/1 system-ui, sans-serif; text-align: center;
+}
+.point-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.point-chips button { font: 600 13px/1 system-ui, sans-serif; color: #eee4cf; }
+.point-chips button:disabled { opacity: .4; }
+.point-stepper button:active, .point-chips button:not(:disabled):active { transform: translateY(1px); }
+.point-wallet { text-align: center; font-size: 12px; color: rgba(238, 228, 207, .7); }
+.point-wallet strong { color: #fff; }
+
+.point-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.point-btn {
+  min-height: 46px; padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(180deg, #6a4f1f, #3a2a10);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), 0 6px 14px rgba(0, 0, 0, .5);
+  color: #fbeccb; font: 700 15px/1 var(--serif);
+}
+.point-btn.blue { border-color: #6fa2e8; background: linear-gradient(180deg, #2d5aa0, #16305a); color: #eef4ff; }
+.point-btn.red { border-color: #e06a6a; background: linear-gradient(180deg, #a02a2d, #5a1316); color: #ffecec; }
+.point-btn.ghost { background: transparent; border-color: var(--gold-dim); color: rgba(243, 220, 166, .85); }
+.point-btn:disabled { opacity: .45; filter: grayscale(.4); }
+.point-btn:not(:disabled):active { transform: translateY(1px); }
+
+.point-verdict { display: grid; justify-items: center; gap: 2px; padding: 8px; animation: point-verdict .6s cubic-bezier(.2, 1.3, .4, 1) both; }
+.point-verdict strong { font: 700 26px/1 var(--serif); }
+.point-verdict.win strong { color: #f3dca6; text-shadow: 0 0 18px rgba(232, 193, 90, .7); }
+.point-verdict.lose strong { color: #ff9a90; }
+.point-verdict small { font-size: 14px; color: #fff; }
+.point-felt.results { gap: 8px; }
+.point-result { display: grid; gap: 6px; padding: 8px; border-radius: 8px; background: rgba(0, 0, 0, .25); }
+.point-result.win { box-shadow: inset 0 0 0 1px rgba(232, 193, 90, .6), 0 0 14px rgba(232, 193, 90, .25); }
+.point-result.lose { opacity: .8; }
+.point-result.me header strong::after { content: " · ты"; font-weight: 400; font-size: 11px; color: rgba(238, 228, 207, .7); }
+.point-result > small { font-size: 12px; color: #fff; }
+.point-feedback { min-height: 16px; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .75); }
+.point21-overlay.busy .point-btn { pointer-events: none; opacity: .6; }
+
+@keyframes point-deal {
+  from { opacity: 0; transform: translate(80px, -120px) rotate(40deg) rotateY(180deg) scale(.7); }
+  60% { opacity: 1; }
+  to { opacity: 1; transform: rotate(calc((var(--n, 0) - 1) * 3deg)); }
+}
+@keyframes point-deck-bob { 0%, 100% { transform: translate(6px, -6px); } 50% { transform: translate(6px, -9px); } }
+@keyframes point-verdict { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .point-card.fresh, .point-deck-stack span, .point-verdict { animation: none !important; } }

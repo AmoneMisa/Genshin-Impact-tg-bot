@@ -1,9 +1,10 @@
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessageWithDelete.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 
 async function bet(session, callback, calcFunc) {
-    if (!checkUserCall(callback, session)) {
+    if (!await checkUserCall(callback, session)) {
         return ;
     }
 
@@ -15,9 +16,14 @@ async function bet(session, callback, calcFunc) {
         return;
     }
 
-    let newBet = calcFunc(session.game.slots.bet);
+    const { chat, member } = await loadPlayer(callback.message.chat.id, session.userId);
+    if (!member.game.hasOwnProperty('slots') || member.game.slots.state !== 'bets') {
+        return;
+    }
 
-    if (newBet > session.game.inventory.gold) {
+    let newBet = calcFunc(member.game.slots.bet);
+
+    if (newBet > member.game.inventory.gold) {
         await sendMessageWithDelete(callback.message.chat.id, 'Нет денег для ставки', {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 20 * 1000);
@@ -31,8 +37,9 @@ async function bet(session, callback, calcFunc) {
         return;
     }
 
-    session.game.slots.bet = newBet;
-    await updateMessage(session, callback);
+    member.game.slots.bet = newBet;
+    await chat.save();
+    await updateMessage(member, callback);
 }
 
 async function updateMessage(session, callback) {

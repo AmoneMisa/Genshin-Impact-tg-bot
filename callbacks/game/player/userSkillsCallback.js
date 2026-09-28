@@ -10,21 +10,23 @@ import isPlayerCanUseSkillMessage from '../../../functions/game/player/isPlayerC
 import bossSendLoot from '../../../functions/game/boss/bossSendLoot.js';
 import bossLootMessage from '../../../functions/game/boss/bossLootMessage.js';
 import getAliveBoss from '../../../functions/game/boss/getBossStatus/getAliveBoss.js';
-import getMembers from '../../../functions/getters/getMembers.js';
-import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import isBossAlive from '../../../functions/game/boss/getBossStatus/isBossAlive.js';
 import skillUsagePayCost from '../../../functions/game/player/skillUsagePayCost.js';
 import getTime from '../../../functions/getters/getTime.js';
 import getChatSession from '../../../functions/getters/getChatSession.js';
 import getMaxHp from '../../../functions/game/player/getters/getMaxHp.js';
+import { getEffectiveSkillCost } from '../../../functions/game/player/skillEnchant.js';
 
 export default [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callback, [, chatId, skillSlot]) {
-    let foundSession = await getSession(chatId, callback.from.id);
-    const skill = foundSession.game.gameClass.skills[skillSlot];
-    let members = getMembers(chatId);
-    let aliveBoss = getAliveBoss(chatId);
-    let isCanBeUsed = isPlayerCanUseSkill(foundSession, skill);
+    const { chat, member } = await loadPlayer(chatId, callback.from.id);
+    if (!member) {
+        return;
+    }
+    const skill = member.game.gameClass.skills[skillSlot];
+    let aliveBoss = await getAliveBoss(chatId);
+    let isCanBeUsed = isPlayerCanUseSkill(member, skill);
 
     if (isCanBeUsed !== 0) {
         await sendMessageWithDelete(callback.message.chat.id, isPlayerCanUseSkillMessage(isCanBeUsed, skill), {
@@ -38,61 +40,70 @@ export default [[/^skill\.([\-0-9]+)\.([0-9]+)$/, async function (session, callb
         return;
     }
 
-    if (isCanBeUsed === 0) {
-        let costCount = skill.costHp > 0 ? skill.costHp : skill.cost;
-        let costType = skill.costHp > 0 ? "hp" : "mp";
+    let { cost, costHp } = getEffectiveSkillCost(skill);
+    let costCount = costHp > 0 ? costHp : cost;
+    let costType = costHp > 0 ? "hp" : "mp";
 
-        skillUsagePayCost(foundSession, costType, costCount);
-        if (skill.isDealDamage) {
-            let dealDamage = userDealDamage(foundSession, aliveBoss, skill);
-            if (dealDamage) {
-                aliveBoss = getAliveBoss(chatId);
-                await sendMessageWithDelete(callback.message.chat.id, userDealDamageMessage(foundSession, aliveBoss, dealDamage), {
+    skillUsagePayCost(member, costType, costCount);
+
+    if (skill.isDealDamage) {
+        let dealDamage = userDealDamage(member, aliveBoss, skill);
+        if (dealDamage) {
+            aliveBoss.markModified("listOfDamage");
+            setSkillCooldown(skill, member);
+            await chat.save();
+
+            await sendMessageWithDelete(callback.message.chat.id, userDealDamageMessage(member, aliveBoss, dealDamage), {
+                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+            }, 15 * 1000);
+
+            if (!isBossAlive(aliveBoss)) {
+                await deleteMessage(callback.message.chat.id, callback.message.message_id);
+                let chatSession = await getChatSession(chatId);
+
+                await deleteMessage(chatId, chatSession.bossMenuMessageId);
+
+                aliveBoss.currentHp = 0;
+                await aliveBoss.save();
+
+                let loot = await bossSendLoot(aliveBoss, chatId);
+                await sendMessageWithDelete(chatId, bossLootMessage(aliveBoss, loot), {
                     ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
-                }, 15 * 1000);
+                }, 25 * 1000);
 
-                if (!isBossAlive(aliveBoss)) {
-                    await deleteMessage(callback.message.chat.id, callback.message.message_id);
-                    let chatSession = getChatSession(chatId);
-
-                    await deleteMessage(chatId, chatSession.bossMenuMessageId);
-                    let loot = bossSendLoot(aliveBoss, members);
-                    await sendMessageWithDelete(chatId, bossLootMessage(aliveBoss, loot), {
-                        ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
-                    }, 25 * 1000);
-
-                    aliveBoss.skill = null;
-                    aliveBoss.currentHp = 0;
-                    aliveBoss.hp = 0;
-                    aliveBoss.listOfDamage = [];
-                }
-            }
-        } else if (skill.isHeal) {
-            let heal = useHealSkill(foundSession, skill);
-            foundSession.game.gameClass.stats.hp = Math.max(foundSession.game.gameClass.stats.hp + heal, getMaxHp(foundSession, foundSession.game.gameClass));
-
-            await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(foundSession)}`, {
-                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
-            }, 15 * 1000);
-        } else if (skill.isShield) {
-            let shield = useShieldSkill(foundSession, skill);
-            let shieldEffect = foundSession.game.effects.find(effect => effect.name === "shield")
-
-            if (!shieldEffect) {
-                foundSession.game.effects.push({name: "shield", value: shield, time: 0});
-            } else {
-                shieldEffect.value = shield;
+                aliveBoss.skill = null;
+                aliveBoss.currentHp = 0;
+                aliveBoss.hp = 0;
+                aliveBoss.listOfDamage = [];
+                aliveBoss.markModified("skill");
+                aliveBoss.markModified("listOfDamage");
             }
 
-            await sendMessageWithDelete(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`, {
-                ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
-            }, 15 * 1000);
+            await aliveBoss.save();
+        }
+        return;
+    } else if (skill.isHeal) {
+        let heal = useHealSkill(member, skill);
+        member.game.gameClass.stats.hp = Math.min(member.game.gameClass.stats.hp + heal, getMaxHp(member, member.game.gameClass));
+
+        await sendMessageWithDelete(callback.message.chat.id, `Ты восстановил себе ${heal} хп. Твоё текущее хп: ${getCurrentHp(member)}`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 15 * 1000);
+    } else if (skill.isShield) {
+        let shield = useShieldSkill(member, skill);
+        let shieldEffect = member.game.effects.find(effect => effect.name === "shield")
+
+        if (!shieldEffect) {
+            member.game.effects.push({name: "shield", value: shield, time: 0});
+        } else {
+            shieldEffect.value = shield;
         }
 
-        setSkillCooldown(skill, foundSession);
-    } else {
-        await sendMessageWithDelete(callback.message.chat.id, "Что-то пошло не так при попытке нанести урон.", {
+        await sendMessageWithDelete(callback.message.chat.id, `Ты наложил на себя щит равный ${shield} хп.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 15 * 1000);
     }
+
+    setSkillCooldown(skill, member);
+    await chat.save();
 }]];

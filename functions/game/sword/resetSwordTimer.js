@@ -1,15 +1,27 @@
-import getOffset from '../../getters/getOffset.js';
-import { sessions } from '../../../data.js';
+import Chat from "../../../db/models/Chat.js";
+import getOffset from "../../getters/getOffset.js";
 
-export default function () {
-    let sessionsArray = Object.values(sessions);
+/**
+ * Сбрасывает таймер меча у всех игроков в базе
+ */
+export default async function() {
+    const chats = await Chat.find({});
 
-    for (let chatSessions of sessionsArray) {
-        let chatSessionsArray = Object.values(chatSessions);
-        for (let session of chatSessionsArray) {
-            if (session.timerSwordCallback && session.timerSwordCallback > new Date().getTime()) {
-                session.timerSwordCallback = getOffset();
+    for (const chat of chats) {
+        let updated = false;
+
+        for (const member of chat.members) {
+            if (
+                member.timerSwordCallback &&
+                member.timerSwordCallback > Date.now()
+            ) {
+                member.timerSwordCallback = getOffset();
+                updated = true;
             }
         }
+
+        if (updated) {
+            await chat.save();
+        }
     }
-};
+}

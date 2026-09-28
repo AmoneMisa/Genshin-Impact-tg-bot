@@ -6,7 +6,6 @@ import calculateUpgradeCosts from '../../../functions/game/builds/calculateUpgra
 import calculateOptimalSpeedUpCost from '../../../functions/game/builds/calculateOptimalSpeedUpCost.js';
 import speedupUpgradeBuild from '../../../functions/game/builds/speedupUpgradeBuild.js';
 import payForUpgrade from '../../../functions/game/builds/payForUpgrade.js';
-import upgradeBuildTimer from '../../../functions/game/builds/upgradeBuildTimer.js';
 import isCanBeBuild from '../../../functions/game/builds/isCanBeBuild.js';
 import calculateRemainBuildTime from '../../../functions/game/builds/calculateRemainBuildTime.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
@@ -14,11 +13,12 @@ import sendMessageWithDelete from '../../../functions/tgBotFunctions/sendMessage
 import getUserName from '../../../functions/getters/getUserName.js';
 import getBuildList from '../../../functions/game/builds/getBuildList.js';
 import getSession from '../../../functions/getters/getSession.js';
+import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import statsDictionary from '../../../dictionaries/statsDictionary.js';
 import editMessageCaption from '../../../functions/tgBotFunctions/editMessageCaption.js';
 
 async function errorUpdateMessage(buildName, build, chatId, messageId, callback, session) {
-    return editMessageCaption(`@${getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
+    return editMessageCaption(`@${await getUserName(session, "nickname")}, здание не может быть улучшено, т.к. не выполнены требования для его улучшения.\n\n${await getUpgradeRequirementsMessage(buildName, build.currentLvl, chatId, callback.from.id)}`, {
         chat_id: callback.message.chat.id,
         message_id: messageId,
         reply_markup: {
@@ -89,7 +89,7 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
             callback_data: "close"
         }]];
 
-        await sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, здание на данный момент улучшается.\n\nВы можете ускорить постройку, нажав на кнопку "Ускорить"\n\nОставшееся время улучшения: ${getStringRemainTime(remain)}`, {
+        await sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, здание на данный момент улучшается.\n\nВы можете ускорить постройку, нажав на кнопку "Ускорить"\n\nОставшееся время улучшения: ${getStringRemainTime(remain)}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
         caption = "upgrade.speedup";
@@ -131,19 +131,19 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
     let playerInventory = foundedSession.game.inventory;
 
     if (playerInventory.gold < currentUpgrade.gold) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, недостаточно золота.\n\nВ наличии: ${playerInventory.gold}.\n\nНеобходимо: ${currentUpgrade.gold}`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, недостаточно золота.\n\nВ наличии: ${playerInventory.gold}.\n\nНеобходимо: ${currentUpgrade.gold}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
 
     if (playerInventory.crystals < currentUpgrade.crystals) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, недостаточно кристаллов.\n\nВ наличии: ${playerInventory.crystals}.\n\nНеобходимо: ${currentUpgrade.crystals}`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, недостаточно кристаллов.\n\nВ наличии: ${playerInventory.crystals}.\n\nНеобходимо: ${currentUpgrade.crystals}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
 
     if (playerInventory.ironOre < currentUpgrade.ironOre) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, недостаточно железной руды.\n\nВ наличии: ${playerInventory.ironOre}.\n\nНеобходимо: ${currentUpgrade.ironOre}`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, недостаточно железной руды.\n\nВ наличии: ${playerInventory.ironOre}.\n\nНеобходимо: ${currentUpgrade.ironOre}`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
@@ -176,13 +176,13 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
     }
 
     if (!build.upgradeStartedAt) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
 
     if (foundedSession.game.inventory.crystals < calculateOptimalSpeedUpCost(buildName, build)) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
@@ -206,28 +206,29 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
 }], [/^builds\.[\-0-9]+\.[^.]+\.upgrade\.speedup\.0$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade\.speedup\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = await getSession(chatId, callback.from.id);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
 
-    let build = await getBuild(chatId, callback.from.id, buildName);
+    let build = member.game.builds[buildName];
 
     if (!build.upgradeStartedAt) {
-        return sendMessageWithDelete(chatId, `@${getUserName(foundedSession, "nickname")}, ошибка ускорения постройки`, {
+        return sendMessageWithDelete(chatId, `@${await getUserName(member, "nickname")}, ошибка ускорения постройки`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 10 * 1000);
     }
 
     if (!await isCanBeBuild(buildName, build, chatId, callback.from.id)) {
-        return errorUpdateMessage(buildName, build, chatId, messageId, callback, foundedSession);
+        return errorUpdateMessage(buildName, build, chatId, messageId, callback, member);
     }
     let speedupCost = calculateOptimalSpeedUpCost(buildName, build);
 
-    if (foundedSession.game.inventory.crystals < speedupCost) {
-        return sendMessageWithDelete(callback.message.chat.id, `@${getUserName(foundedSession, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
+    if (member.game.inventory.crystals < speedupCost) {
+        return sendMessageWithDelete(callback.message.chat.id, `@${await getUserName(member, "nickname")}, Вы не можете ускорить постройку из-за недостаточного количества кристаллов.`, {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 5000);
     }
 
-    speedupUpgradeBuild(buildName, build, foundedSession.game.inventory);
+    speedupUpgradeBuild(buildName, build, member.game.inventory);
+    await chat.save();
 
     return editMessageCaption(getCaption(buildName, "upgrade.speedup.1", build), {
         chat_id: callback.message.chat.id,
@@ -246,17 +247,17 @@ export default [[/^builds\.[\-0-9]+\.[^.]+\.upgrade$/, async function (session, 
 }], [/^builds\.[\-0-9]+\.[^.]+\.upgrade\.upgradeLvl\.0$/, async function (session, callback) {
     const [, chatId, buildName] = callback.data.match(/^builds\.([\-0-9]+)\.([^.]+)\.upgrade\.upgradeLvl\.0$/);
     let messageId = callback.message.message_id;
-    let foundedSession = await getSession(chatId, callback.from.id);
+    let { chat, member } = await loadPlayer(chatId, callback.from.id);
 
-    let build = await getBuild(chatId, callback.from.id, buildName);
+    let build = member.game.builds[buildName];
 
     if (!await isCanBeBuild(buildName, build, chatId, callback.from.id)) {
-        return errorUpdateMessage(buildName, build, chatId, messageId, callback, foundedSession);
+        return errorUpdateMessage(buildName, build, chatId, messageId, callback, member);
     }
 
     build.upgradeStartedAt = new Date().getTime();
-    payForUpgrade(build.currentLvl, buildName, foundedSession.game.inventory);
-    upgradeBuildTimer(buildName, build, chatId, foundedSession, callback.from.id);
+    payForUpgrade(build.currentLvl, buildName, member.game.inventory);
+    await chat.save();
 
     return editMessageCaption(getCaption(buildName, "upgrade.upgradeLvl.0", build), {
         chat_id: callback.message.chat.id,

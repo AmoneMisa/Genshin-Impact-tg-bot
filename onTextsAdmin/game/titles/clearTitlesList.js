@@ -1,7 +1,6 @@
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
-import {titles} from '../../../data.js';
+import Title from '../../../db/models/Title.js';
 import { myId } from '../../../config.js';
-import lodash from 'lodash';
 import sendMessage from '../../../functions/tgBotFunctions/sendMessage.js';
 
 export default [[/(?:^|\s)\/clear_titles/, async (msg) => {
@@ -11,9 +10,7 @@ export default [[/(?:^|\s)\/clear_titles/, async (msg) => {
         return;
     }
 
-    for (let titleList of Object.values(titles)) {
-        lodash.remove(titleList, lodash.isObject);
-    }
+    await Title.deleteMany({});
 
     await sendMessage(msg.from.id, "Титулы очищены", {
         disable_notification: true

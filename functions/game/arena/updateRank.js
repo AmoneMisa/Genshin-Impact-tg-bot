@@ -18,12 +18,12 @@ const ranksRating = [
     {minRating: 1580, percentileRank: 0}
 ].reverse();
 
-export default function (userId, arenaType, chatId) {
-    let [playerRating, percentileRating] = getPlayerRating(userId, arenaType, chatId);
+export default async function (userId, arenaType, chatId) {
+    const [playerRating, percentileRating] = await getPlayerRating(userId, arenaType, chatId);
 
-    for (let [i, rankRating] of ranksRating.entries()) {
+    for (const [i, rankRating] of ranksRating.entries()) {
         if (rankRating.minRating <= playerRating) {
-            if (!rankRating.percentileRank || rankRating.percentileRank >= percentileRating) {
+            if (rankRating.percentileRank === null || rankRating.percentileRank >= percentileRating) {
                 return arenaRanks[i];
             }
         }
