@@ -26,23 +26,25 @@ export function renderPlayerHud({ state, getElement, formatNumber }) {
   const user = context.user || {};
   const firstName = user.firstName || user.username || 'Путешественник';
 
-  getElement('hello').textContent = `Привет, ${firstName}`;
-  getElement('level').textContent = player.level || 1;
-  getElement('class-name').textContent = player.classTitle || (player.className === 'noClass' ? 'Без класса' : player.className || 'Без класса');
-  getElement('class-sigil').textContent = CLASS_SIGILS[player.className] || CLASS_SIGILS.noClass;
+  // Optional nodes (older layouts had a chat badge and arena counter) are skipped when absent.
+  const setText = (id, value) => { const node = getElement(id); if (node) node.textContent = value; };
+  setText('hello', firstName);
+  setText('level', player.level || 1);
+  setText('class-name', player.classTitle || (player.className === 'noClass' ? 'Без класса' : player.className || 'Без класса'));
+  setText('class-sigil', CLASS_SIGILS[player.className] || CLASS_SIGILS.noClass);
   // Painted class portrait in the crest; the sigil stays as the fallback glyph.
   const shell = getElement('class-sigil')?.parentElement;
   if (shell?.style) {
     shell.style.setProperty('--portrait', `url("${menuArtFor('profile', player)}")`);
     shell.classList.add('has-portrait');
   }
-  getElement('chat-badge').textContent = context.chatType || (String(context.chatId) === String(user.id) ? 'private' : 'group');
-  getElement('arena-text').textContent = `Арена: ${player.arenaChances || 0}`;
+  setText('chat-badge', context.chatType || (String(context.chatId) === String(user.id) ? 'private' : 'group'));
+  setText('arena-text', `Арена: ${player.arenaChances || 0}`);
 
   meter(getElement, formatNumber, 'hp', player.hp, player.maxHp);
   meter(getElement, formatNumber, 'mp', player.mp, player.maxMp);
   meter(getElement, formatNumber, 'cp', player.cp, player.maxCp);
   meter(getElement, formatNumber, 'xp', player.currentExp, player.needExp);
 
-  getElement('sp-text').textContent = formatNumber(player.sp);
+  setText('sp-text', formatNumber(player.sp));
 }

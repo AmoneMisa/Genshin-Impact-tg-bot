@@ -236,6 +236,9 @@ async function boot() {
   document.querySelectorAll('[data-open-feature]').forEach(button => {
     button.addEventListener('click', () => { haptic('light'); openFeatureById(button.dataset.openFeature); });
   });
+  document.querySelectorAll('[data-nav-jump]').forEach(button => {
+    button.addEventListener('click', () => switchTab(button.dataset.navJump));
+  });
 
   $('fullscreen').addEventListener('click', () => {
     haptic();

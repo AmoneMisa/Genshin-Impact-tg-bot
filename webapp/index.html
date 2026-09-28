@@ -52,9 +52,34 @@
   <canvas id="webgl" aria-hidden="true"></canvas>
   <div class="noise" aria-hidden="true"></div>
   <main id="app" class="app-shell">
-    <section class="topbar"><div><div class="eyebrow">WHITESLOVE · GAME HUB</div><h1 id="hello">Загрузка профиля…</h1></div><button id="fullscreen" class="icon-button" type="button" aria-label="Полный экран">⛶</button></section>
-    <section class="hero-card mmo-hud glass" aria-label="Состояние персонажа"><div class="hero-crest" aria-hidden="true"><div class="hero-portrait-shell"><span id="class-sigil" class="hero-sigil">◇</span><div class="level-orb"><span id="level">1</span><small>LVL</small></div></div></div><div class="hero-copy"><div class="hero-row"><div class="hero-identity"><small>ПЕРСОНАЖ</small><strong id="class-name">Путешественник</strong></div><span id="chat-badge">Telegram</span></div><div class="hud-stack"><div class="hud-meter hp"><span class="hud-label">HP</span><div class="hud-track"><i id="hp-fill"></i><b></b></div><strong id="hp-text">0 / 1</strong></div><div class="hud-meter mp"><span class="hud-label">MP</span><div class="hud-track"><i id="mp-fill"></i><b></b></div><strong id="mp-text">0 / 1</strong></div><div class="hud-meter cp"><span class="hud-label">CP</span><div class="hud-track"><i id="cp-fill"></i><b></b></div><strong id="cp-text">0 / 1</strong></div><div class="hud-meter sp"><span class="hud-label">SP</span><div class="hud-track sp-track"><i></i><b></b></div><strong id="sp-text">0</strong></div><div class="hud-meter exp"><span class="hud-label">EXP</span><div class="hud-track"><i id="xp-fill"></i><b></b></div><strong id="xp-text">0 / 1</strong></div></div><div class="hud-footer"><span id="arena-text">Арена: 0</span><span class="hud-status-dot">ONLINE</span></div></div></section>
-    <section class="resources" aria-label="Ресурсы"><article class="resource glass"><span>🪙</span><div><small>Мора</small><strong id="gold">0</strong></div><button type="button" class="resource-plus" data-open-feature="shop" aria-label="Магазин">+</button></article><article class="resource glass"><span>💎</span><div><small>Кристаллы</small><strong id="crystals">0</strong></div><button type="button" class="resource-plus" data-open-feature="exchange" aria-label="Обменник">+</button></article><article class="resource glass"><span>⛏️</span><div><small>Руда</small><strong id="ore">0</strong></div></article></section>
+    <header class="top-hud" aria-label="Состояние персонажа">
+      <div class="top-hud-hero">
+        <div class="hero-portrait-shell top-portrait" data-open-feature="profile" role="button" tabindex="0" aria-label="Персонаж"><span id="class-sigil" class="hero-sigil">◇</span><span class="top-level" id="level">1</span></div>
+        <div class="top-hud-stats">
+          <div class="top-hud-name"><strong id="hello">Загрузка…</strong><small id="class-name">Путешественник</small></div>
+          <div class="top-bar hp"><span>HP</span><div class="top-bar-track"><i id="hp-fill"></i><b id="hp-text">0 / 1</b></div></div>
+          <div class="top-bar mp"><span>MP</span><div class="top-bar-track"><i id="mp-fill"></i><b id="mp-text">0 / 1</b></div></div>
+          <div class="top-bar cp"><span>CP</span><div class="top-bar-track"><i id="cp-fill"></i><b id="cp-text">0 / 1</b></div></div>
+          <div class="top-bar sp"><span>SP</span><div class="top-bar-track"><i style="width:100%"></i><b id="sp-text">0</b></div></div>
+          <div class="top-bar exp"><span>EXP</span><div class="top-bar-track"><i id="xp-fill"></i><b id="xp-text">0 / 1</b></div></div>
+        </div>
+      </div>
+      <div class="top-hud-side">
+        <div class="top-resources">
+          <div class="top-res"><span aria-hidden="true">🪙</span><strong id="gold" aria-label="Мора">0</strong><button type="button" class="resource-plus" data-open-feature="shop" aria-label="Пополнить: Мора">+</button></div>
+          <div class="top-res"><span aria-hidden="true">💎</span><strong id="crystals" aria-label="Кристаллы">0</strong><button type="button" class="resource-plus" data-open-feature="exchange" aria-label="Пополнить: Кристаллы">+</button></div>
+          <div class="top-res"><span aria-hidden="true">⛏️</span><strong id="ore" aria-label="Руда">0</strong><i></i></div>
+        </div>
+        <div class="top-hud-rail">
+          <button type="button" class="top-banner" data-open-feature="clan" aria-label="Клан"><span aria-hidden="true">🌳</span><small>Сила<br>в единстве</small></button>
+          <div class="top-icons">
+            <button type="button" class="top-icon" data-open-feature="updates" aria-label="Уведомления">✉</button>
+            <button type="button" class="top-icon" data-nav-jump="more" aria-label="Ещё">⚙</button>
+            <button id="fullscreen" type="button" class="top-icon" aria-label="Полный экран">⛶</button>
+          </div>
+        </div>
+      </div>
+    </header>
     <section id="city" class="city-host" data-tab-panel="city" aria-label="Город"></section>
     <section class="section-head" data-tab-panel="features"><div><div class="eyebrow">РЕЖИМЫ</div><h2 id="tab-title">Куда идём?</h2></div><span class="live-pill">WEBGL</span></section>
     <section id="game-grid" class="game-grid" data-tab-panel="features"></section>

@@ -4,20 +4,15 @@
 .app-shell { padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 12px); }
 [data-tab-panel][hidden] { display: none !important; }
 
-/* Resource "+" shortcuts (shop / exchange). */
-.resource { position: relative; }
+/* Resource "+" shortcuts (shop / exchange) in the top HUD. */
 .resource-plus {
-  position: absolute; top: -6px; right: -6px;
-  width: 22px; height: 22px; padding: 0;
-  display: grid; place-items: center;
-  border-radius: 50%;
+  display: grid; place-items: center; padding: 0;
   border: 1px solid var(--city-gold);
   background: radial-gradient(circle at 40% 35%, #4a3a1c, #1a1309);
   color: #f3dca6; font: 700 15px/1 var(--city-serif);
   box-shadow: 0 0 8px rgba(216, 179, 106, .35);
 }
 .resource-plus:active { transform: scale(.9); }
-@media (max-width: 430px) { .resources .resource > span { display: none; } }
 
 /* ------------------------------------------------------------------ */
 /* City panorama: one night backdrop, buildings as soft-edged islands */
@@ -284,3 +279,6 @@
 @media (prefers-reduced-motion: reduce) {
   .city-card, .city-block, .city-art::before, .city-sky, .city::after, .city-window-art::before, .city-collect, .city-up, .city-progress i::after { animation: none !important; }
 }
+
+/* Feature tabs start below the sticky top HUD. */
+.section-head[data-tab-panel="features"] { margin-top: 18px; }
