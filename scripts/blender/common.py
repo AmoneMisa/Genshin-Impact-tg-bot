@@ -133,12 +133,13 @@ def loft(name, sections, closed=True, uv=None):
     return obj
 
 
-def curve_tube(name, points, radius, taper=None, resolution=12, closed=False):
+def curve_tube(name, points, radius, taper=None, resolution=6, closed=False, bevel_resolution=2):
     """A bevelled curve through `points` converted to mesh; `taper` = (start, end) radius factors."""
     data = bpy.data.curves.new(name, "CURVE")
     data.dimensions = "3D"
     data.bevel_depth = radius
-    data.bevel_resolution = 4
+    # Thin trim reads round with a coarse bevel; fine settings cost thousands of triangles.
+    data.bevel_resolution = bevel_resolution
     data.resolution_u = resolution
     data.use_fill_caps = True
     spline = data.splines.new("NURBS")
