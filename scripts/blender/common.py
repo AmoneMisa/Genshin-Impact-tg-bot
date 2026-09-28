@@ -190,6 +190,43 @@ def curve_tube(name, points, radius, taper=None, resolution=6, closed=False, bev
     return bpy.context.active_object
 
 
+def flat_curve(name, points, width, thickness, taper=(1.0, 0.35), resolution=6):
+    """Tapered blade-like curve: an elliptical profile `width` across (Y) and
+    `thickness` deep in the curve's plane. For bow limbs, prods and ribbons."""
+    profile_data = bpy.data.curves.new(name + "Profile", "CURVE")
+    spline = profile_data.splines.new("NURBS")
+    n = 16
+    spline.points.add(n - 1)
+    for k, p in enumerate(spline.points):
+        a = k / n * math.tau
+        p.co = (math.cos(a) * thickness, math.sin(a) * width, 0, 1)
+    spline.use_cyclic_u = True
+    profile_data.resolution_u = 1  # 16 profile points are plenty; the default subdivides each span ~12x
+    profile = bpy.data.objects.new(name + "Profile", profile_data)
+    bpy.context.collection.objects.link(profile)
+    data = bpy.data.curves.new(name, "CURVE")
+    data.dimensions = "3D"
+    data.bevel_mode = "OBJECT"
+    data.bevel_object = profile
+    data.use_fill_caps = True
+    data.resolution_u = max(1, min(resolution, 96 // max(1, len(points))))
+    path = data.splines.new("NURBS")
+    path.points.add(len(points) - 1)
+    for i, (p, co) in enumerate(zip(path.points, points)):
+        t = i / max(1, len(points) - 1)
+        p.co = (*co, 1)
+        p.radius = taper[0] + (taper[1] - taper[0]) * t
+    path.use_endpoint_u = True
+    path.order_u = min(4, len(points))
+    obj = bpy.data.objects.new(name, data)
+    bpy.context.collection.objects.link(obj)
+    activate(obj)
+    bpy.ops.object.convert(target="MESH")
+    result = bpy.context.active_object
+    bpy.data.objects.remove(profile, do_unlink=True)
+    return result
+
+
 def helix_wrap(name, radius, height, turns, strip, z0=0.0):
     """Leather strip wound around a cylinder along Z (a real 3D grip wrap)."""
     pts = []
