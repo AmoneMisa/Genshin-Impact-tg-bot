@@ -57,6 +57,21 @@
     },
     "gauntlets": {
       "file": "knuckles.glb"
+    },
+    "helmet": {
+      "file": "helmet.glb"
+    },
+    "armor": {
+      "file": "armor.glb"
+    },
+    "gloves": {
+      "file": "gloves.glb"
+    },
+    "greaves": {
+      "file": "greaves.glb"
+    },
+    "boots": {
+      "file": "boots.glb"
     }
   }
 }

@@ -167,7 +167,7 @@ export function runeCrossbow() {
   const trigger = new THREE.TorusGeometry(0.06, 0.012, 8, 24, Math.PI);
   trigger.rotateZ(Math.PI);
   trigger.translate(0.05, -0.08, 0);
-  group.add(merged([...fittings.map(g => g.toNonIndexed()), stirrup.toNonIndexed(), trigger.toNonIndexed()], gold(), 'fittings'));
+  group.add(merged([...fittings.map(g => g), stirrup, trigger], gold(), 'fittings'));
   return group;
 }
 
@@ -241,7 +241,7 @@ export function spikedKnuckles() {
   bar.translate(0, 0.19, 0);
   const spikes = [];
   for (let k = 0; k < 4; k++) { const s = new THREE.ConeGeometry(0.06, 0.26, 8); s.translate(-0.42 + k * 0.28, 0.36, 0); spikes.push(s); }
-  group.add(merged([bar, ...spikes].map(g => (g.index ? g.toNonIndexed() : g)), silver(), 'spikedBar'));
+  group.add(merged([bar, ...spikes], silver(), 'spikedBar'));
   // Palm grip underneath.
   const palm = new THREE.CapsuleGeometry(0.075, 0.7, 6, 16);
   palm.rotateZ(Math.PI / 2);

@@ -8,7 +8,7 @@
 // scrolls) are merged per material so each model stays a handful of draw calls.
 
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 // ---- materials ----
 export const gold = () => new THREE.MeshStandardMaterial({ name: 'gold', color: 0xe3b35c, metalness: 1, roughness: 0.22 });
@@ -22,12 +22,17 @@ export const crystal = (color, { opacity = 1, glow = 1.6 } = {}) => new THREE.Me
 });
 
 export const mesh = (geometry, material, name) => Object.assign(new THREE.Mesh(geometry, material), { name });
-// mergeGeometries needs all-indexed or all-non-indexed input; only fall back to
-// non-indexed (3 unique vertices per triangle, ~3× larger) when the parts are mixed.
+// mergeGeometries needs all-indexed or all-non-indexed input. Index the
+// non-indexed parts (extrusions) rather than un-indexing everything: un-indexed
+// geometry stores 3 unique vertices per triangle and roughly triples file size.
+// mergeVertices only welds vertices whose normals/uvs also match, so flat
+// facets stay crisp.
 export const merged = (geometries, material, name) => {
-  const allIndexed = geometries.every(g => g.index);
-  const parts = allIndexed ? geometries : geometries.map(g => (g.index ? g.toNonIndexed() : g));
-  for (const g of parts) for (const key of Object.keys(g.attributes)) if (!['position', 'normal', 'uv'].includes(key)) g.deleteAttribute(key);
+  const parts = geometries.map(g => {
+    for (const key of Object.keys(g.attributes)) if (!['position', 'normal', 'uv'].includes(key)) g.deleteAttribute(key);
+    if (!g.attributes.uv) g.setAttribute('uv', new THREE.Float32BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
+    return g.index ? g : mergeVertices(g);
+  });
   return mesh(mergeGeometries(parts), material, name);
 };
 
