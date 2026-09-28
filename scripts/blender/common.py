@@ -133,6 +133,34 @@ def loft(name, sections, closed=True, uv=None):
     return obj
 
 
+def surface_grid(name, point, seg_u, seg_v, closed_u=False):
+    """Quad grid from `point(u, v) -> (x, y, z)`, u, v in [0, 1]; optionally closed around u.
+
+    Gets exact (u, v) UVs and is flagged so baking keeps them.
+    """
+    cols = seg_u if closed_u else seg_u + 1
+    verts = [point(i / seg_u, j / seg_v) for j in range(seg_v + 1) for i in range(cols)]
+    faces = []
+    for j in range(seg_v):
+        for i in range(seg_u):
+            a = j * cols + i
+            b = j * cols + (i + 1) % cols if closed_u else a + 1
+            faces.append((a, b, b + cols, a + cols))
+    obj = mesh_from(name, verts, faces)
+    layer = obj.data.uv_layers.new(name="UVMap")
+    for poly in obj.data.polygons:
+        for li in poly.loop_indices:
+            vi = obj.data.loops[li].vertex_index
+            i, j = vi % cols, vi // cols
+            u = i / seg_u
+            # Faces that wrap around the seam need u = 1, not 0.
+            if closed_u and i == 0 and any(obj.data.loops[k].vertex_index % cols == cols - 1 for k in poly.loop_indices):
+                u = 1.0
+            layer.data[li].uv = (u, j / seg_v)
+    obj["uv_ready"] = True
+    return obj
+
+
 def curve_tube(name, points, radius, taper=None, resolution=6, closed=False, bevel_resolution=2):
     """A bevelled curve through `points` converted to mesh; `taper` = (start, end) radius factors."""
     data = bpy.data.curves.new(name, "CURVE")
@@ -140,7 +168,9 @@ def curve_tube(name, points, radius, taper=None, resolution=6, closed=False, bev
     data.bevel_depth = radius
     # Thin trim reads round with a coarse bevel; fine settings cost thousands of triangles.
     data.bevel_resolution = bevel_resolution
-    data.resolution_u = resolution
+    # Densely sampled curves (rims, loops) already have enough points: subdividing
+    # every span again multiplies triangles for no visible gain.
+    data.resolution_u = max(1, min(resolution, 96 // max(1, len(points))))
     data.use_fill_caps = True
     spline = data.splines.new("NURBS")
     spline.points.add(len(points) - 1)

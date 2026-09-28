@@ -62,7 +62,7 @@ test('shipped manifest gives every jewellery kind a model and grade variants for
 });
 
 test('front-facing ornaments sway instead of spinning edge-on', () => {
-  for (const kind of ['tiara', 'amulet', 'earring', 'ring', 'bow', 'shield']) {
+  for (const kind of ['tiara', 'amulet', 'earring', 'ring', 'bow', 'shield', 'armor']) {
     for (const t of [0, 3, 7.5, 30, 120]) assert.ok(Math.abs(itemRotation(kind, t)[1]) <= 0.6 + 1e-9, `${kind} at ${t}s`);
   }
   assert.ok(itemRotation('sword', 30)[1] > 6, 'weapons still spin');
