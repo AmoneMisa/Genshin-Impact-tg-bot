@@ -19,3 +19,12 @@ test('potion flasks are tinted by what they restore', () => {
   assert.equal(potionTone({ type: 'hp', bottleType: 'elixir' }), 'elixir');
   assert.match(flaskHtml({ type: 'mp' }), /inv-flask tone-mp/);
 });
+
+import { clampAmount } from '../webapp/exchange.js';
+test('exchange amount stays a whole number within what you can afford', () => {
+  assert.equal(clampAmount(3, 120), 3);
+  assert.equal(clampAmount(0, 120), 1);
+  assert.equal(clampAmount(500, 120), 120);
+  assert.equal(clampAmount(2.7, 120), 2);
+  assert.equal(clampAmount(5, 0), 0);
+});

@@ -8,6 +8,15 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
+/** Whole crystals within [1, max]; empty when nothing is affordable. */
+export function clampAmount(value, max) {
+  const limit = Math.max(0, Math.floor(Number(max) || 0));
+  if (!limit) return 0;
+  return Math.max(1, Math.min(limit, Math.floor(Number(value) || 0)));
+}
+
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
 export async function openExchangeGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/exchange');
   let pending = false;
@@ -18,11 +27,11 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass exchange-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">EXCHANGE · MONGO</div><h2>Обменник</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="ex-head">
+        <button class="overlay-close ex-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Обменник</h2>
+        <span class="ex-round" aria-hidden="true">⚗</span>
       </header>
-      <p class="overlay-copy">Фиксированный курс старой игры: 1 💎 = 1 500 🪙. Сумма проверяется и списывается только на сервере.</p>
       <div data-exchange-content></div>
       <div class="utility-feedback" data-exchange-feedback aria-live="polite"></div>
     </div>`;
@@ -46,35 +55,42 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
   }
 
   function render() {
-    const quick = [1, 5, 10, 25, 50, 100].filter(amount => amount <= state.maxAffordable);
-    const defaultAmount = state.maxAffordable > 0 ? Math.min(1, state.maxAffordable) : '';
-
+    const defaultAmount = clampAmount(lastPurchase?.amount || 1, state.maxAffordable);
     content.innerHTML = `
-      <section class="exchange-balances">
-        <article><span>🪙</span><div><small>ЗОЛОТО</small><strong>${formatNumber(state.gold)}</strong></div></article>
-        <article><span>💎</span><div><small>КРИСТАЛЛЫ</small><strong>${formatNumber(state.crystals)}</strong></div></article>
+      <section class="ex-altar" data-exchange-altar>
+        <div class="ex-side gold"><span class="ex-pile" aria-hidden="true">🪙</span><small>Золото</small><strong>${formatNumber(state.gold)}</strong></div>
+        <div class="ex-circle" aria-hidden="true"><i></i><i></i><b>⇄</b></div>
+        <div class="ex-side crystal"><span class="ex-pile" aria-hidden="true">💎</span><small>Кристаллы</small><strong>${formatNumber(state.crystals)}</strong></div>
+        <div class="ex-fly" data-exchange-fly aria-hidden="true"></div>
       </section>
+      <p class="ex-rate">Курс: <b>1 💎 = ${formatNumber(state.price)} 🪙</b></p>
       ${successHtml()}
-      <section class="exchange-rate">
-        <span>1 💎</span><i>⇄</i><strong>${formatNumber(state.price)} 🪙</strong>
-      </section>
       <section class="exchange-form">
-        <label>
-          <span>Купить кристаллов</span>
-          <div><b>💎</b><input type="number" min="1" step="1" max="${Math.max(0, state.maxAffordable)}" value="${defaultAmount}" inputmode="numeric" data-exchange-amount /></div>
-        </label>
+        <div class="ex-stepper">
+          <button type="button" data-exchange-step="-1" aria-label="Меньше">−</button>
+          <label><b>💎</b><input type="number" min="1" step="1" max="${Math.max(0, state.maxAffordable)}" value="${defaultAmount || ''}" inputmode="numeric" data-exchange-amount aria-label="Купить кристаллов" /></label>
+          <button type="button" data-exchange-step="1" aria-label="Больше">+</button>
+        </div>
         <div class="exchange-quick">
-          ${quick.map(amount => `<button type="button" data-exchange-quick="${amount}">${formatNumber(amount)}</button>`).join('')}
-          ${state.maxAffordable > 0 ? `<button type="button" data-exchange-quick="${state.maxAffordable}">Макс.</button>` : ''}
+          ${[1, 10, 50].map(amount => `<button type="button" data-exchange-quick="${amount}" ${amount > state.maxAffordable ? 'disabled' : ''}>${formatNumber(amount)}</button>`).join('')}
+          <button type="button" data-exchange-quick="${state.maxAffordable}" ${state.maxAffordable > 0 ? '' : 'disabled'}>Макс. ${formatNumber(state.maxAffordable)}</button>
         </div>
         <div class="exchange-cost" data-exchange-cost></div>
-        <button type="button" class="exchange-buy" data-exchange-buy ${state.maxAffordable <= 0 || pending ? 'disabled' : ''}>
-          <span>💎</span><div><strong>Купить</strong><small>Доступно максимум ${formatNumber(state.maxAffordable)}</small></div>
-        </button>
+        <button type="button" class="exchange-buy" data-exchange-buy ${state.maxAffordable <= 0 ? 'disabled' : ''}>${state.maxAffordable > 0 ? 'Обменять' : 'Не хватает золота'}</button>
       </section>`;
 
     bind();
     updateCost();
+  }
+
+  // Coins stream into the circle, it flares, crystals spill out on the right.
+  async function playTransmute(amount) {
+    const altar = content.querySelector('[data-exchange-altar]');
+    const fly = content.querySelector('[data-exchange-fly]');
+    if (!altar || !fly || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    fly.innerHTML = `${Array.from({ length: 6 }, (_, i) => `<i class="coin" style="--d:${i * 70}ms">🪙</i>`).join('')}${Array.from({ length: Math.min(6, Math.max(2, Math.ceil(Math.log2(amount + 1)))) }, (_, i) => `<i class="gem" style="--d:${550 + i * 80}ms;--y:${(i % 3 - 1) * 16}px">💎</i>`).join('')}<strong>+${formatNumber(amount)} 💎</strong>`;
+    altar.classList.add('transmuting');
+    await wait(1250);
   }
 
   function updateCost() {
@@ -92,6 +108,13 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
   function bind() {
     const input = content.querySelector('[data-exchange-amount]');
     input?.addEventListener('input', updateCost);
+    content.querySelectorAll('[data-exchange-step]').forEach(button => {
+      button.addEventListener('click', () => {
+        if (input) input.value = clampAmount(Number(input.value) + Number(button.dataset.exchangeStep), state.maxAffordable) || '';
+        updateCost();
+        haptic('light');
+      });
+    });
     content.querySelectorAll('[data-exchange-quick]').forEach(button => {
       button.addEventListener('click', () => {
         if (input) input.value = button.dataset.exchangeQuick;
@@ -108,7 +131,7 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
     const amount = input?.value ?? '';
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Покупаем кристаллы…';
+    feedback.textContent = '';
     haptic('heavy');
 
     try {
@@ -116,6 +139,7 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
         method: 'POST',
         body: JSON.stringify({ amount }),
       });
+      await playTransmute(Number(payload.amount) || 0);
       state = payload.exchange;
       lastPurchase = { amount: payload.amount, cost: payload.cost };
       if (payload.state) renderState(payload.state);
