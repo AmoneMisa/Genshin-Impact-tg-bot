@@ -1,4 +1,5 @@
 import { renderForgeLootArt } from './loot-forge.js';
+import { dollSlotFor } from './equipment-paper-doll.js';
 
 function sameEquipmentSnapshot(slotItem, item) {
   if (!slotItem || !item) return false;
@@ -47,7 +48,8 @@ function itemCardByKey(list, key) {
 }
 
 function loadoutNodes(loadout, equipment, item) {
-  const slots = new Set(matchingLoadoutSlots(equipment, item));
+  // Items equip into template slots (helmet/gloves/boots); the doll shows them as head/hands/legs.
+  const slots = new Set(matchingLoadoutSlots(equipment, item).map(dollSlotFor));
   return [...(loadout?.querySelectorAll?.('[data-slot]') || [])]
     .filter((node) => slots.has(node.dataset.slot));
 }

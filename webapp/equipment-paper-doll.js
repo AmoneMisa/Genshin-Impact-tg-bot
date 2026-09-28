@@ -34,10 +34,19 @@ function sameSnapshot(item,slotItem){
     && item.kind===slotItem.kind;
 }
 
+// The paper doll names slots after the body (head/hands/legs) but equipment
+// templates equip into helmet/gloves/boots, so each doll slot also accepts its alias.
+const SLOT_ALIASES={head:['head','helmet'],hands:['hands','gloves'],legs:['legs','boots']};
+
+/** Template slot name (e.g. 'helmet') → the paper-doll slot that displays it ('head'). */
+export function dollSlotFor(slot){return Object.keys(SLOT_ALIASES).find(doll=>SLOT_ALIASES[doll].includes(slot))||slot;}
+
 export function equippedItemForSlot(state={},slot){
-  const slotItem=state.equippedSlots?.[slot];
+  const names=SLOT_ALIASES[slot]||[slot];
+  const equippedName=names.find(name=>state.equippedSlots?.[name]);
+  const slotItem=equippedName?state.equippedSlots[equippedName]:null;
   if(!slotItem)return null;
-  const candidates=(state.items||[]).filter(item=>item.isUsed&&Array.isArray(item.slots)&&item.slots.includes(slot));
+  const candidates=(state.items||[]).filter(item=>item.isUsed&&Array.isArray(item.slots)&&item.slots.includes(equippedName));
   return candidates.find(item=>sameSnapshot(item,slotItem))||candidates[0]||null;
 }
 
@@ -76,7 +85,7 @@ function figureMarkup(state){
 function slotMarkup(state,slot,label,x,y){
   const item=equippedItemForSlot(state,slot);
   const occupied=Boolean(item);
-  const slotSnapshot=state.equippedSlots?.[slot]||null;
+  const slotSnapshot=(SLOT_ALIASES[slot]||[slot]).map(name=>state.equippedSlots?.[name]).find(Boolean)||null;
   const displayItem=item||slotSnapshot;
   const grade=displayItem?.grade||'noGrade';
   const name=displayItem?.translatedName||displayItem?.name||'Пусто';
@@ -89,7 +98,7 @@ function slotMarkup(state,slot,label,x,y){
 
 export function renderEquipmentPaperDoll(container,state={}){
   if(!container)return;
-  const occupied=PAPER_DOLL_SLOTS.filter(([slot])=>state.equippedSlots?.[slot]).length;
+  const occupied=PAPER_DOLL_SLOTS.filter(([slot])=>(SLOT_ALIASES[slot]||[slot]).some(name=>state.equippedSlots?.[name])).length;
   container.className='loadout-grid paper-doll-loadout';
   container.innerHTML=`<div class="paper-doll-stage" data-paper-doll-stage>
     <div class="paper-doll-circuit" aria-hidden="true"></div>
