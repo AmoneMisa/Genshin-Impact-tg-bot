@@ -1,52 +1,114 @@
-.sword-panel { max-height:min(92vh,760px); }
-.sword-hero { position:relative; overflow:hidden; margin:16px 0 10px; padding:18px; border:1px solid rgba(150,178,239,.15); border-radius:20px; background:linear-gradient(145deg,rgba(73,91,148,.12),rgba(255,255,255,.018)); text-align:center; }
-.sword-hero::after { content:""; position:absolute; inset:auto -55px -90px auto; width:190px; height:190px; border-radius:50%; background:radial-gradient(circle,rgba(122,160,235,.14),transparent 70%); pointer-events:none; }
-.sword-blade { position:relative; width:92px; height:150px; margin:0 auto 10px; filter:drop-shadow(0 0 18px rgba(141,178,238,.13)); }
-.sword-blade span { position:absolute; left:50%; top:5px; width:17px; height:105px; transform:translateX(-50%); clip-path:polygon(50% 0,100% 13%,82% 100%,18% 100%,0 13%); background:linear-gradient(90deg,rgba(109,133,189,.62),rgba(226,235,255,.92) 50%,rgba(104,126,183,.65)); }
-.sword-blade i { position:absolute; left:50%; bottom:13px; width:66px; height:8px; transform:translateX(-50%); border-radius:999px; background:linear-gradient(90deg,#66517e,#b9a7da,#66517e); box-shadow:0 18px 0 -1px #786657; }
-.sword-blade::after { content:""; position:absolute; left:50%; bottom:17px; width:8px; height:35px; transform:translate(-50%,100%); border-radius:4px; background:linear-gradient(#8e785e,#54483e); }
-.sword-length { position:relative; z-index:1; display:grid; gap:2px; }
-.sword-length small { color:var(--muted); font-size:8px; letter-spacing:.12em; }
-.sword-length strong { font-size:31px; line-height:1; }
-.sword-length em { color:#aeb8d0; font-size:12px; font-style:normal; }
-.sword-hero p { position:relative; z-index:1; margin:9px 0 0; color:#bbb9c9; font-size:9px; line-height:1.5; }
-.sword-action-card { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:10px 0; padding:11px 12px; border:1px solid rgba(255,255,255,.07); border-radius:14px; background:rgba(255,255,255,.025); }
-.sword-action-card > div { display:grid; gap:2px; }
-.sword-action-card small { color:var(--muted); font-size:8px; letter-spacing:.08em; }
-.sword-action-card strong { font-size:12px; }
-.sword-action-card button { width:31px; height:31px; border:1px solid rgba(255,255,255,.08); border-radius:10px; background:rgba(255,255,255,.035); color:#c9c5d5; }
-.sword-roll { width:100%; min-height:58px; padding:11px 13px; border:1px solid rgba(140,174,239,.2); border-radius:16px; background:linear-gradient(135deg,rgba(82,111,181,.18),rgba(125,75,160,.1)); color:#eef1fa; display:flex; align-items:center; gap:11px; text-align:left; }
-.sword-roll > span { width:34px; height:34px; display:grid; place-items:center; border-radius:11px; background:rgba(255,255,255,.045); font-size:19px; }
-.sword-roll > div { min-width:0; display:grid; gap:3px; }
-.sword-roll strong { font-size:11px; }
-.sword-roll small { color:var(--muted); font-size:8px; line-height:1.35; }
-.sword-roll:disabled { opacity:.48; }
-.sword-rules { display:grid; gap:5px; margin-top:10px; color:#aaa6b8; font-size:8px; }
-.sword-rules span { padding:7px 9px; border:1px solid rgba(255,255,255,.055); border-radius:10px; background:rgba(255,255,255,.018); }
-.sword-feedback { min-height:18px; margin:11px 2px 1px; color:var(--muted); font-size:10px; text-align:center; }
-.sword-overlay.busy .sword-roll, .sword-overlay.busy [data-sword-refresh] { pointer-events:none; opacity:.52; }
-.sword-overlay.rolling .sword-blade { animation:sword-pulse .55s ease; }
-.sword-result { position:sticky; top:0; z-index:22; margin:-2px 0 9px; padding:10px 12px; border:1px solid rgba(255,255,255,.1); border-radius:14px; background:rgba(16,18,34,.95); backdrop-filter:blur(18px); display:flex; align-items:center; gap:9px; opacity:0; transform:translateY(-10px); transition:.18s ease; }
-.sword-result.visible { opacity:1; transform:translateY(0); }
-.sword-result.leaving { opacity:0; transform:translateY(-7px); }
-.sword-result.positive { border-color:rgba(100,211,164,.2); }
-.sword-result.negative { border-color:rgba(231,111,128,.2); }
-.sword-result.neutral { border-color:rgba(184,187,205,.16); }
-.sword-result span { font-size:20px; }
-.sword-result strong { font-size:11px; }
-@keyframes sword-pulse { 0%{transform:rotate(0)} 35%{transform:rotate(-7deg) scale(1.04)} 70%{transform:rotate(6deg) scale(1.03)} 100%{transform:rotate(0)} }
+/* Daily sword (sword.js), forge style: blade over an anvil beside a ruler;
+   a roll swings the hammer, throws sparks and resizes the blade. */
+.overlay-panel.sword-panel {
+  --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
+  display: grid; gap: 10px;
+  max-height: min(94vh, 900px);
+  padding-top: 12px;
+  color: #eee4cf;
+}
+.sword-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.sword-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.sword-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
 
-.sword-ranking { margin-top:12px; padding:12px; border:1px solid rgba(255,255,255,.065); border-radius:16px; background:rgba(255,255,255,.018); }
-.sword-ranking-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
-.sword-ranking-head > div { display:grid; gap:2px; }
-.sword-ranking-head small { color:var(--muted); font-size:8px; letter-spacing:.09em; }
-.sword-ranking-head strong { font-size:12px; }
-.sword-ranking-head > span { min-width:28px; height:28px; padding:0 8px; display:grid; place-items:center; border-radius:9px; background:rgba(255,255,255,.04); color:#c8c5d4; font-size:9px; }
-.sword-ranking-list { display:grid; gap:5px; max-height:190px; overflow:auto; scrollbar-width:thin; }
-.sword-ranking-row { display:grid; grid-template-columns:30px minmax(0,1fr) auto; align-items:center; gap:8px; min-height:36px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.018); }
-.sword-ranking-row.current { background:linear-gradient(90deg,rgba(89,120,193,.13),rgba(126,75,158,.08)); outline:1px solid rgba(139,171,235,.12); }
-.sword-ranking-rank { color:#aaa8b8; font-size:10px; text-align:center; }
-.sword-ranking-name { overflow:hidden; color:#ccc9d7; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
-.sword-ranking-row strong { color:#f1f2f8; font-size:10px; font-variant-numeric:tabular-nums; }
-.sword-ranking-row strong small { color:var(--muted); font-size:7px; font-weight:500; }
-.sword-ranking-empty { padding:12px 8px; color:var(--muted); font-size:9px; text-align:center; }
+.sword-forge {
+  position: relative; overflow: hidden;
+  height: 300px;
+  border-radius: 8px; border: 1px solid var(--gold-dim);
+  background:
+    radial-gradient(ellipse 60% 35% at 50% 88%, rgba(255, 120, 40, .45), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(90, 60, 40, .25), transparent 70%),
+    linear-gradient(180deg, transparent 78%, #140e0a 78%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .3) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .22) 0 1px, transparent 1px 36px),
+    linear-gradient(180deg, #2a2226, #171215);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, .8);
+}
+.sword-forge::before {
+  /* Forge glow breathing from below. */
+  content: ""; position: absolute; left: 20%; right: 20%; bottom: 0; height: 30%;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 140, 50, .55), transparent 70%);
+  animation: sword-embers 2.4s ease-in-out infinite alternate;
+}
+.sword-ruler { position: absolute; left: 10px; top: 14px; bottom: 26%; width: 34px; display: flex; flex-direction: column; justify-content: space-between; border-right: 2px solid rgba(216, 179, 106, .6); }
+.sword-ruler span { position: relative; height: 0; font: 700 9px/1 system-ui, sans-serif; color: rgba(243, 220, 166, .75); }
+.sword-ruler span::after { content: ""; position: absolute; right: -2px; top: 0; width: 8px; height: 1px; background: rgba(216, 179, 106, .7); }
+.sword-ruler span.major::after { width: 14px; }
+.sword-ruler span.major { transform: translateY(-5px); }
+
+.sword-blade { position: absolute; left: 50%; bottom: 24%; width: 130px; height: 210px; margin-left: -65px; display: grid; place-items: end center; transform-origin: 50% 100%; }
+.sword-blade .loot-art { width: 100%; height: 100%; }
+.sword-forge.grow .sword-blade { animation: sword-grow .7s cubic-bezier(.2, 1.4, .4, 1); }
+.sword-forge.shrink .sword-blade { animation: sword-shrink .7s cubic-bezier(.2, 1.4, .4, 1); }
+.sword-forge.forging .sword-blade { animation: sword-heat 1.1s ease-in-out; }
+
+.sword-anvil {
+  position: absolute; left: 50%; bottom: 10%; width: 150px; height: 44px; margin-left: -75px;
+  background: linear-gradient(180deg, #5a5560, #2a262e 60%, #1a171d);
+  clip-path: polygon(0 0, 100% 0, 88% 40%, 70% 45%, 66% 100%, 34% 100%, 30% 45%, 12% 40%);
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .7));
+}
+.sword-hammer {
+  position: absolute; right: 12%; top: 16%; width: 54px; height: 90px;
+  transform-origin: 90% 95%; rotate: 35deg; opacity: 0;
+  background: linear-gradient(180deg, #6a6470 0 30%, transparent 30%) 0 0 / 100% 100% no-repeat, linear-gradient(90deg, transparent 42%, #7a5a34 42% 58%, transparent 58%);
+  border-radius: 4px;
+}
+.sword-forge.forging .sword-hammer { animation: sword-hammer 1.1s ease-in-out; }
+.sword-sparks { position: absolute; left: 50%; bottom: 26%; }
+.sword-sparks i { position: absolute; width: 3px; height: 10px; border-radius: 2px; background: #ffd06a; box-shadow: 0 0 6px #ff9a3a; opacity: 0; transform: rotate(var(--a)) translateY(0); }
+.sword-forge.forging .sword-sparks i { animation: sword-spark .5s ease-out forwards; animation-delay: calc(.3s + var(--d)); }
+.sword-forge.forging .sword-sparks i:nth-child(odd) { animation-name: sword-spark, sword-spark; animation-delay: calc(.3s + var(--d)), calc(.75s + var(--d)); }
+
+.sword-length { position: absolute; right: 12px; bottom: 12px; display: grid; justify-items: end; gap: 2px; text-align: right; }
+.sword-length small { font: 700 10px/1 var(--serif); letter-spacing: .12em; color: rgba(243, 220, 166, .7); text-transform: uppercase; }
+.sword-length strong { font: 700 30px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000, 0 0 14px rgba(255, 170, 70, .35); }
+.sword-length em { font-size: 13px; font-style: normal; color: rgba(243, 220, 166, .7); }
+.sword-delta { position: absolute; left: 50%; top: 30%; z-index: 3; translate: -50% 0; font: 800 28px/1 var(--serif); text-shadow: 0 2px 0 #000; animation: sword-float 1.8s ease-out forwards; pointer-events: none; }
+.sword-delta.up { color: #9fe39a; text-shadow: 0 0 16px rgba(127, 224, 126, .7), 0 2px 0 #000; }
+.sword-delta.down { color: #ff8a80; text-shadow: 0 0 16px rgba(224, 80, 80, .7), 0 2px 0 #000; }
+.sword-delta.flat { color: #eee4cf; }
+
+.sword-modifier { margin: 0; text-align: center; font: 400 12px/1.4 var(--serif); color: rgba(238, 228, 207, .75); }
+.sword-roll {
+  display: grid; justify-items: center; gap: 4px;
+  width: 100%; min-height: 54px; padding: 8px 14px;
+  border-radius: 6px; border: 1px solid var(--gold);
+  background: linear-gradient(180deg, #7a4a1a, #3a200a);
+  box-shadow: inset 0 1px 0 rgba(255, 220, 170, .35), 0 6px 16px rgba(0, 0, 0, .5), 0 0 18px rgba(255, 140, 50, .25);
+  color: #fbeccb;
+}
+.sword-roll strong { font: 700 18px/1 var(--serif); }
+.sword-roll small { font: 600 12px/1 system-ui, sans-serif; color: rgba(251, 236, 203, .8); }
+.sword-roll:disabled { opacity: .6; filter: grayscale(.4); }
+.sword-feedback { min-height: 16px; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .75); }
+.sword-overlay.busy .sword-roll { pointer-events: none; }
+
+.sword-ranking { display: grid; gap: 6px; padding: 10px; border-radius: 8px; border: 1px solid rgba(216, 179, 106, .2); background: rgba(8, 7, 12, .7); }
+.sword-ranking-head { display: flex; justify-content: space-between; align-items: baseline; }
+.sword-ranking-head strong { font: 700 14px/1 var(--serif); color: #f3dca6; }
+.sword-ranking-head span { font-size: 12px; color: rgba(238, 228, 207, .6); }
+.sword-ranking-list { display: grid; gap: 4px; }
+.sword-ranking-row { display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .14); background: #0f0c15; }
+.sword-ranking-row.current { border-color: var(--gold); background: rgba(106, 79, 31, .25); }
+.sword-ranking-rank { font: 700 13px/1 var(--serif); color: var(--gold); text-align: center; }
+.sword-ranking-name { font-size: 13px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sword-ranking-row strong { font-size: 13px; color: #eee4cf; }
+.sword-ranking-row small { font-size: 10px; color: rgba(238, 228, 207, .6); }
+.sword-ranking-empty { padding: 10px; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .6); }
+
+@keyframes sword-embers { from { opacity: .6; } to { opacity: 1; } }
+@keyframes sword-hammer {
+  0% { opacity: 0; rotate: 35deg; }
+  15% { opacity: 1; rotate: 50deg; }
+  30% { rotate: -25deg; }
+  45% { rotate: 45deg; }
+  70% { rotate: -25deg; }
+  100% { opacity: 0; rotate: 35deg; }
+}
+@keyframes sword-heat { 0%, 100% { filter: none; } 30%, 70% { filter: drop-shadow(0 0 16px rgba(255, 120, 40, .9)) sepia(.6) saturate(2) hue-rotate(-20deg); } 32%, 72% { transform: translateY(2px); } }
+@keyframes sword-spark { 0% { opacity: 1; transform: rotate(var(--a)) translateY(0); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(-80px); } }
+@keyframes sword-grow { 0% { transform: scaleY(.85); } 60% { transform: scaleY(1.08); } 100% { transform: none; } }
+@keyframes sword-shrink { 0% { transform: scaleY(1.15); } 60% { transform: scaleY(.94); } 100% { transform: none; } }
+@keyframes sword-float { 0% { opacity: 0; transform: translateY(10px) scale(.7); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-50px); } }
+@media (prefers-reduced-motion: reduce) { .sword-forge::before, .sword-forge *, .sword-delta { animation: none !important; } }
