@@ -1,3 +1,5 @@
+import { menuArtFor } from './menu-art.js';
+
 export const CLASS_SIGILS = Object.freeze({
   warrior: '⚔',
   mage: '✦',
@@ -28,6 +30,12 @@ export function renderPlayerHud({ state, getElement, formatNumber }) {
   getElement('level').textContent = player.level || 1;
   getElement('class-name').textContent = player.classTitle || (player.className === 'noClass' ? 'Без класса' : player.className || 'Без класса');
   getElement('class-sigil').textContent = CLASS_SIGILS[player.className] || CLASS_SIGILS.noClass;
+  // Painted class portrait in the crest; the sigil stays as the fallback glyph.
+  const shell = getElement('class-sigil')?.parentElement;
+  if (shell?.style) {
+    shell.style.setProperty('--portrait', `url("${menuArtFor('profile', player)}")`);
+    shell.classList.add('has-portrait');
+  }
   getElement('chat-badge').textContent = context.chatType || (String(context.chatId) === String(user.id) ? 'private' : 'group');
   getElement('arena-text').textContent = `Арена: ${player.arenaChances || 0}`;
 

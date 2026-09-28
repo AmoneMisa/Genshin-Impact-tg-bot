@@ -29,12 +29,17 @@ import { openFeedbackGame } from './feedback.js';
 import { openHelpGame } from './help.js';
 import { openChatSettings } from './chat-settings.js';
 import { openSelfMute } from './self-mute.js';
+import { mountCity } from './city.js';
+import { featuresForTab, navHtml, NAV_TABS } from './nav.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
 const status = $('status');
 let currentState = null;
 let webglFx = null;
+let activeTab = 'city';
+let city = null;
+let cityMounting = null;
 
 function haptic(type = 'light') {
   try { tg?.HapticFeedback?.impactOccurred(type); } catch {}
@@ -131,7 +136,7 @@ function render(state) {
   $('crystals').textContent = formatNumber(state.player.crystals);
   $('ore').textContent = formatNumber(state.player.ironOre);
 
-  const cards = state.features.map(feature => {
+  const cards = featuresForTab(state.features, activeTab).map(feature => {
     const unavailable = feature.available === false;
     const button = document.createElement('button');
     button.type = 'button';
@@ -160,7 +165,46 @@ function render(state) {
     return button;
   });
   $('game-grid').replaceChildren(...cards);
+  renderTabs();
   status.textContent = 'Mini App подключён к Mongo-сессии игрока.';
+}
+
+function renderTabs() {
+  $('bottom-nav').innerHTML = navHtml(activeTab);
+  const isCity = activeTab === 'city';
+  document.querySelectorAll('[data-tab-panel]').forEach(node => {
+    node.hidden = (node.dataset.tabPanel === 'city') !== isCity;
+  });
+  const tab = NAV_TABS.find(item => item.id === activeTab);
+  $('tab-title').textContent = isCity ? '' : tab.label;
+  if (isCity) showCity();
+}
+
+async function showCity() {
+  if (city) return;
+  if (cityMounting) return cityMounting;
+  cityMounting = mountCity($('city'), { api, haptic, onState: render })
+    .then(mounted => { city = mounted; })
+    .catch(error => {
+      console.error(error);
+      $('city').innerHTML = `<p class="city-error">Город не загрузился: ${error.message}</p>`;
+    })
+    .finally(() => { cityMounting = null; });
+  return cityMounting;
+}
+
+function switchTab(tabId) {
+  if (tabId === activeTab || !NAV_TABS.some(tab => tab.id === tabId)) return;
+  activeTab = tabId;
+  haptic('light');
+  if (tabId === 'city') city?.refresh().catch(() => {});
+  if (currentState) render(currentState);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openFeatureById(id) {
+  const feature = currentState?.features.find(item => item.id === id);
+  if (feature) launchFeature(feature, render);
 }
 
 async function loadState() {
@@ -184,6 +228,14 @@ async function boot() {
     tg?.setBackgroundColor?.('#0b0d17');
     tg?.disableVerticalSwipes?.();
   } catch {}
+
+  $('bottom-nav').addEventListener('click', event => {
+    const tab = event.target.closest('[data-nav-tab]');
+    if (tab) switchTab(tab.dataset.navTab);
+  });
+  document.querySelectorAll('[data-open-feature]').forEach(button => {
+    button.addEventListener('click', () => { haptic('light'); openFeatureById(button.dataset.openFeature); });
+  });
 
   $('fullscreen').addEventListener('click', () => {
     haptic();

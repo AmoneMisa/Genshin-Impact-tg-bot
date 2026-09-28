@@ -314,3 +314,11 @@
   .mmo-hud { grid-template-columns: 1fr; }
   .hero-crest { display: none; }
 }
+
+/* Painted class portrait inside the crest (hud.js sets --portrait). */
+.hero-portrait-shell.has-portrait {
+  background: var(--portrait) center 18% / cover no-repeat, #0d0f18;
+  overflow: visible;
+}
+.hero-portrait-shell.has-portrait .hero-sigil { opacity: 0; }
+.hero-portrait-shell.has-portrait .level-orb { z-index: 1; }
