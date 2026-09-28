@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { PAPER_DOLL_SLOTS, equippedItemForSlot, renderEquipmentPaperDoll } from '../webapp/equipment-paper-doll.js';
+import { PAPER_DOLL_SLOTS, PORTRAIT_SLOT_LAYOUT, equippedItemForSlot, renderEquipmentPaperDoll } from '../webapp/equipment-paper-doll.js';
 
 const root=process.cwd();
 
@@ -56,7 +56,7 @@ test('paper doll is wired before transfer VFX and remains mobile/reduced-motion 
   assert.ok(stylesheets.indexOf('equipment-paper-doll.css')<stylesheets.indexOf('equipment-transfer.css'));
   assert.ok(stylesheets.indexOf('equipment-transfer.css')<stylesheets.indexOf('vfx.css'));
   assert.ok(equipment.includes("import { renderEquipmentPaperDoll } from './equipment-paper-doll.js'"));
-  assert.ok(equipment.includes('function renderSlots(container,state){renderEquipmentPaperDoll(container,state);}'));
+  assert.ok(equipment.includes('function renderSlots(container,state){renderEquipmentPaperDoll(container,state,{portrait:dollPortrait});}'));
   assert.ok(transfer.includes("querySelectorAll?.('[data-slot]')"));
   assert.ok(css.includes('.paper-doll-stage'));
   assert.ok(css.includes('.paper-doll-figure'));
@@ -64,4 +64,16 @@ test('paper doll is wired before transfer VFX and remains mobile/reduced-motion 
   assert.ok(css.includes('@media(max-width:390px)'));
   assert.ok(css.includes('@media(max-width:340px)'));
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
+});
+
+test('portrait mode stands the class painting in the middle with slots in side columns',()=>{
+  const container={className:'',innerHTML:''};
+  renderEquipmentPaperDoll(container,{equippedSlots:{},items:[]},{portrait:'/art/classes/mage-female.webp'});
+  assert.match(container.innerHTML,/paper-doll-stage has-portrait/);
+  assert.match(container.innerHTML,/--portrait:url\('\/art\/classes\/mage-female\.webp'\)/);
+  assert.match(container.innerHTML,/data-slot="leftRing"[^>]*--portrait-x:9%/);
+  assert.match(container.innerHTML,/data-slot="rightRing"[^>]*--portrait-x:91%/);
+  for(const [slot] of PAPER_DOLL_SLOTS)assert.ok(PORTRAIT_SLOT_LAYOUT[slot],`${slot} has a portrait position`);
+  renderEquipmentPaperDoll(container,{equippedSlots:{},items:[]});
+  assert.doesNotMatch(container.innerHTML,/has-portrait/);
 });

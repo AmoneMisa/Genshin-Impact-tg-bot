@@ -32,3 +32,18 @@
 @media(max-width:390px){.paper-doll-stage{min-height:392px;border-radius:18px}.paper-doll-stage::before{inset:10% 21%}.paper-doll-figure{width:120px;height:254px;top:48%}.paper-doll-slot{width:62px;height:62px;padding:3px!important;border-radius:12px!important}.paper-doll-slot-art{inset:2px}.paper-doll-slot-copy{top:calc(100% + 3px);width:72px}.paper-doll-slot-copy small{font-size:6px!important}.paper-doll-slot-copy strong,.paper-doll-slot-copy>span{font-size:6px!important}.paper-doll-caption{top:71%}.paper-doll-caption strong{font-size:18px}.paper-doll-circuit::before{width:205px;height:205px}.paper-doll-circuit::after{width:138px;height:138px}}
 @media(max-width:340px){.paper-doll-stage{min-height:370px}.paper-doll-slot{width:56px;height:56px}.paper-doll-slot-copy{width:64px}.paper-doll-figure{width:108px;height:238px}.paper-doll-caption{top:70%}}
 @media(prefers-reduced-motion:reduce){.paper-doll-core{animation:none}.paper-doll-slot{transition:none}}
+/* Portrait mode (prototype "Мой персонаж"): painted class portrait in the middle, gold-framed slot columns at the sides. */
+.paper-doll-stage.has-portrait{min-height:480px;border-color:#6b5326;border-radius:8px;background:radial-gradient(ellipse 60% 50% at 50% 55%,rgba(216,179,106,.12),transparent 70%),linear-gradient(180deg,#1a1520,#0c0a10)}
+.paper-doll-stage.has-portrait::before,.paper-doll-stage.has-portrait .paper-doll-circuit,.paper-doll-stage.has-portrait .paper-doll-figure,.paper-doll-stage.has-portrait .paper-doll-caption{display:none}
+.paper-doll-portrait{position:absolute;z-index:1;left:20%;right:20%;top:2%;bottom:0;background:var(--portrait) center 12%/cover no-repeat;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent),linear-gradient(180deg,#000 80%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent),linear-gradient(180deg,#000 80%,transparent);mask-composite:intersect;animation:paper-doll-breathe 6s ease-in-out infinite alternate;pointer-events:none}
+.paper-doll-stage.has-portrait .paper-doll-slot{left:var(--portrait-x);top:var(--portrait-y);width:54px;height:54px;padding:3px!important;border-radius:6px!important;border:1px solid #6b5326!important;background:radial-gradient(circle at 50% 40%,#2a2233,#0e0c12)!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.6),0 4px 10px rgba(0,0,0,.5)!important}
+.paper-doll-stage.has-portrait .paper-doll-slot::after{inset:3px;border-color:rgba(216,179,106,.12);border-radius:4px}
+.paper-doll-stage.has-portrait .paper-doll-slot.occupied{border-color:#d8b36a!important;box-shadow:inset 0 0 12px rgba(216,179,106,.18),0 0 10px rgba(216,179,106,.25)!important}
+.paper-doll-stage.has-portrait .paper-doll-slot.empty{border-style:solid!important;opacity:.8}
+.paper-doll-stage.has-portrait .paper-doll-slot-art{inset:2px;border-radius:4px}
+.paper-doll-stage.has-portrait .paper-doll-slot-copy{display:none!important}
+.paper-doll-stage.has-portrait .paper-doll-empty-rune{color:rgba(216,179,106,.35)}
+.paper-doll-stage.has-portrait .paper-doll-slot.equipment-transfer-target{transform:translate(-50%,-50%) scale(1.1)}
+@keyframes paper-doll-breathe{from{transform:scale(1)}to{transform:scale(1.025) translateY(-4px)}}
+@media(max-width:390px){.paper-doll-stage.has-portrait{min-height:440px}.paper-doll-stage.has-portrait .paper-doll-slot{width:48px;height:48px}}
+@media(prefers-reduced-motion:reduce){.paper-doll-portrait{animation:none}}

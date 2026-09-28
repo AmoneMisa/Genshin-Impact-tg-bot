@@ -17,6 +17,15 @@ export const PAPER_DOLL_SLOTS = [
   ['legs','Ноги',50,96],
 ];
 
+/**
+ * Portrait layout (prototype "Мой персонаж"): the painted class portrait stands in
+ * the middle and the slots line up in two framed columns on either side.
+ */
+export const PORTRAIT_SLOT_LAYOUT = {
+  head:[9,7], leftEar:[9,21], up:[9,35], hands:[9,49], leftHand:[9,63], leftRing:[9,77], legs:[9,91],
+  necklace:[91,7], rightEar:[91,21], cloak:[91,35], down:[91,49], rightHand:[91,63], rightRing:[91,77],
+};
+
 function escapeHtml(value){
   return String(value??'')
     .replaceAll('&','&amp;')
@@ -90,17 +99,19 @@ function slotMarkup(state,slot,label,x,y){
   const grade=displayItem?.grade||'noGrade';
   const name=displayItem?.translatedName||displayItem?.name||'Пусто';
   const art=item?renderForgeLootArt(item):'<span class="paper-doll-empty-rune" aria-hidden="true">◇</span>';
-  return `<article class="loadout-slot paper-doll-slot ${occupied?'occupied':'empty'}" data-slot="${escapeHtml(slot)}" data-item-key="${escapeHtml(item?.key||'')}" data-grade="${escapeHtml(grade)}" style="--slot-x:${x}%;--slot-y:${y}%">
+  const [px,py]=PORTRAIT_SLOT_LAYOUT[slot]||[x,y];
+  return `<article class="loadout-slot paper-doll-slot ${occupied?'occupied':'empty'}" data-slot="${escapeHtml(slot)}" data-item-key="${escapeHtml(item?.key||'')}" data-grade="${escapeHtml(grade)}" style="--slot-x:${x}%;--slot-y:${y}%;--portrait-x:${px}%;--portrait-y:${py}%">
     <span class="paper-doll-slot-art">${art}</span>
     <span class="paper-doll-slot-copy"><small>${escapeHtml(label)}</small><strong>${escapeHtml(grade)}${displayItem?.forgeLevel?` +${displayItem.forgeLevel}`:''}</strong><span>${escapeHtml(name)}</span></span>
   </article>`;
 }
 
-export function renderEquipmentPaperDoll(container,state={}){
+export function renderEquipmentPaperDoll(container,state={},{portrait=null}={}){
   if(!container)return;
   const occupied=PAPER_DOLL_SLOTS.filter(([slot])=>(SLOT_ALIASES[slot]||[slot]).some(name=>state.equippedSlots?.[name])).length;
   container.className='loadout-grid paper-doll-loadout';
-  container.innerHTML=`<div class="paper-doll-stage" data-paper-doll-stage>
+  container.innerHTML=`<div class="paper-doll-stage${portrait?' has-portrait':''}" data-paper-doll-stage${portrait?` style="--portrait:url('${escapeHtml(portrait)}')"`:''}>
+    ${portrait?'<div class="paper-doll-portrait" aria-hidden="true"></div>':''}
     <div class="paper-doll-circuit" aria-hidden="true"></div>
     ${figureMarkup(state)}
     ${PAPER_DOLL_SLOTS.map(([slot,label,x,y])=>slotMarkup(state,slot,label,x,y)).join('')}
