@@ -120,6 +120,7 @@ async function launchFeature(feature, render) {
       haptic,
       statusElement: status,
       context: currentState?.context || null,
+      player: currentState?.player || null,
       ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
     });
     status.textContent = successText;

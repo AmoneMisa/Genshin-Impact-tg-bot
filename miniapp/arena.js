@@ -6,6 +6,7 @@ import getBattleResult from '../functions/game/arena/getBattleResult.js';
 import calculatePoints from '../functions/game/arena/calculatePoints.js';
 import calcGearScore from '../functions/game/player/calcGearScore.js';
 import updateRank from '../functions/game/arena/updateRank.js';
+import arenaWeeklyPrizes from '../template/arenaWeeklyPrizes.js';
 import {
   adjustArenaRating,
   getArenaRatingDoc,
@@ -69,6 +70,8 @@ function defenderDto({ id, kind, name, rating, session, bot }) {
     rating: number(rating, 1000),
     level,
     className: className(game),
+    classId: game?.gameClass?.stats?.name || game?.gameClass?.name || 'noClass',
+    gender: kind === 'bot' ? (bot?.gender === 'female' ? 'female' : 'male') : (session?.gender === 'female' ? 'female' : 'male'),
     gearScore: safeGearScore(game),
   };
 }
@@ -153,6 +156,34 @@ async function buildDefenderList(session, chatId, userId, mode, attackerRating) 
   return defenders;
 }
 
+/**
+ * Season ladder for the arena screen: every rank from lowest to highest with its
+ * weekly arena-token reward, the player's current one marked.
+ */
+export function arenaLadder(rank) {
+  const index = arenaWeeklyPrizes.findIndex(item => item.rank === rank);
+  return {
+    ranks: arenaWeeklyPrizes.map((item, i) => ({ rank: item.rank, reward: number(item.reward), current: i === index })),
+    weeklyReward: index >= 0 ? number(arenaWeeklyPrizes[index].reward) : 0,
+    nextRank: index >= 0 && index < arenaWeeklyPrizes.length - 1 ? arenaWeeklyPrizes[index + 1].rank : null,
+  };
+}
+
+function memberName(member) {
+  const user = member?.userChatData?.user || {};
+  return user.first_name || user.username || null;
+}
+
+// Leaderboard names from the current chat's members; one lean lookup.
+async function leaderboardNames(chatId) {
+  try {
+    const chat = await Chat.findOne({ chatId: Number(chatId) }, { members: 1 }).lean();
+    return new Map((chat?.members || []).map(member => [String(member.userId), memberName(member)]));
+  } catch {
+    return new Map();
+  }
+}
+
 export async function getArenaState(session, chatId, userId, mode = 'common') {
   validateMode(mode);
   const snapshot = await getArenaRatingSnapshot(userId, mode, chatId);
@@ -160,9 +191,11 @@ export async function getArenaState(session, chatId, userId, mode = 'common') {
   const defenders = await buildDefenderList(session, chatId, userId, mode, snapshot.rating);
   const chanceKey = chanceField(mode);
   const table = await getArenaRatingTable(mode, chatId);
+  const names = await leaderboardNames(chatId);
 
   return {
     mode,
+    ...arenaLadder(rank),
     rating: snapshot.rating,
     rank,
     position: snapshot.position,
@@ -174,6 +207,7 @@ export async function getArenaState(session, chatId, userId, mode = 'common') {
       position: index + 1,
       userId: doc.userId,
       rating: number(doc.rating, 1000),
+      name: names.get(String(doc.userId)) || `Игрок ${doc.userId}`,
       isCurrentUser: String(doc.userId) === String(userId),
     })),
   };
