@@ -37,3 +37,11 @@ test('title roulette flickers through other names and stops on the recipient', (
   assert.ok(names.slice(0, -1).every(name => name !== 'Kira'));
   assert.equal(rouletteNames([], 'Nero', 3).at(-1), 'Nero');
 });
+
+import { signAngle } from '../webapp/horoscope.js';
+test('zodiac signs are spaced evenly around the ring', () => {
+  assert.equal(signAngle(0), 0);
+  assert.equal(signAngle(3), 90);
+  assert.equal(signAngle(11), 330);
+  assert.equal(signAngle(1, 4), 90);
+});

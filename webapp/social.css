@@ -62,3 +62,31 @@
 @keyframes tt-land { 0% { transform: scale(1); } 40% { transform: scale(1.2); } 100% { transform: none; } }
 @keyframes tt-unfurl { to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) { .tt-wheel span, .tt-ribbon { animation: none !important; transform: none; } }
+
+/* Horoscope (horoscope.js): zodiac ring around a crystal ball, parchment text. */
+.overlay-panel.horo-panel { --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif; display: grid; gap: 10px; padding-top: 12px; color: #eee4cf; }
+.horo-panel [data-horo-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.horo-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.horo-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.horo-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
+.horo-wheel { position: relative; width: min(84vw, 300px); aspect-ratio: 1; margin: 6px auto 0; border-radius: 50%; background: radial-gradient(circle, transparent 38%, rgba(216, 179, 106, .08) 39% 60%, transparent 61%), radial-gradient(circle at 50% 50%, rgba(80, 60, 140, .3), transparent 70%); box-shadow: inset 0 0 0 1px rgba(216, 179, 106, .25); }
+.horo-wheel::before { content: ""; position: absolute; inset: 14%; border-radius: 50%; border: 1px dashed rgba(216, 179, 106, .35); animation: horo-spin 60s linear infinite; }
+.horo-panel .horo-sign { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .9); transform: rotate(var(--a)) translateY(calc(min(84vw, 300px) * -.42)) rotate(calc(-1 * var(--a))); transition: box-shadow .2s ease, border-color .2s ease; }
+.horo-panel .horo-sign span { font-size: 18px; }
+.horo-panel .horo-sign.active { border-color: var(--gold); background: radial-gradient(circle, rgba(216, 179, 106, .35), rgba(14, 11, 18, .95)); box-shadow: 0 0 14px rgba(216, 179, 106, .6); }
+.horo-ball { position: absolute; left: 50%; top: 50%; width: 38%; aspect-ratio: 1; translate: -50% -50%; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .5), rgba(140, 110, 230, .55) 30%, rgba(40, 20, 90, .95) 75%); box-shadow: 0 0 30px rgba(140, 110, 230, .5), inset 0 -10px 20px rgba(0, 0, 0, .5); overflow: hidden; }
+.horo-ball i { position: absolute; inset: -30%; background: conic-gradient(from 0deg, transparent, rgba(255, 220, 255, .35), transparent 30%, rgba(160, 200, 255, .3), transparent 60%); opacity: .5; animation: horo-spin 8s linear infinite; }
+.horo-ball span { position: relative; font-size: 36px; filter: drop-shadow(0 0 8px rgba(255, 255, 255, .6)); }
+.horo-wheel.divining .horo-ball { animation: horo-pulse 1.1s ease-in-out infinite; }
+.horo-wheel.divining .horo-ball i { opacity: 1; animation-duration: 1.2s; }
+.horo-current { position: absolute; left: 0; right: 0; bottom: 27%; text-align: center; font: 700 13px/1 var(--serif); color: #f3dca6; text-shadow: 0 1px 2px #000; pointer-events: none; }
+.horo-styles-wrap small { display: block; margin-bottom: 6px; font: 700 10px/1 var(--serif); letter-spacing: .1em; text-transform: uppercase; color: rgba(243, 220, 166, .6); }
+.horo-panel .horo-styles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 0; }
+.horo-panel .horo-style { min-height: 36px; padding: 6px; border-radius: 6px; border: 1px solid var(--gold-dim); background: linear-gradient(180deg, #2a2233, #120f18); color: #eee4cf; font: 600 12px/1.2 var(--serif); }
+.horo-panel .horo-style.active { border-color: var(--gold); background: linear-gradient(180deg, #6a4f1f, #3a2a10); color: #fbeccb; }
+.horo-panel .horo-result { min-height: 90px; margin: 0; padding: 16px 18px; border-radius: 4px; border: 0; background: linear-gradient(180deg, #e8d9b4, #d4c08e); box-shadow: inset 0 0 20px rgba(120, 80, 30, .45), 0 8px 20px rgba(0, 0, 0, .5); color: #3a2410; font: 400 14px/1.55 var(--serif); }
+.horo-panel .horo-result:not(.filled) { color: rgba(58, 36, 16, .6); text-align: center; font-style: italic; }
+.horo-panel .horo-go { min-height: 46px; border-radius: 6px; border: 1px solid #9a7ae8; background: linear-gradient(180deg, #5b3fa6, #2e1f5c); color: #f0e6ff; font: 700 16px/1 var(--serif); box-shadow: 0 0 16px rgba(154, 122, 232, .35); }
+@keyframes horo-spin { to { rotate: 360deg; } }
+@keyframes horo-pulse { 0%, 100% { box-shadow: 0 0 30px rgba(140, 110, 230, .5), inset 0 -10px 20px rgba(0, 0, 0, .5); } 50% { box-shadow: 0 0 50px rgba(200, 160, 255, .9), inset 0 -10px 20px rgba(0, 0, 0, .5); } }
+@media (prefers-reduced-motion: reduce) { .horo-wheel::before, .horo-ball, .horo-ball i { animation: none !important; } }
