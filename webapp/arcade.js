@@ -1,3 +1,5 @@
+import { playThrow, stageHtml } from './arcade-stage.js';
+
 const REASONS = {
   invalid_bet: 'Ставка должна быть целым неотрицательным числом.',
   not_enough_gold: 'Ставка не может быть больше текущего баланса.',
@@ -6,6 +8,9 @@ const REASONS = {
   finished: 'Раунд уже завершён.',
   reset_not_supported: 'Этот тип игры нельзя сбросить после списания ставки.',
 };
+
+export const BET_CHIPS = Object.freeze([100, 500, 1000]);
+const BET_STEP = 100;
 
 function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(Number(value) || 0);
@@ -25,20 +30,46 @@ function signedNumber(value) {
   return `${number > 0 ? '+' : ''}${formatNumber(number)}`;
 }
 
+function clampBet(value, gold) {
+  return Math.max(0, Math.min(Math.floor(Number(gold) || 0), Math.floor(Number(value) || 0)));
+}
+
+/** One-line rules under the title, like the prototype. */
+export function rulesText(game) {
+  if (game.mode === 'slots') return `Три одинаковых символа — выплата ×${game.payoutMultiplier}. Ставка списывается при запуске.`;
+  const throws = `${game.maxRolls} ${game.maxRolls === 1 ? 'бросок' : 'броска'}`;
+  return `${throws} по 1–${game.maxValue}. Набери ${game.winRange.min}–${game.winRange.max}, чтобы победить.`;
+}
+
+/** Side stat panels (Счёт / Броски / База, or Ставка / Шанс for slots). */
+export function statPanels(game) {
+  const panel = (label, value, extra = '') => `<div class="arcade-stat ${extra}"><small>${label}</small><strong>${value}</strong></div>`;
+  if (game.mode === 'slots') {
+    return panel('Ставка', formatNumber(game.bet)) + panel('Шанс', `${Math.round(game.winChance * 100)}%`) + panel('Выплата', `×${game.payoutMultiplier}`);
+  }
+  const inRange = game.score >= game.winRange.min && game.score <= game.winRange.max;
+  const over = game.score > game.winRange.max;
+  return panel('Очки', formatNumber(game.score), inRange ? 'good' : over ? 'bad' : '')
+    + panel('Броски', `${game.rolls} / ${game.maxRolls}`)
+    + panel('Цель', `${game.winRange.min}–${game.winRange.max}`);
+}
+
 export async function openArcadeGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/arcade');
-  let selected = state.games.find(game => game.active)?.id || 'dice';
+  let selected = state.games.find(game => game.active)?.id || 'basketball';
   let pending = false;
   let lastResult = null;
+  const lastValues = {}; // gameId -> last roll, so the die keeps showing it
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay arcade-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass arcade-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">ARCADE · SERVER RNG</div><h2>Мини-игры</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+    <div class="overlay-panel arcade-panel">
+      <header class="arcade-head">
+        <button class="overlay-close arcade-round" type="button" aria-label="Закрыть">←</button>
+        <h2 data-arcade-title>Мини-игры</h2>
+        <button class="arcade-round" type="button" data-arcade-refresh aria-label="Обновить">↻</button>
       </header>
       <div data-arcade-content></div>
       <div class="arcade-feedback" data-arcade-feedback aria-live="polite"></div>
@@ -46,6 +77,7 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
   const content = overlay.querySelector('[data-arcade-content]');
   const feedback = overlay.querySelector('[data-arcade-feedback]');
+  const title = overlay.querySelector('[data-arcade-title]');
 
   const close = () => {
     overlay.classList.add('closing');
@@ -53,115 +85,75 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.querySelector('[data-arcade-refresh]').addEventListener('click', refresh);
 
   function currentGame() {
     return state.games.find(game => game.id === selected) || state.games[0];
   }
 
-  function resultBanner(result) {
+  function verdict(result) {
     if (!result) return '';
-
     if (result.mode === 'slots') {
-      return `
-        <section class="arcade-result ${result.won ? 'win' : 'lose'}">
-          <span>${result.won ? '🎰' : '🫥'}</span>
-          <div>
-            <strong>${result.won ? `Джекпот · выплата ${formatNumber(result.reward)} золота` : 'Комбинация не сыграла'}</strong>
-            <small>${result.reels.map(escapeHtml).join(' ')} · ставка ${formatNumber(result.bet)} · итог баланса ${signedNumber(result.net)}</small>
-          </div>
-        </section>`;
+      return `<div class="arcade-verdict ${result.won ? 'win' : 'lose'}"><strong>${result.won ? 'Джекпот!' : 'Мимо'}</strong><small>${result.won ? `+${formatNumber(result.reward)} 🪙` : `${signedNumber(result.net)} 🪙`}</small></div>`;
     }
-
-    return `
-      <section class="arcade-result ${result.won ? 'win' : 'lose'}">
-        <span>${result.won ? '🏆' : '🫥'}</span>
-        <div>
-          <strong>${result.won ? `Победа · +${formatNumber(result.reward)} золота` : 'Раунд проигран'}</strong>
-          <small>Итог: ${formatNumber(result.score)} · диапазон победы ${result.winRange.min}–${result.winRange.max}${result.won ? ` · ×${result.multiplier}` : ''}</small>
-        </div>
-      </section>`;
+    return `<div class="arcade-verdict ${result.won ? 'win' : 'lose'}"><strong>${result.won ? 'Победа!' : 'Раунд проигран'}</strong><small>${result.won ? `+${formatNumber(result.reward)} 🪙 · ×${result.multiplier}` : `итог ${formatNumber(result.score)}, нужно ${result.winRange.min}–${result.winRange.max}`}</small></div>`;
   }
 
   function gameTabs() {
     return state.games.map(game => `
-      <button type="button" class="arcade-tab ${game.id === selected ? 'active' : ''}" data-game="${game.id}">
-        <span>${game.icon}</span><strong>${escapeHtml(game.title)}</strong>${game.active ? '<i>LIVE</i>' : ''}
+      <button type="button" class="arcade-tab ${game.id === selected ? 'active' : ''}" data-game="${game.id}" aria-label="${escapeHtml(game.title)}">
+        <span>${game.icon}</span>${game.active ? '<i></i>' : ''}
       </button>`).join('');
   }
 
-  function betControls(game) {
-    const suggested = [100, 1000, 5000].filter(value => value <= state.gold);
+  function controls(game) {
     const slots = game.mode === 'slots';
-    return `
-      <div class="arcade-bet-box">
-        <label><span>${slots ? 'Ставка' : 'База выигрыша'}</span><input type="number" min="0" step="1" max="${Math.floor(state.gold)}" value="${Math.min(100, Math.floor(state.gold))}" data-arcade-bet /></label>
-        <div class="arcade-bet-chips">
-          ${suggested.map(value => `<button type="button" data-bet-value="${value}">${formatNumber(value)}</button>`).join('')}
-          <button type="button" data-bet-value="${Math.floor(state.gold)}">Всё</button>
-        </div>
-        <small>${slots
-          ? `Как в старом боте: ставка списывается при запуске спина. Шанс трёх одинаковых символов — ${Math.round(game.winChance * 100)}%, выплата — ×${game.payoutMultiplier}.`
-          : 'Сохраняем экономику старого бота: сумма ограничена балансом, но не списывается; при победе начисляется награда от этой суммы.'}</small>
-      </div>
-      <button type="button" class="arcade-primary" data-arcade-start><span>${game.icon}</span><div><strong>${slots ? 'Поставить и запустить' : 'Начать раунд'}</strong><small>${slots
-        ? `1 спин · шанс ${Math.round(game.winChance * 100)}% · выплата ×${game.payoutMultiplier}`
-        : `${game.maxRolls} ${game.maxRolls === 1 ? 'бросок' : game.maxRolls < 5 ? 'броска' : 'бросков'} · победа при ${game.winRange.min}–${game.winRange.max}`}</small></div></button>`;
-  }
-
-  function activeControls(game) {
-    if (game.mode === 'slots') {
-      const reels = game.reels?.length ? game.reels : ['❔', '❔', '❔'];
+    if (game.active) {
       return `
-        <section class="arcade-score-card">
-          <div><small>БАРАБАНЫ</small><strong>${reels.map(escapeHtml).join(' ')}</strong></div>
-          <div><small>СТАВКА</small><strong>${formatNumber(game.bet)}</strong></div>
-          <div><small>ШАНС</small><strong>${Math.round(game.winChance * 100)}%</strong></div>
-        </section>
-        <div class="arcade-progress"><span style="width:0%"></span></div>
-        <button type="button" class="arcade-primary roll" data-arcade-roll>
-          <span class="arcade-roll-icon">🎰</span>
-          <div><strong>Крутить барабаны</strong><small>Комбинация генерируется только на сервере</small></div>
-        </button>`;
+        <button type="button" class="arcade-btn gold" data-arcade-roll>${slots ? 'Крутить' : `Бросить · осталось ${game.rollsLeft}`}</button>
+        ${slots ? '' : '<button type="button" class="arcade-btn ghost small" data-arcade-reset>Сбросить раунд</button>'}`;
     }
-
+    const start = Math.min(slots ? 100 : 500, Math.floor(state.gold));
     return `
-      <section class="arcade-score-card">
-        <div><small>СЧЁТ</small><strong>${formatNumber(game.score)}</strong></div>
-        <div><small>БРОСКИ</small><strong>${game.rolls} / ${game.maxRolls}</strong></div>
-        <div><small>БАЗА</small><strong>${formatNumber(game.bet)}</strong></div>
+      <section class="arcade-bet">
+        <div class="arcade-stepper">
+          <button type="button" data-arcade-step="-1" aria-label="Меньше">−</button>
+          <input type="number" inputmode="numeric" min="0" step="1" max="${Math.floor(state.gold)}" value="${start}" data-arcade-bet aria-label="${slots ? 'Ставка' : 'База выигрыша'}" />
+          <button type="button" data-arcade-step="1" aria-label="Больше">+</button>
+        </div>
+        <div class="arcade-chips">${BET_CHIPS.map(value => `<button type="button" data-bet-value="${value}" ${value > state.gold ? 'disabled' : ''}>${formatNumber(value)}</button>`).join('')}<button type="button" data-bet-value="${Math.floor(state.gold)}">Всё</button></div>
+        <small class="arcade-note">${slots ? 'Ставка списывается при запуске.' : 'База не списывается: при победе начисляется награда от неё.'} Баланс: 🪙 ${formatNumber(state.gold)}</small>
       </section>
-      <div class="arcade-progress"><span style="width:${Math.min(100, game.rolls / game.maxRolls * 100)}%"></span></div>
-      <button type="button" class="arcade-primary roll" data-arcade-roll>
-        <span class="arcade-roll-icon">${game.icon}</span>
-        <div><strong>Бросить</strong><small>Осталось: ${game.rollsLeft} · RNG выполняется на сервере</small></div>
-      </button>
-      <button type="button" class="arcade-secondary danger" data-arcade-reset>
-        <span>↺</span><div><strong>Сбросить сессию</strong><small>Счёт и текущая база обнулятся, баланс не изменится</small></div>
-      </button>`;
+      <button type="button" class="arcade-btn gold" data-arcade-start>Начать</button>`;
   }
 
   function bind() {
     content.querySelectorAll('[data-game]').forEach(button => {
       button.addEventListener('click', () => {
+        if (pending) return;
         selected = button.dataset.game;
         lastResult = null;
         haptic('light');
         renderAll();
       });
     });
-
     content.querySelectorAll('[data-bet-value]').forEach(button => {
       button.addEventListener('click', () => {
         const input = content.querySelector('[data-arcade-bet]');
-        if (input) input.value = button.dataset.betValue;
+        if (input) input.value = clampBet(button.dataset.betValue, state.gold);
         haptic('light');
       });
     });
-
+    content.querySelectorAll('[data-arcade-step]').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = content.querySelector('[data-arcade-bet]');
+        if (input) input.value = clampBet(Number(input.value) + Number(button.dataset.arcadeStep) * BET_STEP, state.gold);
+        haptic('light');
+      });
+    });
     content.querySelector('[data-arcade-start]')?.addEventListener('click', start);
     content.querySelector('[data-arcade-roll]')?.addEventListener('click', roll);
     content.querySelector('[data-arcade-reset]')?.addEventListener('click', reset);
-    content.querySelector('[data-arcade-refresh]')?.addEventListener('click', refresh);
   }
 
   async function refresh() {
@@ -173,21 +165,16 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
   async function start() {
     if (pending) return;
-    const input = content.querySelector('[data-arcade-bet]');
-    const bet = Number(input?.value ?? 0);
+    const bet = Number(content.querySelector('[data-arcade-bet]')?.value ?? 0);
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Запускаем раунд…';
+    feedback.textContent = '';
     haptic('medium');
     try {
-      const payload = await api('/api/arcade/start', {
-        method: 'POST',
-        body: JSON.stringify({ gameId: selected, bet }),
-      });
+      const payload = await api('/api/arcade/start', { method: 'POST', body: JSON.stringify({ gameId: selected, bet }) });
       state = payload.arcade;
       if (payload.state) renderState(payload.state);
       lastResult = null;
-      feedback.textContent = currentGame().mode === 'slots' ? 'Ставка принята. Крути барабаны.' : 'Раунд начат.';
       renderAll();
     } catch (error) {
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
@@ -203,17 +190,13 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
     if (pending || currentGame().mode === 'slots') return;
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Сбрасываем текущую сессию…';
     haptic('medium');
     try {
-      const payload = await api('/api/arcade/reset', {
-        method: 'POST',
-        body: JSON.stringify({ gameId: selected }),
-      });
+      const payload = await api('/api/arcade/reset', { method: 'POST', body: JSON.stringify({ gameId: selected }) });
       state = payload.arcade;
       if (payload.state) renderState(payload.state);
       lastResult = null;
-      feedback.textContent = 'Сессия сброшена. Можно начать заново.';
+      feedback.textContent = 'Раунд сброшен.';
       statusElement.textContent = `${currentGame().title}: сессия сброшена.`;
       renderAll();
     } catch (error) {
@@ -229,30 +212,24 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
   async function roll() {
     if (pending) return;
+    const game = currentGame();
     pending = true;
     overlay.classList.add('busy', 'rolling');
-    feedback.textContent = currentGame().mode === 'slots' ? 'Крутим барабаны на сервере…' : 'Генерируем результат на сервере…';
+    feedback.textContent = '';
     haptic('heavy');
     try {
-      const payload = await api('/api/arcade/roll', {
-        method: 'POST',
-        body: JSON.stringify({ gameId: selected }),
-      });
+      const payload = await api('/api/arcade/roll', { method: 'POST', body: JSON.stringify({ gameId: selected }) });
+      // The throw plays on the current stage before the numbers update.
+      const stage = content.querySelector('[data-stage]');
+      const shown = payload.result?.mode === 'slots' ? payload.result.reels : payload.value;
+      await playThrow(stage, selected, shown, { maxValue: game.maxValue });
+      if (payload.result?.mode !== 'slots') lastValues[selected] = payload.value;
       state = payload.arcade;
       if (payload.state) renderState(payload.state);
       lastResult = payload.result || null;
-
-      if (payload.result?.mode === 'slots') {
-        feedback.textContent = payload.result.won
-          ? `Джекпот ${payload.result.reels.join(' ')} · выплата ${formatNumber(payload.result.reward)} золота.`
-          : `${payload.result.reels.join(' ')} · ставка проиграна.`;
-      } else {
-        feedback.textContent = payload.finished
-          ? (payload.result.won ? `Победа: +${formatNumber(payload.result.reward)} золота.` : 'Раунд завершён без выигрыша.')
-          : `Выпало ${payload.value}.`;
-      }
-
-      statusElement.textContent = `Аркада: ${feedback.textContent}`;
+      haptic(payload.result?.won ? 'heavy' : 'light');
+      feedback.textContent = payload.finished ? '' : `Выпало ${payload.value}.`;
+      statusElement.textContent = `Аркада: ${payload.finished ? (payload.result?.won ? 'победа' : 'раунд завершён') : `выпало ${payload.value}`}.`;
       renderAll();
     } catch (error) {
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
@@ -267,19 +244,16 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
 
   function renderAll() {
     const game = currentGame();
-    const slots = game.mode === 'slots';
+    title.textContent = game.title;
     content.innerHTML = `
       <div class="arcade-tabs">${gameTabs()}</div>
-      ${resultBanner(lastResult)}
-      <section class="arcade-hero">
-        <div class="arcade-big-icon">${game.icon}</div>
-        <div><small>${escapeHtml(game.title).toUpperCase()}</small><strong>${game.active ? 'Раунд идёт' : 'Готов к игре'}</strong><p>${slots
-          ? `Три одинаковых символа дают выплату ×${game.payoutMultiplier}. Шанс джекпота — ${Math.round(game.winChance * 100)}%.`
-          : `Победный итог: ${game.winRange.min}–${game.winRange.max}. За один бросок выпадает 1–${game.maxValue}.`}</p></div>
-        <button type="button" data-arcade-refresh aria-label="Обновить">↻</button>
-      </section>
-      <div class="arcade-balance"><span>Доступный баланс</span><strong>🪙 ${formatNumber(state.gold)}</strong></div>
-      ${game.active ? activeControls(game) : betControls(game)}`;
+      <p class="arcade-rules">${escapeHtml(rulesText(game))}</p>
+      <div class="arcade-arena">
+        ${stageHtml(game.id, { ...game, lastValue: lastValues[game.id] })}
+        <div class="arcade-stats">${statPanels(game)}</div>
+      </div>
+      ${verdict(lastResult)}
+      ${controls(game)}`;
     bind();
   }
 
