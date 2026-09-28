@@ -241,7 +241,7 @@ export function getPoint21State(chat, userId, options = {}) {
       phase: 'idle',
       gold,
       remainingMs: 0,
-      me: { joined: false, bet: 0, cards: [], points: 0, passed: false },
+      me: { id: String(userId), joined: false, bet: 0, cards: [], points: 0, passed: false },
       players: [],
       result: null,
     };
@@ -256,6 +256,7 @@ export function getPoint21State(chat, userId, options = {}) {
     remainingMs: deadline ? Math.max(0, Number(deadline) - now) : 0,
     maxPlayers: MAX_HUMANS,
     me: {
+      id: String(userId),
       joined: Boolean(me),
       bet: Number(me?.bet) || 0,
       cards: [...(me?.usedItems || [])],

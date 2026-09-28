@@ -29,10 +29,25 @@ function formatTime(ms) {
   return `0:${String(seconds).padStart(2, '0')}`;
 }
 
-function cardHtml(card) {
+/** A playing card; `fresh` cards are dealt in with a flip from the deck. */
+export function cardHtml(card, { fresh = false, delay = 0 } = {}) {
   const red = /[♥♦]/.test(card);
   const [rank = '', suit = ''] = String(card).split(' ');
-  return `<span class="point-card ${red ? 'red' : ''}"><b>${escapeHtml(rank)}</b><i>${escapeHtml(suit)}</i></span>`;
+  const corner = `<b>${escapeHtml(rank)}<i>${escapeHtml(suit)}</i></b>`;
+  return `<span class="point-card ${red ? 'red' : ''} ${fresh ? 'fresh' : ''}" style="--d:${delay}ms">${corner}<em>${escapeHtml(suit)}</em>${corner}</span>`;
+}
+
+export function cardBackHtml(delay = 0) {
+  return `<span class="point-card back fresh" style="--d:${delay}ms" aria-label="Закрытая карта"><em>🌳</em></span>`;
+}
+
+export const BET_CHIPS = Object.freeze([100, 500, 1000]);
+export const BET_STEP = 100;
+
+/** Clamp a bet to [0, gold] in whole coins. */
+export function clampBet(value, gold) {
+  const bet = Math.floor(Number(value) || 0);
+  return Math.max(0, Math.min(Math.floor(Number(gold) || 0), bet));
 }
 
 export async function openPoint21({ api, renderState, haptic, statusElement }) {
@@ -45,11 +60,12 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass point21-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">21 · SHARED TABLE</div><h2>Двадцать одно</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="point-head">
+        <button class="overlay-close point-round" type="button" aria-label="Закрыть">←</button>
+        <h2>21 очко</h2>
+        <button class="point-round" type="button" data-point-help aria-label="Правила">?</button>
       </header>
-      <p class="overlay-copy">Общий стол чата. Колода, ставки, бот и выплаты считаются на сервере; браузер только показывает состояние.</p>
+      <p class="point-rules">Набери больше очков, чем бот, но не больше 21. Ровно 21 — ×3 к ставке.</p>
       <div data-point-content></div>
       <div class="point-feedback" data-point-feedback aria-live="polite"></div>
     </div>`;
@@ -64,87 +80,117 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.querySelector('[data-point-help]').addEventListener('click', () => overlay.querySelector('.point-rules').classList.toggle('open'));
 
-  function playerRows(players = []) {
-    return players.map(player => `
-      <article class="point-player ${player.isBot ? 'bot' : ''} ${player.passed ? 'passed' : ''}">
-        <div class="point-player-head">
-          <div><strong>${escapeHtml(player.name)}</strong><small>${player.isBot ? 'BOT' : `ставка ${formatNumber(player.bet)}`}</small></div>
-          <span>${player.passed ? 'ПАС' : `${player.points} очк.`}</span>
-        </div>
-        <div class="point-hand">${player.cards.length ? player.cards.map(cardHtml).join('') : '<em>Карты ещё не розданы</em>'}</div>
-      </article>`).join('');
+  // Cards already on screen per player, so only newly dealt ones animate.
+  const seen = new Map();
+  function hand(id, cards = [], { hidden = 0 } = {}) {
+    const known = seen.get(id) || 0;
+    const html = cards.map((card, index) => cardHtml(card, { fresh: index >= known, delay: Math.max(0, index - known) * 140 })).join('')
+      + Array.from({ length: hidden }, (_, index) => cardBackHtml((cards.length - known + index) * 140)).join('');
+    seen.set(id, cards.length);
+    return `<div class="point-hand">${html || '<em class="point-hand-empty">Карты ещё не розданы</em>'}</div>`;
+  }
+
+  function seat(title, points, cards, id, options = {}) {
+    return `
+      <section class="point-seat ${options.mine ? 'mine' : 'bot'} ${options.passed ? 'passed' : ''}">
+        <header><strong>${escapeHtml(title)}</strong><span class="point-score ${points > 21 ? 'bust' : points === 21 ? 'exact' : ''}">${points}</span></header>
+        ${hand(id, cards, options)}
+      </section>`;
+  }
+
+  function others(players) {
+    const list = players.filter(player => !player.isBot && player.id !== state.me.id);
+    if (!list.length) return '';
+    return `<div class="point-others">${list.map(player => `
+      <span class="point-other ${player.passed ? 'passed' : ''}"><strong>${escapeHtml(player.name)}</strong><small>${player.cards.length ? `${player.points} очк.` : `ставка ${formatNumber(player.bet)}`}${player.passed ? ' · пас' : ''}</small></span>`).join('')}</div>`;
+  }
+
+  function timerBar(label) {
+    return `<div class="point-timer"><small>${label}</small><strong data-point-timer>${formatTime(state.remainingMs)}</strong></div>`;
   }
 
   function idleView() {
     return `
-      <section class="point-hero">
-        <div class="point-deck">🂠</div>
-        <div><small>ОБЩИЙ СТОЛ</small><strong>Новая партия</strong><p>После запуска будет 25 секунд на вход и ставки, затем сервер раздаст по две карты.</p></div>
-      </section>
-      <div class="point-balance"><span>Твой баланс</span><strong>🪙 ${formatNumber(state.gold)}</strong></div>
-      <button type="button" class="point-primary" data-point-action="start"><span>♠</span><div><strong>Создать стол</strong><small>Ты сразу присоединишься</small></div></button>`;
+      <div class="point-felt idle">
+        <div class="point-deck-stack" aria-hidden="true"><span></span><span></span><span></span></div>
+        <strong>Новая партия</strong>
+        <p>25 секунд на вход и ставки, затем сервер раздаст по две карты.</p>
+      </div>
+      <div class="point-wallet">Баланс <strong>🪙 ${formatNumber(state.gold)}</strong></div>
+      <button type="button" class="point-btn gold" data-point-action="start">Создать стол</button>`;
   }
 
   function lobbyView() {
     const joined = state.me.joined;
-    const quick = [100, 1000, 5000, 10000].filter(value => value <= state.gold);
+    const humans = state.players.filter(player => !player.isBot);
     return `
-      <section class="point-phase-card lobby">
-        <div><small>СТАВКИ ЗАКРОЮТСЯ ЧЕРЕЗ</small><strong>${formatTime(state.remainingMs)}</strong></div>
-        <span>${state.players.filter(player => !player.isBot).length} / ${state.maxPlayers}</span>
-      </section>
-      <div class="point-table">${playerRows(state.players)}</div>
+      ${timerBar(`Ставки · ${humans.length} / ${state.maxPlayers} игроков`)}
+      <div class="point-felt">
+        <div class="point-lobby-seats">${humans.map(player => `<span class="point-other ${player.id === state.me.id ? 'me' : ''}"><strong>${escapeHtml(player.name)}</strong><small>ставка ${formatNumber(player.bet)}</small></span>`).join('')}</div>
+      </div>
       ${joined ? `
-        <section class="point-bet-box">
-          <div class="point-balance"><span>Твой баланс</span><strong>🪙 ${formatNumber(state.gold)}</strong></div>
-          <label><span>Ставка</span><input type="number" min="0" step="1" max="${Math.floor(state.gold)}" value="${state.me.bet}" data-point-bet /></label>
-          <div class="point-bet-chips">${quick.map(value => `<button type="button" data-point-quick="${value}">${formatNumber(value)}</button>`).join('')}${state.gold ? `<button type="button" data-point-quick="${Math.floor(state.gold)}">Всё</button>` : ''}</div>
-          <div class="point-actions split"><button type="button" data-point-action="bet">Сохранить ставку</button><button type="button" class="ghost" data-point-action="leave">Выйти</button></div>
+        <section class="point-bet">
+          <div class="point-stepper">
+            <button type="button" data-point-step="-1" aria-label="Уменьшить ставку">−</button>
+            <input type="number" inputmode="numeric" min="0" step="1" max="${Math.floor(state.gold)}" value="${state.me.bet}" data-point-bet aria-label="Ставка" />
+            <button type="button" data-point-step="1" aria-label="Увеличить ставку">+</button>
+          </div>
+          <div class="point-chips">${BET_CHIPS.map(value => `<button type="button" data-point-quick="${value}" ${value > state.gold ? 'disabled' : ''}>${formatNumber(value)}</button>`).join('')}<button type="button" data-point-quick="${Math.floor(state.gold)}">Всё</button></div>
+          <div class="point-wallet">Баланс <strong>🪙 ${formatNumber(state.gold)}</strong></div>
+          <div class="point-actions"><button type="button" class="point-btn gold" data-point-action="bet">Сохранить ставку</button><button type="button" class="point-btn ghost" data-point-action="leave">Выйти</button></div>
         </section>` : `
-        <button type="button" class="point-primary" data-point-action="join"><span>＋</span><div><strong>Присоединиться</strong><small>До ${state.maxPlayers} игроков</small></div></button>`}`;
+        <button type="button" class="point-btn gold" data-point-action="join">Присоединиться</button>`}`;
   }
 
   function playingView() {
+    const bot = state.players.find(player => player.isBot);
     const canAct = state.me.joined && !state.me.passed;
     return `
-      <section class="point-phase-card live">
-        <div><small>ХОДЫ ЗАКРОЮТСЯ ЧЕРЕЗ</small><strong>${formatTime(state.remainingMs)}</strong></div>
-        <span>LIVE</span>
-      </section>
-      <div class="point-table">${playerRows(state.players)}</div>
+      ${timerBar('Ходы закроются через')}
+      <div class="point-felt">
+        ${bot ? seat(bot.name || 'Бот', bot.points, bot.cards, 'bot', { hidden: bot.cards.length ? 0 : 2 }) : ''}
+        ${others(state.players)}
+        ${state.me.joined
+          ? seat(state.me.passed ? 'Ход завершён' : 'Ваш ход', state.me.points, state.me.cards, state.me.id, { mine: true, passed: state.me.passed })
+          : '<div class="point-watch">Ты наблюдаешь за этой партией.</div>'}
+      </div>
       ${state.me.joined ? `
-        <section class="point-my-status">
-          <span>Твоя рука</span><strong>${state.me.points} очк.</strong><small>${state.me.passed ? 'Ход завершён' : 'Можно взять карту или спасовать'}</small>
-        </section>
-        <div class="point-actions split">
-          <button type="button" data-point-action="card" ${canAct ? '' : 'disabled'}>Взять карту</button>
-          <button type="button" class="ghost" data-point-action="pass" ${canAct ? '' : 'disabled'}>Пас</button>
-        </div>` : '<div class="point-watch">Ты наблюдаешь за этой партией.</div>'}`;
+        <div class="point-actions">
+          <button type="button" class="point-btn blue" data-point-action="card" ${canAct ? '' : 'disabled'}>Взять карту</button>
+          <button type="button" class="point-btn red" data-point-action="pass" ${canAct ? '' : 'disabled'}>Пас</button>
+        </div>` : ''}`;
   }
 
   function resultView() {
     const results = state.result?.players || [];
+    const mine = results.find(player => player.id === state.me.id);
     return `
-      <section class="point-phase-card result">
-        <div><small>ПАРТИЯ ЗАВЕРШЕНА</small><strong>Результаты</strong></div>
-        <span>21</span>
-      </section>
-      <div class="point-results">
+      ${mine ? `<div class="point-verdict ${mine.won ? 'win' : 'lose'}"><strong>${mine.won ? (mine.exact21 ? 'Ровно 21!' : 'Победа!') : 'Поражение'}</strong><small>${mine.delta >= 0 ? '+' : ''}${formatNumber(mine.delta)} 🪙</small></div>` : ''}
+      <div class="point-felt results">
         ${results.map(player => `
-          <article class="point-result-row ${player.won ? 'win' : 'lose'} ${player.isBot ? 'bot' : ''}">
-            <div><strong>${escapeHtml(player.name)}</strong><small>${player.cards.map(escapeHtml).join(' · ')}</small></div>
-            <div><b>${player.points}</b>${player.isBot ? '<small>BOT</small>' : `<small>${player.delta >= 0 ? '+' : ''}${formatNumber(player.delta)} 🪙</small>`}</div>
+          <article class="point-result ${player.won ? 'win' : 'lose'} ${player.isBot ? 'bot' : ''} ${player.id === state.me.id ? 'me' : ''}">
+            <header><strong>${escapeHtml(player.name)}</strong><span class="point-score ${player.points > 21 ? 'bust' : player.points === 21 ? 'exact' : ''}">${player.points}</span></header>
+            <div class="point-hand mini">${player.cards.map(card => cardHtml(card)).join('')}</div>
+            ${player.isBot ? '' : `<small>${player.delta >= 0 ? '+' : ''}${formatNumber(player.delta)} 🪙</small>`}
           </article>`).join('')}
       </div>
-      <button type="button" class="point-primary" data-point-action="start"><span>↻</span><div><strong>Новая партия</strong><small>Открыть новый стол</small></div></button>`;
+      <button type="button" class="point-btn gold" data-point-action="start">Новая партия</button>`;
   }
 
   function bind() {
     content.querySelectorAll('[data-point-quick]').forEach(button => {
       button.addEventListener('click', () => {
         const input = content.querySelector('[data-point-bet]');
-        if (input) input.value = button.dataset.pointQuick;
+        if (input) input.value = clampBet(button.dataset.pointQuick, state.gold);
+        haptic('light');
+      });
+    });
+    content.querySelectorAll('[data-point-step]').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = content.querySelector('[data-point-bet]');
+        if (input) input.value = clampBet(Number(input.value) + Number(button.dataset.pointStep) * BET_STEP, state.gold);
         haptic('light');
       });
     });
@@ -198,11 +244,17 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   }
 
   function renderAll() {
+    const typing = content.querySelector('[data-point-bet]');
+    const draft = typing && document.activeElement === typing ? typing.value : null;
     const view = state.phase === 'lobby' ? lobbyView()
       : state.phase === 'playing' ? playingView()
         : state.phase === 'finished' ? resultView()
           : idleView();
     content.innerHTML = view;
+    if (draft !== null) {
+      const input = content.querySelector('[data-point-bet]');
+      if (input) { input.value = draft; input.focus(); }
+    }
     bind();
   }
 
@@ -210,4 +262,10 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   pollTimer = window.setInterval(() => refresh(true), 1500);
+  const tick = window.setInterval(() => {
+    if (!overlay.isConnected) { window.clearInterval(tick); return; }
+    state.remainingMs = Math.max(0, (Number(state.remainingMs) || 0) - 250);
+    const node = content.querySelector('[data-point-timer]');
+    if (node) node.textContent = formatTime(state.remainingMs);
+  }, 250);
 }
