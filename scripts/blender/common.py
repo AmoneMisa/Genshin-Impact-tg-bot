@@ -407,60 +407,75 @@ def unwrap(obj, margin=0.02):
     bpy.ops.object.mode_set(mode="OBJECT")
 
 
-def _bake_pass(obj, nt, bsdf, image, bake_type, pass_filter=None, emit_from=None):
-    node = nt.nodes.new("ShaderNodeTexImage")
-    node.image = image
-    nt.nodes.active = node
-    activate(obj)
-    if emit_from is not None:
-        # Route a single channel through Emission to bake it exactly.
-        out = next(n for n in nt.nodes if n.type == "OUTPUT_MATERIAL")
-        emission = nt.nodes.new("ShaderNodeEmission")
-        nt.links.new(emit_from, emission.inputs["Color"])
-        original = out.inputs["Surface"].links[0].from_socket
-        nt.links.new(emission.outputs["Emission"], out.inputs["Surface"])
-        bpy.ops.object.bake(type="EMIT", margin=8)
-        nt.links.new(original, out.inputs["Surface"])
-        nt.nodes.remove(emission)
-    else:
-        kwargs = {"type": bake_type, "margin": 8}
-        if pass_filter:
-            kwargs["pass_filter"] = pass_filter
-        bpy.ops.object.bake(**kwargs)
-    nt.nodes.remove(node)
-
-
 def _input_source(nt, bsdf, name):
     links = bsdf.inputs[name].links
     return links[0].from_socket if links else None
 
 
+BAKE_PASSES = (("color", True), ("rough", False), ("metal", False), ("normal", False))
+
+
 def bake_object(obj, size=None):
     """Bake every procedural material on `obj` into image textures and rewire it for glTF.
+
+    A Blender bake writes into the *active* image node of every material on the
+    object at once, so each pass is a single bake across all materials, each with
+    its own target image (non-baked materials get a throwaway target). Baking
+    materials one by one would overwrite earlier materials' images.
 
     `obj["bake_size"] = (w, h)` overrides the square default (tall maps for blades).
     """
     width, height = obj.get("bake_size", (size or TEXTURE_SIZE, size or TEXTURE_SIZE))
-    mats = [slot.material for slot in obj.material_slots if slot.material and slot.material.get("baked")]
+    all_mats = [slot.material for slot in obj.material_slots if slot.material]
+    mats = [m for m in all_mats if m.get("baked")]
     if not mats:
         return
     unwrap(obj)
+    plan = {}
     for mat in mats:
         nt = mat.node_tree
         bsdf = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
         images = {}
-        for key, srgb in (("color", True), ("rough", False), ("metal", False), ("normal", False)):
+        for key, srgb in BAKE_PASSES:
             img = bpy.data.images.new(f"{mat.name}_{key}", int(width), int(height), alpha=False, float_buffer=False)
             img.colorspace_settings.name = "sRGB" if srgb else "Non-Color"
             images[key] = img
-        color_src = _input_source(nt, bsdf, "Base Color")
-        rough_src = _input_source(nt, bsdf, "Roughness")
-        metal_src = _input_source(nt, bsdf, "Metallic")
-        _bake_pass(obj, nt, bsdf, images["color"], "EMIT", emit_from=color_src or _const(nt, bsdf.inputs["Base Color"].default_value))
-        _bake_pass(obj, nt, bsdf, images["rough"], "EMIT", emit_from=rough_src or _const(nt, [bsdf.inputs["Roughness"].default_value] * 3 + [1]))
-        _bake_pass(obj, nt, bsdf, images["metal"], "EMIT", emit_from=metal_src or _const(nt, [bsdf.inputs["Metallic"].default_value] * 3 + [1]))
-        _bake_pass(obj, nt, bsdf, images["normal"], "NORMAL")
+        sources = {
+            "color": _input_source(nt, bsdf, "Base Color") or _const(nt, bsdf.inputs["Base Color"].default_value),
+            "rough": _input_source(nt, bsdf, "Roughness") or _const(nt, [bsdf.inputs["Roughness"].default_value] * 3 + [1]),
+            "metal": _input_source(nt, bsdf, "Metallic") or _const(nt, [bsdf.inputs["Metallic"].default_value] * 3 + [1]),
+        }
+        plan[mat] = (bsdf, images, sources)
+    dummy = bpy.data.images.new("_bakeDummy", 8, 8, alpha=False)
+
+    for key, _ in BAKE_PASSES:
+        cleanup = []
+        for mat in all_mats:
+            nt = mat.node_tree
+            node = nt.nodes.new("ShaderNodeTexImage")
+            node.image = plan[mat][1][key] if mat in plan else dummy
+            nt.nodes.active = node
+            cleanup.append((nt, node, None, None))
+            if key != "normal" and mat in plan:
+                # Route this channel through Emission so an EMIT bake captures it exactly.
+                out = next(n for n in nt.nodes if n.type == "OUTPUT_MATERIAL")
+                original = out.inputs["Surface"].links[0].from_socket
+                emission = nt.nodes.new("ShaderNodeEmission")
+                nt.links.new(plan[mat][2][key], emission.inputs["Color"])
+                nt.links.new(emission.outputs["Emission"], out.inputs["Surface"])
+                cleanup[-1] = (nt, node, emission, (original, out))
+        activate(obj)
+        bpy.ops.object.bake(type="NORMAL" if key == "normal" else "EMIT", margin=8)
+        for nt, node, emission, route in cleanup:
+            if route:
+                original, out = route
+                nt.links.new(original, out.inputs["Surface"])
+                nt.nodes.remove(emission)
+            nt.nodes.remove(node)
+
+    for mat, (bsdf, images, _) in plan.items():
         _rewire_baked(mat, bsdf, images)
+    bpy.data.images.remove(dummy)
     return obj
 
 

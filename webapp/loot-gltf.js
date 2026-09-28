@@ -358,6 +358,43 @@ async function createStage() {
     return { pivot, materials, halfHeight, radius: entry.scale, flares };
   }
 
+  /** Match a preview canvas's pixel size to its CSS size; grows the shared buffer if needed. */
+  function sizeCanvas(canvas) {
+    const dpr = Math.min(globalThis.devicePixelRatio || 1, 1.6);
+    const w = Math.max(2, Math.round(canvas.clientWidth * dpr));
+    const h = Math.max(2, Math.round(canvas.clientHeight * dpr));
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    if (w > bufferW || h > bufferH) {
+      bufferW = Math.max(bufferW, w);
+      bufferH = Math.max(bufferH, h);
+      renderer.setSize(bufferW, bufferH, false);
+    }
+    return { w, h };
+  }
+
+  /**
+   * Render `scene` with the shared context into a corner of the buffer and copy
+   * it onto the preview's own 2D canvas. `bloom` > 0 runs the glow pipeline.
+   */
+  function renderInto(canvas, ctx, scene, camera, { bloom = 0 } = {}) {
+    const w = canvas.width, h = canvas.height;
+    renderer.setViewport(0, 0, w, h);
+    renderer.setScissor(0, 0, w, h);
+    renderer.clear();
+    if (bloom > 0) {
+      const post = composerFor(w, h);
+      post.renderPass.scene = scene;
+      post.renderPass.camera = camera;
+      post.bloom.strength = bloom;
+      post.composer.render();
+    } else {
+      renderer.render(scene, camera);
+    }
+    ctx.clearRect(0, 0, w, h);
+    // The GL origin is bottom-left, so our w×h corner sits at the bottom of the buffer.
+    ctx.drawImage(renderer.domElement, 0, bufferH - h, w, h, 0, 0, w, h);
+  }
+
   function mount(node, profile, entry) {
     return load(entry.url).then(gltf => {
       if (!node.isConnected) return null;
@@ -417,15 +454,7 @@ async function createStage() {
           // The canvas is display:none until the node is marked ready (the SVG stays
           // visible while the model downloads), so reveal it before measuring.
           if (!shown) { shown = true; node.classList.add('loot-webgl-ready'); }
-          const dpr = Math.min(globalThis.devicePixelRatio || 1, 1.6);
-          const w = Math.max(2, Math.round(canvas.clientWidth * dpr));
-          const h = Math.max(2, Math.round(canvas.clientHeight * dpr));
-          if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-          if (w > bufferW || h > bufferH) {
-            bufferW = Math.max(bufferW, w);
-            bufferH = Math.max(bufferH, h);
-            renderer.setSize(bufferW, bufferH, false);
-          }
+          const { w, h } = sizeCanvas(canvas);
 
           const [rx, ry, rz] = itemRotation(profile.kind, seconds);
           spinner.rotation.set(rx, ry, rz);
@@ -452,21 +481,7 @@ async function createStage() {
             sprite.material.opacity = 0.35 + 0.65 * glow;
           }
 
-          renderer.setViewport(0, 0, w, h);
-          renderer.setScissor(0, 0, w, h);
-          renderer.clear();
-          if (hasGlow) {
-            const post = composerFor(w, h);
-            post.renderPass.scene = scene;
-            post.renderPass.camera = camera;
-            post.bloom.strength = 0.25 + 0.4 * glow;
-            post.composer.render();
-          } else {
-            renderer.render(scene, camera);
-          }
-          ctx.clearRect(0, 0, w, h);
-          // The GL origin is bottom-left, so our w×h corner sits at the bottom of the buffer.
-          ctx.drawImage(renderer.domElement, 0, bufferH - h, w, h, 0, 0, w, h);
+          renderInto(canvas, ctx, scene, camera, { bloom: hasGlow ? 0.25 + 0.4 * glow : 0 });
         },
         destroy() {
           for (const m of materials) m.dispose();
@@ -479,5 +494,6 @@ async function createStage() {
     });
   }
 
-  return { mount };
+  // Primitives for other 3D scenes (e.g. the chest game) that share this context.
+  return { mount, THREE, environment, load, sizeCanvas, renderInto, starTexture, shadowTexture };
 }

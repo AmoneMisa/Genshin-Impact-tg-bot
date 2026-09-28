@@ -1,3 +1,5 @@
+import { createChest, RATTLE_SECONDS, SWING_SECONDS } from './chest-3d.js';
+
 const PRIZE_ICONS = {
   experience: '✦',
   gold: '🪙',
@@ -59,6 +61,8 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
 
   const opened = new Set(chestState.opened || []);
   const buttons = [];
+  // chestId -> 3D chest controller (null when 3D is unavailable: the CSS tile stays).
+  const chests = new Map();
 
   for (let chestId = 1; chestId <= 9; chestId += 1) {
     const button = document.createElement('button');
@@ -71,6 +75,9 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
       button.classList.add('opened', 'historical');
       button.disabled = true;
     }
+    createChest(button, { opened: opened.has(chestId) ? 'treasure' : null, index: chestId })
+      .then(chest => chests.set(chestId, chest))
+      .catch(() => chests.set(chestId, null));
 
     button.addEventListener('click', async () => {
       if (pending || button.disabled || !localState.available) return;
@@ -93,9 +100,23 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
         };
 
         const icon = PRIZE_ICONS[payload.prize.type] || '✦';
+        const rewardHtml = `<span class="reward-icon">${icon}</span><strong>${rewardText(payload.prize)}</strong><small>${payload.prize.label}</small>`;
+        const chest = chests.get(chestId);
         button.classList.remove('opening');
-        button.classList.add('opened');
-        button.innerHTML = `<span class="reward-icon">${icon}</span><strong>${rewardText(payload.prize)}</strong><small>${payload.prize.label}</small>`;
+        if (chest) {
+          // The lid swings open first; the reward rises out once light spills.
+          chest.open(payload.prize.type === 'nothing' ? 'empty' : 'treasure');
+          button.classList.add('opened');
+          window.setTimeout(() => {
+            const reward = document.createElement('div');
+            reward.className = `chest-reward ${payload.prize.type === 'nothing' ? 'empty' : ''}`;
+            reward.innerHTML = rewardHtml;
+            button.appendChild(reward);
+          }, (RATTLE_SECONDS + SWING_SECONDS * 0.6) * 1000);
+        } else {
+          button.classList.add('opened');
+          button.innerHTML = rewardHtml;
+        }
         result.textContent = payload.completed
           ? 'Три сундука открыты. Следующая попытка — после дневного сброса.'
           : `Получено: ${rewardText(payload.prize)} ${payload.prize.label}`;
