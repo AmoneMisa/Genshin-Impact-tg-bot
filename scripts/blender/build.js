@@ -24,6 +24,12 @@ export const BLENDER_MODELS = Object.freeze({
   'bow.glb': 'celestial_bow.py',
   'tiara.glb': 'flower_tiara.py',
   'chest.glb': 'treasure_chest.py',
+  'necklace.glb': 'moonlace_necklace.py',
+  'earring.glb': 'moonlace_earrings.py',
+  'staff.glb': 'celestial_staff.py',
+  'staff-sun.glb': 'celestial_staff.py',
+  'mantle.glb': 'astral_coat.py',
+  'bracers.glb': 'astral_coat.py',
 });
 
 export function findBlender(env = process.env) {

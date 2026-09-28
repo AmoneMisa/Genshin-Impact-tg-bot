@@ -52,9 +52,9 @@ npm run models:check
 
 ## Sample models
 
-`sword.glb`, `shield.glb`, `staff.glb`, `ring.glb` are generated placeholders
-(`node scripts/models/buildSampleModels.js`). Overwrite them with real art any
-time; regenerating only rewrites those four files.
+`node scripts/models/buildSampleModels.js` rebuilds the procedural sample set.
+It skips Blender-owned files registered in `BLENDER_MODELS`; register custom
+Blender replacements there before regenerating the samples.
 
 ## Blender builds
 
@@ -70,3 +70,26 @@ npm run models:blender -- sword.glb # one model
 Needs Blender 4.2+ (built with 5.2). If it isn't in the default install path,
 set `BLENDER_PATH`. Files listed in `BLENDER_MODELS` (`scripts/blender/build.js`)
 are skipped by the Node generator, so the two never overwrite each other.
+
+The Moonlace set replaces `necklace.glb` (amulet) and `earring.glb` with silver
+filigree, faceted sapphire/ice crystals, interlocking links and hanging drops.
+Both use native PBR materials and Draco compression. Their source scripts share
+`scripts/blender/jewelry.py`; the existing manifest routes them into item previews.
+
+```bash
+npm run models:blender -- necklace.glb earring.glb
+blender --background --python scripts/blender/render_preview.py -- webapp/models/necklace.glb /tmp/necklace.png
+```
+
+The preview tool imports the exported GLB and renders a studio image, so visual
+checks exercise the shipped geometry and materials. Its lighting is for review;
+the game's rarity, grade and environment lighting still apply at runtime.
+
+Celestial staves are built by `scripts/blender/celestial_staff.py`: `staff.glb`
+is the silver crescent staff, and `staff-sun.glb` is the gold solar-halo variant
+used for SS/SSS grades. Both include enamel shafts, spiral metal inlay, faceted
+crystals and emissive cores. Rebuild with:
+
+```bash
+npm run models:blender -- staff.glb staff-sun.glb
+```

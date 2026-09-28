@@ -21,7 +21,11 @@
       }
     },
     "staff": {
-      "file": "staff.glb"
+      "file": "staff.glb",
+      "variants": {
+        "SS": "staff-sun.glb",
+        "SSS": "staff-sun.glb"
+      }
     },
     "ring": {
       "file": "ring.glb",
