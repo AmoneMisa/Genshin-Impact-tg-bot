@@ -1,6 +1,6 @@
 /* Chest game (chest.js), prototype style: gothic treasury, iron-framed
    chest slots, close-up reveal and a rewards summary. */
-.chest-panel {
+.overlay-panel.chest-panel {
   --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
   position: relative; overflow-x: hidden;
   display: grid; gap: 12px;

@@ -6,24 +6,31 @@
  * focus, motion and per-mode accent variables.
  */
 :root {
-  --surface-page: #0b0d17;
-  --surface-panel: rgba(16, 18, 34, .94);
-  --surface-glass: rgba(18, 20, 37, .68);
+  --surface-page: #0b0a10;
+  --surface-panel: rgba(18, 14, 22, .97);
+  --surface-glass: rgba(20, 16, 24, .72);
   --surface-card: rgba(255, 255, 255, .035);
   --surface-card-strong: rgba(255, 255, 255, .055);
   --surface-control: rgba(255, 255, 255, .045);
-  --surface-input: rgba(8, 10, 20, .52);
+  --surface-input: rgba(6, 5, 9, .72);
   --surface-card-gradient: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.018)), var(--surface-card);
 
-  --text: #f6f5ff;
-  --text-soft: #d8d4e8;
-  --muted: #aaa9c1;
+  --text: #f4ecdb;
+  --text-soft: #e6dcc4;
+  --muted: #b3a88f;
   --text-faint: #858397;
 
-  --accent: #bc9cff;
-  --accent-2: #75d8ff;
-  --accent-rgb: 188 156 255;
-  --accent-2-rgb: 117 216 255;
+  --accent: #d8b36a;
+  --accent-2: #9a7ae8;
+  --accent-rgb: 216 179 106;
+  --accent-2-rgb: 154 122 232;
+
+  /* Prototype ornament: gold filigree on dark ink, serif headings. */
+  --gold: #d8b36a;
+  --gold-bright: #f3dca6;
+  --gold-dim: #6b5326;
+  --serif: Georgia, "Times New Roman", serif;
+  --button-gold: linear-gradient(180deg, #6a4f1f, #3a2a10);
   --success: #a8f4d8;
   --success-rgb: 126 232 208;
   --warning: #f2d395;
@@ -31,16 +38,16 @@
   --danger: #ffb5ac;
   --danger-rgb: 238 117 104;
 
-  --border-subtle: rgba(255, 255, 255, .065);
-  --border-soft: rgba(255, 255, 255, .09);
-  --border-strong: rgba(255, 255, 255, .14);
+  --border-subtle: rgba(216, 179, 106, .13);
+  --border-soft: rgba(216, 179, 106, .22);
+  --border-strong: rgba(216, 179, 106, .42);
 
   --radius-xs: 8px;
   --radius-sm: 11px;
   --radius-md: 14px;
   --radius-lg: 18px;
   --radius-xl: 24px;
-  --radius-sheet: 28px;
+  --radius-sheet: 14px;
 
   --shadow-card: 0 14px 34px rgba(0, 0, 0, .17);
   --shadow-panel: 0 28px 80px rgba(0, 0, 0, .38);
@@ -106,14 +113,15 @@ body {
 }
 
 .overlay-panel {
-  border: 1px solid var(--border-soft);
+  border: 1px solid var(--gold-dim);
+  border-bottom: 0;
   border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
   background:
-    linear-gradient(155deg, rgb(var(--screen-accent-rgb) / .045), transparent 32%),
-    linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.012)),
-    var(--surface-panel);
-  box-shadow: var(--shadow-panel);
+    radial-gradient(ellipse 90% 30% at 50% 0%, rgb(var(--screen-accent-rgb) / .10), transparent 70%),
+    linear-gradient(180deg, rgba(24, 19, 30, .98), rgba(10, 9, 14, .99));
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .12), inset 0 0 0 1px rgba(255, 222, 160, .05), var(--shadow-panel);
   backdrop-filter: blur(var(--blur-panel)) saturate(1.12);
+  color: var(--text);
 }
 
 .overlay-head {
@@ -121,8 +129,28 @@ body {
 }
 
 .overlay-head h2 {
-  font-size: 24px;
-  letter-spacing: -.025em;
+  font: 700 22px/1.1 var(--serif);
+  letter-spacing: .01em;
+  color: var(--gold-bright);
+  text-shadow: 0 2px 0 #000, 0 0 14px rgb(var(--accent-rgb) / .3);
+}
+
+.overlay-panel .eyebrow {
+  font: 700 10px/1.2 var(--serif);
+  letter-spacing: .14em;
+  color: rgb(var(--accent-rgb) / .75);
+}
+
+.overlay-panel h3 {
+  font-family: var(--serif);
+  color: var(--gold-bright);
+}
+
+.overlay-close.icon-button {
+  border-radius: 50%;
+  border-color: var(--gold-dim);
+  background: rgba(14, 11, 18, .85);
+  color: var(--text-soft);
 }
 
 .overlay-copy {
@@ -283,10 +311,9 @@ textarea:focus-visible {
 .equipment-tabs button.active,
 .arena-tabs button.active {
   color: var(--text);
-  background:
-    linear-gradient(135deg, rgb(var(--screen-accent-rgb) / .18), rgb(var(--screen-accent-2-rgb) / .10)),
-    var(--surface-control);
-  box-shadow: inset 0 0 20px rgb(var(--screen-accent-rgb) / .045);
+  background: var(--button-gold);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), inset 0 0 0 1px var(--gold);
+  color: #fbeccb;
 }
 
 /* Pills/chips. */
@@ -333,7 +360,6 @@ textarea:focus-visible {
 .utility-action,
 .self-mute-action,
 .point-primary,
-.point-actions button:not(.ghost),
 .gacha-roll,
 .gacha-action,
 .arena-attack,
@@ -341,26 +367,21 @@ textarea:focus-visible {
 .forge-action,
 .boss-summon {
   min-height: var(--control-height);
-  border: 1px solid rgb(var(--screen-accent-rgb, 188 156 255) / .28);
-  border-radius: var(--radius-md);
-  color: var(--text);
-  background:
-    linear-gradient(
-      135deg,
-      rgb(var(--screen-accent-rgb, 188 156 255) / .34),
-      rgb(var(--screen-accent-2-rgb, 117 216 255) / .18)
-    ),
-    var(--surface-control);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  color: #fbeccb;
+  background: var(--button-gold);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.055),
-    0 12px 26px rgb(var(--screen-accent-rgb, 188 156 255) / .08);
-  font-weight: 800;
+    inset 0 1px 0 rgba(255, 236, 190, .3),
+    0 6px 14px rgba(0, 0, 0, .45),
+    0 0 14px rgb(var(--accent-rgb) / .16);
+  font-family: var(--serif);
+  font-weight: 700;
 }
 
 .utility-action:not(:disabled):active,
 .self-mute-action:not(:disabled):active,
 .point-primary:not(:disabled):active,
-.point-actions button:not(.ghost):not(:disabled):active,
 .gacha-roll:not(:disabled):active,
 .gacha-action:not(:disabled):active,
 .arena-attack:not(:disabled):active,
@@ -370,7 +391,6 @@ textarea:focus-visible {
   transform: translateY(1px) scale(.985);
 }
 
-.point-actions button.ghost,
 .equipment-action:not(.primary),
 .arena-refresh,
 .boss-name-row button {
@@ -384,7 +404,6 @@ textarea:focus-visible {
 }
 
 .equipment-action,
-.point-actions button,
 .arena-attack,
 .boss-summon {
   min-height: 38px;

@@ -1,6 +1,6 @@
 /* Arcade (arcade.js + arcade-stage.js), prototype "Баскетбол" style: a painted
    hall stage beside stat panels, a bet stepper and one big gold button. */
-.arcade-panel {
+.overlay-panel.arcade-panel {
   --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
   display: grid; gap: 10px;
   padding-top: 12px;

@@ -1,6 +1,6 @@
 /* 21 (point21.js), prototype style: a green felt table with real playing
    cards dealt from the deck, a bet stepper and blue/red action buttons. */
-.point21-panel {
+.overlay-panel.point21-panel {
   --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
   display: grid; gap: 12px;
   padding-top: 12px;

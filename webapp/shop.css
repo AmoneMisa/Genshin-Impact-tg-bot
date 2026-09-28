@@ -1,6 +1,6 @@
 /* Shop (shop.js), prototype style: gold segmented tabs and item rows with an
    emblem tile, name/description and a price button (tap twice to buy). */
-.shop-panel {
+.overlay-panel.shop-panel {
   --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
   max-height: min(92vh, 900px);
   padding-top: 12px;

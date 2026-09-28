@@ -188,7 +188,7 @@
 /* ------------------------------------------------------------------ */
 /* Building window                                                    */
 /* ------------------------------------------------------------------ */
-.city-window-panel {
+.overlay-panel.city-window-panel {
   padding: 0 0 calc(var(--safe-bottom) + 4px);
   border: 1px solid var(--city-gold-dim);
   background: linear-gradient(180deg, rgba(24, 19, 30, .98), rgba(10, 9, 15, .99));
