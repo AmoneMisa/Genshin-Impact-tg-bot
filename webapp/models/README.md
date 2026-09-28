@@ -55,3 +55,18 @@ npm run models:check
 `sword.glb`, `shield.glb`, `staff.glb`, `ring.glb` are generated placeholders
 (`node scripts/models/buildSampleModels.js`). Overwrite them with real art any
 time; regenerating only rewrites those four files.
+
+## Blender builds
+
+Higher-fidelity models are authored as headless Blender scripts in
+`scripts/blender/` (modifiers, booleans, real 3D wraps, procedural materials
+baked to textures with Cycles, Draco-compressed export):
+
+```bash
+npm run models:blender              # all Blender models
+npm run models:blender -- sword.glb # one model
+```
+
+Needs Blender 4.2+ (built with 5.2). If it isn't in the default install path,
+set `BLENDER_PATH`. Files listed in `BLENDER_MODELS` (`scripts/blender/build.js`)
+are skipped by the Node generator, so the two never overwrite each other.

@@ -105,7 +105,7 @@ test('textured sample weapons embed PBR texture maps and glowing parts', async (
   const buffer = fs.readFileSync(path.join(root, 'webapp/models/sword.glb'));
   const json = JSON.parse(buffer.toString('utf8', 20, 20 + buffer.readUInt32LE(12)));
   assert.ok((json.images || []).length >= 4, 'albedo, packed roughness/metal, normal and more');
-  assert.ok(json.images.every(image => image.mimeType === 'image/png'));
+  assert.ok(json.images.every(image => ['image/png', 'image/jpeg'].includes(image.mimeType)));
   const blade = json.materials.find(m => m.name === 'sunSteel');
   assert.ok(blade.pbrMetallicRoughness.baseColorTexture && blade.pbrMetallicRoughness.metallicRoughnessTexture && blade.normalTexture);
   assert.ok(json.materials.some(m => m.emissiveFactor?.some(v => v > 0)), 'sun core glows');

@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { installCanvasShim } from './texture.js';
+import { BLENDER_MODELS } from '../blender/build.js';
 import { runeDagger, sunSword, voidBlade } from './weapons.js';
 import { butterflyNecklace, crescentEarring, filigreeRing, flowerTiara, wingedRing } from './jewelry.js';
 import { celestialBow, greatsword, runeCrossbow, spikedKnuckles, warHammer } from './arsenal.js';
@@ -215,6 +216,8 @@ export const SAMPLE_MODELS = {
 async function main() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
   for (const [name, build] of Object.entries(SAMPLE_MODELS)) {
+    // Files authored in Blender (npm run models:blender) take precedence.
+    if (BLENDER_MODELS[`${name}.glb`]) { console.log(`${name}.glb  (Blender build, skipped)`); continue; }
     const object = build();
     const glb = await exportGlb(object);
     fs.writeFileSync(path.join(OUT_DIR, `${name}.glb`), glb);

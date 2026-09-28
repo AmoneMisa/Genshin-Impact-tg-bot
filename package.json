@@ -10,7 +10,8 @@
     "run:legacy": "node index.js",
     "test": "node --test",
     "models:check": "node scripts/models/checkModels.js",
-    "models:samples": "node scripts/models/buildSampleModels.js"
+    "models:samples": "node scripts/models/buildSampleModels.js",
+    "models:blender": "node scripts/blender/build.js"
   },
   "engines": {
     "node": ">=24 <25"
