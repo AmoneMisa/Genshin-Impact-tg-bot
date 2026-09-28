@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { normalizeManifest } from '../../webapp/loot-gltf.js';
 
-export const KNOWN_KINDS = ['sword', 'dagger', 'staff', 'bow', 'crossbow', 'hammer', 'shield', 'helmet', 'armor', 'gloves', 'greaves', 'boots', 'cloak', 'ring', 'earring', 'amulet', 'tiara', 'relic'];
+export const KNOWN_KINDS = ['sword', 'dagger', 'staff', 'bow', 'crossbow', 'hammer', 'shield', 'helmet', 'armor', 'gloves', 'gauntlets', 'greaves', 'boots', 'cloak', 'ring', 'earring', 'amulet', 'tiara', 'relic'];
 export const BUDGET = { triangles: 50_000, bytes: 1024 * 1024 };
 
 const MODELS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../webapp/models');

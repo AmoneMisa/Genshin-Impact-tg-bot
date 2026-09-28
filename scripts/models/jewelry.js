@@ -11,20 +11,20 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 // ---- materials ----
-const gold = () => new THREE.MeshStandardMaterial({ name: 'gold', color: 0xe3b35c, metalness: 1, roughness: 0.22 });
-const silver = () => new THREE.MeshStandardMaterial({ name: 'silver', color: 0xdfe4ee, metalness: 1, roughness: 0.18 });
-const pearl = () => new THREE.MeshStandardMaterial({ name: 'pearl', color: 0xf6ece6, metalness: 0.1, roughness: 0.28 });
-const enamel = color => new THREE.MeshStandardMaterial({ name: 'enamel', color, metalness: 0.15, roughness: 0.35 });
+export const gold = () => new THREE.MeshStandardMaterial({ name: 'gold', color: 0xe3b35c, metalness: 1, roughness: 0.22 });
+export const silver = () => new THREE.MeshStandardMaterial({ name: 'silver', color: 0xdfe4ee, metalness: 1, roughness: 0.18 });
+export const pearl = () => new THREE.MeshStandardMaterial({ name: 'pearl', color: 0xf6ece6, metalness: 0.1, roughness: 0.28 });
+export const enamel = color => new THREE.MeshStandardMaterial({ name: 'enamel', color, metalness: 0.15, roughness: 0.35 });
 /** Glowing crystal. Emissive so the runtime tints it by rarity and grades its glow. */
-const crystal = (color, { opacity = 1, glow = 1.6 } = {}) => new THREE.MeshStandardMaterial({
+export const crystal = (color, { opacity = 1, glow = 1.6 } = {}) => new THREE.MeshStandardMaterial({
   name: 'crystal', color, emissive: color, emissiveIntensity: glow, metalness: 0.05, roughness: 0.06,
   transparent: opacity < 1, opacity, side: opacity < 1 ? THREE.DoubleSide : THREE.FrontSide,
 });
 
-const mesh = (geometry, material, name) => Object.assign(new THREE.Mesh(geometry, material), { name });
+export const mesh = (geometry, material, name) => Object.assign(new THREE.Mesh(geometry, material), { name });
 // mergeGeometries needs all-indexed or all-non-indexed input; only fall back to
 // non-indexed (3 unique vertices per triangle, ~3× larger) when the parts are mixed.
-const merged = (geometries, material, name) => {
+export const merged = (geometries, material, name) => {
   const allIndexed = geometries.every(g => g.index);
   const parts = allIndexed ? geometries : geometries.map(g => (g.index ? g.toNonIndexed() : g));
   for (const g of parts) for (const key of Object.keys(g.attributes)) if (!['position', 'normal', 'uv'].includes(key)) g.deleteAttribute(key);
@@ -32,7 +32,7 @@ const merged = (geometries, material, name) => {
 };
 
 /** Mirror across X and restore outward winding (a negative scale flips every triangle). */
-function mirrorX(geometry) {
+export function mirrorX(geometry) {
   geometry.scale(-1, 1, 1);
   if (geometry.index) {
     const idx = geometry.index.array;
@@ -50,14 +50,14 @@ function mirrorX(geometry) {
 }
 
 /** Faceted solid: one normal per facet, like a cut stone. */
-function faceted(geometry) {
+export function faceted(geometry) {
   const g = geometry.index ? geometry.toNonIndexed() : geometry;
   g.computeVertexNormals();
   return g;
 }
 
 /** Teardrop pendant (lathe), point up, hanging from y = 0. */
-function teardrop(radius, segments = 24) {
+export function teardrop(radius, segments = 24) {
   const pts = [];
   for (let i = 0; i <= 16; i++) {
     const t = i / 16, a = t * Math.PI;
@@ -67,7 +67,7 @@ function teardrop(radius, segments = 24) {
 }
 
 /** Chain of alternating links along a curve. */
-function chainAlong(curve, count, linkRadius = 0.022, wire = 0.006) {
+export function chainAlong(curve, count, linkRadius = 0.022, wire = 0.006) {
   const links = [];
   for (let i = 0; i < count; i++) {
     const t = (i + 0.5) / count;
@@ -84,7 +84,7 @@ function chainAlong(curve, count, linkRadius = 0.022, wire = 0.006) {
 }
 
 /** Filigree scroll: a spiral tube that thins toward its curled end. */
-function scroll(origin, { radius = 0.12, turns = 1.3, angle = 0, flip = 1, thickness = 0.012, plane = 'xy' } = {}) {
+export function scroll(origin, { radius = 0.12, turns = 1.3, angle = 0, flip = 1, thickness = 0.012, plane = 'xy' } = {}) {
   const pts = [];
   for (let i = 0; i <= 40; i++) {
     const t = i / 40, a = angle + flip * t * turns * Math.PI * 2, r = radius * (1 - t * 0.75);
@@ -101,13 +101,13 @@ function scroll(origin, { radius = 0.12, turns = 1.3, angle = 0, flip = 1, thick
   return tube;
 }
 
-const extrude = (shape, depth, bevel = 0.01, segments = 3) => {
+export const extrude = (shape, depth, bevel = 0.01, segments = 3) => {
   const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: bevel > 0, bevelThickness: bevel, bevelSize: bevel, bevelSegments: segments, curveSegments: 24 });
   g.translate(0, 0, -depth / 2);
   return g;
 };
 
-function heartShape(s = 1) {
+export function heartShape(s = 1) {
   const h = new THREE.Shape();
   h.moveTo(0, -0.5 * s);
   h.bezierCurveTo(-0.08 * s, -0.36 * s, -0.5 * s, -0.12 * s, -0.5 * s, 0.14 * s);
@@ -118,7 +118,7 @@ function heartShape(s = 1) {
 }
 
 /** Five-petal blossom (sakura-like) facing +Z. */
-function blossom(radius) {
+export function blossom(radius) {
   const petals = new THREE.Shape();
   for (let k = 0; k <= 5 * 12; k++) {
     const a = (k / (5 * 12)) * Math.PI * 2;
@@ -134,7 +134,7 @@ function blossom(radius) {
 }
 
 /** Leaf/wing blade outline between two points with a bulge; used for wings and tiara spires. */
-function wingShape(length, width, tipCurl = 0.15) {
+export function wingShape(length, width, tipCurl = 0.15) {
   const s = new THREE.Shape();
   s.moveTo(0, 0);
   s.bezierCurveTo(width * 0.9, length * 0.15, width * 1.1, length * 0.7, width * tipCurl, length);

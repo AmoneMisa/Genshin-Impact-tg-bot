@@ -13,7 +13,7 @@ import { Layer, clamp01, fbm, glyph, mix, rng, scratches, smoothstep } from './t
 // Texture → material plumbing
 // ---------------------------------------------------------------------------
 
-function dataTexture(layer, { srgb = false } = {}) {
+export function dataTexture(layer, { srgb = false } = {}) {
   const texture = new THREE.DataTexture(layer.toBytes(), layer.width, layer.height, THREE.RGBAFormat);
   texture.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -25,7 +25,7 @@ function dataTexture(layer, { srgb = false } = {}) {
  * maps: { albedo: Layer, rough: Layer (ch0 = roughness), metal: Layer (ch0), height: Layer, emissive?: Layer }
  * glTF wants roughness in G and metalness in B of ONE texture, so they're packed here.
  */
-function texturedMaterial(name, maps, { normalStrength = 3, emissiveIntensity = 1, normalScale = 1 } = {}) {
+export function texturedMaterial(name, maps, { normalStrength = 3, emissiveIntensity = 1, normalScale = 1 } = {}) {
   const packed = new Layer(maps.rough.width, maps.rough.height).paint((u, v, x, y) => [1, maps.rough.get(x, y)[0], maps.metal.get(x, y)[0], 1]);
   const orm = dataTexture(packed);
   const material = new THREE.MeshStandardMaterial({
@@ -49,7 +49,7 @@ function texturedMaterial(name, maps, { normalStrength = 3, emissiveIntensity = 
 const mesh = (geometry, material, name) => Object.assign(new THREE.Mesh(geometry, material), { name });
 
 /** Planar UVs from the XY bounding box — for extruded, mostly-flat parts. */
-function planarUV(geometry) {
+export function planarUV(geometry) {
   geometry.computeBoundingBox();
   const { min, max } = geometry.boundingBox;
   const p = geometry.attributes.position, uv = [];
@@ -70,7 +70,7 @@ function faceted(geometry) {
 // ---------------------------------------------------------------------------
 
 /** Brass/gold with tarnish in the low spots and fine hammering. */
-function brassMaps(size, seed, tone = [0.83, 0.64, 0.33]) {
+export function brassMaps(size, seed, tone = [0.83, 0.64, 0.33]) {
   const r = rng(seed);
   const height = new Layer(size).paint((u, v) => { const h = fbm(u, v, { frequency: 8, seed }) * 0.6 + fbm(u, v, { frequency: 32, seed: seed + 3 }) * 0.4; return [h, h, h, 1]; });
   for (const line of scratches(r, 60, { angle: r() * Math.PI, spread: 1, length: [0.02, 0.08] })) height.stroke(line, 0.0018, (px, c) => mix(px, [px[0] - 0.25, 0, 0, 1], c));
@@ -85,7 +85,7 @@ function brassMaps(size, seed, tone = [0.83, 0.64, 0.33]) {
 }
 
 /** Diagonal leather wrap with stitched seams. */
-function leatherWrapMaps(width, height, seed, tone = [0.26, 0.15, 0.1], turns = 14) {
+export function leatherWrapMaps(width, height, seed, tone = [0.26, 0.15, 0.1], turns = 14) {
   const heightMap = new Layer(width, height).paint((u, v) => {
     const band = (v * turns + u) % 1;
     const ridge = Math.sin(band * Math.PI) ** 0.6;

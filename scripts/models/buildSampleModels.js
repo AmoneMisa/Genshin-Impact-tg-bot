@@ -15,6 +15,7 @@ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { installCanvasShim } from './texture.js';
 import { runeDagger, sunSword, voidBlade } from './weapons.js';
 import { butterflyNecklace, crescentEarring, filigreeRing, flowerTiara, wingedRing } from './jewelry.js';
+import { celestialBow, runeCrossbow, spikedKnuckles, warHammer } from './arsenal.js';
 
 installCanvasShim();
 
@@ -203,6 +204,7 @@ function triangleCount(object) {
 // File name → builder. `sword-sss` is the high-grade variant (see manifest.json).
 export const SAMPLE_MODELS = {
   sword: sunSword, dagger: runeDagger, 'sword-sss': voidBlade, shield, staff, ring,
+  bow: celestialBow, crossbow: runeCrossbow, hammer: warHammer, knuckles: spikedKnuckles,
   'ring-filigree': filigreeRing, 'ring-winged': wingedRing, necklace: butterflyNecklace, earring: crescentEarring, tiara: flowerTiara,
 };
 

@@ -26,7 +26,7 @@ Optional fields per entry:
 | `variants` | per-grade files, e.g. `{ "S": "sword-s.glb", "SSS": "sword-sss.glb" }`  |
 
 Kinds: `sword`, `dagger`, `staff`, `bow`, `crossbow`, `hammer`, `shield`,
-`helmet`, `tiara` (priest/mage robe helmets), `armor`, `gloves`, `greaves`, `boots`,
+`gauntlets` (fists), `helmet`, `tiara` (priest/mage robe helmets), `armor`, `gloves`, `greaves`, `boots`,
 `cloak`, `ring`, `earring`, `amulet` (necklaces), `relic`.
 
 ## How the game styles a model
