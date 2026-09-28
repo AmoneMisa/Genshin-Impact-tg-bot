@@ -125,7 +125,7 @@ blade["bake_size"] = (256, 1024)
 # No bevel on the blade: on a razor-thin edge the bevel folds over itself and
 # notches the silhouette. Smooth-by-angle keeps the facets crisp instead.
 c.smooth(blade, 30)
-blade.data.materials.append(steel_mat)
+c.set_material(blade, steel_mat)
 
 # ---------------------------------------------------------------------------
 # Guard: sun ring, sunburst rays, blazing core, side curls, collar
@@ -177,14 +177,14 @@ gold_parts += [pommel, bpy.context.active_object]
 
 guard = c.join(gold_parts, "guard")
 c.smooth(guard, 40)
-guard.data.materials.append(brass_mat)
+c.set_material(guard, brass_mat)
 
 bpy.ops.mesh.primitive_uv_sphere_add(radius=0.1, location=(0, 0, -0.02), segments=40, ring_count=20)
 core = bpy.context.active_object
 core.name = "sunCore"
 core.scale = (1, 0.7, 1)
 bpy.ops.object.shade_smooth()
-core.data.materials.append(core_mat)
+c.set_material(core, core_mat)
 
 # ---------------------------------------------------------------------------
 # Grip: dark core wound with a real leather strip
@@ -193,9 +193,9 @@ core.data.materials.append(core_mat)
 bpy.ops.mesh.primitive_cylinder_add(radius=0.052, depth=0.92, location=(0, 0, -0.93), vertices=32)
 grip_core = bpy.context.active_object
 grip_core.name = "gripCore"
-grip_core.data.materials.append(dark_mat)
+c.set_material(grip_core, dark_mat)
 wrap = c.helix_wrap("gripWrap", radius=0.058, height=0.86, turns=9, strip=0.07, z0=-1.36)
 c.smooth(wrap, 60)
-wrap.data.materials.append(leather_mat)
+c.set_material(wrap, leather_mat)
 
 c.export(c.output_path())

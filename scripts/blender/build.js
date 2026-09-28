@@ -18,6 +18,7 @@ const OUT_DIR = path.resolve(HERE, '../../webapp/models');
 /** Output file → Blender script. These files are skipped by the Node generator. */
 export const BLENDER_MODELS = Object.freeze({
   'sword.glb': 'sun_sword.py',
+  'helmet.glb': 'great_helm.py',
 });
 
 export function findBlender(env = process.env) {

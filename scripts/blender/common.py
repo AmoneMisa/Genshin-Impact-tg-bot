@@ -66,6 +66,19 @@ def join(objects, name):
     return obj
 
 
+def set_material(obj, mat):
+    """Make `mat` the only material and assign every face to it.
+
+    Boolean cuts and joins leave extra (often empty) slots behind, and faces can
+    end up pointing at an empty one, which exports as an untextured default.
+    """
+    obj.data.materials.clear()
+    obj.data.materials.append(mat)
+    for poly in obj.data.polygons:
+        poly.material_index = 0
+    return obj
+
+
 def smooth(obj, angle=35):
     """Smooth shading with sharp edges kept above `angle` degrees."""
     activate(obj)
@@ -77,9 +90,9 @@ def smooth(obj, angle=35):
 # Geometry
 # ---------------------------------------------------------------------------
 
-def mesh_from(name, verts, faces):
+def mesh_from(name, verts, faces, edges=()):
     mesh = bpy.data.meshes.new(name)
-    mesh.from_pydata([tuple(v) for v in verts], [], faces)
+    mesh.from_pydata([tuple(v) for v in verts], list(edges), faces)
     mesh.update()
     obj = bpy.data.objects.new(name, mesh)
     bpy.context.collection.objects.link(obj)
@@ -397,6 +410,8 @@ def _rewire_baked(mat, bsdf, images):
 def export(path, objects=None, draco=True):
     """Bake procedural materials, then write a Draco-compressed, Y-up .glb."""
     objects = objects or [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    for obj in objects:
+        print(f"OBJECT {obj.name}: {len(obj.data.polygons)} faces, materials={[s.material.name if s.material else None for s in obj.material_slots]}")
     for obj in objects:
         bake_object(obj)
     bpy.ops.object.select_all(action="DESELECT")
