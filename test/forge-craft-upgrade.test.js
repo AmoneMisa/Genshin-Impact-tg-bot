@@ -25,7 +25,25 @@ test('crafting deducts the exact grade cost and adds a real item to inventory', 
   assert.equal(inv.crystals, before.crystals - CRAFT_COSTS.D.crystals);
   assert.equal(inv.ironOre, before.ironOre - CRAFT_COSTS.D.ironOre);
   assert.equal(inv.equipment.items.length, 1);
-  assert.equal(inv.equipment.items[0].grade, 'D');
+  // generateRandomEquipment has a 5% "lucky" roll one grade up.
+  assert.ok(['D', 'C'].includes(inv.equipment.items[0].grade));
+});
+
+test('crafting the top grade never overflows past SSS on a lucky roll', () => {
+  const realRandom = Math.random;
+  let first = true;
+  // The grade roll is the generator's first Math.random() call; force only that one
+  // (forcing every call starves the generator's unique-stat picking loops).
+  Math.random = () => (first ? ((first = false), 0.01) : realRandom());
+  try {
+    const inv = inventory();
+    Object.assign(inv, { gold: 1e9, crystals: 1e9, ironOre: 1e9 });
+    const result = craftItem(inv, 'SSS', 100);
+    assert.equal(result.ok, true);
+    assert.equal(result.item.grade, 'SSS');
+  } finally {
+    Math.random = realRandom;
+  }
 });
 
 test('crafting rejects a grade above the player level without mutating inventory', () => {
