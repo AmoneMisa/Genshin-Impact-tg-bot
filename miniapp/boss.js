@@ -13,6 +13,8 @@ import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
+import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
+import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getUserName from '../functions/getters/getUserName.js';
 import saveSession from '../functions/getters/saveSession.js';
 import { getEffectiveSkillCost } from '../functions/game/player/skillEnchant.js';
@@ -77,14 +79,64 @@ function lootDto(boss) {
   }
 }
 
-async function damageListDto(boss) {
-  const rows = [...(boss?.listOfDamage || [])].sort((a, b) => number(b.damage) - number(a.damage));
+const EFFECT_LABELS = Object.freeze({
+  shield: { id: 'shield', label: 'Щит' },
+  addDamageToBoss: { id: 'damageUp', label: 'Урон по боссу' },
+  addCritChanceToBoss: { id: 'critChanceUp', label: 'Шанс крита' },
+  addCritDamageToBoss: { id: 'critDamageUp', label: 'Сила крита' },
+});
+
+/** Player buffs/debuffs for the status row of the player frame. */
+export function playerEffectsDto(effects, respawnRemainMs = 0) {
+  const list = (Array.isArray(effects) ? effects : []).map(effect => {
+    const known = EFFECT_LABELS[effect?.name] || { id: String(effect?.name || 'effect'), label: String(effect?.name || 'Эффект') };
+    return {
+      id: known.id,
+      label: known.label,
+      value: number(effect?.value ?? effect?.amount, 0) || null,
+      count: Number.isFinite(Number(effect?.count)) ? number(effect.count) : null,
+    };
+  });
+  if (respawnRemainMs > 0) list.unshift({ id: 'dead', label: 'Воскрешение', value: null, count: null });
+  return list;
+}
+
+/** Boss status icons: its active skill (reflect, regen, rage, ...). */
+export function bossStatusesDto(boss) {
+  const skill = boss?.skill;
+  if (!skill || !skill.effect) return [];
+  return [{ id: String(skill.effect), label: skill.name || String(skill.effect), description: skill.description || '' }];
+}
+
+/**
+ * Everyone who has hit the boss, ranked by damage, with what the party frames
+ * need: class portrait, level, live HP and damage share. One chat lookup serves
+ * all participants (getSession would create missing members, so it isn't used).
+ */
+async function participantsDto(boss, chatId, viewerId) {
+  const rows = [...(boss?.listOfDamage || [])].sort((a, b) => number(b.damage) - number(a.damage)).slice(0, 20);
+  if (!rows.length) return [];
+  const chat = await Chat.findOne({ chatId: Number(chatId) }, { members: 1 }).lean().catch(() => null);
+  const members = new Map((chat?.members || []).map(member => [String(member.userId), member]));
+  const total = rows.reduce((sum, row) => sum + number(row.damage), 0) || 1;
   const result = [];
-  for (const row of rows.slice(0, 20)) {
+  for (const row of rows) {
+    const member = members.get(String(row.id));
+    const gameClass = member?.game?.gameClass;
+    let hpPercent = null;
+    try {
+      if (member?.game) hpPercent = percent(getCurrentHp(member, gameClass), getMaxHp(member, gameClass));
+    } catch { hpPercent = null; }
     result.push({
       userId: row.id,
       name: await getUserName(row.id, 'name') || `Игрок ${row.id}`,
       damage: number(row.damage),
+      share: Math.round((number(row.damage) / total) * 1000) / 10,
+      className: gameClass?.stats?.name || 'noClass',
+      gender: member?.gender === 'female' ? 'female' : 'male',
+      level: number(member?.game?.stats?.lvl, 1),
+      hpPercent,
+      isYou: viewerId != null && String(row.id) === String(viewerId),
     });
   }
   return result;
@@ -125,7 +177,16 @@ export async function getBossState(session, chatId, now = Date.now()) {
   const currentMp = getCurrentMp(session, session.game.gameClass);
   const skills = (session?.game?.gameClass?.skills || []).map((skill, index) => skillDto(session, skill, index, now));
 
+  const maxCp = number(getMaxCp(session, session.game.gameClass), 0);
+  const currentCp = number(getCurrentCp(session, session.game.gameClass), 0);
+  const respawnRemainMs = Math.max(0, number(session?.game?.respawnTime) - now);
   const player = {
+    name: session?.userId ? (await getUserName(session.userId, 'name') || 'Игрок') : 'Игрок',
+    level: number(session?.game?.stats?.lvl, 1),
+    cp: currentCp,
+    maxCp,
+    cpPercent: percent(currentCp, maxCp),
+    effects: playerEffectsDto(session?.game?.effects, respawnRemainMs),
     // For the battle scene: which class portrait and skill animations to show.
     className: session?.game?.gameClass?.stats?.name || 'noClass',
     gender: session?.gender === 'female' ? 'female' : 'male',
@@ -135,7 +196,7 @@ export async function getBossState(session, chatId, now = Date.now()) {
     mp: currentMp,
     maxMp,
     mpPercent: percent(currentMp, maxMp),
-    respawnRemainMs: Math.max(0, number(session?.game?.respawnTime) - now),
+    respawnRemainMs,
     skills,
   };
 
@@ -163,7 +224,8 @@ export async function getBossState(session, chatId, now = Date.now()) {
         effects: Array.isArray(boss.skill.effect) ? boss.skill.effect : [],
       } : null,
       loot: lootDto(boss),
-      damageList: await damageListDto(boss),
+      statuses: bossStatusesDto(boss),
+      damageList: await participantsDto(boss, chatId, session?.userId),
     },
   };
 }

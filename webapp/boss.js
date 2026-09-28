@@ -1,4 +1,7 @@
 import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
+import {
+  damageMeter, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame,
+} from './boss-hud.js';
 
 const REASONS = {
   already_summoned: 'Босс уже призван.',
@@ -8,60 +11,6 @@ const REASONS = {
   not_enough_resource: 'Недостаточно HP или MP для навыка.',
   cooldown: 'Навык ещё в откате.',
 };
-
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
-
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-function duration(ms) {
-  const total = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));
-  const minutes = Math.floor(total / 60);
-  const seconds = total % 60;
-  return `${minutes}:${String(seconds).padStart(2, '0')}`;
-}
-
-function skillCard(skill) {
-  const type = skill.isDamage ? 'damage' : skill.isHeal ? 'heal' : skill.isShield ? 'shield' : 'utility';
-  const cost = skill.costHp > 0 ? `❤️ ${formatNumber(skill.costHp)}` : `🔹 ${formatNumber(skill.costMp)}`;
-  return `
-    <button type="button" class="boss-skill ${type}" data-skill="${skill.index}" ${skill.canUse ? '' : 'disabled'}>
-      <div class="boss-skill-top"><strong>${escapeHtml(skill.name)}</strong><span>${cost}</span></div>
-      <p>${escapeHtml(skill.description)}</p>
-      <div class="boss-skill-foot">
-        <span>${type === 'damage' ? 'Атака' : type === 'heal' ? 'Лечение' : type === 'shield' ? 'Щит' : 'Навык'}</span>
-        <span data-skill-cooldown data-until="${skill.cooldownUntil || 0}">${skill.cooldownMs > 0 ? `Откат ${duration(skill.cooldownMs)}` : 'Готов'}</span>
-      </div>
-    </button>`;
-}
-
-function lootPreview(loot) {
-  if (!loot) return '';
-  const rows = [];
-  if (loot.gold) rows.push(`<span>🪙 ${formatNumber(loot.gold.min)}–${formatNumber(loot.gold.max)}</span>`);
-  if (loot.crystals) rows.push(`<span>💎 ${formatNumber(loot.crystals.min)}–${formatNumber(loot.crystals.max)}</span>`);
-  if (loot.experience) rows.push(`<span>✦ ${formatNumber(loot.experience.min)}–${formatNumber(loot.experience.max)} XP</span>`);
-  if (loot.equipment) rows.push(`<span>🛡️ Снаряжение</span>`);
-  return rows.join('');
-}
-
-function damageList(rows) {
-  if (!rows?.length) return '<div class="boss-empty compact">Пока никто не атаковал.</div>';
-  return rows.map((row, index) => `
-    <div class="boss-damage-row">
-      <span>#${index + 1}</span>
-      <strong>${escapeHtml(row.name)}</strong>
-      <em>${formatNumber(row.damage)}</em>
-    </div>`).join('');
-}
 
 // Legacy /boss is an entry action, not a passive status read: when no boss is
 // alive it summons one immediately. Preserve that behavior without mutating a
@@ -108,6 +57,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
         <div><div class="eyebrow">РЕЙД · SHARED CHAT BOSS</div><h2>Босс</h2></div>
         <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
       </header>
+      <div data-boss-target></div>
       <div class="boss-stage" data-boss-stage hidden></div>
       <div data-boss-content></div>
       <div class="boss-feedback" data-boss-feedback aria-live="polite"></div>
@@ -117,6 +67,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   // The stage lives outside the re-rendered content so its WebGL context
   // survives every state refresh; renderAll only updates it.
   const stageHost = overlay.querySelector('[data-boss-stage]');
+  const targetHost = overlay.querySelector('[data-boss-target]');
   let stage = null;
   let stageRetiring = false;
 
@@ -273,6 +224,12 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   }
 
   function bind() {
+    targetHost.querySelector('[data-boss-rewards-toggle]')?.addEventListener('click', () => {
+      const panel = targetHost.querySelector('[data-boss-rewards]');
+      if (!panel) return;
+      panel.hidden = !panel.hidden;
+      haptic('light');
+    });
     content.querySelector('[data-summon]')?.addEventListener('click', summon);
     content.querySelector('[data-boss-refresh]')?.addEventListener('click', async () => {
       haptic('light');
@@ -286,6 +243,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   function renderAll() {
     syncStage();
     if (!state.active) {
+      targetHost.innerHTML = '';
       content.innerHTML = `
         <section class="boss-empty-state">
           <div class="boss-empty-icon">👹</div>
@@ -299,44 +257,34 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
 
     const boss = state.boss;
     const player = state.player;
+    const rewardsOpen = !targetHost.querySelector('[data-boss-rewards]')?.hidden && Boolean(targetHost.querySelector('[data-boss-rewards]'));
+    targetHost.innerHTML = `${targetFrame(boss)}${rewardsPanel(boss.loot)}`;
+    if (rewardsOpen) targetHost.querySelector('[data-boss-rewards]').hidden = false;
     content.innerHTML = `
-      <section class="boss-hero">
-        <div class="boss-name-row"><div><small>LVL ${boss.level}</small><strong>${escapeHtml(boss.nameCall)}</strong></div><button type="button" data-boss-refresh>↻</button></div>
-        <p>${escapeHtml(boss.description)}</p>
-        <div class="boss-hp-copy"><span>HP</span><strong>${formatNumber(boss.currentHp)} / ${formatNumber(boss.hp)}</strong></div>
-        <div class="boss-hp-track"><span style="width:${boss.hpPercent}%"></span></div>
-        <div class="boss-timer"><span>До побега</span><strong data-boss-timer data-until="${boss.aliveTime}">${duration(boss.remainMs)}</strong></div>
-      </section>
-
-      <div class="boss-player-bars">
-        <div><small>Твоё HP</small><strong>❤️ ${formatNumber(player.hp)} / ${formatNumber(player.maxHp)}</strong><span><i style="width:${player.hpPercent}%"></i></span></div>
-        <div><small>Твоё MP</small><strong>🔹 ${formatNumber(player.mp)} / ${formatNumber(player.maxMp)}</strong><span><i style="width:${player.mpPercent}%"></i></span></div>
-      </div>
-
-      ${player.respawnRemainMs > 0 ? `<div class="boss-dead">Персонаж восстанавливается · ${duration(player.respawnRemainMs)}</div>` : ''}
-
-      <div class="boss-section-title"><strong>Навыки</strong><small>HP/MP и cooldown проверяет сервер</small></div>
-      <div class="boss-skills">${player.skills.map(skillCard).join('')}</div>
-
-      <div class="boss-section-title"><strong>Возможная награда</strong><small>Зависит от места по урону</small></div>
-      <div class="boss-loot">${lootPreview(boss.loot)}</div>
-
-      <div class="boss-section-title"><strong>Урон группы</strong><small>${boss.damageList.length} участников</small></div>
-      <div class="boss-damage-list">${damageList(boss.damageList)}</div>`;
+      ${playerFrame(player)}
+      ${player.respawnRemainMs > 0 ? `<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>` : ''}
+      ${hotbar(player.skills)}
+      ${partyStrip(boss.damageList)}
+      <div class="mmo-section-title"><strong>Урон рейда</strong><small>${boss.damageList.length} участников · <button type="button" class="mmo-link" data-boss-refresh>обновить</button></small></div>
+      ${damageMeter(boss.damageList)}`;
     bind();
   }
 
   function tick() {
     content.querySelectorAll('[data-skill-cooldown]').forEach((node) => {
       const remain = Math.max(0, Number(node.dataset.until || 0) - Date.now());
-      node.textContent = remain > 0 ? `Откат ${duration(remain)}` : 'Готов';
+      node.textContent = remain > 0 ? formatDuration(remain) : '';
+      const total = Number(node.dataset.total) || remain;
+      node.closest('.mmo-skill')?.style.setProperty('--cd', total > 0 ? String(remain / total) : '0');
       if (remain <= 0) node.closest('.boss-skill')?.removeAttribute('disabled');
     });
-    const bossTimer = content.querySelector('[data-boss-timer]');
-    if (bossTimer) {
-      const remain = Math.max(0, Number(bossTimer.dataset.until || 0) - Date.now());
-      bossTimer.textContent = duration(remain);
-      if (remain <= 0) bossTimer.classList.add('expired');
+    // Escape timer bar in the target frame.
+    const timeBar = targetHost.querySelector('.mmo-bar.time');
+    if (timeBar && state.active) {
+      const remain = Math.max(0, Number(state.boss.aliveTime || 0) - Date.now());
+      timeBar.querySelector('b').textContent = formatDuration(remain);
+      timeBar.querySelector('i').style.width = `${Math.min(100, (remain / (15 * 60 * 1000)) * 100)}%`;
+      timeBar.classList.toggle('expired', remain <= 0);
     }
   }
 
