@@ -105,6 +105,38 @@ export function buildingCard(build, { banner = false } = {}) {
   </article>`;
 }
 
+/**
+ * The city's current goal for the quest card (prototype "Новые горизонты"):
+ * ready harvest first, then the lowest affordable upgrade, a running build,
+ * a requirement to meet, or the cheapest upgrade to save for.
+ */
+export function cityQuest(buildings = []) {
+  const byLevel = [...buildings].sort((a, b) => a.currentLevel - b.currentLevel);
+  const harvest = buildings.find(build => build.canCollect);
+  if (harvest) return { id: harvest.id, icon: '🧺', title: 'Урожай готов', text: `Собери ресурсы: «${harvest.name}»` };
+  const upgrade = byLevel.find(build => build.canUpgrade);
+  if (upgrade) return { id: upgrade.id, icon: '📜', title: 'Новые горизонты', text: `Улучши «${upgrade.name}» до ур. ${upgrade.nextLevel}` };
+  const building = buildings.find(build => build.upgrading);
+  if (building) return { id: building.id, icon: '🔨', title: 'Стройка идёт', text: `«${building.name}» · ${formatDuration(building.remainingMs)}` };
+  const blocked = byLevel.find(build => build.blockedReason === 'requirements');
+  if (blocked) return { id: blocked.id, icon: '🗝️', title: 'Цель', text: `Выполни требования для «${blocked.name}»` };
+  const saving = byLevel
+    .filter(build => build.upgradeCost && build.currentLevel < build.maxLevel)
+    .sort((a, b) => (Number(a.upgradeCost.gold) || 0) - (Number(b.upgradeCost.gold) || 0))[0];
+  if (saving) return { id: saving.id, icon: '🪙', title: 'Копим ресурсы', text: `На «${saving.name}» ур. ${saving.nextLevel}` };
+  return null;
+}
+
+function questHtml(quest) {
+  if (!quest) return '';
+  return `
+    <button type="button" class="city-quest" data-city-quest="${escapeHtml(quest.id)}">
+      <span aria-hidden="true">${quest.icon}</span>
+      <div><strong>${escapeHtml(quest.title)}</strong><small>${escapeHtml(quest.text)}</small></div>
+      <b aria-hidden="true">›</b>
+    </button>`;
+}
+
 export function cityHtml(state) {
   const buildings = state?.buildings || [];
   const palace = buildings.find(build => build.id === 'palace');
@@ -116,6 +148,7 @@ export function cityHtml(state) {
       <strong>WhitesLove</strong>
       <small>Больше, чем игра — наше королевство</small>
     </header>
+    ${questHtml(cityQuest(buildings))}
     ${palace ? buildingCard(palace, { banner: true }) : ''}
     <div class="city-grid">${others.map(build => buildingCard(build)).join('')}</div>
   </section>`;
@@ -260,6 +293,8 @@ export async function mountCity(container, { api, haptic = () => {}, onState = (
       }
       return;
     }
+    const quest = event.target.closest('[data-city-quest]');
+    if (quest && container.contains(quest)) { openWindow(quest.dataset.cityQuest); return; }
     const card = event.target.closest('[data-city-card]');
     if (card && container.contains(card)) openWindow(card.dataset.cityCard);
   }

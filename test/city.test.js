@@ -92,3 +92,18 @@ test('bottom nav groups every feature exactly once and hides the old buildings c
   assert.deepEqual(featuresForTab(features, 'more').map(f => f.id), ['help', 'brandNew']);
   assert.deepEqual(featuresForTab([{ id: 'arena' }, { id: 'boss' }], 'battle').map(f => f.id), ['boss', 'arena']);
 });
+
+import { cityQuest } from '../webapp/city.js';
+test('city quest picks harvest, then the lowest affordable upgrade, then running builds', () => {
+  const mine = build({ id: 'goldMine', name: 'Шахта', currentLevel: 6, canCollect: true });
+  const forge = build({ id: 'forge', name: 'Кузня', currentLevel: 3, nextLevel: 4, canUpgrade: true, canCollect: false, blockedReason: null });
+  const palace = build({ id: 'palace', name: 'Дворец', currentLevel: 8, nextLevel: 9, canUpgrade: true, canCollect: false, blockedReason: null });
+  assert.equal(cityQuest([forge, mine]).title, 'Урожай готов');
+  assert.deepEqual(cityQuest([palace, forge]), { id: 'forge', icon: '📜', title: 'Новые горизонты', text: 'Улучши «Кузня» до ур. 4' });
+  const building = build({ id: 'forge', name: 'Кузня', upgrading: true, remainingMs: 65_000, canUpgrade: false, canCollect: false });
+  assert.equal(cityQuest([building]).title, 'Стройка идёт');
+  assert.equal(cityQuest([build({ canCollect: false, canUpgrade: false, blockedReason: 'requirements' })]).title, 'Цель');
+  assert.equal(cityQuest([build({ canCollect: false, canUpgrade: false, blockedReason: 'resources' })]).title, 'Копим ресурсы');
+  assert.equal(cityQuest([build({ canCollect: false, canUpgrade: false, currentLevel: 30, maxLevel: 30, upgradeCost: null })]), null);
+  assert.match(cityHtml({ buildings: [forge] }), /data-city-quest="forge"/);
+});
