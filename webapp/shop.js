@@ -1,3 +1,23 @@
+import { buildArtUrl } from './art/builds-art.js';
+
+/** Item art: palace styles show their painting, the rest an emblem glyph. */
+export const ITEM_ICONS = Object.freeze({
+  swordImmune: '🛡️', swordAddMm: '🗡️', swordAddTry: '⚔️',
+  bossAddDmg: '💢', bossAddCrChance: '🎯', bossAddCrDmg: '💥',
+  potionHp1000: '🧪', potionHp3000: '🧪', potionHp8000: '🧪',
+  potionMp180: '🧪', potionMp300: '🧪',
+  chestAddTry: '🧰', palaceChangeName: '📜',
+});
+const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
+
+export function itemIconHtml(item) {
+  const art = ITEM_ART[item.command];
+  const url = art ? buildArtUrl(art[0], 1, art[1]) : null;
+  if (url) return `<span class="shop-icon art" style="--art:url('${url}')"></span>`;
+  const tone = item.command.startsWith('potionMp') ? 'mp' : item.command.startsWith('potionHp') ? 'hp' : item.category;
+  return `<span class="shop-icon ${tone}">${ITEM_ICONS[item.command] || '✦'}</span>`;
+}
+
 const REASONS = {
   unknown_item: 'Товар больше не существует.',
   cooldown: 'Этот товар уже покупался и пока не обновился.',
@@ -35,17 +55,18 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
   let pending = false;
   let confirming = null;
   let timer = null;
+  let purchased = null; // flashes the bought row once after re-render
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay shop-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass shop-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">МАГАЗИН · MONGO INVENTORY</div><h2>Лавка</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="shop-head">
+        <button class="overlay-close shop-back" type="button" aria-label="Закрыть">←</button>
+        <h2>Магазин</h2>
+        <strong class="shop-wallet" data-shop-gold>🪙 0</strong>
       </header>
-      <div class="shop-wallet"><small>Твой баланс</small><strong data-shop-gold>🪙 0</strong></div>
       <div class="shop-categories" data-shop-categories></div>
       <div class="shop-list" data-shop-list></div>
       <div class="shop-feedback" data-shop-feedback aria-live="polite"></div>
@@ -66,23 +87,19 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
 
   function itemCard(item) {
     const disabled = item.onCooldown || !item.canAfford;
-    const buttonText = item.onCooldown
-      ? `Обновится через ${remain(item.resetAt)}`
-      : !item.canAfford
-        ? 'Не хватает золота'
-        : confirming === item.command
-          ? `Подтвердить за ${formatNumber(item.cost)}`
-          : `Купить · ${formatNumber(item.cost)}`;
+    const armed = confirming === item.command;
+    const price = item.onCooldown
+      ? `⏳ ${remain(item.resetAt)}`
+      : armed ? `✓ ${formatNumber(item.cost)}` : `🪙 ${formatNumber(item.cost)}`;
 
     return `
-      <article class="shop-item ${item.onCooldown ? 'cooldown' : ''}">
-        <div class="shop-item-head">
-          <span>${escapeHtml(item.categoryLabel)}</span>
-          <strong>🪙 ${formatNumber(item.cost)}</strong>
+      <article class="shop-item ${item.onCooldown ? 'cooldown' : ''} ${armed ? 'armed' : ''} ${!item.canAfford && !item.onCooldown ? 'poor' : ''}">
+        ${itemIconHtml(item)}
+        <div class="shop-item-copy">
+          <h3>${escapeHtml(item.name)}</h3>
+          <p>${escapeHtml(armed ? 'Нажми ещё раз, чтобы купить' : item.message || item.categoryLabel)}</p>
         </div>
-        <h3>${escapeHtml(item.name)}</h3>
-        <p>${escapeHtml(item.message)}</p>
-        <button type="button" data-shop-buy="${escapeHtml(item.command)}" ${disabled ? 'disabled' : ''} class="${confirming === item.command ? 'confirming' : ''}">${escapeHtml(buttonText)}</button>
+        <button type="button" data-shop-buy="${escapeHtml(item.command)}" ${disabled ? 'disabled' : ''} class="shop-price ${armed ? 'confirming' : ''}" aria-label="${escapeHtml(`${item.name}: ${formatNumber(item.cost)} золота`)}">${escapeHtml(price)}</button>
       </article>`;
   }
 
@@ -104,6 +121,11 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
   function renderItems() {
     const items = category === 'all' ? state.items : state.items.filter((item) => item.category === category);
     list.innerHTML = items.length ? items.map(itemCard).join('') : '<div class="shop-empty">В этой категории пока пусто.</div>';
+    list.querySelectorAll('.shop-item').forEach((node, index) => node.style.setProperty('--i', String(index)));
+    if (purchased) {
+      list.querySelector(`[data-shop-buy="${CSS.escape(purchased)}"]`)?.closest('.shop-item')?.classList.add('bought');
+      purchased = null;
+    }
     list.querySelectorAll('[data-shop-buy]').forEach((button) => {
       button.addEventListener('click', () => buy(button.dataset.shopBuy));
     });
@@ -139,6 +161,7 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
       state = payload.shop;
       if (payload.state) renderState(payload.state);
       feedback.textContent = payload.message || `Куплено: ${payload.item?.name || command}`;
+      purchased = command;
       statusElement.textContent = 'Магазин: покупка сохранена в Mongo.';
       renderAll();
     } catch (error) {
@@ -163,7 +186,7 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
     } else {
       list.querySelectorAll('.shop-item.cooldown button').forEach((button) => {
         const item = state.items.find((candidate) => candidate.command === button.dataset.shopBuy);
-        if (item) button.textContent = `Обновится через ${remain(item.resetAt)}`;
+        if (item) button.textContent = `⏳ ${remain(item.resetAt)}`;
       });
     }
   }, 30000);
