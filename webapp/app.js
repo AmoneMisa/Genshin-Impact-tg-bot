@@ -1,4 +1,5 @@
 import { startWebGL } from './renderer.js';
+import { menuArtFor } from './menu-art.js';
 import { startGameVfx } from './vfx.js';
 import { renderPlayerHud } from './hud.js';
 import { openChestGame } from './chest.js';
@@ -135,9 +136,12 @@ function render(state) {
     const button = document.createElement('button');
     button.type = 'button';
     button.disabled = unavailable;
-    button.className = `game-card ${feature.status === 'webgl' ? 'migrated' : ''} ${unavailable ? 'unavailable' : ''}`.trim();
+    const art = menuArtFor(feature.id, state.player);
+    button.className = `game-card ${feature.status === 'webgl' ? 'migrated' : ''} ${unavailable ? 'unavailable' : ''} ${art ? 'has-art' : ''}`.trim();
+    if (art) button.style.setProperty('--card-art', `url("${art}")`);
     button.setAttribute('aria-disabled', String(unavailable));
     button.innerHTML = `
+      ${art ? '<span class="game-art" aria-hidden="true"></span>' : ''}
       <span class="game-icon">${feature.icon}</span>
       ${unavailable
         ? '<span class="mode-badge group-only">GROUP</span>'

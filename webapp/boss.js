@@ -1,3 +1,5 @@
+import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
+
 const REASONS = {
   already_summoned: 'Босс уже призван.',
   no_boss: 'Активного босса больше нет.',
@@ -106,16 +108,59 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
         <div><div class="eyebrow">РЕЙД · SHARED CHAT BOSS</div><h2>Босс</h2></div>
         <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
       </header>
+      <div class="boss-stage" data-boss-stage hidden></div>
       <div data-boss-content></div>
       <div class="boss-feedback" data-boss-feedback aria-live="polite"></div>
     </div>`;
 
   const content = overlay.querySelector('[data-boss-content]');
+  // The stage lives outside the re-rendered content so its WebGL context
+  // survives every state refresh; renderAll only updates it.
+  const stageHost = overlay.querySelector('[data-boss-stage]');
+  let stage = null;
+  let stageRetiring = false;
+
+  function syncStage() {
+    if (state.active) {
+      if (!stage || stage.name !== state.boss.name) {
+        stage?.destroy();
+        stageHost.hidden = false;
+        stage = createBossStage(stageHost, { name: state.boss.name, hpPercent: state.boss.hpPercent, player: state.player });
+      } else {
+        stage.setHp(state.boss.hpPercent);
+      }
+      return;
+    }
+    if (stage && !stageRetiring) {
+      // Let the defeat dissolve play out before the stage goes away.
+      stageRetiring = true;
+      const retiring = stage;
+      window.setTimeout(() => {
+        retiring.destroy();
+        if (stage === retiring) { stage = null; stageHost.hidden = true; }
+        stageRetiring = false;
+      }, 1800);
+    } else if (!stage) {
+      stageHost.hidden = true;
+    }
+  }
+
+  function floatNumber(text, kind, delayMs = 0) {
+    if (delayMs > 0) { window.setTimeout(() => floatNumber(text, kind), delayMs); return; }
+    const node = document.createElement('span');
+    node.className = `boss-stage-number ${kind}`;
+    node.textContent = text;
+    node.style.setProperty('--drift', `${Math.round((Math.random() - 0.5) * 60)}px`);
+    stageHost.appendChild(node);
+    window.setTimeout(() => node.remove(), 1300);
+  }
   const feedback = overlay.querySelector('[data-boss-feedback]');
   if (entry.summoned) feedback.textContent = 'Босс призван. Таймер рейда запущен.';
 
   const close = () => {
     if (timer) window.clearInterval(timer);
+    stage?.destroy();
+    stage = null;
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
   };
@@ -195,6 +240,17 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       });
       state = payload.boss;
       if (payload.state) renderState(payload.state);
+      const result = payload.result || {};
+      if (result.type === 'damage') {
+        stage?.playSkill('damage', { crit: Boolean(result.isHasCritical) });
+        // The number lands with the class animation's impact.
+        const impactMs = (SKILL_FX[skillFxForClass(state.player?.className)]?.impact || 0) * 1000;
+        floatNumber(`-${formatNumber(result.dmg)}`, result.isHasCritical ? 'crit' : 'damage', impactMs);
+      } else if (result.type === 'heal' || result.type === 'shield') {
+        stage?.playSkill(result.type);
+        floatNumber(result.type === 'heal' ? `+${formatNumber(result.heal)}` : `🛡 ${formatNumber(result.shield)}`, 'heal');
+      }
+      if (payload.killed) stage?.defeat();
       resultBanner(payload);
       feedback.textContent = payload.killed
         ? (payload.loot ? 'Твоя награда уже начислена.' : 'Рейд завершён.')
@@ -228,6 +284,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   }
 
   function renderAll() {
+    syncStage();
     if (!state.active) {
       content.innerHTML = `
         <section class="boss-empty-state">

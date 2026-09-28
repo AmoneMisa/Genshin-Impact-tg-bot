@@ -126,6 +126,9 @@ export async function getBossState(session, chatId, now = Date.now()) {
   const skills = (session?.game?.gameClass?.skills || []).map((skill, index) => skillDto(session, skill, index, now));
 
   const player = {
+    // For the battle scene: which class portrait and skill animations to show.
+    className: session?.game?.gameClass?.stats?.name || 'noClass',
+    gender: session?.gender === 'female' ? 'female' : 'male',
     hp: currentHp,
     maxHp,
     hpPercent: percent(currentHp, maxHp),

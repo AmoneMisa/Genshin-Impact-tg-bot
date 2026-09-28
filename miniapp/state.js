@@ -126,6 +126,7 @@ export function createMiniAppState(session, context) {
       currentExp: number(stats.currentExp),
       needExp: Math.max(1, number(stats.needExp, 1)),
       className: gameClassStats.name || 'noClass',
+      gender: session?.gender === 'female' ? 'female' : 'male',
       classTitle: gameClassStats.translateName || gameClassStats.name || 'Без класса',
       hp,
       maxHp,
