@@ -112,7 +112,7 @@ Baros
 
 ## Запуск в Docker
 
-В контейнере работают бот и сервер Mini App (`node miniapp-entry.js`), рядом — MongoDB.
+В контейнере работают бот и сервер Mini App (`node miniapp-entry.js`, Node.js 24 LTS), рядом — MongoDB 8.0 (LTS).
 Токен в образ не попадает: `config.js` и `.env` исключены через `.dockerignore`,
 а `docker/entrypoint.sh` создаёт `config.js` из переменных окружения при старте.
 
@@ -131,11 +131,47 @@ cp .env.example .env
 > Внутри контейнера `localhost` — это сам контейнер. Для сервисов на хосте
 > (например, FreeLLMAPI) используй `http://host.docker.internal:3001/v1`.
 
-**2. Запуск:**
+**2. Запуск.** Образ собирается на GitHub Actions при каждом пуше в `master`
+(сначала тесты, затем сборка и проверка образа) и публикуется в GHCR —
+на сервере ничего собирать не нужно:
 
 ```bash
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 docker compose logs -f bot
+```
+
+Обновление до свежей сборки с очисткой старых образов:
+
+```bash
+./docker/update.sh
+```
+
+Скрипт скачивает новый образ, пересоздаёт изменившиеся контейнеры и удаляет мусор:
+старые версии образов бота и Mongo (у которых тег переехал на новую версию) и
+неиспользуемые анонимные тома. **База данных (`mongo-data`) и данные бота (`bot-state`)
+никогда не удаляются**: это именованные тома с меткой `com.genshin-bot.keep=true`,
+которую очистка пропускает, а если Mongo не запущена — очистка не выполняется вовсе.
+Чистка томов включается только на Docker 23+, где `volume prune` не трогает именованные тома.
+
+Автообновление каждую ночь (cron на сервере):
+
+```bash
+0 5 * * * /opt/bot/docker/update.sh >> /var/log/bot-update.log 2>&1
+```
+
+В GHCR хранятся 10 последних сборок (для отката: `BOT_IMAGE=ghcr.io/amonemisa/genshin-impact-tg-bot:sha-<коммит>`),
+более старые версии CI удаляет сам.
+
+> Пакет в GHCR по умолчанию приватный. Либо сделай его публичным
+> (GitHub → Packages → genshin-impact-tg-bot → Package settings → Change visibility),
+> либо один раз войди на сервере токеном с правом `read:packages`:
+> `docker login ghcr.io -u <github-логин>`.
+
+Собрать образ локально из текущего кода:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 ```
 
 **Cloudflare Tunnel** для публичного адреса Mini App (токен туннеля — в `TUNNEL_TOKEN`,
@@ -148,7 +184,7 @@ docker compose --profile tunnel up -d
 **Внешняя MongoDB** (например, Atlas) — задай `DOCKER_MONGO_URL` и запусти только бота:
 
 ```bash
-docker compose up -d --build --no-deps bot
+docker compose up -d --no-deps bot
 ```
 
 **Данные.** Доверенные чаты, кэш id фотографий и лог ошибок хранятся в томе `bot-state`,

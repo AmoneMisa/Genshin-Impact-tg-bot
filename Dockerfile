@@ -1,12 +1,14 @@
 # Telegram bot + Mini App server (node miniapp-entry.js).
 #
-#   docker compose up -d --build
+# Built and published to GHCR by GitHub Actions on every push to master
+# (.github/workflows/miniapp-ci.yml); servers pull the image instead of building.
 #
 # Secrets never enter the image: config.js and .env are excluded by
 # .dockerignore; docker/entrypoint.sh builds config.js from BOT_TOKEN / ADMIN_ID
 # at start-up. Runtime state (trusted chats, photo id cache, logs) lives in the
 # /app/state volume.
 
+# Node.js 24 is the current LTS line (matches .nvmrc and CI).
 FROM node:24-bookworm-slim
 
 ENV NODE_ENV=production \

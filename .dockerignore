@@ -21,3 +21,4 @@ scripts/models
 Dockerfile
 docker-compose.yml
 .dockerignore
+docker-compose.build.yml

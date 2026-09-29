@@ -1,0 +1,8 @@
+# Local build override: builds the bot image from this checkout instead of
+# pulling it from GHCR.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
+services:
+  bot:
+    build: .
+    image: genshin-tg-bot:local

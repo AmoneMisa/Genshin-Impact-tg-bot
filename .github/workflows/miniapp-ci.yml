@@ -1,12 +1,21 @@
-name: Mini App CI
+name: CI
 
+# Runs only for pushes to master (and on demand). Tests first; when they pass,
+# the Docker image is built here on GitHub, smoke-tested and published to
+# GHCR, so the server only pulls it: `docker compose pull && docker compose up -d`.
 on:
   push:
     branches:
-      - feature/telegram-miniapp-webgl
-  pull_request:
-    branches:
       - master
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 24          # current Node.js LTS; matches the Dockerfile and .nvmrc
+  MONGO_IMAGE: mongo:8.0    # current MongoDB LTS line; matches docker-compose.yml
 
 jobs:
   test:
@@ -15,10 +24,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Use Node.js ${{ env.NODE_VERSION }} (LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
       - name: Install dependencies
@@ -27,113 +36,92 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Check Mini App syntax
+      - name: Check syntax of every module
         run: |
           node --check miniapp-entry.js
-          node --check miniapp/server.js
-          node --check miniapp/telegramAuth.js
-          node --check miniapp/state.js
-          node --check miniapp/skills.js
-          node --check miniapp/forms.js
-          node --check miniapp/updates.js
-          node --check miniapp/feedback.js
-          node --check miniapp/chest.js
-          node --check miniapp/gacha.js
-          node --check miniapp/equipment.js
-          node --check miniapp/builds.js
-          node --check miniapp/arena.js
-          node --check miniapp/boss.js
-          node --check miniapp/shop.js
-          node --check miniapp/sword.js
-          node --check miniapp/arcade.js
-          node --check miniapp/goldTransfer.js
-          node --check miniapp/point21.js
-          node --check miniapp/elements.js
-          node --check miniapp/bonus.js
-          node --check miniapp/titles.js
-          node --check miniapp/horoscope.js
-          node --check miniapp/clan.js
-          node --check miniapp/clanActivities.js
-          node --check functions/game/equipment/equipItem.js
-          node --check functions/game/equipment/unequipItem.js
-          node --check functions/game/builds/calculateRemainBuildTime.js
-          node --check functions/game/builds/checkAccumulateTimer.js
-          node --check functions/game/arena/ratingStore.js
-          node --check functions/game/arena/getPlayerRating.js
-          node --check functions/game/arena/setPlayerRating.js
-          node --check functions/game/arena/updateRank.js
-          node --check functions/game/arena/calculatePoints.js
-          node --check functions/game/arena/getPvpSign.js
-          node --check functions/game/arena/arenaInventory.js
-          node --check functions/game/arena/generateArenaBot.js
-          node --check functions/game/player/useHealPotion.js
-          node --check functions/game/player/userDealDamage.js
-          node --check functions/game/sword/swordCore.js
-          node --check functions/game/sword/swordResult.js
-          node --check functions/game/gold/transferGold.js
-          node --check functions/game/point21/pointMessage.js
-          node --check functions/game/elements/getRandomElement.js
-          node --check functions/game/elements/elementsMessage.js
-          node --check functions/game/general/findWinners.js
-          node --check functions/game/general/endGame.js
-          node --check functions/game/general/pass.js
-          node --check functions/game/general/bet.js
-          node --check functions/game/horoscope/horoscope.js
-          node --check functions/game/clans/getClan.js
-          node --check functions/game/clans/addClanXp.js
-          node --check functions/game/clans/summonClanBoss.js
-          node --check functions/game/clans/clanBossAttack.js
-          node --check functions/game/clans/giveClanShopPotion.js
-          node --check functions/game/clans/getBuildingBonus.js
-          node --check functions/shedullers/bossWin.js
-          node --check callbacks/game/arena/arena.js
-          node --check callbacks/game/player/showInventory.js
-          node --check callbacks/game/player/skillsCallback.js
-          node --check callbacks/game/player/userSkillsCallback.js
-          node --check callbacks/game/shop/shop.js
-          node --check callbacks/game/dice/pullDice.js
-          node --check callbacks/game/bowling/pullSkittle.js
-          node --check callbacks/game/darts/pullDart.js
-          node --check callbacks/game/football/pullBall.js
-          node --check callbacks/game/basketball/pullBall.js
-          node --check callbacks/game/slots/bets.js
-          node --check callbacks/game/slots/startGame.js
-          node --check callbacks/game/boss/sendGoldCallback.js
-          node --check callbacks/game/elements/takeElement.js
-          node --check callbacks/game/horoscope/horoscope.js
-          node --check callbacks/game/clan/clanCallback.js
-          node --check callbacks/whatsNewSettings.js
-          node --check onTexts/game/slots/slots.js
-          node --check onTexts/game/sendGold.js
-          node --check onTexts/game/elements/elements.js
-          node --check onTexts/game/titles/title.js
-          node --check onTexts/game/titles/titlesList.js
-          node --check onTexts/game/bonus/bonus.js
-          node --check onTexts/game/horoscopes/horoscope.js
-          node --check onTexts/game/clan/clan.js
-          node --check onTexts/whatsNew.js
-          node --check onTexts/feedback.js
-          node --check onTextsAdmin/sendNewUpdates.js
-          node --check webapp/app.js
-          node --check webapp/forms.js
-          node --check webapp/skills.js
-          node --check webapp/help.js
-          node --check webapp/updates.js
-          node --check webapp/feedback.js
-          node --check webapp/chest.js
-          node --check webapp/gacha.js
-          node --check webapp/equipment.js
-          node --check webapp/builds.js
-          node --check webapp/arena.js
-          node --check webapp/boss.js
-          node --check webapp/shop.js
-          node --check webapp/sword.js
-          node --check webapp/arcade.js
-          node --check webapp/gold-transfer.js
-          node --check webapp/point21.js
-          node --check webapp/elements.js
-          node --check webapp/bonus.js
-          node --check webapp/titles.js
-          node --check webapp/horoscope.js
-          node --check webapp/clan.js
-          node --check webapp/renderer.js
+          node --check index.js
+          find miniapp webapp -name '*.js' -not -path '*/vendor/*' -print0 | xargs -0 -n1 node --check
+
+  image:
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Image name and tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: genshin-tg-bot:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke test - entrypoint refuses to start without a token
+        run: |
+          if docker run --rm genshin-tg-bot:ci true; then
+            echo "expected a missing BOT_TOKEN to stop the container"; exit 1
+          fi
+
+      - name: Smoke test - Mini App server boots against MongoDB
+        run: |
+          docker network create ci
+          docker run -d --name mongo --network ci "$MONGO_IMAGE"
+          docker run -d --name web --network ci -p 8080:8080 \
+            -e BOT_TOKEN=1:ci -e ADMIN_ID=1 -e MONGO_URL=mongodb://mongo:27017/ci \
+            genshin-tg-bot:ci \
+            node -e "import('./miniapp/chatSettingsServer.js').then(m => m.default())"
+          for i in $(seq 1 30); do curl -fs http://127.0.0.1:8080/healthz && break; sleep 1; done
+          curl -fs -o /dev/null http://127.0.0.1:8080/
+          curl -fs -o /dev/null http://127.0.0.1:8080/models/manifest.json
+          docker logs web | tail -20
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          # One plain manifest per version (no attestation sub-manifests), so
+          # the retention step below can delete old versions without breaking
+          # the ones it keeps.
+          provenance: false
+          sbom: false
+
+      - name: Package name
+        id: package
+        # GHCR stores container packages under a lowercase name.
+        run: echo "name=$(echo "${GITHUB_REPOSITORY#*/}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Delete old image versions from GHCR
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ steps.package.outputs.name }}
+          package-type: container
+          # The newest builds stay available for rollback; latest is always one of them.
+          min-versions-to-keep: 10
