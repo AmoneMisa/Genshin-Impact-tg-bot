@@ -30,6 +30,7 @@ export const BLENDER_MODELS = Object.freeze({
   'staff-sun.glb': 'celestial_staff.py',
   'mantle.glb': 'astral_coat.py',
   'bracers.glb': 'astral_coat.py',
+  'dagger.glb': 'moonglass_dagger.py',
 });
 
 export function findBlender(env = process.env) {
