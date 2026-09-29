@@ -6,7 +6,9 @@ import getBattleResult from '../functions/game/arena/getBattleResult.js';
 import calculatePoints from '../functions/game/arena/calculatePoints.js';
 import calcGearScore from '../functions/game/player/calcGearScore.js';
 import updateRank from '../functions/game/arena/updateRank.js';
-import arenaWeeklyPrizes from '../template/arenaWeeklyPrizes.js';
+import { arenaLadder } from './arenaLadder.js';
+
+export { arenaLadder };
 import {
   adjustArenaRating,
   getArenaRatingDoc,
@@ -154,19 +156,6 @@ async function buildDefenderList(session, chatId, userId, mode, attackerRating) 
   }
 
   return defenders;
-}
-
-/**
- * Season ladder for the arena screen: every rank from lowest to highest with its
- * weekly arena-token reward, the player's current one marked.
- */
-export function arenaLadder(rank) {
-  const index = arenaWeeklyPrizes.findIndex(item => item.rank === rank);
-  return {
-    ranks: arenaWeeklyPrizes.map((item, i) => ({ rank: item.rank, reward: number(item.reward), current: i === index })),
-    weeklyReward: index >= 0 ? number(arenaWeeklyPrizes[index].reward) : 0,
-    nextRank: index >= 0 && index < arenaWeeklyPrizes.length - 1 ? arenaWeeklyPrizes[index + 1].rank : null,
-  };
 }
 
 function memberName(member) {

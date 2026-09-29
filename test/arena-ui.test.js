@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { pickOpponent, rankEmblem, rankTier } from '../webapp/arena.js';
-import { arenaLadder } from '../miniapp/arena.js';
+import { arenaLadder } from '../miniapp/arenaLadder.js';
 
 test('rank names map to a metal tier and division pips', () => {
   assert.deepEqual(rankTier('Серебро III'), { tier: 'silver', division: 3 });

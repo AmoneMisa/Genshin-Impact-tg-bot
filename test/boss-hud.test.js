@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { bar, damageMeter, hotbar, partyStrip, playerFrame, rewardsPanel, statusIcons, targetFrame } from '../webapp/boss-hud.js';
-import { bossStatusesDto, playerEffectsDto } from '../miniapp/boss.js';
+import { bossStatusesDto, playerEffectsDto } from '../miniapp/bossEffects.js';
 
 const boss = { name: 'kivaha', nameCall: 'Киваху', level: 12, hp: 1000, currentHp: 250, aliveTime: Date.now() + 60000, remainMs: 60000, statuses: [{ id: 'reflect', label: 'Зеркало' }] };
 
