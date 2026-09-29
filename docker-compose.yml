@@ -1,19 +1,25 @@
 # Bot + Mini App server with a local MongoDB.
 #
+# The image is built by GitHub Actions on every push to master and published
+# to GHCR; the server only pulls it:
+#
 #   cp .env.example .env        # fill in BOT_TOKEN, ADMIN_ID, MINI_APP_URL, ...
-#   docker compose up -d --build
+#   docker compose pull
+#   docker compose up -d
 #   docker compose logs -f bot
+#
+# Update to the newest build:  docker compose pull bot && docker compose up -d bot
+# Build locally instead:       docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 #
 # Optional Cloudflare tunnel for the Mini App's public HTTPS URL:
 #   docker compose --profile tunnel up -d      (needs TUNNEL_TOKEN in .env)
 #
 # Using an external MongoDB (e.g. Atlas)? Set DOCKER_MONGO_URL in .env and
-# start only the bot:  docker compose up -d --build --no-deps bot
+# start only the bot:  docker compose up -d --no-deps bot
 
 services:
   bot:
-    build: .
-    image: genshin-tg-bot:latest
+    image: ${BOT_IMAGE:-ghcr.io/amonemisa/genshin-impact-tg-bot:latest}
     restart: unless-stopped
     env_file: .env
     environment:
@@ -36,7 +42,8 @@ services:
     stop_grace_period: 20s
 
   mongo:
-    image: mongo:7
+    # MongoDB 8.0: the current long-term support release line.
+    image: mongo:8.0
     restart: unless-stopped
     volumes:
       - mongo-data:/data/db

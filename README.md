@@ -112,7 +112,7 @@ Baros
 
 ## Запуск в Docker
 
-В контейнере работают бот и сервер Mini App (`node miniapp-entry.js`), рядом — MongoDB.
+В контейнере работают бот и сервер Mini App (`node miniapp-entry.js`, Node.js 24 LTS), рядом — MongoDB 8.0 (LTS).
 Токен в образ не попадает: `config.js` и `.env` исключены через `.dockerignore`,
 а `docker/entrypoint.sh` создаёт `config.js` из переменных окружения при старте.
 
@@ -131,11 +131,31 @@ cp .env.example .env
 > Внутри контейнера `localhost` — это сам контейнер. Для сервисов на хосте
 > (например, FreeLLMAPI) используй `http://host.docker.internal:3001/v1`.
 
-**2. Запуск:**
+**2. Запуск.** Образ собирается на GitHub Actions при каждом пуше в `master`
+(сначала тесты, затем сборка и проверка образа) и публикуется в GHCR —
+на сервере ничего собирать не нужно:
 
 ```bash
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 docker compose logs -f bot
+```
+
+Обновление до свежей сборки:
+
+```bash
+docker compose pull bot && docker compose up -d bot
+```
+
+> Пакет в GHCR по умолчанию приватный. Либо сделай его публичным
+> (GitHub → Packages → genshin-impact-tg-bot → Package settings → Change visibility),
+> либо один раз войди на сервере токеном с правом `read:packages`:
+> `docker login ghcr.io -u <github-логин>`.
+
+Собрать образ локально из текущего кода:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 ```
 
 **Cloudflare Tunnel** для публичного адреса Mini App (токен туннеля — в `TUNNEL_TOKEN`,
@@ -148,7 +168,7 @@ docker compose --profile tunnel up -d
 **Внешняя MongoDB** (например, Atlas) — задай `DOCKER_MONGO_URL` и запусти только бота:
 
 ```bash
-docker compose up -d --build --no-deps bot
+docker compose up -d --no-deps bot
 ```
 
 **Данные.** Доверенные чаты, кэш id фотографий и лог ошибок хранятся в томе `bot-state`,
