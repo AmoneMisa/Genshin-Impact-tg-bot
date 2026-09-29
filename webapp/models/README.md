@@ -93,3 +93,13 @@ crystals and emissive cores. Rebuild with:
 ```bash
 npm run models:blender -- staff.glb staff-sun.glb
 ```
+
+`dagger.glb` is the Moonglass dagger (`scripts/blender/moonglass_dagger.py`): a
+curved, faceted ice-crystal blade with a crescent window and glowing inlay, a
+silver crescent-moon guard with a sapphire, a navy leather grip and a star
+pommel. Weapons keep fixed colours (no ColorID/palette data; the script asserts
+it). The editable pre-bake scene is saved to `art-source/moonglass_dagger.blend`.
+
+```bash
+npm run models:blender -- dagger.glb
+```

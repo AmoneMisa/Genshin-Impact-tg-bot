@@ -111,7 +111,9 @@ test('textured sample weapons embed PBR texture maps and glowing parts', async (
   assert.ok(json.materials.some(m => m.emissiveFactor?.some(v => v > 0)), 'sun core glows');
   const dagger = fs.readFileSync(path.join(root, 'webapp/models/dagger.glb'));
   const daggerJson = JSON.parse(dagger.toString('utf8', 20, 20 + dagger.readUInt32LE(12)));
-  assert.ok(daggerJson.materials.some(m => m.emissiveTexture), 'carved runes use an emissive map');
+  // Blender Moonglass dagger: the glowing inlay and moonstone carry emissive factors.
+  assert.ok(daggerJson.materials.some(m => m.name === 'MAT_MoonglassDagger_Weapon_Glow' && m.emissiveFactor?.some(v => v > 0)), 'blade inlay glows');
+  assert.ok(daggerJson.materials.find(m => m.name === 'MAT_MoonglassDagger_Weapon_Crystal')?.pbrMetallicRoughness?.baseColorTexture, 'crystal gradient is a baked texture');
 });
 
 test('the PNG encoder produces a valid, decodable image', async () => {
