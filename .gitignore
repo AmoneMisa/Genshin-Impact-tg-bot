@@ -9,3 +9,9 @@ config.js
 
 #on hold
 /template/shopTemplate.js
+# Python bytecode (Blender build scripts)
+__pycache__/
+*.pyc
+
+# Blender automatic save backups
+*.blend1

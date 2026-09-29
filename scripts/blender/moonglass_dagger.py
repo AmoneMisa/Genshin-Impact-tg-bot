@@ -269,6 +269,7 @@ zs = [(o.matrix_world @ v.co).z for o in meshes for v in o.data.vertices]
 print(f"ASSET {ASSET}: {[o.name for o in meshes]}, {tris} tris, length {max(zs) - min(zs):.3f} m")
 
 os.makedirs(os.path.dirname(BLEND_PATH), exist_ok=True)
+bpy.context.preferences.filepaths.save_version = 0   # no .blend1 backup next to the source
 bpy.ops.wm.save_as_mainfile(filepath=BLEND_PATH, compress=True)
 print(f"SAVED {BLEND_PATH}")
 
