@@ -141,11 +141,27 @@ docker compose up -d
 docker compose logs -f bot
 ```
 
-Обновление до свежей сборки:
+Обновление до свежей сборки с очисткой старых образов:
 
 ```bash
-docker compose pull bot && docker compose up -d bot
+./docker/update.sh
 ```
+
+Скрипт скачивает новый образ, пересоздаёт изменившиеся контейнеры и удаляет мусор:
+старые версии образов бота и Mongo (у которых тег переехал на новую версию) и
+неиспользуемые анонимные тома. **База данных (`mongo-data`) и данные бота (`bot-state`)
+никогда не удаляются**: это именованные тома с меткой `com.genshin-bot.keep=true`,
+которую очистка пропускает, а если Mongo не запущена — очистка не выполняется вовсе.
+Чистка томов включается только на Docker 23+, где `volume prune` не трогает именованные тома.
+
+Автообновление каждую ночь (cron на сервере):
+
+```bash
+0 5 * * * /opt/bot/docker/update.sh >> /var/log/bot-update.log 2>&1
+```
+
+В GHCR хранятся 10 последних сборок (для отката: `BOT_IMAGE=ghcr.io/amonemisa/genshin-impact-tg-bot:sha-<коммит>`),
+более старые версии CI удаляет сам.
 
 > Пакет в GHCR по умолчанию приватный. Либо сделай его публичным
 > (GitHub → Packages → genshin-impact-tg-bot → Package settings → Change visibility),

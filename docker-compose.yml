@@ -8,7 +8,7 @@
 #   docker compose up -d
 #   docker compose logs -f bot
 #
-# Update to the newest build:  docker compose pull bot && docker compose up -d bot
+# Update to the newest build and clean up old images:  ./docker/update.sh
 # Build locally instead:       docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 #
 # Optional Cloudflare tunnel for the Mini App's public HTTPS URL:
@@ -65,6 +65,12 @@ services:
     depends_on:
       - bot
 
+# Both volumes carry the keep label: docker/update.sh prunes old images and
+# anonymous volumes only, and always skips volumes labelled keep=true.
 volumes:
   bot-state:
+    labels:
+      com.genshin-bot.keep: "true"
   mongo-data:
+    labels:
+      com.genshin-bot.keep: "true"

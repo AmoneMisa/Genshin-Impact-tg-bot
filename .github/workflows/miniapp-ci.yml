@@ -107,3 +107,21 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
+          # One plain manifest per version (no attestation sub-manifests), so
+          # the retention step below can delete old versions without breaking
+          # the ones it keeps.
+          provenance: false
+          sbom: false
+
+      - name: Package name
+        id: package
+        # GHCR stores container packages under a lowercase name.
+        run: echo "name=$(echo "${GITHUB_REPOSITORY#*/}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Delete old image versions from GHCR
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ steps.package.outputs.name }}
+          package-type: container
+          # The newest builds stay available for rollback; latest is always one of them.
+          min-versions-to-keep: 10
