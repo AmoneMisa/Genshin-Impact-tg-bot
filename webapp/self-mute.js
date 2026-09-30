@@ -30,7 +30,7 @@ function renderContent(container, state) {
       <div class="utility-card self-mute-message">
         <span class="self-mute-icon">🛡️</span>
         <h3>Админа ограничить нельзя</h3>
-        <p>Telegram не позволяет боту применить restrictChatMember к создателю или администратору группы.</p>
+        <p>Telegram не даёт боту ограничивать создателя и администраторов чата.</p>
       </div>`;
     return;
   }
@@ -62,9 +62,10 @@ export async function openSelfMute({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass self-mute-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">GROUP · TELEGRAM</div><h2>Само-мут</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="ds-head">
+        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Само-мут</h2>
+        <span class="ds-round" aria-hidden="true">🤫</span>
       </header>
       <div data-self-mute-content class="self-mute-content">
         <div class="self-mute-loading">Проверяем статус…</div>

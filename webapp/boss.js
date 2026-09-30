@@ -53,9 +53,10 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass boss-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">РЕЙД · SHARED CHAT BOSS</div><h2>Босс</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="ds-head">
+        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Босс</h2>
+        <span class="ds-round" aria-hidden="true">⚔</span>
       </header>
       <div data-boss-target></div>
       <div class="boss-stage" data-boss-stage hidden></div>
