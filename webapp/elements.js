@@ -1,3 +1,6 @@
+// Elements as a shared table: registration (join, then bets) with seats and a
+// countdown ring, play with every opponent as a compact seat tile and your
+// own seat pinned at the bottom, results as seats with payouts.
 const REASONS = {
   already_started: 'Игра уже идёт.',
   not_join_phase: 'Окно входа уже закрыто.',
@@ -9,25 +12,26 @@ const REASONS = {
   not_enough_gold: 'Недостаточно золота для такой ставки.',
   already_drew: 'В этом раунде ты уже получил стихию.',
   finished: 'Игра уже закончена.',
+  no_game: 'Стол уже пуст.',
+  not_stuck: 'Стол работает — сбросить можно, только если он завис.',
 };
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+/** Seat status for elements: drew this round or still thinking. */
+export function seatStatusElements(player, phase) {
+  if (phase === 'join') return { text: 'за столом', tone: 'ok' };
+  if (phase === 'betting') return player.bet > 0 ? { text: 'ставка сделана', tone: 'ok' } : { text: 'без ставки', tone: 'wait' };
+  if (player.isBot) return { text: 'дилер', tone: 'wait' };
+  return player.drewThisRound ? { text: 'ход сделан', tone: 'ok' } : { text: 'выбирает', tone: 'wait' };
 }
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
+function chips(elements = []) {
+  return elements.length ? elements.map(element => elementChip(element)).join('') : '<em class="seat-none">—</em>';
 }
 
-function formatTime(ms) {
-  const seconds = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));
-  return `0:${String(seconds).padStart(2, '0')}`;
-}
+import {
+  betControls, bindBetControls, emptySeat, escapeHtml, formatNumber,
+  resetBanner, seatGrid, seatTile, tickTimers, timerRing,
+} from './table-seats.js';
 
 function elementIcon(element) {
   return String(element || '').split(' ')[0] || '✦';
@@ -52,6 +56,8 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
   let state = await api('/api/elements');
   let pending = false;
   let pollTimer = null;
+  let tickTimer = null;
+  let resetArmed = false;
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay elements-overlay';
@@ -95,114 +101,105 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
   const feedback = overlay.querySelector('[data-elements-feedback]');
 
   const close = () => {
-    if (pollTimer) window.clearInterval(pollTimer);
+    window.clearInterval(pollTimer);
+    window.clearInterval(tickTimer);
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
-  function playerList() {
+  function humans() {
+    return state.players.filter(player => !player.isBot);
+  }
+
+  function registration(label) {
+    const seated = humans();
+    const free = Math.max(0, (state.maxPlayers || 6) - seated.length);
+    const joining = state.phase === 'join';
     return `
-      <div class="elements-players">
-        ${state.players.map(player => `
-          <article class="elements-player ${player.isBot ? 'bot' : ''} ${player.drewThisRound ? 'done' : ''}">
-            <header><div><strong>${escapeHtml(player.name)}</strong><small>${player.isBot ? 'BOT' : `ставка ${formatNumber(player.bet)}`}</small></div><b>${player.points} pt</b></header>
-            <div class="elements-hand">
-              ${player.elements.length ? player.elements.map(element => elementChip(element)).join('') : '<em>—</em>'}
-            </div>
-          </article>`).join('')}
-      </div>`;
+      ${timerRing(state.remainingMs, state.phaseMs, `${label} · ${seated.length} / ${state.maxPlayers} за столом`)}
+      ${seatGrid([
+        ...seated.map(player => seatTile(player, { you: player.id === state.me.id, status: seatStatusElements(player, state.phase) })),
+        ...(joining ? Array.from({ length: free }, emptySeat) : []),
+      ], { className: 'registration' })}
+      ${state.me.joined
+        ? joining
+          ? `<p class="table-note">Ставки откроются, когда закроется запись.</p>
+             <button type="button" class="table-btn ghost" data-elements-action="leave">Встать из-за стола</button>`
+          : betControls(state.gold, state.me.bet)
+        : joining && free > 0
+          ? '<button type="button" class="table-btn gold" data-elements-action="join">Сесть за стол</button>'
+          : '<div class="elements-watch">Запись закрыта — ты наблюдаешь за партией.</div>'}`;
   }
 
   function idleView() {
     return `
       <section class="elements-hero">
         <div class="elements-orbit">${ELEMENT_RING.map((element, i) => `<span class="tone-${elementTone(element)}" style="--i:${i}">${elementIcon(element)}</span>`).join('')}<strong>✦</strong></div>
-        <div><small>МУЛЬТИПЛЕЕР</small><strong>Новый стол стихий</strong><p>15 секунд на вход, затем 25 секунд на ставки. После старта у каждого будет три хода.</p></div>
+        <div><small>Общий стол</small><strong>Стол свободен</strong><p>15 секунд на запись, затем 25 секунд на ставки и три раунда. До ${state.maxPlayers || 6} игроков.</p></div>
       </section>
-      <div class="elements-balance"><span>Твой баланс</span><strong>🪙 ${formatNumber(state.gold)}</strong></div>
-      <button class="elements-primary" type="button" data-elements-action="start"><span>✦</span><div><strong>Создать игру</strong><small>Ты сразу войдёшь за стол</small></div></button>`;
-  }
-
-  function joinView() {
-    return `
-      <section class="elements-phase join"><div><small>ВХОД ЗАКРОЕТСЯ ЧЕРЕЗ</small><strong>${formatTime(state.remainingMs)}</strong></div><span>${state.players.filter(player => !player.isBot).length} / ${state.maxPlayers}</span></section>
-      ${playerList()}
-      ${state.me.joined
-        ? '<button class="elements-secondary" type="button" data-elements-action="leave">Покинуть стол</button>'
-        : '<button class="elements-primary" type="button" data-elements-action="join"><span>＋</span><div><strong>Присоединиться</strong><small>Успей до закрытия входа</small></div></button>'}`;
-  }
-
-  function bettingView() {
-    const quick = [100, 1000, 5000, 10000].filter(value => value <= state.gold);
-    return `
-      <section class="elements-phase betting"><div><small>СТАВКИ ЗАКРОЮТСЯ ЧЕРЕЗ</small><strong>${formatTime(state.remainingMs)}</strong></div><span>BET</span></section>
-      ${playerList()}
-      ${state.me.joined ? `
-        <section class="elements-bet-box">
-          <div class="elements-balance"><span>Твой баланс</span><strong>🪙 ${formatNumber(state.gold)}</strong></div>
-          <label><span>Ставка</span><input type="number" min="0" step="1" max="${Math.floor(state.gold)}" value="${state.me.bet}" data-elements-bet /></label>
-          <div class="elements-bet-chips">${quick.map(value => `<button type="button" data-elements-quick="${value}">${formatNumber(value)}</button>`).join('')}${state.gold ? `<button type="button" data-elements-quick="${Math.floor(state.gold)}">Всё</button>` : ''}</div>
-          <button class="elements-secondary accent" type="button" data-elements-action="bet">Сохранить ставку</button>
-        </section>` : '<div class="elements-watch">Ты не успел войти и сейчас наблюдаешь за партией.</div>'}`;
+      <div class="table-wallet">Баланс 🪙 ${formatNumber(state.gold)}</div>
+      <button class="table-btn gold" type="button" data-elements-action="start">Открыть стол</button>`;
   }
 
   function playingView() {
     const canDraw = state.me.joined && !state.me.drewThisRound;
+    const others = state.players.filter(player => player.id !== state.me.id);
     return `
-      <section class="elements-phase live"><div><small>РАУНД ${state.round} / ${state.maxRounds}</small><strong>${formatTime(state.remainingMs)}</strong></div><span>LIVE</span></section>
-      ${playerList()}
+      ${timerRing(state.remainingMs, state.phaseMs, `Раунд ${state.round} / ${state.maxRounds}`)}
+      ${seatGrid(others.map(player => seatTile(player, {
+        score: player.points,
+        status: seatStatusElements(player, 'playing'),
+        hand: chips(player.elements),
+      })))}
       ${state.me.joined ? `
-        <section class="elements-me">
-          <div><span>Твои очки</span><strong>${state.me.points}</strong></div>
+        <section class="table-me">
+          <header><strong>${canDraw ? 'Твой ход' : 'Ход сделан'}</strong><b class="seat-score">${state.me.points}</b></header>
           <div class="elements-me-hand">${state.me.elements.map(element => `<span class="tone-${elementTone(element)}">${elementChip(element, 'large')}<small>${escapeHtml(String(element).replace(/^\S+\s*/, ''))}</small></span>`).join('')}</div>
-        </section>
-        <button class="elements-primary draw" type="button" data-elements-action="draw" ${canDraw ? '' : 'disabled'}><span>✦</span><div><strong>${canDraw ? 'Получить стихию' : 'Ход сделан'}</strong><small>${canDraw ? 'Результат определит сервер' : 'Ждём остальных игроков'}</small></div></button>` : '<div class="elements-watch">Ты наблюдаешь за партией.</div>'}`;
+          <button class="table-btn violet" type="button" data-elements-action="draw" ${canDraw ? '' : 'disabled'}>${canDraw ? 'Получить стихию' : 'Ждём остальных игроков'}</button>
+          <small class="table-note">Ставка ${formatNumber(state.me.bet)} 🪙</small>
+        </section>` : '<div class="elements-watch">Ты наблюдаешь за партией.</div>'}`;
   }
 
   function resultView() {
-    const players = state.result?.players || [];
+    const players = [...(state.result?.players || [])].sort((a, b) => b.points - a.points);
+    const look = new Map(state.players.map(player => [player.id, player]));
+    const mine = players.find(player => player.id === state.me.id);
     return `
-      <section class="elements-phase result"><div><small>ИГРА ЗАВЕРШЕНА</small><strong>Результаты</strong></div><span>✦</span></section>
-      <div class="elements-results">
-        ${players.sort((a, b) => b.points - a.points).map(player => `
-          <article class="elements-result ${player.won ? 'win' : ''}">
-            <div><strong>${escapeHtml(player.name)}</strong><span class="elements-hand">${player.elements.map(element => elementChip(element)).join('')}</span></div>
-            <div><b>${player.points}</b>${player.isBot ? '<small>BOT</small>' : `<small>${player.delta >= 0 ? '+' : ''}${formatNumber(player.delta)} 🪙</small>`}</div>
-          </article>`).join('')}
-      </div>
-      <button class="elements-primary" type="button" data-elements-action="start"><span>↻</span><div><strong>Новая игра</strong><small>Открыть новый стол</small></div></button>`;
-  }
-
-  function bind() {
-    content.querySelectorAll('[data-elements-quick]').forEach(button => {
-      button.addEventListener('click', () => {
-        const input = content.querySelector('[data-elements-bet]');
-        if (input) input.value = button.dataset.elementsQuick;
-        haptic('light');
-      });
-    });
-    content.querySelectorAll('[data-elements-action]').forEach(button => {
-      button.addEventListener('click', () => action(button.dataset.elementsAction));
-    });
+      ${mine ? `<div class="point-verdict ${mine.won ? 'win' : 'lose'}"><strong>${mine.won ? 'Победа!' : 'Поражение'}</strong><small>${mine.delta >= 0 ? '+' : ''}${formatNumber(mine.delta)} 🪙</small></div>` : ''}
+      ${seatGrid(players.map(player => seatTile({ ...look.get(player.id), ...player }, {
+        you: player.id === state.me.id,
+        score: player.points,
+        status: player.isBot ? { text: 'дилер', tone: 'wait' } : { text: player.won ? 'победа' : 'проигрыш', tone: player.won ? 'win' : 'lose' },
+        delta: player.isBot ? null : player.delta,
+        hand: chips(player.elements),
+      })), { className: 'results' })}
+      <button class="table-btn gold" type="button" data-elements-action="start">Новая игра</button>`;
   }
 
   async function action(name) {
     if (pending) return;
+    if (name === 'reset' && !resetArmed) {
+      resetArmed = true;
+      haptic('medium');
+      renderAll();
+      return;
+    }
     const body = { action: name };
-    if (name === 'bet') body.bet = content.querySelector('[data-elements-bet]')?.value ?? '0';
+    if (name === 'bet') body.bet = content.querySelector('[data-table-bet]')?.value ?? '0';
 
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Синхронизируем игру…';
+    feedback.textContent = '';
     haptic(name === 'draw' ? 'heavy' : 'medium');
     try {
       const payload = await api('/api/elements/action', { method: 'POST', body: JSON.stringify(body) });
       if (name === 'draw' && payload.element) await playDraw(payload.element);
       state = payload.elements;
       if (payload.state) renderState(payload.state);
-      feedback.textContent = name === 'draw' && payload.element ? `Твоя стихия: ${payload.element}` : '';
+      feedback.textContent = name === 'draw' && payload.element ? `Твоя стихия: ${payload.element}`
+        : name === 'reset' ? 'Стол сброшен.' : name === 'bet' ? 'Ставка сохранена.' : '';
       statusElement.textContent = state.phase === 'finished' ? 'Стихии: партия завершена.' : 'Стихии: стол обновлён.';
       renderAll();
     } catch (error) {
@@ -211,6 +208,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
       haptic('light');
       renderAll();
     } finally {
+      resetArmed = false;
       pending = false;
       overlay.classList.remove('busy');
     }
@@ -220,7 +218,8 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
     if (pending || !overlay.isConnected) return;
     try {
       const next = await api('/api/elements');
-      if (JSON.stringify(next) !== JSON.stringify(state)) {
+      // The countdown ticks locally; only real table changes re-render.
+      if (JSON.stringify({ ...next, remainingMs: 0 }) !== JSON.stringify({ ...state, remainingMs: 0 })) {
         state = next;
         renderAll();
       }
@@ -228,16 +227,27 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
   }
 
   function renderAll() {
-    content.innerHTML = state.phase === 'join' ? joinView()
-      : state.phase === 'betting' ? bettingView()
+    const typing = content.querySelector('[data-table-bet]');
+    const draft = typing && document.activeElement === typing ? typing.value : null;
+    const view = state.phase === 'join' ? registration('Запись за стол')
+      : state.phase === 'betting' ? registration('Ставки')
         : state.phase === 'playing' ? playingView()
           : state.phase === 'finished' ? resultView()
             : idleView();
-    bind();
+    content.innerHTML = `${resetBanner(state, resetArmed)}${view}`;
+    if (draft !== null) {
+      const input = content.querySelector('[data-table-bet]');
+      if (input) { input.value = draft; input.focus(); }
+    }
+    bindBetControls(content, () => state.gold, haptic);
+    content.querySelectorAll('[data-elements-action], [data-table-action]').forEach(button => {
+      button.addEventListener('click', () => action(button.dataset.elementsAction || button.dataset.tableAction));
+    });
   }
 
   renderAll();
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   pollTimer = window.setInterval(refresh, 1500);
+  tickTimer = window.setInterval(() => tickTimers(content), 250);
 }
