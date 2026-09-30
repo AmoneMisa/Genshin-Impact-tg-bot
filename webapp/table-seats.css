@@ -59,12 +59,12 @@
 
 /* Bet stepper */
 .table-bet { display: grid; gap: 8px; padding: 10px; border-radius: 8px; border: 1px solid rgba(216, 179, 106, .25); background: rgba(8, 7, 12, .8); }
-.table-stepper { display: grid; grid-template-columns: 44px 1fr 44px; gap: 8px; }
-.table-stepper button, .table-chips button { min-height: 38px; padding: 0; border-radius: 6px; border: 1px solid var(--gold-dim); background: linear-gradient(180deg, #2a2233, #120f18); color: #f3dca6; font: 700 18px/1 var(--serif); }
-.table-stepper input { min-width: 0; min-height: 38px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .8); color: #fff; font: 700 18px/1 system-ui, sans-serif; text-align: center; }
-.table-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.table-chips button { font: 600 12px/1 system-ui, sans-serif; color: #eee4cf; }
-.table-chips button:disabled { opacity: .4; }
+.table-bet-label { font: 700 14px/1.2 var(--serif); color: #f3dca6; }
+.table-bet input { min-width: 0; min-height: 46px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .8); color: #fff; font: 700 20px/1 system-ui, sans-serif; text-align: center; }
+.table-bet input::placeholder { font: 400 13px/1 system-ui, sans-serif; color: rgba(238, 228, 207, .4); }
+.table-bet input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(216, 179, 106, .25); }
+.table-bet-quick { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.table-bet-quick .table-btn { min-height: 40px; font-size: 13px; }
 .table-wallet, .table-note { margin: 0; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .65); }
 
 /* Buttons */

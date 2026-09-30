@@ -7,8 +7,12 @@ import loadPlayer from '../../../functions/getters/loadPlayer.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import editMessageText from '../../../functions/tgBotFunctions/editMessageText.js';
 import { transferGoldInChat } from '../../../functions/game/gold/transferGold.js';
+import { goldLockMessage } from '../../../functions/game/general/goldLock.js';
 
-function transferErrorText(reason) {
+function transferErrorText(reason, result = {}) {
+    if (reason === 'in_table_game') {
+        return goldLockMessage(result.table);
+    }
     if (reason === 'invalid_amount') {
         return 'Нужно ввести целое положительное число без дополнительных символов.';
     }
@@ -47,7 +51,7 @@ export default [[/^sendGoldRecipient\.([\-0-9]+)\.([^.]+)$/, async function (ses
             const result = transferGoldInChat(freshChat, callback.from.id, recipientId, replyMsg.text);
 
             if (!result.ok) {
-                await sendMessageWithDelete(callback.message.chat.id, transferErrorText(result.reason), {
+                await sendMessageWithDelete(callback.message.chat.id, transferErrorText(result.reason, result), {
                     ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
                 }, 10 * 1000);
                 return;

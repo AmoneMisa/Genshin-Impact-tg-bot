@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import cardsDictionary from '../dictionaries/pointCards.js';
 import getPoints from '../functions/game/point21/getPoints.js';
+import { tableLockFor } from '../functions/game/general/goldLock.js';
 import { isStaleTable, seatLook } from './tableGames.js';
 
 const LOBBY_MS = 25_000;
@@ -168,7 +169,7 @@ function settleGame(chat, game, now, rng) {
       const member = memberById(chat, playerId);
       if (member?.game?.inventory) {
         const current = Number(member.game.inventory.gold) || 0;
-        member.game.inventory.gold = Math.round(current + delta);
+        member.game.inventory.gold = Math.max(0, Math.round(current + delta));
       }
     }
 
@@ -336,6 +337,7 @@ export function setPoint21Bet(chat, userId, rawBet, options = {}) {
   const gold = Math.max(0, Number(member?.game?.inventory?.gold) || 0);
   if (!Number.isSafeInteger(bet) || bet < 0) return response(chat, userId, false, 'invalid_bet', options);
   if (bet > gold) return response(chat, userId, false, 'not_enough_gold', options);
+  if (bet > 0 && tableLockFor(chat, userId, nowValue(options), 'pointsMiniApp')) return response(chat, userId, false, 'in_table_game', options);
 
   player.bet = bet;
   game.gameSessionLastUpdateAt = nowValue(options);

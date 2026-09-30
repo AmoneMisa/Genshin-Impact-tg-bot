@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { isChatAdmin, isStaleTable, seatLook, STALE_MS } from '../miniapp/tableGames.js';
 import { getPoint21State, resetPoint21, setPoint21Bet, startPoint21 } from '../miniapp/point21.js';
 import { resetElements, startElements } from '../miniapp/elements.js';
-import { emptySeat, resetBanner, seatTile, timerRing } from '../webapp/table-seats.js';
+import { betControls, emptySeat, resetBanner, seatTile, timerRing } from '../webapp/table-seats.js';
 
 function makeChat(gold = 10_000) {
   return {
@@ -88,4 +88,14 @@ test('timer ring and reset banner', () => {
   assert.equal(resetBanner({ canReset: false }), '');
   assert.match(resetBanner({ canReset: true, stuck: true }), /table-reset stuck[\s\S]*Сбросить стол/);
   assert.match(resetBanner({ canReset: true, stuck: false }, true), /админ[\s\S]*Точно сбросить/);
+});
+
+test('bet controls: free amount, all in and no bet', () => {
+  const html = betControls(12_450, 0);
+  assert.match(html, /Сколько ставишь\?/);
+  assert.match(html, /data-table-quick="all"[^>]*>Ва-банк · 12 450/);
+  assert.match(html, /data-table-quick="0"[^>]*>Без ставки/);
+  assert.match(html, /без ставки · баланс/);
+  assert.match(betControls(12_450, 700), /value="700"[\s\S]*Твоя ставка 🪙 700/);
+  assert.match(betControls(0, 0), /data-table-quick="all" disabled/);
 });

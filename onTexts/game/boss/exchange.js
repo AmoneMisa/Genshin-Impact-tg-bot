@@ -3,6 +3,7 @@ import getUserName from '../../../functions/getters/getUserName.js';
 import getEmoji from '../../../functions/getters/getEmoji.js';
 import deleteMessage from '../../../functions/tgBotFunctions/deleteMessage.js';
 import loadPlayer from '../../../functions/getters/loadPlayer.js';
+import { goldLockMessage, tableLockFor } from '../../../functions/game/general/goldLock.js';
 
 const CRYSTAL_PRICE = 1500;
 
@@ -15,6 +16,11 @@ export default [[/(?:^|\s)\/exchange ([0-9]+)\b/, async (msg, session, [, amount
     const { chat, member } = await loadPlayer(msg.chat.id, session.userId);
     if (!member) {
         return;
+    }
+
+    const table = tableLockFor(chat, session.userId);
+    if (table) {
+        return sendMessageWithDelete(msg.from.id, goldLockMessage(table), {}, 10 * 1000);
     }
 
     if (member.game.inventory.gold < totalCost) {

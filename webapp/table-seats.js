@@ -5,9 +5,6 @@
 
 import { menuArtFor } from './menu-art.js';
 
-export const BET_CHIPS = Object.freeze([100, 500, 1000]);
-export const BET_STEP = 100;
-
 export function escapeHtml(value) {
   return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }
@@ -48,7 +45,7 @@ export function seatTile(player, { hand = '', status = null, score = null, you =
         ${score === null ? '' : `<b class="seat-score">${escapeHtml(score)}</b>`}
       </header>
       ${hand ? `<div class="seat-hand">${hand}</div>` : ''}
-      ${status || delta !== null ? `<footer>${status ? `<span class="seat-status">${escapeHtml(status.text)}</span>` : ''}${delta !== null && !player.isBot ? `<em class="${delta >= 0 ? 'up' : 'down'}">${delta >= 0 ? '+' : ''}${formatNumber(delta)} 🪙</em>` : ''}</footer>` : ''}
+      ${status || (delta !== null && delta !== 0) ? `<footer>${status ? `<span class="seat-status">${escapeHtml(status.text)}</span>` : ''}${delta !== null && delta !== 0 && !player.isBot ? `<em class="${delta >= 0 ? 'up' : 'down'}">${delta >= 0 ? '+' : ''}${formatNumber(delta)} 🪙</em>` : ''}</footer>` : ''}
     </article>`;
 }
 
@@ -84,31 +81,39 @@ export function tickTimers(root = document) {
   }
 }
 
-export function betControls(gold, current, { saveLabel = 'Сохранить ставку' } = {}) {
+/**
+ * Free-form bet: type any amount, go all in, or play for fun without a bet.
+ * "Ва-банк" and "Без ставки" submit straight away.
+ */
+export function betControls(gold, current) {
+  const bet = Math.floor(Number(current) || 0);
+  const coins = Math.floor(Number(gold) || 0);
   return `
     <section class="table-bet">
-      <div class="table-stepper">
-        <button type="button" data-table-step="-1" aria-label="Меньше">−</button>
-        <input type="number" inputmode="numeric" min="0" step="1" max="${Math.floor(gold)}" value="${Math.floor(current) || 0}" data-table-bet aria-label="Ставка" />
-        <button type="button" data-table-step="1" aria-label="Больше">+</button>
+      <label class="table-bet-label" for="table-bet-input">Сколько ставишь?</label>
+      <input id="table-bet-input" type="number" inputmode="numeric" min="0" step="1" max="${coins}" value="${bet || ''}" placeholder="Пусто — играть без ставки" data-table-bet />
+      <div class="table-bet-quick">
+        <button type="button" class="table-btn red" data-table-quick="all" ${coins > 0 ? '' : 'disabled'}>Ва-банк · ${formatNumber(coins)}</button>
+        <button type="button" class="table-btn ghost" data-table-quick="0">Без ставки</button>
       </div>
-      <div class="table-chips">${BET_CHIPS.map(value => `<button type="button" data-table-quick="${value}" ${value > gold ? 'disabled' : ''}>${formatNumber(value)}</button>`).join('')}<button type="button" data-table-quick="${Math.floor(gold)}">Всё</button></div>
-      <small class="table-wallet">Баланс 🪙 ${formatNumber(gold)}</small>
-      <button type="button" class="table-btn gold" data-table-action="bet">${escapeHtml(saveLabel)}</button>
+      <button type="button" class="table-btn gold" data-table-action="bet">Поставить</button>
+      <small class="table-wallet">${bet > 0 ? `Твоя ставка 🪙 ${formatNumber(bet)}` : 'Сейчас ты играешь без ставки'} · баланс 🪙 ${formatNumber(coins)}</small>
     </section>`;
 }
 
-/** Wires the stepper and chips inside `root`; reads the live gold via `getGold`. */
-export function bindBetControls(root, getGold, haptic = () => {}) {
+/**
+ * Wires the quick buttons inside `root`: they fill the input (clamped to the
+ * live gold from `getGold`) and call `submit`.
+ */
+export function bindBetControls(root, getGold, haptic = () => {}, submit = () => {}) {
   const input = root.querySelector('[data-table-bet]');
   if (!input) return;
-  root.querySelectorAll('[data-table-step]').forEach(button => button.addEventListener('click', () => {
-    input.value = clampBet(Number(input.value) + Number(button.dataset.tableStep) * BET_STEP, getGold());
-    haptic('light');
-  }));
+  input.addEventListener('keydown', event => { if (event.key === 'Enter') submit(); });
   root.querySelectorAll('[data-table-quick]').forEach(button => button.addEventListener('click', () => {
-    input.value = clampBet(button.dataset.tableQuick, getGold());
-    haptic('light');
+    const value = button.dataset.tableQuick === 'all' ? getGold() : button.dataset.tableQuick;
+    input.value = String(clampBet(value, getGold()));
+    haptic(button.dataset.tableQuick === 'all' ? 'heavy' : 'light');
+    submit();
   }));
 }
 
