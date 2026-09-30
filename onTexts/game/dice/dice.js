@@ -55,6 +55,7 @@ export default [[/(?:^|\s)\/dice\b/, async (msg, session) => {
     }
 
     member.game.dice.isStart = true;
+    member.game.dice.startedAt = Date.now();
     await chat.save();
 
     await editMessageText(

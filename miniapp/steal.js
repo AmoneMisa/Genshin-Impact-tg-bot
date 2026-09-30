@@ -1,4 +1,5 @@
 import stealResources from '../functions/game/builds/stealResources.js';
+import { tableLockFor } from '../functions/game/general/goldLock.js';
 
 const DEFAULT_ATTEMPTS = 2;
 
@@ -44,7 +45,7 @@ export function prepareStealMember(member) {
   return false;
 }
 
-function targetDto(member, now) {
+function targetDto(member, now, chat = null) {
   const user = telegramUser(member);
   return {
     id: String(member.userId),
@@ -53,6 +54,8 @@ function targetDto(member, now) {
     level: Math.max(1, number(member?.game?.stats?.lvl, 1)),
     className: member?.game?.gameClass?.stats?.name || 'noClass',
     shieldRemainingMs: shieldRemaining(member, now),
+    // Seated at a 21 / elements table: their gold is on the table, not robbable.
+    inTable: tableLockFor(chat, member.userId, now),
   };
 }
 
@@ -68,7 +71,7 @@ export function getStealState(chat, attackerId, now = Date.now()) {
     .filter(member => String(member.userId) !== String(attackerId))
     .filter(member => !isUnavailable(member))
     .filter(member => member?.game?.inventory)
-    .map(member => targetDto(member, now))
+    .map(member => targetDto(member, now, chat))
     .sort((a, b) => a.name.localeCompare(b.name, 'ru'));
 
   return {
@@ -93,6 +96,9 @@ export function stealForMiniApp(chat, attackerId, targetId, options = {}) {
   if (!target || isUnavailable(target) || !target?.game?.inventory) return { ok: false, reason: 'target_not_found' };
   if (number(attacker.game.chanceToSteal, DEFAULT_ATTEMPTS) <= 0) return { ok: false, reason: 'no_attempts' };
   if (!hasCombatClass(attacker)) return { ok: false, reason: 'no_combat_class' };
+
+  const table = tableLockFor(chat, targetId, now);
+  if (table) return { ok: false, reason: 'target_in_table_game', table };
 
   const targetShield = shieldRemaining(target, now);
   if (targetShield > 0) {

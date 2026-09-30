@@ -35,6 +35,7 @@ export default [[/(?:^|\s)\/basketball\b/, async (msg, session) => {
 
     async function startGame() {
         session.game.basketball.isStart = true;
+        session.game.basketball.startedAt = Date.now();
         editMessageText(`@${await getUserName(session, "nickname")}, делай бросок. Ты выиграешь, если суммарное количество очков за 3 броска будет больше 12.`, {
             ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
             message_id: id,

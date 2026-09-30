@@ -162,7 +162,7 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
       if (payload.state) renderState(payload.state);
       feedback.textContent = payload.message || `Куплено: ${payload.item?.name || command}`;
       purchased = command;
-      statusElement.textContent = 'Магазин: покупка сохранена в Mongo.';
+      statusElement.textContent = 'Покупка совершена.';
       renderAll();
     } catch (error) {
       if (error.payload?.shop) state = error.payload.shop;

@@ -1,12 +1,35 @@
 import { isStaleTable } from '../../../miniapp/tableGames.js';
 
-// While a player sits at a gold table (21 or elements, chat or Mini App) their
-// gold is frozen: no transfers and no spending until the round is settled.
-// Otherwise a bet could be placed and the same gold spent before settlement.
+// While a player is in any game with a bet — the 21 / elements tables and the
+// arcade games (dice, bowling, darts, football, basketball, slots), in the chat
+// or the Mini App — their gold is frozen: no transfers, no spending and no
+// robbery until the round is settled. Otherwise a bet could be placed and the
+// same gold spent or stolen before settlement.
 
 export const GOLD_LOCK_REASON = 'in_table_game';
 // Chat games without a turn for this long no longer hold the lock.
 export const LEGACY_LOCK_MS = 10 * 60_000;
+// An arcade game abandoned for this long no longer holds the lock.
+export const ARCADE_LOCK_MS = 5 * 60_000;
+
+// Per-player arcade state keys (chat commands and the Mini App share them).
+const ARCADE_GAMES = [
+  ['dice', 'Кубики'], ['bowling', 'Боулинг'], ['darts', 'Дартс'],
+  ['football', 'Футбол'], ['basketball', 'Баскетбол'], ['slots', 'Слоты'], ['slotsMiniApp', 'Слоты'],
+];
+
+function arcadeLockFor(member, now, except = null) {
+  const games = member?.game || {};
+  for (const [key, title] of ARCADE_GAMES) {
+    if (key === except) continue;
+    const game = games[key];
+    if (!game || !(Number(game.bet) > 0)) continue;
+    const active = key === 'slots' ? ['bets', 'wait_start', 'spin1', 'spin2'].includes(game.state) : Boolean(game.isStart);
+    const startedAt = Number(game.startedAt) || 0;
+    if (active && startedAt && now - startedAt <= ARCADE_LOCK_MS) return title;
+  }
+  return null;
+}
 
 const LEGACY_TABLES = [['points', '21 очко'], ['elements', 'Стихии']];
 
@@ -20,8 +43,9 @@ function miniAppDeadline(key, game) {
 const MINIAPP_TABLES = [['pointsMiniApp', '21 очко'], ['elementsMiniApp', 'Стихии']];
 
 /**
- * Name of the table that currently holds this player's gold, or null.
- * `except` skips one table (chat.game key), so betting at your own table works.
+ * Name of the game (table or arcade) that currently holds this player's gold, or null.
+ * `except` skips one game (a chat.game table key or a member arcade key), so
+ * betting in your own game works.
  */
 export function tableLockFor(chat, userId, now = Date.now(), except = null) {
   const id = String(userId);
@@ -42,11 +66,17 @@ export function tableLockFor(chat, userId, now = Date.now(), except = null) {
     if (!isStaleTable(game, miniAppDeadline(key, game), now)) return title;
   }
 
-  return null;
+  const member = (chat?.members || []).find(item => String(item.userId) === id);
+  return arcadeLockFor(member, now, except);
+}
+
+/** Shown when someone tries to rob a player who is seated at a table. */
+export function robLockMessage(title) {
+  return `Игрок сейчас в игре «${title}» со ставкой — ограбить его нельзя, пока партия не закончится.`;
 }
 
 export function goldLockMessage(title) {
-  return `Ты сидишь за столом «${title}» — золото нельзя тратить и переводить, пока партия не закончится.`;
+  return `Ты сейчас в игре «${title}» со ставкой — золото нельзя тратить и переводить, пока партия не закончится.`;
 }
 
 /** The chat a member subdocument belongs to (Mongoose), when there is one. */
@@ -78,11 +108,9 @@ const GOLD_SPEND_CALLBACKS = [
   /^sendGoldRecipient\.([-0-9]+)\./,
   /^clan\.contribute_gold$/,
   /^clan\.upgrade_[a-z]+$/,
-  new RegExp(`^(?:basketball|bowling|darts|dice|football|slots)_${BET_SUFFIX}$`),
 ];
-// Bets at the chat 21 / elements tables: fine at that table, not while
-// seated at another one.
-const TABLE_BET_CALLBACK = new RegExp(`^(points|elements)_${BET_SUFFIX}$`);
+// Bets in a game are fine for that game itself, not while in another one.
+const OWN_GAME_BET_CALLBACK = new RegExp(`^(points|elements|basketball|bowling|darts|dice|football|slots)_${BET_SUFFIX}$`);
 
 /**
  * For a bot callback: `{ chatId, except }` when it spends gold (chatId null
@@ -90,8 +118,8 @@ const TABLE_BET_CALLBACK = new RegExp(`^(points|elements)_${BET_SUFFIX}$`);
  */
 export function goldSpendCallback(data) {
   if (typeof data !== 'string') return null;
-  const table = data.match(TABLE_BET_CALLBACK);
-  if (table) return { chatId: null, except: table[1] };
+  const own = data.match(OWN_GAME_BET_CALLBACK);
+  if (own) return { chatId: null, except: own[1] };
   for (const pattern of GOLD_SPEND_CALLBACKS) {
     const match = data.match(pattern);
     if (match) return { chatId: match[1] ?? null, except: null };

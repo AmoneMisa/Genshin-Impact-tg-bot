@@ -11,6 +11,7 @@ import getEmoji from '../../../functions/getters/getEmoji.js';
 import getTime from '../../../functions/getters/getTime.js';
 import getStringRemainTime from '../../../functions/getters/getStringRemainTime.js';
 import checkUserCall from '../../../functions/misc/checkUserCall.js';
+import { robLockMessage, tableLockFor } from '../../../functions/game/general/goldLock.js';
 
 function getRemainHpInPercent(maxHp, remainHp) {
     return (remainHp / maxHp * 100).toFixed(2);
@@ -27,6 +28,14 @@ export default [[/^stealResources\.([\-0-9]+)\.([0-9]+)$/, async function (sessi
 
     if (foundSession.game.chanceToSteal === 0) {
         return sendMessageWithDelete(callback.message.chat.id, `У тебя на данный момент нет попыток ограбления. Попытки восстанавливаются после 00.00 каждый день.`, {
+            ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
+        }, 15 * 1000);
+    }
+
+    // A player seated at a 21 / elements table can't be robbed until the round ends.
+    const table = targetSession && tableLockFor(chat, targetSession.userId);
+    if (table) {
+        return sendMessageWithDelete(callback.message.chat.id, robLockMessage(table), {
             ...(callback.message.message_thread_id ? {message_thread_id: callback.message.message_thread_id} : {})
         }, 15 * 1000);
     }

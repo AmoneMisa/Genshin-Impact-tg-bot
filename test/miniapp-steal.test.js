@@ -117,3 +117,18 @@ test('theft rejects self, exhausted attempts and attacker without combat class',
   attacker.game.gameClass.skills = [];
   assert.equal(stealForMiniApp(chat(attacker, target), 1, 2).reason, 'no_combat_class');
 });
+
+test('a player seated at a gold table cannot be robbed and is marked in the list', () => {
+  const attacker = member(1);
+  const seated = member(2);
+  const room = chat(attacker, seated);
+  const now = Date.now();
+  room.game = { pointsMiniApp: { phase: 'lobby', lobbyEndsAt: now + 25_000, gameSessionLastUpdateAt: now, players: { 2: { bet: 500 } } } };
+
+  assert.equal(getStealState(room, 1, now).targets[0].inTable, '21 очко');
+  const result = stealForMiniApp(room, 1, 2, { now, steal: () => { throw new Error('must not steal'); } });
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, 'target_in_table_game');
+  assert.equal(attacker.game.chanceToSteal, 2);
+  assert.equal(seated.game.inventory.gold, 1000);
+});

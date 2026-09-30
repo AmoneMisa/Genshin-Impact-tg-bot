@@ -57,6 +57,7 @@ export default [[/(?:^|\s)\/darts\b/, async (msg, session) => {
 
     // Автоматический старт игры
     member.game.darts.isStart = true;
+    member.game.darts.startedAt = Date.now();
     await chat.save();
 
     await editMessageText(
