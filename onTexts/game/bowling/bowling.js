@@ -55,6 +55,7 @@ export default [[/(?:^|\s)\/bowling\b/, async (msg, session) => {
     }
 
     member.game.bowling.isStart = true;
+    member.game.bowling.startedAt = Date.now();
     await chat.save();
 
     await editMessageText(

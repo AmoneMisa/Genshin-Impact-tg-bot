@@ -47,6 +47,7 @@ export default [[/(?:^|\s)\/football\b/, async (msg, session) => {
         }
 
         reload.member.game.football.isStart = true;
+        reload.member.game.football.startedAt = Date.now();
         await reload.chat.save();
 
         editMessageText(`@${await getUserName(session, "nickname")}, бей. Ты выиграешь, если суммарное количество очков за 3 удара будет больше 12.`, {

@@ -190,6 +190,8 @@ export function startArcadeGame(session, gameId, rawBet) {
     ...emptyGame(config),
     bet,
     isStart: true,
+    // Lets the gold lock expire if the game is abandoned.
+    startedAt: Date.now(),
   };
 
   return {

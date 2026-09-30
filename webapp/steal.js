@@ -7,7 +7,7 @@ const REASONS = {
   no_attempts: 'Сегодня попытки ограбления закончились. Они восстановятся после ежедневного сброса.',
   no_combat_class: 'Для ограбления нужен выбранный боевой класс.',
   target_shielded: 'У цели действует щит от ограблений.',
-  target_in_table_game: 'Игрок сейчас сидит за игровым столом — ограбить его нельзя, пока партия не закончится.',
+  target_in_table_game: 'Игрок сейчас в игре со ставкой — ограбить его нельзя, пока партия не закончится.',
 };
 
 function formatNumber(value) {
@@ -141,7 +141,7 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
         <div class="steal-target-copy">
           <strong>${escapeHtml(target.name)}</strong>
           <small>LVL ${target.level} · ${escapeHtml(target.className === 'noClass' ? 'без класса' : target.className)}</small>
-          ${seated ? `<em class="steal-seated">🃏 За столом «${escapeHtml(target.inTable)}» — ограбить нельзя</em>`
+          ${seated ? `<em class="steal-seated">🎲 В игре «${escapeHtml(target.inTable)}» — ограбить нельзя</em>`
             : shielded ? `<em>🛡️ ${formatDuration(target.shieldRemainingMs)}</em>` : '<em>Щита нет</em>'}
         </div>
         <button type="button" data-steal-target="${escapeHtml(target.id)}" ${disabled ? 'disabled' : ''}>${seated ? 'Играет' : shielded ? 'Защищён' : 'Атаковать'}</button>

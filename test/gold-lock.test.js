@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { goldLockForMember, goldSpendCallback, LEGACY_LOCK_MS, tableLockFor } from '../functions/game/general/goldLock.js';
+import { ARCADE_LOCK_MS, goldLockForMember, goldSpendCallback, LEGACY_LOCK_MS, robLockMessage, tableLockFor } from '../functions/game/general/goldLock.js';
 import { transferGoldInChat } from '../functions/game/gold/transferGold.js';
 import { joinPoint21, setPoint21Bet, startPoint21 } from '../miniapp/point21.js';
 import { startElements } from '../miniapp/elements.js';
@@ -59,11 +59,35 @@ test('gold-spending bot buttons are recognised with their game chat', () => {
   assert.deepEqual(goldSpendCallback('shop.-100123.potions.hp.buy'), { chatId: '-100123', except: null });
   assert.deepEqual(goldSpendCallback('builds.-100123.forge.craft_rare.0'), { chatId: '-100123', except: null });
   assert.deepEqual(goldSpendCallback('sendGoldRecipient.-100123.42'), { chatId: '-100123', except: null });
-  assert.deepEqual(goldSpendCallback('dice_allin_bet'), { chatId: null, except: null });
+  assert.deepEqual(goldSpendCallback('dice_allin_bet'), { chatId: null, except: 'dice' });
   assert.deepEqual(goldSpendCallback('clan.contribute_gold'), { chatId: null, except: null });
   assert.deepEqual(goldSpendCallback('points_x2_bet'), null);
   assert.deepEqual(goldSpendCallback('points_double_bet'), { chatId: null, except: 'points' });
   assert.equal(goldSpendCallback('clan.contribute_crystals'), null);
   assert.equal(goldSpendCallback('shop.-100123.potions'), null);
   assert.equal(goldSpendCallback('builds.-100123.forge.craft_rare'), null);
+});
+
+test('an arcade game with a bet holds the lock (chat and Mini App), expiring if abandoned', () => {
+  const chat = makeChat();
+  const now = 100_000;
+  chat.members[0].game.dice = { bet: 500, isStart: true, startedAt: now - 1_000 };
+  assert.equal(tableLockFor(chat, 1, now), 'Кубики');
+  assert.equal(tableLockFor(chat, 1, now, 'dice'), null);
+  assert.equal(tableLockFor(chat, 1, now - 1_000 + ARCADE_LOCK_MS + 1), null);
+  assert.match(robLockMessage('Кубики'), /«Кубики» со ставкой — ограбить его нельзя/);
+
+  chat.members[0].game.dice = { bet: 0, isStart: true, startedAt: now };
+  assert.equal(tableLockFor(chat, 1, now), null, 'no bet, no lock');
+  chat.members[0].game.dice = { bet: 500, isStart: true };
+  assert.equal(tableLockFor(chat, 1, now), null, 'old state without a start time never locks');
+
+  chat.members[1].game.slots = { state: 'bets', bet: 300, startedAt: now };
+  assert.equal(tableLockFor(chat, 2, now), 'Слоты');
+  chat.members[1].game.slots.state = 'finished';
+  assert.equal(tableLockFor(chat, 2, now), null);
+
+  chat.members[1].game.slotsMiniApp = { bet: 300, isStart: true, startedAt: Date.now() };
+  assert.equal(tableLockFor(chat, 2), 'Слоты');
+  assert.equal(transferGoldInChat(chat, 2, 1, '10').reason, 'in_table_game');
 });
