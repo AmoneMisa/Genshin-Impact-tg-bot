@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import elementsTemplate from '../template/elements.js';
 import updatePoints from '../functions/game/elements/updatePoints.js';
+import { tableLockFor } from '../functions/game/general/goldLock.js';
 import { isStaleTable, seatLook } from './tableGames.js';
 
 const JOIN_MS = 15_000;
@@ -301,6 +302,7 @@ export function setElementsBet(chat, userId, rawBet, options = {}) {
   const gold = Math.max(0, Number(memberById(chat, userId)?.game?.inventory?.gold) || 0);
   if (!Number.isSafeInteger(bet) || bet < 0) return response(chat, userId, false, 'invalid_bet', options);
   if (bet > gold) return response(chat, userId, false, 'not_enough_gold', options);
+  if (bet > 0 && tableLockFor(chat, userId, nowValue(options), 'elementsMiniApp')) return response(chat, userId, false, 'in_table_game', options);
 
   player.bet = bet;
   game.gameSessionLastUpdateAt = nowValue(options);

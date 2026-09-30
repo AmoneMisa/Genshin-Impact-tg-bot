@@ -22,6 +22,7 @@ const REASONS = {
   deck_empty: 'В колоде закончились карты.',
   no_game: 'Стол уже пуст.',
   not_stuck: 'Стол работает — сбросить можно, только если он завис.',
+  in_table_game: 'Ты уже сидишь за другим столом — ставка здесь недоступна, пока та партия не закончится.',
 };
 
 /** A playing card; `fresh` cards are dealt in with a flip from the deck. */

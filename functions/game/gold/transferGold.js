@@ -1,3 +1,5 @@
+import { tableLockFor } from '../general/goldLock.js';
+
 function finiteNumber(value, fallback = 0) {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : fallback;
@@ -45,6 +47,10 @@ export function transferGoldInChat(chat, senderId, recipientId, rawAmount) {
 
     if (!sender) {
         return { ok: false, reason: 'sender_not_found' };
+    }
+    const table = tableLockFor(chat, senderId);
+    if (table) {
+        return { ok: false, reason: 'in_table_game', table };
     }
     if (!recipient || isUnavailableRecipient(recipient)) {
         return { ok: false, reason: 'recipient_not_found' };

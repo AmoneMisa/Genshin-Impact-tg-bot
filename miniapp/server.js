@@ -74,6 +74,7 @@ import {
   prepareClanQuizAnswer,
 } from './clan.js';
 import { prepareClanActivity } from './clanActivities.js';
+import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
 import { performClanCompetitionAction } from './clanCompetition.js';
 import { performClanManagementAction } from './clanManagement.js';
 import { prepareClanProgressionAction } from './clanProgression.js';
@@ -225,8 +226,19 @@ function stateFor(context) {
 }
 
 function sendApiError(res, scope, error) {
+  if (error.reason === GOLD_LOCK_REASON) return sendJson(res, 409, { ok: false, reason: error.reason, error: error.message });
   console.error(`[miniapp] ${scope}:`, error);
   return sendJson(res, error.status || 401, { error: error.message || 'Unauthorized' });
+}
+
+/** Gold is frozen while the player sits at a 21 / elements table. */
+function assertGoldUnlocked(context) {
+  const message = goldLockForMember(context.session);
+  if (!message) return;
+  const error = new Error(message);
+  error.status = 409;
+  error.reason = GOLD_LOCK_REASON;
+  throw error;
 }
 
 function refreshContextSession(context, chat) {
@@ -433,6 +445,7 @@ async function playerSkillsEnchant(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    assertGoldUnlocked(context);
     const slot = Number(body.slot);
     if (!Number.isInteger(slot) || slot < 0) {
       const error = new Error('slot must be a non-negative integer');
@@ -506,6 +519,7 @@ async function exchangeBuy(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    assertGoldUnlocked(context);
     const result = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
       context.session = await getSession(context.chatId, context.userId);
       const purchase = buyCrystalsForMiniApp(context.session, body.amount);
@@ -536,6 +550,7 @@ async function goldTransferSend(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    assertGoldUnlocked(context);
     if (!['string', 'number'].includes(typeof body.recipientId) || String(body.recipientId).trim() === '') {
       const error = new Error('recipientId is required');
       error.status = 400;
@@ -878,6 +893,7 @@ async function clanAction(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    if (body.action === 'contribute' && body.resource === 'gold') assertGoldUnlocked(context);
     const allowed = new Set(['create', 'join', 'leave', 'disband', 'contribute']);
     if (!allowed.has(body.action)) {
       const error = new Error('Unknown clan action');
@@ -961,6 +977,7 @@ async function clanActivity(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    if (body.action === 'upgrade_member') assertGoldUnlocked(context);
     const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
     const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'settings_update']);
     const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus']);
@@ -1052,6 +1069,7 @@ async function gachaRoll(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    assertGoldUnlocked(context);
     if (typeof body.gachaType !== 'string' || !body.gachaType) {
       const error = new Error('gachaType is required');
       error.status = 400;
@@ -1103,6 +1121,7 @@ async function equipmentAction(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    if (body.action === 'upgrade') assertGoldUnlocked(context);
     if (typeof body.key !== 'string' || !body.key) {
       const error = new Error('equipment key is required');
       error.status = 400;
@@ -1129,6 +1148,7 @@ async function equipmentCraft(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    assertGoldUnlocked(context);
     if (typeof body.grade !== 'string' || !body.grade) {
       const error = new Error('grade is required');
       error.status = 400;
@@ -1165,6 +1185,7 @@ async function buildsAction(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    if (body.action === 'upgrade') assertGoldUnlocked(context);
     if (typeof body.buildName !== 'string' || !body.buildName) {
       const error = new Error('buildName is required');
       error.status = 400;
@@ -1299,6 +1320,7 @@ async function shopBuy(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    assertGoldUnlocked(context);
     if (typeof body.command !== 'string' || !body.command) {
       const error = new Error('command is required');
       error.status = 400;
@@ -1383,6 +1405,7 @@ async function arcadeStart(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
+    if (Number(body.bet) > 0) assertGoldUnlocked(context);
     validateArcadeGameId(body.gameId);
     const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
       context.session = await getSession(context.chatId, context.userId);

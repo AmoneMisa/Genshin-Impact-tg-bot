@@ -21,6 +21,8 @@ import evenWeek from './functions/shedullers/evenWeek.js';
 
 import buttonsDictionary from './dictionaries/buttons.js';
 import Command from "./db/models/CommandMap.js";
+import Chat from "./db/models/Chat.js";
+import { goldLockMessage, goldSpendCallback, tableLockFor } from "./functions/game/general/goldLock.js";
 import {connectMongo} from "./db/db.js";
 
 // Do not accept Telegram updates until Mongo is connected and migration/import
@@ -125,9 +127,26 @@ bot.on("left_chat_member", async (msg) => {
     await saveSession(session);
 });
 
+// Gold is frozen while the player sits at a 21 / elements table.
+async function goldLockAlert(callback, session) {
+    const spend = goldSpendCallback(callback.data);
+    if (!spend) return null;
+    const chat = spend.chatId && String(spend.chatId) !== String(callback.message.chat.id)
+        ? await Chat.findOne({ chatId: spend.chatId })
+        : session.ownerDocument();
+    const title = tableLockFor(chat, callback.from.id, Date.now(), spend.except);
+    return title ? goldLockMessage(title) : null;
+}
+
 bot.on("callback_query", async (callback) => {
     const session = await getSession(callback.message.chat.id, callback.from.id);
     const results = [];
+
+    const locked = await goldLockAlert(callback, session).catch(() => null);
+    if (locked) {
+        await bot.answerCallbackQuery(callback.id, { text: locked, show_alert: true }).catch(() => {});
+        return;
+    }
 
     for (let [key, value] of callbacks) {
         let result = null;
