@@ -2,6 +2,7 @@ import Chat from '../db/models/Chat.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import summonBoss from '../functions/game/boss/summonBoss.js';
 import { attackLogDto, bossAttacksDto } from './bossEffects.js';
+import { getInventoryState } from './inventory.js';
 import getBossLoot from '../functions/game/boss/getters/getBossLoot.js';
 import bossSendLoot from '../functions/game/boss/bossSendLoot.js';
 import userDealDamage from '../functions/game/player/userDealDamage.js';
@@ -173,6 +174,8 @@ export async function getBossState(session, chatId, now = Date.now()) {
     mpPercent: percent(currentMp, maxMp),
     respawnRemainMs,
     skills,
+    // Potions for the quick-use bar in the fight.
+    potions: getInventoryState(session).potions.filter(potion => potion.count > 0),
   };
 
   if (!boss) {
@@ -188,6 +191,8 @@ export async function getBossState(session, chatId, now = Date.now()) {
       nameCall: boss.nameCall || boss.name,
       description: boss.description || '',
       level: number(boss.stats?.lvl, 1),
+      // Bosses level up the more often the chat summons them.
+      summons: { current: number(boss.stats?.currentSummons), need: number(boss.stats?.needSummons) },
       hp: number(boss.hp),
       currentHp: number(boss.currentHp),
       hpPercent: percent(number(boss.currentHp), number(boss.hp)),

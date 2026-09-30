@@ -1,6 +1,6 @@
 import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
 import {
-  damageMeter, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel } from './boss-hud.js';
+  damageMeter, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
 
 const REASONS = {
   already_summoned: 'Босс уже призван.',
@@ -252,7 +252,37 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     }
   }
 
+  const POTION_REASONS = {
+    potion_empty: 'Это зелье закончилось.',
+    player_dead: 'Нельзя пить зелье, пока персонаж мёртв.',
+    hp_full: 'HP уже полное.',
+    mp_full: 'MP уже полное.',
+  };
+
+  async function drinkPotion(key) {
+    if (pending) return;
+    pending = true;
+    overlay.classList.add('busy');
+    try {
+      haptic('light');
+      const payload = await api('/api/inventory/use', { method: 'POST', body: JSON.stringify({ key }) });
+      if (payload.state) renderState(payload.state);
+      state = await api('/api/boss');
+      floatNumber(`+${formatNumber(payload.restored)} ${payload.resource === 'mp' ? 'MP' : 'HP'}`, 'heal');
+      feedback.textContent = `Выпито: ${payload.potion?.name || 'зелье'} (+${formatNumber(payload.restored)} ${payload.resource === 'mp' ? 'MP' : 'HP'}).`;
+    } catch (error) {
+      feedback.textContent = POTION_REASONS[error.payload?.reason] || error.message;
+    } finally {
+      pending = false;
+      overlay.classList.remove('busy');
+      renderAll();
+    }
+  }
+
   function bind() {
+    content.querySelectorAll('[data-boss-potion]').forEach(button => {
+      button.addEventListener('click', () => drinkPotion(button.dataset.bossPotion));
+    });
     targetHost.querySelector('[data-boss-rewards-toggle]')?.addEventListener('click', () => {
       const panel = targetHost.querySelector('[data-boss-rewards]');
       if (!panel) return;
@@ -294,6 +324,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       ${bossAttacksPanel(boss)}
       ${player.respawnRemainMs > 0 ? `<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>` : ''}
       ${hotbar(player.skills)}
+      ${potionBar(player.potions, { disabled: pending || player.respawnRemainMs > 0 })}
       ${partyStrip(boss.damageList)}
       <div class="mmo-section-title"><strong>Урон рейда</strong><small>${boss.damageList.length} участников · <button type="button" class="mmo-link" data-boss-refresh>обновить</button></small></div>
       ${damageMeter(boss.damageList)}`;

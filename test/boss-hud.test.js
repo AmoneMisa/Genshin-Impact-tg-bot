@@ -53,3 +53,18 @@ test('server maps player effects and the boss skill to status icons', () => {
   assert.deepEqual(bossStatusesDto({ skill: { effect: 'reflect', name: 'Зеркало', description: 'd' } }), [{ id: 'reflect', label: 'Зеркало', description: 'd' }]);
   assert.deepEqual(bossStatusesDto({ skill: {} }), []);
 });
+
+test('potion bar lists usable potions with power and count, or a hint when empty', async () => {
+  const { potionBar } = await import('../webapp/boss-hud.js');
+  const html = potionBar([{ key: '0', type: 'hp', bottleType: 'potion', count: 3, power: 1000, name: 'Крохотное зелье ХП' }, { key: '2', type: 'mp', bottleType: 'elixir', count: 1, power: 20, name: 'Эликсир' }]);
+  assert.match(html, /data-boss-potion="0"[\s\S]*HP \+1\s000[\s\S]*×3/);
+  assert.match(html, /MP \+20%/);
+  assert.match(potionBar([], {}), /Зелий нет/);
+  assert.match(potionBar([{ key: '0', type: 'hp', count: 1, power: 5 }], { disabled: true }), /disabled/);
+});
+
+test('boss card shows summons towards the next level', async () => {
+  const { summonsProgress } = await import('../webapp/boss-hud.js');
+  assert.match(summonsProgress({ current: 2, need: 5 }, 12), /До ур\. 13[\s\S]*--p:40%[\s\S]*2 \/ 5 призывов/);
+  assert.equal(summonsProgress({ current: 0, need: 0 }, 1), '');
+});
