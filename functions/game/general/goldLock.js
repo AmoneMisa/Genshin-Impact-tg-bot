@@ -45,6 +45,11 @@ export function tableLockFor(chat, userId, now = Date.now(), except = null) {
   return null;
 }
 
+/** Shown when someone tries to rob a player who is seated at a table. */
+export function robLockMessage(title) {
+  return `Игрок сейчас сидит за столом «${title}» — ограбить его нельзя, пока партия не закончится.`;
+}
+
 export function goldLockMessage(title) {
   return `Ты сидишь за столом «${title}» — золото нельзя тратить и переводить, пока партия не закончится.`;
 }

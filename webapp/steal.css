@@ -78,3 +78,4 @@
 @keyframes heist-loot { 0% { opacity: 1; transform: rotate(var(--a)) translateY(0) scale(.5); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(-150px) scale(1.2); } }
 @media (max-width: 420px) { .steal-heist { --vault: 120px; } .heist-vault { width: 120px; height: 120px; margin-top: -75px; } .heist-loot { right: calc(12% + 60px); } }
 @media (prefers-reduced-motion: reduce) { .steal-heist *, .steal-result { animation: none !important; transition: none !important; } }
+.steal-target .steal-seated { color: #ffcf9a; }
