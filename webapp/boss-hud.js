@@ -71,14 +71,22 @@ export function summonsProgress(summons, level) {
   return `<span class="boss-summons" title="Босс усиливается с каждым призывом"><small>До ур. ${formatNumber(Number(level) + 1)}</small><i style="--p:${(current / need) * 100}%"></i><b>${formatNumber(current)} / ${formatNumber(need)} призывов</b></span>`;
 }
 
-/** Quick-use potions in the fight (`data-boss-potion` = inventory key). */
+/**
+ * Quick-use potions in the fight (`data-boss-potion` = inventory key). Every
+ * potion kind is shown; ones you don't have are dimmed with a 0 badge.
+ */
 export function potionBar(potions = [], { disabled = false } = {}) {
-  if (!potions.length) return '<div class="boss-potions empty">Зелий нет — их можно купить в магазине.</div>';
-  return `<div class="boss-potions">${potions.map(potion => `
-    <button type="button" class="boss-potion" data-boss-potion="${escapeHtml(potion.key)}" ${disabled ? 'disabled' : ''} title="${escapeHtml(potion.name)}">
+  if (!potions.length) return '';
+  return `<div class="boss-potions">${potions.map(potion => {
+    const empty = !(Number(potion.count) > 0) || potion.key == null;
+    const power = `${potion.type === 'mp' ? 'MP' : 'HP'} +${formatNumber(potion.power)}${potion.bottleType === 'elixir' ? '%' : ''}`;
+    return `
+    <button type="button" class="boss-potion ${empty ? 'empty' : ''}" ${empty ? '' : `data-boss-potion="${escapeHtml(potion.key)}"`} ${empty || disabled ? 'disabled' : ''} title="${escapeHtml(potion.name)} · ${power}" aria-label="${escapeHtml(potion.name)}: ${formatNumber(potion.count)} шт.">
       ${flaskHtml(potion)}
-      <span><strong>${potion.type === 'mp' ? 'MP' : 'HP'} +${formatNumber(potion.power)}${potion.bottleType === 'elixir' ? '%' : ''}</strong><small>×${formatNumber(potion.count)}</small></span>
-    </button>`).join('')}</div>`;
+      <em>${formatNumber(potion.count)}</em>
+      <small>${power}</small>
+    </button>`;
+  }).join('')}</div>`;
 }
 
 export function playerFrame(player) {

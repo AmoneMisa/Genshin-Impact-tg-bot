@@ -54,12 +54,13 @@ test('server maps player effects and the boss skill to status icons', () => {
   assert.deepEqual(bossStatusesDto({ skill: {} }), []);
 });
 
-test('potion bar lists usable potions with power and count, or a hint when empty', async () => {
+test('potion bar shows every potion with a count badge; missing ones dimmed with 0', async () => {
   const { potionBar } = await import('../webapp/boss-hud.js');
   const html = potionBar([{ key: '0', type: 'hp', bottleType: 'potion', count: 3, power: 1000, name: 'Крохотное зелье ХП' }, { key: '2', type: 'mp', bottleType: 'elixir', count: 1, power: 20, name: 'Эликсир' }]);
-  assert.match(html, /data-boss-potion="0"[\s\S]*HP \+1\s000[\s\S]*×3/);
+  assert.match(html, /data-boss-potion="0"[\s\S]*<em>3<\/em>[\s\S]*HP \+1\s000/);
   assert.match(html, /MP \+20%/);
-  assert.match(potionBar([], {}), /Зелий нет/);
+  assert.equal(potionBar([], {}), '');
+  assert.match(potionBar([{ key: null, type: 'hp', count: 0, power: 8000, name: 'x' }]), /class="boss-potion empty"[^>]*disabled[\s\S]*<em>0<\/em>/);
   assert.match(potionBar([{ key: '0', type: 'hp', count: 1, power: 5 }], { disabled: true }), /disabled/);
 });
 

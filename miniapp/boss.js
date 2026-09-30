@@ -3,6 +3,7 @@ import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import summonBoss from '../functions/game/boss/summonBoss.js';
 import { attackLogDto, bossAttacksDto } from './bossEffects.js';
 import { getInventoryState } from './inventory.js';
+import potionsTemplate from '../template/potionsInInventoryTemplate.js';
 import getBossLoot from '../functions/game/boss/getters/getBossLoot.js';
 import bossSendLoot from '../functions/game/boss/bossSendLoot.js';
 import userDealDamage from '../functions/game/player/userDealDamage.js';
@@ -143,6 +144,28 @@ async function expireBossIfNeeded(boss, chatId, now = Date.now()) {
   return true;
 }
 
+/**
+ * Every potion kind for the fight's quick-use bar: owned ones carry their
+ * inventory key and count, missing ones show as empty (count 0, key null).
+ */
+function potionBarDto(session) {
+  const owned = getInventoryState(session).potions;
+  const same = (a, b) => a.type === b.type && (a.bottleType || 'potion') === (b.bottleType || 'potion') && number(a.power) === number(b.power);
+  const bar = potionsTemplate.map(template => {
+    const item = owned.find(potion => same(potion, template) && potion.count > 0) || owned.find(potion => same(potion, template));
+    return {
+      key: item && item.count > 0 ? item.key : null,
+      type: template.type,
+      bottleType: template.bottleType,
+      power: number(template.power),
+      name: template.name,
+      count: item ? item.count : 0,
+    };
+  });
+  const extra = owned.filter(potion => potion.count > 0 && !potionsTemplate.some(template => same(potion, template)));
+  return [...bar, ...extra.map(({ key, type, bottleType, power, name, count }) => ({ key, type, bottleType, power, name, count }))];
+}
+
 export async function getBossState(session, chatId, now = Date.now()) {
   let boss = await getAliveBoss(chatId);
   if (boss && await expireBossIfNeeded(boss, chatId, now)) boss = null;
@@ -175,7 +198,7 @@ export async function getBossState(session, chatId, now = Date.now()) {
     respawnRemainMs,
     skills,
     // Potions for the quick-use bar in the fight.
-    potions: getInventoryState(session).potions.filter(potion => potion.count > 0),
+    potions: potionBarDto(session),
   };
 
   if (!boss) {
