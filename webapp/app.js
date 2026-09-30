@@ -31,6 +31,7 @@ import { openChatSettings } from './chat-settings.js';
 import { openSelfMute } from './self-mute.js';
 import { mountCity } from './city.js';
 import { openFriendsGame, openPlayerCard } from './friends.js';
+import { createLoader } from './loading.js';
 import { featuresForTab, navHtml, NAV_TABS } from './nav.js';
 
 const tg = window.Telegram?.WebApp;
@@ -39,6 +40,7 @@ const status = $('status');
 let currentState = null;
 let webglFx = null;
 let activeTab = 'city';
+const loader = createLoader();
 let city = null;
 let cityMounting = null;
 
@@ -114,9 +116,12 @@ async function launchFeature(feature, render) {
   }
 
   const [open, successText] = entry;
+  if (loader.busy) return; // a screen is already opening: ignore double taps
   try {
     webglFx?.transition?.(feature.id);
-    await open({
+    // Screens resolve once their overlay is on the page, so the veil covers
+    // exactly the wait for their data.
+    await loader.run(`Открываем: ${feature.title}…`, () => open({
       api,
       renderState: render,
       haptic,
@@ -124,11 +129,12 @@ async function launchFeature(feature, render) {
       context: currentState?.context || null,
       player: currentState?.player || null,
       ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
-    });
+    }));
     status.textContent = successText;
   } catch (error) {
     console.error(error);
     status.textContent = `${feature.title}: ${error.message}`;
+    loader.error(`${feature.title}: не удалось открыть — ${error.message}`);
   }
 }
 
@@ -244,11 +250,14 @@ async function boot() {
     const target = event.target.closest?.('[data-player-card]');
     if (!target || event.target.closest('button:not([data-player-card])')) return;
     event.preventDefault();
+    if (loader.busy) return;
     haptic('light');
     try {
-      await openPlayerCard({ api, haptic, userId: target.dataset.playerCard });
+      await loader.run('Открываем игрока…', () => openPlayerCard({ api, haptic, userId: target.dataset.playerCard }));
     } catch (error) {
-      status.textContent = error.status === 404 ? 'Этот игрок не из текущего чата.' : error.message;
+      const message = error.status === 404 ? 'Этот игрок не из текущего чата.' : error.message;
+      status.textContent = message;
+      loader.error(message);
     }
   });
   document.querySelectorAll('[data-nav-jump]').forEach(button => {
