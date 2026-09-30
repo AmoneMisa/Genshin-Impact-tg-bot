@@ -41,6 +41,8 @@ export function centerGlyphs(root = document) {
     const text = isGlyph(node);
     if (!text || node.dataset.glyphCentered === text) continue;
     const style = getComputedStyle(node);
+    // Icons drawn by CSS (font-size 0, e.g. the back arrow) need no nudge.
+    if (!parseFloat(style.fontSize)) continue;
     const { x, y } = measure(text, `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`);
     // Padding on the far side moves the centred content by half its size.
     const dy = Math.max(-4, Math.min(4, y)) * 2;
