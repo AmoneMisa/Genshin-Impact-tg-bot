@@ -300,3 +300,21 @@ button.mmo-frame:active { transform: scale(.99); }
 .mmo-meter-row strong { font-size: 12px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mmo-meter-row em { font-style: normal; font-size: 11px; color: #eee4cf; }
 .mmo-meter-row.you { border-color: var(--gold); }
+
+/* The boss's own attacks and the live cast feed. */
+.mmo-frame.boss-attacks { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 10px; }
+.boss-attack-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.boss-attack { display: grid; grid-template-columns: 30px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 7px; align-items: center; padding: 6px 8px; border-radius: 8px; border: 1px solid rgba(224, 72, 76, .35); background: rgba(60, 14, 18, .35); }
+.boss-attack.all { border-color: rgba(224, 140, 60, .4); background: rgba(70, 36, 10, .35); }
+.boss-attack i { grid-row: 1 / 3; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(0, 0, 0, .45); font-style: normal; font-size: 16px; line-height: 1; }
+.boss-attack b { font: 700 12px/1.2 var(--serif, Georgia, serif); color: #ffd9c9; overflow-wrap: anywhere; }
+.boss-attack small { font-size: 10px; color: rgba(255, 220, 200, .6); }
+.boss-attack-feed { display: grid; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.boss-attack-feed li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 8px; align-items: center; padding: 6px 8px; border-radius: 8px; background: rgba(255, 255, 255, .03); opacity: .7; }
+.boss-attack-feed li.latest { opacity: 1; background: rgba(224, 72, 76, .12); animation: boss-cast-in .35s ease both; }
+.boss-attack-feed li.hit-you { box-shadow: inset 3px 0 0 #e0484c; }
+.boss-attack-feed i { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 15px; line-height: 1; }
+.boss-attack-feed strong { display: block; font: 700 12px/1.2 var(--serif, Georgia, serif); color: #f3dca6; }
+.boss-attack-feed small { display: block; font-size: 11px; color: rgba(238, 228, 207, .7); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.boss-stage-number.incoming { left: 26%; top: 60%; color: #ff6b6b; text-shadow: 0 2px 0 rgba(0, 0, 0, .6), 0 0 18px rgba(255, 60, 60, .8); }
+@keyframes boss-cast-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }

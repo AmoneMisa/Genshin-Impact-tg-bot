@@ -5,7 +5,9 @@ import getBossAttack from './getBossStats/getBossAttack.js';
 import bossesTemplate from '../../../template/bossTemplate.js';
 
 export default function (boss, session) {
-    let bossTemplate = bossesTemplate.find(boss => boss.name === boss.name);
+    // The template of this boss (the old callback shadowed `boss` and always
+    // matched the first template).
+    let bossTemplate = bossesTemplate.find(template => template.name === boss.name) || bossesTemplate[0];
     let attack = getBossAttack(boss, bossTemplate);
     let defence = getPlayerDefence(session, session.game.gameClass);
     let reduceIncomingPlayerDamage = getIncomingDamageModifier(session, session.game.gameClass) + 1;

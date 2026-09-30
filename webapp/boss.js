@@ -1,7 +1,6 @@
 import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
 import {
-  damageMeter, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame,
-} from './boss-hud.js';
+  damageMeter, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel } from './boss-hud.js';
 
 const REASONS = {
   already_summoned: 'Босс уже призван.',
@@ -109,8 +108,10 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   const feedback = overlay.querySelector('[data-boss-feedback]');
   if (entry.summoned) feedback.textContent = 'Босс призван. Таймер рейда запущен.';
 
+  let pollTimer = null;
   const close = () => {
     if (timer) window.clearInterval(timer);
+    window.clearInterval(pollTimer);
     stage?.destroy();
     stage = null;
     overlay.classList.add('closing');
@@ -122,6 +123,33 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   async function refresh() {
     state = await api('/api/boss');
     renderAll();
+  }
+
+  // Live combat: poll while the raid is on and play the boss's new casts.
+  let lastCastAt = state.active ? Number(state.boss.attackLog?.[0]?.at) || 0 : 0;
+  async function poll() {
+    if (pending || !overlay.isConnected || !state.active) return;
+    try {
+      const next = await api('/api/boss');
+      const cast = next.active ? next.boss.attackLog?.[0] : null;
+      // Countdowns tick locally; only real changes re-render.
+      const clockless = value => JSON.stringify(value, (key, v) => (/Ms$/.test(key) ? 0 : v));
+      if (clockless(next) === clockless(state)) return;
+      state = next;
+      renderAll();
+      if (cast && Number(cast.at) > lastCastAt) {
+        lastCastAt = Number(cast.at);
+        stage?.bossAttack?.();
+        const mine = cast.hits.find(hit => hit.you);
+        if (mine) {
+          floatNumber(`−${formatNumber(mine.dmg)}`, 'incoming', 350);
+          haptic(mine.killed ? 'heavy' : 'medium');
+          feedback.textContent = `${cast.icon} ${state.boss.nameCall || state.boss.name}: «${cast.name}» — ${mine.killed ? 'ты повержен(-а)!' : `−${formatNumber(mine.dmg)} HP`}`;
+        }
+      }
+    } catch {
+      // Keep the last state; the next poll retries.
+    }
   }
 
   async function summon() {
@@ -263,6 +291,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     if (rewardsOpen) targetHost.querySelector('[data-boss-rewards]').hidden = false;
     content.innerHTML = `
       ${playerFrame(player)}
+      ${bossAttacksPanel(boss)}
       ${player.respawnRemainMs > 0 ? `<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>` : ''}
       ${hotbar(player.skills)}
       ${partyStrip(boss.damageList)}
@@ -279,6 +308,11 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       node.closest('.mmo-skill')?.style.setProperty('--cd', total > 0 ? String(remain / total) : '0');
       if (remain <= 0) node.closest('.boss-skill')?.removeAttribute('disabled');
     });
+    const next = content.querySelector('[data-boss-next]');
+    if (next && state.active && state.boss.damageList?.length) {
+      const remain = Math.max(0, Number(next.dataset.until || 0) - Date.now());
+      next.textContent = remain > 0 ? `следующая через ${Math.ceil(remain / 1000)} с` : 'готовит удар…';
+    }
     // Escape timer bar in the target frame.
     const timeBar = targetHost.querySelector('.mmo-bar.time');
     if (timeBar && state.active) {
@@ -293,4 +327,5 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   timer = window.setInterval(tick, 1000);
+  pollTimer = window.setInterval(poll, 2500);
 }

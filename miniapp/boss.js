@@ -1,6 +1,7 @@
 import Chat from '../db/models/Chat.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import summonBoss from '../functions/game/boss/summonBoss.js';
+import { attackLogDto, bossAttacksDto } from './bossEffects.js';
 import getBossLoot from '../functions/game/boss/getters/getBossLoot.js';
 import bossSendLoot from '../functions/game/boss/bossSendLoot.js';
 import userDealDamage from '../functions/game/player/userDealDamage.js';
@@ -200,6 +201,9 @@ export async function getBossState(session, chatId, now = Date.now()) {
       loot: lootDto(boss),
       statuses: bossStatusesDto(boss),
       damageList: await participantsDto(boss, chatId, session?.userId),
+      attacks: bossAttacksDto(boss.name),
+      attackLog: attackLogDto(boss.attackLog, session?.userId, now),
+      nextAttackMs: Math.max(0, number(boss.nextAttackAt) - now),
     },
   };
 }
