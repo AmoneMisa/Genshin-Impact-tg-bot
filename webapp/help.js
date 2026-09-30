@@ -41,7 +41,7 @@ const COMMAND_GROUPS = [
 ];
 
 const GUIDES = [
-  { id: 'hub', icon: '✨', title: 'Mini App', text: 'Весь город в одном окне: здания открывают игры, инвентарь, постройки, анкеты и остальное. Старые команды в чате тоже работают.' },
+  { id: 'hub', icon: '✨', title: 'Город', text: 'Весь город в одном окне: здания открывают игры, инвентарь, постройки, анкеты и остальное. Старые команды в чате тоже работают.' },
   { id: 'boss', icon: '⚔️', title: 'Босс', text: 'В чате живёт один общий босс. Бейте его всем чатом — награду получает каждый участник рейда.' },
   { id: 'arcade', icon: '🎲', title: 'Аркада', text: 'Кубики, боулинг, дартс, футбол, баскетбол и слоты — в одном зале. Зависшую партию можно сбросить прямо оттуда.' },
   { id: 'profile', icon: '🧙', title: 'Персонаж', text: 'Класс, пол, характеристики, инвентарь, снаряжение и постройки — у каждого свой экран.' },
@@ -159,7 +159,7 @@ export async function openHelpGame({ haptic, statusElement }) {
       </div>
       ${tab === 'guides' ? guidesMarkup() : commandsMarkup()}`;
     bind();
-    if (updateStatus) statusElement.textContent = tab === 'guides' ? 'Справка Mini App открыта.' : 'Открыт список команд.';
+    if (updateStatus) statusElement.textContent = tab === 'guides' ? 'Справка открыта.' : 'Открыт список команд.';
   }
 
   render();

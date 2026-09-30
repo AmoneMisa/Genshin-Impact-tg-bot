@@ -69,7 +69,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'chatSettings', title: 'Настройки чата', subtitle: 'Доступность команд для группы', icon: '⚙️', status: 'webgl' },
   { id: 'updates', title: 'Что нового', subtitle: 'Уведомления об обновлениях', icon: '🔔', status: 'webgl' },
   { id: 'feedback', title: 'Написать разработчику', subtitle: 'Баг, идея или вопрос', icon: '💬', status: 'webgl' },
-  { id: 'help', title: 'Справка', subtitle: 'Гайд и fallback-команды', icon: '❔', status: 'webgl' },
+  { id: 'help', title: 'Справка', subtitle: 'Гайд и команды чата', icon: '❔', status: 'webgl' },
 ]);
 
 export function isPrivateMiniAppContext(context) {

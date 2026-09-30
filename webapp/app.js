@@ -72,35 +72,36 @@ async function api(path, options = {}) {
   return payload;
 }
 
+// Feature id → the function that opens its screen.
 const launchers = {
-  profile: [openPlayerProfile, 'Профиль персонажа работает через Mini App и сохраняется в Mongo.'],
-  skills: [openSkillsGame, 'Навыки и их улучшения работают через Mini App и сохраняются в Mongo.'],
-  forms: [openFormsGame, 'Анкеты работают через Mini App и сохраняются в Mongo.'],
-  inventory: [openInventoryGame, 'Инвентарь работает через Mini App; расходники сохраняются в Mongo.'],
-  exchange: [openExchangeGame, 'Обменник работает через Mini App и сохраняет покупку в Mongo.'],
-  boss: [openBossGame, 'Босс работает через Mini App; общий рейд хранится в Mongo.'],
-  chest: [openChestGame, 'Сундуки работают через Mini App и сохраняют награды в Mongo.'],
-  gacha: [openGachaGame, 'Гача работает через Mini App; RNG и списание ресурсов остаются серверными.'],
-  equipment: [openEquipmentGame, 'Снаряжение работает через Mini App и сохраняется в Mongo.'],
-  builds: [openBuildsGame, 'Постройки работают через Mini App; улучшения и сбор ресурсов сохраняются в Mongo.'],
-  arena: [openArenaGame, 'Арена работает через Mini App; бой и рейтинг считаются на сервере.'],
-  steal: [openStealGame, 'Ограбление работает через Mini App; бой и перенос ресурсов считаются на сервере.'],
-  shop: [openShopGame, 'Магазин работает через Mini App и сохраняет покупки в Mongo.'],
-  transfer: [openGoldTransfer, 'Переводы золота работают через Mini App и сохраняются в Mongo.'],
-  point21: [openPoint21, '21 очко работает через общий серверный стол Mini App.'],
-  elements: [openElementsGame, 'Стихии работают через общий серверный стол Mini App.'],
-  friends: [openFriendsGame, 'Друзья работают через Mini App и хранятся в Mongo.'],
-  clan: [openClanGame, 'Кланы работают через Mini App; основное состояние хранится в Mongo.'],
-  bonus: [openBonusGame, 'Ежедневный бонус работает через серверный RNG и сохраняется в Mongo.'],
-  titles: [openTitlesGame, 'Титулы работают через Mongo и серверный выбор участника.'],
-  horoscope: [openHoroscopeGame, 'Гороскоп работает через серверный FreeLLMAPI с локальным fallback.'],
-  sword: [openSwordGame, 'Меч работает через Mini App; бросок и дневной таймер считаются на сервере.'],
-  arcade: [openArcadeGame, 'Аркада работает через Mini App; результаты генерируются на сервере.'],
-  selfMute: [openSelfMute, 'Само-мут работает через Telegram moderation API.'],
-  chatSettings: [openChatSettings, 'Админские настройки текущего чата работают через Mini App.'],
-  updates: [openUpdatesGame, 'Настройки уведомлений сохранены в Mongo.'],
-  feedback: [openFeedbackGame, 'Форма обратной связи открыта в Mini App.'],
-  help: [openHelpGame, 'Справка и каталог fallback-команд открыты в Mini App.'],
+  profile: openPlayerProfile,
+  skills: openSkillsGame,
+  forms: openFormsGame,
+  inventory: openInventoryGame,
+  exchange: openExchangeGame,
+  boss: openBossGame,
+  chest: openChestGame,
+  gacha: openGachaGame,
+  equipment: openEquipmentGame,
+  builds: openBuildsGame,
+  arena: openArenaGame,
+  steal: openStealGame,
+  shop: openShopGame,
+  transfer: openGoldTransfer,
+  point21: openPoint21,
+  elements: openElementsGame,
+  friends: openFriendsGame,
+  clan: openClanGame,
+  bonus: openBonusGame,
+  titles: openTitlesGame,
+  horoscope: openHoroscopeGame,
+  sword: openSwordGame,
+  arcade: openArcadeGame,
+  selfMute: openSelfMute,
+  chatSettings: openChatSettings,
+  updates: openUpdatesGame,
+  feedback: openFeedbackGame,
+  help: openHelpGame,
 };
 
 async function launchFeature(feature, render) {
@@ -112,11 +113,11 @@ async function launchFeature(feature, render) {
 
   const entry = launchers[feature.id];
   if (!entry || feature.status !== 'webgl') {
-    status.textContent = `${feature.title}: пока используется текстовый fallback.`;
+    status.textContent = `${feature.title}: пока доступно только командой в чате.`;
     return;
   }
 
-  const [open, successText] = entry;
+  const open = entry;
   if (loader.busy) return; // a screen is already opening: ignore double taps
   try {
     webglFx?.transition?.(feature.id);
@@ -131,7 +132,7 @@ async function launchFeature(feature, render) {
       player: currentState?.player || null,
       ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
     }));
-    status.textContent = successText;
+    status.textContent = '';
   } catch (error) {
     console.error(error);
     status.textContent = `${feature.title}: ${error.message}`;
@@ -159,10 +160,10 @@ function render(state) {
       ${art ? '<span class="game-art" aria-hidden="true"></span>' : ''}
       <span class="game-icon">${feature.icon}</span>
       ${unavailable
-        ? '<span class="mode-badge group-only">GROUP</span>'
+        ? '<span class="mode-badge group-only">ГРУППА</span>'
         : feature.status === 'webgl'
-          ? '<span class="mode-badge">PLAY</span>'
-          : '<span class="mode-badge legacy">TEXT</span>'}
+          ? '<span class="mode-badge">ИГРАТЬ</span>'
+          : '<span class="mode-badge legacy">ЧАТ</span>'}
       <h3>${feature.title}</h3>
       <p>${unavailable ? 'Доступно только в групповом чате' : feature.subtitle}</p>
       <span class="arrow">${unavailable ? '🔒' : '↗'}</span>`;
@@ -176,7 +177,7 @@ function render(state) {
   });
   $('game-grid').replaceChildren(...cards);
   renderTabs();
-  status.textContent = 'Mini App подключён к Mongo-сессии игрока.';
+  status.textContent = '';
 }
 
 function renderTabs() {

@@ -210,7 +210,7 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
       statusElement.textContent = payload.outcome === 'stolen'
         ? `Ограбление: +${formatNumber(payload.gold)} золота, +${formatNumber(payload.gainedExp)} XP.`
         : `Ограбление: ${payload.targetName} отбил атаку.`;
-      feedback.textContent = payload.outcome === 'stolen' ? 'Добыча сохранена в Mongo.' : 'Попытка потрачена.';
+      feedback.textContent = payload.outcome === 'stolen' ? 'Добыча твоя!' : 'Попытка потрачена.';
       haptic(payload.outcome === 'stolen' ? 'medium' : 'light');
       render();
     } catch (error) {
