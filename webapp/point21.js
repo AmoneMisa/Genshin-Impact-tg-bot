@@ -170,7 +170,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
     const mine = results.find(player => player.id === state.me.id);
     const look = new Map(state.players.map(player => [player.id, player]));
     return `
-      ${mine ? `<div class="point-verdict ${mine.won ? 'win' : 'lose'}"><strong>${mine.won ? (mine.exact21 ? 'Ровно 21!' : 'Победа!') : 'Поражение'}</strong><small>${mine.delta >= 0 ? '+' : ''}${formatNumber(mine.delta)} 🪙</small></div>` : ''}
+      ${mine ? `<div class="point-verdict ${mine.won ? 'win' : 'lose'}"><strong>${mine.won ? (mine.exact21 ? 'Ровно 21!' : 'Победа!') : 'Поражение'}</strong><small>${mine.bet > 0 ? `${mine.delta >= 0 ? '+' : ''}${formatNumber(mine.delta)} 🪙` : 'Игра без ставки'}</small></div>` : ''}
       <div class="point-felt results">
         ${seatGrid(results.map(player => seatTile({ ...look.get(player.id), ...player }, {
           you: player.id === state.me.id,
@@ -196,7 +196,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
       const input = content.querySelector('[data-table-bet]');
       if (input) { input.value = draft; input.focus(); }
     }
-    bindBetControls(content, () => state.gold, haptic);
+    bindBetControls(content, () => state.gold, haptic, () => action('bet'));
     content.querySelectorAll('[data-point-action], [data-table-action]').forEach(button => {
       button.addEventListener('click', () => action(button.dataset.pointAction || button.dataset.tableAction));
     });
@@ -224,7 +224,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
       return;
     }
     const body = { action: name };
-    if (name === 'bet') body.bet = content.querySelector('[data-table-bet]')?.value ?? '0';
+    if (name === 'bet') body.bet = content.querySelector('[data-table-bet]')?.value || '0';
 
     pending = true;
     overlay.classList.add('busy');
@@ -235,7 +235,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
       state = payload.point21;
       if (payload.state) renderState(payload.state);
       feedback.textContent = name === 'card' && payload.card ? `Выпала карта ${payload.card}.`
-        : name === 'reset' ? 'Стол сброшен.' : name === 'bet' ? 'Ставка сохранена.' : '';
+        : name === 'reset' ? 'Стол сброшен.' : name === 'bet' ? (Number(body.bet) > 0 ? `Ставка ${formatNumber(body.bet)} 🪙 принята.` : 'Играешь без ставки.') : '';
       statusElement.textContent = `21 очко: ${state.phase === 'finished' ? 'партия завершена' : 'стол обновлён'}.`;
     } catch (error) {
       if (error.payload?.point21) state = error.payload.point21;

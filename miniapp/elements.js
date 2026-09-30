@@ -126,7 +126,7 @@ function settle(chat, game, now) {
       const member = memberById(chat, id);
       if (member?.game?.inventory) {
         const current = Number(member.game.inventory.gold) || 0;
-        member.game.inventory.gold = Math.round(current + delta);
+        member.game.inventory.gold = Math.max(0, Math.round(current + delta));
       }
     }
 

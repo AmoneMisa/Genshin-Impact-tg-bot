@@ -167,7 +167,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
     const look = new Map(state.players.map(player => [player.id, player]));
     const mine = players.find(player => player.id === state.me.id);
     return `
-      ${mine ? `<div class="point-verdict ${mine.won ? 'win' : 'lose'}"><strong>${mine.won ? 'Победа!' : 'Поражение'}</strong><small>${mine.delta >= 0 ? '+' : ''}${formatNumber(mine.delta)} 🪙</small></div>` : ''}
+      ${mine ? `<div class="point-verdict ${mine.won ? 'win' : 'lose'}"><strong>${mine.won ? 'Победа!' : 'Поражение'}</strong><small>${mine.bet > 0 ? `${mine.delta >= 0 ? '+' : ''}${formatNumber(mine.delta)} 🪙` : 'Игра без ставки'}</small></div>` : ''}
       ${seatGrid(players.map(player => seatTile({ ...look.get(player.id), ...player }, {
         you: player.id === state.me.id,
         score: player.points,
@@ -187,7 +187,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
       return;
     }
     const body = { action: name };
-    if (name === 'bet') body.bet = content.querySelector('[data-table-bet]')?.value ?? '0';
+    if (name === 'bet') body.bet = content.querySelector('[data-table-bet]')?.value || '0';
 
     pending = true;
     overlay.classList.add('busy');
@@ -199,7 +199,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
       state = payload.elements;
       if (payload.state) renderState(payload.state);
       feedback.textContent = name === 'draw' && payload.element ? `Твоя стихия: ${payload.element}`
-        : name === 'reset' ? 'Стол сброшен.' : name === 'bet' ? 'Ставка сохранена.' : '';
+        : name === 'reset' ? 'Стол сброшен.' : name === 'bet' ? (Number(body.bet) > 0 ? `Ставка ${formatNumber(body.bet)} 🪙 принята.` : 'Играешь без ставки.') : '';
       statusElement.textContent = state.phase === 'finished' ? 'Стихии: партия завершена.' : 'Стихии: стол обновлён.';
       renderAll();
     } catch (error) {
@@ -239,7 +239,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
       const input = content.querySelector('[data-table-bet]');
       if (input) { input.value = draft; input.focus(); }
     }
-    bindBetControls(content, () => state.gold, haptic);
+    bindBetControls(content, () => state.gold, haptic, () => action('bet'));
     content.querySelectorAll('[data-elements-action], [data-table-action]').forEach(button => {
       button.addEventListener('click', () => action(button.dataset.elementsAction || button.dataset.tableAction));
     });
