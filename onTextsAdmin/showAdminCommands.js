@@ -17,8 +17,8 @@ export default [[/(?:^|\s)\/admin_commands\b/, async (msg) => {
         "/add_bonus_chance - Добавить попыток бонуса пользователю\n" +
         "/update_characteristics - Пересчитать очки характеристик пользователю или всей группе\n" +
         "/add_iron_ore - Добавить железной руды пользователю\n" +
-        "/reset_point_game - Сбросить игру в очко\n" +
-        "/reset_elements_game - Сбросить игру в элементы\n" +
+        "/reset_point_game - Сбросить игру в очко (в чате и в Mini App)\n" +
+        "/reset_elements_game - Сбросить игру в элементы (в чате и в Mini App)\n" +
         "/receive_user_sword_timer - Сбросить таймер меча для пользователя\n" +
         "/boss_settings - Настройки босса\n" +
         "/settings - Настройки бота"

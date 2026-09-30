@@ -11,14 +11,20 @@ export default [[/(?:^|\s)\/reset_elements_game\b/, async (msg) => {
     }
 
     let chatSession = await getChatSession(msg.chat.id);
-    chatSession.game.elements.gameSessionIsStart = false;
-    chatSession.game.elements.players = {};
-    chatSession.game.elements.usedItems = [];
-    chatSession.game.elements.currentRound = 1;
-    chatSession.game.elements.countPresses = 0;
+    chatSession.game ||= {};
+    // Text-bot session.
+    if (chatSession.game.elements) {
+        chatSession.game.elements.gameSessionIsStart = false;
+        chatSession.game.elements.players = {};
+        chatSession.game.elements.usedItems = [];
+        chatSession.game.elements.currentRound = 1;
+        chatSession.game.elements.countPresses = 0;
+    }
+    // Mini App table (miniapp/elements.js); bets are settled only at the end.
+    delete chatSession.game.elementsMiniApp;
     await chatSession.save();
 
-    return sendMessage(msg.chat.id, `Сессия игры в элементы сброшена.`, {
+    return sendMessage(msg.chat.id, `Сессия игры в элементы сброшена (в чате и в Mini App).`, {
         ...(msg.message_thread_id ? {message_thread_id: msg.message_thread_id} : {}),
     });
 }]];

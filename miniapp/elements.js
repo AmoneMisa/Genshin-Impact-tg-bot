@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import elementsTemplate from '../template/elements.js';
 import updatePoints from '../functions/game/elements/updatePoints.js';
+import { isStaleTable, seatLook } from './tableGames.js';
 
 const JOIN_MS = 15_000;
 const BETTING_MS = 25_000;
@@ -182,6 +183,7 @@ function playerDto(chat, id, player) {
     id: String(id),
     name: playerName(chat, id),
     isBot: id === 'bot',
+    ...seatLook(id === 'bot' ? null : memberById(chat, id)),
     bet: Number(player.bet) || 0,
     points: Number(player.points) || 0,
     elements: [...(player.usedItems || [])],
@@ -197,8 +199,8 @@ export function getElementsState(chat, userId, options = {}) {
 
   if (!game) {
     return {
-      phase: 'idle', gold, remainingMs: 0, round: 0, maxRounds: MAX_ROUNDS,
-      maxPlayers: MAX_HUMANS, me: { joined: false, bet: 0, points: 0, elements: [], drewThisRound: false },
+      phase: 'idle', gold, remainingMs: 0, round: 0, maxRounds: MAX_ROUNDS, stuck: false, canReset: false,
+      maxPlayers: MAX_HUMANS, me: { id: String(userId), joined: false, bet: 0, points: 0, elements: [], drewThisRound: false },
       players: [], result: null,
     };
   }
@@ -208,14 +210,20 @@ export function getElementsState(chat, userId, options = {}) {
     : game.phase === 'betting' ? game.bettingEndsAt
       : game.phase === 'playing' ? game.turnEndsAt : null;
 
+  const stuck = isStaleTable(game, deadline, now);
   return {
     phase: game.phase,
     gold,
+    stuck,
+    canReset: game.phase !== 'finished' && (stuck || Boolean(options.isAdmin)),
     remainingMs: deadline ? Math.max(0, Number(deadline) - now) : 0,
+    // Full length of the current phase, for the countdown ring.
+    phaseMs: game.phase === 'join' ? JOIN_MS : game.phase === 'betting' ? BETTING_MS : game.phase === 'playing' ? TURN_MS : 0,
     round: Number(game.currentRound) || 0,
     maxRounds: MAX_ROUNDS,
     maxPlayers: MAX_HUMANS,
     me: {
+      id: String(userId),
       joined: Boolean(me),
       bet: Number(me?.bet) || 0,
       points: Number(me?.points) || 0,
@@ -229,6 +237,20 @@ export function getElementsState(chat, userId, options = {}) {
 
 function response(chat, userId, ok, reason, options = {}, extra = {}) {
   return { ok, ...(reason ? { reason } : {}), ...extra, elements: getElementsState(chat, userId, options) };
+}
+
+/** Clears a stuck table (or any table, for chat admins); bets settle only at the end. */
+export function resetElements(chat, userId, options = {}) {
+  const game = chat?.game?.elementsMiniApp;
+  if (!game) return response(chat, userId, false, 'no_game', options);
+  const deadline = game.phase === 'join' ? game.joinEndsAt
+    : game.phase === 'betting' ? game.bettingEndsAt
+      : game.phase === 'playing' ? game.turnEndsAt : null;
+  if (game.phase !== 'finished' && !options.isAdmin && !isStaleTable(game, deadline, nowValue(options))) {
+    return response(chat, userId, false, 'not_stuck', options);
+  }
+  delete chat.game.elementsMiniApp;
+  return response(chat, userId, true, null, options, { action: 'reset' });
 }
 
 export function startElements(chat, userId, options = {}) {

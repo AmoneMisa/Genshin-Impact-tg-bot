@@ -9,6 +9,7 @@ import getChatSession from '../functions/getters/getChatSession.js';
 import saveSession from '../functions/getters/saveSession.js';
 import getClan from '../functions/game/clans/getClan.js';
 import { getPlayerCard, getSocialState, setFriend, stampLastSeen } from './social.js';
+import { isChatAdmin } from './tableGames.js';
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
@@ -47,8 +48,7 @@ import {
   leavePoint21,
   setPoint21Bet,
   takePoint21Card,
-  passPoint21,
-} from './point21.js';
+  passPoint21, resetPoint21 } from './point21.js';
 import {
   getElementsState,
   syncElements,
@@ -56,8 +56,7 @@ import {
   joinElements,
   leaveElements,
   setElementsBet,
-  drawElement,
-} from './elements.js';
+  drawElement, resetElements } from './elements.js';
 import { getBonusState, claimBonus } from './bonus.js';
 import { getTitlesState, assignTitle } from './titles.js';
 import {
@@ -669,10 +668,15 @@ async function point21State(req, res) {
     const context = await authorize(req);
     const point21 = await withLock(`${context.chatId}:point21`, async () => {
       const chat = await getChatSession(context.chatId);
-      const synced = syncPoint21(chat);
-      if (synced.changed) await chat.save();
+      // A broken table must still load, so players can see the reset button.
+      try {
+        const synced = syncPoint21(chat);
+        if (synced.changed) await chat.save();
+      } catch (error) {
+        console.warn('point21 sync failed', error.message);
+      }
       refreshContextSession(context, chat);
-      return getPoint21State(chat, context.userId);
+      return getPoint21State(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
     });
     return sendJson(res, 200, point21);
   } catch (error) {
@@ -684,7 +688,7 @@ async function point21Action(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
-    if (!new Set(['start', 'join', 'leave', 'bet', 'card', 'pass']).has(body.action)) {
+    if (!new Set(['start', 'join', 'leave', 'bet', 'card', 'pass', 'reset']).has(body.action)) {
       const error = new Error('Unknown point21 action');
       error.status = 400;
       throw error;
@@ -698,6 +702,7 @@ async function point21Action(req, res) {
       else if (body.action === 'leave') updated = leavePoint21(chat, context.userId);
       else if (body.action === 'bet') updated = setPoint21Bet(chat, context.userId, body.bet);
       else if (body.action === 'card') updated = takePoint21Card(chat, context.userId);
+      else if (body.action === 'reset') updated = resetPoint21(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
       else updated = passPoint21(chat, context.userId);
 
       await chat.save();
@@ -715,10 +720,14 @@ async function elementsState(req, res) {
     const context = await authorize(req);
     const elements = await withLock(`${context.chatId}:elements`, async () => {
       const chat = await getChatSession(context.chatId);
-      const synced = syncElements(chat);
-      if (synced.changed) await chat.save();
+      try {
+        const synced = syncElements(chat);
+        if (synced.changed) await chat.save();
+      } catch (error) {
+        console.warn('elements sync failed', error.message);
+      }
       refreshContextSession(context, chat);
-      return getElementsState(chat, context.userId);
+      return getElementsState(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
     });
     return sendJson(res, 200, elements);
   } catch (error) {
@@ -730,7 +739,7 @@ async function elementsAction(req, res) {
   try {
     const context = await authorize(req);
     const body = await readJsonBody(req);
-    if (!new Set(['start', 'join', 'leave', 'bet', 'draw']).has(body.action)) {
+    if (!new Set(['start', 'join', 'leave', 'bet', 'draw', 'reset']).has(body.action)) {
       const error = new Error('Unknown elements action');
       error.status = 400;
       throw error;
@@ -743,6 +752,7 @@ async function elementsAction(req, res) {
       else if (body.action === 'join') updated = joinElements(chat, context.userId);
       else if (body.action === 'leave') updated = leaveElements(chat, context.userId);
       else if (body.action === 'bet') updated = setElementsBet(chat, context.userId, body.bet);
+      else if (body.action === 'reset') updated = resetElements(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
       else updated = drawElement(chat, context.userId);
 
       await chat.save();

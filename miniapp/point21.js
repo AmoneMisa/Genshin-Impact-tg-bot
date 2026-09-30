@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import cardsDictionary from '../dictionaries/pointCards.js';
 import getPoints from '../functions/game/point21/getPoints.js';
+import { isStaleTable, seatLook } from './tableGames.js';
 
 const LOBBY_MS = 25_000;
 const TURN_MS = 20_000;
@@ -223,6 +224,7 @@ function playerDto(chat, id, player) {
     id: String(id),
     name: displayName(chat, id),
     isBot: String(id) === 'bot',
+    ...seatLook(String(id) === 'bot' ? null : memberById(chat, id)),
     bet: Number(player?.bet) || 0,
     cards: [...(player?.usedItems || [])],
     points: getPoints(player) || 0,
@@ -241,6 +243,9 @@ export function getPoint21State(chat, userId, options = {}) {
       phase: 'idle',
       gold,
       remainingMs: 0,
+      maxPlayers: MAX_HUMANS,
+      stuck: false,
+      canReset: false,
       me: { id: String(userId), joined: false, bet: 0, cards: [], points: 0, passed: false },
       players: [],
       result: null,
@@ -250,11 +255,16 @@ export function getPoint21State(chat, userId, options = {}) {
   const me = game.players?.[String(userId)] || null;
   const deadline = game.phase === 'lobby' ? game.lobbyEndsAt : game.phase === 'playing' ? game.roundEndsAt : null;
 
+  const stuck = isStaleTable(game, deadline, now);
   return {
     phase: game.phase || 'idle',
     gold,
     remainingMs: deadline ? Math.max(0, Number(deadline) - now) : 0,
+    // Full length of the current phase, for the countdown ring.
+    phaseMs: game.phase === 'lobby' ? LOBBY_MS : game.phase === 'playing' ? TURN_MS : 0,
     maxPlayers: MAX_HUMANS,
+    stuck,
+    canReset: game.phase !== 'finished' && (stuck || Boolean(options.isAdmin)),
     me: {
       id: String(userId),
       joined: Boolean(me),
@@ -374,6 +384,22 @@ export function passPoint21(chat, userId, options = {}) {
   game.roundEndsAt = now + TURN_MS;
   if (allHumansPassed(game)) settleGame(chat, game, now, randomInt(options));
   return response(chat, userId, true, null, options, { action: 'pass' });
+}
+
+/**
+ * Clears a stuck table (or any table, for chat admins). Bets are only settled
+ * at the end of a round, so nobody loses gold. Does not run sync first: a
+ * broken table may be exactly what makes sync fail.
+ */
+export function resetPoint21(chat, userId, options = {}) {
+  const game = chat?.game?.pointsMiniApp;
+  if (!game) return response(chat, userId, false, 'no_game', options);
+  const deadline = game.phase === 'lobby' ? game.lobbyEndsAt : game.phase === 'playing' ? game.roundEndsAt : null;
+  if (game.phase !== 'finished' && !options.isAdmin && !isStaleTable(game, deadline, nowValue(options))) {
+    return response(chat, userId, false, 'not_stuck', options);
+  }
+  delete chat.game.pointsMiniApp;
+  return response(chat, userId, true, null, options, { action: 'reset' });
 }
 
 export const point21Config = Object.freeze({ lobbyMs: LOBBY_MS, turnMs: TURN_MS, maxHumans: MAX_HUMANS });
