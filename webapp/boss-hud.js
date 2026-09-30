@@ -4,6 +4,7 @@
 // that opens from the target frame.
 
 import { bossArtUrl, classArtUrl } from './boss-stage.js';
+import { flaskHtml } from './inventory.js';
 
 export const STATUS_ICONS = Object.freeze({
   // boss skills
@@ -57,8 +58,27 @@ export function targetFrame(boss) {
       ${bar('hp', boss.currentHp, boss.hp)}
       ${bar('time', 0, 0, { label: '⏳', percent: timePercent, text: formatDuration(boss.remainMs) })}
       ${statusIcons(boss.statuses || [])}
+      ${summonsProgress(boss.summons, boss.level)}
     </span>
   </button>`;
+}
+
+/** Summons towards the boss's next level. */
+export function summonsProgress(summons, level) {
+  const need = Number(summons?.need) || 0;
+  if (!need) return '';
+  const current = Math.min(need, Number(summons?.current) || 0);
+  return `<span class="boss-summons" title="Босс усиливается с каждым призывом"><small>До ур. ${formatNumber(Number(level) + 1)}</small><i style="--p:${(current / need) * 100}%"></i><b>${formatNumber(current)} / ${formatNumber(need)} призывов</b></span>`;
+}
+
+/** Quick-use potions in the fight (`data-boss-potion` = inventory key). */
+export function potionBar(potions = [], { disabled = false } = {}) {
+  if (!potions.length) return '<div class="boss-potions empty">Зелий нет — их можно купить в магазине.</div>';
+  return `<div class="boss-potions">${potions.map(potion => `
+    <button type="button" class="boss-potion" data-boss-potion="${escapeHtml(potion.key)}" ${disabled ? 'disabled' : ''} title="${escapeHtml(potion.name)}">
+      ${flaskHtml(potion)}
+      <span><strong>${potion.type === 'mp' ? 'MP' : 'HP'} +${formatNumber(potion.power)}${potion.bottleType === 'elixir' ? '%' : ''}</strong><small>×${formatNumber(potion.count)}</small></span>
+    </button>`).join('')}</div>`;
 }
 
 export function playerFrame(player) {
