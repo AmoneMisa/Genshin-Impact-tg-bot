@@ -61,7 +61,7 @@ export function statsHtml(stats = {}) {
   return `<div class="fr-stats">${rows.map(([icon, label, value]) => `<div><span>${icon}</span><small>${label}</small><strong>${formatNumber(value)}</strong></div>`).join('')}</div>`;
 }
 
-/** Another player's card, on top of whatever is open. Resolves when closed. */
+/** Another player's card, on top of whatever is open. Resolves once it is shown, with `{ closed }`. */
 export async function openPlayerCard({ api, haptic = () => {}, userId, onChange = () => {} }) {
   let card = await api(`/api/player?userId=${encodeURIComponent(userId)}`);
   let tab = 'gear';
@@ -139,7 +139,7 @@ export async function openPlayerCard({ api, haptic = () => {}, userId, onChange 
   render();
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
-  return closed;
+  return { closed };
 }
 
 export async function openFriendsGame({ api, haptic, statusElement }) {

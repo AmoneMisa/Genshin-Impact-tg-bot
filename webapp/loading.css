@@ -1,0 +1,31 @@
+/* Loading veil (loading.js): rune spinner while a screen opens, error card on failure. */
+.load-veil {
+  position: fixed; inset: 0; z-index: 35;
+  display: grid; place-items: center;
+  background: rgba(6, 5, 9, .45);
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s ease;
+}
+.load-veil.on { opacity: 1; pointer-events: auto; }
+.load-card {
+  display: grid; justify-items: center; gap: 10px;
+  min-width: 180px; max-width: min(86vw, 340px);
+  padding: 16px 18px;
+  border-radius: 10px; border: 1px solid #6b5326;
+  background: linear-gradient(180deg, rgba(26, 21, 30, .96), rgba(12, 10, 16, .97));
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .1), 0 12px 30px rgba(0, 0, 0, .6);
+  text-align: center;
+  transform: translateY(6px) scale(.97);
+  transition: transform .2s cubic-bezier(.2, .9, .3, 1.2);
+}
+.load-veil.on .load-card { transform: none; }
+.load-card small { font: 600 13px/1.35 Georgia, "Times New Roman", serif; color: #f3dca6; }
+.load-rune { position: relative; width: 38px; height: 38px; }
+.load-rune i { position: absolute; inset: 0; border-radius: 50%; border: 2px solid transparent; border-top-color: #d8b36a; border-right-color: rgba(216, 179, 106, .35); animation: load-spin .9s linear infinite; }
+.load-rune i:nth-child(2) { inset: 7px; border-top-color: #9fd0ff; border-right-color: rgba(159, 208, 255, .3); animation-duration: 1.4s; animation-direction: reverse; }
+.load-veil.error { background: rgba(6, 5, 9, .35); cursor: pointer; }
+.load-veil.error .load-card { border-color: rgba(224, 106, 106, .6); }
+.load-veil.error .load-rune { display: none; }
+.load-veil.error .load-card small { color: #ffb0a8; }
+@keyframes load-spin { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .load-rune i { animation-duration: 3s; } .load-card { transition: none; } }
