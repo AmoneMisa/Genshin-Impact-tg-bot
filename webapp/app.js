@@ -5,7 +5,6 @@ import { renderPlayerHud } from './hud.js';
 import { openChestGame } from './chest.js';
 import { openGachaGame } from './gacha.js';
 import { openEquipmentGame } from './equipment.js';
-import { openBuildsGame } from './builds.js';
 import { openArenaGame } from './arena.js';
 import { openBossGame } from './boss.js';
 import { openShopGame } from './shop.js';
@@ -83,7 +82,6 @@ const launchers = {
   chest: openChestGame,
   gacha: openGachaGame,
   equipment: openEquipmentGame,
-  builds: openBuildsGame,
   arena: openArenaGame,
   steal: openStealGame,
   shop: openShopGame,
