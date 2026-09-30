@@ -37,9 +37,10 @@ export async function openFormsGame({ api, renderState, haptic, statusElement })
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass forms-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">GROUP PROFILES · MONGO</div><h2>Анкеты</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="ds-head">
+        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Анкеты</h2>
+        <span class="ds-round" aria-hidden="true">📝</span>
       </header>
       <div class="forms-tabs">
         <button type="button" data-forms-tab="mine">Моя анкета</button>
@@ -63,7 +64,7 @@ export async function openFormsGame({ api, renderState, haptic, statusElement })
     content.innerHTML = `
       <section class="forms-intro">
         <span>📝</span>
-        <div><strong>Твоя анкета Genshin</strong><small>Это те же данные, которые раньше заполнялись через /form. Пустое поле очищает сохранённое значение.</small></div>
+        <div><strong>Твоя анкета Genshin</strong><small>Расскажи о себе участникам чата. Пустое поле стирает сохранённое значение.</small></div>
       </section>
       <div class="forms-grid">
         ${state.fields.map(field => `
@@ -73,7 +74,7 @@ export async function openFormsGame({ api, renderState, haptic, statusElement })
           </label>`).join('')}
       </div>
       <button type="button" class="forms-save" data-forms-save>
-        <span>✓</span><div><strong>Сохранить анкету</strong><small>Изменения сохраняются в Mongo и видны участникам группы</small></div>
+        <span>✓</span><div><strong>Сохранить анкету</strong><small>Анкету увидят участники этого чата</small></div>
       </button>`;
 
     content.querySelector('[data-forms-save]')?.addEventListener('click', save);
@@ -136,7 +137,7 @@ export async function openFormsGame({ api, renderState, haptic, statusElement })
       state = payload.forms;
       if (payload.state) renderState(payload.state);
       feedback.textContent = 'Анкета сохранена.';
-      statusElement.textContent = 'Анкета обновлена и сохранена в Mongo.';
+      statusElement.textContent = 'Анкета сохранена.';
       haptic('light');
       renderAll();
     } catch (error) {

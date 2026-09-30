@@ -564,3 +564,152 @@ textarea:focus-visible {
   to { transform: scale(1.1) translate(1.5%, -2%); }
 }
 @media (prefers-reduced-motion: reduce) { .game-card .game-art { animation: none; } }
+
+/* Shared sheet header: back button, centred serif title, round badge.
+   Used by the screens that had the old eyebrow + × header. */
+.overlay-panel .ds-head {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 10px;
+}
+.overlay-panel .ds-head h2 {
+  margin: 0;
+  text-align: center;
+  font: 700 19px/1.15 var(--serif);
+  color: #f3dca6;
+  text-shadow: 0 2px 0 #000, 0 0 14px rgb(var(--accent-rgb) / .25);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.overlay-panel .ds-round {
+  position: static;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+  background: rgba(14, 11, 18, .85);
+  color: #e9dcbc;
+  font: 700 16px/1 var(--serif);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .12);
+}
+.overlay-panel button.ds-round { cursor: pointer; }
+
+/* On/off switches (news, chat settings): a gold track with a sliding knob. */
+.overlay-panel .updates-toggle,
+.overlay-panel .chat-setting-toggle {
+  position: relative;
+  flex: none;
+  display: block;
+  width: 52px;
+  min-width: 52px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--gold-dim);
+  background: rgba(6, 5, 9, .85);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, .6);
+}
+.overlay-panel .updates-toggle span,
+.overlay-panel .chat-setting-toggle span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #5a5060, #2c2530);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+  transform: none;
+  transition: transform .2s var(--ease-game, ease), background .2s ease;
+}
+.overlay-panel .updates-toggle strong,
+.overlay-panel .chat-setting-toggle b {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.overlay-panel .updates-toggle.active,
+.overlay-panel .chat-setting-toggle.active {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, #6a4f1f, #3a2a10);
+}
+.overlay-panel .updates-toggle.active span,
+.overlay-panel .chat-setting-toggle.active span {
+  transform: translateX(22px);
+  background: radial-gradient(circle at 35% 30%, #fff4d6, #e8c15a 60%, #a87a22);
+  box-shadow: 0 0 10px rgba(232, 193, 90, .5), 0 2px 4px rgba(0, 0, 0, .5);
+}
+.overlay-panel .chat-setting-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.overlay-panel .chat-setting-row small { color: var(--muted); }
+.overlay-panel .chat-setting-row:not(.enabled) strong { color: var(--muted); }
+
+/* Forms, feedback, notes: readable sizes and the gold primary button. */
+.overlay-panel .forms-intro strong,
+.overlay-panel .feedback-intro strong { font: 700 14px/1.25 var(--serif); color: var(--gold-bright); }
+.overlay-panel .forms-intro small,
+.overlay-panel .utility-card p,
+.overlay-panel .updates-note p,
+.overlay-panel .feedback-intro p { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+.overlay-panel .utility-card h3 { font-size: 15px; }
+.overlay-panel .forms-field > span,
+.overlay-panel .feedback-field > span { font: 700 11px/1.2 var(--serif); letter-spacing: .04em; color: rgb(var(--accent-rgb) / .85); }
+.overlay-panel .forms-field input,
+.overlay-panel .feedback-field textarea { font-size: 15px; border-color: var(--gold-dim); background: rgba(6, 5, 9, .8); }
+.overlay-panel .forms-field input:focus,
+.overlay-panel .feedback-field textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(216, 179, 106, .2); }
+.overlay-panel .forms-member strong { font-size: 12px; max-width: 120px; }
+.overlay-panel .forms-member small { font-size: 10px; }
+.overlay-panel .forms-member > span { font-size: 11px; color: var(--gold); }
+.overlay-panel .forms-member.active { border-color: var(--gold); background: rgba(60, 46, 22, .5); }
+.overlay-panel .forms-profile-card header small { font-size: 10px; }
+.overlay-panel .forms-profile-card header strong { font: 700 15px/1.2 var(--serif); color: var(--gold-bright); }
+.overlay-panel .forms-profile-field small { font-size: 10px; }
+.overlay-panel .forms-profile-field strong { font-size: 13px; }
+.overlay-panel .forms-feedback,
+.overlay-panel .feedback-meta { font-size: 11px; }
+
+.overlay-panel .forms-save,
+.overlay-panel .feedback-submit {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 6px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(180deg, #6a4f1f, #3a2a10);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), 0 6px 14px rgba(0, 0, 0, .45);
+  color: #fbeccb;
+  font: 700 15px/1 var(--serif);
+}
+.overlay-panel .forms-save { justify-content: center; text-align: center; }
+.overlay-panel .forms-save > span { display: none; }
+.overlay-panel .forms-save > div { justify-items: center; }
+.overlay-panel .forms-save strong { font: 700 15px/1 var(--serif); color: #fbeccb; }
+.overlay-panel .forms-save small { font-size: 10.5px; color: rgba(251, 236, 203, .7); }
+.overlay-panel .forms-save:not(:disabled):active,
+.overlay-panel .feedback-submit:not(:disabled):active { transform: translateY(1px); }
+.overlay-panel .forms-tabs button,
+.overlay-panel .help-tabs button { min-height: 38px; font: 700 13px/1 var(--serif); color: var(--muted); border-color: var(--gold-dim); }
+.overlay-panel .forms-tabs button.active,
+.overlay-panel .help-tabs button.active { color: #1a1206; border-color: var(--gold); background: linear-gradient(180deg, #e8c15a, #a87a22); }
+.overlay-panel .help-guide-card strong { font: 700 14px/1.25 var(--serif); color: var(--gold-bright); }
+.overlay-panel .help-guide-card p { font-size: 12px; line-height: 1.45; color: var(--muted); }
+.overlay-panel .help-guide-card > span { font-size: 18px; }
+.overlay-panel .help-command-row code { font-size: 13px; color: var(--gold-bright); }
+.overlay-panel .help-command-row small { font-size: 10px; }
+.overlay-panel .help-command-row p { font-size: 12px; }
+.overlay-panel .help-filters button { min-height: 32px; font-size: 12px; }
+.overlay-panel .help-filters button.active { border-color: var(--gold); color: var(--gold-bright); background: rgba(60, 46, 22, .5); }
+.overlay-panel .help-search input { font-size: 14px; }
+.overlay-panel .help-legacy-note { font-size: 11px; }
+.overlay-panel .chat-setting-row strong { font: 700 14px/1.2 var(--serif); color: var(--gold-bright); }
+.overlay-panel .chat-setting-row small { font-size: 11px; }
+.overlay-panel .self-mute-card p, .overlay-panel .self-mute-message p { font-size: 12.5px; }

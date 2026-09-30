@@ -19,13 +19,13 @@ function renderContent(container, state) {
 
   container.innerHTML = `
     <div class="chat-settings-intro utility-card">
-      <h3>Доступность legacy-команд</h3>
-      <p>Выключенная команда остаётся недоступной и в текстовом fallback. Изменения сохраняются для текущего группового чата.</p>
+      <h3>Игры и команды чата</h3>
+      <p>Выключенная игра пропадёт и в Mini App, и из команд в чате. Настройки действуют только для этого чата.</p>
     </div>
     <div class="chat-settings-grid">
       ${state.settings.map(item => `
         <article class="chat-setting-row ${item.enabled ? 'enabled' : ''}">
-          <div><strong>${item.label}</strong><small>${item.key}</small></div>
+          <div><strong>${item.label}</strong><small>${item.enabled ? 'доступно' : 'выключено'}</small></div>
           <button type="button" class="chat-setting-toggle ${item.enabled ? 'active' : ''}"
             data-chat-setting="${item.key}" aria-pressed="${item.enabled}">
             <span></span><b>${item.enabled ? 'Вкл' : 'Выкл'}</b>
@@ -40,9 +40,10 @@ export async function openChatSettings({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass chat-settings-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">ADMIN · GROUP</div><h2>Настройки чата</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="ds-head">
+        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Настройки чата</h2>
+        <span class="ds-round" aria-hidden="true">⚙</span>
       </header>
       <div data-chat-settings-content class="chat-settings-content">
         <div class="chat-settings-loading">Загружаем настройки…</div>

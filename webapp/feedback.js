@@ -6,20 +6,21 @@ export async function openFeedbackGame({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass feedback-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">CONTACT · MINI APP</div><h2>Связь с разработчиком</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="ds-head">
+        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Обратная связь</h2>
+        <span class="ds-round" aria-hidden="true">💬</span>
       </header>
       <div class="feedback-card">
         <div class="feedback-intro">
           <span>💬</span>
-          <div><strong>Баг, идея или вопрос?</strong><p>Сообщение уйдёт разработчику вместе с вашим Telegram ID и ID игрового чата, чтобы можно было понять контекст.</p></div>
+          <div><strong>Баг, идея или вопрос?</strong><p>Сообщение уйдёт разработчику вместе с твоим Telegram ID и ID чата, чтобы было понятно, где что случилось.</p></div>
         </div>
         <label class="feedback-field">
           <span>Сообщение</span>
-          <textarea rows="8" maxlength="${MAX_LENGTH}" placeholder="Опишите, что произошло или что хотелось бы изменить…" data-feedback-message></textarea>
+          <textarea rows="8" maxlength="${MAX_LENGTH}" placeholder="Опиши, что случилось или что хочется изменить…" data-feedback-message></textarea>
         </label>
-        <div class="feedback-meta"><span data-feedback-count>0 / ${MAX_LENGTH}</span><span>Ответ по-прежнему можно получить через Telegram.</span></div>
+        <div class="feedback-meta"><span data-feedback-count>0 / ${MAX_LENGTH}</span><span>Ответ придёт в Telegram.</span></div>
         <button type="button" class="feedback-submit" data-feedback-submit>Отправить</button>
         <div class="feedback-result" data-feedback-result hidden></div>
       </div>
@@ -45,7 +46,7 @@ export async function openFeedbackGame({ api, haptic, statusElement }) {
     if (!message) {
       result.hidden = false;
       result.className = 'feedback-result error';
-      result.textContent = 'Сначала напишите сообщение.';
+      result.textContent = 'Сначала напиши сообщение.';
       textarea.focus();
       return;
     }
@@ -63,7 +64,7 @@ export async function openFeedbackGame({ api, haptic, statusElement }) {
       result.hidden = false;
       result.className = 'feedback-result success';
       result.textContent = 'Сообщение отправлено разработчику.';
-      statusElement.textContent = 'Feedback отправлен разработчику.';
+      statusElement.textContent = 'Сообщение отправлено разработчику.';
       haptic('light');
     } catch (error) {
       result.hidden = false;

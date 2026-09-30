@@ -41,14 +41,14 @@ const COMMAND_GROUPS = [
 ];
 
 const GUIDES = [
-  { id: 'hub', icon: '✨', title: 'Mini App', text: 'Игровой хаб теперь является основным интерфейсом. Карточки открывают серверные экраны игр, инвентаря, построек, анкет и других механик. Slash-команды остаются fallback-интерфейсом.' },
-  { id: 'boss', icon: '⚔️', title: 'Босс', text: 'В группе одновременно существует один босс. Его характеристики масштабируются, атаки и награды считаются на сервере. Управление рейдом доступно из карточки «Босс».' },
-  { id: 'arcade', icon: '🎲', title: 'Аркада', text: 'Кубики, боулинг, дартс, футбол, баскетбол и слоты объединены в один экран. RNG и начисления выполняются сервером; спортивные сессии можно сбросить из интерфейса.' },
-  { id: 'profile', icon: '🧙', title: 'Персонаж', text: 'Класс, пол, характеристики, инвентарь, снаряжение и постройки вынесены в отдельные интерактивные экраны. Изменения сохраняются в Mongo.' },
-  { id: 'forms', icon: '📝', title: 'Анкеты', text: 'Свою Genshin-анкету можно редактировать прямо в Mini App, а анкеты активных участников группы — просматривать без Telegram-клавиатур.' },
-  { id: 'updates', icon: '🔔', title: 'Что нового', text: 'Подписку на новости бота можно включить или выключить в карточке «Что нового». Настройка сохраняется в Mongo для вашего участника текущего игрового чата; сами новости приходят в личный Telegram-чат с ботом.' },
-  { id: 'mute', icon: '🔇', title: 'Self mute', text: 'Команда /self_mute остаётся Telegram-командой: она временно ограничивает отправку сообщений в супергруппе и зависит от прав бота.' },
-  { id: 'contact', icon: '💬', title: 'Связь с разработчиком', text: 'Для вопросов, багов и предложений используйте карточку «Написать разработчику». Сообщение отправляется сервером через Telegram; /feedback сохранён как fallback с возможностью продолжить переписку в Telegram.' },
+  { id: 'hub', icon: '✨', title: 'Mini App', text: 'Весь город в одном окне: здания открывают игры, инвентарь, постройки, анкеты и остальное. Старые команды в чате тоже работают.' },
+  { id: 'boss', icon: '⚔️', title: 'Босс', text: 'В чате живёт один общий босс. Бейте его всем чатом — награду получает каждый участник рейда.' },
+  { id: 'arcade', icon: '🎲', title: 'Аркада', text: 'Кубики, боулинг, дартс, футбол, баскетбол и слоты — в одном зале. Зависшую партию можно сбросить прямо оттуда.' },
+  { id: 'profile', icon: '🧙', title: 'Персонаж', text: 'Класс, пол, характеристики, инвентарь, снаряжение и постройки — у каждого свой экран.' },
+  { id: 'forms', icon: '📝', title: 'Анкеты', text: 'Заполни свою Genshin-анкету и загляни в анкеты других участников чата.' },
+  { id: 'updates', icon: '🔔', title: 'Что нового', text: 'Включи уведомления, чтобы узнавать о новых играх и возможностях первым. Новости приходят в личку от бота.' },
+  { id: 'mute', icon: '🔇', title: 'Само-мут', text: 'Нужна пауза? Само-мут на 2 минуты запретит тебе писать в чат. Работает, если у бота есть права администратора.' },
+  { id: 'contact', icon: '💬', title: 'Связь с разработчиком', text: 'Нашёл баг или есть идея? Напиши разработчику из экрана «Связь с разработчиком» или командой /feedback в чате.' },
 ];
 
 function escapeHtml(value) {
@@ -83,9 +83,10 @@ export async function openHelpGame({ haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass help-panel">
-      <header class="overlay-head">
-        <div><div class="eyebrow">HELP · MINI APP</div><h2>Справка</h2></div>
-        <button class="overlay-close icon-button" type="button" aria-label="Закрыть">×</button>
+      <header class="ds-head">
+        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
+        <h2>Справка</h2>
+        <span class="ds-round" aria-hidden="true">📖</span>
       </header>
       <div data-help-content></div>
     </div>`;
@@ -123,7 +124,7 @@ export async function openHelpGame({ haptic, statusElement }) {
             <p>${escapeHtml(description)}</p>
           </article>`).join('') : '<div class="help-empty">Команды не найдены.</div>'}
       </div>
-      <p class="help-legacy-note">Slash-команды сохранены как fallback. Для уже перенесённых механик предпочтительнее использовать карточки Mini App.</p>`;
+      <p class="help-legacy-note">Команды работают прямо в чате. Для большинства игр удобнее открыть здание в городе.</p>`;
   }
 
   function bind() {
@@ -154,11 +155,11 @@ export async function openHelpGame({ haptic, statusElement }) {
     content.innerHTML = `
       <div class="help-tabs">
         <button type="button" data-help-tab="guides" class="${tab === 'guides' ? 'active' : ''}">Как пользоваться</button>
-        <button type="button" data-help-tab="commands" class="${tab === 'commands' ? 'active' : ''}">Команды fallback</button>
+        <button type="button" data-help-tab="commands" class="${tab === 'commands' ? 'active' : ''}">Команды чата</button>
       </div>
       ${tab === 'guides' ? guidesMarkup() : commandsMarkup()}`;
     bind();
-    if (updateStatus) statusElement.textContent = tab === 'guides' ? 'Справка Mini App открыта.' : 'Открыт каталог fallback-команд.';
+    if (updateStatus) statusElement.textContent = tab === 'guides' ? 'Справка Mini App открыта.' : 'Открыт список команд.';
   }
 
   render();
