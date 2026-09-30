@@ -22,6 +22,10 @@ export default async function(chatId) {
     boss.currentHp = boss.hp;
     boss.listOfDamage = [];
     boss.aliveTime = new Date().getTime() + 15 * 60 * 1000;
+    // A fresh fight: no casts yet; the first one comes a few seconds in.
+    boss.lastAttack = null;
+    boss.attackLog = [];
+    boss.nextAttackAt = Date.now() + 5 * 1000;
 
     let currentSummons = boss.stats.currentSummons || bossTemplate.stats.currentSummons;
     let needSummons = boss.stats.needSummons || bossTemplate.stats.needSummons;
@@ -33,6 +37,7 @@ export default async function(chatId) {
     boss.markModified("skill");
     boss.markModified("stats");
     boss.markModified("listOfDamage");
+    boss.markModified("attackLog");
     await boss.save();
 
     return boss;

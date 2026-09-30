@@ -32,6 +32,7 @@ import { openSelfMute } from './self-mute.js';
 import { mountCity } from './city.js';
 import { openFriendsGame, openPlayerCard } from './friends.js';
 import { createLoader } from './loading.js';
+import { watchGlyphs } from './glyph-center.js';
 import { featuresForTab, navHtml, NAV_TABS } from './nav.js';
 
 const tg = window.Telegram?.WebApp;
@@ -221,6 +222,7 @@ async function loadState() {
 }
 
 async function boot() {
+  watchGlyphs(document.body);
   try {
     webglFx = startWebGL($('webgl'));
   } catch (error) {

@@ -139,3 +139,23 @@ export function rewardsPanel(loot) {
     ${rows.length ? rows.map(([icon, name, range]) => `<div class="mmo-reward"><span>${icon}</span><strong>${name}</strong><em>${range}</em></div>`).join('') : '<div class="boss-empty compact">Нет данных о награде.</div>'}
   </section>`;
 }
+
+/**
+ * The boss's own attacks with a countdown to the next cast
+ * (`data-boss-next` is ticked locally) and the latest casts.
+ */
+export function bossAttacksPanel(boss) {
+  const attacks = boss.attacks || [];
+  const log = (boss.attackLog || []).slice(0, 3);
+  return `
+  <section class="mmo-frame boss-attacks">
+    <div class="mmo-section-title"><strong>Атаки босса</strong><small data-boss-next data-until="${Date.now() + (Number(boss.nextAttackMs) || 0)}">${boss.damageList?.length ? 'готовится…' : 'ждёт первого удара'}</small></div>
+    <div class="boss-attack-list">${attacks.map(attack => `
+      <span class="boss-attack ${attack.target}" title="${escapeHtml(attack.description)}"><i>${escapeHtml(attack.icon)}</i><b>${escapeHtml(attack.name)}</b><small>${attack.target === 'all' ? 'по всем' : 'по одному'}</small></span>`).join('')}</div>
+    ${log.length ? `<ol class="boss-attack-feed">${log.map((record, index) => `
+      <li class="${index === 0 ? 'latest' : ''} ${record.hits.some(hit => hit.you) ? 'hit-you' : ''}">
+        <i>${escapeHtml(record.icon)}</i>
+        <div><strong>${escapeHtml(record.name)}</strong><small>${record.hits.map(hit => `${escapeHtml(hit.you ? 'ты' : hit.name)} −${formatNumber(hit.dmg)}${hit.killed ? ' 💀' : ''}`).join(' · ') || 'промах'}</small></div>
+      </li>`).join('')}</ol>` : ''}
+  </section>`;
+}
