@@ -2,6 +2,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { withLock as sharedLock } from '../functions/general/chatLock.js';
 import { fileURLToPath } from 'url';
 import { token, myId } from '../config.js';
 import { trustedChats } from '../data.js';
@@ -88,7 +89,6 @@ const GAME_ASSETS_DIR = path.resolve(__dirname, '../images');
 // browser runtime folders are exposed.
 const THREE_DIR = path.resolve(__dirname, '../node_modules/three');
 const THREE_PUBLIC_PREFIXES = ['build/', 'examples/jsm/'];
-const locks = new Map();
 const feedbackCooldowns = new Map();
 const FEEDBACK_COOLDOWN_MS = 30_000;
 const ARCADE_GAMES = new Set(Object.keys(getArcadeConfig()));
@@ -252,21 +252,8 @@ function lockScope(key) {
   return key.startsWith('clan:') ? key : key.split(':')[0];
 }
 
-async function withLock(rawKey, action) {
-  const key = lockScope(rawKey);
-  const previous = locks.get(key) || Promise.resolve();
-  let release;
-  const gate = new Promise(resolve => { release = resolve; });
-  const tail = previous.catch(() => {}).then(() => gate);
-  locks.set(key, tail);
-
-  await previous.catch(() => {});
-  try {
-    return await action();
-  } finally {
-    release();
-    if (locks.get(key) === tail) locks.delete(key);
-  }
+function withLock(rawKey, action) {
+  return sharedLock(lockScope(rawKey), action);
 }
 
 const RATE_WINDOW_MS = 10_000;

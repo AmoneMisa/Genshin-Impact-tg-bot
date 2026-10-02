@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { Bot, InputFile } from 'node-telegram-bot-api';
 import { fromPath } from 'node-telegram-bot-api/node';
+import { withLock, chatIdOfUpdate } from '../functions/general/chatLock.js';
 
 function clean(object) {
   return Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
@@ -56,7 +57,11 @@ export class LegacyTelegramBotAdapter {
     this.replyListeners = new Map();
 
     this.core.use(async (ctx, next) => {
-      await this.dispatchUpdate(ctx.update);
+      // Same per-chat lock as the Mini App API, so a chat command and an app
+      // request never read-modify-write the same Chat document at once.
+      const chatId = chatIdOfUpdate(ctx.update);
+      if (chatId === null) await this.dispatchUpdate(ctx.update);
+      else await withLock(chatId, () => this.dispatchUpdate(ctx.update));
       if (next) await next();
     });
 
