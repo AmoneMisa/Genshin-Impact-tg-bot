@@ -1,3 +1,4 @@
+import { withLock } from '../general/chatLock.js';
 import bossDealDamage from '../game/boss/bossDealDamage.js';
 import getBossDealDamageMessage from '../game/boss/getters/getBossDealDamageMessage.js';
 import isBossAlive from '../game/boss/getBossStatus/isBossAlive.js';
@@ -13,11 +14,14 @@ export default async function() {
             continue;
         }
 
-        let chat = await getChatSession(boss.chatId);
-        let dmgList = bossDealDamage(chat.members, boss);
-
-        await chat.save();
-        await boss.save();
+        let chat;
+        let dmgList;
+        await withLock(boss.chatId, async () => {
+            chat = await getChatSession(boss.chatId);
+            dmgList = bossDealDamage(chat.members, boss);
+            await chat.save();
+            await boss.save();
+        });
 
         if (chat.bossSettings?.showDamageMessage === 0) {
             continue;

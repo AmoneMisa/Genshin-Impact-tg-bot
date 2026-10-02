@@ -1,3 +1,4 @@
+import { withLock } from "../general/chatLock.js";
 import Boss from "../../db/models/Boss.js";
 import Chat from "../../db/models/Chat.js";
 import sendMessageWithDelete from "../tgBotFunctions/sendMessageWithDelete.js";
@@ -13,8 +14,9 @@ export default async function() {
     });
 
     for (const boss of expiredBosses) {
-        const chat = await Chat.findOne({ chatId: boss.chatId });
-        if (chat) {
+        await withLock(boss.chatId, async () => {
+            const chat = await Chat.findOne({ chatId: boss.chatId });
+            if (!chat) return;
             for (const player of boss.listOfDamage || []) {
                 const member = chat.members.find(m => String(m.userId) === String(player.id));
                 if (member?.game?.gameClass?.stats) {
@@ -23,7 +25,7 @@ export default async function() {
                 }
             }
             await chat.save();
-        }
+        });
 
         boss.skill = null;
         boss.currentHp = 0;

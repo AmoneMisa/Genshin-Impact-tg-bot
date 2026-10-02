@@ -1,26 +1,31 @@
+import { withLock } from '../general/chatLock.js';
+import listChatIds from '../getters/listChatIds.js';
 import Chat from "../../db/models/Chat.js";
 
 /**
  * Сбрасывает количество попыток открытия сундука у всех игроков до 1
  */
 export default async function() {
-    const chats = await Chat.find({});
+    const chatIds = await listChatIds();
+    for (const chatId of chatIds) {
+        await withLock(chatId, async () => {
+            const chat = await Chat.findOne({ chatId });
+            if (!chat) return;
+            let updated = false;
 
-    for (const chat of chats) {
-        let updated = false;
+            for (const member of chat.members) {
+                if (member.userChatData?.user?.is_bot) continue;
 
-        for (const member of chat.members) {
-            if (member.userChatData?.user?.is_bot) continue;
+                const game = member.game;
+                if (!game) continue;
 
-            const game = member.game;
-            if (!game) continue;
+                member.chestTries = 1;
+                updated = true;
+            }
 
-            member.chestTries = 1;
-            updated = true;
-        }
-
-        if (updated) {
-            await chat.save();
-        }
+            if (updated) {
+                await chat.save();
+            }
+        });
     }
 }
