@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
 
 const REASONS = {
@@ -13,14 +14,6 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function initials(name) {
   const parts = String(name || '').trim().split(/\s+/).filter(Boolean);

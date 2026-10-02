@@ -94,7 +94,7 @@
 .sword-ranking-rank { font: 700 13px/1 var(--serif); color: var(--gold); text-align: center; }
 .sword-ranking-name { font-size: 13px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sword-ranking-row strong { font-size: 13px; color: #eee4cf; }
-.sword-ranking-row small { font-size: 10px; color: rgba(238, 228, 207, .6); }
+.sword-ranking-row small { font-size: 11px; color: rgba(238, 228, 207, .6); }
 .sword-ranking-empty { padding: 10px; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .6); }
 
 @keyframes sword-embers { from { opacity: .6; } to { opacity: 1; } }

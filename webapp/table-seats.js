@@ -1,3 +1,5 @@
+import { escapeHtml } from './escape-html.js';
+export { escapeHtml };
 // Shared UI for the multiplayer table games (21, elements): seat tiles with
 // class portraits, empty seats for registration, a countdown ring, a bet
 // stepper and the stuck-table reset banner. Each game supplies its own hand
@@ -5,9 +7,6 @@
 
 import { menuArtFor } from './menu-art.js';
 
-export function escapeHtml(value) {
-  return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
-}
 
 export function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);

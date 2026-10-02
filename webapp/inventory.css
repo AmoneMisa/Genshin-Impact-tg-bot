@@ -68,7 +68,7 @@
 .inventory-resources strong { font: 700 13px/1 system-ui, sans-serif; color: #fff; }
 .inventory-meta { display: grid; gap: 6px; }
 .inventory-meta article { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .12); background: #0f0c15; }
-.inventory-meta small { display: block; font-size: 10px; color: rgba(238, 228, 207, .6); }
+.inventory-meta small { display: block; font-size: 11px; color: rgba(238, 228, 207, .6); }
 .inventory-meta strong { font-size: 13px; color: #fff; }
 .inventory-overlay.busy button { pointer-events: none; }
 

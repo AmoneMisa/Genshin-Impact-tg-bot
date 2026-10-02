@@ -71,7 +71,7 @@
   color: rgb(var(--vfx-rgb));
   background: rgba(7,9,16,.78);
   box-shadow: 0 5px 18px rgba(0,0,0,.28), 0 0 16px rgb(var(--vfx-rgb) / .12);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 850;
   line-height: 1.2;
   text-align: center;
@@ -164,7 +164,7 @@
 
 @media (max-width: 390px) {
   .vfx-particle { box-shadow: 0 0 7px rgb(var(--vfx-rgb) / .7); }
-  .vfx-float-label { max-width: 66%; font-size: 9px; }
+  .vfx-float-label { max-width: 66%; font-size: 11px; }
   .vfx-rarity-beam { width: 62%; }
 }
 

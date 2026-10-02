@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 const REASONS = {
   invalid_title: 'Титул должен быть одним словом из русских или латинских букв, до 32 символов.',
   sender_not_found: 'Не удалось найти твоего персонажа в чате.',
@@ -5,14 +6,6 @@ const REASONS = {
   no_recipients: 'В чате нет доступных участников для титула.',
 };
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function remain(until) {
   const ms = Math.max(0, Number(until || 0) - Date.now());

@@ -70,7 +70,7 @@
   content: "◆";
   position: absolute;
   color: #c9a86b;
-  font-size: 10px;
+  font-size: 11px;
   text-shadow: 0 0 10px rgba(219,184,112,.28);
 }
 
@@ -168,7 +168,7 @@
 .hud-label {
   color: #d6d0dc;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-shadow: 0 1px 1px #000;
 }
@@ -176,7 +176,7 @@
 .hud-meter > strong {
   min-width: 0;
   color: #e9e5ed;
-  font-size: 9px;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
   font-weight: 760;
   text-align: right;
@@ -306,7 +306,7 @@
   .hero-identity strong { font-size: 15px; }
   .hud-meter { grid-template-columns: 23px minmax(0,1fr) 65px; gap: 5px; }
   .hud-meter > strong { font-size: 8px; }
-  .hud-label { font-size: 9px; }
+  .hud-label { font-size: 11px; }
   .hud-track { height: 9px; }
 }
 

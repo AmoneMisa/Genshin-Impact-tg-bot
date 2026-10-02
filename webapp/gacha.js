@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 // Gacha, banner style: one painted banner per spiral, a summon sequence
 // (magic circle, light pillar in the grade's colour, burst) and the item
 // reveal with Оставить / Распылить. Odds, payment and the item are server-side.
@@ -14,9 +15,6 @@ export const GRADE_TONES = Object.freeze({
 });
 
 function number(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0); }
-function escapeHtml(value) {
-  return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
-}
 function gradeLabel(grade) { return grade === 'noGrade' ? '—' : grade; }
 export function gradeTone(grade) { return GRADE_TONES[grade] || 'plain'; }
 

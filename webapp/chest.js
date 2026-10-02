@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 // Chest game, prototype flow: pick one of nine 3D chests -> the chosen chest
 // bursts open in a close-up with its reward -> "Получить" -> after the third
 // pick every chest goes dark and the session's rewards are summarised.
@@ -29,9 +30,6 @@ const PRIZE_TITLES = {
   sword: 'Меч', brokenSword: 'Меч', immuneToUpSword: 'Иммунитет',
 };
 
-function escapeHtml(value) {
-  return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
-}
 
 export function rewardText(prize) {
   if (prize.type === 'nothing') return 'Пусто';

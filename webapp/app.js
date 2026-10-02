@@ -1,3 +1,4 @@
+import { installOverlayA11y } from './overlay-a11y.js';
 import { startWebGL } from './renderer.js';
 import { menuArtFor } from './menu-art.js';
 import { startGameVfx } from './vfx.js';
@@ -283,3 +284,5 @@ async function boot() {
 }
 
 boot();
+
+installOverlayA11y();

@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
 
 export const SKILL_RUNES = Object.freeze({ damage: '⚔️', heal: '✚', shield: '🛡️', utility: '✦' });
@@ -16,14 +17,6 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function usageText(usage) {
   const resource = usage.hp > 0 ? `${formatNumber(usage.hp)} HP` : usage.mp > 0 ? `${formatNumber(usage.mp)} MP` : 'бесплатно';

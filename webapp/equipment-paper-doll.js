@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { renderForgeLootArt } from './loot-forge.js';
 import { renderPaperDollAvatar } from './equipment-paper-doll-avatar.js';
 
@@ -26,14 +27,6 @@ export const PORTRAIT_SLOT_LAYOUT = {
   necklace:[91,7], rightEar:[91,21], cloak:[91,35], down:[91,49], rightHand:[91,63], rightRing:[91,77],
 };
 
-function escapeHtml(value){
-  return String(value??'')
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
-    .replaceAll("'",'&#039;');
-}
 
 function sameSnapshot(item,slotItem){
   if(!item||!slotItem)return false;

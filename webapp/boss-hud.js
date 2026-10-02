@@ -1,3 +1,5 @@
+import { escapeHtml } from './escape-html.js';
+export { escapeHtml };
 // MMO-style boss raid HUD (pure HTML builders, styled in boss.css):
 // target frame, player frame, status-effect icons, party strip with HP rings,
 // skill hotbar with cooldown sweep, ranked damage meter and the rewards panel
@@ -15,11 +17,6 @@ export const STATUS_ICONS = Object.freeze({
 
 const CLASS_COLORS = Object.freeze({ warrior: '#d9744a', archer: '#6fcf6b', mage: '#8f7bff', priest: '#f1d27a', noClass: '#a8a8b8' });
 
-export function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
-}
 
 export function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Math.round(Number(value) || 0));

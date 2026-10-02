@@ -211,8 +211,30 @@ async function withLock(rawKey, action) {
   }
 }
 
+const RATE_WINDOW_MS = 10_000;
+const RATE_MAX_REQUESTS = 60;
+const rateBuckets = new Map();
+
+function enforceRateLimit(userId) {
+  const now = Date.now();
+  let bucket = rateBuckets.get(userId);
+  if (!bucket || bucket.reset <= now) {
+    bucket = { count: 0, reset: now + RATE_WINDOW_MS };
+    rateBuckets.set(userId, bucket);
+    if (rateBuckets.size > 10_000) {
+      for (const [id, item] of rateBuckets) if (item.reset <= now) rateBuckets.delete(id);
+    }
+  }
+  if (++bucket.count > RATE_MAX_REQUESTS) {
+    const error = new Error('Too many requests');
+    error.status = 429;
+    throw error;
+  }
+}
+
 async function authorize(req) {
   const validated = validateTelegramInitData(getInitData(req), token);
+  if (validated.user?.id) enforceRateLimit(validated.user.id);
   if (!validated.user?.id) {
     const error = new Error('Telegram user is missing');
     error.status = 401;

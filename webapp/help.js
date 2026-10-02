@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 const COMMAND_GROUPS = [
   {
     id: 'games',
@@ -51,14 +52,6 @@ const GUIDES = [
   { id: 'contact', icon: '💬', title: 'Связь с разработчиком', text: 'Нашёл баг или есть идея? Напиши разработчику из экрана «Связь с разработчиком» или командой /feedback в чате.' },
 ];
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function commandRows(query, groupId) {
   const normalized = query.trim().toLowerCase();

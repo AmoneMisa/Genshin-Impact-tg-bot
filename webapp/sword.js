@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 // Daily sword, forge style: the blade on an anvil beside a millimetre ruler;
 // a roll hammers it with sparks, then it grows or shrinks by the server delta.
 import { renderDailySwordArt } from './loot-renderer.js';
@@ -5,7 +6,6 @@ import { renderDailySwordArt } from './loot-renderer.js';
 const REASONS = { cooldown: 'Сегодня попытка уже использована.' };
 
 function formatNumber(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0); }
-function escapeHtml(value) { return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;'); }
 function duration(ms) {
   const total = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));
   const hours = Math.floor(total / 3600), minutes = Math.floor((total % 3600) / 60), seconds = total % 60;
