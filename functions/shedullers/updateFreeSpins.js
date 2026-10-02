@@ -1,3 +1,5 @@
+import { withLock } from '../general/chatLock.js';
+import listChatIds from '../getters/listChatIds.js';
 import Chat from "../../db/models/Chat.js";
 import gachaTemplate from "../../template/gachaTemplate.js";
 
@@ -12,39 +14,42 @@ import gachaTemplate from "../../template/gachaTemplate.js";
  * если он был повреждён.
  */
 export default async function resetGachaSpins() {
-    const chats = await Chat.find({});
+    const chatIds = await listChatIds();
+    for (const chatId of chatIds) {
+        await withLock(chatId, async () => {
+            const chat = await Chat.findOne({ chatId });
+            if (!chat) return;
+            let updated = false;
 
-    for (const chat of chats) {
-        let updated = false;
+            for (const member of chat.members) {
+                if (member.userChatData?.user?.is_bot) continue;
 
-        for (const member of chat.members) {
-            if (member.userChatData?.user?.is_bot) continue;
+                const game = member.game;
+                if (!game) continue;
 
-            const game = member.game;
-            if (!game) continue;
-
-            // Восстанавливаем корректную форму (массив) на случай старых данных.
-            if (!Array.isArray(game.gacha)) {
-                game.gacha = [];
-            }
-
-            for (const template of gachaTemplate) {
-                const entry = game.gacha.find(item => item.name === template.name);
-                if (entry) {
-                    entry.freeSpins = template.freeSpins;
-                } else {
-                    game.gacha.push({
-                        name: template.name,
-                        freeSpins: template.freeSpins
-                    });
+                // Восстанавливаем корректную форму (массив) на случай старых данных.
+                if (!Array.isArray(game.gacha)) {
+                    game.gacha = [];
                 }
+
+                for (const template of gachaTemplate) {
+                    const entry = game.gacha.find(item => item.name === template.name);
+                    if (entry) {
+                        entry.freeSpins = template.freeSpins;
+                    } else {
+                        game.gacha.push({
+                            name: template.name,
+                            freeSpins: template.freeSpins
+                        });
+                    }
+                }
+
+                updated = true;
             }
 
-            updated = true;
-        }
-
-        if (updated) {
-            await chat.save();
-        }
+            if (updated) {
+                await chat.save();
+            }
+        });
     }
 }
