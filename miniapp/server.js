@@ -284,9 +284,7 @@ function enforceRateLimit(userId) {
     }
   }
   if (++bucket.count > RATE_MAX_REQUESTS) {
-    const error = new Error('Too many requests');
-    error.status = 429;
-    throw error;
+    throw httpError(429, 'Too many requests');
   }
 }
 
@@ -294,25 +292,19 @@ async function authorize(req) {
   const validated = validateTelegramInitData(getInitData(req), token);
   if (validated.user?.id) enforceRateLimit(validated.user.id);
   if (!validated.user?.id) {
-    const error = new Error('Telegram user is missing');
-    error.status = 401;
-    throw error;
+    throw httpError(401, 'Telegram user is missing');
   }
 
   const chatId = resolveGameChatId(validated);
   if (!trustedChats.includes(String(chatId))) {
-    const error = new Error('This chat is not trusted');
-    error.status = 403;
-    throw error;
+    throw httpError(403, 'This chat is not trusted');
   }
 
   const session = await getSession(chatId, validated.user.id);
   const isGroupContext = String(chatId) !== String(validated.user.id);
   const membershipStatus = session.userChatData?.status || session.$locals?.telegramMembership?.status;
   if (isGroupContext && ['left', 'kicked'].includes(membershipStatus)) {
-    const error = new Error('User is not a member of this game chat');
-    error.status = 403;
-    throw error;
+    throw httpError(403, 'User is not a member of this game chat');
   }
 
   return { validated, chatId, userId: validated.user.id, session };
@@ -326,9 +318,32 @@ function stateFor(context) {
   });
 }
 
+function httpError(status, message) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+
+/** Wraps a route handler: any thrown error becomes a proper JSON error response. */
+function guarded(scope, handler) {
+  return async (...args) => {
+    try {
+      return await handler(...args);
+    } catch (error) {
+      return sendApiError(args[1], scope, error);
+    }
+  };
+}
+
+/** Game actions answer 200 on success, 409 on a rejected action, plus fresh state. */
+function sendResult(res, result, context) {
+  return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
+}
+
 function sendApiError(res, scope, error) {
   if (error.reason === GOLD_LOCK_REASON) return sendJson(res, 409, { ok: false, reason: error.reason, error: error.message });
-  console.error(`[miniapp] ${scope}:`, error);
+  if (error.status && error.status < 500) console.warn(`[miniapp] ${scope}: ${error.status} ${error.message}`);
+  else console.error(`[miniapp] ${scope}:`, error);
   // Only errors that opted into a status expose their message; anything else is
   // an internal failure and must not leak details (or masquerade as 401).
   if (error.status) return sendJson(res, error.status, { error: error.message });
@@ -352,327 +367,241 @@ function refreshContextSession(context, chat) {
 
 function validateArcadeGameId(gameId) {
   if (typeof gameId !== 'string' || !ARCADE_GAMES.has(gameId)) {
-    const error = new Error('Unknown arcade game');
-    error.status = 400;
-    throw error;
+    throw httpError(400, 'Unknown arcade game');
   }
 }
 
-async function bootstrap(req, res) {
-  try {
-    const context = await authorize(req);
-    // Presence for friends lists; throttled inside stampLastSeen.
-    if (stampLastSeen(context.session)) {
-      try { await saveSession(context.session); } catch (error) { console.warn('last seen stamp failed', error.message); }
-    }
-    return sendJson(res, 200, stateFor(context));
-  } catch (error) {
-    return sendApiError(res, 'bootstrap', error);
+const bootstrap = guarded('bootstrap', async (req, res) => {
+  const context = await authorize(req);
+  // Presence for friends lists; throttled inside stampLastSeen.
+  if (stampLastSeen(context.session)) {
+    try { await saveSession(context.session); } catch (error) { console.warn('last seen stamp failed', error.message); }
   }
-}
+  return sendJson(res, 200, stateFor(context));
+});
 
-async function updatesState(req, res) {
-  try {
-    const context = await authorize(req);
+const updatesState = guarded('updates state', async (req, res) => {
+  const context = await authorize(req);
+  context.session = await getSession(context.chatId, context.userId);
+  return sendJson(res, 200, getUpdatesState(context.session));
+});
+
+const updatesSettings = guarded('updates settings', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (typeof body.enabled !== 'boolean') {
+    throw httpError(400, 'enabled must be boolean');
+  }
+
+  const result = await withLock(`${context.chatId}:${context.userId}:updates`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return sendJson(res, 200, getUpdatesState(context.session));
-  } catch (error) {
-    return sendApiError(res, 'updates state', error);
+    const changed = setUpdatesEnabled(context.session, body.enabled);
+    if (changed.ok) await saveSession(context.session);
+    return changed;
+  });
+
+  return sendJson(res, result.ok ? 200 : 409, {
+    ...result,
+    updates: getUpdatesState(context.session),
+    state: stateFor(context),
+  });
+});
+
+const feedbackSubmit = guarded('feedback submit', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const normalized = normalizeFeedbackMessage(body.message);
+  if (!normalized.ok) {
+    throw httpError(400, normalized.reason);
   }
-}
 
-async function updatesSettings(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (typeof body.enabled !== 'boolean') {
-      const error = new Error('enabled must be boolean');
-      error.status = 400;
-      throw error;
-    }
-
-    const result = await withLock(`${context.chatId}:${context.userId}:updates`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const changed = setUpdatesEnabled(context.session, body.enabled);
-      if (changed.ok) await saveSession(context.session);
-      return changed;
-    });
-
-    return sendJson(res, result.ok ? 200 : 409, {
-      ...result,
-      updates: getUpdatesState(context.session),
-      state: stateFor(context),
-    });
-  } catch (error) {
-    return sendApiError(res, 'updates settings', error);
+  const cooldownKey = String(context.userId);
+  const now = Date.now();
+  const lastSentAt = feedbackCooldowns.get(cooldownKey) || 0;
+  const waitMs = FEEDBACK_COOLDOWN_MS - (now - lastSentAt);
+  if (waitMs > 0) {
+    throw httpError(429, `Подождите ${Math.ceil(waitMs / 1000)} сек. перед следующим сообщением`);
   }
-}
 
-async function feedbackSubmit(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    const normalized = normalizeFeedbackMessage(body.message);
-    if (!normalized.ok) {
-      const error = new Error(normalized.reason);
-      error.status = 400;
-      throw error;
-    }
+  await sendMessage(myId, formatFeedbackForDeveloper({
+    message: normalized.message,
+    user: context.validated.user,
+    chatId: context.chatId,
+  }), { disable_notification: true });
+  feedbackCooldowns.set(cooldownKey, now);
 
-    const cooldownKey = String(context.userId);
-    const now = Date.now();
-    const lastSentAt = feedbackCooldowns.get(cooldownKey) || 0;
-    const waitMs = FEEDBACK_COOLDOWN_MS - (now - lastSentAt);
-    if (waitMs > 0) {
-      const error = new Error(`Подождите ${Math.ceil(waitMs / 1000)} сек. перед следующим сообщением`);
-      error.status = 429;
-      throw error;
-    }
+  return sendJson(res, 200, { ok: true });
+});
 
-    await sendMessage(myId, formatFeedbackForDeveloper({
-      message: normalized.message,
-      user: context.validated.user,
-      chatId: context.chatId,
-    }), { disable_notification: true });
-    feedbackCooldowns.set(cooldownKey, now);
+const formsState = guarded('forms state', async (req, res) => {
+  const context = await authorize(req);
+  const forms = await withLock(`${context.chatId}:forms`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    return getFormsState(chat, context.userId);
+  });
+  return sendJson(res, 200, forms);
+});
 
-    return sendJson(res, 200, { ok: true });
-  } catch (error) {
-    return sendApiError(res, 'feedback submit', error);
+const formsSave = guarded('forms save', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:forms`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    const saved = savePersonalForm(chat, context.userId, body.fields);
+    if (saved.ok) await chat.save();
+    return saved;
+  });
+  return sendResult(res, result, context);
+});
+
+const playerProfileState = guarded('player profile state', async (req, res) => {
+  const context = await authorize(req);
+  const profile = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getPlayerProfileState(context.session);
+  });
+  return sendJson(res, 200, profile);
+});
+
+const playerProfileClass = guarded('player profile class', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (typeof body.className !== 'string' || !body.className) {
+    throw httpError(400, 'className is required');
   }
-}
 
-async function formsState(req, res) {
-  try {
-    const context = await authorize(req);
-    const forms = await withLock(`${context.chatId}:forms`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      return getFormsState(chat, context.userId);
-    });
-    return sendJson(res, 200, forms);
-  } catch (error) {
-    return sendApiError(res, 'forms state', error);
+  const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const changed = changePlayerClassForMiniApp(context.session, body.className);
+    if (changed.ok) await saveSession(context.session);
+    return changed;
+  });
+
+  return sendResult(res, result, context);
+});
+
+const playerProfileGender = guarded('player profile gender', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (typeof body.gender !== 'string' || !body.gender) {
+    throw httpError(400, 'gender is required');
   }
-}
 
-async function formsSave(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    const result = await withLock(`${context.chatId}:forms`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      const saved = savePersonalForm(chat, context.userId, body.fields);
-      if (saved.ok) await chat.save();
-      return saved;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'forms save', error);
+  const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const changed = changePlayerGenderForMiniApp(context.session, body.gender);
+    if (changed.ok) await saveSession(context.session);
+    return changed;
+  });
+
+  return sendResult(res, result, context);
+});
+
+const playerSkillsState = guarded('player skills state', async (req, res) => {
+  const context = await authorize(req);
+  const skills = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getSkillsState(context.session);
+  });
+  return sendJson(res, 200, skills);
+});
+
+const playerSkillsEnchant = guarded('player skills enchant', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  const slot = Number(body.slot);
+  if (!Number.isInteger(slot) || slot < 0) {
+    throw httpError(400, 'slot must be a non-negative integer');
   }
-}
 
-async function playerProfileState(req, res) {
-  try {
-    const context = await authorize(req);
-    const profile = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getPlayerProfileState(context.session);
-    });
-    return sendJson(res, 200, profile);
-  } catch (error) {
-    return sendApiError(res, 'player profile state', error);
+  const result = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const enchanted = enchantSkillForMiniApp(context.session, slot);
+    if (enchanted.ok) await saveSession(context.session);
+    return enchanted;
+  });
+
+  return sendResult(res, result, context);
+});
+
+const inventoryState = guarded('inventory state', async (req, res) => {
+  const context = await authorize(req);
+  const inventory = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getInventoryState(context.session);
+  });
+  return sendJson(res, 200, inventory);
+});
+
+const inventoryUse = guarded('inventory use', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!['string', 'number'].includes(typeof body.key) || String(body.key).trim() === '') {
+    throw httpError(400, 'key is required');
   }
-}
 
-async function playerProfileClass(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (typeof body.className !== 'string' || !body.className) {
-      const error = new Error('className is required');
-      error.status = 400;
-      throw error;
-    }
+  const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const used = useInventoryPotion(context.session, body.key);
+    if (used.ok) await saveSession(context.session);
+    return used;
+  });
 
-    const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const changed = changePlayerClassForMiniApp(context.session, body.className);
-      if (changed.ok) await saveSession(context.session);
-      return changed;
-    });
+  return sendResult(res, result, context);
+});
 
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'player profile class', error);
+const exchangeState = guarded('exchange state', async (req, res) => {
+  const context = await authorize(req);
+  const exchange = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getExchangeState(context.session);
+  });
+  return sendJson(res, 200, exchange);
+});
+
+const exchangeBuy = guarded('exchange buy', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  const result = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const purchase = buyCrystalsForMiniApp(context.session, body.amount);
+    if (purchase.ok) await saveSession(context.session);
+    return purchase;
+  });
+  return sendResult(res, result, context);
+});
+
+const goldTransferState = guarded('gold transfer state', async (req, res) => {
+  const context = await authorize(req);
+  const transfer = await withLock(`${context.chatId}:gold-transfer`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    return getGoldTransferState(chat, context.userId);
+  });
+  return sendJson(res, 200, transfer);
+});
+
+const goldTransferSend = guarded('gold transfer send', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  if (!['string', 'number'].includes(typeof body.recipientId) || String(body.recipientId).trim() === '') {
+    throw httpError(400, 'recipientId is required');
   }
-}
 
-async function playerProfileGender(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (typeof body.gender !== 'string' || !body.gender) {
-      const error = new Error('gender is required');
-      error.status = 400;
-      throw error;
-    }
-
-    const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const changed = changePlayerGenderForMiniApp(context.session, body.gender);
-      if (changed.ok) await saveSession(context.session);
-      return changed;
-    });
-
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'player profile gender', error);
-  }
-}
-
-async function playerSkillsState(req, res) {
-  try {
-    const context = await authorize(req);
-    const skills = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getSkillsState(context.session);
-    });
-    return sendJson(res, 200, skills);
-  } catch (error) {
-    return sendApiError(res, 'player skills state', error);
-  }
-}
-
-async function playerSkillsEnchant(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    assertGoldUnlocked(context);
-    const slot = Number(body.slot);
-    if (!Number.isInteger(slot) || slot < 0) {
-      const error = new Error('slot must be a non-negative integer');
-      error.status = 400;
-      throw error;
-    }
-
-    const result = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const enchanted = enchantSkillForMiniApp(context.session, slot);
-      if (enchanted.ok) await saveSession(context.session);
-      return enchanted;
-    });
-
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'player skills enchant', error);
-  }
-}
-
-async function inventoryState(req, res) {
-  try {
-    const context = await authorize(req);
-    const inventory = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getInventoryState(context.session);
-    });
-    return sendJson(res, 200, inventory);
-  } catch (error) {
-    return sendApiError(res, 'inventory state', error);
-  }
-}
-
-async function inventoryUse(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (!['string', 'number'].includes(typeof body.key) || String(body.key).trim() === '') {
-      const error = new Error('key is required');
-      error.status = 400;
-      throw error;
-    }
-
-    const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const used = useInventoryPotion(context.session, body.key);
-      if (used.ok) await saveSession(context.session);
-      return used;
-    });
-
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'inventory use', error);
-  }
-}
-
-async function exchangeState(req, res) {
-  try {
-    const context = await authorize(req);
-    const exchange = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getExchangeState(context.session);
-    });
-    return sendJson(res, 200, exchange);
-  } catch (error) {
-    return sendApiError(res, 'exchange state', error);
-  }
-}
-
-async function exchangeBuy(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    assertGoldUnlocked(context);
-    const result = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const purchase = buyCrystalsForMiniApp(context.session, body.amount);
-      if (purchase.ok) await saveSession(context.session);
-      return purchase;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'exchange buy', error);
-  }
-}
-
-async function goldTransferState(req, res) {
-  try {
-    const context = await authorize(req);
-    const transfer = await withLock(`${context.chatId}:gold-transfer`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      return getGoldTransferState(chat, context.userId);
-    });
-    return sendJson(res, 200, transfer);
-  } catch (error) {
-    return sendApiError(res, 'gold transfer state', error);
-  }
-}
-
-async function goldTransferSend(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    assertGoldUnlocked(context);
-    if (!['string', 'number'].includes(typeof body.recipientId) || String(body.recipientId).trim() === '') {
-      const error = new Error('recipientId is required');
-      error.status = 400;
-      throw error;
-    }
-
-    const result = await withLock(`${context.chatId}:gold-transfer`, async () => {
-      const chat = await getChatSession(context.chatId);
-      const moved = transferGoldForMiniApp(chat, context.userId, body.recipientId, body.amount);
-      if (moved.ok) await chat.save();
-      refreshContextSession(context, chat);
-      return moved;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'gold transfer send', error);
-  }
-}
+  const result = await withLock(`${context.chatId}:gold-transfer`, async () => {
+    const chat = await getChatSession(context.chatId);
+    const moved = transferGoldForMiniApp(chat, context.userId, body.recipientId, body.amount);
+    if (moved.ok) await chat.save();
+    refreshContextSession(context, chat);
+    return moved;
+  });
+  return sendResult(res, result, context);
+});
 
 const SOCIAL_REASONS_STATUS = { not_member: 403, unknown_player: 404 };
 
@@ -685,860 +614,658 @@ async function clanInfo(userId) {
   }
 }
 
-async function socialState(req, res) {
-  try {
-    const context = await authorize(req);
+const socialState = guarded('social state', async (req, res) => {
+  const context = await authorize(req);
+  const chat = await getChatSession(context.chatId);
+  const clan = await clanInfo(context.userId);
+  return sendJson(res, 200, getSocialState(chat, context.userId, { clanMemberIds: clan.memberIds, clanName: clan.name }));
+});
+
+const socialFriend = guarded('social friend', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!['string', 'number'].includes(typeof body.userId) || !['add', 'remove'].includes(body.action)) {
+    throw httpError(400, 'userId and action (add | remove) are required');
+  }
+  const result = await withLock(`${context.chatId}:social`, async () => {
     const chat = await getChatSession(context.chatId);
-    const clan = await clanInfo(context.userId);
-    return sendJson(res, 200, getSocialState(chat, context.userId, { clanMemberIds: clan.memberIds, clanName: clan.name }));
-  } catch (error) {
-    return sendApiError(res, 'social state', error);
-  }
-}
+    const updated = setFriend(chat, context.userId, String(body.userId), body.action);
+    if (updated.ok) await chat.save();
+    return { updated, chat };
+  });
+  const clan = await clanInfo(context.userId);
+  const social = getSocialState(result.chat, context.userId, { clanMemberIds: clan.memberIds, clanName: clan.name });
+  const status = result.updated.ok ? 200 : (SOCIAL_REASONS_STATUS[result.updated.reason] || 409);
+  return sendJson(res, status, { ...result.updated, social });
+});
 
-async function socialFriend(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (!['string', 'number'].includes(typeof body.userId) || !['add', 'remove'].includes(body.action)) {
-      const error = new Error('userId and action (add | remove) are required');
-      error.status = 400;
-      throw error;
-    }
-    const result = await withLock(`${context.chatId}:social`, async () => {
-      const chat = await getChatSession(context.chatId);
-      const updated = setFriend(chat, context.userId, String(body.userId), body.action);
-      if (updated.ok) await chat.save();
-      return { updated, chat };
-    });
-    const clan = await clanInfo(context.userId);
-    const social = getSocialState(result.chat, context.userId, { clanMemberIds: clan.memberIds, clanName: clan.name });
-    const status = result.updated.ok ? 200 : (SOCIAL_REASONS_STATUS[result.updated.reason] || 409);
-    return sendJson(res, status, { ...result.updated, social });
-  } catch (error) {
-    return sendApiError(res, 'social friend', error);
-  }
-}
+const playerCard = guarded('player card', async (req, res, requestUrl) => {
+  const context = await authorize(req);
+  const targetId = requestUrl.searchParams.get('userId') || String(context.userId);
+  const chat = await getChatSession(context.chatId);
+  const clan = await clanInfo(targetId);
+  const card = getPlayerCard(chat, targetId, context.userId, { clanName: clan.name });
+  if (!card) return sendJson(res, 404, { error: 'Игрок не найден в этом чате', reason: 'unknown_player' });
+  return sendJson(res, 200, card);
+});
 
-async function playerCard(req, res, requestUrl) {
-  try {
-    const context = await authorize(req);
-    const targetId = requestUrl.searchParams.get('userId') || String(context.userId);
+const stealState = guarded('steal state', async (req, res) => {
+  const context = await authorize(req);
+  const steal = await withLock(`${context.chatId}:steal`, async () => {
     const chat = await getChatSession(context.chatId);
-    const clan = await clanInfo(targetId);
-    const card = getPlayerCard(chat, targetId, context.userId, { clanName: clan.name });
-    if (!card) return sendJson(res, 404, { error: 'Игрок не найден в этом чате', reason: 'unknown_player' });
-    return sendJson(res, 200, card);
-  } catch (error) {
-    return sendApiError(res, 'player card', error);
-  }
-}
+    refreshContextSession(context, chat);
+    const changed = prepareStealMember(context.session);
+    if (changed) await chat.save();
+    return getStealState(chat, context.userId);
+  });
+  return sendJson(res, 200, steal);
+});
 
-async function stealState(req, res) {
-  try {
-    const context = await authorize(req);
-    const steal = await withLock(`${context.chatId}:steal`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      const changed = prepareStealMember(context.session);
-      if (changed) await chat.save();
-      return getStealState(chat, context.userId);
-    });
-    return sendJson(res, 200, steal);
-  } catch (error) {
-    return sendApiError(res, 'steal state', error);
+const stealAttack = guarded('steal attack', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!['string', 'number'].includes(typeof body.targetId) || String(body.targetId).trim() === '') {
+    throw httpError(400, 'targetId is required');
   }
-}
 
-async function stealAttack(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (!['string', 'number'].includes(typeof body.targetId) || String(body.targetId).trim() === '') {
-      const error = new Error('targetId is required');
-      error.status = 400;
-      throw error;
+  const payload = await withLock(`${context.chatId}:steal`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    const result = stealForMiniApp(chat, context.userId, body.targetId);
+    if (result.ok) await chat.save();
+    refreshContextSession(context, chat);
+    return {
+      result,
+      steal: getStealState(chat, context.userId),
+    };
+  });
+
+  return sendJson(res, payload.result.ok ? 200 : 409, {
+    ...payload.result,
+    steal: payload.steal,
+    state: stateFor(context),
+  });
+});
+
+const point21State = guarded('point21 state', async (req, res) => {
+  const context = await authorize(req);
+  const point21 = await withLock(`${context.chatId}:point21`, async () => {
+    const chat = await getChatSession(context.chatId);
+    // A broken table must still load, so players can see the reset button.
+    try {
+      const synced = syncPoint21(chat);
+      if (synced.changed) await chat.save();
+    } catch (error) {
+      console.warn('point21 sync failed', error.message);
     }
+    refreshContextSession(context, chat);
+    return getPoint21State(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
+  });
+  return sendJson(res, 200, point21);
+});
 
-    const payload = await withLock(`${context.chatId}:steal`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      const result = stealForMiniApp(chat, context.userId, body.targetId);
-      if (result.ok) await chat.save();
-      refreshContextSession(context, chat);
-      return {
-        result,
-        steal: getStealState(chat, context.userId),
-      };
-    });
-
-    return sendJson(res, payload.result.ok ? 200 : 409, {
-      ...payload.result,
-      steal: payload.steal,
-      state: stateFor(context),
-    });
-  } catch (error) {
-    return sendApiError(res, 'steal attack', error);
+const point21Action = guarded('point21 action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!new Set(['start', 'join', 'leave', 'bet', 'card', 'pass', 'reset']).has(body.action)) {
+    throw httpError(400, 'Unknown point21 action');
   }
-}
 
-async function point21State(req, res) {
-  try {
-    const context = await authorize(req);
-    const point21 = await withLock(`${context.chatId}:point21`, async () => {
-      const chat = await getChatSession(context.chatId);
-      // A broken table must still load, so players can see the reset button.
-      try {
-        const synced = syncPoint21(chat);
-        if (synced.changed) await chat.save();
-      } catch (error) {
-        console.warn('point21 sync failed', error.message);
-      }
-      refreshContextSession(context, chat);
-      return getPoint21State(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
-    });
-    return sendJson(res, 200, point21);
-  } catch (error) {
-    return sendApiError(res, 'point21 state', error);
-  }
-}
+  const result = await withLock(`${context.chatId}:point21`, async () => {
+    const chat = await getChatSession(context.chatId);
+    let updated;
+    if (body.action === 'start') updated = startPoint21(chat, context.userId);
+    else if (body.action === 'join') updated = joinPoint21(chat, context.userId);
+    else if (body.action === 'leave') updated = leavePoint21(chat, context.userId);
+    else if (body.action === 'bet') updated = setPoint21Bet(chat, context.userId, body.bet);
+    else if (body.action === 'card') updated = takePoint21Card(chat, context.userId);
+    else if (body.action === 'reset') updated = resetPoint21(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
+    else updated = passPoint21(chat, context.userId);
 
-async function point21Action(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (!new Set(['start', 'join', 'leave', 'bet', 'card', 'pass', 'reset']).has(body.action)) {
-      const error = new Error('Unknown point21 action');
-      error.status = 400;
-      throw error;
+    await chat.save();
+    refreshContextSession(context, chat);
+    return updated;
+  });
+  return sendResult(res, result, context);
+});
+
+const elementsState = guarded('elements state', async (req, res) => {
+  const context = await authorize(req);
+  const elements = await withLock(`${context.chatId}:elements`, async () => {
+    const chat = await getChatSession(context.chatId);
+    try {
+      const synced = syncElements(chat);
+      if (synced.changed) await chat.save();
+    } catch (error) {
+      console.warn('elements sync failed', error.message);
     }
+    refreshContextSession(context, chat);
+    return getElementsState(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
+  });
+  return sendJson(res, 200, elements);
+});
 
-    const result = await withLock(`${context.chatId}:point21`, async () => {
-      const chat = await getChatSession(context.chatId);
-      let updated;
-      if (body.action === 'start') updated = startPoint21(chat, context.userId);
-      else if (body.action === 'join') updated = joinPoint21(chat, context.userId);
-      else if (body.action === 'leave') updated = leavePoint21(chat, context.userId);
-      else if (body.action === 'bet') updated = setPoint21Bet(chat, context.userId, body.bet);
-      else if (body.action === 'card') updated = takePoint21Card(chat, context.userId);
-      else if (body.action === 'reset') updated = resetPoint21(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
-      else updated = passPoint21(chat, context.userId);
-
-      await chat.save();
-      refreshContextSession(context, chat);
-      return updated;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'point21 action', error);
+const elementsAction = guarded('elements action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!new Set(['start', 'join', 'leave', 'bet', 'draw', 'reset']).has(body.action)) {
+    throw httpError(400, 'Unknown elements action');
   }
-}
 
-async function elementsState(req, res) {
-  try {
-    const context = await authorize(req);
-    const elements = await withLock(`${context.chatId}:elements`, async () => {
-      const chat = await getChatSession(context.chatId);
-      try {
-        const synced = syncElements(chat);
-        if (synced.changed) await chat.save();
-      } catch (error) {
-        console.warn('elements sync failed', error.message);
-      }
-      refreshContextSession(context, chat);
-      return getElementsState(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
-    });
-    return sendJson(res, 200, elements);
-  } catch (error) {
-    return sendApiError(res, 'elements state', error);
+  const result = await withLock(`${context.chatId}:elements`, async () => {
+    const chat = await getChatSession(context.chatId);
+    let updated;
+    if (body.action === 'start') updated = startElements(chat, context.userId);
+    else if (body.action === 'join') updated = joinElements(chat, context.userId);
+    else if (body.action === 'leave') updated = leaveElements(chat, context.userId);
+    else if (body.action === 'bet') updated = setElementsBet(chat, context.userId, body.bet);
+    else if (body.action === 'reset') updated = resetElements(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
+    else updated = drawElement(chat, context.userId);
+
+    await chat.save();
+    refreshContextSession(context, chat);
+    return updated;
+  });
+  return sendResult(res, result, context);
+});
+
+const bonusState = guarded('bonus state', async (req, res) => {
+  const context = await authorize(req);
+  return sendJson(res, 200, getBonusState(context.session));
+});
+
+const bonusClaim = guarded('bonus claim', async (req, res) => {
+  const context = await authorize(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:bonus`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const claimed = claimBonus(context.session);
+    if (claimed.ok) await saveSession(context.session);
+    return claimed;
+  });
+  return sendResult(res, result, context);
+});
+
+const titlesState = guarded('titles state', async (req, res) => {
+  const context = await authorize(req);
+  const titles = await withLock(`${context.chatId}:titles`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    return getTitlesState(context.chatId, context.userId, chat);
+  });
+  return sendJson(res, 200, titles);
+});
+
+const titlesAssign = guarded('titles assign', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const payload = await withLock(`${context.chatId}:titles`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    const result = await assignTitle(chat, context.userId, body.title);
+    const titles = await getTitlesState(context.chatId, context.userId, chat);
+    refreshContextSession(context, chat);
+    return { result, titles };
+  });
+
+  return sendJson(res, payload.result.ok ? 200 : 409, {
+    ...payload.result,
+    titles: payload.titles,
+    state: stateFor(context),
+  });
+});
+
+const horoscopeState = guarded('horoscope state', async (req, res) => {
+  const context = await authorize(req);
+  return sendJson(res, 200, getHoroscopeState(context.session));
+});
+
+const horoscopeSettings = guarded('horoscope settings', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:horoscope`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const updated = updateHoroscopeSettings(context.session, body);
+    if (updated.ok) await saveSession(context.session);
+    return updated;
+  });
+  return sendJson(res, result.ok ? 200 : 400, { ...result, state: stateFor(context) });
+});
+
+const horoscopeGenerate = guarded('horoscope generate', async (req, res) => {
+  const context = await authorize(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:horoscope`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return generateHoroscopeForMiniApp(context.session);
+  });
+  return sendJson(res, 200, result);
+});
+
+const clanState = guarded('clan state', async (req, res) => {
+  const context = await authorize(req);
+  const dashboard = await withLock('clan:global', () => getClanDashboard(context.userId, context.session));
+  return sendJson(res, 200, dashboard);
+});
+
+const clanAction = guarded('clan action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (body.action === 'contribute' && body.resource === 'gold') assertGoldUnlocked(context);
+  const allowed = new Set(['create', 'join', 'leave', 'disband', 'contribute']);
+  if (!allowed.has(body.action)) {
+    throw httpError(400, 'Unknown clan action');
   }
-}
 
-async function elementsAction(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (!new Set(['start', 'join', 'leave', 'bet', 'draw', 'reset']).has(body.action)) {
-      const error = new Error('Unknown elements action');
-      error.status = 400;
-      throw error;
-    }
-
-    const result = await withLock(`${context.chatId}:elements`, async () => {
-      const chat = await getChatSession(context.chatId);
-      let updated;
-      if (body.action === 'start') updated = startElements(chat, context.userId);
-      else if (body.action === 'join') updated = joinElements(chat, context.userId);
-      else if (body.action === 'leave') updated = leaveElements(chat, context.userId);
-      else if (body.action === 'bet') updated = setElementsBet(chat, context.userId, body.bet);
-      else if (body.action === 'reset') updated = resetElements(chat, context.userId, { isAdmin: isChatAdmin(context.session) });
-      else updated = drawElement(chat, context.userId);
-
-      await chat.save();
-      refreshContextSession(context, chat);
-      return updated;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'elements action', error);
-  }
-}
-
-async function bonusState(req, res) {
-  try {
-    const context = await authorize(req);
-    return sendJson(res, 200, getBonusState(context.session));
-  } catch (error) {
-    return sendApiError(res, 'bonus state', error);
-  }
-}
-
-async function bonusClaim(req, res) {
-  try {
-    const context = await authorize(req);
-    const result = await withLock(`${context.chatId}:${context.userId}:bonus`, async () => {
+  const payload = await withLock('clan:global', async () => {
+    let result;
+    if (body.action === 'create') {
+      result = await createClanForMiniApp(context.userId, body.name);
+    } else if (body.action === 'join') {
       context.session = await getSession(context.chatId, context.userId);
-      const claimed = claimBonus(context.session);
-      if (claimed.ok) await saveSession(context.session);
-      return claimed;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'bonus claim', error);
-  }
-}
-
-async function titlesState(req, res) {
-  try {
-    const context = await authorize(req);
-    const titles = await withLock(`${context.chatId}:titles`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      return getTitlesState(context.chatId, context.userId, chat);
-    });
-    return sendJson(res, 200, titles);
-  } catch (error) {
-    return sendApiError(res, 'titles state', error);
-  }
-}
-
-async function titlesAssign(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    const payload = await withLock(`${context.chatId}:titles`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      const result = await assignTitle(chat, context.userId, body.title);
-      const titles = await getTitlesState(context.chatId, context.userId, chat);
-      refreshContextSession(context, chat);
-      return { result, titles };
-    });
-
-    return sendJson(res, payload.result.ok ? 200 : 409, {
-      ...payload.result,
-      titles: payload.titles,
-      state: stateFor(context),
-    });
-  } catch (error) {
-    return sendApiError(res, 'titles assign', error);
-  }
-}
-
-async function horoscopeState(req, res) {
-  try {
-    const context = await authorize(req);
-    return sendJson(res, 200, getHoroscopeState(context.session));
-  } catch (error) {
-    return sendApiError(res, 'horoscope state', error);
-  }
-}
-
-async function horoscopeSettings(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    const result = await withLock(`${context.chatId}:${context.userId}:horoscope`, async () => {
+      result = await joinClanForMiniApp(context.userId, body.clanId, context.session);
+    } else if (body.action === 'leave') {
+      result = await leaveClanForMiniApp(context.userId);
+    } else if (body.action === 'disband') {
+      result = await disbandClanForMiniApp(context.userId);
+    } else {
       context.session = await getSession(context.chatId, context.userId);
-      const updated = updateHoroscopeSettings(context.session, body);
-      if (updated.ok) await saveSession(context.session);
-      return updated;
-    });
-    return sendJson(res, result.ok ? 200 : 400, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'horoscope settings', error);
-  }
-}
-
-async function horoscopeGenerate(req, res) {
-  try {
-    const context = await authorize(req);
-    const result = await withLock(`${context.chatId}:${context.userId}:horoscope`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return generateHoroscopeForMiniApp(context.session);
-    });
-    return sendJson(res, 200, result);
-  } catch (error) {
-    return sendApiError(res, 'horoscope generate', error);
-  }
-}
-
-async function clanState(req, res) {
-  try {
-    const context = await authorize(req);
-    const dashboard = await withLock('clan:global', () => getClanDashboard(context.userId, context.session));
-    return sendJson(res, 200, dashboard);
-  } catch (error) {
-    return sendApiError(res, 'clan state', error);
-  }
-}
-
-async function clanAction(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (body.action === 'contribute' && body.resource === 'gold') assertGoldUnlocked(context);
-    const allowed = new Set(['create', 'join', 'leave', 'disband', 'contribute']);
-    if (!allowed.has(body.action)) {
-      const error = new Error('Unknown clan action');
-      error.status = 400;
-      throw error;
-    }
-
-    const payload = await withLock('clan:global', async () => {
-      let result;
-      if (body.action === 'create') {
-        result = await createClanForMiniApp(context.userId, body.name);
-      } else if (body.action === 'join') {
-        context.session = await getSession(context.chatId, context.userId);
-        result = await joinClanForMiniApp(context.userId, body.clanId, context.session);
-      } else if (body.action === 'leave') {
-        result = await leaveClanForMiniApp(context.userId);
-      } else if (body.action === 'disband') {
-        result = await disbandClanForMiniApp(context.userId);
-      } else {
-        context.session = await getSession(context.chatId, context.userId);
-        const prepared = await prepareClanContribution(
-          context.userId,
-          context.session,
-          body.resource,
-          body.amount
-        );
-        result = prepared.result;
-        if (result.ok) {
-          // Keep the legacy safety ordering: debit the player first, then credit
-          // the shared clan document. A failed second save cannot duplicate funds.
-          await saveSession(context.session);
-          await prepared.clan.save();
-        }
-      }
-
-      const dashboard = await getClanDashboard(context.userId, context.session);
-      return { result, dashboard };
-    });
-
-    return sendJson(res, payload.result.ok ? 200 : 409, {
-      ...payload.result,
-      dashboard: payload.dashboard,
-      state: stateFor(context),
-    });
-  } catch (error) {
-    return sendApiError(res, 'clan action', error);
-  }
-}
-
-async function clanQuiz(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    const payload = await withLock('clan:global', async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const prepared = await prepareClanQuizAnswer(context.userId, context.session, body.answer);
-      const result = prepared.result;
-
+      const prepared = await prepareClanContribution(
+        context.userId,
+        context.session,
+        body.resource,
+        body.amount
+      );
+      result = prepared.result;
       if (result.ok) {
-        // Mark the answer in the clan first. A failed personal reward save cannot
-        // leave an answer replayable for duplicate rewards.
+        // Keep the legacy safety ordering: debit the player first, then credit
+        // the shared clan document. A failed second save cannot duplicate funds.
+        await saveSession(context.session);
         await prepared.clan.save();
-        if (result.correct) await saveSession(context.session);
       }
-
-      const dashboard = await getClanDashboard(context.userId, context.session);
-      return { result, dashboard };
-    });
-
-    return sendJson(res, payload.result.ok ? 200 : 409, {
-      ...payload.result,
-      dashboard: payload.dashboard,
-      state: stateFor(context),
-    });
-  } catch (error) {
-    return sendApiError(res, 'clan quiz', error);
-  }
-}
-
-async function clanActivity(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (body.action === 'upgrade_member') assertGoldUnlocked(context);
-    const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
-    const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'settings_update']);
-    const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus']);
-    const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
-    if (!allowed.has(body.action)) {
-      const error = new Error('Unknown clan activity');
-      error.status = 400;
-      throw error;
     }
 
-    const payload = await withLock('clan:global', async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      let result;
+    const dashboard = await getClanDashboard(context.userId, context.session);
+    return { result, dashboard };
+  });
 
-      if (competitionActions.has(body.action)) {
-        // Competition actions persist only clan documents. Player combat state is
-        // treated as a read-only snapshot, matching the legacy duel/war behavior.
-        result = await performClanCompetitionAction(context.userId, context.session, body.action, body);
-      } else if (managementActions.has(body.action)) {
-        const prepared = await performClanManagementAction(context.userId, context.session, body.action, body);
-        result = prepared.result;
-        if (result.ok && prepared.clan) await prepared.clan.save();
-      } else if (progressionActions.has(body.action)) {
-        const prepared = await prepareClanProgressionAction(context.userId, context.session, body.action, body);
-        result = prepared.result;
-        if (result.ok) {
-          if (prepared.savePlayer) await saveSession(context.session);
-          if (prepared.clan) await prepared.clan.save();
-        }
-      } else {
-        const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
-        result = prepared.result;
-        if (result.ok) {
-          if (prepared.savePlayer) await saveSession(context.session);
-          if (prepared.clan) await prepared.clan.save();
-        }
+  return sendJson(res, payload.result.ok ? 200 : 409, {
+    ...payload.result,
+    dashboard: payload.dashboard,
+    state: stateFor(context),
+  });
+});
+
+const clanQuiz = guarded('clan quiz', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const payload = await withLock('clan:global', async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const prepared = await prepareClanQuizAnswer(context.userId, context.session, body.answer);
+    const result = prepared.result;
+
+    if (result.ok) {
+      // Mark the answer in the clan first. A failed personal reward save cannot
+      // leave an answer replayable for duplicate rewards.
+      await prepared.clan.save();
+      if (result.correct) await saveSession(context.session);
+    }
+
+    const dashboard = await getClanDashboard(context.userId, context.session);
+    return { result, dashboard };
+  });
+
+  return sendJson(res, payload.result.ok ? 200 : 409, {
+    ...payload.result,
+    dashboard: payload.dashboard,
+    state: stateFor(context),
+  });
+});
+
+const clanActivity = guarded('clan activity', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (body.action === 'upgrade_member') assertGoldUnlocked(context);
+  const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
+  const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'settings_update']);
+  const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus']);
+  const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
+  if (!allowed.has(body.action)) {
+    throw httpError(400, 'Unknown clan activity');
+  }
+
+  const payload = await withLock('clan:global', async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    let result;
+
+    if (competitionActions.has(body.action)) {
+      // Competition actions persist only clan documents. Player combat state is
+      // treated as a read-only snapshot, matching the legacy duel/war behavior.
+      result = await performClanCompetitionAction(context.userId, context.session, body.action, body);
+    } else if (managementActions.has(body.action)) {
+      const prepared = await performClanManagementAction(context.userId, context.session, body.action, body);
+      result = prepared.result;
+      if (result.ok && prepared.clan) await prepared.clan.save();
+    } else if (progressionActions.has(body.action)) {
+      const prepared = await prepareClanProgressionAction(context.userId, context.session, body.action, body);
+      result = prepared.result;
+      if (result.ok) {
+        if (prepared.savePlayer) await saveSession(context.session);
+        if (prepared.clan) await prepared.clan.save();
       }
+    } else {
+      const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
+      result = prepared.result;
+      if (result.ok) {
+        if (prepared.savePlayer) await saveSession(context.session);
+        if (prepared.clan) await prepared.clan.save();
+      }
+    }
 
-      const dashboard = await getClanDashboard(context.userId, context.session);
-      return { result, dashboard };
-    });
+    const dashboard = await getClanDashboard(context.userId, context.session);
+    return { result, dashboard };
+  });
 
-    return sendJson(res, payload.result.ok ? 200 : 409, {
-      ...payload.result,
-      dashboard: payload.dashboard,
-      state: stateFor(context),
-    });
-  } catch (error) {
-    return sendApiError(res, 'clan activity', error);
-  }
-}
+  return sendJson(res, payload.result.ok ? 200 : 409, {
+    ...payload.result,
+    dashboard: payload.dashboard,
+    state: stateFor(context),
+  });
+});
 
-async function chestState(req, res) {
-  try {
-    const context = await authorize(req);
-    return sendJson(res, 200, getChestState(context.session));
-  } catch (error) {
-    return sendApiError(res, 'chest state', error);
-  }
-}
+const chestState = guarded('chest state', async (req, res) => {
+  const context = await authorize(req);
+  return sendJson(res, 200, getChestState(context.session));
+});
 
-async function chestOpen(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    const result = await withLock(`${context.chatId}:${context.userId}:chest`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
+const chestOpen = guarded('open chest', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:chest`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    try {
       const opened = openChest(context.session, context.chatId, body.chestId);
       if (opened.ok) await saveSession(context.session);
       return opened;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    if (!error.status && /Chest id/.test(error.message || '')) error.status = 400;
-    return sendApiError(res, 'open chest', error);
-  }
-}
-
-async function gachaState(req, res) {
-  try {
-    const context = await authorize(req);
-    return sendJson(res, 200, getGachaState(context.session));
-  } catch (error) {
-    return sendApiError(res, 'gacha state', error);
-  }
-}
-
-async function gachaRoll(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    assertGoldUnlocked(context);
-    if (typeof body.gachaType !== 'string' || !body.gachaType) {
-      const error = new Error('gachaType is required');
-      error.status = 400;
+    } catch (error) {
+      if (!error.status && /Chest id/.test(error.message || '')) error.status = 400;
       throw error;
     }
-    const result = await withLock(`${context.chatId}:${context.userId}:gacha`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const rolled = rollGacha(context.session, body.gachaType);
-      if (rolled.ok) await saveSession(context.session);
-      return rolled;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'gacha roll', error);
+  });
+  return sendResult(res, result, context);
+});
+
+const gachaState = guarded('gacha state', async (req, res) => {
+  const context = await authorize(req);
+  return sendJson(res, 200, getGachaState(context.session));
+});
+
+const gachaRoll = guarded('gacha roll', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  if (typeof body.gachaType !== 'string' || !body.gachaType) {
+    throw httpError(400, 'gachaType is required');
   }
-}
-
-async function gachaResolve(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (!['save', 'break'].includes(body.action)) {
-      const error = new Error('action must be save or break');
-      error.status = 400;
-      throw error;
-    }
-    const result = await withLock(`${context.chatId}:${context.userId}:gacha`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const resolved = resolveGacha(context.session, body.action);
-      if (resolved.ok) await saveSession(context.session);
-      return resolved;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'gacha resolve', error);
-  }
-}
-
-async function equipmentState(req, res) {
-  try {
-    const context = await authorize(req);
-    return sendJson(res, 200, getEquipmentState(context.session));
-  } catch (error) {
-    return sendApiError(res, 'equipment state', error);
-  }
-}
-
-async function equipmentAction(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (body.action === 'upgrade') assertGoldUnlocked(context);
-    if (typeof body.key !== 'string' || !body.key) {
-      const error = new Error('equipment key is required');
-      error.status = 400;
-      throw error;
-    }
-    if (!['equip', 'unequip', 'sell', 'upgrade'].includes(body.action)) {
-      const error = new Error('action must be equip, unequip, sell or upgrade');
-      error.status = 400;
-      throw error;
-    }
-    const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const updated = performEquipmentAction(context.session, body.key, body.action);
-      if (updated.ok) await saveSession(context.session);
-      return updated;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'equipment action', error);
-  }
-}
-
-async function equipmentCraft(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    assertGoldUnlocked(context);
-    if (typeof body.grade !== 'string' || !body.grade) {
-      const error = new Error('grade is required');
-      error.status = 400;
-      throw error;
-    }
-    const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const updated = craftEquipmentItem(context.session, body.grade);
-      if (updated.ok) await saveSession(context.session);
-      return updated;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'equipment craft', error);
-  }
-}
-
-async function buildsState(req, res) {
-  try {
-    const context = await authorize(req);
-    const builds = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const changed = prepareBuilds(context.session);
-      if (changed) await saveSession(context.session);
-      return getBuildsState(context.session);
-    });
-    return sendJson(res, 200, builds);
-  } catch (error) {
-    return sendApiError(res, 'builds state', error);
-  }
-}
-
-async function buildsAction(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (body.action === 'upgrade') assertGoldUnlocked(context);
-    if (typeof body.buildName !== 'string' || !body.buildName) {
-      const error = new Error('buildName is required');
-      error.status = 400;
-      throw error;
-    }
-    if (!new Set(['upgrade', 'speedup', 'collect', 'change_type', 'rename']).has(body.action)) {
-      const error = new Error('Unknown building action');
-      error.status = 400;
-      throw error;
-    }
-
-    const result = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const prepared = prepareBuilds(context.session);
-      let updated;
-      if (body.action === 'upgrade') updated = startBuildUpgrade(context.session, body.buildName);
-      else if (body.action === 'speedup') updated = speedupBuildUpgrade(context.session, body.buildName);
-      else if (body.action === 'collect') updated = collectBuildResources(context.session, body.buildName);
-      else if (body.action === 'change_type') updated = changeBuildType(context.session, body.buildName, body.typeName);
-      else updated = renameBuild(context.session, body.buildName, body.name);
-      if (prepared || updated.ok) await saveSession(context.session);
-      return updated;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'builds action', error);
-  }
-}
-
-async function arenaState(req, res, requestUrl) {
-  try {
-    const context = await authorize(req);
-    const mode = requestUrl.searchParams.get('mode') || 'common';
-    const arena = await withLock(`${context.chatId}:${context.userId}:arena`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getArenaState(context.session, context.chatId, context.userId, mode);
-    });
-    return sendJson(res, 200, arena);
-  } catch (error) {
-    return sendApiError(res, 'arena state', error);
-  }
-}
-
-async function arenaAttack(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (!['common', 'expansion'].includes(body.mode)) {
-      const error = new Error('mode must be common or expansion');
-      error.status = 400;
-      throw error;
-    }
-    if (typeof body.defenderId !== 'string' || !body.defenderId) {
-      const error = new Error('defenderId is required');
-      error.status = 400;
-      throw error;
-    }
-    const result = await withLock(`${context.chatId}:${context.userId}:arena`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const battle = await attackArena(context.session, context.chatId, context.userId, body.mode, body.defenderId);
-      if (battle.ok) await saveSession(context.session);
-      return battle;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'arena attack', error);
-  }
-}
-
-async function bossState(req, res) {
-  try {
-    const context = await authorize(req);
-    const boss = await withLock(`${context.chatId}:boss`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getBossState(context.session, context.chatId);
-    });
-    return sendJson(res, 200, boss);
-  } catch (error) {
-    return sendApiError(res, 'boss state', error);
-  }
-}
-
-async function bossSummon(req, res) {
-  try {
-    const context = await authorize(req);
-    const result = await withLock(`${context.chatId}:boss`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return summonBossForMiniApp(context.session, context.chatId);
-    });
+  const result = await withLock(`${context.chatId}:${context.userId}:gacha`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'boss summon', error);
-  }
-}
+    const rolled = rollGacha(context.session, body.gachaType);
+    if (rolled.ok) await saveSession(context.session);
+    return rolled;
+  });
+  return sendResult(res, result, context);
+});
 
-async function bossSkill(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    const skillIndex = Number(body.skillIndex);
-    if (!Number.isInteger(skillIndex) || skillIndex < 0) {
-      const error = new Error('skillIndex must be a non-negative integer');
-      error.status = 400;
-      throw error;
-    }
-    const result = await withLock(`${context.chatId}:boss`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return useBossSkill(context.session, context.chatId, context.userId, skillIndex);
-    });
+const gachaResolve = guarded('gacha resolve', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!['save', 'break'].includes(body.action)) {
+    throw httpError(400, 'action must be save or break');
+  }
+  const result = await withLock(`${context.chatId}:${context.userId}:gacha`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'boss skill', error);
-  }
-}
+    const resolved = resolveGacha(context.session, body.action);
+    if (resolved.ok) await saveSession(context.session);
+    return resolved;
+  });
+  return sendResult(res, result, context);
+});
 
-async function shopState(req, res) {
-  try {
-    const context = await authorize(req);
-    const shop = await withLock(`${context.chatId}:${context.userId}:shop`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getShopState(context.session);
-    });
-    return sendJson(res, 200, shop);
-  } catch (error) {
-    return sendApiError(res, 'shop state', error);
-  }
-}
+const equipmentState = guarded('equipment state', async (req, res) => {
+  const context = await authorize(req);
+  return sendJson(res, 200, getEquipmentState(context.session));
+});
 
-async function shopBuy(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    assertGoldUnlocked(context);
-    if (typeof body.command !== 'string' || !body.command) {
-      const error = new Error('command is required');
-      error.status = 400;
-      throw error;
-    }
-    const result = await withLock(`${context.chatId}:${context.userId}:shop`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const purchase = await buyShopItem(context.session, body.command);
-      if (purchase.ok) await saveSession(context.session);
-      return purchase;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'shop buy', error);
+const equipmentAction = guarded('equipment action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (body.action === 'upgrade') assertGoldUnlocked(context);
+  if (typeof body.key !== 'string' || !body.key) {
+    throw httpError(400, 'equipment key is required');
   }
-}
+  if (!['equip', 'unequip', 'sell', 'upgrade'].includes(body.action)) {
+    throw httpError(400, 'action must be equip, unequip, sell or upgrade');
+  }
+  const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const updated = performEquipmentAction(context.session, body.key, body.action);
+    if (updated.ok) await saveSession(context.session);
+    return updated;
+  });
+  return sendResult(res, result, context);
+});
 
-async function swordState(req, res) {
-  try {
-    const context = await authorize(req);
-    const sword = await withLock(`${context.chatId}:sword`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      return getMiniAppSwordDashboard(chat, context.userId);
-    });
-    return sendJson(res, 200, sword);
-  } catch (error) {
-    return sendApiError(res, 'sword state', error);
+const equipmentCraft = guarded('equipment craft', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  if (typeof body.grade !== 'string' || !body.grade) {
+    throw httpError(400, 'grade is required');
   }
-}
+  const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const updated = craftEquipmentItem(context.session, body.grade);
+    if (updated.ok) await saveSession(context.session);
+    return updated;
+  });
+  return sendResult(res, result, context);
+});
 
-async function swordRoll(req, res) {
-  try {
-    const context = await authorize(req);
-    const result = await withLock(`${context.chatId}:sword`, async () => {
-      const chat = await getChatSession(context.chatId);
-      refreshContextSession(context, chat);
-      const rolled = rollMiniAppSword(context.session);
-      if (rolled.ok) await chat.save();
-      return {
-        ...rolled,
-        sword: getMiniAppSwordDashboard(chat, context.userId),
-      };
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'sword roll', error);
-  }
-}
+const buildsState = guarded('builds state', async (req, res) => {
+  const context = await authorize(req);
+  const builds = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const changed = prepareBuilds(context.session);
+    if (changed) await saveSession(context.session);
+    return getBuildsState(context.session);
+  });
+  return sendJson(res, 200, builds);
+});
 
-async function arcadeReset(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    validateArcadeGameId(body.gameId);
-    const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const reset = resetArcadeGame(context.session, body.gameId);
-      if (reset.ok) await saveSession(context.session);
-      return reset;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'arcade reset', error);
+const buildsAction = guarded('builds action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (body.action === 'upgrade') assertGoldUnlocked(context);
+  if (typeof body.buildName !== 'string' || !body.buildName) {
+    throw httpError(400, 'buildName is required');
   }
-}
+  if (!new Set(['upgrade', 'speedup', 'collect', 'change_type', 'rename']).has(body.action)) {
+    throw httpError(400, 'Unknown building action');
+  }
 
-async function arcadeState(req, res) {
-  try {
-    const context = await authorize(req);
-    const arcade = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      return getArcadeState(context.session);
-    });
-    return sendJson(res, 200, arcade);
-  } catch (error) {
-    return sendApiError(res, 'arcade state', error);
-  }
-}
+  const result = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const prepared = prepareBuilds(context.session);
+    let updated;
+    if (body.action === 'upgrade') updated = startBuildUpgrade(context.session, body.buildName);
+    else if (body.action === 'speedup') updated = speedupBuildUpgrade(context.session, body.buildName);
+    else if (body.action === 'collect') updated = collectBuildResources(context.session, body.buildName);
+    else if (body.action === 'change_type') updated = changeBuildType(context.session, body.buildName, body.typeName);
+    else updated = renameBuild(context.session, body.buildName, body.name);
+    if (prepared || updated.ok) await saveSession(context.session);
+    return updated;
+  });
+  return sendResult(res, result, context);
+});
 
-async function arcadeStart(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    if (Number(body.bet) > 0) assertGoldUnlocked(context);
-    validateArcadeGameId(body.gameId);
-    const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const started = startArcadeGame(context.session, body.gameId, body.bet);
-      if (started.ok) await saveSession(context.session);
-      return started;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'arcade start', error);
-  }
-}
+const arenaState = guarded('arena state', async (req, res, requestUrl) => {
+  const context = await authorize(req);
+  const mode = requestUrl.searchParams.get('mode') || 'common';
+  const arena = await withLock(`${context.chatId}:${context.userId}:arena`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getArenaState(context.session, context.chatId, context.userId, mode);
+  });
+  return sendJson(res, 200, arena);
+});
 
-async function arcadeRoll(req, res) {
-  try {
-    const context = await authorize(req);
-    const body = await readJsonBody(req);
-    validateArcadeGameId(body.gameId);
-    const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
-      context.session = await getSession(context.chatId, context.userId);
-      const rolled = rollArcadeGame(context.session, body.gameId);
-      if (rolled.ok) await saveSession(context.session);
-      return rolled;
-    });
-    return sendJson(res, result.ok ? 200 : 409, { ...result, state: stateFor(context) });
-  } catch (error) {
-    return sendApiError(res, 'arcade roll', error);
+const arenaAttack = guarded('arena attack', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!['common', 'expansion'].includes(body.mode)) {
+    throw httpError(400, 'mode must be common or expansion');
   }
-}
+  if (typeof body.defenderId !== 'string' || !body.defenderId) {
+    throw httpError(400, 'defenderId is required');
+  }
+  const result = await withLock(`${context.chatId}:${context.userId}:arena`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const battle = await attackArena(context.session, context.chatId, context.userId, body.mode, body.defenderId);
+    if (battle.ok) await saveSession(context.session);
+    return battle;
+  });
+  return sendResult(res, result, context);
+});
+
+const bossState = guarded('boss state', async (req, res) => {
+  const context = await authorize(req);
+  const boss = await withLock(`${context.chatId}:boss`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getBossState(context.session, context.chatId);
+  });
+  return sendJson(res, 200, boss);
+});
+
+const bossSummon = guarded('boss summon', async (req, res) => {
+  const context = await authorize(req);
+  const result = await withLock(`${context.chatId}:boss`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return summonBossForMiniApp(context.session, context.chatId);
+  });
+  context.session = await getSession(context.chatId, context.userId);
+  return sendResult(res, result, context);
+});
+
+const bossSkill = guarded('boss skill', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const skillIndex = Number(body.skillIndex);
+  if (!Number.isInteger(skillIndex) || skillIndex < 0) {
+    throw httpError(400, 'skillIndex must be a non-negative integer');
+  }
+  const result = await withLock(`${context.chatId}:boss`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return useBossSkill(context.session, context.chatId, context.userId, skillIndex);
+  });
+  context.session = await getSession(context.chatId, context.userId);
+  return sendResult(res, result, context);
+});
+
+const shopState = guarded('shop state', async (req, res) => {
+  const context = await authorize(req);
+  const shop = await withLock(`${context.chatId}:${context.userId}:shop`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getShopState(context.session);
+  });
+  return sendJson(res, 200, shop);
+});
+
+const shopBuy = guarded('shop buy', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  if (typeof body.command !== 'string' || !body.command) {
+    throw httpError(400, 'command is required');
+  }
+  const result = await withLock(`${context.chatId}:${context.userId}:shop`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const purchase = await buyShopItem(context.session, body.command);
+    if (purchase.ok) await saveSession(context.session);
+    return purchase;
+  });
+  return sendResult(res, result, context);
+});
+
+const swordState = guarded('sword state', async (req, res) => {
+  const context = await authorize(req);
+  const sword = await withLock(`${context.chatId}:sword`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    return getMiniAppSwordDashboard(chat, context.userId);
+  });
+  return sendJson(res, 200, sword);
+});
+
+const swordRoll = guarded('sword roll', async (req, res) => {
+  const context = await authorize(req);
+  const result = await withLock(`${context.chatId}:sword`, async () => {
+    const chat = await getChatSession(context.chatId);
+    refreshContextSession(context, chat);
+    const rolled = rollMiniAppSword(context.session);
+    if (rolled.ok) await chat.save();
+    return {
+      ...rolled,
+      sword: getMiniAppSwordDashboard(chat, context.userId),
+    };
+  });
+  return sendResult(res, result, context);
+});
+
+const arcadeReset = guarded('arcade reset', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  validateArcadeGameId(body.gameId);
+  const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const reset = resetArcadeGame(context.session, body.gameId);
+    if (reset.ok) await saveSession(context.session);
+    return reset;
+  });
+  return sendResult(res, result, context);
+});
+
+const arcadeState = guarded('arcade state', async (req, res) => {
+  const context = await authorize(req);
+  const arcade = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getArcadeState(context.session);
+  });
+  return sendJson(res, 200, arcade);
+});
+
+const arcadeStart = guarded('arcade start', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (Number(body.bet) > 0) assertGoldUnlocked(context);
+  validateArcadeGameId(body.gameId);
+  const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const started = startArcadeGame(context.session, body.gameId, body.bet);
+    if (started.ok) await saveSession(context.session);
+    return started;
+  });
+  return sendResult(res, result, context);
+});
+
+const arcadeRoll = guarded('arcade roll', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  validateArcadeGameId(body.gameId);
+  const result = await withLock(`${context.chatId}:${context.userId}:arcade`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const rolled = rollArcadeGame(context.session, body.gameId);
+    if (rolled.ok) await saveSession(context.session);
+    return rolled;
+  });
+  return sendResult(res, result, context);
+});
 
 export default function startMiniAppServer() {
   if (process.env.MINI_APP_ENABLED === 'false') return null;
