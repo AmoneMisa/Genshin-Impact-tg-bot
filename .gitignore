@@ -15,3 +15,5 @@ __pycache__/
 
 # Blender automatic save backups
 *.blend1
+
+api.access.log

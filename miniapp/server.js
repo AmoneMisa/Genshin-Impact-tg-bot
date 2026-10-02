@@ -113,12 +113,19 @@ function sendJson(res, status, payload) {
   res.writeHead(status, {
     'content-type': 'application/json; charset=utf-8',
     'cache-control': 'no-store',
+    'x-content-type-options': 'nosniff',
   });
   res.end(JSON.stringify(payload));
 }
 
 function safeStaticPath(root, urlPath) {
-  const decoded = decodeURIComponent(urlPath.split('?')[0]);
+  let decoded;
+  try {
+    decoded = decodeURIComponent(urlPath.split('?')[0]);
+  } catch {
+    return null;
+  }
+  if (decoded.includes('\0')) return null;
   const relative = decoded.replace(/^\/+/, '');
   const resolved = path.resolve(root, relative || 'index.html');
   if (!resolved.startsWith(root + path.sep) && resolved !== root) return null;
@@ -134,6 +141,8 @@ function serveFile(res, root, urlPath) {
   const ext = path.extname(filePath).toLowerCase();
   res.writeHead(200, {
     'content-type': MIME[ext] || 'application/octet-stream',
+    'x-content-type-options': 'nosniff',
+    'referrer-policy': 'no-referrer',
     'cache-control': ext === '.html' ? 'no-store' : 'public, max-age=3600',
   });
   fs.createReadStream(filePath).pipe(res);
@@ -178,7 +187,15 @@ async function readJsonBody(req, maxBytes = 8192) {
   });
 }
 
-async function withLock(key, action) {
+// Every game feature mutates the same Chat document (gold, items, ...), so
+// per-feature locks let two requests read the same balance and overwrite each
+// other's save. Serialise all work for a chat behind one lock instead.
+function lockScope(key) {
+  return key.startsWith('clan:') ? key : key.split(':')[0];
+}
+
+async function withLock(rawKey, action) {
+  const key = lockScope(rawKey);
   const previous = locks.get(key) || Promise.resolve();
   let release;
   const gate = new Promise(resolve => { release = resolve; });
@@ -196,7 +213,11 @@ async function withLock(key, action) {
 
 async function authorize(req) {
   const validated = validateTelegramInitData(getInitData(req), token);
-  if (!validated.user?.id) throw new Error('Telegram user is missing');
+  if (!validated.user?.id) {
+    const error = new Error('Telegram user is missing');
+    error.status = 401;
+    throw error;
+  }
 
   const chatId = resolveGameChatId(validated);
   if (!trustedChats.includes(String(chatId))) {
@@ -228,7 +249,10 @@ function stateFor(context) {
 function sendApiError(res, scope, error) {
   if (error.reason === GOLD_LOCK_REASON) return sendJson(res, 409, { ok: false, reason: error.reason, error: error.message });
   console.error(`[miniapp] ${scope}:`, error);
-  return sendJson(res, error.status || 401, { error: error.message || 'Unauthorized' });
+  // Only errors that opted into a status expose their message; anything else is
+  // an internal failure and must not leak details (or masquerade as 401).
+  if (error.status) return sendJson(res, error.status, { error: error.message });
+  return sendJson(res, 500, { error: 'Internal server error' });
 }
 
 /** Gold is frozen while the player sits at a 21 / elements table. */
