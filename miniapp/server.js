@@ -1,6 +1,7 @@
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { token, myId } from '../config.js';
 import { trustedChats } from '../data.js';
@@ -147,6 +148,63 @@ function serveFile(res, root, urlPath) {
   });
   fs.createReadStream(filePath).pipe(res);
   return true;
+}
+
+// The page links ~40 feature stylesheets; each is a render-blocking request on
+// a phone. Concatenate them (in their original order) into one hashed bundle and
+// rewrite index.html on the fly. All CSS urls are absolute, so nothing breaks.
+const STYLESHEET_LINK = /<link rel="stylesheet" href="(\/[^"]+\.css)" \/>\s*/g;
+const NEWLINE = String.fromCharCode(10);
+let pageCache = null;
+
+function buildPage() {
+  const html = fs.readFileSync(path.join(WEBAPP_DIR, 'index.html'), 'utf8');
+  const files = [...html.matchAll(STYLESHEET_LINK)].map(match => match[1]);
+  if (!files.length) return { html, css: '', cssPath: null };
+
+  const css = files.map(file => fs.readFileSync(path.join(WEBAPP_DIR, file), 'utf8')).join(NEWLINE);
+  const cssPath = `/bundle.${crypto.createHash('sha1').update(css).digest('hex').slice(0, 10)}.css`;
+  let inserted = false;
+  const bundled = html.replace(STYLESHEET_LINK, () => {
+    if (inserted) return '';
+    inserted = true;
+    return `<link rel="stylesheet" href="${cssPath}" />${NEWLINE}  `;
+  });
+  return { html: bundled, css, cssPath };
+}
+
+function getPage() {
+  if (process.env.NODE_ENV !== 'production') return buildPage();
+  pageCache ||= buildPage();
+  return pageCache;
+}
+
+function servePage(res, urlPath) {
+  try {
+    const page = getPage();
+    if (page.cssPath && urlPath === page.cssPath) {
+      res.writeHead(200, {
+        'content-type': MIME['.css'],
+        'cache-control': 'public, max-age=31536000, immutable',
+        'x-content-type-options': 'nosniff',
+      });
+      res.end(page.css);
+      return true;
+    }
+    if (urlPath === '/' || urlPath === '/index.html') {
+      res.writeHead(200, {
+        'content-type': MIME['.html'],
+        'cache-control': 'no-store',
+        'x-content-type-options': 'nosniff',
+        'referrer-policy': 'no-referrer',
+      });
+      res.end(page.html);
+      return true;
+    }
+  } catch (error) {
+    console.error('[miniapp] page bundle failed, serving files as-is:', error);
+  }
+  return false;
 }
 
 function getInitData(req) {
@@ -1566,10 +1624,12 @@ export default function startMiniAppServer() {
       return sendJson(res, 404, { error: 'Asset not found' });
     }
 
+    if (req.method === 'GET' && servePage(res, requestUrl.pathname)) return;
     if (req.method === 'GET' && serveFile(res, WEBAPP_DIR, requestUrl.pathname)) return;
     // A missing model must 404: the SPA fallback below would hand the glTF
     // loader an HTML page with status 200.
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/models/')) return sendJson(res, 404, { error: 'Model not found' });
+    if (req.method === 'GET' && servePage(res, '/index.html')) return;
     if (req.method === 'GET' && serveFile(res, WEBAPP_DIR, '/index.html')) return;
     return sendJson(res, 404, { error: 'Not found' });
   });
