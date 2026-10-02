@@ -2,15 +2,21 @@ import crypto from 'crypto';
 
 const MAX_AUTH_AGE_SECONDS = 60 * 60 * 24;
 
+function authError(message) {
+  const error = new Error(message);
+  error.status = 401;
+  return error;
+}
+
 export function validateTelegramInitData(initData, botToken, maxAgeSeconds = MAX_AUTH_AGE_SECONDS) {
   if (!initData || !botToken) {
-    throw new Error('Telegram init data or bot token is missing');
+    throw authError('Telegram init data or bot token is missing');
   }
 
   const params = new URLSearchParams(initData);
   const receivedHash = params.get('hash');
   if (!receivedHash) {
-    throw new Error('Telegram init data hash is missing');
+    throw authError('Telegram init data hash is missing');
   }
 
   params.delete('hash');
@@ -32,17 +38,17 @@ export function validateTelegramInitData(initData, botToken, maxAgeSeconds = MAX
   const actual = Buffer.from(receivedHash, 'hex');
   const expected = Buffer.from(expectedHash, 'hex');
   if (actual.length !== expected.length || !crypto.timingSafeEqual(actual, expected)) {
-    throw new Error('Telegram init data signature is invalid');
+    throw authError('Telegram init data signature is invalid');
   }
 
   const authDate = Number(params.get('auth_date'));
   if (!Number.isFinite(authDate)) {
-    throw new Error('Telegram init data auth_date is invalid');
+    throw authError('Telegram init data auth_date is invalid');
   }
 
   const age = Math.floor(Date.now() / 1000) - authDate;
   if (age < -30 || age > maxAgeSeconds) {
-    throw new Error('Telegram init data is expired');
+    throw authError('Telegram init data is expired');
   }
 
   const parseJson = (key) => {
@@ -71,5 +77,5 @@ export function resolveGameChatId(initData) {
   if (match) return Number(match[1]);
   if (initData.chat?.id) return Number(initData.chat.id);
   if (initData.user?.id) return Number(initData.user.id);
-  throw new Error('Unable to resolve game chat');
+  throw authError('Unable to resolve game chat');
 }

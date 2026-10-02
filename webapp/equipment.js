@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { renderForgeLootArt } from './loot-forge.js';
 import { captureEquipmentTransfer, playEquipmentTransfer } from './equipment-transfer.js';
 import { renderEquipmentPaperDoll } from './equipment-paper-doll.js';
@@ -8,7 +9,6 @@ let dollPortrait=null;
 const TYPE_LABELS = { weapon:'Оружие', armor:'Броня', shield:'Щиты', cloak:'Плащи', accessories:'Аксессуары' };
 const REASONS = { stale_item:'Список уже изменился. Обнови снаряжение и повтори действие.', already_equipped:'Этот предмет уже надет.', not_equipped:'Этот предмет уже снят.', invalid_item:'Предмет повреждён и не может быть экипирован.', equip_failed:'Не удалось надеть предмет.', invalid_action:'Неизвестное действие.', unknown_grade:'Неизвестный грейд.', level_too_low:'Уровень персонажа слишком низкий для этого грейда.', not_enough_resources:'Недостаточно ресурсов для ковки.', not_enough_gold:'Недостаточно золота для улучшения.', not_enough_crystals:'Недостаточно кристаллов для улучшения.', not_enough_iron_ore:'Недостаточно руды для улучшения.', nothing_to_upgrade:'У предмета нет дополнительных характеристик для улучшения.', max_level:'Предмет уже улучшен до максимума.' };
 function formatNumber(value){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:3}).format(Number(value)||0);}
-function escapeHtml(value){return String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');}
 function gradeClass(grade){return `grade-${String(grade||'noGrade').toLowerCase()}`;}
 function statText(stat){const value=Number(stat.value)||0;return `${value>0?'+':''}${formatNumber(value)} ${stat.name||'stat'}`;}
 function costMarkup(cost,missing={}){if(!cost)return '<span class="forge-cost maxed">MAX</span>';const entries=[['gold','🪙',cost.gold],['crystals','💎',cost.crystals],['ironOre','⛏️',cost.ironOre]];return entries.map(([key,icon,value])=>`<span class="forge-cost ${(Number(missing?.[key])||0)>0?'missing':''}">${icon} ${formatNumber(value)}</span>`).join('');}

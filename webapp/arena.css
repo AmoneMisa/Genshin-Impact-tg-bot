@@ -79,7 +79,7 @@
 .arena-match.leaving { animation: arena-slide-out .25s ease-in forwards; }
 .arena-match-portrait { width: 64px; height: 64px; border-radius: 50%; background: var(--art) center 20% / cover no-repeat, #111; box-shadow: 0 0 0 2px #1a1420, 0 0 0 3px #e06a6a, 0 0 14px rgba(224, 106, 106, .5); }
 .arena-match-info { display: grid; gap: 2px; min-width: 0; }
-.arena-match-info small { font-size: 10px; color: rgba(238, 228, 207, .6); text-transform: uppercase; letter-spacing: .06em; }
+.arena-match-info small { font-size: 11px; color: rgba(238, 228, 207, .6); text-transform: uppercase; letter-spacing: .06em; }
 .arena-match-info strong { font: 700 16px/1.15 var(--serif); color: #f3dca6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .arena-match-info span { font-size: 12px; color: rgba(238, 228, 207, .8); }
 

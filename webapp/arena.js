@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 // Arena, prototype style: Обычная / Рейтинговая tabs over the arena painting,
 // a metal rank emblem with points, "Найти противника" matchmaking with a VS
 // intro and result, the season reward ladder and the leaderboard.
@@ -19,14 +20,6 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 /** Metal tier and division pips of a rank name ("Серебро III" -> silver, 3). */
 export function rankTier(rank) {

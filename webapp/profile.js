@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
 
 const REASONS = {
@@ -29,14 +30,6 @@ function formatDuration(ms) {
   return `${minutes} мин.`;
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function stat(label, value, icon) {
   return `<article><span>${icon}</span><div><small>${label}</small><strong>${formatNumber(value)}</strong></div></article>`;

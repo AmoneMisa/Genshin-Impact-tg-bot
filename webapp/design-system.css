@@ -668,12 +668,12 @@ textarea:focus-visible {
 .overlay-panel .forms-field input:focus,
 .overlay-panel .feedback-field textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(216, 179, 106, .2); }
 .overlay-panel .forms-member strong { font-size: 12px; max-width: 120px; }
-.overlay-panel .forms-member small { font-size: 10px; }
+.overlay-panel .forms-member small { font-size: 11px; }
 .overlay-panel .forms-member > span { font-size: 11px; color: var(--gold); }
 .overlay-panel .forms-member.active { border-color: var(--gold); background: rgba(60, 46, 22, .5); }
-.overlay-panel .forms-profile-card header small { font-size: 10px; }
+.overlay-panel .forms-profile-card header small { font-size: 11px; }
 .overlay-panel .forms-profile-card header strong { font: 700 15px/1.2 var(--serif); color: var(--gold-bright); }
-.overlay-panel .forms-profile-field small { font-size: 10px; }
+.overlay-panel .forms-profile-field small { font-size: 11px; }
 .overlay-panel .forms-profile-field strong { font-size: 13px; }
 .overlay-panel .forms-feedback,
 .overlay-panel .feedback-meta { font-size: 11px; }
@@ -693,7 +693,7 @@ textarea:focus-visible {
 .overlay-panel .forms-save > span { display: none; }
 .overlay-panel .forms-save > div { justify-items: center; }
 .overlay-panel .forms-save strong { font: 700 15px/1 var(--serif); color: #fbeccb; }
-.overlay-panel .forms-save small { font-size: 10.5px; color: rgba(251, 236, 203, .7); }
+.overlay-panel .forms-save small { font-size: 11px; color: rgba(251, 236, 203, .7); }
 .overlay-panel .forms-save:not(:disabled):active,
 .overlay-panel .feedback-submit:not(:disabled):active { transform: translateY(1px); }
 .overlay-panel .forms-tabs button,
@@ -704,7 +704,7 @@ textarea:focus-visible {
 .overlay-panel .help-guide-card p { font-size: 12px; line-height: 1.45; color: var(--muted); }
 .overlay-panel .help-guide-card > span { font-size: 18px; }
 .overlay-panel .help-command-row code { font-size: 13px; color: var(--gold-bright); }
-.overlay-panel .help-command-row small { font-size: 10px; }
+.overlay-panel .help-command-row small { font-size: 11px; }
 .overlay-panel .help-command-row p { font-size: 12px; }
 .overlay-panel .help-filters button { min-height: 32px; font-size: 12px; }
 .overlay-panel .help-filters button.active { border-color: var(--gold); color: var(--gold-bright); background: rgba(60, 46, 22, .5); }
@@ -741,4 +741,15 @@ textarea:focus-visible {
 }
 .overlay-close.icon-button[data-city-close] {
   --close-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
+}
+
+[role="button"]:focus-visible,
+a:focus-visible {
+  outline: 2px solid #ffd978;
+  outline-offset: 2px;
+}
+
+.game-overlay {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }

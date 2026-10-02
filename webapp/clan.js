@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 const REASONS = {
   already_in_clan: 'Ты уже состоишь в клане.',
   invalid_name: 'Название клана должно быть от 1 до 40 символов.',
@@ -68,14 +69,6 @@ const REASONS = {
   unknown_clan_progression: 'Неизвестное действие прогресса клана.',
 };
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);

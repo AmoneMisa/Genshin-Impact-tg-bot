@@ -6,12 +6,12 @@
 .help-guide-card { min-width:0; padding:11px; border:1px solid rgba(255,255,255,.06); border-radius:14px; background:rgba(255,255,255,.018); display:grid; grid-template-columns:auto 1fr; gap:9px; align-items:start; }
 .help-guide-card > span { width:34px; height:34px; display:grid; place-items:center; border-radius:10px; background:rgba(255,255,255,.035); font-size:18px; }
 .help-guide-card > div { min-width:0; display:grid; gap:3px; }
-.help-guide-card strong { font-size:9px; color:#e8e4f2; }
+.help-guide-card strong { font-size: 11px; color:#e8e4f2; }
 .help-guide-card p { margin:0; color:#9894a6; font-size:7px; line-height:1.5; }
 .help-command-tools { position:sticky; top:0; z-index:2; padding:2px 0 8px; background:linear-gradient(180deg,rgba(17,20,38,.98) 72%,rgba(17,20,38,0)); }
 .help-search { height:38px; padding:0 10px; border:1px solid rgba(255,255,255,.075); border-radius:11px; background:rgba(5,7,16,.3); display:flex; align-items:center; gap:7px; }
 .help-search span { color:#878395; font-size:16px; }
-.help-search input { width:100%; border:0; outline:0; background:transparent; color:#eeeaf7; font:inherit; font-size:9px; }
+.help-search input { width:100%; border:0; outline:0; background:transparent; color:#eeeaf7; font:inherit; font-size: 11px; }
 .help-search input::placeholder { color:#6f6b7e; }
 .help-filters { display:flex; gap:5px; overflow-x:auto; padding:7px 0 1px; scrollbar-width:none; }
 .help-filters::-webkit-scrollbar { display:none; }

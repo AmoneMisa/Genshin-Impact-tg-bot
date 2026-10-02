@@ -1,3 +1,4 @@
+import { installOverlayA11y } from './overlay-a11y.js';
 import { startWebGL } from './renderer.js';
 import { menuArtFor } from './menu-art.js';
 import { startGameVfx } from './vfx.js';
@@ -196,7 +197,7 @@ async function showCity() {
     .then(mounted => { city = mounted; })
     .catch(error => {
       console.error(error);
-      $('city').innerHTML = `<p class="city-error">Город не загрузился: ${error.message}</p>`;
+      $('city').innerHTML = `<p class="city-error">Город не загрузился</p>`;
     })
     .finally(() => { cityMounting = null; });
   return cityMounting;
@@ -283,3 +284,5 @@ async function boot() {
 }
 
 boot();
+
+installOverlayA11y();

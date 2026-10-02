@@ -44,7 +44,7 @@
 .bonus-panel .bonus-prize { display: grid; justify-items: center; gap: 4px; padding: 10px 6px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .18); background: #0f0c15; text-align: center; }
 .bonus-prize > span { font-size: 22px; }
 .bonus-prize strong { display: block; font: 600 12px/1.2 var(--serif); color: #f3dca6; }
-.bonus-prize small { font-size: 10px; color: rgba(238, 228, 207, .65); }
+.bonus-prize small { font-size: 11px; color: rgba(238, 228, 207, .65); }
 .bonus-prize b { font: 700 13px/1 system-ui, sans-serif; color: #fff; }
 .bonus-feedback { min-height: 16px; text-align: center; font-size: 12px; color: rgba(238, 228, 207, .75); }
 

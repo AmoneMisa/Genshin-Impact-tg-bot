@@ -15,8 +15,10 @@ export default async function(chatId, userId) {
     const chat = await getChatSession(chatId);
 
     let memberIndex = chat.members.findIndex(m => m.userId?.toString() === userIdStr);
+    let dirty = false;
 
     if (memberIndex < 0) {
+        dirty = true;
         chat.members.push({
             userId,
             isHided: false,
@@ -30,11 +32,16 @@ export default async function(chatId, userId) {
     member.userId = userId;
 
     const user = await getUser(chatId, userId);
+    const before = JSON.stringify(member.toObject?.() ?? member);
     member.userChatData = user.userChatData;
 
     getLostFieldsInSession(member);
-    chat.markModified(`members.${memberIndex}`);
-    await chat.save();
+    // Only write when something actually changed: this runs on every request,
+    // and a needless whole-document save can clobber concurrent updates.
+    if (dirty || JSON.stringify(member.toObject?.() ?? member) !== before) {
+        chat.markModified(`members.${memberIndex}`);
+        await chat.save();
+    }
 
     return member;
 }

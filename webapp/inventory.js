@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 const REASONS = {
   potion_not_found: 'Зелье больше недоступно. Обнови инвентарь.',
   potion_empty: 'Это зелье закончилось.',
@@ -11,14 +12,6 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function percent(value, max) {
   return max > 0 ? Math.min(100, Math.max(0, Number(value) / Number(max) * 100)) : 0;

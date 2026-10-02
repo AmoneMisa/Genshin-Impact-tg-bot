@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { playThrow, stageHtml } from './arcade-stage.js';
 
 const REASONS = {
@@ -16,14 +17,6 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(Number(value) || 0);
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function signedNumber(value) {
   const number = Number(value) || 0;

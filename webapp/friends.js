@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 // Friends / clanmates (prototype "Друзья / Соклановцы") and the public player
 // card ("Чужой персонаж"): portrait, clan, gear on the paper doll, stats and a
 // "Написать" link into Telegram.
@@ -13,9 +14,6 @@ const REASONS = {
   too_many: 'Список друзей заполнен.',
 };
 
-function escapeHtml(value) {
-  return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
-}
 function formatNumber(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0); }
 
 export function portraitFor(person) {

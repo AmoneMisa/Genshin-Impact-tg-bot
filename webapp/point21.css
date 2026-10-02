@@ -87,13 +87,13 @@
 .point-hand.mini { min-height: 0; justify-content: flex-start; }
 .point-hand.mini .point-card { width: 34px; height: 48px; margin: 0 -3px; }
 .point-hand.mini .point-card > em { font-size: 16px; }
-.point-hand.mini .point-card > b { font-size: 9px; }
+.point-hand.mini .point-card > b { font-size: 11px; }
 .point-hand.mini .point-card > b i { font-size: 7px; }
 
 .point-others, .point-lobby-seats { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
 .point-other { display: grid; padding: 5px 9px; border-radius: 6px; background: rgba(0, 0, 0, .35); border: 1px solid rgba(216, 179, 106, .2); text-align: center; }
 .point-other strong { font: 600 12px/1.2 var(--serif); color: #f3dca6; }
-.point-other small { font-size: 10px; color: rgba(238, 228, 207, .7); }
+.point-other small { font-size: 11px; color: rgba(238, 228, 207, .7); }
 .point-other.passed { opacity: .6; }
 .point-other.me { border-color: var(--gold); }
 .point-watch { text-align: center; font-size: 12px; color: rgba(238, 228, 207, .75); }

@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 const REASONS = {
   invalid_fields: 'Не удалось прочитать поля анкеты.',
   invalid_field: 'В анкете найдено неизвестное поле.',
@@ -6,14 +7,6 @@ const REASONS = {
   member_not_found: 'Твой профиль не найден в этом чате.',
 };
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function profileFields(profile) {
   if (!profile.fields?.length) {

@@ -40,7 +40,7 @@
 .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .profile-stats article { display: grid; grid-template-columns: 22px 1fr; gap: 6px; align-items: center; padding: 8px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .16); background: #0f0c15; }
 .profile-stats span { font-size: 16px; text-align: center; }
-.profile-stats small { display: block; font-size: 10px; color: rgba(238, 228, 207, .6); }
+.profile-stats small { display: block; font-size: 11px; color: rgba(238, 228, 207, .6); }
 .profile-stats strong { font: 700 14px/1.1 system-ui, sans-serif; color: #fff; }
 
 .profile-classes { display: grid; gap: 8px; }
@@ -62,7 +62,7 @@
 .profile-class-card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 45%, rgba(10, 8, 14, .95)); }
 .profile-class-badge { position: absolute; top: 6px; left: 6px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(10, 8, 14, .8); font-size: 13px; }
 .profile-class-card strong { font: 700 14px/1.1 var(--serif); color: #f3dca6; text-shadow: 0 1px 2px #000; }
-.profile-class-card small { font-size: 10px; color: rgba(238, 228, 207, .8); }
+.profile-class-card small { font-size: 11px; color: rgba(238, 228, 207, .8); }
 .profile-class-card.selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(216, 179, 106, .45); transform: translateY(-3px); }
 .profile-class-card.selected .profile-class-art, .profile-class-card.active .profile-class-art { filter: none; transform: scale(1.05); }
 .profile-class-card.active { border-color: #7fc97a; }

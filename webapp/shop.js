@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { buildArtUrl } from './art/builds-art.js';
 
 /** Item art: palace styles show their painting, the rest an emblem glyph. */
@@ -29,14 +30,6 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function remain(until) {
   const ms = Math.max(0, Number(until || 0) - Date.now());

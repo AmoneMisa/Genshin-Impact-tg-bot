@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
 
 const REASONS = {
@@ -22,14 +23,6 @@ function formatDuration(ms) {
   return minutes ? `${hours} ч. ${minutes} мин.` : `${hours} ч.`;
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 function initials(name) {
   return String(name || '?')

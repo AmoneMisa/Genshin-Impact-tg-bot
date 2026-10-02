@@ -1,3 +1,5 @@
+import { escapeHtml } from './escape-html.js';
+export { escapeHtml };
 // City screen: the player's buildings as painted cards (palace banner + grid),
 // each opening its own window to interact with it: collect, upgrade, speed up,
 // change style, rename. Paintings follow the building's level (art/builds-art.js).
@@ -28,9 +30,6 @@ export const REASONS = Object.freeze({
   invalid_name: 'Название должно содержать от 1 до 40 символов.',
 });
 
-export function escapeHtml(value) {
-  return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
-}
 
 export function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Math.round(Number(value) || 0));
