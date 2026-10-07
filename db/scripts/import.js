@@ -5,10 +5,7 @@ import process from 'node:process'
 process.loadEnvFile('.env');
 const MONGO_URI = process.env.MONGO_URL;
 // 1. Подключение к MongoDB
-mongoose.connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect(MONGO_URI);
 
 const User = mongoose.model("users", new mongoose.Schema({}, {strict: false}));
 const Chat = mongoose.model("chats", new mongoose.Schema({}, {strict: false}));
