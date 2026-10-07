@@ -77,4 +77,6 @@
 .grade-ss { color:#ffd8a8; text-shadow:0 0 12px rgba(255,190,102,.22); }
 .grade-sss { color:#ffe7ad; text-shadow:0 0 15px rgba(255,213,112,.32); }
 @media (min-width:680px) { .equipment-summary { grid-template-columns:repeat(5,minmax(0,1fr)); }.loadout-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }.equipment-list,.forge-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.equipment-item-actions { margin-top:auto; } }
-@media (max-width:390px) { .equipment-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }.equipment-summary > div { padding:9px 8px; }.equipment-section-title small { display:none; }.equipment-item-actions { grid-template-columns:1fr; }.equipment-badges { flex-direction:column; align-items:flex-end; } }
+/* Phones: one compact row of chips (scrolls sideways) so the paper doll is on the first screen, like the design. */
+@media (max-width:679px) { .equipment-summary { display:flex; gap:6px; margin:10px 0 8px; overflow-x:auto; scrollbar-width:none; }.equipment-summary::-webkit-scrollbar { display:none; }.equipment-summary > div { flex:0 0 auto; min-width:74px; padding:6px 9px; border-radius:11px; gap:2px; }.equipment-summary small { font-size:9px; letter-spacing:.05em; }.equipment-summary strong { font-size:13px; } }
+@media (max-width:390px) {.equipment-section-title small { display:none; }.equipment-item-actions { grid-template-columns:1fr; }.equipment-badges { flex-direction:column; align-items:flex-end; } }

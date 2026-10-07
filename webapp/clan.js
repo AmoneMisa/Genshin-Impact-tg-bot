@@ -260,7 +260,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   function overviewHtml(clan) {
     const gear = overlay.querySelector('[data-clan-gear]');
     if (gear) gear.hidden = !clan.canManage;
-    const main = TABS.some(([id]) => id === tab) ? tab : null;
+    // Right after creating or joining a clan the tab is still "discover": show the overview.
+    const main = TABS.some(([id]) => id === tab) ? tab : tab === 'discover' ? 'overview' : null;
     return `
       ${bannerHtml(clan)}
       <nav class="clan-tabs">${TABS.map(([id, label]) => `<button type="button" data-clan-tab="${id}" class="${main === id ? 'active' : ''}">${label}</button>`).join('')}</nav>
