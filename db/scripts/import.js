@@ -11,40 +11,14 @@ const User = mongoose.model("users", new mongoose.Schema({}, {strict: false}));
 const Chat = mongoose.model("chats", new mongoose.Schema({}, {strict: false}));
 const Boss = mongoose.model("bosses", new mongoose.Schema({}, {strict: false}));
 const ChatSettings = mongoose.model("chatSettings", new mongoose.Schema({}, {strict: false}));
-const ClassStats = mongoose.model("classStats", new mongoose.Schema({}, {strict: false}));
-const ClassSkills = mongoose.model("classSkills", new mongoose.Schema({}, {strict: false}));
 const ArenaRatings = mongoose.model("arenaRatings", new mongoose.Schema({}, {strict: false}));
-const ArenaPrizes = mongoose.model("arenaPrizes", new mongoose.Schema({}, {strict: false}));
-const Builds = mongoose.model("buildings", new mongoose.Schema({}, {strict: false}));
-const BossLoot = mongoose.model("bossLoot", new mongoose.Schema({}, {strict: false}));
-const Shop = mongoose.model("shop", new mongoose.Schema({}, {strict: false}));
-const Potions = mongoose.model("potions", new mongoose.Schema({}, {strict: false}));
-const EquipmentTemplate = mongoose.model("equipmentTemplate", new mongoose.Schema({}, {strict: false}));
-const EquipmentBonusStats = mongoose.model("equipmentBonusStats", new mongoose.Schema({}, {strict: false}));
-const Elements = mongoose.model("elements", new mongoose.Schema({}, {strict: false}));
-const ElementsSynergy = mongoose.model("elementsSynergy", new mongoose.Schema({}, {strict: false}));
-const ChanceToHit = mongoose.model("chanceToHit", new mongoose.Schema({}, {strict: false}));
-const GachaTemplate = mongoose.model("gachaTemplate", new mongoose.Schema({}, {strict: false}));
 
 // 3. Загрузка JSON
 const sessions = JSON.parse(fs.readFileSync("./sessions.json", "utf-8"));
 const bosses = JSON.parse(fs.readFileSync("./bosses.json", "utf-8"));
 const arenaRating = JSON.parse(fs.readFileSync("./arenaRating.json", "utf-8"));
 
-// 4. Загрузка JS‑шаблонов
-import classStats from "../../template/classStatsTemplate.js";
-import classSkills from "../../template/classSkillsTemplate.js";
-import arenaWeeklyPrizes from "../../template/arenaWeeklyPrizes.js";
-import builds from "../../template/buildsTemplate.js";
-import bossLoot from "../../template/bossLootTemplate.js";
-import shop from "../../template/shopTemplate.js";
-import potions from "../../template/potionsInInventoryTemplate.js";
-import equipmentTemplate from "../../template/equipmentTemplate.js";
-import equipmentBonusStats from "../../template/equipmentBonusStatsTemplate.js";
-import elements from "../../template/elements.js";
-import elementsSynergy from "../../template/elementsSynergy.js";
-import chanceToHit from "../../template/chanceToHitTemplate.js";
-import gachaTemplate from "../../template/gachaTemplate.js";
+// Игровые шаблоны больше не импортируются сюда: см. db/templates.js (коллекция game_templates).
 import importCommandMap from "./commandMapImport.js";
 
 // 5. Импорт пользователей и чатов
@@ -134,23 +108,8 @@ async function importBosses() {
     }
 }
 
-// 7. Импорт классов, арены и игровых систем
-async function importGameTemplates() {
-    if (!(await isTemplateCollectionImported(ClassStats.collection.name))) {
-        await ClassStats.insertMany(classStats);
-        console.log(`✅ Imported: ${ClassStats.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(ClassSkills.collection.name))) {
-        await ClassSkills.insertMany(Object.entries(classSkills).map(([cls, skills]) => ({class: cls, skills})));
-        console.log(`✅ Imported: ${ClassSkills.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(ArenaPrizes.collection.name))) {
-        await ArenaPrizes.insertMany(arenaWeeklyPrizes);
-        console.log(`✅ Imported: ${ArenaPrizes.collection.name}`);
-    }
-
+// 7. Импорт рейтингов арены (данные игроков, не шаблон)
+async function importArenaRatings() {
     if (!(await isTemplateCollectionImported(ArenaRatings.collection.name))) {
         // arenaRating.json → плоская структура
         for (const [mode, ratings] of Object.entries(arenaRating)) {
@@ -167,56 +126,6 @@ async function importGameTemplates() {
         }
         console.log(`✅ Imported: ${ArenaRatings.collection.name}`);
     }
-
-    if (!(await isTemplateCollectionImported(Builds.collection.name))) {
-        await Builds.insertOne(builds);
-        console.log(`✅ Imported: ${Builds.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(BossLoot.collection.name))) {
-        await BossLoot.insertOne(bossLoot);
-        console.log(`✅ Imported: ${BossLoot.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(Shop.collection.name))) {
-        await Shop.insertMany(shop);
-        console.log(`✅ Imported: ${Shop.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(Potions.collection.name))) {
-        await Potions.insertMany(potions);
-        console.log(`✅ Imported: ${Potions.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(EquipmentTemplate.collection.name))) {
-        await EquipmentTemplate.insertOne(equipmentTemplate);
-        console.log(`✅ Imported: ${EquipmentTemplate.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(EquipmentBonusStats.collection.name))) {
-        await EquipmentBonusStats.insertOne(equipmentBonusStats);
-        console.log(`✅ Imported: ${EquipmentBonusStats.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(Elements.collection.name))) {
-        await Elements.insertMany(elements.map(e => ({name: e})));
-        console.log(`✅ Imported: ${Elements.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(ElementsSynergy.collection.name))) {
-        await ElementsSynergy.insertMany(elementsSynergy.map(combo => ({combo})));
-        console.log(`✅ Imported: ${ElementsSynergy.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(ChanceToHit.collection.name))) {
-        await ChanceToHit.insertMany(chanceToHit.map(v => ({value: v})));
-        console.log(`✅ Imported: ${ChanceToHit.collection.name}`);
-    }
-
-    if (!(await isTemplateCollectionImported(GachaTemplate.collection.name))) {
-        await GachaTemplate.insertMany(gachaTemplate);
-        console.log(`✅ Imported ${GachaTemplate.collection.name}`);
-    }
 }
 
 async function ensureIndex(collection, keys, options) {
@@ -231,7 +140,7 @@ async function ensureIndex(collection, keys, options) {
 export default async function main() {
     await importSessions();
     await importBosses();
-    await importGameTemplates();
+    await importArenaRatings();
     await importCommandMap();
 
     await ensureIndex(User.collection, {userId: 1}, {unique: true, name: "userId_1"});
