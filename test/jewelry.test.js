@@ -7,6 +7,7 @@ import { normalizeLootKind, renderLootArt as renderLootArtForTest } from '../web
 import { itemRotation, normalizeManifest, resolveModelEntry } from '../webapp/loot-gltf.js';
 import { dollSlotFor, equippedItemForSlot } from '../webapp/equipment-paper-doll.js';
 import fs from 'node:fs';
+import { itemArtKey, itemArtSources } from '../webapp/art/items-art.js';
 
 function jewel(type, name) {
   const kind = equipmentTemplate.itemType.find(t => t.name === 'jewelry').kind.find(k => k.type === type);
@@ -53,12 +54,11 @@ test('previews map jewellery and robe helmets to their own kinds', () => {
   assert.equal(normalizeLootKind({ kind: 'heavy', category: 'helmet' }), 'helmet');
 });
 
-test('shipped manifest gives every jewellery kind a model and grade variants for rings', () => {
-  const manifest = normalizeManifest(JSON.parse(fs.readFileSync('webapp/models/manifest.json', 'utf8')));
-  for (const kind of ['ring', 'earring', 'amulet', 'tiara']) assert.ok(manifest.models[kind], kind);
-  assert.equal(resolveModelEntry(manifest, { kind: 'ring', grade: 'c' }).url, '/models/ring.glb');
-  assert.equal(resolveModelEntry(manifest, { kind: 'ring', grade: 'a' }).url, '/models/ring-filigree.glb');
-  assert.equal(resolveModelEntry(manifest, { kind: 'ring', grade: 'sss' }).url, '/models/ring-winged.glb');
+test('every jewellery kind has a distinct WebP painting', () => {
+  for (const kind of ['ring', 'earring', 'amulet', 'tiara']) {
+    assert.equal(itemArtKey(kind), kind);
+    assert.equal(itemArtSources(kind).src, '/art/items/v1/'+kind+'-128.webp');
+  }
 });
 
 test('front-facing ornaments sway instead of spinning edge-on', () => {
@@ -78,20 +78,18 @@ test('the paper doll shows helmets, gloves and boots in head, hands and legs', (
   assert.equal(equippedItemForSlot(state, 'head'), helm);
 });
 
-test('item type picks its own model and wins over grade variants', () => {
-  const manifest = normalizeManifest(JSON.parse(fs.readFileSync('webapp/models/manifest.json', 'utf8')));
-  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'sss', type: 'twoHandedSword' }).url, '/models/greatsword.glb');
-  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'sss', type: 'oneHandedSword' }).url, '/models/sword-sss.glb');
-  for (const [kind, file] of [['armor', 'mantle.glb'], ['gloves', 'bracers.glb'], ['boots', 'anklets.glb'], ['greaves', 'leg-wraps.glb']]) {
-    assert.equal(resolveModelEntry(manifest, { kind, type: 'robe' }).url, `/models/${file}`);
-    assert.equal(resolveModelEntry(manifest, { kind, type: 'heavy' }).url, `/models/${kind}.glb`);
+test('item type selects its own painting for robe slots and weapons', () => {
+  assert.equal(itemArtKey('sword',{kind:'twoHandedSword',grade:'sss'}),'greatsword-solar');
+  assert.equal(itemArtKey('sword',{kind:'oneHandedSword',grade:'sss'}),'sword-prismatic');
+  for(const [kind,key] of [['armor','mantle'],['gloves','bracers'],['boots','anklets'],['greaves','leg-wraps']]) {
+    assert.equal(itemArtKey(kind,{kind:'robe'}),key);
+    assert.equal(itemArtKey(kind,{kind:'heavy'}),kind);
   }
-  assert.equal(resolveModelEntry(manifest, { kind: 'shield', type: 'sigill' }).url, '/models/sigil.glb');
-  const unsafe = normalizeManifest({ models: { sword: { file: 'sword.glb', types: { robe: '../x.glb' } } } });
-  assert.deepEqual(unsafe.models.sword.types, {});
+  assert.equal(itemArtKey('shield',{kind:'sigill'}),'sigil');
+  assert.equal(itemArtKey('../secret'), 'relic');
 });
 
-test('loot art exposes the raw item type for model lookup', () => {
+test('loot art exposes the raw item type for artwork lookup', () => {
   const html = renderLootArtForTest({ kind: 'robe', category: 'gloves', grade: 'A' });
   assert.match(html, /data-loot-type="robe"/);
 });

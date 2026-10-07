@@ -69,13 +69,11 @@ test('a missing or broken manifest degrades to "no models" instead of throwing',
   assert.deepEqual(manifest.models, {});
 });
 
-test('shipped models pass the validator and stay inside the phone budget', () => {
-  const { errors, warnings, rows } = checkModels(path.join(root, 'webapp/models'));
-  assert.deepEqual(errors, []);
-  assert.deepEqual(warnings, []);
-  assert.ok(rows.length >= 4);
-  for (const row of rows) assert.ok(row.triangles > 5000, `${row.file} should be high-poly`);
-  assert.match(inspectGlb(Buffer.from('not a model at all')).error, /not a binary glTF/);
+test('item model manifest is retired and only the chest GLB ships', () => {
+  const {errors,warnings,rows}=checkModels(path.join(root,'webapp/models'));
+  assert.deepEqual(errors,[]);assert.deepEqual(warnings,[]);assert.deepEqual(rows,[]);
+  assert.deepEqual(fs.readdirSync(path.join(root,'webapp/models')).filter(f=>f.endsWith('.glb')),['chest.glb']);
+  assert.match(inspectGlb(Buffer.from('not a model at all')).error,/not a binary glTF/);
 });
 
 test('three.js is pinned and served locally through an import map', () => {
@@ -101,19 +99,12 @@ test('grades from the DOM (lowercase) resolve variants and glow like canonical g
   assert.equal(materialAdjustments({ grade: 'sss' }).glow, materialAdjustments({ grade: 'SSS' }).glow);
 });
 
-test('textured sample weapons embed PBR texture maps and glowing parts', async () => {
-  const buffer = fs.readFileSync(path.join(root, 'webapp/models/sword.glb'));
-  const json = JSON.parse(buffer.toString('utf8', 20, 20 + buffer.readUInt32LE(12)));
-  assert.ok((json.images || []).length >= 4, 'albedo, packed roughness/metal, normal and more');
-  assert.ok(json.images.every(image => ['image/png', 'image/jpeg'].includes(image.mimeType)));
-  const blade = json.materials.find(m => m.name === 'sunSteel');
-  assert.ok(blade.pbrMetallicRoughness.baseColorTexture && blade.pbrMetallicRoughness.metallicRoughnessTexture && blade.normalTexture);
-  assert.ok(json.materials.some(m => m.emissiveFactor?.some(v => v > 0)), 'sun core glows');
-  const dagger = fs.readFileSync(path.join(root, 'webapp/models/dagger.glb'));
-  const daggerJson = JSON.parse(dagger.toString('utf8', 20, 20 + dagger.readUInt32LE(12)));
-  // Blender Moonglass dagger: the glowing inlay and moonstone carry emissive factors.
-  assert.ok(daggerJson.materials.some(m => m.name === 'MAT_MoonglassDagger_Weapon_Glow' && m.emissiveFactor?.some(v => v > 0)), 'blade inlay glows');
-  assert.ok(daggerJson.materials.find(m => m.name === 'MAT_MoonglassDagger_Weapon_Crystal')?.pbrMetallicRoughness?.baseColorTexture, 'crystal gradient is a baked texture');
+test('equipment never boots the legacy 3D item renderer', () => {
+  const renderer=fs.readFileSync(path.join(root,'webapp/renderer.js'),'utf8');
+  assert.doesNotMatch(renderer,/startLootWebGL|loot-webgl/);
+  const art=fs.readFileSync(path.join(root,'webapp/loot-renderer.js'),'utf8');
+  assert.doesNotMatch(art,/<svg|<canvas|\\.glb/);
+  assert.match(art,/loot-item-image/);
 });
 
 test('the PNG encoder produces a valid, decodable image', async () => {

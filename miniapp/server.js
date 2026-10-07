@@ -144,7 +144,7 @@ function serveFile(res, root, urlPath) {
     'content-type': MIME[ext] || 'application/octet-stream',
     'x-content-type-options': 'nosniff',
     'referrer-policy': 'no-referrer',
-    'cache-control': ext === '.html' ? 'no-store' : 'public, max-age=3600',
+    'cache-control': ext === '.html' ? 'no-store' : /^\/art\/items\/v\d+\//.test(urlPath) ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
   });
   fs.createReadStream(filePath).pipe(res);
   return true;
@@ -1343,6 +1343,7 @@ export default function startMiniAppServer() {
     // A missing model must 404: the SPA fallback below would hand the glTF
     // loader an HTML page with status 200.
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/models/')) return sendJson(res, 404, { error: 'Model not found' });
+    if (req.method === 'GET' && requestUrl.pathname.startsWith('/art/')) return sendJson(res, 404, { error: 'Artwork not found' });
     if (req.method === 'GET' && servePage(res, '/index.html')) return;
     if (req.method === 'GET' && serveFile(res, WEBAPP_DIR, '/index.html')) return;
     return sendJson(res, 404, { error: 'Not found' });

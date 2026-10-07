@@ -1,15 +1,6 @@
-// High-poly glTF presentation for loot previews.
-//
-// Artists drop .glb files into webapp/models/ and list them in
-// webapp/models/manifest.json (see models/README.md). Any loot kind without a
-// model keeps the procedural renderer in loot-webgl-v2.js, so the pipeline can be
-// filled in one item at a time.
-//
-// All glTF previews share ONE WebGL context: each preview owns a plain 2D canvas
-// and the shared renderer draws into a scissored corner of its own canvas, which
-// is then copied over. Mobile browsers only allow a handful of live contexts.
-
-import { motionForKind } from './loot-webgl-v2.js';
+// Shared glTF stage for chest scenes. Equipment previews use WebP paintings.
+// Shared scene support for chests. Equipment does not import a WebGL renderer.
+const motionForKind = kind => ['ring','amulet','earring'].includes(kind) ? 'orbit' : ['armor','gloves','greaves','boots','cloak'].includes(kind) ? 'float' : ['helmet','tiara'].includes(kind) ? 'wobble' : ['bow','crossbow','hammer','shield'].includes(kind) ? 'heavy-turn' : 'spin';
 
 export const MODEL_MANIFEST_URL = '/models/manifest.json';
 const MODEL_BASE_URL = '/models/';

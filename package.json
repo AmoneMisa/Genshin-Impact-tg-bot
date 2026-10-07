@@ -10,9 +10,10 @@
     "run:legacy": "node index.js",
     "test": "node --test",
     "models:check": "node scripts/models/checkModels.js",
-    "models:samples": "node scripts/models/buildSampleModels.js",
-    "models:blender": "node scripts/blender/build.js",
-    "art:build": "node scripts/blender/art.js"
+    "art:build": "node scripts/blender/art.js",
+    "models:chest": "node scripts/blender/build.js",
+    "items:check": "node scripts/items/check-art.js",
+    "items:build": "python scripts/items/build-art.py"
   },
   "engines": {
     "node": ">=24 <25"

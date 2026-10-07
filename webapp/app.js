@@ -1,3 +1,4 @@
+import { startItemArt } from './item-art-runtime.js';
 import { installOverlayA11y } from './overlay-a11y.js';
 import { startWebGL } from './renderer.js';
 import { menuArtFor } from './menu-art.js';
@@ -223,6 +224,7 @@ async function loadState() {
 
 async function boot() {
   watchGlyphs(document.body);
+  startItemArt();
   try {
     webglFx = startWebGL($('webgl'));
   } catch (error) {

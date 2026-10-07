@@ -1,4 +1,4 @@
-import { startLootWebGL } from './loot-webgl-v4.js';
+// Item art is rendered as responsive WebP images; this module only draws the background.
 
 const VERTEX_SHADER = `
 attribute vec2 a_position;
@@ -149,7 +149,6 @@ export function startWebGL(canvas) {
     }
   }
 
-  startLootWebGL();
   const started = performance.now();
   let last = started;
   function frame(now) {

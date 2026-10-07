@@ -60,5 +60,5 @@ test('interactive runtime uses real WebGL root transforms and cleans listeners',
   assert.ok(!source.includes(".equipment-loot-preview .loot-art"));
   assert.ok(css.includes('pointer-events:auto;cursor:grab;touch-action:pan-y'));
   assert.ok(css.includes('.paper-doll-slot.preview-focused'));
-  assert.ok(renderer.startsWith("import { startLootWebGL } from './loot-webgl-v4.js';"));
+  assert.ok(!renderer.includes("loot-webgl-v4.js"), "equipment uses painted art");
 });

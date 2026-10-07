@@ -1,7 +1,7 @@
-// Builds the Blender-authored models into webapp/models/.
+// Builds the treasure chest. Equipment uses painted WebP art.
 //
-//   npm run models:blender                 # all models
-//   npm run models:blender -- sword.glb    # just one
+//   npm run models:chest
+//   npm run models:chest
 //
 // Needs Blender 4.2+ (tested with 5.2). Set BLENDER_PATH if it isn't installed
 // in the default location. Each script runs headless:
@@ -16,22 +16,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = path.resolve(HERE, '../../webapp/models');
 
 /** Output file → Blender script. These files are skipped by the Node generator. */
-export const BLENDER_MODELS = Object.freeze({
-  'sword.glb': 'sun_sword.py',
-  'helmet.glb': 'great_helm.py',
-  'ring-winged.glb': 'winged_ring.py',
-  'armor.glb': 'sun_cuirass.py',
-  'bow.glb': 'celestial_bow.py',
-  'tiara.glb': 'flower_tiara.py',
-  'chest.glb': 'treasure_chest.py',
-  'necklace.glb': 'moonlace_necklace.py',
-  'earring.glb': 'moonlace_earrings.py',
-  'staff.glb': 'celestial_staff.py',
-  'staff-sun.glb': 'celestial_staff.py',
-  'mantle.glb': 'astral_coat.py',
-  'bracers.glb': 'astral_coat.py',
-  'dagger.glb': 'moonglass_dagger.py',
-});
+export const BLENDER_MODELS = Object.freeze({ 'chest.glb': 'treasure_chest.py' });
 
 export function findBlender(env = process.env) {
   if (env.BLENDER_PATH) return env.BLENDER_PATH;
