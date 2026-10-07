@@ -107,3 +107,20 @@ test('city quest picks harvest, then the lowest affordable upgrade, then running
   assert.equal(cityQuest([build({ canCollect: false, canUpgrade: false, currentLevel: 30, maxLevel: 30, upgradeCost: null })]), null);
   assert.match(cityHtml({ buildings: [forge] }), /data-city-quest="forge"/);
 });
+
+test('building window shows requirements as "needed / have" and production before -> after', () => {
+  const html = buildingWindow(build({
+    affordability: [
+      { resource: 'gold', required: 12000, current: 1245730, met: true },
+      { resource: 'crystals', required: 0, current: 4820, met: true },
+      { resource: 'ironOre', required: 8000, current: 1200, met: false },
+    ],
+    nextProductionPerHour: 1600,
+  }));
+  assert.match(html, /Требования/);
+  assert.match(html, /<li class="met">[\s\S]*?12\s000 \/ 1\s245\s730/);
+  assert.match(html, /<li class="missing">[\s\S]*?8\s000 \/ 1\s200/);
+  assert.doesNotMatch(html, /4\s820/, 'resources the upgrade does not cost are not listed');
+  assert.match(html, /1\s450 <i class="city-arrow">→<\/i> <em class="city-gain">1\s600/);
+  assert.doesNotMatch(buildingWindow(build({ nextProductionPerHour: 1450 })), /city-gain/);
+});

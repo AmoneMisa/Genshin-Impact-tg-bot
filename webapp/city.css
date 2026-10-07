@@ -302,3 +302,13 @@
 .city-quest strong { display: block; font: 700 14px/1.2 var(--city-serif); color: #e9b86a; }
 .city-quest small { font-size: 12px; color: rgba(238, 228, 207, .8); }
 .city-quest b { font-size: 22px; color: var(--city-gold); animation: city-bob 1.6s ease-in-out infinite; }
+
+/* Building window: requirements as "needed / have" rows and the before -> after production. */
+.city-needs { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.city-needs li { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.city-needs li > span { width: 22px; display: grid; place-items: center; font-size: 17px; }
+.city-needs li strong { font: 700 14px/1 system-ui, sans-serif; color: #fff; }
+.city-needs li.missing strong { color: #ff8d8d; }
+.city-subhead { margin: 2px 0 6px; font: 700 13px/1 var(--city-serif); color: rgba(238, 228, 207, .75); }
+.city-arrow { font-style: normal; opacity: .6; }
+.city-gain { font-style: normal; color: #6fe0a3; }

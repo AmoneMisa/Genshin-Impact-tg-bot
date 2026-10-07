@@ -66,6 +66,14 @@ function costRow(build) {
     .join('') || '<span class="city-cost">Бесплатно</span>';
 }
 
+/** Window requirements as "needed / have" rows, like the design's building sheet. */
+function needRows(build) {
+  const rows = (build.affordability || []).filter(item => Number(item.required) > 0);
+  if (!rows.length) return costRow(build);
+  return `<ul class="city-needs">${rows.map(item => `
+    <li class="${item.met ? 'met' : 'missing'}"><span>${RESOURCE_META[item.resource]?.icon || '•'}</span><strong>${formatNumber(item.required)} / ${formatNumber(item.current)}</strong></li>`).join('')}</ul>`;
+}
+
 function progressHtml(build) {
   const progress = upgradeProgress(build);
   if (!progress) return '';
@@ -180,13 +188,13 @@ export function buildingWindow(build) {
     ${build.description ? `<p class="city-desc">${escapeHtml(build.description)}</p>` : ''}
     ${resource ? `
     <section class="city-block"><h4>Производство</h4>
-      <div class="city-stat"><span>${resource.icon} ${escapeHtml(resource.label)} в час</span><strong>${formatNumber(build.productionPerHour)}</strong></div>
+      <div class="city-stat"><span>${resource.icon} ${escapeHtml(resource.label)} в час</span><strong>${formatNumber(build.productionPerHour)}${build.nextProductionPerHour > build.productionPerHour ? ` <i class="city-arrow">→</i> <em class="city-gain">${formatNumber(build.nextProductionPerHour)}</em>` : ''}</strong></div>
       <div class="city-stat"><span>Накоплено</span><strong>${formatNumber(build.resourceCollected)}</strong></div>
       ${build.maxWorkHoursWithoutCollection ? `<div class="city-stat"><span>Склад заполняется за</span><strong>${formatNumber(build.maxWorkHoursWithoutCollection)} ч</strong></div>` : ''}
       <button type="button" class="city-btn collect" data-city-action="collect" data-build="${escapeHtml(build.id)}" ${build.canCollect ? '' : 'disabled'}>Собрать</button>
     </section>` : ''}
     <section class="city-block"><h4>${build.upgrading ? 'Улучшение идёт' : build.currentLevel >= build.maxLevel ? 'Максимальный уровень' : `Улучшение до ${formatNumber(build.nextLevel)}`}</h4>
-      ${build.upgrading ? progressHtml(build) : `<div class="city-costs">${costRow(build)}</div>${requirementsHtml(build.requirements)}`}
+      ${build.upgrading ? progressHtml(build) : `${build.currentLevel < build.maxLevel ? '<h5 class="city-subhead">Требования</h5>' : ''}${needRows(build)}${requirementsHtml(build.requirements)}`}
       ${actionButton(build)}
       ${!build.upgrading && build.blockedReason && build.currentLevel < build.maxLevel ? `<p class="city-note">${escapeHtml(REASONS[build.blockedReason] || '')}</p>` : ''}
     </section>

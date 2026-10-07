@@ -287,6 +287,7 @@ function buildState(session, buildName, now = Date.now()) {
     resourceType,
     resourceCollected,
     productionPerHour: resourceType ? calculateProductionPerHour(buildName, build) : 0,
+    nextProductionPerHour: resourceType && currentLevel < maxLevel ? calculateProductionPerHour(buildName, { ...build, currentLvl: nextLevel }) : null,
     maxWorkHoursWithoutCollection: asNumber(template.maxWorkHoursWithoutCollection),
     canCollect: Boolean(resourceType) && !upgrading && resourceCollected > 0,
     currentType: build.type || null,
