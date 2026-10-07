@@ -13,7 +13,6 @@ export default [[/(?:^|\s)\/creator_commands\b/, async (msg) => {
         "/get_debug_log - Получить дебаг лог\n" +
         "/get_chat_data - Информация о чате\n" +
         "/hide_dead_souls - Проставить флаги мёртвым душам\n" +
-        "/mark_trusted - Добавить чат и его участников в доверенные\n" +
         "/update_characteristics - Пересчитать очки характеристик пользователю или всей группе\n" +
         "/update_boss_model - Обновить модель боссов\n" +
         "/clear_all_sessions - Почистить сессии пользователей от старых полей\n" +

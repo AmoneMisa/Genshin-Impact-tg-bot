@@ -1,6 +1,5 @@
 import { PassThrough } from 'node:stream';
 import { token, myId } from '../config.js';
-import { trustedChats } from '../data.js';
 import bot from '../bot.js';
 import getSession from '../functions/getters/getSession.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
@@ -89,12 +88,6 @@ async function authorize(req) {
   if (!validated.user?.id) throw new Error('Telegram user is missing');
 
   const chatId = resolveGameChatId(validated);
-  if (!trustedChats.includes(String(chatId))) {
-    const error = new Error('This chat is not trusted');
-    error.status = 403;
-    throw error;
-  }
-
   const userId = validated.user.id;
   const session = await getSession(chatId, userId);
   const isGroupContext = String(chatId) !== String(userId);

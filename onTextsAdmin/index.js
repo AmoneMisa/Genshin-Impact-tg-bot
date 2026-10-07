@@ -1,7 +1,6 @@
 import game from './game/index.js';
 import getChatData from './getChatData.js';
 import getDebugLog from './getDebugLog.js';
-import addTrustedChat from './addTrustedChat.js';
 import showAdminCommands from './showAdminCommands.js';
 import showCreatorCommands from './showCreatorCommands.js';
 import settings from './settings.js';
@@ -16,7 +15,6 @@ export default [
     ...game,
     ...getChatData,
     ...getDebugLog,
-    ...addTrustedChat,
     ...showAdminCommands,
     ...showCreatorCommands,
     ...settings,

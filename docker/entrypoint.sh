@@ -36,16 +36,6 @@ link_state arenaRating.json '{}'
 link_state arenaTempBots.json '[]'
 link_state api.access.log ''
 
-# TRUSTED_CHATS="-1001234,-1005678" seeds the trusted chat list on first start.
-if [ -n "${TRUSTED_CHATS:-}" ] && [ "$(cat "$STATE/trustedChats.json")" = "[]" ]; then
-  # Values go through the environment: chat ids start with "-", which node
-  # would otherwise read as command-line options.
-  TRUSTED_FILE="$STATE/trustedChats.json" node -e '
-    const ids = process.env.TRUSTED_CHATS.split(",").map(s => s.trim()).filter(Boolean);
-    require("fs").writeFileSync(process.env.TRUSTED_FILE, JSON.stringify(ids));
-  '
-fi
-
 if [ ! -f "$APP/config.js" ]; then
   if [ -z "${BOT_TOKEN:-}" ]; then
     echo "entrypoint: BOT_TOKEN is not set (or mount your own /app/config.js)." >&2

@@ -5,7 +5,6 @@ import crypto from 'crypto';
 import { withLock as sharedLock } from '../functions/general/chatLock.js';
 import { fileURLToPath } from 'url';
 import { token, myId } from '../config.js';
-import { trustedChats } from '../data.js';
 import getSession from '../functions/getters/getSession.js';
 import getChatSession from '../functions/getters/getChatSession.js';
 import saveSession from '../functions/getters/saveSession.js';
@@ -283,10 +282,6 @@ async function authorize(req) {
   }
 
   const chatId = resolveGameChatId(validated);
-  if (!trustedChats.includes(String(chatId))) {
-    throw httpError(403, 'This chat is not trusted');
-  }
-
   const session = await getSession(chatId, validated.user.id);
   const isGroupContext = String(chatId) !== String(validated.user.id);
   const membershipStatus = session.userChatData?.status || session.$locals?.telegramMembership?.status;
