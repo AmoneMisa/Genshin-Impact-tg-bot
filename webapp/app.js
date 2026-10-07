@@ -34,7 +34,8 @@ import { mountCity } from './city.js';
 import { openFriendsGame, openPlayerCard } from './friends.js';
 import { createLoader } from './loading.js';
 import { watchGlyphs } from './glyph-center.js';
-import { featuresForTab, navHtml, NAV_TABS } from './nav.js';
+import { featureIconHtml, featuresForTab, navHtml, NAV_TABS } from './nav.js';
+import { startEmojiIcons } from './icons.js';
 
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
@@ -158,7 +159,7 @@ function render(state) {
     button.setAttribute('aria-disabled', String(unavailable));
     button.innerHTML = `
       ${art ? '<span class="game-art" aria-hidden="true"></span>' : ''}
-      <span class="game-icon">${feature.icon}</span>
+      <span class="game-icon">${featureIconHtml(feature)}</span>
       ${unavailable
         ? '<span class="mode-badge group-only">ГРУППА</span>'
         : feature.status === 'webgl'
@@ -187,7 +188,8 @@ function renderTabs() {
     node.hidden = (node.dataset.tabPanel === 'city') !== isCity;
   });
   const tab = NAV_TABS.find(item => item.id === activeTab);
-  $('tab-title').textContent = isCity ? '' : tab.label;
+  $('tab-title').textContent = isCity ? '' : tab.title;
+  $('tab-hint').textContent = isCity ? '' : tab.hint;
   if (isCity) showCity();
 }
 
@@ -225,6 +227,7 @@ async function loadState() {
 async function boot() {
   watchGlyphs(document.body);
   startItemArt();
+  startEmojiIcons();
   try {
     webglFx = startWebGL($('webgl'));
   } catch (error) {

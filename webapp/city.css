@@ -49,6 +49,10 @@
 }
 .city-title { position: relative; z-index: 2; display: grid; justify-items: center; gap: 4px; padding: 26px 0 0; text-align: center; }
 .city-title strong { font: 700 38px/1 var(--city-serif); letter-spacing: .01em; background: linear-gradient(180deg, #fff3cf, #d8b36a 60%, #8a6a2c); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 #000) drop-shadow(0 0 14px rgba(216, 179, 106, .35)); }
+.city-crown { width: 26px; height: 26px; color: #e9c777; stroke-width: 1.6; filter: drop-shadow(0 2px 4px #000); margin-bottom: -6px; }
+.city-game { display: flex; align-items: center; gap: 10px; font: 700 11px/1 var(--city-serif); letter-spacing: .5em; color: #d8b36a; text-shadow: 0 1px 2px #000; }
+.city-game i { width: 38px; height: 1px; background: linear-gradient(90deg, transparent, #d8b36a); }
+.city-game i:last-child { transform: scaleX(-1); }
 .city-title small { font: 400 12px/1.2 var(--city-serif); color: rgba(238, 228, 207, .8); text-shadow: 0 1px 2px #000; }
 
 .city-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 10px; padding-bottom: 56px; }
@@ -258,10 +262,10 @@
   cursor: pointer;
   transition: color .2s ease;
 }
-.nav-tab span { font-size: 20px; line-height: 1; filter: grayscale(.6); transition: transform .25s cubic-bezier(.2, .8, .3, 1.4), filter .2s ease; }
-.nav-tab small { font: 700 10px/1 var(--city-serif); letter-spacing: .02em; }
+.nav-tab .ui-icon { width: 24px; height: 24px; stroke-width: 1.7; transition: transform .25s cubic-bezier(.2, .8, .3, 1.4), color .2s ease; }
+.nav-tab small { font: 700 11px/1 var(--city-serif); letter-spacing: .02em; }
 .nav-tab.active { color: #f3dca6; background: radial-gradient(ellipse at 50% 100%, rgba(216, 179, 106, .22), transparent 70%); }
-.nav-tab.active span { filter: none; transform: translateY(-3px) scale(1.12); }
+.nav-tab.active .ui-icon { transform: translateY(-2px) scale(1.1); stroke-width: 2; }
 .nav-tab.active::before { content: ""; position: absolute; top: -7px; left: 30%; right: 30%; height: 2px; border-radius: 2px; background: var(--city-gold); box-shadow: 0 0 8px var(--city-gold); }
 /* Overlays sit above the nav. */
 .game-overlay { z-index: 40; }

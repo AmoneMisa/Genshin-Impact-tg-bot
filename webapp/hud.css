@@ -336,10 +336,10 @@
   box-shadow: 0 10px 24px rgba(0, 0, 0, .55), inset 0 -1px 0 rgba(255, 236, 190, .08);
   color: #eee4cf;
 }
-.top-hud-hero { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 8px; min-width: 0; }
+.top-hud-hero { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 7px; min-width: 0; }
 
 .top-portrait.hero-portrait-shell {
-  width: 78px; height: 96px;
+  width: 70px; height: 90px;
   border: 1px solid var(--gold);
   border-radius: 6px;
   box-shadow: 0 0 0 2px #120e16, 0 0 0 3px var(--gold-dim), 0 6px 16px rgba(0, 0, 0, .6);
@@ -381,7 +381,21 @@
 .top-bar.sp i { background: linear-gradient(180deg, #3fc2a8, #1b6e60); }
 .top-bar.exp i { background: linear-gradient(180deg, #a07ae0, #5b3a9c); }
 
-.top-hud-side { display: grid; grid-template-columns: auto auto; gap: 6px; align-items: stretch; }
+/* Phones: the class sits under the name so the name is never cut to "Wh…". */
+@media (max-width: 429px) {
+  .top-hud-stats { gap: 2px; }
+  .top-hud-name { flex-direction: column; align-items: flex-start; gap: 0; margin-bottom: 0; }
+  .top-hud-name strong { max-width: 100%; font-size: 14px; }
+  .top-hud-name small { font-size: 10px; line-height: 1.1; }
+  .top-bar-track { height: 11px; }
+}
+/* Smallest phones: the clan banner duplicates the Клан tab, so the bars get its space. */
+@media (max-width: 359px) {
+  .top-banner { display: none; }
+  .top-hud-hero { grid-template-columns: 62px minmax(0, 1fr); }
+  .top-portrait.hero-portrait-shell { width: 62px; height: 84px; }
+}
+.top-hud-side { display: grid; grid-template-columns: auto auto; gap: 5px; align-items: stretch; }
 .top-resources {
   display: grid; align-content: space-between; gap: 4px;
   padding: 5px 6px;
@@ -389,7 +403,7 @@
   border: 1px solid var(--gold-dim);
   background: rgba(6, 5, 9, .6);
 }
-.top-res { display: grid; grid-template-columns: 16px minmax(46px, auto) 20px; gap: 4px; align-items: center; }
+.top-res { display: grid; grid-template-columns: 16px minmax(40px, auto) 20px; gap: 4px; align-items: center; }
 .top-res > span { font-size: 13px; text-align: center; }
 .top-res strong { font: 700 12px/1 system-ui, sans-serif; color: #fff; white-space: nowrap; text-align: right; }
 .top-res .resource-plus { position: static; width: 20px; height: 20px; font-size: 14px; border-radius: 4px; }
@@ -398,7 +412,7 @@
 .top-hud-rail { display: grid; grid-template-columns: auto; grid-template-rows: 1fr auto; gap: 4px; }
 .top-banner {
   position: relative;
-  width: 40px; min-height: 64px; padding: 6px 2px 12px;
+  width: 34px; min-height: 64px; padding: 6px 1px 12px;
   display: grid; justify-items: center; align-content: start; gap: 3px;
   border: 1px solid var(--gold);
   border-bottom: 0;
@@ -409,21 +423,19 @@
   animation: top-banner-sway 5s ease-in-out infinite;
   transform-origin: 50% 0;
 }
-.top-banner span { font-size: 16px; filter: sepia(1) saturate(2) hue-rotate(5deg); }
-.top-banner small { font: 400 7px/1.1 var(--serif); text-align: center; color: rgba(243, 220, 166, .85); }
-.top-icons { display: none; }
-
-@media (min-width: 420px) {
-  .top-hud-rail { grid-template-columns: auto auto; grid-template-rows: none; }
-  .top-icons { display: grid; gap: 4px; align-content: start; }
-}
+.top-banner .ui-icon { font-size: 18px; color: #f3dca6; }
+.top-banner small { font: 400 6.5px/1.1 var(--serif); text-align: center; color: rgba(243, 220, 166, .85); }
+.top-hud-rail { grid-template-columns: auto auto; grid-template-rows: none; }
+.top-icons { display: grid; gap: 4px; align-content: start; }
+.top-icons #fullscreen { display: none; }
+@media (min-width: 430px) { .top-icons #fullscreen { display: grid; } }
 .top-icon {
   width: 28px; height: 28px; padding: 0;
   display: grid; place-items: center;
   border-radius: 6px;
   border: 1px solid var(--gold-dim);
   background: rgba(20, 16, 26, .9);
-  color: #d8c9a4; font-size: 14px;
+  color: #d8c9a4; font-size: 16px;
 }
 .top-icon:active, .top-banner:active, .top-portrait:active { transform: scale(.94); }
 

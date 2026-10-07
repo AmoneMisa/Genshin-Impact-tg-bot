@@ -1,13 +1,25 @@
 // Bottom navigation of the main screen: the city plus feature groups.
-// Features not listed in any group land in "Ещё", so new ones never disappear.
+// Features not listed in any group land in "Меню", so new ones never disappear.
+import { icon } from './icons.js';
 
 export const NAV_TABS = Object.freeze([
-  { id: 'city', label: 'Город', icon: '🏰' },
-  { id: 'hero', label: 'Персонаж', icon: '🧙', features: ['profile', 'skills', 'equipment', 'inventory', 'titles', 'horoscope'] },
-  { id: 'battle', label: 'Арена', icon: '⚔️', features: ['boss', 'arena', 'steal', 'chest', 'gacha', 'sword', 'arcade', 'point21', 'elements', 'bonus'] },
-  { id: 'clan', label: 'Клан', icon: '🛡️', features: ['clan', 'friends', 'forms', 'transfer'] },
-  { id: 'more', label: 'Ещё', icon: '☰' },
+  { id: 'city', label: 'Город', title: 'Город', hint: 'Ваше королевство', icon: 'castle' },
+  { id: 'hero', label: 'Герой', title: 'Ваш герой', hint: 'Персонаж и снаряжение', icon: 'user-round', features: ['profile', 'skills', 'equipment', 'inventory', 'titles', 'horoscope'] },
+  { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['boss', 'arena', 'steal', 'elements'] },
+  { id: 'games', label: 'Игры', title: 'Игры и награды', hint: 'Удача и развлечения', icon: 'dices', features: ['chest', 'gacha', 'bonus', 'sword', 'arcade', 'point21'] },
+  { id: 'clan', label: 'Клан', title: 'Клан и друзья', hint: 'Сообщество', icon: 'users', features: ['clan', 'friends', 'forms', 'transfer'] },
+  // Opened from the gear in the header, not from the bottom bar.
+  { id: 'more', label: 'Меню', title: 'Меню', hint: 'Магазин и настройки', icon: 'settings', hidden: true },
 ]);
+
+/** Icon per feature card; the server's emoji stays as a fallback for new features. */
+export const FEATURE_ICONS = Object.freeze({
+  profile: 'user-round', skills: 'zap', forms: 'notebook-pen', inventory: 'backpack', exchange: 'arrow-left-right',
+  boss: 'swords', chest: 'package-open', gacha: 'sparkles', equipment: 'shield', builds: 'landmark', arena: 'trophy',
+  steal: 'venetian-mask', shop: 'shopping-cart', transfer: 'coin', point21: 'spade', elements: 'orbit', clan: 'castle',
+  friends: 'handshake', bonus: 'gift', titles: 'tag', horoscope: 'orbit', sword: 'sword', arcade: 'dices',
+  selfMute: 'volume-x', chatSettings: 'settings', updates: 'bell', feedback: 'message-circle', help: 'circle-help',
+});
 
 /** The city screen replaces the old buildings card. */
 const HIDDEN_FEATURES = new Set(['builds']);
@@ -22,9 +34,13 @@ export function featuresForTab(features = [], tabId) {
   return visible.filter(feature => order.has(feature.id)).sort((a, b) => order.get(a.id) - order.get(b.id));
 }
 
+export function featureIconHtml(feature) {
+  return FEATURE_ICONS[feature.id] ? icon(FEATURE_ICONS[feature.id]) : (feature.icon || '');
+}
+
 export function navHtml(activeId) {
-  return NAV_TABS.map(tab => `
-    <button type="button" class="nav-tab ${tab.id === activeId ? 'active' : ''}" data-nav-tab="${tab.id}" aria-pressed="${tab.id === activeId}">
-      <span aria-hidden="true">${tab.icon}</span><small>${tab.label}</small>
+  return NAV_TABS.filter(tab => !tab.hidden).map(tab => `
+    <button type="button" class="nav-tab ${tab.id === activeId ? 'active' : ''}" data-nav-tab="${tab.id}" aria-pressed="${tab.id === activeId}" aria-label="${tab.title}">
+      ${icon(tab.icon)}<small>${tab.label}</small>
     </button>`).join('');
 }

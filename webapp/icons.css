@@ -1,0 +1,17 @@
+/* SVG icons (icons.js). They scale with the surrounding font size and take its colour. */
+.ui-icon { width: 1em; height: 1em; flex: none; display: inline-block; vertical-align: -.14em; overflow: visible; }
+/* Resource and status accents so currencies stay recognisable at a glance. */
+.ui-icon-coin, .ui-icon-coins, .ui-icon-hand-coins, .ui-icon-star, .ui-icon-crown, .ui-icon-trophy { color: #f2c14e; }
+.ui-icon-gem, .ui-icon-diamond { color: #5cc8ff; }
+.ui-icon-pickaxe, .ui-icon-hammer { color: #c7b79a; }
+.ui-icon-heart { color: #ff6b7d; }
+.ui-icon-flame, .ui-icon-bomb { color: #ff8a4c; }
+.ui-icon-zap { color: #ffd45c; }
+.ui-icon-snowflake, .ui-icon-droplet { color: #7fd6ff; }
+.ui-icon-leaf, .ui-icon-trees { color: #7fd08a; }
+.ui-icon-sparkles, .ui-icon-sparkle, .ui-icon-wand-sparkles, .ui-icon-orbit { color: #c9b6ff; }
+.ui-icon-circle-check { color: #6fe0a3; }
+.ui-icon-x { color: #ff7a85; }
+.game-card.unavailable .ui-icon, .game-card.unavailable .game-icon { color: inherit; }
+/* Inside coloured chips and buttons the icon follows the text colour instead. */
+.nav-tab .ui-icon, .top-icon .ui-icon, .city-quest .ui-icon, .mode-badge .ui-icon { color: currentColor; }

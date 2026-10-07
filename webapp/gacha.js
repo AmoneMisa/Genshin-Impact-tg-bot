@@ -20,7 +20,7 @@ export function gradeTone(grade) { return GRADE_TONES[grade] || 'plain'; }
 
 function costText(spiral) {
   if (spiral.paymentMode === 'free') return `Бесплатно · ${spiral.freeSpins}`;
-  if (spiral.paymentMode === 'shards') return `🔹 ${spiral.shardsCost} осколков`;
+  if (spiral.paymentMode === 'shards') return `💎 ${spiral.shardsCost} осколков`;
   const parts = [];
   if (spiral.spinCost.gold) parts.push(`🪙 ${number(spiral.spinCost.gold)}`);
   if (spiral.spinCost.crystals) parts.push(`💎 ${number(spiral.spinCost.crystals)}`);

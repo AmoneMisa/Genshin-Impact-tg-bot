@@ -5,6 +5,7 @@ export { escapeHtml };
 // change style, rename. Paintings follow the building's level (art/builds-art.js).
 
 import { buildArtUrl } from './art/builds-art.js';
+import { icon } from './icons.js';
 
 export const RESOURCE_META = Object.freeze({
   gold: { label: 'Золото', icon: '🪙' },
@@ -144,7 +145,9 @@ export function cityHtml(state) {
   <section class="city">
     <div class="city-sky" aria-hidden="true"></div>
     <header class="city-title">
+      ${icon('crown', 'city-crown')}
       <strong>WhitesLove</strong>
+      <span class="city-game" aria-hidden="true"><i></i>GAME<i></i></span>
       <small>Больше, чем игра — наше королевство</small>
     </header>
     ${questHtml(cityQuest(buildings))}
