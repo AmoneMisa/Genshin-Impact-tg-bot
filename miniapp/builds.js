@@ -9,7 +9,8 @@ import setLevel from '../functions/game/player/setLevel.js';
 const DEFAULT_MAX_LEVEL = 30;
 const SPEEDUP_CRYSTALS_PER_HOUR = 30;
 const FREE_SPEEDUP_WINDOW_MS = 15 * 60 * 1000;
-const ACTIVE_BUILD_NAMES = Object.entries(buildsTemplate)
+// Computed per call: the template can be replaced from Mongo after this module loads.
+const activeBuildNames = () => Object.entries(buildsTemplate)
   .filter(([, template]) => template?.available && Number(template.startLvl) > 0)
   .map(([name]) => name);
 
@@ -170,7 +171,7 @@ function ensureBuildDefaults(session) {
   }
 
   const defaults = getBuildFromTemplate();
-  for (const buildName of ACTIVE_BUILD_NAMES) {
+  for (const buildName of activeBuildNames()) {
     if (!game.builds[buildName] && defaults[buildName]) {
       game.builds[buildName] = clone(defaults[buildName]);
       changed = true;
@@ -212,7 +213,7 @@ function settleFinishedUpgrades(session, now = Date.now()) {
   const game = getGame(session);
   let changed = false;
 
-  for (const buildName of ACTIVE_BUILD_NAMES) {
+  for (const buildName of activeBuildNames()) {
     const build = game.builds?.[buildName];
     const template = buildsTemplate[buildName];
     if (!build?.upgradeStartedAt) continue;
@@ -307,7 +308,7 @@ export function getBuildsState(session, now = Date.now()) {
       ironOre: asNumber(inventory.ironOre),
     },
     playerLevel: asNumber(session?.game?.stats?.lvl, 1),
-    buildings: ACTIVE_BUILD_NAMES
+    buildings: activeBuildNames()
       .filter((name) => session.game.builds?.[name])
       .map((name) => buildState(session, name, now)),
   };
@@ -315,7 +316,7 @@ export function getBuildsState(session, now = Date.now()) {
 
 function findBuild(session, buildName) {
   prepareBuilds(session);
-  if (!ACTIVE_BUILD_NAMES.includes(buildName)) return null;
+  if (!activeBuildNames().includes(buildName)) return null;
   const build = session.game.builds?.[buildName];
   if (!build || !buildsTemplate[buildName]) return null;
   return build;
