@@ -1,7 +1,12 @@
+import { icon } from './icons.js';
+
 const REASONS = {
   invalid_amount: 'Укажи целое положительное количество кристаллов.',
   not_enough_gold: 'Недостаточно золота для покупки.',
   inventory_missing: 'Инвентарь персонажа недоступен.',
+  too_many_pending: 'Слишком много неоплаченных счетов. Оплати открытый или подожди час.',
+  invoice_failed: 'Telegram не смог создать счёт. Попробуй чуть позже.',
+  unknown_pack: 'Такого набора больше нет.',
 };
 
 function formatNumber(value) {
@@ -16,6 +21,36 @@ export function clampAmount(value, max) {
 }
 
 const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
+/** Opens a Stars invoice in Telegram; resolves with 'paid' | 'cancelled' | 'failed' | 'pending' | 'unsupported'. */
+function openInvoice(url) {
+  const tg = window.Telegram?.WebApp;
+  if (typeof tg?.openInvoice !== 'function') return Promise.resolve('unsupported');
+  return new Promise(resolve => tg.openInvoice(url, resolve));
+}
+
+function shieldDays(until) {
+  return Math.max(1, Math.ceil((Number(until) - Date.now()) / 86_400_000));
+}
+
+export function starsHtml(stars) {
+  if (!stars?.packs?.length) return '';
+  const first = stars.firstPurchase;
+  return `
+    <section class="ex-stars" aria-label="Купить кристаллы за Telegram Stars">
+      <header><h3>${icon('star')} Купить за Звёзды</h3><small>Telegram Stars</small></header>
+      ${first ? `<p class="ex-first">${icon('gift')} Бонус первой покупки: до +${formatNumber(Math.max(...stars.packs.map(pack => pack.firstBonus)))}&nbsp;${icon('gem')}</p>` : ''}
+      <div class="ex-packs">
+        ${stars.packs.map(pack => `
+          <button type="button" class="ex-pack" data-star-pack="${pack.id}" aria-label="${pack.title}: ${formatNumber(pack.crystals)} кристаллов за ${pack.stars} звёзд">
+            <span class="ex-pack-crystals">${icon('gem')}<strong>${formatNumber(pack.crystals)}</strong></span>
+            <em class="ex-pack-bonus ${first && pack.firstBonus ? 'first' : ''}">${first && pack.firstBonus ? `+${formatNumber(pack.firstBonus)} бонус` : pack.bonusPercent ? `+${pack.bonusPercent}%` : '&nbsp;'}</em>
+            <span class="ex-pack-price">${icon('star')}<b>${formatNumber(pack.stars)}</b></span>
+          </button>`).join('')}
+      </div>
+      <p class="ex-shield">${icon('shield')} ${stars.shield ? `Защищено от ограбления: ${formatNumber(stars.shield.amount)} ${icon('gem')} · ещё ${shieldDays(stars.shield.until)} дн.` : 'Купленные кристаллы 7 дней защищены от ограбления.'}</p>
+    </section>`;
+}
 
 export async function openExchangeGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/exchange');
@@ -63,6 +98,8 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
         <div class="ex-side crystal"><span class="ex-pile" aria-hidden="true">💎</span><small>Кристаллы</small><strong>${formatNumber(state.crystals)}</strong></div>
         <div class="ex-fly" data-exchange-fly aria-hidden="true"></div>
       </section>
+      ${starsHtml(state.stars)}
+      <h3 class="ex-subhead">Обмен золота</h3>
       <p class="ex-rate">Курс: <b>1 💎 = ${formatNumber(state.price)} 🪙</b></p>
       ${successHtml()}
       <section class="exchange-form">
@@ -123,6 +160,7 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
       });
     });
     content.querySelector('[data-exchange-buy]')?.addEventListener('click', buy);
+    content.querySelectorAll('[data-star-pack]').forEach(button => button.addEventListener('click', () => buyWithStars(button.dataset.starPack)));
   }
 
   async function buy() {
@@ -158,6 +196,55 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
     } finally {
       pending = false;
       overlay.classList.remove('busy');
+    }
+  }
+
+  // Telegram confirms a payment a moment before the crystals land, so wait for them.
+  async function waitForCrystals(before) {
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const fresh = await api('/api/exchange');
+      if (fresh.crystals > before) return fresh;
+      await wait(1500);
+    }
+    return null;
+  }
+
+  async function buyWithStars(packId) {
+    if (pending) return;
+    pending = true;
+    overlay.classList.add('busy');
+    feedback.textContent = '';
+    haptic('medium');
+    try {
+      const invoice = await api('/api/stars/invoice', { method: 'POST', body: JSON.stringify({ packId }) });
+      const status = await openInvoice(invoice.url);
+      if (status === 'unsupported') {
+        feedback.textContent = 'Обнови Telegram: эта версия не умеет оплату Звёздами.';
+      } else if (status === 'cancelled') {
+        feedback.textContent = '';
+      } else if (status === 'failed') {
+        feedback.textContent = 'Платёж не прошёл. Звёзды не списаны.';
+      } else {
+        feedback.textContent = 'Платёж принят, начисляем кристаллы…';
+        const before = state.crystals;
+        const fresh = await waitForCrystals(before);
+        if (fresh) {
+          state = fresh;
+          renderState(await api('/api/bootstrap'));
+          const gained = fresh.crystals - before;
+          feedback.textContent = `Готово! Начислено ${formatNumber(gained)} кристаллов.`;
+          statusElement.textContent = `Обменник: куплено ${formatNumber(gained)} кристаллов за Звёзды.`;
+          haptic('heavy');
+        } else {
+          feedback.textContent = 'Платёж получен, кристаллы появятся в течение минуты. Если нет, напиши /paysupport.';
+        }
+      }
+    } catch (error) {
+      feedback.textContent = REASONS[error.payload?.reason] || error.message;
+    } finally {
+      pending = false;
+      overlay.classList.remove('busy');
+      render();
     }
   }
 

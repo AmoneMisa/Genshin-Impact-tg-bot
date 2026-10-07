@@ -145,6 +145,9 @@ export class LegacyTelegramBotAdapter {
     if ('callback_query' in update && update.callback_query) {
       await this.emitLegacy('callback_query', update.callback_query);
     }
+    if ('pre_checkout_query' in update && update.pre_checkout_query) {
+      await this.emitLegacy('pre_checkout_query', update.pre_checkout_query);
+    }
     if ('edited_message' in update && update.edited_message) {
       await this.emitLegacy('edited_message', update.edited_message);
     }

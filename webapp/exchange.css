@@ -71,3 +71,24 @@
 @keyframes ex-flare { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 @keyframes ex-pop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .ex-pile, .ex-circle i, .ex-fly *, .exchange-success { animation: none !important; } }
+
+/* Telegram Stars packs */
+.ex-subhead { margin: 6px 0 -4px; font: 700 14px/1 var(--serif); color: rgba(238, 228, 207, .8); }
+.ex-stars { display: grid; gap: 8px; padding: 12px; border: 1px solid rgba(255, 214, 120, .35); border-radius: 14px; background: linear-gradient(180deg, rgba(48, 36, 14, .55), rgba(16, 12, 8, .6)); }
+.ex-stars header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.ex-stars h3 { margin: 0; display: flex; align-items: center; gap: 6px; font: 700 16px/1 var(--serif); color: #f3dca6; }
+.ex-stars header small { color: rgba(238, 228, 207, .55); font-size: 11px; }
+.ex-first { margin: 0; padding: 6px 9px; border-radius: 9px; background: rgba(111, 224, 163, .1); border: 1px solid rgba(111, 224, 163, .3); color: #b8f0d2; font-size: 12px; line-height: 1.3; }
+.ex-packs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ex-pack { position: relative; display: grid; justify-items: center; gap: 4px; padding: 10px 6px 8px; border: 1px solid rgba(255, 214, 120, .3); border-radius: 12px; background: radial-gradient(ellipse at 50% 0, rgba(92, 200, 255, .14), rgba(10, 9, 14, .75) 70%); color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .15s ease, border-color .15s ease; }
+.ex-pack:active { transform: scale(.97); }
+.ex-pack:focus-visible { outline: 2px solid #f2c14e; outline-offset: 2px; }
+.ex-pack-crystals { display: flex; align-items: center; gap: 6px; font-size: 18px; }
+.ex-pack-crystals strong { font: 700 18px/1 system-ui, sans-serif; }
+.ex-pack-bonus { min-height: 14px; font-style: normal; font-size: 11px; line-height: 1.2; color: #8fe0b0; }
+.ex-pack-bonus.first { color: #6fe0a3; font-weight: 700; }
+.ex-pack-price { display: flex; align-items: center; justify-content: center; gap: 5px; min-width: 70%; padding: 5px 10px; border-radius: 999px; background: linear-gradient(180deg, #f5cf6b, #c18a22); color: #2a1a02; font-size: 14px; }
+.ex-pack-price .ui-icon { color: #2a1a02; }
+.ex-pack-price b { font: 800 14px/1 system-ui, sans-serif; }
+.ex-shield { margin: 0; font-size: 12px; line-height: 1.4; color: rgba(238, 228, 207, .7); }
+.exchange-overlay.busy .ex-pack { opacity: .6; pointer-events: none; }

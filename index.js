@@ -11,6 +11,7 @@ import saveSession from './functions/getters/saveSession.js';
 import getChatSessionSettings from './functions/getters/getChatSessionSettings.js';
 import debugMessage from './functions/tgBotFunctions/debugMessage.js';
 import sendMessage from './functions/tgBotFunctions/sendMessage.js';
+import { registerStarPayments } from './functions/payments/starsHandlers.js';
 
 import evenSecond from './functions/shedullers/evenSecond.js';
 import evenTwoMinutes from './functions/shedullers/evenTwoMinutes.js';
@@ -200,6 +201,8 @@ function shutdown() {
 
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
+
+await registerStarPayments(bot);
 
 // startPolling() keeps its own loop alive; do not await it at module scope,
 // otherwise miniapp-entry.js would never continue to the HTTP server startup.

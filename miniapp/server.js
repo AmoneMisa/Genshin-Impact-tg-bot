@@ -38,6 +38,8 @@ import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderF
 import { getSkillsState, enchantSkillForMiniApp } from './skills.js';
 import { getInventoryState, useInventoryPotion } from './inventory.js';
 import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
+import { createStarInvoice, getStarsState, mongoStarStore } from './stars.js';
+import bot from '../bot.js';
 import { getFormsState, savePersonalForm } from './forms.js';
 import { getUpdatesState, setUpdatesEnabled } from './updates.js';
 import { normalizeFeedbackMessage, formatFeedbackForDeveloper } from './feedback.js';
@@ -535,13 +537,28 @@ const inventoryUse = guarded('inventory use', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+let starStorePromise = null;
+const starStore = () => (starStorePromise ||= mongoStarStore());
+
 const exchangeState = guarded('exchange state', async (req, res) => {
   const context = await authorize(req);
   const exchange = await withLock(`${context.chatId}:${context.userId}:exchange`, async () => {
     context.session = await getSession(context.chatId, context.userId);
     return getExchangeState(context.session);
   });
-  return sendJson(res, 200, exchange);
+  const hasPaid = await (await starStore()).hasPaid(context.chatId, context.userId);
+  return sendJson(res, 200, { ...exchange, stars: getStarsState(context.session, { hasPaid }) });
+});
+
+const starsInvoice = guarded('stars invoice', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await createStarInvoice({
+    store: await starStore(), api: bot.api, chatId: context.chatId, userId: context.userId, packId: String(body.packId || ''),
+  });
+  if (result.ok) return sendJson(res, 200, { ok: true, url: result.url, pack: result.pack, bonus: result.bonus });
+  if (result.error) console.error('[stars] invoice failed:', result.error);
+  return sendJson(res, result.reason === 'invoice_failed' ? 502 : 409, { ok: false, reason: result.reason });
 });
 
 const exchangeBuy = guarded('exchange buy', async (req, res) => {
@@ -1275,6 +1292,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
     if (route === 'GET /api/exchange') return exchangeState(req, res);
     if (route === 'POST /api/exchange/buy') return exchangeBuy(req, res);
+    if (route === 'POST /api/stars/invoice') return starsInvoice(req, res);
     if (route === 'GET /api/gold-transfer') return goldTransferState(req, res);
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
     if (route === 'GET /api/social') return socialState(req, res);

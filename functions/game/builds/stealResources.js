@@ -3,6 +3,12 @@ import calculateIncreaseGuardedResources from "./calculateIncreaseGuardedResourc
 import buildsTemplate from "../../../template/buildsTemplate.js";
 import setLevel from "../player/setLevel.js";
 import getMaxHp from "../player/getters/getMaxHp.js";
+import {starShieldAmount} from "./starShield.js";
+
+/** Crystals a raid can touch: above the palace guard and above the Stars shield (starShield.js). */
+export function stealableCrystals(crystals, guardedCrystals, game, now = Date.now()) {
+    return Math.max(0, crystals - guardedCrystals - starShieldAmount(game, now));
+}
 
 export default function stealResources(currentUser, targetUser) {
     const remainHp = calcDamagePlayerToPlayer(currentUser, targetUser);
@@ -40,7 +46,7 @@ export default function stealResources(currentUser, targetUser) {
         stealPercentage
     );
     const crystalsToSteal = Math.ceil(
-        Math.max(0, defenderCrystals - guardedResources.guardedCrystals) *
+        stealableCrystals(defenderCrystals, guardedResources.guardedCrystals, targetUser.game) *
         stealPercentage
     );
 
