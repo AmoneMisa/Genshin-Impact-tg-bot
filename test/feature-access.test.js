@@ -47,8 +47,8 @@ test('Mini App feature gate covers mutations as well as read endpoints', () => {
 });
 
 test('Mini App preserves the legacy supergroup-only route matrix', () => {
-  // 23 legacy routes + the Mini App's own friends / player-card / epic boss routes (per chat).
-  assert.equal(MINI_APP_GROUP_ONLY_ROUTES.size, 27);
+  // 23 legacy routes + the Mini App's own friends / player-card / epic boss / auction routes (per chat).
+  assert.equal(MINI_APP_GROUP_ONLY_ROUTES.size, 31);
 
   for (const [method, pathname] of [
     ['GET', '/api/forms'],
@@ -68,6 +68,8 @@ test('Mini App preserves the legacy supergroup-only route matrix', () => {
     ['GET', '/api/social'],
     ['POST', '/api/social/friend'],
     ['GET', '/api/player'],
+    ['GET', '/api/auction'],
+    ['POST', '/api/auction/buy'],
   ]) {
     assert.equal(isMiniAppGroupOnlyRoute(method, pathname), true, `${method} ${pathname}`);
   }

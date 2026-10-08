@@ -5,11 +5,13 @@ import ArenaRating from "../../db/models/ArenaRating.js";
 import updateRank from "../../functions/game/arena/updateRank.js";
 import arenaWeeklyPrize from "../../template/arenaWeeklyPrizes.js";
 import { addArenaTokens, grantArenaMedal, normalizeArenaInventory } from "../game/arena/arenaInventory.js";
+import { chatLadder, mailArenaLuckCoins, weekKeyOf } from "../game/arena/arenaLuckRewards.js";
 
 /**
  * Еженедельный ресет арены:
  * - начисляет токены за ранги
  * - выдаёт PvP-медаль, если её ещё нет
+ * - топ-10 рейтинга чата получает Монеты удачи (3-5-7-10-15) почтой
  * - сбрасывает все рейтинги до 1000
  */
 export default async function() {
@@ -19,6 +21,10 @@ export default async function() {
             const chat = await Chat.findOne({ chatId });
             if (!chat) return;
             let updated = false;
+
+            // Ladder first: the ranks and the reset below change the ratings.
+            const awards = mailArenaLuckCoins(chat, await chatLadder(chat.chatId), weekKeyOf());
+            if (awards.length) updated = true;
 
             for (const member of chat.members) {
                 if (member.userChatData?.user?.is_bot) continue;

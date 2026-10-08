@@ -35,3 +35,6 @@
 .ex-first .luck-coin-icon, .ex-shield .luck-coin-icon { width: 16px; height: 16px; }
 .exchange-buy .luck-coin-icon { width: 18px; height: 18px; margin-right: 4px; }
 .luck-overlay .luck-coin-icon { object-fit: contain; }
+.luck-tabs { flex-wrap: wrap; margin: 12px 0; }
+.luck-tabs button { flex: 1 1 auto; }
+.auction-stats { font-size: 12px; opacity: .85; }

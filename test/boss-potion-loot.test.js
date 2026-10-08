@@ -48,3 +48,24 @@ test('with unlucky rolls only the epic boss top three still get a potion', async
   const { members } = await kill(t, 'queenAnt', [1, 2, 3, 4, 5], () => 0.999);
   assert.deepEqual(members.map(potionCount), [1, 1, 1, 0, 0]);
 });
+
+test('everyone who fights an epic boss gets Coins of Luck, scaled by the boss, and shown in the loot', async t => {
+  const { loot, members } = await kill(t, 'queenAnt', [1, 2, 3, 4, 5], () => 0.999);
+  for (const player of members) {
+    assert.equal(player.game.inventory.luckCoins, 5, `player ${player.userId}`);
+    assert.equal(loot[player.userId].luckCoins, 5);
+    assert.deepEqual(loot[player.userId].items.find(item => item.item === 'luckCoins').amount, 5);
+  }
+});
+
+test('epic bosses pay 5 to 50 coins and ordinary bosses none', async t => {
+  const { EPIC_LUCK_COINS, epicLuckCoins } = await import('../functions/game/boss/epicBosses.js');
+  const values = Object.values(EPIC_LUCK_COINS);
+  assert.equal(Math.min(...values), 5);
+  assert.equal(Math.max(...values), 50);
+  assert.deepEqual([...values].sort((a, b) => a - b), values, 'the harder the boss, the more coins');
+  assert.equal(epicLuckCoins('someOrdinaryBoss'), 0);
+
+  const { members } = await kill(t, 'kivaha', [1, 2], () => 0.999);
+  assert.deepEqual(members.map(player => player.game.inventory.luckCoins ?? 0), [0, 0]);
+});

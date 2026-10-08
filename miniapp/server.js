@@ -94,6 +94,7 @@ import {
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
+import { buyLot, cancelLot, createLot, getAuctionState, mongoAuctionStore, returnExpiredLots } from './auction.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
@@ -646,6 +647,84 @@ const starsInvoice = guarded('stars invoice', async (req, res) => {
   if (result.ok) return sendJson(res, 200, { ok: true, url: result.url, pack: result.pack, bonus: result.bonus });
   if (result.error) console.error('[stars] invoice failed:', result.error);
   return sendJson(res, result.reason === 'invoice_failed' ? 502 : 409, { ok: false, reason: result.reason });
+});
+
+let auctionStorePromise = null;
+const auctionStore = () => (auctionStorePromise ||= mongoAuctionStore());
+
+/** The chat lock is shared with the schedulers (the key is the bare chat id). */
+const auctionLock = context => String(context.chatId);
+
+const auctionState = guarded('auction state', async (req, res, requestUrl) => {
+  const context = await authorize(req);
+  const state = await withLock(auctionLock(context), async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const store = await auctionStore();
+    // Lots nobody bought go back to their sellers before anything is shown.
+    if (await returnExpiredLots(context.session.ownerDocument(), store)) await saveSession(context.session);
+    return getAuctionState(context.session, store, {
+      kind: requestUrl.searchParams.get('kind') || 'all',
+      sort: requestUrl.searchParams.get('sort') || 'new',
+    });
+  });
+  return sendJson(res, 200, state);
+});
+
+const auctionList = guarded('auction list', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(auctionLock(context), async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const store = await auctionStore();
+    const created = await createLot(context.session, store, {
+      kind: String(body.kind || ''), ref: String(body.ref ?? ''), count: body.count ?? 1, price: body.price,
+    });
+    if (created.ok) {
+      try {
+        await saveSession(context.session);
+      } catch (error) {
+        await store.claim(created.lot.id, 'active', 'cancelled', { returned: true }).catch(() => {});
+        throw error;
+      }
+    }
+    return { ...created, auction: await getAuctionState(context.session, store) };
+  });
+  return sendResult(res, result, context);
+});
+
+const auctionBuy = guarded('auction buy', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  const result = await withLock(auctionLock(context), async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const store = await auctionStore();
+    const bought = await buyLot(context.session, store, String(body.lotId || ''));
+    if (bought.ok) {
+      try {
+        await saveSession(context.session);
+      } catch (error) {
+        await bought.undo().catch(() => {});
+        throw error;
+      }
+      delete bought.undo;
+    }
+    return { ...bought, auction: await getAuctionState(context.session, store) };
+  });
+  return sendResult(res, result, context);
+});
+
+const auctionCancel = guarded('auction cancel', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(auctionLock(context), async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const store = await auctionStore();
+    const cancelled = await cancelLot(context.session, store, String(body.lotId || ''));
+    if (cancelled.ok) await saveSession(context.session);
+    return { ...cancelled, auction: await getAuctionState(context.session, store) };
+  });
+  return sendResult(res, result, context);
 });
 
 const luckShopState = guarded('luck shop state', async (req, res) => {
@@ -1306,7 +1385,7 @@ const equipmentAction = guarded('equipment action', async (req, res) => {
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = performEquipmentAction(context.session, body.key, body.action, { blessed: body.blessed === true });
+    const updated = performEquipmentAction(context.session, body.key, body.action, { blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null });
     if (updated.ok) await saveSession(context.session);
     return updated;
   });
@@ -1606,6 +1685,10 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/exchange/buy') return exchangeBuy(req, res);
     if (route === 'POST /api/stars/invoice') return starsInvoice(req, res);
     if (route === 'GET /api/luck') return luckShopState(req, res);
+    if (route === 'GET /api/auction') return auctionState(req, res, requestUrl);
+    if (route === 'POST /api/auction/list') return auctionList(req, res);
+    if (route === 'POST /api/auction/buy') return auctionBuy(req, res);
+    if (route === 'POST /api/auction/cancel') return auctionCancel(req, res);
     if (route === 'POST /api/luck/buy') return luckShopBuy(req, res);
     if (route === 'GET /api/gold-transfer') return goldTransferState(req, res);
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);

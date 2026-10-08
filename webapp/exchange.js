@@ -52,8 +52,8 @@ export function starsHtml(stars, coins = 0) {
             <span class="ex-pack-price">${icon('star')}<b>${formatNumber(pack.stars)}</b></span>
           </button>`).join('')}
       </div>
-      <p class="ex-shield">${luckCoinHtml(16)} Монеты удачи не воруют. Потратить их можно в «Лавке удачи».${stars.shield ? ` Кристаллы оттуда защищены от ограбления: ${formatNumber(stars.shield.amount)} ${icon('gem')} · ещё ${shieldDays(stars.shield.until)} дн.` : ''}</p>
-      <button type="button" class="exchange-buy" data-luck-shop>${luckCoinHtml(18)} Лавка удачи · ${formatNumber(coins)}</button>
+      <p class="ex-shield">${luckCoinHtml(16)} Монеты удачи не воруют. Потратить их можно в «Донат-магазине».${stars.shield ? ` Кристаллы оттуда защищены от ограбления: ${formatNumber(stars.shield.amount)} ${icon('gem')} · ещё ${shieldDays(stars.shield.until)} дн.` : ''}</p>
+      <button type="button" class="exchange-buy" data-luck-shop>${luckCoinHtml(18)} Донат-магазин · ${formatNumber(coins)}</button>
     </section>`;
 }
 

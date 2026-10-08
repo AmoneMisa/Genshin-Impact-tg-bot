@@ -23,6 +23,13 @@ export function rollEpicWeapon(template,fighters,random=Math.random) {
 
 const HOUR_MS = 60 * 60 * 1000;
 
+/** Coins of Luck every fighter gets for killing an epic raid boss: 5 for the easiest, 50 for the hardest. */
+export const EPIC_LUCK_COINS = Object.freeze({
+    queenAnt: 5, core: 8, orfen: 12, zaken: 18, baium: 25, frintezza: 32, antharas: 40, valakas: 50,
+});
+
+export const epicLuckCoins = name => EPIC_LUCK_COINS[name] || 0;
+
 export const epicTemplates = () => bossTemplates.filter(boss => boss.epic);
 
 export const getEpicTemplate = name => epicTemplates().find(boss => boss.name === name) || null;

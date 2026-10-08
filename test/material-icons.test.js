@@ -9,6 +9,9 @@ test('enchant and crafting materials map onto the painted icons, everything else
   assert.deepEqual(materialIconInfo('blessed_S84'), { icon: 'scroll-blessed', grade: 'S84' });
   assert.deepEqual(materialIconInfo('crystal_S80'), { icon: 'crystal', grade: 'S80' });
   assert.deepEqual(materialIconInfo('craft_leather_noGrade'), { icon: 'leather', grade: 'noGrade' });
+  assert.deepEqual(materialIconInfo('blessed_weapon_A'), { icon: 'scroll-blessed', grade: 'A' });
+  assert.deepEqual(materialIconInfo('safe_armor_S80'), { icon: 'scroll-safe', grade: 'S80' });
+  assert.equal(materialIconInfo('safe_shield_A'), null);
   assert.equal(materialIconInfo('skill_scroll'), null);
   assert.equal(materialIconInfo('essence_baium'), null);
   assert.equal(materialIconInfo('scroll_X'), null);
@@ -19,7 +22,7 @@ test('enchant and crafting materials map onto the painted icons, everything else
 test('every enchant / crafting material has a painted icon in both sizes', () => {
   for (const material of materials) {
     const info = materialIconInfo(material.key);
-    if (!/^(scroll|blessed|crystal|craft)_/.test(material.key)) continue;
+    if (!/^(scroll|blessed|safe|crystal|craft)_/.test(material.key)) continue;
     assert.ok(info, material.key);
     for (const size of [128, 256]) assert.ok(fs.existsSync(`webapp/art/icons/${info.icon}-${size}.webp`), `${info.icon}-${size}`);
   }

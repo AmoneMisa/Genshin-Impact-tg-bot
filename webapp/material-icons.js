@@ -7,6 +7,11 @@ const GRADES = Object.freeze(['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'])
 /** {icon, grade} of an enchant / crafting material key, or null for any other material. */
 export function materialIconInfo(key) {
   const parts = String(key || '').split('_');
+  // Typed scrolls: blessed_weapon_A, safe_armor_S80 (blessed ones share the blessed painting).
+  if (parts.length === 3 && ['weapon', 'armor'].includes(parts[1]) && GRADES.includes(parts[2])) {
+    if (parts[0] === 'blessed') return { icon: 'scroll-blessed', grade: parts[2] };
+    if (parts[0] === 'safe') return { icon: 'scroll-safe', grade: parts[2] };
+  }
   if (ICONS[parts[0]] && GRADES.includes(parts[1]) && parts.length === 2) return { icon: ICONS[parts[0]], grade: parts[1] };
   if (parts[0] === 'craft' && FAMILIES.includes(parts[1]) && GRADES.includes(parts[2])) return { icon: parts[1], grade: parts[2] };
   return null;

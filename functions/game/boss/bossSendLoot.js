@@ -8,7 +8,7 @@ import lodash from "lodash";
 import Chat from "../../../db/models/Chat.js";
 import { bossTemplateFor } from "./bossUnits.js";
 import { addMaterial, materialInfo } from "../player/materials.js";
-import { markEpicKilled, rollEpicJewel, rollEpicWeapon } from "./epicBosses.js";
+import { epicLuckCoins, markEpicKilled, rollEpicJewel, rollEpicWeapon } from "./epicBosses.js";
 import { rollEnchantDrops } from "../equipment/enchantDrops.js";
 import { rollCraftDrops } from "../equipment/craftItem.js";
 import { recordQuestEvent } from "../classes/classQuests.js";
@@ -93,6 +93,16 @@ export default async function(boss, chatId) {
     // Epic raid bosses start their respawn window and may drop their jewellery.
     if (template?.epic) {
         markEpicKilled(chat, boss.name);
+        // Coins of Luck for everyone who fought the raid boss, whatever their place.
+        const luckCoins = epicLuckCoins(boss.name);
+        if (luckCoins) {
+            for (const member of playedSessions) {
+                const inventory = member.game.inventory;
+                inventory.luckCoins = (Number(inventory.luckCoins) || 0) + luckCoins;
+                gotLoot[member.userId].luckCoins = luckCoins;
+                gotLoot[member.userId].items.push({item: "luckCoins", name: "Монеты удачи", icon: "🍀", amount: luckCoins});
+            }
+        }
         const drop = rollEpicJewel(template, players.map(player => ({id: player.id, damage: player.damage})));
         const winner = drop && playedSessions.find(member => member.userId === drop.id);
         if (winner) {

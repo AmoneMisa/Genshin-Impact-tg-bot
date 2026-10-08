@@ -51,8 +51,11 @@ export function setBonusValues(gradeName, armorType) {
 export function uniqueEquipped(equipmentStats) {
     const seen = new Set();
     const items = [];
+    const now = Date.now();
     for (const slot of Object.values(equipmentStats || {})) {
         if (!slot) continue;
+        // A rented epic item stops working the moment its time is up.
+        if (slot.timed && Number(slot.expiresAt) <= now) continue;
         if (Array.isArray(slot.slots)) {
             const key = `${slot.kind}|${[...slot.slots].sort().join(',')}`;
             if (seen.has(key)) continue;

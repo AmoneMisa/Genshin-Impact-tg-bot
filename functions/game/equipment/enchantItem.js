@@ -11,6 +11,11 @@ export const scrollKey = grade => `scroll_${grade}`;
 export const blessedKey = grade => `blessed_${grade}`;
 export const crystalKey = grade => `crystal_${grade}`;
 
+/** Typed scrolls fit weapons or everything else (armor, shields, jewelry), as in Lineage II. */
+export const scrollTarget = item => (item?.mainType === 'weapon' ? 'weapon' : 'armor');
+export const blessedTypedKey = item => `blessed_${scrollTarget(item)}_${item.grade}`;
+export const safeTypedKey = item => `safe_${scrollTarget(item)}_${item.grade}`;
+
 const config = () => equipmentTemplate.enchant;
 
 /** No-grade gear has no scrolls or crystals (as in Lineage 2). */
@@ -47,15 +52,22 @@ function destroy(session, item) {
  * Reads one scroll of the item's grade and tries to raise the item by a level.
  *   success  the level goes up (always up to the safe level, `chance` above it)
  *   reset    blessed scroll failed: the level falls back to the safe one, the item survives
+ *   kept     indestructible scroll failed: the item survives and keeps its level
  *   broken   plain scroll failed: the item is destroyed and gives crystals
+ *
+ * `scroll` picks the typed scrolls of the Donate shop: 'blessedTyped' (weapon or armor, like a blessed
+ * scroll) and 'safeTyped' (indestructible). Without it `blessed` chooses the generic blessed scroll.
  */
-export function enchantItem(session, item, { blessed = false } = {}) {
+export function enchantItem(session, item, { blessed = false, scroll = null } = {}) {
     if (!isEnchantable(item)) return { ok: false, reason: 'not_enchantable' };
 
     const level = getEnchantLevel(item);
     if (level >= maxEnchantLevel()) return { ok: false, reason: 'max_level' };
 
-    const key = blessed ? blessedKey(item.grade) : scrollKey(item.grade);
+    const key = scroll === 'safeTyped' ? safeTypedKey(item)
+        : scroll === 'blessedTyped' ? blessedTypedKey(item)
+            : blessed ? blessedKey(item.grade) : scrollKey(item.grade);
+    const resets = blessed || scroll === 'blessedTyped';
     if (!spendMaterials(session, { [key]: 1 })) return { ok: false, reason: 'no_scroll', scroll: key };
 
     const chance = enchantChance(item);
@@ -65,7 +77,11 @@ export function enchantItem(session, item, { blessed = false } = {}) {
         return { ok: true, outcome: 'success', level: item.enchant, chance };
     }
 
-    if (blessed) {
+    if (scroll === 'safeTyped') {
+        return { ok: true, outcome: 'kept', level, chance };
+    }
+
+    if (resets) {
         item.enchant = Math.min(level, safeEnchantLevel(item));
         syncEquippedSnapshot(session, item);
         return { ok: true, outcome: 'reset', level: item.enchant, previous: level, chance };

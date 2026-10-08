@@ -12,6 +12,17 @@ const enchantMaterials = ENCHANT_GRADES.flatMap(grade => [
     {key: `crystal_${grade}`, name: `Кристалл ${grade}`, icon: '💠', description: `Остаётся от разрушенного или кристаллизованного снаряжения грейда ${grade}. Идёт на свитки заточки.`},
 ]);
 
+// Typed scrolls (Lineage II): blessed ones drop a failed item back to the safe level, indestructible
+// ones keep both the item and its level. Weapon scrolls work on weapons, armor scrolls on armor,
+// shields and jewelry. Sold for Coins of Luck in the Donate shop.
+const TYPED_SCROLLS = ENCHANT_GRADES.flatMap(grade => ['weapon', 'armor'].flatMap(target => {
+    const label = target === 'weapon' ? 'оружие' : 'броня';
+    return [
+        {key: `blessed_${target}_${grade}`, name: `Благословенный свиток: ${label} (${grade})`, icon: '✨', description: `Заточка: ${label} грейда ${grade}. При неудаче предмет не ломается, а возвращается на безопасный уровень.`},
+        {key: `safe_${target}_${grade}`, name: `Нерушимый свиток: ${label} (${grade})`, icon: '🛡️', description: `Заточка: ${label} грейда ${grade}. При неудаче предмет не ломается и не теряет уровень заточки.`},
+    ];
+}));
+
 // Crafting materials (functions/game/equipment/craftRecipes.js): four families, one material per grade
 // from no-grade to S84. Bosses drop them; metal is the ore the mine produces (inventory.ironOre).
 const CRAFT_GRADES = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
@@ -53,5 +64,6 @@ export default [
     {key: 'essence_selene', name: 'Сущность Селены', icon: '🌙', description: 'Лунный свет. Редкая добыча с Селены.'},
     {key: 'essence_umbra', name: 'Сущность Умбры', icon: '🌑', description: 'Сгусток тени. Редкая добыча с Умбры.'},
     ...enchantMaterials,
+    ...TYPED_SCROLLS,
     ...craftMaterials,
 ];

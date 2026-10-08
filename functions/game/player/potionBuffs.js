@@ -54,14 +54,17 @@ export function applyPotionBuff(session,id,now=Date.now(),{factor=1}={}) {
  session.game.effects.push(effect);return effect;
 }
 
-/** Adds `count` buff potions to the inventory stack (created from the template when new). */
-export function addBuffPotion(session,id,count=1) {
- const definition=potionsInInventoryTemplate.find(p=>p.id===id && p.type==='buff');if(!definition)return null;
+/** Adds `count` of a potion with an id (buff potion or elixir) to its inventory stack, created from the template when new. */
+export function addPotionById(session,id,count=1) {
+ const definition=potionsInInventoryTemplate.find(p=>p.id===id);if(!definition)return null;
  const items=session?.game?.inventory?.potions?.items;if(!Array.isArray(items))return null;
  const existing=items.find(p=>p.id===id);
  if(existing)existing.count=(Number(existing.count)||0)+count;
  else items.push({...definition,count});
  return definition;
 }
+
+/** Adds `count` buff potions to the inventory stack. */
+export const addBuffPotion=(session,id,count=1)=>potionsInInventoryTemplate.some(p=>p.id===id && p.type==='buff')?addPotionById(session,id,count):null;
 
 export const BUFF_POTION_IDS=buffPotions.map(p=>p.id);

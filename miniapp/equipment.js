@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { daysLeft, expireTimedItems, isTimedItem } from '../functions/game/equipment/timedItems.js';
 import equipmentTemplate from '../template/equipmentTemplate.js';
 import equipItem from '../functions/game/equipment/equipItem.js';
 import unequipItem from '../functions/game/equipment/unequipItem.js';
@@ -14,6 +15,8 @@ import craftItem, {
 import { findCatalogItem } from '../functions/game/equipment/catalog.js';
 import {
   blessedKey,
+  blessedTypedKey,
+  safeTypedKey,
   buyScroll,
   crystalKey,
   crystalYield,
@@ -118,6 +121,9 @@ function sanitizeItem(session, item, index) {
     epic: Boolean(item?.epic),
     epicBoss: item?.epicBoss || null,
     epicWeapon:item?.epicWeapon || null,
+    timed: isTimedItem(item),
+    expiresAt: isTimedItem(item) ? Number(item.expiresAt) : null,
+    daysLeft: isTimedItem(item) ? daysLeft(item) : null,
     collection:item?.collection || null,
     // the real Lineage 2 numbers of the item (P.Atk / M.Atk / P.Def / M.Def)
     lineage: item?.lineage || null,
@@ -134,6 +140,8 @@ function sanitizeItem(session, item, index) {
     scrolls: enchantable ? {
       plain: getMaterialCount(session, scrollKey(item.grade)),
       blessed: getMaterialCount(session, blessedKey(item.grade)),
+      blessedTyped: getMaterialCount(session, blessedTypedKey(item)),
+      safeTyped: getMaterialCount(session, safeTypedKey(item)),
     } : null,
     crystals: enchantable ? crystalYield(item) : 0,
   };
@@ -185,6 +193,7 @@ export function getScrollShopState(session) {
 }
 
 export function getEquipmentState(session) {
+  expireTimedItems(session);
   const items = getItems(session);
   const sanitized = items.map((item, index) => sanitizeItem(session, item, index));
   const equippedSlots = {};
@@ -221,6 +230,7 @@ export function getEquipmentState(session) {
 const EQUIP_FAILURES = { 2: 'invalid_item', 3: 'wrong_class' };
 
 export function performEquipmentAction(session, key, action, options = {}) {
+  expireTimedItems(session);
   if (!ACTIONS.has(action)) {
     return { ok: false, reason: 'invalid_action', equipment: getEquipmentState(session) };
   }
@@ -261,7 +271,8 @@ export function performEquipmentAction(session, key, action, options = {}) {
 
   if (action === 'enchant') {
     const previous = getEnchantLevel(item);
-    const result = enchantItem(session, item, { blessed: Boolean(options.blessed) });
+    const scroll = ['blessedTyped', 'safeTyped'].includes(options.scroll) ? options.scroll : null;
+    const result = enchantItem(session, item, { blessed: Boolean(options.blessed), scroll });
     if (!result.ok) {
       return { ok: false, reason: result.reason, scroll: result.scroll, equipment: getEquipmentState(session) };
     }
@@ -280,6 +291,10 @@ export function performEquipmentAction(session, key, action, options = {}) {
       item: destroyed ? null : sanitizeItem(session, item, index),
       equipment: getEquipmentState(session),
     };
+  }
+
+  if (isTimedItem(item) && (action === 'crystallize' || action === 'sell')) {
+    return { ok: false, reason: 'timed_item', equipment: getEquipmentState(session) };
   }
 
   if (action === 'crystallize') {

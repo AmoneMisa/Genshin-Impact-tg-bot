@@ -2,6 +2,8 @@ import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
+import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
+import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getEquipStatByName from '../functions/game/player/getters/getEquipStatByName.js';
 import potionRestore, { potionShare } from '../functions/game/player/potionRestore.js';
 import buffPotions from '../template/buffPotions.js';
@@ -32,6 +34,8 @@ function potionDto(item, index) {
     description: item?.description || '',
     id:item?.id || null,
     seconds:item?.seconds || null,
+    grade:item?.grade || null,
+    needLvl:Math.max(0, number(item?.needLvl)),
   };
 }
 
@@ -84,6 +88,9 @@ export function useInventoryPotion(session, rawKey) {
   if (hp <= 0) {
     return { ok: false, reason: 'player_dead', inventory: getInventoryState(session) };
   }
+  if (number(potion.needLvl) > number(session?.game?.stats?.lvl, 1)) {
+    return { ok: false, reason: 'level_too_low', needLvl: potion.needLvl, inventory: getInventoryState(session) };
+  }
 
   const multiplier = Math.max(0, number(getEquipStatByName(session, 'healPowerPotionsMul', true), 1));
   let restored = 0;
@@ -103,6 +110,15 @@ export function useInventoryPotion(session, rawKey) {
     const next = Math.min(maxHp, hp + Math.max(0, base * multiplier));
     restored = Math.max(0, Math.round(next - hp));
     session.game.gameClass.stats.hp = next;
+  } else if (potion.type === 'cp') {
+    const cp = number(getCurrentCp(session, gameClass));
+    const maxCp = Math.max(1, number(getMaxCp(session, gameClass), 1));
+    if (cp >= maxCp) {
+      return { ok: false, reason: 'cp_full', inventory: getInventoryState(session) };
+    }
+    const next = Math.min(maxCp, cp + Math.max(0, potionRestore(potion, maxCp) * multiplier));
+    restored = Math.max(0, Math.round(next - cp));
+    session.game.gameClass.stats.cp = next;
   } else if (potion.type === 'mp') {
     const mp = number(getCurrentMp(session, gameClass));
     const maxMp = Math.max(1, number(getMaxMp(session, gameClass), 1));
