@@ -33,6 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # config.js (token, admin id) is secret and git-ignored; production builds it from the
+      # environment (docker/entrypoint.sh). Modules that load the bot need one to be imported.
+      - name: Create a dummy config.js for the tests
+        run: |
+          echo 'export let token = "123456:ci-test-token";' > config.js
+          echo 'export let myId = 1;' >> config.js
+          echo 'export let giantBombApiKey = "";' >> config.js
+
       - name: Run tests
         run: npm test
 
