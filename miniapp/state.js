@@ -69,6 +69,9 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'chatSettings', title: 'Настройки чата', subtitle: 'Доступность команд для группы', icon: '⚙️', status: 'webgl' },
   { id: 'updates', title: 'Что нового', subtitle: 'Уведомления об обновлениях', icon: '🔔', status: 'webgl' },
   { id: 'feedback', title: 'Написать разработчику', subtitle: 'Баг, идея или вопрос', icon: '💬', status: 'webgl' },
+  { id: 'mail', title: 'Почта', subtitle: 'Награды и письма', icon: '✉️', status: 'webgl' },
+  { id: 'promo', title: 'Промокод', subtitle: 'Ввести код и получить награду', icon: '🎟️', status: 'webgl' },
+  { id: 'admin', title: 'Админка', subtitle: 'Промокоды и объявления', icon: '🛠️', status: 'webgl', adminOnly: true },
   { id: 'help', title: 'Справка', subtitle: 'Гайд и команды чата', icon: '❔', status: 'webgl' },
 ]);
 
@@ -80,7 +83,7 @@ export function isPrivateMiniAppContext(context) {
 
 export function createMiniAppFeatures(context) {
   const isPrivate = isPrivateMiniAppContext(context);
-  return FEATURE_CATALOG.map(feature => {
+  return FEATURE_CATALOG.filter(feature => !feature.adminOnly || context?.isAdmin).map(feature => {
     const groupOnly = GROUP_ONLY_FEATURE_SET.has(feature.id);
     const available = !groupOnly || !isPrivate;
     return {

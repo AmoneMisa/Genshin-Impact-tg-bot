@@ -22,11 +22,15 @@ import { openClanGame } from './clan.js';
 import { openStealGame } from './steal.js';
 import { openPlayerProfile } from './profile.js';
 import { openSkillsGame } from './skills.js';
+import { openClassQuests } from './class-quests.js';
 import { openFormsGame } from './forms.js';
 import { openInventoryGame } from './inventory.js';
 import { openExchangeGame } from './exchange.js';
 import { openUpdatesGame } from './updates.js';
 import { openFeedbackGame } from './feedback.js';
+import { openMailGame, openPromoGame } from './mail.js';
+import { openAdminGame } from './admin.js';
+import { showHelloNotices } from './notices.js';
 import { openHelpGame } from './help.js';
 import { openChatSettings } from './chat-settings.js';
 import { openSelfMute } from './self-mute.js';
@@ -118,6 +122,9 @@ const launchers = {
   chatSettings: openChatSettings,
   updates: openUpdatesGame,
   feedback: openFeedbackGame,
+  mail: openMailGame,
+  promo: openPromoGame,
+  admin: openAdminGame,
   help: openHelpGame,
 };
 
@@ -196,7 +203,16 @@ function render(state) {
   });
   $('game-grid').replaceChildren(...cards);
   renderTabs();
+  renderGearDot();
   status.textContent = '';
+}
+
+// The gear opens the menu (mail, promo code), so it carries the mail dot.
+function renderGearDot() {
+  const gear = document.querySelector('[data-nav-jump="more"]');
+  if (!gear) return;
+  gear.querySelector('.red-dot')?.remove();
+  if (badges.mail > 0) gear.insertAdjacentHTML('beforeend', badgeHtml(badges.mail));
 }
 
 function renderTabs() {
@@ -300,6 +316,7 @@ async function boot() {
 
   try {
     await loadState();
+    showHelloNotices({ api, haptic });
   } catch (error) {
     console.error(error);
     status.textContent = error.message;

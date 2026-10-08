@@ -84,6 +84,10 @@ import {
   prepareClanContribution,
   prepareClanQuizAnswer,
 } from './clan.js';
+import {
+  activeNotices, claimAllMail, claimMail, createPromo, deleteNotice, deletePromo, getMailbox, listNotices, listPromos,
+  PROMO_ERRORS, redeemPromo, releasePromo, saveNotice, setPromoExpiry, validateNotice, validatePromo, pendingMailCount,
+} from './promo.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
@@ -308,7 +312,16 @@ function stateFor(context) {
     chatId: context.chatId,
     chatType: context.validated.chatType,
     user: context.validated.user,
+    isAdmin: isAdminUser(context.userId),
   });
+}
+
+function isAdminUser(userId) {
+  return myId !== undefined && myId !== null && String(userId) === String(myId);
+}
+
+function requireAdmin(context) {
+  if (!isAdminUser(context.userId)) throw httpError(403, 'Только для администратора');
 }
 
 function httpError(status, message) {
@@ -520,6 +533,64 @@ const playerSkillsEnchant = guarded('player skills enchant', async (req, res) =>
   return sendResult(res, result, context);
 });
 
+const playerSkillsRoute = guarded('player skills route', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  const slot = Number(body.slot);
+  if (!Number.isInteger(slot) || slot < 0) {
+    throw httpError(400, 'slot must be a non-negative integer');
+  }
+  if (typeof body.route !== 'string' || !body.route) {
+    throw httpError(400, 'route is required');
+  }
+
+  const result = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const changed = routeSkillForMiniApp(context.session, slot, body.route);
+    if (changed.ok) await saveSession(context.session);
+    return changed;
+  });
+
+  return sendResult(res, result, context);
+});
+
+const classQuestsState = guarded('class quests state', async (req, res) => {
+  const context = await authorize(req);
+  const quests = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getClassQuestsState(context.session);
+  });
+  return sendJson(res, 200, quests);
+});
+
+const classQuestsAction = guarded('class quests action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!['start', 'pay', 'abandon', 'promote'].includes(body.action)) {
+    throw httpError(400, 'action must be start, pay, abandon or promote');
+  }
+  if (['start', 'promote'].includes(body.action) && (typeof body.to !== 'string' || !body.to)) {
+    throw httpError(400, 'to is required');
+  }
+  if (['pay', 'promote'].includes(body.action)) assertGoldUnlocked(context);
+
+  const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const actions = {
+      start: () => startClassQuestForMiniApp(context.session, body.to),
+      pay: () => payClassQuestForMiniApp(context.session),
+      abandon: () => abandonClassQuestForMiniApp(context.session),
+      promote: () => promoteClassForMiniApp(context.session, body.to),
+    };
+    const outcome = actions[body.action]();
+    if (outcome.ok) await saveSession(context.session);
+    return outcome;
+  });
+
+  return sendResult(res, result, context);
+});
+
 const inventoryState = guarded('inventory state', async (req, res) => {
   const context = await authorize(req);
   const inventory = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
@@ -652,6 +723,88 @@ const socialFriend = guarded('social friend', async (req, res) => {
   return sendJson(res, status, { ...result.updated, social });
 });
 
+const mailState = guarded('mail state', async (req, res) => {
+  const context = await authorize(req);
+  const mail = await withLock(`${context.chatId}:${context.userId}:mail`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getMailbox(context.session);
+  });
+  return sendJson(res, 200, mail);
+});
+
+const mailClaim = guarded('mail claim', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (body.id !== undefined && typeof body.id !== 'string') throw httpError(400, 'id must be a string');
+  const result = await withLock(`${context.chatId}:${context.userId}:mail`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const claimed = body.id ? claimMail(context.session, body.id) : claimAllMail(context.session);
+    if (claimed.ok) await saveSession(context.session);
+    return { ...claimed, mail: getMailbox(context.session) };
+  });
+  return sendResult(res, result, context);
+});
+
+const promoRedeem = guarded('promo redeem', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (typeof body.code !== 'string') throw httpError(400, 'code is required');
+  const result = await withLock(`${context.chatId}:${context.userId}:mail`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const redeemed = await redeemPromo(context.session, context.userId, body.code);
+    if (!redeemed.ok) return { ...redeemed, error: PROMO_ERRORS[redeemed.reason] || PROMO_ERRORS.invalid };
+    try {
+      await saveSession(context.session);
+    } catch (error) {
+      await releasePromo(redeemed.code, context.userId).catch(() => {});
+      throw error;
+    }
+    return { ...redeemed, mail: getMailbox(context.session) };
+  });
+  return sendResult(res, result, context);
+});
+
+const noticesState = guarded('notices', async (req, res) => {
+  await authorize(req);
+  return sendJson(res, 200, { notices: await activeNotices() });
+});
+
+const adminState = guarded('admin state', async (req, res) => {
+  const context = await authorize(req);
+  requireAdmin(context);
+  return sendJson(res, 200, { promos: await listPromos(), notices: await listNotices() });
+});
+
+const adminPromo = guarded('admin promo', async (req, res) => {
+  const context = await authorize(req);
+  requireAdmin(context);
+  const body = await readJsonBody(req);
+  let result;
+  if (body.action === 'delete') {
+    result = (await deletePromo(String(body.code || ''))) ? { ok: true } : { ok: false, reason: 'not_found' };
+  } else if (body.action === 'expiry') {
+    result = await setPromoExpiry(String(body.code || ''), body.expiresAt);
+  } else {
+    const checked = validatePromo(body);
+    result = checked.ok ? await createPromo(checked.promo, context.userId) : { ok: false, reason: 'invalid', error: checked.error };
+  }
+  return sendJson(res, result.ok ? 200 : 409, { ...result, promos: await listPromos() });
+});
+
+const adminNotice = guarded('admin notice', async (req, res) => {
+  const context = await authorize(req);
+  requireAdmin(context);
+  const body = await readJsonBody(req);
+  let result;
+  if (body.action === 'delete') {
+    result = (await deleteNotice(String(body.id || ''))) ? { ok: true } : { ok: false, reason: 'not_found' };
+  } else {
+    const checked = validateNotice(body);
+    result = checked.ok ? await saveNotice(body.id ? String(body.id) : null, checked.notice, context.userId) : { ok: false, reason: 'invalid', error: checked.error };
+  }
+  return sendJson(res, result.ok ? 200 : 409, { ...result, notices: await listNotices() });
+});
+
 const badges = guarded('badges', async (req, res) => {
   const context = await authorize(req);
   const chat = await getChatSession(context.chatId);
@@ -661,7 +814,7 @@ const badges = guarded('badges', async (req, res) => {
   if (String(context.chatId) !== String(context.userId)) {
     try { bossAlive = Boolean(await getAliveBoss(context.chatId)); } catch { bossAlive = false; }
   }
-  return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive }));
+  return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive, mail: pendingMailCount(context.session) }));
 });
 
 const playerCard = guarded('player card', async (req, res, requestUrl) => {
@@ -1341,6 +1494,13 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/social') return socialState(req, res);
     if (route === 'POST /api/social/friend') return socialFriend(req, res);
     if (route === 'GET /api/badges') return badges(req, res);
+    if (route === 'GET /api/mail') return mailState(req, res);
+    if (route === 'POST /api/mail/claim') return mailClaim(req, res);
+    if (route === 'POST /api/promo/redeem') return promoRedeem(req, res);
+    if (route === 'GET /api/notices') return noticesState(req, res);
+    if (route === 'GET /api/admin') return adminState(req, res);
+    if (route === 'POST /api/admin/promo') return adminPromo(req, res);
+    if (route === 'POST /api/admin/notice') return adminNotice(req, res);
     if (route === 'GET /api/player') return playerCard(req, res, requestUrl);
     if (route === 'GET /api/steal') return stealState(req, res);
     if (route === 'POST /api/steal/attack') return stealAttack(req, res);

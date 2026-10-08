@@ -67,7 +67,7 @@ export function personalBadges(session) {
  * Counts behind the red dots, keyed by feature id. `bossAlive` is resolved by
  * the caller because it needs the database.
  */
-export function getBadges(chat, userId, clan = null, { session = null, bossAlive = false } = {}) {
+export function getBadges(chat, userId, clan = null, { session = null, bossAlive = false, mail = 0 } = {}) {
   const social = getSocialState(chat, userId);
   const friends = (social.incoming || []).length;
 
@@ -86,6 +86,6 @@ export function getBadges(chat, userId, clan = null, { session = null, bossAlive
 
   const personal = personalBadges(session);
   const boss = bossAlive ? 1 : 0;
-  const total = friends + clanCount + boss + Object.values(personal).reduce((sum, value) => sum + value, 0);
-  return { friends, clan: clanCount, boss, ...personal, total };
+  const total = friends + clanCount + boss + mail + Object.values(personal).reduce((sum, value) => sum + value, 0);
+  return { friends, clan: clanCount, boss, mail, ...personal, total };
 }

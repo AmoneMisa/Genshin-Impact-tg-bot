@@ -1,0 +1,23 @@
+/* Mail, promo field, admin screen and hello popups. */
+.mail-promo { margin-bottom: 12px; }
+.mail-list { display: grid; gap: 10px; margin-top: 12px; }
+.mail-letter { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--gold-dim, #6b5326); border-radius: 12px; background: rgba(6, 5, 9, .55); }
+.mail-letter.claimed { opacity: .6; }
+.mail-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.mail-head strong { font: 700 14px/1.25 var(--serif, Georgia, serif); color: var(--gold-bright, #f3dca6); }
+.mail-head small, .mail-letter > small { color: var(--muted, #a99f8b); font-size: 11.5px; }
+.mail-letter p { margin: 0; font-size: 13px; line-height: 1.45; }
+.mail-rewards { display: flex; flex-wrap: wrap; gap: 6px; }
+.mail-reward { padding: 4px 9px; border-radius: 999px; background: rgba(216, 179, 106, .14); border: 1px solid rgba(216, 179, 106, .35); font-weight: 700; font-size: 13px; }
+.mail-reward small { font-weight: 500; opacity: .8; }
+.mail-empty { text-align: center; color: var(--muted, #a99f8b); padding: 18px 0; }
+.admin-rewards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.admin-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.admin-row input { flex: 1 1 150px; min-width: 0; }
+.mail-overlay input, .admin-overlay input, .admin-overlay textarea { width: 100%; box-sizing: border-box; min-height: 44px; }
+.notice-panel { display: grid; gap: 12px; padding: 20px 16px; max-width: 420px; margin: auto; text-align: center; }
+.notice-panel h2 { margin: 0; font: 700 18px/1.25 var(--serif, Georgia, serif); color: var(--gold-bright, #f3dca6); }
+.notice-panel p { margin: 0; font-size: 14px; line-height: 1.5; }
+.notice-skip { display: flex; gap: 8px; align-items: center; justify-content: center; font-size: 12.5px; color: var(--muted, #a99f8b); }
+.top-icon { position: relative; }
+.top-icon .red-dot { top: -3px; right: -3px; }
