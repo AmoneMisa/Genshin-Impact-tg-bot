@@ -7,6 +7,7 @@ const root = process.cwd();
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const html=`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/city.css"><style>:root{--safe-bottom:0px}body{margin:0;background:#0b0d18}.app-shell{max-width:900px;margin:auto;padding:18px}.ui-icon{width:24px;height:24px}</style><main class="app-shell" id="root"></main><script type="module">
 import {mountCity} from '/city.js';
+import { screenshotWebp } from '../lib/screenshot-webp.mjs';
 const names={palace:'Башня магов',forge:'Кузница титанов',crystalLake:'Озеро кристаллов',traineeArea:'Казармы',goldMine:'Золотая шахта',ironDeposit:'Залежи руды',academy:'Академия'};
 const buildings=Object.entries(names).map(([id,name],i)=>({id,name,currentLevel:i===0?4:5,maxLevel:30,nextLevel:6,currentType:id==='palace'?'royal':null,canUpgrade:true,canCollect:false,upgrading:i===0,remainingMs:8130000,upgradeStartedAt:Date.now()-1000,canSpeedup:true,speedupCost:30,upgradeCost:{gold:12000,ironOre:8000}}));
 window.cityActions=[];
@@ -63,7 +64,7 @@ try {
   }
   await page.evaluate(()=>window.setCityLevel(4));await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(700);
   await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.city-sky').evaluate(e=>getComputedStyle(e).animationName),'none');
-  assert.deepEqual(errors,[]);if(width===390)await page.screenshot({path:path.join(root,'docs/city-mobile.png'),fullPage:true});
+  assert.deepEqual(errors,[]);if(width===390)await screenshotWebp(page,path.join(root,'docs/city-mobile.webp'),{fullPage:true});
   console.log(JSON.stringify({width,buildings:7,panoramaRequests:1,overflow:false}));await context.close();
  }
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

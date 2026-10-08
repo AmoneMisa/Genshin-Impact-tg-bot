@@ -1,6 +1,7 @@
 import { icon } from './icons.js';
 import { worldIconHtml } from './art/world-art.js';
 import { openLuckShopGame } from './luck-shop.js';
+import { luckCoinHtml } from './currency-icons.js';
 
 const REASONS = {
   invalid_amount: 'Укажи целое положительное количество кристаллов.',
@@ -41,18 +42,18 @@ export function starsHtml(stars, coins = 0) {
   return `
     <section class="ex-stars" aria-label="Купить монеты удачи за Telegram Stars">
       <header><h3>${icon('star')} Монеты удачи за Звёзды</h3><small>Telegram Stars</small></header>
-      ${first ? `<p class="ex-first">${icon('gift')} Бонус первой покупки: до +${formatNumber(Math.max(...stars.packs.map(pack => pack.firstBonus)))}&nbsp;🍀</p>` : ''}
+      ${first ? `<p class="ex-first">${icon('gift')} Бонус первой покупки: до +${formatNumber(Math.max(...stars.packs.map(pack => pack.firstBonus)))}&nbsp;${luckCoinHtml(16)}</p>` : ''}
       <div class="ex-packs">
         ${stars.packs.map(pack => `
           <button type="button" class="ex-pack" data-star-pack="${pack.id}" aria-label="${pack.title}: ${formatNumber(pack.coins)} монет удачи за ${pack.stars} звёзд">
             ${worldIconHtml(`stars/${pack.id}`, 80)}
-            <span class="ex-pack-crystals"><span aria-hidden="true">🍀</span><strong>${formatNumber(pack.coins)}</strong></span>
+            <span class="ex-pack-crystals">${luckCoinHtml(26)}<strong>${formatNumber(pack.coins)}</strong></span>
             <em class="ex-pack-bonus ${first && pack.firstBonus ? 'first' : ''}">${first && pack.firstBonus ? `+${formatNumber(pack.firstBonus)} бонус` : pack.bonusPercent ? `+${pack.bonusPercent}%` : '&nbsp;'}</em>
             <span class="ex-pack-price">${icon('star')}<b>${formatNumber(pack.stars)}</b></span>
           </button>`).join('')}
       </div>
-      <p class="ex-shield">🍀 Монеты удачи не воруют. Потратить их можно в «Лавке удачи».${stars.shield ? ` Кристаллы оттуда защищены от ограбления: ${formatNumber(stars.shield.amount)} ${icon('gem')} · ещё ${shieldDays(stars.shield.until)} дн.` : ''}</p>
-      <button type="button" class="exchange-buy" data-luck-shop>🍀 Лавка удачи · ${formatNumber(coins)}</button>
+      <p class="ex-shield">${luckCoinHtml(16)} Монеты удачи не воруют. Потратить их можно в «Лавке удачи».${stars.shield ? ` Кристаллы оттуда защищены от ограбления: ${formatNumber(stars.shield.amount)} ${icon('gem')} · ещё ${shieldDays(stars.shield.until)} дн.` : ''}</p>
+      <button type="button" class="exchange-buy" data-luck-shop>${luckCoinHtml(18)} Лавка удачи · ${formatNumber(coins)}</button>
     </section>`;
 }
 

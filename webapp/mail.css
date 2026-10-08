@@ -27,3 +27,11 @@
 .admin-overlay .feedback-card { margin-bottom: 12px; }
 .luck-group { margin: 14px 0 6px; font: 700 13px/1.2 var(--serif, Georgia, serif); color: var(--gold-bright, #f3dca6); }
 .luck-overlay .feedback-card > .feedback-submit { margin-top: 10px; }
+
+/* Coin of Luck icon next to numbers and labels. */
+.luck-coin-icon { display: inline-block; vertical-align: -0.2em; object-fit: contain; }
+.top-res > .luck-coin-icon { justify-self: center; }
+.ex-pack .ex-pack-crystals .luck-coin-icon { width: 26px; height: 26px; }
+.ex-first .luck-coin-icon, .ex-shield .luck-coin-icon { width: 16px; height: 16px; }
+.exchange-buy .luck-coin-icon { width: 18px; height: 18px; margin-right: 4px; }
+.luck-overlay .luck-coin-icon { object-fit: contain; }

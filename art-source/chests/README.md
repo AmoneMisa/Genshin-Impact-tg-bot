@@ -18,6 +18,6 @@ users see immediate state changes. Missing images display a fallback chest symbo
 The original server-side rewards and three selections per daily attempt remain unchanged.
 
 Visual checks: `node scripts/chests/browser-check.js` with PLAYWRIGHT_MODULE and
-ITEM_ART_BROWSER when needed. Screenshots: docs/chests-mobile.png and
-docs/chests-open-mobile.png. Checks cover 320/390 px, DPR 3, all selections, summary,
+ITEM_ART_BROWSER when needed. Screenshots: docs/chests-mobile.webp and
+docs/chests-open-mobile.webp. Checks cover 320/390 px, DPR 3, all selections, summary,
 empty reward, retry, history, daily unavailability, close during a request and image errors.

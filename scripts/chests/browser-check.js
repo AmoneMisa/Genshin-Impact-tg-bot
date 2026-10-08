@@ -7,6 +7,7 @@ const root = process.cwd();
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
 const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/chest.css"><style>:root{--safe-bottom:0px}body{margin:0;background:#080b12}</style><script type="module">
 import {openChestGame} from '/chest.js';
+import { screenshotWebp } from '../lib/screenshot-webp.mjs';
 window.launch=async(options={})=>{
 let n=0, failed=false;window.calls=0;window.rendered=0;
 await openChestGame({haptic:()=>{},renderState:()=>window.rendered++,statusElement:document.createElement('p'),api:async(url)=>{
@@ -38,13 +39,13 @@ try {
     assert.ok((await page.locator('.chest-art-image').evaluateAll(imgs=>imgs.map(i=>i.currentSrc))).every(u=>u.endsWith('-256.webp')));
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await page.waitForTimeout(900);
-    if(width===390)await page.screenshot({path:path.join(root,'docs/chests-mobile.png')});
+    if(width===390)await screenshotWebp(page,path.join(root,'docs/chests-mobile.webp'),{});
     for(let n=1;n<=3;n++){
       await page.locator('[data-chest-id="'+n+'"]').click();
       await page.waitForSelector('.chest-reveal.visible');
       await page.locator('.chest-reveal .chest-art-open').evaluate(i=>i.decode());
       assert.equal(await page.locator('.chest-reveal .has-treasure').count(),n===2?0:1);
-      if(width===390&&n===1){await page.waitForTimeout(1100);await page.screenshot({path:path.join(root,'docs/chests-open-mobile.png')});}
+      if(width===390&&n===1){await page.waitForTimeout(1100);await screenshotWebp(page,path.join(root,'docs/chests-open-mobile.webp'),{});}
       await page.locator('[data-chest-claim]').click();
       await page.waitForSelector('.chest-reveal[hidden]',{state:'attached'});
     }

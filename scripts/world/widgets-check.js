@@ -12,6 +12,7 @@ ${['styles','exchange','arena','clan','equipment','equipment-paper-doll','arcade
 <script type="module">
 import {starsHtml} from '/exchange.js';import {rankEmblem,openArenaGame} from '/arena.js';import {openClanGame} from '/clan.js';
 import {renderEquipmentPaperDoll} from '/equipment-paper-doll.js';import {fullBodyHeroUrl} from '/art/world-art.js';import {stageHtml,playThrow} from '/arcade-stage.js';
+import { screenshotWebp } from '../lib/screenshot-webp.mjs';
 document.querySelector('#packs').innerHTML=starsHtml({firstPurchase:true,packs:['pouch','sack','casket','chest','trove','vault'].map((id,i)=>({id,title:id,crystals:(i+1)*1000,stars:(i+1)*100,firstBonus:100,bonusPercent:10}))});
 document.querySelector('#badges').innerHTML=['Бронза III','Серебро II','Золото I','Бриллиант I'].map(n=>rankEmblem(n,'large')).join('');
 window.showHero=(cls,gender)=>renderEquipmentPaperDoll(document.querySelector('#doll'),{items:[],equippedSlots:{}},{portrait:fullBodyHeroUrl({className:cls,gender})});showHero('warrior','male');
@@ -44,7 +45,7 @@ try{
       assert.equal(await page.locator('.paper-doll-portrait').evaluate(n=>getComputedStyle(n).backgroundSize),'contain');
     }
     assert.equal(errors.length,0,errors.join('\n'));await page.evaluate(()=>showHero('warrior','male'));
-    await page.screenshot({path:path.join(root,`docs/world-widgets-${width}.png`),fullPage:true});
+    await screenshotWebp(page,path.join(root,`docs/world-widgets-${width}.webp`),{fullPage:true});
     await page.emulateMedia({reducedMotion:'no-preference'});await page.evaluate(()=>throwBall());
     assert.equal(await page.locator('.as-shot.after-hit').count(),1);await page.emulateMedia({reducedMotion:'reduce'});
     await page.evaluate(()=>showArena());await page.waitForSelector('.arena-overlay.visible');
@@ -52,7 +53,7 @@ try{
     await page.locator('[data-mode="expansion"]').click();await page.waitForSelector('.arena-hero-art.expansion');
     assert.ok(await page.locator('.arena-hero-art').evaluate(n=>getComputedStyle(n).backgroundImage.includes('arena-ranked-512.webp')));
     assert.equal(await page.locator('.arena-rank .painted img').count(),1);
-    if(width===390)await page.screenshot({path:path.join(root,'docs/arena-mobile.png')});
+    if(width===390)await screenshotWebp(page,path.join(root,'docs/arena-mobile.webp'),{});
     await page.locator('.arena-overlay .overlay-close').click();await page.waitForSelector('.arena-overlay',{state:'detached'});
     for(const [level,tier] of [[1,1],[6,2],[11,3],[21,4]]){
       await page.evaluate(l=>showClan(l),level);await page.waitForSelector('.clan-overlay.visible');
@@ -60,7 +61,7 @@ try{
       assert.ok((await banner.getAttribute('src')).includes('clan-banner-'+tier+'-256.webp'));
       assert.ok(await page.locator('.clan-hero').evaluate(n=>getComputedStyle(n).backgroundImage.includes('clan-hero-512.webp')));
       assert.equal(await page.locator('.clan-panel').evaluate(n=>n.scrollWidth>n.clientWidth),false);
-      if(width===390&&tier===4)await page.screenshot({path:path.join(root,'docs/clan-mobile.png')});
+      if(width===390&&tier===4)await screenshotWebp(page,path.join(root,'docs/clan-mobile.webp'),{});
       await page.locator('.clan-overlay .overlay-close').click();await page.waitForSelector('.clan-overlay',{state:'detached'});
     }
     assert.equal(errors.length,0,errors.join('\n'));

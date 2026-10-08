@@ -64,8 +64,8 @@ attachments were moved. Existing used-reference handling is preserved.
   variants, both arena modes, all four clan banners, image decoding, no overflow.
 - Every production WebP audited for its byte budget and cutout transparency.
 
-Previews: docs/city-mobile.png, docs/chests-open-mobile.png, docs/world-widgets-390.png,
-docs/arena-mobile.png and docs/clan-mobile.png.
+Previews: docs/city-mobile.webp, docs/chests-open-mobile.webp, docs/world-widgets-390.webp,
+docs/arena-mobile.webp and docs/clan-mobile.webp.
 
 Conversion: scripts/world/build-art.py (Pillow); --force rebuilds unchanged masters
 if encoding/padding rules change. Generation used built-in imagegen only, one call

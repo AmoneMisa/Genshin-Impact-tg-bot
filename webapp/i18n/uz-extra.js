@@ -86,4 +86,8 @@ export default {
   'Тут уже максимум попыток на сегодня.': 'Bugun bu yerda urinishlar allaqachon maksimal.',
   'Хранилище удачи': 'Omad ombori',
   'Шкатулка монет удачи': 'Omad tangalari qutichasi',
+  '{3} Монеты удачи не воруют. Потратить их можно в «Лавке удачи».{4}': "{3} Omad tangalari o'g'irlanmaydi. Ularni «Omad do'koni»da sarflash mumkin.{4}",
+  '{5} Лавка удачи · {6}': "{5} Omad do'koni · {6}",
+  'Донатная валюта: покупается за Telegram Stars в «Обменнике», в игре не выпадает и не воруется.{2}': "Donat valyutasi: «Ayirboshlash»da Telegram Stars evaziga sotib olinadi, o'yinda tushmaydi va o'g'irlanmaydi.{2}",
+  'Монеты удачи: {1}': 'Omad tangalari: {1}',
 };

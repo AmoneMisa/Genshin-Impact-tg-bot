@@ -8,6 +8,7 @@ import { BASE_ITEM_ART_KEYS, ITEM_ART_KEYS, ITEM_ART_VARIANTS, EPIC_ITEM_ART_KEY
 import { CATALOG_ITEM_ART } from '../../webapp/art/catalog-item-art.js';
 import epicWeapons from '../../template/epicWeapons.js';
 import { SPECIAL_ITEM_ART } from '../../webapp/art/special-item-art.js';
+import { screenshotWebp } from '../lib/screenshot-webp.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const modulePath=process.env.PLAYWRIGHT_MODULE;
 const {chromium}=await import(modulePath?pathToFileURL(modulePath).href:'playwright');
@@ -62,7 +63,7 @@ try{
     await page.emulateMedia({reducedMotion:'reduce'});
     assert.equal(await page.locator('#hero img').evaluate(img=>getComputedStyle(img).animationName),'none');
     fs.mkdirSync(path.join(root,'docs'),{recursive:true});
-    if(width===390)await page.screenshot({path:path.join(root,'docs/item-art-mobile.png')});
+    if(width===390)await screenshotWebp(page,path.join(root,'docs/item-art-mobile.webp'),{});
     await page.locator('article img').first().evaluate(img=>{img.removeAttribute('srcset');img.src='/art/items/v1/missing.webp';});
     await page.waitForSelector('.art-unavailable',{state:'attached'});
     results.push({width,paintings:ITEM_ART_KEYS.length,modelRequests:0,overflow:false});

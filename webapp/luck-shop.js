@@ -1,4 +1,5 @@
 import { escapeHtml } from './escape-html.js';
+import { luckCoinHtml } from './currency-icons.js';
 
 // "Лавка удачи": where Coins of Luck (bought with Telegram Stars) are spent.
 
@@ -25,7 +26,7 @@ export async function openLuckShopGame({ api, renderState, haptic, statusElement
       <header class="ds-head">
         <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
         <h2>Лавка удачи</h2>
-        <span class="ds-round" aria-hidden="true">🍀</span>
+        <span class="ds-round" aria-hidden="true">${luckCoinHtml(26)}</span>
       </header>
       <div data-luck-body></div>
     </div>`;
@@ -38,7 +39,7 @@ export async function openLuckShopGame({ api, renderState, haptic, statusElement
     const disabled = pending || !item.affordable || item.full;
     return `
       <article class="mail-letter pending luck-item">
-        <div class="mail-head"><strong>${item.icon} ${escapeHtml(item.title)}</strong><small>${formatNumber(item.cost)} 🍀</small></div>
+        <div class="mail-head"><strong>${item.icon} ${escapeHtml(item.title)}</strong><small>${formatNumber(item.cost)} ${luckCoinHtml(14)}</small></div>
         <button type="button" class="feedback-submit" data-luck-buy="${escapeHtml(item.id)}" ${disabled ? 'disabled' : ''}>${item.full ? 'Максимум' : item.affordable ? 'Купить' : 'Не хватает монет'}</button>
       </article>`;
   }
@@ -46,7 +47,7 @@ export async function openLuckShopGame({ api, renderState, haptic, statusElement
   function render() {
     body.innerHTML = `
       <div class="feedback-card">
-        <div class="feedback-intro"><span>🍀</span><div><strong>Монеты удачи: ${formatNumber(state.coins)}</strong>
+        <div class="feedback-intro"><span>${luckCoinHtml(32)}</span><div><strong>Монеты удачи: ${formatNumber(state.coins)}</strong>
           <p>Донатная валюта: покупается за Telegram Stars в «Обменнике», в игре не выпадает и не воруется.${state.shield ? ` Кристаллы отсюда защищены от ограбления: ${formatNumber(state.shield.amount)} 💎.` : ''}</p></div></div>
         <button type="button" class="feedback-submit" data-luck-exchange>Купить монеты за Звёзды</button>
       </div>

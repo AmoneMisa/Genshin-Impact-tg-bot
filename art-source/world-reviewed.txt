@@ -61,3 +61,4 @@ games/event-winter
 city/map-portrait
 arena/rank-iron
 arena/rank-ruby
+currency/luck-coin
