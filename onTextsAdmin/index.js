@@ -1,27 +1,15 @@
-import game from './game/index.js';
 import getChatData from './getChatData.js';
-import getDebugLog from './getDebugLog.js';
-import showAdminCommands from './showAdminCommands.js';
-import showCreatorCommands from './showCreatorCommands.js';
-import settings from './settings.js';
 import sendFile from './sendFile.js';
 import getFileAndBackup from './getFileAndBackup.js';
-import hideDeadSouls from './hideDeadSouls.js';
-import sendNewUpdates from './sendNewUpdates.js';
-import updateUserFields from "./updateUserFields.js";
-// import testCommand from './testCommand/index.js';
+import updateUserFields from './updateUserFields.js';
+import clearSessions from './game/player/clearSessionsInAllChatSessions.js';
 
+// Owner tools that need Telegram file/reply flows or are one-off migrations.
+// The rest of the owner tools live in the Mini App admin screen (miniapp/adminTools.js).
 export default [
-    ...game,
     ...getChatData,
-    ...getDebugLog,
-    ...showAdminCommands,
-    ...showCreatorCommands,
-    ...settings,
     ...sendFile,
     ...getFileAndBackup,
-    // ...testCommand,
-    ...hideDeadSouls,
-    ...sendNewUpdates,
-    ...updateUserFields
+    ...updateUserFields,
+    ...clearSessions
 ];

@@ -88,6 +88,9 @@ import {
   activeNotices, claimAllMail, claimMail, createPromo, deleteNotice, deletePromo, getMailbox, listNotices, listPromos,
   PROMO_ERRORS, redeemPromo, releasePromo, saveNotice, setPromoExpiry, validateNotice, validatePromo, pendingMailCount,
 } from './promo.js';
+import {
+  ADMIN_TOOL_ERRORS, getAdminToolsState, runChatTool, runGlobalTool, runPlayerTool,
+} from './adminTools.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
@@ -789,6 +792,31 @@ const adminPromo = guarded('admin promo', async (req, res) => {
     result = checked.ok ? await createPromo(checked.promo, context.userId) : { ok: false, reason: 'invalid', error: checked.error };
   }
   return sendJson(res, result.ok ? 200 : 409, { ...result, promos: await listPromos() });
+});
+
+const adminToolsState = guarded('admin tools state', async (req, res) => {
+  const context = await authorize(req);
+  requireAdmin(context);
+  return sendJson(res, 200, await getAdminToolsState(context.chatId));
+});
+
+const adminToolsRun = guarded('admin tools run', async (req, res) => {
+  const context = await authorize(req);
+  requireAdmin(context);
+  const body = await readJsonBody(req);
+  if (typeof body.action !== 'string') throw httpError(400, 'action is required');
+
+  const result = await withLock(`${context.chatId}:admin-tools`, async () => {
+    if (body.scope === 'player') {
+      if (!['string', 'number'].includes(typeof body.userId)) throw httpError(400, 'userId is required');
+      return runPlayerTool(context.chatId, String(body.userId), body.action, body.amount);
+    }
+    if (body.scope === 'chat') return runChatTool(context.chatId, body.action);
+    if (body.scope === 'global') return runGlobalTool(body.action, body.text);
+    throw httpError(400, 'scope must be player, chat or global');
+  });
+  console.log(`[admin] ${context.userId} ${body.scope}/${body.action} chat=${context.chatId} -> ${result.ok ? 'ok' : result.reason}`);
+  return sendJson(res, result.ok ? 200 : 409, { ...result, error: result.ok ? undefined : ADMIN_TOOL_ERRORS[result.reason] || result.reason });
 });
 
 const adminNotice = guarded('admin notice', async (req, res) => {
@@ -1501,6 +1529,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/admin') return adminState(req, res);
     if (route === 'POST /api/admin/promo') return adminPromo(req, res);
     if (route === 'POST /api/admin/notice') return adminNotice(req, res);
+    if (route === 'GET /api/admin/tools') return adminToolsState(req, res);
+    if (route === 'POST /api/admin/tools') return adminToolsRun(req, res);
     if (route === 'GET /api/player') return playerCard(req, res, requestUrl);
     if (route === 'GET /api/steal') return stealState(req, res);
     if (route === 'POST /api/steal/attack') return stealAttack(req, res);

@@ -1,7 +1,8 @@
 import { escapeHtml } from './escape-html.js';
 import { rewardsHtml } from './mail.js';
 
-// Admin screen (only offered to the bot owner): create promo codes and hello popups.
+// Admin screen (only offered to the bot owner): promo codes, hello popups and the
+// owner tools that used to be text commands.
 
 const KINDS = [['gold', '🪙 Золото'], ['crystals', '💎 Кристаллы'], ['ironOre', '⛏️ Железная руда'], ['bonusChances', '🎁 Попытки бонуса']];
 
@@ -11,6 +12,8 @@ const dateText = ms => (ms ? new Date(ms).toLocaleString('ru-RU', { dateStyle: '
 export async function openAdminGame({ api, haptic }) {
   let data = await api('/api/admin');
   let tab = 'promo';
+  let tools = null;
+  let selectedPlayer = '';
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay admin-overlay';
@@ -22,7 +25,7 @@ export async function openAdminGame({ api, haptic }) {
         <h2>Админка</h2>
         <span class="ds-round" aria-hidden="true">🛠️</span>
       </header>
-      <nav class="fr-tabs"><button type="button" data-admin-tab="promo">Промокоды</button><button type="button" data-admin-tab="notice">Объявления</button></nav>
+      <nav class="fr-tabs"><button type="button" data-admin-tab="promo">Промокоды</button><button type="button" data-admin-tab="notice">Объявления</button><button type="button" data-admin-tab="tools">Инструменты</button></nav>
       <div data-admin-body></div>
       <div class="feedback-result" data-admin-result hidden></div>
     </div>`;
@@ -102,9 +105,73 @@ export async function openAdminGame({ api, haptic }) {
         </article>`).join('') : '<p class="mail-empty">Объявлений нет.</p>'}</div>`;
   }
 
+  function optionHtml(player) {
+    return `<option value="${escapeHtml(player.userId)}" ${player.userId === selectedPlayer ? 'selected' : ''}>${escapeHtml(player.name)}</option>`;
+  }
+
+  function toolsHtml() {
+    if (!tools) return '<p class="mail-empty">Загрузка…</p>';
+    return `
+      <div class="feedback-card">
+        <h4>Игрок этого чата</h4>
+        <label class="feedback-field"><span>Игрок</span><select data-t-player>${tools.players.map(optionHtml).join('')}</select></label>
+        <label class="feedback-field"><span>Количество (для добавления; можно отрицательное)</span><input type="number" step="1" inputmode="numeric" data-t-amount placeholder="100" /></label>
+        <div class="admin-tools">${tools.playerTools.map(tool => `<button type="button" class="fr-btn ghost" data-t-player-tool="${escapeHtml(tool.id)}" data-t-needs-amount="${tool.amountLabel ? '1' : ''}">${escapeHtml(tool.label)}</button>`).join('')}</div>
+      </div>
+      <div class="feedback-card">
+        <h4>Этот чат</h4>
+        <div class="admin-tools">${tools.chatTools.map(tool => `<button type="button" class="fr-btn ghost" data-t-chat-tool="${escapeHtml(tool.id)}">${escapeHtml(tool.label)}</button>`).join('')}</div>
+      </div>
+      <div class="feedback-card">
+        <h4>Весь бот</h4>
+        <label class="feedback-field"><span>Текст рассылки</span><textarea rows="3" maxlength="3500" data-t-text placeholder="Новости для подписчиков"></textarea></label>
+        <div class="admin-tools">${tools.globalTools.map(tool => `<button type="button" class="fr-btn ghost" data-t-global-tool="${escapeHtml(tool.id)}">${escapeHtml(tool.label)}</button>`).join('')}</div>
+      </div>`;
+  }
+
+  async function runTool(payload, confirmText) {
+    if (confirmText && !window.confirm(confirmText)) return;
+    try {
+      haptic?.('medium');
+      const response = await api('/api/admin/tools', { method: 'POST', body: JSON.stringify(payload) });
+      say('success', response.message);
+    } catch (error) {
+      say('error', error.payload?.error || error.message);
+    }
+  }
+
+  async function loadTools() {
+    try {
+      tools = await api('/api/admin/tools');
+      selectedPlayer ||= tools.players[0]?.userId || '';
+    } catch (error) {
+      say('error', error.message);
+      tools = { players: [], playerTools: [], chatTools: [], globalTools: [] };
+    }
+    render();
+  }
+
+  function bindTools() {
+    const player = body.querySelector('[data-t-player]');
+    player?.addEventListener('change', () => { selectedPlayer = player.value; });
+    body.querySelectorAll('[data-t-player-tool]').forEach(button => button.addEventListener('click', () => {
+      const amount = body.querySelector('[data-t-amount]').value;
+      if (button.dataset.tNeedsAmount && amount === '') return say('error', 'Введи количество.');
+      runTool({ scope: 'player', userId: player.value, action: button.dataset.tPlayerTool, amount: button.dataset.tNeedsAmount ? Number(amount) : undefined });
+    }));
+    body.querySelectorAll('[data-t-chat-tool]').forEach(button => button.addEventListener('click', () => {
+      runTool({ scope: 'chat', action: button.dataset.tChatTool }, `${button.textContent}?`);
+    }));
+    body.querySelectorAll('[data-t-global-tool]').forEach(button => button.addEventListener('click', () => {
+      const text = body.querySelector('[data-t-text]').value;
+      runTool({ scope: 'global', action: button.dataset.tGlobalTool, text }, `${button.textContent}? Это затронет всех игроков.`);
+    }));
+  }
+
   function render() {
     overlay.querySelectorAll('[data-admin-tab]').forEach(button => button.classList.toggle('active', button.dataset.adminTab === tab));
-    body.innerHTML = tab === 'promo' ? promoHtml() : noticeHtml();
+    body.innerHTML = tab === 'promo' ? promoHtml() : tab === 'notice' ? noticeHtml() : toolsHtml();
+    if (tab === 'tools') bindTools();
 
     body.querySelector('[data-p-create]')?.addEventListener('click', () => {
       const rewards = [...body.querySelectorAll('[data-p-reward]')]
@@ -144,7 +211,7 @@ export async function openAdminGame({ api, haptic }) {
     }));
   }
 
-  overlay.querySelectorAll('[data-admin-tab]').forEach(button => button.addEventListener('click', () => { tab = button.dataset.adminTab; result.hidden = true; render(); }));
+  overlay.querySelectorAll('[data-admin-tab]').forEach(button => button.addEventListener('click', () => { tab = button.dataset.adminTab; result.hidden = true; render(); if (tab === 'tools' && !tools) loadTools(); }));
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   render();

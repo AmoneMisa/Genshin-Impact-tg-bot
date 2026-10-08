@@ -21,3 +21,7 @@
 .notice-skip { display: flex; gap: 8px; align-items: center; justify-content: center; font-size: 12.5px; color: var(--muted, #a99f8b); }
 .top-icon { position: relative; }
 .top-icon .red-dot { top: -3px; right: -3px; }
+.admin-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-overlay select { width: 100%; min-height: 44px; box-sizing: border-box; }
+.admin-overlay h4 { margin: 0 0 8px; font: 700 13px/1.2 var(--serif, Georgia, serif); color: var(--gold-bright, #f3dca6); }
+.admin-overlay .feedback-card { margin-bottom: 12px; }
