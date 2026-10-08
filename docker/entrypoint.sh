@@ -28,7 +28,6 @@ link_state() {
 }
 
 link_state trustedChats.json '[]'
-link_state imagesIds.json '{}'
 link_state sessions.json '{}'
 link_state titles.json '{}'
 link_state bosses.json '{}'
