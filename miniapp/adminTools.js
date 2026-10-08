@@ -10,6 +10,8 @@ import Boss from '../db/models/Boss.js';
 import bot from '../bot.js';
 import { myId } from '../config.js';
 import loadPlayer from '../functions/getters/loadPlayer.js';
+import listChatIds from '../functions/getters/listChatIds.js';
+import { withLock } from '../functions/general/chatLock.js';
 import getChatSession from '../functions/getters/getChatSession.js';
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import setLevel from '../functions/game/player/setLevel.js';
@@ -147,13 +149,18 @@ export async function runChatTool(chatId, toolId) {
 
 async function forEveryPlayer(visit) {
   let count = 0;
-  for (const chat of await Chat.find({})) {
-    for (const member of chat.members) {
-      if (member.userChatData?.user?.is_bot) continue;
-      visit(member);
-      count++;
-    }
-    await chat.save();
+  for (const chatId of await listChatIds()) {
+    // Re-read and save each chat under its lock, like the schedulers do.
+    await withLock(chatId, async () => {
+      const chat = await Chat.findOne({ chatId });
+      if (!chat) return;
+      for (const member of chat.members) {
+        if (member.userChatData?.user?.is_bot) continue;
+        visit(member);
+        count++;
+      }
+      await chat.save();
+    });
   }
   return count;
 }
