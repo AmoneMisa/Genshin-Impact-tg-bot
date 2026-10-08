@@ -167,6 +167,157 @@ Design sheet examples to match: the white-haired black-and-gold knight with a lo
 
 ---
 
+## 5b. New classes and professions (portraits)
+
+The class tree has two new base classes (`rogue`, `berserk`) and 24 professions. Until they
+have their own portraits they borrow the base class's (`webapp/class-family.js`: rogue uses the
+archer set, berserk the warrior set). Same folder and size as section 5; one set per base class
+is enough to start, a set per profession later (the tier-3 ones read as the "final form").
+
+| class | `{CLASS}` |
+|---|---|
+| rogue | a lithe rogue in dark teal leather with twin curved daggers, a half-mask, a short cloak |
+| berserk | a scarred barbarian warrior in fur and iron with a huge battle axe, glowing red war paint |
+| crusader / phoenixKnight | the black-and-gold knight with a flaming sword; tier 3 adds phoenix-wing pauldrons and ember trails |
+| warden / bastion | the knight with a tower shield and heavy plate; tier 3 adds a glowing fortress emblem on the shield |
+| elementalist / archmage | a mage wrapped in lightning and ice shards; tier 3 adds floating star constellations |
+| warlock / soulReaper | a dark mage with violet flames and a skull-topped staff; tier 3 adds a scythe and drifting souls |
+| cleric / saint | a healer in white-gold robes with a glowing chalice; tier 3 adds a radiant halo and wings of light |
+| inquisitor / judicator | a stern priest with a flaming sword and a holy tome; tier 3 adds a golden scale of justice |
+| ranger / hawkeye | a forest archer with a falcon on the shoulder; tier 3 adds a glowing eagle-eye monocle |
+| sniper / phantomShot | a long-rifle-style marksman's bow with a scope lens; tier 3 adds ghostly translucent arrows |
+| assassin / shadowBlade | a hooded killer in black with a long dagger; tier 3 adds blades made of shadow |
+| trickster / phantomDancer | a playful thief with a theatrical mask and a coin; tier 3 adds trailing smoke and many masks |
+| slayer / warbringer | a berserker with two axes; tier 3 adds a tattered war banner |
+| ironclad / titan | an armored giant with a hammer; tier 3 adds molten-rock plates and a glowing core |
+
+## 5c. New bosses (stage paintings)
+
+Folder `art-source/bosses/<boss>.png`, same size and framing as the existing five boss
+paintings (subject centered, a darker backdrop so the stage shader can sway it). New bosses
+currently reuse a painting with a different tint (`BOSS_ART` in `webapp/boss-stage.js`).
+Remove the `art` key there once the file exists.
+
+| boss | prompt |
+|---|---|
+| zephyrion | a huge storm dragon in mid-air among spiralling wind and lightning clouds, pale cyan scales, gold-lit eye |
+| terrax | a towering granite golem with glowing amber cracks, floating rock shards orbiting it |
+| veraxis | a skeletal lich lord in a ruined crypt, violet soulfire in the ribcage, spectral skeletons in the haze |
+| tiamara | a three-headed swamp hydra, the outer heads (one breathing fire, one dripping venom) larger than the middle |
+| ignar | two fire twins back to back, a brutish brother with molten fists and a dancing sister with ember daggers (one wide painting) |
+| selene | two sisters under a lunar eclipse, one made of silver light, one of living shadow (one wide painting) |
+
+---
+
+## 5d. Epic raid bosses (stage paintings)
+
+Folder `art-source/bosses/<boss>.png`, **960x960**, same framing as section 5c: subject centered with 8%
+margin, a darker backdrop the stage shader can sway. These are the biggest fights in the game, so they
+should look clearly grander than the ordinary bosses: larger scale, a stronger focal glow, an
+unmistakable silhouette. Names are Lineage 2 epic raids; paint an original interpretation, no text.
+The code (`BOSS_ART` in `webapp/boss-stage.js`) borrows another painting until the file exists.
+
+Template: paste the master style, then `{BOSS}`:
+
+```
+Boss stage painting, 960x960. {BOSS}
+A colossal epic raid boss that dominates the frame, menacing and majestic, ancient and legendary.
+Strong single focal glow on the eyes or core, volumetric haze, floating embers and sparks,
+dark backdrop with depth so the silhouette reads at thumbnail size. No text, no UI, no frame.
+```
+
+| boss | `{BOSS}` |
+|---|---|
+| queenAnt | a gigantic armored queen ant with an engorged glowing amber abdomen, curved mandibles dripping acid, perched on a mound of eggs inside a dark underground hive, soldier ants swarming at her feet |
+| core | a hulking rock-and-magma colossus with a glowing furnace in its chest, cracks of molten orange light across black basalt skin, standing in a fiery cavern with falling embers |
+| orfen | an elegant dark-feathered harpy witch with huge black-violet wings spread wide, a crown of thorns, swirling wind and drifting feathers, cold violet-white eyes, a ruined cliff in the storm |
+| zaken | a spectral pirate captain in a tattered coat and tricorn hat, half translucent with ghostly teal flames, a cursed cutlass in one hand, the hull of a sunken ghost ship and fog behind him |
+| baium | a gaunt winged demon seated on a throne of giant crystals, long clawed fingers, stone-grey skin with glowing blue cracks, stone angel statues kneeling around the throne in a vast crystal crypt |
+| frintezza | a lich maestro in ornate dark robes conducting with a bone baton, ghostly violin and cello floating around him, a spectral choir of translucent faces, a ruined grand hall lit by violet moonlight |
+| antharas | an immense earth dragon, mountain-sized, scales like cracked boulders and moss, a long spiked tail, golden slit eyes, jaw open with a brown-gold breath of rock and dust, a ruined mountain lair |
+| valakas | an immense volcano dragon with obsidian-black scales and glowing lava veins, wings spread like a burning sky, a molten maw, a volcano erupting behind it, a river of lava below |
+
+---
+
+## 5e. Epic jewellery (8 item icons)
+
+Folder `art-source/items/epic/<id>.png`, **512x512**, transparent, one object centered, slightly
+angled three-quarter view, a strong gem or magic glow, gold filigree in the master palette but with
+the boss's own colour accent. These are the rarest pieces in the game: more ornate than any ordinary
+ring, earring or necklace. No text, no runes that read as letters.
+
+Template:
+
+```
+Game item icon, transparent background, centered, 512x512. {ITEM}
+Legendary epic jewellery, intricate sculpted gold filigree, one large glowing centerpiece,
+small floating sparks, soft rim light, no hand, no stand, no shadow plate, no text.
+```
+
+| id | `{ITEM}` |
+|---|---|
+| queenAnt | a ring shaped like an ant's armored head, a large amber gem held between curved mandibles, chitin-brown and gold |
+| core | a ring of black basalt with a glowing molten-orange core gem and thin lava veins in gold setting |
+| orfen | a pair of earrings (one shown, a second smaller behind it) of dark feathers in gold with violet moonstone drops |
+| zaken | an earring of tarnished gold with a ghostly teal gem shaped like a tiny skull, a short chain with a coin |
+| baium | a ring carved from a single blue-white crystal, a stone angel's wing wrapping the band, cold inner glow |
+| antharas | an earring of sandstone-gold with a large golden dragon-eye gem, rough cracked scales around the setting |
+| valakas | a necklace with a pendant of obsidian and glowing lava, a dragon-claw clasp, red-gold chain |
+| frintezza | a necklace with a violin-scroll pendant holding a violet gem, a thin chain of silver notes, ghostly glow |
+
+---
+
+## 5f. Enchant and craft icons (tinted by grade in code)
+
+Folder `art-source/icons/`, **256x256**, transparent, neutral/white-gold colouring because the game
+tints them per grade (D, C, B, A, S, S80, S84). Centered, readable at 48 px, one object each.
+
+```
+Game inventory icon, transparent background, centered, 256x256, neutral light gold-and-parchment
+colours so it can be tinted. {ICON}
+Clean readable silhouette, soft glow, no text, no letters, no shadow plate.
+```
+
+| file | `{ICON}` |
+|---|---|
+| scroll.png | a rolled parchment scroll tied with a gold ribbon, faint glowing runes drawn as abstract strokes (not letters) |
+| scroll-blessed.png | the same scroll with a bright holy radiance, small white wings of light on each side, a gentle halo |
+| crystal.png | a faceted crystal shard, cold light inside, a few small floating fragments |
+| binder.png | a small ceramic jar of varnish with a wooden stopper and a bone-powder pile beside it |
+| leather.png | a folded roll of tanned leather with a stitched edge and a bone needle |
+| fiber.png | a spool of shimmering thread with a small folded piece of silk cloth |
+| gem.png | a cut gemstone in a small cluster of three smaller stones on a velvet cloth |
+
+Optional banners, **1024x384**, full scene, no text:
+
+```
+forge-banner.png:  inside a dwarven forge, a glowing anvil with a half-finished sword, sparks,
+                   hanging tongs and hammers, warm amber light against deep navy shadows.
+epic-banner.png:   a dark stone hall with eight huge shadowy silhouettes (ant queen, golem,
+                   winged witch, ghost captain, crystal demon, lich, two dragons) behind a
+                   glowing gold crown at the center, ominous and grand.
+```
+
+---
+
+## 5g. Fist and claw weapons (3 item variants)
+
+Fist weapons currently reuse the gauntlet icon. Folder `art-source/items/`, **512x512**, transparent,
+one object centered, three-quarter view, in the same style as the existing weapon icons.
+
+```
+Game item icon, transparent, centered, 512x512. A pair of fist weapons: {ITEM}.
+Dark-fantasy gold filigree, soft rim light, small sparks, no hand, no text.
+```
+
+| file | `{ITEM}` |
+|---|---|
+| fists-low.png (no-grade, D, C) | simple iron knuckle claws with leather straps and short blades |
+| fists-mid.png (B, A, S) | steel bagh-nakh claws with etched gold lines and a ruby in the knuckle guard |
+| fists-high.png (S80, S84) | ornate gold-and-obsidian dragon claws with glowing cyan gems and curved blades |
+
+---
+
 ## 6. Arena
 
 Folder `art-source/arena/`.
@@ -223,3 +374,27 @@ gift chest). Same cyan/gold palette; one centered object each.
 3. No text or symbols that look like letters anywhere (banners and shields stay emblem-only).
 4. The subject reads at 96 px.
 5. Save to the path shown, then tell Claude Code which folder is ready.
+
+
+City map composition follow-up (8 October 2026), city/map-portrait:
+
+Premium painted 2D dark fantasy RPG kingdom map, semi-realistic painterly style. Use the supplied city design only as a composition and palette reference. Create an original continuous vertical landscape, NOT a screenshot or UI. Midnight navy mountains, antique gold stonework, cyan crystals and amber lit windows. Top quarter: giant knight statue holding an upright sword on LEFT cliff, a glowing blue-spired royal castle in CENTER DISTANCE, a floating castle island on RIGHT, bridges and waterfalls. Lower three quarters: descending terraced city streets with stone paths, connecting bridges, warm small rooftops, trees and a central round plaza with an elegant statue and fountain. Let the landscape flow naturally from distant skyline to near foreground. Keep seven broad calm areas with subdued detail for separately rendered buildings: one central upper terrace, three paired left/right lower terraces. No large foreground buildings in those areas, no isolated floating dioramas. No text, letters, words, labels, logos, borders, HUD, icons, UI, numbers or watermark anywhere. Portrait 2:3 composition, target 1024 x 1536, full environment to edges. Readable landscape at phone width.
+Reference: art-source/city/reference.png, composition and palette only.
+
+
+Actual server rank arena/rank-iron (8 October 2026):
+
+Premium painted 2D dark fantasy RPG concept art, refined semi-realistic anime-leaning shapes and painterly shading. Midnight navy and indigo shadows, antique gold, cyan-blue crystal glow, violet accents, amber lantern light. One strong focal glow, crisp readable silhouette at 96 px. No text, letters, numbers, signatures, logos, watermarks, UI or border. References guide style only; invent original silhouettes. Subject centered with 8% breathing room.
+Heraldic rank emblem, faceted shield with raised border, central gemstone and swept-back wings on both sides. dark brushed iron, neutral gray steel and pale blue gemstone. One centered symmetrical emblem, no stars or numerals.
+Composition aspect 512:512, target 512x512. Actual transparent background, isolated subject, no ground plane or cast shadow at canvas edges.
+
+
+Actual server rank arena/rank-ruby (8 October 2026):
+
+Premium painted 2D dark fantasy RPG concept art, refined semi-realistic anime-leaning shapes and painterly shading. Midnight navy and indigo shadows, antique gold, cyan-blue crystal glow, violet accents, amber lantern light. One strong focal glow, crisp readable silhouette at 96 px. No text, letters, numbers, signatures, logos, watermarks, UI or border. References guide style only; invent original silhouettes. Subject centered with 8% breathing room.
+Heraldic rank emblem, faceted shield with raised border, central gemstone and swept-back wings on both sides. antique silver border, deep ruby-red metal and brilliant red gemstone. One centered symmetrical emblem, no stars or numerals.
+Composition aspect 512:512, target 512x512. Actual transparent background, isolated subject, no ground plane or cast shadow at canvas edges.
+# Epic reference collection delivery
+
+The current exact per-asset prompts and stable reference paths are in `art-source/epic-collection/jobs.json`; saved master provenance is alongside each PNG in `art-source/items/epic-collection/*.generation.json`. Delivery and quota status are in `art-source/epic-collection/STATUS.md` and `progress.json`. Finish these 14 weapons and 13 potions before avatar work. Potion effects use Lineage II buff concepts: Might, Shield, Haste, Focus, Death Whisper, Guidance and Wind Walk, with 20-minute durations and bonuses adapted to this game's stat scale. Only reviewed images enter the mobile WebP allowlist.
+

@@ -1,0 +1,23 @@
+You are painting game art for "WhitesLove", a Telegram Mini App RPG. Match the attached
+design sheet. One consistent look for everything:
+
+STYLE: premium 2D painted dark-fantasy RPG concept art (gacha-game quality), semi-realistic
+with anime-leaning clean shapes. Rich painterly shading, crisp refined silhouettes, intricate
+sculpted filigree. Nothing flat, nothing cartoonish, nothing photoreal.
+
+PALETTE: deep midnight navy and indigo shadows (#0b0d18 to #1c2140), antique brushed-gold
+trim (#d8b36a), glowing cyan-blue crystal light (#5cc8ff), royal violet accents (#7b4fd6),
+warm amber lantern/window light (#ffb04a). Dark, moody, but the focal point always glows.
+
+LIGHT: one strong focal glow, soft rim light, volumetric haze, floating embers and tiny
+star-like sparks. Strong value contrast so the image still reads at 96 px thumbnail size.
+
+HARD RULES: no text, no letters, no numbers, no logo, no watermark, no signature, no UI,
+no frame or border, no people unless the asset says so, no modern objects.
+Keep the subject centered with 8% breathing room on every side so nothing is cropped.
+Output PNG. Transparent background where the asset says "transparent", otherwise a full scene.
+
+Game item icon, transparent, centered, 512x512. A pair of fist weapons: simple iron knuckle claws with leather straps and short blades.
+Dark-fantasy gold filigree, soft rim light, small sparks, no hand, no text.
+
+EDIT CORRECTION: Preserve the transparent background, paired weapon layout and premium painted icon style. Make these visibly entry-level simple iron knuckle claws: matte dark iron guards, plain brown leather straps, three short straight iron blades per weapon. Remove ALL gemstones and cyan/violet magic flames. Remove the elaborate gold armor, pointed star decorations and large curved blades. Only a very small restrained etched antique-gold accent is allowed; iron and leather must dominate. No hand, no text. Keep both entire weapons inside 8 percent transparent margins.
