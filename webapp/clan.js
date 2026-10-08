@@ -25,6 +25,17 @@ const REASONS = {
   unknown_shop_item: 'Неизвестный товар кланового магазина.',
   shop_cooldown: 'На этой неделе покупка уже была.',
   warehouse_insufficient: 'В клановом хранилище недостаточно ресурсов.',
+  unknown_skill: 'Неизвестный клановый навык.',
+  rta_squad_full: 'Отряд заполнен: максимум 5 бойцов.',
+  rta_squad_small: 'В вашем отряде меньше 3 бойцов.',
+  rta_opponent_squad_small: 'В отряде соперника меньше 3 бойцов.',
+  rta_cooldown: 'Клан ещё отдыхает после прошлого боя.',
+  rta_rating_gap: 'Рейтинги кланов слишком отличаются.',
+  rta_unknown_opponent: 'Такого соперника нет.',
+  not_allowed: 'Это действие доступно главе и офицерам.',
+  clan_level_too_low: 'Уровень клана слишком низкий для этого навыка.',
+  not_enough_reputation: 'Клану не хватает репутации.',
+  not_enough_eggs: 'В хранилище не хватает яиц.',
   shop_delivery_failed: 'Не удалось выдать предмет в инвентарь.',
   unknown_upgrade: 'Неизвестное улучшение персонажа.',
   upgrade_maxed: 'Это улучшение уже максимального уровня.',
@@ -203,7 +214,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
-  const TABS = [['overview', 'Обзор'], ['members', 'Участники'], ['tasks', 'Задания'], ['wars', 'Войны']];
+  const TABS = [['overview', 'Обзор'], ['members', 'Участники'], ['tasks', 'Задания'], ['skills', 'Навыки'], ['wars', 'Войны']];
 
   // Prototype header: waving banner, name, level, members, XP bar.
   function bannerHtml(clan) {
@@ -259,8 +270,47 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
+  function skillsTabHtml() {
+    const skills = dashboard.progression?.skills;
+    if (!skills) return '';
+    const percent = (value, unit) => (unit ? `${Math.round(value * 1000) / 10}%` : `${value}`);
+    return `
+      <section class="clan-section clan-activities">
+        <h4>Клановые навыки</h4>
+        <p class="clan-motto">Навык изучается за золото, репутацию и яйца из хранилища (яйца выпадают с эпических боссов). Бонус получают все участники клана${skills.canManage ? '.' : '; изучают глава и офицеры.'}</p>
+        <div class="clan-warehouse">${skills.eggs.map(egg => `<article><span>🥚</span><strong>${egg.count}</strong><small>${escapeHtml(egg.name)}</small></article>`).join('')}</div>
+        ${skills.skills.map(skill => `
+          <article class="clan-card">
+            <h4>${escapeHtml(skill.name)} · ${skill.level} / ${skill.maxLevel}</h4>
+            <small>${escapeHtml(skill.stat)}: +${percent(skill.perLevel * skill.level, skill.perLevel < 1)}${skill.level < skill.maxLevel ? ` → +${percent(skill.perLevel * (skill.level + 1), skill.perLevel < 1)}` : ''}</small>
+            ${skill.cost ? `<small>Нужно: ${skill.cost.clanLevel} ур. клана · ✦ ${formatNumber(skill.cost.reputation)} · 🪙 ${formatNumber(skill.cost.gold)} · 🥚 ${skill.cost.eggs} (${escapeHtml(skill.cost.eggName)})</small>
+            ${skills.canManage ? `<button type="button" class="clan-play" data-clan-skill="${escapeHtml(skill.id)}" ${skill.canLearn ? '' : 'disabled'}>Изучить</button>` : ''}` : ''}
+          </article>`).join('')}
+      </section>`;
+  }
+
+  const RTA_RESULT = { win: '🏆', loss: '💀', draw: '🤝' };
+
+  function rtaHtml() {
+    const rta = dashboard.rta;
+    if (!rta) return '';
+    return `
+      <section class="clan-card">
+        <h4>Командные бои (RTA) · рейтинг ${formatNumber(rta.rating)}</h4>
+        <small>Победы ${rta.wins} · поражения ${rta.losses} · ничьи ${rta.draws}. Отряд до ${rta.squadSize} бойцов сражается копиями героев: от ${rta.minSquad} бойцов отряд готов к бою.</small>
+        <div class="clan-warehouse">${rta.squad.length ? rta.squad.map(member => `<article><strong>${escapeHtml(member.name)}</strong><small>⚔ ${formatNumber(member.power)}</small>${rta.canManage ? `<button type="button" class="clan-play ghost" data-clan-rta-leave="${member.userId}">Убрать</button>` : ''}</article>`).join('') : '<small>В отряде пока никого.</small>'}</div>
+        <button type="button" class="clan-play" data-clan-rta-join>${rta.inSquad ? 'Обновить бойца' : 'Вступить в отряд'}</button>
+        ${rta.inSquad ? '<button type="button" class="clan-play ghost" data-clan-rta-leave="me">Выйти из отряда</button>' : ''}
+        ${rta.canManage ? `<h4>Соперники</h4>${rta.cooldownMs ? `<small>Следующий бой через ${formatDuration(rta.cooldownMs)}</small>` : ''}
+          ${rta.opponents.length ? rta.opponents.map(rival => `<div class="clan-daily-row"><div><strong>${escapeHtml(rival.name)}</strong><small>Рейтинг ${formatNumber(rival.rating)} · бойцов ${rival.squad}</small></div><button type="button" class="clan-play" data-clan-rta-battle="${escapeHtml(rival.id)}" ${rta.cooldownMs || rta.squad.length < rta.minSquad ? 'disabled' : ''}>В бой</button></div>`).join('') : `<small>Подходящих кланов с отрядом от ${rta.minSquad} бойцов пока нет.</small>`}` : ''}
+        ${rta.history.length ? `<h4>Последние бои</h4>${rta.history.map(entry => `<small>${RTA_RESULT[entry.result] || ''} ${escapeHtml(entry.opponent)} · ${entry.wins}:${entry.losses} · ${entry.change > 0 ? '+' : ''}${entry.change}</small>`).join('<br>')}` : ''}
+        <h4>Топ кланов</h4>
+        ${rta.top.map((entry, index) => `<small>${index + 1}. ${entry.mine ? '<b>' : ''}${escapeHtml(entry.name)}${entry.mine ? '</b>' : ''} · ${formatNumber(entry.rating)}</small>`).join('<br>')}
+      </section>`;
+  }
+
   function warsTabHtml(clan) {
-    return `<section class="clan-section clan-activities">${warHtml(clan)}${pvpHtml()}</section>`;
+    return `<section class="clan-section clan-activities">${rtaHtml()}${warHtml(clan)}${pvpHtml()}</section>`;
   }
 
   function overviewHtml(clan) {
@@ -277,6 +327,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         : tab === 'quiz' ? quizHtml()
         : tab === 'members' ? membersHtml(clan)
         : tab === 'tasks' ? tasksTabHtml(clan)
+        : tab === 'skills' ? skillsTabHtml()
         : tab === 'wars' ? warsTabHtml(clan)
         : tab === 'management' && clan.canManage ? managementHtml(clan)
         : overviewTabHtml(clan)}
@@ -603,6 +654,10 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelector('[data-clan-investigation-fund]')?.addEventListener('click', () => activity({ action: 'investigation_fund' }));
     content.querySelector('[data-clan-investigation-complete]')?.addEventListener('click', () => activity({ action: 'investigation_complete' }));
     content.querySelector('[data-clan-investigation-cancel]')?.addEventListener('click', () => activity({ action: 'investigation_cancel' }));
+    content.querySelector('[data-clan-rta-join]')?.addEventListener('click', () => activity({ action: 'rta_join' }));
+    content.querySelectorAll('[data-clan-rta-leave]').forEach(button => button.addEventListener('click', () => activity({ action: 'rta_leave', userId: button.dataset.clanRtaLeave === 'me' ? undefined : Number(button.dataset.clanRtaLeave) })));
+    content.querySelectorAll('[data-clan-rta-battle]').forEach(button => button.addEventListener('click', () => activity({ action: 'rta_battle', opponentId: button.dataset.clanRtaBattle })));
+    content.querySelectorAll('[data-clan-skill]').forEach(button => button.addEventListener('click', () => activity({ action: 'skill_learn', id: button.dataset.clanSkill })));
     content.querySelectorAll('[data-clan-task-claim]').forEach(button => button.addEventListener('click', () => activity({ action: 'task_claim', taskKey: button.dataset.clanTaskClaim })));
     content.querySelector('[data-clan-task-bonus]')?.addEventListener('click', () => activity({ action: 'task_claim_bonus' }));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {

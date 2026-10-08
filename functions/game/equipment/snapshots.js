@@ -28,5 +28,6 @@ export function syncEquippedSnapshot(session, item) {
         if (!isSameSnapshot(equipped, item)) continue;
         equipped.enchant = item.enchant;
         equipped.stats = item.stats;
+        equipped.augment = item.augment;
     }
 }

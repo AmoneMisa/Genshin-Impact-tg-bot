@@ -3,12 +3,14 @@
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
 import getRandom from '../../getters/getRandom.js';
 import { addMaterial, materialInfo } from '../player/materials.js';
+import { AUGMENT_GRADES, lifestoneKey } from './augment.js';
 import { blessedKey, crystalKey, scrollKey } from './enchantItem.js';
 
 export const ENCHANT_DROPS = Object.freeze({
     scroll: {chance: 0.35, min: 1, max: 2},
     blessed: {chance: 0.04, min: 1, max: 1},
     crystal: {chance: 0.5, min: 1, max: 4},
+    lifestone: {chance: 0.025, min: 1, max: 1},
 });
 
 /** The grade of the gear a character of this level wears, or null below the first enchantable one. */
@@ -32,9 +34,10 @@ export function rollEnchantDrops(member, {tier = 1, place = 10, random = Math.ra
         [scrollKey(grade), ENCHANT_DROPS.scroll],
         [blessedKey(grade), ENCHANT_DROPS.blessed],
         [crystalKey(grade), ENCHANT_DROPS.crystal],
+        ...(AUGMENT_GRADES.includes(grade) ? [[lifestoneKey(grade), ENCHANT_DROPS.lifestone]] : []),
     ];
     for (const [key, drop] of table) {
-        if (random() >= Math.min(1, drop.chance * luck * (key.startsWith('blessed') ? tier : 1))) continue;
+        if (random() >= Math.min(1, drop.chance * luck * (key.startsWith('blessed') || key.startsWith('lifestone') ? tier : 1))) continue;
         const amount = getRandom(drop.min, drop.max) * (key.startsWith('blessed') ? 1 : tier);
         addMaterial(member, key, amount);
         const info = materialInfo(key);

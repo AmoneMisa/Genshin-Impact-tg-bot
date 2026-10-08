@@ -10,6 +10,7 @@ import { getClanActivitiesState } from './clanActivities.js';
 import { getClanCompetitionState } from './clanCompetition.js';
 import { getClanManagementState } from './clanManagement.js';
 import { getClanProgressionState, markTaskProgress } from './clanProgression.js';
+import { getRtaState } from './clanRta.js';
 
 export const MAX_CLAN_MEMBERS = 30;
 const RESOURCES = new Set(['gold', 'crystals', 'ironOre']);
@@ -145,6 +146,7 @@ export async function getClanDashboard(userId, playerSession = null) {
       competition: await getClanCompetitionState(clan, playerSession, userId),
       management: await getClanManagementState(clan, userId, playerSession),
       progression: getClanProgressionState(clan, userId),
+      rta: await getRtaState(clan, userId),
     };
   }
 
@@ -168,6 +170,7 @@ export async function getClanDashboard(userId, playerSession = null) {
     competition: null,
     management: null,
     progression: null,
+    rta: null,
   };
 }
 

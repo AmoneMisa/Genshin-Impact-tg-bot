@@ -3,6 +3,7 @@ import addClanXp from '../functions/game/clans/addClanXp.js';
 import calcReputationPoints from '../functions/game/clans/calcReputationPoints.js';
 import getInvestigationBonus from '../functions/game/clans/getInvestigationBonus.js';
 import clanInvestigations from '../dictionaries/clanInvestigations.js';
+import { getClanSkillsState, learnClanSkill } from '../functions/game/clans/clanPerks.js';
 import clanTasks, { CLAN_TASKS_BONUS_XP } from '../dictionaries/clanTasks.js';
 
 function number(value, fallback = 0) {
@@ -159,6 +160,7 @@ export function getClanProgressionState(clan, userId) {
   return {
     investigations: investigationsState(clan),
     tasks: tasksState(clan, userId),
+    skills: { ...getClanSkillsState(clan), canManage: String(clan.owner) === String(userId) || findMember(clan, userId)?.role === 'officer' },
   };
 }
 
@@ -249,6 +251,7 @@ export async function prepareClanProgressionAction(userId, playerSession, action
   if (action === 'investigation_fund') return { clan, result: fundClanInvestigation(clan, userId), savePlayer: false };
   if (action === 'investigation_complete') return { clan, result: completeClanInvestigation(clan, userId), savePlayer: false };
   if (action === 'investigation_cancel') return { clan, result: cancelClanInvestigation(clan, userId, canManage), savePlayer: false };
+  if (action === 'skill_learn') return { clan, result: canManage ? learnClanSkill(clan, String(body.id || '')) : { ok: false, reason: 'not_allowed' }, savePlayer: false };
   if (action === 'task_claim') return { clan, result: claimClanTask(clan, playerSession, userId, body.taskKey), savePlayer: true };
   if (action === 'task_claim_bonus') return { clan, result: claimClanTasksBonus(clan, userId), savePlayer: false };
 

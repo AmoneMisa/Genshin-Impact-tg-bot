@@ -30,6 +30,15 @@ export const EPIC_LUCK_COINS = Object.freeze({
 
 export const epicLuckCoins = name => EPIC_LUCK_COINS[name] || 0;
 
+/** The egg every clan with a fighter gets for an epic kill (clan skills need them, see clanPerks.js). */
+export const EPIC_EGGS = Object.freeze({
+    queenAnt: {key: 'egg_wyvern', count: 1}, core: {key: 'egg_wyvern', count: 1}, orfen: {key: 'egg_wyvern', count: 2},
+    zaken: {key: 'egg_dragon', count: 1}, baium: {key: 'egg_dragon', count: 1}, frintezza: {key: 'egg_dragon', count: 2},
+    antharas: {key: 'egg_ancient', count: 1}, valakas: {key: 'egg_ancient', count: 1},
+});
+
+export const epicEgg = name => EPIC_EGGS[name] || null;
+
 export const epicTemplates = () => bossTemplates.filter(boss => boss.epic);
 
 export const getEpicTemplate = name => epicTemplates().find(boss => boss.name === name) || null;

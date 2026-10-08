@@ -32,8 +32,9 @@ import { describeItemStats } from '../functions/game/equipment/describeStats.js'
 import { canClassUse } from '../functions/game/equipment/catalog.js';
 import { isActuallyEquipped } from '../functions/game/equipment/snapshots.js';
 import { getMaterialCount } from '../functions/game/player/materials.js';
+import { augmentInfo, augmentItem } from '../functions/game/equipment/augment.js';
 
-const ACTIONS = new Set(['equip', 'unequip', 'sell', 'enchant', 'crystallize']);
+const ACTIONS = new Set(['equip', 'unequip', 'sell', 'enchant', 'augment', 'crystallize']);
 
 function asNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -144,6 +145,7 @@ function sanitizeItem(session, item, index) {
       safeTyped: getMaterialCount(session, safeTypedKey(item)),
     } : null,
     crystals: enchantable ? crystalYield(item) : 0,
+    augment: augmentInfo(session, item),
   };
 }
 
@@ -267,6 +269,12 @@ export function performEquipmentAction(session, key, action, options = {}) {
 
     unequipItem(session, item);
     return { ok: true, action, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
+  }
+
+  if (action === 'augment') {
+    const result = augmentItem(session, item);
+    if (!result.ok) return { ok: false, reason: result.reason, stone: result.stone, gold: result.gold, equipment: getEquipmentState(session) };
+    return { ok: true, action, augment: result.augment, replaced: result.replaced, gold: result.gold, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
   }
 
   if (action === 'enchant') {

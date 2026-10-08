@@ -48,6 +48,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'classQuests', title: 'Профессии', subtitle: 'Квесты 2-й и 3-й профессии', icon: '🎓', status: 'webgl' },
   { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
   { id: 'buffs', title: 'Баффы', subtitle: 'Усиления класса на 20 минут', icon: '✨', status: 'webgl' },
+  { id: 'passives', title: 'Пассивные навыки', subtitle: 'Постоянные бонусы класса за ОП', icon: '🛡️', status: 'webgl' },
   { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
   { id: 'luckShop', title: 'Донат-магазин', subtitle: 'Эпики, свитки, эликсиры за монеты удачи', icon: '🍀', status: 'webgl' },
   { id: 'auction', title: 'Аукцион', subtitle: 'Купить и продать за золото', icon: '⚖️', status: 'webgl' },

@@ -8,7 +8,8 @@ import lodash from "lodash";
 import Chat from "../../../db/models/Chat.js";
 import { bossTemplateFor } from "./bossUnits.js";
 import { addMaterial, materialInfo } from "../player/materials.js";
-import { epicLuckCoins, markEpicKilled, rollEpicJewel, rollEpicWeapon } from "./epicBosses.js";
+import awardClanEggs from "../clans/awardClanEggs.js";
+import { epicEgg, epicLuckCoins, markEpicKilled, rollEpicJewel, rollEpicWeapon } from "./epicBosses.js";
 import { rollEnchantDrops } from "../equipment/enchantDrops.js";
 import { rollCraftDrops } from "../equipment/craftItem.js";
 import { recordQuestEvent } from "../classes/classQuests.js";
@@ -123,6 +124,15 @@ export default async function(boss, chatId) {
     }
 
     await chat.save();
+    if (template?.epic) {
+        // A failed egg award must not lose the loot that is already saved.
+        try {
+            const egg = epicEgg(boss.name);
+            await awardClanEggs(playedSessions.map(member => member.userId), egg);
+        } catch (error) {
+            console.error("[boss] clan eggs:", error.message);
+        }
+    }
     return gotLoot;
 }
 

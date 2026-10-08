@@ -111,6 +111,18 @@ const clanSchema = new mongoose.Schema({
         // progress[userId] = { taskKey: true }; claimed[userId] = [taskKey, ...]
     },
 
+    // Clan RTA state: { rating, wins, losses, draws, squad: [userId], cooldownUntil, history }, see miniapp/clanRta.js.
+    rta: {
+        type: Object,
+        default: {}
+    },
+
+    // Clan skills learned with eggs ({ skillId: level }), see functions/game/clans/clanPerks.js.
+    skills: {
+        type: Object,
+        default: {}
+    },
+
     // Moderation bookkeeping (e.g. per-actor kick cooldowns) that doesn't belong
     // to any single activity above.
     moderation: {
@@ -137,6 +149,8 @@ clanSchema.pre("save", function () {
     this.markModified("investigations");
     this.markModified("tasks");
     this.markModified("moderation");
+    this.markModified("skills");
+    this.markModified("rta");
 });
 
 export default mongoose.model("Clan", clanSchema);

@@ -23,6 +23,15 @@ const TYPED_SCROLLS = ENCHANT_GRADES.flatMap(grade => ['weapon', 'armor'].flatMa
     ];
 }));
 
+// Life Stones (functions/game/equipment/augment.js): one per weapon grade from C up.
+const LIFESTONE_GRADES = ['C', 'B', 'A', 'S', 'S80', 'S84'];
+const lifeStones = LIFESTONE_GRADES.map(grade => ({
+    key: `lifestone_${grade}`,
+    name: `Камень жизни (${grade})`,
+    icon: '🔮',
+    description: `Усиление оружия грейда ${grade}: добавляет случайный бонус (аугментация). Повторное применение заменяет бонус. Падает с боссов.`,
+}));
+
 // Crafting materials (functions/game/equipment/craftRecipes.js): four families, one material per grade
 // from no-grade to S84. Bosses drop them; metal is the ore the mine produces (inventory.ironOre).
 const CRAFT_GRADES = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
@@ -40,6 +49,7 @@ const craftMaterials = Object.entries(CRAFT_FAMILIES).flatMap(([family, info]) =
 })));
 
 export default [
+    ...lifeStones,
     {key: 'skill_scroll', name: 'Свиток мастерства', icon: '📜', description: 'Нужен для улучшения навыков с 4-го по 7-й уровень. Падает с любых боссов и их свиты.'},
     {key: 'ancient_seal', name: 'Древняя печать', icon: '🔱', description: 'Нужна для улучшения навыков с 8-го по 10-й уровень. Падает со стойких боссов (2-й и 3-й ранг) и парных боссов.'},
     {key: 'essence_kivaha', name: 'Сущность Киваху', icon: '⚡', description: 'Искра грозовой черепахи. Редкая добыча с Киваху.'},

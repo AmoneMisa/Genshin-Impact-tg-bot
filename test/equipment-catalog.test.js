@@ -309,7 +309,7 @@ test('boss drops give scrolls and crystals of the fighter grade, more from harde
   assert.equal(enchantGradeForLevel(99), 'S84');
   const member = { game: { stats: { lvl: 82 }, inventory: {} } };
   const drops = rollEnchantDrops(member, { tier: 1, place: 1, random: () => 0 });
-  assert.deepEqual(drops.map((drop) => drop.item), ['scroll_S80', 'blessed_S80', 'crystal_S80']);
+  assert.deepEqual(drops.map((drop) => drop.item), ['scroll_S80', 'blessed_S80', 'crystal_S80', 'lifestone_S80']);
   assert.ok(getMaterialCount(member, 'scroll_S80') >= 1);
   const hard = { game: { stats: { lvl: 82 }, inventory: {} } };
   rollEnchantDrops(hard, { tier: 3, place: 1, random: () => 0 });

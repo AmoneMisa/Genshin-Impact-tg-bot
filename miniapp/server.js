@@ -93,6 +93,9 @@ import {
 } from './adminTools.js';
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
+import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
+import { performRtaAction } from './clanRta.js';
+import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
 import { buyLot, cancelLot, createLot, getAuctionState, mongoAuctionStore, returnExpiredLots } from './auction.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
@@ -306,6 +309,11 @@ async function authorize(req) {
 
   const chatId = resolveGameChatId(validated);
   const session = await getSession(chatId, validated.user.id);
+  // Clan skills reach the stat code through the session; the copy is refreshed every few minutes
+  // and persisted by whichever action saves the session next.
+  if (clanPerksStale(session)) {
+    try { syncClanPerks(session, await getClan(Number(validated.user.id))); } catch (error) { console.warn('[miniapp] clan perks sync:', error.message); }
+  }
   const isGroupContext = String(chatId) !== String(validated.user.id);
   const membershipStatus = session.userChatData?.status || session.$locals?.telegramMembership?.status;
   if (isGroupContext && ['left', 'kicked'].includes(membershipStatus)) {
@@ -962,6 +970,27 @@ const classBuffsCast = guarded('class buffs cast', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const passivesState = guarded('passives state', async (req, res) => {
+  const context = await authorize(req);
+  const state = await withLock(`${context.chatId}:passives`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getPassivesState(context.session);
+  });
+  return sendJson(res, 200, state);
+});
+
+const passivesLearn = guarded('passives learn', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:passives`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const learned = learnPassive(context.session, String(body.id || ''));
+    if (learned.ok) await saveSession(context.session);
+    return { ...learned, passives: getPassivesState(context.session) };
+  });
+  return sendResult(res, result, context);
+});
+
 const badges = guarded('badges', async (req, res) => {
   const context = await authorize(req);
   const chat = await getChatSession(context.chatId);
@@ -1263,8 +1292,9 @@ const clanActivity = guarded('clan activity', async (req, res) => {
   if (body.action === 'upgrade_member') assertGoldUnlocked(context);
   const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
   const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'transfer', 'settings_update']);
-  const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus']);
-  const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
+  const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus', 'skill_learn']);
+  const rtaActions = new Set(['rta_join', 'rta_leave', 'rta_battle']);
+  const allowed = new Set(['boss_summon', ...rtaActions, 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
   if (!allowed.has(body.action)) {
     throw httpError(400, 'Unknown clan activity');
   }
@@ -1273,7 +1303,11 @@ const clanActivity = guarded('clan activity', async (req, res) => {
     context.session = await getSession(context.chatId, context.userId);
     let result;
 
-    if (competitionActions.has(body.action)) {
+    if (rtaActions.has(body.action)) {
+      const prepared = await performRtaAction(context.userId, context.session, body.action, body);
+      result = prepared.result;
+      if (result.ok && prepared.clan) await prepared.clan.save();
+    } else if (competitionActions.has(body.action)) {
       // Competition actions persist only clan documents. Player combat state is
       // treated as a read-only snapshot, matching the legacy duel/war behavior.
       result = await performClanCompetitionAction(context.userId, context.session, body.action, body);
@@ -1376,11 +1410,11 @@ const equipmentState = guarded('equipment state', async (req, res) => {
 const equipmentAction = guarded('equipment action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (body.action === 'enchant') assertGoldUnlocked(context);
+  if (body.action === 'enchant' || body.action === 'augment') assertGoldUnlocked(context);
   if (typeof body.key !== 'string' || !body.key) {
     throw httpError(400, 'equipment key is required');
   }
-  if (!['equip', 'unequip', 'sell', 'enchant', 'crystallize'].includes(body.action)) {
+  if (!['equip', 'unequip', 'sell', 'enchant', 'augment', 'crystallize'].includes(body.action)) {
     throw httpError(400, 'action must be equip, unequip, sell, enchant or crystallize');
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
@@ -1697,6 +1731,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/badges') return badges(req, res);
     if (route === 'GET /api/buffs') return classBuffsState(req, res);
     if (route === 'POST /api/buffs/cast') return classBuffsCast(req, res);
+    if (route === 'GET /api/passives') return passivesState(req, res);
+    if (route === 'POST /api/passives/learn') return passivesLearn(req, res);
     if (route === 'GET /api/mail') return mailState(req, res);
     if (route === 'POST /api/mail/claim') return mailClaim(req, res);
     if (route === 'POST /api/promo/redeem') return promoRedeem(req, res);

@@ -1,6 +1,7 @@
 import { language } from './i18n/init.js';
 import { openLanguageGame } from './language.js';
 import { openBuffsGame } from './buffs.js';
+import { openPassivesGame } from './passives.js';
 import { openLuckShopGame } from './luck-shop.js';
 import { openAuctionGame } from './auction.js';
 import { startItemArt } from './item-art-runtime.js';
@@ -130,6 +131,7 @@ const launchers = {
   feedback: openFeedbackGame,
   language: openLanguageGame,
   buffs: openBuffsGame,
+  passives: openPassivesGame,
   luckShop: openLuckShopGame,
   auction: openAuctionGame,
   mail: openMailGame,

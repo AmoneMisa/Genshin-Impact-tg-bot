@@ -10,6 +10,8 @@ const POINT_SCALE_MUL_STATS = new Set(["power", "defencePower"]);
 
 import gradeScale from '../../equipment/gradeScale.js';
 import { potionStatBonus } from '../potionBuffs.js';
+import extraStatBonus from '../extraModifiers.js';
+import { augmentStat } from '../../equipment/augment.js';
 import { activeSets, enchantExtras, uniqueEquipped } from '../../equipment/itemBonuses.js';
 
 export default function (session, statName, isMul = false) {
@@ -67,6 +69,13 @@ export default function (session, statName, isMul = false) {
                 }
             }
         }
+
+        // The Life Stone bonus of a weapon.
+        const augment = augmentStat(slot, statName, isMul);
+        if (augment !== null) {
+            if (isMul) totalStatValue *= augment;
+            else totalStatValue += augment;
+        }
     }
 
     // Full-set bonuses (helmet + gloves + boots + body cover of one set).
@@ -83,6 +92,6 @@ export default function (session, statName, isMul = false) {
         }
     }
 
-    const potionBonus=potionStatBonus(session,statName,isMul);
-    return isMul ? totalStatValue*potionBonus : totalStatValue+potionBonus;
+    const potionBonus=potionStatBonus(session,statName,isMul)*(isMul ? extraStatBonus(session,statName,true) : 1);
+    return isMul ? totalStatValue*potionBonus : totalStatValue+potionBonus+extraStatBonus(session,statName);
 }

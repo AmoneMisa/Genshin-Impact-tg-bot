@@ -15,6 +15,8 @@ export const MINI_APP_ROUTE_SETTINGS = Object.freeze({
   'POST /api/skills/route': 'whoami',
   'GET /api/buffs': 'whoami',
   'POST /api/buffs/cast': 'whoami',
+  'GET /api/passives': 'whoami',
+  'POST /api/passives/learn': 'whoami',
   'GET /api/class-quests': 'whoami',
   'POST /api/class-quests': 'whoami',
   'GET /api/inventory': 'whoami',
