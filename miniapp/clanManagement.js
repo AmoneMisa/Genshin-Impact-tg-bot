@@ -1,6 +1,7 @@
 import Clan from '../db/models/Clan.js';
 import getClan from '../functions/game/clans/getClan.js';
 import getUserName from '../functions/getters/getUserName.js';
+import { MAX_CLAN_MEMBERS } from './clan.js';
 import calcReputationPoints from '../functions/game/clans/calcReputationPoints.js';
 
 const KICK_COOLDOWN = 5 * 60 * 1000;
@@ -87,28 +88,46 @@ export async function acceptClanApplication(clan, userId, applicantId) {
   if (await getClan(applicantId)) {
     return { ok: false, reason: 'applicant_already_in_clan' };
   }
+  if (clan.members.length >= MAX_CLAN_MEMBERS) return { ok: false, reason: 'clan_full' };
 
   clan.members.push({ userId: Number(applicantId), role: 'member' });
   clan.reputation = calcReputationPoints(clan);
   const name = (await getUserName(Number(applicantId), 'name')) || `Игрок ${applicantId}`;
-  return { ok: true, applicantId: String(applicantId), message: `${name} принят(а) в клан.` };
+  return {
+    ok: true,
+    applicantId: String(applicantId),
+    message: `${name} принят(а) в клан.`,
+    notify: [{ userId: String(applicantId), text: `✅ Твоя заявка принята: ты в клане «${clan.name}».` }],
+  };
 }
 
 export function rejectClanApplication(clan, userId, applicantId) {
   if (!clan || !canManage(clan, userId)) return { ok: false, reason: 'owner_only' };
   clan.applications = (clan.applications || []).filter(id => Number(id) !== Number(applicantId));
-  return { ok: true, message: 'Заявка отклонена.' };
+  return {
+    ok: true,
+    message: 'Заявка отклонена.',
+    notify: [{ userId: String(applicantId), text: `❌ Твою заявку в клан «${clan.name}» отклонили.` }],
+  };
 }
 
 // ---- Invite / kick ----
-export async function inviteClanMember(clan, userId, targetId) {
+export async function inviteClanMember(clan, userId, targetId, chatMembers = null) {
   if (!clan || !canManage(clan, userId)) return { ok: false, reason: 'owner_only' };
+  if (chatMembers && !chatMembers.some(member => String(member.userId) === String(targetId))) {
+    return { ok: false, reason: 'unknown_player' };
+  }
+  if (clan.members.length >= MAX_CLAN_MEMBERS) return { ok: false, reason: 'clan_full' };
   if (await getClan(targetId)) return { ok: false, reason: 'target_already_in_clan' };
 
   clan.members.push({ userId: Number(targetId), role: 'member' });
   clan.reputation = calcReputationPoints(clan);
   const name = (await getUserName(Number(targetId), 'name')) || `Игрок ${targetId}`;
-  return { ok: true, message: `${name} добавлен(а) в клан.` };
+  return {
+    ok: true,
+    message: `${name} добавлен(а) в клан.`,
+    notify: [{ userId: String(targetId), text: `🏰 Тебя приняли в клан «${clan.name}».` }],
+  };
 }
 
 export async function kickClanMember(clan, userId, targetId) {
@@ -134,7 +153,11 @@ export async function kickClanMember(clan, userId, targetId) {
   clan.members = clan.members.filter(member => String(member.userId) !== String(targetId));
   clan.reputation = calcReputationPoints(clan);
   const name = (await getUserName(Number(targetId), 'name')) || `Игрок ${targetId}`;
-  return { ok: true, message: `${name} исключён(а) из клана.` };
+  return {
+    ok: true,
+    message: `${name} исключён(а) из клана.`,
+    notify: [{ userId: String(targetId), text: `🚪 Тебя исключили из клана «${clan.name}».` }],
+  };
 }
 
 // ---- Officer roles ----
@@ -152,6 +175,21 @@ export function demoteClanMember(clan, userId, targetId) {
   if (!member || member.role === 'owner') return { ok: false, reason: 'invalid_role_target' };
   member.role = 'member';
   return { ok: true, message: 'Участник разжалован.' };
+}
+
+export function transferClanOwnership(clan, userId, targetId) {
+  if (!clan || String(clan.owner) !== String(userId)) return { ok: false, reason: 'owner_only' };
+  const target = findMember(clan, targetId);
+  if (!target || target.role === 'owner') return { ok: false, reason: 'invalid_role_target' };
+  const previous = findMember(clan, userId);
+  if (previous) previous.role = 'officer';
+  target.role = 'owner';
+  clan.owner = Number(targetId);
+  return {
+    ok: true,
+    message: 'Глава клана передан.',
+    notify: [{ userId: String(targetId), text: `👑 Ты теперь глава клана «${clan.name}».` }],
+  };
 }
 
 // ---- Settings (owner only) ----
@@ -199,10 +237,11 @@ export async function performClanManagementAction(userId, playerSession, action,
 
   if (action === 'application_accept') return { clan, result: await acceptClanApplication(clan, userId, body.applicantId) };
   if (action === 'application_reject') return { clan, result: rejectClanApplication(clan, userId, body.applicantId) };
-  if (action === 'invite') return { clan, result: await inviteClanMember(clan, userId, body.targetId) };
+  if (action === 'invite') return { clan, result: await inviteClanMember(clan, userId, body.targetId, activeChatMembers(playerSession)) };
   if (action === 'kick') return { clan, result: await kickClanMember(clan, userId, body.targetId) };
   if (action === 'promote') return { clan, result: promoteClanMember(clan, userId, body.targetId) };
   if (action === 'demote') return { clan, result: demoteClanMember(clan, userId, body.targetId) };
+  if (action === 'transfer') return { clan, result: transferClanOwnership(clan, userId, body.targetId) };
   if (action === 'settings_update') return { clan, result: updateClanSettings(clan, userId, body.changes) };
 
   return { clan, result: { ok: false, reason: 'unknown_clan_management' } };

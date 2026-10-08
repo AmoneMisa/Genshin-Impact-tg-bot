@@ -4,7 +4,7 @@ import { icon } from './icons.js';
 
 export const NAV_TABS = Object.freeze([
   { id: 'city', label: 'Город', title: 'Город', hint: 'Ваше королевство', icon: 'castle' },
-  { id: 'hero', label: 'Герой', title: 'Ваш герой', hint: 'Персонаж и снаряжение', icon: 'user-round', features: ['profile', 'skills', 'equipment', 'inventory', 'titles', 'horoscope'] },
+  { id: 'hero', label: 'Герой', title: 'Ваш герой', hint: 'Персонаж и снаряжение', icon: 'user-round', features: ['profile', 'skills', 'classQuests', 'equipment', 'inventory', 'titles', 'horoscope'] },
   { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['boss', 'arena', 'steal', 'elements'] },
   { id: 'games', label: 'Игры', title: 'Игры и награды', hint: 'Удача и развлечения', icon: 'dices', features: ['chest', 'gacha', 'bonus', 'sword', 'arcade', 'point21'] },
   { id: 'clan', label: 'Клан', title: 'Клан и друзья', hint: 'Сообщество', icon: 'users', features: ['clan', 'friends', 'forms', 'transfer'] },
@@ -38,9 +38,19 @@ export function featureIconHtml(feature) {
   return FEATURE_ICONS[feature.id] ? icon(FEATURE_ICONS[feature.id]) : (feature.icon || '');
 }
 
-export function navHtml(activeId) {
+/** Red-dot counts per bottom tab, from the per-feature counts in `badges`. */
+export function tabBadgeCount(tab, badges = {}) {
+  return (tab.features || []).reduce((sum, id) => sum + (Number(badges[id]) || 0), 0);
+}
+
+export function badgeHtml(count) {
+  const value = Number(count) || 0;
+  return value > 0 ? `<i class="red-dot" aria-label="Новых событий: ${value}">${value > 9 ? '9+' : value}</i>` : '';
+}
+
+export function navHtml(activeId, badges = {}) {
   return NAV_TABS.filter(tab => !tab.hidden).map(tab => `
     <button type="button" class="nav-tab ${tab.id === activeId ? 'active' : ''}" data-nav-tab="${tab.id}" aria-pressed="${tab.id === activeId}" aria-label="${tab.title}">
-      ${icon(tab.icon)}<small>${tab.label}</small>
+      ${icon(tab.icon)}<small>${tab.label}</small>${badgeHtml(tabBadgeCount(tab, badges))}
     </button>`).join('');
 }

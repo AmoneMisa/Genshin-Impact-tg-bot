@@ -8,6 +8,8 @@ const REASONS = {
   closed: 'Этот клан закрыт для вступления.',
   not_in_clan: 'Ты не состоишь в клане.',
   owner_cannot_leave: 'Глава не может покинуть клан — только расформировать его.',
+  clan_full: 'В клане нет свободных мест.',
+  unknown_player: 'Игрок не найден в этом чате.',
   owner_only: 'Это действие доступно только главе.',
   invalid_resource: 'Неизвестный ресурс.',
   invalid_amount: 'Введи целое положительное количество.',
@@ -193,8 +195,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <div class="clan-list">
           ${dashboard.available.length ? dashboard.available.map(clan => `
             <article class="clan-list-row">
-              <div><strong>${escapeHtml(clan.name)}</strong><small>Уровень ${clan.level} · ${clan.members} участников · ${clan.entryType === 1 ? 'по заявке' : 'свободный вход'}</small></div>
-              <button type="button" class="clan-join-button" data-clan-join="${clan.id}">${clan.entryType === 1 ? 'Заявка' : 'Вступить'}</button>
+              <div><strong>${escapeHtml(clan.name)}</strong><small>Уровень ${clan.level} · ${clan.members}/${clan.maxMembers || 30} участников · ${clan.entryType === 1 ? 'по заявке' : 'свободный вход'}</small></div>
+              <button type="button" class="clan-join-button" data-clan-join="${clan.id}" ${clan.applied ? 'disabled' : ''}>${clan.applied ? 'Заявка отправлена' : clan.entryType === 1 ? 'Заявка' : 'Вступить'}</button>
             </article>`).join('') : '<p>Открытых кланов пока нет.</p>'}
         </div>
       </section>`;
@@ -473,6 +475,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         ${management.roleTargets.length ? `<div class="clan-activity-list">${management.roleTargets.map(member => `
           <article class="clan-activity-row"><div><strong>${escapeHtml(member.name)}</strong><small>${member.role === 'officer' ? 'офицер' : 'участник'}</small></div>
             <button type="button" data-clan-${member.role === 'officer' ? 'demote' : 'promote'}="${member.userId}">${member.role === 'officer' ? 'Разжаловать' : 'В офицеры'}</button>
+            <button type="button" data-clan-transfer="${member.userId}" data-name="${escapeHtml(member.name)}">Передать клан</button>
           </article>`).join('')}</div>` : '<p class="clan-muted">В клане пока нет других участников.</p>'}
       </section>`;
   }
@@ -576,6 +579,9 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-invite]').forEach(button => button.addEventListener('click', () => activity({ action: 'invite', targetId: button.dataset.clanInvite })));
     content.querySelectorAll('[data-clan-kick]').forEach(button => button.addEventListener('click', () => activity({ action: 'kick', targetId: button.dataset.clanKick })));
     content.querySelectorAll('[data-clan-promote]').forEach(button => button.addEventListener('click', () => activity({ action: 'promote', targetId: button.dataset.clanPromote })));
+    content.querySelectorAll('[data-clan-transfer]').forEach(button => button.addEventListener('click', () => {
+      if (window.confirm(`Передать клан игроку ${button.dataset.name}? Ты станешь офицером.`)) activity({ action: 'transfer', targetId: button.dataset.clanTransfer });
+    }));
     content.querySelectorAll('[data-clan-demote]').forEach(button => button.addEventListener('click', () => activity({ action: 'demote', targetId: button.dataset.clanDemote })));
     content.querySelector('[data-clan-settings-save]')?.addEventListener('click', () => {
       const changes = {

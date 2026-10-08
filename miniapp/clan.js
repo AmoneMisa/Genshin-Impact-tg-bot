@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import Clan from '../db/models/Clan.js';
 import getClan from '../functions/game/clans/getClan.js';
 import getUserName from '../functions/getters/getUserName.js';
+import calcReputationPoints from '../functions/game/clans/calcReputationPoints.js';
 import addClanXp from '../functions/game/clans/addClanXp.js';
 import calcGearScore from '../functions/game/player/calcGearScore.js';
 import clanQuiz from '../dictionaries/clanQuiz.js';
@@ -10,6 +11,7 @@ import { getClanCompetitionState } from './clanCompetition.js';
 import { getClanManagementState } from './clanManagement.js';
 import { getClanProgressionState, markTaskProgress } from './clanProgression.js';
 
+export const MAX_CLAN_MEMBERS = 30;
 const RESOURCES = new Set(['gold', 'crystals', 'ironOre']);
 const XP_PER_CONTRIBUTION = 10;
 const QUIZ_GOLD_REWARD = 100;
@@ -158,6 +160,8 @@ export async function getClanDashboard(userId, playerSession = null) {
       name: item.name,
       level: Math.max(1, number(item.level, 1)),
       members: item.members?.length || 0,
+      maxMembers: MAX_CLAN_MEMBERS,
+      applied: Array.isArray(item.applications) && item.applications.includes(Number(userId)),
       entryType: number(item.entryConditions?.entryType),
     })),
     quiz: null,
@@ -197,10 +201,16 @@ export async function joinClanForMiniApp(userId, clanId, playerSession = null) {
   const entryType = number(clan.entryConditions?.entryType);
   if (entryType === -1) return { ok: false, reason: 'closed' };
 
+  if ((clan.members || []).length >= MAX_CLAN_MEMBERS) return { ok: false, reason: 'clan_full' };
+
   if (entryType === 1) {
     if (!clan.applications.includes(Number(userId))) clan.applications.push(Number(userId));
     await clan.save();
-    return { ok: true, applied: true, clanName: clan.name };
+    const name = (await getUserName(Number(userId), 'name')) || `Игрок ${userId}`;
+    const notify = clan.members
+      .filter(member => member.role === 'owner' || member.role === 'officer')
+      .map(member => ({ userId: String(member.userId), text: `🏰 ${name} подал(а) заявку в клан «${clan.name}».` }));
+    return { ok: true, applied: true, clanName: clan.name, notify };
   }
 
   const reasons = getEntryBlockReasons(clan, playerSession);
@@ -209,6 +219,7 @@ export async function joinClanForMiniApp(userId, clanId, playerSession = null) {
   }
 
   clan.members.push({ userId: Number(userId), role: 'member' });
+  clan.reputation = calcReputationPoints(clan);
   await clan.save();
   return { ok: true, applied: false, clan: await clanDto(clan, userId) };
 }
@@ -219,6 +230,7 @@ export async function leaveClanForMiniApp(userId) {
   if (String(clan.owner) === String(userId)) return { ok: false, reason: 'owner_cannot_leave' };
 
   clan.members = clan.members.filter(member => String(member.userId) !== String(userId));
+  clan.reputation = calcReputationPoints(clan);
   await clan.save();
   return { ok: true, clanName: clan.name };
 }

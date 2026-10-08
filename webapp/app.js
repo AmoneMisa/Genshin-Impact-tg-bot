@@ -34,7 +34,7 @@ import { mountCity } from './city.js';
 import { openFriendsGame, openPlayerCard } from './friends.js';
 import { createLoader } from './loading.js';
 import { watchGlyphs } from './glyph-center.js';
-import { featureIconHtml, featuresForTab, navHtml, NAV_TABS } from './nav.js';
+import { badgeHtml, featureIconHtml, featuresForTab, navHtml, NAV_TABS } from './nav.js';
 import { startEmojiIcons } from './icons.js';
 
 const tg = window.Telegram?.WebApp;
@@ -56,6 +56,22 @@ function formatNumber(value) {
     notation: value >= 100000 ? 'compact' : 'standard',
     maximumFractionDigits: 1,
   }).format(value || 0);
+}
+
+// Red-dot counts keyed by feature id (see /api/badges).
+let badges = {};
+const BADGE_REFRESH_MS = 45_000;
+
+async function refreshBadges() {
+  try {
+    const next = await api('/api/badges');
+    const { total, ...counts } = next;
+    const changed = JSON.stringify(counts) !== JSON.stringify(badges);
+    badges = counts;
+    if (changed && currentState) render(currentState);
+  } catch {
+    // Dots are decorative; keep the last known counts.
+  }
 }
 
 async function api(path, options = {}) {
@@ -134,6 +150,7 @@ async function launchFeature(feature, render) {
       ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
     }));
     status.textContent = '';
+    refreshBadges();
   } catch (error) {
     console.error(error);
     status.textContent = `${feature.title}: ${error.message}`;
@@ -165,6 +182,7 @@ function render(state) {
         : feature.status === 'webgl'
           ? '<span class="mode-badge">ИГРАТЬ</span>'
           : '<span class="mode-badge legacy">ЧАТ</span>'}
+      ${badgeHtml(badges[feature.id])}
       <h3>${feature.title}</h3>
       <p>${unavailable ? 'Доступно только в групповом чате' : feature.subtitle}</p>
       <span class="arrow">${unavailable ? '🔒' : '↗'}</span>`;
@@ -182,7 +200,7 @@ function render(state) {
 }
 
 function renderTabs() {
-  $('bottom-nav').innerHTML = navHtml(activeTab);
+  $('bottom-nav').innerHTML = navHtml(activeTab, badges);
   const isCity = activeTab === 'city';
   document.querySelectorAll('[data-tab-panel]').forEach(node => {
     node.hidden = (node.dataset.tabPanel === 'city') !== isCity;
@@ -222,6 +240,7 @@ function openFeatureById(id) {
 
 async function loadState() {
   render(await api('/api/bootstrap'));
+  refreshBadges();
 }
 
 async function boot() {
@@ -289,5 +308,7 @@ async function boot() {
 }
 
 boot();
+window.setInterval(() => { if (!document.hidden) refreshBadges(); }, BADGE_REFRESH_MS);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshBadges(); });
 
 installOverlayA11y();

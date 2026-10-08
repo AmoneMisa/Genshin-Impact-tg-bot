@@ -1,7 +1,8 @@
 // Social layer for the Mini App: friends (per game chat), clanmates, public
 // player cards (another player's gear and stats) and last-seen presence.
 //
-// Friends live on the member record: member.game.friends = [userId, ...].
+// Friends are mutual and live on the member record: member.game.friends,
+// plus pending friendRequestsIn / friendRequestsOut (userId lists).
 // Presence comes from member.game.lastSeenAt, stamped when the Mini App opens.
 
 import { getEquipmentState } from './equipment.js';
@@ -88,37 +89,97 @@ function byPresence(a, b) {
 export function getSocialState(chat, userId, { clanMemberIds = [], clanName = null, now = Date.now() } = {}) {
   const me = findMember(chat, userId);
   const friends = new Set(friendIds(me));
+  const incomingIds = new Set(idList(me, 'friendRequestsIn'));
+  const outgoingIds = new Set(idList(me, 'friendRequestsOut'));
   const clan = new Set(clanMemberIds.map(String));
   const others = members(chat).filter(member => String(member.userId) !== String(userId) && isListed(member));
   return {
     friends: others.filter(member => friends.has(String(member.userId))).map(member => memberRow(member, now)).sort(byPresence),
-    clanmates: others.filter(member => clan.has(String(member.userId))).map(member => ({ ...memberRow(member, now), isFriend: friends.has(String(member.userId)) })).sort(byPresence),
-    candidates: others.filter(member => !friends.has(String(member.userId))).map(member => memberRow(member, now)).sort(byPresence),
+    clanmates: others.filter(member => clan.has(String(member.userId))).map(member => ({ ...memberRow(member, now), isFriend: friends.has(String(member.userId)), requestState: incomingIds.has(String(member.userId)) ? 'incoming' : outgoingIds.has(String(member.userId)) ? 'outgoing' : null })).sort(byPresence),
+    incoming: others.filter(member => incomingIds.has(String(member.userId)) && !friends.has(String(member.userId))).map(member => memberRow(member, now)).sort(byPresence),
+    outgoing: others.filter(member => outgoingIds.has(String(member.userId)) && !friends.has(String(member.userId))).map(member => memberRow(member, now)).sort(byPresence),
+    candidates: others.filter(member => !friends.has(String(member.userId)) && !incomingIds.has(String(member.userId)) && !outgoingIds.has(String(member.userId))).map(member => memberRow(member, now)).sort(byPresence),
     clanName,
     maxFriends: MAX_FRIENDS,
   };
 }
 
-/** Adds or removes a friend inside this chat. Mutates the chat; caller saves. */
+function idList(member, key) {
+  return Array.isArray(member?.game?.[key]) ? member.game[key].map(String) : [];
+}
+
+function ensureGame(member) {
+  if (!member.game || typeof member.game !== 'object') member.game = {};
+  return member.game;
+}
+
+function without(list, id) {
+  return list.filter(item => item !== String(id));
+}
+
+function makeFriends(me, target) {
+  const mine = ensureGame(me);
+  const theirs = ensureGame(target);
+  mine.friends = [...without(idList(me, 'friends'), target.userId), String(target.userId)];
+  theirs.friends = [...without(idList(target, 'friends'), me.userId), String(me.userId)];
+  mine.friendRequestsIn = without(idList(me, 'friendRequestsIn'), target.userId);
+  mine.friendRequestsOut = without(idList(me, 'friendRequestsOut'), target.userId);
+  theirs.friendRequestsIn = without(idList(target, 'friendRequestsIn'), me.userId);
+  theirs.friendRequestsOut = without(idList(target, 'friendRequestsOut'), me.userId);
+}
+
+/**
+ * Friendship is mutual and goes through requests, all inside this chat:
+ * add (send a request, or accept if they already asked), accept, decline
+ * (incoming), cancel (outgoing) and remove (drops both sides).
+ * Mutates the chat; caller saves.
+ */
 export function setFriend(chat, userId, targetId, action) {
   const me = findMember(chat, userId);
   if (!me) return { ok: false, reason: 'not_member' };
   if (String(targetId) === String(userId)) return { ok: false, reason: 'self' };
   const target = findMember(chat, targetId);
   if (!isListed(target)) return { ok: false, reason: 'unknown_player' };
-  if (!me.game || typeof me.game !== 'object') me.game = {};
-  const current = friendIds(me);
-  if (action === 'add') {
-    if (current.includes(String(targetId))) return { ok: false, reason: 'already_friend' };
-    if (current.length >= MAX_FRIENDS) return { ok: false, reason: 'too_many' };
-    me.game.friends = [...current, String(targetId)];
-  } else if (action === 'remove') {
-    if (!current.includes(String(targetId))) return { ok: false, reason: 'not_friend' };
-    me.game.friends = current.filter(id => id !== String(targetId));
-  } else {
-    return { ok: false, reason: 'invalid_action' };
+  const mine = ensureGame(me);
+  const theirs = ensureGame(target);
+  const friends = idList(me, 'friends');
+  const incoming = idList(me, 'friendRequestsIn').includes(String(targetId));
+  const outgoing = idList(me, 'friendRequestsOut').includes(String(targetId));
+
+  if (action === 'add' || action === 'accept') {
+    if (friends.includes(String(targetId))) return { ok: false, reason: 'already_friend' };
+    if (action === 'accept' && !incoming) return { ok: false, reason: 'no_request' };
+    if (incoming) {
+      if (friends.length >= MAX_FRIENDS) return { ok: false, reason: 'too_many' };
+      if (idList(target, 'friends').length >= MAX_FRIENDS) return { ok: false, reason: 'target_too_many' };
+      makeFriends(me, target);
+      return { ok: true, status: 'friends' };
+    }
+    if (outgoing) return { ok: false, reason: 'already_requested' };
+    if (friends.length + idList(me, 'friendRequestsOut').length >= MAX_FRIENDS) return { ok: false, reason: 'too_many' };
+    mine.friendRequestsOut = [...idList(me, 'friendRequestsOut'), String(targetId)];
+    theirs.friendRequestsIn = [...without(idList(target, 'friendRequestsIn'), userId), String(userId)];
+    return { ok: true, status: 'requested' };
   }
-  return { ok: true };
+  if (action === 'decline') {
+    if (!incoming) return { ok: false, reason: 'no_request' };
+    mine.friendRequestsIn = without(idList(me, 'friendRequestsIn'), targetId);
+    theirs.friendRequestsOut = without(idList(target, 'friendRequestsOut'), userId);
+    return { ok: true, status: 'declined' };
+  }
+  if (action === 'cancel') {
+    if (!outgoing) return { ok: false, reason: 'no_request' };
+    mine.friendRequestsOut = without(idList(me, 'friendRequestsOut'), targetId);
+    theirs.friendRequestsIn = without(idList(target, 'friendRequestsIn'), userId);
+    return { ok: true, status: 'cancelled' };
+  }
+  if (action === 'remove') {
+    if (!friends.includes(String(targetId))) return { ok: false, reason: 'not_friend' };
+    mine.friends = without(friends, targetId);
+    theirs.friends = without(idList(target, 'friends'), userId);
+    return { ok: true, status: 'removed' };
+  }
+  return { ok: false, reason: 'invalid_action' };
 }
 
 function safeGearScore(game) {
@@ -145,6 +206,8 @@ export function getPlayerCard(chat, targetId, viewerId, { clanName = null, now =
     clanName,
     isSelf: String(targetId) === String(viewerId),
     isFriend: friendIds(findMember(chat, viewerId)).includes(String(targetId)),
+    requestState: idList(findMember(chat, viewerId), 'friendRequestsIn').includes(String(targetId)) ? 'incoming'
+      : idList(findMember(chat, viewerId), 'friendRequestsOut').includes(String(targetId)) ? 'outgoing' : null,
     stats: {
       hp: number(classStats.maxHp ?? classStats.hp),
       mp: number(classStats.maxMp ?? classStats.mp),

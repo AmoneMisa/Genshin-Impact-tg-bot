@@ -51,14 +51,17 @@ test('social state lists friends, clanmates and candidates without hidden member
 
 test('friends can be added and removed only for listed chat members', () => {
   const c = chat();
-  assert.deepEqual(setFriend(c, 1, '3', 'add'), { ok: true });
+  assert.deepEqual(setFriend(c, 1, '3', 'add'), { ok: true, status: 'requested' });
+  assert.deepEqual(c.members[0].game.friends, ['2']);
+  assert.equal(setFriend(c, 1, '3', 'add').reason, 'already_requested');
+  assert.deepEqual(setFriend(c, 3, '1', 'accept'), { ok: true, status: 'friends' });
   assert.deepEqual(c.members[0].game.friends, ['2', '3']);
   assert.equal(setFriend(c, 1, '3', 'add').reason, 'already_friend');
   assert.equal(setFriend(c, 1, '1', 'add').reason, 'self');
   assert.equal(setFriend(c, 1, '4', 'add').reason, 'unknown_player');
   assert.equal(setFriend(c, 1, '5', 'add').reason, 'unknown_player');
   assert.equal(setFriend(c, 1, '99', 'add').reason, 'unknown_player');
-  assert.deepEqual(setFriend(c, 1, '2', 'remove'), { ok: true });
+  assert.deepEqual(setFriend(c, 1, '2', 'remove'), { ok: true, status: 'removed' });
   assert.deepEqual(c.members[0].game.friends, ['3']);
   assert.equal(setFriend(c, 1, '2', 'remove').reason, 'not_friend');
 });
@@ -87,4 +90,23 @@ test('raid party and damage rows open other players’ cards, not your own', () 
     assert.match(html, /data-player-card="2"/);
     assert.doesNotMatch(html, /data-player-card="1"/);
   }
+});
+
+test('friend requests are mutual: decline, cancel and remove clean up both sides', () => {
+  const c = chat();
+  setFriend(c, 1, '3', 'add');
+  assert.deepEqual(c.members.find(m => m.userId === 3).game.friendRequestsIn, ['1']);
+  assert.equal(getSocialState(c, 3).incoming.length, 1);
+  assert.equal(setFriend(c, 1, '3', 'decline').reason, 'no_request');
+  assert.equal(setFriend(c, 3, '1', 'decline').status, 'declined');
+  assert.deepEqual(c.members[0].game.friendRequestsOut, []);
+
+  setFriend(c, 1, '3', 'add');
+  assert.equal(setFriend(c, 1, '3', 'cancel').status, 'cancelled');
+  assert.deepEqual(c.members.find(m => m.userId === 3).game.friendRequestsIn, []);
+
+  setFriend(c, 3, '1', 'add');
+  assert.equal(setFriend(c, 1, '3', 'add').status, 'friends');
+  assert.equal(setFriend(c, 3, '1', 'remove').status, 'removed');
+  assert.equal(c.members[0].game.friends.includes('3'), false);
 });

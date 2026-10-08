@@ -1,10 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { MAX_CLAN_MEMBERS } from '../miniapp/clan.js';
 import {
   rejectClanApplication,
   promoteClanMember,
   demoteClanMember,
   updateClanSettings,
+  transferClanOwnership,
+  inviteClanMember,
 } from '../miniapp/clanManagement.js';
 
 function makeClan() {
@@ -95,4 +98,24 @@ test('settings update is owner-only', () => {
   assert.equal(denied.ok, false);
   assert.equal(denied.reason, 'owner_only');
   assert.equal(clan.tag, undefined);
+});
+
+test('ownership transfer is owner-only, makes the old owner an officer and updates clan.owner', () => {
+  const clan = makeClan();
+  assert.equal(transferClanOwnership(clan, 2, 3).reason, 'owner_only');
+  assert.equal(transferClanOwnership(clan, 1, 1).reason, 'invalid_role_target');
+  assert.equal(transferClanOwnership(clan, 1, 99).reason, 'invalid_role_target');
+
+  assert.equal(transferClanOwnership(clan, 1, 3).ok, true);
+  assert.equal(clan.owner, 3);
+  assert.equal(clan.members.find(m => m.userId === 3).role, 'owner');
+  assert.equal(clan.members.find(m => m.userId === 1).role, 'officer');
+});
+
+test('invite rejects players outside the chat and full clans', async () => {
+  const clan = makeClan();
+  assert.equal((await inviteClanMember(clan, 1, 77, [{ userId: 5 }])).reason, 'unknown_player');
+
+  clan.members = Array.from({ length: MAX_CLAN_MEMBERS }, (_, i) => ({ userId: i + 1, role: i ? 'member' : 'owner' }));
+  assert.equal((await inviteClanMember(clan, 1, 500, [{ userId: 500 }])).reason, 'clan_full');
 });

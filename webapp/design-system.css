@@ -753,3 +753,20 @@ a:focus-visible {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
 }
+
+/* Red dot: pending events on a nav tab or feature card (friends, clan). */
+.red-dot {
+  position: absolute; top: 6px; right: 8px; z-index: 3;
+  min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box;
+  display: grid; place-items: center;
+  border-radius: 9px; border: 1.5px solid #0b0d17;
+  background: #e5384b; color: #fff;
+  font: 800 10px/1 system-ui, sans-serif; font-style: normal;
+  box-shadow: 0 0 8px rgba(229, 56, 75, .7);
+  animation: red-dot-pulse 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+.game-card .red-dot { top: 10px; left: 10px; right: auto; }
+.nav-tab .red-dot { top: 2px; right: calc(50% - 22px); }
+@keyframes red-dot-pulse { 50% { transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .red-dot { animation: none; } }

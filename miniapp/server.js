@@ -9,14 +9,14 @@ import getSession from '../functions/getters/getSession.js';
 import getChatSession from '../functions/getters/getChatSession.js';
 import saveSession from '../functions/getters/saveSession.js';
 import getClan from '../functions/game/clans/getClan.js';
-import { getPlayerCard, getSocialState, setFriend, stampLastSeen } from './social.js';
+import { findMember, getPlayerCard, getSocialState, memberName, setFriend, stampLastSeen } from './social.js';
 import { isChatAdmin } from './tableGames.js';
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
 import { getChestState, openChest } from './chest.js';
 import { getGachaState, rollGacha, resolveGacha } from './gacha.js';
-import { getEquipmentState, performEquipmentAction, craftEquipmentItem } from './equipment.js';
+import { getEquipmentState, performEquipmentAction, craftEquipmentItem, learnEquipmentRecipe, buyEnchantScroll } from './equipment.js';
 import {
   prepareBuilds,
   getBuildsState,
@@ -27,7 +27,8 @@ import {
   renameBuild,
 } from './builds.js';
 import { getArenaState, attackArena } from './arena.js';
-import { getBossState, summonBossForMiniApp, useBossSkill } from './boss.js';
+import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
+import { getBossState, getEpicState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
 import { getMiniAppSwordDashboard, rollMiniAppSword } from './sword.js';
 import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from './arcade.js';
@@ -35,7 +36,14 @@ import { resetArcadeGame } from './arcadeReset.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
-import { getSkillsState, enchantSkillForMiniApp } from './skills.js';
+import { getSkillsState, enchantSkillForMiniApp, routeSkillForMiniApp } from './skills.js';
+import {
+  getClassQuestsState,
+  startClassQuestForMiniApp,
+  payClassQuestForMiniApp,
+  abandonClassQuestForMiniApp,
+  promoteClassForMiniApp,
+} from './classQuests.js';
 import { getInventoryState, useInventoryPotion } from './inventory.js';
 import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
 import { createStarInvoice, getStarsState, mongoStarStore } from './stars.js';
@@ -76,6 +84,7 @@ import {
   prepareClanContribution,
   prepareClanQuizAnswer,
 } from './clan.js';
+import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
 import { performClanCompetitionAction } from './clanCompetition.js';
@@ -623,8 +632,8 @@ const socialState = guarded('social state', async (req, res) => {
 const socialFriend = guarded('social friend', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (!['string', 'number'].includes(typeof body.userId) || !['add', 'remove'].includes(body.action)) {
-    throw httpError(400, 'userId and action (add | remove) are required');
+  if (!['string', 'number'].includes(typeof body.userId) || !['add', 'accept', 'decline', 'cancel', 'remove'].includes(body.action)) {
+    throw httpError(400, 'userId and action (add | accept | decline | cancel | remove) are required');
   }
   const result = await withLock(`${context.chatId}:social`, async () => {
     const chat = await getChatSession(context.chatId);
@@ -634,8 +643,25 @@ const socialFriend = guarded('social friend', async (req, res) => {
   });
   const clan = await clanInfo(context.userId);
   const social = getSocialState(result.chat, context.userId, { clanMemberIds: clan.memberIds, clanName: clan.name });
+  if (result.updated.ok) {
+    const actor = memberName(findMember(result.chat, context.userId));
+    if (result.updated.status === 'requested') pushTo(body.userId, `🤝 ${actor} хочет добавить тебя в друзья. Открой «Друзья» → «Заявки».`);
+    if (result.updated.status === 'friends') pushTo(body.userId, `🤝 ${actor} теперь твой друг.`);
+  }
   const status = result.updated.ok ? 200 : (SOCIAL_REASONS_STATUS[result.updated.reason] || 409);
   return sendJson(res, status, { ...result.updated, social });
+});
+
+const badges = guarded('badges', async (req, res) => {
+  const context = await authorize(req);
+  const chat = await getChatSession(context.chatId);
+  let clan = null;
+  try { clan = await getClan(Number(context.userId)); } catch { clan = null; }
+  let bossAlive = false;
+  if (String(context.chatId) !== String(context.userId)) {
+    try { bossAlive = Boolean(await getAliveBoss(context.chatId)); } catch { bossAlive = false; }
+  }
+  return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive }));
 });
 
 const playerCard = guarded('player card', async (req, res, requestUrl) => {
@@ -912,6 +938,8 @@ const clanQuiz = guarded('clan quiz', async (req, res) => {
     return { result, dashboard };
   });
 
+  pushAll(payload.result.notify);
+  delete payload.result.notify;
   return sendJson(res, payload.result.ok ? 200 : 409, {
     ...payload.result,
     dashboard: payload.dashboard,
@@ -924,7 +952,7 @@ const clanActivity = guarded('clan activity', async (req, res) => {
   const body = await readJsonBody(req);
   if (body.action === 'upgrade_member') assertGoldUnlocked(context);
   const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
-  const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'settings_update']);
+  const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'transfer', 'settings_update']);
   const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus']);
   const allowed = new Set(['boss_summon', 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
   if (!allowed.has(body.action)) {
@@ -963,6 +991,8 @@ const clanActivity = guarded('clan activity', async (req, res) => {
     return { result, dashboard };
   });
 
+  pushAll(payload.result.notify);
+  delete payload.result.notify;
   return sendJson(res, payload.result.ok ? 200 : 409, {
     ...payload.result,
     dashboard: payload.dashboard,
@@ -1142,13 +1172,26 @@ const bossState = guarded('boss state', async (req, res) => {
   return sendJson(res, 200, boss);
 });
 
+const bossEpic = guarded('boss epic', async (req, res) => {
+  const context = await authorize(req);
+  return sendJson(res, 200, await getEpicState(context.chatId));
+});
+
 const bossSummon = guarded('boss summon', async (req, res) => {
   const context = await authorize(req);
+  const body = await readJsonBody(req).catch(() => ({}));
+  const epic = typeof body?.epic === 'string' && body.epic ? body.epic : null;
   const result = await withLock(`${context.chatId}:boss`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return summonBossForMiniApp(context.session, context.chatId);
+    return summonBossForMiniApp(context.session, context.chatId, epic);
   });
   context.session = await getSession(context.chatId, context.userId);
+  if (result.ok && String(context.chatId) !== String(context.userId)) {
+    const chat = await getChatSession(context.chatId);
+    const summoner = memberName(findMember(chat, context.userId));
+    const text = `⚔️ ${summoner} призвал(а) босса! Заходи в «Бой», пока он жив.`;
+    pushAll(bossSpawnRecipients(chat, context.userId).map(userId => ({ userId, text })));
+  }
   return sendResult(res, result, context);
 });
 
@@ -1297,6 +1340,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
     if (route === 'GET /api/social') return socialState(req, res);
     if (route === 'POST /api/social/friend') return socialFriend(req, res);
+    if (route === 'GET /api/badges') return badges(req, res);
     if (route === 'GET /api/player') return playerCard(req, res, requestUrl);
     if (route === 'GET /api/steal') return stealState(req, res);
     if (route === 'POST /api/steal/attack') return stealAttack(req, res);
