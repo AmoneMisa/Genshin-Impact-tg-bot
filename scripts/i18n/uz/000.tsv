@@ -1,0 +1,273 @@
+0	Boss hujumi sovishini -30% ga kamaytiradi
+1	Urushdagi hujum sovishini -30% ga kamaytiradi
+2	Klan do'konidagi kutish vaqtini -50% ga kamaytiradi
+3	— kritik!
+6	. 7 kun davomida ular talonchilikdan himoyalangan.
+7	. Uni inventarda ishlat.
+8	· {0} mag'lub etildi: +{1} MO{2}
+9	· {0} s sovish
+10	· {0} zarba
+11	· {0}-kasb
+12	· bepul
+13	· vampirizm {0}
+14	· topshiriq: {0}
+15	· KRITIK
+16	· mahoratning yangi darajasi!
+17	· mahorat darajasi {0} kerak
+18	· karaxt qilindi
+19	· ochiq
+20	· qaytarildi {0}
+21	· mag'lub bo'ldi
+22	· yaqinlar bossni himoya qilmoqda
+23	· zarba to'xtatildi!
+24	· Epik
+25	‹ Umumiy ko'rinish
+30	(charxlashdan +{0})
+31	(birinchi xarid bonusi +{0} bilan)
+32	(qalqon {0} ni yutdi)
+33	{0} - {1} zarar
+34	{0} - 10 ochko;
+35	{0} - 17 ochko;
+36	{0} - 35 ochko;
+40	{0} - foydani yig'ib bo'lmaydi. Hali hech narsa ishlab chiqarilmagan. Uzluksiz ishlab chiqarishga qolgan vaqt: {1}
+41	{0} - foydani yig'ish. Ishlab chiqarildi: {1} {2}. Uzluksiz ishlab chiqarishga qolgan vaqt: {3}
+42	{0} - bino holati. Daraja: {1} {2} Holat: {3}
+43	{0} - xazina holati. Hozir himoyada: {1} {2} oltin, {3} {4} temir rudasi, {5} {6} kristall.
+44	{0} - binoni yaxshilash. Siz binoni {1} {2} darajagacha yaxshilashni boshladingiz!
+45	{0} - binoni yaxshilash. Qurilishni tezlashtirishni xohlaysizmi? Tezlashtirish narxi: {1} {2} kristall. Yaxshilashga qolgan vaqt: {3}
+46	{0} - binoni yaxshilash. Siz {1} binosini {2} {3} darajagacha muvaffaqiyatli yaxshiladingiz!
+47	{0} - binoni yaxshilash. Bino allaqachon yaxshilanmoqda. Qurilishni tezlashtirishingiz mumkin.
+48	{0} - binoni yaxshilash. Daraja: {1} {2} Binoni yaxshilashni xohlaysizmi? Keyingi darajaga yaxshilash narxi: {3}
+49	{0} - binoni yaxshilash. Daraja: {1} {2} Keyingi darajaga yaxshilash narxi: {3}
+50	{0} — {1} zarar{2}{3}
+51	{0} — to'liq to'plam bonusi
+52	{0} · stol atrofida {1} / {2}
+53	{0} · {1} daq.
+54	{0} · {1} s
+55	{0} · kunlik yangilanishdan keyin yangi savol.
+56	{0} · kuch {1}
+57	{0} (sen)
+58	{0} {1} (Ishlatilmoqda)
+59	{0} {1} soatiga
+60	{0} {1} «{2}» ni ishlatdi!
+61	{0} {1} Daraja: {2} {3} Sinf: {4} {5} Jihozlar reytingi: {6}
+62	{0} {1}: sekundiga {2} birlik
+63	{0} {1}: {2}. Soni: {3}
+64	{0} / {1} bajarildi
+65	{0} hujum
+66	{0} Birinchi xarid bonusi: +{1} gacha
+67	{0} k. {1} soat
+68	{0} {1}-darajali jihozlarni yasash uchun. Bosslardan tushadi.
+69	{0} kun
+70	{0} kun {1} soat
+71	{0} klanga qo'shildi.
+72	{0} ta mavjud ishtirokchi · sovish:
+73	{0} Temir rudasi: {1}
+74	{0} temir rudasi
+75	{0} +{1} gacha charxlandi.
+76	{0} oltin
+77	{0} Oltin: {1}
+78	{0} Inventar
+79	{0} klandan chiqarildi.
+80	{0} Sinf: {1}
+81	{0} Talonchilik urinishlari soni: {1}
+82	{0} kristall
+83	{0} WhitesLove o'yinida kristall{1}. Shu o'yin chatiga o'tkaziladi. Sotib olingan kristallar 7 kun talonchilikdan himoyalangan.
+84	{0} Kristallar: {1}
+85	{0} Yulduzlarga sotib olish
+86	{0} daq {1} s
+87	{0} daq.
+88	{0} Zarar ko'paytirgichi: x{1}
+89	{0} Zarar ko'paytirgichi: x1
+90	{0} qaytardi
+91	{0} 1–{1} oralig'ida. G'alaba qozonish uchun {2}–{3} yig'.
+92	{0} g'alaba · {1} mag'lubiyat · {2} durang
+93	{0} duelda g'alaba qozondi.
+94	{0} «{1}» unvonini oladi.
+95	{0} klanga qabul qilindi.
+96	{0} Jihozlar reytingi: {1}
+97	{0} Reyting: {1}
+98	{0} s
+99	{0} s
+100	{0} s.
+101	{0} Joriy tajriba miqdori: {1}
+102	{0} Joriy jamg'arma: {1} {2} Soatiga ishlab chiqarish: {3}
+103	{0} endi do'stlaringda.
+104	{0} Keyingi darajagacha kerak bo'lgan tajriba: {1}
+105	{0} +{1} gacha yaxshilandi.
+106	{0} {1}-darajagacha yaxshilandi.
+107	{0} Daraja: {1}
+108	{0} soat
+109	{0} soat {1} daq {2} s
+110	{0} soat
+111	{0} soat {1} daq.
+112	{0} dona qazib olinmoqda
+113	{0}, bu haftada xarid allaqachon qilingan. Dushanba kuni 00.00 da yangilanadi
+114	{0}, bugun xarid allaqachon qilingan. 00.00 da yangilanadi
+115	{0}, biror narsa sotib olish uchun avval oltin topishing kerak.
+116	{0}, sen boss tomonidan mag'lub etilding.
+117	{0}, senda bu bino nomini o'zgartirish kartochkasi allaqachon bor.
+118	{0}, senda bu turdagi bino allaqachon bor.
+119	{0}: {1} oltin
+120	{0}: {1} mm.
+121	{0}: {1} ochko.
+122	{0}: {1}; Jami ochko: {2}
+123	{0}: faqat guruh chatida mavjud.
+124	{0}: ochib bo'lmadi — {1}
+125	{0}: chaqirish uchun parchalar. Soni: {1}
+126	{0}: hozircha faqat chatdagi buyruq orqali mavjud.
+127	{0}: yo'l tiklandi.
+128	{0}: yo'l {1} gacha yaxshilandi.
+129	{0}: sessiya tiklandi.
+130	{0}? Bu barcha o'yinchilarga ta'sir qiladi.
+131	{0}. {1} (Reyting {2} | Daraja: {3})
+132	{0}. Soni: {1}
+133	{0}{1} ishl.
+134	{0}{1} mm
+135	{0}% qochish
+136	{0}k {1}h
+137	{0}d
+138	{0}d {1}s
+139	{0}s
+140	{0}h {1}d
+141	{0}h {1}d {2}s
+142	{1} · yakunlandi
+143	{1} / {2} tajriba
+144	{2} / {3} chaqiruv
+145	{2}{3} ochko
+146	{3} · dar. {4}
+147	{3} iksir
+148	{4} · balans 🪙 {5}
+149	{4} · {5} qoldi
+150	{4} ochko
+151	{4} maydon
+152	{4}Charxlash +{5} / +{6}
+153	{5} Balans: 🪙 {6}
+154	{5} ochko · 🛡️ {6}
+155	{7} ishtirokchi ·
+156	@{0} - olingan tajriba: {1} {2}. Joriy daraja: {3} {4}. Keyingi darajagacha kerak: {5} {6} Olingan oltin: {7} {8}. Jami oltin: {9} {10}. Olingan kristall: {11} {12}. Jami kristall: {13} {14}
+157	@{0}, buyruqni sutkada bir marta ishlatish mumkin. Urinish 00.00 da yangilanadi. Qoldi: {1}
+158	@{0}, sening "{1}" binong muvaffaqiyatli qurildi!
+159	@{0}, qilichingning uzunligi bugun o'zgarmadi. Hozir: {1} mm
+160	@{0}, qilichingning uzunligi {1} mm ga oshdi. Hozir: {2} mm
+161	@{0}, qilichingning uzunligi {1} mm ga qisqardi. Hozir: {2} mm
+162	@{0}, sening hazil munajjimlik bashoratting: {1}
+163	@{0}, sen bossga {1} kritik zarar yetkazding! {2}
+164	@{0}, sen bossga {1} zarar yetkazding. {2}
+165	@{0}, sen bossga {1} o'limli zarba berding! {2}
+166	@{0}, nolga teng stavkani ko'paytirib bo'lmaydi.
+167	@{0}, sen {1} {2} olding
+175	↩️ Orqaga
+176	＋ Do'st qo'shish
+177	+{0} bonus
+178	+{0}% kritik zararga
+179	+{0}% kritik ehtimoliga
+180	+{0}% zararga
+181	Mahoratning kritik ehtimoliga +3%, har darajada zaiflashtirish 4% kuchliroq.
+182	Har daraja uchun +4% zarar (boss va urushlar)
+183	Har daraja uchun mukofotlardagi oltinga +5%
+184	Har daraja uchun klan tajribasiga +5%
+185	+oltin, tajriba va hissa
+186	± 0 mm
+187	| (Yoq.)
+188	| (O'ch.)
+189	−{0}% sovishga
+190	−{0}% olinadigan zarar
+191	−10…+15 mm
+192	⚔️ {0} boss chaqirdi! U tirik ekan, «Jang» bo'limiga kir.
+193	⚔️ Do'stona duellar
+194	⚙️ Sozlamalar
+195	⚠️ Boss «{0}» ni to'plamoqda! Karaxtlik zarbani to'xtatadi.
+196	⚡️ Elektro
+197	⛏️ Temir rudasi
+198	⛔️ Darajangizdan yuqori bir yoki bir nechta buyum kiyilgan. Ba'zi xususiyatlaringizga 45% jarima qo'yilgan. Yuqori darajali jihozni yechishni yoki darajangizni oshirishni tavsiya qilamiz.⛔️
+199	✅ bajarildi
+200	✅ Arizang qabul qilindi: sen «{0}» klanidasan.
+201	✦ {0} MO
+202	✦ {5} MO
+203	✦ {6} MO
+204	❄️ Krio
+205	❌ «{0}» klaniga arizang rad etildi.
+206	➕ Taklif qilish
+207	➖ Chiqarish
+208	⤵️ Keyingi otish qilichni albatta qisqartiradi.
+209	⬆️ Qahramon yaxshilanishlari
+210	⬜ bajarilmadi
+211	⭐ Kiyilgan ·
+212	⭐ ofitser
+213	⭐ Rollar
+214	🌿 Dendro
+215	🎁 Bonus urinishlari
+216	🎮 O'yinni ochish
+217	🎲 «{0}» o'yinida — talon qilib bo'lmaydi
+218	🎲 Odatiy oraliq: −10 dan +15 mm gacha.
+219	🏆 olindi
+220	🏆 Sen eng yuqori kasbga erishding. Endi mahoratlar va ularning yo'llarini yaxshila.
+221	🏗️ Binolar
+222	🏰 {0} «{1}» klaniga ariza topshirdi.
+223	🏰 Seni «{0}» klaniga qabul qilishdi.
+224	🏳️ {0} bilan urush
+225	🏳️ Klan urushlari
+226	👑 rahbar
+227	👑 klan rahbari
+228	👑 Sen endi «{0}» klanining rahbarisan.
+229	👑 Epik qurol: {0}!
+230	👑 Epik taqinchoq: {0}!
+231	👹 Klan bossi
+232	💍 {0} · {1}{2} · ehtimol {3}%
+233	💎 {0} parcha
+234	💎 Kristallar
+235	💧 Gidro
+236	💨 Anemo
+237	💬 Mini App'dan fikr-mulohaza
+238	📋 Kunlik topshiriqlar
+239	📜 Mahorat o'ramasi
+240	📨 Arizalar
+241	🔒 {0}-daraja kerak · senda {1}
+242	🔒 {0}-daraja kerak (hozir {1})
+243	🔒 {0}-darajada ochiladi
+244	🔒 Yaxshilash yo'llari (kuch, narx, vaqt, ehtimol, atribut, himoya) 3-kasbdan keyin ochiladi.
+245	🔒 retsept o'rganilmagan
+246	🔒 dar. {0}
+247	🔥 Piro
+248	🔬 Tadqiqotlar
+249	🔮 Mahorat ochkolari (MO): {0}
+250	🔱 Qadimiy muhr
+251	🗝️ Urinishlar
+252	🗿 Geo
+253	🤝 {0} endi sening do'sting.
+254	🤝 {0} seni do'stlikka qo'shmoqchi. «Do'stlar» → «Arizalar» bo'limini och.
+255	🪙 {0} · 💎 {1} · ⛏️ {2} · ✦ {3} MO
+256	🪙 Oltin
+257	🚪 Seni «{0}» klanidan chiqarishdi.
+258	🛒 Klan do'koni
+259	🛡️ Keyingi otish qilichni qisqarta olmaydi.
+260	🛡️ Sening qalqoning: {0}
+261	0 s
+264	1000% zarar, sog'lig'i 35% dan past bossga — uch baravar ko'p.
+265	1000% zarar. Yetkazilgan zararning 40% ini salomatlik sifatida qaytaradi.
+268	1200% zarar va kritik ehtimoliga +60%; sog'lig'i 30% dan past bossga — uch baravar ko'p.
+270	1300% zarar va bossni 4 soniyaga karaxt qiladi.
+272	Yozilish uchun 15 soniya, keyin stavkalar va uch raund uchun 25 soniya. {1} o'yinchigacha.
+274	150% zarar va bossni 3 soniyaga karaxt qiladi.
+275	1600% zarar va bossni 5 soniyaga karaxt qiladi.
+276	1800% zarar va kritik ehtimoliga +60%.
+277	2-kasb
+278	2-kasb — 20-darajadan, 3-kasb — 40-darajadan. Topshiriqlar boss janglarida bajariladi.
+280	20 daqiqa · qayta ishlatish vaqtni yangilaydi
+281	200% zarar, bossni 5 soniyaga karaxt qilish va 12 soniyaga 60% qochish.
+282	200% zarar. 12 soniyaga bossning himoyasini 30% ga kamaytiradi.
+283	21 ochko
+284	21 ochko: {0}.
+285	240% zarar. Yetkazilgan zararning 20% ini salomatlik sifatida qaytaradi.
+286	3-kasb
+288	300% zarar va bossni 4 soniyaga karaxt qiladi.
+289	300% zarar. 15 soniyaga bossning himoyasini 35% ga kamaytiradi.
+291	400% zarar va kritik ehtimoliga +35%.
+292	400% zarar, bossni 6 soniyaga karaxt qilish va 15 soniyaga sovishni 40% ga tezlashtirish.
+293	420% zarar va kritik ehtimoliga +30%.
+294	450% zarar, yarador bossga (sog'lig'i 30% dan past) — 60% ko'proq.
+295	450% zarar. Yetkazilgan zararning 30% ini salomatlik sifatida qaytaradi.
+297	500% zarar va kritik ehtimoliga +50%; sog'lig'i 40% dan past bossga — 150% ko'proq.
+298	500% zarar, sog'lig'i 30% dan past bossga — 120% ko'proq.
+299	550% zarar va bossni 3 soniyaga karaxt qiladi.

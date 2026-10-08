@@ -15,7 +15,7 @@ test('game VFX particle layout is deterministic and bounded', () => {
 });
 
 test('rarity and screen modes map to stable visual tones', () => {
-  assert.equal(rarityTone('SSS'), 'prismatic');
+  assert.equal(rarityTone('S84'), 'prismatic');
   assert.equal(rarityTone('S'), 'gold');
   assert.equal(rarityTone('A'), 'arcane');
   assert.equal(rarityTone('unknown'), 'arcane');

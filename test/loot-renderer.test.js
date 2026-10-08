@@ -33,7 +33,7 @@ test('equipment kinds map to distinct original loot silhouettes and motion prese
   assert.equal(normalizeLootKind({ category: 'ring', mainType: 'accessories' }), 'ring');
   assert.match(renderLootArt({ kind: 'twoHandedSword', grade: 'S' }, { reveal: true }), /motion-spin/);
   assert.match(renderLootArt({ category: 'helmet', grade: 'A' }, { reveal: true }), /motion-wobble/);
-  assert.match(renderLootArt({ category: 'ring', grade: 'SSS' }, { reveal: true }), /motion-orbit/);
+  assert.match(renderLootArt({ category: 'ring', grade: 'S84' }, { reveal: true }), /motion-orbit/);
 });
 
 test('loot visual identity is deterministic but gives same-type items different geometry and materials', () => {
@@ -55,7 +55,7 @@ test('loot visual identity is deterministic but gives same-type items different 
 });
 
 test('grade and rarity select stable visual tones', () => {
-  assert.equal(lootTone({ grade: 'SSS' }), 'prismatic');
+  assert.equal(lootTone({ grade: 'S84' }), 'prismatic');
   assert.equal(lootTone({ grade: 'S' }), 'gold');
   assert.equal(lootTone({ rarity: 'royal' }), 'rose');
   assert.equal(lootTone({ rarity: 'common' }), 'mist');

@@ -1,3 +1,4 @@
+import buffPotions from './buffPotions.js';
 export default [{
     type: "hp",
     bottleType: "potion",
@@ -46,4 +47,4 @@ export default [{
     power: 300,
     name: "Маленькое зелье восстановления мп",
     description: "Восстанавливает мп в количестве 300 единиц"
-}];
+}, ...buffPotions];

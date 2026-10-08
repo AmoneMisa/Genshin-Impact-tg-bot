@@ -1,0 +1,319 @@
+960	Maydon qiymati matn bo'lishi kerak.
+961	To'da chorlovi
+962	oltin
+963	Oltin arzimas narsa
+964	Oltin koni
+965	Oltin
+966	oltin {0}{1}
+967	Oltindan kristallga
+968	O'yin vaqtida oltinni o'tkazib bo'lmaydi. Kristallarni o'tkazib bo'lmaydi.
+969	Oltin I
+970	Oltin II
+971	Oltin III
+972	Lochin ko'zi
+973	va {0} kristall
+974	va birinchi xarid bonusi +{0}
+975	Ignar qayg'udan bo'kirdi — uning atrofida alanga yallig'landi!
+976	Ignar va Pira
+977	Stavkasiz o'yin
+978	{0} o'yini ishtirokchilar faoliyati yo'qligi sababli bekor qilindi. Yangi o'yinni boshlang.
+979	21 ochko o'yini
+981	21 ochko o'yini. {0}
+987	Unsurlar o'yini.
+990	O'yin allaqachon tugagan.
+991	O'yin allaqachon ketmoqda.
+992	O'yin allaqachon boshlangan. Stavka qilib bo'lmaydi
+993	O'ynamoqda
+994	Maestro kuyini chalmoqda.
+995	Stavkasiz o'ynayapsan.
+996	O'ynash
+997	O'YNASH
+998	O'yin ID
+999	O'yin profili topilmadi.
+1000	O'yin chati topilmadi.
+1001	O'yinchi
+1002	O'yinchi {0}
+1003	O'yinchi {0} topilmadi
+1004	O'yinchi {0} {1} chatida topilmadi
+1005	O'yinchi bu chatda endi topilmadi.
+1008	O'yinchi bu chatda topilmadi
+1009	O'yinchi bu chatda topilmadi.
+1010	O'yinchi sening klaningda emas.
+1011	O'yinchi hozir «{0}» o'yinida stavka bilan o'ynayapti — partiya tugamaguncha uni talon qilib bo'lmaydi.
+1012	O'yinchi hozir stavkali o'yinda — partiya tugamaguncha uni talon qilib bo'lmaydi.
+1013	O'yinchi allaqachon boshqa klanda.
+1014	O'yinchi allaqachon klanda.
+1015	Shu chat o'yinchisi
+1016	O'yinchi №{0}
+1017	O'yinchi №{0} {1} Daraja: {2} {3} Sinf: {4} {5} Jihozlar reytingi: {6}
+1019	Shu chat o'yinchilari
+1020	O'yinlar
+1022	O'yinlar va mukofotlar
+1023	Boshqa topshiriq bajarilmoqda
+1024	Yerdan yirtqich novdalar otilib chiqmoqda!
+1025	Ayato va Ayaka Kamisato qaysi mintaqadan?
+1026	Ke Sin qaysi mintaqadan?
+1027	Sarkofaglardan sharpalar otilib chiqmoqda!
+1028	Yoriqlardan magma jinlari otilib chiqmoqda!
+1029	Ombordan resurslar tadqiqotga sarflandi.
+1030	Vulqon otilishi
+1031	Otilish butun guruhni qoplaydi. Bir yurish zaryadlanadi.
+1032	Saroy nomini o'zgartirish
+1033	Retsept o'rganilmoqda…
+1034	Retseptni o'rganish · {0} 🪙
+1035	Immunitet
+1036	Qilichni uzaytirishda manfiy son tushishidan immunitet
+1037	qilich uzayishidan immunitet
+1038	Qilich uzayishidan immunitet
+1039	Qilich qisqarishidan immunitet
+1040	Qilich immuniteti
+1041	Talondan immunitet: {0}
+1042	Ism
+1043	Inadzuma
+1044	Inventar
+1045	Inventar yo'q:
+1046	Qahramon inventari mavjud emas.
+1047	Inventar: {0} ishlatildi.
+1048	Inkvizitor
+1049	Asboblar
+1050	Guruh haqida ma'lumot
+1051	Botda amalga oshirilgan turli mini-o'yinlar haqida ma'lumot
+1052	O'zing haqingda ma'lumot
+1053	Istehzoli
+1054	Istehzoli (qo'pol bo'lishi mumkin)
+1055	Chiqarish
+1056	Momaqaldiroq toshbaqasining uchquni. Kivahudan kam uchraydigan o'lja.
+1057	Momaqaldiroq uchquni
+1058	Egizaklar o'chog'idan uchgan uchqun.
+1059	Uchqun xanjari
+1060	1400% zarar yetkazuvchi yondiruvchi zarba, zararning 15% ini salomatlik sifatida qaytaradi.
+1061	Olovda sinab ko'r: jang mahoratlarini ishlat
+1062	Tadqiqot hali tayyor emas.
+1063	Tadqiqot hali to'liq moliyalashtirilmagan.
+1064	Tadqiqot yakunlandi: {0}.
+1065	Tadqiqot bekor qilindi, resurslar omborga qaytarildi.
+1066	Mana manbai
+1067	Iksirlar bilan davolash
+1068	Mahoratlar bilan davolash
+1069	O'zingni va guruhni davola: Tong yulduzi nurini ishlat
+1070	Salomatlikning 100% ini davolaydi va mananing 25% ini qaytaradi.
+1071	Salomatlikning 70% ini davolaydi.
+1072	Boshqalarni davolab, o'zimizni ham davolaymiz. Odamlarni halokat yoqasidan qaytara olishingni ko'rsat.
+1073	natija {0}, kerak {1}–{2}
+1074	K
+1075	Kechga borib hammasi joyiga tushadi, garchi avval to'liq tartibsizlikka o'xshasa ham.
+1076	Har bir o'yinchiga o'yin boshida bitta unsur beriladi, ular birinchi taqsimotda takrorlanmaydi.
+1077	Har daqiqada ma'lum miqdorda HP tiklaydi.
+1079	Kazarma
+1080	Xazina
+1081	Soyadan qatl
+1082	Azizlar qatli
+1083	Kichkina hamroh-sayohatchining ismi nima?
+1084	Mondshtadtdagi sayohatchi bardning ismi nima?
+1085	Inadzuma mintaqasining poytaxti nima deb ataladi?
+1086	Qanday foydalanish
+1087	Ibodatlar (bannerlar) uchun qaysi valyuta ishlatiladi?
+1088	Gan Yu qanday qurol ishlatadi?
+1089	Dilyuk qanday qurol ko'taradi?
+1090	Sumeruni qaysi Arxont boshqaradi?
+1091	Fontenni qaysi Arxont boshqaradi?
+1092	Kli qaysi unsurni boshqaradi?
+1093	Xu Tao qaysi unsurni boshqaradi?
+1094	Taxt yonidagi tosh farishta.
+1095	Kor toshdan jangchisi.
+1096	Olovli qa'rdan chiqqan tosh devqomat. Uning zarbalari g'orni larzaga soladi, issiqlik chaqnashlari butun guruhni kuydiradi.
+1097	Tosh parchasi
+1098	Tosh bo'roni
+1099	Tosh
+1100	Bastion toshi
+1101	Toshlar uch kishiga uradi.
+1102	Taqdir toshlari
+1103	La'natlangan kema kapitani. U zulmatda g'oyib bo'ladi va soyalardan uradi, uning jamoasi charchashni bilmaydi.
+1104	Qo'riqchi kapitani
+1105	Buzilish tomchisi
+1106	Parining yuragidan toza suv tomchisi. Avroradan kam uchraydigan o'lja.
+1107	Osmon jazosi
+1108	Cherkovning jazolovchi qo'li. Muqaddas olov va yarador dushmanga tugatuvchi zarba.
+1109	300% zarar yetkazuvchi jazolovchi zarba. Yetkazilgan zararning 8% ini salomatlik sifatida qaytaradi.
+1110	Karnevorus Isse
+1111	Kartalar hali tarqatilmagan
+1112	Mushtlar
+1113	Katalizator
+1114	Toifalar
+1115	Sifat
+1116	Kasb topshirig'i bajarildi!
+1117	2- va 3-kasb topshiriqlari
+1118	Kivahu
+1119	Kivahu momaqaldiroq ruhlarini chaqirmoqda!
+1120	Xanjar
+1121	Kislotali nish
+1122	Klan
+1123	«{0}» klani · shu chatda {1}
+1124	Klan va do'stlar
+1125	Klan topilmadi.
+1126	Bunday nomli klan allaqachon mavjud.
+1127	Klan hozir urushda ishtirok etmayapti.
+1128	Raqib klan topilmadi.
+1129	Raqib klan allaqachon urushda.
+1130	Klan: {0}
+1131	Klan viktorinasi
+1132	Klan ombori
+1133	Klan bossi allaqachon chaqirilgan.
+1134	Klanlar
+1135	Sinf
+1136	Sinf · {1}-daraja
+1137	Aniq ixtisoslikka ega bo'lmagan sinf; ajoyib mahorat yoki qobiliyatga ega bo'lmagan sarson.
+1138	Sinf o'zgartirildi: {0}.
+1139	Sinfni haftada faqat bir marta o'zgartirish mumkin.
+1140	Sinfni hozir o'zgartirish mumkin
+1141	Berserk sinfi: dahshatli kuch uchun salomatlik bilan to'laydi. Yuqori HP zaxirasi, zarbalar seriyasi va vampirizm.
+1142	Yaqin jang uchun mo'ljallangan, yuqori himoya va hujum kuchiga ega jangchi sinfi
+1143	Yuqori chidamlilik va himoyaga ega, ittifoqchilarni davolay oladigan ruhoniy sinfi
+1144	Uzoq masofadan yuqori jismoniy zarar yetkaza oladigan kamonchi sinfi.
+1145	Sehrli hujumlarga ixtisoslashgan, yuqori tezlik va managa ega sehrgar sinfi
+1146	Qaroqchi sinfi: xanjarlar bilan chaqmoqdek zarbalar, kritik zararning katta ehtimoli va chaqqonlik, lekin deyarli zirhsiz.
+1147	Sinf, jins va xususiyatlar
+1148	Sinf, jins, xususiyatlar, inventar, jihozlar va binolar — har birining o'z ekrani bor.
+1149	Sinflar: {0}
+1150	Klaymor
+1151	Pichoqlar uch jangchini chopmoqda.
+1152	Qip-qizil hayot pichog'i
+1153	Soyalar pichog'i
+1154	Pichoq endi — qo'lingning davomi. Soyalarga xush kelibsan.
+1155	Yetakchi tishi
+1156	Qasam kuch beradi: keyingi 4 ta hujumda bossga zarar +35%.
+1157	Yorug'lik qasami
+1159	Yasash
+1160	YASASH YAKUNLANDI
+1161	Yasash muvaffaqiyatsiz — materiallar yo'qoldi. +{0} tajriba{1}
+1162	Retseptlar bo'yicha yasash
+1163	Boss o'ldirilganda mukofotlar beriladi: oltin va tajriba. Eng katta mukofotni dastlabki 3 o'rin oladi.
+1164	Bo'ron changali
+1165	Jodugar changali
+1166	Iblis changali
+1167	Olovli ajdaho changallari
+1168	Kod
+1169	Kod: 3–40 belgi — harflar, raqamlar, _ yoki -.
+1170	Teri
+1171	Tog' echkisi
+1172	Miqdor
+1173	Miqdor (qo'shish uchun; manfiy ham bo'lishi mumkin)
+1174	Yutuqlar soni
+1175	Mukofot miqdori: 1 dan {0} gacha butun son.
+1176	Chaqiruvlar soni
+1177	Kolleksiya va noyoblik
+1178	Uzuk
+1180	Buyruq hali sovimoqda.
+1181	Jamoaviy jang
+1182	Komandor Eldrik
+1183	Buyruqlar topilmadi.
+1187	Resurs to'playmiz
+1188	Nayza
+1189	Suv nayzalari ikki kishini teshmoqda.
+1190	Suyak nayzalari uch kishiga uradi.
+1191	Nayzalar uch kishini teshmoqda.
+1192	Kor g'or qo'riqchilarini uyg'otmoqda!
+1193	kor.
+1194	Kor
+1195	Kema zulmatga cho'kmoqda — kapitanlar soyalardan chiqmoqda!
+1196	Malika askarlarni chaqirmoqda — chumoli uyasi tashqariga to'kildi!
+1197	Qirollik gvardiyasi qalqonlarini yopmoqda!
+1198	Qirollik o't suyuqligi
+1199	Qirollik spirali
+1200	Qirollik
+1201	Saroy uchun qirollik ko'rinishi
+1202	Qirollik qo'riqchisi
+1203	Qirollik
+1204	Chumolilar malikasi
+1205	Qirol Bim
+1206	O'g'rilar qiroli
+1207	Qisqacha
+1208	Tungi tutilish o'roq
+1209	Yetti unsur o'rog'i
+1210	Quyosh tongi o'rog'i
+1211	Suyak nayzalari
+1212	Zirh mustahkamligi
+1213	Qal'a
+1214	Salibchi
+1215	Salibchilar ikki marta o'ladi: birinchisi — jangda, ikkinchisi — ular unutilganda. Feniks patini olib kel, sen hech o'lmaysan.
+1216	Krio
+1217	Krio Xabarchisi
+1218	Kristall {0}
+1219	kristall
+1220	Kristallar
+1221	kristallar {0}{1}
+1222	Kristallar yo'q qilingan jihozlardan tushadi
+1224	Maqbara kristallari yorilib, bolalar to'dasini chiqarmoqda!
+1226	Billur nayzalar
+1227	Billur to'da
+1228	Kritik +{0}%
+1229	Krit. zarar
+1230	bossga kritik zarar
+1231	Krit. ehtimol
+1232	Kritik zarar
+1233	Kritik zarar +20%, 20 daqiqaga (umumiy chegaragacha).
+1234	Qonli zirh
+1235	Qonli o'rim
+1236	Qonli g'azab
+1237	Qon qaynayapti! Endi sen haqiqiy jangchisan.
+1238	Kichkina HP tiklash iksiri
+1239	Kichkina MP iksiri
+1240	Kichkina HP iksiri
+1241	Olovda aylanib, hammaga tegadi.
+1242	Aylantirish
+1243	G'ildirakni aylantirish
+1244	O'lja bilan o'ynaydigan qanotli jodugar: goh jang maydoni ustida aylanadi, goh eng xavfli jangchiga tushadi.
+1245	Jodugarning qanotli xizmatkori.
+1246	Bu qahramonlardan qaysi biri Geo Arxonti?
+1247	Kubiklar
+1248	Kubiklar, bouling, darts, futbol, basketbol va slotlar — bitta zalda. Qotib qolgan partiyani shu yerning o'zidan tiklash mumkin.
+1249	Kubiklar, sport va slotlar
+1250	Qayerga boramiz?
+1251	Buyum yasalmoqda…
+1252	Temirchi Xarald
+1253	Temirchilik
+1254	Qilich temirchiligi
+1255	Temirchilik ustaxonasi
+1257	Sotib olingan kristallar 7 kun talonchilikdan himoyalangan.
+1258	{0} 💎 sotib olindi
+1259	Sotib olindi: {0}
+1260	Kurs:
+1261	Keya
+1262	Lava ikki kishining oyog'i ostidan otilmoqda.
+1263	Qor ko'chkisi
+1264	Qor ko'chkisi butun guruhga tushmoqda.
+1265	Lava geyzeri
+1266	Lava ajdahochasi
+1267	Lava changali
+1268	Lava changali. Valakasdan tushadi.
+1269	Sher
+1270	Chap bosh olov purkaydi. U tirik ekan, Tiamaruni o'ldirib bo'lmaydi.
+1271	Chap qo'l
+1272	Chap sirg'a
+1273	Chap uzuk
+1274	Chap quloq
+1275	Yengil
+1276	Butun guruhga muzli bo'ron.
+1277	Muz bolasi
+1278	Muz mushti
+1279	Muz orangutani
+1280	Muz depsinishi
+1281	Muz tikani
+1282	Muz kishanlari
+1283	Tubsiz manali tabib. Tez davolash, duolar va manani qaytarish.
+1284	O'rmon seni qabul qiladi. Xaritada yo'q yo'llardan yur.
+1285	Davolash
+1286	Li Yue
+1287	Foydalanish chegarasi (bo'sh — cheksiz)
+1288	Foydalanish chegarasi: 1 dan boshlab butun son.
+1289	Snayper linzasi
+1290	Jangni boshqaradigan lich-qo'g'irchoqboz. Uning musiqasi chalinar ekan, yaqinlari ayamaydi; kuyni bosib qo'y, ular zaiflashadi.
+1291	Tinchlik topmagan lich. U halok bo'lgan xizmatkorlarni to'lqin-to'lqin ko'taradi, eng ko'p zarar yetkazganga uning teginishi o'lim keltiradi.
+1292	zararning bir qismini ushlab oladi
+1293	Bot logi: {0}
+1294	Log senga shaxsiy xabarda yuborildi.
+1295	Chirmovuq bitta jangchini o'rab, bo'g'moqda.
+1296	Bo'g'uvchi chirmovuq
+1297	Kamon
+1298	Quyosh toji kamoni
+1299	Oy soyasi

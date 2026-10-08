@@ -47,3 +47,6 @@
 @keyframes paper-doll-breathe{from{transform:scale(1)}to{transform:scale(1.025) translateY(-4px)}}
 @media(max-width:390px){.paper-doll-stage.has-portrait{min-height:440px}.paper-doll-stage.has-portrait .paper-doll-slot{width:48px;height:48px}}
 @media(prefers-reduced-motion:reduce){.paper-doll-portrait{animation:none}}
+
+
+.paper-doll-stage[style*='/art/world/'] .paper-doll-portrait { background-size: contain; background-position: center; mask-image: none; -webkit-mask-image: none; animation: none; }

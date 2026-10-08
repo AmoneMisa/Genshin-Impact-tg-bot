@@ -92,3 +92,5 @@
 .ex-pack-price b { font: 800 14px/1 system-ui, sans-serif; }
 .ex-shield { margin: 0; font-size: 12px; line-height: 1.4; color: rgba(238, 228, 207, .7); }
 .exchange-overlay.busy .ex-pack { opacity: .6; pointer-events: none; }
+
+.ex-pack .world-painted-icon { width: 80px; height: 80px; object-fit: contain; justify-self: center; }

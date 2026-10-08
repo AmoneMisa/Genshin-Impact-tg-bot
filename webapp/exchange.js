@@ -1,4 +1,5 @@
 import { icon } from './icons.js';
+import { worldIconHtml } from './art/world-art.js';
 
 const REASONS = {
   invalid_amount: 'Укажи целое положительное количество кристаллов.',
@@ -43,6 +44,7 @@ export function starsHtml(stars) {
       <div class="ex-packs">
         ${stars.packs.map(pack => `
           <button type="button" class="ex-pack" data-star-pack="${pack.id}" aria-label="${pack.title}: ${formatNumber(pack.crystals)} кристаллов за ${pack.stars} звёзд">
+            ${worldIconHtml(`stars/${pack.id}`, 80)}
             <span class="ex-pack-crystals">${icon('gem')}<strong>${formatNumber(pack.crystals)}</strong></span>
             <em class="ex-pack-bonus ${first && pack.firstBonus ? 'first' : ''}">${first && pack.firstBonus ? `+${formatNumber(pack.firstBonus)} бонус` : pack.bonusPercent ? `+${pack.bonusPercent}%` : '&nbsp;'}</em>
             <span class="ex-pack-price">${icon('star')}<b>${formatNumber(pack.stars)}</b></span>

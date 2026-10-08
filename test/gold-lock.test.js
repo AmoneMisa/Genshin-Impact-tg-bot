@@ -57,7 +57,7 @@ test('betting at one Mini App table while seated at another is refused', () => {
 
 test('gold-spending bot buttons are recognised with their game chat', () => {
   assert.deepEqual(goldSpendCallback('shop.-100123.potions.hp.buy'), { chatId: '-100123', except: null });
-  assert.deepEqual(goldSpendCallback('builds.-100123.forge.craft_rare.0'), { chatId: '-100123', except: null });
+  assert.deepEqual(goldSpendCallback('builds.-100123.forge.rm_12.0'), { chatId: '-100123', except: null });
   assert.deepEqual(goldSpendCallback('sendGoldRecipient.-100123.42'), { chatId: '-100123', except: null });
   assert.deepEqual(goldSpendCallback('dice_allin_bet'), { chatId: null, except: 'dice' });
   assert.deepEqual(goldSpendCallback('clan.contribute_gold'), { chatId: null, except: null });
@@ -65,7 +65,7 @@ test('gold-spending bot buttons are recognised with their game chat', () => {
   assert.deepEqual(goldSpendCallback('points_double_bet'), { chatId: null, except: 'points' });
   assert.equal(goldSpendCallback('clan.contribute_crystals'), null);
   assert.equal(goldSpendCallback('shop.-100123.potions'), null);
-  assert.equal(goldSpendCallback('builds.-100123.forge.craft_rare'), null);
+  assert.equal(goldSpendCallback('builds.-100123.forge.rm_12'), null);
 });
 
 test('an arcade game with a bet holds the lock (chat and Mini App), expiring if abandoned', () => {

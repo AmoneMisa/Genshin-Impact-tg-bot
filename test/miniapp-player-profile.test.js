@@ -25,12 +25,12 @@ function session() {
   };
 }
 
-test('profile exposes four selectable combat classes and current gender', () => {
+test('profile exposes the six base combat classes and current gender', () => {
   const state = getPlayerProfileState(session(), 1000);
   assert.equal(state.gender, 'male');
   assert.equal(state.currentClass.name, 'noClass');
   assert.equal(state.classChangeRemainingMs, 0);
-  assert.deepEqual(state.classes.map(item => item.name), ['warrior', 'mage', 'priest', 'archer']);
+  assert.deepEqual(state.classes.map(item => item.name), ['warrior', 'mage', 'priest', 'archer', 'rogue', 'berserk']);
   assert.ok(state.classes.every(item => item.stats.maxHp > 0));
 });
 
@@ -72,4 +72,20 @@ test('gender accepts only legacy male/female values', () => {
   assert.equal(player.gender, 'female');
   assert.equal(changePlayerGenderForMiniApp(player, 'other', 1000).reason, 'unknown_gender');
   assert.equal(player.gender, 'female');
+});
+
+test('professions are earned by quest, never picked from the class list', () => {
+  const player = session();
+  assert.equal(changePlayerClassForMiniApp(player, 'crusader', 1000).reason, 'unknown_class');
+  assert.equal(changePlayerClassForMiniApp(player, 'titan', 1000).reason, 'unknown_class');
+});
+
+test('switching to another base class drops a running profession quest but keeps earned ones', () => {
+  const player = session();
+  changePlayerClassForMiniApp(player, 'warrior', 1000);
+  player.game.classQuest = { active: { to: 'crusader', progress: {} }, completed: ['warden'] };
+  const result = changePlayerClassForMiniApp(player, 'mage', 1000 + 8 * 24 * 60 * 60 * 1000);
+  assert.equal(result.ok, true);
+  assert.equal(player.game.classQuest.active, null);
+  assert.deepEqual(player.game.classQuest.completed, ['warden']);
 });

@@ -1,92 +1,36 @@
-import statsDictionary from '../../../dictionaries/statsDictionary.js';
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
+import statsDictionary from '../../../dictionaries/statsDictionary.js';
 import inventory from '../../../dictionaries/inventory.js';
-import getEmoji from '../../../functions/getters/getEmoji.js';
-import isStatPenalty from '../../game/equipment/isStatPenalty.js';
+import { describeItemStats } from './describeStats.js';
+import { getEnchantLevel, safeEnchantLevel } from './itemBonuses.js';
 
-function getStr(key, value) {
-    let strValue;
+const CLASS_NAMES = {warrior: 'Воин', assassin: 'Разбойник', archer: 'Лучник', priest: 'Жрец', mage: 'Маг'};
 
-    if (key.match(/Mul$/) || key === "incomingDamageModifier") {
-        value = ((value - 1) * 100);
-        strValue = value.toFixed(2) + '%';
-    } else {
-        strValue = '' + value;
-    }
-
-    if (value > 0) {
-        strValue = '+' + strValue;
-    }
-
-    return `${getEmoji(key)} ${statsDictionary[key]}: ${strValue}\n`;
-}
-
+/** Text card of an equipment item for the chat bot. */
 export default function (item) {
-    let str = `${item.name}\n\n`;
+    const enchant = getEnchantLevel(item);
+    let str = `${enchant ? `+${enchant} ` : ''}${item.name}\n`;
+    str += `Грейд: ${item.grade === 'noGrade' ? 'без грейда' : item.grade}\n\n`;
 
-    str += `Класс: `;
+    const owners = (item.classOwner || []).map(owner => CLASS_NAMES[owner] || statsDictionary[owner]).filter(Boolean);
+    if (owners.length) str += `Классы: ${owners.join(', ')}\n\n`;
 
-    for (let classOwner of item.classOwner) {
-        if (classOwner === "assassin") {
-            continue;
-        }
-
-        str += `${statsDictionary[classOwner]} `;
-    }
-
-    str += "\n\n";
-
-    str += `Минимальный уровень для использования: ${equipmentTemplate.grades.find(grade => grade.name === item.grade).lvl.from}\n\n`;
+    const grade = equipmentTemplate.grades.find(entry => entry.name === item.grade);
+    if (grade) str += `Минимальный уровень для использования: ${grade.lvl.from}\n\n`;
 
     str += `Характеристики:\n`;
-
-    if (item.mainType === "shield") {
-        for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
-            str += getStr(characteristicKey, characteristicValue);
-        }
-    } else if (item.mainType === "armor" || item.mainType === "jewelry") {
-        for (let [characteristicKey, characteristicValue] of Object.entries(item.characteristics)) {
-            str += getStr(characteristicKey, characteristicValue);
-        }
-
-        str += `Тип: ${getEmoji(item.kind)} ${item.translatedName}\n`;
-        str += `Слот: `;
-
-        for (let slot of item.slots) {
-            str += `${inventory[slot]} `;
-        }
-
-        str += "\n";
-
-    } else if (item.mainType === "weapon") {
-        str += `${getEmoji("power")} ${statsDictionary["power"]} : ${item.characteristics.power}\n`;
-        if (item.slots.length === 1) {
-            str += `${getEmoji("oneHanded")} Одноручное\n`;
-        } else {
-            str += `${getEmoji("twoHanded")} Двуручное\n`;
-        }
+    for (const line of describeItemStats(item)) {
+        str += `• ${line.text}\n`;
     }
 
-    let filteredStats = item.stats.filter(_stat => !isStatPenalty(_stat.name, _stat.value));
-
-    if (filteredStats.length) {
-        str += `\n${getEmoji(item.rarity)} Дополнительные характеристики:\n`;
-        for (let stat of filteredStats) {
-            str += getStr(stat.name, stat.value);
-        }
+    if (item.mainType === 'weapon') {
+        str += item.slots?.length === 1 ? 'Одноручное\n' : 'Двуручное\n';
+    } else if (item.slots?.length) {
+        str += `Слот: ${item.slots.map(slot => inventory[slot] || slot).join(' ')}\n`;
     }
 
-    let penalty = item.stats.filter(_stat => isStatPenalty(_stat.name, _stat.value));
-
-    if (penalty.length) {
-        str += `\nОтрицательные характеристики:\n`;
-        for (let stat of penalty) {
-            str += getStr(stat.name, stat.value);
-        }
-    }
-
-    str += `\n${getEmoji("quality")} Качество предмета: [${item.quality.current} / ${item.quality.max}]\n`;
-    str += `${getEmoji("persistence")} Прочность предмета: [${item.persistence.current} / ${item.persistence.max}]\n`;
+    if (item.setName) str += `\nВходит в: ${item.setName} (бонус за полный комплект)\n`;
+    if (item.grade !== 'noGrade' && item.slots?.length) str += `\nБезопасная заточка до +${safeEnchantLevel(item)}\n`;
 
     return str;
-};
+}

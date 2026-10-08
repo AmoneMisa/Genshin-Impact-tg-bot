@@ -1,14 +1,7 @@
 import bot from '../../../../bot.js';
-import getRandom from '../../../getters/getRandom.js';
+import computeBossHp from '../bossHp.js';
 
-export default async function(bossSkill, chatId) {
+export default async function(bossSkill, chatId, bossTemplate) {
     let countChatMembers = await bot.getChatMemberCount(chatId);
-    let maxHp = countChatMembers * 6780;
-    let hp = getRandom(maxHp * 3.75, maxHp);
-
-    if (bossSkill.effect.includes("rage")) {
-        hp = hp / 2;
-    }
-
-    return hp;
+    return computeBossHp({members: countChatMembers, template: bossTemplate, skillEffect: bossSkill.effect});
 }

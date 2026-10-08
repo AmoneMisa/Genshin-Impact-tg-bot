@@ -148,3 +148,12 @@
 @keyframes arena-clash { 0% { opacity: 0; transform: scale(.3); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.4); } }
 @keyframes arena-result-in { from { opacity: 0; transform: translateY(20px) scale(.8); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .arena-emblem.large, .arena-match, .arena-vs *, .arena-btn.searching { animation: none !important; } }
+
+.arena-hero-art[style] { background: linear-gradient(180deg,rgba(10,8,14,.1) 30%,rgba(10,8,14,.92)),var(--arena-painting) center / cover no-repeat; }
+.arena-emblem.painted { background: none; border: 0; clip-path: none; box-shadow: none; }
+.arena-emblem.painted img { width: 100%; height: 100%; object-fit: contain; }
+.arena-emblem.painted::before,.arena-emblem.painted::after { display: none; }
+
+.arena-head { grid-template-columns: 44px 1fr 44px; }
+.arena-round { width: 44px; height: 44px; }
+.arena-mode-tabs button { min-height: 44px; }

@@ -28,6 +28,9 @@
 
 .chest-panel .chest-grid { gap: 8px; }
 .chest-panel .chest-tile {
+  min-height: 0;
+  display: block;
+  transform-style: flat;
   border-radius: 8px;
   border: 1px solid #3a3440;
   background: radial-gradient(circle at 50% 70%, rgba(255, 190, 110, .10), rgba(8, 8, 14, .75) 70%);
@@ -71,7 +74,7 @@
   border: 1px solid #3a3440;
   background: radial-gradient(circle at 50% 40%, #241e2c, #0e0c12);
   font-size: 20px;
-  animation: chest-shimmer 3.2s ease-in-out infinite;
+  box-shadow: inset 0 0 10px rgba(216, 179, 106, .1);
 }
 .chest-possible-item:nth-child(2) { animation-delay: .4s; }
 .chest-possible-item:nth-child(3) { animation-delay: .8s; }
@@ -107,14 +110,19 @@
   position: relative;
   width: min(78vw, 300px); aspect-ratio: 1;
 }
-.chest-reveal-stage .chest-3d-canvas { z-index: 1; }
+.chest-reveal-stage .chest-art { z-index: 1; }
+.chest-reveal-stage.painted-scene { width: 100%; aspect-ratio: 3 / 2; }
+.painted-scene .chest-art, .painted-scene .chest-reveal-rays { visibility: hidden; }
+.chest-scene { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+.chest-possible-item .world-painted-icon { width: 100%; height: 100%; object-fit: contain; }
+.chest-prize-tile .world-painted-icon { width: 64px; height: 64px; object-fit: contain; }
+.chest-summary-row .world-painted-icon { width: 44px; height: 44px; object-fit: contain; }
 .chest-reveal-rays {
   position: absolute; inset: -10%; z-index: 0;
   background: conic-gradient(from 0deg, transparent 0 10deg, rgba(255, 210, 120, .22) 14deg, transparent 20deg 40deg, rgba(255, 210, 120, .18) 46deg, transparent 52deg 80deg, rgba(255, 210, 120, .2) 86deg, transparent 92deg 120deg);
   -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent);
   mask-image: radial-gradient(closest-side, #000 30%, transparent);
-  animation: chest-rays 12s linear infinite, chest-rays-in 1s ease-out both;
-  animation-delay: 0s, .5s;
+  animation: chest-rays-in .8s ease-out both;
 }
 .chest-reveal-stage.empty .chest-reveal-rays { display: none; }
 .chest-reveal-stage.fallback::after { content: "🧰"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 110px; animation: reward-pop .4s ease both; }
@@ -186,4 +194,33 @@
 
 @media (prefers-reduced-motion: reduce) {
   .chest-panel .chest-tile, .chest-possible-item, .chest-reveal-rays, .chest-prize-tile, .chest-summary-row, .chest-reveal .chest-btn { animation: none !important; }
+  .chest-overlay *, .chest-overlay *::before, .chest-overlay *::after { transition: none !important; animation: none !important; }
 }
+
+/* Two cached paintings, requested at thumbnail or reveal sizes only. */
+.chest-art { position: absolute; inset: 0; pointer-events: none; }
+.chest-art-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity .4s ease; }
+.chest-art-closed.loaded { opacity: 1; }
+.chest-art-open { z-index: 1; }
+.chest-art.is-open .chest-art-open.loaded { opacity: 1; }
+.chest-art.is-open:has(.chest-art-open.loaded) .chest-art-closed { opacity: 0; }
+.chest-art-fallback { position: absolute; inset: 0; display: grid; place-items: center; font-size: clamp(28px, 10vw, 90px); }
+.chest-art:has(.loaded) .chest-art-fallback { display: none; }
+.chest-art-image.failed { display: none; }
+.chest-art.depleted { filter: grayscale(1) brightness(.65); }
+.chest-art.has-treasure::before { content: ''; position: absolute; inset: 10% 5%; background: radial-gradient(ellipse at 50% 55%, #ffd48280, transparent 65%); animation: chest-rays-in .6s ease-out both; }
+.chest-panel .chest-tile.opened { display: block; }
+.chest-panel .chest-tile.historical { animation: none; }
+.chest-reward { bottom: 3px; background: linear-gradient(transparent, #08070ce8 35%); padding-top: 8px; }
+.chest-reward .reward-icon { font-size: 16px; }
+.chest-reward strong { font-size: 12px; }
+.chest-reveal { min-height: 430px; }
+@media (max-width: 360px) {
+  .chest-panel { gap: 8px; }
+  .chest-head h2 { font-size: 16px; }
+  .chest-reveal-stage { width: min(72vw, 250px); }
+}
+
+.chest-panel:has(.chest-reveal:not([hidden])) { min-height: min(620px, 88vh); }
+
+.chest-reveal { background-color: #08070c; }

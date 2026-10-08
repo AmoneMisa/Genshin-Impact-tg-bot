@@ -1,5 +1,4 @@
-import playerDamagePlayer from "../arena/playerDamagePlayer.js";
-import getMaxHp from "../player/getters/getMaxHp.js";
+import playerDamagePlayer, { poolPercent } from "../arena/playerDamagePlayer.js";
 
 /**
  * Simulates a friendly duel between two live clan members.
@@ -16,10 +15,11 @@ import getMaxHp from "../player/getters/getMaxHp.js";
  *          result: 0 attacker wins, 1 attacker loses, 2 draw
  */
 export default function (attacker, defender) {
-    const [attackerHp, defenderHp] = playerDamagePlayer(attacker, defender, false, false, 60, false);
+    const [attackerHp, defenderHp, details] = playerDamagePlayer(attacker, defender, false, false, 60, false);
 
-    const attackerPercent = attackerHp / getMaxHp(attacker, attacker.game.gameClass) * 100;
-    const defenderPercent = defenderHp / getMaxHp(defender, defender.game.gameClass) * 100;
+    // Damage is taken from cp before hp, so compare the combined pools.
+    const attackerPercent = attackerHp <= 0 ? 0 : poolPercent(details.attacker);
+    const defenderPercent = defenderHp <= 0 ? 0 : poolPercent(details.defender);
 
     let result;
     if (defenderPercent <= 0.18) {

@@ -11,9 +11,9 @@
     "test": "node --test",
     "models:check": "node scripts/models/checkModels.js",
     "art:build": "node scripts/blender/art.js",
-    "models:chest": "node scripts/blender/build.js",
     "items:check": "node scripts/items/check-art.js",
-    "items:build": "python scripts/items/build-art.py"
+    "items:build": "python scripts/items/build-art.py",
+    "epic-art:build": "python scripts/items/build-epic-art.py && python scripts/items/build-art.py --source art-source/items/epic --prefix epic-"
   },
   "engines": {
     "node": ">=24 <25"

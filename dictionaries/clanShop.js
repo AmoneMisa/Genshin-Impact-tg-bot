@@ -1,10 +1,12 @@
+import buffPotions from '../template/buffPotions.js';
+
 /**
  * Clan shop catalogue.
  *
  * Items are funded by the shared clan warehouse (filled via contributions and
  * boss loot) and delivered to the buyer's personal inventory. Each `potion`
  * must match an entry in template/potionsInInventoryTemplate.js by
- * bottleType + type + power, otherwise delivery fails.
+ * bottleType + type + power (buff potions by `id`), otherwise delivery fails.
  *
  * Each member may claim one clan-shop item per week (see clanCallback.js).
  */
@@ -26,5 +28,12 @@ export default [
         label: "Зелье МП (300)",
         potion: { type: "mp", bottleType: "potion", power: 300 },
         cost: { gold: 3500 }
-    }
+    },
+    // Lineage II style buff potions (20 minutes), see template/buffPotions.js.
+    ...buffPotions.map(potion => ({
+        key: "buff-" + potion.id,
+        label: potion.name,
+        potion: { type: "buff", bottleType: potion.bottleType, id: potion.id },
+        cost: { gold: 4500, crystals: 3 }
+    }))
 ];

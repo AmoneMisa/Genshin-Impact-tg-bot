@@ -46,3 +46,33 @@ test('SP accumulates on top of whatever the player already has', () => {
 
   assert.equal(s.game.inventory.sp, 520);
 });
+
+import { spForLevelUp } from '../functions/game/player/setLevel.js';
+import { getSkillEnchantCost, SKILL_ENCHANT_MAX_LEVEL } from '../functions/game/player/skillEnchant.js';
+import classSkills from '../template/classSkillsTemplate.js';
+
+test('level-up SP grows with the level and keeps the old 20 at level 1', () => {
+  assert.equal(spForLevelUp(1), 20);
+  assert.ok(spForLevelUp(50) > spForLevelUp(10));
+  let total = 0;
+  for (let lvl = 1; lvl < 99; lvl++) total += spForLevelUp(lvl);
+  assert.ok(total > 8_000 && total < 11_000, `total ${total}`);
+});
+
+test('the skill upgrade economy is reachable: levelling pays for the build you actually play', () => {
+  const spToMax = skill => {
+    let sp = 0;
+    for (let level = 0; level < SKILL_ENCHANT_MAX_LEVEL; level++) sp += getSkillEnchantCost({ ...skill, enchantLevel: level }).sp;
+    return sp;
+  };
+  let levelIncome = 0;
+  for (let lvl = 1; lvl < 40; lvl++) levelIncome += spForLevelUp(lvl);
+  // By level 40 the levels alone pay for every base skill of a class...
+  const baseSkills = classSkills.warrior.filter(skill => skill.slot > 0);
+  assert.ok(baseSkills.reduce((sum, skill) => sum + spToMax(skill), 0) < levelIncome * 1.3);
+  // ...and the whole 3rd-class kit stays a long-term goal, not a free gift.
+  const full = classSkills.archmage.filter(skill => skill.slot > 0).reduce((sum, skill) => sum + spToMax(skill), 0);
+  let allLevels = 0;
+  for (let lvl = 1; lvl < 99; lvl++) allLevels += spForLevelUp(lvl);
+  assert.ok(full > allLevels * 0.8, `${full} vs ${allLevels}`);
+});

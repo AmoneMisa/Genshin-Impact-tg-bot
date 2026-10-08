@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--source', type=Path, default=ROOT / 'art-source/items')
 parser.add_argument('--out', type=Path, default=ROOT / 'webapp/art/items/v1')
 parser.add_argument('--only', nargs='+', help='Build only these newly approved source names')
+parser.add_argument('--prefix', default='', help='Prefix for the output names (epic jewellery uses epic-)')
 args = parser.parse_args()
 args.out.mkdir(parents=True, exist_ok=True)
 sources = sorted(args.source.glob('*.png'))
@@ -37,7 +38,7 @@ for source in sources:
             scaled = ImageOps.contain(image, (round(width * .9), round(height * .9)), Image.Resampling.LANCZOS)
             canvas = Image.new('RGBA', (width, height))
             canvas.alpha_composite(scaled, ((width-scaled.width)//2, (height-scaled.height)//2))
-            out = args.out / f'{source.stem}-{width}.webp'
+            out = args.out / f'{args.prefix}{source.stem}-{width}.webp'
             # Atomic replacement keeps a concurrent preview from decoding a partial file.
             temporary = out.with_suffix('.webp.tmp')
             budget = {128: 18000, 256: 45000, 512: 130000}[width]

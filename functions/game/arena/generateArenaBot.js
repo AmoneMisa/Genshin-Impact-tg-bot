@@ -4,16 +4,17 @@ import classStatsTemplate from '../../../template/classStatsTemplate.js';
 import getRandom from '../../getters/getRandom.js';
 
 export default function (rating = 1000) {
-    const availableClasses = classStatsTemplate.filter(item => item?.name && item.name !== 'noClass');
+    const normalizedRating = Math.max(0, Number(rating) || 1000);
+    const ratingObj = levelsMap.find(item => item.rating >= normalizedRating) || levelsMap.at(-1);
+    // A bot of this level can only be in a profession it could have reached.
+    const availableClasses = classStatsTemplate.filter(item => item?.name && item.name !== 'noClass' && (item.promoteLvl || 0) <= ratingObj.lvl);
     const classTemplate = availableClasses.length
         ? availableClasses[getRandom(0, availableClasses.length - 1)]
         : classStatsTemplate[0];
     const className = classTemplate?.name || 'noClass';
-
-    const normalizedRating = Math.max(0, Number(rating) || 1000);
-    const ratingObj = levelsMap.find(item => item.rating >= normalizedRating) || levelsMap.at(-1);
-    const stats = getClassStatsFromTemplate(className, ratingObj.lvl);
-    const skills = getClassSkillsFromTemplate(className);
+    // Copies: the arena simulation sorts a fighter's skills, which must never reorder the shared template.
+    const stats = structuredClone(getClassStatsFromTemplate(className, ratingObj.lvl));
+    const skills = structuredClone(getClassSkillsFromTemplate(className));
     const currentIndex = levelsMap.indexOf(ratingObj);
     const next = levelsMap[Math.min(currentIndex + 1, levelsMap.length - 1)];
     const minRating = ratingObj.rating === 0 ? 1000 : ratingObj.rating;

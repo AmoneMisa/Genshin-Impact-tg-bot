@@ -1,4 +1,5 @@
 import { escapeHtml } from './escape-html.js';
+import { worldArtUrl } from './art/world-art.js';
 const REASONS = {
   already_in_clan: 'Ты уже состоишь в клане.',
   invalid_name: 'Название клана должно быть от 1 до 40 символов.',
@@ -208,9 +209,12 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   function bannerHtml(clan) {
     const progress = clan.levelProgress || { current: 0, needed: 1000 };
     const percent = Math.min(100, progress.current / Math.max(1, progress.needed) * 100);
+    const tier = clan.level > 20 ? 4 : clan.level > 10 ? 3 : clan.level > 5 ? 2 : 1;
+    const banner = worldArtUrl(`clan/clan-banner-${tier}`);
+    const hall = worldArtUrl('clan/clan-hero',512);
     return `
-      <section class="clan-hero">
-        <div class="clan-banner" aria-hidden="true"><span>🌳</span></div>
+      <section class="clan-hero" ${hall ? `style="background-image:linear-gradient(90deg,rgba(8,7,12,.8),rgba(8,7,12,.7)),url('${hall}')"` : ''}>
+        <div class="clan-banner ${banner ? 'painted' : ''}" aria-hidden="true">${banner ? `<img src="${banner}" width="64" height="96" alt="" loading="lazy" decoding="async">` : '<span>🌳</span>'}</div>
         <div class="clan-hero-info">
           <h3>${escapeHtml(clan.name)}${clan.tag ? ` <small>[${escapeHtml(clan.tag)}]</small>` : ''}</h3>
           <div class="clan-hero-row"><span>Ур. ${clan.level}</span><span>👥 ${clan.members.length}</span><span>✦ ${formatNumber(clan.reputation)}</span></div>

@@ -1,5 +1,6 @@
 import { escapeHtml } from './escape-html.js';
 import { buildArtUrl } from './art/builds-art.js';
+import {flaskHtml} from './inventory.js';
 
 /** Item art: palace styles show their painting, the rest an emblem glyph. */
 export const ITEM_ICONS = Object.freeze({
@@ -12,6 +13,9 @@ export const ITEM_ICONS = Object.freeze({
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 
 export function itemIconHtml(item) {
+  if(item.potionId)return `<span class="shop-icon">${flaskHtml({type:'buff',id:item.potionId})}</span>`;
+  const potion={potionHp1000:{type:'hp',size:'little'},potionHp3000:{type:'hp',size:'small'},potionHp8000:{type:'hp',size:'medium'},elixirHp45:{type:'hp',bottleType:'elixir'},potionMp180:{type:'mp',size:'little'},potionMp300:{type:'mp',size:'small'}}[item.command];
+  if(potion)return `<span class="shop-icon ${potion.type}">${flaskHtml(potion)}</span>`;
   const art = ITEM_ART[item.command];
   const url = art ? buildArtUrl(art[0], 1, art[1]) : null;
   if (url) return `<span class="shop-icon art" style="--art:url('${url}')"></span>`;

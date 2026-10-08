@@ -6,7 +6,7 @@ import potionsInInventoryTemplate from "../../../template/potionsInInventoryTemp
  * or pushes a fresh one from the inventory template. Caller saves the chat.
  *
  * @param {Object} session - buyer member subdoc (current chat)
- * @param {{type:string, bottleType:string, power:number}} potion
+ * @param {{type:string, bottleType:string, power?:number, id?:string}} potion
  * @returns {boolean} true if delivered, false if no matching template exists
  */
 export default function (session, potion) {
@@ -15,22 +15,18 @@ export default function (session, potion) {
         return false;
     }
 
-    const existing = items.find(p =>
-        p.bottleType === potion.bottleType &&
-        p.type === potion.type &&
-        p.power === potion.power
-    );
+    // Buff potions share bottleType/type/power, so they are told apart by id.
+    const matches = p => potion.id
+        ? p.id === potion.id
+        : p.bottleType === potion.bottleType && p.type === potion.type && p.power === potion.power;
+    const existing = items.find(matches);
 
     if (existing) {
         existing.count++;
         return true;
     }
 
-    const template = potionsInInventoryTemplate.find(p =>
-        p.bottleType === potion.bottleType &&
-        p.type === potion.type &&
-        p.power === potion.power
-    );
+    const template = potionsInInventoryTemplate.find(matches);
 
     if (!template) {
         return false;

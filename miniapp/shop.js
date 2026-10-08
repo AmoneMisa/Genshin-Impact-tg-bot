@@ -27,6 +27,7 @@ export function getShopState(session, now = Date.now()) {
       id: item.command,
       command: item.command,
       name: item.name,
+      potionId:item.potionId || null,
       category: item.category,
       categoryLabel: CATEGORY_LABELS[item.category] || item.category,
       cost: Math.max(0, number(item.cost)),

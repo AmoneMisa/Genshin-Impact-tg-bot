@@ -1,3 +1,4 @@
+import { dealsDamage } from '../player/skillSimulation.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
 import getMaxCp from '../player/getters/getMaxCp.js';
 import getCurrentHp from '../player/getters/getCurrentHp.js';
@@ -23,17 +24,28 @@ import getDefence from '../player/getters/getDefence.js';
 import getAdditionalDamageMul from '../player/getters/getAdditionalDamageMul.js';
 import getIncomingDamageModifier from '../player/getters/getIncomingDamageModifier.js';
 import getPvpSign from '../arena/getPvpSign.js';
-import useHealSkill from '../player/useHealSkill.js';
-import useShieldSkill from '../player/useShieldSkill.js';
+import { getEffectiveSkillCost, getSkillCooldownMultiplier, getSkillPowerMultiplier } from '../player/skillEnchant.js';
+import { getRouteBonus } from '../player/skillRoutes.js';
+import { isMagicClass } from '../classes/classFamily.js';
 import getRandom from '../../getters/getRandom.js';
 import lodash from 'lodash';
 
-export default function (attacker, defender, defenderIsBot = false, attackerIsBot = false, battleTime = 5 * 60, isArena = false) {
+/**
+ * Share (0..100) of a fighter's combined hp + cp pool that the opponent has NOT taken
+ * (net of healing and regeneration). Costs a fighter pays for its own skills do not count
+ * here - they only matter through survival - so paying in hp is not an automatic loss.
+ */
+export function poolPercent({taken, maxHp, maxCp}) {
+    return Math.max(0, 100 - taken / ((maxHp + maxCp) || 1) * 100);
+}
+
+// options.defenderActs = false makes the defender a passive target (a raid on someone who is away).
+export default function (attacker, defender, defenderIsBot = false, attackerIsBot = false, battleTime = 5 * 60, isArena = false, {defenderActs = true} = {}) {
     let defenderObj;
 
     if (defenderIsBot) {
         defenderObj = {
-            className: defender.gameClass.name,
+            className: defender.gameClass.stats.name,
             lvl: defender.stats.lvl,
             effects: null,
             randomWeaponDamage: getEquipStatByName(defender, "randomDamage"),
@@ -41,11 +53,12 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             maxHp: getMaxHp(defender, defender.gameClass),
             cp: getMaxCp(defender, defender.gameClass),
             maxCp: getMaxCp(defender, defender.gameClass),
+            mp: getMaxMp(defender, defender.gameClass),
             maxMp: getMaxMp(defender, defender.gameClass),
             mpRestoreSpeed: getMpRestoreSpeed(defender, defender.gameClass),
             hpRestoreSpeed: getHpRestoreSpeed(defender, defender.gameClass),
             cpRestoreSpeed: getCpRestoreSpeed(defender, defender.gameClass),
-            skills: defender.gameClass.skills.sort(compareSkills).reverse(),
+            skills: [...defender.gameClass.skills].sort(compareSkills).reverse(),
             evasion: getEvasion(defender, defender.gameClass),
             block: getBlock(defender, defender.gameClass),
             accuracy: getAccuracy(defender, defender.gameClass),
@@ -57,11 +70,11 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             additionalDamageMul: getAdditionalDamageMul(defender, defender.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(defender, defender.gameClass),
             increasePvpDamage: 1,
-            decreaseIncomingPvpDamage: 1
+            decreaseIncomingPvpDamage: 0
         };
     } else {
         defenderObj = {
-            className: defender.game.gameClass.name,
+            className: defender.game.gameClass.stats.name,
             lvl: defender.game.stats.lvl,
             effects: defender.game.effects,
             randomWeaponDamage: getEquipStatByName(defender, "randomDamage"),
@@ -69,11 +82,12 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             maxHp: getMaxHp(defender, defender.game.gameClass),
             cp: getMaxCp(defender, defender.game.gameClass),
             maxCp: getMaxCp(defender, defender.game.gameClass),
+            mp: getCurrentMp(defender, defender.game.gameClass),
             maxMp: getMaxMp(defender, defender.game.gameClass),
             mpRestoreSpeed: getMpRestoreSpeed(defender, defender.game.gameClass),
             hpRestoreSpeed: getHpRestoreSpeed(defender, defender.game.gameClass),
             cpRestoreSpeed: getCpRestoreSpeed(defender, defender.game.gameClass),
-            skills: defender.game.gameClass.skills.sort(compareSkills).reverse(),
+            skills: [...defender.game.gameClass.skills].sort(compareSkills).reverse(),
             evasion: getEvasion(defender, defender.game.gameClass),
             block: getBlock(defender, defender.game.gameClass),
             accuracy: getAccuracy(defender, defender.game.gameClass),
@@ -95,7 +109,7 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
 
     if (attackerIsBot) {
         attackerObj = {
-            className: attacker.gameClass.name,
+            className: attacker.gameClass.stats.name,
             lvl: attacker.stats.lvl,
             effects: null,
             randomWeaponDamage: getEquipStatByName(attacker, "randomDamage"),
@@ -103,11 +117,12 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             maxHp: getMaxHp(attacker, attacker.gameClass),
             cp: getMaxCp(attacker, attacker.gameClass),
             maxCp: getMaxCp(attacker, attacker.gameClass),
+            mp: getMaxMp(attacker, attacker.gameClass),
             maxMp: getMaxMp(attacker, attacker.gameClass),
             mpRestoreSpeed: getMpRestoreSpeed(attacker, attacker.gameClass),
             hpRestoreSpeed: getHpRestoreSpeed(attacker, attacker.gameClass),
             cpRestoreSpeed: getCpRestoreSpeed(attacker, attacker.gameClass),
-            skills: attacker.gameClass.skills.sort(compareSkills).reverse(),
+            skills: [...attacker.gameClass.skills].sort(compareSkills).reverse(),
             evasion: getEvasion(attacker, attacker.gameClass),
             block: getBlock(attacker, attacker.gameClass),
             accuracy: getAccuracy(attacker, attacker.gameClass),
@@ -119,11 +134,11 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             additionalDamageMul: getAdditionalDamageMul(attacker, attacker.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.gameClass),
             increasePvpDamage: 1,
-            decreaseIncomingPvpDamage: 1
+            decreaseIncomingPvpDamage: 0
         };
     } else {
         attackerObj = {
-            className: attacker.game.gameClass.name,
+            className: attacker.game.gameClass.stats.name,
             lvl: attacker.game.stats.lvl,
             effects: attacker.game.effects,
             randomWeaponDamage: getEquipStatByName(attacker, "randomDamage"),
@@ -136,7 +151,7 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             mpRestoreSpeed: getMpRestoreSpeed(attacker, attacker.game.gameClass),
             hpRestoreSpeed: getHpRestoreSpeed(attacker, attacker.game.gameClass),
             cpRestoreSpeed: getCpRestoreSpeed(attacker, attacker.game.gameClass),
-            skills: attacker.game.gameClass.skills.sort(compareSkills).reverse(),
+            skills: [...attacker.game.gameClass.skills].sort(compareSkills).reverse(),
             evasion: getEvasion(attacker, attacker.game.gameClass),
             block: getBlock(attacker, attacker.game.gameClass),
             accuracy: getAccuracy(attacker, attacker.game.gameClass),
@@ -154,23 +169,35 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
 
     attackerObj.cooldowns = attackerObj.skills.map(_ => 0);
 
-    // Расчёт суммарного урона атакующего по противнику за несколько минут. По умолчанию - 5.
-    for (let i = 0; i < battleTime; i++) {
-        useSkills(defender, attackerObj, defenderObj, isArena);
-        useSkills(attacker, defenderObj, attackerObj, isArena);
+    attackerObj.fx = newFx();
+    defenderObj.fx = newFx();
+    attackerObj.taken = 0;
+    defenderObj.taken = 0;
 
-        attackerObj.mp = Math.min(attackerObj.maxMp, attackerObj.mp + attackerObj.mpRestoreSpeed);
-        attackerObj.cooldowns = attackerObj.cooldowns.map(cooldown => Math.max(0, cooldown - 1));
-        attackerObj.hp = Math.min(attackerObj.maxHp, attackerObj.hp + attackerObj.hpRestoreSpeed);
-        attackerObj.cp = Math.min(attackerObj.maxCp, attackerObj.cp + attackerObj.cpRestoreSpeed);
+    // Auto-fight: both sides play their skills every second until time runs out or
+    // one of them falls. A fallen fighter stays down (no regeneration back to life).
+    for (let t = 0; t < battleTime; t++) {
+        useSkills(attackerObj, defenderObj, isArena, t);
+        if (defenderActs && defenderObj.hp > 0) useSkills(defenderObj, attackerObj, isArena, t);
 
-        defenderObj.mp = Math.min(defenderObj.maxMp, defenderObj.mp + defenderObj.mpRestoreSpeed);
-        defenderObj.cooldowns = defenderObj.cooldowns.map(cooldown => Math.max(0, cooldown - 1));
-        defenderObj.hp = Math.min(defenderObj.maxHp, defenderObj.hp + defenderObj.hpRestoreSpeed);
-        defenderObj.cp = Math.min(defenderObj.maxCp, defenderObj.cp + defenderObj.cpRestoreSpeed);
+        if (attackerObj.hp <= 0 || defenderObj.hp <= 0) {
+            attackerObj.hp = Math.max(0, attackerObj.hp);
+            defenderObj.hp = Math.max(0, defenderObj.hp);
+            break;
+        }
+
+        for (const fighter of [attackerObj, defenderObj]) {
+            fighter.mp = Math.min(fighter.maxMp, fighter.mp + fighter.mpRestoreSpeed);
+            fighter.cooldowns = fighter.cooldowns.map(cooldown => Math.max(0, cooldown - 1));
+            gainHp(fighter, fighter.hpRestoreSpeed);
+            gainCp(fighter, fighter.cpRestoreSpeed);
+        }
     }
 
-    return [attackerObj.hp, defenderObj.hp];
+    // [attacker hp, defender hp, details]: damage is taken from CP before HP, so a fair
+    // comparison of the two fighters uses both pools (see poolPercent).
+    const pools = obj => ({hp: obj.hp, cp: obj.cp, maxHp: obj.maxHp, maxCp: obj.maxCp, taken: obj.taken});
+    return [attackerObj.hp, defenderObj.hp, {attacker: pools(attackerObj), defender: pools(defenderObj)}];
 }
 
 function compareSkills(skillA, skillB) {
@@ -180,69 +207,118 @@ function compareSkills(skillA, skillB) {
     return damageModifierA - damageModifierB;
 }
 
-function calculateDamage(skill, attackerObj, defenderObj, isArena) {
-    const isMagicClass = ['mage', 'priest'].includes(attackerObj.className);
-    let damage = 1;
-    let isHit = true;
-    let isBlocked = false;
+// Per-fight state of the profession-skill effects (self buffs, debuffs from the opponent).
+export const STUN_IMMUNITY_SECONDS = 20;
 
-    // Расчет попадания и уворота. Магические классы (на данный момент - маг, прист) всегда попадают скиллами, но могут увернуться.
-    // Так же, если уровень защитника на 8 и более, выше, чем уровень нападающего, защитник всегда уклоняется.
-    if (!isMagicClass || (defenderObj.lvl - attackerObj.lvl < 8)) {
-        let diff = limit(
-            attackerObj.accuracy - defenderObj.evasion,
-            -25, 10
-        );
-        let i = diff + 25;
-        let hitChance = chanceToHitTemplate[i] / 100;
-
-        isHit = Math.random() < hitChance;
-    }
-
-    if (isHit) {
-        damage = calcSkillDamage(skill, attackerObj, defenderObj);
-        // Проверка на блок урона
-        const blockRate = (defenderObj.block - 1) / (135 - 1);
-        // Минимальный шанс заблокировать урон - 1.75%, максимальный - 65%.
-        const blockChance = 0.0175 + (0.65 - 0.0175) * blockRate;
-
-        isBlocked = Math.random() < blockChance;
-
-        // Урон может быть уменьшен до 67% в зависимости от величины значения блока.
-        if (isBlocked) {
-            damage *= (1 - (blockRate * 0.67));
-        }
-    }
-
-    // Добавляем в расчёт рандомный разброс от оружия
-    let minDmg = 1 - attackerObj.randomWeaponDamage;
-    let maxDmg = 1 + attackerObj.randomWeaponDamage;
-    let rndDmg = getRandomWithoutFloor(minDmg, maxDmg);
-
-    // Добавляем показатели от медали арены, если считаем урон для арены
-    if (isArena) {
-        damage = Math.ceil(damage * rndDmg * attackerObj.increasePvpDamage * (1 - defenderObj.decreaseIncomingPvpDamage));
-    } else {
-     // Расчёт по умолчанию
-        damage = Math.ceil(damage * rndDmg);
-    }
-
+function newFx() {
     return {
-        damage,
-        isHit,
-        isBlocked
+        damage: null,      // {amount (%), charges}  - next attacks hit harder
+        critChance: null,  // {amount (points), charges}
+        critDamage: null,  // {amount (%), charges}
+        guardUntil: 0, guard: 0,
+        evadeUntil: 0, evade: 0,
+        hasteUntil: 0, haste: 0,
+        stunUntil: 0, stunImmuneUntil: 0,
+        armorBreakUntil: 0, armorBreak: 0,
+        weakenUntil: 0, weaken: 0,
     };
 }
 
-function calcSkillDamage(skill, attackerObj, defenderObj) {
+const active = (fx, name, t) => (fx[`${name}Until`] > t ? fx[name] : 0);
+
+function chargeBuff(fx, name) {
+    const buff = fx[name];
+    if (!buff || buff.charges <= 0) return 0;
+    return buff.amount;
+}
+
+function spendCharge(fx, name) {
+    if (fx[name] && fx[name].charges > 0) fx[name].charges--;
+}
+
+/**
+ * One attack with `skill`: every hit of a multi-hit skill rolls hit, crit and block on
+ * its own. Returns {damage, hits, hit} (damage already includes the arena medal).
+ */
+function calculateDamage(skill, attackerObj, defenderObj, isArena, t = 0) {
+    const magic = isMagicClass(attackerObj.className);
+    const hits = Math.max(1, Math.floor(skill.hits || 1));
+    let total = 0;
+    let landed = 0;
+
+    // Charges of damage / crit buffs are spent once per skill, not per hit.
+    const buffs = {
+        damage: chargeBuff(attackerObj.fx, 'damage'),
+        critChance: chargeBuff(attackerObj.fx, 'critChance'),
+        critDamage: chargeBuff(attackerObj.fx, 'critDamage'),
+    };
+    spendCharge(attackerObj.fx, 'damage');
+    spendCharge(attackerObj.fx, 'critChance');
+    spendCharge(attackerObj.fx, 'critDamage');
+
+    for (let i = 0; i < hits; i++) {
+        let damage = 1;
+        let isHit = true;
+
+        // Магические классы: см. комментарий в истории - бросок попадания пропускается, только если
+        // защитник на 8 и более уровней выше.
+        if (!magic || (defenderObj.lvl - attackerObj.lvl < 8)) {
+            const diff = limit(attackerObj.accuracy - defenderObj.evasion, -25, 10);
+            isHit = Math.random() < chanceToHitTemplate[diff + 25] / 100;
+        }
+
+        // Defender's dodge from an evade buff.
+        const evade = active(defenderObj.fx, 'evade', t);
+        if (isHit && evade > 0 && Math.random() < evade) isHit = false;
+
+        if (isHit) {
+            damage = calcSkillDamage(skill, attackerObj, defenderObj, buffs, t);
+            // Проверка на блок урона
+            const blockRate = (defenderObj.block - 1) / (135 - 1);
+            // Минимальный шанс заблокировать урон - 1.75%, максимальный - 65%.
+            const blockChance = 0.0175 + (0.65 - 0.0175) * blockRate;
+
+            // Урон может быть уменьшен до 67% в зависимости от величины значения блока.
+            if (Math.random() < blockChance) {
+                damage *= (1 - (blockRate * 0.67));
+            }
+            landed++;
+        }
+
+        // Добавляем в расчёт рандомный разброс от оружия
+        let rndDmg = getRandomWithoutFloor(1 - attackerObj.randomWeaponDamage, 1 + attackerObj.randomWeaponDamage);
+
+        // Добавляем показатели от медали арены, если считаем урон для арены
+        if (isArena) {
+            damage = Math.ceil(damage * rndDmg * attackerObj.increasePvpDamage * (1 - defenderObj.decreaseIncomingPvpDamage));
+        } else {
+            // Расчёт по умолчанию
+            damage = Math.ceil(damage * rndDmg);
+        }
+        total += damage;
+    }
+
+    return {damage: total, hits, hit: landed > 0};
+}
+
+function calcSkillDamage(skill, attackerObj, defenderObj, buffs, t) {
     let dmg;
-    let modifier = skill.damageModifier || 1;
+    // Skill level and enchant route count here too (they used to be ignored outside boss fights).
+    let modifier = (skill.damageModifier || 1) * getSkillPowerMultiplier(skill);
 
-    dmg = 70 * attackerObj.attack / defenderObj.defence * modifier * attackerObj.additionalDamageMul;
+    // Execute skills hit harder once the target is low.
+    if (skill.executeBelow && defenderObj.hp / defenderObj.maxHp <= skill.executeBelow) {
+        modifier *= 1 + (skill.executeBonus || 0);
+    }
+
+    const defence = defenderObj.defence * (1 - active(defenderObj.fx, 'armorBreak', t));
+    dmg = 70 * attackerObj.attack / defence * modifier * attackerObj.additionalDamageMul;
     dmg *= attackerObj.damageMultiplier;
+    dmg *= 1 + buffs.damage / 100;
 
-    if (getRandom(1, 100) <= attackerObj.criticalChance) {
-        dmg *= attackerObj.criticalDamage;
+    const critChance = Math.min(100, attackerObj.criticalChance + (skill.critChanceBonus || 0) + getRouteBonus(skill).critBonus + buffs.critChance);
+    if (getRandom(1, 100) <= critChance) {
+        dmg *= attackerObj.criticalDamage * (1 + buffs.critDamage / 100);
     }
 
     if (attackerObj.effects) {
@@ -255,7 +331,11 @@ function calcSkillDamage(skill, attackerObj, defenderObj) {
         }
     }
 
-    dmg = dmg * attackerObj.incomingDamageModifier;
+    // The defender's modifier (it used to be the attacker's own, which made it an outgoing bonus),
+    // the defender's guard, and the attacker's weaken curse.
+    dmg = dmg * defenderObj.incomingDamageModifier;
+    dmg *= 1 - active(defenderObj.fx, 'guard', t);
+    dmg *= 1 - active(attackerObj.fx, 'weaken', t);
     dmg = Math.ceil(dmg);
 
     if (lodash.isNaN(dmg) || lodash.isUndefined(dmg)) {
@@ -265,42 +345,135 @@ function calcSkillDamage(skill, attackerObj, defenderObj) {
     return dmg;
 }
 
-function useSkills(defender, attackerObj, defenderObj, isArena = false) {
+function ensureEffects(obj) {
+    if (!Array.isArray(obj.effects)) obj.effects = [];
+    return obj.effects;
+}
+
+/** Shield first, then cp, then hp. */
+function applyDamage(obj, damage) {
+    const shield = ensureEffects(obj).find(effect => effect.name === "shield" && effect.value > 0);
+    if (shield) {
+        const absorbed = Math.min(shield.value, damage);
+        shield.value -= absorbed;
+        damage -= absorbed;
+    }
+    const damageCp = Math.min(obj.cp, damage);
+    obj.cp -= damageCp;
+    damage -= damageCp;
+    const damageHp = Math.min(obj.hp, damage);
+    obj.hp -= damageHp;
+    obj.taken += damageCp + damageHp;
+}
+
+/** Healing, lifesteal and regeneration give back damage taken from the opponent. */
+function gainHp(obj, amount) {
+    const gained = Math.max(0, Math.min(obj.maxHp - obj.hp, amount));
+    obj.hp += gained;
+    obj.taken = Math.max(0, obj.taken - gained);
+}
+
+function gainCp(obj, amount) {
+    const gained = Math.max(0, Math.min(obj.maxCp - obj.cp, amount));
+    obj.cp += gained;
+    obj.taken = Math.max(0, obj.taken - gained);
+}
+
+function giveShield(obj, amount) {
+    const shieldEffect = ensureEffects(obj).find(effect => effect.name === "shield");
+    if (!shieldEffect) {
+        obj.effects.push({name: "shield", value: amount, time: 0});
+    } else {
+        shieldEffect.value = amount;
+    }
+}
+
+function applyBuffs(obj, skill, t) {
+    const power = getSkillPowerMultiplier(skill);
+    for (const buff of skill.buffs || []) {
+        if (['damage', 'critChance', 'critDamage'].includes(buff.kind)) {
+            obj.fx[buff.kind] = {amount: buff.amount * power, charges: buff.charges || 1};
+        } else if (['guard', 'evade', 'haste'].includes(buff.kind)) {
+            obj.fx[buff.kind] = Math.min({guard: 0.8, evade: 0.75, haste: 0.5}[buff.kind], buff.amount / 100 * power);
+            obj.fx[`${buff.kind}Until`] = t + (buff.seconds || 10);
+        }
+    }
+}
+
+function applyDebuff(target, debuff, t, power = 1) {
+    if (debuff.kind === 'stun') {
+        if (target.fx.stunImmuneUntil > t) return;
+        target.fx.stunUntil = t + (debuff.seconds || 3);
+        target.fx.stunImmuneUntil = target.fx.stunUntil + STUN_IMMUNITY_SECONDS;
+    } else if (debuff.kind === 'armorBreak') {
+        target.fx.armorBreak = Math.min(0.6, debuff.amount / 100 * power);
+        target.fx.armorBreakUntil = t + (debuff.seconds || 10);
+    } else if (debuff.kind === 'weaken') {
+        target.fx.weaken = Math.min(0.5, debuff.amount / 100 * power);
+        target.fx.weakenUntil = t + (debuff.seconds || 10);
+    }
+}
+
+function restoreMana(obj, share) {
+    obj.mp = Math.min(obj.maxMp, obj.mp + Math.ceil(obj.maxMp * share));
+}
+
+// One turn of one fighter (a stunned one loses it): the first usable skill is played.
+// Damage skills hit the opponent; heals and shields are cast on the caster, only when
+// needed (otherwise the next skill is tried); buffs, debuffs and mana returns are
+// played when ready. Taunt does nothing in a one-on-one fight.
+function useSkills(attackerObj, defenderObj, isArena = false, t = 0) {
+    if (attackerObj.fx.stunUntil > t) return;
+
     for (let j = 0; j < attackerObj.skills.length; j++) {
         let skill = attackerObj.skills[j];
-        if (attackerObj.cooldowns[j] <= 0 && attackerObj.hp >= skill.costHp && attackerObj.mp >= skill.cost) {
-            let defenderCurrentHpPercent = defenderObj.hp / defenderObj.maxHp;
+        const damages = dealsDamage(skill);
+        const heals = skill.isHeal && !skill.isDealDamage;
+        const shields = skill.isShield && !skill.isDealDamage;
+        const utility = !damages && !heals && !shields;
 
-            if (!skill.isHeal && !skill.isShield) {
-                // считаем урон только от скиллов isDamage = true
-                let damage = calculateDamage(skill, attackerObj, defenderObj, isArena).damage;
-                let damageCp = Math.min(defenderObj.cp, damage);
-                defenderObj.cp -= damageCp;
-                damage -= damageCp;
-                let damageHp = Math.min(defenderObj.hp, damage);
-                defenderObj.hp -= damageHp;
-                damage -= damageHp;
+        const price = getEffectiveSkillCost(skill, attackerObj.maxHp);
+        if (attackerObj.cooldowns[j] <= 0 && attackerObj.hp > price.costHp && attackerObj.mp >= price.cost) {
+            const ownHpShare = attackerObj.hp / attackerObj.maxHp;
+            const power = getSkillPowerMultiplier(skill);
+
+            if (damages) {
+                const result = calculateDamage(skill, attackerObj, defenderObj, isArena, t);
+                applyDamage(defenderObj, result.damage);
+
+                const vampire = (skill.vampirePower || 0) + getRouteBonus(skill).vampire;
+                if (vampire > 0) gainHp(attackerObj, Math.ceil(result.damage * vampire));
+                if (result.hit) {
+                    for (const debuff of [skill.debuff, ...(skill.debuffs || [])].filter(Boolean)) applyDebuff(defenderObj, debuff, t, power);
+                }
+                applyBuffs(attackerObj, skill, t);
 
                 if (defenderObj.hp === 0) {
                     return 0;
                 }
-            } else if (skill.isShield && defenderCurrentHpPercent < 0.80) {
-                let shield = useShieldSkill(defender, skill);
-                let shieldEffect = defenderObj.effects ? defenderObj.effects.find(effect => effect.name === "shield") : null;
-
-                if (!shieldEffect) {
-                    defenderObj.effects.push({name: "shield", value: shield, time: 0});
-                } else {
-                    shieldEffect.value = shield;
-                }
-
-            } else if (skill.isHeal && defenderCurrentHpPercent < 0.60) {
-                defenderObj.hp = Math.max(defenderObj.maxHp, defenderObj.hp + useHealSkill(defender, skill));
+            } else if (shields) {
+                if (ownHpShare >= 0.80) continue;
+                giveShield(attackerObj, Math.ceil(attackerObj.maxHp * skill.shieldPower * power));
+                if (skill.restoreMp) restoreMana(attackerObj, skill.restoreMp);
+            } else if (heals) {
+                if (ownHpShare >= 0.60) continue;
+                gainHp(attackerObj, Math.ceil(attackerObj.maxHp * skill.healPower * power));
+                if (skill.restoreMp) restoreMana(attackerObj, skill.restoreMp);
+            } else if (utility) {
+                // A buff already running is not recast; a debuff on an already-stunned/cursed target waits.
+                if (skill.buffs?.some(buff => ['guard', 'evade', 'haste'].includes(buff.kind) && attackerObj.fx[`${buff.kind}Until`] > t)) continue;
+                if (skill.debuff?.kind === 'weaken' && defenderObj.fx.weakenUntil > t) continue;
+                if (skill.restoreMp && !skill.buffs && !skill.debuff && attackerObj.mp / attackerObj.maxMp > 0.5) continue;
+                if (skill.buffs?.length) applyBuffs(attackerObj, skill, t);
+                if (skill.shieldPower) giveShield(attackerObj, Math.ceil(attackerObj.maxHp * skill.shieldPower * power));
+                if (skill.debuff) applyDebuff(defenderObj, skill.debuff, t, power);
+                if (skill.restoreMp) restoreMana(attackerObj, skill.restoreMp);
             }
 
-            attackerObj.cooldowns[j] = skill.cooldown;
-            attackerObj.hp -= skill.costHp;
-            attackerObj.mp -= skill.cost;
+            // Haste shortens the cooldown the skill is put on.
+            attackerObj.cooldowns[j] = Math.ceil(skill.cooldown * getSkillCooldownMultiplier(skill) * (1 - active(attackerObj.fx, 'haste', t)));
+            attackerObj.hp -= price.costHp;
+            attackerObj.mp -= price.cost;
 
             break;
         }

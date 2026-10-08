@@ -91,6 +91,8 @@ import {
 import {
   ADMIN_TOOL_ERRORS, getAdminToolsState, runChatTool, runGlobalTool, runPlayerTool,
 } from './adminTools.js';
+import { rememberLanguage } from './language.js';
+import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
@@ -161,7 +163,7 @@ function serveFile(res, root, urlPath) {
     'content-type': MIME[ext] || 'application/octet-stream',
     'x-content-type-options': 'nosniff',
     'referrer-policy': 'no-referrer',
-    'cache-control': ext === '.html' ? 'no-store' : /^\/art\/items\/v\d+\//.test(urlPath) ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
+    'cache-control': ext === '.html' ? 'no-store' : /^\/art\/(?:items|chests|world)\/v\d+\//.test(urlPath) ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
   });
   fs.createReadStream(filePath).pipe(res);
   return true;
@@ -298,6 +300,7 @@ async function authorize(req) {
   if (!validated.user?.id) {
     throw httpError(401, 'Telegram user is missing');
   }
+  rememberLanguage(validated.user.id, req.headers['x-app-lang']);
 
   const chatId = resolveGameChatId(validated);
   const session = await getSession(chatId, validated.user.id);
@@ -833,6 +836,30 @@ const adminNotice = guarded('admin notice', async (req, res) => {
   return sendJson(res, result.ok ? 200 : 409, { ...result, notices: await listNotices() });
 });
 
+const classBuffsState = guarded('class buffs state', async (req, res) => {
+  const context = await authorize(req);
+  const buffs = await withLock(`${context.chatId}:buffs`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getClassBuffsState(context.session);
+  });
+  return sendJson(res, 200, buffs);
+});
+
+const classBuffsCast = guarded('class buffs cast', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (typeof body.buffId !== 'string' || !['string', 'number', 'undefined'].includes(typeof body.targetId)) {
+    throw httpError(400, 'buffId is required');
+  }
+  const result = await withLock(`${context.chatId}:buffs`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const cast = castClassBuff(context.session, body.buffId, body.targetId ?? null);
+    if (cast.ok) await saveSession(context.session);
+    return { ...cast, buffs: getClassBuffsState(context.session) };
+  });
+  return sendResult(res, result, context);
+});
+
 const badges = guarded('badges', async (req, res) => {
   const context = await authorize(req);
   const chat = await getChatSession(context.chatId);
@@ -1247,16 +1274,16 @@ const equipmentState = guarded('equipment state', async (req, res) => {
 const equipmentAction = guarded('equipment action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (body.action === 'upgrade') assertGoldUnlocked(context);
+  if (body.action === 'enchant') assertGoldUnlocked(context);
   if (typeof body.key !== 'string' || !body.key) {
     throw httpError(400, 'equipment key is required');
   }
-  if (!['equip', 'unequip', 'sell', 'upgrade'].includes(body.action)) {
-    throw httpError(400, 'action must be equip, unequip, sell or upgrade');
+  if (!['equip', 'unequip', 'sell', 'enchant', 'crystallize'].includes(body.action)) {
+    throw httpError(400, 'action must be equip, unequip, sell, enchant or crystallize');
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = performEquipmentAction(context.session, body.key, body.action);
+    const updated = performEquipmentAction(context.session, body.key, body.action, { blessed: body.blessed === true });
     if (updated.ok) await saveSession(context.session);
     return updated;
   });
@@ -1267,12 +1294,47 @@ const equipmentCraft = guarded('equipment craft', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
   assertGoldUnlocked(context);
+  if (typeof body.itemId !== 'string' || !body.itemId) {
+    throw httpError(400, 'itemId is required');
+  }
+  const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const updated = craftEquipmentItem(context.session, body.itemId);
+    if (updated.ok) await saveSession(context.session);
+    return updated;
+  });
+  return sendResult(res, result, context);
+});
+
+const equipmentRecipe = guarded('equipment recipe', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  if (typeof body.itemId !== 'string' || !body.itemId) {
+    throw httpError(400, 'itemId is required');
+  }
+  const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const updated = learnEquipmentRecipe(context.session, body.itemId);
+    if (updated.ok) await saveSession(context.session);
+    return updated;
+  });
+  return sendResult(res, result, context);
+});
+
+const equipmentScroll = guarded('equipment scroll', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
   if (typeof body.grade !== 'string' || !body.grade) {
     throw httpError(400, 'grade is required');
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = craftEquipmentItem(context.session, body.grade);
+    const updated = buyEnchantScroll(context.session, body.grade, {
+      blessed: body.blessed === true,
+      withCrystals: body.withCrystals === true,
+    });
     if (updated.ok) await saveSession(context.session);
     return updated;
   });
@@ -1385,7 +1447,7 @@ const bossSkill = guarded('boss skill', async (req, res) => {
   }
   const result = await withLock(`${context.chatId}:boss`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return useBossSkill(context.session, context.chatId, context.userId, skillIndex);
+    return useBossSkill(context.session, context.chatId, context.userId, skillIndex, typeof body.targetId === 'string' ? body.targetId : null);
   });
   context.session = await getSession(context.chatId, context.userId);
   return sendResult(res, result, context);
@@ -1512,6 +1574,9 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
     if (route === 'GET /api/skills') return playerSkillsState(req, res);
     if (route === 'POST /api/skills/enchant') return playerSkillsEnchant(req, res);
+    if (route === 'POST /api/skills/route') return playerSkillsRoute(req, res);
+    if (route === 'GET /api/class-quests') return classQuestsState(req, res);
+    if (route === 'POST /api/class-quests') return classQuestsAction(req, res);
     if (route === 'GET /api/inventory') return inventoryState(req, res);
     if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
     if (route === 'GET /api/exchange') return exchangeState(req, res);
@@ -1522,6 +1587,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/social') return socialState(req, res);
     if (route === 'POST /api/social/friend') return socialFriend(req, res);
     if (route === 'GET /api/badges') return badges(req, res);
+    if (route === 'GET /api/buffs') return classBuffsState(req, res);
+    if (route === 'POST /api/buffs/cast') return classBuffsCast(req, res);
     if (route === 'GET /api/mail') return mailState(req, res);
     if (route === 'POST /api/mail/claim') return mailClaim(req, res);
     if (route === 'POST /api/promo/redeem') return promoRedeem(req, res);
@@ -1557,11 +1624,14 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/equipment') return equipmentState(req, res);
     if (route === 'POST /api/equipment/action') return equipmentAction(req, res);
     if (route === 'POST /api/equipment/craft') return equipmentCraft(req, res);
+    if (route === 'POST /api/equipment/scroll') return equipmentScroll(req, res);
+    if (route === 'POST /api/equipment/recipe') return equipmentRecipe(req, res);
     if (route === 'GET /api/builds') return buildsState(req, res);
     if (route === 'POST /api/builds/action') return buildsAction(req, res);
     if (route === 'GET /api/arena') return arenaState(req, res, requestUrl);
     if (route === 'POST /api/arena/attack') return arenaAttack(req, res);
     if (route === 'GET /api/boss') return bossState(req, res);
+    if (route === 'GET /api/boss/epic') return bossEpic(req, res);
     if (route === 'POST /api/boss/summon') return bossSummon(req, res);
     if (route === 'POST /api/boss/skill') return bossSkill(req, res);
     if (route === 'GET /api/shop') return shopState(req, res);

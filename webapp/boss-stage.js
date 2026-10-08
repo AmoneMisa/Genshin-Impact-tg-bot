@@ -12,12 +12,30 @@
 //
 // Falls back to a plain <img> without WebGL and a still frame with reduced motion.
 
+import { familyOf, portraitFamily } from './class-family.js';
+
 export const BOSS_ART = Object.freeze({
   kivaha: { element: 1, tint: [0.55, 0.78, 1.0] },        // lightning turtle
   avrora: { element: 2, tint: [0.35, 0.85, 1.0] },        // corrupted water fairy
   fjorina: { element: 3, tint: [1.0, 0.5, 0.18] },        // fire-and-poison naga
   radjahal: { element: 4, tint: [0.75, 0.9, 1.0] },       // ice orangutan
   carnevorusIsse: { element: 5, tint: [1.0, 0.82, 0.45] }, // light/dark flower
+  // Newer bosses borrow a painting (and its element effect) until they get their own.
+  zephyrion: { element: 2, tint: [0.8, 0.95, 1.0], art: 'avrora' },        // storm dragon
+  terrax: { element: 5, tint: [0.78, 0.66, 0.5], art: 'carnevorusIsse' },  // granite golem
+  veraxis: { element: 3, tint: [0.62, 0.45, 0.9], art: 'fjorina' },        // lich lord
+  tiamara: { element: 1, tint: [0.5, 0.95, 0.45], art: 'kivaha' },         // hydra
+  ignar: { element: 3, tint: [1.0, 0.4, 0.15], art: 'fjorina' },           // fire twins
+  selene: { element: 5, tint: [0.85, 0.85, 1.0], art: 'avrora' },          // moon sisters
+  // Epic raid bosses have their own paintings (art-source/bosses, npm run epic-art:build).
+  queenAnt: { element: 5, tint: [0.55, 0.75, 0.4] },
+  core: { element: 3, tint: [1.0, 0.45, 0.2] },
+  orfen: { element: 2, tint: [0.7, 0.5, 0.95] },
+  zaken: { element: 3, tint: [0.5, 0.55, 0.9] },
+  baium: { element: 5, tint: [0.75, 0.7, 0.85] },
+  antharas: { element: 5, tint: [0.62, 0.62, 0.5] },
+  valakas: { element: 3, tint: [1.0, 0.3, 0.1] },
+  frintezza: { element: 3, tint: [0.8, 0.5, 1.0] },
 });
 
 /** Shader skill ids and the delay (s) from cast to impact. */
@@ -29,19 +47,20 @@ export const SKILL_FX = Object.freeze({
   punch: { id: 5, impact: 0.06 },
 });
 
-const CLASS_SKILL = Object.freeze({ warrior: 'slash', archer: 'arrow', mage: 'orb', priest: 'beam', noClass: 'punch' });
+const CLASS_SKILL = Object.freeze({ warrior: 'slash', archer: 'arrow', mage: 'orb', priest: 'beam', rogue: 'slash', berserk: 'punch', noClass: 'punch' });
 
 /** Damage-skill animation for a class (unknown classes punch). */
 export function skillFxForClass(className) {
-  return CLASS_SKILL[className] || 'punch';
+  return CLASS_SKILL[familyOf(className)] || 'punch';
 }
 
 export function bossArtUrl(name) {
-  return BOSS_ART[name] ? `/art/bosses/${name}.webp` : null;
+  return BOSS_ART[name] ? `/art/bosses/${BOSS_ART[name].art || name}.webp` : null;
 }
 
 export function classArtUrl(className, gender) {
-  const cls = CLASS_SKILL[className] ? className : 'noClass';
+  const family = portraitFamily(className);
+  const cls = CLASS_SKILL[family] ? family : 'noClass';
   return `/art/classes/${cls}-${gender === 'female' ? 'female' : 'male'}.webp`;
 }
 

@@ -4,6 +4,7 @@ import { escapeHtml } from './escape-html.js';
 // intro and result, the season reward ladder and the leaderboard.
 
 import { menuArtFor } from './menu-art.js';
+import { worldArtUrl } from './art/world-art.js';
 
 const MODE_LABELS = {
   common: { tab: 'Обычная', subtitle: 'Соперники из текущего игрового чата' },
@@ -35,6 +36,8 @@ export function rankTier(rank) {
 
 export function rankEmblem(rank, size = '') {
   const { tier, division } = rankTier(rank);
+  const art = worldArtUrl(`arena/rank-${tier}`);
+  if (art) return `<span class="arena-emblem ${tier} ${size} painted" aria-hidden="true"><img src="${art}" width="64" height="64" alt="" loading="lazy" decoding="async"><b>${'◆'.repeat(division)}</b></span>`;
   return `<span class="arena-emblem ${tier} ${size}" aria-hidden="true"><i></i><b>${'◆'.repeat(division)}</b></span>`;
 }
 
@@ -114,8 +117,9 @@ export async function openArenaGame({ api, renderState, haptic, statusElement, p
   }
 
   function heroHtml() {
+    const painting = worldArtUrl(`arena/arena-${arena.mode === 'expansion' ? 'ranked' : 'normal'}`,512);
     return `
-      <section class="arena-hero-art ${arena.mode}">
+      <section class="arena-hero-art ${arena.mode}" ${painting ? `style="--arena-painting:url('${painting}')"` : ''}>
         <div class="arena-rank">
           ${rankEmblem(arena.rank, 'large')}
           <div>

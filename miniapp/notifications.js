@@ -5,6 +5,7 @@
 // started the bot, so a failure is swallowed and the red dot is the fallback.
 
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
+import { translateFor } from './language.js';
 import { getSocialState } from './social.js';
 import { getChestState } from './chest.js';
 import { getClanProgressionState } from './clanProgression.js';
@@ -22,10 +23,11 @@ function isDuplicate(userId, text, now) {
 }
 
 /** Fire-and-forget DM to a player. Never throws. */
-export function pushTo(userId, text, { send = sendMessage, now = Date.now() } = {}) {
+export function pushTo(userId, text, { send = sendMessage, now = Date.now(), translate = translateFor } = {}) {
   if (!userId || !text || isDuplicate(userId, text, now)) return Promise.resolve(false);
   return Promise.resolve()
-    .then(() => send(Number(userId), text))
+    .then(() => translate(userId, text))
+    .then(message => send(Number(userId), message))
     .then(() => true, () => false);
 }
 

@@ -1,12 +1,14 @@
 import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
 import {
-  damageMeter, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
+  damageMeter, encounterPanel, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
 
 const REASONS = {
   already_summoned: 'Босс уже призван.',
   no_boss: 'Активного босса больше нет.',
   dead: 'Персонаж погиб и ещё не воскрес.',
   invalid_skill: 'Навык больше недоступен.',
+  skill_locked: 'Навык откроется на более высоком уровне.',
+  target_gone: 'Цель уже побеждена — выбери другую.',
   not_enough_resource: 'Недостаточно HP или MP для навыка.',
   cooldown: 'Навык ещё в откате.',
 };
@@ -46,6 +48,8 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   if (entry.state) renderState(entry.state);
   let pending = false;
   let timer = null;
+  // Damage skills go to this target: 'boss' or a minion id.
+  let selectedTarget = 'boss';
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay boss-overlay';
@@ -55,7 +59,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       <header class="ds-head">
         <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
         <h2>Босс</h2>
-        <span class="ds-round" aria-hidden="true">⚔</span>
+        <button class="ds-round" type="button" data-epic-open aria-label="Эпические боссы">👑</button>
       </header>
       <div data-boss-target></div>
       <div class="boss-stage" data-boss-stage hidden></div>
@@ -106,6 +110,89 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     window.setTimeout(() => node.remove(), 1300);
   }
   const feedback = overlay.querySelector('[data-boss-feedback]');
+  // ---- Epic raid bosses (Lineage 2): long respawn windows, unique jewellery ----
+  const EPIC_REASONS = {
+    ...REASONS,
+    unknown_epic: 'Такого эпического босса нет.',
+    epic_level_too_low: 'Твой уровень слишком низок для этого босса.',
+    epic_cooldown: 'Босс ещё не вернулся — подожди окончания таймера.',
+  };
+  let epicTimer = 0;
+  const epicDuration = (ms) => {
+    const minutes = Math.max(0, Math.ceil(ms / 60000));
+    const days = Math.floor(minutes / 1440), hours = Math.floor((minutes % 1440) / 60);
+    return days ? `${days}д ${hours}ч` : hours ? `${hours}ч ${minutes % 60}м` : `${minutes}м`;
+  };
+
+  function epicRemaining(entry) {
+    return Math.max(0, (Number(entry.respawnAt) || 0) - Date.now());
+  }
+
+  function epicCard(entry, level) {
+    const remain = epicRemaining(entry);
+    const tooLow = level < entry.minLevel;
+    const jewel = entry.jewel;
+    const real = jewel?.lineage?.mDef != null ? `M.Def ${jewel.lineage.mDef}` : '';
+    const status = remain > 0 ? `Вернётся через <b data-epic-timer="${escapeHtml(entry.respawnAt)}">${epicDuration(remain)}</b>` : tooLow ? `Нужен LVL ${entry.minLevel}` : 'Можно вызвать';
+    return `<article class="forge-card epic-card ${remain > 0 || tooLow ? 'unaffordable' : ''}">
+      <div class="forge-card-head"><span class="equipment-grade grade-s">👑</span><div><strong>${escapeHtml(entry.nameCall)}</strong><small>${escapeHtml(entry.title || '')}</small></div></div>
+      <div class="forge-costs">
+        <span class="forge-cost">LVL ${entry.minLevel}+</span>
+        <span class="forge-cost">Возрождение ${entry.respawnHours}–${entry.respawnHours + entry.windowHours} ч</span>
+        <span class="forge-cost">Убит ${entry.kills || 0} раз</span>
+      </div>
+      ${jewel ? `<p class="epic-jewel">💍 ${escapeHtml(jewel.name)} · ${escapeHtml(jewel.grade)}${real ? ` · ${escapeHtml(real)}` : ''} · шанс ${Math.round(entry.jewelChance * 100)}%</p>` : ''}
+      ${entry.weapons?.length ? `<p class="epic-jewel">Эпическое оружие · S84 · ур. 84 · шанс ${Math.round(entry.weaponChance * 100)}%<br>${entry.weapons.map(weapon=>escapeHtml(weapon.name)).join(' · ')}<br>Для подходящего класса участника рейда.</p>` : ''}
+      <p class="epic-status">${status}</p>
+      <button class="equipment-action forge-action" type="button" data-epic-summon="${escapeHtml(entry.name)}" ${remain > 0 || tooLow ? 'disabled' : ''}>Бросить вызов</button>
+    </article>`;
+  }
+
+  async function openEpic() {
+    if (pending) return;
+    let epic;
+    try {
+      epic = await api('/api/boss/epic');
+    } catch (error) {
+      feedback.textContent = EPIC_REASONS[error.payload?.reason] || error.message;
+      return;
+    }
+    const panel = document.createElement('section');
+    panel.className = 'boss-epic-panel';
+    panel.innerHTML = `<header class="ds-head"><button class="ds-round" type="button" data-epic-close aria-label="Назад">←</button><h2>Эпические боссы</h2><span class="ds-round" aria-hidden="true">👑</span></header>
+      <p class="epic-note">Вызов эпического босса ставит таймер возрождения для всего чата. Нетронутый обычный босс уступит место.</p>
+      <div class="forge-grid">${(epic.bosses || []).map(entry => epicCard(entry, Number(state.player?.level) || 1)).join('')}</div>`;
+    overlay.querySelector('.overlay-panel').appendChild(panel);
+    const close = () => { window.clearInterval(epicTimer); panel.remove(); };
+    panel.querySelector('[data-epic-close]').addEventListener('click', close);
+    epicTimer = window.setInterval(() => {
+      panel.querySelectorAll('[data-epic-timer]').forEach(node => {
+        const left = Math.max(0, Number(node.dataset.epicTimer) - Date.now());
+        node.textContent = epicDuration(left);
+      });
+    }, 1000);
+    panel.querySelectorAll('[data-epic-summon]').forEach(button => button.addEventListener('click', async () => {
+      if (pending || button.disabled) return;
+      pending = true;
+      overlay.classList.add('busy');
+      haptic('heavy');
+      try {
+        const payload = await api('/api/boss/summon', { method: 'POST', body: JSON.stringify({ epic: button.dataset.epicSummon }) });
+        state = payload.boss;
+        if (payload.state) renderState(payload.state);
+        feedback.textContent = 'Эпический босс вышел на бой!';
+        close();
+        renderAll();
+      } catch (error) {
+        feedback.textContent = EPIC_REASONS[error.payload?.reason] || error.message;
+        haptic('light');
+      } finally {
+        pending = false;
+        overlay.classList.remove('busy');
+      }
+    }));
+  }
+  overlay.querySelector('[data-epic-open]')?.addEventListener('click', openEpic);
   if (entry.summoned) feedback.textContent = 'Босс призван. Таймер рейда запущен.';
 
   let pollTimer = null;
@@ -189,11 +276,35 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       icon = '💚'; text = `Восстановлено ${formatNumber(result.heal)} HP`;
     } else if (result.type === 'shield') {
       icon = '🛡️'; text = `Щит: ${formatNumber(result.shield)}`;
+    } else if (result.type === 'buff') {
+      icon = '⬆'; text = 'Усиление наложено';
+    } else if (result.type === 'debuff') {
+      icon = '⬇'; text = result.debuffs?.some(item => item.kind === 'stun' && item.applied) ? 'Босс оглушён!' : 'Босс ослаблен';
+    } else if (result.type === 'restore') {
+      icon = '🔹'; text = `Мана +${formatNumber(result.restoredMp)}`;
     }
+    if (result.type === 'damage') {
+      if (result.hits?.length > 1) text += ` · ${result.hits.length} удара`;
+      if (result.shielded) text += ' · свита прикрывает босса';
+      if (result.locked) text = 'Босс неуязвим, пока жива его вторая половина!';
+      if (result.debuffs?.some(item => item.kind === 'stun' && item.applied)) text += result.debuffs.find(item => item.kind === 'stun').interrupted ? ' · удар прерван!' : ' · оглушён';
+    }
+    if (payload.unitDrops) {
+      const items = payload.unitDrops.items.map(item => `${item.icon} ${item.name} ×${item.amount}`).join(', ');
+      text += ` · ${payload.unitDrops.name} повержен: +${payload.unitDrops.sp} ОП${items ? `, ${items}` : ''}`;
+    }
+    if (payload.questGains?.length) text += ` · квест: ${payload.questGains.map(gain => `${gain.item ? `${gain.item} ` : ''}${gain.progress}/${gain.target}`).join(', ')}`;
 
     if (payload.killed) {
       icon = '🏆';
       text = 'Босс повержен! Награды распределены между участниками.';
+      if (payload.loot) {
+        const drops = (payload.loot.items || []).map(item => `${item.icon} ${item.name} ×${item.amount}`).join(', ');
+        text += ` Тебе: +${formatNumber(payload.loot.gotSp || 0)} ОП${drops ? `, ${drops}` : ''}.`;
+        if (payload.loot.epicItem) text += ` 👑 Эпическое украшение: ${payload.loot.epicItem}!`;
+        if (payload.loot.epicWeapon) text += ` 👑 Эпическое оружие: ${payload.loot.epicWeapon}!`;
+        if (payload.loot.questReady) text += ' Квест профессии выполнен!';
+      }
     }
 
     const banner = document.createElement('div');
@@ -216,7 +327,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     try {
       const payload = await api('/api/boss/skill', {
         method: 'POST',
-        body: JSON.stringify({ skillIndex: Number(index) }),
+        body: JSON.stringify({ skillIndex: Number(index), targetId: selectedTarget }),
       });
       state = payload.boss;
       if (payload.state) renderState(payload.state);
@@ -294,6 +405,13 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       haptic('light');
       await refresh();
     });
+    content.querySelectorAll('[data-boss-target]').forEach((button) => {
+      button.addEventListener('click', () => {
+        selectedTarget = button.dataset.bossTarget;
+        haptic('light');
+        renderAll();
+      });
+    });
     content.querySelectorAll('[data-skill]').forEach((button) => {
       button.addEventListener('click', () => useSkill(button.dataset.skill));
     });
@@ -316,11 +434,14 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
 
     const boss = state.boss;
     const player = state.player;
+    // A fallen minion can't stay targeted.
+    if (selectedTarget !== 'boss' && !boss.minions?.some(unit => unit.id === selectedTarget && unit.alive)) selectedTarget = 'boss';
     const rewardsOpen = !targetHost.querySelector('[data-boss-rewards]')?.hidden && Boolean(targetHost.querySelector('[data-boss-rewards]'));
     targetHost.innerHTML = `${targetFrame(boss)}${rewardsPanel(boss.loot)}`;
     if (rewardsOpen) targetHost.querySelector('[data-boss-rewards]').hidden = false;
     content.innerHTML = `
       ${playerFrame(player)}
+      ${encounterPanel(boss, selectedTarget)}
       ${bossAttacksPanel(boss)}
       ${player.respawnRemainMs > 0 ? `<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>` : ''}
       ${hotbar(player.skills)}
@@ -334,7 +455,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   function tick() {
     content.querySelectorAll('[data-skill-cooldown]').forEach((node) => {
       const remain = Math.max(0, Number(node.dataset.until || 0) - Date.now());
-      node.textContent = remain > 0 ? formatDuration(remain) : '';
+      node.textContent = remain > 0 ? epicDuration(remain) : '';
       const total = Number(node.dataset.total) || remain;
       node.closest('.mmo-skill')?.style.setProperty('--cd', total > 0 ? String(remain / total) : '0');
       if (remain <= 0) node.closest('.boss-skill')?.removeAttribute('disabled');
@@ -348,7 +469,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     const timeBar = targetHost.querySelector('.mmo-bar.time');
     if (timeBar && state.active) {
       const remain = Math.max(0, Number(state.boss.aliveTime || 0) - Date.now());
-      timeBar.querySelector('b').textContent = formatDuration(remain);
+      timeBar.querySelector('b').textContent = epicDuration(remain);
       timeBar.querySelector('i').style.width = `${Math.min(100, (remain / (15 * 60 * 1000)) * 100)}%`;
       timeBar.classList.toggle('expired', remain <= 0);
     }

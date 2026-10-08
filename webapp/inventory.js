@@ -1,4 +1,6 @@
 import { escapeHtml } from './escape-html.js';
+import { worldIconHtml } from './art/world-art.js';
+import {SPECIAL_ITEM_ART} from './art/special-item-art.js';
 const REASONS = {
   potion_not_found: 'Зелье больше недоступно. Обнови инвентарь.',
   potion_empty: 'Это зелье закончилось.',
@@ -24,6 +26,9 @@ export function potionTone(item) {
 }
 
 export function flaskHtml(item) {
+  const token=item?.type==='buff'?item.id:item?.type==='hp'&&item.bottleType==='elixir'?'hp-elixir':`${item?.type}-${item?.size}`;
+  const key='potion-'+token;
+  if(SPECIAL_ITEM_ART.includes(key))return `<img class="inv-potion-art" src="/art/items/v1/${key}-128.webp" srcset="/art/items/v1/${key}-128.webp 128w, /art/items/v1/${key}-256.webp 256w" sizes="64px" width="64" height="96" alt="" loading="lazy" decoding="async">`;
   return `<span class="inv-flask tone-${potionTone(item)}" aria-hidden="true"><i class="inv-liquid"></i><i class="inv-bubbles"></i></span>`;
 }
 
@@ -94,7 +99,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <div>
           <strong>${escapeHtml(item.name)}</strong>
           <small>${escapeHtml(item.description)}</small>
-          <em>${item.type.toUpperCase()} · сила ${power} · осталось ${formatNumber(item.count)}</em>
+          <em>${item.type==='buff'?'Эффект · 20 минут':`${item.type.toUpperCase()} · сила ${power}`} · осталось ${formatNumber(item.count)}</em>
         </div>
         <button type="button" data-inventory-potion="${escapeHtml(item.key)}" ${usable ? '' : 'disabled'}>Выпить</button>
       </section>`;
@@ -102,6 +107,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
 
   function resultHtml() {
     if (!lastResult) return '';
+    if(lastResult.resource==='buff')return `<section class="inventory-result"><div><strong>${escapeHtml(lastResult.potion?.name||'Эффект активен')}</strong><small>20 минут · повторное использование обновляет время</small></div></section>`;
     const resource = lastResult.resource === 'mp' ? 'MP' : 'HP';
     return `<section class="inventory-result ${lastResult.resource === 'mp' ? 'mp' : 'hp'}"><span>+</span><div><strong>${formatNumber(lastResult.restored)} ${resource}</strong><small>${escapeHtml(lastResult.potion?.name || '')}</small></div></section>`;
   }
@@ -113,6 +119,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     const emptySlots = Math.max(0, 8 - state.potions.length);
     content.innerHTML = `
       ${vitalsHtml()}
+      ${state.buffs?.length?`<p class="inv-hint">${state.buffs.map(buff=>`${escapeHtml(buff.name)} · ${Math.max(0,Math.ceil((buff.until-Date.now())/60000))} мин.`).join(' · ')}</p>`:''}
       ${resultHtml()}
       <section class="inventory-section">
         <div class="inventory-title"><strong>Сумка</strong><small>${formatNumber(state.counts.potions)} зелий</small></div>
@@ -122,7 +129,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       <section class="inventory-resources">
         <article><span>🪙</span><strong>${formatNumber(state.resources.gold)}</strong></article>
         <article><span>💎</span><strong>${formatNumber(state.resources.crystals)}</strong></article>
-        <article><span>⛏️</span><strong>${formatNumber(state.resources.ironOre)}</strong></article>
+        <article><span>${worldIconHtml('chests/reward-ore',32) || '⛏️'}</span><strong>${formatNumber(state.resources.ironOre)}</strong></article>
       </section>
       <section class="inventory-meta">
         <article><span>🛡️</span><div><small>Снаряжение</small><strong>${formatNumber(state.counts.equipment)}</strong></div></article>

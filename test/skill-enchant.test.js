@@ -61,8 +61,9 @@ test('enchant cost scales with (currentLevel+1) and is null at max level', () =>
   const fresh = getSkillEnchantCost(skill({ enchantLevel: 0 }));
   assert.deepEqual(fresh, { gold: 2000, crystals: 5, ironOre: 15, sp: 20 });
 
+  // Level 4 is the first step that also asks for a Skill Scroll.
   const later = getSkillEnchantCost(skill({ enchantLevel: 3 }));
-  assert.deepEqual(later, { gold: 8000, crystals: 20, ironOre: 60, sp: 80 });
+  assert.deepEqual(later, { gold: 8000, crystals: 20, ironOre: 60, sp: 80, items: { skill_scroll: 1 } });
 
   assert.equal(getSkillEnchantCost(skill({ enchantLevel: SKILL_ENCHANT_MAX_LEVEL })), null);
 });

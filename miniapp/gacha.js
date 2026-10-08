@@ -4,6 +4,7 @@ import makeRoll from '../functions/game/equipment/makeRoll.js';
 import generateRandomEquipment from '../functions/game/equipment/generateRandomEquipment.js';
 import addItemToUserInventory from '../functions/game/equipment/addItemToUserInventory.js';
 import breakItemToSpins from '../functions/game/equipment/breakItemToSpins.js';
+import { describeItemStats } from '../functions/game/equipment/describeStats.js';
 import normalizeGachaState, { ensureGachaEntry, getGachaShardEntry } from '../functions/game/equipment/normalizeGachaState.js';
 
 function paymentMode(code) {
@@ -30,11 +31,12 @@ function sanitizeItem(item) {
     translatedName: item.translatedName,
     classOwner: item.classOwner,
     cost: Number(item.cost) || 0,
-    quality: item.quality || null,
-    persistence: item.persistence || null,
-    stats: Array.isArray(item.stats)
-      ? item.stats.map((stat) => ({ name: stat.name, value: stat.value }))
-      : [],
+    quality: null,
+    persistence: null,
+    ability: item.ability || null,
+    lineage: item.lineage || null,
+    set: item.setId ? { id: item.setId, name: item.setName || null } : null,
+    stats: describeItemStats(item),
   };
 }
 
@@ -96,7 +98,11 @@ export function rollGacha(session, gachaType) {
   }
 
   const randomGrade = makeRoll(session.game, template, code < 0);
-  const item = generateRandomEquipment(session.game.stats.lvl, randomGrade);
+  // The spiral's own grade odds decide the grade; the generator adds no extra upgrade roll.
+  const item = generateRandomEquipment(session.game.stats.lvl, randomGrade, {
+    exact: true,
+    forClass: session.game.gameClass?.stats?.name,
+  });
   session.game.gachaTempItem = item;
   session.game.gachaTempType = gachaType;
 

@@ -79,6 +79,13 @@ async function check(session, command, item, isDaily) {
     } else if (command.includes("swordAddTry")) {
         session.timerSwordCallback = 0;
         updateShopTimer(session, command, true);
+    } else if (item.potionId) {
+        const definition=potionsInInventoryTemplate.find(p=>p.id===item.potionId);
+        if(!definition)return 'Зелье недоступно.';
+        const existing=session.game.inventory.potions.items.find(p=>p.id===item.potionId);
+        if(existing)existing.count=(Number(existing.count)||0)+1;
+        else session.game.inventory.potions.items.push({...definition,count:1});
+        updateShopTimer(session, command, true);
     } else if (command.includes("potion") || command.includes("elixir")) {
         addPotion(session, command);
         updateShopTimer(session, command, true);

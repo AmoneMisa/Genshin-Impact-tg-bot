@@ -8,10 +8,10 @@ import { renderLootArt } from './loot-renderer.js';
 const PAYMENT_LABELS = {
   free: 'Бесплатная крутка', shards: 'За осколки', currency: 'За ресурсы', level_locked: 'Нужен уровень', gold_locked: 'Не хватает моры', crystals_locked: 'Не хватает кристаллов', locked: 'Недоступно',
 };
-export const GRADE_ORDER = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'SS', 'SSS'];
+export const GRADE_ORDER = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
 /** Summon colour per grade: grey -> green -> blue -> purple -> gold -> crimson -> prismatic. */
 export const GRADE_TONES = Object.freeze({
-  noGrade: 'plain', D: 'plain', C: 'green', B: 'blue', A: 'purple', S: 'gold', SS: 'crimson', SSS: 'prism',
+  noGrade: 'plain', D: 'plain', C: 'green', B: 'blue', A: 'purple', S: 'gold', S80: 'crimson', S84: 'prism',
 });
 
 function number(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0); }
@@ -126,7 +126,7 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
     requestAnimationFrame(() => scene.classList.add('charging'));
     await wait(900);
     scene.classList.add('pillar');
-    haptic(['S', 'SS', 'SSS'].includes(item.grade) ? 'heavy' : 'medium');
+    haptic(['S', 'S80', 'S84'].includes(item.grade) ? 'heavy' : 'medium');
     await wait(700);
     scene.classList.add('burst');
     await wait(450);

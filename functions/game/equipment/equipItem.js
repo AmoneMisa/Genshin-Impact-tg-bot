@@ -1,5 +1,6 @@
 import unequipItem from "./unequipItem.js";
 import equipmentTemplate from "../../../template/equipmentTemplate.js";
+import { canClassUse } from "./catalog.js";
 
 function overlapsSlots(left = [], right = []) {
     const rightSlots = new Set(right);
@@ -20,6 +21,11 @@ export default function equipItem(session, item) {
     );
     if (!equipTemplateGrade) {
         return 2;
+    }
+
+    // Lineage 2 class restrictions: a mage cannot wear heavy armor, a warrior cannot draw a staff.
+    if (!canClassUse(session.game?.gameClass?.stats?.name, item)) {
+        return 3;
     }
 
     session.game.equipmentStats ||= {};

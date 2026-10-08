@@ -7,15 +7,20 @@ export { escapeHtml };
 
 import { bossArtUrl, classArtUrl } from './boss-stage.js';
 import { flaskHtml } from './inventory.js';
+import { familyOf } from './class-family.js';
 
 export const STATUS_ICONS = Object.freeze({
   // boss skills
   reflect: '🪞', hp_regen: '✚', rage: '🔥', resistance: '🛡️', life: '❤️',
   // player effects
   shield: '🛡️', damageUp: '⚔️', critChanceUp: '🎯', critDamageUp: '💥', dead: '💀',
+  guard: '🛡', taunt: '📣', evade: '💨', haste: '⚡',
+  // boss debuffs / states
+  armorBreak: '🔨', weaken: '📉', stun: '💫', enrage: '😡', armored: '🪨', locked: '🔒',
 });
 
-const CLASS_COLORS = Object.freeze({ warrior: '#d9744a', archer: '#6fcf6b', mage: '#8f7bff', priest: '#f1d27a', noClass: '#a8a8b8' });
+const CLASS_COLORS = Object.freeze({ warrior: '#d9744a', archer: '#6fcf6b', mage: '#8f7bff', priest: '#f1d27a', rogue: '#4fd1c5', berserk: '#e0483c', noClass: '#a8a8b8' });
+const classColor = className => CLASS_COLORS[familyOf(className)] || CLASS_COLORS.noClass;
 
 
 export function formatNumber(value) {
@@ -44,6 +49,20 @@ export function statusIcons(list = []) {
     </span>`).join('')}</div>`;
 }
 
+/** The boss's own skill plus the states of this fight (enrage, minion shield, stun, debuffs). */
+export function encounterStatuses(boss) {
+  const list = [...(boss.statuses || [])];
+  if (boss.enrage > 0) list.push({ id: 'enrage', label: 'Ярость', description: `Урон босса +${boss.enrage}%` });
+  if (boss.shielded > 0) list.push({ id: 'armored', label: 'Свита прикрывает', description: `Босс игнорирует ${boss.shielded}% урона, пока жива свита` });
+  if (boss.locked) list.push({ id: 'locked', label: 'Неуязвим', description: 'Пока живы обе головы / близнец, босса не убить' });
+  if (boss.stunned) list.push({ id: 'stun', label: 'Оглушён' });
+  for (const debuff of boss.debuffs || []) {
+    if (debuff.kind === 'stun') continue;
+    list.push({ id: debuff.kind, label: debuff.kind === 'armorBreak' ? 'Броня разбита' : 'Ослаблен', description: `−${Math.round(debuff.amount * 100)}%`, count: Math.ceil(debuff.remainMs / 1000) });
+  }
+  return list;
+}
+
 /** Boss target frame; tapping it opens the rewards panel (`data-boss-rewards-toggle`). */
 export function targetFrame(boss) {
   const timePercent = boss.aliveTime && boss.remainMs != null ? clampPercent((boss.remainMs / (15 * 60 * 1000)) * 100) : 0;
@@ -54,7 +73,7 @@ export function targetFrame(boss) {
       <span class="mmo-frame-title"><strong>${escapeHtml(boss.nameCall || boss.name)}</strong><small>Босс · награды ▾</small></span>
       ${bar('hp', boss.currentHp, boss.hp)}
       ${bar('time', 0, 0, { label: '⏳', percent: timePercent, text: formatDuration(boss.remainMs) })}
-      ${statusIcons(boss.statuses || [])}
+      ${statusIcons(encounterStatuses(boss))}
       ${summonsProgress(boss.summons, boss.level)}
     </span>
   </button>`;
@@ -76,7 +95,10 @@ export function potionBar(potions = [], { disabled = false } = {}) {
   if (!potions.length) return '';
   return `<div class="boss-potions">${potions.map(potion => {
     const empty = !(Number(potion.count) > 0) || potion.key == null;
-    const power = `${potion.type === 'mp' ? 'MP' : 'HP'} +${formatNumber(potion.power)}${potion.bottleType === 'elixir' ? '%' : ''}`;
+    const unit = potion.type === 'mp' ? 'MP' : 'HP';
+    const power = potion.bottleType === 'elixir'
+      ? `${unit} +${formatNumber(potion.power)}%`
+      : potion.share > 0 ? `${unit} ≥${formatNumber(potion.power)} · ${potion.share}%` : `${unit} +${formatNumber(potion.power)}`;
     return `
     <button type="button" class="boss-potion ${empty ? 'empty' : ''}" ${empty ? '' : `data-boss-potion="${escapeHtml(potion.key)}"`} ${empty || disabled ? 'disabled' : ''} title="${escapeHtml(potion.name)} · ${power}" aria-label="${escapeHtml(potion.name)}: ${formatNumber(potion.count)} шт.">
       ${flaskHtml(potion)}
@@ -108,7 +130,7 @@ export function partyStrip(rows = []) {
     <div class="mmo-section-title"><strong>В бою</strong><small>${rows.length}</small></div>
     <div class="mmo-party-row">${rows.map(row => `
       <div class="mmo-party-member ${row.isYou ? 'you' : ''}" ${row.isYou ? '' : `data-player-card="${escapeHtml(row.userId)}"`} title="${escapeHtml(row.name)} · ${formatNumber(row.damage)}">
-        <span class="mmo-ring" style="--hp:${row.hpPercent == null ? 100 : clampPercent(row.hpPercent)};--class:${CLASS_COLORS[row.className] || CLASS_COLORS.noClass}">
+        <span class="mmo-ring" style="--hp:${row.hpPercent == null ? 100 : clampPercent(row.hpPercent)};--class:${classColor(row.className)}">
           <span class="mmo-portrait mini" style="--portrait:url('${classArtUrl(row.className, row.gender)}')"></span>
         </span>
         <small>${escapeHtml(row.isYou ? 'Ты' : row.name)}</small>
@@ -121,6 +143,8 @@ function skillGlyph(skill) {
   if (skill.isHeal) return '✚';
   if (skill.isShield) return '🛡️';
   if (skill.isDamage) return '⚔️';
+  if (skill.isBuff) return '⬆';
+  if (skill.isDebuff) return '⬇';
   return '✦';
 }
 
@@ -128,9 +152,9 @@ function skillGlyph(skill) {
 export function hotbar(skills = []) {
   return `<div class="mmo-hotbar">${skills.map(skill => {
     const type = skill.isDamage ? 'damage' : skill.isHeal ? 'heal' : skill.isShield ? 'shield' : 'utility';
-    const cost = skill.costHp > 0 ? `❤️${formatNumber(skill.costHp)}` : `🔹${formatNumber(skill.costMp)}`;
+    const cost = skill.locked ? `🔒 ур. ${formatNumber(skill.needLevel)}` : skill.costHp > 0 ? `❤️${formatNumber(skill.costHp)}` : `🔹${formatNumber(skill.costMp)}`;
     return `
-    <button type="button" class="mmo-skill boss-skill ${type}" data-skill="${skill.index}" ${skill.canUse ? '' : 'disabled'} title="${escapeHtml(skill.description)}">
+    <button type="button" class="mmo-skill boss-skill ${type}${skill.locked ? ' locked' : ''}${skill.tier > 1 ? ` tier-${skill.tier}` : ''}" data-skill="${skill.index}" ${skill.canUse ? '' : 'disabled'} title="${escapeHtml(skill.description)}${skill.tags?.length ? ` · ${escapeHtml(skill.tags.join(' · '))}` : ''}">
       <span class="mmo-skill-icon">${skillGlyph(skill)}</span>
       <span class="mmo-skill-cooldown" data-skill-cooldown data-until="${skill.cooldownUntil || 0}" data-total="${skill.cooldownMs || 0}">${skill.cooldownMs > 0 ? formatDuration(skill.cooldownMs) : ''}</span>
       <strong>${escapeHtml(skill.name)}</strong>
@@ -144,7 +168,7 @@ export function damageMeter(rows = []) {
   if (!rows.length) return '<div class="boss-empty compact">Пока никто не атаковал.</div>';
   const top = Math.max(...rows.map(row => Number(row.damage) || 0), 1);
   return `<div class="mmo-meter">${rows.map((row, index) => `
-    <div class="mmo-meter-row ${row.isYou ? 'you' : ''}" ${row.isYou ? '' : `data-player-card="${escapeHtml(row.userId)}"`} style="--fill:${((Number(row.damage) || 0) / top) * 100}%;--class:${CLASS_COLORS[row.className] || CLASS_COLORS.noClass}">
+    <div class="mmo-meter-row ${row.isYou ? 'you' : ''}" ${row.isYou ? '' : `data-player-card="${escapeHtml(row.userId)}"`} style="--fill:${((Number(row.damage) || 0) / top) * 100}%;--class:${classColor(row.className)}">
       <span class="rank">${index + 1}</span>
       <strong>${escapeHtml(row.isYou ? `${row.name} (ты)` : row.name)}</strong>
       <em>${formatNumber(row.damage)} · ${row.share ?? 0}%</em>
@@ -158,6 +182,7 @@ export function rewardsPanel(loot) {
   if (loot?.crystals) rows.push(['💎', 'Кристаллы', `${formatNumber(loot.crystals.min)} – ${formatNumber(loot.crystals.max)}`]);
   if (loot?.experience) rows.push(['✦', 'Опыт', `${formatNumber(loot.experience.min)} – ${formatNumber(loot.experience.max)}`]);
   if (loot?.equipment) rows.push(['🛡️', 'Снаряжение', `${formatNumber(loot.equipment)} шт. в добыче`]);
+  if (loot?.buffPotion) rows.push(['🧪', 'Зелья-баффы', loot.buffPotion.guaranteedTop ? 'топ-3 — всегда' : `шанс ${loot.buffPotion.percent}%`]);
   return `
   <section class="mmo-frame mmo-rewards" data-boss-rewards hidden>
     <div class="mmo-section-title"><strong>Возможная награда</strong><small>Зависит от места по урону</small></div>
@@ -176,11 +201,45 @@ export function bossAttacksPanel(boss) {
   <section class="mmo-frame boss-attacks">
     <div class="mmo-section-title"><strong>Атаки босса</strong><small data-boss-next data-until="${Date.now() + (Number(boss.nextAttackMs) || 0)}">${boss.damageList?.length ? 'готовится…' : 'ждёт первого удара'}</small></div>
     <div class="boss-attack-list">${attacks.map(attack => `
-      <span class="boss-attack ${attack.target}" title="${escapeHtml(attack.description)}"><i>${escapeHtml(attack.icon)}</i><b>${escapeHtml(attack.name)}</b><small>${attack.target === 'all' ? 'по всем' : 'по одному'}</small></span>`).join('')}</div>
+      <span class="boss-attack ${attack.target}" title="${escapeHtml(attack.description)}"><i>${escapeHtml(attack.icon)}</i><b>${escapeHtml(attack.name)}</b><small>${attack.target === 'all' ? 'по всем' : attack.target === 'multi' ? `по ${attack.count || 2}` : 'по одному'}</small></span>`).join('')}</div>
     ${log.length ? `<ol class="boss-attack-feed">${log.map((record, index) => `
       <li class="${index === 0 ? 'latest' : ''} ${record.hits.some(hit => hit.you) ? 'hit-you' : ''}">
         <i>${escapeHtml(record.icon)}</i>
         <div><strong>${escapeHtml(record.name)}</strong><small>${record.hits.map(hit => `${escapeHtml(hit.you ? 'ты' : hit.name)} −${formatNumber(hit.dmg)}${hit.killed ? ' 💀' : ''}`).join(' · ') || 'промах'}</small></div>
       </li>`).join('')}</ol>` : ''}
+  </section>`;
+}
+
+/**
+ * The encounter: minions / twins / heads as targets (`data-boss-target`), a
+ * warning while an ultimate charges, and the latest fight events. `selected` is
+ * the target id damage skills are aimed at ('boss' or a minion id).
+ */
+export function encounterPanel(boss, selected = 'boss') {
+  const units = boss.minions || [];
+  const events = (boss.events || []).slice(0, 3);
+  if (!units.length && !events.length && !boss.charging) return '';
+
+  const chargeAttack = (boss.attacks || []).find(attack => attack.key === boss.charging?.key);
+  const unitRow = unit => `
+    <button type="button" class="boss-unit ${unit.kind} ${selected === unit.id ? 'selected' : ''} ${unit.alive ? '' : 'dead'}" data-boss-target="${escapeHtml(unit.id)}" ${unit.alive ? '' : 'disabled'} title="${escapeHtml(unit.description)}">
+      <i>${escapeHtml(unit.icon)}</i>
+      <span><strong>${escapeHtml(unit.name)}${unit.required ? ' 🔒' : ''}</strong>
+      <span class="boss-unit-bar"><b style="width:${clampPercent(unit.hpPercent)}%"></b></span></span>
+      <em>${formatNumber(unit.currentHp)}</em>
+    </button>`;
+
+  return `
+  <section class="mmo-frame boss-encounter">
+    ${boss.charging ? `<div class="boss-charging" role="alert">⚠️ Босс накапливает «${escapeHtml(chargeAttack?.name || 'ультимейт')}»! Оглушение прервёт удар.</div>` : ''}
+    ${units.length ? `<div class="mmo-section-title"><strong>Свита</strong><small>${boss.requiredAlive ? 'добей, чтобы убить босса' : 'ловят часть урона'}</small></div>
+    <div class="boss-units">
+      <button type="button" class="boss-unit boss ${selected === 'boss' ? 'selected' : ''}" data-boss-target="boss">
+        <i>👹</i><span><strong>${escapeHtml(boss.nameCall || boss.name)}</strong>
+        <span class="boss-unit-bar"><b style="width:${clampPercent(boss.hpPercent)}%"></b></span></span><em>${formatNumber(boss.currentHp)}</em>
+      </button>
+      ${units.map(unitRow).join('')}
+    </div>` : ''}
+    ${events.length ? `<ol class="boss-events">${events.map(event => `<li><i>${escapeHtml(event.icon)}</i><span>${escapeHtml(event.text)}</span></li>`).join('')}</ol>` : ''}
   </section>`;
 }

@@ -12,9 +12,9 @@ export const TONE_HEX = Object.freeze({
 
 // Grade → how strongly the rim light and accent glow read. Higher grades should
 // be visibly more "alive" even when the model itself is the same file.
-const GRADE_GLOW = Object.freeze({ noGrade: 0.15, D: 0.2, C: 0.3, B: 0.4, A: 0.55, S: 0.7, SS: 0.85, SSS: 1 });
+const GRADE_GLOW = Object.freeze({ noGrade: 0.15, D: 0.2, C: 0.3, B: 0.4, A: 0.55, S: 0.7, S80: 0.85, S84: 1 });
 
-/** 'sss' / 'SSS' / 'nograde' (the DOM stores grades lowercased) → canonical 'SSS' / 'noGrade'. */
+/** 's84' / 'S84' / 'nograde' (the DOM stores grades lowercased) → canonical 'S84' / 'noGrade'. */
 export function canonicalGrade(grade) {
   const raw = String(grade ?? '').trim();
   if (!raw || raw.toLowerCase() === 'nograde') return 'noGrade';

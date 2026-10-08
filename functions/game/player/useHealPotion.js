@@ -1,6 +1,7 @@
 import getEquipStatByName from './getters/getEquipStatByName.js';
 import getMaxHp from './getters/getMaxHp.js';
 import getCurrentHp from './getters/getCurrentHp.js';
+import potionRestore from './potionRestore.js';
 
 export default function (session, potion) {
     let player = session.game.gameClass.stats;
@@ -16,7 +17,7 @@ export default function (session, potion) {
     }
 
     potion.count--;
-    const heal = potion.power * getEquipStatByName(session, "healPowerPotionsMul", true);
+    const heal = potionRestore(potion, maxHp) * getEquipStatByName(session, "healPowerPotionsMul", true);
     session.game.gameClass.stats.hp = Math.min(currentHp + heal, maxHp);
     session.game.inventory.potions.items.find(_potion => _potion.bottleType === potion.bottleType && _potion.name === potion.name && _potion.power === potion.power).count = potion.count;
     return 0;

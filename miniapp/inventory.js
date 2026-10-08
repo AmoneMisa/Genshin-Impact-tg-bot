@@ -3,6 +3,9 @@ import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getEquipStatByName from '../functions/game/player/getters/getEquipStatByName.js';
+import potionRestore, { potionShare } from '../functions/game/player/potionRestore.js';
+import buffPotions from '../template/buffPotions.js';
+import {applyPotionBuff,activePotionBuffs} from '../functions/game/player/potionBuffs.js';
 
 function number(value, fallback = 0) {
   const parsed = Number(value);
@@ -23,8 +26,12 @@ function potionDto(item, index) {
     size: item?.size || '',
     count: Math.max(0, number(item?.count)),
     power: Math.max(0, number(item?.power)),
+    // Share of the maximum a flat potion restores at the least (0 for elixirs, which are percentages).
+    share: Math.round(potionShare(item) * 100),
     name: item?.name || `Зелье ${index + 1}`,
     description: item?.description || '',
+    id:item?.id || null,
+    seconds:item?.seconds || null,
   };
 }
 
@@ -55,6 +62,7 @@ export function getInventoryState(session) {
       potions: potions.reduce((sum, item) => sum + item.count, 0),
     },
     potions,
+    buffs:activePotionBuffs(session).map(e=>({id:e.potionId,name:e.name,until:e.until})),
   };
 }
 
@@ -81,13 +89,17 @@ export function useInventoryPotion(session, rawKey) {
   let restored = 0;
   let resource = potion.type;
 
-  if (potion.type === 'hp') {
+  if (potion.type === 'buff') {
+    const definition=buffPotions.find(p=>p.id===potion.id);
+    if(!definition)return {ok:false,reason:'unsupported_potion',inventory:getInventoryState(session)};
+    const effect=applyPotionBuff(session,definition.id);
+    potion.count=Math.max(0,number(potion.count)-1);
+    return {ok:true,action:'use_potion',resource:'buff',effect,potion:potionDto(potion,index),inventory:getInventoryState(session)};
+  } else if (potion.type === 'hp') {
     if (hp >= maxHp) {
       return { ok: false, reason: 'hp_full', inventory: getInventoryState(session) };
     }
-    const base = potion.bottleType === 'elixir'
-      ? maxHp * number(potion.power) / 100
-      : number(potion.power);
+    const base = potionRestore(potion, maxHp);
     const next = Math.min(maxHp, hp + Math.max(0, base * multiplier));
     restored = Math.max(0, Math.round(next - hp));
     session.game.gameClass.stats.hp = next;
@@ -97,7 +109,7 @@ export function useInventoryPotion(session, rawKey) {
     if (mp >= maxMp) {
       return { ok: false, reason: 'mp_full', inventory: getInventoryState(session) };
     }
-    const next = Math.min(maxMp, mp + Math.max(0, number(potion.power) * multiplier));
+    const next = Math.min(maxMp, mp + Math.max(0, potionRestore(potion, maxMp) * multiplier));
     restored = Math.max(0, Math.round(next - mp));
     session.game.gameClass.stats.mp = next;
   } else {

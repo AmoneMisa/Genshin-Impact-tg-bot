@@ -44,7 +44,7 @@ test('building lot shows cost affordability, collect chip and the blocked upgrad
   assert.match(html, /city-cost missing">⛏️ 2\s?400/);
   assert.match(html, /data-city-action="collect"[^>]*>🪙 \+8\s?420/);
   assert.match(html, /data-city-action="upgrade"[^>]*disabled/);
-  assert.match(html, /\/art\/builds\/goldMine\//);
+  assert.match(html, /\/art\/(?:world\/v1\/)?builds\/goldMine\//);
 });
 
 test('upgrading lot shows a live progress bar and a speed-up with its crystal cost', () => {

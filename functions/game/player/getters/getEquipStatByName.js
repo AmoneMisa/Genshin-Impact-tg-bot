@@ -8,9 +8,14 @@
 // correctly elsewhere.
 const POINT_SCALE_MUL_STATS = new Set(["power", "defencePower"]);
 
+import gradeScale from '../../equipment/gradeScale.js';
+import { potionStatBonus } from '../potionBuffs.js';
+import { activeSets, enchantExtras, uniqueEquipped } from '../../equipment/itemBonuses.js';
+
 export default function (session, statName, isMul = false) {
     if (!session.game || !session.game.equipmentStats) {
-        return 1;
+        const bonus=potionStatBonus(session,statName,isMul);
+        return isMul ? bonus : 1+bonus;
     }
 
     let totalStatValue = (statName === "defencePower" || statName === "power") ? 1 : 0;
@@ -24,25 +29,17 @@ export default function (session, statName, isMul = false) {
     // A two-slot item (e.g. a two-handed sword occupying leftHand+rightHand) is
     // written into equipmentStats once per slot it fills (see equipItem.js) — a
     // separate object per slot key once loaded back from Mongo, so reference
-    // equality won't dedup them. Key on type+slots content instead: equipItem.js
-    // unequips anything overlapping a slot before equipping, so two entries
-    // sharing the same type and slot list can only be copies of the same item.
-    const seenItems = new Set();
-
-    for (let slot of Object.values(session.game.equipmentStats)) {
-        if (!slot) {
-            continue;
+    // equality won't dedup them. uniqueEquipped keys on type+slots content:
+    // equipItem.js unequips anything overlapping a slot before equipping, so two
+    // entries sharing the same type and slot list can only be copies of one item.
+    for (let slot of uniqueEquipped(session.game.equipmentStats)) {
+        // Fixed characteristics of the catalog item plus what its enchant level adds.
+        const characteristics = {...(slot.characteristics || {})};
+        for (const [name, extra] of Object.entries(enchantExtras(slot))) {
+            characteristics[name] = (characteristics[name] || 0) + extra;
         }
 
-        if (Array.isArray(slot.slots)) {
-            const itemKey = `${slot.kind}|${[...slot.slots].sort().join(',')}`;
-            if (seenItems.has(itemKey)) {
-                continue;
-            }
-            seenItems.add(itemKey);
-        }
-
-        for (let [statKey, statValue] of Object.entries(slot.characteristics)) {
+        for (let [statKey, statValue] of Object.entries(characteristics)) {
 
             if (statKey !== statName) {
                 continue;
@@ -51,17 +48,12 @@ export default function (session, statName, isMul = false) {
             if (isMul) {
                 totalStatValue *= asFactor ? (1 + statValue / 100) : statValue;
             } else {
-                totalStatValue += statValue;
+                totalStatValue += statValue * gradeScale(statName, slot.grade);
             }
         }
 
-        // Random bonus (and penalty) rolls from generateRandomEquipment.js —
-        // template/equipmentBonusStatsTemplate.js already stores every one of
-        // these keys in the same convention getEquipStatByName expects ("Mul"
-        // stats as a ready-to-multiply factor near 1, everything else as a flat
-        // point value), so no percentage conversion is needed here, only for
-        // "power"/"defencePower" above. Previously these rolled stats were
-        // generated and displayed but never actually applied to combat.
+        // Fixed extra stats of the item (special abilities of S-grade weapons, and bonus
+        // rolls of items created before the Lineage 2 catalog).
         if (Array.isArray(slot.stats)) {
             for (let {name: statKey, value: statValue} of slot.stats) {
                 if (statKey !== statName || typeof statValue !== "number") {
@@ -71,10 +63,26 @@ export default function (session, statName, isMul = false) {
                 if (isMul) {
                     totalStatValue *= statValue;
                 } else {
-                    totalStatValue += statValue;
+                    totalStatValue += statValue * gradeScale(statName, slot.grade);
                 }
             }
         }
     }
-    return totalStatValue;
+
+    // Full-set bonuses (helmet + gloves + boots + body cover of one set).
+    for (const set of activeSets(session.game.equipmentStats)) {
+        const statValue = set.bonus[statName];
+        if (typeof statValue !== "number") {
+            continue;
+        }
+
+        if (isMul) {
+            totalStatValue *= statValue;
+        } else {
+            totalStatValue += statValue;
+        }
+    }
+
+    const potionBonus=potionStatBonus(session,statName,isMul);
+    return isMul ? totalStatValue*potionBonus : totalStatValue+potionBonus;
 }

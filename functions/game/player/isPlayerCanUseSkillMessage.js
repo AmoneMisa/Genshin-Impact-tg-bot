@@ -7,6 +7,10 @@ export default function (errorCode, skill) {
         return "Недостаточно маны или хп для использования скилла. /whoami";
     }
 
+    if (errorCode === 3) {
+        return `Скилл «${skill.name}» откроется на ${skill.needLvl} уровне.`;
+    }
+
     let cooldown = getSkillCooldown(skill);
     let [remain] = getTime(cooldown);
 

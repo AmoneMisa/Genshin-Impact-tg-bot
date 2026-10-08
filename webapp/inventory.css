@@ -41,6 +41,10 @@
 .inv-slot em { position: absolute; right: 4px; bottom: 3px; font: 800 11px/1 system-ui, sans-serif; font-style: normal; color: #fff; text-shadow: 0 0 3px #000, 0 0 3px #000; }
 
 /* CSS flask: rounded body, neck, cork; liquid colour by potion tone. */
+.inv-potion-art { display: block; width: 38px; height: 48px; object-fit: contain; }
+.inv-detail .inv-potion-art { width: 64px; height: 96px; margin: 0 auto; }
+.shop-icon .inv-potion-art { width: 32px; height: 38px; }
+.inv-hint { overflow-wrap: anywhere; }
 .inv-flask { --liquid: #e0484c; --liquid-rgb: 224 72 76; position: relative; width: 30px; height: 38px; display: block; }
 .inv-flask.tone-mp { --liquid: #4a90e2; --liquid-rgb: 74 144 226; }
 .inv-flask.tone-elixir { --liquid: #ff6ab8; --liquid-rgb: 255 106 184; }

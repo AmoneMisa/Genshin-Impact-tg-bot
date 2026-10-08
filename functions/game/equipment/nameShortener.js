@@ -42,6 +42,11 @@ export default function (phrase) {
         return nameParts[0];
     }
 
+    // Catalog items have short fixed names; only items named the old way need shortening.
+    if (!phrase.includes(' - ')) {
+        return phrase.trim();
+    }
+
     const parts = phrase.split(' - ');
     let grade = shortenPart(parts[0]);
     const qualityAndItem = parts[1].split(') ');

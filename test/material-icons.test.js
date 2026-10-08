@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { materialIcon, materialIconInfo } from '../webapp/material-icons.js';
+import materials from '../template/materialsTemplate.js';
+
+test('enchant and crafting materials map onto the painted icons, everything else keeps its emoji', () => {
+  assert.deepEqual(materialIconInfo('scroll_D'), { icon: 'scroll', grade: 'D' });
+  assert.deepEqual(materialIconInfo('blessed_S84'), { icon: 'scroll-blessed', grade: 'S84' });
+  assert.deepEqual(materialIconInfo('crystal_S80'), { icon: 'crystal', grade: 'S80' });
+  assert.deepEqual(materialIconInfo('craft_leather_noGrade'), { icon: 'leather', grade: 'noGrade' });
+  assert.equal(materialIconInfo('skill_scroll'), null);
+  assert.equal(materialIconInfo('essence_baium'), null);
+  assert.equal(materialIconInfo('scroll_X'), null);
+  assert.equal(materialIcon('skill_scroll', '📜'), '📜');
+  assert.match(materialIcon('scroll_A'), /class="mat-icon grade-tint-a" src="\/art\/icons\/scroll-128\.webp"/);
+});
+
+test('every enchant / crafting material has a painted icon in both sizes', () => {
+  for (const material of materials) {
+    const info = materialIconInfo(material.key);
+    if (!/^(scroll|blessed|crystal|craft)_/.test(material.key)) continue;
+    assert.ok(info, material.key);
+    for (const size of [128, 256]) assert.ok(fs.existsSync(`webapp/art/icons/${info.icon}-${size}.webp`), `${info.icon}-${size}`);
+  }
+});

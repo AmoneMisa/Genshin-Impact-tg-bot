@@ -74,9 +74,30 @@
 .grade-b { color:#b6b3ff; }
 .grade-a { color:#d7aef2; }
 .grade-s { color:#f1c9a2; }
-.grade-ss { color:#ffd8a8; text-shadow:0 0 12px rgba(255,190,102,.22); }
-.grade-sss { color:#ffe7ad; text-shadow:0 0 15px rgba(255,213,112,.32); }
+.grade-s80 { color:#ffd8a8; text-shadow:0 0 12px rgba(255,190,102,.22); }
+.grade-s84 { color:#ffe7ad; text-shadow:0 0 15px rgba(255,213,112,.32); }
 @media (min-width:680px) { .equipment-summary { grid-template-columns:repeat(5,minmax(0,1fr)); }.loadout-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }.equipment-list,.forge-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.equipment-item-actions { margin-top:auto; } }
 /* Phones: one compact row of chips (scrolls sideways) so the paper doll is on the first screen, like the design. */
 @media (max-width:679px) { .equipment-summary { display:flex; gap:6px; margin:10px 0 8px; overflow-x:auto; scrollbar-width:none; }.equipment-summary::-webkit-scrollbar { display:none; }.equipment-summary > div { flex:0 0 auto; min-width:74px; padding:6px 9px; border-radius:11px; gap:2px; }.equipment-summary small { font-size:9px; letter-spacing:.05em; }.equipment-summary strong { font-size:13px; } }
 @media (max-width:390px) {.equipment-section-title small { display:none; }.equipment-item-actions { grid-template-columns:1fr; }.equipment-badges { flex-direction:column; align-items:flex-end; } }
+.equipment-set { position:relative; z-index:1; margin-top:6px; color:#9fe3c8; font-size:11px; }
+.equipment-item.unusable { opacity:.72; }
+.equipment-action.crystallize { grid-column:1 / -1; }
+.forge-enchant-actions { position:relative; z-index:1; display:grid; gap:7px; }
+.scroll-card .forge-enchant-actions { grid-template-columns:1fr; }
+.craft-skill { display:grid; gap:4px; padding:11px 12px; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(255,255,255,.035); }
+.craft-skill small { color:var(--muted); font-size:11px; }
+.craft-skill-bar { height:6px; border-radius:99px; background:rgba(255,255,255,.07); overflow:hidden; }
+.craft-skill-bar i { display:block; height:100%; background:linear-gradient(90deg,rgba(225,181,112,.8),rgba(165,126,240,.8)); }
+/* painted enchant / craft material icons: neutral gold art, turned to the colour of the grade */
+.mat-icon { width:22px; height:22px; vertical-align:-6px; object-fit:contain; }
+.grade-tint-nograde { filter:saturate(.25) brightness(.95); }
+.grade-tint-d { filter:hue-rotate(80deg) saturate(.9); }
+.grade-tint-c { filter:hue-rotate(130deg); }
+.grade-tint-b { filter:hue-rotate(170deg); }
+.grade-tint-a { filter:hue-rotate(230deg); }
+.grade-tint-s { filter:drop-shadow(0 0 3px rgba(255,200,90,.7)); }
+.grade-tint-s80 { filter:hue-rotate(290deg) drop-shadow(0 0 3px rgba(255,120,170,.7)); }
+.grade-tint-s84 { animation:mat-prism 4s linear infinite; }
+@keyframes mat-prism { to { filter:hue-rotate(360deg) drop-shadow(0 0 4px rgba(255,255,255,.6)); } from { filter:hue-rotate(0deg) drop-shadow(0 0 4px rgba(255,255,255,.6)); } }
+@media(prefers-reduced-motion:reduce) { .grade-tint-s84 { animation:none; filter:drop-shadow(0 0 4px rgba(255,255,255,.7)); } }

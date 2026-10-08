@@ -1,7 +1,7 @@
 // Textured high-poly weapon samples, styled after classic fantasy-RPG hero items:
 //   sunSword()    — engraved longsword with twin fullers and a blazing sun-ring guard
 //   runeDagger()  — curved, serrated dark-steel dagger with glowing carved runes
-//   voidBlade()   — stylised dark blade with a luminous core channel (SS/SSS variant)
+//   voidBlade()   — stylised dark blade with a luminous core channel (S80/S84 variant)
 //
 // Geometry carries the silhouette; texture maps (albedo, packed roughness/metal,
 // normal, emissive) carry the surface detail, exactly like hand-made game assets.

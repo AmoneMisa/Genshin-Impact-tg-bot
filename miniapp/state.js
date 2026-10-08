@@ -44,7 +44,9 @@ const GROUP_ONLY_FEATURE_SET = new Set(GROUP_ONLY_FEATURE_IDS);
 const FEATURE_CATALOG = Object.freeze([
   { id: 'profile', title: 'Персонаж', subtitle: 'Класс, пол и характеристики', icon: '🧙', status: 'webgl' },
   { id: 'skills', title: 'Навыки', subtitle: 'Прокачка умений и ОП', icon: '⚡', status: 'webgl' },
+  { id: 'classQuests', title: 'Профессии', subtitle: 'Квесты 2-й и 3-й профессии', icon: '🎓', status: 'webgl' },
   { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
+  { id: 'buffs', title: 'Баффы', subtitle: 'Усиления класса на 20 минут', icon: '✨', status: 'webgl' },
   { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
   { id: 'exchange', title: 'Обменник', subtitle: 'Золото в кристаллы', icon: '💱', status: 'webgl' },
   { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
@@ -69,6 +71,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'chatSettings', title: 'Настройки чата', subtitle: 'Доступность команд для группы', icon: '⚙️', status: 'webgl' },
   { id: 'updates', title: 'Что нового', subtitle: 'Уведомления об обновлениях', icon: '🔔', status: 'webgl' },
   { id: 'feedback', title: 'Написать разработчику', subtitle: 'Баг, идея или вопрос', icon: '💬', status: 'webgl' },
+  { id: 'language', title: 'Til / Язык', subtitle: 'Language · Язык', icon: '🌐', status: 'webgl' },
   { id: 'mail', title: 'Почта', subtitle: 'Награды и письма', icon: '✉️', status: 'webgl' },
   { id: 'promo', title: 'Промокод', subtitle: 'Ввести код и получить награду', icon: '🎟️', status: 'webgl' },
   { id: 'admin', title: 'Админка', subtitle: 'Промокоды и объявления', icon: '🛠️', status: 'webgl', adminOnly: true },

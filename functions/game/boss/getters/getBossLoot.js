@@ -1,17 +1,24 @@
 import bossLootTemplate from '../../../../template/bossLootTemplate.js';
 import lodash from 'lodash';
 
-const modifiers = {
-    kivaha: {gold: 1.03, crystals: 1.04, experience: 1.1},
-    avrora: {gold: 1.035, crystals: 1.07, experience: 1.5},
-    carnevorusIsse: {gold: 1.044, crystals: 1.06, experience: 2},
-    fjorina: {gold: 1.021, crystals: 1.03, experience: 1.67},
-    radjahal: {gold: 1.0155, crystals: 1.1, experience: 1.3}
+import bossTemplates from '../../../../template/bossTemplate.js';
+
+const DEFAULT_MODIFIERS = {gold: 1.03, crystals: 1.05, experience: 1.3};
+
+function modifiersFor(bossName) {
+    return {...DEFAULT_MODIFIERS, ...(bossTemplates.find(item => item.name === bossName)?.lootMod || {})};
 }
 
 export default function (boss) {
+    const modifiers = {[boss.name]: modifiersFor(boss.name)};
     let newLootObj = {};
     for (let [lootType, lootArray] of Object.entries(bossLootTemplate)) {
+        // Equipment rolls are shares of the fighters (not amounts), so they are not scaled by boss level.
+        if (lootType === "equipment") {
+            newLootObj[lootType] = lootArray.map(item => ({...item}));
+            continue;
+        }
+
         let newLootTypeArray = [];
         for (let loot of lootArray) {
 

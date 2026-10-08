@@ -1,6 +1,6 @@
 // High-poly jewellery samples in an ornate "fairy fantasy" style:
 //   filigreeRing()  — scroll-work band with a bezel-set cabochon (B–S grades)
-//   wingedRing()    — crowned crystal heart with translucent veined wings (SS/SSS)
+//   wingedRing()    — crowned crystal heart with translucent veined wings (S80/S84)
 //   butterflyNecklace(), crescentEarring(), flowerTiara()
 //
 // Mostly untextured PBR: polished metal and glowing crystal read best as clean

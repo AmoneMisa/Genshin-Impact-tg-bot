@@ -5,6 +5,8 @@
 //
 // Outcomes are decided by the server value; this module only shows them.
 
+import { worldArtUrl } from './art/world-art.js';
+
 const SLOT_STRIP = ['😈', '❤️', '💋', '🤏', '🛫', '🚗', '💩', '👻', '👽', '☠️'];
 
 /** Visual outcome of a throw. Mirrors the Telegram dice semantics the bot used. */
@@ -74,7 +76,8 @@ function sceneHtml(gameId, game) {
 }
 
 export function stageHtml(gameId, game) {
-  return `<div class="arcade-stage as-${gameId}" data-stage="${gameId}">${sceneHtml(gameId, game)}<div class="as-flash" data-flash></div></div>`;
+  const art = gameId === 'basketball' && worldArtUrl('games/basketball',512);
+  return `<div class="arcade-stage as-${gameId}" data-stage="${gameId}" ${art ? `style="--arcade-painting:url('${art}')"` : ''}>${sceneHtml(gameId, game)}<div class="as-flash" data-flash></div></div>`;
 }
 
 const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));

@@ -8,7 +8,7 @@ export default function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    let totalValue = Math.min(225, stats.speed + getEquipStatByName(session, "speed"));
+    let totalValue = Math.min(225, (stats.speed + getEquipStatByName(session, "speed")) * getEquipStatByName(session,"speedMul",true));
 
     if (isHasPenalty(session)) {
         totalValue *= 0.45;

@@ -35,8 +35,8 @@ test('avatar gear reuses loot identity, condition and forge presentation',()=>{
 
 test('paper doll avatar receives full equipped items but ignores tiny jewelry layers',()=>{
   const helmet=equippedItem({key:'1:helm',name:'Moon Crown',grade:'A',mainType:'armor',category:'helmet',kind:'helmet',slots:['head'],forgeLevel:5});
-  const armor=equippedItem({key:'2:armor',name:'Moon Plate',grade:'SS',mainType:'armor',category:'armor',kind:'armor',slots:['up'],forgeLevel:7});
-  const ring=equippedItem({key:'3:ring',name:'Moon Ring',grade:'SSS',mainType:'accessories',category:'ring',kind:'ring',slots:['leftRing'],forgeLevel:10});
+  const armor=equippedItem({key:'2:armor',name:'Moon Plate',grade:'S80',mainType:'armor',category:'armor',kind:'armor',slots:['up'],forgeLevel:7});
+  const ring=equippedItem({key:'3:ring',name:'Moon Ring',grade:'S84',mainType:'accessories',category:'ring',kind:'ring',slots:['leftRing'],forgeLevel:10});
   const state={
     equippedSlots:{head:snapshot(helmet),up:snapshot(armor),leftRing:snapshot(ring)},
     items:[helmet,armor,ring],

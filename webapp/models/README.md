@@ -1,7 +1,7 @@
-# Scene models
+# Retired scene models
 
-Equipment previews use responsive WebP paintings in webapp/art/items/v1. The item model manifest is intentionally empty; item GLBs have been removed.
+No GLB files ship with the game. Equipment and chests use responsive WebP paintings.
+The model manifest stays empty for compatibility with the offline model checker.
+Historical Blender utilities are not part of the runtime asset pipeline.
 
-chest.glb is used by the treasure-chest scene. Rebuild it with npm run models:chest.
-
-See art-source/items/README.md for item artwork, source references and mobile budgets.
+See art-source/items/README.md and art-source/chests/README.md for production assets.

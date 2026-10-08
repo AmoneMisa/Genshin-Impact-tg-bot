@@ -13,7 +13,7 @@ test('all equipment template categories have WebP art, including robe subtypes',
     assert.notEqual(kind,'relic',JSON.stringify(item));
     assert.ok(ITEM_ART_KEYS.includes(itemArtKey(kind,item)));
     assert.match(renderLootArt(item), /<img class="loot-item-image"/);
-    for (const grade of ['B','A','S','SS','SSS']) {
+    for (const grade of ['B','A','S','S80','S84']) {
       const graded = {...item,grade};
       assert.ok(!BASE_ITEM_ART_KEYS.includes(itemArtKey(kind,graded)),JSON.stringify(graded));
     }
@@ -34,16 +34,16 @@ test('higher grades select distinct paintings without overriding weapon subtypes
     assert.match(renderLootArt(item),new RegExp(`data-art-key="${variant.key}"`));
     assert.equal(itemArtKey(variant.kind,{...item,forgeLevel:10}),variant.key);
   }
-  assert.equal(itemArtKey('sword',{kind:'twoHandedSword',grade:'SSS'}),'greatsword-solar');
+  assert.equal(itemArtKey('sword',{kind:'twoHandedSword',grade:'S84'}),'greatsword-solar');
   assert.equal(itemArtKey('sword',{kind:'twoHandedSword',grade:'D'}),'greatsword');
-  assert.equal(itemArtKey('armor',{kind:'heavy',grade:'SSS'}),'armor-prismatic');
-  assert.equal(itemArtKey('armor',{kind:'robe',grade:'SSS'}),'mantle-royal');
-  assert.equal(itemArtKey('boots',{kind:'robe',grade:'SSS'}),'anklets-crystal');
-  assert.equal(itemArtKey('boots',{kind:'heavy',grade:'SSS'}),'boots-raven');
-  assert.equal(itemArtKey('greaves',{kind:'robe',grade:'SSS'}),'leg-wraps-tidal');
-  assert.equal(itemArtKey('gloves',{kind:'robe',grade:'SSS'}),'bracers-crystal');
-  assert.equal(itemArtKey('gloves',{kind:'light',grade:'SSS'}),'gloves-nightweave');
-  for (const kind of ['helmet','armor','gloves','greaves','boots']) for (const grade of ['SS','SSS']) {
+  assert.equal(itemArtKey('armor',{kind:'heavy',grade:'S84'}),'armor-prismatic');
+  assert.equal(itemArtKey('armor',{kind:'robe',grade:'S84'}),'mantle-royal');
+  assert.equal(itemArtKey('boots',{kind:'robe',grade:'S84'}),'anklets-crystal');
+  assert.equal(itemArtKey('boots',{kind:'heavy',grade:'S84'}),'boots-raven');
+  assert.equal(itemArtKey('greaves',{kind:'robe',grade:'S84'}),'leg-wraps-tidal');
+  assert.equal(itemArtKey('gloves',{kind:'robe',grade:'S84'}),'bracers-crystal');
+  assert.equal(itemArtKey('gloves',{kind:'light',grade:'S84'}),'gloves-nightweave');
+  for (const kind of ['helmet','armor','gloves','greaves','boots']) for (const grade of ['S80','S84']) {
     const item={kind:'light',category:kind==='armor'?'body':kind,grade};
     assert.equal(itemArtKey(kind,item),`${kind}-nightweave`);
     assert.match(renderLootArt(item),new RegExp(`data-art-key="${kind}-nightweave"`));
@@ -72,15 +72,15 @@ test('higher grades select distinct paintings without overriding weapon subtypes
       assert.notEqual(itemArtKey(kind,{...light,kind:'robe'}),`${kind}-shadowleather`);
     }
   }
-  assert.match(renderLootArt({kind:'fists',grade:'A'}),/data-art-key="gauntlets-dusk"/);
+  assert.match(renderLootArt({kind:'fists',grade:'A'}),/data-art-key="fists-mid"/);
   assert.match(renderLootArt({kind:'blunt',grade:'A'}),/data-art-key="hammer-opal"/);
   assert.equal(itemArtKey('gloves',{kind:'robe',grade:'D'}),'bracers');
   assert.equal(itemArtKey('greaves',{kind:'robe',grade:'D'}),'leg-wraps');
   assert.equal(itemArtKey('boots',{kind:'robe',grade:'D'}),'anklets');
-  assert.equal(itemArtKey('shield',{kind:'sigill',grade:'SSS'}),'sigil-nebula');
+  assert.equal(itemArtKey('shield',{kind:'sigill',grade:'S84'}),'sigil-nebula');
   assert.equal(itemArtKey('shield',{kind:'sigill',grade:'D'}),'sigil');
-  assert.match(renderLootArt({kind:'sigill',grade:'SSS'}),/data-art-key="sigil-nebula"/);
-  assert.match(renderLootArt({kind:'robe',category:'helmet',grade:'SSS'}),/data-art-key="tiara-night"/);
+  assert.match(renderLootArt({kind:'sigill',grade:'S84'}),/data-art-key="sigil-nebula"/);
+  assert.match(renderLootArt({kind:'robe',category:'helmet',grade:'S84'}),/data-art-key="tiara-night"/);
   assert.equal(itemArtKey('ring',{grade:'D'}),'ring');
   assert.equal(itemArtKey('ring',{grade:'???'}),'ring');
 });
@@ -120,4 +120,20 @@ test('motion is visibility-gated, reduced-motion safe and independent of WebGL s
   assert.match(runtime,/visibilitychange/);
   assert.doesNotMatch(runtime,/requestAnimationFrame|getContext|getGltfStage/);
   assert.ok(app.indexOf('startItemArt();')<app.indexOf("startWebGL($('webgl'))"));
+});
+
+test('every epic jewel has its own painting and fist weapons three tiers', () => {
+  const bosses = ['queenAnt', 'core', 'orfen', 'zaken', 'baium', 'antharas', 'valakas', 'frintezza'];
+  for (const boss of bosses) {
+    const item = { kind: 'ring', category: 'ring', mainType: 'jewelry', grade: 'S', epicBoss: boss };
+    assert.equal(itemArtKey('ring', item), `epic-${boss}`);
+    assert.ok(ITEM_ART_KEYS.includes(`epic-${boss}`));
+    assert.match(renderLootArt(item), new RegExp(`data-art-key="epic-${boss}"`));
+  }
+  assert.equal(itemArtKey('ring', { kind: 'ring', grade: 'S' }) .startsWith('epic-'), false, 'ordinary rings keep their art');
+  assert.equal(itemArtKey('fists', { kind: 'fists', grade: 'noGrade' }), 'fists-low');
+  assert.equal(itemArtKey('fists', { kind: 'fists', grade: 'C' }), 'fists-low');
+  assert.equal(itemArtKey('fists', { kind: 'fists', grade: 'S' }), 'fists-mid');
+  assert.equal(itemArtKey('fists', { kind: 'fists', grade: 'S84' }), 'fists-high');
+  assert.equal(normalizeLootKind({ kind: 'fists' }), 'fists');
 });

@@ -35,7 +35,7 @@ export default [{
     translatedName: "Королевская спираль",
     freeSpins: 3,
     piecesForFleeCall: 85,
-    gradesForSpin: [{value: "A", chance: 0.75}, {value: "S", chance: 0.22}, {value: "SS", chance: 0.03}],
+    gradesForSpin: [{value: "A", chance: 0.75}, {value: "S", chance: 0.22}, {value: "S80", chance: 0.03}],
     spinCost: {
         crystals: 170,
         gold: 55000,
@@ -46,7 +46,7 @@ export default [{
     translatedName: "Божественная спираль",
     freeSpins: 3,
     piecesForFleeCall: 120,
-    gradesForSpin: [{value: "S", chance: 0.65}, {value: "SS", chance: 0.28}, {value: "SSS", chance: 0.07}],
+    gradesForSpin: [{value: "S", chance: 0.65}, {value: "S80", chance: 0.28}, {value: "S84", chance: 0.07}],
     spinCost: {
         crystals: 550,
         gold: 355000,

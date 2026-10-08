@@ -17,3 +17,9 @@ __pycache__/
 *.blend1
 
 api.access.log
+
+# i18n tooling data (tracked even though *.json is ignored)
+!scripts/i18n/*.json
+
+# local tool attachments
+/.codex-remote-attachments/

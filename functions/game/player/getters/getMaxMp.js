@@ -7,5 +7,7 @@ export default function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return Math.round(stats.maxMp * (1 + getEquipStatByName(session, "maxMp")));
+    // Gear adds a flat amount (maxMp) and a multiplier (maxMpMul) on top of the class value.
+    return Math.round((stats.maxMp + getEquipStatByName(session, "maxMp"))
+        * getEquipStatByName(session, "maxMpMul", true));
 };

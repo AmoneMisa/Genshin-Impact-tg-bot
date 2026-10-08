@@ -93,12 +93,6 @@ h2 { margin-top: 4px; font-size: 24px; letter-spacing: -.025em; }
 @media (min-width: 680px) { .app-shell { padding-left: 24px; padding-right: 24px; }.game-grid { grid-template-columns: repeat(3, 1fr); }.game-card { min-height: 155px; }.game-overlay { align-items:center; padding:24px; }.overlay-panel { border-radius:28px; } }
 @media (max-width: 390px) { .resources { gap: 7px; }.resource { padding: 10px 8px; }.resource > span { display:none; }.hero-card { gap: 12px; }.level-orb { width: 66px; border-radius: 21px; }.chest-grid { gap:7px; }.chest-tile { border-radius:16px; } }
 
-/* 3D chests (chest-3d.js): the canvas replaces the CSS glyphs; rewards overlay the open chest. */
-.chest-tile.chest-3d-ready { background: radial-gradient(circle at 50% 70%, rgba(255, 190, 110, .10), rgba(10, 10, 20, .55) 70%); }
-.chest-tile.chest-3d-ready .chest-glow, .chest-tile.chest-3d-ready .chest-lid, .chest-tile.chest-3d-ready .chest-body { display: none; }
-.chest-tile.chest-3d-ready.opening { animation: none; }
-.chest-3d-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-.chest-tile.chest-3d-ready.opened { display: block; }
 .chest-reward {
   position: absolute; left: 0; right: 0; bottom: 8px; z-index: 1;
   display: flex; flex-direction: column; align-items: center; gap: 1px;

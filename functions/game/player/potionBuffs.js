@@ -1,0 +1,67 @@
+import buffPotions from '../../../template/buffPotions.js';
+import potionsInInventoryTemplate from '../../../template/potionsInInventoryTemplate.js';
+
+// Lineage II style buffs. They come from potions (full strength) and from class
+// buff skills (template/classBuffs.js, scaled by a buff level). Both live in
+// session.game.effects as {potionId, until, factor}; the modifiers always come
+// from template/buffPotions.js, never from the stored effect.
+
+const MAX_FACTOR = 1.3;
+
+const factorOf = effect => {
+ const factor = Number(effect?.factor);
+ return Number.isFinite(factor) && factor > 0 ? Math.min(MAX_FACTOR, factor) : 1;
+};
+
+export function activePotionBuffs(session,now=Date.now()) {
+ return (session?.game?.effects||[]).filter(e=>e?.potionId && Number(e.until)>now && buffPotions.some(p=>p.id===e.potionId));
+}
+
+/** A modifier scaled by buff strength: 1.15 at factor .5 becomes 1.075, +15 becomes +7.5. */
+export function scaleModifier(value,isMul,factor=1) {
+ return isMul ? 1+(value-1)*factor : value*factor;
+}
+
+export function potionStatBonus(session,stat,isMul=false,now=Date.now()) {
+ let result=isMul?1:0;
+ for(const effect of activePotionBuffs(session,now)) {
+  // Resolve modifiers from trusted definitions, not a client-supplied item.
+  const value=buffPotions.find(p=>p.id===effect.potionId).modifiers[stat];
+  if(value===undefined) continue;
+  const scaled=scaleModifier(value,isMul,factorOf(effect));
+  result=isMul?result*scaled:result+scaled;
+ }
+ return result;
+}
+
+/**
+ * Puts a buff on a player. A potion (factor 1) always replaces the effect; a
+ * weaker class buff never downgrades a stronger one that is still running, it
+ * only keeps it from running out earlier.
+ */
+export function applyPotionBuff(session,id,now=Date.now(),{factor=1}={}) {
+ const definition=buffPotions.find(p=>p.id===id);if(!definition)return null;
+ if(!Array.isArray(session.game.effects))session.game.effects=[];
+ const until=now+definition.seconds*1000;
+ const strength=Math.min(MAX_FACTOR,Math.max(0.1,Number(factor)||1));
+ const current=session.game.effects.find(e=>e?.potionId===id && Number(e.until)>now);
+ if(current && factorOf(current)>strength) {
+  current.until=Math.max(Number(current.until),until);
+  return current;
+ }
+ session.game.effects=session.game.effects.filter(e=>e?.potionId!==id);
+ const effect={name:definition.name,potionId:id,amount:0,until,factor:strength};
+ session.game.effects.push(effect);return effect;
+}
+
+/** Adds `count` buff potions to the inventory stack (created from the template when new). */
+export function addBuffPotion(session,id,count=1) {
+ const definition=potionsInInventoryTemplate.find(p=>p.id===id && p.type==='buff');if(!definition)return null;
+ const items=session?.game?.inventory?.potions?.items;if(!Array.isArray(items))return null;
+ const existing=items.find(p=>p.id===id);
+ if(existing)existing.count=(Number(existing.count)||0)+count;
+ else items.push({...definition,count});
+ return definition;
+}
+
+export const BUFF_POTION_IDS=buffPotions.map(p=>p.id);

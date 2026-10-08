@@ -11,6 +11,8 @@ const chatSchema = new mongoose.Schema({
     settingsMessageId: Number,
     settingsButtons: Array,
     game: {type: Object, default: {}},
+    // When each epic raid boss may be challenged again: {name: {killedAt, respawnAt, kills}} (epicBosses.js).
+    epicBosses: {type: Object, default: {}},
     members: [{
         userId: {type: Number},
         isHided: Boolean,

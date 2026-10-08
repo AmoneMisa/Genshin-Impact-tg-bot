@@ -1,3 +1,6 @@
+import { language } from './i18n/init.js';
+import { openLanguageGame } from './language.js';
+import { openBuffsGame } from './buffs.js';
 import { startItemArt } from './item-art-runtime.js';
 import { installOverlayA11y } from './overlay-a11y.js';
 import { startWebGL } from './renderer.js';
@@ -80,7 +83,7 @@ async function refreshBadges() {
 
 async function api(path, options = {}) {
   if (!tg?.initData) throw new Error('Telegram initData отсутствует');
-  const headers = { ...(options.headers || {}), 'x-telegram-init-data': tg.initData };
+  const headers = { ...(options.headers || {}), 'x-telegram-init-data': tg.initData, 'x-app-lang': language };
   if (options.body && !headers['content-type']) headers['content-type'] = 'application/json';
 
   const response = await fetch(path, { ...options, headers });
@@ -98,6 +101,7 @@ async function api(path, options = {}) {
 const launchers = {
   profile: openPlayerProfile,
   skills: openSkillsGame,
+  classQuests: openClassQuests,
   forms: openFormsGame,
   inventory: openInventoryGame,
   exchange: openExchangeGame,
@@ -122,6 +126,8 @@ const launchers = {
   chatSettings: openChatSettings,
   updates: openUpdatesGame,
   feedback: openFeedbackGame,
+  language: openLanguageGame,
+  buffs: openBuffsGame,
   mail: openMailGame,
   promo: openPromoGame,
   admin: openAdminGame,

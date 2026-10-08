@@ -4,7 +4,8 @@ export { escapeHtml };
 // each opening its own window to interact with it: collect, upgrade, speed up,
 // change style, rename. Paintings follow the building's level (art/builds-art.js).
 
-import { buildArtUrl } from './art/builds-art.js';
+import { buildingArtSources } from './art/world-buildings.js';
+import { worldArtUrl } from './art/world-art.js';
 import { icon } from './icons.js';
 
 export const RESOURCE_META = Object.freeze({
@@ -54,7 +55,15 @@ export function upgradeProgress(build, now = Date.now()) {
 }
 
 function artFor(build) {
-  return buildArtUrl(build.id, build.currentLevel, build.currentType) || '';
+  return buildingArtSources(build.id, build.currentLevel, build.currentType, { detail: true }).url || '';
+}
+
+function lotArtHtml(build, banner = false) {
+  const art = buildingArtSources(build.id, build.currentLevel, build.currentType, { detail: banner });
+  const styles = art.painted ? '' : `--art:url('${art.url || ''}')`;
+  const theme = ['common', 'elven', 'royal'].includes(build.currentType) ? build.currentType : 'common';
+  const image = art.painted ? `<img class="city-building-image" src="${art.url}" ${art.srcset ? `srcset="${art.srcset}" sizes="(max-width: 450px) 90vw, 420px"` : ''} width="512" height="512" alt="" loading="${banner ? 'eager' : 'lazy'}" decoding="async" />` : '';
+  return `<div class="city-art ${art.painted ? 'painted' : ''}" data-building-style="${theme}" style="${styles}">${image}</div>`;
 }
 
 function costRow(build) {
@@ -99,7 +108,7 @@ function collectChip(build) {
 export function buildingCard(build, { banner = false } = {}) {
   return `
   <article class="city-card ${banner ? 'banner' : ''} ${build.upgrading ? 'upgrading' : ''}" data-city-card="${escapeHtml(build.id)}" tabindex="0" role="button" aria-label="${escapeHtml(build.name)}">
-    <div class="city-art" style="--art:url('${artFor(build)}')"></div>
+    ${lotArtHtml(build, banner)}
     ${collectChip(build)}
     <div class="city-plate">
       <div class="city-ribbon">
@@ -146,11 +155,16 @@ function questHtml(quest) {
 }
 
 export function cityHtml(state) {
+  const mapSmall = worldArtUrl('city/map-portrait',512);
+  const mapLarge = worldArtUrl('city/map-portrait',768);
   const buildings = state?.buildings || [];
   const palace = buildings.find(build => build.id === 'palace');
-  const others = buildings.filter(build => build.id !== 'palace');
+  const mapOrder = ['forge', 'crystalLake', 'goldMine', 'traineeArea', 'ironDeposit', 'academy'];
+  const position = id => mapOrder.includes(id) ? mapOrder.indexOf(id) : mapOrder.length;
+  const others = buildings.filter(build => build.id !== 'palace')
+    .sort((a, b) => position(a.id) - position(b.id));
   return `
-  <section class="city">
+  <section class="city ${mapSmall ? 'has-map' : ''}" ${mapSmall ? `style="--city-map:image-set(url('${mapSmall}') 1x,url('${mapLarge || mapSmall}') 2x)"` : ''}>
     <div class="city-sky" aria-hidden="true"></div>
     <header class="city-title">
       ${icon('crown', 'city-crown')}
@@ -181,7 +195,7 @@ export function buildingWindow(build) {
     <section class="city-block"><h4>Защита казны</h4><div class="city-costs">
       <span class="city-cost">🪙 ${formatNumber(build.treasury.guardedGold)}</span><span class="city-cost">💎 ${formatNumber(build.treasury.guardedCrystals)}</span><span class="city-cost">⛏️ ${formatNumber(build.treasury.guardedIronOre)}</span></div></section>` : '';
   return `
-  <div class="city-window-art" style="--art:url('${artFor(build)}')">
+  <div class="city-window-art ${buildingArtSources(build.id, build.currentLevel, build.currentType).painted ? 'painted' : ''}" style="--art:url('${artFor(build)}')">
     <div class="city-window-title"><strong>${escapeHtml(build.name)}</strong><small>Уровень ${formatNumber(build.currentLevel)} / ${formatNumber(build.maxLevel)}</small></div>
   </div>
   <div class="city-window-body">

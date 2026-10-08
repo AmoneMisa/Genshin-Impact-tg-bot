@@ -16,7 +16,11 @@ test('counter prompts the pick and explains the daily reset', () => {
 
 test('possible rewards row lists every non-empty prize with an icon', () => {
   const html = possibleRewardsHtml();
-  for (const item of POSSIBLE_REWARDS) assert.ok(html.includes(PRIZE_ICONS[item.type]), item.type);
+  for (const item of POSSIBLE_REWARDS) {
+    assert.ok(html.includes(`aria-label="${item.label}"`), item.type);
+    const tile = html.match(new RegExp(`<span class="chest-possible-item ${item.type}"[^>]*>(.*?)</span>`))?.[1];
+    assert.ok(tile && (tile.includes(PRIZE_ICONS[item.type]) || tile.includes('world-painted-icon')), item.type);
+  }
   assert.doesNotMatch(html, /nothing/);
 });
 

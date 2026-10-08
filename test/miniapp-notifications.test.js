@@ -11,11 +11,12 @@ const chat = () => ({ members: [member(1, 'A'), member(2, 'B')] });
 test('pushTo sends once per 30s per text and swallows send failures', async () => {
   const sent = [];
   const send = async (id, text) => { sent.push([id, text]); };
-  assert.equal(await pushTo(7, 'hello', { send, now: 1_000_000 }), true);
-  assert.equal(await pushTo(7, 'hello', { send, now: 1_010_000 }), false);
-  assert.equal(await pushTo(7, 'hello', { send, now: 1_040_000 }), true);
+  const translate = async (_, text) => text;
+  assert.equal(await pushTo(7, 'hello', { send, translate, now: 1_000_000 }), true);
+  assert.equal(await pushTo(7, 'hello', { send, translate, now: 1_010_000 }), false);
+  assert.equal(await pushTo(7, 'hello', { send, translate, now: 1_040_000 }), true);
   assert.equal(sent.length, 2);
-  assert.equal(await pushTo(8, 'boom', { send: async () => { throw new Error('blocked'); }, now: 2_000_000 }), false);
+  assert.equal(await pushTo(8, 'boom', { send: async () => { throw new Error('blocked'); }, translate, now: 2_000_000 }), false);
   assert.deepEqual(await pushAll(undefined), []);
 });
 

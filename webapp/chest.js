@@ -1,9 +1,10 @@
 import { escapeHtml } from './escape-html.js';
-// Chest game, prototype flow: pick one of nine 3D chests -> the chosen chest
+import { worldArtUrl, worldIconHtml } from './art/world-art.js';
+// Chest game: pick one of nine painted chests -> the chosen chest
 // bursts open in a close-up with its reward -> "Получить" -> after the third
 // pick every chest goes dark and the session's rewards are summarised.
 
-import { createChest, RATTLE_SECONDS, SWING_SECONDS } from './chest-3d.js';
+import { createChest, openingDelay } from './chest-art.js';
 
 export const PRIZE_ICONS = Object.freeze({
   experience: '✦',
@@ -13,7 +14,13 @@ export const PRIZE_ICONS = Object.freeze({
   sword: '⚔️',
   brokenSword: '🗡️',
   immuneToUpSword: '🛡️',
+  buffPotion: '🧪',
 });
+
+function prizeIcon(type) {
+  const art = { gold: 'gold', crystals: 'crystal', experience: 'scroll', immuneToUpSword: 'armor' }[type];
+  return (art && worldIconHtml(`chests/reward-${art}`)) || PRIZE_ICONS[type] || '✦';
+}
 
 /** Shown under the grid; mirrors the server's prize table (miniapp/chest.js). */
 export const POSSIBLE_REWARDS = Object.freeze([
@@ -23,11 +30,12 @@ export const POSSIBLE_REWARDS = Object.freeze([
   { type: 'sword', label: 'Рост меча' },
   { type: 'immuneToUpSword', label: 'Иммунитет меча' },
   { type: 'brokenSword', label: 'Поломка меча' },
+  { type: 'buffPotion', label: 'Зелье-бафф' },
 ]);
 
 const PRIZE_TITLES = {
   experience: 'Опыт', gold: 'Золото', crystals: 'Кристаллы', nothing: 'Пусто',
-  sword: 'Меч', brokenSword: 'Меч', immuneToUpSword: 'Иммунитет',
+  sword: 'Меч', brokenSword: 'Меч', immuneToUpSword: 'Иммунитет', buffPotion: 'Зелье',
 };
 
 
@@ -48,7 +56,7 @@ export function possibleRewardsHtml() {
   return `
   <section class="chest-possible">
     <small>Возможные награды:</small>
-    <div>${POSSIBLE_REWARDS.map(item => `<span class="chest-possible-item ${item.type}" title="${item.label}" aria-label="${item.label}">${PRIZE_ICONS[item.type]}</span>`).join('')}</div>
+    <div>${POSSIBLE_REWARDS.map(item => `<span class="chest-possible-item ${item.type}" title="${item.label}" aria-label="${item.label}">${prizeIcon(item.type)}</span>`).join('')}</div>
   </section>`;
 }
 
@@ -56,7 +64,7 @@ export function possibleRewardsHtml() {
 export function rewardTilesHtml(prizes) {
   return prizes.map(prize => `
     <div class="chest-prize-tile ${prize.type === 'nothing' ? 'empty' : ''} ${prize.type}">
-      <span>${PRIZE_ICONS[prize.type] || '✦'}</span>
+      <span>${prizeIcon(prize.type)}</span>
       <strong>${escapeHtml(rewardText(prize))}</strong>
       <small>${escapeHtml(prize.label || '')}</small>
     </div>`).join('');
@@ -66,10 +74,12 @@ export function rewardTilesHtml(prizes) {
 export function summaryRows(prizes) {
   const rows = new Map();
   for (const prize of prizes) {
-    const row = rows.get(prize.type) || { type: prize.type, label: prize.label, amount: 0, count: 0 };
+    // Different buff potions are different rewards.
+    const key = prize.type === 'buffPotion' ? `${prize.type}:${prize.label}` : prize.type;
+    const row = rows.get(key) || { type: prize.type, label: prize.label, amount: 0, count: 0 };
     row.amount += Number(prize.amount) || 0;
     row.count += 1;
-    rows.set(prize.type, row);
+    rows.set(key, row);
   }
   return [...rows.values()];
 }
@@ -82,7 +92,7 @@ export function summaryHtml(prizes) {
     <h3>Награды</h3>
     <div class="chest-summary-list">${rows.length ? rows.map(row => `
       <div class="chest-summary-row ${row.type}">
-        <span>${PRIZE_ICONS[row.type] || '✦'}</span>
+        <span>${prizeIcon(row.type)}</span>
         <div><small>${PRIZE_TITLES[row.type] || escapeHtml(row.label)}</small><strong>${escapeHtml(row.type === 'immuneToUpSword' || row.type === 'nothing' ? rewardText(row) : `${rewardText(row)} ${row.label}`)}</strong></div>
         ${row.count > 1 ? `<em>×${row.count}</em>` : ''}
       </div>`).join('') : '<p class="chest-summary-empty">Сегодня награды уже получены.</p>'}</div>
@@ -103,7 +113,7 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
         <button class="chest-help" type="button" data-chest-help aria-label="Правила">?</button>
       </header>
       <p class="chest-rules" hidden>Выбери три сундука из девяти. Награда определяется на сервере в момент открытия; одна попытка в день.</p>
-      <div class="chest-grid" role="grid" aria-label="Сундуки"></div>
+      <div class="chest-grid" role="group" aria-label="Сундуки"></div>
       <div class="chest-counter"></div>
       ${possibleRewardsHtml()}
       <div class="chest-result" aria-live="polite"></div>
@@ -120,10 +130,15 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
   let localState = chestState;
   let pending = false;
   let revealChest = null;
+  let closed = false;
+  let finishReveal = null;
   const won = [];
 
-  const chests = new Map(); // chestId -> 3D controller (null: CSS tile fallback)
+  const chests = new Map();
   const close = () => {
+    if (closed) return;
+    closed = true;
+    finishReveal?.();
     for (const chest of chests.values()) chest?.destroy?.();
     revealChest?.destroy?.();
     overlay.classList.add('closing');
@@ -139,6 +154,8 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
   });
 
   function showSummary() {
+    if (closed) return;
+    for (const chest of chests.values()) chest?.showDepleted();
     overlay.classList.add('completed');
     summaryHost.innerHTML = summaryHtml(won);
     summaryHost.hidden = false;
@@ -150,16 +167,19 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
   // Close-up of the opened chest with its reward; resolves on "Получить".
   function showReveal(prize) {
     return new Promise((resolve) => {
+      finishReveal = resolve;
       const empty = prize.type === 'nothing';
+      const scene = !empty && worldArtUrl('chests/chest-open-scene', 768);
       reveal.innerHTML = `
         <h3>${empty ? 'Сундук пуст' : 'Сундук открыт'}</h3>
-        <div class="chest-reveal-stage ${empty ? 'empty' : ''}"><span class="chest-reveal-rays" aria-hidden="true"></span></div>
+        <div class="chest-reveal-stage ${empty ? 'empty' : ''} ${scene ? 'painted-scene' : ''}">${scene ? `<img class="chest-scene" src="${scene}" width="768" height="512" alt="" decoding="async">` : ''}<span class="chest-reveal-rays" aria-hidden="true"></span></div>
         <div class="chest-prize-row">${rewardTilesHtml([prize])}</div>
         <button type="button" class="chest-btn" data-chest-claim>${empty ? 'Дальше' : 'Получить'}</button>`;
       reveal.hidden = false;
       requestAnimationFrame(() => reveal.classList.add('visible'));
       const stage = reveal.querySelector('.chest-reveal-stage');
-      createChest(stage, { index: 0 }).then((chest) => {
+      createChest(stage, { reveal: true }).then((chest) => {
+        if (closed) { chest.destroy(); return; }
         revealChest = chest;
         chest?.open(empty ? 'empty' : 'treasure');
         if (!chest) stage.classList.add('fallback');
@@ -169,7 +189,7 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
         revealChest?.destroy?.();
         revealChest = null;
         reveal.classList.remove('visible');
-        window.setTimeout(() => { reveal.hidden = true; reveal.innerHTML = ''; resolve(); }, 220);
+        window.setTimeout(() => { reveal.hidden = true; reveal.innerHTML = ''; finishReveal = null; resolve(); }, 220);
       }, { once: true });
     });
   }
@@ -181,53 +201,63 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
     button.type = 'button';
     button.className = 'chest-tile';
     button.dataset.chestId = String(chestId);
+    button.setAttribute('aria-label', `Сундук ${chestId}${opened.has(chestId) ? ' · открыт' : ''}`);
     button.style.setProperty('--i', String(chestId - 1));
-    button.innerHTML = '<span class="chest-glow"></span><span class="chest-lid">✦</span><span class="chest-body">▰</span>';
     if (opened.has(chestId)) {
       button.classList.add('opened', 'historical');
       button.disabled = true;
     }
     createChest(button, { opened: opened.has(chestId) ? 'treasure' : null, index: chestId })
-      .then(chest => chests.set(chestId, chest))
+      .then(chest => {
+        if (closed) { chest.destroy(); return; }
+        if (!localState.available) chest.showDepleted();
+        chests.set(chestId, chest);
+      })
       .catch(() => chests.set(chestId, null));
 
     button.addEventListener('click', async () => {
       if (pending || button.disabled || !localState.available) return;
       pending = true;
+      result.textContent = '';
       haptic('medium');
       button.classList.add('opening');
       buttons.forEach((item) => { item.disabled = true; });
 
       try {
         const payload = await api('/api/chest/open', { method: 'POST', body: JSON.stringify({ chestId }) });
+        if (payload.state) renderState(payload.state);
+        if (closed) return;
         localState = { available: payload.tries > 0, tries: payload.tries, opened: payload.opened, selectionsLeft: payload.selectionsLeft };
         won.push(payload.prize);
         const empty = payload.prize.type === 'nothing';
 
-        // The grid chest rattles and swings open, then the close-up takes over.
+        // Crossfade to the open painting before the reward close-up.
         chests.get(chestId)?.open(empty ? 'empty' : 'treasure');
         button.classList.remove('opening');
         button.classList.add('opened', 'just-opened');
-        await new Promise(resolve => window.setTimeout(resolve, (RATTLE_SECONDS + SWING_SECONDS * 0.7) * 1000));
+        button.setAttribute('aria-label', `Сундук ${chestId} · ${rewardText(payload.prize)}`);
+        await new Promise(resolve => window.setTimeout(resolve, openingDelay()));
+        if (closed) return;
         haptic(empty ? 'light' : 'heavy');
-        if (payload.state) renderState(payload.state);
         await showReveal(payload.prize);
+        if (closed) return;
 
         const badge = document.createElement('div');
         badge.className = `chest-reward ${empty ? 'empty' : ''}`;
         badge.innerHTML = `<span class="reward-icon">${PRIZE_ICONS[payload.prize.type] || '✦'}</span><strong>${escapeHtml(rewardText(payload.prize))}</strong>`;
         button.appendChild(badge);
-        if (!chests.get(chestId)) button.querySelectorAll('.chest-lid, .chest-body').forEach(node => node.remove());
 
         if (payload.completed) showSummary();
         else counter.textContent = counterText(localState);
       } catch (error) {
+        if (closed) return;
         button.classList.remove('opening');
         result.textContent = error.message;
         statusElement.textContent = `Сундуки: ${error.message}`;
         haptic('light');
       } finally {
         pending = false;
+        if (closed) return;
         buttons.forEach((item) => {
           const id = Number(item.dataset.chestId);
           item.disabled = item.classList.contains('opened') || !localState.available || (localState.opened || []).includes(id);

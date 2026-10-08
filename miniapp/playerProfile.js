@@ -27,11 +27,14 @@ function statDto(stats = {}) {
   };
 }
 
+const isBaseClass = item => (item.tier || 1) === 1;
+
 function classDto(template, level) {
   const scaled = getClassStatsFromTemplate(template.name, level) || template;
   return {
     name: template.name,
     title: template.translateName,
+    tier: template.tier || 1,
     description: template.description,
     stats: statDto(scaled),
   };
@@ -51,17 +54,19 @@ export function getPlayerProfileState(session, now = Date.now()) {
     currentClass: {
       name: currentName,
       title: current.translateName || classes.find(item => item.name === currentName)?.translateName || 'Бродяжка',
+      tier: current.tier || classes.find(item => item.name === currentName)?.tier || 1,
       stats: statDto(current),
     },
     classChangeRemainingMs: currentName === 'noClass' ? 0 : Math.max(0, timer - now),
     classes: classes
-      .filter(item => item.name !== 'noClass')
+      .filter(item => item.name !== 'noClass' && isBaseClass(item))
       .map(item => classDto(item, level)),
   };
 }
 
 export function changePlayerClassForMiniApp(session, className, now = Date.now()) {
-  const target = classes.find(item => item.name === className && item.name !== 'noClass');
+  // Professions (tier 2/3) are earned through quests, never picked here.
+  const target = classes.find(item => item.name === className && item.name !== 'noClass' && isBaseClass(item));
   if (!target) return { ok: false, reason: 'unknown_class' };
 
   const currentName = session?.game?.gameClass?.stats?.name || 'noClass';
@@ -76,6 +81,8 @@ export function changePlayerClassForMiniApp(session, className, now = Date.now()
 
   session.changeClassTimer = now + CLASS_CHANGE_COOLDOWN_MS;
   changePlayerClass(session, target);
+  // A running profession quest belongs to the old class line; earned ones are kept.
+  if (session.game?.classQuest) session.game.classQuest.active = null;
   updatePlayerStats(session);
 
   return {

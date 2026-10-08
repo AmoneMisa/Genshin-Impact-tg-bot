@@ -1,17 +1,24 @@
 import Chat from '../db/models/Chat.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import summonBoss from '../functions/game/boss/summonBoss.js';
+import { epicList, epicStatus, getEpicTemplate } from '../functions/game/boss/epicBosses.js';
 import { attackLogDto, bossAttacksDto } from './bossEffects.js';
 import { getInventoryState } from './inventory.js';
 import potionsTemplate from '../template/potionsInInventoryTemplate.js';
 import getBossLoot from '../functions/game/boss/getters/getBossLoot.js';
+import { BUFF_POTION_DROP_CHANCE } from '../functions/game/boss/buffPotionDrops.js';
 import bossSendLoot from '../functions/game/boss/bossSendLoot.js';
-import userDealDamage from '../functions/game/player/userDealDamage.js';
+import castSkill from '../functions/game/player/castSkill.js';
+import { skillTags } from './skills.js';
+import { potionShare } from '../functions/game/player/potionRestore.js';
+import { addMaterial, materialInfo } from '../functions/game/player/materials.js';
+import { recordQuestEvent } from '../functions/game/classes/classQuests.js';
+import { bossDebuffList, isBossStunned } from '../functions/game/boss/bossDebuffs.js';
+import { aliveRequiredUnits, aliveUnits, armorShield, bossTemplateFor, findUnit } from '../functions/game/boss/bossUnits.js';
+import { EVENT_LOG_SIZE } from '../functions/game/boss/bossPhases.js';
 import isPlayerCanUseSkill from '../functions/game/player/isPlayerCanUseSkill.js';
 import skillUsagePayCost from '../functions/game/player/skillUsagePayCost.js';
 import setSkillCooldown from '../functions/game/player/setSkillCooldown.js';
-import useHealSkill from '../functions/game/player/useHealSkill.js';
-import useShieldSkill from '../functions/game/player/useShieldSkill.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
@@ -39,9 +46,11 @@ function skillDto(session, skill, index, now = Date.now()) {
   const cooldownMs = Math.max(0, cooldownUntil - now);
   const hp = getCurrentHp(session, session.game.gameClass);
   const mp = getCurrentMp(session, session.game.gameClass);
-  const effectiveCost = getEffectiveSkillCost(skill);
+  const effectiveCost = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass));
   const costHp = Math.max(0, number(effectiveCost.costHp));
   const costMp = Math.max(0, number(effectiveCost.cost));
+  const needLevel = Math.max(0, number(skill?.needLvl));
+  const locked = needLevel > number(session?.game?.stats?.lvl, 1);
 
   return {
     slot: Number.isFinite(Number(skill?.slot)) ? Number(skill.slot) : index,
@@ -51,12 +60,18 @@ function skillDto(session, skill, index, now = Date.now()) {
     isDamage: Boolean(skill?.isDealDamage),
     isHeal: Boolean(skill?.isHeal),
     isShield: Boolean(skill?.isShield),
+    isBuff: Boolean(skill?.isBuff || skill?.buffs?.length),
+    isDebuff: Boolean(skill?.debuff && !skill?.isDealDamage),
+    tags: skillTags(skill),
+    tier: Math.max(1, number(skill?.tier, 1)),
+    locked,
+    needLevel,
     enchantLevel: Math.max(0, number(skill?.enchantLevel)),
     costHp,
     costMp,
     cooldownMs,
     cooldownUntil,
-    canUse: cooldownMs <= 0 && hp >= costHp && mp >= costMp,
+    canUse: !locked && cooldownMs <= 0 && hp > costHp && mp >= costMp,
   };
 }
 
@@ -71,6 +86,13 @@ function lootRange(values) {
   return { min: Math.min(...rows), max: Math.max(...rows) };
 }
 
+/** Chance of a buff potion per fighter and whether the top places always get one. */
+function buffPotionLoot(boss) {
+  const template = bossTemplateFor(boss);
+  const chance = BUFF_POTION_DROP_CHANCE[template?.tier || 1] ?? BUFF_POTION_DROP_CHANCE[1];
+  return { percent: Math.round(chance * 100), guaranteedTop: Boolean(template?.epic) };
+}
+
 function lootDto(boss) {
   try {
     const loot = getBossLoot(boss);
@@ -79,6 +101,7 @@ function lootDto(boss) {
       crystals: lootRange(loot.crystals),
       experience: lootRange(loot.experience),
       equipment: Array.isArray(loot.equipment) ? loot.equipment.length : 0,
+      buffPotion: buffPotionLoot(boss),
     };
   } catch {
     return null;
@@ -158,12 +181,52 @@ function potionBarDto(session) {
       type: template.type,
       bottleType: template.bottleType,
       power: number(template.power),
+      share: Math.round(potionShare(template) * 100),
       name: template.name,
       count: item ? item.count : 0,
     };
   });
   const extra = owned.filter(potion => potion.count > 0 && !potionsTemplate.some(template => same(potion, template)));
-  return [...bar, ...extra.map(({ key, type, bottleType, power, name, count }) => ({ key, type, bottleType, power, name, count }))];
+  return [...bar, ...extra.map(({ key, type, bottleType, power, share, name, count }) => ({ key, type, bottleType, power, share, name, count }))];
+}
+
+/** Minions, phases, charging ultimate, stun and debuffs of the encounter. */
+function encounterDto(boss, now) {
+  const template = bossTemplateFor(boss);
+  const lockedBy = aliveRequiredUnits(boss).length;
+  const charging = boss.charging && number(boss.charging.readyAt) > 0 ? boss.charging : null;
+  return {
+    title: template?.title || '',
+    element: template?.element || '',
+    tier: number(template?.tier, 1),
+    pair: Boolean(template?.pair),
+    enrage: Math.round(number(boss.enrage) * 100),
+    shielded: Math.round(armorShield(boss, template) * 100),
+    locked: lockedBy > 0 && number(boss.currentHp) <= 1,
+    requiredAlive: lockedBy,
+    phase: { current: number(boss.phaseIndex), total: (template?.phases || []).length },
+    charging: charging ? { key: String(charging.key), readyInMs: Math.max(0, number(charging.readyAt) - now) } : null,
+    stunned: isBossStunned(boss, now),
+    debuffs: bossDebuffList(boss, now),
+    minions: (boss.minions || []).map(unit => ({
+      id: String(unit.id),
+      key: String(unit.key),
+      name: String(unit.name || ''),
+      icon: String(unit.icon || '👾'),
+      kind: String(unit.kind || 'minion'),
+      required: Boolean(unit.required),
+      description: String(unit.description || ''),
+      hp: number(unit.hp),
+      currentHp: Math.max(0, number(unit.currentHp)),
+      hpPercent: percent(Math.max(0, number(unit.currentHp)), number(unit.hp)),
+      alive: number(unit.currentHp) > 0,
+    })).filter(unit => unit.alive || unit.kind !== 'minion'),
+    events: (Array.isArray(boss.eventLog) ? boss.eventLog : []).slice(0, EVENT_LOG_SIZE).map(event => ({
+      icon: String(event.icon || '⚠️'),
+      text: String(event.text || ''),
+      agoMs: Math.max(0, now - number(event.at)),
+    })),
+  };
 }
 
 export async function getBossState(session, chatId, now = Date.now()) {
@@ -232,17 +295,51 @@ export async function getBossState(session, chatId, now = Date.now()) {
       attacks: bossAttacksDto(boss.name),
       attackLog: attackLogDto(boss.attackLog, session?.userId, now),
       nextAttackMs: Math.max(0, number(boss.nextAttackAt) - now),
+      ...encounterDto(boss, now),
     },
   };
 }
 
-export async function summonBossForMiniApp(session, chatId) {
-  const alive = await getAliveBoss(chatId);
-  if (alive && !(await expireBossIfNeeded(alive, chatId))) {
-    return { ok: false, reason: 'already_summoned', boss: await getBossState(session, chatId) };
+/** The epic raid bosses with their respawn timers for this chat. */
+export async function getEpicState(chatId, now = Date.now()) {
+  const chat = await Chat.findOne({ chatId: Number(chatId) });
+  return { bosses: epicList(chat, now) };
+}
+
+// An unfought ordinary boss (nobody has hit it yet) makes way for an epic challenge.
+async function clearUnfoughtBoss(boss) {
+  if (!boss || (boss.listOfDamage || []).length) return false;
+  boss.skill = null;
+  boss.currentHp = 0;
+  boss.hp = 0;
+  boss.markModified('skill');
+  await boss.save();
+  return true;
+}
+
+export async function summonBossForMiniApp(session, chatId, epicName = null) {
+  let epicTemplate = null;
+  if (epicName) {
+    epicTemplate = getEpicTemplate(epicName);
+    if (!epicTemplate) return { ok: false, reason: 'unknown_epic', boss: await getBossState(session, chatId) };
+    if (number(session?.game?.stats?.lvl, 1) < epicTemplate.epic.minLevel) {
+      return { ok: false, reason: 'epic_level_too_low', requiredLevel: epicTemplate.epic.minLevel, boss: await getBossState(session, chatId) };
+    }
+    const chat = await Chat.findOne({ chatId: Number(chatId) });
+    const status = epicStatus(chat, epicName);
+    if (!status.available) {
+      return { ok: false, reason: 'epic_cooldown', remainMs: status.remainMs, respawnAt: status.respawnAt, boss: await getBossState(session, chatId) };
+    }
   }
 
-  const boss = await summonBoss(chatId);
+  const alive = await getAliveBoss(chatId);
+  if (alive && !(await expireBossIfNeeded(alive, chatId))) {
+    if (!(epicTemplate && await clearUnfoughtBoss(alive))) {
+      return { ok: false, reason: 'already_summoned', boss: await getBossState(session, chatId) };
+    }
+  }
+
+  const boss = await summonBoss(chatId, epicTemplate);
   return {
     ok: true,
     action: 'summon',
@@ -251,7 +348,7 @@ export async function summonBossForMiniApp(session, chatId) {
   };
 }
 
-export async function useBossSkill(session, chatId, userId, rawSkillIndex) {
+export async function useBossSkill(session, chatId, userId, rawSkillIndex, targetId = null) {
   const boss = await getAliveBoss(chatId);
   if (!boss || await expireBossIfNeeded(boss, chatId)) {
     return { ok: false, reason: 'no_boss', boss: await getBossState(session, chatId) };
@@ -269,6 +366,9 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex) {
   }
 
   const canUse = isPlayerCanUseSkill(session, skill);
+  if (canUse === 3) {
+    return { ok: false, reason: 'skill_locked', needLevel: number(skill.needLvl), boss: await getBossState(session, chatId) };
+  }
   if (canUse === 1) {
     return { ok: false, reason: 'not_enough_resource', boss: await getBossState(session, chatId) };
   }
@@ -276,38 +376,49 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex) {
     return { ok: false, reason: 'cooldown', boss: await getBossState(session, chatId) };
   }
 
-  const { cost, costHp } = getEffectiveSkillCost(skill);
+  // A damage skill may be aimed at one of the boss's minions.
+  let target = null;
+  if (targetId && targetId !== 'boss') {
+    target = findUnit(boss, String(targetId));
+    if (skill.isDealDamage && !target) {
+      return { ok: false, reason: 'target_gone', boss: await getBossState(session, chatId) };
+    }
+  }
+
+  const { cost, costHp } = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass));
   const costCount = costHp > 0 ? costHp : cost;
   const costType = costHp > 0 ? 'hp' : 'mp';
   skillUsagePayCost(session, costType, costCount);
 
-  let result = { type: 'utility' };
-  let killed = false;
-  let loot = null;
-
-  if (skill.isDealDamage) {
-    const damage = userDealDamage(session, boss, skill);
-    result = { type: 'damage', ...damage };
-    boss.markModified('listOfDamage');
-  } else if (skill.isHeal) {
-    const heal = useHealSkill(session, skill);
-    const maxPlayerHp = getMaxHp(session, session.game.gameClass);
-    session.game.gameClass.stats.hp = Math.min(maxPlayerHp, number(session.game.gameClass.stats.hp) + heal);
-    result = { type: 'heal', heal };
-  } else if (skill.isShield) {
-    const shield = useShieldSkill(session, skill);
-    if (!Array.isArray(session.game.effects)) session.game.effects = [];
-    const shieldEffect = session.game.effects.find(effect => effect.name === 'shield');
-    if (shieldEffect) shieldEffect.value = shield;
-    else session.game.effects.push({ name: 'shield', value: shield, time: 0 });
-    result = { type: 'shield', shield };
-  }
-
+  const result = castSkill(session, boss, skill, { targetId: target?.id || null });
+  if (skill.isDealDamage) boss.markModified('listOfDamage');
+  boss.markModified('minions');
+  boss.markModified('debuffs');
+  boss.markModified('eventLog');
   setSkillCooldown(skill, session);
+
+  // Quest progress and the minion's own rewards ride on the same save.
+  const questGains = recordQuestEvent(session, { type: 'skill', skill }).gains;
+  let unitDrops = null;
+  if (result.unitKilled) {
+    const { sp, items } = result.unitKilled;
+    session.game.inventory.sp = number(session.game.inventory.sp) + sp;
+    items.forEach(drop => addMaterial(session, drop.item, drop.amount));
+    unitDrops = {
+      name: result.unitKilled.name,
+      sp,
+      items: items.map(drop => ({ ...materialInfo(drop.item), amount: drop.amount })),
+      reaction: result.unitKilled.reaction?.say || '',
+    };
+    questGains.push(...recordQuestEvent(session, { type: 'minion_kill', count: 1 }).gains);
+    delete result.unitKilled;
+  }
   await saveSession(session);
 
-  if (skill.isDealDamage) {
-    if (number(boss.currentHp) <= 0) {
+  let killed = false;
+  let loot = null;
+  if (skill.isDealDamage || result.type === 'debuff') {
+    if (skill.isDealDamage && number(boss.currentHp) <= 0) {
       boss.currentHp = 0;
       await boss.save();
       loot = await bossSendLoot(boss, chatId);
@@ -316,8 +427,10 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex) {
       boss.currentHp = 0;
       boss.hp = 0;
       boss.listOfDamage = [];
+      boss.minions = [];
       boss.markModified('skill');
       boss.markModified('listOfDamage');
+      boss.markModified('minions');
     }
     await boss.save();
   }
@@ -329,7 +442,9 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex) {
     result,
     killed,
     loot: loot?.[userId] || null,
-    refreshPlayer: killed,
+    unitDrops,
+    questGains,
+    refreshPlayer: killed || Boolean(unitDrops) || questGains.length > 0,
     boss: await getBossState(session, chatId),
   };
 }

@@ -3,6 +3,7 @@ import lodash from 'lodash';
 import potionsInInventoryTemplate from '../../template/potionsInInventoryTemplate.js';
 import classStatsTemplate from '../../template/classStatsTemplate.js';
 import classSkillsTemplate from '../../template/classSkillsTemplate.js';
+import { migrateSessionEquipment } from '../game/equipment/migrateEquipment.js';
 
 export default function (session) {
     if (!session.hasOwnProperty("whatsNewSettings")) {
@@ -32,6 +33,10 @@ export default function (session) {
             isStart: false
         },
         bonusChances: 1,
+        classQuest: {
+            active: null,
+            completed: []
+        },
         bowling: {
             bet: 0,
             skittles: 0,
@@ -138,4 +143,7 @@ export default function (session) {
             }
         }
     }
+
+    // Gear from before the Lineage 2 catalog (random stats, SS / SSS grades) becomes catalog items.
+    migrateSessionEquipment(session);
 }

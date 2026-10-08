@@ -17,38 +17,40 @@ import bosses from '../template/bossTemplate.js';
 import builds from '../template/buildsTemplate.js';
 import chanceToHit from '../template/chanceToHitTemplate.js';
 import clanApplicationConditions from '../template/clanApplicationConditionsTemplate.js';
+import classQuests from '../template/classQuestsTemplate.js';
 import classSkills from '../template/classSkillsTemplate.js';
 import classStats from '../template/classStatsTemplate.js';
 import elements from '../template/elements.js';
 import elementsSynergy from '../template/elementsSynergy.js';
-import equipmentBonusStats from '../template/equipmentBonusStatsTemplate.js';
 import equipment from '../template/equipmentTemplate.js';
 import gacha from '../template/gachaTemplate.js';
 import levels from '../template/levelsTemplate.js';
+import materials from '../template/materialsTemplate.js';
 import potions from '../template/potionsInInventoryTemplate.js';
 import pvpSign from '../template/pvpSignTemplate.js';
 import shop from '../template/shopTemplate.js';
 
 export const TEMPLATES = Object.freeze([
     {key: 'arenaWeeklyPrizes', source: arenaWeeklyPrizes, version: 1},
-    {key: 'bossAttacks', source: bossAttacks, version: 1},
-    {key: 'bossLoot', source: bossLoot, version: 1},
+    {key: 'bossAttacks', source: bossAttacks, version: 3},
+    {key: 'bossLoot', source: bossLoot, version: 2},
     {key: 'bossSkills', source: bossSkills, version: 1},
-    {key: 'bosses', source: bosses, version: 1},
+    {key: 'bosses', source: bosses, version: 3},
     {key: 'builds', source: builds, version: 1},
     {key: 'chanceToHit', source: chanceToHit, version: 1},
     {key: 'clanApplicationConditions', source: clanApplicationConditions, version: 1},
-    {key: 'classSkills', source: classSkills, version: 1},
-    {key: 'classStats', source: classStats, version: 1},
+    {key: 'classQuests', source: classQuests, version: 1},
+    {key: 'classSkills', source: classSkills, version: 4},
+    {key: 'classStats', source: classStats, version: 7},
     {key: 'elements', source: elements, version: 1},
     {key: 'elementsSynergy', source: elementsSynergy, version: 1},
-    {key: 'equipmentBonusStats', source: equipmentBonusStats, version: 1},
-    {key: 'equipment', source: equipment, version: 1},
-    {key: 'gacha', source: gacha, version: 1},
+    {key: 'equipment', source: equipment, version: 4},
+    {key: 'gacha', source: gacha, version: 2},
     {key: 'levels', source: levels, version: 1},
-    {key: 'potions', source: potions, version: 1},
+    {key: 'materials', source: materials, version: 4},
+    {key: 'potions', source: potions, version: 2},
     {key: 'pvpSign', source: pvpSign, version: 1},
-    {key: 'shop', source: shop, version: 1},
+    {key: 'shop', source: shop, version: 2},
 ]);
 
 function canonical(value) {

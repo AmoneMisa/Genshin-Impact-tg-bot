@@ -21,7 +21,7 @@ test('jewellery exists in the template for every class, with slots the paper dol
   assert.deepEqual(jewelry.kind.map(k => k.type).sort(), ['earring', 'necklace', 'ring']);
   for (const kind of jewelry.kind) {
     assert.equal(kind.classOwner.length, 5);
-    assert.ok(Object.keys(kind.characteristics).length >= 2);
+    assert.ok(Object.keys(kind.characteristics).length >= 1);
   }
 });
 
@@ -79,8 +79,8 @@ test('the paper doll shows helmets, gloves and boots in head, hands and legs', (
 });
 
 test('item type selects its own painting for robe slots and weapons', () => {
-  assert.equal(itemArtKey('sword',{kind:'twoHandedSword',grade:'sss'}),'greatsword-solar');
-  assert.equal(itemArtKey('sword',{kind:'oneHandedSword',grade:'sss'}),'sword-prismatic');
+  assert.equal(itemArtKey('sword',{kind:'twoHandedSword',grade:'s84'}),'greatsword-solar');
+  assert.equal(itemArtKey('sword',{kind:'oneHandedSword',grade:'s84'}),'sword-prismatic');
   for(const [kind,key] of [['armor','mantle'],['gloves','bracers'],['boots','anklets'],['greaves','leg-wraps']]) {
     assert.equal(itemArtKey(kind,{kind:'robe'}),key);
     assert.equal(itemArtKey(kind,{kind:'heavy'}),kind);

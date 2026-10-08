@@ -11,14 +11,31 @@ import getCriticalDamageMultiplier from '../player/getters/getCriticalDamageMult
 import bossesTemplate from '../../../template/bossTemplate.js';
 import getEquipStatByName from '../player/getters/getEquipStatByName.js';
 import { getSkillPowerMultiplier } from '../player/skillEnchant.js';
+import { bossDebuffAmount } from './bossDebuffs.js';
+import { getRouteBonus } from '../player/skillRoutes.js';
 
-export default function (session, skill, boss) {
+/**
+ * One hit of `skill` from `session` on the boss (or on a minion, via
+ * `options.defence`). Options:
+ *   consume  - spend one charge of the damage/crit buffs (a multi-hit skill
+ *              consumes them only on its first hit)
+ *   defence  - target defence override (minions)
+ *   hpShare  - target's remaining hp share, for `executeBelow` skills
+ *   now      - clock, for armor-break expiry
+ */
+export default function (session, skill, boss, options = {}) {
+    const {consume = true, defence, hpShare = 1, now = Date.now()} = options;
     let dmg;
     let template = bossesTemplate.find(bossTemplate => bossTemplate.name === boss.name);
     let modifier = (skill.damageModifier || 1) * getSkillPowerMultiplier(skill);
 
+    // Execute skills hit harder once the target is low.
+    if (skill.executeBelow && hpShare <= skill.executeBelow) {
+        modifier *= 1 + (skill.executeBonus || 0);
+    }
+
     let criticalChanceMultiplier = getCriticalChanceMultiplier(session);
-    let criticalChance = getCriticalChance(session) + criticalChanceMultiplier;
+    let criticalChance = getCriticalChance(session) + criticalChanceMultiplier + (skill.critChanceBonus || 0) + getRouteBonus(skill).critBonus;
 
     if (criticalChance > 100) {
         criticalChance = 100;
@@ -32,7 +49,7 @@ export default function (session, skill, boss) {
 
     let attack = getAttack(session, session.game.gameClass);
     let damageMultiplier = getDamageMultiplier(session.game.effects);
-    let bossDefence = getBossDefence(boss, template);
+    let bossDefence = (defence ?? getBossDefence(boss, template)) * (1 - bossDebuffAmount(boss, 'armorBreak', now));
     let additionalDamageMul = (getAdditionalDamageMul(session) / 100) + 1;
 
     dmg = 70 * attack / bossDefence * modifier * additionalDamageMul;
@@ -43,11 +60,13 @@ export default function (session, skill, boss) {
         dmg *= criticalDamage;
     }
 
-    session.game.effects = session.game.effects.filter(effect => !effect.hasOwnProperty("count") || effect.count > 0);
+    if (consume) {
+        session.game.effects = session.game.effects.filter(effect => !effect.hasOwnProperty("count") || effect.count > 0);
 
-    for (let effect of session.game.effects) {
-        if (effect.count) {
-            effect.count--;
+        for (let effect of session.game.effects) {
+            if (effect.count) {
+                effect.count--;
+            }
         }
     }
 

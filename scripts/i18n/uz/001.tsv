@@ -1,0 +1,316 @@
+300	550% zarar, sog'lig'i 35% dan past bossga — ikki baravar ko'p.
+302	600% zarar. 20 soniyaga bossning himoyasini 50% ga kamaytiradi.
+306	900% zarar, sog'lig'i 40% dan past bossga — 150% ko'proq.
+307	Avrora
+308	Adminni cheklab bo'lmaydi
+309	Joriy chat administratori bu imkoniyatni guruh sozlamalarida o'chirib qo'ygan.
+310	Admin paneli
+311	Akademiya
+312	Aksessuarlar
+313	faol
+314	Faol boss endi yo'q.
+315	Faol boss yo'q
+316	Faol uyalar
+317	faol uya
+318	Qo'riqchi farishta
+319	Anemo
+320	Anketa hali to'ldirilmagan.
+321	Anketa saqlandi.
+322	ISHTIROKCHI ANKETASI
+323	Foydalanuvchi o'zi haqida o'yin ma'lumotlarini taqdim etishi uchun anketa.
+324	Anketani shu chat ishtirokchilari ko'radi
+325	Anketalar
+326	Guruh anketalari
+327	Antaras ajdaho-begemotlarni chaqirmoqda!
+328	Antaras yerni yirtmoqda — bu uning oxirgi g'azabi!
+329	Antaras
+330	Arbalet
+331	Billur bo'ron arbaleti
+332	Arena
+333	Arena: {0}
+334	Arena: {0}.
+335	Arkada
+336	Arkada: {0}.
+337	arkada o'yinlari tiklandi
+338	Artefaktlar
+339	Arximag
+340	Minora arxonti
+341	Hujum
+342	Hujum {0} urush ochkosini keltirdi{1}
+343	Boss hujumlari
+344	Hujum qilish
+345	Hujum qilish 🗡️
+346	Klan bossiga hujum qilish
+347	Atribut
+348	K. sigil
+349	K. qalqon
+350	Xato, g'oya yoki savol
+351	Xato, g'oya yoki savol?
+352	Yutuq asosi
+353	Asos yechilmaydi: g'alaba qozonilganda undan mukofot hisoblanadi.
+354	Balans 🪙 {1}
+355	Balans 🪙 {2}
+356	Balans: {0} oltin · {1} kristall.
+357	Basketbol
+358	Bastion — bino emas, chekinmaslik qarori. Tog' ham yema olmagan toshni olib kel.
+359	Bayum uyg'onmoqda — qo'riqchi farishtalar jonlanmoqda!
+360	Bayum bo'kirmoqda: uyqu abadiy tugadi!
+361	Bayum
+362	darajasiz
+363	Darajasiz
+364	Ismsiz
+365	sinfsiz
+366	Sinfsiz
+367	Darajasiz
+368	stavkasiz
+369	Stavkasiz
+370	Xususiyatlarsiz
+371	username yo'q
+372	Xavfsiz charxlash
+373	+{0} gacha xavfsiz charxlash
+374	+3 gacha xavfsiz (butun zirhda +4); undan yuqorisida buyumni yo'qotish xavfi bor
+375	Orqadan ur: jang mahoratlarini ishlat
+376	Bennet
+377	karta oladi
+378	Berserk
+379	Og'ir sovutdagi berserk. Qonli zirh va vampirizm uni o'ldirib bo'lmas qiladi.
+380	Cheksizlik
+381	Cheksiz raqs
+382	Bepul aylantirish
+383	bepul
+384	Bepul
+385	Bepul · {0}
+386	Ruhlar o'lmasligi
+387	Taqinchoqlar
+388	Qahramon yig'masi
+389	Bossga soatiga bir marta zarba berish mumkin.
+390	Duo qilingan · {18} {19} + {20} 🪙
+391	Duo qilingan o'rama
+392	Duo qilingan o'rama ({0})
+393	Blant
+394	Egizaklar
+395	Egizaklar jangga chiqdi!
+396	Egizaklar alangani birlashtirmoqda. Bir yurish to'planadi.
+397	Egizaklar alangani yagona qilib qo'shmoqda!
+398	Blok
+399	Jang tezligi +20%, 20 daqiqaga.
+400	Jang hayqirig'i
+401	Jang hayqirig'i butun guruhning zararini oshiradi... va o'zining ham.
+402	Jangovar sinflar
+403	Jang statlari shu yerdan olinadi
+404	Jangchi hali zarbadan so'ng tiklanmoqda.
+405	ilohiy
+406	Ilohiy spiral
+407	Ilohiy
+408	Ilohiy qalqon
+409	Jang
+410	Bugun boshqa ko'rsatilmasin
+411	O'yindan ko'proq — bizning shohligimiz
+412	Katta
+413	Katta qalqon
+414	Bonus
+415	Bonus olindi: +{0} klan XP.
+416	Bonus allaqachon olingan.
+417	Bonus: {0} +{1} {2}
+418	Boss
+419	Boss · mukofotlar ▾
+420	Boss o'z salomatligini tikladi. Uning joriy salomatligi: {0}
+421	Boss jangga chiqdi!
+422	Boss hali qaytmadi — taymer tugashini kut.
+423	Yaqinlari tirik ekan, boss zararning {0}% ini e'tiborsiz qoldiradi
+424	Boss taktikasini o'zgartirmoqda!
+425	Boss o'ldi. Qaytish xonasiga qo'ng'iroq qiling.
+426	Boss senga qaytarish orqali {0} zarar yetkazdi. Qolgan salomatligingiz: {1}
+427	Boss butun guruhga zarar yetkazdi:
+428	Boss har ikki daqiqada barcha o'yinchilarga ularning xususiyatlariga qarab zarar yetkazadi. Shuningdek, chaqiruvlar soniga qarab o'z darajasi va statlarini oshiradi. Chaqiruvning sovishi yo'q. Bir vaqtning o'zida faqat bitta boss mavjud bo'lishi mumkin.
+429	Boss topilmadi
+430	Boss topilmadi!
+431	Ikkinchi yarmi tirik ekan, boss zarar ko'rmaydi!
+432	Boss karaxt qilindi!
+433	Boss zaiflashtirildi
+434	Boss mag'lub etildi! Mukofotlar ishtirokchilar o'rtasida taqsimlandi.
+435	Boss mag'lub etildi. Klan {0} oltin, {1} kristall va {2} XP oldi.
+436	Boss chaqirildi. Reyd taymeri ishga tushdi.
+437	{0} nomli boss ID {1} bo'lgan chatda allaqachon bor
+438	Boss 12 soniya sening ustingga e'tibor qaratadi, olinadigan zarar esa 30% ga kamayadi.
+439	Boss o'ldirildi.
+440	Boss allaqachon chaqirilgan.
+441	Boss: {0}
+442	{0} nomli boss shablonda topilmadi
+443	{0} nomli boss topilmadi
+444	Bosslar va PvP
+445	Bot bu guruhda xabar, media, so'rovnoma va boshqa xabarlar yuborishingni vaqtincha taqiqlaydi.
+446	Bot birinchi yoza olmaydi. Agar u bilan hali gaplashmagan bo'lsang, Telegram'da botni ochib «Start» ni bos.
+447	Botinkalar
+448	Botinkalar (etiklar)
+449	Botinkalar/Etiklar
+450	Bouling
+451	Lavada tug'ilgan aka-singil. Ignar mushtlari bilan uradi, Pira xanjarlar bilan raqsga tushadi. Singlisi tirik ekan, akani tugatib bo'lmaydi; u qulasa, aka g'azabga minadi.
+452	Birodar Kaelen
+453	Brilliant
+454	Brilliant I
+455	Brilliant II
+456	Brilliant III
+457	Sarson
+458	Zirh teshuvchi o'q
+459	Bronza
+460	Bronza I
+461	Bronza II
+462	Bronza III
+463	Zirh
+464	boss zirhi −{0}%
+465	Zirh sindirildi
+466	Tashla · {0} qoldi
+467	Duelga chaqirish
+468	otish
+469	Otishlar
+470	otish
+471	Bo'ron
+472	G'uncha o'ldiruvchi bulutga aylanib ochilmoqda.
+473	{0} kun oldin edi
+474	{0} daqiqa oldin edi
+475	{0} soat oldin edi
+476	Salomatlikning 18% ini tez tiklaydi.
+477	Tezlik
+478	Qilich bilan tez zarba.
+479	Zarar yetkazish bo'yicha yetakchiga tez zarba.
+480	Xanjar bilan tez sanchish.
+481	Bitta jangchiga granit mushti bilan uradi.
+482	Zulmatdan zarar yetkazish yetakchisiga uradi.
+483	Eng xavfli jangchiga chaqmoq uradi.
+484	Bitta jangchiga uradi.
+485	Eng yarador jangchiga uradi.
+486	Kirish
+487	Anketada noma'lum maydon topildi.
+488	Jangga
+489	Jangda
+490	Guruhda hali birorta unvon yo'q.
+491	birlikda
+492	O'yinda
+493	O'yinda ishtirokchilar soni allaqachon maksimal.
+494	Klanda bo'sh o'rin yo'q.
+495	Klanda hozircha boshqa ishtirokchilar yo'q.
+496	Klan omborida resurslar yetarli emas.
+497	Kolodada kartalar tugadi.
+498	Kristallga · {2} 💠
+499	Do'konda turli buyumlar va yaxshilanishlarni — doimiy ham, vaqtincha ham — sotib olish mumkin. Masalan, bossga ko'proq zarar yetkazish bonusi (10 zarbaga amal qiladi) yoki qilich uzunligi.
+500	Ofitser qilish
+501	Jarayonda
+502	Omborda to'ldirish uchun resurslar yo'q.
+503	Chatda bitta umumiy boss yashaydi. Uni butun chat bilan uring — reyd ishtirokchilarining har biri mukofot oladi.
+504	Chatda unvon uchun mavjud ishtirokchilar yo'q.
+505	Bu toifada hali buyumlar yo'q.
+506	Bu toifa hozircha bo'sh.
+507	Bu o'yin chatida hozir sendan boshqa mavjud ishtirokchilar yo'q.
+508	Bu raundda sen allaqachon unsur olgansan.
+509	Bu chatda hozircha hujum qilish uchun hech kim yo'q.
+510	Barcha pul tikish · {3}
+511	Valakas nafas oladi — lava ajdaho bolalarini tug'moqda!
+512	Valakas atrofdagi hamma narsani yoqmoqda — oxirgi hujum!
+513	Valakas
+514	Valet - 2, Dama - 3, Shoh - 4, Tuz - 11 yoki 1, joriy ochkolar soniga qarab. Eng ko'p ochko to'plagan, lekin 21 dan oshmagan kishi g'olib bo'ladi.
+515	Vampirizm {0}%
+516	Sening qahramoning
+517	Sening asosiy binong. Uning ko'rinishini saroy menyusi orqali tanlashing mumkin. Uning darajasiga qarab,
+518	Sening shohliging
+519	Sening temir rudasi konlaring. U qurol, zirh va binolarni yaxshilash uchun kerak. 36 soatgacha uzluksiz ishlaydi.
+520	Miqdorni kiriting.
+521	Manfiy bo'lmagan son kiriting.
+522	Promokodni kiriting.
+523	Xabar matnini kiriting (3500 belgigacha).
+524	Oltinning butun musbat miqdorini kiriting.
+525	Butun musbat miqdorni kiriting.
+526	Butun miqdorni kiriting
+527	Kodni kiritib mukofot oling
+528	Shamol va zulmat jodugari
+529	Jodugar g'azabli girdobga aylanmoqda!
+530	Buyuk magistr Eldrik
+531	Venti
+532	Imon qilich ham bo'ladi. Lekin qilich o'tkir bo'lishi kerak: olovingning do'stlarni emas, dushmanlarni kuydirishini isbotla.
+533	Veraksis qolgan kuchini berdi — o'lim yaqin!
+534	Veraksis o'liklarning birinchi to'lqinini ko'tarmoqda!
+535	Veraksis
+536	Qaytadi
+537	To'g'ri ✅
+538	To'g'ri! Mukofot hisoblandi.
+539	Kasbni qaytarish · 🪙 {1}
+540	Yuqori
+541	Zirhning yuqori qismi
+542	Oliy sehrgar Liara
+543	Oliy inkvizitor
+544	Oliy sudya Kaelen
+545	Urush xabarchisi
+546	Tarozi
+547	Butun bot
+548	Butun shahar bitta oynada: binolar o'yinlar, inventar, qurilishlar, anketalar va boshqalarni ochadi.
+549	Shamol butun guruhni yiqitadi.
+550	Abadiy tayanch
+551	Abadiy muz. Rajahaldan kam uchraydigan o'lja.
+552	Qanot qoqish
+553	Qilich zarbasi
+554	Dum zarbasi
+555	Topshiriq olish
+556	Karta olish
+557	Nishonning har bir zaifligini ko'radi. Minglab o'qlar va o'ldiruvchi kritik zarbalar.
+558	Bo'ron qichqirig'i
+559	Viktorina
+560	Viktorina hozir mavjud emas.
+561	Girdob butun guruhni yiqitadi.
+562	Soyalar girdobi
+563	Yoq.
+564	Hissa: {3}
+565	yoqilgan
+566	Yangi o'yinlar va imkoniyatlardan birinchi bo'lib xabardor bo'lish uchun bildirishnomalarni yoq. Yangiliklar botdan shaxsiy xabarda keladi.
+567	Yoqish
+568	O'qish uchun to'lov kirit
+569	Kiritish
+570	Klan omboriga hissa qo'shish
+571	Yaxshilanish vaqtida resurslarni yig'ib bo'lmaydi.
+572	Girdob butun guruhni tortib ketmoqda.
+573	Dalv
+574	Suv nayzalari
+575	Urush hujumi hali sovimoqda.
+576	Harbiy taktika
+577	Paladinning ishtiyoqi
+578	Yetakchi Grosh
+579	Qabila yetakchisi
+580	Yosh
+581	Qaytarish bajarildi: {0} Stars, {1} kristall yechildi.
+582	Qaytarish bajarilmadi: {0}
+583	Stars qaytarish qo'lda amalga oshiriladi: qaytarilgan xarid uchun kristallar yechib olinadi.
+584	Maksimal mananing 35% ini tiklaydi.
+585	Yangi mukofotlar uchun kunlik yangilanishdan keyin qayt.
+586	Havo pichoqlari ikkitaga uchmoqda.
+587	Mumkin bo'lgan mukofot
+588	Mumkin bo'lgan mukofotlar:
+589	Qayta tirilish {4}–{5} soat
+590	Feniksning qayta tug'ilishi
+591	Jangchi
+592	Yorug'lik jangchisi: jazolovchi qilich va yaralarni davolovchi imon. Yuqori yashovchanlikda yaxshi zarar.
+593	Urush tugamaydi — u qiyofasini o'zgartiradi. Barcha dushmanlarimiz yig'ilgan bayroqni olib kel.
+594	Urush e'lon qilindi: {0} {1} ga qarshi.
+595	Urush bekor qilindi
+596	Urush allaqachon tugagan.
+597	Urushlar
+598	To'lqin barcha jangchilarni qoplaydi.
+599	O'lim to'lqini
+600	O'g'irlik
+601	Sakkizta yulduz nishonga tushadi, har biri 260% zarar.
+602	Ketma-ket sakkizta o'q, har biri 100% zarar.
+603	Tiriltirish (to'liq HP)
+604	tiriltirildi
+605	Qayta tirilish
+606	180 birlik MP tiklaydi
+607	300 birlik MP tiklaydi
+608	1000 birlik HP tiklaydi
+609	3000 birlik HP tiklaydi
+610	HP ni 45% tiklaydi
+611	8000 birlik HP tiklaydi
+612	Tiklanish · {0}
+613	MP tiklanishi
+614	HP tiklanishi
+615	CP tiklanishi
+616	{0} HP tiklandi
+617	Dushmanlar
+618	Vaqt
+619	Bossni o'ldirish vaqti tugadi. Boss qochib ketdi!

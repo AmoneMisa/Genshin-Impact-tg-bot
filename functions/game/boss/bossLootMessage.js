@@ -22,6 +22,11 @@ export default function (boss, loot) {
         if (playerLoot.equipment) {
             message += `Снаряжение: ${playerLoot.equipment}\n`;
         }
+
+        if (playerLoot.epicItem) {
+            message += `👑 Эпическое украшение: ${playerLoot.epicItem}!\n`;
+        }
+        if(playerLoot.epicWeapon)message+=`👑 Эпическое оружие: ${playerLoot.epicWeapon}!\n`;
     }
 
     return message;

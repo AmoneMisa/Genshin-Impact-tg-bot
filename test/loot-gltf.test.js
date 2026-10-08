@@ -23,7 +23,7 @@ test('manifest normalization drops unsafe paths and bad kinds', () => {
       absolute: { file: '/etc/passwd.glb' },
       binary: { file: 'payload.exe' },
       'Bad Kind': { file: 'x.glb' },
-      ring: { file: 'ring.glb', variants: { S: 'ring-s.glb', SS: '../nope.glb' }, scale: -2 },
+      ring: { file: 'ring.glb', variants: { S: 'ring-s.glb', S80: '../nope.glb' }, scale: -2 },
     },
   });
   assert.deepEqual(Object.keys(manifest.models).sort(), ['ring', 'shield', 'sword']);
@@ -36,8 +36,8 @@ test('manifest normalization drops unsafe paths and bad kinds', () => {
 });
 
 test('model resolution prefers a grade variant and falls back to the kind default', () => {
-  const manifest = normalizeManifest({ models: { sword: { file: 'sword.glb', variants: { SSS: 'sword-sss.glb' } } } });
-  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'SSS' }).url, '/models/sword-sss.glb');
+  const manifest = normalizeManifest({ models: { sword: { file: 'sword.glb', variants: { S84: 'sword-s84.glb' } } } });
+  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'S84' }).url, '/models/sword-s84.glb');
   assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'D' }).url, '/models/sword.glb');
   assert.equal(resolveModelEntry(manifest, { kind: 'hammer' }), null);
 });
@@ -49,7 +49,7 @@ test('item condition maps onto PBR parameters in the right direction', () => {
   assert.ok(worn.roughnessAdd > fresh.roughnessAdd && worn.colorMul < fresh.colorMul, 'worn gear is rougher and darker');
   assert.ok(shoddy.envIntensity < fresh.envIntensity, 'low quality reflects less');
   const glow = grade => materialAdjustments({ grade }).glow;
-  assert.ok(glow('D') < glow('A') && glow('A') < glow('S') && glow('S') < glow('SSS'));
+  assert.ok(glow('D') < glow('A') && glow('A') < glow('S') && glow('S') < glow('S84'));
   assert.equal(glow('unknown'), glow('noGrade'));
 });
 
@@ -69,10 +69,10 @@ test('a missing or broken manifest degrades to "no models" instead of throwing',
   assert.deepEqual(manifest.models, {});
 });
 
-test('item model manifest is retired and only the chest GLB ships', () => {
+test('model manifest is retired and no GLB ships', () => {
   const {errors,warnings,rows}=checkModels(path.join(root,'webapp/models'));
   assert.deepEqual(errors,[]);assert.deepEqual(warnings,[]);assert.deepEqual(rows,[]);
-  assert.deepEqual(fs.readdirSync(path.join(root,'webapp/models')).filter(f=>f.endsWith('.glb')),['chest.glb']);
+  assert.deepEqual(fs.readdirSync(path.join(root,'webapp/models')).filter(f=>f.endsWith('.glb')),[]);
   assert.match(inspectGlb(Buffer.from('not a model at all')).error,/not a binary glTF/);
 });
 
@@ -91,12 +91,12 @@ test('three.js is pinned and served locally through an import map', () => {
 
 test('grades from the DOM (lowercase) resolve variants and glow like canonical grades', async () => {
   const { canonicalGrade } = await import('../webapp/loot-gltf.js');
-  assert.equal(canonicalGrade('sss'), 'SSS');
+  assert.equal(canonicalGrade('s84'), 'S84');
   assert.equal(canonicalGrade('nograde'), 'noGrade');
   assert.equal(canonicalGrade('???'), 'noGrade');
-  const manifest = normalizeManifest({ models: { sword: { file: 'sword.glb', variants: { SSS: 'sword-sss.glb' } } } });
-  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 'sss' }).url, '/models/sword-sss.glb');
-  assert.equal(materialAdjustments({ grade: 'sss' }).glow, materialAdjustments({ grade: 'SSS' }).glow);
+  const manifest = normalizeManifest({ models: { sword: { file: 'sword.glb', variants: { S84: 'sword-s84.glb' } } } });
+  assert.equal(resolveModelEntry(manifest, { kind: 'sword', grade: 's84' }).url, '/models/sword-s84.glb');
+  assert.equal(materialAdjustments({ grade: 's84' }).glow, materialAdjustments({ grade: 'S84' }).glow);
 });
 
 test('equipment never boots the legacy 3D item renderer', () => {

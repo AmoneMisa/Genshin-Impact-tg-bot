@@ -24,6 +24,7 @@ import restoreChestChances from '../functions/shedullers/restoreChestChances.js'
 import resetSwordTimer from '../functions/game/sword/resetSwordTimer.js';
 import { getResettableArcadeGames, resetArcadeGame } from './arcadeReset.js';
 import { memberName } from './social.js';
+import { translateFor } from './language.js';
 
 const MAX_AMOUNT = 1_000_000_000;
 
@@ -181,7 +182,7 @@ async function broadcast(text) {
   let sent = 0;
   for (const userId of recipients) {
     try {
-      await sendMessage(userId, `Новости: ${text}`, { disable_notification: true });
+      await sendMessage(userId, await translateFor(userId, `Новости: ${text}`), { disable_notification: true });
       sent++;
     } catch {
       // The player blocked the bot: skip.

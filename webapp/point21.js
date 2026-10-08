@@ -4,6 +4,7 @@
 // actions. Results: every seat with its hand and payout. A stuck table can be
 // reset from here (anyone when it stalls, chat admins any time).
 
+import { worldArtUrl } from './art/world-art.js';
 import {
   betControls, bindBetControls, clampBet as clampTableBet, emptySeat, escapeHtml, formatNumber,
   resetBanner, seatGrid, seatTile, tickTimers, timerRing,
@@ -139,7 +140,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
     const me = myPlayer();
     return `
       ${timerRing(state.remainingMs, state.phaseMs, 'Ход закончится через')}
-      <div class="point-felt">
+      <div class="point-felt" ${worldArtUrl('games/table21',512) ? `style="background-image:linear-gradient(rgba(3,15,10,.65),rgba(3,15,10,.65)),url('${worldArtUrl('games/table21',512)}');background-size:cover;background-position:center"` : ''}>
         ${bot ? `
           <section class="point-dealer">
             <header><strong>Дилер</strong><span class="point-score ${bot.points > 21 ? 'bust' : ''}">${bot.cards.length ? bot.points : '?'}</span></header>

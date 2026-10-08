@@ -339,3 +339,28 @@ button.mmo-frame:active { transform: scale(.99); }
 .boss-potion:disabled { cursor: default; }
 .boss-potion:not(.empty):disabled { opacity: .5; }
 .boss-potion:not(:disabled):active { transform: translateY(1px); }
+
+/* Encounter: minions, twins and heads as targets, charging warning, fight events. */
+.boss-encounter, .mmo-frame.boss-encounter { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.boss-charging { padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255, 120, 80, .7); background: rgba(120, 30, 20, .35); color: #ffd9c9; font: 700 12px/1.3 system-ui, sans-serif; animation: boss-charge-pulse .9s ease-in-out infinite alternate; }
+@keyframes boss-charge-pulse { from { box-shadow: 0 0 0 rgba(255, 90, 60, 0); } to { box-shadow: 0 0 14px rgba(255, 90, 60, .55); } }
+.boss-units { display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.boss-unit { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 7px; align-items: center; padding: 6px 8px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .08); background: rgba(255, 255, 255, .03); color: inherit; text-align: left; font: inherit; }
+.boss-unit > i { font-style: normal; font-size: 18px; text-align: center; }
+.boss-unit strong { display: block; font: 700 11px/1.2 system-ui, sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.boss-unit em { font: 600 10px/1 system-ui, sans-serif; font-style: normal; opacity: .7; }
+.boss-unit.selected { border-color: #d8b36a; box-shadow: 0 0 0 1px rgba(216, 179, 106, .5) inset; }
+.boss-unit.partner, .boss-unit.head { border-color: rgba(255, 140, 90, .45); }
+.boss-unit.dead { opacity: .35; }
+.boss-unit-bar { display: block; height: 5px; margin-top: 3px; border-radius: 3px; background: rgba(0, 0, 0, .45); overflow: hidden; }
+.boss-unit-bar b { display: block; height: 100%; background: linear-gradient(90deg, #d44, #f88); transition: width .25s; }
+.boss-events { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; font: 500 11px/1.3 system-ui, sans-serif; color: rgba(238, 228, 207, .8); }
+.boss-events li { display: grid; grid-template-columns: 20px 1fr; gap: 6px; }
+.boss-events i { font-style: normal; }
+.mmo-skill.locked { filter: grayscale(.8); opacity: .55; }
+.mmo-skill.tier-3 { box-shadow: 0 0 0 1px rgba(216, 179, 106, .55) inset; }
+.boss-attack.multi { border-color: rgba(255, 200, 90, .35); }
+.boss-epic-panel { position:absolute; inset:0; z-index:5; overflow:auto; padding:16px; border-radius:inherit; background:var(--bg, #0d0b12); }
+.boss-epic-panel .epic-note { margin:4px 2px 12px; color:var(--muted); font-size:12px; line-height:1.4; }
+.epic-card .epic-jewel { position:relative; z-index:1; margin:2px 0; color:#f1d9a4; font-size:12px; }
+.epic-card .epic-status { position:relative; z-index:1; margin:0; color:var(--muted); font-size:12px; }

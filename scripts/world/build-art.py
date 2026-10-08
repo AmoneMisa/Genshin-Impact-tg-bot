@@ -1,0 +1,105 @@
+"""Convert completed world-art masters; leave existing art intact for missing jobs."""
+from pathlib import Path
+from PIL import Image
+import io
+import json
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+
+def padded_cutout(image):
+    alpha = image.getchannel('A')
+    if alpha.getextrema()[0] == 255:
+        raise ValueError('Transparent master required')
+    content = image.crop(alpha.getbbox())
+    content.thumbnail((round(image.width * .9), round(image.height * .9)), Image.Resampling.LANCZOS)
+    canvas = Image.new('RGBA', image.size)
+    canvas.alpha_composite(content, ((image.width - content.width) // 2, (image.height - content.height) // 2))
+    return canvas
+
+def save_webp(image, target, size, budget):
+    # Reuse completed delivery. Use --force after changing padding or encoding rules.
+    if '--force' not in sys.argv and target.is_file() and target.stat().st_mtime >= source.stat().st_mtime:
+        return
+    reduced = image.copy()
+    reduced.thumbnail(size, Image.Resampling.LANCZOS)
+    for quality in (82, 78, 74, 70, 66, 62, 58, 54, 50, 46, 42, 38):
+        output = io.BytesIO()
+        reduced.save(output, format='WEBP', quality=quality, method=6)
+        if output.tell() <= budget:
+            break
+    if output.tell() > budget:
+        raise ValueError(f'{target}: exceeds {budget} bytes')
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = target.with_suffix('.tmp')
+    temporary.write_bytes(output.getvalue())
+    temporary.replace(target)
+    print(target.relative_to(ROOT), output.tell())
+
+source = ROOT / 'art-source/city/hero.png'
+if source.exists():
+    image = Image.open(source).convert('RGB')
+    # Legacy menu path remains compatible; smaller backgrounds are chosen on phones.
+    for name, width, budget in [('builds-512.webp', 512, 45000),
+                                ('builds-1024.webp', 1024, 120000),
+                                ('builds.webp', 1536, 240000)]:
+        save_webp(image, ROOT / 'webapp/art/menu' / name, (width, round(width * 2 / 3)), budget)
+
+for category in ('builds', 'stars', 'heroes', 'arena', 'clan', 'games'):
+    folder = ROOT / 'art-source' / category
+    if not folder.exists():
+        continue
+    for source in sorted(folder.rglob('*.png')):
+        # Existing offline files outside the approved batch are not touched.
+        relative = source.relative_to(folder)
+        if category == 'builds' and source.stem not in ('small', 'grand', 'royal'):
+            continue
+        image = Image.open(source).convert('RGBA')
+        if category in ('stars', 'heroes') or (category == 'arena' and source.stem.startswith('rank-')) or (category == 'clan' and source.stem.startswith('clan-banner-')):
+            image = padded_cutout(image)
+        if category == 'builds':
+            alpha = image.getchannel('A')
+            if alpha.getextrema()[0] == 255:
+                raise ValueError(f'{source}: transparent master required')
+            # Consistent square canvas and safe margin even if a generated tip is near an edge.
+            content = image.crop(alpha.getbbox())
+            content.thumbnail((1008, 1008), Image.Resampling.LANCZOS)
+            image = Image.new('RGBA', (1120, 1120))
+            image.alpha_composite(content, ((1120 - content.width) // 2, 1064 - content.height))
+        for width, budget in ((256, 45000), (512, 130000)):
+            destination = ROOT / 'webapp/art/world/v1' / category / relative.parent / f'{source.stem}-{width}.webp'
+            save_webp(image, destination, (width, round(width * image.height / image.width)), budget)
+
+for source in sorted((ROOT / 'art-source/chests').glob('reward-*.png')):
+    image = padded_cutout(Image.open(source).convert('RGBA'))
+    for width, budget in ((128, 18000), (256, 45000)):
+        save_webp(image, ROOT / 'webapp/art/world/v1/chests' / f'{source.stem}-{width}.webp', (width, width), budget)
+source = ROOT / 'art-source/chests/chest-open-scene.png'
+if source.exists():
+    save_webp(Image.open(source).convert('RGB'), ROOT / 'webapp/art/world/v1/chests/chest-open-scene-768.webp', (768, 512), 100000)
+source = ROOT / 'art-source/city/map-portrait.png'
+if source.exists():
+    for width, budget in ((512, 100000), (768, 180000)):
+        save_webp(Image.open(source).convert('RGB'), ROOT / f'webapp/art/world/v1/city/map-portrait-{width}.webp', (width, round(width * 1.5)), budget)
+
+# Never expose a file in the UI merely because generation finished.
+reviewed_file = ROOT / 'art-source/world-reviewed.txt'
+reviewed = reviewed_file.read_text().splitlines() if reviewed_file.exists() else []
+buildings = []
+for key in reviewed:
+    if not key.startswith('builds/'):
+        continue
+    relative = key.removeprefix('builds/')
+    if all((ROOT / f'webapp/art/world/v1/builds/{relative}-{size}.webp').is_file() for size in (256, 512)):
+        buildings.append(relative)
+(ROOT / 'webapp/art/world-buildings-manifest.js').write_text(
+    '// Reviewed paintings only; generated by scripts/world/build-art.py.\n'
+    f'export const REVIEWED_WORLD_BUILDINGS = {json.dumps(sorted(set(buildings)))};\n', encoding='utf-8')
+assets = {}
+for key in reviewed:
+    sizes = [size for size in (128, 256, 512, 768) if (ROOT / f'webapp/art/world/v1/{key}-{size}.webp').is_file()]
+    if sizes:
+        assets[key] = sizes
+(ROOT / 'webapp/art/world-art-manifest.js').write_text(
+    '// Reviewed artwork only; generated by scripts/world/build-art.py.\n'
+    f'export const REVIEWED_WORLD_ART = {json.dumps(assets, sort_keys=True)};\n', encoding='utf-8')

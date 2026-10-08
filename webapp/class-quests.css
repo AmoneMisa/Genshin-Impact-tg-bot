@@ -1,0 +1,50 @@
+/* Profession quests (class-quests.js): a mentor's journal. */
+.overlay-panel.cq-panel {
+  --gold: #d8b36a; --gold-dim: #6b5326; --serif: Georgia, "Times New Roman", serif;
+  width: min(760px, calc(100vw - 20px)); max-height: min(92vh, 900px);
+  display: grid; gap: 10px; padding-top: 12px; overflow-y: auto; color: #eee4cf;
+}
+.cq-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
+.cq-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
+.cq-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
+.cq-summary { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; padding: 10px; border-radius: 8px; border: 1px solid rgba(216, 179, 106, .2); background: linear-gradient(180deg, rgba(26, 21, 30, .92), rgba(12, 10, 16, .92)); }
+.cq-portrait { width: 64px; height: 64px; border-radius: 50%; background: var(--art) center 18% / cover no-repeat, #111; box-shadow: 0 0 0 2px #120e16, 0 0 0 3px var(--gold); }
+.cq-summary > div { display: grid; gap: 3px; }
+.cq-summary small { font: 700 10px/1 var(--serif); letter-spacing: .12em; text-transform: uppercase; color: rgba(243, 220, 166, .6); }
+.cq-summary strong { font: 700 18px/1.1 var(--serif); color: #f3dca6; }
+.cq-summary em { font-style: normal; font-size: 11px; line-height: 1.35; color: rgba(238, 228, 207, .65); }
+.cq-resources { display: flex; flex-wrap: wrap; gap: 6px; }
+.cq-resources span { padding: 5px 9px; border-radius: 999px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .7); font: 600 12px/1 system-ui, sans-serif; color: #fff; }
+.cq-list { display: grid; gap: 10px; }
+.cq-empty { padding: 22px 14px; text-align: center; border-radius: 8px; border: 1px dashed rgba(216, 179, 106, .3); color: rgba(238, 228, 207, .75); font-size: 13px; }
+.cq-card { display: grid; gap: 9px; padding: 12px; border-radius: 8px; border: 1px solid rgba(216, 179, 106, .2); background: linear-gradient(180deg, rgba(26, 21, 30, .94), rgba(12, 10, 16, .94)); }
+.cq-card.tier-3 { border-color: rgba(216, 179, 106, .55); }
+.cq-card.status-locked { opacity: .6; }
+.cq-card.status-ready { border-color: #7fe07e; box-shadow: 0 0 14px rgba(127, 224, 126, .2); }
+.cq-card header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.cq-card header small { font: 700 10px/1 var(--serif); letter-spacing: .1em; text-transform: uppercase; color: rgba(243, 220, 166, .6); }
+.cq-card h3 { margin: 3px 0 0; font: 700 17px/1.1 var(--serif); color: #f3dca6; }
+.cq-status { padding: 4px 8px; border-radius: 999px; border: 1px solid var(--gold-dim); font: 700 10px/1 system-ui, sans-serif; white-space: nowrap; }
+.cq-desc { margin: 0; font-size: 12px; line-height: 1.4; color: rgba(238, 228, 207, .8); }
+.cq-giver { margin: 0; padding: 8px 10px; border-left: 3px solid var(--gold); border-radius: 4px; background: rgba(255, 255, 255, .03); display: grid; gap: 2px; }
+.cq-giver b { font: 700 12px/1.2 system-ui, sans-serif; color: #f3dca6; }
+.cq-giver small { font-size: 10px; opacity: .7; }
+.cq-giver p { margin: 4px 0 0; font-style: italic; font-size: 12px; line-height: 1.4; }
+.cq-steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.cq-step { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 12px; }
+.cq-step strong { font-weight: 600; }
+.cq-step em { font-style: normal; font-size: 11px; opacity: .8; }
+.cq-step.done strong { opacity: .6; text-decoration: line-through; }
+.cq-check { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); font-size: 11px; }
+.cq-step.done .cq-check { background: #2f6b34; border-color: #7fe07e; }
+.cq-bar { display: block; height: 5px; margin-top: 4px; border-radius: 3px; background: rgba(0, 0, 0, .5); overflow: hidden; }
+.cq-bar i { display: block; height: 100%; background: linear-gradient(90deg, #d8b36a, #f3dca6); }
+.cq-reward { display: grid; gap: 2px; }
+.cq-reward small { font: 700 10px/1 var(--serif); letter-spacing: .1em; text-transform: uppercase; color: rgba(243, 220, 166, .6); }
+.cq-reward strong { font: 600 12px/1.3 system-ui, sans-serif; }
+.cq-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.cq-actions button { flex: 1 1 140px; }
+.cq-promote { box-shadow: 0 0 12px rgba(127, 224, 126, .35); }
+.cq-ghost { opacity: .75; }
+.cq-lock { color: rgba(238, 228, 207, .7); }
+.cq-feedback { min-height: 16px; font-size: 12px; color: #f3dca6; }

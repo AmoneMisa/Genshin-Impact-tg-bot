@@ -1,3 +1,5 @@
+import equipmentTemplate from "../../../template/equipmentTemplate.js";
+
 export default function getEquipmentByGrade(session, minGrade) {
     if (!session?.game?.inventory?.equipment?.items) {
         console.error("Инвентарь отсутствует:", session?.game);
@@ -19,7 +21,7 @@ export default function getEquipmentByGrade(session, minGrade) {
 }
 
 function getItemGradePower(grade) {
-    const allGrades = ["noGrade", "D", "C", "B", "A", "S", "SS", "SSS"];
+    const allGrades = equipmentTemplate.grades.map(entry => entry.name);
     const index = allGrades.indexOf(grade);
     if (index === -1) {
         console.warn(`Неизвестный грейд: ${grade}`);

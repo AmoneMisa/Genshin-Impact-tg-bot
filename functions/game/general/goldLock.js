@@ -100,8 +100,8 @@ const BET_SUFFIX = '(?:bet|double_bet|thousand_bet|xfive_bet|10t_bet|xten_bet|x2
 // game chat id (these buttons often live in private messages).
 const GOLD_SPEND_CALLBACKS = [
   /^builds\.([-0-9]+)\.[^.]+\.upgrade$/,
-  /^builds\.([-0-9]+)\.forge\.craft_[a-zA-Z]+\.0$/,
-  /^builds\.([-0-9]+)\.forge\.itemUpgrade_[0-9]+\.0$/,
+  /^builds\.([-0-9]+)\.forge\.r[lm]_[0-9]+\.0$/,
+  /^builds\.([-0-9]+)\.forge\.itemUpgrade_[0-9]+\.[01]$/,
   /^shop\.([-0-9]+)\.[^.]+\.[^.]+\.buy$/,
   /^lucky_roll\.([-0-9]+)\.[^.]+\.roll$/,
   /^player\.([-0-9]+)\.skills\.confirm_[0-9]+$/,

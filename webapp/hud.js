@@ -1,10 +1,13 @@
 import { menuArtFor } from './menu-art.js';
+import { familyOf } from './class-family.js';
 
 export const CLASS_SIGILS = Object.freeze({
   warrior: '⚔',
   mage: '✦',
   priest: '✧',
   archer: '➶',
+  rogue: '†',
+  berserk: '⚒',
   noClass: '◇',
 });
 
@@ -31,7 +34,7 @@ export function renderPlayerHud({ state, getElement, formatNumber }) {
   setText('hello', firstName);
   setText('level', player.level || 1);
   setText('class-name', player.classTitle || (player.className === 'noClass' ? 'Без класса' : player.className || 'Без класса'));
-  setText('class-sigil', CLASS_SIGILS[player.className] || CLASS_SIGILS.noClass);
+  setText('class-sigil', CLASS_SIGILS[familyOf(player.className)] || CLASS_SIGILS.noClass);
   // Painted class portrait in the crest; the sigil stays as the fallback glyph.
   const shell = getElement('class-sigil')?.parentElement;
   if (shell?.style) {

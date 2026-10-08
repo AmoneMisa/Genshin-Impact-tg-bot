@@ -1,15 +1,15 @@
 import { itemArtKey, itemArtSources } from './art/items-art.js';
 const GRADE_TONES = Object.freeze({
-  noGrade: 'mist', D: 'mist', C: 'aqua', B: 'aqua', A: 'arcane', S: 'gold', SS: 'rose', SSS: 'prismatic',
+  noGrade: 'mist', D: 'mist', C: 'aqua', B: 'aqua', A: 'arcane', S: 'gold', S80: 'rose', S84: 'prismatic',
 });
 const RARITY_TONES = Object.freeze({
   break: 'mist', common: 'mist', unusual: 'aqua', special: 'aqua', unique: 'arcane', rare: 'gold', royal: 'rose', magic: 'prismatic', goddess: 'prismatic',
 });
 const KIND_ALIASES = Object.freeze({
-  gauntlets:'gauntlets', tiara:'tiara', sigill:'shield', sigil:'sigil', onehandedsword:'sword', twohandedsword:'sword', sword:'sword', dagger:'dagger', mace:'staff', staff:'staff', bow:'bow', crossbow:'crossbow', blunt:'hammer', hammer:'hammer', fists:'gauntlets', helmet:'helmet', gloves:'gloves', greaves:'greaves', boots:'boots', shield:'shield', cloak:'cloak', ring:'ring', earrings:'earring', earring:'earring', necklace:'amulet', amulet:'amulet', armor:'armor', chest:'armor', body:'armor', up:'armor',
+  gauntlets:'gauntlets', tiara:'tiara', sigill:'shield', sigil:'sigil', onehandedsword:'sword', twohandedsword:'sword', sword:'sword', dagger:'dagger', mace:'staff', staff:'staff', bow:'bow', crossbow:'crossbow', blunt:'hammer', hammer:'hammer', fists:'fists', helmet:'helmet', gloves:'gloves', greaves:'greaves', boots:'boots', shield:'shield', cloak:'cloak', ring:'ring', earrings:'earring', earring:'earring', necklace:'amulet', amulet:'amulet', armor:'armor', chest:'armor', body:'armor', up:'armor',
 });
 const MOTION_BY_KIND = Object.freeze({
-  sword:'spin', dagger:'spin', staff:'spin', hammer:'heavy-turn', bow:'heavy-turn', crossbow:'heavy-turn', shield:'heavy-turn', helmet:'wobble', armor:'float', gloves:'float', gauntlets:'float', greaves:'float', boots:'float', cloak:'float', ring:'orbit', earring:'orbit', amulet:'orbit', tiara:'wobble', relic:'orbit',
+  sword:'spin', dagger:'spin', staff:'spin', hammer:'heavy-turn', bow:'heavy-turn', crossbow:'heavy-turn', shield:'heavy-turn', helmet:'wobble', armor:'float', gloves:'float', gauntlets:'float', fists:'float', greaves:'float', boots:'float', cloak:'float', ring:'orbit', earring:'orbit', amulet:'orbit', tiara:'wobble', relic:'orbit',
 });
 const MATERIALS = Object.freeze(['iron', 'bronze', 'moonsteel', 'obsidian']);
 const ORNAMENTS = Object.freeze(['plain', 'runic', 'royal', 'crystal']);

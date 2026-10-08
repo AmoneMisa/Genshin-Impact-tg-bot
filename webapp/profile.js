@@ -13,6 +13,8 @@ const CLASS_ICONS = {
   mage: '🪄',
   priest: '✨',
   archer: '🏹',
+  rogue: '🗡️',
+  berserk: '🪓',
   noClass: '🧭',
 };
 

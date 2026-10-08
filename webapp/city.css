@@ -26,12 +26,13 @@
 }
 .city-sky {
   position: absolute; z-index: -1; inset: 0 0 auto;
-  height: 420px;
-  background: url("/art/menu/builds.webp") center 30% / cover no-repeat;
+  height: clamp(240px, 66.667vw, 420px);
+  background: url("/art/menu/builds-512.webp") center top / 100% auto no-repeat;
+  background-image: image-set(url("/art/menu/builds-512.webp") 1x, url("/art/menu/builds-1024.webp") 2x);
   -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent);
   mask-image: linear-gradient(180deg, #000 45%, transparent);
   opacity: .8;
-  animation: city-drift 20s ease-in-out infinite alternate;
+  /* Static panorama preserves the statue and floating island on narrow phones. */
 }
 .city::after {
   /* Drifting fireflies over the whole city. */
@@ -47,7 +48,7 @@
   animation: city-fireflies 16s linear infinite;
   opacity: .8;
 }
-.city-title { position: relative; z-index: 2; display: grid; justify-items: center; gap: 4px; padding: 26px 0 0; text-align: center; }
+.city-title { position: relative; z-index: 2; display: grid; justify-items: center; align-content: start; min-height: 180px; gap: 4px; padding: 26px 0 0; text-align: center; }
 .city-title strong { font: 700 38px/1 var(--city-serif); letter-spacing: .01em; background: linear-gradient(180deg, #fff3cf, #d8b36a 60%, #8a6a2c); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 #000) drop-shadow(0 0 14px rgba(216, 179, 106, .35)); }
 .city-crown { width: 26px; height: 26px; color: #e9c777; stroke-width: 1.6; filter: drop-shadow(0 2px 4px #000); margin-bottom: -6px; }
 .city-game { display: flex; align-items: center; gap: 10px; font: 700 11px/1 var(--city-serif); letter-spacing: .5em; color: #d8b36a; text-shadow: 0 1px 2px #000; }
@@ -91,6 +92,7 @@
 .city-art::before {
   content: ""; position: absolute; inset: 0;
   background: var(--art) center / cover no-repeat;
+  background-image: var(--art-responsive, var(--art));
   animation: city-breathe 9s ease-in-out infinite alternate;
   transition: transform .3s ease, filter .3s ease;
 }
@@ -100,6 +102,14 @@
 
 .city-card.banner { margin: -10px auto 10px; max-width: 420px; }
 .city-card.banner .city-art { width: 108%; margin: 0 -4% -26%; }
+
+/* Transparent paintings keep their silhouettes and breathing room. */
+.city-art.painted { -webkit-mask-image: none; mask-image: none; }
+.city-art.painted::before { display: none; }
+.city-building-image { width: 100%; height: 100%; object-fit: contain; }
+.city-art.painted[data-building-style="elven"] .city-building-image { filter: hue-rotate(-18deg) saturate(.85); }
+.city-art.painted[data-building-style="royal"] .city-building-image { filter: saturate(1.12) brightness(1.08); }
+.city-window-art.painted::before { inset: 0; background-size: contain; animation: none; }
 
 .city-plate {
   position: relative; z-index: 1;
@@ -134,7 +144,7 @@
 
 .city-btn {
   width: 100%;
-  min-height: 30px; padding: 6px 8px;
+  min-height: 44px; padding: 6px 8px;
   border-radius: 6px;
   border: 1px solid var(--city-gold);
   background: linear-gradient(180deg, #6a4f1f, #3a2a10);
@@ -312,3 +322,11 @@
 .city-subhead { margin: 2px 0 6px; font: 700 13px/1 var(--city-serif); color: rgba(238, 228, 207, .75); }
 .city-arrow { font-style: normal; opacity: .6; }
 .city-gain { font-style: normal; color: #6fe0a3; }
+
+.city.has-map { background: linear-gradient(rgba(7,8,14,.18),rgba(7,8,14,.45)),var(--city-map) center top / 100% auto no-repeat; }
+.city.has-map .city-grid { position: relative; isolation: isolate; }
+.city.has-map .city-grid::before { content: ''; position: absolute; z-index: -1; inset: -80px -12px 0; background: linear-gradient(rgba(7,8,14,.28),rgba(7,8,14,.55)),var(--city-map) center bottom / auto 200% no-repeat; mask-image: linear-gradient(transparent,#000 100px); -webkit-mask-image: linear-gradient(transparent,#000 100px); pointer-events: none; }
+.city.has-map .city-sky { display: none; background-image: none; }
+.city.has-map .city-title { min-height: 210px; }
+.city.has-map .city-card.banner { max-width: 320px; }
+@media (max-width: 679px) { .city::after { animation: none; } }

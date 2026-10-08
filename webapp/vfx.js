@@ -5,8 +5,8 @@ const RARITY_TONES = Object.freeze({
   B: 'aqua',
   A: 'arcane',
   S: 'gold',
-  SS: 'rose',
-  SSS: 'prismatic',
+  S80: 'rose',
+  S84: 'prismatic',
 });
 
 const INTERACTIVE_SELECTOR = [
@@ -203,7 +203,7 @@ function inspectGacha(container) {
   container.dataset.vfxSignature = signature;
   const tone = rarityTone(grade);
   rarityBeam(container, grade);
-  burst(container, tone, grade === 'SSS' ? 22 : grade === 'SS' ? 18 : 14);
+  burst(container, tone, grade === 'S84' ? 22 : grade === 'S80' ? 18 : 14);
   floatingLabel(container, grade, tone);
 }
 

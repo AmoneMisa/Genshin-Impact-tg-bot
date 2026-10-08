@@ -4,7 +4,10 @@ import path from 'node:path';
 import http from 'node:http';
 import assert from 'node:assert/strict';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { BASE_ITEM_ART_KEYS, ITEM_ART_KEYS, ITEM_ART_VARIANTS } from '../../webapp/art/items-art.js';
+import { BASE_ITEM_ART_KEYS, ITEM_ART_KEYS, ITEM_ART_VARIANTS, EPIC_ITEM_ART_KEYS } from '../../webapp/art/items-art.js';
+import { CATALOG_ITEM_ART } from '../../webapp/art/catalog-item-art.js';
+import epicWeapons from '../../template/epicWeapons.js';
+import { SPECIAL_ITEM_ART } from '../../webapp/art/special-item-art.js';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const modulePath=process.env.PLAYWRIGHT_MODULE;
 const {chromium}=await import(modulePath?pathToFileURL(modulePath).href:'playwright');
@@ -13,10 +16,13 @@ const html=`<!doctype html><html><head><meta name="viewport" content="width=devi
 <style>body{margin:0;padding:16px;background:#111723;color:#eee;font:14px system-ui}h1{font-size:20px}main{max-width:700px;margin:auto}.hero{padding:8px;border-radius:20px;background:radial-gradient(ellipse,#302650,#171e2a);text-align:center}.hero .loot-art{height:270px;width:220px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}article{border:1px solid #ffffff15;border-radius:16px;background:#1a2230;padding:10px;text-align:center;min-width:0}article .loot-art{width:96px;height:144px}article p{margin:6px;text-transform:capitalize}</style></head>
 <body><main><h1>Celestial equipment</h1><div class="hero" id="hero"></div><div class="grid" id="grid"></div></main>
 <script type="module">import {renderLootArt} from '/loot-renderer.js';import {startItemArt} from '/item-art-runtime.js';
-startItemArt();document.querySelector('#hero').innerHTML=renderLootArt({kind:'staff',grade:'SSS'},{reveal:true});
+startItemArt();document.querySelector('#hero').innerHTML=renderLootArt({kind:'staff',grade:'S84'},{reveal:true});
 const keys=${JSON.stringify(BASE_ITEM_ART_KEYS)};const variants=${JSON.stringify(ITEM_ART_VARIANTS)};const robe={mantle:'armor',bracers:'gloves','leg-wraps':'greaves',anklets:'boots'};
 const items=keys.map(key=>({key,item:{...(robe[key]?{kind:'robe',category:robe[key]}:key==='greatsword'?{kind:'twoHandedSword'}:key==='sigil'?{kind:'sigill'}:{kind:key}),grade:'D'}}));
 items.push(...variants.map(v=>({key:v.key,item:{kind:v.type||v.kind,category:v.kind,grade:v.grades.at(-1)}})));
+items.push(...${JSON.stringify(EPIC_ITEM_ART_KEYS)}.map(key=>({key,item:{epicBoss:key.slice(5),kind:'ring',grade:'S'}})));
+items.push(...${JSON.stringify(CATALOG_ITEM_ART)}.map(item=>({key:item.key,item})));
+items.push(...${JSON.stringify(epicWeapons.filter(w=>SPECIAL_ITEM_ART.includes(w.artKey)))}.map(w=>({key:w.artKey,item:{epicWeapon:w.id,kind:w.kind,grade:'S84'}})));
 document.querySelector('#grid').innerHTML=items.map(({key,item})=>'<article data-expected-art="'+key+'">'+renderLootArt(item)+'<p>'+key+'</p></article>').join('');
 </script></body></html>`;
 const mime={'.js':'text/javascript','.css':'text/css','.webp':'image/webp'};

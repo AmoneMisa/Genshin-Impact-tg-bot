@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import {getCatalog} from '../../functions/game/equipment/catalog.js';
+import {normalizeLootKind} from '../../webapp/loot-renderer.js';
+import {itemArtKey} from '../../webapp/art/items-art.js';
+import {CATALOG_ITEM_ART} from '../../webapp/art/catalog-item-art.js';
+const items=getCatalog();
+const groups=Map.groupBy(items,item=>itemArtKey(normalizeLootKind(item),item));
+const missing=[];
+for(const [key] of groups)for(const width of [128,256,512])if(!fs.existsSync(`webapp/art/items/v1/${key}-${width}.webp`))missing.push(`${key}-${width}`);
+const jobs=JSON.parse(fs.readFileSync('art-source/catalog-art-jobs.json','utf8'));
+const approved=new Set(CATALOG_ITEM_ART.map(item=>item.key));
+const shared=[...groups].filter(([,rows])=>rows.length>1).map(([key,rows])=>({key,items:rows.map(item=>item.id)}));
+console.log(JSON.stringify({catalogue:items.length,uniquePaintings:groups.size,additionalPaintingsPublished:approved.size,remainingSharedAssignments:items.length-groups.size,missing,pending:jobs.filter(job=>!approved.has(job.key)).map(job=>({id:job.id,key:job.key,generated:fs.existsSync(`art-source/items/catalog/${job.key}.png`)})),shared},null,2));
+if(missing.length||(process.argv.includes('--require-unique')&&shared.length))process.exitCode=1;
