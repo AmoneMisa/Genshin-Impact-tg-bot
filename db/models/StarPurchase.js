@@ -7,10 +7,14 @@ const StarPurchaseSchema = new mongoose.Schema({
     userId: {type: Number, required: true, index: true},
     packId: {type: String, required: true},
     stars: {type: Number, required: true},
-    crystals: {type: Number, required: true},           // the pack, without the first-purchase bonus
-    bonusCrystals: {type: Number, default: 0},          // first-purchase bonus, fixed when the payment lands
+    // What the pack pays out. Rows from before Coins of Luck have no `currency` and pay crystals.
+    currency: {type: String, enum: ['crystals', 'luckCoins'], default: 'crystals'},
+    coins: {type: Number, default: 0},                  // luckCoins pack, without the first-purchase bonus
+    bonusCoins: {type: Number, default: 0},             // luckCoins first-purchase bonus, fixed when the payment lands
+    crystals: {type: Number, default: 0},               // legacy crystals pack
+    bonusCrystals: {type: Number, default: 0},          // legacy crystals first-purchase bonus
     status: {type: String, enum: ['pending', 'paid', 'refunded'], default: 'pending', index: true},
-    credited: {type: Boolean, default: false},          // crystals are in the player's inventory
+    credited: {type: Boolean, default: false},          // the payout is in the player's inventory
     chargeId: {type: String, unique: true, sparse: true},
     providerChargeId: String,
     expiresAt: {type: Date, required: true},

@@ -50,6 +50,7 @@ function addTo(target, key, amount) {
 /** Tools applied to one chat member. `apply` mutates the member; the caller saves the chat. */
 export const PLAYER_TOOLS = Object.freeze([
   { id: 'add_gold', label: 'Золото', amountLabel: 'Сколько золота', apply: (m, n) => addTo(inventory(m), 'gold', n), text: n => `золото ${n > 0 ? '+' : ''}${n}` },
+  { id: 'add_luck_coins', label: 'Монеты удачи', amountLabel: 'Сколько монет', apply: (m, n) => addTo(inventory(m), 'luckCoins', n), text: n => `монеты удачи ${n > 0 ? '+' : ''}${n}` },
   { id: 'add_crystals', label: 'Кристаллы', amountLabel: 'Сколько кристаллов', apply: (m, n) => addTo(inventory(m), 'crystals', n), text: n => `кристаллы ${n > 0 ? '+' : ''}${n}` },
   { id: 'add_iron_ore', label: 'Железная руда', amountLabel: 'Сколько руды', apply: (m, n) => addTo(inventory(m), 'ironOre', n), text: n => `руда ${n > 0 ? '+' : ''}${n}` },
   {

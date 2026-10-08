@@ -1,34 +1,45 @@
-// Buying crystals with Telegram Stars (currency "XTR").
+// Buying Coins of Luck (the donation currency) with Telegram Stars (currency "XTR").
 //
 // Flow: the Mini App asks for an invoice (createStarInvoice) -> opens it in Telegram ->
 // Telegram sends a pre_checkout_query (checkPreCheckout, answered within 10 s) -> after
-// payment a successful_payment message arrives (settlePayment) -> crystals are credited.
+// payment a successful_payment message arrives (settlePayment) -> the coins are credited.
 //
 // Money rules: every purchase is a ledger document (db/models/StarPurchase.js); a payment is
 // recognised once, by Telegram's charge id; crediting is retried on startup if the process
-// died halfway (reconcileStarPurchases); purchased crystals are shielded from raids for a week.
+// died halfway (reconcileStarPurchases). Coins of Luck cannot be raided; the crystals bought with
+// them in the Luck shop are shielded for a week. Purchases made before Coins of Luck existed
+// carry currency 'crystals' and are still credited and refunded as crystals.
 import { addStarShield, removeFromStarShield, starShieldAmount } from '../functions/game/builds/starShield.js';
 
 export const STARS_CURRENCY = 'XTR';
-export const CRYSTALS_PER_STAR = 10;            // base rate of the smallest pack; bigger packs add a bonus
-export const FIRST_PURCHASE_BONUS_CAP = 2000;   // extra crystals on a player's first purchase: min(pack, cap)
+export const LUCK_COINS = 'luckCoins';
+export const COINS_PER_STAR = 1;                // base rate of the smallest pack; bigger packs add a bonus
+export const FIRST_PURCHASE_BONUS_CAP = 200;    // extra coins on a player's first purchase: min(pack, cap)
 export const INVOICE_TTL_MS = 60 * 60 * 1000;
 export const MAX_PENDING_INVOICES = 5;
 
 export const STAR_PACKS = Object.freeze([
-  { id: 'pouch', title: 'Горсть кристаллов', stars: 25, crystals: 250 },
-  { id: 'sack', title: 'Мешочек кристаллов', stars: 50, crystals: 550 },
-  { id: 'casket', title: 'Шкатулка кристаллов', stars: 100, crystals: 1200 },
-  { id: 'chest', title: 'Сундук кристаллов', stars: 250, crystals: 3250 },
-  { id: 'trove', title: 'Сокровищница', stars: 500, crystals: 7000 },
-  { id: 'vault', title: 'Хранилище кристаллов', stars: 1000, crystals: 15000 },
+  { id: 'pouch', title: 'Горсть монет удачи', stars: 25, coins: 25 },
+  { id: 'sack', title: 'Мешочек монет удачи', stars: 50, coins: 55 },
+  { id: 'casket', title: 'Шкатулка монет удачи', stars: 100, coins: 120 },
+  { id: 'chest', title: 'Сундук монет удачи', stars: 250, coins: 325 },
+  { id: 'trove', title: 'Сокровищница удачи', stars: 500, coins: 700 },
+  { id: 'vault', title: 'Хранилище удачи', stars: 1000, coins: 1500 },
 ].map(Object.freeze));
 
 export const packById = id => STAR_PACKS.find(pack => pack.id === id) || null;
-export const bonusPercent = pack => Math.round((pack.crystals / (pack.stars * CRYSTALS_PER_STAR) - 1) * 100);
-export const firstPurchaseBonus = pack => Math.min(pack.crystals, FIRST_PURCHASE_BONUS_CAP);
+export const bonusPercent = pack => Math.round((pack.coins / (pack.stars * COINS_PER_STAR) - 1) * 100);
+export const firstPurchaseBonus = pack => Math.min(pack.coins, FIRST_PURCHASE_BONUS_CAP);
 
-/** What the Mini App shows: the ladder, the first-purchase offer and the raid shield. */
+/** What a ledger row pays out: its currency, base amount, first-purchase bonus and the total. */
+export function purchaseAmount(purchase) {
+  const coins = purchase?.currency === LUCK_COINS;
+  const base = Number(coins ? purchase.coins : purchase?.crystals) || 0;
+  const bonus = Number(coins ? purchase.bonusCoins : purchase?.bonusCrystals) || 0;
+  return { currency: coins ? LUCK_COINS : 'crystals', base, bonus, total: base + bonus };
+}
+
+/** What the Mini App shows: the ladder, the first-purchase offer and the raid shield (of crystals bought with coins). */
 export function getStarsState(session, { hasPaid = false, now = Date.now() } = {}) {
   const game = session?.game;
   const shield = starShieldAmount(game, now);
@@ -38,7 +49,7 @@ export function getStarsState(session, { hasPaid = false, now = Date.now() } = {
       id: pack.id,
       title: pack.title,
       stars: pack.stars,
-      crystals: pack.crystals,
+      coins: pack.coins,
       bonusPercent: bonusPercent(pack),
       firstBonus: hasPaid ? 0 : firstPurchaseBonus(pack),
     })),
@@ -53,18 +64,18 @@ export async function createStarInvoice({ store, api, chatId, userId, packId, no
   if (!pack) return { ok: false, reason: 'unknown_pack' };
   if (await store.countPending(chatId, userId, now) >= MAX_PENDING_INVOICES) return { ok: false, reason: 'too_many_pending' };
 
-  const purchase = await store.create({ chatId, userId, packId: pack.id, stars: pack.stars, crystals: pack.crystals, expiresAt: new Date(now + INVOICE_TTL_MS) });
+  const purchase = await store.create({ chatId, userId, packId: pack.id, stars: pack.stars, currency: LUCK_COINS, coins: pack.coins, expiresAt: new Date(now + INVOICE_TTL_MS) });
   const bonus = (await store.hasPaid(chatId, userId)) ? 0 : firstPurchaseBonus(pack);
   try {
     const url = await api.createInvoiceLink({
       title: pack.title,
-      description: `${pack.crystals} кристаллов в игре WhitesLove${bonus ? ` и бонус первой покупки +${bonus}` : ''}. Зачислим в этот игровой чат. Купленные кристаллы 7 дней защищены от ограбления.`,
+      description: `${pack.coins} монет удачи в игре WhitesLove${bonus ? ` и бонус первой покупки +${bonus}` : ''}. Зачислим в этот игровой чат.`,
       payload: String(purchase.id),
       provider_token: '',
       currency: STARS_CURRENCY,
       prices: [{ label: pack.title, amount: pack.stars }],
     });
-    return { ok: true, url, purchaseId: String(purchase.id), pack: { id: pack.id, stars: pack.stars, crystals: pack.crystals }, bonus };
+    return { ok: true, url, purchaseId: String(purchase.id), pack: { id: pack.id, stars: pack.stars, coins: pack.coins }, bonus };
   } catch (error) {
     await store.remove(purchase.id);
     return { ok: false, reason: 'invoice_failed', error };
@@ -92,10 +103,14 @@ async function credit(purchase, deps, now) {
     const fresh = await deps.store.findById(purchase.id);
     if (!fresh || fresh.credited || fresh.status !== 'paid') return;
     const session = await deps.getSession(fresh.chatId, fresh.userId);
-    const total = fresh.crystals + (fresh.bonusCrystals || 0);
+    const { currency, total } = purchaseAmount(fresh);
     const inventory = session.game.inventory;
-    inventory.crystals = (Number(inventory.crystals) || 0) + total;
-    addStarShield(session.game, total, now);
+    if (currency === LUCK_COINS) {
+      inventory.luckCoins = (Number(inventory.luckCoins) || 0) + total;
+    } else {
+      inventory.crystals = (Number(inventory.crystals) || 0) + total;
+      addStarShield(session.game, total, now);
+    }
     await deps.saveSession(session);
     await deps.store.markCredited(fresh.id);
   });
@@ -129,12 +144,13 @@ export async function settlePayment(message, deps) {
 
   // The bonus is decided inside the chat lock, so two simultaneous first payments cannot both get it.
   await deps.withLock(String(paid.chatId), async () => {
-    const bonus = (await deps.store.hasPaidBefore(paid)) ? 0 : firstPurchaseBonus(paid);
-    if (bonus) await deps.store.setBonus(paid.id, bonus);
+    const { currency, base } = purchaseAmount(paid);
+    const bonus = (await deps.store.hasPaidBefore(paid)) ? 0 : Math.min(base, FIRST_PURCHASE_BONUS_CAP);
+    if (bonus) await deps.store.setBonus(paid.id, bonus, currency);
   });
   const settled = await deps.store.findById(paid.id);
   await credit(settled, deps, now);
-  const total = settled.crystals + (settled.bonusCrystals || 0);
+  const { total } = purchaseAmount(settled);
   if (deps.notify) await deps.notify(settled.userId, settled, total).catch(() => {});
   return { ok: true, purchase: settled, total };
 }
@@ -146,7 +162,7 @@ export async function reconcileStarPurchases(deps) {
   return stuck.length;
 }
 
-/** Admin refund: returns the Stars through Telegram, then takes the crystals back (never below 0). */
+/** Admin refund: returns the Stars through Telegram, then takes the coins (or legacy crystals) back, never below 0. */
 export async function refundStarPurchase(chargeId, deps) {
   const purchase = await deps.store.findByCharge(chargeId);
   if (!purchase) return { ok: false, reason: 'not_found' };
@@ -154,10 +170,14 @@ export async function refundStarPurchase(chargeId, deps) {
   await deps.api.refundStarPayment({ user_id: purchase.userId, telegram_payment_charge_id: chargeId });
   await deps.withLock(String(purchase.chatId), async () => {
     const session = await deps.getSession(purchase.chatId, purchase.userId);
-    const total = purchase.crystals + (purchase.bonusCrystals || 0);
+    const { currency, total } = purchaseAmount(purchase);
     const inventory = session.game.inventory;
-    inventory.crystals = Math.max(0, (Number(inventory.crystals) || 0) - total);
-    removeFromStarShield(session.game, total);
+    if (currency === LUCK_COINS) {
+      inventory.luckCoins = Math.max(0, (Number(inventory.luckCoins) || 0) - total);
+    } else {
+      inventory.crystals = Math.max(0, (Number(inventory.crystals) || 0) - total);
+      removeFromStarShield(session.game, total);
+    }
     await deps.saveSession(session);
     await deps.store.markRefunded(purchase.id);
   });
@@ -182,7 +202,9 @@ export async function mongoStarStore() {
     async markPaid(id, { chargeId, providerChargeId, now }) {
       return plain(await StarPurchase.findOneAndUpdate({ _id: id, status: 'pending' }, { $set: { status: 'paid', chargeId, providerChargeId, paidAt: new Date(now) } }, { new: true }).lean());
     },
-    async setBonus(id, bonusCrystals) { await StarPurchase.updateOne({ _id: id }, { $set: { bonusCrystals } }); },
+    async setBonus(id, bonus, currency = 'crystals') {
+      await StarPurchase.updateOne({ _id: id }, { $set: currency === LUCK_COINS ? { bonusCoins: bonus } : { bonusCrystals: bonus } });
+    },
     async markCredited(id) { await StarPurchase.updateOne({ _id: id }, { $set: { credited: true } }); },
     async markRefunded(id) { await StarPurchase.updateOne({ _id: id }, { $set: { status: 'refunded', refundedAt: new Date() } }); },
     async listUncredited() { return (await StarPurchase.find({ status: 'paid', credited: false }).lean()).map(plain); },

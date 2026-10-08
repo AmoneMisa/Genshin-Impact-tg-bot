@@ -3,7 +3,7 @@ import { escapeHtml } from './escape-html.js';
 // Mail (rewards and letters) and the promo code field. Promo rewards are not
 // applied on redeem: they arrive as a letter and are claimed from the mail.
 
-const KIND_LABELS = { gold: ['🪙', 'золота'], crystals: ['💎', 'кристаллов'], ironOre: ['⛏️', 'железной руды'], bonusChances: ['🎁', 'попыток бонуса'] };
+const KIND_LABELS = { gold: ['🪙', 'золота'], crystals: ['💎', 'кристаллов'], luckCoins: ['🍀', 'монет удачи'], ironOre: ['⛏️', 'железной руды'], bonusChances: ['🎁', 'попыток бонуса'] };
 
 export function rewardsHtml(rewards = []) {
   return rewards.map(reward => {

@@ -93,6 +93,7 @@ import {
 } from './adminTools.js';
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
+import { buyLuckItem, getLuckShopState } from './luck.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
@@ -645,6 +646,28 @@ const starsInvoice = guarded('stars invoice', async (req, res) => {
   if (result.ok) return sendJson(res, 200, { ok: true, url: result.url, pack: result.pack, bonus: result.bonus });
   if (result.error) console.error('[stars] invoice failed:', result.error);
   return sendJson(res, result.reason === 'invoice_failed' ? 502 : 409, { ok: false, reason: result.reason });
+});
+
+const luckShopState = guarded('luck shop state', async (req, res) => {
+  const context = await authorize(req);
+  const luck = await withLock(`${context.chatId}:${context.userId}:luck`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getLuckShopState(context.session);
+  });
+  return sendJson(res, 200, luck);
+});
+
+const luckShopBuy = guarded('luck shop buy', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (typeof body.itemId !== 'string') throw httpError(400, 'itemId is required');
+  const result = await withLock(`${context.chatId}:${context.userId}:luck`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const bought = buyLuckItem(context.session, body.itemId);
+    if (bought.ok) await saveSession(context.session);
+    return { ...bought, luck: getLuckShopState(context.session) };
+  });
+  return sendResult(res, result, context);
 });
 
 const exchangeBuy = guarded('exchange buy', async (req, res) => {
@@ -1582,6 +1605,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/exchange') return exchangeState(req, res);
     if (route === 'POST /api/exchange/buy') return exchangeBuy(req, res);
     if (route === 'POST /api/stars/invoice') return starsInvoice(req, res);
+    if (route === 'GET /api/luck') return luckShopState(req, res);
+    if (route === 'POST /api/luck/buy') return luckShopBuy(req, res);
     if (route === 'GET /api/gold-transfer') return goldTransferState(req, res);
     if (route === 'POST /api/gold-transfer/send') return goldTransferSend(req, res);
     if (route === 'GET /api/social') return socialState(req, res);

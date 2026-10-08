@@ -4,7 +4,7 @@ import { rewardsHtml } from './mail.js';
 // Admin screen (only offered to the bot owner): promo codes, hello popups and the
 // owner tools that used to be text commands.
 
-const KINDS = [['gold', '🪙 Золото'], ['crystals', '💎 Кристаллы'], ['ironOre', '⛏️ Железная руда'], ['bonusChances', '🎁 Попытки бонуса']];
+const KINDS = [['gold', '🪙 Золото'], ['crystals', '💎 Кристаллы'], ['luckCoins', '🍀 Монеты удачи'], ['ironOre', '⛏️ Железная руда'], ['bonusChances', '🎁 Попытки бонуса']];
 
 const toMs = value => (value ? new Date(value).getTime() : null);
 const dateText = ms => (ms ? new Date(ms).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' }) : '—');

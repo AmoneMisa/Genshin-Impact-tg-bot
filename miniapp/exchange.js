@@ -17,11 +17,13 @@ export function getExchangeState(session) {
   const inventory = session?.game?.inventory || {};
   const gold = Math.max(0, number(inventory.gold));
   const crystals = Math.max(0, number(inventory.crystals));
+  const luckCoins = Math.max(0, number(inventory.luckCoins));
 
   return {
     price: CRYSTAL_PRICE,
     gold,
     crystals,
+    luckCoins,
     maxAffordable: Math.floor(gold / CRYSTAL_PRICE),
   };
 }

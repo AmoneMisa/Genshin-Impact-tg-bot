@@ -25,3 +25,5 @@
 .admin-overlay select { width: 100%; min-height: 44px; box-sizing: border-box; }
 .admin-overlay h4 { margin: 0 0 8px; font: 700 13px/1.2 var(--serif, Georgia, serif); color: var(--gold-bright, #f3dca6); }
 .admin-overlay .feedback-card { margin-bottom: 12px; }
+.luck-group { margin: 14px 0 6px; font: 700 13px/1.2 var(--serif, Georgia, serif); color: var(--gold-bright, #f3dca6); }
+.luck-overlay .feedback-card > .feedback-submit { margin-top: 10px; }

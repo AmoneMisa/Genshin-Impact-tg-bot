@@ -56,11 +56,11 @@ test('timer tools reset exactly their own cooldowns', () => {
 test('every old owner command has a tool and ids are unique', () => {
   const ids = [...PLAYER_TOOLS, ...CHAT_TOOLS, ...GLOBAL_TOOLS].map(item => item.id);
   assert.equal(new Set(ids).size, ids.length);
-  for (const id of ['add_gold', 'add_crystals', 'add_iron_ore', 'add_experience', 'add_bonus_chance', 'add_steal_chance',
+  for (const id of ['add_gold', 'add_luck_coins', 'add_crystals', 'add_iron_ore', 'add_experience', 'add_bonus_chance', 'add_steal_chance',
     'respawn', 'recalc_stats', 'reset_chest_timer', 'reset_sword_timer', 'reset_title_timer', 'reset_arcade',
     'kill_boss', 'reset_point', 'reset_elements', 'update_all_stats', 'update_all_skills', 'restore_chests',
     'reset_sword_timers', 'clear_boss_sessions', 'update_boss_model', 'hide_dead_souls', 'debug_log', 'broadcast']) {
     assert.ok(ids.includes(id), id);
   }
-  assert.ok(PLAYER_TOOLS.filter(item => item.amountLabel).every(item => ['add_gold', 'add_crystals', 'add_iron_ore', 'add_experience', 'add_bonus_chance', 'add_steal_chance'].includes(item.id)));
+  assert.ok(PLAYER_TOOLS.filter(item => item.amountLabel).every(item => ['add_gold', 'add_luck_coins', 'add_crystals', 'add_iron_ore', 'add_experience', 'add_bonus_chance', 'add_steal_chance'].includes(item.id)));
 });

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  STAR_PACKS, CRYSTALS_PER_STAR, FIRST_PURCHASE_BONUS_CAP, MAX_PENDING_INVOICES, INVOICE_TTL_MS,
+  STAR_PACKS, COINS_PER_STAR, FIRST_PURCHASE_BONUS_CAP, purchaseAmount, MAX_PENDING_INVOICES, INVOICE_TTL_MS,
   bonusPercent, firstPurchaseBonus, getStarsState, createStarInvoice, checkPreCheckout, settlePayment,
   reconcileStarPurchases, refundStarPurchase,
 } from '../miniapp/stars.js';
@@ -17,7 +17,7 @@ function memoryStore() {
   const copy = row => (row ? { ...row, id: row._id } : null);
   return {
     rows,
-    async create(fields) { const _id = `p${++seq}`; rows.set(_id, { _id, status: 'pending', credited: false, bonusCrystals: 0, ...fields }); return copy(rows.get(_id)); },
+    async create(fields) { const _id = `p${++seq}`; rows.set(_id, { _id, status: 'pending', credited: false, bonusCrystals: 0, bonusCoins: 0, ...fields }); return copy(rows.get(_id)); },
     async remove(id) { rows.delete(id); },
     async findById(id) { return copy(rows.get(id)); },
     async findByCharge(chargeId) { return copy([...rows.values()].find(r => r.chargeId === chargeId)); },
@@ -30,15 +30,15 @@ function memoryStore() {
       Object.assign(row, { status: 'paid', chargeId, providerChargeId, paidAt: new Date(now) });
       return copy(row);
     },
-    async setBonus(id, bonusCrystals) { rows.get(id).bonusCrystals = bonusCrystals; },
+    async setBonus(id, bonus, currency) { rows.get(id)[currency === 'luckCoins' ? 'bonusCoins' : 'bonusCrystals'] = bonus; },
     async markCredited(id) { rows.get(id).credited = true; },
     async markRefunded(id) { Object.assign(rows.get(id), { status: 'refunded' }); },
     async listUncredited() { return [...rows.values()].filter(r => r.status === 'paid' && !r.credited).map(copy); },
   };
 }
 
-function world(crystals = 100) {
-  const session = { game: { inventory: { gold: 0, crystals, ironOre: 0 } } };
+function world(luckCoins = 100, crystals = 0) {
+  const session = { game: { inventory: { gold: 0, crystals, luckCoins, ironOre: 0 } } };
   const sent = [];
   const deps = {
     store: memoryStore(),
@@ -60,11 +60,11 @@ const payment = (purchase, overrides = {}) => ({
   successful_payment: { currency: 'XTR', total_amount: purchase.stars, invoice_payload: purchase.id, telegram_payment_charge_id: 'charge-1', provider_payment_charge_id: 'prov-1', ...overrides },
 });
 
-test('pack ladder: more Stars always give more crystals per Star, starting at the base rate', () => {
-  assert.equal(STAR_PACKS[0].crystals, STAR_PACKS[0].stars * CRYSTALS_PER_STAR, 'smallest pack has no bonus');
+test('pack ladder: more Stars always give more coins per Star, starting at the base rate', () => {
+  assert.equal(STAR_PACKS[0].coins, STAR_PACKS[0].stars * COINS_PER_STAR, 'smallest pack has no bonus');
   let previous = 0;
   for (const pack of STAR_PACKS) {
-    const rate = pack.crystals / pack.stars;
+    const rate = pack.coins / pack.stars;
     assert.ok(rate > previous, `${pack.id} must be a better deal than the pack below it`);
     previous = rate;
     assert.ok(Number.isInteger(pack.stars) && pack.stars >= 1 && pack.stars <= 10000, 'valid XTR amount');
@@ -75,7 +75,7 @@ test('pack ladder: more Stars always give more crystals per Star, starting at th
 });
 
 test('first purchase bonus doubles small packs and is capped on big ones', () => {
-  assert.equal(firstPurchaseBonus(STAR_PACKS[0]), 250);
+  assert.equal(firstPurchaseBonus(STAR_PACKS[0]), 25);
   assert.equal(firstPurchaseBonus(STAR_PACKS.at(-1)), FIRST_PURCHASE_BONUS_CAP);
 });
 
@@ -84,7 +84,8 @@ test('state lists the packs, the first-purchase offer and an active shield', () 
   const state = getStarsState(session, { hasPaid: false, now: NOW });
   assert.equal(state.packs.length, STAR_PACKS.length);
   assert.equal(state.firstPurchase, true);
-  assert.equal(state.packs[0].firstBonus, 250);
+  assert.equal(state.packs[0].firstBonus, 25);
+  assert.equal(state.packs[0].coins, 25);
   assert.deepEqual(state.shield, { amount: 500, until: NOW + 1000 });
   const paid = getStarsState({ game: {} }, { hasPaid: true, now: NOW });
   assert.equal(paid.packs[0].firstBonus, 0);
@@ -96,14 +97,14 @@ test('invoice: XTR currency, one price line, payload is the ledger id, bonus ann
   const result = await createStarInvoice({ ...deps, chatId: -1001, userId: 7, packId: 'casket', now: NOW });
   assert.equal(result.ok, true);
   assert.match(result.url, /^https:\/\/t\.me\//);
-  assert.equal(result.bonus, 1200);
+  assert.equal(result.bonus, 120);
   const sent = calls.invoice;
   assert.equal(sent.currency, 'XTR');
   assert.equal(sent.provider_token, '');
-  assert.deepEqual(sent.prices, [{ label: 'Шкатулка кристаллов', amount: 100 }]);
+  assert.deepEqual(sent.prices, [{ label: 'Шкатулка монет удачи', amount: 100 }]);
   assert.ok(Buffer.byteLength(sent.payload) <= 128 && sent.description.length <= 255 && sent.title.length <= 32);
   const row = await deps.store.findById(sent.payload);
-  assert.deepEqual([row.chatId, row.userId, row.stars, row.crystals, row.status], [-1001, 7, 100, 1200, 'pending']);
+  assert.deepEqual([row.chatId, row.userId, row.stars, row.currency, row.coins, row.status], [-1001, 7, 100, 'luckCoins', 120, 'pending']);
   assert.equal(new Date(row.expiresAt).getTime(), NOW + INVOICE_TTL_MS);
 });
 
@@ -133,18 +134,18 @@ test('pre-checkout accepts only the buyer, the exact amount in XTR, a pending an
   assert.equal((await checkPreCheckout(query(), { ...deps, now: NOW + INVOICE_TTL_MS + 1 })).ok, false, 'expired');
 });
 
-test('payment credits crystals + first bonus once, shields them and notifies', async () => {
-  const w = world(100);
+test('payment credits coins + first bonus once, does not touch crystals and notifies', async () => {
+  const w = world(100, 40);
   const { purchaseId } = await createStarInvoice({ ...w.deps, chatId: 1, userId: 7, packId: 'sack', now: NOW });
   const result = await settlePayment(payment({ id: purchaseId, userId: 7, stars: 50 }), w.deps);
   assert.equal(result.ok, true);
-  assert.equal(result.total, 550 + 550);
-  assert.equal(w.session.game.inventory.crystals, 100 + 1100);
-  assert.equal(starShieldAmount(w.session.game, NOW), 1100);
-  assert.equal(w.session.game.starShield.until, NOW + STAR_SHIELD_MS);
-  assert.deepEqual(w.sent, [{ userId: 7, total: 1100 }]);
+  assert.equal(result.total, 55 + 55);
+  assert.equal(w.session.game.inventory.luckCoins, 100 + 110);
+  assert.equal(w.session.game.inventory.crystals, 40, 'crystals are untouched');
+  assert.equal(starShieldAmount(w.session.game, NOW), 0, 'coins need no raid shield');
+  assert.deepEqual(w.sent, [{ userId: 7, total: 110 }]);
   const row = await w.deps.store.findById(purchaseId);
-  assert.deepEqual([row.status, row.credited, row.bonusCrystals, row.chargeId], ['paid', true, 550, 'charge-1']);
+  assert.deepEqual([row.status, row.credited, row.bonusCoins, row.chargeId], ['paid', true, 55, 'charge-1']);
 });
 
 test('the same payment delivered twice credits only once', async () => {
@@ -154,7 +155,7 @@ test('the same payment delivered twice credits only once', async () => {
   await settlePayment(message, w.deps);
   const again = await settlePayment(message, w.deps);
   assert.equal(again.duplicate, true);
-  assert.equal(w.session.game.inventory.crystals, 250 + 250);
+  assert.equal(w.session.game.inventory.luckCoins, 25 + 25);
 });
 
 test('the second purchase gets no first-purchase bonus', async () => {
@@ -163,8 +164,8 @@ test('the second purchase gets no first-purchase bonus', async () => {
   const second = await createStarInvoice({ ...w.deps, chatId: 1, userId: 7, packId: 'pouch', now: NOW });
   await settlePayment(payment({ id: first.purchaseId, userId: 7, stars: 25 }, { telegram_payment_charge_id: 'c1' }), w.deps);
   await settlePayment(payment({ id: second.purchaseId, userId: 7, stars: 25 }, { telegram_payment_charge_id: 'c2' }), w.deps);
-  assert.equal(w.session.game.inventory.crystals, 500 + 250);
-  assert.equal((await w.deps.store.findById(second.purchaseId)).bonusCrystals, 0);
+  assert.equal(w.session.game.inventory.luckCoins, 50 + 25);
+  assert.equal((await w.deps.store.findById(second.purchaseId)).bonusCoins, 0);
 });
 
 test('a payment that does not match its order is never credited', async () => {
@@ -176,7 +177,7 @@ test('a payment that does not match its order is never credited', async () => {
     assert.equal((await settlePayment(payment({ id: purchaseId, userId: 8, stars: 50 }), w.deps)).reason, 'unknown_order');
     assert.equal((await settlePayment(payment({ id: purchaseId, userId: 7, stars: 50 }, { total_amount: 5 }), w.deps)).reason, 'unknown_order');
   } finally { console.error = originalError; }
-  assert.equal(w.session.game.inventory.crystals, 0);
+  assert.equal(w.session.game.inventory.luckCoins, 0);
 });
 
 test('a crash between "paid" and "credited" is repaired on the next start', async () => {
@@ -185,22 +186,21 @@ test('a crash between "paid" and "credited" is repaired on the next start', asyn
   const crashing = { ...w.deps, saveSession: async () => { throw new Error('mongo down'); } };
   await assert.rejects(settlePayment(payment({ id: purchaseId, userId: 7, stars: 25 }), crashing));
   assert.equal((await w.deps.store.findById(purchaseId)).credited, false);
-  w.session.game.inventory.crystals = 0;
+  w.session.game.inventory.luckCoins = 0;
   assert.equal(await reconcileStarPurchases(w.deps), 1);
-  assert.equal(w.session.game.inventory.crystals, 250 + 250);
+  assert.equal(w.session.game.inventory.luckCoins, 25 + 25);
   assert.equal(await reconcileStarPurchases(w.deps), 0, 'nothing left to repair');
 });
 
-test('refund returns the Stars and takes the crystals back, never below zero', async () => {
+test('refund returns the Stars and takes the coins back, never below zero', async () => {
   const w = world(0);
   const { purchaseId } = await createStarInvoice({ ...w.deps, chatId: 1, userId: 7, packId: 'pouch', now: NOW });
   await settlePayment(payment({ id: purchaseId, userId: 7, stars: 25 }), w.deps);
-  w.session.game.inventory.crystals = 100;
+  w.session.game.inventory.luckCoins = 10;
   const result = await refundStarPurchase('charge-1', w.deps);
   assert.equal(result.ok, true);
   assert.deepEqual(calls.refund, { user_id: 7, telegram_payment_charge_id: 'charge-1' });
-  assert.equal(w.session.game.inventory.crystals, 0);
-  assert.equal(starShieldAmount(w.session.game, NOW), 0);
+  assert.equal(w.session.game.inventory.luckCoins, 0);
   assert.equal((await w.deps.store.findById(purchaseId)).status, 'refunded');
   assert.equal((await refundStarPurchase('charge-1', w.deps)).reason, 'already_refunded');
   assert.equal((await refundStarPurchase('nope', w.deps)).reason, 'not_found');
@@ -213,4 +213,21 @@ test('raids cannot take shielded crystals but still take the unshielded rest', (
   assert.equal(stealableCrystals(10000, 300, game, NOW), 5700, 'shield and guard both stay out of reach');
   assert.equal(stealableCrystals(4000, 0, game, NOW), 0, 'a fully shielded stash is untouchable');
   assert.equal(stealableCrystals(10000, 300, game, NOW + STAR_SHIELD_MS + 1), 9700, 'an expired shield protects nothing');
+});
+
+test('purchases made before Coins of Luck are still paid and refunded in crystals', async () => {
+  const w = world(0, 0);
+  // A row written by the old code: no currency, crystals pack and bonus, paid but never credited.
+  const row = await w.deps.store.create({ chatId: 1, userId: 7, packId: 'sack', stars: 50, crystals: 550, bonusCrystals: 550, expiresAt: new Date(NOW + 1000) });
+  Object.assign(w.deps.store.rows.get(row.id), { status: 'paid', chargeId: 'old-1' });
+  assert.deepEqual(purchaseAmount(row), { currency: 'crystals', base: 550, bonus: 550, total: 1100 });
+
+  assert.equal(await reconcileStarPurchases(w.deps), 1);
+  assert.equal(w.session.game.inventory.crystals, 1100);
+  assert.equal(w.session.game.inventory.luckCoins, 0);
+  assert.equal(starShieldAmount(w.session.game, NOW), 1100, 'crystals keep the raid shield');
+
+  assert.equal((await refundStarPurchase('old-1', w.deps)).ok, true);
+  assert.equal(w.session.game.inventory.crystals, 0);
+  assert.equal(starShieldAmount(w.session.game, NOW), 0);
 });

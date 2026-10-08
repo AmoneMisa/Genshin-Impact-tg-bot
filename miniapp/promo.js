@@ -17,6 +17,7 @@ const MAX_NOTICES = 50;
 export const REWARD_KINDS = Object.freeze({
   gold: { label: 'золота', icon: '🪙' },
   crystals: { label: 'кристаллов', icon: '💎' },
+  luckCoins: { label: 'монет удачи', icon: '🍀' },
   ironOre: { label: 'железной руды', icon: '⛏️' },
   bonusChances: { label: 'попыток бонуса', icon: '🎁' },
 });
@@ -141,12 +142,12 @@ export function pendingMailCount(session, now = Date.now()) {
   return (session?.game?.mailbox || []).filter(mail => mail.status === 'pending' && number(mail.expiresAt) > now).length;
 }
 
-function applyReward(session, reward) {
+export function applyReward(session, reward) {
   const game = session.game;
   if (!game.inventory) game.inventory = {};
   if (reward.kind === 'bonusChances') {
     game.bonusChances = Math.max(0, number(game.bonusChances)) + reward.amount;
-  } else if (['gold', 'crystals', 'ironOre'].includes(reward.kind)) {
+  } else if (['gold', 'crystals', 'ironOre', 'luckCoins'].includes(reward.kind)) {
     game.inventory[reward.kind] = Math.max(0, number(game.inventory[reward.kind])) + reward.amount;
   }
 }

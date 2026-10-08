@@ -1,6 +1,7 @@
 import { language } from './i18n/init.js';
 import { openLanguageGame } from './language.js';
 import { openBuffsGame } from './buffs.js';
+import { openLuckShopGame } from './luck-shop.js';
 import { startItemArt } from './item-art-runtime.js';
 import { installOverlayA11y } from './overlay-a11y.js';
 import { startWebGL } from './renderer.js';
@@ -128,6 +129,7 @@ const launchers = {
   feedback: openFeedbackGame,
   language: openLanguageGame,
   buffs: openBuffsGame,
+  luckShop: openLuckShopGame,
   mail: openMailGame,
   promo: openPromoGame,
   admin: openAdminGame,
@@ -176,6 +178,7 @@ function render(state) {
   renderPlayerHud({ state, getElement: $, formatNumber });
   $('gold').textContent = formatNumber(state.player.gold);
   $('crystals').textContent = formatNumber(state.player.crystals);
+  $('luck-coins').textContent = formatNumber(state.player.luckCoins);
   $('ore').textContent = formatNumber(state.player.ironOre);
 
   const cards = featuresForTab(state.features, activeTab).map(feature => {

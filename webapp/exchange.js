@@ -1,5 +1,6 @@
 import { icon } from './icons.js';
 import { worldIconHtml } from './art/world-art.js';
+import { openLuckShopGame } from './luck-shop.js';
 
 const REASONS = {
   invalid_amount: 'Укажи целое положительное количество кристаллов.',
@@ -34,23 +35,24 @@ function shieldDays(until) {
   return Math.max(1, Math.ceil((Number(until) - Date.now()) / 86_400_000));
 }
 
-export function starsHtml(stars) {
+export function starsHtml(stars, coins = 0) {
   if (!stars?.packs?.length) return '';
   const first = stars.firstPurchase;
   return `
-    <section class="ex-stars" aria-label="Купить кристаллы за Telegram Stars">
-      <header><h3>${icon('star')} Купить за Звёзды</h3><small>Telegram Stars</small></header>
-      ${first ? `<p class="ex-first">${icon('gift')} Бонус первой покупки: до +${formatNumber(Math.max(...stars.packs.map(pack => pack.firstBonus)))}&nbsp;${icon('gem')}</p>` : ''}
+    <section class="ex-stars" aria-label="Купить монеты удачи за Telegram Stars">
+      <header><h3>${icon('star')} Монеты удачи за Звёзды</h3><small>Telegram Stars</small></header>
+      ${first ? `<p class="ex-first">${icon('gift')} Бонус первой покупки: до +${formatNumber(Math.max(...stars.packs.map(pack => pack.firstBonus)))}&nbsp;🍀</p>` : ''}
       <div class="ex-packs">
         ${stars.packs.map(pack => `
-          <button type="button" class="ex-pack" data-star-pack="${pack.id}" aria-label="${pack.title}: ${formatNumber(pack.crystals)} кристаллов за ${pack.stars} звёзд">
+          <button type="button" class="ex-pack" data-star-pack="${pack.id}" aria-label="${pack.title}: ${formatNumber(pack.coins)} монет удачи за ${pack.stars} звёзд">
             ${worldIconHtml(`stars/${pack.id}`, 80)}
-            <span class="ex-pack-crystals">${icon('gem')}<strong>${formatNumber(pack.crystals)}</strong></span>
+            <span class="ex-pack-crystals"><span aria-hidden="true">🍀</span><strong>${formatNumber(pack.coins)}</strong></span>
             <em class="ex-pack-bonus ${first && pack.firstBonus ? 'first' : ''}">${first && pack.firstBonus ? `+${formatNumber(pack.firstBonus)} бонус` : pack.bonusPercent ? `+${pack.bonusPercent}%` : '&nbsp;'}</em>
             <span class="ex-pack-price">${icon('star')}<b>${formatNumber(pack.stars)}</b></span>
           </button>`).join('')}
       </div>
-      <p class="ex-shield">${icon('shield')} ${stars.shield ? `Защищено от ограбления: ${formatNumber(stars.shield.amount)} ${icon('gem')} · ещё ${shieldDays(stars.shield.until)} дн.` : 'Купленные кристаллы 7 дней защищены от ограбления.'}</p>
+      <p class="ex-shield">🍀 Монеты удачи не воруют. Потратить их можно в «Лавке удачи».${stars.shield ? ` Кристаллы оттуда защищены от ограбления: ${formatNumber(stars.shield.amount)} ${icon('gem')} · ещё ${shieldDays(stars.shield.until)} дн.` : ''}</p>
+      <button type="button" class="exchange-buy" data-luck-shop>🍀 Лавка удачи · ${formatNumber(coins)}</button>
     </section>`;
 }
 
@@ -100,7 +102,7 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
         <div class="ex-side crystal"><span class="ex-pile" aria-hidden="true">💎</span><small>Кристаллы</small><strong>${formatNumber(state.crystals)}</strong></div>
         <div class="ex-fly" data-exchange-fly aria-hidden="true"></div>
       </section>
-      ${starsHtml(state.stars)}
+      ${starsHtml(state.stars, state.luckCoins)}
       <h3 class="ex-subhead">Обмен золота</h3>
       <p class="ex-rate">Курс: <b>1 💎 = ${formatNumber(state.price)} 🪙</b></p>
       ${successHtml()}
@@ -163,6 +165,11 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
     });
     content.querySelector('[data-exchange-buy]')?.addEventListener('click', buy);
     content.querySelectorAll('[data-star-pack]').forEach(button => button.addEventListener('click', () => buyWithStars(button.dataset.starPack)));
+    content.querySelector('[data-luck-shop]')?.addEventListener('click', () => {
+      haptic('light');
+      close();
+      openLuckShopGame({ api, renderState, haptic, statusElement });
+    });
   }
 
   async function buy() {
@@ -201,11 +208,11 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
     }
   }
 
-  // Telegram confirms a payment a moment before the crystals land, so wait for them.
-  async function waitForCrystals(before) {
+  // Telegram confirms a payment a moment before the coins land, so wait for them.
+  async function waitForCoins(before) {
     for (let attempt = 0; attempt < 10; attempt++) {
       const fresh = await api('/api/exchange');
-      if (fresh.crystals > before) return fresh;
+      if (fresh.luckCoins > before) return fresh;
       await wait(1500);
     }
     return null;
@@ -227,18 +234,18 @@ export async function openExchangeGame({ api, renderState, haptic, statusElement
       } else if (status === 'failed') {
         feedback.textContent = 'Платёж не прошёл. Звёзды не списаны.';
       } else {
-        feedback.textContent = 'Платёж принят, начисляем кристаллы…';
-        const before = state.crystals;
-        const fresh = await waitForCrystals(before);
+        feedback.textContent = 'Платёж принят, начисляем монеты удачи…';
+        const before = state.luckCoins;
+        const fresh = await waitForCoins(before);
         if (fresh) {
           state = fresh;
           renderState(await api('/api/bootstrap'));
-          const gained = fresh.crystals - before;
-          feedback.textContent = `Готово! Начислено ${formatNumber(gained)} кристаллов.`;
-          statusElement.textContent = `Обменник: куплено ${formatNumber(gained)} кристаллов за Звёзды.`;
+          const gained = fresh.luckCoins - before;
+          feedback.textContent = `Готово! Начислено ${formatNumber(gained)} монет удачи.`;
+          statusElement.textContent = `Обменник: куплено ${formatNumber(gained)} монет удачи за Звёзды.`;
           haptic('heavy');
         } else {
-          feedback.textContent = 'Платёж получен, кристаллы появятся в течение минуты. Если нет, напиши /paysupport.';
+          feedback.textContent = 'Платёж получен, монеты появятся в течение минуты. Если нет, напиши /paysupport.';
         }
       }
     } catch (error) {

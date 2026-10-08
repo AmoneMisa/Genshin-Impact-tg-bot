@@ -1,12 +1,12 @@
-// Telegram side of buying crystals with Stars (logic: miniapp/stars.js).
+// Telegram side of buying Coins of Luck with Stars (logic: miniapp/stars.js).
 import { myId } from '../../config.js';
 import { withLock } from '../general/chatLock.js';
 import getSession from '../getters/getSession.js';
 import saveSession from '../getters/saveSession.js';
-import { checkPreCheckout, mongoStarStore, reconcileStarPurchases, refundStarPurchase, settlePayment } from '../../miniapp/stars.js';
+import { LUCK_COINS, checkPreCheckout, mongoStarStore, purchaseAmount, reconcileStarPurchases, refundStarPurchase, settlePayment } from '../../miniapp/stars.js';
 
-const SUPPORT_TEXT = 'По вопросам оплаты Telegram Stars (не пришли кристаллы, нужен возврат) напиши @WhitesLove и приложи скриншот платежа. '
-  + 'Возврат Stars делается вручную: кристаллы за возвращённую покупку списываются.';
+const SUPPORT_TEXT = 'По вопросам оплаты Telegram Stars (не пришли монеты удачи, нужен возврат) напиши @WhitesLove и приложи скриншот платежа. '
+  + 'Возврат Stars делается вручную: монеты за возвращённую покупку списываются.';
 
 export async function registerStarPayments(bot, { store, now } = {}) {
   store = store || await mongoStarStore();
@@ -17,10 +17,14 @@ export async function registerStarPayments(bot, { store, now } = {}) {
     getSession,
     saveSession,
     now,
-    notify: (userId, purchase, total) => bot.sendMessage(userId,
-      `Спасибо за покупку! Начислено ${total} кристаллов`
-      + (purchase.bonusCrystals ? ` (включая бонус первой покупки +${purchase.bonusCrystals})` : '')
-      + '. 7 дней они защищены от ограбления.'),
+    notify: (userId, purchase, total) => {
+      const { currency, bonus } = purchaseAmount(purchase);
+      const legacy = currency !== LUCK_COINS;
+      return bot.sendMessage(userId,
+        `Спасибо за покупку! Начислено ${total} ${legacy ? 'кристаллов' : 'монет удачи'}`
+        + (bonus ? ` (включая бонус первой покупки +${bonus})` : '')
+        + (legacy ? '. 7 дней они защищены от ограбления.' : '. Потратить их можно в «Лавке удачи».'));
+    },
   };
 
   // Telegram waits 10 seconds for this answer, so it never throws.
@@ -49,7 +53,7 @@ export async function registerStarPayments(bot, { store, now } = {}) {
     try {
       const result = await refundStarPurchase(match[1], deps);
       await bot.sendMessage(message.chat.id, result.ok
-        ? `Возврат выполнен: ${result.purchase.stars} Stars, списано ${result.purchase.crystals + (result.purchase.bonusCrystals || 0)} кристаллов.`
+        ? `Возврат выполнен: ${result.purchase.stars} Stars, списано ${purchaseAmount(result.purchase).total} ${purchaseAmount(result.purchase).currency === LUCK_COINS ? 'монет удачи' : 'кристаллов'}.`
         : `Возврат не выполнен: ${result.reason}`);
     } catch (error) {
       await bot.sendMessage(message.chat.id, `Telegram отклонил возврат: ${error.message}`);
