@@ -51,9 +51,8 @@ export function clanCanManage(clan, userId) {
 
 const CLASS_LABELS = { noClass: 'Бродяжка', priest: 'Прист', mage: 'Маг', archer: 'Лучник', warrior: 'Палладин', berserk: 'Берсерк' };
 
-// Mirrors callbacks/game/clan/clanCallback.js#getEntryBlockReasons — kept in
-// sync manually since the bot and Mini App read the same Clan document but
-// have separate session shapes.
+// Entry conditions for joining a clan. The chat clan handlers that this once
+// mirrored (callbacks/game/clan) were removed; the Mini App is the only path now.
 export function getEntryBlockReasons(clan, playerSession) {
   const cond = clan?.entryConditions || {};
   const reasons = [];

@@ -16,7 +16,7 @@ export const CLAN_SHOP_COOLDOWN = 7 * 24 * 60 * 60 * 1000;
 const BOSS_CONTRIBUTION_PER_DAMAGE = 100;
 
 // The "swiftStrikes"/"tradeRoutes" investigations (dictionaries/clanInvestigations.js)
-// shorten these cooldowns once completed — mirrors clanCallback.js's bot-side logic.
+// shorten these cooldowns once completed.
 function getBossCooldown(clan) {
   return getInvestigationBonus(clan, 'swiftStrikes') ? CLAN_BOSS_ATTACK_COOLDOWN * 0.7 : CLAN_BOSS_ATTACK_COOLDOWN;
 }

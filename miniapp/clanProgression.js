@@ -23,7 +23,7 @@ function cloneCost(cost = {}) {
   return Object.fromEntries(Object.entries(cost).map(([resource, amount]) => [resource, number(amount)]));
 }
 
-// ---- Daily tasks — shared with callbacks/game/clan/clanCallback.js's ensureTaskState ----
+// ---- Daily tasks ----
 export function ensureTaskState(clan) {
   if (!clan.tasks || !clan.tasks.lastResetAt) {
     clan.tasks = { lastResetAt: Date.now(), progress: {}, claimed: {} };

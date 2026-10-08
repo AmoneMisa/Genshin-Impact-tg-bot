@@ -2,7 +2,7 @@
  * Daily clan task checklist — separate from the daily quiz (dictionaries/clanQuiz.js).
  *
  * Each task tracks a boolean "done today" flag per member (clan.tasks.progress),
- * marked by the activity handler itself (see callbacks/game/clan/clanCallback.js).
+ * marked by the Mini App activity handlers (miniapp/clanActivities.js).
  * Rewards go to the player's personal inventory + a small clan-contribution bump,
  * mirroring the quiz reward shape. Reset once a day by resetClanTasks.js.
  */
