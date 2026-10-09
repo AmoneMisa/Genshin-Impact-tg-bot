@@ -13,6 +13,8 @@ import getEquipStatByName from '../player/getters/getEquipStatByName.js';
 import { getSkillPowerMultiplier } from '../player/skillEnchant.js';
 import { bossDebuffAmount } from './bossDebuffs.js';
 import { getRouteBonus } from '../player/skillRoutes.js';
+import { attackFactor, attributeProfile, normalizeElement } from '../equipment/attributes.js';
+import { chanceSkillFactor, equippedChanceSkills } from '../equipment/lifestoneSkills.js';
 
 /**
  * One hit of `skill` from `session` on the boss (or on a minion, via
@@ -54,6 +56,9 @@ export default function (session, skill, boss, options = {}) {
 
     dmg = 70 * attack / bossDefence * modifier * additionalDamageMul;
     dmg *= damageMultiplier;
+    // The weapon's element against the boss's (minions have none), and the chance skills of a Life Stone weapon.
+    if (defence === undefined) dmg *= attackFactor(attributeProfile(session).attack, normalizeElement(template?.element));
+    dmg *= chanceSkillFactor(equippedChanceSkills(session));
 
     if (getRandom(1, 100) <= criticalChance) {
         isHasCritical = true;

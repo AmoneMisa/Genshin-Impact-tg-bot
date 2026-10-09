@@ -1,3 +1,5 @@
+import {ATTRIBUTE_TIERS, ELEMENTS, LIFESTONE_GRADES, LIFESTONE_TIERS, attributeKey, lifestoneKey} from './augmentData.js';
+
 // Craft/upgrade materials kept in inventory.materials = {key: count}. Skill
 // enchanting (skillEnchant.js) spends them; bosses and minions drop them
 // (bossTemplate.js `drops`). Quest-only items are not here: quest collectables
@@ -23,14 +25,23 @@ const TYPED_SCROLLS = ENCHANT_GRADES.flatMap(grade => ['weapon', 'armor'].flatMa
     ];
 }));
 
-// Life Stones (functions/game/equipment/augment.js): one per weapon grade from C up.
-const LIFESTONE_GRADES = ['C', 'B', 'A', 'S', 'S80', 'S84'];
-const lifeStones = LIFESTONE_GRADES.map(grade => ({
-    key: `lifestone_${grade}`,
-    name: `Камень жизни (${grade})`,
+// Life Stones (functions/game/equipment/augment.js): one per grade from C up and quality, for weapons
+// and jewellery. The plain stone keeps the old key; better ones carry a skill chance on weapons.
+const lifeStones = LIFESTONE_TIERS.flatMap(tier => LIFESTONE_GRADES.map(grade => ({
+    key: lifestoneKey(grade, tier.id),
+    name: `Камень жизни${tier.label ? `: ${tier.label}` : ''} (${grade})`,
     icon: '🔮',
-    description: `Усиление оружия грейда ${grade}: добавляет случайный бонус (аугментация). Повторное применение заменяет бонус. Падает с боссов.`,
-}));
+    description: `Аугментация оружия и бижутерии грейда ${grade}: случайный бонус${tier.skill ? `, у оружия с шансом ${Math.round(tier.skill * 100)}% ещё и навык` : ''}. Повторное применение заменяет бонус. Падает с боссов.`,
+})));
+
+// Attribute stones (functions/game/equipment/attributes.js): an element for a weapon's attack or an
+// armor piece's resistance. Bosses drop the stones of their own element.
+const attributeStones = ATTRIBUTE_TIERS.flatMap(tier => ELEMENTS.map(element => ({
+    key: attributeKey(tier.id, element.id),
+    name: `${tier.label}: ${element.label}`,
+    icon: element.icon,
+    description: `Даёт оружию (до ${tier.weapon.cap}) или броне (до ${tier.armor.cap} на деталь) атрибут «${element.label}»: ${tier.weapon.add} очков атаки или ${tier.armor.add} сопротивления за камень. Падает с боссов стихии «${element.label}».`,
+})));
 
 // Crafting materials (functions/game/equipment/craftRecipes.js): four families, one material per grade
 // from no-grade to S84. Bosses drop them; metal is the ore the mine produces (inventory.ironOre).
@@ -50,6 +61,7 @@ const craftMaterials = Object.entries(CRAFT_FAMILIES).flatMap(([family, info]) =
 
 export default [
     ...lifeStones,
+    ...attributeStones,
     {key: 'skill_scroll', name: 'Свиток мастерства', icon: '📜', description: 'Нужен для улучшения навыков с 4-го по 7-й уровень. Падает с любых боссов и их свиты.'},
     {key: 'ancient_seal', name: 'Древняя печать', icon: '🔱', description: 'Нужна для улучшения навыков с 8-го по 10-й уровень. Падает со стойких боссов (2-й и 3-й ранг) и парных боссов.'},
     {key: 'essence_kivaha', name: 'Сущность Киваху', icon: '⚡', description: 'Искра грозовой черепахи. Редкая добыча с Киваху.'},

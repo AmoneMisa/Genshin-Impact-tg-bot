@@ -29,5 +29,6 @@ export function syncEquippedSnapshot(session, item) {
         equipped.enchant = item.enchant;
         equipped.stats = item.stats;
         equipped.augment = item.augment;
+        equipped.attribute = item.attribute;
     }
 }

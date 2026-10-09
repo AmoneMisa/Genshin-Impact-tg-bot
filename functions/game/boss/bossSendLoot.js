@@ -10,7 +10,8 @@ import { bossTemplateFor } from "./bossUnits.js";
 import { addMaterial, materialInfo } from "../player/materials.js";
 import awardClanEggs from "../clans/awardClanEggs.js";
 import { epicEgg, epicLuckCoins, markEpicKilled, rollEpicJewel, rollEpicWeapon } from "./epicBosses.js";
-import { rollEnchantDrops } from "../equipment/enchantDrops.js";
+import { rollAttributeDrops, rollEnchantDrops } from "../equipment/enchantDrops.js";
+import { normalizeElement } from "../equipment/attributes.js";
 import { rollCraftDrops } from "../equipment/craftItem.js";
 import { recordQuestEvent } from "../classes/classQuests.js";
 import { giveBuffPotionDrop } from "./buffPotionDrops.js";
@@ -145,6 +146,7 @@ function getBossDrops(template, member, place) {
     const enchantItems = [
         ...rollEnchantDrops(member, {tier: template?.tier || 1, place}),
         ...rollCraftDrops(member, {tier: template?.tier || 1, place}),
+        ...rollAttributeDrops(member, {element: normalizeElement(template?.element), tier: template?.tier || 1, place, epic: Boolean(template?.epic)}),
     ];
     // Lineage II style buff potions (Might, Shield, Haste, ...).
     const potion = giveBuffPotionDrop(member, {tier: template?.tier || 1, place, epic: Boolean(template?.epic)});

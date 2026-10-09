@@ -9,6 +9,8 @@ const REASONS = {
   not_enough_sp: 'Не хватает очков навыков (ОП).',
   not_enough_gold: 'Не хватает золота.',
 };
+
+const percent = value => `${Math.round(Number(value) * 10) / 10}%`;
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
 
 export async function openPassivesGame({ api, haptic, renderState }) {
@@ -44,8 +46,32 @@ export async function openPassivesGame({ api, haptic, renderState }) {
       </article>`;
   }
 
+  function characteristicsHtml() {
+    const stats = state.characteristics || [];
+    const attrs = state.attributes || { attack: null, resist: [] };
+    if (!stats.length) return '';
+    const resists = attrs.resist.filter(entry => entry.value > 0);
+    return `
+      <div class="feedback-card">
+        <div class="feedback-intro"><span>📊</span><div><strong>Характеристики</strong>
+          <p>Базовые значения класса; бижутерия с камнем жизни добавляет очки.</p></div></div>
+        <div class="mail-list">${stats.map(stat => `
+          <article class="mail-letter ${stat.bonus ? 'pending' : 'claimed'}">
+            <div class="mail-head"><strong>${stat.icon} ${escapeHtml(stat.name)}</strong>
+              <small>${stat.total}${stat.bonus ? ` (+${stat.bonus})` : ''}</small></div>
+            <p>${escapeHtml(stat.text)}${stat.effect ? ` · ${escapeHtml(stat.effect)}` : ''}</p>
+          </article>`).join('')}</div>
+      </div>
+      <div class="feedback-card">
+        <div class="feedback-intro"><span>🔥</span><div><strong>Атрибуты</strong>
+          <p>${attrs.attack ? `Оружие: ${attrs.attack.icon} ${escapeHtml(attrs.attack.label)} ${attrs.attack.value} (урон +${percent(attrs.attack.bonus)})` : 'Оружие без атрибута.'}</p>
+          <p>${resists.length ? resists.map(entry => `${entry.icon} ${escapeHtml(entry.label)} ${entry.value} (−${percent(entry.reduction)} урона)`).join(' · ') : 'Броня без сопротивлений стихиям.'}</p></div></div>
+      </div>`;
+  }
+
   function render() {
     body.innerHTML = `
+      ${characteristicsHtml()}
       <div class="feedback-card">
         <div class="feedback-intro"><span>🛡️</span><div><strong>Постоянные бонусы класса</strong>
           <p>ОП: ${state.sp} · золото: ${state.gold}. Бонусы действуют всегда; при смене класса навыки другой ветки отключаются, но не теряются.</p></div></div>

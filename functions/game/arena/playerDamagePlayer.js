@@ -28,6 +28,8 @@ import { getEffectiveSkillCost, getSkillCooldownMultiplier, getSkillPowerMultipl
 import { getRouteBonus } from '../player/skillRoutes.js';
 import { isMagicClass } from '../classes/classFamily.js';
 import getRandom from '../../getters/getRandom.js';
+import { attributeProfile, pvpFactor } from '../equipment/attributes.js';
+import { chanceSkillFactor, equippedChanceSkills } from '../equipment/lifestoneSkills.js';
 import lodash from 'lodash';
 
 /**
@@ -99,7 +101,9 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             additionalDamageMul: getAdditionalDamageMul(defender, defender.game.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(defender, defender.game.gameClass),
             increasePvpDamage: isArena ? getPvpSign(defender).increasePvpDamage : 1,
-            decreaseIncomingPvpDamage: isArena ? getPvpSign(defender).decreaseIncomingPvpDamage : 1
+            decreaseIncomingPvpDamage: isArena ? getPvpSign(defender).decreaseIncomingPvpDamage : 1,
+            attributes: attributeProfile(defender),
+            chances: equippedChanceSkills(defender)
         };
     }
 
@@ -163,7 +167,9 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             additionalDamageMul: getAdditionalDamageMul(attacker, attacker.game.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.game.gameClass),
             increasePvpDamage: isArena ? getPvpSign(attacker).increasePvpDamage : 1,
-            decreaseIncomingPvpDamage: isArena ? getPvpSign(attacker).decreaseIncomingPvpDamage : 1
+            decreaseIncomingPvpDamage: isArena ? getPvpSign(attacker).decreaseIncomingPvpDamage : 1,
+            attributes: attributeProfile(attacker),
+            chances: equippedChanceSkills(attacker)
         };
     }
 
@@ -315,6 +321,9 @@ function calcSkillDamage(skill, attackerObj, defenderObj, buffs, t) {
     dmg = 70 * attackerObj.attack / defence * modifier * attackerObj.additionalDamageMul;
     dmg *= attackerObj.damageMultiplier;
     dmg *= 1 + buffs.damage / 100;
+    // Weapon element against the defender's armor resistance, and Life Stone chance skills.
+    dmg *= pvpFactor(attackerObj.attributes, defenderObj.attributes);
+    dmg *= chanceSkillFactor(attackerObj.chances);
 
     const critChance = Math.min(100, attackerObj.criticalChance + (skill.critChanceBonus || 0) + getRouteBonus(skill).critBonus + buffs.critChance);
     if (getRandom(1, 100) <= critChance) {

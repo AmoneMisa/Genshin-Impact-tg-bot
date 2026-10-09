@@ -95,6 +95,8 @@ import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
+import { getBaseStatsState } from '../functions/game/player/baseStats.js';
+import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
 import { buyLot, cancelLot, createLot, getAuctionState, mongoAuctionStore, returnExpiredLots } from './auction.js';
@@ -970,11 +972,18 @@ const classBuffsCast = guarded('class buffs cast', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+// The passives screen also shows the base characteristics (STR, DEX, ...) and the element of the gear.
+const passivesPayload = session => ({
+  ...getPassivesState(session),
+  characteristics: getBaseStatsState(session),
+  attributes: getAttributesState(session),
+});
+
 const passivesState = guarded('passives state', async (req, res) => {
   const context = await authorize(req);
   const state = await withLock(`${context.chatId}:passives`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return getPassivesState(context.session);
+    return passivesPayload(context.session);
   });
   return sendJson(res, 200, state);
 });
@@ -986,7 +995,7 @@ const passivesLearn = guarded('passives learn', async (req, res) => {
     context.session = await getSession(context.chatId, context.userId);
     const learned = learnPassive(context.session, String(body.id || ''));
     if (learned.ok) await saveSession(context.session);
-    return { ...learned, passives: getPassivesState(context.session) };
+    return { ...learned, passives: passivesPayload(context.session) };
   });
   return sendResult(res, result, context);
 });
@@ -1410,16 +1419,16 @@ const equipmentState = guarded('equipment state', async (req, res) => {
 const equipmentAction = guarded('equipment action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (body.action === 'enchant' || body.action === 'augment') assertGoldUnlocked(context);
+  if (['enchant', 'augment', 'attribute', 'attribute_clear'].includes(body.action)) assertGoldUnlocked(context);
   if (typeof body.key !== 'string' || !body.key) {
     throw httpError(400, 'equipment key is required');
   }
-  if (!['equip', 'unequip', 'sell', 'enchant', 'augment', 'crystallize'].includes(body.action)) {
-    throw httpError(400, 'action must be equip, unequip, sell, enchant or crystallize');
+  if (!['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'ls_activate', 'crystallize'].includes(body.action)) {
+    throw httpError(400, 'action must be equip, unequip, sell, enchant, augment, attribute, attribute_clear, ls_activate or crystallize');
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = performEquipmentAction(context.session, body.key, body.action, { blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null });
+    const updated = performEquipmentAction(context.session, body.key, body.action, { blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null, tier: typeof body.tier === 'string' ? body.tier : null, element: typeof body.element === 'string' ? body.element : null });
     if (updated.ok) await saveSession(context.session);
     return updated;
   });

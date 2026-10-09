@@ -15,6 +15,7 @@ import getIncomingDamageModifier from '../player/getters/getIncomingDamageModifi
 import damageMitigation from '../player/damageMitigation.js';
 import {bossDebuffAmount} from './bossDebuffs.js';
 import {bossTemplateFor} from './bossUnits.js';
+import {attributeProfile, normalizeElement, resistFactor} from '../equipment/attributes.js';
 
 export const LEVEL_DANGER_STEP = 0.12;
 export const DEFAULT_DANGER_PCT = 3;
@@ -39,8 +40,10 @@ export default function calcBossHit(boss, member, {now = Date.now(), random = Ma
     const enrage = 1 + (Number(boss.enrage) || 0);
     const weaken = 1 - bossDebuffAmount(boss, 'weaken', now);
     const spread = 0.9 + random() * 0.2;
+    // Armor attributes resist the boss's element.
+    const resist = resistFactor(attributeProfile(member).resist, normalizeElement(template?.element));
 
-    let dmg = base * levelScale * mitigation * incoming * enrage * weaken * spread * unitPower;
+    let dmg = base * levelScale * mitigation * incoming * enrage * weaken * spread * unitPower * resist;
 
     const critChance = (Number(boss.stats?.criticalChance) || 0) * CRIT_CHANCE_SHARE;
     if (random() * 100 < critChance) {

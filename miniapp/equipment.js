@@ -33,8 +33,10 @@ import { canClassUse } from '../functions/game/equipment/catalog.js';
 import { isActuallyEquipped } from '../functions/game/equipment/snapshots.js';
 import { getMaterialCount } from '../functions/game/player/materials.js';
 import { augmentInfo, augmentItem } from '../functions/game/equipment/augment.js';
+import { addAttribute, attributeInfo, clearAttribute } from '../functions/game/equipment/attributes.js';
+import { activateSkill } from '../functions/game/equipment/lifestoneSkills.js';
 
-const ACTIONS = new Set(['equip', 'unequip', 'sell', 'enchant', 'augment', 'crystallize']);
+const ACTIONS = new Set(['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'ls_activate', 'crystallize']);
 
 function asNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -146,6 +148,7 @@ function sanitizeItem(session, item, index) {
     } : null,
     crystals: enchantable ? crystalYield(item) : 0,
     augment: augmentInfo(session, item),
+    attribute: attributeInfo(session, item),
   };
 }
 
@@ -271,8 +274,26 @@ export function performEquipmentAction(session, key, action, options = {}) {
     return { ok: true, action, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
   }
 
+  if (action === 'attribute') {
+    const result = addAttribute(session, item, options.element, options.tier);
+    if (!result.ok) return { ok: false, reason: result.reason, cap: result.cap, equipment: getEquipmentState(session) };
+    return { ok: true, action, attribute: result.attribute, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
+  }
+
+  if (action === 'attribute_clear') {
+    const result = clearAttribute(session, item);
+    if (!result.ok) return { ok: false, reason: result.reason, gold: result.gold, equipment: getEquipmentState(session) };
+    return { ok: true, action, gold: result.gold, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
+  }
+
+  if (action === 'ls_activate') {
+    const result = activateSkill(session, item);
+    if (!result.ok) return { ok: false, reason: result.reason, cooldownMs: result.cooldownMs, equipment: getEquipmentState(session) };
+    return { ok: true, action, skill: result.name, seconds: result.seconds, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
+  }
+
   if (action === 'augment') {
-    const result = augmentItem(session, item);
+    const result = augmentItem(session, item, { tier: typeof options.tier === 'string' ? options.tier : 'normal' });
     if (!result.ok) return { ok: false, reason: result.reason, stone: result.stone, gold: result.gold, equipment: getEquipmentState(session) };
     return { ok: true, action, augment: result.augment, replaced: result.replaced, gold: result.gold, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
   }
