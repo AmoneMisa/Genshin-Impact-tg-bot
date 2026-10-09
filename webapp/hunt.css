@@ -1,0 +1,32 @@
+/* Hunting fields: zone cards, the mob frame with the champion aura, shots, log. Builds on boss.css (mmo-*). */
+.hunt-panel { display: flex; flex-direction: column; gap: 10px; }
+.hunt-mob { position: relative; }
+.hunt-mob-icon { display: grid; place-items: center; font-size: 30px; }
+.hunt-mob.champion { border-color: var(--champion, #fff); animation: hunt-aura 1.8s ease-in-out infinite; }
+.hunt-mob.blue { --champion: #4aa3ff; }
+.hunt-mob.red { --champion: #ff4a4a; }
+.hunt-mob.champion .mmo-bar.hp i { background: linear-gradient(180deg, color-mix(in srgb, var(--champion) 80%, #fff), var(--champion)); }
+@keyframes hunt-aura {
+  0%, 100% { box-shadow: 0 0 6px var(--champion), inset 0 0 8px color-mix(in srgb, var(--champion) 35%, transparent); }
+  50% { box-shadow: 0 0 20px var(--champion), inset 0 0 14px color-mix(in srgb, var(--champion) 55%, transparent); }
+}
+.hunt-swing { display: block; position: relative; height: 14px; margin: 4px 0; border-radius: 7px; background: rgba(0, 0, 0, .35); overflow: hidden; }
+.hunt-swing small { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; font-size: 10px; color: #fff; text-shadow: 0 1px 2px #000; }
+.hunt-swing i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, #7a2d2d, #d9534f); transition: width .2s linear; }
+.hunt-shots { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 10px; border-radius: 12px; background: rgba(255, 255, 255, .05); font-size: 12px; }
+.hunt-shots.on { box-shadow: inset 0 0 0 1px rgba(255, 214, 102, .6); }
+.hunt-shots.off small { opacity: .7; }
+.hunt-shots em { font-style: normal; padding: 2px 6px; border-radius: 8px; background: rgba(0, 0, 0, .3); }
+.hunt-toggle, .hunt-flee { margin-left: auto; padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08); color: inherit; font: inherit; cursor: pointer; }
+.hunt-flee { margin: 0; width: 100%; }
+.hunt-vitality .mmo-bar.vit i { background: linear-gradient(180deg, #5fd6c4, #1f8f86); }
+.hunt-zones { display: grid; gap: 8px; }
+.hunt-zone { padding: 10px 12px; border-radius: 14px; background: rgba(255, 255, 255, .05); display: grid; gap: 6px; }
+.hunt-zone.recommended { box-shadow: inset 0 0 0 1px rgba(111, 207, 107, .55); }
+.hunt-zone.far { opacity: .55; }
+.hunt-zone-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.hunt-zone-mobs { margin: 0; font-size: 12px; opacity: .8; }
+.hunt-last p { margin: 4px 0 0; font-size: 13px; }
+.hunt-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 12px; }
+.hunt-log li { display: flex; gap: 6px; opacity: .85; }
+.hunt-log li:first-child { opacity: 1; font-weight: 600; }

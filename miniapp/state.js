@@ -55,6 +55,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'auction', title: 'Аукцион', subtitle: 'Купить и продать за золото', icon: '⚖️', status: 'webgl' },
   { id: 'exchange', title: 'Обменник', subtitle: 'Золото в кристаллы', icon: '💱', status: 'webgl' },
   { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
+  { id: 'hunt', title: 'Охотничьи поля', subtitle: 'Мобы, синие и красные чемпионы', icon: '🗡️', status: 'webgl' },
   { id: 'chest', title: 'Сундуки', subtitle: 'Награды и удача', icon: '🧰', status: 'webgl' },
   { id: 'gacha', title: 'Гача', subtitle: 'Коллекция и редкости', icon: '✨', status: 'webgl' },
   { id: 'equipment', title: 'Снаряжение', subtitle: 'Билд персонажа', icon: '🛡️', status: 'webgl' },

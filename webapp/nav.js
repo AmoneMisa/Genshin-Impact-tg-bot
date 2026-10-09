@@ -5,7 +5,7 @@ import { icon } from './icons.js';
 export const NAV_TABS = Object.freeze([
   { id: 'city', label: 'Город', title: 'Город', hint: 'Ваше королевство', icon: 'castle' },
   { id: 'hero', label: 'Герой', title: 'Ваш герой', hint: 'Персонаж и снаряжение', icon: 'user-round', features: ['profile', 'skills', 'passives', 'buffs', 'classQuests', 'equipment', 'inventory', 'titles', 'horoscope'] },
-  { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['boss', 'arena', 'steal', 'elements'] },
+  { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['hunt', 'boss', 'arena', 'steal', 'elements'] },
   { id: 'games', label: 'Игры', title: 'Игры и награды', hint: 'Удача и развлечения', icon: 'dices', features: ['chest', 'gacha', 'bonus', 'sword', 'arcade', 'point21'] },
   { id: 'clan', label: 'Клан', title: 'Клан и друзья', hint: 'Сообщество', icon: 'users', features: ['clan', 'friends', 'forms', 'transfer'] },
   // Opened from the gear in the header, not from the bottom bar.

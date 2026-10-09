@@ -47,10 +47,10 @@ export const TEMPLATES = Object.freeze([
     {key: 'equipment', source: equipment, version: 5},
     {key: 'gacha', source: gacha, version: 2},
     {key: 'levels', source: levels, version: 2},
-    {key: 'materials', source: materials, version: 7},
+    {key: 'materials', source: materials, version: 8},
     {key: 'potions', source: potions, version: 3},
     {key: 'pvpSign', source: pvpSign, version: 1},
-    {key: 'shop', source: shop, version: 3},
+    {key: 'shop', source: shop, version: 4},
 ]);
 
 function canonical(value) {

@@ -10,6 +10,7 @@ export const ITEM_ICONS = Object.freeze({
   potionMp180: '🧪', potionMp300: '🧪',
   chestAddTry: '🧰', palaceChangeName: '📜',
   ...Object.fromEntries(['C', 'B', 'A', 'S'].map(grade => [`lifestoneMid-${grade}`, '🔮'])),
+  ...Object.fromEntries(['soulshot', 'spiritshot', 'blessed'].flatMap(kind => ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'].map(grade => [`shot-${kind}-${grade}`, kind === 'soulshot' ? '🔸' : kind === 'spiritshot' ? '🔹' : '💠']))),
 });
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 

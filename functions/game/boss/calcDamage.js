@@ -15,6 +15,7 @@ import { bossDebuffAmount } from './bossDebuffs.js';
 import { getRouteBonus } from '../player/skillRoutes.js';
 import { attackFactor, attributeProfile, normalizeElement } from '../equipment/attributes.js';
 import { chanceSkillFactor, equippedChanceSkills } from '../equipment/lifestoneSkills.js';
+import { shotBoost } from '../shots/shots.js';
 
 /**
  * One hit of `skill` from `session` on the boss (or on a minion, via
@@ -51,14 +52,18 @@ export default function (session, skill, boss, options = {}) {
 
     let attack = getAttack(session, session.game.gameClass);
     let damageMultiplier = getDamageMultiplier(session.game.effects);
-    let bossDefence = (defence ?? getBossDefence(boss, template)) * (1 - bossDebuffAmount(boss, 'armorBreak', now));
+    let bossDefence = (defence ?? (boss.hunt ? boss.hunt.defence : getBossDefence(boss, template))) * (1 - bossDebuffAmount(boss, 'armorBreak', now));
     let additionalDamageMul = (getAdditionalDamageMul(session) / 100) + 1;
 
     dmg = 70 * attack / bossDefence * modifier * additionalDamageMul;
     dmg *= damageMultiplier;
     // The weapon's element against the boss's (minions have none), and the chance skills of a Life Stone weapon.
-    if (defence === undefined) dmg *= attackFactor(attributeProfile(session).attack, normalizeElement(template?.element));
+    // A hunt mob (boss.hunt) has its own element; a boss's minion has none.
+    if (boss.hunt) dmg *= attackFactor(attributeProfile(session).attack, boss.hunt.element || null);
+    else if (defence === undefined) dmg *= attackFactor(attributeProfile(session).attack, normalizeElement(template?.element));
     dmg *= chanceSkillFactor(equippedChanceSkills(session));
+    // Soulshots / Spiritshots armed for this skill.
+    dmg *= shotBoost(session);
 
     if (getRandom(1, 100) <= criticalChance) {
         isHasCritical = true;

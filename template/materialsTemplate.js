@@ -1,3 +1,4 @@
+import {SHOT_GRADES, SHOT_KINDS, gradeLabel, shotKey} from './shotsData.js';
 import {ATTRIBUTE_TIERS, ELEMENTS, LIFESTONE_GRADES, LIFESTONE_TIERS, attributeKey, lifestoneKey} from './augmentData.js';
 
 // Craft/upgrade materials kept in inventory.materials = {key: count}. Skill
@@ -43,6 +44,14 @@ const attributeStones = ATTRIBUTE_TIERS.flatMap(tier => ELEMENTS.map(element => 
     description: `Даёт оружию (до ${tier.weapon.cap}) или броне (до ${tier.armor.cap} на деталь) атрибут «${element.label}»: ${tier.weapon.add} очков атаки или ${tier.armor.add} сопротивления за камень. Падает с боссов стихии «${element.label}».`,
 })));
 
+// Soulshots, Spiritshots and Blessed Spiritshots, one per weapon grade (functions/game/shots/shots.js).
+const shots = SHOT_KINDS.flatMap(kind => SHOT_GRADES.map(grade => ({
+    key: shotKey(kind.id, grade),
+    name: `${kind.label} (${gradeLabel(grade)})`,
+    icon: kind.icon,
+    description: `Заряды для оружия грейда ${gradeLabel(grade)}: навык бьёт сильнее (x${kind.boost}), пока включены автозаряды. Продаются в магазине.`,
+})));
+
 // Crafting materials (functions/game/equipment/craftRecipes.js): four families, one material per grade
 // from no-grade to S84. Bosses drop them; metal is the ore the mine produces (inventory.ironOre).
 const CRAFT_GRADES = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
@@ -62,6 +71,7 @@ const craftMaterials = Object.entries(CRAFT_FAMILIES).flatMap(([family, info]) =
 export default [
     ...lifeStones,
     ...attributeStones,
+    ...shots,
     {key: 'skill_scroll', name: 'Свиток мастерства', icon: '📜', description: 'Нужен для улучшения навыков с 4-го по 7-й уровень. Падает с любых боссов и их свиты.'},
     {key: 'ancient_seal', name: 'Древняя печать', icon: '🔱', description: 'Нужна для улучшения навыков с 8-го по 10-й уровень. Падает со стойких боссов (2-й и 3-й ранг) и парных боссов.'},
     {key: 'essence_kivaha', name: 'Сущность Киваху', icon: '⚡', description: 'Искра грозовой черепахи. Редкая добыча с Киваху.'},

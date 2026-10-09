@@ -1,5 +1,6 @@
 import buffPotions from './buffPotions.js';
 import {LIFESTONE_SHOP, lifestoneKey} from './augmentData.js';
+import {SHOT_GRADES, SHOT_KINDS, SHOT_PACK, SHOT_PACK_PRICE, gradeLabel, shotKey} from './shotsData.js';
 
 // Mid Life Stones (Lineage II sells them up to level 78, grade S); one of each a day.
 const midLifeStones = Object.entries(LIFESTONE_SHOP.mid).map(([grade, cost]) => ({
@@ -8,8 +9,18 @@ const midLifeStones = Object.entries(LIFESTONE_SHOP.mid).map(([grade, cost]) => 
     message: `ты получил средний камень жизни (${grade}). Он нужен для аугментации оружия и бижутерии в кузнице.`,
 }));
 
+// Packs of shots per weapon grade; any number of packs a day.
+export const SHOT_COMMANDS = SHOT_KINDS.flatMap(kind => SHOT_GRADES.map(grade => `shot-${kind.id}-${grade}`));
+const shotPacks = SHOT_KINDS.flatMap(kind => SHOT_GRADES.map(grade => ({
+    name: `${kind.label} ×${SHOT_PACK} (${gradeLabel(grade)})`, cost: SHOT_PACK_PRICE[grade] * kind.price, time: 1,
+    command: `shot-${kind.id}-${grade}`, category: 'shots', repeatable: true,
+    material: {key: shotKey(kind.id, grade), amount: SHOT_PACK},
+    message: `ты получил ${SHOT_PACK} зарядов (${gradeLabel(grade)}). Включи автозаряды в бою.`,
+})));
+
 export default [
     ...midLifeStones,
+    ...shotPacks,
     ...buffPotions.map(p=>({name:p.name,cost:p.cost,time:1,command:'potionBuff-'+p.id,potionId:p.id,message:'ты получил '+p.name+'. Используй его в инвентаре.',category:'player'})),
     {name: "Иммунитет к уменьшению меча", cost: 3800, time: 1, command: "swordImmune", message: "ты получил одноразовый иммунитет к уменьшению меча", category: "sword"},
     {name: "Увеличить меч на 25 мм", cost: 5000, time: 1, command: "swordAddMm", message: "ты увеличил свой меч на 25 мм!", category: "sword"},

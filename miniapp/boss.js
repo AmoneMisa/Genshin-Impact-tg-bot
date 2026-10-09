@@ -29,6 +29,7 @@ import getUserName from '../functions/getters/getUserName.js';
 import saveSession from '../functions/getters/saveSession.js';
 import { getEffectiveSkillCost } from '../functions/game/player/skillEnchant.js';
 import { bossStatusesDto, playerEffectsDto } from './bossEffects.js';
+import { armShots, clearShots, getShotsState } from '../functions/game/shots/shots.js';
 
 export { bossStatusesDto, playerEffectsDto };
 
@@ -41,7 +42,7 @@ function percent(current, max) {
   return max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0;
 }
 
-function skillDto(session, skill, index, now = Date.now()) {
+export function skillDto(session, skill, index, now = Date.now()) {
   const cooldownUntil = number(skill?.cooldownReceive);
   const cooldownMs = Math.max(0, cooldownUntil - now);
   const hp = getCurrentHp(session, session.game.gameClass);
@@ -171,7 +172,7 @@ async function expireBossIfNeeded(boss, chatId, now = Date.now()) {
  * Every potion kind for the fight's quick-use bar: owned ones carry their
  * inventory key and count, missing ones show as empty (count 0, key null).
  */
-function potionBarDto(session) {
+export function potionBarDto(session) {
   const owned = getInventoryState(session).potions;
   const same = (a, b) => a.type === b.type && (a.bottleType || 'potion') === (b.bottleType || 'potion') && number(a.power) === number(b.power);
   const bar = potionsTemplate.map(template => {
@@ -262,6 +263,7 @@ export async function getBossState(session, chatId, now = Date.now()) {
     skills,
     // Potions for the quick-use bar in the fight.
     potions: potionBarDto(session),
+    shots: getShotsState(session),
   };
 
   if (!boss) {
@@ -390,7 +392,10 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex, targe
   const costType = costHp > 0 ? 'hp' : 'mp';
   skillUsagePayCost(session, costType, costCount);
 
+  const shots = armShots(session, skill);
   const result = castSkill(session, boss, skill, { targetId: target?.id || null });
+  clearShots(session);
+  if (shots) result.shots = shots;
   if (skill.isDealDamage) boss.markModified('listOfDamage');
   boss.markModified('minions');
   boss.markModified('debuffs');

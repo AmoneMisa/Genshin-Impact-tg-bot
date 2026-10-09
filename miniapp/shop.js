@@ -8,6 +8,7 @@ const CATEGORY_LABELS = {
   misc: 'Разное',
   builds: 'Для построек',
   stones: 'Камни жизни',
+  shots: 'Заряды',
 };
 
 function number(value, fallback = 0) {

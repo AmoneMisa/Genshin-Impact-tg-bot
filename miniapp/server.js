@@ -96,6 +96,7 @@ import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
+import { fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp } from './hunt.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
@@ -1598,6 +1599,55 @@ const bossSkill = guarded('boss skill', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+// Hunting fields. The lock is the inventory one: potions drunk in a fight go through /api/inventory/use.
+const huntLock = context => `${context.chatId}:${context.userId}:inventory`;
+
+// Every hunt answer carries the whole screen; mob swings that fell due are applied (and saved) on the way.
+async function huntAnswer(context, run) {
+  return withLock(huntLock(context), async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const result = await run(context.session);
+    const hunt = await getHuntState(context.session);
+    if (result.ok !== false || hunt.changed) await saveSession(context.session);
+    return { ...result, hunt };
+  });
+}
+
+const huntState = guarded('hunt state', async (req, res) => {
+  const context = await authorize(req);
+  const result = await huntAnswer(context, async () => ({ ok: true }));
+  return sendJson(res, 200, result.hunt);
+});
+
+const huntStart = guarded('hunt start', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await huntAnswer(context, session => startHuntForMiniApp(session, body.zone));
+  return sendResult(res, result, context);
+});
+
+const huntSkill = guarded('hunt skill', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const skillIndex = Number(body.skillIndex);
+  if (!Number.isInteger(skillIndex) || skillIndex < 0) throw httpError(400, 'skillIndex must be a non-negative integer');
+  const result = await huntAnswer(context, session => useHuntSkillForMiniApp(session, skillIndex));
+  return sendResult(res, result, context);
+});
+
+const huntFlee = guarded('hunt flee', async (req, res) => {
+  const context = await authorize(req);
+  const result = await huntAnswer(context, session => fleeHuntForMiniApp(session));
+  return sendResult(res, result, context);
+});
+
+const shotsAuto = guarded('shots auto', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await huntAnswer(context, session => setAutoShotsForMiniApp(session, body.enabled === true));
+  return sendResult(res, result, context);
+});
+
 const shopState = guarded('shop state', async (req, res) => {
   const context = await authorize(req);
   const shop = await withLock(`${context.chatId}:${context.userId}:shop`, async () => {
@@ -1784,6 +1834,11 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/arena') return arenaState(req, res, requestUrl);
     if (route === 'POST /api/arena/attack') return arenaAttack(req, res);
     if (route === 'GET /api/boss') return bossState(req, res);
+    if (route === 'GET /api/hunt') return huntState(req, res);
+    if (route === 'POST /api/hunt/start') return huntStart(req, res);
+    if (route === 'POST /api/hunt/skill') return huntSkill(req, res);
+    if (route === 'POST /api/hunt/flee') return huntFlee(req, res);
+    if (route === 'POST /api/shots/auto') return shotsAuto(req, res);
     if (route === 'GET /api/boss/epic') return bossEpic(req, res);
     if (route === 'POST /api/boss/summon') return bossSummon(req, res);
     if (route === 'POST /api/boss/skill') return bossSkill(req, res);

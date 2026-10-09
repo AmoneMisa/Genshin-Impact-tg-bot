@@ -82,7 +82,7 @@ async function check(session, command, item, isDaily) {
         updateShopTimer(session, command, true);
     } else if (item.material) {
         addMaterial(session, item.material.key, item.material.amount || 1);
-        updateShopTimer(session, command, true);
+        if (!item.repeatable) updateShopTimer(session, command, true);
     } else if (item.potionId) {
         const definition=potionsInInventoryTemplate.find(p=>p.id===item.potionId);
         if(!definition)return 'Зелье недоступно.';
