@@ -100,13 +100,39 @@ export function artJobs() {
   return jobs;
 }
 
+
+/** Reviewed PNGs only; this mode preserves legacy city/building paintings. */
+export function paintedArtJobs(root = ROOT) {
+  const planFile = path.join(root, 'art-source/hunt-ui/jobs.json');
+  const reviewedFile = path.join(root, 'art-source/hunt-ui/reviewed.json');
+  if (!fs.existsSync(planFile) || !fs.existsSync(reviewedFile)) return [];
+  const reviewed = new Set(JSON.parse(fs.readFileSync(reviewedFile, 'utf8')));
+  const plan = JSON.parse(fs.readFileSync(planFile, 'utf8'));
+  const jobs = [];
+  for (const asset of plan.filter(asset => reviewed.has(asset.key))) {
+    const src = path.resolve(root, asset.source);
+    if (!src.startsWith(path.join(root, 'art-source') + path.sep)) throw new Error('Invalid painted source');
+    if (!fs.existsSync(src)) throw new Error('Reviewed source missing: ' + asset.key);
+    for (const output of asset.outputs) {
+      const dst = path.resolve(root, output);
+      if (!dst.startsWith(path.join(root, 'webapp/art') + path.sep)) throw new Error('Invalid painted destination');
+      const size = Number(output.match(/-(128|256|480|960)\.webp$/)?.[1]) || 480;
+      jobs.push({src, dst, size, quality: asset.group === 'icon' ? 86 : 80});
+    }
+  }
+  return jobs;
+}
+
 function main() {
+  const painted = process.argv.includes('--painted');
+  const selectedJobs = painted ? paintedArtJobs() : artJobs().map(job => ({ ...job, src: path.join(IMAGES, job.src), dst: path.join(OUT, job.dst) }));
+  if (!selectedJobs.length) { console.log('No reviewed painted assets to build.'); return; }
   const blender = findBlender();
   if (!blender) {
     console.error('Blender not found. Install it or set BLENDER_PATH.');
     process.exit(1);
   }
-  const jobs = artJobs().map(job => ({ ...job, src: path.join(IMAGES, job.src), dst: path.join(OUT, job.dst) }));
+  const jobs = selectedJobs;
   const missing = jobs.filter(job => !fs.existsSync(job.src));
   if (missing.length) {
     console.error(`Missing source art:\n${missing.map(job => job.src).join('\n')}`);
@@ -121,7 +147,7 @@ function main() {
     console.error(result.stdout.slice(-3000), result.stderr.slice(-2000));
     process.exit(1);
   }
-  fs.writeFileSync(path.join(OUT, 'builds-art.js'), buildArtModule());
+  if (!painted) fs.writeFileSync(path.join(OUT, 'builds-art.js'), buildArtModule());
   let total = 0;
   for (const job of jobs) total += fs.statSync(job.dst).size;
   console.log(`✓ ${done} images → webapp/art (${Math.round(total / 1024)} KB total)`);

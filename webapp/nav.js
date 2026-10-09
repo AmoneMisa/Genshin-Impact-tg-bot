@@ -1,18 +1,19 @@
 // Bottom navigation of the main screen: the city plus feature groups.
-// Features not listed in any group land in "Меню", so new ones never disappear.
+// Settings have an explicit allowlist; unclassified features remain in the hero section.
 import { icon } from './icons.js';
 
 export const NAV_TABS = Object.freeze([
   { id: 'city', label: 'Город', title: 'Город', hint: 'Ваше королевство', icon: 'castle' },
-  { id: 'hero', label: 'Герой', title: 'Ваш герой', hint: 'Персонаж и снаряжение', icon: 'user-round', features: ['profile', 'skills', 'passives', 'buffs', 'classQuests', 'equipment', 'inventory', 'titles', 'horoscope'] },
+  { id: 'hero', label: 'Герой', title: 'Ваш герой', hint: 'Персонаж и снаряжение', icon: 'user-round', features: ['profile', 'skills', 'passives', 'buffs', 'classQuests', 'equipment', 'inventory', 'titles', 'horoscope', 'mail', 'help', 'updates', 'feedback', 'admin'] },
   { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['hunt', 'boss', 'arena', 'steal', 'elements'] },
   { id: 'games', label: 'Игры', title: 'Игры и награды', hint: 'Удача и развлечения', icon: 'dices', features: ['chest', 'gacha', 'bonus', 'sword', 'arcade', 'point21'] },
   { id: 'clan', label: 'Клан', title: 'Клан и друзья', hint: 'Сообщество', icon: 'users', features: ['clan', 'friends', 'forms', 'transfer'] },
+  { id: 'trade', label: 'Магазин', title: 'Магазин и обмен', hint: 'Покупки и валюта', icon: 'shopping-cart', features: ['shop', 'exchange', 'luckShop', 'auction'] },
   // Opened from the gear in the header, not from the bottom bar.
-  { id: 'more', label: 'Меню', title: 'Меню', hint: 'Магазин и настройки', icon: 'settings', hidden: true },
+  { id: 'more', label: 'Настройки', title: 'Настройки', hint: 'Настройки и промокоды', icon: 'settings', hidden: true, features: ['language', 'selfMute', 'chatSettings', 'promo'] },
 ]);
 
-/** Icon per feature card; the server's emoji stays as a fallback for new features. */
+/** New features receive the common reviewed emblem until assigned their own art. */
 export const FEATURE_ICONS = Object.freeze({
   profile: 'user-round', skills: 'zap', forms: 'notebook-pen', inventory: 'backpack', exchange: 'arrow-left-right',
   boss: 'swords', chest: 'package-open', gacha: 'sparkles', equipment: 'shield', builds: 'landmark', arena: 'trophy',
@@ -29,13 +30,13 @@ export function featuresForTab(features = [], tabId) {
   const tab = NAV_TABS.find(item => item.id === tabId);
   if (!tab || tab.id === 'city') return [];
   const visible = features.filter(feature => !HIDDEN_FEATURES.has(feature.id));
-  if (tab.id === 'more') return visible.filter(feature => !GROUPED.has(feature.id));
+  if (tab.id === 'hero') return visible.filter(feature => (tab.features.includes(feature.id) || !GROUPED.has(feature.id))).sort((a,b)=>(tab.features.indexOf(a.id)<0?999:tab.features.indexOf(a.id))-(tab.features.indexOf(b.id)<0?999:tab.features.indexOf(b.id)));
   const order = new Map(tab.features.map((id, index) => [id, index]));
   return visible.filter(feature => order.has(feature.id)).sort((a, b) => order.get(a.id) - order.get(b.id));
 }
 
 export function featureIconHtml(feature) {
-  return FEATURE_ICONS[feature.id] ? icon(FEATURE_ICONS[feature.id]) : (feature.icon || '');
+  return icon(FEATURE_ICONS[feature.id] || ({mail:'mail',promo:'gift',language:'book-open',admin:'settings',passives:'shield',classQuests:'scroll',buffs:'flask-conical',luckShop:'shopping-basket',auction:'hammer'}[feature.id]) || 'sparkle');
 }
 
 /** Red-dot counts per bottom tab, from the per-feature counts in `badges`. */

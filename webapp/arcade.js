@@ -1,3 +1,4 @@
+import {arcadeTabIconHtml} from './art/arcade-art.js';
 import { escapeHtml } from './escape-html.js';
 import { playThrow, stageHtml } from './arcade-stage.js';
 
@@ -95,7 +96,7 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
   function gameTabs() {
     return state.games.map(game => `
       <button type="button" class="arcade-tab ${game.id === selected ? 'active' : ''}" data-game="${game.id}" aria-label="${escapeHtml(game.title)}">
-        <span>${game.icon}</span>${game.active ? '<i></i>' : ''}
+        <span>${arcadeTabIconHtml(game.id)}</span>${game.active ? '<i></i>' : ''}
       </button>`).join('');
   }
 

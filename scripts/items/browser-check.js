@@ -13,10 +13,12 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const modulePath=process.env.PLAYWRIGHT_MODULE;
 const {chromium}=await import(modulePath?pathToFileURL(modulePath).href:'playwright');
 const html=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="/loot-renderer.css"><link rel="stylesheet" href="/loot-forge.css"><link rel="stylesheet" href="/item-art.css">
+<link rel="stylesheet" href="/equipment.css"><link rel="stylesheet" href="/hunt.css"><link rel="stylesheet" href="/inventory.css"><link rel="stylesheet" href="/shop.css"><link rel="stylesheet" href="/loot-renderer.css"><link rel="stylesheet" href="/loot-forge.css"><link rel="stylesheet" href="/item-art.css">
 <style>body{margin:0;padding:16px;background:#111723;color:#eee;font:14px system-ui}h1{font-size:20px}main{max-width:700px;margin:auto}.hero{padding:8px;border-radius:20px;background:radial-gradient(ellipse,#302650,#171e2a);text-align:center}.hero .loot-art{height:270px;width:220px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}article{border:1px solid #ffffff15;border-radius:16px;background:#1a2230;padding:10px;text-align:center;min-width:0}article .loot-art{width:96px;height:144px}article p{margin:6px;text-transform:capitalize}</style></head>
-<body><main><h1>Celestial equipment</h1><div class="hero" id="hero"></div><div class="grid" id="grid"></div></main>
-<script type="module">import {renderLootArt} from '/loot-renderer.js';import {startItemArt} from '/item-art-runtime.js';
+<body><main><h1>Celestial equipment</h1><div class="hero" id="hero"></div><div class="grid" id="grid"></div><section id="potions" class="grid"></section><section id="icons" class="grid"></section><section id="hunting" class="grid"></section></main>
+<script type="module">import {renderLootArt} from '/loot-renderer.js';import {startItemArt} from '/item-art-runtime.js';import {flaskHtml} from '/inventory.js';import {SPECIAL_ITEM_ART} from '/art/special-item-art.js';import {PAINTED_ICONS,paintedIconHtml} from '/art/painted-icon-art.js';
+import {HUNT_MOB_ART,HUNT_ZONE_ART,huntMobUrl,huntZoneUrl} from '/art/hunt-art.js';import {MOB_ARCHETYPE} from '/art/hunt-mob-mapping.js';
+document.querySelector('#hunting').innerHTML=HUNT_MOB_ART.map(kind=>{const id=Object.keys(MOB_ARCHETYPE).find(id=>MOB_ARCHETYPE[id]===kind);return '<div><img class="hunt-mob-art" width="64" height="64" src="'+huntMobUrl({id})+'" srcset="'+huntMobUrl({id})+' 1x, '+huntMobUrl({id},256)+' 2x" alt="'+kind+'"></div>';}).join('')+HUNT_ZONE_ART.map((band,i)=>'<div><img style="max-width:100%;height:auto" width="480" height="160" src="'+huntZoneUrl({id:band,level:[1,40,52,61,76,80,84,85][i]})+'" alt="'+band+'"></div>').join('');
 startItemArt();document.querySelector('#hero').innerHTML=renderLootArt({kind:'staff',grade:'S84'},{reveal:true});
 const keys=${JSON.stringify(BASE_ITEM_ART_KEYS)};const variants=${JSON.stringify(ITEM_ART_VARIANTS)};const robe={mantle:'armor',bracers:'gloves','leg-wraps':'greaves',anklets:'boots'};
 const items=keys.map(key=>({key,item:{...(robe[key]?{kind:'robe',category:robe[key]}:key==='greatsword'?{kind:'twoHandedSword'}:key==='sigil'?{kind:'sigill'}:{kind:key}),grade:'D'}}));
@@ -24,6 +26,8 @@ items.push(...variants.map(v=>({key:v.key,item:{kind:v.type||v.kind,category:v.k
 items.push(...${JSON.stringify(EPIC_ITEM_ART_KEYS)}.map(key=>({key,item:{epicBoss:key.slice(5),kind:'ring',grade:'S'}})));
 items.push(...${JSON.stringify(CATALOG_ITEM_ART)}.map(item=>({key:item.key,item})));
 items.push(...${JSON.stringify(epicWeapons.filter(w=>SPECIAL_ITEM_ART.includes(w.artKey)))}.map(w=>({key:w.artKey,item:{epicWeapon:w.id,kind:w.kind,grade:'S84'}})));
+document.querySelector('#icons').innerHTML=PAINTED_ICONS.map(key=>'<div>'+paintedIconHtml(key,key.startsWith('element-')?'element-tint-'+key.slice(8):'grade-tint-a')+'</div>').join('');
+document.querySelector('#potions').innerHTML=SPECIAL_ITEM_ART.filter(k=>k.startsWith('potion-')).map(key=>{const token=key.slice(7),parts=token.split('-');const item=parts[0]==='hp'||parts[0]==='mp'?{type:parts[0],size:parts[1],bottleType:parts[1]==='elixir'?'elixir':'potion'}:{type:'buff',id:token};return '<div class="inv-detail" data-potion-art="'+key+'">'+flaskHtml(item)+'</div>';}).join('');
 document.querySelector('#grid').innerHTML=items.map(({key,item})=>'<article data-expected-art="'+key+'">'+renderLootArt(item)+'<p>'+key+'</p></article>').join('');
 </script></body></html>`;
 const mime={'.js':'text/javascript','.css':'text/css','.webp':'image/webp'};
@@ -45,11 +49,16 @@ try{
     page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
     await page.goto(`http://127.0.0.1:${server.address().port}/preview`);
     await page.waitForFunction(count=>document.querySelectorAll('article').length===count,ITEM_ART_KEYS.length);
-    for(const image of await page.locator('.loot-item-image').all()){
+    for(const image of await page.locator('img').all()){
       await image.evaluate(img=>img.scrollIntoView({block:'center'}));
       await image.evaluate(img=>img.decode());
     }
     assert.equal(await page.locator('canvas').count(),0);
+    assert.equal(await page.locator('#potions img').count(),13);
+    assert.equal(await page.locator('#icons img').count(),18);
+    assert.equal(await page.locator('#hunting img').count(),20);
+    assert.ok(await page.locator('#icons img').evaluateAll(images=>images.every(img=>img.naturalWidth>0&&/-128\.webp$|-256\.webp$/.test(img.currentSrc))));
+    assert.ok(await page.locator('#potions img').evaluateAll(images=>images.every(img=>img.naturalWidth>0&&/-128\.webp$|-256\.webp$/.test(img.currentSrc))));
     assert.ok(!requests.some(url=>/\.glb|\/models\/|loot-webgl|generated_images/.test(url)));
     assert.deepEqual(errors,[]);
     const mismatches=await page.locator('article').evaluateAll(cards=>cards.map(card=>({expected:card.dataset.expectedArt,actual:card.querySelector('.loot-art').dataset.artKey})).filter(item=>item.expected!==item.actual));
@@ -66,7 +75,7 @@ try{
     if(width===390)await screenshotWebp(page,path.join(root,'docs/item-art-mobile.webp'),{});
     await page.locator('article img').first().evaluate(img=>{img.removeAttribute('srcset');img.src='/art/items/v1/missing.webp';});
     await page.waitForSelector('.art-unavailable',{state:'attached'});
-    results.push({width,paintings:ITEM_ART_KEYS.length,modelRequests:0,overflow:false});
+    results.push({width,paintings:ITEM_ART_KEYS.length,modelRequests:0,potions:13,overflow:false});
     await context.close();
   }
   console.log(JSON.stringify(results));

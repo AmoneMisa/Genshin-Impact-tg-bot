@@ -5,6 +5,7 @@
 // reset from here (anyone when it stalls, chat admins any time).
 
 import { worldArtUrl } from './art/world-art.js';
+import { icon } from './icons.js';
 import {
   betControls, bindBetControls, clampBet as clampTableBet, emptySeat, escapeHtml, formatNumber,
   resetBanner, seatGrid, seatTile, tickTimers, timerRing,
@@ -30,12 +31,15 @@ const REASONS = {
 export function cardHtml(card, { fresh = false, delay = 0 } = {}) {
   const red = /[♥♦]/.test(card);
   const [rank = '', suit = ''] = String(card).split(' ');
-  const corner = `<b>${escapeHtml(rank)}<i>${escapeHtml(suit)}</i></b>`;
-  return `<span class="point-card ${red ? 'red' : ''} ${fresh ? 'fresh' : ''}" style="--d:${delay}ms">${corner}<em>${escapeHtml(suit)}</em>${corner}</span>`;
+  const suitKey={'♠':'spade','♥':'heart','♣':'club','♦':'diamond'}[suit];
+  const suitArt=icon(suitKey || 'sparkle');
+  const suitName={'♠':'пики','♥':'черви','♣':'трефы','♦':'бубны'}[suit] || '';
+  const corner = `<b>${escapeHtml(rank)}<i>${suitArt}</i></b>`;
+  return `<span class="point-card ${red ? 'red' : ''} ${fresh ? 'fresh' : ''}" style="--d:${delay}ms" aria-label="${escapeHtml(rank)} ${suitName}">${corner}<em>${suitArt}</em>${corner}</span>`;
 }
 
 export function cardBackHtml(delay = 0) {
-  return `<span class="point-card back fresh" style="--d:${delay}ms" aria-label="Закрытая карта"><em>🌳</em></span>`;
+  return `<span class="point-card back fresh" style="--d:${delay}ms" aria-label="Закрытая карта"><em>${icon('trees')}</em></span>`;
 }
 
 export const clampBet = clampTableBet;

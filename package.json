@@ -13,6 +13,7 @@
     "art:build": "node scripts/blender/art.js",
     "items:check": "node scripts/items/check-art.js",
     "items:build": "python scripts/items/build-art.py",
+    "ui-art:build": "python scripts/ui/build-painted-icons.py",
     "epic-art:build": "python scripts/items/build-epic-art.py && python scripts/items/build-art.py --source art-source/items/epic --prefix epic-"
   },
   "engines": {

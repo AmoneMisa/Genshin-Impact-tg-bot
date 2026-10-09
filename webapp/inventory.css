@@ -54,7 +54,7 @@
 .inv-liquid::after { content: ""; position: absolute; left: 20%; top: 25%; width: 20%; height: 35%; border-radius: 50%; background: rgba(255, 255, 255, .45); }
 .inv-bubbles { position: absolute; left: 30%; bottom: 6px; width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, .7); opacity: 0; }
 .inv-slot:not(.empty) .inv-bubbles { animation: inv-bubble 2.4s ease-in infinite; }
-.inv-flask.drinking { animation: inv-drink .65s ease-in-out forwards; }
+.inv-flask.drinking, .inv-potion-art.drinking { animation: inv-drink .65s ease-in-out forwards; }
 .inv-flask.drinking .inv-liquid { background: linear-gradient(180deg, transparent 70%, var(--liquid) 70%), rgba(220, 230, 255, .12); transition: background .6s ease; }
 
 .inv-detail { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 10px; border-radius: 8px; border: 1px solid rgba(216, 179, 106, .25); background: linear-gradient(180deg, rgba(26, 21, 30, .94), rgba(12, 10, 16, .94)); animation: inv-in .25s ease both; }
@@ -80,4 +80,4 @@
 @keyframes inv-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes inv-bubble { 0%, 60% { opacity: 0; transform: translateY(0); } 70% { opacity: .9; } 100% { opacity: 0; transform: translateY(-16px); } }
 @keyframes inv-drink { 0% { transform: rotate(0); } 40% { transform: rotate(-35deg) translateY(-4px); } 80% { transform: rotate(-35deg) translateY(-4px); } 100% { transform: rotate(0); } }
-@media (prefers-reduced-motion: reduce) { .inv-bubbles, .inv-flask.drinking, .inventory-result, .inv-detail { animation: none !important; } .inv-vital b { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .inv-bubbles, .inv-flask.drinking, .inv-potion-art.drinking, .inventory-result, .inv-detail { animation: none !important; } .inv-vital b { transition: none; } }

@@ -238,8 +238,48 @@
 .arcade-stage[style] { background: linear-gradient(rgba(8,7,12,.5),rgba(8,7,12,.6)),var(--arcade-painting) center / cover no-repeat; }
 .arcade-stage[style]::before { display: none; }
 
-.arcade-stage[style] .as-board { visibility: hidden; }
-.arcade-stage[style] .as-hoop { top: 29%; width: 12%; opacity: 0; }
+.arcade-stage[style] .as-board { visibility: visible; }
+.arcade-stage[style] .as-hoop { opacity: 1; }
 
-.arcade-stage[style] .as-shot { bottom: 13%; opacity: 0; }
+.arcade-stage[style] .as-shot { opacity: 1; }
 .arcade-stage[style] .as-shot.fly { opacity: 1; }
+
+/* Each game has its own setting; remove the repeated flat window backdrop. */
+.arcade-stage:not([style])::before { display: none; }
+.arcade-stage.as-dice {
+ background: radial-gradient(ellipse at 50% 42%,#29453d80,transparent 65%),repeating-linear-gradient(45deg,#c9aa6210 0 1px,transparent 1px 16px),linear-gradient(160deg,#132d2a,#080e16);
+ box-shadow: inset 0 0 55px #0009;
+}
+.arcade-stage.as-slots { background: radial-gradient(ellipse at 50% 50%,#69502566,transparent 70%),linear-gradient(135deg,#251934,#0b101c); }
+.arcade-stage.as-darts { background: radial-gradient(ellipse at 50% 35%,#543c2c,transparent 70%),repeating-linear-gradient(90deg,#2b211b 0 25px,#171513 26px 28px); }
+.arcade-stage.as-bowling { background: linear-gradient(#151d2f,#080d17); }
+.arcade-stage.as-football { background: radial-gradient(ellipse at 50% 10%,#365c7377,transparent 70%),linear-gradient(#172738,#0b1119); }
+.as-machine { box-shadow: 0 0 0 4px #17120c,0 10px 24px #0009,inset 0 1px 0 #f7d99170; }
+.as-dartboard { filter: drop-shadow(0 6px 10px #0009); }
+.arcade-stage::after { opacity: .35; }
+
+.arcade-sprite { width: 100%; height: 100%; object-fit: contain; display: block; }
+.as-ball:has(.arcade-sprite),.as-dart:has(.arcade-sprite),.as-pin:has(.arcade-sprite) { background: none; border: 0; box-shadow: none; }
+.as-ball:has(.arcade-sprite)::before,.as-ball:has(.arcade-sprite)::after,.as-dart:has(.arcade-sprite)::before,.as-dart:has(.arcade-sprite)::after,.as-pin:has(.arcade-sprite)::before,.as-pin:has(.arcade-sprite)::after { display: none; }
+.slot-painting { width: 48px; height: 48px; object-fit: contain; }
+.painted-game.as-football .as-goal,.painted-game.as-darts .as-dartboard { background: transparent; border: 0; box-shadow: none; }
+.painted-game.as-football .as-goal > *,.painted-game.as-football .as-pitch,.painted-game.as-darts .as-dartboard > *,.painted-game.as-darts .as-dartboard::before,.painted-game.as-bowling .as-lane { visibility: hidden; }
+.painted-game.as-basketball .as-board { visibility: hidden; }
+.painted-game.as-basketball .as-hoop { opacity: 0; }
+.painted-game.as-slots .as-machine { border: 0; background: transparent; box-shadow: none; }
+.die-face.painted-die { background: var(--die-painting) center / 125% 125% no-repeat; border-radius: 0; box-shadow: none; }
+
+.arcade-tab > span { display: grid; place-items: center; }
+.arcade-tab .arcade-sprite,.arcade-tab .slot-painting { width: 28px; height: 28px; }
+
+.painted-game[style] { background: linear-gradient(#08070c08,#08070c22),var(--arcade-painting) center / 100% 100% no-repeat; }
+.painted-game.as-football .as-goal { top: 24%; height: 34%; width: 58%; }
+.painted-game.as-darts .as-dartboard { top: 8%; width: 44%; }
+.painted-game.as-bowling .as-pins { top: 30%; height: 22%; width: 26%; }
+.painted-game .as-pin { width: 38px; height: 38px; margin-left: -19px; }
+.as-dart:has(.arcade-sprite) { width: 44px; margin-left: -19px; }
+.painted-game.as-slots .as-machine { width: 47%; top: 47%; gap: 8%; padding: 0; }
+.painted-game.as-slots .as-reel { width: 28%; border-radius: 4px; background: #0b0b13; }
+.painted-game.as-slots .as-strip span { font-size: 28px; }
+.painted-game.as-slots .slot-painting { max-width: 95%; }
+.painted-game.as-basketball .as-hoop { top: 38%; width: 12%; }

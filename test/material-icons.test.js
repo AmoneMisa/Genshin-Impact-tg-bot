@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import { materialIcon, materialIconInfo } from '../webapp/material-icons.js';
 import materials from '../template/materialsTemplate.js';
 
-test('enchant and crafting materials map onto the painted icons, everything else keeps its emoji', () => {
+test('enchant and crafting materials map onto paintings, unknown items use a painted fallback', () => {
   assert.deepEqual(materialIconInfo('scroll_D'), { icon: 'scroll', grade: 'D' });
   assert.deepEqual(materialIconInfo('blessed_S84'), { icon: 'scroll-blessed', grade: 'S84' });
   assert.deepEqual(materialIconInfo('crystal_S80'), { icon: 'crystal', grade: 'S80' });
@@ -15,7 +15,8 @@ test('enchant and crafting materials map onto the painted icons, everything else
   assert.equal(materialIconInfo('skill_scroll'), null);
   assert.equal(materialIconInfo('essence_baium'), null);
   assert.equal(materialIconInfo('scroll_X'), null);
-  assert.equal(materialIcon('skill_scroll', '📜'), '📜');
+  assert.match(materialIcon('skill_scroll', '📜'), /<img/);
+  assert.doesNotMatch(materialIcon('skill_scroll', '📜'), /📜|svg/);
   assert.match(materialIcon('scroll_A'), /class="mat-icon grade-tint-a" src="\/art\/icons\/scroll-128\.webp"/);
 });
 

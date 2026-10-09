@@ -89,7 +89,7 @@ test('bottom nav groups every feature exactly once and hides the old buildings c
   const shown = NAV_TABS.flatMap(tab => featuresForTab(features, tab.id).map(f => f.id));
   assert.deepEqual([...shown].sort(), ids.filter(id => id !== 'builds').sort());
   assert.deepEqual(featuresForTab(features, 'city'), []);
-  assert.deepEqual(featuresForTab(features, 'more').map(f => f.id), ['help', 'brandNew']);
+  assert.deepEqual(featuresForTab(features, 'more').map(f => f.id), []);
   assert.deepEqual(featuresForTab([{ id: 'arena' }, { id: 'boss' }], 'battle').map(f => f.id), ['boss', 'arena']);
 });
 

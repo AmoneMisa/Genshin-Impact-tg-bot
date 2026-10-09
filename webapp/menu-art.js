@@ -2,7 +2,7 @@
 // Features without a painting keep their icon-only card.
 import { portraitFamily } from './class-family.js';
 
-export const MENU_ART = Object.freeze(['boss', 'chest', 'arena', 'shop', 'builds', 'steal', 'inventory', 'gacha']);
+export const MENU_ART = Object.freeze(['boss', 'chest', 'arena', 'shop', 'builds', 'steal', 'inventory', 'gacha', 'hunt']);
 const CLASS_ART = new Set(['noClass', 'warrior', 'archer', 'mage', 'priest']);
 
 /** The character card shows the player's own class and gender. */

@@ -1,22 +1,19 @@
-// SVG icons only: no emoji reach the screen. `icon(name)` builds markup directly;
-// `startEmojiIcons()` swaps any emoji that still arrives as text (feature
-// definitions from the server, older templates, toasts) for the matching icon.
-import { ICONS, EMOJI_ICON } from './icon-set.js';
+// Painted WebP icons, including symbols arriving in older server templates.
+import { EMOJI_ICON } from './emoji-icon-map.js';
+import { uiIconUrl } from './art/ui-icon-art.js';
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'SELECT', 'OPTION', 'TITLE', 'SVG', 'CANVAS', 'NOSCRIPT']);
 const ATTRS = ['title', 'aria-label', 'alt', 'placeholder'];
 const KEYS = Object.keys(EMOJI_ICON).sort((a, b) => b.length - a.length);
-const EMOJI_RX = new RegExp(`(?:${KEYS.join('|')})\\uFE0F?`, 'gu');
+const PICTO = String.raw`(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})(?:\uFE0F|\p{Emoji_Modifier})?(?:\u200D(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})(?:\uFE0F|\p{Emoji_Modifier})?)*`;
+const EMOJI_RX = new RegExp(`(?:\\p{Regional_Indicator}{2}|${PICTO}|${KEYS.join('|')})\\uFE0F?`, 'gu');
 const templates = new Map();
 
-function attrs(name, cls) {
-  return `class="ui-icon ui-icon-${name}${cls ? ` ${cls}` : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"`;
-}
-
-/** Inline SVG markup for an icon; unknown names render nothing. */
+/** Responsive artwork. Unknown names render nothing; no untrusted asset paths. */
 export function icon(name, cls = '') {
-  return ICONS[name] ? `<svg ${attrs(name, cls)}>${ICONS[name]}</svg>` : '';
+  const src=uiIconUrl(name);
+  const extra=String(cls).replace(/[^a-zA-Z0-9_ -]/g,'');
+  return src ? `<img class="ui-icon ui-icon-${name}${extra ? ` ${extra}` : ''}" src="${src}" srcset="${src} 1x, ${uiIconUrl(name,256)} 2x" width="24" height="24" alt="" aria-hidden="true" decoding="async" draggable="false">` : '';
 }
 
 export function emojiIconName(emoji) {
@@ -26,12 +23,11 @@ export function emojiIconName(emoji) {
 function iconNode(name, doc) {
   let template = templates.get(name);
   if (!template) {
-    template = doc.createElementNS(SVG_NS, 'svg');
+    template = doc.createElement('img');
     for (const [key, value] of Object.entries({
-      class: `ui-icon ui-icon-${name}`, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2',
-      'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false',
+      class: `ui-icon ui-icon-${name}`, src: uiIconUrl(name), srcset: `${uiIconUrl(name)} 1x, ${uiIconUrl(name,256)} 2x`, width: '24', height: '24', alt: '',
+      'aria-hidden': 'true', decoding: 'async', draggable: 'false',
     })) template.setAttribute(key, value);
-    template.innerHTML = ICONS[name];
     templates.set(name, template);
   }
   return template.cloneNode(true);
@@ -44,6 +40,14 @@ export function stripEmoji(text) {
 
 function convertTextNode(node, doc) {
   const text = node.nodeValue;
+  const actions={'←':'chevron-left','→':'chevron-right','?':'circle-help','×':'x','+':'plus','−':'minus','-':'minus'};
+  const button=node.parentElement?.closest('button');
+  const action=button && actions[button.textContent.trim()];
+  if(action && text.trim()===button.textContent.trim()) {
+    if(!button.hasAttribute('aria-label'))button.setAttribute('aria-label',button.title || ({'chevron-left':'Назад','chevron-right':'Далее','circle-help':'Справка',x:'Закрыть',plus:'Увеличить',minus:'Уменьшить'}[action]));
+    node.replaceWith(iconNode(action,doc));
+    return;
+  }
   EMOJI_RX.lastIndex = 0;
   if (!text || !EMOJI_RX.test(text)) return;
   EMOJI_RX.lastIndex = 0;
@@ -51,7 +55,7 @@ function convertTextNode(node, doc) {
   let last = 0;
   for (const match of text.matchAll(EMOJI_RX)) {
     if (match.index > last) fragment.append(text.slice(last, match.index));
-    fragment.append(iconNode(emojiIconName(match[0]), doc));
+    fragment.append(iconNode(emojiIconName(match[0]) || 'sparkle', doc));
     last = match.index + match[0].length;
   }
   if (last < text.length) fragment.append(text.slice(last));
@@ -68,7 +72,7 @@ function convertAttributes(element) {
   }
 }
 
-/** Converts every emoji below `root` (text nodes and a few attributes) to SVG icons. */
+/** Converts UI emoji to painted images; editable input values remain untouched. */
 export function iconize(root) {
   if (root.nodeType === 1 && SKIP_TAGS.has(root.tagName.toUpperCase())) return;
   const doc = root.ownerDocument || root;

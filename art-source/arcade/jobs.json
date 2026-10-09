@@ -1,0 +1,80 @@
+[
+  {
+    "key": "football",
+    "prompt": "A painterly dark-fantasy royal football courtyard at night, landscape 3:2. Complete realistic goal with ivory net and worn bronze posts centered in upper half, midnight navy stone castle, antique gold torches, rich green grass in lower third, no ball, no people. Premium hand-painted RPG illustration, realistic volume and materials, dramatic clear lighting, no text, no numbers, no logos, no spiders, no UI or borders, no vector or flat SVG style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-1a20815d-df5e-4392-acf7-deaa134e4ce0.png",
+    "source": "art-source/arcade/football.png"
+  },
+  {
+    "key": "darts",
+    "prompt": "Painterly royal dark fantasy tavern dart game backdrop landscape 3:2. One richly detailed circular ivory, black, crimson and emerald dartboard centered at 50% width 42% height, occupies 55% of image height, concentric scoring rings and radial sectors but NO numerals or letters. Carved dark walnut wood wall with brass candle sconces, midnight navy shadows and amber warm lighting. Board fully visible. No dart, no people, no text, no logos, no spiders, no UI, no flat vector style. Realistic dimensional painterly RPG illustration.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-b1a79109-da4a-475b-af21-104270b61914.png",
+    "source": "art-source/arcade/darts.png"
+  },
+  {
+    "key": "slots",
+    "prompt": "Painterly premium dark fantasy RPG slot machine artwork landscape 3:2. A complete ornate antique gold and dark walnut mechanical slot machine centered, front view, three EMPTY dark rectangular reel openings centered horizontally at mid-height, each matching width, framed in ivory and gold. Warm amber gem lights, midnight navy velvet background, dramatic rich realistic painted materials. NO symbols in reel openings, no text, no letters, no numbers, no UI buttons, no borders, no people, no spiders, no vector or flat style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-06a8037d-5010-479e-bcd8-9d05536d3eb6.png",
+    "source": "art-source/arcade/slots.png"
+  },
+  {
+    "key": "dice",
+    "prompt": "Painterly dark-fantasy RPG dice table background landscape 3:2. Overhead tilted view of emerald velvet gaming tray with ornate antique gold frame and carved walnut edge, warm amber light, midnight navy shadows. Center is calm clear dark green velvet for an animated dice object. No dice, no objects in the center, no people, no spiders, no text, no numbers, no logos, no interface, no flat vector art. Luxurious realistic hand painted texture and depth.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-f638fd89-7e63-465c-be66-17dd0a380d83.png",
+    "source": "art-source/arcade/dice.png"
+  },
+  {
+    "key": "basketball-ball",
+    "transparent": true,
+    "prompt": "One realistic hand painted leather basketball sprite, centered front view, sphere orange brown worn pebbled leather with dark seams and strong dimensional lighting, highlights upper left, shadow lower right. Premium dark fantasy RPG object art matching warm amber and midnight navy palette. Entire object 80% of canvas, no cast shadow plane, no background, true transparent alpha, square. No text, no logo, no border, no flat SVG or vector style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-aa3c24e5-37a0-4f3b-aa0b-d1177a9bd135.png",
+    "source": "art-source/arcade/basketball-ball.png"
+  },
+  {
+    "key": "football-ball",
+    "transparent": true,
+    "prompt": "One realistic hand painted football soccer ball sprite, centered, ivory leather hexagonal panels and midnight black pentagonal panels, visible seams, strong volumetric upper left light with dark lower right shading, premium painterly RPG object art. Complete sphere 80% of canvas. Square true transparent alpha, no shadow plane, no text, no logo, no border, no flat SVG or vector style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-fa8d22d3-98b4-42a2-a64c-0ae6dcfb9e17.png",
+    "source": "art-source/arcade/football-ball.png"
+  },
+  {
+    "key": "bowling-ball",
+    "transparent": true,
+    "prompt": "One realistic hand painted bowling ball sprite, centered, deep amethyst polished marble sphere, three finger holes in upper front, strong upper left light and dark lower right shading, antique fantasy RPG item art. Complete sphere 80% canvas, square true transparent alpha, no cast shadow plane, no background, no text, no logo, no border, no vector style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-c7211f8c-d37d-45f9-8a52-8e669f7b7aab.png",
+    "source": "art-source/arcade/bowling-ball.png"
+  },
+  {
+    "key": "dart",
+    "transparent": true,
+    "prompt": "Single hand painted realistic dart projectile sprite, vertical upward pointing, complete sharp steel point at TOP and red feather flight fins at BOTTOM, antique brass ridged grip middle. Dark fantasy RPG item art, dimensional painterly material lighting. Centered full silhouette 80% canvas height. Square true transparent alpha, no shadow plane, no background, no text, no letters, no logo, no vector style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-e6806b0e-7482-4f06-af9e-ed9544cee50a.png",
+    "source": "art-source/arcade/dart.png"
+  },
+  {
+    "key": "pin",
+    "transparent": true,
+    "prompt": "Single realistic painterly ivory bowling pin sprite, upright full frontal silhouette, rounded head narrow neck wide body with two crimson neck stripes, smooth polished aged ivory warm upper left light dark lower right shadow. Premium fantasy RPG object art. Entire pin 85% canvas height. Square true transparent alpha, no cast shadow plane, no text, no logo, no border, no flat SVG or vector style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-747222f2-7b5c-48ed-96e8-416547e07f2d.png",
+    "source": "art-source/arcade/pin.png"
+  },
+  {
+    "key": "die",
+    "transparent": true,
+    "prompt": "A single realistic hand painted cubical gaming die sprite, FRONT VIEW of square front face only with softly rounded beveled gold edges and ivory blank face with NO pips or marks, subtle dimensional shading and antique material texture, painterly premium dark fantasy RPG item art. Complete die fills 80% square canvas. True transparent alpha, no background, no shadow plane, no text, no numbers, no symbols, no logo, no flat vector style.",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-8fb4e058-d234-4706-8475-3c317293aa41.png",
+    "source": "art-source/arcade/die.png"
+  },
+  {
+    "key": "bowling",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-a5ba6245-f4c8-4ca6-b5a4-08afd58658cf.png",
+    "prompt": "Edit this royal bowling hall image: remove ALL bowling pins and their reflections completely, leaving the lane empty. Preserve architecture, perspective, wood, flames, light, gold navy style, and landscape composition. No ball, no text, no spiders. The empty lane will receive separate animated bowling pins in code.",
+    "source": "art-source/arcade/bowling.png"
+  },
+  {
+    "key": "basketball",
+    "path": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-0c4ee07a-a3ef-4ba2-9e67-4bf5b48fdb51.png",
+    "prompt": "Edit this painted royal basketball court: remove the basketball on the floor and its shadow completely. Preserve the ornate hoop, board, architecture, antique gold, midnight navy and amber lighting. Recompose as landscape 3:2 with hoop centered at 50% width and 38% image height, whole hoop visible, empty foreground floor. No people, no balls, no text, no spiders. Separate animated basketball will be added in code.",
+    "source": "art-source/arcade/basketball.png"
+  }
+]

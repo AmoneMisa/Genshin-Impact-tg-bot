@@ -1,5 +1,12 @@
-/* SVG icons (icons.js). They scale with the surrounding font size and take its colour. */
-.ui-icon { width: 1em; height: 1em; flex: none; display: inline-block; vertical-align: -.14em; overflow: visible; }
+/* Painted icons keep their proportions and reserve space before decoding. */
+.ui-icon { width: 1em; height: 1em; flex: none; display: inline-block; vertical-align: -.14em; object-fit: contain; }
+.ui-icon-chevron-left { rotate: 180deg; }
+.ui-icon-arrow-up { rotate: -90deg; }
+.ui-icon-rotate-ccw { scale: -1 1; }
+.ui-icon-bell-off,.ui-icon-volume-x { opacity: .65; }
+.game-icon .ui-icon { width: 32px; height: 32px; }
+.top-icon .ui-icon,.resource-plus .ui-icon { width: 20px; height: 20px; }
+.game-card.unavailable .ui-icon { filter: saturate(.35); }
 /* Resource and status accents so currencies stay recognisable at a glance. */
 .ui-icon-coin, .ui-icon-coins, .ui-icon-hand-coins, .ui-icon-star, .ui-icon-crown, .ui-icon-trophy { color: #f2c14e; }
 .ui-icon-gem, .ui-icon-diamond { color: #5cc8ff; }

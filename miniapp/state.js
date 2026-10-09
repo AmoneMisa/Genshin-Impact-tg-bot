@@ -26,11 +26,9 @@ function combatValue(getter, session, fallback = 0) {
 
 export const GROUP_ONLY_FEATURE_IDS = Object.freeze([
   'forms',
-  'exchange',
   'boss',
   'gacha',
   'steal',
-  'shop',
   'transfer',
   'bonus',
   'titles',

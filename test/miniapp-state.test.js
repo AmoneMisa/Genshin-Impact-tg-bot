@@ -44,7 +44,7 @@ test('private bootstrap disables group-only cards but keeps private-capable feat
     assert.equal(byId[id].unavailableReason, 'group_only', id);
   }
 
-  for (const id of ['profile', 'skills', 'inventory', 'equipment', 'builds', 'arena', 'chest', 'point21', 'elements', 'clan', 'horoscope', 'arcade', 'updates', 'feedback', 'help']) {
+  for (const id of ['shop', 'exchange', 'profile', 'skills', 'inventory', 'equipment', 'builds', 'arena', 'chest', 'point21', 'elements', 'clan', 'horoscope', 'arcade', 'updates', 'feedback', 'help']) {
     assert.equal(byId[id].available, true, id);
     assert.equal(byId[id].unavailableReason, null, id);
   }

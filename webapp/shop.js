@@ -1,3 +1,5 @@
+import {materialIcon} from './material-icons.js';
+import {shotIcon} from './art/painted-icon-art.js';
 import { escapeHtml } from './escape-html.js';
 import { buildArtUrl } from './art/builds-art.js';
 import {flaskHtml} from './inventory.js';
@@ -15,6 +17,8 @@ export const ITEM_ICONS = Object.freeze({
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 
 export function itemIconHtml(item) {
+  const life=item.command.match(/^lifestoneMid-(C|B|A|S)$/);if(life)return '<span class="shop-icon">'+materialIcon('lifestone_mid_'+life[1],'🔮')+'</span>';
+  const shot=item.command.match(/^shot-(soulshot|spiritshot|blessed)-(noGrade|D|C|B|A|S|S80|S84)$/);if(shot)return '<span class="shop-icon">'+shotIcon(shot[1],shot[2])+'</span>';
   if(item.potionId)return `<span class="shop-icon">${flaskHtml({type:'buff',id:item.potionId})}</span>`;
   const potion={potionHp1000:{type:'hp',size:'little'},potionHp3000:{type:'hp',size:'small'},potionHp8000:{type:'hp',size:'medium'},elixirHp45:{type:'hp',bottleType:'elixir'},potionMp180:{type:'mp',size:'little'},potionMp300:{type:'mp',size:'small'}}[item.command];
   if(potion)return `<span class="shop-icon ${potion.type}">${flaskHtml(potion)}</span>`;

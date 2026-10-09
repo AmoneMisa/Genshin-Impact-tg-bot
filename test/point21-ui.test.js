@@ -6,7 +6,10 @@ test('cards render rank and suit corners, red suits and the deal animation flag'
   const html = cardHtml('10 ♥', { fresh: true, delay: 280 });
   assert.match(html, /point-card red fresh/);
   assert.match(html, /--d:280ms/);
-  assert.equal((html.match(/<b>10<i>♥<\/i><\/b>/g) || []).length, 2);
+  assert.equal((html.match(/<b>10<i><img/g) || []).length, 2);
+  assert.match(html,/ui-icon-heart/);
+  assert.match(html,/aria-label="10 черви"/);
+  assert.doesNotMatch(html,/♥|<svg/);
   assert.doesNotMatch(cardHtml('K ♠'), /red|fresh/);
   assert.match(cardBackHtml(), /point-card back/);
 });

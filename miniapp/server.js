@@ -171,7 +171,7 @@ function serveFile(res, root, urlPath) {
     'content-type': MIME[ext] || 'application/octet-stream',
     'x-content-type-options': 'nosniff',
     'referrer-policy': 'no-referrer',
-    'cache-control': ext === '.html' ? 'no-store' : /^\/art\/(?:items|chests|world)\/v\d+\//.test(urlPath) ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
+    'cache-control': ext === '.html' ? 'no-store' : ['.js', '.css'].includes(ext) ? 'no-cache' : /^\/art\/(?:items|chests|world)\/v\d+\//.test(urlPath) ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
   });
   fs.createReadStream(filePath).pipe(res);
   return true;

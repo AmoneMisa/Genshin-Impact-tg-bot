@@ -398,3 +398,353 @@ Composition aspect 512:512, target 512x512. Actual transparent background, isola
 
 The current exact per-asset prompts and stable reference paths are in `art-source/epic-collection/jobs.json`; saved master provenance is alongside each PNG in `art-source/items/epic-collection/*.generation.json`. Delivery and quota status are in `art-source/epic-collection/STATUS.md` and `progress.json`. Finish these 14 weapons and 13 potions before avatar work. Potion effects use Lineage II buff concepts: Might, Shield, Haste, Focus, Death Whisper, Guidance and Wind Walk, with 20-minute durations and bonuses adapted to this game's stat scale. Only reviewed images enter the mobile WebP allowlist.
 
+
+
+## 10. Hunting and item icons (9 October 2026)
+
+Finish epic weapons/potions first. These exact prompts extend the master style from section 0. Neutral transparent gold icons are tinted in code; publish only reviewed files.
+
+### lifestone — priority 1
+
+Source: `art-source/icons/lifestone.png`. Outputs: `webapp/art/icons/lifestone-128.webp`, `webapp/art/icons/lifestone-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: polished irregular mineral with organic veins and a small inner glow. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### attr-stone — priority 1
+
+Source: `art-source/icons/attr-stone.png`. Outputs: `webapp/art/icons/attr-stone-128.webp`, `webapp/art/icons/attr-stone-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: rough chunky attribute mineral with one central facet. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### attr-crystal — priority 1
+
+Source: `art-source/icons/attr-crystal.png`. Outputs: `webapp/art/icons/attr-crystal-128.webp`, `webapp/art/icons/attr-crystal-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: tall angular crystal cluster with three distinct tips. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### attr-jewel — priority 1
+
+Source: `art-source/icons/attr-jewel.png`. Outputs: `webapp/art/icons/attr-jewel-128.webp`, `webapp/art/icons/attr-jewel-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: refined faceted jewel in a thin gold setting. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### soulshot — priority 1
+
+Source: `art-source/icons/soulshot.png`. Outputs: `webapp/art/icons/soulshot-128.webp`, `webapp/art/icons/soulshot-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: pointed physical weapon charge with solid gold casing and a bright core. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### spiritshot — priority 1
+
+Source: `art-source/icons/spiritshot.png`. Outputs: `webapp/art/icons/spiritshot-128.webp`, `webapp/art/icons/spiritshot-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: rounded magic charge with a delicate cage around a pearl core. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### blessed-spiritshot — priority 1
+
+Source: `art-source/icons/blessed-spiritshot.png`. Outputs: `webapp/art/icons/blessed-spiritshot-128.webp`, `webapp/art/icons/blessed-spiritshot-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: winged magical charge with a luminous pearl core. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### egg-wyvern — priority 1
+
+Source: `art-source/icons/egg-wyvern.png`. Outputs: `webapp/art/icons/egg-wyvern-128.webp`, `webapp/art/icons/egg-wyvern-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: small leathery egg with fine scales. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### egg-dragon — priority 1
+
+Source: `art-source/icons/egg-dragon.png`. Outputs: `webapp/art/icons/egg-dragon-128.webp`, `webapp/art/icons/egg-dragon-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: broad egg with overlapping dragon scales and gold seams. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### egg-ancient — priority 1
+
+Source: `art-source/icons/egg-ancient.png`. Outputs: `webapp/art/icons/egg-ancient-128.webp`, `webapp/art/icons/egg-ancient-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: ancient fossil-like egg with heavy plates and glowing gold seams. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### hunt — priority 1
+
+Source: `art-source/menu/hunt.png`. Outputs: `webapp/art/menu/hunt.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+A lone hunter seen from behind on a forest path, distant ruined royal tower, faint cyan monster silhouette and amber lantern. One focal subject and calm lower area for labels added by code. Square 1024x1024, delivery 480px.
+
+### element-fire — priority 2
+
+Source: `art-source/icons/element-fire.png`. Outputs: `webapp/art/icons/element-fire-128.webp`, `webapp/art/icons/element-fire-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: sculpted flame elemental emblem, distinct silhouette. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### element-water — priority 2
+
+Source: `art-source/icons/element-water.png`. Outputs: `webapp/art/icons/element-water-128.webp`, `webapp/art/icons/element-water-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: curling wave and droplet elemental emblem, distinct silhouette. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### element-wind — priority 2
+
+Source: `art-source/icons/element-wind.png`. Outputs: `webapp/art/icons/element-wind-128.webp`, `webapp/art/icons/element-wind-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: flowing wind spiral elemental emblem, distinct silhouette. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### element-earth — priority 2
+
+Source: `art-source/icons/element-earth.png`. Outputs: `webapp/art/icons/element-earth-128.webp`, `webapp/art/icons/element-earth-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: layered mountain elemental emblem, distinct silhouette. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### element-holy — priority 2
+
+Source: `art-source/icons/element-holy.png`. Outputs: `webapp/art/icons/element-holy-128.webp`, `webapp/art/icons/element-holy-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: sunburst and pearl elemental emblem, distinct silhouette. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### element-dark — priority 2
+
+Source: `art-source/icons/element-dark.png`. Outputs: `webapp/art/icons/element-dark-128.webp`, `webapp/art/icons/element-dark-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: crescent enclosing a shadow pearl elemental emblem, distinct silhouette. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### champion-blue — priority 2
+
+Source: `art-source/icons/champion-blue.png`. Outputs: `webapp/art/icons/champion-blue-128.webp`, `webapp/art/icons/champion-blue-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: single-winged gem shield medal; neutral gold for code to tint blue. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### champion-red — priority 2
+
+Source: `art-source/icons/champion-red.png`. Outputs: `webapp/art/icons/champion-red-128.webp`, `webapp/art/icons/champion-red-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Subject: double-winged crowned shield medal; neutral gold for code to tint red. Neutral desaturated gold, ivory and parchment only; no saturated elemental colours (code tints the icon). True transparent background without shadow plane, halo or checkerboard. One complete centered subject with 10% breathing room. Readable at 22, 48 and 96px. Square 512x512.
+
+### zone-ng-d — priority 2
+
+Source: `art-source/hunt/zones/ng-d.png`. Outputs: `webapp/art/hunt/zones/ng-d-480.webp`, `webapp/art/hunt/zones/ng-d-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: moonlit woodland, stone path, ruined watchtower. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### zone-c — priority 2
+
+Source: `art-source/hunt/zones/c.png`. Outputs: `webapp/art/hunt/zones/c-480.webp`, `webapp/art/hunt/zones/c-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: misty marsh and half-sunken temple ruins. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### zone-b — priority 2
+
+Source: `art-source/hunt/zones/b.png`. Outputs: `webapp/art/hunt/zones/b-480.webp`, `webapp/art/hunt/zones/b-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: deep forest ravine and ancient overgrown pillars. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### zone-a — priority 2
+
+Source: `art-source/hunt/zones/a.png`. Outputs: `webapp/art/hunt/zones/a-480.webp`, `webapp/art/hunt/zones/a-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: ruined fortress courtyard under a stormy night sky. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### zone-s — priority 2
+
+Source: `art-source/hunt/zones/s.png`. Outputs: `webapp/art/hunt/zones/s-480.webp`, `webapp/art/hunt/zones/s-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: towering cathedral ruin with violet windows. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### zone-s80 — priority 2
+
+Source: `art-source/hunt/zones/s80.png`. Outputs: `webapp/art/hunt/zones/s80-480.webp`, `webapp/art/hunt/zones/s80-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: volcanic wasteland, obsidian cliffs, restrained molten rivers. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### zone-s84 — priority 2
+
+Source: `art-source/hunt/zones/s84.png`. Outputs: `webapp/art/hunt/zones/s84-480.webp`, `webapp/art/hunt/zones/s84-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: celestial ruin, broken royal spires and cyan fissures. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### zone-hellbound — priority 2
+
+Source: `art-source/hunt/zones/hellbound.png`. Outputs: `webapp/art/hunt/zones/hellbound-480.webp`, `webapp/art/hunt/zones/hellbound-960.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+Wide environmental banner: cursed island coastline, shattered citadel, sand and dark mist. Distant focal landmark, calm edges for cropping, no foreground characters. Full painted backdrop, target 1536x512.
+
+### mob-beast — priority 2
+
+Source: `art-source/hunt/mobs/beast.png`. Outputs: `webapp/art/hunt/mobs/beast-128.webp`, `webapp/art/hunt/mobs/beast-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: powerful wolf with clear muzzle and alert ears. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-orc — priority 2
+
+Source: `art-source/hunt/mobs/orc.png`. Outputs: `webapp/art/hunt/mobs/orc-128.webp`, `webapp/art/hunt/mobs/orc-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: tusked orc raider in weathered bronze armour. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-undead — priority 2
+
+Source: `art-source/hunt/mobs/undead.png`. Outputs: `webapp/art/hunt/mobs/undead-128.webp`, `webapp/art/hunt/mobs/undead-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: skeletal knight with dented helmet and hollow eyes. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-insect — priority 2
+
+Source: `art-source/hunt/mobs/insect.png`. Outputs: `webapp/art/hunt/mobs/insect-128.webp`, `webapp/art/hunt/mobs/insect-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: a majestic armoured beetle with rounded gold-and-navy carapace, compact antennae and small calm eyes; no spider or arachnid anatomy. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-lizardman — priority 2
+
+Source: `art-source/hunt/mobs/lizardman.png`. Outputs: `webapp/art/hunt/mobs/lizardman-128.webp`, `webapp/art/hunt/mobs/lizardman-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: reptilian warrior with scales, crest and primitive armour. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-golem — priority 2
+
+Source: `art-source/hunt/mobs/golem.png`. Outputs: `webapp/art/hunt/mobs/golem-128.webp`, `webapp/art/hunt/mobs/golem-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: massive stone golem with a small crystal core. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-bandit — priority 2
+
+Source: `art-source/hunt/mobs/bandit.png`. Outputs: `webapp/art/hunt/mobs/bandit-128.webp`, `webapp/art/hunt/mobs/bandit-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: masked human outlaw with leather hood. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-plant — priority 2
+
+Source: `art-source/hunt/mobs/plant.png`. Outputs: `webapp/art/hunt/mobs/plant-128.webp`, `webapp/art/hunt/mobs/plant-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: animated tree creature with bark face and fungal growth. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-demon — priority 2
+
+Source: `art-source/hunt/mobs/demon.png`. Outputs: `webapp/art/hunt/mobs/demon-128.webp`, `webapp/art/hunt/mobs/demon-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: horned infernal demon with obsidian skin and violet eyes. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-dragon — priority 2
+
+Source: `art-source/hunt/mobs/dragon.png`. Outputs: `webapp/art/hunt/mobs/dragon-128.webp`, `webapp/art/hunt/mobs/dragon-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: scaled drake with horns and wing shoulders. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-spirit — priority 2
+
+Source: `art-source/hunt/mobs/spirit.png`. Outputs: `webapp/art/hunt/mobs/spirit-128.webp`, `webapp/art/hunt/mobs/spirit-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: spectral ghost with translucent shroud and pale cyan face. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+### mob-giant — priority 2
+
+Source: `art-source/hunt/mobs/giant.png`. Outputs: `webapp/art/hunt/mobs/giant-128.webp`, `webapp/art/hunt/mobs/giant-256.webp`.
+
+Use case: stylized-concept. Premium 2D painted dark-fantasy RPG art, semi-realistic forms, painterly shading, crisp silhouette. Midnight navy shadows, antique gold, restrained cyan, violet and amber focal glow. Original design. No text, letters, numbers, logos, signatures, watermark, UI, border or 3D render.
+One head-and-shoulders portrait: ancient giant with heavy brow and weathered stone-like skin. Subdued navy backdrop, face centered with 12% margins for circular cropping, no weapon crossing face. Square 512x512, readable at 48/96px.
+
+Optional polish deferred: passives/luckShop/auction, STR/DEX/CON/INT/WIT/MEN, 13 passive + 6 clan + 16 Life Stone skills, vitality, clan RTA. Inspect real skill definitions before specifying subjects.
+
+Reviewed delivery: add accepted keys to `art-source/hunt-ui/reviewed.json`, then run `npm run art:build -- --painted`. This preserves existing world paintings and builds only accepted icon/hunt PNGs.
+
+## 11. Painted mini-game scenes and animated objects
+
+### football
+Source: `art-source/arcade/football.png`
+
+A painterly dark-fantasy royal football courtyard at night, landscape 3:2. Complete realistic goal with ivory net and worn bronze posts centered in upper half, midnight navy stone castle, antique gold torches, rich green grass in lower third, no ball, no people. Premium hand-painted RPG illustration, realistic volume and materials, dramatic clear lighting, no text, no numbers, no logos, no spiders, no UI or borders, no vector or flat SVG style.
+
+### darts
+Source: `art-source/arcade/darts.png`
+
+Painterly royal dark fantasy tavern dart game backdrop landscape 3:2. One richly detailed circular ivory, black, crimson and emerald dartboard centered at 50% width 42% height, occupies 55% of image height, concentric scoring rings and radial sectors but NO numerals or letters. Carved dark walnut wood wall with brass candle sconces, midnight navy shadows and amber warm lighting. Board fully visible. No dart, no people, no text, no logos, no spiders, no UI, no flat vector style. Realistic dimensional painterly RPG illustration.
+
+### slots
+Source: `art-source/arcade/slots.png`
+
+Painterly premium dark fantasy RPG slot machine artwork landscape 3:2. A complete ornate antique gold and dark walnut mechanical slot machine centered, front view, three EMPTY dark rectangular reel openings centered horizontally at mid-height, each matching width, framed in ivory and gold. Warm amber gem lights, midnight navy velvet background, dramatic rich realistic painted materials. NO symbols in reel openings, no text, no letters, no numbers, no UI buttons, no borders, no people, no spiders, no vector or flat style.
+
+### dice
+Source: `art-source/arcade/dice.png`
+
+Painterly dark-fantasy RPG dice table background landscape 3:2. Overhead tilted view of emerald velvet gaming tray with ornate antique gold frame and carved walnut edge, warm amber light, midnight navy shadows. Center is calm clear dark green velvet for an animated dice object. No dice, no objects in the center, no people, no spiders, no text, no numbers, no logos, no interface, no flat vector art. Luxurious realistic hand painted texture and depth.
+
+### basketball-ball
+Source: `art-source/arcade/basketball-ball.png`
+
+One realistic hand painted leather basketball sprite, centered front view, sphere orange brown worn pebbled leather with dark seams and strong dimensional lighting, highlights upper left, shadow lower right. Premium dark fantasy RPG object art matching warm amber and midnight navy palette. Entire object 80% of canvas, no cast shadow plane, no background, true transparent alpha, square. No text, no logo, no border, no flat SVG or vector style.
+
+### football-ball
+Source: `art-source/arcade/football-ball.png`
+
+One realistic hand painted football soccer ball sprite, centered, ivory leather hexagonal panels and midnight black pentagonal panels, visible seams, strong volumetric upper left light with dark lower right shading, premium painterly RPG object art. Complete sphere 80% of canvas. Square true transparent alpha, no shadow plane, no text, no logo, no border, no flat SVG or vector style.
+
+### bowling-ball
+Source: `art-source/arcade/bowling-ball.png`
+
+One realistic hand painted bowling ball sprite, centered, deep amethyst polished marble sphere, three finger holes in upper front, strong upper left light and dark lower right shading, antique fantasy RPG item art. Complete sphere 80% canvas, square true transparent alpha, no cast shadow plane, no background, no text, no logo, no border, no vector style.
+
+### dart
+Source: `art-source/arcade/dart.png`
+
+Single hand painted realistic dart projectile sprite, vertical upward pointing, complete sharp steel point at TOP and red feather flight fins at BOTTOM, antique brass ridged grip middle. Dark fantasy RPG item art, dimensional painterly material lighting. Centered full silhouette 80% canvas height. Square true transparent alpha, no shadow plane, no background, no text, no letters, no logo, no vector style.
+
+### pin
+Source: `art-source/arcade/pin.png`
+
+Single realistic painterly ivory bowling pin sprite, upright full frontal silhouette, rounded head narrow neck wide body with two crimson neck stripes, smooth polished aged ivory warm upper left light dark lower right shadow. Premium fantasy RPG object art. Entire pin 85% canvas height. Square true transparent alpha, no cast shadow plane, no text, no logo, no border, no flat SVG or vector style.
+
+### die
+Source: `art-source/arcade/die.png`
+
+A single realistic hand painted cubical gaming die sprite, FRONT VIEW of square front face only with softly rounded beveled gold edges and ivory blank face with NO pips or marks, subtle dimensional shading and antique material texture, painterly premium dark fantasy RPG item art. Complete die fills 80% square canvas. True transparent alpha, no background, no shadow plane, no text, no numbers, no symbols, no logo, no flat vector style.
+
+### bowling
+Source: `art-source/arcade/bowling.png`
+
+Edit this royal bowling hall image: remove ALL bowling pins and their reflections completely, leaving the lane empty. Preserve architecture, perspective, wood, flames, light, gold navy style, and landscape composition. No ball, no text, no spiders. The empty lane will receive separate animated bowling pins in code.
+
+### basketball
+Source: `art-source/arcade/basketball.png`
+
+Edit this painted royal basketball court: remove the basketball on the floor and its shadow completely. Preserve the ornate hoop, board, architecture, antique gold, midnight navy and amber lighting. Recompose as landscape 3:2 with hoop centered at 50% width and 38% image height, whole hoop visible, empty foreground floor. No people, no balls, no text, no spiders. Separate animated basketball will be added in code.
+
+## 12. Painted interface icons
+
+The 26 exact delivered prompts are recorded in [art-source/ui-icons/prompts.md](../art-source/ui-icons/prompts.md), with job keys, source paths and original built-in imagegen output paths in [jobs.json](../art-source/ui-icons/jobs.json). These transparent paintings cover utility buttons, navigation, card suits, dice and crossed swords. No reference files were consumed in this batch.
+
+Reviewed sources and shared aliases are in `art-source/ui-icons/catalog.json`; 95 icon names reuse 58 paintings. Build transparent 128/256 WebP delivery with `npm run ui-art:build`. See [STATUS.md](../art-source/ui-icons/STATUS.md) for verification and scope.

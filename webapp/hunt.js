@@ -1,3 +1,5 @@
+import {huntZoneUrl,huntMobUrl} from './art/hunt-art.js';
+import {shotIcon,elementIcon,championIcon} from './art/painted-icon-art.js';
 import { bar, escapeHtml, formatDuration, formatNumber, hotbar, playerFrame, potionBar, statusIcons } from './boss-hud.js';
 
 // Hunting fields (Lineage II style): pick a zone, fight one mob at a time in real time with skills,
@@ -20,8 +22,8 @@ const POTION_REASONS = {
   hp_full: 'HP уже полное.',
   mp_full: 'MP уже полное.',
 };
-const ELEMENT_ICONS = { fire: '🔥', water: '💧', wind: '🌪️', earth: '🪨', holy: '✨', dark: '🌑' };
-const CHAMPION = { blue: { icon: '🔵', label: 'Синий чемпион' }, red: { icon: '🔴', label: 'Красный чемпион' } };
+const ELEMENT_ICONS = Object.fromEntries(['fire','water','wind','earth','holy','dark'].map(element=>[element,elementIcon(element)]));
+const CHAMPION = { blue: { icon: championIcon('blue'), label: 'Синий чемпион' }, red: { icon: championIcon('red'), label: 'Красный чемпион' } };
 
 export async function openHuntGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/hunt');
@@ -106,7 +108,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
 
   async function start(zone) {
     const payload = await run('/api/hunt/start', { zone }, { heavy: true });
-    if (payload) say(payload.hunt.mob ? `${payload.hunt.mob.champion ? `${CHAMPION[payload.hunt.mob.champion].icon} ` : ''}${payload.hunt.mob.name} нападает!` : 'Врага нет.');
+    if (payload) say(payload.hunt.mob ? `${payload.hunt.mob.champion ? `${CHAMPION[payload.hunt.mob.champion].label} ` : ''}${payload.hunt.mob.name} нападает!` : 'Врага нет.');
     render();
   }
 
@@ -151,7 +153,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
   function shotsHtml() {
     const shots = state.shots;
     if (!shots?.grade) return '<div class="hunt-shots off"><span>🔸 Заряды</span><small>Надень оружие, чтобы использовать заряды.</small></div>';
-    const kinds = shots.kinds.map(kind => `<em title="${escapeHtml(kind.label)}">${kind.icon} ${formatNumber(kind.count)}</em>`).join('');
+    const kinds = shots.kinds.map(kind => `<em title="${escapeHtml(kind.label)}">${shotIcon(kind.id,shots.grade,kind.icon)} ${formatNumber(kind.count)}</em>`).join('');
     return `<div class="hunt-shots ${shots.enabled ? 'on' : ''}">
       <span>Заряды ${shots.grade === 'noGrade' ? 'NG' : escapeHtml(shots.grade)} · ${shots.perCast}/удар</span>${kinds}
       <button type="button" class="hunt-toggle" data-shots>${shots.enabled ? 'Авто: вкл' : 'Авто: выкл'}</button>
@@ -176,7 +178,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
     }
     return `
     <section class="mmo-frame target-frame hunt-mob ${mob.champion ? `champion ${mob.champion}` : ''}">
-      <span class="mmo-portrait boss hunt-mob-icon"><em>${formatNumber(mob.level)}</em>${champion ? champion.icon : '👾'}</span>
+      <span class="mmo-portrait boss hunt-mob-icon"><em>${formatNumber(mob.level)}</em>${huntMobUrl(mob)?`<img class="hunt-mob-art" src="${huntMobUrl(mob)}" srcset="${huntMobUrl(mob)} 1x, ${huntMobUrl(mob,256)} 2x" width="64" height="64" alt="" decoding="async">`:'👾'}${champion?`<span class="hunt-champion-badge">${champion.icon}</span>`:''}</span>
       <span class="mmo-frame-body">
         <span class="mmo-frame-title"><strong>${escapeHtml(mob.name)}</strong><small>${champion ? escapeHtml(champion.label) : 'Моб'}${mob.element ? ` · ${ELEMENT_ICONS[mob.element] || ''}` : ''}</small></span>
         ${bar('hp', mob.currentHp, mob.hp)}
@@ -190,6 +192,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
     const zones = state.zones;
     return `<div class="hunt-zones">${zones.map(zone => `
       <article class="hunt-zone ${zone.recommended ? 'recommended' : ''} ${zone.reachable ? '' : 'far'}">
+        ${huntZoneUrl(zone)?`<img class="hunt-zone-art" src="${huntZoneUrl(zone)}" srcset="${huntZoneUrl(zone)} 1x, ${huntZoneUrl(zone,960)} 2x" width="480" height="160" alt="" loading="lazy" decoding="async">`:''}
         <div class="hunt-zone-head"><strong>${escapeHtml(zone.title)}</strong><small>ур. ${zone.min}–${zone.max}${zone.recommended ? ' · для тебя' : ''}</small></div>
         <p class="hunt-zone-mobs">${zone.mobs.map(mob => `${mob.element ? ELEMENT_ICONS[mob.element] : ''}${escapeHtml(mob.name)} ${mob.level}`).join(' · ')}</p>
         <button type="button" class="equipment-action forge-action" data-zone="${escapeHtml(zone.id)}" ${zone.reachable ? '' : 'disabled'}>${zone.reachable ? 'Охотиться' : 'Опыт не даётся'}</button>

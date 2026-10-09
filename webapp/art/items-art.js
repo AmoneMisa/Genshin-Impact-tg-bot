@@ -78,7 +78,7 @@ export const ITEM_ART_VARIANTS = Object.freeze([
 ].map(variant=>Object.freeze({...variant,grades:Object.freeze(variant.grades),...(variant.excludeTypes?{excludeTypes:Object.freeze(variant.excludeTypes)}:{})})));
 // One painting per epic jewel (item.epicBoss), see docs/imagegen-prompts.md 5e.
 export const EPIC_ITEM_ART_KEYS = Object.freeze(['queenAnt','core','orfen','zaken','baium','antharas','valakas','frintezza'].map(boss=>`epic-${boss}`));
-export const ITEM_ART_KEYS = Object.freeze([...BASE_ITEM_ART_KEYS,...ITEM_ART_VARIANTS.map(variant=>variant.key),...EPIC_ITEM_ART_KEYS,...CATALOG_ITEM_ART.map(entry=>entry.key),...SPECIAL_ITEM_ART]);
+export const ITEM_ART_KEYS = Object.freeze([...BASE_ITEM_ART_KEYS,...ITEM_ART_VARIANTS.map(variant=>variant.key),...EPIC_ITEM_ART_KEYS,...CATALOG_ITEM_ART.map(entry=>entry.key),...SPECIAL_ITEM_ART.filter(key=>key.startsWith('epic-weapon-'))]);
 const keys = new Set(ITEM_ART_KEYS);
 const catalogIdentity = item => [item.name,item.grade,item.kind,item.category].map(value=>String(value||'').trim().toLowerCase()).join('|');
 const catalogArt = new Map(CATALOG_ITEM_ART.map(entry=>[catalogIdentity(entry),entry.key]));

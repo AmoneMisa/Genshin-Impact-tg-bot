@@ -1,3 +1,4 @@
+import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldIconHtml } from './art/world-art.js';
 import {SPECIAL_ITEM_ART} from './art/special-item-art.js';
@@ -128,6 +129,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <div class="inv-bag">${state.potions.map(slotHtml).join('')}${'<span class="inv-slot blank" aria-hidden="true"></span>'.repeat(emptySlots)}</div>
         ${detailHtml()}
       </section>
+      ${state.materials?.length?`<section class="inventory-section"><div class="inventory-title"><strong>Материалы и заряды</strong></div><div class="inventory-meta">${state.materials.map(item=>`<article><span>${materialIcon(item.key,escapeHtml(item.icon||'✦'))}</span><div><small>${escapeHtml(item.name)}</small><strong>${formatNumber(item.count)}</strong></div></article>`).join('')}</div></section>`:''}
       <section class="inventory-resources">
         <article><span>🪙</span><strong>${formatNumber(state.resources.gold)}</strong></article>
         <article><span>💎</span><strong>${formatNumber(state.resources.crystals)}</strong></article>
@@ -175,7 +177,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     overlay.classList.add('busy');
     feedback.textContent = '';
     haptic('medium');
-    const flask = content.querySelector('.inv-detail .inv-flask');
+    const flask = content.querySelector('.inv-detail .inv-flask, .inv-detail .inv-potion-art');
     flask?.classList.add('drinking');
     try {
       const [payload] = await Promise.all([

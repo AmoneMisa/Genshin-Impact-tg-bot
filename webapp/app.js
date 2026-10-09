@@ -222,9 +222,9 @@ function render(state) {
   status.textContent = '';
 }
 
-// The gear opens the menu (mail, promo code), so it carries the mail dot.
+// Mail notifications belong to the mail shortcut, not settings.
 function renderGearDot() {
-  const gear = document.querySelector('[data-nav-jump="more"]');
+  const gear = document.querySelector('[data-open-feature="mail"]');
   if (!gear) return;
   gear.querySelector('.red-dot')?.remove();
   if (badges.mail > 0) gear.insertAdjacentHTML('beforeend', badgeHtml(badges.mail));

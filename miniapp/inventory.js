@@ -1,3 +1,5 @@
+import materialDefinitions from '../template/materialsTemplate.js';
+import {getMaterialCount} from '../functions/game/player/materials.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
@@ -65,6 +67,7 @@ export function getInventoryState(session) {
       gacha: Array.isArray(inventory?.gacha?.items) ? inventory.gacha.items.length : 0,
       potions: potions.reduce((sum, item) => sum + item.count, 0),
     },
+    materials:materialDefinitions.map(item=>({key:item.key,name:item.name,icon:item.icon,count:getMaterialCount(session,item.key)})).filter(item=>item.count>0),
     potions,
     buffs:activePotionBuffs(session).map(e=>({id:e.potionId,name:e.name,until:e.until})),
   };

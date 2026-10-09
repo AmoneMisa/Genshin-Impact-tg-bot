@@ -26,8 +26,8 @@ export async function createChest(host, { opened = null, reveal = false } = {}) 
     img.sizes = reveal ? '(max-width: 384px) 78vw, 300px' : '(max-width: 520px) 30vw, 156px';
     img.srcset = sizes.map(size => `${CHEST_ART_ROOT}/${state}-${size}.webp ${size}w`).join(', ');
     img.src = `${CHEST_ART_ROOT}/${state}-${sizes[0]}.webp`;
-    img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-    img.addEventListener('error', () => { img.classList.remove('loaded'); img.classList.add('failed'); }, { once: true });
+    img.addEventListener('load', () => { img.classList.add('loaded'); fallback.hidden = true; }, { once: true });
+    img.addEventListener('error', () => { img.classList.remove('loaded'); img.classList.add('failed'); fallback.hidden = false; }, { once: true });
     art.append(img);
     return img;
   }

@@ -5,6 +5,7 @@
 //
 // Outcomes are decided by the server value; this module only shows them.
 
+import { arcadeArtUrl, arcadeSpriteHtml, slotPaintingHtml } from './art/arcade-art.js';
 import { worldArtUrl } from './art/world-art.js';
 
 const SLOT_STRIP = ['😈', '❤️', '💋', '🤏', '🛫', '🚗', '💩', '👻', '👽', '☠️'];
@@ -36,7 +37,7 @@ export function dieRotation(face) {
 
 const PIPS = { 1: [5], 2: [1, 9], 3: [1, 5, 9], 4: [1, 3, 7, 9], 5: [1, 3, 5, 7, 9], 6: [1, 3, 4, 6, 7, 9] };
 function dieFace(n) {
-  return `<span class="die-face f${n}">${Array.from({ length: 9 }, (_, i) => `<i class="${PIPS[n].includes(i + 1) ? 'on' : ''}"></i>`).join('')}</span>`;
+  return `<span class="die-face f${n} ${arcadeArtUrl("die") ? "painted-die" : ""}" ${arcadeArtUrl("die") ? `style="--die-painting:url(/art/arcade/v1/die-128.webp)"` : ""}>${Array.from({ length: 9 }, (_, i) => `<i class="${PIPS[n].includes(i + 1) ? 'on' : ''}"></i>`).join('')}</span>`;
 }
 
 function sceneHtml(gameId, game) {
@@ -45,25 +46,25 @@ function sceneHtml(gameId, game) {
       return `
         <div class="as-board"><span class="as-board-square"></span></div>
         <div class="as-hoop" data-target><span class="as-rim"></span><span class="as-net"></span></div>
-        <div class="as-shot" data-shot><span class="as-ball basket"></span></div>`;
+        <div class="as-shot" data-shot><span class="as-ball basket">${arcadeSpriteHtml("basketball-ball")}</span></div>`;
     case 'football':
       return `
         <div class="as-goal" data-target><span class="as-goal-net"></span><span class="as-keeper"></span></div>
         <span class="as-pitch" aria-hidden="true"></span>
-        <div class="as-shot" data-shot><span class="as-ball soccer"></span></div>`;
+        <div class="as-shot" data-shot><span class="as-ball soccer">${arcadeSpriteHtml("football-ball")}</span></div>`;
     case 'darts':
       return `
         <div class="as-dartboard" data-target><span class="as-bull"></span></div>
-        <div class="as-shot dart" data-shot><span class="as-dart"></span></div>`;
+        <div class="as-shot dart" data-shot><span class="as-dart">${arcadeSpriteHtml("dart")}</span></div>`;
     case 'bowling':
       return `
         <span class="as-lane" aria-hidden="true"></span>
-        <div class="as-pins" data-target>${[1, 2, 3, 4, 5, 6].map(n => `<span class="as-pin p${n}"></span>`).join('')}</div>
-        <div class="as-shot bowl" data-shot><span class="as-ball bowling"></span></div>`;
+        <div class="as-pins" data-target>${[1, 2, 3, 4, 5, 6].map(n => `<span class="as-pin p${n}">${arcadeSpriteHtml("pin")}</span>`).join('')}</div>
+        <div class="as-shot bowl" data-shot><span class="as-ball bowling">${arcadeSpriteHtml("bowling-ball")}</span></div>`;
     case 'slots': {
-      const reels = game?.reels?.length ? game.reels : ['❔', '❔', '❔'];
+      const reels = game?.reels?.length ? game.reels : ['🍒', '⭐', '💎'];
       return `
-        <div class="as-machine">${reels.map((symbol, i) => `<div class="as-reel" data-reel="${i}"><div class="as-strip"><span>${symbol}</span></div></div>`).join('')}</div>
+        <div class="as-machine">${reels.map((symbol, i) => `<div class="as-reel" data-reel="${i}"><div class="as-strip"><span>${slotPaintingHtml(symbol)}</span></div></div>`).join('')}</div>
         <span class="as-slots-line" aria-hidden="true"></span>`;
     }
     default: {
@@ -76,8 +77,8 @@ function sceneHtml(gameId, game) {
 }
 
 export function stageHtml(gameId, game) {
-  const art = gameId === 'basketball' && worldArtUrl('games/basketball',512);
-  return `<div class="arcade-stage as-${gameId}" data-stage="${gameId}" ${art ? `style="--arcade-painting:url('${art}')"` : ''}>${sceneHtml(gameId, game)}<div class="as-flash" data-flash></div></div>`;
+  const art = arcadeArtUrl(gameId) || (gameId === 'basketball' ? worldArtUrl('games/basketball',512) : null);
+  return `<div class="arcade-stage as-${gameId} ${art ? "painted-game" : ""}" data-stage="${gameId}" ${art ? `style="--arcade-painting:url('${art}')"` : ''}>${sceneHtml(gameId, game)}<div class="as-flash" data-flash></div></div>`;
 }
 
 const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));

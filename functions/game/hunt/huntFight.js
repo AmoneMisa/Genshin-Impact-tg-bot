@@ -190,6 +190,7 @@ export function mobDto(mob, now = Date.now()) {
     if (!mob) return null;
     const tier = mob.champion ? CHAMPIONS[mob.champion] : null;
     return {
+        id: mob.mobId,
         name: mob.name,
         level: mob.level,
         champion: mob.champion || null,

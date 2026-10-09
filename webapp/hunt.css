@@ -30,3 +30,9 @@
 .hunt-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 12px; }
 .hunt-log li { display: flex; gap: 6px; opacity: .85; }
 .hunt-log li:first-child { opacity: 1; font-weight: 600; }
+
+.hunt-zone-art {display:block;width:100%;height:auto;aspect-ratio:3/1;object-fit:cover;border-radius:8px;margin-bottom:8px}
+.hunt-mob-icon {position:relative;overflow:visible}
+.hunt-mob-art {width:100%;height:100%;object-fit:cover;border-radius:50%}
+.hunt-mob-icon em {z-index:2}
+.hunt-champion-badge {position:absolute;right:-4px;bottom:-4px;z-index:3}

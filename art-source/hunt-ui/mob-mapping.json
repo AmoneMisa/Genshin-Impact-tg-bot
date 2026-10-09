@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "20481",
+    "name": "Bearded Keltir",
+    "archetype": "beast"
+  },
+  {
+    "id": "20544",
+    "name": "Elder Keltir",
+    "archetype": "beast"
+  },
+  {
+    "id": "20120",
+    "name": "Wolf",
+    "archetype": "beast"
+  },
+  {
+    "id": "20442",
+    "name": "Elder Wolf",
+    "archetype": "beast"
+  },
+  {
+    "id": "20131",
+    "name": "Orc Grunt",
+    "archetype": "orc"
+  },
+  {
+    "id": "20326",
+    "name": "Goblin Scout",
+    "archetype": "orc"
+  },
+  {
+    "id": "20509",
+    "name": "Spore Fungus",
+    "archetype": "plant"
+  },
+  {
+    "id": "20471",
+    "name": "Kaboo Orc Fighter",
+    "archetype": "orc"
+  },
+  {
+    "id": "20473",
+    "name": "Kaboo Orc Fighter Lieutenant",
+    "archetype": "orc"
+  },
+  {
+    "id": "20472",
+    "name": "Kaboo Orc Fighter Leader",
+    "archetype": "orc"
+  },
+  {
+    "id": "20013",
+    "name": "Dryad",
+    "archetype": "plant"
+  },
+  {
+    "id": "20019",
+    "name": "Dryad Elder",
+    "archetype": "plant"
+  },
+  {
+    "id": "20433",
+    "name": "Festering Bat",
+    "archetype": "beast"
+  },
+  {
+    "id": "20020",
+    "name": "Marsh Zombie Lord",
+    "archetype": "undead"
+  },
+  {
+    "id": "20379",
+    "name": "Stone Soldier",
+    "archetype": "golem"
+  },
+  {
+    "id": "20025",
+    "name": "Lesser Dark Horror",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20392",
+    "name": "Redeye Bat",
+    "archetype": "beast"
+  },
+  {
+    "id": "20105",
+    "name": "Dark Horror",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20021",
+    "name": "Red Bear",
+    "archetype": "beast"
+  },
+  {
+    "id": "20380",
+    "name": "Stone Guardian",
+    "archetype": "golem"
+  },
+  {
+    "id": "20034",
+    "name": "Prowler",
+    "archetype": "beast"
+  },
+  {
+    "id": "20038",
+    "name": "Venomous Spider",
+    "archetype": "insect"
+  },
+  {
+    "id": "20418",
+    "name": "Crystalline Beast",
+    "archetype": "beast"
+  },
+  {
+    "id": "20043",
+    "name": "Arachnid Tracker",
+    "archetype": "insect"
+  },
+  {
+    "id": "20039",
+    "name": "Scavenger Wererat",
+    "archetype": "beast"
+  },
+  {
+    "id": "20049",
+    "name": "Lycanthrope",
+    "archetype": "beast"
+  },
+  {
+    "id": "20205",
+    "name": "Dire Wolf",
+    "archetype": "beast"
+  },
+  {
+    "id": "20206",
+    "name": "Kadif Werewolf",
+    "archetype": "beast"
+  },
+  {
+    "id": "20266",
+    "name": "Monster Eye Gazer",
+    "archetype": "demon"
+  },
+  {
+    "id": "20068",
+    "name": "Monster Eye Destroyer",
+    "archetype": "demon"
+  },
+  {
+    "id": "20250",
+    "name": "Glass Jaguar",
+    "archetype": "beast"
+  },
+  {
+    "id": "20251",
+    "name": "Delu Lizardman",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20499",
+    "name": "Turek Orc Footman",
+    "archetype": "orc"
+  },
+  {
+    "id": "20496",
+    "name": "Turek Orc Archer",
+    "archetype": "orc"
+  },
+  {
+    "id": "20498",
+    "name": "Turek Orc Supplier",
+    "archetype": "orc"
+  },
+  {
+    "id": "20497",
+    "name": "Turek Orc Skirmisher",
+    "archetype": "orc"
+  },
+  {
+    "id": "20501",
+    "name": "Turek Orc Shaman",
+    "archetype": "orc"
+  },
+  {
+    "id": "20495",
+    "name": "Turek Orc Warlord",
+    "archetype": "orc"
+  },
+  {
+    "id": "20227",
+    "name": "Horror Mist Ripper",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20229",
+    "name": "Stinger Wasp",
+    "archetype": "insect"
+  },
+  {
+    "id": "20230",
+    "name": "Marsh Stakato Worker",
+    "archetype": "insect"
+  },
+  {
+    "id": "20231",
+    "name": "Toad Lord",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20232",
+    "name": "Marsh Stakato Soldier",
+    "archetype": "insect"
+  },
+  {
+    "id": "20233",
+    "name": "Marsh Spider",
+    "archetype": "insect"
+  },
+  {
+    "id": "20199",
+    "name": "Amber Basilisk",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20267",
+    "name": "Breka Orc",
+    "archetype": "orc"
+  },
+  {
+    "id": "20268",
+    "name": "Breka Orc Archer",
+    "archetype": "orc"
+  },
+  {
+    "id": "20271",
+    "name": "Breka Orc Warrior",
+    "archetype": "orc"
+  },
+  {
+    "id": "20269",
+    "name": "Breka Orc Shaman",
+    "archetype": "orc"
+  },
+  {
+    "id": "20270",
+    "name": "Breka Orc Overlord",
+    "archetype": "orc"
+  },
+  {
+    "id": "20928",
+    "name": "Hatu Weird Bee",
+    "archetype": "insect"
+  },
+  {
+    "id": "20929",
+    "name": "Hatu Dire Wolf",
+    "archetype": "beast"
+  },
+  {
+    "id": "20930",
+    "name": "Hatu Brown Bear",
+    "archetype": "beast"
+  },
+  {
+    "id": "20934",
+    "name": "Wasp Worker",
+    "archetype": "insect"
+  },
+  {
+    "id": "20931",
+    "name": "Hatu Onyx Beast",
+    "archetype": "beast"
+  },
+  {
+    "id": "20935",
+    "name": "Wasp Leader",
+    "archetype": "insect"
+  },
+  {
+    "id": "21238",
+    "name": "Grave Sentinel",
+    "archetype": "undead"
+  },
+  {
+    "id": "21239",
+    "name": "Grave Monk",
+    "archetype": "undead"
+  },
+  {
+    "id": "21145",
+    "name": "Catacomb Stakato Soldier",
+    "archetype": "insect"
+  },
+  {
+    "id": "21172",
+    "name": "Lith Patrolman",
+    "archetype": "bandit"
+  },
+  {
+    "id": "21193",
+    "name": "Gigant Raider",
+    "archetype": "giant"
+  },
+  {
+    "id": "21146",
+    "name": "Grave Keeper Dark Horror",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20789",
+    "name": "Crokian",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20790",
+    "name": "Dailaon",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20791",
+    "name": "Crokian Warrior",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20792",
+    "name": "Farhite",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20786",
+    "name": "Lienrik",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20135",
+    "name": "Alligator",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20555",
+    "name": "Giant Fungus",
+    "archetype": "plant"
+  },
+  {
+    "id": "20556",
+    "name": "Giant Monstereye",
+    "archetype": "demon"
+  },
+  {
+    "id": "20557",
+    "name": "Dire Wyrm",
+    "archetype": "dragon"
+  },
+  {
+    "id": "20558",
+    "name": "Rotting tree",
+    "archetype": "plant"
+  },
+  {
+    "id": "20559",
+    "name": "Rotting Golem",
+    "archetype": "golem"
+  },
+  {
+    "id": "20561",
+    "name": "Trisalim Tarantula",
+    "archetype": "insect"
+  },
+  {
+    "id": "20584",
+    "name": "Timak Orc Archer",
+    "archetype": "orc"
+  },
+  {
+    "id": "20585",
+    "name": "Timak Orc Soldier",
+    "archetype": "orc"
+  },
+  {
+    "id": "20586",
+    "name": "Timak Orc Warrior",
+    "archetype": "orc"
+  },
+  {
+    "id": "20587",
+    "name": "Timak Orc Shaman",
+    "archetype": "orc"
+  },
+  {
+    "id": "20767",
+    "name": "Timak Orc Troop Leader",
+    "archetype": "orc"
+  },
+  {
+    "id": "20588",
+    "name": "Timak Orc Overlord",
+    "archetype": "orc"
+  },
+  {
+    "id": "20564",
+    "name": "Enchanted Monstereye",
+    "archetype": "demon"
+  },
+  {
+    "id": "20565",
+    "name": "Enchanted Stone Golem",
+    "archetype": "golem"
+  },
+  {
+    "id": "20568",
+    "name": "Formor",
+    "archetype": "giant"
+  },
+  {
+    "id": "20569",
+    "name": "Formor Elder",
+    "archetype": "giant"
+  },
+  {
+    "id": "20570",
+    "name": "Tarlk Bugbear",
+    "archetype": "beast"
+  },
+  {
+    "id": "20571",
+    "name": "Tarlk Bugbear Warrior",
+    "archetype": "beast"
+  },
+  {
+    "id": "20794",
+    "name": "Blade Stakato",
+    "archetype": "insect"
+  },
+  {
+    "id": "20796",
+    "name": "Blade Stakato Warrior",
+    "archetype": "insect"
+  },
+  {
+    "id": "20798",
+    "name": "Water Giant",
+    "archetype": "giant"
+  },
+  {
+    "id": "20800",
+    "name": "Eva's Seeker",
+    "archetype": "bandit"
+  },
+  {
+    "id": "20801",
+    "name": "Theeder Piker",
+    "archetype": "bandit"
+  },
+  {
+    "id": "20802",
+    "name": "Theeder Mage",
+    "archetype": "bandit"
+  },
+  {
+    "id": "20836",
+    "name": "Pirate Zombie",
+    "archetype": "undead"
+  },
+  {
+    "id": "20840",
+    "name": "Death Flyer",
+    "archetype": "undead"
+  },
+  {
+    "id": "20841",
+    "name": "Fiend Archer",
+    "archetype": "demon"
+  },
+  {
+    "id": "21619",
+    "name": "Pit Archer",
+    "archetype": "bandit"
+  },
+  {
+    "id": "20846",
+    "name": "Doll Blader",
+    "archetype": "golem"
+  },
+  {
+    "id": "21634",
+    "name": "Crimson Doll Blader",
+    "archetype": "golem"
+  },
+  {
+    "id": "20681",
+    "name": "Vanor Silenos",
+    "archetype": "beast"
+  },
+  {
+    "id": "20682",
+    "name": "Vanor Silenos Grunt",
+    "archetype": "beast"
+  },
+  {
+    "id": "20683",
+    "name": "Vanor Silenos Scout",
+    "archetype": "beast"
+  },
+  {
+    "id": "20684",
+    "name": "Vanor Silenos Warrior",
+    "archetype": "beast"
+  },
+  {
+    "id": "20685",
+    "name": "Vanor Silenos Shaman",
+    "archetype": "beast"
+  },
+  {
+    "id": "20686",
+    "name": "Vanor Silenos Chieftain",
+    "archetype": "beast"
+  },
+  {
+    "id": "21261",
+    "name": "Ol Mahum Transcender",
+    "archetype": "beast"
+  },
+  {
+    "id": "20574",
+    "name": "Elder Tarlk Basilisk",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "20241",
+    "name": "Hunter Gargoyle",
+    "archetype": "dragon"
+  },
+  {
+    "id": "20161",
+    "name": "Oel Mahum",
+    "archetype": "beast"
+  },
+  {
+    "id": "20575",
+    "name": "Oel Mahum Warrior",
+    "archetype": "beast"
+  },
+  {
+    "id": "20576",
+    "name": "Oel Mahum Witch Doctor",
+    "archetype": "beast"
+  },
+  {
+    "id": "20675",
+    "name": "Tairim",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20996",
+    "name": "Spiteful Ghost of Ruins",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20997",
+    "name": "Soldier of Grief",
+    "archetype": "undead"
+  },
+  {
+    "id": "20678",
+    "name": "Tortured Undead",
+    "archetype": "undead"
+  },
+  {
+    "id": "21000",
+    "name": "Soul of Ruins",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20669",
+    "name": "Taik Orc Supply Leader",
+    "archetype": "orc"
+  },
+  {
+    "id": "21001",
+    "name": "Wretched Archer",
+    "archetype": "undead"
+  },
+  {
+    "id": "21004",
+    "name": "Dismal Pole",
+    "archetype": "undead"
+  },
+  {
+    "id": "21005",
+    "name": "Grave Predator",
+    "archetype": "undead"
+  },
+  {
+    "id": "21006",
+    "name": "Doom Servant",
+    "archetype": "undead"
+  },
+  {
+    "id": "21009",
+    "name": "Doom Trooper",
+    "archetype": "undead"
+  },
+  {
+    "id": "20974",
+    "name": "Spiteful Soul Leader",
+    "archetype": "spirit"
+  },
+  {
+    "id": "21521",
+    "name": "Claws of Splendor",
+    "archetype": "spirit"
+  },
+  {
+    "id": "21523",
+    "name": "Flash of Splendor",
+    "archetype": "spirit"
+  },
+  {
+    "id": "21524",
+    "name": "Blade of Splendor",
+    "archetype": "spirit"
+  },
+  {
+    "id": "21526",
+    "name": "Wisdom of Splendor",
+    "archetype": "spirit"
+  },
+  {
+    "id": "21537",
+    "name": "Fang of Splendor",
+    "archetype": "spirit"
+  },
+  {
+    "id": "21539",
+    "name": "Wailing of Splendor",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20815",
+    "name": "Hound Dog of Hallate",
+    "archetype": "beast"
+  },
+  {
+    "id": "20818",
+    "name": "Hallate's Warrior",
+    "archetype": "demon"
+  },
+  {
+    "id": "20821",
+    "name": "Erin Ediunce",
+    "archetype": "spirit"
+  },
+  {
+    "id": "20824",
+    "name": "Hallate's Commander",
+    "archetype": "demon"
+  },
+  {
+    "id": "21066",
+    "name": "Platinum Guardian Shaman",
+    "archetype": "bandit"
+  },
+  {
+    "id": "21069",
+    "name": "Platinum Guardian Prefect",
+    "archetype": "bandit"
+  },
+  {
+    "id": "21108",
+    "name": "Glow Wisp",
+    "archetype": "spirit"
+  },
+  {
+    "id": "21109",
+    "name": "Hames Orc Scout",
+    "archetype": "orc"
+  },
+  {
+    "id": "21110",
+    "name": "Marsh Predator",
+    "archetype": "beast"
+  },
+  {
+    "id": "21111",
+    "name": "Lava Wyrm",
+    "archetype": "dragon"
+  },
+  {
+    "id": "21112",
+    "name": "Hames Orc Footman",
+    "archetype": "orc"
+  },
+  {
+    "id": "21113",
+    "name": "Hames Orc Sniper",
+    "archetype": "orc"
+  },
+  {
+    "id": "21510",
+    "name": "Splinter Stakato Soldier",
+    "archetype": "insect"
+  },
+  {
+    "id": "21511",
+    "name": "Splinter Stakato Drone",
+    "archetype": "insect"
+  },
+  {
+    "id": "21513",
+    "name": "Needle Stakato",
+    "archetype": "insect"
+  },
+  {
+    "id": "21514",
+    "name": "Needle Stakato Worker",
+    "archetype": "insect"
+  },
+  {
+    "id": "21515",
+    "name": "Needle Stakato Soldier",
+    "archetype": "insect"
+  },
+  {
+    "id": "21516",
+    "name": "Needle Stakato Drone",
+    "archetype": "insect"
+  },
+  {
+    "id": "21315",
+    "name": "Hot Springs Buffalo",
+    "archetype": "beast"
+  },
+  {
+    "id": "21314",
+    "name": "Hot Springs Bandersnatchling",
+    "archetype": "beast"
+  },
+  {
+    "id": "21318",
+    "name": "Hot Springs Antelope",
+    "archetype": "beast"
+  },
+  {
+    "id": "21316",
+    "name": "Hot Springs Flava",
+    "archetype": "beast"
+  },
+  {
+    "id": "21320",
+    "name": "Hot Springs Yeti",
+    "archetype": "giant"
+  },
+  {
+    "id": "21319",
+    "name": "Hot Springs Nepenthes",
+    "archetype": "plant"
+  },
+  {
+    "id": "21295",
+    "name": "Canyon Antelope Slave",
+    "archetype": "beast"
+  },
+  {
+    "id": "21296",
+    "name": "Canyon Bandersnatch",
+    "archetype": "beast"
+  },
+  {
+    "id": "21308",
+    "name": "Disciples of Punishment",
+    "archetype": "bandit"
+  },
+  {
+    "id": "21309",
+    "name": "Disciples of Punishment",
+    "archetype": "bandit"
+  },
+  {
+    "id": "21310",
+    "name": "Disciples of Authority",
+    "archetype": "bandit"
+  },
+  {
+    "id": "21311",
+    "name": "Disciples of Authority",
+    "archetype": "bandit"
+  },
+  {
+    "id": "21253",
+    "name": "Crypt Preacher",
+    "archetype": "undead"
+  },
+  {
+    "id": "21162",
+    "name": "Lesser Ancient Scout",
+    "archetype": "demon"
+  },
+  {
+    "id": "21184",
+    "name": "Lilim Slayer",
+    "archetype": "demon"
+  },
+  {
+    "id": "21205",
+    "name": "Nephilim Royal Guard",
+    "archetype": "demon"
+  },
+  {
+    "id": "21254",
+    "name": "Tomb Guard",
+    "archetype": "undead"
+  },
+  {
+    "id": "21163",
+    "name": "Lesser Ancient Shaman",
+    "archetype": "demon"
+  },
+  {
+    "id": "21332",
+    "name": "Ketra Orc Lieutenant",
+    "archetype": "orc"
+  },
+  {
+    "id": "21333",
+    "name": "Grazing Windsus",
+    "archetype": "beast"
+  },
+  {
+    "id": "21330",
+    "name": "Grazing Buffalo",
+    "archetype": "beast"
+  },
+  {
+    "id": "21345",
+    "name": "Ketra's Head Shaman",
+    "archetype": "orc"
+  },
+  {
+    "id": "21334",
+    "name": "Ketra Orc Medium",
+    "archetype": "orc"
+  },
+  {
+    "id": "21335",
+    "name": "Ketra Orc Elite Soldier",
+    "archetype": "orc"
+  },
+  {
+    "id": "18346",
+    "name": "Sprigant",
+    "archetype": "plant"
+  },
+  {
+    "id": "18345",
+    "name": "Sprigant",
+    "archetype": "plant"
+  },
+  {
+    "id": "22198",
+    "name": "Velociraptor",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "22219",
+    "name": "Ornithomimus",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "22223",
+    "name": "Velociraptor",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "22218",
+    "name": "Velociraptor",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "22673",
+    "name": "Hirokai",
+    "archetype": "giant"
+  },
+  {
+    "id": "22661",
+    "name": "Lesser Giant Soldier",
+    "archetype": "giant"
+  },
+  {
+    "id": "22665",
+    "name": "Lesser Giant Elder",
+    "archetype": "giant"
+  },
+  {
+    "id": "22664",
+    "name": "Lesser Giant Mage",
+    "archetype": "giant"
+  },
+  {
+    "id": "22663",
+    "name": "Lesser Giant Scout",
+    "archetype": "giant"
+  },
+  {
+    "id": "22662",
+    "name": "Lesser Giant Shooter",
+    "archetype": "giant"
+  },
+  {
+    "id": "22387",
+    "name": "Foundry Mystic",
+    "archetype": "bandit"
+  },
+  {
+    "id": "22373",
+    "name": "Cosmic Scout",
+    "archetype": "bandit"
+  },
+  {
+    "id": "22383",
+    "name": "Tully's Toy",
+    "archetype": "golem"
+  },
+  {
+    "id": "22385",
+    "name": "Tully's Golem Guard",
+    "archetype": "golem"
+  },
+  {
+    "id": "22370",
+    "name": "Passageway Captain",
+    "archetype": "bandit"
+  },
+  {
+    "id": "22374",
+    "name": "Cosmic Watcher",
+    "archetype": "bandit"
+  },
+  {
+    "id": "22782",
+    "name": "Sel Mahum Recruit",
+    "archetype": "beast"
+  },
+  {
+    "id": "22780",
+    "name": "Sel Mahum Recruit",
+    "archetype": "beast"
+  },
+  {
+    "id": "22784",
+    "name": "Sel Mahum Recruit",
+    "archetype": "beast"
+  },
+  {
+    "id": "22787",
+    "name": "Sel Mahum Squad Leader",
+    "archetype": "beast"
+  },
+  {
+    "id": "22783",
+    "name": "Sel Mahum Soldier",
+    "archetype": "beast"
+  },
+  {
+    "id": "22786",
+    "name": "Sel Mahum Squad Leader",
+    "archetype": "beast"
+  },
+  {
+    "id": "22650",
+    "name": "Mucrokian Fanatic",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "22651",
+    "name": "Mucrokian Ascetic",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "22658",
+    "name": "Sentinel Waterspirit",
+    "archetype": "spirit"
+  },
+  {
+    "id": "22659",
+    "name": "Guardian Waterspirit",
+    "archetype": "spirit"
+  },
+  {
+    "id": "22653",
+    "name": "Mucrokian Preacher",
+    "archetype": "lizardman"
+  },
+  {
+    "id": "22652",
+    "name": "Mucrokian Savior",
+    "archetype": "lizardman"
+  }
+]

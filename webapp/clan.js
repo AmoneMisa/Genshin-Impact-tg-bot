@@ -1,3 +1,4 @@
+import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldArtUrl } from './art/world-art.js';
 const REASONS = {
@@ -278,12 +279,12 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       <section class="clan-section clan-activities">
         <h4>Клановые навыки</h4>
         <p class="clan-motto">Навык изучается за золото, репутацию и яйца из хранилища (яйца выпадают с эпических боссов). Бонус получают все участники клана${skills.canManage ? '.' : '; изучают глава и офицеры.'}</p>
-        <div class="clan-warehouse">${skills.eggs.map(egg => `<article><span>🥚</span><strong>${egg.count}</strong><small>${escapeHtml(egg.name)}</small></article>`).join('')}</div>
+        <div class="clan-warehouse">${skills.eggs.map(egg => `<article><span>${materialIcon(egg.key,'🥚')}</span><strong>${egg.count}</strong><small>${escapeHtml(egg.name)}</small></article>`).join('')}</div>
         ${skills.skills.map(skill => `
           <article class="clan-card">
             <h4>${escapeHtml(skill.name)} · ${skill.level} / ${skill.maxLevel}</h4>
             <small>${escapeHtml(skill.stat)}: +${percent(skill.perLevel * skill.level, skill.perLevel < 1)}${skill.level < skill.maxLevel ? ` → +${percent(skill.perLevel * (skill.level + 1), skill.perLevel < 1)}` : ''}</small>
-            ${skill.cost ? `<small>Нужно: ${skill.cost.clanLevel} ур. клана · ✦ ${formatNumber(skill.cost.reputation)} · 🪙 ${formatNumber(skill.cost.gold)} · 🥚 ${skill.cost.eggs} (${escapeHtml(skill.cost.eggName)})</small>
+            ${skill.cost ? `<small>Нужно: ${skill.cost.clanLevel} ур. клана · ✦ ${formatNumber(skill.cost.reputation)} · 🪙 ${formatNumber(skill.cost.gold)} · ${materialIcon(skill.cost.egg,'🥚')} ${skill.cost.eggs} (${escapeHtml(skill.cost.eggName)})</small>
             ${skills.canManage ? `<button type="button" class="clan-play" data-clan-skill="${escapeHtml(skill.id)}" ${skill.canLearn ? '' : 'disabled'}>Изучить</button>` : ''}` : ''}
           </article>`).join('')}
       </section>`;

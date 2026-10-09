@@ -224,3 +224,5 @@
 .chest-panel:has(.chest-reveal:not([hidden])) { min-height: min(620px, 88vh); }
 
 .chest-reveal { background-color: #08070c; }
+
+.chest-art-fallback[hidden] { display: none; }
