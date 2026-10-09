@@ -133,3 +133,25 @@ jobs:
           package-type: container
           # The newest builds stay available for rollback; latest is always one of them.
           min-versions-to-keep: 10
+
+  deploy:
+    # Only pushes to master deploy; manual runs of the workflow build and test but do not ship.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs: image
+    environment: Production
+    steps:
+      - name: Pull the new image and restart the bot on the server
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Trust-on-first-use: the host key is fetched on each run. Pin it under a
+          # secret/variable if you want a hard check.
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "$DEPLOY_USER@$DEPLOY_HOST" \
+            'cd /opt/genshin-bot && docker compose pull bot && docker compose up -d bot && docker compose ps bot'
