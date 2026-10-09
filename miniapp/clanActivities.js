@@ -4,6 +4,7 @@ import addClanXp from '../functions/game/clans/addClanXp.js';
 import summonClanBoss from '../functions/game/clans/summonClanBoss.js';
 import clanBossAttack from '../functions/game/clans/clanBossAttack.js';
 import giveClanShopPotion from '../functions/game/clans/giveClanShopPotion.js';
+import { addMaterial } from '../functions/game/player/materials.js';
 import getBuildingBonus from '../functions/game/clans/getBuildingBonus.js';
 import getInvestigationBonus from '../functions/game/clans/getInvestigationBonus.js';
 import clanShop from '../dictionaries/clanShop.js';
@@ -222,7 +223,8 @@ export function buyClanShopItem(clan, playerSession, userId, itemKey, options = 
 
   const warehouse = normalizeWarehouse(clan);
   if (!canAffordCost(warehouse, item.cost)) return { ok: false, reason: 'warehouse_insufficient' };
-  if (!giveClanShopPotion(playerSession, item.potion)) return { ok: false, reason: 'shop_delivery_failed' };
+  const delivered = item.material ? addMaterial(playerSession, item.material.key, item.material.amount || 1) > 0 : giveClanShopPotion(playerSession, item.potion);
+  if (!delivered) return { ok: false, reason: 'shop_delivery_failed' };
 
   for (const [resource, amount] of Object.entries(item.cost)) {
     warehouse[resource] = number(warehouse[resource]) - number(amount);

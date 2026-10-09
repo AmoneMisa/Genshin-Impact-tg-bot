@@ -43,3 +43,19 @@ export const ATTRIBUTE_TIERS = Object.freeze([
 export const ATTRIBUTE_GRADES = Object.freeze(['B', 'A', 'S', 'S80', 'S84']);
 
 export const attributeKey = (tier, element) => `attr_${tier}_${element}`;
+
+/**
+ * Where Life Stones are sold, as in Lineage II: mid stones in the gold shop up to grade S (level 78),
+ * high stones in the clan shop up to S80, top stones in the Donate shop up to S84. Prices by grade.
+ */
+export const LIFESTONE_SHOP = Object.freeze({
+    mid: Object.freeze({C: 7500, B: 22500, A: 67500, S: 180000}),
+    high: Object.freeze({
+        C: Object.freeze({gold: 30000, crystals: 15}),
+        B: Object.freeze({gold: 60000, crystals: 30}),
+        A: Object.freeze({gold: 150000, crystals: 60}),
+        S: Object.freeze({gold: 350000, crystals: 100}),
+        S80: Object.freeze({gold: 700000, crystals: 160}),
+    }),
+    top: Object.freeze({C: 4, B: 6, A: 10, S: 18, S80: 28, S84: 40}),
+});

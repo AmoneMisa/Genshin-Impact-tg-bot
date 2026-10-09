@@ -172,3 +172,42 @@ test('base stats: gear points feed attack, hp and cooldowns like Lineage II, and
   assert.equal(state[0].total, 44);
   assert.equal(state[0].bonus, 4);
 });
+
+import { buyClanShopItem } from '../miniapp/clanActivities.js';
+import { buyLuckItem } from '../miniapp/luck.js';
+import { getMaterialCount } from '../functions/game/player/materials.js';
+import { LIFESTONE_SHOP } from '../template/augmentData.js';
+import clanShop from '../dictionaries/clanShop.js';
+import luckShop from '../template/luckShop.js';
+import shopTemplate from '../template/shopTemplate.js';
+
+test('Life Stones are sold by quality: mid in the gold shop (to S), high in the clan shop (to S80), top for coins (to S84)', async () => {
+  assert.deepEqual(Object.keys(LIFESTONE_SHOP.mid), ['C', 'B', 'A', 'S']);
+  assert.deepEqual(Object.keys(LIFESTONE_SHOP.high), ['C', 'B', 'A', 'S', 'S80']);
+  assert.deepEqual(Object.keys(LIFESTONE_SHOP.top), ['C', 'B', 'A', 'S', 'S80', 'S84']);
+  assert.equal(shopTemplate.filter(item => item.command.startsWith('lifestoneMid-')).length, 4);
+
+  // The purchase itself goes through shopSellItem (it looks the buyer's name up in the database).
+  const mid = shopTemplate.find(item => item.command === 'lifestoneMid-S');
+  assert.deepEqual(mid.material, { key: lifestoneKey('S', 'mid'), amount: 1 });
+  assert.equal(mid.cost, LIFESTONE_SHOP.mid.S);
+  assert.equal(mid.category, 'stones');
+
+  const clan = { owner: 1, level: 5, warehouse: { gold: 10_000_000, crystals: 1000 }, members: [{ userId: 1, role: 'owner' }] };
+  const member = { game: { inventory: { materials: {} } } };
+  const key = 'lifestone-high-S80';
+  assert.ok(clanShop.some(item => item.key === key));
+  assert.ok(!clanShop.some(item => item.key === 'lifestone-high-S84'));
+  const got = buyClanShopItem(clan, member, 1, key, { now: 1_000 });
+  assert.equal(got.ok, true);
+  assert.equal(getMaterialCount(member, lifestoneKey('S80', 'high')), 1);
+  assert.equal(clan.warehouse.gold, 10_000_000 - LIFESTONE_SHOP.high.S80.gold);
+  assert.equal(clan.warehouse.crystals, 1000 - LIFESTONE_SHOP.high.S80.crystals);
+
+  const donor = { userId: 1, game: { stats: { lvl: 90 }, inventory: { luckCoins: 100, materials: {}, equipment: { items: [] } } } };
+  assert.ok(luckShop.some(item => item.id === 'lifestone-top-S84'));
+  const paid = buyLuckItem(donor, 'lifestone-top-S84');
+  assert.equal(paid.ok, true);
+  assert.equal(getMaterialCount(donor, lifestoneKey('S84', 'top')), 1);
+  assert.equal(donor.game.inventory.luckCoins, 100 - LIFESTONE_SHOP.top.S84);
+});

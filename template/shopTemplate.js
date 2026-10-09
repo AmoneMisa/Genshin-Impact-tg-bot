@@ -1,5 +1,15 @@
 import buffPotions from './buffPotions.js';
+import {LIFESTONE_SHOP, lifestoneKey} from './augmentData.js';
+
+// Mid Life Stones (Lineage II sells them up to level 78, grade S); one of each a day.
+const midLifeStones = Object.entries(LIFESTONE_SHOP.mid).map(([grade, cost]) => ({
+    name: `Камень жизни: средний (${grade})`, cost, time: 1, command: `lifestoneMid-${grade}`, category: 'stones',
+    material: {key: lifestoneKey(grade, 'mid'), amount: 1},
+    message: `ты получил средний камень жизни (${grade}). Он нужен для аугментации оружия и бижутерии в кузнице.`,
+}));
+
 export default [
+    ...midLifeStones,
     ...buffPotions.map(p=>({name:p.name,cost:p.cost,time:1,command:'potionBuff-'+p.id,potionId:p.id,message:'ты получил '+p.name+'. Используй его в инвентаре.',category:'player'})),
     {name: "Иммунитет к уменьшению меча", cost: 3800, time: 1, command: "swordImmune", message: "ты получил одноразовый иммунитет к уменьшению меча", category: "sword"},
     {name: "Увеличить меч на 25 мм", cost: 5000, time: 1, command: "swordAddMm", message: "ты увеличил свой меч на 25 мм!", category: "sword"},

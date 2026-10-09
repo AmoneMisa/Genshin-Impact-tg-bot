@@ -1,4 +1,5 @@
 import buffPotions from '../template/buffPotions.js';
+import { LIFESTONE_SHOP, lifestoneKey } from '../template/augmentData.js';
 
 /**
  * Clan shop catalogue.
@@ -30,6 +31,13 @@ export default [
         cost: { gold: 3500 }
     },
     // Lineage II style buff potions (20 minutes), see template/buffPotions.js.
+    // High Life Stones (Lineage II sells them up to level 80, grade S80): delivered as a material.
+    ...Object.entries(LIFESTONE_SHOP.high).map(([grade, cost]) => ({
+        key: "lifestone-high-" + grade,
+        label: `Камень жизни: высокий (${grade})`,
+        material: { key: lifestoneKey(grade, 'high'), amount: 1 },
+        cost: { ...cost }
+    })),
     ...buffPotions.map(potion => ({
         key: "buff-" + potion.id,
         label: potion.name,

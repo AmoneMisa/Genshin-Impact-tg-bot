@@ -331,4 +331,9 @@ export default {
   'Эпические предметы нельзя аугментировать.': "Epik buyumlarni augmentatsiya qilib bo'lmaydi.",
   'Этот камень не усиливает атрибут дальше. Нужен камень посильнее.': "Bu tosh atributni boshqa kuchaytirmaydi. Kuchliroq tosh kerak.",
   'Ясность': "Ravshanlik",
+  'Аугментация оружия и бижутерии грейда {0}; у оружия — навык с шансом 80%': "{0} darajadagi qurol va taqinchoqlarni augmentatsiya qilish; qurolda 80% ehtimol bilan ko'nikma",
+  'Камень жизни: высокий ({0})': "Hayot toshi: yuqori ({0})",
+  'Камень жизни: средний ({0})': "Hayot toshi: o'rta ({0})",
+  'Камни жизни': "Hayot toshlari",
+  'ты получил средний камень жизни ({0}). Он нужен для аугментации оружия и бижутерии в кузнице.': "sen o'rta hayot toshini ({0}) oldin. U temirchilikda qurol va taqinchoqlarni augmentatsiya qilish uchun kerak.",
 };

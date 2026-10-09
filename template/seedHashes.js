@@ -20,5 +20,5 @@ export default {
     materials: 'ee48acfa02c16659898a4905ce28d826ea75c011',
     potions: '5fa80eee2a5056a6bff07cef79b3bcc29d019df6',
     pvpSign: '3d59ea38a7317f5aa8410df1fa1002c5903033d6',
-    shop: '2f861134e17b0d1a1cae44f9894e76dee4445145',
+    shop: '2a45f77e86218ec9bf2634a33a971d691dee4f58',
 };

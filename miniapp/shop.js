@@ -7,6 +7,7 @@ const CATEGORY_LABELS = {
   sword: 'Для меча',
   misc: 'Разное',
   builds: 'Для построек',
+  stones: 'Камни жизни',
 };
 
 function number(value, fallback = 0) {

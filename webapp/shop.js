@@ -9,6 +9,7 @@ export const ITEM_ICONS = Object.freeze({
   potionHp1000: '🧪', potionHp3000: '🧪', potionHp8000: '🧪',
   potionMp180: '🧪', potionMp300: '🧪',
   chestAddTry: '🧰', palaceChangeName: '📜',
+  ...Object.fromEntries(['C', 'B', 'A', 'S'].map(grade => [`lifestoneMid-${grade}`, '🔮'])),
 });
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 

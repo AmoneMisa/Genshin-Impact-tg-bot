@@ -3,6 +3,7 @@ import potionsInInventoryTemplate from "../../../template/potionsInInventoryTemp
 import getOffsetToDay from "../../getters/getOffsetToDay.js";
 import getOffset from "../../getters/getOffset.js";
 import getUserName from "../../getters/getUserName.js";
+import { addMaterial } from "../player/materials.js";
 
 function getPotionCharacteristics(command) {
     const match = command.match(/^(potion|elixir)(Hp|Mp)(\d+)$/);
@@ -79,6 +80,9 @@ async function check(session, command, item, isDaily) {
     } else if (command.includes("swordAddTry")) {
         session.timerSwordCallback = 0;
         updateShopTimer(session, command, true);
+    } else if (item.material) {
+        addMaterial(session, item.material.key, item.material.amount || 1);
+        updateShopTimer(session, command, true);
     } else if (item.potionId) {
         const definition=potionsInInventoryTemplate.find(p=>p.id===item.potionId);
         if(!definition)return 'Зелье недоступно.';
@@ -118,6 +122,6 @@ export default async function buyItem(session, command, item) {
         return `${await getUserName(session, "nickname")}, сначала нужно обзавестись золотишком, чтобы что-то купить.`;
     }
 
-    const isPotion = command.includes("potion") || command.includes("elixir");
+    const isPotion = command.includes("potion") || command.includes("elixir") || Boolean(item.material);
     return check(session, command, item, isPotion);
 }

@@ -12,9 +12,11 @@
 import buffPotions from './buffPotions.js';
 import elixirs from './elixirs.js';
 import materials from './materialsTemplate.js';
+import { LIFESTONE_SHOP, lifestoneKey } from './augmentData.js';
 
 export const LUCK_SHOP_GROUPS = Object.freeze([
   { id: 'epic', title: 'Временные эпики' },
+  { id: 'lifestones', title: 'Камни жизни' },
   { id: 'scrolls', title: 'Свитки' },
   { id: 'elixirs', title: 'Эликсиры' },
   { id: 'craft', title: 'Материалы ковки' },
@@ -67,7 +69,14 @@ const craftItems = CRAFT_BUNDLES.map(({ grade, each, ironOre, cost }) => ({
   },
 }));
 
+// Top Life Stones (Lineage II: up to level 84, grade S84).
+const lifeStoneItems = Object.entries(LIFESTONE_SHOP.top).map(([grade, cost]) => ({
+  id: `lifestone-top-${grade}`, group: 'lifestones', title: materialName(lifestoneKey(grade, 'top')), icon: '🔮',
+  subtitle: `Аугментация оружия и бижутерии грейда ${grade}; у оружия — навык с шансом 80%`, cost, grant: { materials: { [lifestoneKey(grade, 'top')]: 1 } },
+}));
+
 export default Object.freeze([
+  ...lifeStoneItems,
   ...scrolls,
   ...elixirItems,
   ...craftItems,
