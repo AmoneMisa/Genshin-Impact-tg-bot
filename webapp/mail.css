@@ -30,7 +30,7 @@
 
 /* Coin of Luck icon next to numbers and labels. */
 .luck-coin-icon { display: inline-block; vertical-align: -0.2em; object-fit: contain; }
-.top-res > .luck-coin-icon { justify-self: center; }
+.top-res > .luck-coin-icon { justify-self: center; width: 30px; height: 30px; }
 .ex-pack .ex-pack-crystals .luck-coin-icon { width: 26px; height: 26px; }
 .ex-first .luck-coin-icon, .ex-shield .luck-coin-icon { width: 16px; height: 16px; }
 .exchange-buy .luck-coin-icon { width: 18px; height: 18px; margin-right: 4px; }

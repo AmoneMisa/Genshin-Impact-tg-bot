@@ -62,6 +62,9 @@ export function renderPlayerHud({ state, getElement, formatNumber }) {
     const fill = getElement('vit-fill');
     if (text) text.textContent = `x${Math.round(vitality.rate * vitality.bonus * 10) / 10} · ${formatNumber(vitality.points)}`;
     if (fill) fill.style.width = `${percent(vitality.points, vitality.max)}%`;
+    // Three charges light up with the bar stage: 1-2 one, 3 two, 4 (x3) all three.
+    const lit = [0, 1, 1, 2, 3][vitality.stage] || 0;
+    getElement('vit-cells')?.querySelectorAll('i').forEach((cell, index) => cell.classList.toggle('on', index < lit));
   }
 
   setText('sp-text', formatNumber(player.sp));

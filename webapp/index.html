@@ -60,31 +60,33 @@
   <div class="noise" aria-hidden="true"></div>
   <main id="app" class="app-shell">
     <header class="top-hud" aria-label="Состояние персонажа">
-      <div class="top-hud-hero">
-        <div class="hero-portrait-shell top-portrait" data-open-feature="profile" role="button" tabindex="0" aria-label="Персонаж"><span id="class-sigil" class="hero-sigil">◇</span><span class="top-level" id="level">1</span></div>
-        <div class="top-hud-stats">
-          <div class="top-hud-name"><strong id="hello">Загрузка…</strong><small id="class-name">Путешественник</small></div>
+      <div class="th-frame">
+        <div class="th-id">
+          <div class="hero-portrait-shell top-portrait" data-open-feature="profile" role="button" tabindex="0" aria-label="Персонаж"><span id="class-sigil" class="hero-sigil">◇</span></div>
+          <div class="th-level" id="level" aria-label="Уровень">1</div>
+          <div class="th-name"><strong id="hello">Загрузка…</strong><div class="th-sub"><small id="class-name">Путешественник</small><span class="th-sp" aria-label="SP">SP <b id="sp-text">0</b></span></div></div>
+          <div class="th-btns">
+            <button type="button" class="top-icon" data-open-feature="mail" aria-label="Почта"><img class="ui-icon ui-icon-mail" src="/art/ui/v1/mail-128.webp" srcset="/art/ui/v1/mail-128.webp 1x, /art/ui/v1/mail-256.webp 2x" width="22" height="22" alt="" aria-hidden="true"></button>
+            <button type="button" class="top-icon" data-nav-jump="more" aria-label="Настройки"><img class="ui-icon ui-icon-settings" src="/art/ui/v1/settings-128.webp" srcset="/art/ui/v1/settings-128.webp 1x, /art/ui/v1/settings-256.webp 2x" width="22" height="22" alt="" aria-hidden="true"></button>
+            <button id="fullscreen" type="button" class="top-icon" aria-label="Полный экран"><img class="ui-icon ui-icon-maximize" src="/art/ui/v1/maximize-128.webp" srcset="/art/ui/v1/maximize-128.webp 1x, /art/ui/v1/maximize-256.webp 2x" width="22" height="22" alt="" aria-hidden="true"></button>
+          </div>
+        </div>
+        <div class="th-bars">
+          <div class="top-bar cp"><span>CP</span><div class="top-bar-track"><i id="cp-fill"></i><b id="cp-text">0 / 1</b></div></div>
           <div class="top-bar hp"><span>HP</span><div class="top-bar-track"><i id="hp-fill"></i><b id="hp-text">0 / 1</b></div></div>
           <div class="top-bar mp"><span>MP</span><div class="top-bar-track"><i id="mp-fill"></i><b id="mp-text">0 / 1</b></div></div>
-          <div class="top-bar cp"><span>CP</span><div class="top-bar-track"><i id="cp-fill"></i><b id="cp-text">0 / 1</b></div></div>
-          <div class="top-bar sp"><span>SP</span><div class="top-bar-track"><i style="width:100%"></i><b id="sp-text">0</b></div></div>
-          <div class="top-bar exp"><span>EXP</span><div class="top-bar-track"><i id="xp-fill"></i><b id="xp-text">0 / 1</b></div></div>
-          <div class="top-bar vit"><span>VIT</span><div class="top-bar-track"><i id="vit-fill"></i><b id="vit-text">x5</b></div></div>
         </div>
-      </div>
-      <div class="top-hud-side">
         <div class="top-resources">
-          <div class="top-res"><img class="ui-icon ui-icon-coin" src="/art/ui/v1/coin-128.webp" srcset="/art/ui/v1/coin-128.webp 1x, /art/ui/v1/coin-256.webp 2x" width="16" height="16" alt="" aria-hidden="true"><strong id="gold" aria-label="Мора">0</strong><button type="button" class="resource-plus" data-open-feature="shop" aria-label="Пополнить: Мора">+</button></div>
-          <div class="top-res"><img class="ui-icon ui-icon-gem" src="/art/ui/v1/crystal-128.webp" srcset="/art/ui/v1/crystal-128.webp 1x, /art/ui/v1/crystal-256.webp 2x" width="16" height="16" alt="" aria-hidden="true"><strong id="crystals" aria-label="Кристаллы">0</strong><button type="button" class="resource-plus" data-open-feature="exchange" aria-label="Пополнить: Кристаллы">+</button></div>
-          <div class="top-res"><img class="luck-coin-icon" src="/art/world/v1/currency/luck-coin-128.webp" width="16" height="16" alt="" aria-hidden="true"><strong id="luck-coins" aria-label="Монеты удачи">0</strong><button type="button" class="resource-plus" data-open-feature="luckShop" aria-label="Пополнить: Монеты удачи">+</button></div>
-          <div class="top-res"><img class="ui-icon ui-icon-pickaxe" src="/art/ui/v1/ore-128.webp" srcset="/art/ui/v1/ore-128.webp 1x, /art/ui/v1/ore-256.webp 2x" width="16" height="16" alt="" aria-hidden="true"><strong id="ore" aria-label="Руда">0</strong><i></i></div>
+          <div class="top-res"><img class="ui-icon ui-icon-coin" src="/art/ui/v1/coin-128.webp" srcset="/art/ui/v1/coin-128.webp 1x, /art/ui/v1/coin-256.webp 2x" width="30" height="30" alt="" aria-hidden="true"><strong id="gold" aria-label="Мора">0</strong><button type="button" class="resource-plus" data-open-feature="shop" aria-label="Пополнить: Мора">+</button></div>
+          <div class="top-res"><img class="ui-icon ui-icon-gem" src="/art/ui/v1/crystal-128.webp" srcset="/art/ui/v1/crystal-128.webp 1x, /art/ui/v1/crystal-256.webp 2x" width="30" height="30" alt="" aria-hidden="true"><strong id="crystals" aria-label="Кристаллы">0</strong><button type="button" class="resource-plus" data-open-feature="exchange" aria-label="Пополнить: Кристаллы">+</button></div>
+          <div class="top-res"><img class="luck-coin-icon" src="/art/world/v1/currency/luck-coin-128.webp" width="30" height="30" alt="" aria-hidden="true"><strong id="luck-coins" aria-label="Монеты удачи">0</strong><button type="button" class="resource-plus" data-open-feature="luckShop" aria-label="Пополнить: Монеты удачи">+</button></div>
+          <div class="top-res"><img class="ui-icon ui-icon-pickaxe" src="/art/ui/v1/ore-128.webp" srcset="/art/ui/v1/ore-128.webp 1x, /art/ui/v1/ore-256.webp 2x" width="30" height="30" alt="" aria-hidden="true"><strong id="ore" aria-label="Руда">0</strong><i></i></div>
         </div>
-        <div class="top-hud-rail">
-          <button type="button" class="top-banner" data-open-feature="clan" aria-label="Клан"><img class="ui-icon ui-icon-trees" src="/art/ui/v1/banner-128.webp" srcset="/art/ui/v1/banner-128.webp 1x, /art/ui/v1/banner-256.webp 2x" width="24" height="24" alt="" aria-hidden="true"><small>Сила<br>в единстве</small></button>
-          <div class="top-icons">
-            <button type="button" class="top-icon" data-open-feature="mail" aria-label="Почта"><img class="ui-icon ui-icon-mail" src="/art/ui/v1/mail-128.webp" srcset="/art/ui/v1/mail-128.webp 1x, /art/ui/v1/mail-256.webp 2x" width="20" height="20" alt="" aria-hidden="true"></button>
-            <button type="button" class="top-icon" data-nav-jump="more" aria-label="Настройки"><img class="ui-icon ui-icon-settings" src="/art/ui/v1/settings-128.webp" srcset="/art/ui/v1/settings-128.webp 1x, /art/ui/v1/settings-256.webp 2x" width="20" height="20" alt="" aria-hidden="true"></button>
-            <button id="fullscreen" type="button" class="top-icon" aria-label="Полный экран"><img class="ui-icon ui-icon-maximize" src="/art/ui/v1/maximize-128.webp" srcset="/art/ui/v1/maximize-128.webp 1x, /art/ui/v1/maximize-256.webp 2x" width="20" height="20" alt="" aria-hidden="true"></button>
+        <div class="th-foot">
+          <div class="th-charges" id="vit-cells" aria-label="Заряды Vitality"><i></i><i></i><i></i></div>
+          <div class="th-thin">
+            <div class="top-bar exp"><span>EXP</span><div class="top-bar-track"><i id="xp-fill"></i><b id="xp-text"></b></div></div>
+            <div class="top-bar vit"><span>VIT</span><div class="top-bar-track"><i id="vit-fill"></i><b id="vit-text"></b></div></div>
           </div>
         </div>
       </div>
