@@ -105,7 +105,8 @@ test('trainee area collection awards experience and clears stored production', (
   assert.equal(result.ok, true);
   assert.equal(result.resourceType, 'experience');
   assert.equal(result.amount, 321);
-  assert.equal(player.game.stats.currentExp, 321);
+  // x5 rate and full Vitality (x3): 321 * 15 = 4815 experience.
+  assert.equal(player.game.stats.currentExp, 4815);
   assert.equal(player.game.builds.traineeArea.resourceCollected, 0);
   assert.equal(player.game.builds.traineeArea.lastCollectAt, 123_456);
 });

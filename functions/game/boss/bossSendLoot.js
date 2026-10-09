@@ -12,6 +12,7 @@ import awardClanEggs from "../clans/awardClanEggs.js";
 import { epicEgg, epicLuckCoins, markEpicKilled, rollEpicJewel, rollEpicWeapon } from "./epicBosses.js";
 import { rollAttributeDrops, rollEnchantDrops } from "../equipment/enchantDrops.js";
 import { normalizeElement } from "../equipment/attributes.js";
+import { gainExp } from "../player/vitality.js";
 import { rollCraftDrops } from "../equipment/craftItem.js";
 import { recordQuestEvent } from "../classes/classQuests.js";
 import { giveBuffPotionDrop } from "./buffPotionDrops.js";
@@ -44,8 +45,8 @@ export default async function(boss, chatId) {
 
         const loot = getBossLoot(boss);
 
-        const expAmount = getExperienceReward(i, loot);
-        member.game.stats.currentExp += expAmount;
+        // x5 rate and Vitality bonus, see functions/game/player/vitality.js
+        const {gained: expAmount} = gainExp(member, getExperienceReward(i, loot));
 
         const gotGold = getGoldReward(i, loot);
         member.game.inventory.gold += gotGold;

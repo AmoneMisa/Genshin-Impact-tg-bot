@@ -86,12 +86,13 @@ test('an immune target is not raided, and a narrow win takes less than a crushin
 }));
 
 test('the exp reward cannot be farmed by hitting far higher-level targets', () => withSeed(6, () => {
-  const near = player('warrior', 90);
+  const near = player('warrior', 80);
   near.game.stats.currentExp = 5_000_000;
   const targetNear = player('warrior', 20);
   const result = stealResources(near, targetNear);
   assert.equal(result.resultCode, 0);
   // Largest term the formula can produce: 9500 + 7.7% of the current exp bar per capped level.
-  assert.ok(result.gainedExp <= 9500 + 5_000_000 * 0.077 * EXP_LEVEL_DIFF_CAP + 1);
-  assert.ok(result.gainedExp >= 9500);
+  // ... times the x5 rate and the best Vitality bonus (x3).
+  assert.ok(result.gainedExp <= (9500 + 5_000_000 * 0.077 * EXP_LEVEL_DIFF_CAP + 1) * 15);
+  assert.ok(result.gainedExp >= 9500 * 5);
 }));

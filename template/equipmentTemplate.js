@@ -16,7 +16,7 @@ export default {
         {name: 'A', label: 'A', cost: 55000, lvl: {from: 61, to: 75}, crystals: 160, scrollGold: 42000},
         {name: 'S', label: 'S', cost: 136000, lvl: {from: 76, to: 79}, crystals: 300, scrollGold: 95000},
         {name: 'S80', label: 'S80', cost: 223000, lvl: {from: 80, to: 83}, crystals: 480, scrollGold: 180000},
-        {name: 'S84', label: 'S84', cost: 1890000, lvl: {from: 84, to: 99}, crystals: 720, scrollGold: 420000}
+        {name: 'S84', label: 'S84', cost: 1890000, lvl: {from: 84, to: 85}, crystals: 720, scrollGold: 420000}
     ],
     rarity: [
         {name: 'break', translatedName: 'Сломано', cost: 50, count: 0},

@@ -1,3 +1,4 @@
+import { clampLevel } from '../game/player/setLevel.js';
 import getBuildFromTemplate from '../game/builds/getBuildFromTemplate.js';
 import lodash from 'lodash';
 import potionsInInventoryTemplate from '../../template/potionsInInventoryTemplate.js';
@@ -146,4 +147,5 @@ export default function (session) {
 
     // Gear from before the Lineage 2 catalog (random stats, SS / SSS grades) becomes catalog items.
     migrateSessionEquipment(session);
+    clampLevel(session);
 }

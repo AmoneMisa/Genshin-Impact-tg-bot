@@ -47,7 +47,22 @@ export function renderPlayerHud({ state, getElement, formatNumber }) {
   meter(getElement, formatNumber, 'hp', player.hp, player.maxHp);
   meter(getElement, formatNumber, 'mp', player.mp, player.maxMp);
   meter(getElement, formatNumber, 'cp', player.cp, player.maxCp);
-  meter(getElement, formatNumber, 'xp', player.currentExp, player.needExp);
+  if (player.maxLevel && player.level >= player.maxLevel) {
+    const text = getElement('xp-text');
+    const fill = getElement('xp-fill');
+    if (text) text.textContent = 'MAX';
+    if (fill) fill.style.width = '100%';
+  } else {
+    meter(getElement, formatNumber, 'xp', player.currentExp, player.needExp);
+  }
+  // Vitality: the bar and the experience multiplier it gives (x5 rate times the stage bonus).
+  const vitality = player.vitality;
+  if (vitality) {
+    const text = getElement('vit-text');
+    const fill = getElement('vit-fill');
+    if (text) text.textContent = `x${Math.round(vitality.rate * vitality.bonus * 10) / 10} · ${formatNumber(vitality.points)}`;
+    if (fill) fill.style.width = `${percent(vitality.points, vitality.max)}%`;
+  }
 
   setText('sp-text', formatNumber(player.sp));
 }

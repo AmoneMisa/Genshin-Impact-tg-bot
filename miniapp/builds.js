@@ -1,3 +1,4 @@
+import { gainExp } from '../functions/game/player/vitality.js';
 import buildsTemplate from '../template/buildsTemplate.js';
 import getBuildFromTemplate from '../functions/game/builds/getBuildFromTemplate.js';
 import calculateUpgradeCosts from '../functions/game/builds/calculateUpgradeCosts.js';
@@ -395,7 +396,7 @@ export function collectBuildResources(session, buildName, now = Date.now()) {
   }
 
   if (resourceType === 'experience') {
-    session.game.stats.currentExp = asNumber(session.game.stats.currentExp) + amount;
+    gainExp(session, amount);
     setLevel(session);
   } else {
     const inventory = getInventory(session);

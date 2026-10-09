@@ -380,6 +380,7 @@
 .top-bar.cp i { background: linear-gradient(180deg, #e8c15a, #a87a22); }
 .top-bar.sp i { background: linear-gradient(180deg, #3fc2a8, #1b6e60); }
 .top-bar.exp i { background: linear-gradient(180deg, #a07ae0, #5b3a9c); }
+.top-bar.vit i { background: linear-gradient(180deg, #5fd6c4, #1f8f86); }
 
 /* Phones: the class sits under the name so the name is never cut to "Wh…". */
 @media (max-width: 429px) {

@@ -1,3 +1,4 @@
+import { gainExp } from '../functions/game/player/vitality.js';
 import getRandom from '../functions/getters/getRandom.js';
 import getValueByChance from '../functions/getters/getValueByChance.js';
 import setLevel from '../functions/game/player/setLevel.js';
@@ -48,7 +49,7 @@ function applyPrize(session, prize, extras = {}) {
       inventory.crystals = (Number(inventory.crystals) || 0) + amount;
       break;
     case 'experience':
-      game.stats.currentExp = (Number(game.stats.currentExp) || 0) + amount;
+      amount = gainExp(session, amount).gained;
       setLevel(session);
       break;
     case 'sword':

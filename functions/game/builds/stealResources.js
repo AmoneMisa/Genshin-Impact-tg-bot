@@ -1,3 +1,4 @@
+import { gainExp } from '../player/vitality.js';
 import playerDamagePlayer, {poolPercent} from "../arena/playerDamagePlayer.js";
 import calculateIncreaseGuardedResources from "./calculateIncreaseGuardedResources.js";
 import buildsTemplate from "../../../template/buildsTemplate.js";
@@ -85,7 +86,7 @@ export default function stealResources(currentUser, targetUser) {
     targetUser.game.stealImmuneTimer = Date.now() + 2 * 60 * 60 * 1000;
 
     // Опыт
-    const gainedExp = Math.ceil(
+    const baseExp = Math.ceil(
         Math.max(
             9500,
             currentUser.game.stats.currentExp * 0.077 *
@@ -93,7 +94,7 @@ export default function stealResources(currentUser, targetUser) {
             9500
         )
     );
-    currentUser.game.stats.currentExp += gainedExp;
+    const {gained: gainedExp} = gainExp(currentUser, baseExp);
     setLevel(currentUser);
 
     return {

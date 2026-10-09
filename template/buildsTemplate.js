@@ -578,12 +578,12 @@ export default {
             {
                 level: 29,
                 buildRequirements: [{name: "palace", level: 18}, {name: "goldMine", level: 23}],
-                characterRequirements: [{lvl: 88}]
+                characterRequirements: [{lvl: 82}]
             },
             {
                 level: 30,
                 buildRequirements: [{name: "palace", level: 19}, {name: "goldMine", level: 25}],
-                characterRequirements: [{lvl: 92}]
+                characterRequirements: [{lvl: 85}]
             }
             // Далее для каждого следующего уровня требуется уровень дворца на 1 больше
         ]

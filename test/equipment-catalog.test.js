@@ -57,7 +57,7 @@ test('the grades are the Lineage 2 ones with contiguous level bands up to the le
     assert.ok(equipmentTemplate.gradeRarity[grade.name], `${grade.name} has a colour tier`);
     assert.ok(equipmentTemplate.rarity.some((rarity) => rarity.name === equipmentTemplate.gradeRarity[grade.name]));
   });
-  assert.equal(equipmentTemplate.grades.at(-1).lvl.to, 99);
+  assert.equal(equipmentTemplate.grades.at(-1).lvl.to, 85);
 });
 
 test('every grade has the same complete catalog with unique ids and real names', () => {
