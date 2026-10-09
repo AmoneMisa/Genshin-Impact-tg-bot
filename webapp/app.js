@@ -28,6 +28,7 @@ import { openHoroscopeGame } from './horoscope.js';
 import { openClanGame } from './clan.js';
 import { openStealGame } from './steal.js';
 import { openPlayerProfile } from './profile.js';
+import { openCharacterPage } from './character.js';
 import { openSkillsGame } from './skills.js';
 import { openClassQuests } from './class-quests.js';
 import { openFormsGame } from './forms.js';
@@ -103,8 +104,8 @@ async function api(path, options = {}) {
 
 // Feature id → the function that opens its screen.
 const launchers = {
-  profile: openPlayerProfile,
-  skills: openSkillsGame,
+  profile: options => openCharacterPage(options, 'stats'),
+  skills: options => openCharacterPage(options, 'skills'),
   classQuests: openClassQuests,
   forms: openFormsGame,
   inventory: openInventoryGame,
@@ -113,7 +114,7 @@ const launchers = {
   hunt: openHuntGame,
   chest: openChestGame,
   gacha: openGachaGame,
-  equipment: openEquipmentGame,
+  equipment: options => openCharacterPage(options, 'equipment'),
   arena: openArenaGame,
   steal: openStealGame,
   shop: openShopGame,
@@ -132,8 +133,8 @@ const launchers = {
   updates: openUpdatesGame,
   feedback: openFeedbackGame,
   language: openLanguageGame,
-  buffs: openBuffsGame,
-  passives: openPassivesGame,
+  buffs: options => openCharacterPage(options, 'effects'),
+  passives: options => openCharacterPage(options, 'skills'),
   luckShop: openLuckShopGame,
   auction: openAuctionGame,
   mail: openMailGame,

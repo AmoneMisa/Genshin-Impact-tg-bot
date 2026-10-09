@@ -1,6 +1,8 @@
+import character from './uz-character.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
+  ...character,
   'Til / Язык': 'Til / Язык',
   'Language · Язык': 'Language · Til',
   // Short tokens that show up inside composed strings ("Ур. 5 · Маг").

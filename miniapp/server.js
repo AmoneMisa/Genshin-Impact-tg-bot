@@ -14,6 +14,7 @@ import { isChatAdmin } from './tableGames.js';
 import sendMessage from '../functions/tgBotFunctions/sendMessage.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
 import { createMiniAppState } from './state.js';
+import { getCharacterState } from './character.js';
 import { getChestState, openChest } from './chest.js';
 import { getGachaState, rollGacha, resolveGacha } from './gacha.js';
 import { getEquipmentState, performEquipmentAction, craftEquipmentItem, learnEquipmentRecipe, buyEnchantScroll } from './equipment.js';
@@ -479,6 +480,14 @@ const formsSave = guarded('forms save', async (req, res) => {
     return saved;
   });
   return sendResult(res, result, context);
+});
+
+const characterState = guarded('character state', async (req, res) => {
+  const context = await authorize(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:character`, async () => {
+    return getCharacterState(context.session, { chatId: context.chatId, chatType: context.validated.chatType, user: context.validated.user });
+  });
+  return sendJson(res, 200, result);
 });
 
 const playerProfileState = guarded('player profile state', async (req, res) => {
@@ -1764,6 +1773,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/feedback') return feedbackSubmit(req, res);
     if (route === 'GET /api/forms') return formsState(req, res);
     if (route === 'POST /api/forms/save') return formsSave(req, res);
+    if (route === 'GET /api/character') return characterState(req, res);
     if (route === 'GET /api/profile') return playerProfileState(req, res);
     if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
