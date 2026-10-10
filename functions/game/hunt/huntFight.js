@@ -20,6 +20,7 @@ import { evadeChance, guardReduction } from '../player/skillEffects.js';
 import { bossDebuffAmount, isBossStunned } from '../boss/bossDebuffs.js';
 import { attributeProfile, resistFactor } from '../equipment/attributes.js';
 import { armShots, clearShots } from '../shots/shots.js';
+import { spendAmmo } from '../shots/ammo.js';
 import { recordQuestEvent } from '../classes/classQuests.js';
 import { AI_ROLES, AI_LABELS, aggroNearby, provokeMob, mobBuff, mobAiTurn, pursuePlayer, canMobReach } from './huntAi.js';
 import {fieldPvpSkillBlock,reduceHuntKarma,fieldPvpEffect} from './fieldPvpState.js';
@@ -245,11 +246,13 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
     if (usable === 3) return {...fail('skill_locked'), needLevel: number(skill.needLvl)};
     if (usable === 1) return fail('not_enough_resource');
     if (usable === 2) return fail('cooldown');
+    if (usable === 4) return fail('no_ammo');
 
     if (hunt.field && (skill.isDealDamage || skill.debuff || skill.debuffs?.length || skill.buffs?.some(b => b.kind === 'taunt'))) provokeMob(hunt, mob, now);
 
     const {cost, costHp} = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass), session);
     skillUsagePayCost(session, costHp > 0 ? 'hp' : 'mp', costHp > 0 ? costHp : cost);
+    spendAmmo(session, skill);
 
     const shots = armShots(session, skill);
     const result = castSkill(session, asBoss(mob), skill, {now});

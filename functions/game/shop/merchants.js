@@ -10,6 +10,7 @@ import {canClassUse, findCatalogItem, getCatalog, gradeIndex, instantiate} from 
 import {addMaterial, getMaterialCount, materialInfo, spendMaterials} from '../player/materials.js';
 import {lootInfo, itemRow} from '../hunt/lootTable.js';
 import {HUNT} from '../hunt/huntConfig.js';
+import {AMMO_IDS} from '../shots/ammo.js';
 
 export const MERCHANTS = Object.freeze([
     {id: 'weapons', title: 'Торговец оружием', subtitle: 'Оружие без грейда, D и C за адену', currency: 'gold'},
@@ -40,7 +41,7 @@ function equipmentEntries(types) {
         .map(item => {
             const price = DATA.equipment[item.id];
             return {
-                id: `eq:${item.id}`, kind: 'equipment', itemId: item.id, name: item.name, grade: item.grade,
+                id: `eq:${item.id}`, kind: 'equipment', group: item.kind, itemId: item.id, name: item.name, grade: item.grade,
                 minLevel: equipmentTemplate.grades[gradeIndex(item.grade)].lvl.from,
                 // never cheaper than twice what the shop pays for the same item
                 cost: {gold: Math.max(gold(price.price), item.cost * 2)}, estimated: Boolean(price.estimated), realId: price.realId,
@@ -61,7 +62,7 @@ function productEntry(prefix, row) {
     if (Object.keys(materials).length) cost.materials = materials;
     const sp = DATA.items[row.product]?.[6] || 0;
     return {
-        id: `${prefix}:${row.product}`, kind: sp ? 'sp' : 'material', key: info.key, amount: sp || row.amount,
+        id: `${prefix}:${row.product}`, kind: sp ? 'sp' : 'material', group: sp ? 'sp' : info.kind, key: info.key, amount: sp || row.amount,
         name: realName(row.product), realId: row.product, cost,
     };
 }
@@ -74,9 +75,17 @@ function build() {
         alchemist: [],
         mammon: [],
     };
+    // arrows and bolts in packs of a hundred, at the real price of one
+    for (const kind of ['arrow', 'bolt']) {
+        for (const [grade, id] of Object.entries(AMMO_IDS[kind])) {
+            const price = DATA.ammo?.[id];
+            if (!price) continue;
+            stock.weapons.push({id: `am:${id}`, kind: 'material', group: 'ammo', key: `l2_${id}`, amount: 100, name: `${realName(id)} ×100`, grade, realId: id, cost: {gold: gold(price * 100)}});
+        }
+    }
     for (const [id, price] of DATA.grocer) {
         const info = infoOf(id);
-        stock.alchemist.push({id: `bk:${id}`, kind: 'material', key: info.key, amount: 1, name: realName(id), realId: id, cost: {gold: gold(price)}});
+        stock.alchemist.push({id: `bk:${id}`, kind: 'material', group: info.kind, key: info.key, amount: 1, name: realName(id), realId: id, cost: {gold: gold(price)}});
     }
     for (const row of DATA.mammon) {
         const entry = productEntry(row.merchant === 'priest' ? 'pr' : 'mm', row);
@@ -176,4 +185,43 @@ export function merchantRows(session, merchantId) {
             canUse: availability.ok, useReason: availability.reason || null, canPay: !lack, lack,
         };
     });
+}
+
+export const MERCHANT_PAGE_SIZE = 12;
+
+const GROUP_LABELS = {
+    oneHandedSword: 'Мечи', twoHandedSword: 'Двуручные мечи', dagger: 'Кинжалы', mace: 'Посохи и булавы', bow: 'Луки', crossbow: 'Арбалеты',
+    blunt: 'Дробящее', fists: 'Кастеты', heavy: 'Тяжёлая броня', light: 'Лёгкая броня', robe: 'Роба', bigShield: 'Большие щиты',
+    smallShield: 'Малые щиты', sigill: 'Сигилы', ring: 'Кольца', earring: 'Серьги', necklace: 'Ожерелья',
+    ammo: 'Стрелы и болты', recipe: 'Рецепты', dye: 'Краски', scroll: 'Свитки заточки', sp: 'Свитки ОП', material: 'Материалы', other: 'Прочее',
+};
+
+/**
+ * One page of a merchant's stock for a player, with the filters that were applied and the ones that can be chosen.
+ * query: {page, grade, group, search, usable, affordable}.
+ */
+export function merchantPage(session, merchantId, query = {}) {
+    const meta = MERCHANTS.find(merchant => merchant.id === merchantId) || MERCHANTS[0];
+    const all = merchantRows(session, meta.id);
+    const stock = merchantStock()[meta.id];
+    const groupOf = new Map(stock.map(entry => [entry.id, entry.group || entry.kind]));
+    const search = String(query.search || '').trim().toLowerCase().slice(0, 40);
+    const rows = all.filter(row => {
+        if (query.grade && row.grade !== query.grade) return false;
+        if (query.group && groupOf.get(row.id) !== query.group) return false;
+        if (query.usable && !row.canUse) return false;
+        if (query.affordable && !row.canPay) return false;
+        if (search && !row.name.toLowerCase().includes(search)) return false;
+        return true;
+    });
+    const pages = Math.max(1, Math.ceil(rows.length / MERCHANT_PAGE_SIZE));
+    const page = Math.min(pages, Math.max(1, Math.floor(number(query.page, 1))));
+    const grades = [...new Set(all.map(row => row.grade).filter(Boolean))];
+    const groups = [...new Set(stock.map(entry => entry.group || entry.kind))].map(id => ({id, label: GROUP_LABELS[id] || id}));
+    return {
+        merchant: meta.id, page, pages, total: rows.length, pageSize: MERCHANT_PAGE_SIZE,
+        items: rows.slice((page - 1) * MERCHANT_PAGE_SIZE, page * MERCHANT_PAGE_SIZE),
+        facets: {grades, groups},
+        applied: {grade: query.grade || null, group: query.group || null, search, usable: Boolean(query.usable), affordable: Boolean(query.affordable)},
+    };
 }

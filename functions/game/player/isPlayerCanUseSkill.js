@@ -1,7 +1,8 @@
 import getSkillCooldown from './getters/getSkillCooldown.js';
 import isEnoughResourcesForUseSkill from './isEnoughResourcesForUseSkill.js';
+import {hasAmmo} from '../shots/ammo.js';
 
-// 0 - can be used; 1 - not enough mp/hp; 2 - on cooldown; 3 - the player's level is too low.
+// 0 - can be used; 1 - not enough mp/hp; 2 - on cooldown; 3 - the player's level is too low; 4 - no arrows / bolts.
 export default function (session, skill) {
     if ((Number(skill?.needLvl) || 0) > (Number(session?.game?.stats?.lvl) || 1)) {
         return 3;
@@ -17,6 +18,10 @@ export default function (session, skill) {
 
     if (cooldown > new Date().getTime()) {
         return 2;
+    }
+
+    if (!hasAmmo(session, skill)) {
+        return 4;
     }
 
     return 0;

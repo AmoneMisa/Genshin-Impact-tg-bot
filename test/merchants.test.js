@@ -18,7 +18,7 @@ test('town merchants sell the catalog items of no grade, D and C at the real pri
   const stock = merchantStock();
   assert.deepEqual(MERCHANTS.map(merchant => merchant.id), ['weapons', 'armor', 'jewelry', 'alchemist', 'mammon']);
   assert.ok(stock.weapons.length >= 20 && stock.armor.length >= 40 && stock.jewelry.length >= 6);
-  for (const entry of [...stock.weapons, ...stock.armor, ...stock.jewelry]) assert.ok(['noGrade', 'D', 'C'].includes(entry.grade), entry.name);
+  for (const entry of [...stock.weapons, ...stock.armor, ...stock.jewelry].filter(entry => entry.kind === 'equipment')) assert.ok(['noGrade', 'D', 'C'].includes(entry.grade), entry.name);
   // Club costs 590 adena in High Five
   const club = stock.weapons.find(entry => entry.name === 'Club');
   assert.equal(club.cost.gold, Math.max(Math.round(590 * HUNT.goldScale), 200));
@@ -83,15 +83,51 @@ test('SP scrolls give skill points at once; gemstones D/C/B and recipe books are
   assert.equal(buyEntry(player, 'alchemist', gemC.id, 0).reason, 'invalid_count');
 });
 
-test('the screen state lists every merchant with what the player can pay and use', () => {
+test('the screen state lists the merchants and one filtered, paged slice of the chosen one', () => {
   const player = hero('warrior', 85, {gold: 100, ancientAdena: 0});
-  const state = getMerchantsState(player);
-  assert.equal(state.merchants.length, 5);
-  const weapons = state.merchants.find(merchant => merchant.id === 'weapons').items;
-  assert.ok(weapons.some(item => item.canPay === false && item.lack === 'not_enough_gold'));
-  const result = buyFromMerchant(player, 'weapons', weapons[0].id);
+  const state = getMerchantsState(player, {merchant: 'weapons'});
+  assert.deepEqual(state.merchants.map(merchant => merchant.id), ['weapons', 'armor', 'jewelry', 'alchemist', 'mammon']);
+  assert.ok(state.merchants.every(merchant => merchant.count > 0));
+  assert.equal(state.items.length, 12);
+  assert.equal(state.pageSize, 12);
+  assert.ok(state.pages >= 2);
+  assert.ok(state.items.some(item => item.canPay === false && item.lack === 'not_enough_gold'));
+  const result = buyFromMerchant(player, 'weapons', state.items[0].id);
   assert.equal(result.ok, false);
   assert.equal(result.reason, 'not_enough_gold');
   assert.equal(result.merchants.merchants.length, 5);
   assert.equal(player.game.inventory.gold, 100);
+});
+
+test('filters: grade, kind, search, usable and affordable narrow the page; pages are clamped', () => {
+  const player = hero('warrior', 85, {gold: 5000});
+  const all = getMerchantsState(player, {merchant: 'armor'});
+  const d = getMerchantsState(player, {merchant: 'armor', grade: 'D'});
+  assert.ok(d.total > 0 && d.total < all.total);
+  assert.ok(d.items.every(item => item.grade === 'D'));
+  assert.ok(all.facets.grades.includes('noGrade') && all.facets.groups.some(group => group.id === 'heavy'));
+  const heavy = getMerchantsState(player, {merchant: 'armor', group: 'heavy'});
+  assert.ok(heavy.total > 0 && heavy.total < all.total);
+  const found = getMerchantsState(player, {merchant: 'armor', search: 'brigandine'});
+  assert.ok(found.total > 0 && found.items.every(item => /brigandine/i.test(item.name)));
+  const cheap = getMerchantsState(player, {merchant: 'armor', affordable: true});
+  assert.ok(cheap.items.every(item => item.canPay));
+  const mage = hero('mage', 85);
+  const usable = getMerchantsState(mage, {merchant: 'armor', usable: true});
+  assert.ok(usable.items.every(item => item.canUse));
+  assert.ok(usable.total < getMerchantsState(mage, {merchant: 'armor'}).total);
+  const last = getMerchantsState(player, {merchant: 'alchemist', page: 9999});
+  assert.equal(last.page, last.pages);
+  assert.equal(getMerchantsState(player, {merchant: 'nope'}).merchant, 'weapons');
+  // the alchemist alone sells well over a hundred goods, never more than a page is sent
+  const alchemist = getMerchantsState(player, {merchant: 'alchemist'});
+  assert.ok(alchemist.total > 100 && alchemist.items.length === 12);
+});
+
+test('arrows and bolts are sold in packs of a hundred at the real price of one', () => {
+  const player = hero('archer', 85, {gold: 10000});
+  const pack = merchantStock().weapons.find(entry => entry.name === 'Steel Arrow ×100');
+  assert.equal(pack.cost.gold, Math.round(5 * 100 * HUNT.goldScale));
+  assert.equal(buyEntry(player, 'weapons', pack.id).ok, true);
+  assert.equal(getMaterialCount(player, 'l2_1342'), 100);
 });

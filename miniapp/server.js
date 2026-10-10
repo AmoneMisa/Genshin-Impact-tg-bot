@@ -98,7 +98,7 @@ import {
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { getPartyState, performPartyAction } from './party.js';
-import { buyFromMerchant, getMerchantsState } from './merchants.js';
+import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchants.js';
 import { getTattooState, performTattooAction } from './tattoos.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
@@ -1661,13 +1661,33 @@ const huntStart = guarded('hunt start', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+// A screen request may carry the filters: merchant, page, grade, group, search, usable, affordable.
+const merchantQuery = body => ({
+  merchant: typeof body?.merchant === 'string' ? body.merchant : undefined,
+  page: body?.page, grade: typeof body?.grade === 'string' ? body.grade : null, group: typeof body?.group === 'string' ? body.group : null,
+  search: typeof body?.search === 'string' ? body.search : '', usable: body?.usable === true, affordable: body?.affordable === true,
+});
+
 const merchantsState = guarded('merchants state', async (req, res) => {
   const context = await authorize(req);
+  const body = req.method === 'POST' ? await readJsonBody(req) : {};
   const state = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return getMerchantsState(context.session);
+    return getMerchantsState(context.session, merchantQuery(body));
   });
   return sendJson(res, 200, state);
+});
+
+const merchantsConvert = guarded('merchants convert', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const done = convertAmmunition(context.session, body, merchantQuery(body.query));
+    if (done.ok) await saveSession(context.session);
+    return done;
+  });
+  return sendResult(res, result, context);
 });
 
 const merchantsBuy = guarded('merchants buy', async (req, res) => {
@@ -1675,7 +1695,7 @@ const merchantsBuy = guarded('merchants buy', async (req, res) => {
   const body = await readJsonBody(req);
   const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const bought = buyFromMerchant(context.session, body.merchant, body.entry, body.count ?? 1);
+    const bought = buyFromMerchant(context.session, body.merchant, body.entry, body.count ?? 1, merchantQuery(body.query));
     if (bought.ok) await saveSession(context.session);
     return bought;
   });
@@ -1978,6 +1998,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/tattoos') return tattoosState(req, res);
     if (route === 'POST /api/tattoos') return tattoosAction(req, res);
     if (route === 'GET /api/merchants') return merchantsState(req, res);
+    if (route === 'POST /api/merchants') return merchantsState(req, res);
+    if (route === 'POST /api/merchants/convert') return merchantsConvert(req, res);
     if (route === 'POST /api/merchants/buy') return merchantsBuy(req, res);
     if (route === 'GET /api/party') return partyState(req, res);
     if (route === 'POST /api/party/action') return partyAction(req, res);

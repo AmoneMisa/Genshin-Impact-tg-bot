@@ -19,6 +19,7 @@ import {guardReduction,evadeChance} from '../player/skillEffects.js';
 import {isMagicClass} from '../classes/classFamily.js';
 import {attributeProfile} from '../equipment/attributes.js';
 import {armShots,clearShots} from '../shots/shots.js';
+import {spendAmmo} from '../shots/ammo.js';
 import {tickSoulDots} from '../equipment/soulCrystalCombat.js';
 
 const id = s => String(s.userId);
@@ -107,7 +108,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
     if(!Number.isInteger(skillIndex) || !skill)return fail('invalid_skill');
     const block=fieldPvpSkillBlock(attacker,skill,now);if(block)return fail(block);
     const usable=isPlayerCanUseSkill(attacker,skill);
-    if(usable!==0)return fail({1:'not_enough_resource',2:'cooldown',3:'skill_locked'}[usable]);
+    if(usable!==0)return fail({1:'not_enough_resource',2:'cooldown',3:'skill_locked',4:'no_ammo'}[usable]);
     const hostile=Boolean(skill.isDealDamage || skill.debuff || skill.debuffs?.length);
     const magic=isMagicClass(attacker.game.gameClass.stats.name);
     const distance=Math.hypot(attacker.game.hunt.field.x-defender.game.hunt.field.x,attacker.game.hunt.field.y-defender.game.hunt.field.y);
@@ -117,6 +118,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
 
     const cost=getEffectiveSkillCost(skill,getMaxHp(attacker),attacker);
     skillUsagePayCost(attacker,cost.costHp>0?'hp':'mp',cost.costHp>0?cost.costHp:cost.cost);
+    spendAmmo(attacker,skill);
     const shots=armShots(attacker,skill);
     const proxy=proxyFor(defender,now);
     const accuracy=1-fieldPvpEffect(attacker,'accuracyDown',now);

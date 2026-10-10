@@ -150,3 +150,20 @@
 .merchant-filter{display:flex;gap:8px;align-items:center;font:12px/1.4 system-ui;padding:4px 2px}
 .merchant-item .missing{color:#e07a6a}
 .merchants-panel .shop-categories{overflow-x:auto}
+.pager{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0;font:12px/1.4 system-ui}
+.shop-search{width:100%;box-sizing:border-box;margin:6px 0;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,214,120,.35);background:rgba(0,0,0,.35);color:inherit}
+.merchant-filters{display:grid;gap:6px;padding:4px 0}
+.merchant-row{display:flex;gap:6px}
+.merchant-row select,.merchant-row input{flex:1;min-width:0;padding:7px 9px;border-radius:8px;border:1px solid rgba(255,214,120,.35);background:rgba(0,0,0,.35);color:inherit}
+.convert-row{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
+.convert-row .equipment-action{grid-column:span 2}
+.tattoo-slots{display:grid;gap:6px;padding:6px 0}
+.tattoo-slot{display:grid;gap:3px;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
+.tattoo-slot.locked{opacity:.55}
+.tattoo-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px 0}
+.tattoo-totals span{display:grid;text-align:center;padding:6px;border-radius:8px;background:rgba(0,0,0,.28)}
+.tattoo-totals .plus b,.tattoo-dye .plus{color:#8fd694}
+.tattoo-totals .minus b,.tattoo-dye .minus{color:#e07a6a}
+.tattoo-dyes{display:grid;gap:8px;padding:6px 0}
+.tattoo-dye{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
+.tattoo-dye.poor{opacity:.7}

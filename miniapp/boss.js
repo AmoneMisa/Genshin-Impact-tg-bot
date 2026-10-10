@@ -30,6 +30,7 @@ import saveSession from '../functions/getters/saveSession.js';
 import { getEffectiveSkillCost } from '../functions/game/player/skillEnchant.js';
 import { bossStatusesDto, playerEffectsDto } from './bossEffects.js';
 import { armShots, clearShots, getShotsState } from '../functions/game/shots/shots.js';
+import { hasAmmo, spendAmmo } from '../functions/game/shots/ammo.js';
 
 export { bossStatusesDto, playerEffectsDto };
 
@@ -72,7 +73,7 @@ export function skillDto(session, skill, index, now = Date.now()) {
     costMp,
     cooldownMs,
     cooldownUntil,
-    canUse: !locked && cooldownMs <= 0 && hp > costHp && mp >= costMp,
+    canUse: !locked && cooldownMs <= 0 && hp > costHp && mp >= costMp && hasAmmo(session, skill),
   };
 }
 
@@ -377,6 +378,9 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex, targe
   if (canUse === 2) {
     return { ok: false, reason: 'cooldown', boss: await getBossState(session, chatId) };
   }
+  if (canUse === 4) {
+    return { ok: false, reason: 'no_ammo', boss: await getBossState(session, chatId) };
+  }
 
   // A damage skill may be aimed at one of the boss's minions.
   let target = null;
@@ -391,6 +395,7 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex, targe
   const costCount = costHp > 0 ? costHp : cost;
   const costType = costHp > 0 ? 'hp' : 'mp';
   skillUsagePayCost(session, costType, costCount);
+  spendAmmo(session, skill);
 
   const shots = armShots(session, skill);
   const result = castSkill(session, boss, skill, { targetId: target?.id || null });

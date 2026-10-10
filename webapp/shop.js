@@ -60,6 +60,9 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
   let confirming = null;
   let timer = null;
   let purchased = null; // flashes the bought row once after re-render
+  let page = 1;
+  let search = '';
+  const PAGE_SIZE = 12;
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay shop-overlay';
@@ -72,13 +75,22 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
         <strong class="shop-wallet" data-shop-gold>🪙 0</strong>
       </header>
       <div class="shop-categories" data-shop-categories></div>
+      <input type="search" class="shop-search" data-shop-search placeholder="Поиск по названию" maxlength="40">
       <div class="shop-list" data-shop-list></div>
+      <div class="pager" data-shop-pager></div>
       <div class="shop-feedback" data-shop-feedback aria-live="polite"></div>
     </div>`;
 
   const list = overlay.querySelector('[data-shop-list]');
   const categories = overlay.querySelector('[data-shop-categories]');
   const feedback = overlay.querySelector('[data-shop-feedback]');
+  const pager = overlay.querySelector('[data-shop-pager]');
+  overlay.querySelector('[data-shop-search]').addEventListener('input', event => {
+    search = event.target.value.trim().toLowerCase();
+    page = 1;
+    confirming = null;
+    renderItems();
+  });
   const gold = overlay.querySelector('[data-shop-gold]');
 
   const close = () => {
@@ -115,6 +127,7 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
     categories.querySelectorAll('[data-shop-category]').forEach((button) => {
       button.addEventListener('click', () => {
         category = button.dataset.shopCategory;
+        page = 1;
         confirming = null;
         haptic('light');
         renderAll();
@@ -123,8 +136,16 @@ export async function openShopGame({ api, renderState, haptic, statusElement }) 
   }
 
   function renderItems() {
-    const items = category === 'all' ? state.items : state.items.filter((item) => item.category === category);
-    list.innerHTML = items.length ? items.map(itemCard).join('') : '<div class="shop-empty">В этой категории пока пусто.</div>';
+    const matching = (category === 'all' ? state.items : state.items.filter((item) => item.category === category))
+      .filter((item) => !search || item.name.toLowerCase().includes(search));
+    const pages = Math.max(1, Math.ceil(matching.length / PAGE_SIZE));
+    page = Math.min(page, pages);
+    const items = matching.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    pager.innerHTML = pages > 1
+      ? `<button type="button" class="equipment-action" data-shop-page="${page - 1}" ${page <= 1 ? 'disabled' : ''}>←</button><span>${page} / ${pages} · ${matching.length}</span><button type="button" class="equipment-action" data-shop-page="${page + 1}" ${page >= pages ? 'disabled' : ''}>→</button>`
+      : '';
+    pager.querySelectorAll('[data-shop-page]').forEach((button) => button.addEventListener('click', () => { page = Number(button.dataset.shopPage); confirming = null; renderItems(); }));
+    list.innerHTML = items.length ? items.map(itemCard).join('') : '<div class="shop-empty">Ничего не найдено.</div>';
     list.querySelectorAll('.shop-item').forEach((node, index) => node.style.setProperty('--i', String(index)));
     if (purchased) {
       list.querySelector(`[data-shop-buy="${CSS.escape(purchased)}"]`)?.closest('.shop-item')?.classList.add('bought');
