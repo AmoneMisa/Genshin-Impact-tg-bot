@@ -6,6 +6,8 @@ import { itemIconHtml, ITEM_ICONS } from '../webapp/shop.js';
 test('every shop item gets an emblem or its painting', () => {
   for (const item of shopTemplate) {
     const html = itemIconHtml(item);
+    assert.match(html, /\.webp/, `${item.command} uses raster art`);
+    assert.doesNotMatch(html, /[\p{Extended_Pictographic}]/u, `${item.command} has no text icons`);
     if (item.command.startsWith('palace') && item.command !== 'palaceChangeName') assert.match(html, /shop-icon art[^>]*\/art\/builds\/palace\//, item.command);
     else if (item.potionId) assert.match(html, /inv-flask|inv-potion-art/, item.command);
     else if(item.command.startsWith('soul-'))assert.match(html,/art\/l2\/icon-etc_soul_stone_i0[012]-128.webp/,item.command);

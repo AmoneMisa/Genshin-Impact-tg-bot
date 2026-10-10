@@ -4,6 +4,7 @@ import {flaskHtml} from './inventory.js';
 import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
 import {l2CategoryIcon} from './art/l2-icon-art.js';
+import {icon} from './icons.js';
 
 // Аукцион чата: лоты других игроков, продажа своих вещей и список своих лотов.
 
@@ -26,6 +27,9 @@ const KIND_LABELS = { all: 'Всё', equipment: 'Снаряжение', potion: 
 const SORT_LABELS = { new: 'Новые', cheap: 'Дешевле', expensive: 'Дороже' };
 const formatNumber = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 const TYPES = {all:'Все',weapon:'Оружие',armor:'Доспехи',shield:'Щиты',jewelry:'Бижутерия',potion:'Припасы',material:'Ресурсы'};
+function dropdown(name, label, value, choices) {
+  return `<details class="auction-dropdown" data-dropdown="${name}"><summary aria-label="${label}">${escapeHtml(choices.find(([id])=>id===value)?.[1]||label)}</summary><div class="auction-dropdown-options">${choices.map(([id,text])=>`<button type="button" data-choice="${escapeHtml(id)}" aria-pressed="${value===id}">${escapeHtml(text)}</button>`).join('')}</div></details>`;
+}
 function auctionArt(entry) {
   if(entry.kind==='material')return entry.materialKey ? materialIcon(entry.materialKey) : l2CategoryIcon('material');
   if(entry.kind==='potion')return entry.artPotion ? flaskHtml(entry.artPotion) : l2CategoryIcon('consumable');
@@ -42,7 +46,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
   let pending = false;
   let feedback = { kind: '', text: '' };
   let type = 'all', grade = '', search = '', page = 1, selectedLot = null;
-  const PAGE_SIZE = window.matchMedia('(max-width: 600px)').matches ? 8 : 12;
+  const PAGE_SIZE = window.matchMedia('(max-width: 600px)').matches ? 6 : 12;
   const load = () => api(`/api/auction?kind=${encodeURIComponent(kind)}&sort=${encodeURIComponent(sort)}`);
   let state = await load();
 
@@ -53,7 +57,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
     <div class="overlay-panel auction-panel">
       <header class="auction-title">
         <h2>Комиссионная торговля</h2>
-        <button class="overlay-close" type="button" aria-label="Закрыть">×</button>
+        <button class="overlay-close" type="button" aria-label="Закрыть">${icon('x')}</button>
       </header>
       <div data-auction-body></div>
     </div>`;
@@ -61,6 +65,9 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
   const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.addEventListener('click',event=>{
+    if(!event.target.closest('.auction-dropdown'))body.querySelectorAll('[data-dropdown]').forEach(menu=>{menu.open=false;});
+  });
 
   const detailsHtml = lot => `
     ${lot.description ? `<p>${escapeHtml(lot.description)}</p>` : ''}
@@ -76,18 +83,18 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
     const active=matches.find(lot=>lot.id===selectedLot);
     const grades=[...new Set(source.map(lot=>lot.grade).filter(Boolean))];
     return `<form class="auction-filters" data-auction-search-form>
-      <label>Вид<select data-auction-type>${Object.entries(TYPES).map(([id,label])=>`<option value="${id}" ${id===type?'selected':''}>${label}</option>`).join('')}</select></label>
-      <label>Ранг<select data-auction-grade><option value="">Все</option>${grades.map(id=>`<option value="${escapeHtml(id)}" ${id===grade?'selected':''}>${escapeHtml(id==='noGrade'?'Без ранга':id)}</option>`).join('')}</select></label>
-      <label class="auction-keywords">Ключевые слова<input type="search" maxlength="40" data-auction-search value="${escapeHtml(search)}"></label>
-      <button type="submit">Поиск</button><button type="button" data-auction-reset>Сброс</button>
+      <div class="auction-filter-field"><span>Вид</span>${dropdown('type','Вид предмета',type,Object.entries(TYPES))}</div>
+      <div class="auction-filter-field"><span>Ранг</span>${dropdown('grade','Ранг предмета',grade,[['','Все ранги'],...grades.map(id=>[id,id==='noGrade'?'Без ранга':id])])}</div>
+      <label class="auction-filter-field auction-keywords"><span>Поиск предмета</span><input type="search" placeholder="Название предмета…" maxlength="40" data-auction-search value="${escapeHtml(search)}"></label>
+      <div class="auction-filter-actions"><button type="submit">${icon('search')} Поиск</button><button type="button" data-auction-reset>${icon('rotate-ccw')} Сброс</button></div>
     </form>
     <div class="auction-market"><aside class="auction-types" aria-label="Тип предмета"><strong>Тип</strong>${Object.entries(TYPES).map(([id,label])=>`<button type="button" data-auction-type-button="${id}" class="${id===type?'active':''}">${label}</button>`).join('')}</aside>
-      <div class="auction-results"><div class="auction-list-title">Список предметов (${matches.length})<select data-auction-sort aria-label="Сортировка">${Object.entries(SORT_LABELS).map(([id,label])=>`<option value="${id}" ${id===sort?'selected':''}>${label}</option>`).join('')}</select></div>
+      <div class="auction-results"><div class="auction-list-title"><span>Список предметов <b>${matches.length}</b></span>${dropdown('sort','Сортировка',sort,Object.entries(SORT_LABELS))}</div>
       <table class="auction-table"><thead><tr><th>Предмет</th><th class="auction-grade">Ранг</th><th class="auction-count">Кол-во</th><th>Цена</th></tr></thead><tbody>${matches.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(lotHtml).join('')}</tbody></table>
       ${!matches.length?'<p class="auction-empty">Лотов не найдено.</p>':''}
-      <div class="auction-pagination"><button type="button" data-auction-page="${page-1}" ${page===1?'disabled':''}>←</button><span>${page} / ${pages}</span><button type="button" data-auction-page="${page+1}" ${page===pages?'disabled':''}>→</button></div>
+      <div class="auction-pagination"><button type="button" aria-label="Предыдущая страница" data-auction-page="${page-1}" ${page===1?'disabled':''}>${icon('chevron-left')}</button><span>${page} / ${pages}</span><button type="button" aria-label="Следующая страница" data-auction-page="${page+1}" ${page===pages?'disabled':''}>${icon('chevron-right')}</button></div>
       ${active?`<div class="auction-detail"><strong>${escapeHtml(active.title)}</strong>${detailsHtml(active)}<small>Ещё ${active.hoursLeft} ч.</small></div>`:''}
-      <div class="auction-actions"><button type="button" data-auction-refresh>Обновить</button>${active?active.mine?`<button type="button" data-auction-cancel="${escapeHtml(active.id)}">Снять с продажи</button>`:`<button type="button" data-auction-buy="${escapeHtml(active.id)}" ${state.gold<active.price||pending?'disabled':''}>Купить · ${formatNumber(active.price)}</button>`:'<button type="button" disabled>Выбери предмет</button>'}</div></div></div>`;
+      <div class="auction-actions"><button type="button" data-auction-refresh>${icon('rotate-ccw')} Обновить</button>${active?active.mine?`<button type="button" data-auction-cancel="${escapeHtml(active.id)}">Снять с продажи</button>`:`<button type="button" data-auction-buy="${escapeHtml(active.id)}" ${state.gold<active.price||pending?'disabled':''}>${materialIcon('gold')} Купить · ${formatNumber(active.price)}</button>`:'<button type="button" disabled>Выбери предмет</button>'}</div></div></div>`;
   }
 
   function sellTab() {
@@ -96,7 +103,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
         <div class="feedback-card">
           <strong>${escapeHtml(selected.title)}</strong>
           ${selected.max > 1 ? `<label class="feedback-field"><span>Количество (до ${formatNumber(selected.max)})</span><input type="number" min="1" max="${selected.max}" step="1" value="${selected.max}" inputmode="numeric" data-sell-count /></label>` : ''}
-          <label class="feedback-field"><span>Цена за весь лот, золото</span><input type="number" min="1" step="1" inputmode="numeric" data-sell-price placeholder="1000" /></label>
+          <label class="feedback-field"><span>Цена за весь лот, адена</span><input type="number" min="1" max="1000000000" step="1" inputmode="numeric" data-sell-price placeholder="Например, 10 000" /></label>
           <small>Комиссия ${Math.round(state.fee * 100)}% с продажи. Лот висит ${state.hours} ч., потом вещь вернётся.</small>
           <button type="button" class="feedback-submit" data-sell-confirm>Выставить</button>
           <button type="button" class="fr-btn ghost" data-sell-back>Назад</button>
@@ -124,8 +131,6 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
     const resetPage = () => { page=1; selectedLot=null; render(); };
     body.querySelector('[data-auction-search-form]')?.addEventListener('submit',event=>{event.preventDefault();search=body.querySelector('[data-auction-search]').value.trim();resetPage();});
     body.querySelector('[data-auction-reset]')?.addEventListener('click',()=>{type='all';grade='';search='';resetPage();});
-    body.querySelector('[data-auction-type]')?.addEventListener('change',event=>{type=event.target.value;resetPage();});
-    body.querySelector('[data-auction-grade]')?.addEventListener('change',event=>{grade=event.target.value;resetPage();});
     body.querySelectorAll('[data-auction-type-button]').forEach(button=>button.addEventListener('click',()=>{type=button.dataset.auctionTypeButton;resetPage();}));
     body.querySelectorAll('[data-auction-page]').forEach(button=>button.addEventListener('click',()=>{page=Number(button.dataset.auctionPage);selectedLot=null;render();}));
     body.querySelectorAll('[data-lot-select]').forEach(button=>button.addEventListener('click',()=>{selectedLot=button.dataset.lotSelect;render();}));
@@ -137,7 +142,23 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
       finally {pending=false;render();}
     }
     body.querySelector('[data-auction-refresh]')?.addEventListener('click',reload);
-    body.querySelector('[data-auction-sort]')?.addEventListener('change',event=>{sort=event.target.value;reload();});
+    body.querySelectorAll('[data-dropdown]').forEach(menu=>{
+      menu.addEventListener('toggle',()=>{if(menu.open)body.querySelectorAll('[data-dropdown]').forEach(other=>{if(other!==menu)other.open=false;});});
+      menu.querySelectorAll('[data-choice]').forEach(button=>button.addEventListener('click',()=>{
+        const value=button.dataset.choice;
+        if(menu.dataset.dropdown==='sort'){sort=value;reload();}
+        else {if(menu.dataset.dropdown==='type')type=value;else grade=value;resetPage();}
+        body.querySelector(`[data-dropdown="${menu.dataset.dropdown}"] summary`)?.focus();
+      }));
+      menu.addEventListener('keydown',event=>{
+        if(event.key==='Escape'){menu.open=false;menu.querySelector('summary').focus();event.preventDefault();}
+        if(event.key==='ArrowDown'||event.key==='ArrowUp'){
+          event.preventDefault();menu.open=true;
+          const choices=[...menu.querySelectorAll('[data-choice]')],index=choices.indexOf(document.activeElement);
+          choices[(index+(event.key==='ArrowDown'?1:-1)+choices.length)%choices.length]?.focus();
+        }
+      });
+    });
     body.querySelectorAll('[data-auction-buy]').forEach(button => button.addEventListener('click', () => act('/api/auction/buy', { lotId: button.dataset.auctionBuy }, 'Куплено!')));
     body.querySelectorAll('[data-auction-cancel]').forEach(button => button.addEventListener('click', () => act('/api/auction/cancel', { lotId: button.dataset.auctionCancel }, 'Лот снят, вещь вернулась к тебе.')));
     body.querySelectorAll('[data-sell-pick]').forEach(button => button.addEventListener('click', () => {
@@ -160,7 +181,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
     try {
       const result = await api(path, { method: 'POST', body: JSON.stringify(payload) });
       state = result.auction;
-      feedback = { kind: 'success', text: result.fee ? `${okText} Комиссия продавца: ${formatNumber(result.fee)} 🪙.` : okText };
+      feedback = { kind: 'success', text: result.fee ? `${okText} Комиссия продавца: ${formatNumber(result.fee)} адены.` : okText };
       after();
       renderState?.(result.state);
       if (statusElement) statusElement.textContent = `Аукцион: ${okText}`;

@@ -65,10 +65,27 @@ try {
     });
     await page.waitForTimeout(250);
     await page.locator('.auction-panel').evaluate(n=>Promise.all([...n.querySelectorAll('img')].map(i=>i.decode())));
-    assert.equal(await page.locator('.auction-table tbody tr').count(),width<=600?8:12);
+    assert.equal(await page.locator('.auction-table tbody tr').count(),width<=600?6:12);
+    assert.equal(await page.locator('.auction-panel select').count(),0,'no native dropdowns');
+    assert.ok(await page.locator('[data-auction-search]').getAttribute('placeholder'));
+    assert.equal(await page.locator('[data-auction-search]').evaluate(n=>getComputedStyle(n).borderRadius),'2px','input style survives global theme');
+    await page.locator('[data-dropdown=type] summary').click();
+    await page.locator('[data-dropdown=type] [data-choice=material]').click();
+    assert.equal(await page.locator('.auction-table tbody tr').count(),1,'custom category filter');
+    await page.locator('[data-auction-reset]').click();
+    await page.locator('[data-dropdown=grade] summary').focus();
+    await page.keyboard.press('ArrowDown');
+    assert.equal(await page.locator('[data-dropdown=grade]').getAttribute('open'),'');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('[data-dropdown=grade]').getAttribute('open'),null);
     assert.equal(await page.locator('.auction-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'auction overflow');
     if(width===390)await page.locator('.auction-panel').screenshot({path:'docs/l2-auction-390.png'});
     if(width===1100)await page.locator('.auction-panel').screenshot({path:'docs/l2-auction-desktop.png'});
+    if(width===390){
+      await page.locator('[data-dropdown=type] summary').click();
+      await page.locator('.auction-panel').screenshot({path:'docs/l2-auction-dropdown-390.png'});
+      await page.keyboard.press('Escape');
+    }
     await page.locator('[data-auction-search]').fill('Кожа');
     await page.locator('[data-auction-search-form] button[type=submit]').click();
     assert.equal(await page.locator('.auction-table tbody tr').count(),1);

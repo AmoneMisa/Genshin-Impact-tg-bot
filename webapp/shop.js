@@ -9,6 +9,7 @@ import { openExchangeGame } from './exchange.js';
 import { openBonusGame } from './bonus.js';
 import { openLuckShopGame } from './luck-shop.js';
 import { openAuctionGame } from './auction.js';
+import {icon} from './icons.js';
 
 // Keep the category window underneath the goods: closing a child returns here.
 export async function openShopGame(options) {
@@ -35,7 +36,7 @@ export async function openShopGame(options) {
   overlay.className = 'game-overlay l2-store-overlay';
   overlay.innerHTML = `<div class="overlay-backdrop"></div>
     <div class="overlay-panel l2-store-panel">
-      <header class="l2-store-title"><h2>Магазин</h2><button type="button" class="overlay-close" aria-label="Закрыть">×</button></header>
+      <header class="l2-store-title"><h2>Магазин</h2><button type="button" class="overlay-close" aria-label="Закрыть">${icon('x')}</button></header>
       <div class="l2-store-ornament" aria-hidden="true"><span></span></div>
       <div class="l2-store-grid">${categories.map(([id, label, art, open, reason]) => `<button type="button" class="l2-store-category" data-store-category="${id}" ${!open ? `aria-disabled="true" title="${reason}"` : ''}>${l2IconHtml(art)}<span>${label}</span></button>`).join('')}</div>
       <div class="l2-store-notice" role="status" aria-live="polite"></div>
@@ -67,21 +68,21 @@ export async function openShopGame(options) {
   requestAnimationFrame(() => overlay.classList.add('visible'));
 }
 
-/** Item art: palace styles show their painting, the rest an emblem glyph. */
+/** Item art: palace styles show their painting, all other emblems are WebP. */
 export const ITEM_ICONS = Object.freeze({
-  swordImmune: '🛡️', swordAddMm: '🗡️', swordAddTry: '⚔️',
-  bossAddDmg: '💢', bossAddCrChance: '🎯', bossAddCrDmg: '💥',
-  potionHp1000: '🧪', potionHp3000: '🧪', potionHp8000: '🧪',
-  potionMp180: '🧪', potionMp300: '🧪',
-  chestAddTry: '🧰', palaceChangeName: '📜',
-  ...Object.fromEntries(['C', 'B', 'A', 'S'].map(grade => [`lifestoneMid-${grade}`, '🔮'])),
-  ...Object.fromEntries(['soulshot', 'spiritshot', 'blessed'].flatMap(kind => ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'].map(grade => [`shot-${kind}-${grade}`, kind === 'soulshot' ? '🔸' : kind === 'spiritshot' ? '🔹' : '💠']))),
+  swordImmune: 'shield', swordAddMm: 'sword', swordAddTry: 'swords',
+  bossAddDmg: 'flame', bossAddCrChance: 'target', bossAddCrDmg: 'sparkles',
+  potionHp1000: 'flask-conical', potionHp3000: 'flask-conical', potionHp8000: 'flask-conical',
+  potionMp180: 'flask-conical', potionMp300: 'flask-conical',
+  chestAddTry: 'package-open', palaceChangeName: 'scroll',
+  ...Object.fromEntries(['C', 'B', 'A', 'S'].map(grade => [`lifestoneMid-${grade}`, 'sparkle'])),
+  ...Object.fromEntries(['soulshot', 'spiritshot', 'blessed'].flatMap(kind => ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'].map(grade => [`shot-${kind}-${grade}`, 'sparkle']))),
 });
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 
 export function itemIconHtml(item) {
   const soul=item.command.match(/^soul-(red|green|blue)-(\d+)$/);if(soul)return '<span class="shop-icon">'+materialIcon('soul_'+soul[1]+'_'+soul[2])+'</span>';
-  const life=item.command.match(/^lifestoneMid-(C|B|A|S)$/);if(life)return '<span class="shop-icon">'+materialIcon('lifestone_mid_'+life[1],'🔮')+'</span>';
+  const life=item.command.match(/^lifestoneMid-(C|B|A|S)$/);if(life)return '<span class="shop-icon">'+materialIcon('lifestone_mid_'+life[1])+'</span>';
   const shot=item.command.match(/^shot-(soulshot|spiritshot|blessed)-(noGrade|D|C|B|A|S|S80|S84)$/);if(shot)return '<span class="shop-icon">'+shotIcon(shot[1],shot[2])+'</span>';
   if(item.potionId)return `<span class="shop-icon">${flaskHtml({type:'buff',id:item.potionId})}</span>`;
   const potion={potionHp1000:{type:'hp',size:'little'},potionHp3000:{type:'hp',size:'small'},potionHp8000:{type:'hp',size:'medium'},elixirHp45:{type:'hp',bottleType:'elixir'},potionMp180:{type:'mp',size:'little'},potionMp300:{type:'mp',size:'small'}}[item.command];
@@ -90,7 +91,7 @@ export function itemIconHtml(item) {
   const url = art ? buildArtUrl(art[0], 1, art[1]) : null;
   if (url) return `<span class="shop-icon art" style="--art:url('${url}')"></span>`;
   const tone = item.command.startsWith('potionMp') ? 'mp' : item.command.startsWith('potionHp') ? 'hp' : item.category;
-  return `<span class="shop-icon ${tone}">${ITEM_ICONS[item.command] || '✦'}</span>`;
+  return `<span class="shop-icon ${tone}">${icon(ITEM_ICONS[item.command] || 'sparkle')}</span>`;
 }
 
 const REASONS = {
@@ -133,9 +134,9 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass shop-panel">
       <header class="shop-head">
-        <button class="overlay-close shop-back" type="button" aria-label="Закрыть">←</button>
+        <button class="overlay-close shop-back" type="button" aria-label="Назад">${icon('chevron-left')}</button>
         <h2>Магазин</h2>
-        <strong class="shop-wallet" data-shop-gold>🪙 0</strong>
+        <strong class="shop-wallet" data-shop-gold></strong>
       </header>
       <div class="shop-categories" data-shop-categories></div>
       <input type="search" class="shop-search" data-shop-search placeholder="Поиск по названию" maxlength="40">
@@ -168,8 +169,8 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     const disabled = item.onCooldown || !item.canAfford;
     const armed = confirming === item.command;
     const price = item.onCooldown
-      ? `⏳ ${remain(item.resetAt)}`
-      : armed ? `✓ ${formatNumber(item.cost)}` : `🪙 ${formatNumber(item.cost)}`;
+      ? `${icon('hourglass')} ${escapeHtml(remain(item.resetAt))}`
+      : `${armed ? icon('circle-check') : materialIcon('gold')} ${formatNumber(item.cost)}`;
 
     return `
       <article class="shop-item ${item.onCooldown ? 'cooldown' : ''} ${armed ? 'armed' : ''} ${!item.canAfford && !item.onCooldown ? 'poor' : ''}">
@@ -178,7 +179,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
           <h3>${escapeHtml(item.name)}</h3>
           <p>${escapeHtml(armed ? 'Нажми ещё раз, чтобы купить' : item.message || item.categoryLabel)}</p>
         </div>
-        <button type="button" data-shop-buy="${escapeHtml(item.command)}" ${disabled ? 'disabled' : ''} class="shop-price ${armed ? 'confirming' : ''}" aria-label="${escapeHtml(`${item.name}: ${formatNumber(item.cost)} золота`)}">${escapeHtml(price)}</button>
+        <button type="button" data-shop-buy="${escapeHtml(item.command)}" ${disabled ? 'disabled' : ''} class="shop-price ${armed ? 'confirming' : ''}" aria-label="${escapeHtml(`${item.name}: ${formatNumber(item.cost)} золота`)}">${price}</button>
       </article>`;
   }
 
@@ -220,7 +221,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
   }
 
   function renderAll() {
-    gold.textContent = `🪙 ${formatNumber(state.gold)}`;
+    gold.innerHTML = `${materialIcon('gold')} ${formatNumber(state.gold)}`;
     renderCategories();
     renderItems();
   }
@@ -274,7 +275,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     } else {
       list.querySelectorAll('.shop-item.cooldown button').forEach((button) => {
         const item = state.items.find((candidate) => candidate.command === button.dataset.shopBuy);
-        if (item) button.textContent = `⏳ ${remain(item.resetAt)}`;
+        if (item) button.innerHTML = `${icon('hourglass')} ${escapeHtml(remain(item.resetAt))}`;
       });
     }
   }, 30000);

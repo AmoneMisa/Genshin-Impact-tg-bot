@@ -23,6 +23,10 @@
 .l2-store-notice { min-height: 20px; margin-top: 8px; font: 12px/16px Arial, sans-serif; color: #c6baa0; text-align: center; }
 .l2-store-footer { display: flex; gap: 8px; border-top: 1px solid #514c37; padding-top: 8px; }
 .l2-store-footer button { flex: 1; padding: 5px 2px; border: 1px solid #70664c; border-radius: 1px; background: #20281f; color: #d9d0b7; font: 11px/14px Arial, sans-serif; }
+.l2-store-title .ui-icon { width: 14px; height: 14px; object-fit: contain; }
+.shop-icon .ui-icon { width: 34px; height: 34px; object-fit: contain; }
+.shop-price, .shop-wallet { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.shop-price .ui-icon, .shop-price .mat-icon { width: 17px; height: 17px; object-fit: contain; }
 
 /* Shop (shop.js), prototype style: gold segmented tabs and item rows with an
    emblem tile, name/description and a price button (tap twice to buy). */
