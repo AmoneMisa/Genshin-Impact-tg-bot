@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createForgeState, makeForgeItem, forgeGear, forgeCombatStats, craftForgeItem, refineMasterwork, unsealForgeItem, unsealPreview, installSa, removeSa, installShoulder, exchangeSealStones, sealExchangePreview, farmCatacomb, equipForgeItem, fullHighGradeSet, addRaidReward, blessEpic, forgeItemStats, forgeItemInfo } from '../webapp/design/economy-model.js';
+import { createForgeState, makeForgeItem, forgeGear, forgeCombatStats, craftForgeItem, refineMasterwork, buyVarnish, unsealForgeItem, unsealPreview, installSa, removeSa, installShoulder, exchangeSealStones, sealExchangePreview, farmCatacomb, equipForgeItem, fullHighGradeSet, addRaidReward, blessEpic, forgeItemStats, forgeItemInfo } from '../webapp/design/economy-model.js';
 
 function blockedWithoutMutation(state,action){const before=structuredClone(state);assert.equal(action().ok,false);assert.deepEqual(state,before);}
 function completeDynasty(state){refineMasterwork(state,'forge-1');unsealForgeItem(state,'forge-1');unsealForgeItem(state,'forge-2');equipForgeItem(state,'forge-1');equipForgeItem(state,'forge-2');}
 test('cloak requires a matching full S80+ set, and breaking it removes the cloak without deleting it',()=>{
   const state=createForgeState(),cloak=addRaidReward(state,'cloakFreya').item;
-  assert.deepEqual(unsealPreview(state,cloak.uid).cost,{gold:200000,aa:80000});
+  assert.deepEqual(unsealPreview(state,cloak.uid).cost,{gold:200000});
   blockedWithoutMutation(state,()=>equipForgeItem(state,cloak.uid));unsealForgeItem(state,cloak.uid);
   blockedWithoutMutation(state,()=>equipForgeItem(state,cloak.uid));completeDynasty(state);
   assert.equal(fullHighGradeSet(state),'dynasty');assert.equal(equipForgeItem(state,cloak.uid).ok,true);
@@ -65,10 +65,10 @@ test('foundation craft, refinement and high-grade unsealing preserve identity an
   const state=createForgeState(),start=structuredClone(state);const result=craftForgeItem(state,'dynastyGloves','foundation'),item=result.item;
   assert.equal(result.ok,true);assert.equal(item.sealed,true);assert.equal(item.quality,'foundation');assert.equal(state.gear.length,start.gear.length+1);
   blockedWithoutMutation(state,()=>equipForgeItem(state,item.uid));blockedWithoutMutation(state,()=>unsealForgeItem(state,item.uid));
-  const uid=item.uid,aaBefore=state.aa;assert.equal(refineMasterwork(state,uid).ok,true);assert.equal(state.aa,aaBefore-30000);assert.equal(item.quality,'masterwork');assert.equal(item.sealed,true);
+  const uid=item.uid,aaBefore=state.aa,goldBefore=state.gold,varnish=state.materials.varnish;assert.equal(refineMasterwork(state,uid).ok,true);assert.equal(state.aa,aaBefore);assert.equal(state.gold,goldBefore);assert.equal(state.materials.varnish,varnish-7);assert.equal(item.quality,'masterwork');assert.equal(item.sealed,true);
   const aa=state.aa,gemS=state.materials.gemS,gold=state.gold;
   assert.equal(unsealForgeItem(state,uid).ok,true);assert.equal(item.uid,uid);assert.equal(item.quality,'masterwork');assert.equal(item.sealed,false);
-  assert.equal(state.aa,aa-60000);assert.equal(state.materials.gemS,gemS-8);assert.equal(state.gold,gold-180000);
+  assert.equal(state.aa,aa-457000);assert.equal(state.materials.gemS,gemS);assert.equal(state.gold,gold);
   blockedWithoutMutation(state,()=>unsealForgeItem(state,uid));blockedWithoutMutation(state,()=>refineMasterwork(state,uid));
 });
 test('failed crafting consumes one attempt and produces no gear; 100 percent recipes cannot fail',()=>{
@@ -79,12 +79,15 @@ test('failed crafting consumes one attempt and produces no gear; 100 percent rec
   blockedWithoutMutation(state,()=>craftForgeItem(state,'dynasty','unknown'));state.materials.parts=0;
   blockedWithoutMutation(state,()=>craftForgeItem(state,'dynasty','ordinary'));
 });
-test('unsealing always spends AA: A/S only AA, S80/S84 also Gemstone S and normal adena, masterwork AA too',()=>{
+test('unsealing uses the real High Five prices: Ancient Adena for S+, plain adena for A; masterwork is varnish only',()=>{
   const state=createForgeState();const ring=forgeGear(state,'forge-3'),boots=forgeGear(state,'forge-4');
-  assert.deepEqual(unsealPreview(state,ring.uid).cost,{aa:25000});assert.deepEqual(unsealPreview(state,boots.uid).cost,{gold:360000,aa:120000,materials:{gemS:16}});
-  const gold=state.gold,stones=state.materials.gemS;assert.equal(unsealForgeItem(state,ring.uid).ok,true);assert.equal(state.gold,gold);assert.equal(state.materials.gemS,stones);
-  const aa=state.aa;state.aa=119999;blockedWithoutMutation(state,()=>unsealForgeItem(state,boots.uid));state.aa=aa;assert.equal(unsealForgeItem(state,boots.uid).ok,true);assert.equal(state.aa,aa-120000);
-  const dynasty=forgeGear(state,'forge-2');state.materials.gemS=0;blockedWithoutMutation(state,()=>unsealForgeItem(state,dynasty.uid));
+  assert.deepEqual(unsealPreview(state,ring.uid).cost,{aa:488000});assert.deepEqual(unsealPreview(state,boots.uid).cost,{aa:4184000});
+  assert.deepEqual(unsealPreview(state,'forge-2').cost,{aa:1372000});
+  const gold=state.gold,stones=state.materials.gemS,aa=state.aa;assert.equal(unsealForgeItem(state,ring.uid).ok,true);
+  assert.equal(state.gold,gold);assert.equal(state.materials.gemS,stones);assert.equal(state.aa,aa-488000);
+  state.aa=4183999;blockedWithoutMutation(state,()=>unsealForgeItem(state,boots.uid));
+  state.aa=4184000;assert.equal(unsealForgeItem(state,boots.uid).ok,true);assert.equal(state.aa,0);
+  assert.equal(buyVarnish(state,3).ok,true);assert.equal(state.gold,gold-300000);blockedWithoutMutation(state,()=>buyVarnish(state,0));
 });
 test('SA checks exact crystal color and stage, preserves enchant and does not refund crystals on removal',()=>{
   const state=createForgeState(),weapon=forgeGear(state,'forge-0');blockedWithoutMutation(state,()=>installSa(state,weapon.uid,'acumen'));

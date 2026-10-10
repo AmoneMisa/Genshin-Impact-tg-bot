@@ -729,8 +729,10 @@ select,input { background:#141b10; color:#ddd5b7; border:1px solid #797457; padd
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script>
 (()=>{
-// Proposed WhitesLove rules for the design prototype, not live character mutations.
-const TATTOO_RULES = Object.freeze({ slots:3, dyesPerSymbol:10, refund:5, bonusCap:5, minimumStat:1, applyAa:6000, removeAa:3000 });
+// Real High Five numbers (L2J Mobius hennaList.xml, Mammon multisell) for the +4/-4 Greater Dye: 10 dyes and 628 000 adena
+// to apply, 5 dyes back for 125 600 adena to cancel. One dye costs 174 000 Ancient Adena at the Merchant of Mammon.
+// The three slots and the +5 cap are WhitesLove rules; this is a design prototype, not live character mutations.
+const TATTOO_RULES = Object.freeze({ slots:3, dyesPerSymbol:10, refund:5, bonusCap:5, minimumStat:1, applyFee:628000, removeFee:125600, dyePriceAa:174000 });
 const DYES = Object.freeze([
   { id:'int-men', name:'Краска интеллекта', plus:'INT', minus:'MEN', amount:4, color:'#9473b5', glyph:'✧' },
   { id:'wit-men', name:'Краска мудрости', plus:'WIT', minus:'MEN', amount:4, color:'#718dbe', glyph:'✦' },
@@ -758,7 +760,7 @@ function tattooPreview(state, id) {
   if (!dye) reason = 'Выберите краску.';
   else if (state.symbols.length >= TATTOO_RULES.slots) reason = 'Все три слота заняты. Сначала снимите символ.';
   else if ((state.stock[id] || 0) < TATTOO_RULES.dyesPerSymbol) reason = 'Нужно 10 красок одного типа.';
-  else if ((state.aa || 0) < TATTOO_RULES.applyAa) reason = 'Недостаточно древней адены (AA) для нанесения.';
+  else if (state.gold < TATTOO_RULES.applyFee) reason = 'Недостаточно адены для нанесения.';
   else if (Object.values(after).some(value => value < TATTOO_RULES.minimumStat)) reason = 'Характеристика не может стать ниже 1.';
   else if (after[dye.plus] <= before[dye.plus]) reason = 'Для этой характеристики уже достигнут бонус +5.';
   return { before,after,reason,allowed:!reason };
@@ -769,22 +771,44 @@ function applyTattoo(state, id) {
   if (!preview.allowed) return { ok:false,reason:preview.reason };
   state.symbols.push(id);
   state.stock[id] -= TATTOO_RULES.dyesPerSymbol;
-  state.aa -= TATTOO_RULES.applyAa;
+  state.gold -= TATTOO_RULES.applyFee;
   return { ok:true };
 }
 
 function removeTattoo(state, index) {
   const id = state.symbols[index];
   if (!Number.isInteger(index) || !id) return { ok:false,reason:'Символ не найден.' };
-  if ((state.aa || 0) < TATTOO_RULES.removeAa) return { ok:false,reason:'Недостаточно древней адены (AA) для снятия.' };
+  if (state.gold < TATTOO_RULES.removeFee) return { ok:false,reason:'Недостаточно адены для снятия.' };
   state.symbols.splice(index,1);
   state.stock[id] = (state.stock[id] || 0) + TATTOO_RULES.refund;
-  state.aa -= TATTOO_RULES.removeAa;
+  state.gold -= TATTOO_RULES.removeFee;
   return { ok:true };
+}
+
+function buyDye(state, id, count = 1) {
+  if (!DYES.some(dye => dye.id === id)) return { ok:false,reason:'Выберите краску.' };
+  if (!Number.isSafeInteger(count) || count < 1) return { ok:false,reason:'Неверное количество.' };
+  const cost = count * TATTOO_RULES.dyePriceAa;
+  if ((state.aa || 0) < cost) return { ok:false,reason:'Недостаточно древней адены (AA).' };
+  state.aa -= cost;
+  state.stock[id] = (state.stock[id] || 0) + count;
+  return { ok:true,aa:cost };
 }
 
 // Design-only adaptation. Prices, rates, bonuses and drops are illustrative.
 const SEAL_STONES = Object.freeze({blue:{name:'Синий камень печати',rate:3,color:'#79b4e2'},green:{name:'Зелёный камень печати',rate:5,color:'#9cba73'},red:{name:'Красный камень печати',rate:10,color:'#d3897b'}});
+// Real High Five prices (L2J Mobius CT 2.6 multisell, Blacksmith / Merchant of Mammon). AA = Ancient Adena.
+// Unsealing: 'Sealed X' + AA at the Blacksmith of Mammon (A grade is plain adena at any blacksmith).
+const UNSEAL_COSTS = Object.freeze({
+  darkGloves:{gold:87000},
+  arcanaGloves:{aa:268500},arcanaRing:{aa:488000},
+  dynasty:{aa:1372000},dynastyHelmet:{aa:686000},dynastyGloves:{aa:457000},dynastyBoots:{aa:457000},
+  elegia:{aa:12553000},elegiaHelmet:{aa:6276000},elegiaGloves:{aa:4184000},elegiaBoots:{aa:4184000},
+});
+// Masterwork: Foundation + Mammon's Varnish Enhancer(s); no AA. The Enhancer costs 100 000 adena at the Merchant of Mammon.
+// Elegia has no retail Foundation, its count is extrapolated from Dynasty 7 -> Icarus/Vesper weapons 14-16.
+const VARNISH_PRICE_GOLD = 100000;
+const VARNISH_COUNTS = Object.freeze({darkGloves:2,arcanaGloves:4,arcanaRing:3,dynasty:7,dynastyHelmet:7,dynastyGloves:7,dynastyBoots:7,elegia:8,elegiaHelmet:8,elegiaGloves:8,elegiaBoots:8,arcana:7});
 const FORGE_CATALOG = Object.freeze({
   arcana:{name:'Посох Тайн · Arcana Mace',grade:'S',type:'weapon',slot:'weapon',art:'weapon-mace',stats:{pAtk:225,mAtk:175},masterwork:{mAtk:12},stage:13,sa:['acumen','mana','regen']},
   darkGloves:{name:'Перчатки Тёмного Кристалла',grade:'A',type:'armor',slot:'gloves',art:'armor-robe-gloves',stats:{pDef:48},masterwork:{castingSpeed:10}},
@@ -843,7 +867,7 @@ function makeForgeItem(templateId,uid,overrides={}) {
   return {uid,templateId,enchant:0,quality:'ordinary',sealed:true,equipped:false,sa:null,shoulder:null,...overrides};
 }
 function createForgeState() {
-  return {gold:9000000,aa:600000,level:84,family:'mage',energy:12,hp:49773,
+  return {gold:9000000,aa:60000000,level:84,family:'mage',energy:12,hp:49773,
     seals:{blue:25000,green:10000,red:5000},materials:{parts:250,alloy:250,gemS:120,varnish:40,essence1:3,essence2:2,...Object.fromEntries(Object.entries(FORGE_CATALOG).filter(([,info])=>info.epic).map(([id])=>[`soul_${id}`,2]))},
     soulCrystals:{'blue:13':3,'green:13':2,'red:13':2},nextUid:7,
     gear:[makeForgeItem('arcana','forge-0',{sealed:false,enchant:6,equipped:true}),
@@ -887,8 +911,13 @@ function craftForgeItem(state,recipeId,outcome='ordinary') {
 }
 function masterworkPreview(state,uid) {
   const item=forgeGear(state,uid),info=forgeItemInfo(item);
-  const cost={gold:info?.grade==='S84'?240000:120000,aa:info?.grade==='S84'?60000:info?.grade==='S80'?30000:15000,materials:{varnish:info?.grade==='S84'?12:info?.grade==='S80'?7:4}};
+  const cost={materials:{varnish:VARNISH_COUNTS[item?.templateId]||(info?.grade==='S84'?8:info?.grade==='S80'?7:4)}};
   return ready(cost,processReason(item)||(!info?.masterwork?'Для этого предмета Masterwork недоступен.':'')||(item.quality!=='foundation'?'Требуется заготовка Foundation.':'')||costReason(state,cost));
+}
+function buyVarnish(state,count=1) {
+  if(!Number.isSafeInteger(count)||count<1)return {ok:false,reason:'Неверное количество.'};
+  const cost=count*VARNISH_PRICE_GOLD;if(state.gold<cost)return {ok:false,reason:'Недостаточно обычной адены.'};
+  state.gold-=cost;state.materials.varnish=(state.materials.varnish||0)+count;return {ok:true,gold:cost};
 }
 function refineMasterwork(state,uid) {
   const preview=masterworkPreview(state,uid);if(!preview.allowed)return {ok:false,reason:preview.reason};
@@ -896,7 +925,8 @@ function refineMasterwork(state,uid) {
 }
 function unsealPreview(state,uid) {
   const item=forgeGear(state,uid),info=forgeItemInfo(item);
-  const cost=info?.type==='cloak'?{gold:info.grade==='S84'?200000:100000,aa:info.grade==='S84'?80000:40000}:info?.grade==='S80'?{gold:180000,aa:60000,materials:{gemS:8}}:info?.grade==='S84'?{gold:360000,aa:120000,materials:{gemS:16}}:{aa:info?.grade==='A'?12000:25000};
+  // Cloaks and epic jewellery are not sealed in High Five; the prototype keeps a plain adena fee for them.
+  const cost=UNSEAL_COSTS[item?.templateId]||{gold:info?.grade==='S84'?200000:100000};
   return ready(cost,processReason(item)||(!item.sealed?'Предмет уже распечатан.':item.quality==='foundation'?'Сначала обработайте Foundation в Masterwork.':'')||costReason(state,cost));
 }
 function unsealForgeItem(state,uid) {
@@ -1056,7 +1086,7 @@ function createEconomyScreens({getState,windowHtml,row,section,button,img,ui,fmt
   }
   function unseal() {
     const state=getState(),item=forgeGear(state,unsealUid),preview=unsealPreview(state,unsealUid),info=forgeItemInfo(item);
-    return windowHtml('Распечатка · Маммон / Ишума',`<div class="forge-service"><b>${['S80','S84'].includes(info?.grade)?'Маэстро Ишума':'Кузнец Маммон'}</b><span>${['S80','S84'].includes(info?.grade)?'Gemstone S + обычная адена':'Древняя адена · AA'}</span></div>${gearList(item=>forgeItemInfo(item).type!=='weapon',unsealUid,'unseal')}${summary(item)}${section('Снятие печати')}<div class="forge-transform"><span>Запечатанный<br><b>${info?.grade||'—'}</b></span><em>→</em><span>Доступен для экипировки<br><b class="positive">Без печати</b></span></div><p class="note">Заточка, Masterwork и остальные свойства сохраняются. У Foundation сначала завершите обработку. Повторная распечатка не расходует ресурсы.</p>${section('Требуется для выбранного предмета')}${costs(preview.cost)}${warning(preview)}${message()}<div class="actions">${button('Камни → AA','aa')}${button('Распечатать','forge-unseal','primary',!preview.allowed)}</div>${equippedControl(item)}`);
+    return windowHtml('Распечатка · Маммон / Ишума',`<div class="forge-service"><b>${['S80','S84'].includes(info?.grade)?'Маэстро Ишума':'Кузнец Маммон'}</b><span>${preview.cost.aa?'Древняя адена · AA':'Обычная адена'}</span></div>${gearList(item=>forgeItemInfo(item).type!=='weapon',unsealUid,'unseal')}${summary(item)}${section('Снятие печати')}<div class="forge-transform"><span>Запечатанный<br><b>${info?.grade||'—'}</b></span><em>→</em><span>Доступен для экипировки<br><b class="positive">Без печати</b></span></div><p class="note">Заточка, Masterwork и остальные свойства сохраняются. У Foundation сначала завершите обработку. Повторная распечатка не расходует ресурсы.</p>${section('Требуется для выбранного предмета')}${costs(preview.cost)}${warning(preview)}${message()}<div class="actions">${button('Камни → AA','aa')}${button('Распечатать','forge-unseal','primary',!preview.allowed)}</div>${equippedControl(item)}`);
   }
   function catacombs() {
     const state=getState(),zone=CATACOMBS.find(zone=>zone.id===zoneId);
@@ -1213,7 +1243,7 @@ function tattoos() {
   const dye=DYES.find(d=>d.id===dyeId), preview=tattooPreview(model,dyeId);
   const existing=tattooStats(model.base,model.symbols);
   const after=pendingRemoval!==null?tattooStats(model.base,model.symbols.filter((_,index)=>index!==pendingRemoval)):preview.after;
-  return windowHtml('Мастер символов',`<div class="tabs"><button type="button" data-action="tattoo-tab" data-value="apply" class="${tattooMode==='apply'?'active':''}">Нанести символ</button><button type="button" data-action="tattoo-tab" data-value="remove" class="${tattooMode==='remove'?'active':''}">Снять символ</button></div><div class="tattoo-slots">${[0,1,2].map(index=>{const d=DYES.find(d=>d.id===model.symbols[index]);return `<div class="tattoo-slot"><span>${d?dyeIcon(d):""}</span><small>${d?`${d.plus} +4 / ${d.minus} −4`:'Свободный слот'}</small>${d&&tattooMode==='remove'?`<button type="button" data-action="remove-select" data-index="${index}">${pendingRemoval===index?'Выбран':'Выбрать'}</button>`:''}</div>`;}).join('')}</div>${tattooMode==='apply'?`${section('Краски в инвентаре')}<div>${DYES.map(d=>`<button type="button" class="dye-row ${d.id===dyeId?'selected':''}" data-action="dye" data-value="${d.id}" aria-pressed="${d.id===dyeId}">${dyeIcon(d)}<span class="dye-copy"><b>${d.name}</b><small><span class="positive">${d.plus} +4</span> / <span class="negative">${d.minus} −4</span></small></span><span class="dye-stock">${model.stock[d.id]} / 10</span></button>`).join('')}</div>`:'<p class="note">Выберите нанесённый символ. Снятие возвращает 5 красок того же типа.</p>'}${section('Характеристики · до → после')}<div class="two-col">${Object.entries(existing).map(([key,value])=>`<div class="preview-stat"><span>${key}</span><strong>${value}<em>→</em><span class="${after[key]>value?'positive':after[key]<value?'negative':''}">${tattooMode==='remove'&&pendingRemoval===null?value:after[key]}</span></strong></div>`).join('')}</div><p class="note">Бонус от тату — до +5 на характеристику. Штрафы складываются полностью; минимальное значение — 1.</p><div class="inset">${row(tattooMode==='apply'?'Нанесение':'Снятие',`${fmt(tattooMode==='apply'?TATTOO_RULES.applyAa:TATTOO_RULES.removeAa)} AA`)}${row('Баланс AA',fmt(model.aa))}${tattooMode==='apply'?row('Будет потрачено',`10 красок · ${dye.plus} +4 / ${dye.minus} −4`):row('Будет возвращено','5 красок')}</div>${tattooMode==='apply'&&preview.reason?`<p class="note negative">${preview.reason}</p>`:''}<div class="actions">${button('Состояние','status')}${tattooMode==='apply'?button('Нанести символ','tattoo-apply','primary',!preview.allowed):button('Подтвердить снятие','tattoo-remove','primary',pendingRemoval===null||model.gold<TATTOO_RULES.removeFee)}</div>`);
+  return windowHtml('Мастер символов',`<div class="tabs"><button type="button" data-action="tattoo-tab" data-value="apply" class="${tattooMode==='apply'?'active':''}">Нанести символ</button><button type="button" data-action="tattoo-tab" data-value="remove" class="${tattooMode==='remove'?'active':''}">Снять символ</button></div><div class="tattoo-slots">${[0,1,2].map(index=>{const d=DYES.find(d=>d.id===model.symbols[index]);return `<div class="tattoo-slot"><span>${d?dyeIcon(d):""}</span><small>${d?`${d.plus} +4 / ${d.minus} −4`:'Свободный слот'}</small>${d&&tattooMode==='remove'?`<button type="button" data-action="remove-select" data-index="${index}">${pendingRemoval===index?'Выбран':'Выбрать'}</button>`:''}</div>`;}).join('')}</div>${tattooMode==='apply'?`${section('Краски в инвентаре')}<div>${DYES.map(d=>`<button type="button" class="dye-row ${d.id===dyeId?'selected':''}" data-action="dye" data-value="${d.id}" aria-pressed="${d.id===dyeId}">${dyeIcon(d)}<span class="dye-copy"><b>${d.name}</b><small><span class="positive">${d.plus} +4</span> / <span class="negative">${d.minus} −4</span></small></span><span class="dye-stock">${model.stock[d.id]} / 10</span></button>`).join('')}</div>`:'<p class="note">Выберите нанесённый символ. Снятие возвращает 5 красок того же типа.</p>'}${section('Характеристики · до → после')}<div class="two-col">${Object.entries(existing).map(([key,value])=>`<div class="preview-stat"><span>${key}</span><strong>${value}<em>→</em><span class="${after[key]>value?'positive':after[key]<value?'negative':''}">${tattooMode==='remove'&&pendingRemoval===null?value:after[key]}</span></strong></div>`).join('')}</div><p class="note">Бонус от тату — до +5 на характеристику. Штрафы складываются полностью; минимальное значение — 1.</p><div class="inset">${row(tattooMode==='apply'?'Нанесение':'Снятие',`${fmt(tattooMode==='apply'?TATTOO_RULES.applyFee:TATTOO_RULES.removeFee)} золота`)}${row('Баланс',fmt(model.gold))}${row('Краска у Маммона',`${fmt(TATTOO_RULES.dyePriceAa)} AA · есть ${fmt(model.aa)}`)}${tattooMode==='apply'?row('Будет потрачено',`10 красок · ${dye.plus} +4 / ${dye.minus} −4`):row('Будет возвращено','5 красок')}</div>${tattooMode==='apply'&&preview.reason?`<p class="note negative">${preview.reason}</p>`:''}<div class="actions">${button('Состояние','status')}${tattooMode==='apply'?button('Купить 10 красок','dye-buy','',(model.aa||0)<TATTOO_RULES.dyePriceAa*10)+button('Нанести символ','tattoo-apply','primary',!preview.allowed):button('Подтвердить снятие','tattoo-remove','primary',pendingRemoval===null||model.gold<TATTOO_RULES.removeFee)}</div>`);
 }
 function materials(entries) { return `<div class="materials">${entries.map(([url,label,value])=>`<div class="material">${img(url)}<div>${label}<br><span class="gold">${value}</span></div></div>`).join('')}</div>`; }
 function weapon() {
@@ -1261,7 +1291,8 @@ $('screen').addEventListener('click',event=>{
   if(action==='dye')dyeId=value;
   if(action==='tattoo-tab'){tattooMode=value;pendingRemoval=null;}
   if(action==='remove-select')pendingRemoval=index;
-  if(action==='tattoo-apply'){const result=applyTattoo(model,dyeId);toast(result.ok?'Символ нанесён. Потрачено 10 красок и 6 000 AA.':result.reason);}
+  if(action==='dye-buy'){const result=buyDye(model,dyeId,10);toast(result.ok?'Куплено 10 красок за 1 740 000 AA.':result.reason);}
+  if(action==='tattoo-apply'){const result=applyTattoo(model,dyeId);toast(result.ok?'Символ нанесён. Потрачено 10 красок и 628 000 золота.':result.reason);}
   if(action==='tattoo-remove'){const result=removeTattoo(model,pendingRemoval);pendingRemoval=null;toast(result.ok?'Символ снят. Возвращено 5 красок.':result.reason);}
   if(action==='weapon-success'||action==='weapon-fail') {
     if(weaponDestroyed){toast('Оружие разрушено. Сбросьте пример, чтобы повторить.');return;}

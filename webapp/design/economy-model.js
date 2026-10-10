@@ -1,5 +1,17 @@
 // Design-only adaptation. Prices, rates, bonuses and drops are illustrative.
 export const SEAL_STONES = Object.freeze({blue:{name:'Синий камень печати',rate:3,color:'#79b4e2'},green:{name:'Зелёный камень печати',rate:5,color:'#9cba73'},red:{name:'Красный камень печати',rate:10,color:'#d3897b'}});
+// Real High Five prices (L2J Mobius CT 2.6 multisell, Blacksmith / Merchant of Mammon). AA = Ancient Adena.
+// Unsealing: 'Sealed X' + AA at the Blacksmith of Mammon (A grade is plain adena at any blacksmith).
+export const UNSEAL_COSTS = Object.freeze({
+  darkGloves:{gold:87000},
+  arcanaGloves:{aa:268500},arcanaRing:{aa:488000},
+  dynasty:{aa:1372000},dynastyHelmet:{aa:686000},dynastyGloves:{aa:457000},dynastyBoots:{aa:457000},
+  elegia:{aa:12553000},elegiaHelmet:{aa:6276000},elegiaGloves:{aa:4184000},elegiaBoots:{aa:4184000},
+});
+// Masterwork: Foundation + Mammon's Varnish Enhancer(s); no AA. The Enhancer costs 100 000 adena at the Merchant of Mammon.
+// Elegia has no retail Foundation, its count is extrapolated from Dynasty 7 -> Icarus/Vesper weapons 14-16.
+export const VARNISH_PRICE_GOLD = 100000;
+export const VARNISH_COUNTS = Object.freeze({darkGloves:2,arcanaGloves:4,arcanaRing:3,dynasty:7,dynastyHelmet:7,dynastyGloves:7,dynastyBoots:7,elegia:8,elegiaHelmet:8,elegiaGloves:8,elegiaBoots:8,arcana:7});
 export const FORGE_CATALOG = Object.freeze({
   arcana:{name:'Посох Тайн · Arcana Mace',grade:'S',type:'weapon',slot:'weapon',art:'weapon-mace',stats:{pAtk:225,mAtk:175},masterwork:{mAtk:12},stage:13,sa:['acumen','mana','regen']},
   darkGloves:{name:'Перчатки Тёмного Кристалла',grade:'A',type:'armor',slot:'gloves',art:'armor-robe-gloves',stats:{pDef:48},masterwork:{castingSpeed:10}},
@@ -58,7 +70,7 @@ export function makeForgeItem(templateId,uid,overrides={}) {
   return {uid,templateId,enchant:0,quality:'ordinary',sealed:true,equipped:false,sa:null,shoulder:null,...overrides};
 }
 export function createForgeState() {
-  return {gold:9000000,aa:600000,level:84,family:'mage',energy:12,hp:49773,
+  return {gold:9000000,aa:60000000,level:84,family:'mage',energy:12,hp:49773,
     seals:{blue:25000,green:10000,red:5000},materials:{parts:250,alloy:250,gemS:120,varnish:40,essence1:3,essence2:2,...Object.fromEntries(Object.entries(FORGE_CATALOG).filter(([,info])=>info.epic).map(([id])=>[`soul_${id}`,2]))},
     soulCrystals:{'blue:13':3,'green:13':2,'red:13':2},nextUid:7,
     gear:[makeForgeItem('arcana','forge-0',{sealed:false,enchant:6,equipped:true}),
@@ -102,8 +114,13 @@ export function craftForgeItem(state,recipeId,outcome='ordinary') {
 }
 export function masterworkPreview(state,uid) {
   const item=forgeGear(state,uid),info=forgeItemInfo(item);
-  const cost={gold:info?.grade==='S84'?240000:120000,aa:info?.grade==='S84'?60000:info?.grade==='S80'?30000:15000,materials:{varnish:info?.grade==='S84'?12:info?.grade==='S80'?7:4}};
+  const cost={materials:{varnish:VARNISH_COUNTS[item?.templateId]||(info?.grade==='S84'?8:info?.grade==='S80'?7:4)}};
   return ready(cost,processReason(item)||(!info?.masterwork?'Для этого предмета Masterwork недоступен.':'')||(item.quality!=='foundation'?'Требуется заготовка Foundation.':'')||costReason(state,cost));
+}
+export function buyVarnish(state,count=1) {
+  if(!Number.isSafeInteger(count)||count<1)return {ok:false,reason:'Неверное количество.'};
+  const cost=count*VARNISH_PRICE_GOLD;if(state.gold<cost)return {ok:false,reason:'Недостаточно обычной адены.'};
+  state.gold-=cost;state.materials.varnish=(state.materials.varnish||0)+count;return {ok:true,gold:cost};
 }
 export function refineMasterwork(state,uid) {
   const preview=masterworkPreview(state,uid);if(!preview.allowed)return {ok:false,reason:preview.reason};
@@ -111,7 +128,8 @@ export function refineMasterwork(state,uid) {
 }
 export function unsealPreview(state,uid) {
   const item=forgeGear(state,uid),info=forgeItemInfo(item);
-  const cost=info?.type==='cloak'?{gold:info.grade==='S84'?200000:100000,aa:info.grade==='S84'?80000:40000}:info?.grade==='S80'?{gold:180000,aa:60000,materials:{gemS:8}}:info?.grade==='S84'?{gold:360000,aa:120000,materials:{gemS:16}}:{aa:info?.grade==='A'?12000:25000};
+  // Cloaks and epic jewellery are not sealed in High Five; the prototype keeps a plain adena fee for them.
+  const cost=UNSEAL_COSTS[item?.templateId]||{gold:info?.grade==='S84'?200000:100000};
   return ready(cost,processReason(item)||(!item.sealed?'Предмет уже распечатан.':item.quality==='foundation'?'Сначала обработайте Foundation в Masterwork.':'')||costReason(state,cost));
 }
 export function unsealForgeItem(state,uid) {
