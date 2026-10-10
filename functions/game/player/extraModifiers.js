@@ -5,9 +5,10 @@ import { passiveModifiers } from './passiveSkills.js';
 import { clanPerkModifiers } from '../clans/clanPerks.js';
 import { activeSkillModifiers, passiveSkillModifiers } from '../equipment/lifestoneSkills.js';
 import { baseStatDelta } from './baseStats.js';
+import { scrydeModifiers } from './scrydeBuffer.js';
 
 function sources(session) {
-    return [passiveModifiers(session), clanPerkModifiers(session), passiveSkillModifiers(session), activeSkillModifiers(session)];
+    return [passiveModifiers(session), clanPerkModifiers(session), passiveSkillModifiers(session), activeSkillModifiers(session), scrydeModifiers(session)];
 }
 
 /** The extra bonus for one stat: 1.x when `isMul`, an addend otherwise (0 when there is none). */

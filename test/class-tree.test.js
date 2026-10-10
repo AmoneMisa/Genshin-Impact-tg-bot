@@ -57,7 +57,7 @@ test('professions keep their parent skills in the same slots and add two (four a
     const parentSkills = classSkills[item.parent];
     // when the family changes (a rogue becomes an archer) the base kit is the new family's, the parent's profession skills stay
     if (byName(item.parent).family === item.family) parentSkills.forEach((skill, index) => assert.equal(own[index].name, skill.name, `${item.name} inherits ${skill.name}`));
-    const added = own.filter(skill => skill.tier === item.tier);
+    const added = own.filter(skill => skill.tier === item.tier && !skill.scryde);
     assert.equal(added.length, item.tier === 4 ? 4 : 2, `${item.name} learns ${added.length} skills`);
     for (const skill of added) assert.ok(skill.needLvl >= item.promoteLvl, `${item.name}/${skill.name} unlocks at ${skill.needLvl}`);
   }
@@ -65,7 +65,7 @@ test('professions keep their parent skills in the same slots and add two (four a
 
 test('3rd professions awaken two skills at levels 76 and 80 that want a boss essence', () => {
   for (const item of classStats.filter(entry => entry.tier === 4)) {
-    const awakened = classSkills[item.name].filter(skill => skill.tier === 4).slice(2);
+    const awakened = classSkills[item.name].filter(skill => skill.tier === 4 && !skill.scryde).slice(2);
     assert.equal(awakened.length, 2, item.name);
     assert.deepEqual(awakened.map(skill => skill.needLvl), [76, 80], item.name);
     assert.ok(awakened.every(skill => skill.enchantItem?.key), `${item.name} awakened skills want an essence`);
@@ -85,7 +85,7 @@ test('every enchant item is a known material and every boss has an essence', () 
 
 test('skills are real: each one a profession learns is a skill of the real tree, with its name', () => {
   for (const item of professions) {
-    for (const skill of classSkills[item.name].filter(entry => entry.tier)) {
+    for (const skill of classSkills[item.name].filter(entry => entry.tier && !entry.scryde)) {
       const real = l2.skills[String(skill.l2Id)];
       assert.ok(real, `${item.name}/${skill.name}`);
       assert.equal(skill.name, real.name);

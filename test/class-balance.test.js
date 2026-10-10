@@ -216,15 +216,16 @@ function winRates(names, lvl, runs = 8) {
   });
 }
 
-test('arena auto-fight: inside every tier each class wins 30-70% of its duels at every level', () => {
+test('arena auto-fight: inside every tier each shape of class wins 30-70% of its duels at every level', () => {
   const tiers = {
-    bases: ['warrior', 'mage', 'priest', 'archer', 'rogue', 'berserk'],
-    second: classStats.filter(item => item.tier === 2).map(item => item.name),
-    third: classStats.filter(item => item.tier === 3).map(item => item.name),
+    bases: [['warrior', 'mage', 'priest', 'archer', 'rogue', 'berserk'], [20, 60, 90]],
+    second: [shapes(2).map(item => item.name), [20, 40, 60]],
+    third: [shapes(3).map(item => item.name), [40, 60, 90]],
+    fourth: [shapes(4).map(item => item.name), [76, 85]],
   };
-  for (const [tier, names] of Object.entries(tiers)) {
-    for (const level of tier === 'third' ? [40, 90] : [20, 60, 90]) {
-      for (const [name, rate] of Object.entries(winRates(names, level))) {
+  for (const [tier, [names, levels]] of Object.entries(tiers)) {
+    for (const level of levels) {
+      for (const [name, rate] of Object.entries(winRates(names, level, 6))) {
         assert.ok(rate > 30 && rate < 70, `${tier} ${name} lvl ${level}: ${rate.toFixed(0)}%`);
       }
     }
@@ -232,9 +233,10 @@ test('arena auto-fight: inside every tier each class wins 30-70% of its duels at
 });
 
 test('arena auto-fight: a higher profession beats a lower tier on average (promotion is real progress)', () => {
-  const sample = ['warrior', 'archer', 'crusader', 'ranger', 'phoenixKnight', 'hawkeye'];
-  const rates = winRates(sample, 60, 6);
+  const sample = ['warrior', 'archer', 'humanKnight', 'warder', 'darkAvenger', 'hawkeye', 'hellKnight', 'sagittarius'];
+  const rates = winRates(sample, 85, 6);
   const avg = names => names.reduce((sum, name) => sum + rates[name], 0) / names.length;
-  assert.ok(avg(['warrior', 'archer']) < avg(['crusader', 'ranger']), 'tier 2 beats the bases');
-  assert.ok(avg(['crusader', 'ranger']) < avg(['phoenixKnight', 'hawkeye']), 'tier 3 beats tier 2');
+  assert.ok(avg(['warrior', 'archer']) < avg(['humanKnight', 'warder']), 'tier 2 beats the bases');
+  assert.ok(avg(['humanKnight', 'warder']) < avg(['darkAvenger', 'hawkeye']), 'tier 3 beats tier 2');
+  assert.ok(avg(['darkAvenger', 'hawkeye']) < avg(['hellKnight', 'sagittarius']), 'tier 4 beats tier 3');
 });

@@ -267,7 +267,7 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
     spendAmmo(session, skill);
 
     const shots = armShots(session, skill);
-    const result = castSkill(session, asBoss(mob), skill, {now});
+    const result = castSkill(session, asBoss(mob), skill, {now, l2Target: mob, random});
     clearShots(session);
     if (shots) result.shots = shots;
     setSkillCooldown(skill, session);

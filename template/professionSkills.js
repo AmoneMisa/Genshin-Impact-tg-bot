@@ -15,11 +15,16 @@
 // like the real item names.
 import l2 from './l2Classes.js';
 import {L2_CLASS_META} from './l2ClassMeta.js';
+import {L2_EFFECT_SKILLS} from './l2EffectSkills.js';
+import {CLASS_SKILLS as SCRYDE_SKILLS} from './scrydeSpells.js';
 
 const flags = {cooldown: 0, isSelf: false, isDealDamage: false, isHeal: false, isShield: false, isBuff: false, costHp: 0, cost: 0};
 
 const DAMAGE = new Set(['PhysicalDamage', 'MagicalDamage', 'FatalBlow', 'HpDrain', 'PhysicalSoulDamage', 'MagicalSoulDamage', 'EnergyDamage', 'MagicalDamageMp', 'DamOverTime', 'Lethal']);
 const HEAL = new Set(['Heal', 'HealPercent', 'CpHeal', 'CpHealPercent', 'HealOverTime']);
+const MANA = new Set(['ManaHealPercent', 'ManaHeal', 'ManaHealByLevel']);
+// the real stats a buff can move that the engine buffs know how to express
+const BUFF_STATS = new Set(['pAtk', 'mAtk', 'pDef', 'mDef', 'shieldDef', 'pAtkSpd', 'mAtkSpd', 'runSpd', 'rCrit', 'mCritRate', 'rEvas', 'rShld', 'sDef', 'maxHp', 'maxMp', 'maxCp']);
 const CONTROL = new Set(['Stun', 'Sleep', 'Root', 'Paralyze', 'Fear', 'Mute', 'PhysicalMute', 'Petrification', 'Disarm']);
 const AVOID = new Set(['Summon', 'Transformation', 'Resurrection', 'ResurrectionSpecial', 'Escape', 'ClanGate', 'FakeDeath', 'Hide', 'SilentMove', 'BlockChat', 'BlockParty', 'Flag', 'DeleteHateOfMe', 'ChangeFishingMastery', 'VitalityPointUp', 'NevitsHourglass', 'ServitorShare', 'ConsumeBody']);
 const MAGIC_STATS = new Set(['mAtk', 'mDef', 'mAtkSpd']);
@@ -39,9 +44,10 @@ const kindOf = skill => {
     if (effects.some(name => AVOID.has(name))) return null;
     if (skill.op === 'P') return null;
     if (effects.some(name => DAMAGE.has(name))) return skill.op === 'A1' || skill.op === 'CA1' || skill.op === 'A2' ? 'damage' : null;
+    if (effects.some(name => MANA.has(name))) return skill.op === 'A1' ? 'mana' : null;
     if (effects.some(name => HEAL.has(name))) return 'heal';
     if (effects.some(name => CONTROL.has(name))) return skill.op === 'A1' || skill.op === 'CA1' ? 'control' : null;
-    if (['A2', 'A3', 'T', 'DA2'].includes(skill.op) && (skill.stats || []).some(node => node.tag !== 'sub' || node.stat)) return 'buff';
+    if (['A2', 'A3', 'T', 'DA2'].includes(skill.op) && (skill.stats || []).some(node => BUFF_STATS.has(node.stat))) return 'buff';
     return null;
 };
 
@@ -110,7 +116,22 @@ function pick(rows, wants, used, tier, promoteLevel) {
     return chosen;
 }
 
+/**
+ * Buffs and debuffs of the real tree also exist as real effects (l2Effects.js): a kit skill that has one carries
+ * `l2Cast` and is resolved through it in a fight (castSkill.js); the engine numbers of the skill stay as the model of the
+ * arena auto-fight and as the fallback when there is no target for the real effect.
+ */
+function withRealEffect(skill, row) {
+    const real = L2_EFFECT_SKILLS[row.id];
+    if (real && (skill.isBuff || skill.debuff)) skill.l2Cast = {id: row.id, hostile: real.kind === 'debuff'};
+    return skill;
+}
+
 function build(row, {tier, family, slotNeed, fixedNeed = false, awakened = false, essence = null}) {
+    return withRealEffect(buildPlain(row, {tier, family, slotNeed, fixedNeed, awakened, essence}), row);
+}
+
+function buildPlain(row, {tier, family, slotNeed, fixedNeed = false, awakened = false, essence = null}) {
     const info = row.info;
     const name = info.name;
     const magic = isMagic(row) || ['mage', 'priest'].includes(family);
@@ -123,6 +144,11 @@ function build(row, {tier, family, slotNeed, fixedNeed = false, awakened = false
         const heal = (awakened ? HEAL_REF[5] : HEAL_REF[tier]);
         return {...base, description: `Исцеляет ${Math.round(heal * 100)}% здоровья.`, effect: 'heal', isSelf: true, isHeal: true,
             cooldown: clamp(Math.round(reuse * 5) + 40, 40, 240), cost: Math.max(cost, 60), healPower: heal, ...enchant};
+    }
+    if (row.kind === 'mana') {
+        const share = awakened ? 0.5 : {2: 0.25, 3: 0.35, 4: 0.45}[tier];
+        return {...base, description: `Возвращает ${Math.round(share * 100)}% маны.`, effect: 'restore', isSelf: true, restoreMp: share,
+            cooldown: clamp(Math.round(reuse * 4) + 60, 60, 240), cost: 0, ...enchant};
     }
     if (row.kind === 'buff') {
         const buffs = buffsOf(row);
@@ -146,8 +172,17 @@ function build(row, {tier, family, slotNeed, fixedNeed = false, awakened = false
         cooldown: clamp(Math.max(Math.round(reuse * 4 + tier * 6), Math.ceil(damageModifier / 0.25), awakened ? 90 : 0), COOLDOWN_CLAMP[0], awakened ? 220 : COOLDOWN_CLAMP[1])};
     if (drain) skill.vampirePower = 0.2;
     if (fatal) skill.critChanceBonus = 30;
+    // "Double Shot", "Triple Slash", "Dual Blow": the same damage in separate hits (each rolls its own crit)
+    const hits = {Double: 2, Dual: 2, Triple: 3, Quadruple: 4}[(/\b(Double|Dual|Triple|Quadruple)\b/.exec(name) || [])[1]];
+    if (hits && !drain) {
+        skill.effect = 'multi_hit';
+        skill.hits = hits;
+        skill.damageModifier = Math.round(damageModifier / hits * 100) / 100;
+    }
     if (control) skill.debuff = {kind: 'stun', amount: 0, seconds: 3};
-    skill.description = `${damageModifier * 100 | 0}% урона${control ? ' и оглушение на 3 с' : ''}${drain ? ', возвращает 20% урона здоровьем' : ''}.`;
+    skill.description = skill.hits
+        ? `${skill.hits} удара по ${Math.round(skill.damageModifier * 100)}% урона.`
+        : `${damageModifier * 100 | 0}% урона${control ? ' и оглушение на 3 с' : ''}${drain ? ', возвращает 20% урона здоровьем' : ''}.`;
     return skill;
 }
 
@@ -196,7 +231,12 @@ export function assembleProfessionSkills(baseSkills) {
         const inherited = parentMeta.family === meta.family ? parentKit : [...baseSkills[meta.family].map(skill => ({...skill})), ...parentKit.slice(baseSkills[parentMeta.family].length).filter(skill => skill.tier)];
         const names = new Set(inherited.map(skill => skill.name));
         const added = ownSkills(classId, meta.family, meta.level + 1, names);
-        return result[meta.key] = [...inherited, ...added].map((skill, slot) => ({...skill, slot}));
+        // the class balance skills of the Scryde server (template/scrydeSpells.js) come after the real ones
+        const promoteLevel = {2: 20, 3: 40, 4: 76}[meta.level + 1];
+        const specials = SCRYDE_SKILLS.filter(entry => entry.classes.includes(meta.key) && !names.has(entry.name)).map(entry => ({
+            ...flags, name: entry.name, description: entry.description, tier: meta.level + 1, needLvl: Math.max(entry.needLvl, promoteLevel), scryde: true, ...entry.skill,
+        }));
+        return result[meta.key] = [...inherited, ...added, ...specials].map((skill, slot) => ({...skill, slot}));
     };
     for (const id of Object.keys(L2_CLASS_META)) build(Number(id));
     return result;

@@ -1,3 +1,4 @@
+import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
 import Chat from '../db/models/Chat.js';
 import ArenaTempBot from '../db/models/ArenaTempBot.js';
 import getSession from '../functions/getters/getSession.js';
@@ -114,6 +115,8 @@ async function loadPlayerDefender(mode, currentChatId, userId) {
 
   try {
     const session = await getSession(sourceChatId, userId);
+    // the defender fights with the skills its clan has now, not with a copy from its last visit
+    await ensureClanPerks(session, userId);
     return { session, sourceChatId, rating: number(ratingDoc.rating, 1000) };
   } catch {
     return null;
@@ -242,6 +245,7 @@ export async function attackArena(session, chatId, userId, mode, defenderId) {
     return { ok: false, reason: 'stale_defender', arena: await getArenaState(session, chatId, userId, mode) };
   }
 
+  await ensureClanPerks(session, userId);
   const attackerCombat = clone(session);
   const defenderCombat = defender.kind === 'bot' ? clone(defender.bot) : clone(defender.session);
   const [battleResult, defenderHpPercent] = getBattleResult(

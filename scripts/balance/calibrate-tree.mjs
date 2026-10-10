@@ -46,7 +46,19 @@ const SIGMA = 0.5;
 const smoothWin = margin => 1 / (1 + Math.exp(-margin / SIGMA));
 const realRandom = Math.random;
 
+// A knob moves one class, so only the duels of that class are fought again: the result of a pair is kept while
+// the numbers of both classes stay the same.
+const memo = new Map();
+const signature = name => JSON.stringify(['attack', 'defence', 'maxHp', 'maxMp', 'maxCp', 'evasion', 'accuracy', 'block', 'criticalChance', 'speed'].map(field => by(name)[field]));
 function directed(a, b, lvl) {
+  const key = `${a}|${b}|${lvl}|${signature(a)}|${signature(b)}`;
+  if (memo.has(key)) return memo.get(key);
+  const value = fight(a, b, lvl);
+  memo.set(key, value);
+  return value;
+}
+
+function fight(a, b, lvl) {
   let wins = 0, smooth = 0;
   for (let i = 0; i < RUNS; i++) {
     Math.random = seeded(hash(`${lvl}|${a}|${b}|${i}`));

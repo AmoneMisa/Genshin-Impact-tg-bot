@@ -94,7 +94,7 @@ def record(skill_id):
     effects = [e.get('name') for e in s.findall('./effects/effect')]
     power = None
     for e in s.findall('./effects/effect'):
-        if power is None and e.get('name') in ('PhysicalDamage', 'MagicalDamage', 'FatalBlow', 'HpDrain', 'PhysicalSoulDamage', 'MagicalSoulDamage', 'Heal', 'HealPercent'):
+        if power is None and e.get('name') in ('PhysicalDamage', 'MagicalDamage', 'FatalBlow', 'HpDrain', 'PhysicalSoulDamage', 'MagicalSoulDamage', 'Heal', 'HealPercent', 'Resurrection'):
             node = e.find('power')
             power = per_level(s, node.text if node is not None and node.text else None, levels)
     if power is None:

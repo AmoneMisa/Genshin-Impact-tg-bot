@@ -12,6 +12,9 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getAttack from '../functions/game/player/getters/getAttack.js';
 import getDefence from '../functions/game/player/getters/getDefence.js';
 import {memberName} from './social.js';
+import {REVIVE_IDS,reviveEntries,castRevival} from '../functions/game/player/revival.js';
+import {CUBIC_IDS,cubicEntries,castCubic} from '../functions/game/player/cubics.js';
+import {isScrydeId,bufferEntries,castScryde} from '../functions/game/player/scrydeBuffer.js';
 const n=(v,d=0)=>Number.isFinite(Number(v))?Number(v):d;
 const mpCost=(session,skill,now)=>Math.ceil(skill.mp*l2RawStat(session,n(skill.fields.isMagic)===1?'magicalMpConsumeRate':'physicalMpConsumeRate',true,now));
 const p=e=>Object.fromEntries((e.children||[]).filter(c=>c.value!==undefined).map(c=>[c.tag,c.value]));
@@ -30,6 +33,9 @@ export function describeL2Effect(skill){
  return parts.join(' · ')||skill.name;
 }
 export function getL2BuffsState(session,now=Date.now()){
+ return [...effectEntries(session,now),...reviveEntries(session,now),...cubicEntries(session,now),...bufferEntries(session,now)];
+}
+function effectEntries(session,now){
  return classEffectSkills(session).map(skill=>({id:'l2:'+skill.id,name:skill.name,kind:skill.kind,group:skill.group,level:skill.learnedLevel,maxLevel:skill.maxLearnedLevel,firstLevelAt:skill.needLevel,nextLevelAt:skill.nextLevel,effect:describeL2Effect(skill),seconds:skill.seconds,toggle:skill.operate==='T',cost:mpCost(session,skill,now),costOthers:mpCost(session,skill,now),cooldownUntil:n(session.game.l2CastAt?.[skill.id]),active:l2EffectRows(session,now).find(row=>row.id==='l2:'+skill.id)||null}));
 }
 function instantEffects(caster,target,skill,now,random=Math.random){
@@ -67,7 +73,10 @@ function instantEffects(caster,target,skill,now,random=Math.random){
  return {damage,healed};
 }
 export function castL2Buff(session,rawId,targetId=null,{now=Date.now(),random=Math.random,force=false}={}){
+ if(isScrydeId(rawId))return castScryde(session,rawId,targetId,{now,random});
  const id=Number(String(rawId).replace(/^l2:/,''));
+ if(REVIVE_IDS.has(id))return castRevival(session,id,targetId,{now});
+ if(CUBIC_IDS.has(id))return castCubic(session,id,{now});
  const entry=classEffectSkills(session,{includeLocked:false}).find(s=>s.id===id);
  if(!entry)return {ok:false,reason:'not_learned'};
  const summon=isL2PetSkill(entry);

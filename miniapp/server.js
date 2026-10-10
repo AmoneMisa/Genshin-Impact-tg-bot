@@ -103,6 +103,7 @@ import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchan
 import { getTattooState, performTattooAction } from './tattoos.js';
 import { performFishingAction } from './fishing.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
+import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
 import { getZoneLoot, fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
@@ -1018,7 +1019,7 @@ const classBuffsCast = guarded('class buffs cast', async (req, res) => {
   const result = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const advanced=advanceFieldPvp(context.session.ownerDocument());
-    const cast = body.buffId.startsWith('l2:') ? castL2Buff(context.session,body.buffId,body.targetId??null,{force:body.force===true}) : castClassBuff(context.session, body.buffId, body.targetId ?? null);
+    const cast = (body.buffId.startsWith('l2:') || body.buffId.startsWith('scryde:')) ? castL2Buff(context.session,body.buffId,body.targetId??null,{force:body.force===true}) : castClassBuff(context.session, body.buffId, body.targetId ?? null);
     const buffs=getClassBuffsState(context.session);
     if (cast.ok||advanced||context.session.needsSave) await saveSession(context.session);
     return { ...cast, buffs };
@@ -1098,6 +1099,11 @@ const stealAttack = guarded('steal attack', async (req, res) => {
   const payload = await withLock(`${context.chatId}:steal`, async () => {
     const chat = await getChatSession(context.chatId);
     refreshContextSession(context, chat);
+    // the raid is fought with the current clan skills of both sides
+    for (const id of [context.userId, body.targetId]) {
+      const member = (chat.members || []).find(entry => String(entry.userId) === String(id));
+      if (member) await ensureClanPerks(member, id);
+    }
     const result = stealForMiniApp(chat, context.userId, body.targetId);
     if (result.ok) await chat.save();
     refreshContextSession(context, chat);

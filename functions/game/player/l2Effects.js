@@ -71,7 +71,9 @@ export function l2ActionBlock(target,{magic=false,move=false,attack=false}={},no
 }
 export function l2RawStat(target,stat,isMul=false,now=Date.now()){
  let total=isMul?1:0;
- for(const {skill} of activeL2Effects(target,now))for(const e of skill.effects){
+ for(const {record,skill} of activeL2Effects(target,now))for(const e of skill.effects){
+  // `scale` weakens a buff that a server gives at a part of its power (Scryde dances and songs at 50%)
+  const scale=record?.scale===undefined?1:n(record.scale,1);
   if(e.name==='ServitorShare'&&isMul)total*=n(params(e)[stat],1);
   if(e.name==='MaxHp'&&stat==='maxHp'){
    const p=params(e);if(isMul&&p.type==='PER')total*=1+n(p.power)/100;else if(!isMul&&p.type!=='PER')total+=n(p.power);
@@ -80,8 +82,8 @@ export function l2RawStat(target,stat,isMul=false,now=Date.now()){
    if(node.stat!==stat)continue;
    const raw=statNodeValue(target,node);if(raw===null||raw===undefined)continue;
    const value=n(raw,isMul?1:0);
-   if(isMul&&node.tag==='mul')total*=value;
-   if(!isMul&&['add','sub'].includes(node.tag))total+=(node.tag==='sub'?-value:value);
+   if(isMul&&node.tag==='mul')total*=scale===1?value:1+(value-1)*scale;
+   if(!isMul&&['add','sub'].includes(node.tag))total+=(node.tag==='sub'?-value:value)*scale;
   }
  }
  return total;

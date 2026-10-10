@@ -1,5 +1,5 @@
 import userDealDamage from './userDealDamage.js';
-import {l2OnHostileAction} from './l2Effects.js';
+import {l2OnHostileAction, applyL2Effect, classEffectSkills} from './l2Effects.js';
 import {applySoulSpell} from '../equipment/soulCrystalCombat.js';
 import {partyTargets} from '../party/party.js';
 import useHealSkill from './useHealSkill.js';
@@ -63,8 +63,40 @@ export default function castSkill(session, boss, skill, options = {}) {
     return result;
 }
 
-function resolveSkill(session, boss, skill, {targetId = null, now = Date.now()} = {}) {
+/**
+ * A kit skill that has a real High Five effect (skill.l2Cast) applies it: a buff to the caster (and the party for a party
+ * buff), a debuff to the monster of the hunt (`l2Target`). Returns null when the real effect has no one to land on, so the
+ * engine numbers of the skill are used instead.
+ */
+function castRealEffect(session, skill, {now = Date.now(), l2Target = null, random = Math.random} = {}) {
+    const {id, hostile} = skill.l2Cast;
+    const known = classEffectSkills(session).find(entry => entry.id === id);
+    const level = Math.max(1, known?.learnedLevel || 1);
+    if (hostile) {
+        if (!l2Target || number(l2Target.currentHp, 1) <= 0) return null;
+        const result = applyL2Effect(session, l2Target, id, level, {now, random});
+        return {type: 'debuff', l2: id, name: skill.name, debuffs: [], resisted: Boolean(result.resisted), applied: Boolean(result.applied), until: result.until};
+    }
+    const party = known?.fields?.targetType === 'PARTY' && typeof session.ownerDocument === 'function' ? partyTargets(session.ownerDocument(), session) : [session];
+    const audience = party.includes(session) ? party : [session, ...party];
+    let applied = 0, until = null;
+    for (const member of audience) {
+        const result = applyL2Effect(session, member, id, level, {now, random});
+        if (result.applied) applied += 1;
+        until = result.until ?? until;
+        if (member !== session) member.needsSave = true;
+    }
+    return {type: 'buff', l2: id, name: skill.name, buffs: [], applied, until};
+}
+
+function resolveSkill(session, boss, skill, options = {}) {
+    const {targetId = null, now = Date.now()} = options;
     pruneExpiredEffects(session, now);
+
+    if (skill.l2Cast && !skill.isDealDamage) {
+        const real = castRealEffect(session, skill, options);
+        if (real) return real;
+    }
 
     if (skill.isDealDamage) {
         return {type: 'damage', ...userDealDamage(session, boss, skill, {targetId, now})};

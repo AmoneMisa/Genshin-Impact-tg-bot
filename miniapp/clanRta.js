@@ -3,6 +3,7 @@
 // (the friendly-duel engine, fighters paired from the strongest). The team with more duels won takes
 // rating from the other (Elo) and a prize for the warehouse. Fighters are copies, so a battle never
 // touches a player's own game and works while they are offline, from any chat.
+import { syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import Clan from '../db/models/Clan.js';
 import RtaFighter from '../db/models/RtaFighter.js';
 import getClan from '../functions/game/clans/getClan.js';
@@ -150,6 +151,7 @@ export async function joinRtaSquad(clan, userId, session, name) {
     const rta = ensureRta(clan);
     const inSquad = rta.squad.some(id => String(id) === String(userId));
     if (!inSquad && rta.squad.length >= RTA_SQUAD_SIZE) return {ok: false, reason: 'rta_squad_full'};
+    syncClanPerks(session, clan);
     await RtaFighter.updateOne(
         {userId: Number(userId)},
         {$set: {clanId: idOf(clan), name: name || `Игрок ${userId}`, power: powerOf(session), snapshot: snapshotFighter(session)}},
@@ -185,6 +187,9 @@ export async function startRtaBattle(clan, actorId, opponentId, {now = Date.now(
     if (mine.length < RTA_MIN_SQUAD) return {ok: false, reason: 'rta_squad_small'};
     if (theirs.length < RTA_MIN_SQUAD) return {ok: false, reason: 'rta_opponent_squad_small'};
 
+    // the stored snapshots predate the skills the clans learned since: both squads fight with the current ones
+    for (const fighter of mine) syncClanPerks(fighter.snapshot, clan);
+    for (const fighter of theirs) syncClanPerks(fighter.snapshot, opponent);
     const fight = fightSquads(mine, theirs, duel);
     const applied = applyRtaResult(clan, opponent, fight, now);
     await Promise.all([clan.save(), opponent.save()]);

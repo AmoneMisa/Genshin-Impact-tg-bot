@@ -4,6 +4,7 @@ import calcDamage from '../boss/calcDamage.js';
 import getBossDefence from '../boss/getBossStats/getBossDefence.js';
 import userVampireSkill from './userVampireSkill.js';
 import getMaxHp from './getters/getMaxHp.js';
+import {cubicDamage} from './cubics.js';
 import {l2RawStat,l2OnDamageReceived,l2PreventDeath,l2OnHostileAction,l2CompanionDamage} from './l2Effects.js';
 import { applyBossDebuff } from '../boss/bossDebuffs.js';
 import { advanceBossPhases } from '../boss/bossPhases.js';
@@ -62,8 +63,11 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
     let playerStats = session.game.gameClass.stats;
     const companionDamage=l2CompanionDamage(session,total,now);
     total+=companionDamage;
+    // the cubics of the hero add a blow of their own to every hit
+    const cubic=cubicDamage(session,total,now);
+    total+=cubic.damage;
     const userId = session.userChatData.user.id;
-    const result = {isHasCritical, dmg: total, dealt: 0, hits, companionDamage, vampire: 0, reflectDamage: 0, target: 'boss'};
+    const result = {isHasCritical, dmg: total, dealt: 0, hits, companionDamage, cubicDamage: cubic.damage, vampire: 0, reflectDamage: 0, target: 'boss'};
 
     if (unit) {
         const dealt = Math.min(total, unit.currentHp);

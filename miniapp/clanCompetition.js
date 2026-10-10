@@ -1,3 +1,4 @@
+import { syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import crypto from 'crypto';
 import Clan from '../db/models/Clan.js';
 import getClan from '../functions/game/clans/getClan.js';
@@ -321,6 +322,9 @@ export async function performClanCompetitionAction(userId, playerSession, action
     const chatMembers = activeChatMembers(playerSession);
     const defender = chatMembers.find(member => String(member.userId) === String(opponentId));
     if (!defender) return { ok: false, reason: 'pvp_opponent_not_in_chat' };
+    // both fighters are members of this clan: they fight with its current skills
+    syncClanPerks(playerSession, clan);
+    syncClanPerks(defender, clan);
     const result = resolveClanDuel(clan, userId, opponentId, playerSession, defender);
     if (result.ok) await clan.save();
     if (result.ok) {

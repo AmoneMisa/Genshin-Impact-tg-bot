@@ -118,7 +118,7 @@ function partyAudience(session) {
  * party always buffs the whole party; the cost grows with the number of members.
  */
 export function castClassBuff(session, buffId, targetId = null, now = Date.now()) {
-  if(String(buffId).startsWith('l2:'))return castL2Buff(session,buffId,targetId,{now});
+  if(String(buffId).startsWith('l2:')||String(buffId).startsWith('scryde:'))return castL2Buff(session,buffId,targetId,{now});
   const definition = buffPotions.find(potion => potion.id === buffId);
   if (!definition) return { ok: false, reason: 'unknown_buff' };
 

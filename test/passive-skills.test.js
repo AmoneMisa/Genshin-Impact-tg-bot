@@ -160,3 +160,21 @@ test('RTA: a won battle changes both ratings, pays the winner and starts the coo
   assert.equal(loser.rta.history[0].result, 'loss');
   assert.equal(ensureRta(winner).wins, 1);
 });
+
+import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
+import getAttack from '../functions/game/player/getters/getAttack.js';
+
+test('a fighter is refreshed with the current clan skills before a combat reads its stats', async () => {
+  const might = CLAN_SKILLS.find(entry => entry.name === 'Clan Might');
+  const clan = { level: 8, skills: { [might.id]: 3 } };
+  const session = player('duelist');
+  session.game.clanPerks = {};
+  session.game.gameClass.stats.attack = 1000;
+  const before = getAttack(session);
+  assert.equal(await ensureClanPerks(session, 1, clan), true);
+  assert.ok(getAttack(session) > before, 'the clan skill reaches the attack');
+  // a clan that is gone takes the perks away; a lookup that fails keeps the fight going
+  assert.equal(await ensureClanPerks(session, 1, null), true);
+  assert.deepEqual(session.game.clanPerks, {});
+  assert.equal(await ensureClanPerks(null, 1, clan), false);
+});
