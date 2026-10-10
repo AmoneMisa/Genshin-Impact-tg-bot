@@ -8,6 +8,7 @@ import { icon } from './icons.js';
 const REASONS = {
   unknown_dye: 'Такой краски нет.',
   no_free_slot: 'Все слоты заняты. Сначала сотри символ.',
+  profession_too_low: 'Мастер символов принимает только после второй профессии.',
   level_too_low: 'Твой уровень слишком низкий для этой краски.',
   class_cannot_use: 'Эта краска не для твоего класса.',
   bonus_capped: 'Бонус по этим характеристикам уже достиг +5.',
@@ -81,7 +82,7 @@ export async function openTattoosGame({ api, renderState, haptic, statusElement 
           <button type="button" class="equipment-action" data-remove="${entry.index}">Стереть · 🪙 ${number(entry.cancelFee)} · вернётся ${entry.back}</button></div>`;
       }
       const open = index < state.slots;
-      return `<div class="tattoo-slot ${open ? 'free' : 'locked'}"><strong>${open ? 'Свободный слот' : 'Закрыт'}</strong><small>${open ? 'Выбери краску ниже' : `Откроется на ${state.slotLevels[index]} уровне`}</small></div>`;
+      return `<div class="tattoo-slot ${open ? 'free' : 'locked'}"><strong>${open ? 'Свободный слот' : 'Закрыт'}</strong><small>${open ? 'Выбери краску ниже' : `Нужна 2-я профессия (с ${state.needLevel} уровня)`}</small></div>`;
     }).join('')}</div>`;
   }
 

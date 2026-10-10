@@ -735,4 +735,6 @@ export default {
   'Тяжёлая броня':'Og‘ir zirh',
   'Чёрный торговец Маммона меняет стрелы на болты и обратно один к одному, бесплатно. Нужны для луков и арбалетов своего грейда.':'Mammonning qora savdogari o‘qlarni boltlarga va aksincha birga bir, bepul almashtiradi. O‘z darajasidagi kamon va arbaletlar uchun kerak.',
   '{0} · {1} ур. · {2} красок':'{0} · {1}-daraja · {2} bo‘yoq',
+  'Мастер символов принимает только после второй профессии.':'Belgilar ustasi faqat ikkinchi kasbdan keyin qabul qiladi.',
+  'Нужна 2-я профессия (с {0} уровня)':'2-kasb kerak ({0}-darajadan)',
 };

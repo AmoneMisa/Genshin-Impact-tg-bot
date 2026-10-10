@@ -1,16 +1,20 @@
 // Symbols (tattoos) of High Five: a dye changes the six base characteristics, up to three symbols at a time.
-//  - slots: one from level 20, two from 40, three from 76 (the first, second and third profession);
+//  - the Symbol Maker only works for a character who has taken the 2nd profession (class tier 3, level 40);
+//    from then on there are three slots;
 //  - drawing a symbol takes `wear[0]` dyes of one kind and adena; erasing returns `cancel[0]` dyes and costs adena;
 //  - a symbol can only be drawn at the level its dye asks for and by the classes the dye is made for;
 //  - gains from symbols stop at +5 per characteristic, the losses always count in full.
 // The adena fees are the real ones on the game's gold scale (HUNT.goldScale).
 import HENNAS from '../../../template/hennaData.js';
 import {classFamily} from '../classes/classFamily.js';
+import classStats from '../../../template/classStatsTemplate.js';
 import {addMaterial, getMaterialCount, spendMaterials} from './materials.js';
 import {HUNT} from '../hunt/huntConfig.js';
 import {BASE_STATS} from './baseStatsData.js';
 
-export const TATTOO_SLOT_LEVELS = Object.freeze([20, 40, 76]);
+export const TATTOO_SLOTS = 3;
+/** The class tier (1 base, 2 first profession, 3 second profession) the Symbol Maker asks for. */
+export const TATTOO_MIN_TIER = 3;
 export const TATTOO_BONUS_CAP = 5;
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
@@ -27,7 +31,10 @@ export function archetypeOf(session) {
     return 'fighter';
 }
 
-export const slotCount = session => TATTOO_SLOT_LEVELS.filter(level => number(session?.game?.stats?.lvl, 1) >= level).length;
+export const professionTier = session => number(classStats.find(entry => entry.name === session?.game?.gameClass?.stats?.name)?.tier, 1);
+export const professionLevel = tier => number(classStats.find(entry => entry.tier === tier && entry.promoteLvl)?.promoteLvl, 0);
+
+export const slotCount = session => (professionTier(session) >= TATTOO_MIN_TIER ? TATTOO_SLOTS : 0);
 
 const worn = session => (Array.isArray(session?.game?.tattoos) ? session.game.tattoos : []);
 
@@ -82,8 +89,10 @@ export function getTattooState(session, query = {}) {
     return {
         page, pages, total: filtered.length, pageSize: DYE_PAGE_SIZE,
         slots: slotCount(session),
-        maxSlots: TATTOO_SLOT_LEVELS.length,
-        slotLevels: TATTOO_SLOT_LEVELS,
+        maxSlots: TATTOO_SLOTS,
+        needTier: TATTOO_MIN_TIER,
+        needLevel: professionLevel(TATTOO_MIN_TIER),
+        tierOk: professionTier(session) >= TATTOO_MIN_TIER,
         cap: TATTOO_BONUS_CAP,
         archetype,
         gold: Math.max(0, number(session?.game?.inventory?.gold)),
@@ -101,6 +110,7 @@ export function applyTattoo(session, rawDye) {
     const henna = hennaOfDye(rawDye);
     if (!henna) return {ok: false, reason: 'unknown_dye'};
     const tattoos = worn(session);
+    if (professionTier(session) < TATTOO_MIN_TIER) return {ok: false, reason: 'profession_too_low', needLevel: professionLevel(TATTOO_MIN_TIER)};
     if (tattoos.length >= slotCount(session)) return {ok: false, reason: 'no_free_slot'};
     if (number(session.game.stats?.lvl, 1) < henna.level) return {ok: false, reason: 'level_too_low', needLevel: henna.level};
     if (!henna.who.includes(archetypeOf(session))) return {ok: false, reason: 'class_cannot_use'};

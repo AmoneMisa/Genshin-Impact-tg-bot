@@ -10,7 +10,7 @@ import {
 } from '../functions/game/player/tattoos.js';
 import {performTattooAction} from '../miniapp/tattoos.js';
 
-const hero = (className = 'warrior', level = 80, gold = 1e9) => {
+const hero = (className = 'phoenixKnight', level = 80, gold = 1e9) => {
   const session = {userId: 1, userChatData: {user: {id: 1}}, game: {stats: {lvl: level, currentExp: 0}, inventory: {gold, materials: {}, equipment: {items: []}, potions: {items: []}}, equipmentStats: {}, effects: [], builds: {}, respawnTime: 0}};
   changeClass(session, className);
   updateStats(session);
@@ -25,13 +25,20 @@ test('the data is the real High Five list: 180 symbols, ten dyes to draw, five c
   assert.deepEqual([greater.stats, greater.wear, greater.cancel], [{STR: 4, CON: -4}, [10, 628000], [5, 125600]]);
 });
 
-test('slots open with the professions: level 20, 40 and 76', () => {
-  assert.deepEqual([1, 19, 20, 39, 40, 75, 76].map(level => slotCount(hero('warrior', level))), [0, 0, 1, 1, 2, 2, 3]);
-  assert.equal(applyTattoo(hero('warrior', 10), 4445).reason, 'no_free_slot');
+test('the Symbol Maker asks for the 2nd profession (tier 3); then there are three slots', () => {
+  assert.deepEqual(['warrior', 'crusader', 'phoenixKnight', 'mage', 'elementalist', 'archmage'].map(name => slotCount(hero(name, 85))), [0, 0, 3, 0, 0, 3]);
+  const base = hero('warrior', 85);
+  const before = JSON.stringify(base.game);
+  assert.deepEqual([applyTattoo(base, 4445).reason, JSON.stringify(base.game)], ['profession_too_low', before]);
+  assert.equal(getTattooState(base).tierOk, false);
+  assert.equal(getTattooState(base).needLevel, 40);
+  assert.equal(getTattooState(hero('archmage', 85)).tierOk, true);
+  const first = hero('crusader', 85);
+  assert.equal(applyTattoo(first, 4445).reason, 'profession_too_low');
 });
 
 test('a symbol takes the dyes and the real adena fee and changes the characteristics', () => {
-  const session = hero('warrior', 80);
+  const session = hero('phoenixKnight', 80);
   const henna = dye(item => item.who.includes('fighter') && item.stats.STR === 2 && item.level <= 80);
   const base = statTotal(session, 'STR'), gold = session.game.inventory.gold;
   assert.equal(applyTattoo(session, henna.dye).reason, 'not_enough_dyes');
@@ -46,7 +53,7 @@ test('a symbol takes the dyes and the real adena fee and changes the characteris
 });
 
 test('erasing returns five dyes for the fee; level, class and gold are checked first', () => {
-  const session = hero('warrior', 80);
+  const session = hero('phoenixKnight', 80);
   const henna = dye(item => item.who.includes('fighter') && item.level <= 80 && item.stats.DEX > 0);
   stock(session, henna);
   assert.equal(applyTattoo(session, henna.dye).ok, true);
@@ -57,18 +64,18 @@ test('erasing returns five dyes for the fee; level, class and gold are checked f
   assert.equal(removeTattoo(session, 0).reason, 'no_such_symbol');
 
   const mageOnly = dye(item => item.who.length === 1 && item.who[0] === 'mage');
-  const warrior = hero('warrior', 80);
+  const warrior = hero('phoenixKnight', 80);
   stock(warrior, mageOnly);
   assert.equal(applyTattoo(warrior, mageOnly.dye).reason, 'class_cannot_use');
-  const mage = hero('mage', 80);
+  const mage = hero('archmage', 80);
   stock(mage, mageOnly);
   assert.equal(applyTattoo(mage, mageOnly.dye).ok, true);
 
   const high = dye(item => item.level >= 50 && item.who.includes('fighter'));
-  const low = hero('warrior', 40);
+  const low = hero('phoenixKnight', 40);
   stock(low, high);
   assert.equal(applyTattoo(low, high.dye).reason, 'level_too_low');
-  const poor = hero('warrior', 80, 0);
+  const poor = hero('phoenixKnight', 80, 0);
   stock(poor, high);
   const before = JSON.stringify(poor.game);
   assert.deepEqual([applyTattoo(poor, high.dye).reason, JSON.stringify(poor.game)], ['not_enough_gold', before]);
@@ -83,7 +90,7 @@ test('gains stop at +5 per characteristic, losses always count', () => {
 });
 
 test('the screen state is paged and filtered, and the mini app actions return it', () => {
-  const session = hero('mage', 80);
+  const session = hero('archmage', 80);
   const all = getTattooState(session, {usable: false});
   assert.equal(all.total, 180);
   assert.equal(all.dyes.length, 8);
