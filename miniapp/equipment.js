@@ -379,6 +379,7 @@ function recipeRow(session, recipe) {
     gold: recipe.gold,
     mp: asNumber(recipe.mp),
     real: Boolean(recipe.real),
+    dye: Boolean(recipe.dye),
     learnPrice: recipe.learnPrice,
     craftLevel: recipe.craftLevel,
     minLevel: recipe.minLevel,

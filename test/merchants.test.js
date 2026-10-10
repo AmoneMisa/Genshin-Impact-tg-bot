@@ -16,7 +16,7 @@ const hero = (className = 'warrior', level = 85, inventory = {}) => {
 
 test('town merchants sell the catalog items of no grade, D and C at the real prices on the gold scale', () => {
   const stock = merchantStock();
-  assert.deepEqual(MERCHANTS.map(merchant => merchant.id), ['weapons', 'armor', 'jewelry', 'alchemist', 'mammon']);
+  assert.deepEqual(MERCHANTS.map(merchant => merchant.id), ['weapons', 'armor', 'jewelry', 'alchemist', 'fisher', 'mammon']);
   assert.ok(stock.weapons.length >= 20 && stock.armor.length >= 40 && stock.jewelry.length >= 6);
   for (const entry of [...stock.weapons, ...stock.armor, ...stock.jewelry].filter(entry => entry.kind === 'equipment')) assert.ok(['noGrade', 'D', 'C'].includes(entry.grade), entry.name);
   // Club costs 590 adena in High Five
@@ -86,7 +86,7 @@ test('SP scrolls give skill points at once; gemstones D/C/B and recipe books are
 test('the screen state lists the merchants and one filtered, paged slice of the chosen one', () => {
   const player = hero('warrior', 85, {gold: 100, ancientAdena: 0});
   const state = getMerchantsState(player, {merchant: 'weapons'});
-  assert.deepEqual(state.merchants.map(merchant => merchant.id), ['weapons', 'armor', 'jewelry', 'alchemist', 'mammon']);
+  assert.deepEqual(state.merchants.map(merchant => merchant.id), ['weapons', 'armor', 'jewelry', 'alchemist', 'fisher', 'mammon']);
   assert.ok(state.merchants.every(merchant => merchant.count > 0));
   assert.equal(state.items.length, 12);
   assert.equal(state.pageSize, 12);
@@ -95,7 +95,7 @@ test('the screen state lists the merchants and one filtered, paged slice of the 
   const result = buyFromMerchant(player, 'weapons', state.items[0].id);
   assert.equal(result.ok, false);
   assert.equal(result.reason, 'not_enough_gold');
-  assert.equal(result.merchants.merchants.length, 5);
+  assert.equal(result.merchants.merchants.length, 6);
   assert.equal(player.game.inventory.gold, 100);
 });
 

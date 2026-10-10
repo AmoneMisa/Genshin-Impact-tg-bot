@@ -12,12 +12,14 @@ import {lootInfo, itemRow} from '../hunt/lootTable.js';
 import {HUNT} from '../hunt/huntConfig.js';
 import {AMMO_IDS} from '../shots/ammo.js';
 import {hennaOfDye} from '../player/tattoos.js';
+import FISHING from '../../../template/fishingData.js';
 
 export const MERCHANTS = Object.freeze([
     {id: 'weapons', title: 'Торговец оружием', subtitle: 'Оружие без грейда, D и C за адену', currency: 'gold'},
     {id: 'armor', title: 'Торговец доспехами', subtitle: 'Броня и щиты без грейда, D и C', currency: 'gold'},
     {id: 'jewelry', title: 'Торговец бижутерией', subtitle: 'Кольца, серьги и ожерелья без грейда, D и C', currency: 'gold'},
     {id: 'alchemist', title: 'Лавка мастеров', subtitle: 'Самоцветы, рецепты и лак Маммона за адену', currency: 'gold'},
+    {id: 'fisher', title: 'Рыбак', subtitle: 'Удочки и рецепты красок Гильдии рыбаков', currency: 'gold'},
     {id: 'mammon', title: 'Торговец Маммона', subtitle: 'Древняя адена: самоцветы, свитки, ОП', currency: 'aa'},
 ]);
 
@@ -74,8 +76,18 @@ function build() {
         armor: equipmentEntries(['armor', 'shield']),
         jewelry: equipmentEntries(['jewelry']),
         alchemist: [],
+        fisher: [],
         mammon: [],
     };
+    // the Fishermen's Guild: rods (a rod is the "fishing staff" of the game) and the recipes of the dyes
+    for (const rod of FISHING.rods) {
+        const info = infoOf(rod.item);
+        stock.fisher.push({id: `rod:${rod.item}`, kind: 'material', group: 'rod', key: info.key, amount: 1, name: rod.name, minLevel: rod.level, realId: rod.item, cost: {gold: gold(rod.price)}});
+    }
+    for (const [id, price] of FISHING.recipes) {
+        const info = infoOf(id);
+        stock.fisher.push({id: `fr:${id}`, kind: 'material', group: 'recipe', key: info.key, amount: 1, name: realName(id), realId: id, cost: {gold: gold(price)}});
+    }
     // arrows and bolts in packs of a hundred, at the real price of one
     for (const kind of ['arrow', 'bolt']) {
         for (const [grade, id] of Object.entries(AMMO_IDS[kind])) {
@@ -125,8 +137,8 @@ export function entryCost(entry, count = 1) {
 
 export function entryAvailability(session, entry) {
     const level = number(session.game.stats?.lvl, 1);
+    if (entry.minLevel && level < entry.minLevel) return {ok: false, reason: 'level_too_low', needLevel: entry.minLevel};
     if (entry.kind === 'equipment') {
-        if (level < entry.minLevel) return {ok: false, reason: 'level_too_low', needLevel: entry.minLevel};
         if (!canClassUse(session.game.gameClass?.stats?.name, findCatalogItem(entry.itemId))) return {ok: false, reason: 'class_cannot_use'};
     }
     return {ok: true};
@@ -196,7 +208,7 @@ const GROUP_LABELS = {
     oneHandedSword: 'Мечи', twoHandedSword: 'Двуручные мечи', dagger: 'Кинжалы', mace: 'Посохи и булавы', bow: 'Луки', crossbow: 'Арбалеты',
     blunt: 'Дробящее', fists: 'Кастеты', heavy: 'Тяжёлая броня', light: 'Лёгкая броня', robe: 'Роба', bigShield: 'Большие щиты',
     smallShield: 'Малые щиты', sigill: 'Сигилы', ring: 'Кольца', earring: 'Серьги', necklace: 'Ожерелья',
-    ammo: 'Стрелы и болты', recipe: 'Рецепты', dye: 'Краски', scroll: 'Свитки заточки', sp: 'Свитки ОП', material: 'Материалы', other: 'Прочее',
+    ammo: 'Стрелы и болты', rod: 'Удочки', recipe: 'Рецепты', dye: 'Краски', scroll: 'Свитки заточки', sp: 'Свитки ОП', material: 'Материалы', other: 'Прочее',
 };
 
 /**

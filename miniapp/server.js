@@ -100,6 +100,7 @@ import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { getPartyState, performPartyAction } from './party.js';
 import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchants.js';
 import { getTattooState, performTattooAction } from './tattoos.js';
+import { performFishingAction } from './fishing.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
@@ -1724,6 +1725,20 @@ const tattoosAction = guarded('tattoos action', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const fishingAction = guarded('fishing', async (req, res) => {
+  const context = await authorize(req);
+  const body = req.method === 'POST' ? await readJsonBody(req) : {};
+  const action = typeof body.action === 'string' ? body.action : 'state';
+  const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const done = performFishingAction(context.session, action, body);
+    // a settled catch and any action change the inventory: save always, the state read is cheap
+    await saveSession(context.session);
+    return done;
+  });
+  return sendResult(res, result, context);
+});
+
 const PARTY_ACTIONS = new Set(['create', 'invite', 'accept', 'decline', 'leave', 'kick', 'disband', 'loot']);
 
 const partyState = guarded('party state', async (req, res) => {
@@ -1995,6 +2010,7 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/boss') return bossState(req, res);
     if (route === 'GET /api/hunt') return huntState(req, res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
+    if (route === 'POST /api/fishing') return fishingAction(req, res);
     if (route === 'GET /api/tattoos') return tattoosState(req, res);
     if (route === 'POST /api/tattoos') return tattoosAction(req, res);
     if (route === 'GET /api/merchants') return merchantsState(req, res);

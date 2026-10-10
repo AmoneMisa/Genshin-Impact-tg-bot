@@ -3,6 +3,7 @@
 // armor, pieces, recipes, dyes, crafting goods - is a collectable material `l2_<item id>` named like the real item.
 import LOOT from '../../../template/l2Loot.js';
 import ITEMS from '../../../template/l2Items.js';
+import FISHING from '../../../template/fishingData.js';
 import {ATTRIBUTE_TIERS, ELEMENTS, lifestoneKey} from '../../../template/augmentData.js';
 
 export const LOOT_KINDS = Object.freeze([
@@ -18,6 +19,7 @@ export const LOOT_KINDS = Object.freeze([
     {id: 'material', label: 'Материалы', icon: '🔩'},
     {id: 'consumable', label: 'Расходники', icon: '🧪'},
     {id: 'herb', label: 'Травы', icon: '🌿'},
+    {id: 'fish', label: 'Рыба', icon: '🐟'},
     {id: 'other', label: 'Прочее', icon: '📦'},
 ]);
 
@@ -28,7 +30,10 @@ const TIER_BY_NAME = {Stone: 'stone', Crystal: 'crystal', Jewel: 'jewel'};
 
 export function itemRow(id) {
     const row = ITEMS[id];
-    return row ? {id: Number(id), name: row[0], type: row[1], grade: row[2], price: row[3], etc: row[4]} : null;
+    if (row) return {id: Number(id), name: row[0], type: row[1], grade: row[2], price: row[3], etc: row[4]};
+    // the fish and what they turn into are described by the fishing data
+    const fishing = FISHING.items[id];
+    return fishing ? {id: Number(id), name: fishing[0], type: 'EtcItem', grade: 'NONE', price: fishing[1], etc: fishing[2] || null} : null;
 }
 
 /** {key, kind} of a real item id. */
@@ -56,6 +61,7 @@ export function lootInfo(itemId, row = null) {
         if (element && tier) return {key: `attr_${tier.id}_${element}`, kind: 'attribute'};
     }
     const key = `l2_${id}`;
+    if (FISHING.capsules[id]) return {key, kind: 'fish'};
     if (item.etc === 'DYE') return {key, kind: 'dye'};
     if (item.etc === 'RECIPE' || name.startsWith('Recipe')) return {key, kind: 'recipe'};
     if (item.type === 'Weapon') return {key, kind: 'full'};

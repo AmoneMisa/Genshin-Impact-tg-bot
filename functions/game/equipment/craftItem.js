@@ -4,10 +4,11 @@
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
 import { getCatalog, findCatalogItem, gradeIndex, instantiate, slotShareKey, canClassUse } from './catalog.js';
 import { addMaterial, getMaterialCount, materialInfo, spendMaterials } from '../player/materials.js';
-import { realRecipeByName, realRecipeByItem, splitIngredients, intermediateRecipes } from './realRecipes.js';
+import { realRecipeByName, realRecipeByItem, splitIngredients, intermediateRecipes, allRecipes } from './realRecipes.js';
 import { itemRow, lootInfo } from '../hunt/lootTable.js';
 import { HUNT } from '../hunt/huntConfig.js';
 import getCurrentMp from '../player/getters/getCurrentMp.js';
+import {hennaOfDye, professionTier, professionLevel, TATTOO_MIN_TIER} from '../player/tattoos.js';
 import skillUsagePayCost from '../player/skillUsagePayCost.js';
 
 // A recipe id is the catalog item it makes, or `recipe:<recipe item>` for a real recipe that makes a material
@@ -72,8 +73,11 @@ function materialRecipe(recipeItem) {
     const real = realRecipeByItem(recipeItem);
     if (!real) return null;
     const product = lootInfo(real.product), item = itemRow(real.product);
+    // dyes are made by characters of the 2nd profession (class tier 3) only
+    const dye = hennaOfDye(real.product);
     return realRow(`${MATERIAL_RECIPE}${recipeItem}`, 'noGrade', real, {
         productKey: product.key, productName: item?.name || product.key, amount: real.amount,
+        ...(dye ? {dye: true, minTier: TATTOO_MIN_TIER, minLevel: dye.level} : {}),
     });
 }
 
@@ -129,6 +133,7 @@ export function learnRecipe(session, itemId) {
     if (isRecipeLearned(session, recipe)) return {ok: false, reason: 'already_learned'};
     if ((Number(session.game.stats?.lvl) || 1) < recipe.minLevel) return {ok: false, reason: 'level_too_low', requiredLevel: recipe.minLevel};
     if (craft.level < recipe.craftLevel) return {ok: false, reason: 'craft_level_too_low', requiredCraftLevel: recipe.craftLevel};
+    if (recipe.minTier && professionTier(session) < recipe.minTier) return {ok: false, reason: 'profession_too_low', requiredLevel: professionLevel(recipe.minTier)};
     const inventory = session.game.inventory;
     // The recipe book of High Five is learned by reading it; without one the shop price is paid.
     if (recipe.bookKey && getMaterialCount(session, recipe.bookKey) > 0) {
@@ -180,6 +185,7 @@ export default function craftItem(session, itemId, {random = Math.random} = {}) 
     if (!isRecipeLearned(session, recipe)) return {ok: false, reason: 'recipe_not_learned'};
     if ((Number(session.game.stats?.lvl) || 1) < recipe.minLevel) return {ok: false, reason: 'level_too_low', requiredLevel: recipe.minLevel};
     if (craft.level < recipe.craftLevel) return {ok: false, reason: 'craft_level_too_low', requiredCraftLevel: recipe.craftLevel};
+    if (recipe.minTier && professionTier(session) < recipe.minTier) return {ok: false, reason: 'profession_too_low', requiredLevel: professionLevel(recipe.minTier)};
 
     const missing = missingForRecipe(session, recipe);
     if (Object.keys(missing).length) return {ok: false, reason: 'not_enough_materials', missing};
@@ -224,7 +230,13 @@ export function visibleRecipes(session) {
         for (const sub of intermediateRecipes([realRecipeByItem(recipe.recipeItem)]).values()) gradeOf.set(sub.recipeItem, recipe.grade);
     }
     const rows = [...gradeOf].map(([recipeItem, grade]) => ({...getRecipe(`${MATERIAL_RECIPE}${recipeItem}`), grade}));
-    return items.concat(rows);
+    // The dyes of the symbols: real recipes, made only by characters of the 2nd profession.
+    const gradeAt = level => equipmentTemplate.grades.find(entry => entry.lvl.from <= level && level <= entry.lvl.to)?.name || 'noGrade';
+    const dyes = professionTier(session) < TATTOO_MIN_TIER ? [] : allRecipes().filter(recipe => hennaOfDye(recipe.product))
+        .map(recipe => getRecipe(`${MATERIAL_RECIPE}${recipe.recipeItem}`))
+        .filter(Boolean)
+        .map(row => ({...row, grade: gradeAt(row.minLevel)}));
+    return items.concat(rows, dyes);
 }
 
 /** Display rows of a recipe's materials with how many the player has. */

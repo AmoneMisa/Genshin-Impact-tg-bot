@@ -30,6 +30,7 @@ export function realRecipeByName(name) {
 }
 
 export const realRecipeByItem = recipeItemId => byRecipeItem.get(Number(recipeItemId)) || null;
+export const allRecipes = () => RECIPES;
 
 /** The recipe that makes a material key (an intermediate product such as an alloy), if any. */
 export function recipeForMaterial(key) {
