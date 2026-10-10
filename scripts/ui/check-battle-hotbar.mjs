@@ -33,7 +33,7 @@ try {for(const width of [320,390,1100]){
   // Extra selectable rows exercise the 16-slot limit independently of class balance.
   const example=window.hunt.player.skills[0];window.hunt.player.skills=Array.from({length:22},(_,index)=>({...example,index,slot:index,name:index%2?'War Cry':'Triple Slash',description:'Skill description',costMp:40+index,canUse:true,locked:false}));
   window.hunt.player.hotbar=[0,1,2];
-  window.hunt.player.special=[{type:'ls',id:'ls:active_might',iconId:'active_might',name:'Might',description:'Life Stone skill',costMp:0,canUse:true},{type:'toggle',id:'l2:312',name:'Vicious Stance',description:'Toggle skill',costMp:12,canUse:true}];
+  window.hunt.player.special=[{type:'ls',id:'ls:active_might',iconId:'active_might',name:'Might',description:'Life Stone skill',costMp:0,canUse:true},{type:'toggle',id:'l2:312',name:'Vicious Stance',description:'Toggle skill',costMp:12,canUse:true},{type:'summon',id:'l2:1406',name:'Summon Feline King',description:'Summon companion',costMp:100,canUse:true}];
   window.boss={active:true,player:window.hunt.player,boss:{name:'queen_ant',title:'Queen Ant',currentHp:1000,maxHp:1000,hpPercent:100,level:85,damageList:[],attacks:[],attackLog:[],statuses:[],nextAttackMs:0}};
   window.options={haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),api:async(url,options)=>{
    if(options?.method==='POST'){
@@ -57,17 +57,20 @@ try {for(const width of [320,390,1100]){
  assert.equal(await page.locator('.hunt-controls [data-skill]').count(),16);
  if(width===390)await page.locator('.hunt-controls').screenshot({path:'docs/battle-hotbar-390.png'});
  await page.locator('[data-bar-tab=special]').click();
- assert.equal(await page.locator('[data-special]').count(),2);
+ assert.equal(await page.locator('[data-special]').count(),3);
  assert.equal(await page.locator('[data-special="l2:312"] .mmo-skill-cost').textContent(),'12');
  await page.locator('[data-special="ls:active_might"] img').evaluate(n=>n.decode());
  if(width===390)await page.locator('.hunt-controls').screenshot({path:'docs/battle-special-390.png'});
+ await page.locator('[data-special="l2:1406"] img').evaluate(n=>n.decode());
+ await page.locator('[data-special="l2:1406"]').click();
+ assert.ok(await page.evaluate(()=>posts.some(p=>p.body.id==='l2:1406')));
  await page.locator('[data-special="l2:312"]').click();
  assert.ok(await page.evaluate(()=>posts.some(p=>p.url==='/api/hunt/special'&&p.body.id==='l2:312')));
  await page.locator('.hunt-overlay').evaluate(n=>n.remove());
  await page.evaluate(async()=>{const {openBossGame}=await import('/boss.js');await openBossGame(window.options);});
  assert.equal(await page.locator('.boss-panel [data-skill]').count(),16);
  await page.locator('.boss-panel [data-bar-tab=special]').click();
- assert.equal(await page.locator('.boss-panel [data-special]').count(),2);
+ assert.equal(await page.locator('.boss-panel [data-special]').count(),3);
  assert.equal(await page.locator('.boss-panel .mmo-hotbar').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'boss skill grid overflow');
  assert.deepEqual(errors,[]);
  await page.close();console.log(`Skill selection, MP badges, special casting and boss/hunt tabs verified at ${width}px`);

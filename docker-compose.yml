@@ -25,7 +25,7 @@ services:
     environment:
       # Inside Docker "localhost" is the container itself, so the bot gets its
       # own setting: the bundled database by default, DOCKER_MONGO_URL to override.
-      MONGO_URL: ${DOCKER_MONGO_URL:-mongodb://mongo:27017/genshin_bot}
+      MONGO_URL: ${DOCKER_MONGO_URL:-mongodb://mongo:27017/genshin_bot?replicaSet=rs0}
       MINI_APP_HOST: 0.0.0.0
       MINI_APP_PORT: ${MINI_APP_PORT:-8080}
     ports:
@@ -45,10 +45,12 @@ services:
     # MongoDB 8.0: the current long-term support release line.
     image: mongo:8.0
     restart: unless-stopped
+    # Single-node replica set enables atomic clan auction escrow/refunds.
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     volumes:
       - mongo-data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status() } catch (e) { if (e.code === 94) rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}); else throw e; } if (!db.hello().isWritablePrimary) quit(1)"]
       interval: 10s
       timeout: 5s
       retries: 10

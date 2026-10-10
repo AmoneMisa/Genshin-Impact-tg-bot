@@ -98,6 +98,7 @@ import {
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
 import {castL2Buff} from './l2Buffs.js';
+import {bidForClanHall} from './clanHallAuction.js';
 import { getPartyState, performPartyAction } from './party.js';
 import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchants.js';
 import { getTattooState, performTattooAction } from './tattoos.js';
@@ -1358,10 +1359,10 @@ const clanQuiz = guarded('clan quiz', async (req, res) => {
 const clanActivity = guarded('clan activity', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (body.action === 'upgrade_member') assertGoldUnlocked(context);
+  if (body.action === 'upgrade_member' || body.action === 'hall_bid') assertGoldUnlocked(context);
   const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
   const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'transfer', 'settings_update']);
-  const progressionActions = new Set(['investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus', 'skill_learn']);
+  const progressionActions = new Set(['hall_upgrade', 'hall_deposit', 'hall_bid', 'investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus', 'skill_learn']);
   const rtaActions = new Set(['rta_join', 'rta_leave', 'rta_battle']);
   const allowed = new Set(['boss_summon', ...rtaActions, 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
   if (!allowed.has(body.action)) {
@@ -1372,7 +1373,9 @@ const clanActivity = guarded('clan activity', async (req, res) => {
     context.session = await getSession(context.chatId, context.userId);
     let result;
 
-    if (rtaActions.has(body.action)) {
+    if (body.action === 'hall_bid') {
+      result = await bidForClanHall(context.userId, String(body.hallId||''), body.amount);
+    } else if (rtaActions.has(body.action)) {
       const prepared = await performRtaAction(context.userId, context.session, body.action, body);
       result = prepared.result;
       if (result.ok && prepared.clan) await prepared.clan.save();

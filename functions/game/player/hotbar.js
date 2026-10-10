@@ -1,9 +1,9 @@
 // The battle skill bar: a player chooses up to HOTBAR_MAX skills of the class kit (the kit grows with the profession) and
-// keeps Life Stone and toggle skills on a second tab. The choice is session.game.hotbar = [skill index, ...] in the order
+// keeps Life Stone, summon and toggle skills on a second tab. The choice is session.game.hotbar = [skill index, ...] in the order
 // the player put them.
 import { skillById, equippedSkills, activateSkill } from '../equipment/lifestoneSkills.js';
 import { uniqueEquipped } from '../equipment/itemBonuses.js';
-import { classEffectSkills, l2EffectRows } from './l2Effects.js';
+import { classEffectSkills, l2EffectRows, isL2PetSkill } from './l2Effects.js';
 
 export const HOTBAR_MAX = 16;
 const n = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
@@ -12,7 +12,7 @@ const kit = session => (Array.isArray(session?.game?.gameClass?.skills) ? sessio
 
 function clean(session, slots) {
     const total = kit(session).length;
-    const toggles = new Set(classEffectSkills(session,{includeLocked:true}).filter(s=>s.operate==='T').map(s=>s.name));
+    const toggles = new Set(classEffectSkills(session,{includeLocked:true}).filter(s=>s.operate==='T'||isL2PetSkill(s)).map(s=>s.name));
     const seen = new Set();
     const result = [];
     for (const raw of Array.isArray(slots) ? slots : []) {
@@ -41,7 +41,7 @@ export function setHotbar(session, slots) {
     return { ok: true, hotbar: list, max: HOTBAR_MAX };
 }
 
-/** The second tab: the active skill of the Life Stone of the worn weapon and the toggle skills of the class. */
+/** The second tab: the active skill of the Life Stone of the worn weapon and the summon and toggle skills of the class. */
 export function specialSkills(session, now = Date.now()) {
     const rows = [];
     for (const { skill, level } of equippedSkills(session)) {
@@ -53,8 +53,9 @@ export function specialSkills(session, now = Date.now()) {
     }
     const active = new Set(l2EffectRows(session, now).map(row => row.id));
     for (const entry of classEffectSkills(session, { includeLocked: false })) {
-        if (entry.operate !== 'T') continue;
-        rows.push({ type: 'toggle', id: `l2:${entry.id}`, name: entry.name, level: entry.learnedLevel, running: active.has(`l2:${entry.id}`), cooldownMs: Math.max(0, n(session.game.l2CastAt?.[entry.id]) - now), canUse: true });
+        const summon = isL2PetSkill(entry);
+        if (entry.operate !== 'T' && !summon) continue;
+        rows.push({ type: summon ? 'summon' : 'toggle', id: `l2:${entry.id}`, name: entry.name, level: entry.learnedLevel, running: active.has(`l2:${entry.id}`), cooldownMs: Math.max(0, n(session.game.l2CastAt?.[entry.id]) - now), canUse: true });
     }
     return rows;
 }

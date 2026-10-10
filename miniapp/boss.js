@@ -264,7 +264,7 @@ export async function getBossState(session, chatId, now = Date.now()) {
     maxMp,
     mpPercent: percent(currentMp, maxMp),
     respawnRemainMs,
-    skills: excludeToggleSkills(skills,special),
+    skills: excludeToggleSkills(skills,special,session),
     hotbar: getHotbar(session),
     hotbarMax: HOTBAR_MAX,
     special,

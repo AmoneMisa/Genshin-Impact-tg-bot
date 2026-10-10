@@ -85,7 +85,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
             cp, maxCp, cpPercent: percent(cp, maxCp),
             effects: [...fieldPlayerDto(session,now).effects, ...playerEffectsDto([],respawnRemainMs,now), ...(hunt.playerDebuffs || []).filter(e => e.until > now).map(e => ({id: e.kind, label: 'Атаки ослаблены', value: e.amount, count: Math.ceil((e.until - now) / 1000)}))],
             respawnRemainMs,
-            skills: excludeToggleSkills((gameClass?.skills || []).map((skill, index) => {const dto=skillDto(session,skill,index,now);return {...dto,canUse:dto.canUse && !fieldPvpSkillBlock(session,skill,now)};}),special),
+            skills: excludeToggleSkills((gameClass?.skills || []).map((skill, index) => {const dto=skillDto(session,skill,index,now);return {...dto,canUse:dto.canUse && !fieldPvpSkillBlock(session,skill,now)};}),special,session),
             potions: potionBarDto(session),
             hotbar: getHotbar(session),
             hotbarMax: HOTBAR_MAX,

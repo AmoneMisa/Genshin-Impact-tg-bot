@@ -283,7 +283,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const max = player.hotbarMax || 16;
     const tabs = `<div class="hunt-bar-tabs" role="tablist">
       <button type="button" role="tab" aria-selected="${skillTab === 'skills'}" class="${skillTab === 'skills' ? 'active' : ''}" data-bar-tab="skills">Умения</button>
-      <button type="button" role="tab" aria-selected="${skillTab === 'special'}" class="${skillTab === 'special' ? 'active' : ''}" data-bar-tab="special">ЛС и переключаемые</button>
+      <button type="button" role="tab" aria-selected="${skillTab === 'special'}" class="${skillTab === 'special' ? 'active' : ''}" data-bar-tab="special" title="Навыки ЛС, призывы и переключаемые">Особые</button>
     </div>`;
     if (skillTab === 'special') {
       const rows = (player.special || []).map(row => `
@@ -292,7 +292,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
           <small class="mmo-skill-cost">${formatNumber(row.costMp||0)}</small>
           <span class="mmo-skill-cooldown">${row.cooldownMs > 0 && row.type === 'ls' ? formatDuration(row.cooldownMs) : ''}</span>
         </button>`).join('');
-      return `${tabs}<div class="mmo-hotbar icons-only">${rows || '<p class="party-note">Нет особых умений: нужен камень жизни на оружии или переключаемые умения класса.</p>'}</div>`;
+      return `${tabs}<div class="mmo-hotbar icons-only">${rows || '<p class="party-note">Нет особых умений: нужен камень жизни на оружии, призывы или переключаемые умения класса.</p>'}</div>`;
     }
     if (editBar) {
       const all = player.skills.map(skill => hotbarChoice(skill, {className: player.className, on: barDraft.includes(skill.index), position: barDraft.indexOf(skill.index) + 1})).join('');

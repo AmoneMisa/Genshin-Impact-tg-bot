@@ -12,6 +12,7 @@ import { getClanCompetitionState } from './clanCompetition.js';
 import { getClanManagementState } from './clanManagement.js';
 import { getClanProgressionState, markTaskProgress } from './clanProgression.js';
 import { getRtaState } from './clanRta.js';
+import {getHallAuctions} from './clanHallAuction.js';
 
 export const MAX_CLAN_MEMBERS = 30;
 const RESOURCES = new Set(['gold', 'crystals', 'ironOre']);
@@ -136,10 +137,14 @@ async function clanDto(clan, userId) {
 }
 
 export async function getClanDashboard(userId, playerSession = null) {
-  const clan = await getClan(userId);
+  let clan = await getClan(userId);
+  const hallAuctions = clan ? await getHallAuctions(clan,userId) : null;
+  if (clan) clan = await getClan(userId);
   if (clan) {
+    const beforeHall=JSON.stringify(clan.hall);
+    const progression={...getClanProgressionState(clan,userId,playerSession),hallAuctions};
     const quizPrepared = prepareClanQuiz(clan);
-    if (quizPrepared.changed) await clan.save();
+    if (quizPrepared.changed||beforeHall!==JSON.stringify(clan.hall)) await clan.save();
     return {
       clan: await clanDto(clan, userId),
       available: [],
@@ -147,7 +152,7 @@ export async function getClanDashboard(userId, playerSession = null) {
       activities: await getClanActivitiesState(clan, userId, playerSession),
       competition: await getClanCompetitionState(clan, playerSession, userId),
       management: await getClanManagementState(clan, userId, playerSession),
-      progression: getClanProgressionState(clan, userId, playerSession),
+      progression,
       rta: await getRtaState(clan, userId),
     };
   }
@@ -243,6 +248,9 @@ export async function disbandClanForMiniApp(userId) {
   const clan = await getClan(userId);
   if (!clan) return { ok: false, reason: 'not_in_clan' };
   if (String(clan.owner) !== String(userId)) return { ok: false, reason: 'owner_only' };
+
+  const auction=await getHallAuctions(clan,userId);
+  if (auction.halls.some(hall=>hall.mine)) return {ok:false,reason:'hall_auction_reserved'};
 
   const clanName = clan.name;
   await clan.deleteOne();

@@ -54,6 +54,15 @@ const skillByKey = key => HALL_SKILLS.find(skill => skill.key === key);
 export function ensureHall(clan, now = Date.now()) {
     if (!clan.hall || typeof clan.hall !== 'object') clan.hall = {};
     const hall = clan.hall;
+    const estate = hall.estate;
+    if (estate) {
+        const end = Math.min(now, Number(estate.until)||0);
+        const hours = Math.floor(Math.max(0,end-(Number(estate.lastTickAt)||now))/3_600_000);
+        if (hours) {
+            hall.glory = Math.max(0,Number(hall.glory)||0)+hours*(Number(estate.gloryPerHour)||0);
+            estate.lastTickAt += hours*3_600_000;
+        }
+    }
     hall.level = Math.max(1, Math.min(HALL_MAX_LEVEL, Math.floor(number(hall.level, 1))));
     hall.glory = Math.max(0, Math.floor(number(hall.glory)));
     if (!number(hall.lastTickAt)) hall.lastTickAt = now;
@@ -131,7 +140,8 @@ export function getClanHallState(clan, now = Date.now()) {
         if (warehouseGold < next.gold) missing.push('gold');
     }
     return {
-        level: hall.level, maxLevel: HALL_MAX_LEVEL, glory: hall.glory, farmGloryPerHour: HALL_LEVELS[hall.level - 1].farmGloryPerHour,
+        estate: hall.estate?.until>now ? hall.estate : null,
+        level: hall.level, maxLevel: HALL_MAX_LEVEL, glory: hall.glory, farmGloryPerHour: HALL_LEVELS[hall.level - 1].farmGloryPerHour+(hall.estate?.until>now ? hall.estate.gloryPerHour : 0),
         enchantBonus: HALL_LEVELS[hall.level - 1].enchantBonus, shopLevel: HALL_LEVELS[hall.level - 1].shop,
         teleports: HALL_LEVELS.slice(0, hall.level).flatMap(row => row.teleports),
         next: next ? {level: next.level, glory: next.glory, gold: next.gold, canUpgrade: missing.length === 0, missing} : null,

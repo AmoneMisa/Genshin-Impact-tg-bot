@@ -62,3 +62,5 @@ city/map-portrait
 arena/rank-iron
 arena/rank-ruby
 currency/luck-coin
+clan/clan-hall
+clan/clan-hall-auction

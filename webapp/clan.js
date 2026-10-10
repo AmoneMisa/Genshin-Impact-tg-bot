@@ -3,6 +3,12 @@ import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldArtUrl } from './art/world-art.js';
 const REASONS = {
+  hall_auction_closed: 'Торги завершены или зал уже занят.',
+  hall_clan_level: 'Для участия нужен клан 3 уровня.',
+  hall_already_reserved: 'Клан может владеть одним залом или лидировать в одних торгах.',
+  hall_bid_too_low: 'Ставка должна быть целым числом и не ниже следующей ставки.',
+  hall_bid_clan_missing: 'Предыдущий клан недоступен. Ставка не списана.',
+  hall_auction_reserved: 'Сначала дождись завершения торгов и аренды зала.',
   hall_max_level: 'Зал клана уже развит до максимума.',
   hall_not_enough_glory: 'Клану не хватает славы для следующего уровня зала.',
   no_glory_coins: 'У тебя нет монет славы.',
@@ -112,6 +118,7 @@ function formatCost(cost) {
 export async function openClanGame({ api, renderState, haptic, statusElement }) {
   let dashboard = await api('/api/clan');
   let tab = dashboard.clan ? 'overview' : 'discover';
+  let hallTab = 'hall';
   let pending = false;
   let feedbackText = '';
 
@@ -219,7 +226,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
-  const TABS = [['overview', 'Обзор'], ['members', 'Участники'], ['tasks', 'Задания'], ['skills', 'Навыки'], ['wars', 'Войны']];
+  const TABS = [['overview', 'Обзор'], ['members', 'Участники'], ['tasks', 'Задания'], ['skills', 'Навыки'], ['hall', 'Зал клана'], ['wars', 'Войны']];
 
   // Prototype header: waving banner, name, level, members, XP bar.
   function bannerHtml(clan) {
@@ -283,7 +290,9 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     const need = next ? `Нужно: ✦ ${formatNumber(next.glory)} славы · 🪙 ${formatNumber(next.gold)} в хранилище` : 'Зал развит до максимума.';
     return `
       <section class="clan-section clan-activities">
+        <img class="clan-hall-art" src="${worldArtUrl('clan/clan-hall',512)}" alt="Зал клана" width="512" height="341" loading="lazy">
         <h4>Зал клана · ${hall.level} / ${hall.maxLevel}</h4>
+        ${hall.estate ? `<p class="clan-motto">${escapeHtml(hall.estate.name)} · аренда до ${new Date(hall.estate.until).toLocaleDateString('ru-RU')}</p>` : ''}
         <p class="clan-motto">Слава клана: ${formatNumber(hall.glory)}${hall.farmGloryPerHour ? ` · +${hall.farmGloryPerHour} в час с залов фарма` : ''}. Бонус к шансу заточки +${Math.round(hall.enchantBonus * 100)}% · магазин зала ${hall.shopLevel} ур.</p>
         <p class="clan-motto">Телепорты: ${hall.teleports.map(escapeHtml).join(' · ')}</p>
         <div class="clan-actions-row">
@@ -299,11 +308,35 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
+  function hallAuctionHtml() {
+    const auction=dashboard.progression?.hallAuctions;
+    if(!auction) return '';
+    return `<section class="clan-section clan-activities clan-hall-auction">
+      <img class="clan-hall-art" src="${worldArtUrl('clan/clan-hall-auction',512)}" alt="Аукцион залов клана" width="512" height="341" loading="lazy">
+      <h4>Аукцион залов клана</h4>
+      <p class="clan-motto">От ${auction.minClanLevel} уровня клана · аренда на ${auction.leaseDays} дней. Ставки из хранилища; перебитая ставка возвращается полностью. Один зал на клан. Шаг ставки 5%.</p>
+      <button type="button" class="clan-play ghost" data-hall-refresh>Обновить торги</button>
+      <div class="clan-hall-lots">${auction.halls.map(hall=>`<article class="clan-card clan-hall-lot">
+        <h4>${escapeHtml(hall.name)} <small>${escapeHtml(hall.grade)}</small></h4>
+        <p class="clan-motto">${escapeHtml(hall.town)} · +${hall.gloryPerHour} славы в час</p>
+        ${hall.owner ? `<p class="clan-motto">${hall.mine?'Твой клан':escapeHtml(hall.owner.name)} · аренда ещё ${formatDuration(hall.remainingMs)}</p>` : `<p class="clan-motto">Торги ещё ${formatDuration(hall.remainingMs)}${hall.bid?` · ${hall.mine?'Твоя ставка':escapeHtml(hall.bid.name)}: ${materialIcon('gold')} ${formatNumber(hall.bid.amount)}`:' · ставок нет'}</p>
+          <form class="clan-hall-bid" data-hall-bid="${hall.id}">
+            <label>Ставка в адене<input name="amount" type="number" inputmode="numeric" min="${hall.minBid}" step="1" placeholder="От ${formatNumber(hall.minBid)}" required ${hall.canBid&&!pending?'':'disabled'}></label>
+            <button class="clan-play" type="submit" ${hall.canBid&&!pending?'':'disabled'}>Сделать ставку</button>
+          </form>
+          ${!hall.canBid?`<small class="clan-motto">${!auction.canManage?'Ставки делает глава или офицер.':dashboard.clan.level<auction.minClanLevel?'Нужен клан 3 уровня.':'У клана уже есть зал или ведущая ставка.'}</small>`:''}`}
+      </article>`).join('')}</div></section>`;
+  }
+
+  function hallTabHtml() {
+    return `<nav class="clan-hall-tabs" aria-label="Зал клана"><button type="button" data-hall-tab="hall" class="${hallTab==='hall'?'active':''}">Зал клана</button><button type="button" data-hall-tab="auction" class="${hallTab==='auction'?'active':''}">Аукцион</button></nav>${hallTab==='auction'?hallAuctionHtml():hallHtml()}`;
+  }
+
   function skillsTabHtml() {
     const skills = dashboard.progression?.skills;
     if (!skills) return '';
     const percent = (value, unit) => (unit ? `${Math.round(value * 1000) / 10}%` : `${value}`);
-    return `${hallHtml()}
+    return `
       <section class="clan-section clan-activities">
         <h4>Клановые навыки</h4>
         <p class="clan-motto">Навык изучается за золото, репутацию и яйца из хранилища (яйца выпадают с эпических боссов). Бонус получают все участники клана${skills.canManage ? '.' : '; изучают глава и офицеры.'}</p>
@@ -357,6 +390,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         : tab === 'members' ? membersHtml(clan)
         : tab === 'tasks' ? tasksTabHtml(clan)
         : tab === 'skills' ? skillsTabHtml()
+        : tab === 'hall' ? hallTabHtml()
         : tab === 'wars' ? warsTabHtml(clan)
         : tab === 'management' && clan.canManage ? managementHtml(clan)
         : overviewTabHtml(clan)}
@@ -689,6 +723,15 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-skill]').forEach(button => button.addEventListener('click', () => activity({ action: 'skill_learn', id: button.dataset.clanSkill })));
     content.querySelector('[data-hall-deposit]')?.addEventListener('click', () => activity({ action: 'hall_deposit' }));
     content.querySelector('[data-hall-upgrade]')?.addEventListener('click', () => activity({ action: 'hall_upgrade' }));
+    content.querySelectorAll('[data-hall-tab]').forEach(button=>button.addEventListener('click',()=>{hallTab=button.dataset.hallTab;render();}));
+    content.querySelectorAll('[data-hall-bid]').forEach(form=>form.addEventListener('submit',event=>{
+      event.preventDefault();activity({action:'hall_bid',hallId:form.dataset.hallBid,amount:form.elements.amount.value});
+    }));
+    content.querySelector('[data-hall-refresh]')?.addEventListener('click',async()=>{
+      if(pending)return;pending=true;
+      try{dashboard=await api('/api/clan');}catch(error){feedbackText=error.message;}
+      finally{pending=false;render();}
+    });
     content.querySelectorAll('[data-clan-task-claim]').forEach(button => button.addEventListener('click', () => activity({ action: 'task_claim', taskKey: button.dataset.clanTaskClaim })));
     content.querySelector('[data-clan-task-bonus]')?.addEventListener('click', () => activity({ action: 'task_claim_bonus' }));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {

@@ -33,7 +33,7 @@
 .clan-xp i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, #2d4f86, #6fa2e8); transition: width .6s ease; }
 .clan-hero-info > small { font-size: 11px; color: rgba(238, 228, 207, .7); }
 
-.clan-tabs { display: grid; grid-template-columns: repeat(4, 1fr); border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .7); overflow: hidden; }
+.clan-tabs { display: grid; grid-template-columns: repeat(3, 1fr); border-radius: 6px; border: 1px solid var(--gold-dim); background: rgba(6, 5, 9, .7); overflow: hidden; }
 .clan-tabs button { min-height: 36px; padding: 0 4px; border: 0; border-right: 1px solid rgba(107, 83, 38, .45); background: transparent; color: rgba(238, 228, 207, .7); font: 600 12px/1 var(--serif); }
 .clan-tabs button:last-child { border-right: 0; }
 .clan-tabs button.active { color: #fbeccb; background: linear-gradient(180deg, #6a4f1f, #3a2a10); box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), inset 0 0 0 1px var(--gold); }
@@ -132,3 +132,16 @@
 .clan-head { grid-template-columns: 44px 1fr 44px; }
 .clan-round { width: 44px; height: 44px; }
 .clan-tabs button { min-height: 44px; }
+.clan-hall-art{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border:1px solid rgba(199,163,91,.45);border-radius:12px;margin:0 0 14px;box-sizing:border-box}
+.clan-hall-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.clan-hall-tabs button{min-height:42px;padding:8px;border:1px solid var(--gold-dim);border-radius:8px;background:#17121e;color:#d5c9dc;font:600 14px var(--serif)}
+.clan-hall-tabs button.active{color:#fbeccb;border-color:var(--gold);background:linear-gradient(#6a4f1f,#3a2a10)}
+.clan-hall-lots{display:grid;gap:12px;margin-top:14px}
+.clan-hall-lot{min-width:0}
+.clan-hall-lot h4{display:flex;justify-content:space-between;gap:12px}
+.clan-hall-bid{display:grid;gap:10px;margin-top:12px}
+.clan-hall-bid label{display:grid;gap:6px;color:var(--text-muted,#b9abc3);font-size:12px}
+.clan-hall-bid input{box-sizing:border-box;width:100%;min-width:0;padding:11px 12px;border:1px solid rgba(199,163,91,.4);border-radius:9px;background:#17121e;color:#f4ecdb;font:inherit;font-size:14px}
+.clan-hall-bid input::placeholder{color:#94899e}
+.clan-hall-bid input:focus{outline:2px solid #c7a35b;outline-offset:2px}
+@media(min-width:680px){.clan-hall-lots{grid-template-columns:repeat(2,minmax(0,1fr))}}
