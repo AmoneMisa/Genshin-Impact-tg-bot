@@ -798,4 +798,9 @@ export default {
   'Твой уровень слишком низкий для этого уровня мастерства.':'Sening darajang bu mahorat darajasi uchun juda past.',
   'Чтобы ловить, изучи рыбалку и первый уровень мастерства в Гильдии ниже.':'Baliq ovlash uchun pastdagi gildiyada baliq ovlash va mahoratning birinchi darajasini o‘rgan.',
   'Это не принимает Гильдия.':'Gildiya buni qabul qilmaydi.',
+  '{0} Гильдия рыбаков': '{0} Baliqchilar gildiyasi',
+  '{1} {2}: {3} шт. — вдвое быстрее': '{1} {2}: {3} dona — ikki barobar tez',
+  '{5} ур. · скорость {6} · {7} рыб в день{8}': '{5}-dar. · tezlik {6} · kuniga {7} baliq{8}',
+  'Обменять всё на {0}': 'Hammasini {0} ga almashtirish',
+  'по {3} {4}': '{3} {4} dan',
 };
