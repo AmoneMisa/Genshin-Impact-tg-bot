@@ -3,6 +3,8 @@
 // All operations take the freshly loaded Chat document and must run under the chat lock; they return the
 // sessions they changed so the caller can mark exactly those members as modified.
 export const PARTY_MAX = 9;
+/** How a party shares the items of a kill: the killer keeps them, a random member gets each, or members take turns. */
+export const LOOT_MODES = Object.freeze(['finders', 'random', 'turn']);
 export const INVITE_TTL_MS = 5 * 60 * 1000;
 /** Casting a buff on a party costs this much more MP per extra member (nine members: x2.2). */
 export const PARTY_COST_STEP = 0.15;
@@ -36,7 +38,7 @@ export function partyState(chat, session) {
 }
 
 function setParty(member, party) {
-    member.game.party = party ? {id: party.id, leaderId: id(party.leaderId), joinedAt: party.joinedAt ?? Date.now()} : null;
+    member.game.party = party ? {id: party.id, leaderId: id(party.leaderId), joinedAt: party.joinedAt ?? Date.now(), loot: LOOT_MODES.includes(party.loot) ? party.loot : 'finders', lootTurn: Number(party.lootTurn) || 0} : null;
 }
 
 export function createParty(chat, leader, now = Date.now()) {
@@ -70,7 +72,7 @@ export function acceptInvite(chat, session, partyId, now = Date.now()) {
         return {ok: false, reason: 'party_gone', changed: [session]};
     }
     if (list.length >= PARTY_MAX) return {ok: false, reason: 'party_full'};
-    setParty(session, {id: partyId, leaderId: list[0].game.party.leaderId, joinedAt: now});
+    setParty(session, {id: partyId, leaderId: list[0].game.party.leaderId, joinedAt: now, loot: list[0].game.party.loot, lootTurn: list[0].game.party.lootTurn});
     session.game.partyInvites = [];
     return {ok: true, changed: [session]};
 }
@@ -123,6 +125,44 @@ export function pruneInvites(chat, session, now = Date.now()) {
     const before = invitesOf(session).length;
     session.game.partyInvites = invitesOf(session).filter(invite => invite.until > now && live.has(invite.partyId));
     return session.game.partyInvites.length !== before;
+}
+
+/** The leader chooses the loot mode; every member carries it. */
+export function setLootMode(chat, leader, mode) {
+    const party = partyState(chat, leader);
+    if (!party) return {ok: false, reason: 'no_party'};
+    if (party.leaderId !== id(leader.userId)) return {ok: false, reason: 'not_leader'};
+    if (!LOOT_MODES.includes(mode)) return {ok: false, reason: 'invalid_loot_mode'};
+    party.members.forEach(member => { member.game.party.loot = mode; member.game.party.lootTurn = 0; });
+    return {ok: true, changed: party.members};
+}
+
+export const lootModeOf = session => (LOOT_MODES.includes(session?.game?.party?.loot) ? session.game.party.loot : 'finders');
+
+/**
+ * Who receives the next item of a kill by `killer`: returns {members, pick()}; with no party the killer alone. Items are
+ * rolled one by one, so "turn" hands them out in order and "random" draws for each. Adena is always split equally.
+ */
+export function lootDistributor(chat, killer, random = Math.random) {
+    const members = chat ? partyTargets(chat, killer) : [killer];
+    const mode = members.length > 1 ? lootModeOf(killer) : 'finders';
+    const leader = members.find(member => id(member.userId) === id(killer.game.party?.leaderId)) || killer;
+    // the cursor lives on the leader's record so that every kill of the party advances the same turn
+    let cursor = Number(leader.game?.party?.lootTurn) || 0;
+    const touched = new Set();
+    return {
+        mode,
+        members,
+        pick() {
+            if (mode === 'finders') return killer;
+            if (mode === 'random') return members[Math.floor(random() * members.length) % members.length];
+            const member = members[cursor % members.length];
+            cursor += 1;
+            if (leader.game?.party) { leader.game.party.lootTurn = cursor; touched.add(leader); }
+            return member;
+        },
+        touched,
+    };
 }
 
 export {find as findMember};

@@ -141,3 +141,4 @@
 .party-invite span,.party-candidate span{flex:1;min-width:0}
 .party-actions{display:flex;gap:8px;flex-wrap:wrap}
 .party-note,.party-empty p{font:12px/1.5 system-ui;opacity:.85}
+.party-loot-modes{display:flex;gap:6px;flex-wrap:wrap;padding:6px 0}

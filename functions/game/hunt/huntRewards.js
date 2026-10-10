@@ -9,6 +9,7 @@ import { CHAMPIONS, HUNT, STONE_CHANCE } from './huntConfig.js';
 import { addMaterial, materialInfo } from '../player/materials.js';
 import { attributeKey, ATTRIBUTE_GRADES } from '../equipment/attributes.js';
 import { lootRows, LOOT_KINDS } from './lootTable.js';
+import { lootDistributor } from '../party/party.js';
 import { enchantGradeForLevel } from '../equipment/enchantDrops.js';
 import { gainExp, levelNeed } from '../player/vitality.js';
 import setLevel, { spForLevelUp } from '../player/setLevel.js';
@@ -68,7 +69,11 @@ export {LOOT_KINDS};
 export function grantKillRewards(session, mob, mobDef, {random = Math.random, now = Date.now()} = {}) {
     const level = Math.max(1, Number(session.game.stats?.lvl) || 1);
     const tier = mob.champion ? CHAMPIONS[mob.champion] : null;
-    const result = {exp: 0, sp: 0, gold: 0, items: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
+    const result = {exp: 0, sp: 0, gold: 0, items: [], shared: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
+    // A party shares the loot of a kill by its loot mode (the killer keeps everything outside a party).
+    const chat = typeof session.ownerDocument === 'function' ? session.ownerDocument() : null;
+    const distributor = lootDistributor(chat, session, random);
+    const nameOf = member => member.userChatData?.user?.first_name || member.userChatData?.user?.username || String(member.userId);
 
     // experience and skill points: the real share of a level step, times the champion multiplier
     const expFactor = expGapFactor(level, mob.level);
@@ -88,15 +93,31 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     // gold
     const adenaGap = dropGapFactor(level, mob.level, HUNT.adenaGap);
     if (mobDef?.gold && random() < Math.min(1, mobDef.gold.chance / 100 * adenaGap)) {
-        result.gold = Math.max(1, Math.round(getRandom(mobDef.gold.min, mobDef.gold.max) * HUNT.goldScale));
-        session.game.inventory.gold = (Number(session.game.inventory.gold) || 0) + result.gold;
+        const total = Math.max(1, Math.round(getRandom(mobDef.gold.min, mobDef.gold.max) * HUNT.goldScale));
+        // adena is split equally between the members of a party; the killer gets the remainder
+        const members = distributor.members, each = Math.floor(total / members.length);
+        for (const member of members) {
+            const share = member === session ? total - each * (members.length - 1) : each;
+            member.game.inventory.gold = (Number(member.game.inventory.gold) || 0) + share;
+            if (member !== session) {
+                member.needsSave = true;
+                if (share) result.shared.push({userId: String(member.userId), name: nameOf(member), item: 'gold', amount: share});
+            }
+        }
+        result.gold = total - each * (members.length - 1);
     }
 
     // items of the real drop table: every row rolls on its own, a chance above 100% gives guaranteed copies
     const itemGap = dropGapFactor(level, mob.level, HUNT.itemGap);
     const give = (key, amount) => {
-        addMaterial(session, key, amount);
+        const receiver = distributor.pick();
+        addMaterial(receiver, key, amount);
         const info = materialInfo(key);
+        if (receiver !== session) {
+            receiver.needsSave = true;
+            result.shared.push({userId: String(receiver.userId), name: nameOf(receiver), item: key, itemName: info.name, icon: info.icon, amount});
+            return;
+        }
         const row = result.items.find(item => item.item === key);
         if (row) row.amount += amount;
         else result.items.push({item: key, name: info.name, icon: info.icon, amount});
@@ -113,6 +134,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
             if (chances[stone] > 0 && random() < chances[stone]) give(attributeKey(stone, mobDef.dropElement), 1);
         }
     }
+    distributor.touched.forEach(member => { if (member !== session) member.needsSave = true; });
     result.soulCrystal=absorbHuntSoul(session,mob,random);
     return result;
 }

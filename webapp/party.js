@@ -17,6 +17,7 @@ const REASONS = {
   party_gone: 'Группа уже распалась.',
   not_member: 'Игрока нет в группе.',
   invalid_target: 'Нельзя выбрать себя.',
+  invalid_loot_mode: 'Такого режима добычи нет.',
 };
 
 export async function openPartyGame({ api, haptic, statusElement }) {
@@ -48,6 +49,11 @@ export async function openPartyGame({ api, haptic, statusElement }) {
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
+  const LOOT_LABELS = {
+    finders: ['Нашедшему', 'Добыча достаётся тому, кто убил монстра.'],
+    random: ['Случайно', 'Каждый предмет получает случайный игрок группы.'],
+    turn: ['По очереди', 'Предметы раздаются участникам по кругу.'],
+  };
   const costText = count => `×${(1 + state.costStep * Math.max(0, count - 1)).toFixed(2)}`;
 
   function memberHtml(member, amLeader) {
@@ -87,6 +93,11 @@ export async function openPartyGame({ api, haptic, statusElement }) {
     } else {
       body = `${invitesHtml()}<section class="mmo-frame party-roster"><div class="mmo-section-title"><strong>Состав</strong><small>${party.members.length} / ${state.max} · бафф ${costText(party.members.length)} MP</small></div>
           <div class="party-members">${party.members.map(member => memberHtml(member, party.amLeader)).join('')}</div></section>
+        <section class="mmo-frame party-loot"><div class="mmo-section-title"><strong>Добыча</strong><small>адена делится поровну</small></div>
+          ${party.amLeader
+            ? `<div class="party-loot-modes">${state.lootModes.map(mode => `<button type="button" class="equipment-filter ${party.loot === mode ? 'active' : ''}" data-party-loot="${mode}">${LOOT_LABELS[mode][0]}</button>`).join('')}</div>`
+            : `<strong>${LOOT_LABELS[party.loot][0]}</strong>`}
+          <p class="party-note">${LOOT_LABELS[party.loot][1]}</p></section>
         ${party.amLeader ? candidatesHtml(party) : ''}
         <div class="party-actions">
           <button type="button" class="equipment-action" data-party-action="leave">Покинуть группу</button>
@@ -119,6 +130,7 @@ export async function openPartyGame({ api, haptic, statusElement }) {
 
   function bind() {
     content.querySelectorAll('[data-party-action]').forEach(button => button.addEventListener('click', () => act(button.dataset.partyAction)));
+    content.querySelectorAll('[data-party-loot]').forEach(button => button.addEventListener('click', () => act('loot', { mode: button.dataset.partyLoot })));
     content.querySelectorAll('[data-party-invite]').forEach(button => button.addEventListener('click', () => act('invite', { userId: button.dataset.partyInvite })));
     content.querySelectorAll('[data-party-kick]').forEach(button => button.addEventListener('click', () => act('kick', { userId: button.dataset.partyKick })));
     content.querySelectorAll('[data-party-accept]').forEach(button => button.addEventListener('click', () => act('accept', { partyId: button.dataset.partyAccept })));

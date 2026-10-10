@@ -1,6 +1,6 @@
 // Mini App face of the party system (functions/game/party/party.js): the screen state and its actions.
 import {
-  PARTY_MAX, PARTY_COST_STEP, acceptInvite, createParty, declineInvite, disbandParty, findMember, invitePlayer, kickMember, leaveParty,
+  LOOT_MODES, PARTY_MAX, PARTY_COST_STEP, acceptInvite, lootModeOf, setLootMode, createParty, declineInvite, disbandParty, findMember, invitePlayer, kickMember, leaveParty,
   partyState, pruneInvites,
 } from '../functions/game/party/party.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
@@ -32,14 +32,14 @@ function memberDto(member, session, leaderId) {
 
 export function getPartyState(session, now = Date.now()) {
   const chat = chatOf(session);
-  const base = {max: PARTY_MAX, costStep: PARTY_COST_STEP, party: null, invites: [], candidates: []};
+  const base = {max: PARTY_MAX, costStep: PARTY_COST_STEP, lootModes: LOOT_MODES, party: null, invites: [], candidates: []};
   if (!chat) return base;
   const pruned = pruneInvites(chat, session, now);
   const party = partyState(chat, session);
   const state = {
     ...base,
     changed: pruned,
-    party: party ? {id: party.id, leaderId: party.leaderId, amLeader: party.leaderId === String(session.userId), members: party.members.map(member => memberDto(member, session, party.leaderId))} : null,
+    party: party ? {id: party.id, leaderId: party.leaderId, loot: lootModeOf(session), amLeader: party.leaderId === String(session.userId), members: party.members.map(member => memberDto(member, session, party.leaderId))} : null,
     invites: (session.game.partyInvites || []).map(invite => {
       const from = findMember(chat, invite.fromId);
       const size = chat.members.filter(member => member.game?.party?.id === invite.partyId).length;
@@ -68,6 +68,7 @@ export function performPartyAction(session, action, body = {}, now = Date.now())
     case 'leave': result = leaveParty(chat, session); break;
     case 'kick': result = kickMember(chat, session, body.userId); break;
     case 'disband': result = disbandParty(chat, session); break;
+    case 'loot': result = setLootMode(chat, session, String(body.mode || '')); break;
     default: return {ok: false, reason: 'unknown_action'};
   }
   for (const member of result.changed || []) if (member !== session) member.needsSave = true;

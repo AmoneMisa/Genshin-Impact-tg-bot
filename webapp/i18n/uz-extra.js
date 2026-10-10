@@ -644,4 +644,13 @@ export default {
   'Ты не состоишь в группе.':'Sen guruhda emassan.',
   'Ты уже в группе.':'Sen allaqachon guruhdasan.',
   'Это может только лидер группы.':'Buni faqat guruh lideri qila oladi.',
+  'Нашедшему':'Topganga',
+  'Добыча достаётся тому, кто убил монстра.':'O‘lja yirtqichni o‘ldirgan o‘yinchiga tegadi.',
+  'Случайно':'Tasodifiy',
+  'Каждый предмет получает случайный игрок группы.':'Har bir buyumni guruhning tasodifiy a’zosi oladi.',
+  'По очереди':'Navbat bilan',
+  'Предметы раздаются участникам по кругу.':'Buyumlar a’zolarga navbat bilan beriladi.',
+  'Добыча':'O‘lja',
+  'адена делится поровну':'adena teng bo‘linadi',
+  'Такого режима добычи нет.':'Bunday o‘lja rejimi yo‘q.',
 };

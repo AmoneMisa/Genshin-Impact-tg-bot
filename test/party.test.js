@@ -150,3 +150,68 @@ test('the mini app state lists the party, invitations and who can be invited', (
   assert.equal(getPartyState(world.at(1), NOW).party.members.length, 2);
   assert.equal(performPartyAction(world.at(2), 'nonsense', {}, NOW).reason, 'unknown_action');
 });
+
+test('the leader sets the loot mode: finder, random or one by one; members cannot', async () => {
+  const {setLootMode, lootDistributor, lootModeOf} = await import('../functions/game/party/party.js');
+  const world = fullParty(3);
+  assert.equal(lootModeOf(world.at(2)), 'finders');
+  assert.equal(setLootMode(world.chat, world.at(2), 'random').reason, 'not_leader');
+  assert.equal(setLootMode(world.chat, world.leader, 'dice').reason, 'invalid_loot_mode');
+  assert.equal(setLootMode(world.chat, world.leader, 'random').ok, true);
+  assert.deepEqual(world.chat.members.map(lootModeOf), ['random', 'random', 'random']);
+
+  // finder: the killer keeps everything
+  setLootMode(world.chat, world.leader, 'finders');
+  const finder = lootDistributor(world.chat, world.at(2));
+  assert.deepEqual([finder.pick(), finder.pick()].map(m => m.userId), [2, 2]);
+
+  // one by one: items go round the party and the turn survives to the next kill
+  setLootMode(world.chat, world.leader, 'turn');
+  const first = lootDistributor(world.chat, world.at(2));
+  assert.deepEqual([first.pick(), first.pick()].map(m => m.userId), [1, 2]);
+  const next = lootDistributor(world.chat, world.at(3));
+  assert.deepEqual([next.pick(), next.pick(), next.pick()].map(m => m.userId), [3, 1, 2]);
+
+  // random: every member can win, the draw is the injected random
+  setLootMode(world.chat, world.leader, 'random');
+  const draws = [0, 0.4, 0.99];
+  const random = lootDistributor(world.chat, world.at(1), () => draws.shift());
+  assert.deepEqual([random.pick(), random.pick(), random.pick()].map(m => m.userId), [1, 2, 3]);
+
+  // a new member inherits the mode; outside a party the killer keeps everything
+  const extra = chatOf(1).at(1);
+  assert.equal(lootDistributor(null, extra).pick(), extra);
+});
+
+test('a hunt kill shares adena equally and items by the loot mode', async () => {
+  const {setLootMode} = await import('../functions/game/party/party.js');
+  const {grantKillRewards} = await import('../functions/game/hunt/huntRewards.js');
+  const {getZone, getMobDef, buildMob} = await import('../functions/game/hunt/huntMobs.js');
+  const zone = getZone('catacomb-heretic'), def = zone.mobs.find(mob => mob.name === 'Lith Medium');
+  const world = fullParty(3);
+  const kill = (mode, random = () => 0) => {
+    setLootMode(world.chat, world.leader, mode);
+    for (const member of world.chat.members) { member.game.inventory.gold = 0; member.game.inventory.materials = {}; }
+    const mob = buildMob(zone, def, {champion: null, random: () => 0.5});
+    const result = grantKillRewards(world.at(2), mob, def, {random, now: NOW});
+    const total = member => Object.values(member.game.inventory.materials).reduce((sum, count) => sum + count, 0);
+    return {result, items: world.chat.members.map(total), gold: world.chat.members.map(member => member.game.inventory.gold)};
+  };
+
+  const finders = kill('finders');
+  assert.equal(finders.items[0] + finders.items[2], 0);
+  assert.ok(finders.items[1] > 0);
+
+  const turn = kill('turn');
+  assert.ok(turn.items.every(count => count > 0), 'items went round all three members');
+  assert.equal(turn.result.shared.every(row => row.userId !== '2' || row.item === 'gold'), true);
+
+  // adena is split equally in every mode (Lith Medium has none, so use a mob that drops it)
+  const goldDef = zone.mobs.find(mob => mob.gold), goldMob = buildMob(zone, goldDef, {champion: null, random: () => 0.5});
+  for (const member of world.chat.members) member.game.inventory.gold = 0;
+  const paid = grantKillRewards(world.at(2), goldMob, goldDef, {random: () => 0, now: NOW});
+  const gold = world.chat.members.map(member => member.game.inventory.gold);
+  assert.ok(paid.gold > 0);
+  assert.equal(gold.reduce((sum, value) => sum + value, 0), paid.gold + paid.shared.filter(row => row.item === 'gold').reduce((sum, row) => sum + row.amount, 0));
+  assert.ok(Math.max(...gold) - Math.min(...gold) <= 2);
+});
