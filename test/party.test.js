@@ -189,6 +189,7 @@ test('a hunt kill shares adena equally and items by the loot mode', async () => 
   const {getZone, getMobDef, buildMob} = await import('../functions/game/hunt/huntMobs.js');
   const zone = getZone('catacomb-heretic'), def = zone.mobs.find(mob => mob.name === 'Lith Medium');
   const world = fullParty(3);
+  for (const member of world.chat.members) member.game.hunt = {zone: zone.id, field: {mobs: []}};
   const kill = (mode, random = () => 0) => {
     setLootMode(world.chat, world.leader, mode);
     for (const member of world.chat.members) { member.game.inventory.gold = 0; member.game.inventory.materials = {}; }
@@ -214,4 +215,44 @@ test('a hunt kill shares adena equally and items by the loot mode', async () => 
   assert.ok(paid.gold > 0);
   assert.equal(gold.reduce((sum, value) => sum + value, 0), paid.gold + paid.shared.filter(row => row.item === 'gold').reduce((sum, row) => sum + row.amount, 0));
   assert.ok(Math.max(...gold) - Math.min(...gold) <= 2);
+});
+
+test('party experience: highest level, High Five bonus, split by level squared, only members on the field', async () => {
+  const {expShares, partyExpBonus} = await import('../functions/game/party/party.js');
+  const {grantKillRewards} = await import('../functions/game/hunt/huntRewards.js');
+  const {getZone, buildMob} = await import('../functions/game/hunt/huntMobs.js');
+  assert.deepEqual([1, 2, 3, 4, 9].map(partyExpBonus), [1, 1.30, 1.39, 1.50, 1.71]);
+  const shares = expShares([{game: {stats: {lvl: 60}}}, {game: {stats: {lvl: 80}}}]);
+  assert.equal(shares.level, 80);
+  assert.equal(shares.bonus, 1.30);
+  assert.ok(Math.abs(shares.shares[0].share - 3600 / 10000) < 1e-9 && Math.abs(shares.shares[1].share - 6400 / 10000) < 1e-9);
+
+  const zone = getZone('catacomb-heretic'), def = zone.mobs.find(mob => mob.name === 'Lith Medium');
+  const mob = () => buildMob(zone, def, {champion: null, random: () => 0.5});
+  const level = 38;
+  const setup = count => {
+    const world = fullParty(count);
+    for (const member of world.chat.members) { member.game.stats = {lvl: level, currentExp: 0}; member.game.hunt = {zone: zone.id, field: {mobs: []}}; }
+    return world;
+  };
+  const solo = chatOf(1).at(1);
+  solo.game.stats = {lvl: level, currentExp: 0};
+  const alone = grantKillRewards(solo, mob(), def, {random: () => 0.99, now: NOW});
+  assert.ok(alone.exp > 0);
+
+  const world = setup(3);
+  const together = grantKillRewards(world.at(1), mob(), def, {random: () => 0.99, now: NOW});
+  // three equal members: a third of the reward times the 1.39 party bonus each
+  assert.ok(Math.abs(together.exp - alone.exp * 1.39 / 3) <= 1, `${together.exp} vs ${alone.exp * 1.39 / 3}`);
+  assert.equal(together.party.length, 2);
+  assert.ok(together.party.every(row => Math.abs(row.exp - together.exp) <= 1));
+  assert.ok(world.at(2).game.stats.currentExp > 0 && world.at(2).game.inventory.sp > 0);
+  assert.equal(world.at(2).needsSave, true);
+
+  // a member who is elsewhere gets nothing and does not dilute the shares
+  const apart = setup(3);
+  apart.at(3).game.hunt = {zone: 'other-zone', field: null};
+  const two = grantKillRewards(apart.at(1), mob(), def, {random: () => 0.99, now: NOW});
+  assert.ok(Math.abs(two.exp - alone.exp * 1.30 / 2) <= 1);
+  assert.equal(apart.at(3).game.stats.currentExp, 0);
 });

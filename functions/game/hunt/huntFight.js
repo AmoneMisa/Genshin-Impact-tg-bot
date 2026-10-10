@@ -265,7 +265,7 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
         killed = true;
         mob.currentHp = 0;
         rewards = finishKill(session,hunt,mob,{random,now});
-        pushLog(hunt, '🏆', `${mob.name} повержен: +${rewards.exp} опыта, +${rewards.sp} ОП${rewards.gold ? `, +${rewards.gold} золота` : ''}.`, now);
+        pushLog(hunt, '🏆', `${mob.name} повержен: +${rewards.exp} опыта, +${rewards.sp} ОП${rewards.gold ? `, +${rewards.gold} золота` : ''}.${rewards.party?.length ? ' Группа получила свою долю.' : ''}`, now);
         if (!hunt.field) hunt.mob = null;
     }
     return {ok: true, result, killed, rewards, shots: shots || null, questGains, log: swings};

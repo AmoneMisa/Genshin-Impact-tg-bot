@@ -9,7 +9,7 @@ import { CHAMPIONS, HUNT, STONE_CHANCE } from './huntConfig.js';
 import { addMaterial, materialInfo } from '../player/materials.js';
 import { attributeKey, ATTRIBUTE_GRADES } from '../equipment/attributes.js';
 import { lootRows, LOOT_KINDS } from './lootTable.js';
-import { lootDistributor } from '../party/party.js';
+import { lootDistributor, expShares } from '../party/party.js';
 import { enchantGradeForLevel } from '../equipment/enchantDrops.js';
 import { gainExp, levelNeed } from '../player/vitality.js';
 import setLevel, { spForLevelUp } from '../player/setLevel.js';
@@ -69,25 +69,39 @@ export {LOOT_KINDS};
 export function grantKillRewards(session, mob, mobDef, {random = Math.random, now = Date.now()} = {}) {
     const level = Math.max(1, Number(session.game.stats?.lvl) || 1);
     const tier = mob.champion ? CHAMPIONS[mob.champion] : null;
-    const result = {exp: 0, sp: 0, gold: 0, items: [], shared: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
+    const result = {exp: 0, sp: 0, gold: 0, items: [], shared: [], party: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
     // A party shares the loot of a kill by its loot mode (the killer keeps everything outside a party).
     const chat = typeof session.ownerDocument === 'function' ? session.ownerDocument() : null;
-    const distributor = lootDistributor(chat, session, random);
+    // Members of the party that stand in the same hunting zone share the kill (the High Five party range).
+    const inRange = member => member.game?.hunt?.zone === mob.zone && Boolean(member.game.hunt.field);
+    const distributor = lootDistributor(chat, session, random, inRange);
     const nameOf = member => member.userChatData?.user?.first_name || member.userChatData?.user?.username || String(member.userId);
 
-    // experience and skill points: the real share of a level step, times the champion multiplier
-    const expFactor = expGapFactor(level, mob.level);
+    // experience and skill points: the real share of a level step, times the champion multiplier. A party gets the
+    // reward of its highest level, times the party bonus, split by level squared (High Five).
+    const party = expShares(distributor.members);
+    const expFactor = expGapFactor(party.level, mob.level);
     if (expFactor > 0 && mobDef) {
         const multiplier = expFactor * (tier ? tier.exp : 1);
-        const base = mobDef.expShare * levelNeed(mob.level) * multiplier;
-        const before = level;
-        const gained = gainExp(session, base, {now});
-        result.exp = gained.gained;
-        result.bonus = gained.bonus;
-        result.sp = Math.max(1, Math.round(mobDef.expShare * spForLevelUp(mob.level) * multiplier));
-        session.game.inventory.sp = (Number(session.game.inventory.sp) || 0) + result.sp;
-        setLevel(session);
-        result.leveledUp = (Number(session.game.stats.lvl) || before) > before;
+        const base = mobDef.expShare * levelNeed(mob.level) * multiplier * party.bonus;
+        const baseSp = mobDef.expShare * spForLevelUp(mob.level) * multiplier * party.bonus;
+        for (const {member, share} of party.shares) {
+            const before = Math.max(1, Number(member.game.stats?.lvl) || 1);
+            const gained = gainExp(member, base * share, {now});
+            const sp = Math.max(1, Math.round(baseSp * share));
+            member.game.inventory.sp = (Number(member.game.inventory.sp) || 0) + sp;
+            setLevel(member);
+            const leveledUp = (Number(member.game.stats.lvl) || before) > before;
+            if (member === session) {
+                result.exp = gained.gained;
+                result.bonus = gained.bonus;
+                result.sp = sp;
+                result.leveledUp = leveledUp;
+            } else {
+                member.needsSave = true;
+                result.party.push({userId: String(member.userId), name: nameOf(member), exp: gained.gained, sp, leveledUp});
+            }
+        }
     }
 
     // gold

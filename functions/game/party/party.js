@@ -8,6 +8,26 @@ export const LOOT_MODES = Object.freeze(['finders', 'random', 'turn']);
 export const INVITE_TTL_MS = 5 * 60 * 1000;
 /** Casting a buff on a party costs this much more MP per extra member (nine members: x2.2). */
 export const PARTY_COST_STEP = 0.15;
+/** High Five party experience bonus by the number of members taking part (L2J Party.BONUS_EXP_SP). */
+export const PARTY_EXP_BONUS = Object.freeze([1, 1, 1.30, 1.39, 1.50, 1.54, 1.58, 1.63, 1.67, 1.71]);
+export const partyExpBonus = count => PARTY_EXP_BONUS[Math.max(1, Math.min(PARTY_MAX, count))];
+
+/**
+ * How a party splits the experience of a kill, as in High Five: the base reward is calculated for the highest level of
+ * the members, multiplied by the party bonus, and every member gets the share of their level squared.
+ * Returns {bonus, level, shares: [{member, share}]}.
+ */
+export function expShares(members) {
+    const list = members.filter(Boolean);
+    const level = member => Math.max(1, Number(member.game?.stats?.lvl) || 1);
+    const squares = list.map(member => level(member) ** 2);
+    const sum = squares.reduce((total, value) => total + value, 0) || 1;
+    return {
+        bonus: partyExpBonus(list.length),
+        level: Math.max(1, ...list.map(level)),
+        shares: list.map((member, index) => ({member, share: squares[index] / sum})),
+    };
+}
 
 const id = value => String(value);
 const members = chat => (Array.isArray(chat?.members) ? chat.members : []);
@@ -143,8 +163,8 @@ export const lootModeOf = session => (LOOT_MODES.includes(session?.game?.party?.
  * Who receives the next item of a kill by `killer`: returns {members, pick()}; with no party the killer alone. Items are
  * rolled one by one, so "turn" hands them out in order and "random" draws for each. Adena is always split equally.
  */
-export function lootDistributor(chat, killer, random = Math.random) {
-    const members = chat ? partyTargets(chat, killer) : [killer];
+export function lootDistributor(chat, killer, random = Math.random, eligible = () => true) {
+    const members = chat ? partyTargets(chat, killer).filter(member => member === killer || eligible(member)) : [killer];
     const mode = members.length > 1 ? lootModeOf(killer) : 'finders';
     const leader = members.find(member => id(member.userId) === id(killer.game.party?.leaderId)) || killer;
     // the cursor lives on the leader's record so that every kill of the party advances the same turn

@@ -656,4 +656,6 @@ export default {
   'есть':'bor',
   'камней':'ta tosh',
   'Не хватает самоцветов для аугментации.':'Augmentatsiya uchun qimmatbaho toshlar yetarli emas.',
+  '{0} повержен: +{1} опыта, +{2} ОП{3}.{4}':'{0} yengildi: +{1} tajriba, +{2} OB{3}.{4}',
+  'Группа получила свою долю.':'Guruh o‘z ulushini oldi.',
 };
