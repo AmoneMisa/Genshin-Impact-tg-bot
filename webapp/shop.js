@@ -23,7 +23,8 @@ export async function openShopGame(options) {
     ['arrows', 'Стрелы', L2_MATERIAL_ART.l2_17, merchant('weapons', 'ammo')],
     ['potions', 'Банки', L2_CATEGORY_ART.consumable, goods('player')],
     ['crystals', 'Кристаллы', L2_CATEGORY_ART.crystal, goods('soul')],
-    ['quest', 'Квест', L2_CATEGORY_ART.recipe, null, 'Квестовые товары пока не продаются.'],
+    // High Five item 3276, Mark of Champion (Destroyer profession): icon.etc_jewel_gold_i00.
+    ['quest', 'Квест', 'icon-etc_jewel_gold_i00', null, 'Квестовые товары пока не продаются.'],
     ['dyes', 'Краски', L2_CATEGORY_ART.dye, merchant('mammon', 'dye')],
     ['scrolls', 'Свитки', L2_CATEGORY_ART.scroll, merchant('mammon', 'scroll')],
     ['life', 'ЛС', L2_CATEGORY_ART.lifestone, goods('stones')],
