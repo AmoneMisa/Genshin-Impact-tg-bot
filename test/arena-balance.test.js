@@ -154,12 +154,12 @@ test('skill levels and enchant routes make a fighter stronger in the arena and i
   const duelLoss = (enchant) => withSeed(77, () => {
     let loss = 0;
     for (let i = 0; i < 12; i++) {
-      const me = player('archmage', 70);
+      const me = player('hawkeye', 50);
       for (const skill of me.game.gameClass.skills) {
         skill.enchantLevel = enchant;
         if (enchant) { skill.routeKind = 'power'; skill.routeLevel = 5; }
       }
-      loss += 100 - clanDuel(me, player('archmage', 70)).defenderPercent;
+      loss += 100 - clanDuel(me, player('hawkeye', 50)).defenderPercent;
     }
     return loss / 12;
   });
