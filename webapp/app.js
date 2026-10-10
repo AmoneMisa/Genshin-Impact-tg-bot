@@ -5,6 +5,7 @@ import { openPassivesGame } from './passives.js';
 import { openHuntGame } from './hunt.js';
 import { openPartyGame } from './party.js';
 import { openMerchantsGame } from './merchants.js';
+import { openTattoosGame } from './tattoos.js';
 import { openLuckShopGame } from './luck-shop.js';
 import { openAuctionGame } from './auction.js';
 import { startItemArt } from './item-art-runtime.js';
@@ -116,6 +117,7 @@ const launchers = {
   hunt: openHuntGame,
   party: openPartyGame,
   merchants: openMerchantsGame,
+  tattoos: openTattoosGame,
   catacombs: options=>openHuntGame({...options,initialZoneKind:'catacomb'}),
   chest: openChestGame,
   gacha: openGachaGame,

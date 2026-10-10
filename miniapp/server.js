@@ -99,6 +99,7 @@ import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { getPartyState, performPartyAction } from './party.js';
 import { buyFromMerchant, getMerchantsState } from './merchants.js';
+import { getTattooState, performTattooAction } from './tattoos.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
@@ -1681,6 +1682,28 @@ const merchantsBuy = guarded('merchants buy', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const tattoosState = guarded('tattoos state', async (req, res) => {
+  const context = await authorize(req);
+  const state = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getTattooState(context.session);
+  });
+  return sendJson(res, 200, state);
+});
+
+const tattoosAction = guarded('tattoos action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (['apply', 'remove'].includes(body.action)) assertGoldUnlocked(context);
+  const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const done = performTattooAction(context.session, body.action, body);
+    if (done.ok && body.action !== 'list') await saveSession(context.session);
+    return done;
+  });
+  return sendResult(res, result, context);
+});
+
 const PARTY_ACTIONS = new Set(['create', 'invite', 'accept', 'decline', 'leave', 'kick', 'disband', 'loot']);
 
 const partyState = guarded('party state', async (req, res) => {
@@ -1952,6 +1975,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/boss') return bossState(req, res);
     if (route === 'GET /api/hunt') return huntState(req, res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
+    if (route === 'GET /api/tattoos') return tattoosState(req, res);
+    if (route === 'POST /api/tattoos') return tattoosAction(req, res);
     if (route === 'GET /api/merchants') return merchantsState(req, res);
     if (route === 'POST /api/merchants/buy') return merchantsBuy(req, res);
     if (route === 'GET /api/party') return partyState(req, res);

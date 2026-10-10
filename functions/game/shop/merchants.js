@@ -81,7 +81,7 @@ function build() {
     for (const row of DATA.mammon) {
         const entry = productEntry(row.merchant === 'priest' ? 'pr' : 'mm', row);
         // only what the game can use: gemstones, enchant scrolls, SP and Mammon's varnish
-        const usable = entry.kind === 'sp' || /^(craft_gem_|scroll_|blessed_)/.test(entry.key) || row.product === MAMMON_VARNISH;
+        const usable = entry.kind === 'sp' || /^(craft_gem_|scroll_|blessed_)/.test(entry.key) || row.product === MAMMON_VARNISH || infoOf(row.product).kind === 'dye';
         if (!usable) continue;
         (row.adena && !row.aa ? stock.alchemist : stock.mammon).push(entry);
     }

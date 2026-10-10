@@ -11,6 +11,7 @@
 //   WIT -> skill cooldowns, crit chance (mage, priest)   MEN -> max mana, mana regeneration
 import { classFamily, isMagicClass } from '../classes/classFamily.js';
 import getEquipStatByName from './getters/getEquipStatByName.js';
+import { tattooPoints } from './tattoos.js';
 import { BASE_STATS, BASE_STAT_INFO, DEFAULT_BASE_STATS, FAMILY_BASE_STATS } from './baseStatsData.js';
 
 export { BASE_STATS, BASE_STAT_INFO };
@@ -24,9 +25,9 @@ const familyOf = session => classFamily(className(session));
 
 export const baseStatsOf = session => FAMILY_BASE_STATS[familyOf(session)] || DEFAULT_BASE_STATS;
 
-/** Points the gear adds to one characteristic. */
+/** Points the gear and the symbols (tattoos) add to one characteristic. */
 export function gearPoints(session, stat) {
-    return Number(getEquipStatByName(session, stat)) || 0;
+    return (Number(getEquipStatByName(session, stat)) || 0) + tattooPoints(session, stat);
 }
 
 export function statTotal(session, stat) {

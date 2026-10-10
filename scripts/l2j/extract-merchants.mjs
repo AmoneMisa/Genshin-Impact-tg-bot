@@ -82,6 +82,8 @@ for (const name of ['Gemstone D', 'Gemstone C', 'Gemstone B']) {
   const real = townByName.get(name.toLowerCase());
   if (real) grocer.push([real.id, real.price]);
 }
+// every dye the town dye merchants sell (the symbols mechanic uses them)
+for (const [id, price] of town) if (items.get(id)?.etc === 'DYE' && !grocer.some(([known]) => known === id)) grocer.push([id, price]);
 grocer.sort((a, b) => a[0] - b[0]);
 
 // ---- Ancient Adena merchants (Merchant of Mammon, Priest of Dawn)
