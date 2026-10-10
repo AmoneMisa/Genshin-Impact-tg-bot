@@ -5,6 +5,7 @@ import updateStats from '../functions/game/player/updatePlayerStats.js';
 import {addMaterial, getMaterialCount} from '../functions/game/player/materials.js';
 import {
   FISHING, bestRod, castMs, castOnce, fishLevelFor, getFishingState, openFish, pickFish, rodKey, setAuto, settleFishing, shotKey, ROD_GRADES,
+  exchangeProofs, learnSkill, nextSkill, ticketKey, ticketsFor, MAX_EXPERTISE,
 } from '../functions/game/fishing/fishing.js';
 import FISHING_DATA from '../template/fishingData.js';
 import {performFishingAction} from '../miniapp/fishing.js';
@@ -20,6 +21,7 @@ const hero = (className = 'phoenixKnight', level = 80) => {
   updateStats(session);
   return session;
 };
+const train = (session, level = 27) => { session.game.fishing = {day: '2026-10-12', fish: 0, casts: 0, auto: false, shots: true, lastAt: 0, total: 0, learned: true, expertise: level}; return session; };
 const rod = (name) => FISHING_DATA.rods.find(entry => entry.name === name);
 const give = (session, name) => addMaterial(session, rodKey(rod(name).item), 1);
 const bestRodGrade = name => ROD_GRADES[FISHING_DATA.rods.findIndex(entry => entry.name === name)];
@@ -50,17 +52,18 @@ test('daily fish by grade: 500 for an S rod, 220 for A, and fewer below', () => 
   assert.equal(getFishingState(archer, NOW).limit, 220);
 });
 
-test('fish are caught by level: the top three fish levels of the character', () => {
-  assert.deepEqual([20, 40, 80, 85].map(fishLevelFor), [7, 13, 27, 27]);
+test('fish are caught by the Fishing Expertise: the top three fish levels', () => {
+  assert.equal(fishLevelFor(hero()), 0);
+  assert.equal(fishLevelFor(train(hero(), 13)), 13);
   for (let roll = 0; roll < 20; roll += 1) {
-    const fish = pickFish(40, () => roll / 20);
+    const fish = pickFish(13, () => roll / 20);
     assert.ok(fish.level >= 11 && fish.level <= 13, `${fish.name} ${fish.level}`);
     assert.ok(FISHING_DATA.capsules[fish.item], 'only fish with a known capsule are caught');
   }
 });
 
 test('a manual cast needs a rod, burns a shot of the rod grade and waits for the cast time', () => {
-  const session = hero();
+  const session = train(hero());
   assert.equal(castOnce(session, NOW).reason, 'no_rod');
   give(session, 'Triton Pole');
   addMaterial(session, shotKey('S'), 2);
@@ -86,7 +89,7 @@ test('a manual cast needs a rod, burns a shot of the rod grade and waits for the
 });
 
 test('past the daily fish a cast catches by a very low chance and burns no shot', () => {
-  const session = hero();
+  const session = train(hero());
   give(session, 'Cygnus Pole');
   addMaterial(session, shotKey('A'), 10);
   getFishingState(session, NOW);
@@ -109,7 +112,7 @@ test('past the daily fish a cast catches by a very low chance and burns no shot'
 });
 
 test('auto fishing settles the casts that fell due, quicker with shots, and slows down to the limit', () => {
-  const session = hero();
+  const session = train(hero());
   give(session, 'Triton Pole');
   const slow = castMs(rod('Triton Pole')), quick = castMs(rod('Triton Pole'), true);
   addMaterial(session, shotKey('S'), 4);
@@ -131,7 +134,7 @@ test('auto fishing settles the casts that fell due, quicker with shots, and slow
 });
 
 test('opening a fish gives one of its real products by chance; some fish give nothing', () => {
-  const session = hero();
+  const session = train(hero());
   const fish = FISHING_DATA.fish.find(entry => FISHING_DATA.capsules[entry.item]);
   const products = FISHING_DATA.capsules[fish.item];
   addMaterial(session, `l2_${fish.item}`, 3);
@@ -147,7 +150,7 @@ test('opening a fish gives one of its real products by chance; some fish give no
 });
 
 test('the mini app actions return the screen state and settle first', () => {
-  const session = hero();
+  const session = train(hero());
   give(session, 'Triton Pole');
   const started = performFishingAction(session, 'auto', {enabled: true}, NOW);
   assert.equal(started.ok, true);
@@ -192,4 +195,61 @@ test('dyes are crafted from real recipes by the 2nd profession only', () => {
   assert.equal(result.ok, true);
   assert.equal(result.success, true);
   assert.equal(getMaterialCount(master, `l2_${recipe.product}`), 1);
+});
+
+test('the Guild: oils, scales, bones and gems turn into tickets at the real rates', () => {
+  const session = hero();
+  addMaterial(session, 'l2_6908', 10); // Fish Oil: 1 ticket
+  addMaterial(session, 'l2_6910', 2);  // Premium Fish Oil: 25
+  addMaterial(session, 'l2_6914', 1);  // Shiny Fish Gem: 20
+  addMaterial(session, 'l2_6916', 3);  // Thick Fish Bone: 9
+  const before = JSON.stringify(session.game.inventory);
+  assert.equal(exchangeProofs(session, 'all').given, 16);
+  assert.equal(getMaterialCount(session, ticketKey), 10 + 50 + 20 + 27);
+  assert.equal(getMaterialCount(session, 'l2_6908'), 0);
+  assert.equal(exchangeProofs(session, 'all').reason, 'nothing_to_exchange');
+  assert.equal(exchangeProofs(session, 1).reason, 'not_exchangeable');
+  assert.notEqual(JSON.stringify(session.game.inventory), before);
+  addMaterial(session, 'l2_6909', 4);
+  assert.equal(exchangeProofs(session, 6909, 3).tickets, 15);
+  assert.equal(getMaterialCount(session, 'l2_6909'), 1);
+});
+
+test('tickets learn the Fishing skill and then Fishing Expertise 1-27 at the real character levels', () => {
+  const session = hero('phoenixKnight', 30);
+  assert.equal(fishLevelFor(session), 0);
+  assert.deepEqual(nextSkill(session), {kind: 'fishing', level: 1, needLevel: 1, tickets: ticketsFor(1000)});
+  assert.equal(ticketsFor(1000), 10);
+  assert.equal(learnSkill(session).reason, 'not_enough_tickets');
+  addMaterial(session, ticketKey, 100000);
+  assert.equal(learnSkill(session).ok, true);
+  assert.equal(learnSkill(session).learned, 'expertise');
+  assert.equal(fishLevelFor(session), 1);
+  // level 30 allows the expertise whose character level is <= 30: 1 4 7 ... 28 = 10 levels
+  for (let level = 2; level <= 10; level += 1) assert.equal(learnSkill(session).level, level);
+  const refused = learnSkill(session);
+  assert.deepEqual([refused.ok, refused.reason, refused.needLevel], [false, 'level_too_low', 31]);
+  assert.equal(fishLevelFor(session), 10);
+  const spent = 100000 - getMaterialCount(session, ticketKey);
+  assert.equal(spent, 10 + [10, 50, 200, 300, 500, 800, 1600, 2600, 4000, 6700].reduce((sum, adena) => sum + ticketsFor(adena), 0));
+  const master = hero('phoenixKnight', 85);
+  train(master, MAX_EXPERTISE);
+  assert.equal(learnSkill(master).reason, 'max_level');
+  assert.equal(nextSkill(master), null);
+});
+
+test('without the skill nothing can be cast; with it the fish level is the expertise', () => {
+  const session = hero();
+  give(session, 'Triton Pole');
+  assert.equal(castOnce(session, NOW).reason, 'not_learned');
+  assert.equal(setAuto(session, true, NOW).reason, 'not_learned');
+  session.game.fishing.learned = true;
+  assert.equal(castOnce(session, NOW).reason, 'not_learned', 'expertise 0 is not enough');
+  session.game.fishing.expertise = 1;
+  const result = castOnce(session, NOW, () => 0.5);
+  assert.equal(result.ok, true);
+  assert.ok(FISHING_DATA.fish.find(fish => fish.item === result.caught[0].item).level <= 1);
+  const state = performFishingAction(session, 'learn');
+  assert.equal(state.reason, 'not_enough_tickets');
+  assert.equal(state.fishing.skill.expertise, 1);
 });

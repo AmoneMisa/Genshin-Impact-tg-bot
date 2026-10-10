@@ -9,6 +9,12 @@ const REASONS = {
   no_rod: 'Нужна удочка. Купи её у рыбака (раздел «Торговцы»).',
   not_ready: 'Удочка ещё не готова.',
   not_a_fish: 'Это не рыба.',
+  not_learned: 'Сначала выучи рыбалку и мастерство в Гильдии рыбаков (раздел ниже).',
+  not_enough_tickets: 'Не хватает «Доказательств улова». Обменяй добычу в Гильдии.',
+  level_too_low: 'Твой уровень слишком низкий для этого уровня мастерства.',
+  max_level: 'Мастерство рыбалки уже на максимуме.',
+  nothing_to_exchange: 'Нечего менять: нужны масла, чешуя, кости или самоцветы.',
+  not_exchangeable: 'Это не принимает Гильдия.',
   no_fish: 'Рыбы нет.',
 };
 const number = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
@@ -49,6 +55,8 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
       const payload = await api('/api/fishing', { method: 'POST', body: JSON.stringify({ action, ...body }) });
       state = payload.fishing;
       if (action === 'cast' || action === 'state') feedback = payload.caught?.length ? `Улов: ${caughtText(payload.caught)}.` : (quiet ? feedback : '');
+      if (action === 'learn') feedback = payload.learned === 'fishing' ? 'Навык рыбалки изучен.' : `Мастерство рыбалки: ${payload.level} ур.`;
+      if (action === 'exchange') feedback = `Обменено ${number(payload.given)} шт. на ${number(payload.tickets)} доказательств улова.`;
       if (action === 'auto') feedback = payload.auto ? 'Автоловля включена.' : 'Автоловля выключена.';
       if (action === 'open') feedback = payload.items.length ? `Разобрано ${number(payload.opened)}: ${payload.items.map(row => `${row.name} ×${row.amount}`).join(', ')}.` : `Разобрано ${number(payload.opened)}, ничего не выпало.`;
       if (action !== 'state' && payload.state) renderState(payload.state);
@@ -77,12 +85,28 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
     </article>`).join('')}</div>`;
   }
 
+  function guildHtml() {
+    const skill = state.skill, next = skill.next;
+    const upgrade = next
+      ? `<button type="button" class="equipment-action forge-action" data-learn ${state.tickets >= next.tickets ? '' : 'disabled'}>${next.kind === 'fishing' ? 'Изучить рыбалку' : `Мастерство ${next.level} ур.`} · ${number(next.tickets)} 🎫${next.needLevel > 1 ? ` · с ${next.needLevel} ур. героя` : ''}</button>`
+      : '<p class="party-note">Мастерство рыбалки на максимуме.</p>';
+    const rows = state.exchange.map(row => `<span class="guild-row">${escapeHtml(row.name)} ×${number(row.count)} <small>по ${row.rate} 🎫</small></span>`).join('');
+    return `<section class="mmo-frame">
+      <div class="mmo-section-title"><strong>Гильдия рыбаков</strong><small>🎫 ${number(state.tickets)}</small></div>
+      <p class="party-note">${skill.learned ? `Мастерство рыбалки: ${skill.expertise} / ${skill.max} — ловится рыба до ${skill.expertise} уровня.` : 'Навык рыбалки не изучен.'}</p>
+      ${upgrade}
+      <div class="guild-exchange">${rows || '<p class="party-note">Масла, чешуя, кости и самоцветы из разобранной рыбы меняются на «Доказательства улова».</p>'}</div>
+      ${state.exchange.length ? '<button type="button" class="equipment-action" data-exchange-all>Обменять всё на 🎫</button>' : ''}
+    </section>`;
+  }
+
   function render() {
     if (!state) { content.innerHTML = '<p class="shop-empty">Загрузка…</p>'; return; }
     const ready = state.rod && state.nextCastMs <= 0;
     content.innerHTML = `
       <section class="mmo-frame">
         <div class="mmo-section-title"><strong>${state.rod ? escapeHtml(state.rod.name) : 'Нет удочки'}</strong><small>рыба до ${state.fishLevel} ур.</small></div>
+        ${state.skill.learned && state.fishLevel > 0 ? '' : '<p class="party-note">Чтобы ловить, изучи рыбалку и первый уровень мастерства в Гильдии ниже.</p>'}
         <p class="party-note">Заброс: ${state.rod ? seconds(state.rod.castMs) : '—'} · рыбы сегодня ${number(state.fishToday)} / ${number(state.limit)} · всего забросов ${number(state.total)}</p>
         ${state.overLimit ? `<p class="party-note">Дневная норма выловлена: теперь клюёт крайне редко (${(state.overChance * 100).toFixed(1)}% на заброс).</p>` : ''}
         ${state.shot ? `<label class="merchant-filter"><input type="checkbox" data-shots ${state.shots ? 'checked' : ''}> ${escapeHtml(state.shot.name)}: ${number(state.shot.count)} шт. — вдвое быстрее</label>` : ''}
@@ -92,6 +116,7 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
         </div>
         ${rodsHtml()}
       </section>
+      ${guildHtml()}
       <section class="mmo-frame">
         <div class="mmo-section-title"><strong>Улов</strong><small>${number(state.fishBag.reduce((sum, fish) => sum + fish.count, 0))} рыб</small></div>
         ${state.fishBag.length ? '<button type="button" class="equipment-action" data-open-all>Разобрать всё</button>' : ''}
@@ -100,6 +125,8 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
     feedbackNode.textContent = feedback;
     content.querySelector('[data-cast]')?.addEventListener('click', () => { haptic('light'); run('cast'); });
     content.querySelector('[data-auto]')?.addEventListener('click', event => { haptic('medium'); run('auto', { enabled: event.currentTarget.dataset.auto === '1' }); });
+    content.querySelector('[data-learn]')?.addEventListener('click', () => { haptic('medium'); run('learn'); });
+    content.querySelector('[data-exchange-all]')?.addEventListener('click', () => { haptic('medium'); run('exchange', { item: 'all', count: 'all' }); });
     content.querySelector('[data-shots]')?.addEventListener('change', event => { run('shots', { enabled: event.target.checked }, true); });
     content.querySelector('[data-open-all]')?.addEventListener('click', () => { haptic('medium'); run('open', { item: 'all', count: 'all' }); });
     content.querySelectorAll('[data-open]').forEach(button => button.addEventListener('click', () => { haptic('light'); run('open', { item: Number(button.dataset.open), count: 'all' }); }));

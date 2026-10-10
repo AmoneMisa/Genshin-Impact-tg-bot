@@ -7,6 +7,9 @@
 //   - a daily number of fish by the grade of the rod; past it a cast catches something only by a very low chance;
 //   - the real fish: a fish of the character's level is caught, opening it (as double-clicking a fish in L2)
 //     turns it into Fish Oil, scales, bones, gems ... by the real chances; those are the dye ingredients;
+//   - the Fishing skill and Fishing Expertise 1-27 (real character levels, 1 4 7 ... 79) decide which fish are met;
+//     they are learned at the Fishermen's Guild for Proof of Catching a Fish tickets, which the Guild gives for
+//     fish oil, scales, bones and gems at the real rates;
 //   - nothing runs in the background: the casts that fell due are settled whenever the screen or an action asks.
 import DATA from '../../../template/fishingData.js';
 import {addMaterial, getMaterialCount, materialInfo, spendMaterials} from '../player/materials.js';
@@ -23,14 +26,17 @@ export const FISHING = Object.freeze({
     // casts settled in one go and the longest absence that counts
     maxBatch: 2000,
     maxAwayMs: 12 * 3600 * 1000,
-    // how fast the level of the character grows into fish levels (fish levels are 1-27)
-    levelPerFishLevel: 3,
+    // a ticket stands for this much of the real adena price of a skill level
+    adenaPerTicket: 100,
 });
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 export const rodKey = item => `l2_${item}`;
 export const fishKey = item => `l2_${item}`;
 export const shotKey = grade => `l2_${DATA.shots[grade]}`;
+export const ticketKey = `l2_${DATA.proofItem}`;
+export const MAX_EXPERTISE = DATA.expertise.length;
+export const ticketsFor = adena => Math.max(1, Math.round(adena / FISHING.adenaPerTicket));
 const byItem = new Map(DATA.fish.map(fish => [fish.item, fish]));
 /** Only the fish a capsule is known for can be caught. */
 const catchable = DATA.fish.filter(fish => DATA.capsules[fish.item]);
@@ -41,7 +47,7 @@ export const dayKey = (now = Date.now()) => new Date(now).toISOString().slice(0,
 
 function ensureState(session, now) {
     const game = session.game;
-    if (!game.fishing || typeof game.fishing !== 'object') game.fishing = {day: dayKey(now), fish: 0, casts: 0, auto: false, shots: true, lastAt: 0, total: 0};
+    if (!game.fishing || typeof game.fishing !== 'object') game.fishing = {day: dayKey(now), fish: 0, casts: 0, auto: false, shots: true, lastAt: 0, total: 0, learned: false, expertise: 0};
     const state = game.fishing;
     if (state.day !== dayKey(now)) { state.day = dayKey(now); state.fish = 0; state.casts = 0; }
     if (typeof state.shots !== 'boolean') state.shots = true;
@@ -61,12 +67,12 @@ export function bestRod(session) {
 export const castMs = (rod, shot = false) => Math.max(3000, Math.round(FISHING.castMs * 20 / (rod?.damage || 20) / (shot ? 2 : 1)));
 export const dailyLimit = rod => FISHING.dailyFish[rod?.grade] || 0;
 
-/** The highest fish level a character of that level meets. */
-export const fishLevelFor = level => Math.max(1, Math.min(27, Math.round(number(level, 1) / FISHING.levelPerFishLevel)));
+/** The highest fish level a character meets: its Fishing Expertise (0 before the skill is learned). */
+export const fishLevelFor = session => (session?.game?.fishing?.learned ? Math.max(0, Math.min(MAX_EXPERTISE, number(session.game.fishing.expertise))) : 0);
 
-/** One fish for a character of that level: the top three fish levels are fished, by bite rate and grade. */
-export function pickFish(level, random = Math.random) {
-    const top = fishLevelFor(level);
+/** One fish of the given top fish level: the top three fish levels are fished, by bite rate and grade. */
+export function pickFish(top, random = Math.random) {
+    top = Math.max(1, top);
     const pool = catchable.filter(fish => fish.level <= top && fish.level >= Math.max(1, top - 2));
     const weights = pool.map(fish => fish.bite * (GRADE_WEIGHT[fish.grade] || 1));
     let roll = random() * weights.reduce((sum, value) => sum + value, 0);
@@ -84,7 +90,7 @@ export function pickFish(level, random = Math.random) {
  */
 function cast(session, state, rod, count, random) {
     const caught = new Map();
-    const level = number(session.game.stats?.lvl, 1);
+    const level = Math.max(1, fishLevelFor(session));
     const limit = dailyLimit(rod);
     let shotsSpent = 0, fish = 0;
     for (let index = 0; index < count; index += 1) {
@@ -116,7 +122,7 @@ export function settleFishing(session, now = Date.now(), random = Math.random) {
     const state = ensureState(session, now);
     if (!state.auto) return [];
     const rod = bestRod(session);
-    if (!rod) { state.auto = false; return []; }
+    if (!rod || fishLevelFor(session) < 1) { state.auto = false; return []; }
     if (!state.lastAt || state.lastAt > now) state.lastAt = now;
     state.lastAt = Math.max(state.lastAt, now - FISHING.maxAwayMs);
     const totals = new Map();
@@ -138,6 +144,7 @@ export function castOnce(session, now = Date.now(), random = Math.random) {
     const state = ensureState(session, now);
     const rod = bestRod(session);
     if (!rod) return {ok: false, reason: 'no_rod'};
+    if (fishLevelFor(session) < 1) return {ok: false, reason: 'not_learned'};
     const wait = number(state.lastAt) + castMs(rod, shotReady(session, state, rod)) - now;
     if (!state.auto && state.lastAt && wait > 0) return {ok: false, reason: 'not_ready', waitMs: wait};
     const over = state.fish >= dailyLimit(rod);
@@ -151,6 +158,7 @@ export function setAuto(session, enabled, now = Date.now(), random = Math.random
     const state = ensureState(session, now);
     if (enabled) {
         if (!bestRod(session)) return {ok: false, reason: 'no_rod', caught: settled};
+        if (fishLevelFor(session) < 1) return {ok: false, reason: 'not_learned', caught: settled};
         state.auto = true;
         state.lastAt = now;
     } else {
@@ -208,6 +216,44 @@ export function openFish(session, item = 'all', count = 'all', random = Math.ran
     };
 }
 
+/** What the Guild asks for the next skill level: {kind, level, needLevel, tickets} or null at the top. */
+export function nextSkill(session, now = Date.now()) {
+    const state = ensureState(session, now);
+    if (!state.learned) return {kind: 'fishing', level: 1, needLevel: DATA.fishing.needLevel || 1, tickets: ticketsFor(DATA.fishing.adena)};
+    const row = DATA.expertise[state.expertise];
+    return row ? {kind: 'expertise', level: row.level, needLevel: row.needLevel, tickets: ticketsFor(row.adena)} : null;
+}
+
+/** Learns the Fishing skill, then Fishing Expertise level by level, for Proof of Catching a Fish tickets. */
+export function learnSkill(session, now = Date.now()) {
+    const state = ensureState(session, now);
+    const next = nextSkill(session, now);
+    if (!next) return {ok: false, reason: 'max_level'};
+    if (number(session.game.stats?.lvl, 1) < next.needLevel) return {ok: false, reason: 'level_too_low', needLevel: next.needLevel};
+    if (getMaterialCount(session, ticketKey) < next.tickets) return {ok: false, reason: 'not_enough_tickets', need: next.tickets};
+    spendMaterials(session, {[ticketKey]: next.tickets});
+    if (next.kind === 'fishing') state.learned = true; else state.expertise = next.level;
+    return {ok: true, learned: next.kind, level: state.expertise, spent: next.tickets};
+}
+
+/** The Guild turns oils, scales, bones and gems into Proofs of Catching a Fish at the real rates. */
+export function exchangeProofs(session, item = 'all', count = 'all') {
+    const targets = (item === 'all' ? Object.keys(DATA.proofs).map(Number) : [Number(item)]).filter(id => DATA.proofs[id]);
+    if (!targets.length) return {ok: false, reason: 'not_exchangeable'};
+    let tickets = 0, given = 0;
+    for (const id of targets) {
+        const owned = getMaterialCount(session, `l2_${id}`);
+        const amount = count === 'all' ? owned : Math.min(owned, Math.max(0, Math.floor(number(count))));
+        if (!amount) continue;
+        spendMaterials(session, {[`l2_${id}`]: amount});
+        tickets += amount * DATA.proofs[id];
+        given += amount;
+    }
+    if (!given) return {ok: false, reason: 'nothing_to_exchange'};
+    addMaterial(session, ticketKey, tickets);
+    return {ok: true, tickets, given};
+}
+
 export function getFishingState(session, now = Date.now()) {
     const state = ensureState(session, now);
     const rod = bestRod(session);
@@ -224,7 +270,10 @@ export function getFishingState(session, now = Date.now()) {
         overChance: FISHING.overLimitChance,
         casts: state.casts,
         nextCastMs: rod && state.lastAt ? Math.max(0, state.lastAt + step - now) : 0,
-        fishLevel: fishLevelFor(session.game.stats?.lvl),
+        fishLevel: fishLevelFor(session),
+        skill: {learned: Boolean(state.learned), expertise: fishLevelFor(session), max: MAX_EXPERTISE, next: nextSkill(session, now)},
+        tickets: getMaterialCount(session, ticketKey),
+        exchange: Object.entries(DATA.proofs).map(([id, rate]) => ({item: Number(id), name: DATA.items[id]?.[0] || id, rate, count: getMaterialCount(session, `l2_${id}`)})).filter(row => row.count > 0),
         total: number(state.total),
         fishBag: fishInBag(session),
     };
