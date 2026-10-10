@@ -304,4 +304,5 @@ export default {
   "Этот предмет нельзя кристаллизовать.": "Bu buyumni kristallashtirib bo'lmaydi.",
   "Этот предмет уже выбран.": "Bu buyum allaqachon tanlangan.",
   "Журнал хранилища": "Ombor jurnali",
+  "(+{0} от заточки и MW)": "(charxlash va MW dan +{0})",
 };

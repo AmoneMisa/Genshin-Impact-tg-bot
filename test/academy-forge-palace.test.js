@@ -4,7 +4,7 @@ import {getAcademyState, claimBounty, recordAcademyEvent, bountyQuality, bountyR
 import {forgeBonuses, FORGE_MAX, reduceNeeds} from '../functions/game/builds/forgeBonuses.js';
 import {inventoryCapacity, warehouseCapacity, inventorySlotsUsed, hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
 import {enchantChance} from '../functions/game/equipment/enchantItem.js';
-import {enchantExtras} from '../functions/game/equipment/itemBonuses.js';
+import {enchantExtras, itemExtras, masterworkProfile} from '../functions/game/equipment/itemBonuses.js';
 
 const hero = (builds = {}, extra = {}) => ({
     userId: 7,
@@ -35,10 +35,18 @@ test('the forge raises the risky enchant roll but not the safe levels', () => {
     assert.equal(enchantChance({grade: 'D', mainType: 'weapon', enchant: 0}, hero({forge: {currentLvl: 30}})), 1);
 });
 
-test('a masterwork item is stronger than the same item without it', () => {
-    const item = {mainType: 'weapon', characteristics: {power: 100}};
-    assert.equal(enchantExtras(item).power, undefined);
-    assert.equal(enchantExtras({...item, masterwork: true}).power, 10);
+test('a masterwork item improves its own stats by an amount that is fixed per item', () => {
+    const a = {id: 'sword-a', mainType: 'weapon', characteristics: {power: 100, accuracy: 10}};
+    const b = {id: 'sword-b', mainType: 'weapon', characteristics: {power: 100, accuracy: 10}};
+    assert.deepEqual(itemExtras(a), {}, 'an ordinary item has no extras');
+    assert.equal(enchantExtras({...a, masterwork: true}).power, undefined);
+    const mwA = itemExtras({...a, masterwork: true});
+    const profile = masterworkProfile(a);
+    assert.ok(Math.abs(mwA.power - 100 * profile.main) < 1e-9);
+    assert.ok(profile.main >= 0.06 && profile.main <= 0.14);
+    assert.ok(mwA[profile.extra.stat] >= profile.extra.value);
+    assert.deepEqual(itemExtras({...a, masterwork: true}), mwA, 'stable for the same item');
+    assert.notDeepEqual(masterworkProfile(a), masterworkProfile(b), 'items have different bonuses');
 });
 
 test('palace level sets inventory (80..250) and warehouse (60..500) size', () => {

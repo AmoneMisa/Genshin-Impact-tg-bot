@@ -1,6 +1,6 @@
 // Player-facing text for the stats an equipment item carries (Mini App cards and the text bot).
 import statsDictionary from '../../../dictionaries/statsDictionary.js';
-import { enchantExtras, isFactorStat } from './itemBonuses.js';
+import { itemExtras, isFactorStat } from './itemBonuses.js';
 
 const LABELS = {
     ...statsDictionary,
@@ -27,7 +27,7 @@ function trim(value) {
 }
 
 /** One characteristic as {name, label, value, text}: factors become percentages ("+3% Макс. ХП"). */
-export function describeStat(name, value, extra = null) {
+export function describeStat(name, value, extra = null, masterwork = false) {
     const label = LABELS[name] || name;
     const number = Number(value) || 0;
     let text;
@@ -37,14 +37,18 @@ export function describeStat(name, value, extra = null) {
         const percent = (number - 1) * 100;
         text = `${label} ${percent >= 0 ? '+' : ''}${trim(percent)}%`;
     } else text = `${label} ${number >= 0 ? '+' : ''}${trim(number)}`;
-    if (extra) text += ` (+${trim(extra)} от заточки)`;
+    if (extra) text += masterwork ? ` (+${trim(extra)} от заточки и MW)` : ` (+${trim(extra)} от заточки)`;
     return { name, label, value: number, text };
 }
 
 /** All stats of an item (characteristics with the enchant bonus, then its special ability). */
 export function describeItemStats(item) {
-    const extras = enchantExtras(item);
-    const lines = Object.entries(item?.characteristics || {}).map(([name, value]) => describeStat(name, value, extras[name]));
+    const extras = itemExtras(item);
+    const lines = Object.entries(item?.characteristics || {}).map(([name, value]) => describeStat(name, value, extras[name], Boolean(item?.masterwork)));
+    // a masterwork item can carry a stat its ordinary version does not have
+    for (const [name, value] of Object.entries(extras)) {
+        if (!(name in (item?.characteristics || {}))) lines.push(describeStat(name, value, value, true));
+    }
     for (const stat of item?.stats || []) {
         if (typeof stat?.value === 'number') {
             const line = describeStat(stat.name, stat.value);

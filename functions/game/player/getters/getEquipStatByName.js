@@ -15,7 +15,7 @@ import gradeScale from '../../equipment/gradeScale.js';
 import { potionStatBonus } from '../potionBuffs.js';
 import extraStatBonus from '../extraModifiers.js';
 import { augmentStat } from '../../equipment/augment.js';
-import { activeSets, enchantExtras, uniqueEquipped } from '../../equipment/itemBonuses.js';
+import { activeSets, itemExtras, uniqueEquipped } from '../../equipment/itemBonuses.js';
 
 export default function (session, statName, isMul = false) {
     if (!session.game || !session.game.equipmentStats) {
@@ -41,7 +41,7 @@ export default function (session, statName, isMul = false) {
     for (let slot of uniqueEquipped(session.game.equipmentStats)) {
         // Fixed characteristics of the catalog item plus what its enchant level adds.
         const characteristics = {...(slot.characteristics || {})};
-        for (const [name, extra] of Object.entries(enchantExtras(slot))) {
+        for (const [name, extra] of Object.entries(itemExtras(slot))) {
             characteristics[name] = (characteristics[name] || 0) + extra;
         }
 
