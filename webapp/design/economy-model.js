@@ -58,7 +58,7 @@ export function makeForgeItem(templateId,uid,overrides={}) {
   return {uid,templateId,enchant:0,quality:'ordinary',sealed:true,equipped:false,sa:null,shoulder:null,...overrides};
 }
 export function createForgeState() {
-  return {gold:9000000,aa:50000,level:84,family:'mage',energy:12,hp:49773,
+  return {gold:9000000,aa:600000,level:84,family:'mage',energy:12,hp:49773,
     seals:{blue:25000,green:10000,red:5000},materials:{parts:250,alloy:250,gemS:120,varnish:40,essence1:3,essence2:2,...Object.fromEntries(Object.entries(FORGE_CATALOG).filter(([,info])=>info.epic).map(([id])=>[`soul_${id}`,2]))},
     soulCrystals:{'blue:13':3,'green:13':2,'red:13':2},nextUid:7,
     gear:[makeForgeItem('arcana','forge-0',{sealed:false,enchant:6,equipped:true}),
@@ -102,7 +102,7 @@ export function craftForgeItem(state,recipeId,outcome='ordinary') {
 }
 export function masterworkPreview(state,uid) {
   const item=forgeGear(state,uid),info=forgeItemInfo(item);
-  const cost={gold:info?.grade==='S84'?240000:120000,materials:{varnish:info?.grade==='S84'?12:info?.grade==='S80'?7:4}};
+  const cost={gold:info?.grade==='S84'?240000:120000,aa:info?.grade==='S84'?60000:info?.grade==='S80'?30000:15000,materials:{varnish:info?.grade==='S84'?12:info?.grade==='S80'?7:4}};
   return ready(cost,processReason(item)||(!info?.masterwork?'Для этого предмета Masterwork недоступен.':'')||(item.quality!=='foundation'?'Требуется заготовка Foundation.':'')||costReason(state,cost));
 }
 export function refineMasterwork(state,uid) {
@@ -111,7 +111,7 @@ export function refineMasterwork(state,uid) {
 }
 export function unsealPreview(state,uid) {
   const item=forgeGear(state,uid),info=forgeItemInfo(item);
-  const cost=info?.type==='cloak'?{gold:info.grade==='S84'?200000:100000}:info?.grade==='S80'?{gold:180000,materials:{gemS:8}}:info?.grade==='S84'?{gold:360000,materials:{gemS:16}}:{aa:info?.grade==='A'?12000:25000};
+  const cost=info?.type==='cloak'?{gold:info.grade==='S84'?200000:100000,aa:info.grade==='S84'?80000:40000}:info?.grade==='S80'?{gold:180000,aa:60000,materials:{gemS:8}}:info?.grade==='S84'?{gold:360000,aa:120000,materials:{gemS:16}}:{aa:info?.grade==='A'?12000:25000};
   return ready(cost,processReason(item)||(!item.sealed?'Предмет уже распечатан.':item.quality==='foundation'?'Сначала обработайте Foundation в Masterwork.':'')||costReason(state,cost));
 }
 export function unsealForgeItem(state,uid) {

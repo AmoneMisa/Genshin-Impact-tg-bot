@@ -1,5 +1,5 @@
 // Proposed WhitesLove rules for the design prototype, not live character mutations.
-export const TATTOO_RULES = Object.freeze({ slots:3, dyesPerSymbol:10, refund:5, bonusCap:5, minimumStat:1, applyFee:145000, removeFee:72500 });
+export const TATTOO_RULES = Object.freeze({ slots:3, dyesPerSymbol:10, refund:5, bonusCap:5, minimumStat:1, applyAa:6000, removeAa:3000 });
 export const DYES = Object.freeze([
   { id:'int-men', name:'Краска интеллекта', plus:'INT', minus:'MEN', amount:4, color:'#9473b5', glyph:'✧' },
   { id:'wit-men', name:'Краска мудрости', plus:'WIT', minus:'MEN', amount:4, color:'#718dbe', glyph:'✦' },
@@ -27,7 +27,7 @@ export function tattooPreview(state, id) {
   if (!dye) reason = 'Выберите краску.';
   else if (state.symbols.length >= TATTOO_RULES.slots) reason = 'Все три слота заняты. Сначала снимите символ.';
   else if ((state.stock[id] || 0) < TATTOO_RULES.dyesPerSymbol) reason = 'Нужно 10 красок одного типа.';
-  else if (state.gold < TATTOO_RULES.applyFee) reason = 'Недостаточно золота для нанесения.';
+  else if ((state.aa || 0) < TATTOO_RULES.applyAa) reason = 'Недостаточно древней адены (AA) для нанесения.';
   else if (Object.values(after).some(value => value < TATTOO_RULES.minimumStat)) reason = 'Характеристика не может стать ниже 1.';
   else if (after[dye.plus] <= before[dye.plus]) reason = 'Для этой характеристики уже достигнут бонус +5.';
   return { before,after,reason,allowed:!reason };
@@ -38,16 +38,16 @@ export function applyTattoo(state, id) {
   if (!preview.allowed) return { ok:false,reason:preview.reason };
   state.symbols.push(id);
   state.stock[id] -= TATTOO_RULES.dyesPerSymbol;
-  state.gold -= TATTOO_RULES.applyFee;
+  state.aa -= TATTOO_RULES.applyAa;
   return { ok:true };
 }
 
 export function removeTattoo(state, index) {
   const id = state.symbols[index];
   if (!Number.isInteger(index) || !id) return { ok:false,reason:'Символ не найден.' };
-  if (state.gold < TATTOO_RULES.removeFee) return { ok:false,reason:'Недостаточно золота для снятия.' };
+  if ((state.aa || 0) < TATTOO_RULES.removeAa) return { ok:false,reason:'Недостаточно древней адены (AA) для снятия.' };
   state.symbols.splice(index,1);
   state.stock[id] = (state.stock[id] || 0) + TATTOO_RULES.refund;
-  state.gold -= TATTOO_RULES.removeFee;
+  state.aa -= TATTOO_RULES.removeAa;
   return { ok:true };
 }
