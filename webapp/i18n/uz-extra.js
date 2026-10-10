@@ -768,4 +768,10 @@ export default {
   'Улов: {0}.':'Ov: {0}.',
   'Через {0}':'{0} dan keyin',
   'Это не рыба.':'Bu baliq emas.',
+  '{1}: {2} шт. — вдвое быстрее':'{1}: {2} ta — ikki barobar tez',
+  '{15} рыб':'{15} ta baliq',
+  '{4} ур. · скорость {5} · {6} рыб в день{7}':'{4}-daraja · tezlik {5} · kuniga {6} ta baliq{7}',
+  'Дневная норма выловлена: теперь клюёт крайне редко ({0}% на заброс).':'Kunlik me’yor tutildi: endi juda kamdan-kam tishlaydi ({0}% har tashlashga).',
+  'Заброс: {2} · рыбы сегодня {3} / {4} · всего забросов {5}':'Tashlash: {2} · bugun baliq {3} / {4} · jami tashlash {5}',
+  'Рыбацкие заряды':'Baliqchi zaryadlari',
 };

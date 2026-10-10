@@ -84,6 +84,12 @@ function build() {
         const info = infoOf(rod.item);
         stock.fisher.push({id: `rod:${rod.item}`, kind: 'material', group: 'rod', key: info.key, amount: 1, name: rod.name, minLevel: rod.level, realId: rod.item, cost: {gold: gold(rod.price)}});
     }
+    // fishing shots in packs of a hundred, at the real price of one
+    for (const [grade, id] of Object.entries(FISHING.shots)) {
+        const row = FISHING.items[id];
+        if (!row) continue;
+        stock.fisher.push({id: `fs:${id}`, kind: 'material', group: 'shot', key: infoOf(id).key, amount: 100, name: `${row[0]} ×100`, grade, realId: id, cost: {gold: gold(row[1] * 100)}});
+    }
     for (const [id, price] of FISHING.recipes) {
         const info = infoOf(id);
         stock.fisher.push({id: `fr:${id}`, kind: 'material', group: 'recipe', key: info.key, amount: 1, name: realName(id), realId: id, cost: {gold: gold(price)}});
@@ -208,7 +214,7 @@ const GROUP_LABELS = {
     oneHandedSword: 'Мечи', twoHandedSword: 'Двуручные мечи', dagger: 'Кинжалы', mace: 'Посохи и булавы', bow: 'Луки', crossbow: 'Арбалеты',
     blunt: 'Дробящее', fists: 'Кастеты', heavy: 'Тяжёлая броня', light: 'Лёгкая броня', robe: 'Роба', bigShield: 'Большие щиты',
     smallShield: 'Малые щиты', sigill: 'Сигилы', ring: 'Кольца', earring: 'Серьги', necklace: 'Ожерелья',
-    ammo: 'Стрелы и болты', rod: 'Удочки', recipe: 'Рецепты', dye: 'Краски', scroll: 'Свитки заточки', sp: 'Свитки ОП', material: 'Материалы', other: 'Прочее',
+    ammo: 'Стрелы и болты', rod: 'Удочки', shot: 'Рыбацкие заряды', recipe: 'Рецепты', dye: 'Краски', scroll: 'Свитки заточки', sp: 'Свитки ОП', material: 'Материалы', other: 'Прочее',
 };
 
 /**

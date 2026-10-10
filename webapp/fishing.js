@@ -7,7 +7,6 @@ import { icon } from './icons.js';
 
 const REASONS = {
   no_rod: 'Нужна удочка. Купи её у рыбака (раздел «Торговцы»).',
-  daily_limit: 'Дневной лимит забросов исчерпан. Завтра снова.',
   not_ready: 'Удочка ещё не готова.',
   not_a_fish: 'Это не рыба.',
   no_fish: 'Рыбы нет.',
@@ -65,12 +64,12 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
   }
 
   function rodsHtml() {
-    return `<div class="fishing-rods">${state.rods.map(rod => `<span class="${rod.owned ? 'owned' : ''} ${rod.usable ? '' : 'locked'}">${escapeHtml(rod.name)}<small>${rod.level} ур. · скорость ${rod.damage}${rod.owned ? ' · есть' : ''}</small></span>`).join('')}</div>`;
+    return `<div class="fishing-rods">${state.rods.map(rod => `<span class="${rod.owned ? 'owned' : ''} ${rod.usable ? '' : 'locked'}">${escapeHtml(rod.name)} <b>${rod.grade === 'noGrade' ? 'NG' : rod.grade}</b><small>${rod.level} ур. · скорость ${rod.damage} · ${number(rod.limit)} рыб в день${rod.owned ? ' · есть' : ''}</small></span>`).join('')}</div>`;
   }
 
   function fishHtml() {
-    if (!state.fish.length) return '<p class="party-note">Рыбы в сумке нет.</p>';
-    return `<div class="fishing-bag">${state.fish.map(fish => `<article class="fishing-fish">
+    if (!state.fishBag.length) return '<p class="party-note">Рыбы в сумке нет.</p>';
+    return `<div class="fishing-bag">${state.fishBag.map(fish => `<article class="fishing-fish">
       <span class="shop-icon">${materialIcon(`l2_${fish.item}`)}</span>
       <div class="shop-item-copy"><h3>${escapeHtml(fish.name)} <small>×${number(fish.count)}</small></h3>
         <p>${fish.can.map(product => `${escapeHtml(product.name)} ×${product.amount} (${product.chance}%)`).join(' · ')}</p></div>
@@ -80,11 +79,13 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
 
   function render() {
     if (!state) { content.innerHTML = '<p class="shop-empty">Загрузка…</p>'; return; }
-    const ready = state.rod && state.nextCastMs <= 0 && state.remaining > 0;
+    const ready = state.rod && state.nextCastMs <= 0;
     content.innerHTML = `
       <section class="mmo-frame">
         <div class="mmo-section-title"><strong>${state.rod ? escapeHtml(state.rod.name) : 'Нет удочки'}</strong><small>рыба до ${state.fishLevel} ур.</small></div>
-        <p class="party-note">Заброс: ${state.rod ? seconds(state.rod.castMs) : '—'} · сегодня ${number(state.casts)} / ${number(state.limit)} · всего ${number(state.total)}</p>
+        <p class="party-note">Заброс: ${state.rod ? seconds(state.rod.castMs) : '—'} · рыбы сегодня ${number(state.fishToday)} / ${number(state.limit)} · всего забросов ${number(state.total)}</p>
+        ${state.overLimit ? `<p class="party-note">Дневная норма выловлена: теперь клюёт крайне редко (${(state.overChance * 100).toFixed(1)}% на заброс).</p>` : ''}
+        ${state.shot ? `<label class="merchant-filter"><input type="checkbox" data-shots ${state.shots ? 'checked' : ''}> ${escapeHtml(state.shot.name)}: ${number(state.shot.count)} шт. — вдвое быстрее</label>` : ''}
         <div class="party-actions">
           <button type="button" class="equipment-action forge-action" data-cast ${ready ? '' : 'disabled'}>${state.nextCastMs > 0 && state.rod ? `Через ${seconds(state.nextCastMs)}` : 'Забросить удочку'}</button>
           <button type="button" class="equipment-action ${state.auto ? 'active' : ''}" data-auto="${state.auto ? '0' : '1'}" ${state.rod ? '' : 'disabled'}>${state.auto ? 'Остановить автоловлю' : 'Автоловля'}</button>
@@ -92,13 +93,14 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
         ${rodsHtml()}
       </section>
       <section class="mmo-frame">
-        <div class="mmo-section-title"><strong>Улов</strong><small>${number(state.fish.reduce((sum, fish) => sum + fish.count, 0))} рыб</small></div>
-        ${state.fish.length ? '<button type="button" class="equipment-action" data-open-all>Разобрать всё</button>' : ''}
+        <div class="mmo-section-title"><strong>Улов</strong><small>${number(state.fishBag.reduce((sum, fish) => sum + fish.count, 0))} рыб</small></div>
+        ${state.fishBag.length ? '<button type="button" class="equipment-action" data-open-all>Разобрать всё</button>' : ''}
         ${fishHtml()}
       </section>`;
     feedbackNode.textContent = feedback;
     content.querySelector('[data-cast]')?.addEventListener('click', () => { haptic('light'); run('cast'); });
     content.querySelector('[data-auto]')?.addEventListener('click', event => { haptic('medium'); run('auto', { enabled: event.currentTarget.dataset.auto === '1' }); });
+    content.querySelector('[data-shots]')?.addEventListener('change', event => { run('shots', { enabled: event.target.checked }, true); });
     content.querySelector('[data-open-all]')?.addEventListener('click', () => { haptic('medium'); run('open', { item: 'all', count: 'all' }); });
     content.querySelectorAll('[data-open]').forEach(button => button.addEventListener('click', () => { haptic('light'); run('open', { item: Number(button.dataset.open), count: 'all' }); }));
   }
