@@ -142,3 +142,8 @@
 .party-actions{display:flex;gap:8px;flex-wrap:wrap}
 .party-note,.party-empty p{font:12px/1.5 system-ui;opacity:.85}
 .party-loot-modes{display:flex;gap:6px;flex-wrap:wrap;padding:6px 0}
+
+.merchant-note{font:12px/1.5 system-ui;opacity:.8;margin:0 0 6px}
+.merchant-filter{display:flex;gap:8px;align-items:center;font:12px/1.4 system-ui;padding:4px 2px}
+.merchant-item .missing{color:#e07a6a}
+.merchants-panel .shop-categories{overflow-x:auto}

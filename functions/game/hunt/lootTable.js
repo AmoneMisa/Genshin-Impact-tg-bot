@@ -32,10 +32,10 @@ export function itemRow(id) {
 }
 
 /** {key, kind} of a real item id. */
-export function lootInfo(itemId) {
+export function lootInfo(itemId, row = null) {
     const id = Number(itemId);
     if (SEAL[id]) return {key: SEAL[id], kind: 'seal'};
-    const item = itemRow(id);
+    const item = row || itemRow(id);
     if (!item) return {key: `l2_${id}`, kind: 'other'};
     const name = item.name;
     const scroll = name.match(/^(Blessed )?Scroll: Enchant (?:Weapon|Armor) \((\w+)-Grade\)/);

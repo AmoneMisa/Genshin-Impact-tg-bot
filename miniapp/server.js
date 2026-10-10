@@ -98,6 +98,7 @@ import {
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { getPartyState, performPartyAction } from './party.js';
+import { buyFromMerchant, getMerchantsState } from './merchants.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
@@ -1659,6 +1660,27 @@ const huntStart = guarded('hunt start', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const merchantsState = guarded('merchants state', async (req, res) => {
+  const context = await authorize(req);
+  const state = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getMerchantsState(context.session);
+  });
+  return sendJson(res, 200, state);
+});
+
+const merchantsBuy = guarded('merchants buy', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const bought = buyFromMerchant(context.session, body.merchant, body.entry, body.count ?? 1);
+    if (bought.ok) await saveSession(context.session);
+    return bought;
+  });
+  return sendResult(res, result, context);
+});
+
 const PARTY_ACTIONS = new Set(['create', 'invite', 'accept', 'decline', 'leave', 'kick', 'disband', 'loot']);
 
 const partyState = guarded('party state', async (req, res) => {
@@ -1930,6 +1952,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/boss') return bossState(req, res);
     if (route === 'GET /api/hunt') return huntState(req, res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
+    if (route === 'GET /api/merchants') return merchantsState(req, res);
+    if (route === 'POST /api/merchants/buy') return merchantsBuy(req, res);
     if (route === 'GET /api/party') return partyState(req, res);
     if (route === 'POST /api/party/action') return partyAction(req, res);
     if (route === 'POST /api/hunt/loot') return huntLoot(req, res);
