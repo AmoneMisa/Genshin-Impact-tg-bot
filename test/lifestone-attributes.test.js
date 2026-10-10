@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import getEquipStatByName from '../functions/game/player/getters/getEquipStatByName.js';
-import { AUGMENT_GOLD, augmentGold, augmentInfo, augmentItem, canAugment, lifestoneKey } from '../functions/game/equipment/augment.js';
+import { augmentGems, augmentInfo, augmentItem, canAugment, lifestoneKey } from '../functions/game/equipment/augment.js';
 import { activateSkill, chanceSkillFactor, equippedChanceSkills, LS_SKILLS, passiveSkillModifiers } from '../functions/game/equipment/lifestoneSkills.js';
 import { addAttribute, attackFactor, attributeKey, attributeProfile, clearAttribute, normalizeElement, pvpFactor, resistFactor } from '../functions/game/equipment/attributes.js';
 import { rollAttributeDrops } from '../functions/game/equipment/enchantDrops.js';
@@ -9,7 +9,7 @@ import { baseStatDelta, getBaseStatsState, statTotal } from '../functions/game/p
 import materials from '../template/materialsTemplate.js';
 
 const player = (className = 'warrior', overrides = {}) => ({
-  game: { gameClass: { stats: { name: className } }, stats: { lvl: 80 }, inventory: { gold: 10_000_000, materials: {} }, equipmentStats: {}, ...overrides },
+  game: { gameClass: { stats: { name: className } }, stats: { lvl: 80 }, inventory: { gold: 10_000_000, materials: { craft_gem_D: 1000, craft_gem_C: 1000, craft_gem_B: 1000 } }, equipmentStats: {}, ...overrides },
 });
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
 const wear = (session, item) => {
@@ -52,14 +52,17 @@ test('a jewellery stone adds whole points of a base stat that reach the stat pip
   assert.equal(statTotal(session, 'STR'), 40 + item.augment.value);
 });
 
-test('better stones cost more gold, give more and can add a weapon skill', () => {
-  assert.ok(augmentGold('S', 'top') > augmentGold('S', 'mid') && augmentGold('S', 'mid') > AUGMENT_GOLD.S);
+test('better stones can add a weapon skill; gemstones follow the real High Five rule', () => {
+  assert.deepEqual([augmentGems({grade: 'C', mainType: 'weapon'}), augmentGems({grade: 'S', mainType: 'weapon'}), augmentGems({grade: 'S84', mainType: 'jewelry'})],
+    [{key: 'craft_gem_D', count: 20}, {key: 'craft_gem_C', count: 25}, {key: 'craft_gem_B', count: 480}]);
+  assert.deepEqual([augmentGems({grade: 'B', mainType: 'jewelry'}), augmentGems({grade: 'A', mainType: 'weapon'}), augmentGems({grade: 'S80', mainType: 'weapon'})],
+    [{key: 'craft_gem_D', count: 300}, {key: 'craft_gem_C', count: 20}, {key: 'craft_gem_B', count: 36}]);
   const session = player();
   const weapon = wear(session, sword());
   give(session, lifestoneKey('S', 'top'));
   const result = augmentItem(session, weapon, { tier: 'top', random: () => 0.1 });
   assert.equal(result.ok, true);
-  assert.equal(session.game.inventory.gold, 10_000_000 - augmentGold('S', 'top'));
+  assert.equal(session.game.inventory.materials.craft_gem_C, 1000 - 25);
   assert.ok(weapon.augment.skill, 'a top stone gave a skill');
   assert.equal(weapon.augment.tier, 'top');
   assert.equal(session.game.equipmentStats.rightHand.augment.skill.id, weapon.augment.skill.id);

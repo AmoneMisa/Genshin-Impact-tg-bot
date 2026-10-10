@@ -653,4 +653,7 @@ export default {
   'Добыча':'O‘lja',
   'адена делится поровну':'adena teng bo‘linadi',
   'Такого режима добычи нет.':'Bunday o‘lja rejimi yo‘q.',
+  'есть':'bor',
+  'камней':'ta tosh',
+  'Не хватает самоцветов для аугментации.':'Augmentatsiya uchun qimmatbaho toshlar yetarli emas.',
 };

@@ -303,8 +303,8 @@ export function performEquipmentAction(session, key, action, options = {}) {
 
   if (action === 'augment') {
     const result = augmentItem(session, item, { tier: typeof options.tier === 'string' ? options.tier : 'normal' });
-    if (!result.ok) return { ok: false, reason: result.reason, stone: result.stone, gold: result.gold, equipment: getEquipmentState(session) };
-    return { ok: true, action, augment: result.augment, replaced: result.replaced, gold: result.gold, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
+    if (!result.ok) return { ok: false, reason: result.reason, stone: result.stone, gem: result.gem, count: result.count, equipment: getEquipmentState(session) };
+    return { ok: true, action, augment: result.augment, replaced: result.replaced, gems: result.gems, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
   }
 
   if (action === 'enchant') {

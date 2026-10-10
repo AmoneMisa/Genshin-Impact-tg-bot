@@ -55,11 +55,11 @@ test('clan skills cost gold and an egg, and reach members through game.clanPerks
   assert.deepEqual(clanPerkModifiers(session), {});
 });
 
-import { augmentItem, canAugment, lifestoneKey, AUGMENT_GOLD } from '../functions/game/equipment/augment.js';
+import { augmentItem, canAugment, lifestoneKey } from '../functions/game/equipment/augment.js';
 
 test('a Life Stone adds a bonus to a weapon and another one re-rolls it', () => {
   const weapon = { name: 'Sword', mainType: 'weapon', grade: 'S', slots: ['rightHand'], kind: 'oneHandedSword', uid: 'w1' };
-  const session = player('warrior', { inventory: { gold: AUGMENT_GOLD.S * 3, materials: { [lifestoneKey('S')]: 2 } }, equipmentStats: { rightHand: { ...weapon } } });
+  const session = player('warrior', { inventory: { gold: 0, materials: { [lifestoneKey('S')]: 2, craft_gem_C: 100 } }, equipmentStats: { rightHand: { ...weapon } } });
   weapon.isUsed = true;
   session.game.inventory.equipment = { items: [weapon] };
   assert.equal(canAugment(weapon), true);
@@ -70,7 +70,7 @@ test('a Life Stone adds a bonus to a weapon and another one re-rolls it', () => 
   assert.equal(weapon.augment.name, 'attackMul');
   assert.equal(session.game.equipmentStats.rightHand.augment.name, 'attackMul');
   near(getEquipStatByName(session, 'attackMul', true), 1 + weapon.augment.value);
-  assert.equal(session.game.inventory.gold, AUGMENT_GOLD.S * 2);
+  assert.equal(session.game.inventory.materials.craft_gem_C, 100 - 25);
 
   const second = augmentItem(session, weapon, { random: () => 0.5 });
   assert.equal(second.replaced.name, 'attackMul');

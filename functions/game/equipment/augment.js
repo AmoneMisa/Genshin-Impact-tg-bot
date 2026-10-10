@@ -15,12 +15,22 @@ import { BASE_STAT_INFO } from '../player/baseStatsData.js';
 export const lifestoneKey = keyFor;
 export const AUGMENT_GRADES = LIFESTONE_GRADES;
 export const AUGMENT_TIERS = LIFESTONE_TIERS.map(tier => tier.id);
-export const AUGMENT_GOLD = Object.freeze({C: 5000, B: 15000, A: 45000, S: 120000, S80: 300000, S84: 600000});
+// Real High Five augmentation price: the Life Stone plus Gemstones of a type that depends on the item's grade
+// (Gemstone D for C/B, C for A/S, B for S80/S84) and a count that depends on the grade and on weapon / jewellery.
+export const AUGMENT_GEM_GRADE = Object.freeze({C: 'D', B: 'D', A: 'C', S: 'C', S80: 'B', S84: 'B'});
+export const AUGMENT_GEM_COUNT = Object.freeze({
+    weapon: Object.freeze({C: 20, B: 30, A: 20, S: 25, S80: 36, S84: 36}),
+    jewelry: Object.freeze({C: 200, B: 300, A: 200, S: 250, S80: 360, S84: 480}),
+});
 
 const tierInfo = id => LIFESTONE_TIERS.find(tier => tier.id === id) || null;
 
-/** Gold for one augmentation of a grade with a stone tier. */
-export const augmentGold = (grade, tier = 'normal') => Math.round((AUGMENT_GOLD[grade] || 0) * (tierInfo(tier)?.gold || 1));
+/** {key, count} of the Gemstones one augmentation of this item takes. */
+export function augmentGems(item) {
+    const grade = AUGMENT_GEM_GRADE[item?.grade];
+    const count = AUGMENT_GEM_COUNT[item?.mainType === 'jewelry' ? 'jewelry' : 'weapon'][item?.grade];
+    return grade && count ? {key: `craft_gem_${grade}`, count} : null;
+}
 
 // base/per: the value at the first grade and its growth per grade step (index in AUGMENT_GRADES, 0..5).
 const WEAPON_BONUSES = Object.freeze([
@@ -91,31 +101,32 @@ function roll(item, tier, random) {
 }
 
 /**
- * Spends a Life Stone of the item's grade and tier plus gold, and gives (or re-rolls) its bonus.
- * Returns {ok, augment, replaced, gold} or {ok: false, reason}.
+ * Spends a Life Stone of the item's grade and tier plus the grade's Gemstones, and gives (or re-rolls) its bonus.
+ * Returns {ok, augment, replaced, gems} or {ok: false, reason}.
  */
 export function augmentItem(session, item, {tier = 'normal', random = Math.random} = {}) {
     if (isEpicItem(item)) return {ok: false, reason: 'epic_item'};
     if (!item || !canAugment(item)) return {ok: false, reason: 'not_augmentable'};
     if (!tierInfo(tier)) return {ok: false, reason: 'unknown_stone'};
     if (item.timed) return {ok: false, reason: 'timed_item'};
-    const inventory = session.game.inventory;
-    const gold = augmentGold(item.grade, tier);
-    if ((Number(inventory.gold) || 0) < gold) return {ok: false, reason: 'not_enough_gold', gold};
+    const gems = augmentGems(item);
+    if (getMaterialCount(session, gems.key) < gems.count) return {ok: false, reason: 'no_gemstones', gem: gems.key, count: gems.count};
     if (!spendMaterials(session, {[lifestoneKey(item.grade, tier)]: 1})) return {ok: false, reason: 'no_lifestone', stone: lifestoneKey(item.grade, tier)};
 
-    inventory.gold -= gold;
+    spendMaterials(session, {[gems.key]: gems.count});
     const replaced = item.augment || null;
     item.augment = roll(item, tier, random);
     if (isActuallyEquipped(session, item)) syncEquippedSnapshot(session, item);
-    return {ok: true, augment: item.augment, replaced, gold};
+    return {ok: true, augment: item.augment, replaced, gems};
 }
 
 /** Stones in inventory, prices and the current bonus for an item's card; null when it cannot be augmented. */
 export function augmentInfo(session, item, now = Date.now()) {
     if (!canAugment(item)) return null;
+    const gems = augmentGems(item);
     return {
         kind: item.mainType,
+        gems: {...gems, have: getMaterialCount(session, gems.key)},
         magic: isMagicWeapon(item),
         current: describeAugment(item.augment),
         active: isActuallyEquipped(session, item) ? activeSkillState(session, item, now) : null,
@@ -124,7 +135,6 @@ export function augmentInfo(session, item, now = Date.now()) {
             label: tier.label,
             key: lifestoneKey(item.grade, tier.id),
             stones: getMaterialCount(session, lifestoneKey(item.grade, tier.id)),
-            gold: augmentGold(item.grade, tier.id),
             skillChance: item.mainType === 'weapon' ? tier.skill : 0,
         })),
     };
