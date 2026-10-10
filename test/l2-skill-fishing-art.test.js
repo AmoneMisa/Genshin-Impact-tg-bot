@@ -11,7 +11,7 @@ import {materialIcon} from '../webapp/material-icons.js';
 import {hotbar,statusIcons} from '../webapp/boss-hud.js';
 import {playerEffectsDto} from '../miniapp/bossEffects.js';
 test('all current class, passive, clan and augmentation skills resolve to published WebP originals',()=>{
- const keys=[...Object.values(skills).flat().map(s=>s.name),...LS_SKILLS.map(s=>s.id),...PASSIVES.map(s=>s.id),...CLAN_SKILLS.map(s=>s.id)];
+ const keys=[...Object.values(skills).flat().map(s=>s.name),...LS_SKILLS.map(s=>s.id),...PASSIVES.map(s=>s.id),...CLAN_SKILLS.map(s=>s.name)];
  for(const key of keys){assert.ok(L2_SKILL_ART[key],key);assert.match(l2SkillIcon(key),/\.webp/);}
  for(const key of new Set([...Object.values(L2_SKILL_ART),...Object.values(L2_FISHING_ART)]))for(const size of [32,64,128]){
   const bytes=fs.readFileSync('webapp'+l2ExtraUrl(key,size));assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WEBP');

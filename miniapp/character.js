@@ -75,10 +75,10 @@ export function getCharacterState(session, context = {}, now = Date.now()) {
     passives:getPassivesState(session), buffs:getClassBuffsState(session, now),
     effects:characterEffects(session, now),
     clanPassives:CLAN_SKILLS.map(entry => {
-      const level = Math.min(5, Math.max(0, Math.floor(num(session?.game?.clanPerks?.[entry.id]))));
+      const level = Math.min(entry.maxLevel, Math.max(0, Math.floor(num(session?.game?.clanPerks?.[entry.id]))));
       const amount = entry.per * level;
       return {id:entry.id,name:entry.name,level,stat:entry.text,
-        bonus:entry.stat === 'accuracy' || entry.stat === 'evasion' ? '+' + amount : '+' + Math.round(amount * 1000) / 10 + '%'};
+        bonus:!entry.stat ? '—' : ['accuracy','evasion','block','speed'].includes(entry.stat) ? '+' + amount : (amount < 0 ? '−' : '+') + Math.round(Math.abs(amount) * 1000) / 10 + '%'};
     }).filter(entry => entry.level > 0),
   };
 }

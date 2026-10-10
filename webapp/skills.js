@@ -10,6 +10,8 @@ const REASONS = {
   invalid_skill: 'Навык не найден. Обнови список и попробуй снова.',
   no_skills: 'Сначала выбери игровой класс.',
   max_level: 'Навык уже улучшен до максимума.',
+  already_learned: 'Это умение уже изучено.',
+  level_too_low: 'Твой уровень ещё слишком низкий для этого умения.',
   not_enough_gold: 'Недостаточно золота.',
   not_enough_crystals: 'Недостаточно кристаллов.',
   not_enough_iron_ore: 'Недостаточно железной руды.',
@@ -97,11 +99,12 @@ function skillCard(skill, state) {
       <p>${escapeHtml(skill.description)}</p>
       ${skill.tags?.length ? `<div class="skill-tags">${skill.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
       ${transition}
-      <div class="skill-upgrade-cost"><small>${maxed ? 'Максимальный уровень' : 'Улучшение'}</small><strong>${escapeHtml(costText(skill.upgradeCost))}</strong></div>
+      ${skill.learn ? `<div class="skill-upgrade-cost"><small>Умение не изучено</small><strong>✦ ${formatNumber(skill.learn.sp)} ОП</strong></div>
+      <button type="button" data-skill-learn="${skill.slot}" ${skill.learn.canLearn ? '' : 'disabled'}>${skill.locked ? `Нужен ${skill.needLevel} уровень` : 'Изучить'}</button>` : `<div class="skill-upgrade-cost"><small>${maxed ? 'Максимальный уровень' : 'Улучшение'}</small><strong>${escapeHtml(costText(skill.upgradeCost))}</strong></div>
       <button type="button" data-skill-upgrade="${skill.slot}" ${maxed || !skill.canUpgrade ? 'disabled' : ''}>
         ${maxed ? 'MAX' : skill.canUpgrade ? `Улучшить до +${skill.enchantLevel + 1}` : missingItems ? 'Не хватает материалов' : 'Не хватает ресурсов'}
       </button>
-      ${routeBlock(skill, state)}
+      ${routeBlock(skill, state)}`}
     </article>`;
 }
 
@@ -149,6 +152,25 @@ export async function openSkillsGame({ api, renderState, haptic, statusElement }
         if (payload.state) renderState(payload.state);
         feedbackText = payload.route ? `${payload.skillName}: путь улучшен до ${payload.level}.` : `${payload.skillName}: путь сброшен.`;
         enchanted = Number(button.dataset.skillRoute);
+        haptic('heavy');
+      } catch (error) {
+        if (error.payload?.skills) state = error.payload.skills;
+        feedbackText = REASONS[error.payload?.reason] || error.message;
+        haptic('light');
+      } finally {
+        pending = false;
+        render();
+      }
+    }));
+    content.querySelectorAll('[data-skill-learn]').forEach(button => button.addEventListener('click', async () => {
+      if (pending) return;
+      pending = true;
+      haptic('medium');
+      try {
+        const payload = await api('/api/skills/learn', { method: 'POST', body: JSON.stringify({ slot: Number(button.dataset.skillLearn) }) });
+        state = payload.skills;
+        if (payload.state) renderState(payload.state);
+        feedbackText = `Умение «${payload.name}» изучено.`;
         haptic('heavy');
       } catch (error) {
         if (error.payload?.skills) state = error.payload.skills;

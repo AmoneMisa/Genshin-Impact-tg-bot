@@ -40,7 +40,7 @@ import { resetArcadeGame } from './arcadeReset.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
-import { getSkillsState, enchantSkillForMiniApp, routeSkillForMiniApp } from './skills.js';
+import { getSkillsState, enchantSkillForMiniApp, learnSkillForMiniApp, routeSkillForMiniApp } from './skills.js';
 import {
   getClassQuestsState,
   startClassQuestForMiniApp,
@@ -564,6 +564,25 @@ const playerSkillsEnchant = guarded('player skills enchant', async (req, res) =>
     const enchanted = enchantSkillForMiniApp(context.session, slot);
     if (enchanted.ok) await saveSession(context.session);
     return enchanted;
+  });
+
+  return sendResult(res, result, context);
+});
+
+const playerSkillsLearn = guarded('player skills learn', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  assertGoldUnlocked(context);
+  const slot = Number(body.slot);
+  if (!Number.isInteger(slot) || slot < 0) {
+    throw httpError(400, 'slot must be a non-negative integer');
+  }
+
+  const result = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const learned = learnSkillForMiniApp(context.session, slot);
+    if (learned.ok) await saveSession(context.session);
+    return learned;
   });
 
   return sendResult(res, result, context);
@@ -1948,6 +1967,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
     if (route === 'GET /api/skills') return playerSkillsState(req, res);
     if (route === 'POST /api/skills/enchant') return playerSkillsEnchant(req, res);
+    if (route === 'POST /api/skills/learn') return playerSkillsLearn(req, res);
     if (route === 'POST /api/skills/route') return playerSkillsRoute(req, res);
     if (route === 'GET /api/class-quests') return classQuestsState(req, res);
     if (route === 'POST /api/class-quests') return classQuestsAction(req, res);

@@ -17,7 +17,8 @@ import { getMaterialCount, spendMaterials } from './materials.js';
 
 export const ROUTE_MAX_LEVEL = 5;
 export const ROUTE_MIN_SKILL_LEVEL = 5;
-export const ROUTE_MIN_CLASS_TIER = 3;
+// the 3rd profession (tier 4, level 76) of the real class tree
+export const ROUTE_MIN_CLASS_TIER = 4;
 export const ROUTE_RESET_FEE = {gold: 25000, crystals: 25};
 
 export const ROUTES = Object.freeze({

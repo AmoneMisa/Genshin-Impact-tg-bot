@@ -279,7 +279,7 @@ export function getClassQuestView(session) {
         classTitle: current.translateName || currentName,
         tier: classTier(currentName),
         level,
-        maxTier: classTier(currentName) >= 3,
+        maxTier: classTier(currentName) >= 4,
         needsBaseClass: currentName === 'noClass',
         completed: [...state.completed],
         promotions,

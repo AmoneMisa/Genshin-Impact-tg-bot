@@ -186,7 +186,13 @@ const baseClasses = [{
     evasion: 25
 }];
 
-// `family` is the base class a class grows out of (mage line, priest line, ...).
+// `family` is the combat line of a class (mage line, priest line, ...). The six family blocks are the stat
+// blocks the real start classes and professions are built from (classTree.js); only `noClass` stays a class.
 for (const base of baseClasses) base.family = base.name;
 
-export default [...baseClasses, ...buildPromotedClasses(baseClasses)];
+// The six family blocks stay in the list as `legacy` classes: characters and tools of the old tree still name
+// them (migrateSessionClass moves a character to a real class); they are never offered for a choice.
+const familyBlocks = baseClasses.filter(base => base.name !== 'noClass').map(base => ({...base}));
+for (const base of baseClasses) if (base.name !== 'noClass') base.legacy = true;
+export const FAMILY_BLOCKS = familyBlocks;
+export default [...baseClasses, ...buildPromotedClasses(familyBlocks)];

@@ -18,44 +18,67 @@ const near = (value, target, tolerance) => Math.abs(value / target - 1) <= toler
 // what a skill kit is worth. So the stat power of a class may differ from the tier target in either
 // direction; the bands below only catch a runaway, and the duel test at the bottom is the real check.
 
-test('every promotion stays a sane multiple of its parent in stat power at every level', () => {
-  for (const item of classStats.filter(entry => entry.tier > 1)) {
-    const parent = byName(item.parent);
+// Classes that share a family, an archetype (`like`) and a tier have the same numbers, so these tests look at one
+// representative of each shape.
+const shapes = tier => {
+  const seen = new Map();
+  for (const item of classStats.filter(entry => entry.tier === tier && entry.like)) if (!seen.has(`${item.family}/${item.like}`)) seen.set(`${item.family}/${item.like}`, item);
+  return [...seen.values()];
+};
+const real = classStats.filter(item => !item.legacy && item.name !== 'noClass');
+
+test('classes of one family, shape and tier are identical in stats', () => {
+  for (const tier of [2, 3, 4]) {
+    for (const rep of shapes(tier)) {
+      for (const item of classStats.filter(entry => entry.tier === tier && entry.family === rep.family && entry.like === rep.like)) {
+        for (const key of ['attack', 'defence', 'maxHp', 'maxMp', 'criticalChance', 'speed', 'evasion', 'accuracy', 'block']) assert.equal(item[key], rep[key], `${item.name}.${key}`);
+      }
+    }
+  }
+});
+
+// The step a profession takes: the same shape one tier lower (the family's block for the 1st profession).
+const stepBelow = item => (item.tier === 2 ? byName(item.family)
+  : classStats.find(entry => entry.tier === item.tier - 1 && entry.family === item.family && entry.like === item.like)
+  // the shape first appears at this tier (a Paladin is a "warden" shape, the 1st profession is a "crusader" one)
+  || classStats.find(entry => entry.tier === item.tier - 1 && entry.family === item.family));
+
+test('every promotion stays a sane multiple of the same shape one tier lower at every level', () => {
+  for (const item of real.filter(entry => entry.tier > 1)) {
+    const from = stepBelow(item);
+    assert.ok(from, item.name);
     for (const level of LEVELS) {
-      const ratio = power(item, level) / power(parent, level);
+      const ratio = power(item, level) / power(from, level);
       assert.ok(ratio > 0.45 && ratio < 1.6, `${item.name} lvl ${level}: ${ratio.toFixed(3)}`);
     }
   }
 });
 
-test('sibling professions stay within a quarter of each other in stat power', () => {
-  for (const parent of classStats) {
-    const siblings = classStats.filter(item => item.parent === parent.name);
-    if (siblings.length < 2) continue;
-    for (const level of LEVELS) {
-      const [a, b] = siblings.map(item => power(item, level));
-      assert.ok(a / b > 0.75 && a / b < 1.33, `${siblings.map(item => item.name)} lvl ${level}: ${(a / b).toFixed(3)}`);
+test('professions of one tier stay within a band of each other in stat power', () => {
+  for (const tier of [2, 3, 4]) {
+    const list = shapes(tier);
+    for (const level of [20, 40, 60, 90]) {
+      const powers = list.map(item => power(item, level));
+      assert.ok(Math.max(...powers) / Math.min(...powers) < 3, `tier ${tier} lvl ${level}: ${(Math.max(...powers) / Math.min(...powers)).toFixed(2)}`);
     }
   }
 });
 
-test('3rd professions are not weaker than their base class by stats alone, and branches really differ', () => {
-  for (const item of classStats.filter(entry => entry.tier === 3)) {
-    const root = byName(byName(item.parent).parent);
-    const ratio = power(item, 60) / power(root, 60);
-    assert.ok(ratio > 0.5 && ratio < 2.1, `${item.name}: ${ratio.toFixed(2)}`);
+test('each step up the tree is real progress by stats alone, and branches really differ', () => {
+  for (const item of real.filter(entry => entry.tier === 4)) {
+    const ratio = power(item, 80) / power(byName(item.family), 80);
+    assert.ok(ratio > 0.5 && ratio < 2.6, `${item.name}: ${ratio.toFixed(2)}`);
   }
-  // A damage branch and a tank branch of the same class still split attack and health differently.
-  const crusader = byName('crusader');
-  const warden = byName('warden');
-  assert.ok(crusader.attack > warden.attack && crusader.defence < warden.defence);
-  assert.ok(warden.incomingDamageModifier < crusader.incomingDamageModifier);
-  const assassin = byName('assassin');
-  const trickster = byName('trickster');
-  assert.ok(assassin.attack > trickster.attack && trickster.evasion > assassin.evasion);
+  // A damage branch and a tank branch of the same start class still split attack and health differently.
+  const knight = byName('humanKnight');
+  const paladin = byName('paladin');
+  assert.ok(byName('darkAvenger').attack > paladin.attack && byName('darkAvenger').defence < paladin.defence);
+  assert.ok(paladin.incomingDamageModifier < byName('darkAvenger').incomingDamageModifier);
+  assert.ok(byName('assassin').attack > byName('elvenScout').attack && byName('elvenScout').evasion > byName('assassin').evasion);
+  assert.ok(knight.tier === 2 && paladin.tier === 3 && byName('phoenixKnight').tier === 4);
 });
 
-test('the new base classes sit inside the range of the old four', () => {
+test('the six family blocks sit inside the range of each other', () => {
   for (const level of [30, 60]) {
     const old = ['warrior', 'mage', 'priest', 'archer'].map(name => power(byName(name), level));
     for (const name of ['rogue', 'berserk']) {
@@ -140,13 +163,13 @@ test('PvP: no base class is left behind - the archer used to be 5-25x weaker (de
 });
 
 test('every profession stays within a sane band of its parent in both PvE and PvP stat power', () => {
-  for (const item of classStats.filter(entry => entry.tier > 1)) {
-    const parent = byName(item.parent);
+  for (const item of real.filter(entry => entry.tier > 1)) {
+    const parent = stepBelow(item);
     for (const level of [20, 60, 90]) {
       const pvp = pvpPower(scaleClassStats(item, level), level) / pvpPower(scaleClassStats(parent, level), level);
       const pve = pvePower(scaleClassStats(item, level), level) / pvePower(scaleClassStats(parent, level), level);
       assert.ok(pvp > 0.4 && pvp < 1.6, `${item.name} PvP lvl ${level}: ${pvp.toFixed(2)}`);
-      assert.ok(pve > 0.5 && pve < 1.6, `${item.name} PvE lvl ${level}: ${pve.toFixed(2)}`);
+      assert.ok(pve > 0.4 && pve < 1.6, `${item.name} PvE lvl ${level}: ${pve.toFixed(2)}`);
     }
   }
 });

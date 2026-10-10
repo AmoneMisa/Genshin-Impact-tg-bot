@@ -25,32 +25,32 @@ function session() {
   };
 }
 
-test('profile exposes the six base combat classes and current gender', () => {
+test('profile exposes the eleven start classes of the real tree and current gender', () => {
   const state = getPlayerProfileState(session(), 1000);
   assert.equal(state.gender, 'male');
   assert.equal(state.currentClass.name, 'noClass');
   assert.equal(state.classChangeRemainingMs, 0);
-  assert.deepEqual(state.classes.map(item => item.name), ['warrior', 'mage', 'priest', 'archer', 'rogue', 'berserk']);
+  assert.deepEqual(state.classes.map(item => item.name), ['humanFighter', 'humanMystic', 'elvenFighter', 'elvenMystic', 'darkFighter', 'darkMystic', 'orcFighter', 'orcMystic', 'dwarvenFighter', 'maleSoldier', 'femaleSoldier']);
   assert.ok(state.classes.every(item => item.stats.maxHp > 0));
 });
 
 test('first class choice is allowed immediately and starts weekly cooldown', () => {
   const player = session();
   player.changeClassTimer = 999999999;
-  const result = changePlayerClassForMiniApp(player, 'mage', 1000);
+  const result = changePlayerClassForMiniApp(player, 'humanMystic', 1000);
 
   assert.equal(result.ok, true);
-  assert.equal(player.game.gameClass.stats.name, 'mage');
-  assert.equal(result.profile.currentClass.name, 'mage');
+  assert.equal(player.game.gameClass.stats.name, 'humanMystic');
+  assert.equal(result.profile.currentClass.name, 'humanMystic');
   assert.equal(result.profile.classChangeRemainingMs, 7 * 24 * 60 * 60 * 1000);
 });
 
 test('class change rejects same class and active cooldown', () => {
   const player = session();
-  assert.equal(changePlayerClassForMiniApp(player, 'warrior', 1000).ok, true);
-  assert.equal(changePlayerClassForMiniApp(player, 'warrior', 1001).reason, 'same_class');
+  assert.equal(changePlayerClassForMiniApp(player, 'humanFighter', 1000).ok, true);
+  assert.equal(changePlayerClassForMiniApp(player, 'humanFighter', 1001).reason, 'same_class');
 
-  const blocked = changePlayerClassForMiniApp(player, 'archer', 1001);
+  const blocked = changePlayerClassForMiniApp(player, 'elvenFighter', 1001);
   assert.equal(blocked.ok, false);
   assert.equal(blocked.reason, 'class_cooldown');
   assert.ok(blocked.cooldownRemainingMs > 0);
@@ -59,11 +59,11 @@ test('class change rejects same class and active cooldown', () => {
 test('class can be changed after the weekly cooldown', () => {
   const player = session();
   const start = 1000;
-  changePlayerClassForMiniApp(player, 'warrior', start);
-  const result = changePlayerClassForMiniApp(player, 'priest', start + 7 * 24 * 60 * 60 * 1000 + 1);
+  changePlayerClassForMiniApp(player, 'humanFighter', start);
+  const result = changePlayerClassForMiniApp(player, 'darkMystic', start + 7 * 24 * 60 * 60 * 1000 + 1);
 
   assert.equal(result.ok, true);
-  assert.equal(player.game.gameClass.stats.name, 'priest');
+  assert.equal(player.game.gameClass.stats.name, 'darkMystic');
 });
 
 test('gender accepts only legacy male/female values', () => {
@@ -76,16 +76,16 @@ test('gender accepts only legacy male/female values', () => {
 
 test('professions are earned by quest, never picked from the class list', () => {
   const player = session();
-  assert.equal(changePlayerClassForMiniApp(player, 'crusader', 1000).reason, 'unknown_class');
+  assert.equal(changePlayerClassForMiniApp(player, 'humanKnight', 1000).reason, 'unknown_class');
   assert.equal(changePlayerClassForMiniApp(player, 'titan', 1000).reason, 'unknown_class');
 });
 
 test('switching to another base class drops a running profession quest but keeps earned ones', () => {
   const player = session();
-  changePlayerClassForMiniApp(player, 'warrior', 1000);
-  player.game.classQuest = { active: { to: 'crusader', progress: {} }, completed: ['warden'] };
-  const result = changePlayerClassForMiniApp(player, 'mage', 1000 + 8 * 24 * 60 * 60 * 1000);
+  changePlayerClassForMiniApp(player, 'humanFighter', 1000);
+  player.game.classQuest = { active: { to: 'humanKnight', progress: {} }, completed: ['warriorProf'] };
+  const result = changePlayerClassForMiniApp(player, 'humanMystic', 1000 + 8 * 24 * 60 * 60 * 1000);
   assert.equal(result.ok, true);
   assert.equal(player.game.classQuest.active, null);
-  assert.deepEqual(player.game.classQuest.completed, ['warden']);
+  assert.deepEqual(player.game.classQuest.completed, ['warriorProf']);
 });

@@ -4,7 +4,7 @@ import {castL2Buff} from '../miniapp/l2Buffs.js';
 import {resolveEffectSkill,classEffectSkills,l2RawStat,l2CompanionDamage,isL2PetSkill,applyL2Effect,l2ActionBlock} from '../functions/game/player/l2Effects.js';
 import userDealDamage from '../functions/game/player/userDealDamage.js';
 const NOW=Date.now();
-function hero(name='soulReaper'){
+function hero(name='soultaker'){
  return {userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85},inventory:{gold:0,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],respawnTime:0,gameClass:{stats:{name,attack:1000,defence:100,hp:10000,maxHp:10000,mp:10000,maxMp:10000,cp:1000,maxCp:1000,criticalChance:0,criticalDamage:1,additionalDamageMul:0,speed:100,incomingDamageModifier:1},skills:[]}}};
 }
 test('summons cost only mana, need no items or corpse, and replace the previous companion',()=>{
@@ -21,7 +21,8 @@ test('insufficient mana spends nothing; servitor support skills work without a p
  assert.equal(castL2Buff(s,'l2:1111',null,{now:NOW}).reason,'not_enough_mp');assert.equal(s.game.effects.length,0);assert.equal(s.game.l2CastAt,undefined);
  s.game.gameClass.stats.mp=10000;
  assert.equal(castL2Buff(s,'l2:1557',null,{now:NOW}).ok,true);assert.equal(l2RawStat(s,'mAtk',true,NOW),1.25);
- assert.equal(castL2Buff(s,'l2:1299',null,{now:NOW}).ok,true);assert.ok(l2RawStat(s,'mDef',false,NOW)>0);
+ const warlock=hero('arcanaLord');warlock.game.gameClass.stats.mp=10000;
+ assert.equal(castL2Buff(warlock,'l2:1299',null,{now:NOW}).ok,true);assert.ok(l2RawStat(warlock,'mDef',false,NOW)>0);
  assert.equal(s.game.pet,undefined);
 });
 test('companions add actual battle damage and native L2 class names keep their pet trees',()=>{

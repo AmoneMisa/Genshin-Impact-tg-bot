@@ -330,30 +330,43 @@ test('boss loot works for every boss, including the new ones', () => {
   }
 });
 
+// Engine skills of every effect kind (the class kits are generated from the real class trees, so the engine
+// tests keep their own fixtures instead of pointing at a slot of a generated class).
+const KIT = {
+  oath: {"name":"Клятва света","description":"Клятва придаёт силы: +35% к урону по боссу на следующие 4 атаки.","effect":"buff","cooldown":60,"isSelf":true,"isDealDamage":false,"isHeal":false,"isShield":false,"isBuff":true,"costHp":0,"cost":90,"tier":2,"needLvl":28,"buffs":[{"kind":"damage","amount":35,"charges":4}]},
+  taunt: {"name":"Вызов","description":"Босс сосредотачивается на тебе на 12 секунд, а получаемый урон падает на 30%.","effect":"buff","cooldown":45,"isSelf":true,"isDealDamage":false,"isHeal":false,"isShield":false,"isBuff":true,"costHp":0,"cost":60,"tier":2,"needLvl":28,"buffs":[{"kind":"taunt","seconds":12},{"kind":"guard","amount":30,"seconds":12}]},
+  curse: {"name":"Проклятие слабости","description":"Проклятие на 15 секунд: босс наносит на 25% меньше урона.","effect":"debuff","cooldown":40,"isSelf":false,"isDealDamage":false,"isHeal":false,"isShield":false,"isBuff":false,"costHp":0,"cost":70,"tier":2,"needLvl":28,"debuff":{"kind":"weaken","amount":25,"seconds":15}},
+  spring: {"name":"Источник маны","description":"Возвращает 35% максимальной маны.","effect":"restore","cooldown":90,"isSelf":true,"isDealDamage":false,"isHeal":false,"isShield":false,"isBuff":false,"costHp":0,"cost":0,"tier":2,"needLvl":28,"restoreMp":0.35},
+  wall: {"name":"Несокрушимый","description":"На 15 секунд получаемый урон падает на 60%, плюс щит на 50% здоровья.","effect":"buff","cooldown":120,"isSelf":true,"isDealDamage":false,"isHeal":false,"isShield":false,"isBuff":true,"costHp":0,"cost":150,"tier":3,"needLvl":52,"buffs":[{"kind":"guard","amount":60,"seconds":15}],"shieldPower":0.5,"enchantItem":{"key":"essence_terrax","perLevel":1}},
+  volley: {"name":"Град стрел","description":"Пять стрел, каждая по 80% урона.","effect":"multi_hit","cooldown":20,"isSelf":false,"isDealDamage":true,"isHeal":false,"isShield":false,"isBuff":false,"costHp":0,"cost":90,"tier":2,"needLvl":22,"hits":5,"damageModifier":0.8},
+  reap: {"name":"Жатва душ","description":"550% урона, а по боссу с запасом здоровья ниже 35% — вдвое больше.","effect":"execute","cooldown":45,"isSelf":false,"isDealDamage":true,"isHeal":false,"isShield":false,"isBuff":false,"costHp":0,"cost":200,"tier":3,"needLvl":44,"damageModifier":5.5,"executeBelow":0.35,"executeBonus":1},
+  drain: {"name":"Похищение жизни","description":"240% урона. Возвращает 20% нанесённого урона здоровьем.","effect":"vampire","cooldown":20,"isSelf":false,"isDealDamage":true,"isHeal":false,"isShield":false,"isBuff":false,"costHp":0,"cost":80,"tier":2,"needLvl":22,"damageModifier":2.4,"vampirePower":0.2}
+};
+
 test('profession skills resolve through the shared engine: buffs, debuffs, mana, shields', () => {
   const boss = makeBoss('kivaha');
   const session = fighter(1);
   session.game.gameClass.stats.mp = 100;
 
-  const oath = classSkills.crusader[4];
+  const oath = KIT.oath;
   const buff = castSkill(session, boss, oath);
   assert.equal(buff.type, 'buff');
   assert.deepEqual(session.game.effects.find(effect => effect.name === 'addDamageToBoss'), { name: 'addDamageToBoss', amount: 35, count: 4 });
 
-  const taunt = castSkill(session, boss, classSkills.warden[4], { now: 1_000 });
+  const taunt = castSkill(session, boss, KIT.taunt, { now: 1_000 });
   assert.equal(taunt.type, 'buff');
   assert.equal(session.game.effects.find(effect => effect.name === 'taunt').until, 13_000);
   assert.equal(session.game.effects.find(effect => effect.name === 'guard').amount, 0.3);
 
-  const curse = castSkill(session, boss, classSkills.warlock[4], { now: 0 });
+  const curse = castSkill(session, boss, KIT.curse, { now: 0 });
   assert.equal(curse.type, 'debuff');
   assert.equal(bossDebuffAmount(boss, 'weaken', 1_000), 0.25);
 
-  const spring = castSkill(session, boss, classSkills.cleric[4]);
+  const spring = castSkill(session, boss, KIT.spring);
   assert.equal(spring.type, 'restore');
   assert.equal(session.game.gameClass.stats.mp, 450);
 
-  const wall = castSkill(session, boss, classSkills.titan[6]);
+  const wall = castSkill(session, boss, KIT.wall);
   assert.equal(wall.shield, 5_000);
   assert.equal(session.game.effects.find(effect => effect.name === 'shield').value, 5_000);
 });
@@ -362,17 +375,17 @@ test('multi-hit skills roll every hit; execute skills hit harder on a wounded bo
   const session = fighter(1);
   session.game.gameClass.stats.hp = 5_000;
   const boss = makeBoss('kivaha');
-  const volley = classSkills.ranger[3];
+  const volley = KIT.volley;
   const result = userDealDamage(session, boss, volley);
   assert.equal(result.hits.length, 5);
   assert.equal(result.dmg, result.hits.reduce((sum, hit) => sum + hit.dmg, 0));
 
-  const reap = classSkills.soulReaper[5];
+  const reap = KIT.reap;
   const healthy = userDealDamage(session, makeBoss('kivaha'), reap).dmg;
   const wounded = userDealDamage(session, makeBoss('kivaha', { currentHp: 20_000 }), reap).dmg;
   assert.ok(wounded > healthy * 1.7, `${healthy} -> ${wounded}`);
 
-  const drain = classSkills.warlock[3];
+  const drain = KIT.drain;
   const hpBefore = session.game.gameClass.stats.hp;
   const drained = userDealDamage(session, makeBoss('kivaha'), drain);
   assert.ok(drained.vampire > 0 && session.game.gameClass.stats.hp > hpBefore);

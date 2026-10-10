@@ -1,6 +1,7 @@
 // High Five abnormal effects. Stored records contain IDs/levels/time only; values come from trusted XML.
 import {L2_EFFECT_SKILLS,L2_EFFECT_LEARN,L2_CLASSES} from '../../../template/l2EffectSkills.js';
 import {isMagicClass} from '../classes/classFamily.js';
+import classStats from '../../../template/classStatsTemplate.js';
 export const L2_EFFECT_LIMITS=Object.freeze({buff:24,debuff:16,music:12,pet:1});
 export const isL2PetSkill=skill=>skill?.effects?.some(e=>e.name==='Summon')||false;
 export const PROJECT_L2_CLASSES=Object.freeze({noClass:0,warrior:0,crusader:5,phoenixKnight:90,warden:6,bastion:91,mage:10,elementalist:12,archmage:94,warlock:13,soulReaper:95,priest:15,cleric:17,saint:98,inquisitor:16,judicator:97,archer:7,ranger:9,hawkeye:92,sniper:24,phantomShot:102,rogue:7,assassin:8,shadowBlade:93,trickster:34,phantomDancer:107,berserk:1,slayer:2,warbringer:88,ironclad:3,titan:89});
@@ -25,12 +26,11 @@ export function resolveEffectSkill(id,level=1){
 export function classEffectSkills(session,{includeLocked=true}={}){
  const name=session?.game?.gameClass?.stats?.name||'noClass';
  const nativeId=Object.keys(L2_CLASSES).find(id=>L2_CLASSES[id].name.replace(/[^a-z0-9]/gi,'').toLowerCase()===name.replace(/[^a-z0-9]/gi,'').toLowerCase());
- const classes=new Set();let current=String(PROJECT_L2_CLASSES[name]??nativeId??0);
+ // A real class carries its High Five class id; the old project names map through PROJECT_L2_CLASSES.
+ const realId=classStats.find(item=>item.name===name)?.l2Id;
+ const classes=new Set();let current=String(realId??PROJECT_L2_CLASSES[name]??nativeId??0);
  while(current&&!classes.has(current)){classes.add(current);current=L2_CLASSES[current]?.parent;}
- // Our support line covers the L2 buffer professions; the dancer retains its original song/dance tree.
- if(['cleric','saint'].includes(name))for(const id of [17,30,43,51,52,98,104,105,115,116,21,34,100,107])classes.add(String(id));
- // The project's summoner line covers the three original servitor professions.
- if(['warlock','soulReaper'].includes(name))for(const id of [14,28,41,96,104,111])classes.add(String(id));
+ // A real class learns its own tree and the trees of its parents (the chain above).
  const byId=new Map();const playerLevel=n(session?.game?.stats?.lvl,1);
  for(const classId of classes)for(const row of L2_EFFECT_LEARN[classId]||[]){
   const skill=L2_EFFECT_SKILLS[row.id];if(!skill||skill.operate==='P')continue;

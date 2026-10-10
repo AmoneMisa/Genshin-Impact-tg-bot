@@ -1,11 +1,13 @@
 import character from './uz-character.js';
 import customSets from './uz-custom-sets.js';
+import classTree from './uz-class-tree.js';
 import l2Effects from './uz-l2-effects.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
   ...character,
   ...customSets,
+  ...classTree,
   ...l2Effects,
   'Til / Язык': 'Til / Язык',
   'Language · Язык': 'Language · Til',

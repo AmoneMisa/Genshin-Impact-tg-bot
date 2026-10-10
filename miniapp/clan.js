@@ -1,3 +1,4 @@
+import { classFamily } from '../functions/game/classes/classFamily.js';
 import crypto from 'crypto';
 import Clan from '../db/models/Clan.js';
 import getClan from '../functions/game/clans/getClan.js';
@@ -70,7 +71,8 @@ export function getEntryBlockReasons(clan, playerSession) {
     }
   }
 
-  if (cond.allowedClass && playerSession?.game?.gameClass?.name !== cond.allowedClass) {
+  // the clan names a combat family (priest, mage, ...): every class of the real tree belongs to one
+  if (cond.allowedClass && classFamily(playerSession?.game?.gameClass?.stats?.name || 'noClass') !== cond.allowedClass) {
     reasons.push(`Требуемый класс: ${CLASS_LABELS[cond.allowedClass] || cond.allowedClass}`);
   }
 

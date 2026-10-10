@@ -8,9 +8,14 @@ import {
 } from '../functions/game/player/skillEnchant.js';
 import { addMaterial, getMaterialCount } from '../functions/game/player/materials.js';
 import { getSkillsState, routeSkillForMiniApp, skillTags } from '../miniapp/skills.js';
-import classSkills from '../template/classSkillsTemplate.js';
+// An awakened skill of a 3rd profession: a stun, a boss essence for the top levels (the kit is generated from the
+// real class trees, so the test builds its own skill instead of pointing at a slot of a generated class).
+const awakened = { slot: 9, name: 'Test Awakening', description: 'x', effect: 'magic_attack', isDealDamage: true, damageModifier: 15, cooldown: 150, cost: 450,
+  tier: 4, needLvl: 80, debuff: { kind: 'stun', amount: 0, seconds: 5 }, enchantItem: { key: 'essence_radjahal', perLevel: 1 } };
+const volley = { slot: 10, name: 'Test Volley', description: 'x', effect: 'multi_hit', hits: 5, isDealDamage: true, damageModifier: 2.2, cooldown: 90, cost: 330, tier: 4, needLvl: 76 };
+const classSkills = { archmage: Object.assign([], { 5: volley, 6: awakened, 7: awakened }) };
 
-function session(tier = 3, skillOverrides = {}) {
+function session(tier = 4, skillOverrides = {}) {
   const skill = { ...classSkills.archmage[6], enchantLevel: 5, ...skillOverrides };
   return {
     game: {
@@ -23,7 +28,8 @@ function session(tier = 3, skillOverrides = {}) {
 }
 
 test('routes open only for 3rd professions', () => {
-  assert.equal(canUseRoutes(session(3)), true);
+  assert.equal(canUseRoutes(session(4)), true);
+  assert.equal(canUseRoutes(session(3)), false);
   assert.equal(canUseRoutes(session(2)), false);
   assert.equal(canUseRoutes(session(1)), false);
   const second = session(2);
@@ -33,9 +39,9 @@ test('routes open only for 3rd professions', () => {
 });
 
 test('before the 3rd class a skill only has its level; routes need skill level 5 first', () => {
-  const low = session(3, { enchantLevel: 4 });
+  const low = session(4, { enchantLevel: 4 });
   assert.equal(upgradeRoute(low, low.game.gameClass.skills[0], 'power').reason, 'skill_level_too_low');
-  const ready = session(3);
+  const ready = session(4);
   assert.equal(upgradeRoute(ready, ready.game.gameClass.skills[0], 'nonsense').reason, 'unknown_route');
 });
 
@@ -107,7 +113,7 @@ test('plain skill levels from 4 on need Skill Scrolls, 8 on Ancient Seals, and t
   assert.deepEqual(getSkillEnchantCost({ ...skill, enchantLevel: 3 }).items, { skill_scroll: 1 });
   assert.deepEqual(getSkillEnchantCost({ ...skill, enchantLevel: 6 }).items, { skill_scroll: 4 });
   assert.deepEqual(getSkillEnchantCost({ ...skill, enchantLevel: 7 }).items, { ancient_seal: 1, [skill.enchantItem.key]: 1 });
-  assert.equal(getSkillEnchantCost({ ...skill, enchantLevel: 0 }).gold, 4000, 'tier 3 skills cost double gold');
+  assert.equal(getSkillEnchantCost({ ...skill, enchantLevel: 0 }).gold, 5000, 'tier 4 skills cost two and a half times the gold');
 
   const owner = session();
   const target = { ...skill, enchantLevel: 3 };
@@ -119,7 +125,7 @@ test('plain skill levels from 4 on need Skill Scrolls, 8 on Ancient Seals, and t
 
 test('Mini App state shows tags, locks, items and the route block; the route action works end to end', () => {
   const s = session();
-  s.game.stats.lvl = 60;
+  s.game.stats.lvl = 80;
   const skill = s.game.gameClass.skills[0];
   addMaterial(s, 'ancient_seal', 3);
   const state = getSkillsState(s);
@@ -127,7 +133,7 @@ test('Mini App state shows tags, locks, items and the route block; the route act
   assert.equal(state.routeOptions.length, 6);
   assert.deepEqual(state.materials.map(item => item.key), ['ancient_seal']);
   const row = state.skills[0];
-  assert.equal(row.tier, 3);
+  assert.equal(row.tier, 4);
   assert.equal(row.power.hits, 1);
   assert.ok(row.tags.some(tag => tag.startsWith('оглушение')));
   assert.ok(skillTags(classSkills.archmage[5]).includes('Серия ×5'));
@@ -141,8 +147,8 @@ test('Mini App state shows tags, locks, items and the route block; the route act
   assert.equal(routeSkillForMiniApp(s, 99, 'power').reason, 'invalid_skill');
 
   s.game.stats.lvl = 30;
-  assert.equal(getSkillsState(s).skills[0].locked, true, 'level 52 skill is locked at level 30');
+  assert.equal(getSkillsState(s).skills[0].locked, true, 'level 80 skill is locked at level 30');
   assert.equal(getSkillsState(session(2)).routesUnlocked, false);
-  assert.ok(skillTags(classSkills.slayer[3]).includes('Цена: 3% HP'));
-  assert.ok(skillTags(classSkills.warbringer[6]).some(tag => tag.includes('+80% урона')));
+  assert.ok(skillTags({ slot: 3, name: 'x', effect: 'strong_attack', isDealDamage: true, damageModifier: 7, cooldown: 50, cost: 0, costHpPct: 0.03 }).includes('Цена: 3% HP'));
+  assert.ok(skillTags({ slot: 4, name: 'y', effect: 'buff', isBuff: true, isSelf: true, cooldown: 90, cost: 0, buffs: [{ kind: 'damage', amount: 80, charges: 4 }] }).some(tag => tag.includes('+80% урона')));
 });

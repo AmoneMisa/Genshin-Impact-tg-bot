@@ -1,4 +1,5 @@
 import classes from '../template/classStatsTemplate.js';
+import { RACE_TITLES } from '../template/l2ClassMeta.js';
 import getClassStatsFromTemplate from '../functions/game/player/getters/getGameClassStatsFromTemplate.js';
 import changePlayerClass from '../functions/game/player/changePlayerGameClass.js';
 import updatePlayerStats from '../functions/game/player/updatePlayerStats.js';
@@ -27,13 +28,15 @@ function statDto(stats = {}) {
   };
 }
 
-const isBaseClass = item => (item.tier || 1) === 1;
+const isBaseClass = item => (item.tier || 1) === 1 && !item.legacy;
 
 function classDto(template, level) {
   const scaled = getClassStatsFromTemplate(template.name, level) || template;
   return {
     name: template.name,
     title: template.translateName,
+    race: template.race || null,
+    raceTitle: template.race ? RACE_TITLES[template.race] : null,
     tier: template.tier || 1,
     description: template.description,
     stats: statDto(scaled),

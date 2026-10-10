@@ -8,6 +8,7 @@ import {
   getSkillPowerMultiplier,
 } from '../functions/game/player/skillEnchant.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
+import { isSkillLearned, learnSkill, skillLearnCost } from '../functions/game/player/skillLearning.js';
 import { getMaterialCount, listMaterials, materialInfo } from '../functions/game/player/materials.js';
 import {
   ROUTES, ROUTE_MAX_LEVEL, ROUTE_MIN_SKILL_LEVEL, ROUTE_RESET_FEE,
@@ -148,6 +149,17 @@ function routeState(session, skill) {
   };
 }
 
+function learnState(session, skill, playerLevel) {
+  const cost = skillLearnCost(skill);
+  const sp = number(session?.game?.inventory?.sp);
+  const items = (cost.items || []).map(([item, count]) => ({ key: `l2_${item}`, need: count, have: getMaterialCount(session, `l2_${item}`) }));
+  return {
+    sp: cost.sp,
+    items,
+    canLearn: playerLevel >= number(skill.needLvl) && sp >= cost.sp && items.every(item => item.have >= item.need),
+  };
+}
+
 function skillState(session, skill, playerLevel) {
   const inventory = session?.game?.inventory || {};
   const maxHp = number(getMaxHp(session, session.game.gameClass));
@@ -167,6 +179,8 @@ function skillState(session, skill, playerLevel) {
     tags: skillTags(skill),
     needLevel: Math.max(0, number(skill?.needLvl)),
     locked: number(skill?.needLvl) > playerLevel,
+    learned: isSkillLearned(session, skill),
+    learn: isSkillLearned(session, skill) ? null : learnState(session, skill, playerLevel),
     enchantLevel: level,
     maxEnchantLevel: SKILL_ENCHANT_MAX_LEVEL,
     power: powerState(skill, getSkillPowerMultiplier(skill)),
@@ -201,6 +215,13 @@ export function getSkillsState(session) {
     routeResetFee: ROUTE_RESET_FEE,
     skills: skills.map(skill => skillState(session, skill, playerLevel)),
   };
+}
+
+export function learnSkillForMiniApp(session, rawSlot) {
+  const slot = Number(rawSlot);
+  if (!Number.isInteger(slot) || slot < 0) return { ok: false, reason: 'invalid_skill', skills: getSkillsState(session) };
+  const result = learnSkill(session, slot);
+  return { ...result, slot, skills: getSkillsState(session) };
 }
 
 export function enchantSkillForMiniApp(session, rawSlot) {

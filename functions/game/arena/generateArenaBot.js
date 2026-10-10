@@ -7,7 +7,7 @@ export default function (rating = 1000) {
     const normalizedRating = Math.max(0, Number(rating) || 1000);
     const ratingObj = levelsMap.find(item => item.rating >= normalizedRating) || levelsMap.at(-1);
     // A bot of this level can only be in a profession it could have reached.
-    const availableClasses = classStatsTemplate.filter(item => item?.name && item.name !== 'noClass' && (item.promoteLvl || 0) <= ratingObj.lvl);
+    const availableClasses = classStatsTemplate.filter(item => item?.name && item.name !== 'noClass' && !item.legacy && (item.promoteLvl || 0) <= ratingObj.lvl);
     const classTemplate = availableClasses.length
         ? availableClasses[getRandom(0, availableClasses.length - 1)]
         : classStatsTemplate[0];

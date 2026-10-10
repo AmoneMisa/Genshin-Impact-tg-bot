@@ -1,275 +1,205 @@
-// Skills taught by the 2nd and 3rd professions (see classTree.js). Each promoted
-// class repeats its parent's skills in the same slots - so a skill's enchant level
-// survives a promotion - and adds two of its own after them. Field reference:
-// classSkillsTemplate.js.
+// The battle skills of the professions, taken from the real High Five class trees (template/l2Classes.js).
+//
+// A start class fights with the base kit of its family (classSkillsTemplate.js, slots 0-2). Every profession
+// keeps the kit of its parent in the same slots - so a skill's enchant level survives a promotion - and adds two
+// skills from its own real tree (slots 3-4 at the 1st profession, 5-6 at the 2nd, 7-8 at the 3rd); the 3rd
+// profession also awakens two more (slots 9-10, which want a boss essence for their top enchant levels).
+//
+// A real skill becomes an engine skill (see classSkillsTemplate.js for the fields) by what it does:
+//   damage      PhysicalDamage / MagicalDamage / FatalBlow / HpDrain ...   -> strong_attack / magic_attack / vampire
+//   control     Stun / Sleep / Root / Paralyze / Fear ...                  -> a hit with a stun / weakening
+//   heal        Heal / HealPercent / CpHeal                                -> heal
+//   buff        a self / party buff with stat changes                      -> buff (damage, guard, haste, evade ...)
+// The real name and the real order of power, mana and reuse are kept; the numbers are scaled to the engine
+// (a boss fight is a duel of long cooldowns, not a farm of three-second skills). Real skill names stay in English
+// like the real item names.
+import l2 from './l2Classes.js';
+import {L2_CLASS_META} from './l2ClassMeta.js';
 
 const flags = {cooldown: 0, isSelf: false, isDealDamage: false, isHeal: false, isShield: false, isBuff: false, costHp: 0, cost: 0};
 
-/** Damage skill. */
-const hit = (name, description, tier, needLvl, cooldown, cost, extra) => ({
-    name, description, effect: "strong_attack", ...flags, isDealDamage: true, tier, needLvl, cooldown, cost, ...extra
-});
-const heal = (name, description, tier, needLvl, cooldown, cost, healPower, extra) => ({
-    name, description, effect: "heal", ...flags, isSelf: true, isHeal: true, tier, needLvl, cooldown, cost, healPower, ...extra
-});
-const shield = (name, description, tier, needLvl, cooldown, cost, shieldPower, extra) => ({
-    name, description, effect: "shield", ...flags, isSelf: true, isShield: true, tier, needLvl, cooldown, cost, shieldPower, ...extra
-});
-/** Self buff (no damage). */
-const buff = (name, description, tier, needLvl, cooldown, cost, buffs, extra) => ({
-    name, description, effect: "buff", ...flags, isSelf: true, isBuff: true, tier, needLvl, cooldown, cost, buffs, ...extra
-});
+const DAMAGE = new Set(['PhysicalDamage', 'MagicalDamage', 'FatalBlow', 'HpDrain', 'PhysicalSoulDamage', 'MagicalSoulDamage', 'EnergyDamage', 'MagicalDamageMp', 'DamOverTime', 'Lethal']);
+const HEAL = new Set(['Heal', 'HealPercent', 'CpHeal', 'CpHealPercent', 'HealOverTime']);
+const CONTROL = new Set(['Stun', 'Sleep', 'Root', 'Paralyze', 'Fear', 'Mute', 'PhysicalMute', 'Petrification', 'Disarm']);
+const AVOID = new Set(['Summon', 'Transformation', 'Resurrection', 'ResurrectionSpecial', 'Escape', 'ClanGate', 'FakeDeath', 'Hide', 'SilentMove', 'BlockChat', 'BlockParty', 'Flag', 'DeleteHateOfMe', 'ChangeFishingMastery', 'VitalityPointUp', 'NevitsHourglass', 'ServitorShare', 'ConsumeBody']);
+const MAGIC_STATS = new Set(['mAtk', 'mDef', 'mAtkSpd']);
 
-export const professionSkills = {
-    // --- Паладин -----------------------------------------------------------
-    crusader: [
-        hit("Удар возмездия", "Карающий удар на 300% урона. Возвращает 8% нанесённого урона здоровьем.", 2, 22, 16, 70,
-            {effect: "vampire", damageModifier: 3, vampirePower: 0.08}),
-        buff("Клятва света", "Клятва придаёт силы: +35% к урону по боссу на следующие 4 атаки.", 2, 28, 60, 90,
-            [{kind: "damage", amount: 35, charges: 4}])
-    ],
-    phoenixKnight: [
-        heal("Возрождение феникса", "Пламя феникса исцеляет 45% здоровья.", 3, 42, 150, 160, 0.45),
-        hit("Пылающий меч", "Меч, объятый огнём, наносит 600% урона и возвращает 10% урона здоровьем.", 3, 50, 40, 150,
-            {effect: "vampire", damageModifier: 6, vampirePower: 0.1, enchantItem: {key: "essence_ignar", perLevel: 1}})
-    ],
-    warden: [
-        shield("Несокрушимый щит", "Щит, поглощающий урон в размере 60% от максимального здоровья.", 2, 22, 70, 85, 0.6),
-        buff("Вызов", "Босс сосредотачивается на тебе на 12 секунд, а получаемый урон падает на 30%.", 2, 28, 45, 60,
-            [{kind: "taunt", seconds: 12}, {kind: "guard", amount: 30, seconds: 12}])
-    ],
-    bastion: [
-        shield("Крепость", "Непробиваемый щит в размере 100% максимального здоровья.", 3, 42, 140, 170, 1),
-        buff("Неприступный бастион", "На 15 секунд босс бьёт только по тебе, а получаемый урон падает на 55%.", 3, 50, 90, 140,
-            [{kind: "taunt", seconds: 15}, {kind: "guard", amount: 55, seconds: 15}],
-            {enchantItem: {key: "essence_terrax", perLevel: 1}})
-    ],
+/** Score of a damage modifier per tier: the top skill of a class tier is worth this much of an attack. */
+const DAMAGE_REF = {2: 3.2, 3: 6, 4: 9, 5: 14};
+const HEAL_REF = {2: 0.45, 3: 0.7, 4: 0.9, 5: 1};
+const COOLDOWN_CLAMP = [12, 140];
+// boss essences the awakened skills of the 3rd profession ask for (they rotate over the classes)
+const ESSENCES = ['ignar', 'terrax', 'radjahal', 'pira', 'selene', 'zephyrion', 'tiamara', 'veraxis', 'umbra', 'kivaha'];
 
-    // --- Маг ---------------------------------------------------------------
-    elementalist: [
-        hit("Цепная молния", "Молния прыгает три раза, каждый удар — 160% урона.", 2, 22, 24, 110,
-            {effect: "multi_hit", hits: 3, damageModifier: 1.6}),
-        hit("Ледяной шип", "Шип льда на 320% урона, который на 10 секунд ослабляет защиту босса на 20%.", 2, 28, 14, 75,
-            {effect: "magic_attack", damageModifier: 3.2, debuff: {kind: "armorBreak", amount: 20, seconds: 10}})
-    ],
-    archmage: [
-        hit("Метеоритный дождь", "Пять метеоритов, каждый по 220% урона.", 3, 44, 90, 330,
-            {effect: "multi_hit", hits: 5, damageModifier: 2.2}),
-        hit("Ледяные оковы", "300% урона и оглушение босса на 4 секунды.", 3, 52, 60, 220,
-            {effect: "magic_attack", damageModifier: 3, debuff: {kind: "stun", amount: 0, seconds: 4},
-                enchantItem: {key: "essence_radjahal", perLevel: 1}})
-    ],
-    warlock: [
-        hit("Похищение жизни", "240% урона. Возвращает 20% нанесённого урона здоровьем.", 2, 22, 20, 80,
-            {effect: "vampire", damageModifier: 2.4, vampirePower: 0.2}),
-        {
-            name: "Проклятие слабости", description: "Проклятие на 15 секунд: босс наносит на 25% меньше урона.",
-            effect: "debuff", ...flags, tier: 2, needLvl: 28, cooldown: 40, cost: 70,
-            debuff: {kind: "weaken", amount: 25, seconds: 15}
-        }
-    ],
-    soulReaper: [
-        hit("Жатва душ", "550% урона, а по боссу с запасом здоровья ниже 35% — вдвое больше.", 3, 44, 45, 200,
-            {effect: "execute", damageModifier: 5.5, executeBelow: 0.35, executeBonus: 1}),
-        hit("Пожирание", "450% урона. Возвращает 30% нанесённого урона здоровьем.", 3, 52, 70, 230,
-            {effect: "vampire", damageModifier: 4.5, vampirePower: 0.3, enchantItem: {key: "essence_veraxis", perLevel: 1}})
-    ],
+const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+const last = list => (Array.isArray(list) && list.length ? list.at(-1) : null);
 
-    // --- Прист -------------------------------------------------------------
-    cleric: [
-        heal("Малое исцеление", "Быстрое исцеление на 18% здоровья.", 2, 22, 8, 50, 0.18),
-        {
-            name: "Источник маны", description: "Возвращает 35% максимальной маны.",
-            effect: "restore", ...flags, isSelf: true, tier: 2, needLvl: 28, cooldown: 90, cost: 0, restoreMp: 0.35
-        }
-    ],
-    saint: [
-        heal("Священное чудо", "Исцеляет 70% здоровья.", 3, 44, 120, 220, 0.7),
-        shield("Ореол", "Сияющий щит на 90% здоровья и возврат 20% маны.", 3, 52, 100, 200, 0.9,
-            {restoreMp: 0.2, enchantItem: {key: "essence_selene", perLevel: 1}})
-    ],
-    inquisitor: [
-        hit("Священный огонь", "Огонь веры на 340% урона.", 2, 22, 15, 72, {effect: "magic_attack", damageModifier: 3.4}),
-        hit("Кара небес", "450% урона, а по раненому боссу (здоровье ниже 30%) — на 60% больше.", 2, 28, 30, 100,
-            {effect: "execute", damageModifier: 4.5, executeBelow: 0.3, executeBonus: 0.6})
-    ],
-    judicator: [
-        hit("Луч правосудия", "Луч света на 750% урона.", 3, 44, 50, 240, {effect: "magic_attack", damageModifier: 7.5}),
-        hit("Приговор", "500% урона, по боссу ниже 30% здоровья — на 120% больше.", 3, 52, 60, 260,
-            {effect: "execute", damageModifier: 5, executeBelow: 0.3, executeBonus: 1.2, enchantItem: {key: "essence_selene", perLevel: 1}})
-    ],
-
-    // --- Лучник ------------------------------------------------------------
-    ranger: [
-        hit("Град стрел", "Пять стрел, каждая по 80% урона.", 2, 22, 20, 90, {effect: "multi_hit", hits: 5, damageModifier: 0.8}),
-        buff("Охотничий азарт", "Следующие 5 атак: шанс крита выше на 50%.", 2, 28, 55, 60, [{kind: "critChance", amount: 50, charges: 5}])
-    ],
-    hawkeye: [
-        hit("Тысяча стрел", "Восемь стрел подряд, каждая по 100% урона.", 3, 44, 80, 300, {effect: "multi_hit", hits: 8, damageModifier: 1}),
-        buff("Глаз сокола", "Следующие 5 атак: шанс крита +80% и критический урон +50%.", 3, 52, 90, 160,
-            [{kind: "critChance", amount: 80, charges: 5}, {kind: "critDamage", amount: 50, charges: 5}],
-            {enchantItem: {key: "essence_zephyrion", perLevel: 1}})
-    ],
-    sniper: [
-        hit("Выстрел в слабое место", "420% урона и +30% к шансу крита.", 2, 22, 18, 95, {damageModifier: 4.2, critChanceBonus: 30}),
-        hit("Бронебойная стрела", "200% урона. На 12 секунд снижает защиту босса на 30%.", 2, 28, 30, 80,
-            {damageModifier: 2, debuff: {kind: "armorBreak", amount: 30, seconds: 12}})
-    ],
-    phantomShot: [
-        hit("Призрачная стрела", "Стрела из теней на 800% урона и +40% к шансу крита.", 3, 44, 55, 260, {damageModifier: 8, critChanceBonus: 40}),
-        hit("Ночной охотник", "300% урона. На 15 секунд снижает защиту босса на 35%.", 3, 52, 45, 190,
-            {damageModifier: 3, debuff: {kind: "armorBreak", amount: 35, seconds: 15}, enchantItem: {key: "essence_veraxis", perLevel: 1}})
-    ],
-
-    // --- Разбойник ---------------------------------------------------------
-    assassin: [
-        hit("Удар в спину", "400% урона и +35% к шансу крита.", 2, 22, 14, 85, {damageModifier: 4, critChanceBonus: 35}),
-        buff("Смертельная метка", "Следующие 3 атаки: критический урон +60%.", 2, 28, 50, 70, [{kind: "critDamage", amount: 60, charges: 3}])
-    ],
-    shadowBlade: [
-        hit("Тысяча порезов", "Семь быстрых порезов, каждый по 110% урона.", 3, 44, 70, 240, {effect: "multi_hit", hits: 7, damageModifier: 1.1}),
-        hit("Казнь из тени", "500% урона и +50% к шансу крита; по боссу ниже 40% здоровья — на 150% больше.", 3, 52, 60, 230,
-            {effect: "execute", damageModifier: 5, critChanceBonus: 50, executeBelow: 0.4, executeBonus: 1.5,
-                enchantItem: {key: "essence_umbra", perLevel: 1}})
-    ],
-    trickster: [
-        hit("Ослепление", "150% урона и оглушение босса на 3 секунды.", 2, 22, 35, 70,
-            {damageModifier: 1.5, debuff: {kind: "stun", amount: 0, seconds: 3}}),
-        buff("Тень", "На 12 секунд: 50% шанс уклониться от удара босса и перезарядка быстрее на 30%.", 2, 28, 50, 65,
-            [{kind: "evade", amount: 50, seconds: 12}, {kind: "haste", amount: 30, seconds: 12}])
-    ],
-    phantomDancer: [
-        hit("Вихрь теней", "Четыре удара по 180% урона. На 8 секунд даёт 40% уклонения.", 3, 44, 65, 210,
-            {effect: "multi_hit", hits: 4, damageModifier: 1.8, buffs: [{kind: "evade", amount: 40, seconds: 8}]}),
-        hit("Дымовая завеса", "200% урона, оглушение босса на 5 секунд и 60% уклонения на 12 секунд.", 3, 52, 100, 180,
-            {damageModifier: 2, debuff: {kind: "stun", amount: 0, seconds: 5}, buffs: [{kind: "evade", amount: 60, seconds: 12}],
-                enchantItem: {key: "essence_umbra", perLevel: 1}})
-    ],
-
-    // --- Берсерк -----------------------------------------------------------
-    slayer: [
-        hit("Рубка", "Три удара по 140% урона. Платишь 3% здоровья.", 2, 22, 18, 0,
-            {effect: "multi_hit", hits: 3, damageModifier: 1.4, costHpPct: 0.03}),
-        buff("Неистовство", "Платишь 5% здоровья: следующие 3 атаки наносят на 50% больше урона.", 2, 28, 50, 0,
-            [{kind: "damage", amount: 50, charges: 3}], {costHpPct: 0.05})
-    ],
-    warbringer: [
-        hit("Громовой удар", "Платишь 6% здоровья ради удара на 700% урона.", 3, 44, 55, 0, {damageModifier: 7, costHpPct: 0.06}),
-        buff("Боевой клич", "Платишь 8% здоровья: следующие 4 атаки на 80% сильнее, а перезарядка быстрее на 20% на 15 секунд.", 3, 52, 100, 0,
-            [{kind: "damage", amount: 80, charges: 4}, {kind: "haste", amount: 20, seconds: 15}],
-            {costHpPct: 0.08, enchantItem: {key: "essence_ignar", perLevel: 1}})
-    ],
-    ironclad: [
-        shield("Кровавая броня", "Платишь 3% здоровья и получаешь щит на 50% здоровья.", 2, 22, 60, 0, 0.5, {costHpPct: 0.03}),
-        buff("Железная плоть", "На 15 секунд получаемый урон падает на 40%.", 2, 28, 55, 70, [{kind: "guard", amount: 40, seconds: 15}])
-    ],
-    titan: [
-        hit("Землетрясение", "550% урона и оглушение босса на 3 секунды.", 3, 44, 70, 200,
-            {damageModifier: 5.5, debuff: {kind: "stun", amount: 0, seconds: 3}}),
-        buff("Несокрушимый", "На 15 секунд получаемый урон падает на 60%, плюс щит на 50% здоровья.", 3, 52, 120, 150,
-            [{kind: "guard", amount: 60, seconds: 15}], {shieldPower: 0.5, enchantItem: {key: "essence_terrax", perLevel: 1}})
-    ]
+const kindOf = skill => {
+    const effects = skill.effects || [];
+    if (effects.some(name => AVOID.has(name))) return null;
+    if (skill.op === 'P') return null;
+    if (effects.some(name => DAMAGE.has(name))) return skill.op === 'A1' || skill.op === 'CA1' || skill.op === 'A2' ? 'damage' : null;
+    if (effects.some(name => HEAL.has(name))) return 'heal';
+    if (effects.some(name => CONTROL.has(name))) return skill.op === 'A1' || skill.op === 'CA1' ? 'control' : null;
+    if (['A2', 'A3', 'T', 'DA2'].includes(skill.op) && (skill.stats || []).some(node => node.tag !== 'sub' || node.stat)) return 'buff';
+    return null;
 };
 
-// --- 3rd-class awakening: two more powerful skills at levels 60 and 75 (slots 7-8).
-// Big numbers, long cooldowns; each wants a boss essence for its top enchant levels.
-export const awakenedSkills = {
-    phoenixKnight: [
-        heal("Огненное воскрешение", "Пламя феникса исцеляет 80% здоровья и на 10 секунд снижает получаемый урон на 30%.", 3, 60, 240, 300, 0.8,
-            {buffs: [{kind: "guard", amount: 30, seconds: 10}], enchantItem: {key: "essence_ignar", perLevel: 1}}),
-        hit("Гнев феникса", "Испепеляющий удар на 1400% урона, возвращает 15% урона здоровьем.", 3, 75, 120, 320,
-            {effect: "vampire", damageModifier: 14, vampirePower: 0.15, enchantItem: {key: "essence_pira", perLevel: 1}})
-    ],
-    bastion: [
-        shield("Стена света", "Щит на 160% максимального здоровья.", 3, 60, 200, 320, 1.6, {enchantItem: {key: "essence_terrax", perLevel: 1}}),
-        buff("Последний рубеж", "На 20 секунд босс бьёт только по тебе, а получаемый урон падает на 75%. Тут же даёт щит на 80% здоровья.", 3, 75, 180, 280,
-            [{kind: "taunt", seconds: 20}, {kind: "guard", amount: 75, seconds: 20}], {shieldPower: 0.8, enchantItem: {key: "essence_tiamara", perLevel: 1}})
-    ],
-    archmage: [
-        hit("Звёздный шторм", "Восемь звёзд падают на цель, каждая по 260% урона.", 3, 60, 200, 520,
-            {effect: "multi_hit", hits: 8, damageModifier: 2.6, enchantItem: {key: "essence_zephyrion", perLevel: 1}}),
-        hit("Разлом реальности", "1600% урона и оглушение босса на 5 секунд.", 3, 75, 150, 450,
-            {effect: "magic_attack", damageModifier: 16, debuff: {kind: "stun", amount: 0, seconds: 5}, enchantItem: {key: "essence_radjahal", perLevel: 1}})
-    ],
-    soulReaper: [
-        hit("Жатва мира", "900% урона, по боссу ниже 40% здоровья — на 150% больше.", 3, 60, 100, 380,
-            {effect: "execute", damageModifier: 9, executeBelow: 0.4, executeBonus: 1.5, enchantItem: {key: "essence_veraxis", perLevel: 1}}),
-        hit("Бессмертие душ", "1000% урона. Возвращает 40% нанесённого урона здоровьем.", 3, 75, 160, 420,
-            {effect: "vampire", damageModifier: 10, vampirePower: 0.4, enchantItem: {key: "essence_tiamara", perLevel: 1}})
-    ],
-    saint: [
-        heal("Небесное исцеление", "Исцеляет 100% здоровья и возвращает 25% маны.", 3, 60, 240, 380, 1,
-            {restoreMp: 0.25, enchantItem: {key: "essence_selene", perLevel: 1}}),
-        shield("Божественный щит", "Щит на 150% здоровья и возврат 40% маны.", 3, 75, 200, 360, 1.5,
-            {restoreMp: 0.4, enchantItem: {key: "essence_umbra", perLevel: 1}})
-    ],
-    judicator: [
-        hit("Гнев небес", "Небесный огонь на 1500% урона.", 3, 60, 130, 460,
-            {effect: "magic_attack", damageModifier: 15, enchantItem: {key: "essence_selene", perLevel: 1}}),
-        hit("Последний суд", "1000% урона, по боссу ниже 35% здоровья — втрое больше.", 3, 75, 140, 480,
-            {effect: "execute", damageModifier: 10, executeBelow: 0.35, executeBonus: 2, enchantItem: {key: "essence_veraxis", perLevel: 1}})
-    ],
-    hawkeye: [
-        hit("Дождь комет", "Двенадцать стрел с небес, каждая по 140% урона.", 3, 60, 160, 480,
-            {effect: "multi_hit", hits: 12, damageModifier: 1.4, enchantItem: {key: "essence_zephyrion", perLevel: 1}}),
-        buff("Зрение сокола", "Следующие 5 атак: урон +100% и шанс крита +100%.", 3, 75, 200, 300,
-            [{kind: "damage", amount: 100, charges: 5}, {kind: "critChance", amount: 100, charges: 5}], {enchantItem: {key: "essence_kivaha", perLevel: 1}})
-    ],
-    phantomShot: [
-        hit("Выстрел судьбы", "1800% урона и +60% к шансу крита.", 3, 60, 140, 500,
-            {damageModifier: 18, critChanceBonus: 60, enchantItem: {key: "essence_veraxis", perLevel: 1}}),
-        hit("Тьма над целью", "600% урона. На 20 секунд снижает защиту босса на 50%.", 3, 75, 100, 380,
-            {damageModifier: 6, debuff: {kind: "armorBreak", amount: 50, seconds: 20}, enchantItem: {key: "essence_umbra", perLevel: 1}})
-    ],
-    shadowBlade: [
-        hit("Танец тысячи клинков", "Двенадцать ударов, каждый по 150% урона.", 3, 60, 160, 460,
-            {effect: "multi_hit", hits: 12, damageModifier: 1.5, enchantItem: {key: "essence_umbra", perLevel: 1}}),
-        hit("Поцелуй смерти", "1200% урона и +60% к шансу крита; по боссу ниже 30% здоровья — втрое больше.", 3, 75, 150, 480,
-            {effect: "execute", damageModifier: 12, critChanceBonus: 60, executeBelow: 0.3, executeBonus: 2, enchantItem: {key: "essence_veraxis", perLevel: 1}})
-    ],
-    phantomDancer: [
-        hit("Затмение", "Шесть ударов по 250% урона, 70% уклонения на 12 секунд.", 3, 60, 150, 420,
-            {effect: "multi_hit", hits: 6, damageModifier: 2.5, buffs: [{kind: "evade", amount: 70, seconds: 12}], enchantItem: {key: "essence_selene", perLevel: 1}}),
-        hit("Бесконечный танец", "400% урона, оглушение босса на 6 секунд и ускорение перезарядки на 40% на 15 секунд.", 3, 75, 200, 400,
-            {damageModifier: 4, debuff: {kind: "stun", amount: 0, seconds: 6}, buffs: [{kind: "haste", amount: 40, seconds: 15}], enchantItem: {key: "essence_zephyrion", perLevel: 1}})
-    ],
-    warbringer: [
-        buff("Рёв войны", "Платишь 10% здоровья: следующие 5 атак на 120% сильнее.", 3, 60, 220, 0,
-            [{kind: "damage", amount: 120, charges: 5}], {costHpPct: 0.1, enchantItem: {key: "essence_ignar", perLevel: 1}}),
-        hit("Кровавая жатва", "Платишь 9% здоровья: удар на 1600% урона, возвращает 20% урона здоровьем.", 3, 75, 140, 0,
-            {effect: "vampire", damageModifier: 16, vampirePower: 0.2, costHpPct: 0.09, enchantItem: {key: "essence_pira", perLevel: 1}})
-    ],
-    titan: [
-        hit("Гнев гор", "1300% урона и оглушение босса на 4 секунды.", 3, 60, 130, 360,
-            {damageModifier: 13, debuff: {kind: "stun", amount: 0, seconds: 4}, enchantItem: {key: "essence_terrax", perLevel: 1}}),
-        buff("Вечная твердь", "На 20 секунд получаемый урон падает на 80%, плюс щит на 100% здоровья.", 3, 75, 240, 300,
-            [{kind: "guard", amount: 80, seconds: 20}], {shieldPower: 1, enchantItem: {key: "essence_tiamara", perLevel: 1}})
-    ]
+/** The skills (unique by id) a class's own tree teaches, with the level they first open at. */
+function treeOf(classId) {
+    const rows = new Map();
+    for (const [id, level, need] of l2.learn[String(classId)] || []) {
+        const entry = rows.get(id) || {id, need, maxLevel: level, maxNeed: need};
+        entry.need = Math.min(entry.need, need);
+        if (level >= entry.maxLevel) { entry.maxLevel = level; entry.maxNeed = need; }
+        rows.set(id, entry);
+    }
+    return [...rows.values()].map(row => {
+        const info = l2.skills[String(row.id)];
+        return info ? {...row, info, kind: kindOf(info)} : null;
+    }).filter(row => row && row.kind);
+}
+
+const powerOf = row => last(row.info.power?.slice(0, row.maxLevel)) || 0;
+const reuseSeconds = row => (last(row.info.reuse?.slice(0, row.maxLevel)) || 0) / 1000;
+const mpOf = row => last(row.info.mp?.slice(0, row.maxLevel)) || 0;
+const isMagic = row => row.info.magic === '1' || (row.info.effects || []).some(name => name.startsWith('Magical')) || (row.info.stats || []).some(node => MAGIC_STATS.has(node.stat));
+
+function buffsOf(row) {
+    const kinds = new Map();
+    for (const node of row.info.stats || []) {
+        const value = node.value?.[Math.min(node.value.length, row.maxLevel) - 1];
+        if (value === undefined || value === null) continue;
+        const rise = node.tag === 'mul' || node.tag === 'basemul' ? (value - 1) * 100 : 0;
+        if (['pAtk', 'mAtk'].includes(node.stat)) kinds.set('damage', {kind: 'damage', amount: clamp(Math.round(rise) || 40, 20, 120), charges: 4});
+        else if (['pDef', 'mDef', 'shieldDef'].includes(node.stat)) kinds.set('guard', {kind: 'guard', amount: clamp(Math.round(rise / 2) || 25, 15, 60), seconds: 15});
+        else if (['pAtkSpd', 'mAtkSpd', 'runSpd'].includes(node.stat)) kinds.set('haste', {kind: 'haste', amount: clamp(Math.round(rise) || 20, 10, 40), seconds: 15});
+        else if (['rCrit', 'mCritRate'].includes(node.stat)) kinds.set('critChance', {kind: 'critChance', amount: clamp(Math.round(rise) || 40, 20, 100), charges: 4});
+        else if (['rEvas', 'rShld', 'sDef'].includes(node.stat)) kinds.set('evade', {kind: 'evade', amount: 30, seconds: 12});
+        else if (['maxHp', 'maxMp', 'maxCp'].includes(node.stat)) kinds.set('guard', {kind: 'guard', amount: 20, seconds: 15});
+    }
+    if (!kinds.size) kinds.set('damage', {kind: 'damage', amount: 30, charges: 3});
+    return [...kinds.values()].slice(0, 2);
+}
+
+// what each family wants from the two skills it learns at a profession, in order of preference
+const WANTS = {
+    warrior: ['buff', 'damage'],
+    berserk: ['damage', 'buff'],
+    rogue: ['damage', 'control'],
+    archer: ['damage', 'control'],
+    mage: ['damage', 'control'],
+    priest: ['heal', 'buff']
 };
 
-// Which class each profession grows out of (matches CLASS_TREE in classTree.js).
-export const PROFESSION_PARENT = {
-    crusader: 'warrior', warden: 'warrior', phoenixKnight: 'crusader', bastion: 'warden',
-    elementalist: 'mage', warlock: 'mage', archmage: 'elementalist', soulReaper: 'warlock',
-    cleric: 'priest', inquisitor: 'priest', saint: 'cleric', judicator: 'inquisitor',
-    ranger: 'archer', sniper: 'archer', hawkeye: 'ranger', phantomShot: 'sniper',
-    assassin: 'rogue', trickster: 'rogue', shadowBlade: 'assassin', phantomDancer: 'trickster',
-    slayer: 'berserk', ironclad: 'berserk', warbringer: 'slayer', titan: 'ironclad'
-};
+function pick(rows, wants, used, tier, promoteLevel) {
+    const chosen = [];
+    const open = row => !used.has(row.info.name) && !chosen.includes(row);
+    const reachable = row => row.need >= promoteLevel && row.need <= promoteLevel + 16;
+    for (const want of wants) {
+        const pool = rows.filter(row => open(row) && (row.kind === want || (want === 'damage' && row.kind === 'control')));
+        const near = pool.filter(reachable);
+        const list = near.length ? near : pool;
+        // the strongest of the near ones (power, then the higher mana as a sign of a bigger skill)
+        list.sort((a, b) => powerOf(b) - powerOf(a) || mpOf(b) - mpOf(a) || a.info.name.localeCompare(b.info.name));
+        if (list[0]) chosen.push(list[0]);
+    }
+    // the family may lack a kind: fill with whatever is left, damage first
+    const rest = rows.filter(open).sort((a, b) => (b.kind === 'damage') - (a.kind === 'damage') || powerOf(b) - powerOf(a));
+    while (chosen.length < 2 && rest.length) { const next = rest.shift(); if (!chosen.includes(next)) chosen.push(next); }
+    return chosen;
+}
 
-/** Full skill list (inherited + own, slots assigned) for every profession. */
+function build(row, {tier, family, slotNeed, fixedNeed = false, awakened = false, essence = null}) {
+    const info = row.info;
+    const name = info.name;
+    const magic = isMagic(row) || ['mage', 'priest'].includes(family);
+    const reuse = reuseSeconds(row);
+    const needLvl = fixedNeed ? slotNeed : Math.max(slotNeed, row.need);
+    const cost = clamp(Math.round(mpOf(row) * 2.4), 20, tier >= 4 ? 320 : 200);
+    const base = {name, l2Id: row.id, tier, needLvl, ...flags};
+    const enchant = essence ? {enchantItem: {key: `essence_${essence}`, perLevel: 1}} : {};
+    if (row.kind === 'heal') {
+        const heal = (awakened ? HEAL_REF[5] : HEAL_REF[tier]);
+        return {...base, description: `Исцеляет ${Math.round(heal * 100)}% здоровья.`, effect: 'heal', isSelf: true, isHeal: true,
+            cooldown: clamp(Math.round(reuse * 5) + 40, 40, 240), cost: Math.max(cost, 60), healPower: heal, ...enchant};
+    }
+    if (row.kind === 'buff') {
+        const buffs = buffsOf(row);
+        const parts = buffs.map(buff => ({damage: `следующие ${buff.charges} атаки на ${buff.amount}% сильнее`, guard: `получаемый урон ниже на ${buff.amount}% на ${buff.seconds} с`,
+            haste: `перезарядка быстрее на ${buff.amount}% на ${buff.seconds} с`, critChance: `шанс крита +${buff.amount}% на ${buff.charges} атаки`, evade: `уклонение +${buff.amount}% на ${buff.seconds} с`}[buff.kind]));
+        return {...base, description: `${parts.join('; ')}.`.replace(/^./, c => c.toUpperCase()), effect: 'buff', isSelf: true, isBuff: true,
+            cooldown: clamp(Math.round(reuse * 4) + 30, 30, 200), cost: Math.max(cost, 40), buffs, ...enchant};
+    }
+    // damage and control become a hit
+    const control = row.kind === 'control' || (info.effects || []).some(effect => CONTROL.has(effect));
+    const ref = awakened ? DAMAGE_REF[5] : DAMAGE_REF[tier];
+    const share = row.share ?? 1;
+    const damageModifier = Math.round(Math.max(0.5, share) * ref * (row.kind === 'control' ? 0.5 : 1) * 10) / 10;
+    const drain = (info.effects || []).includes('HpDrain');
+    const fatal = (info.effects || []).some(effect => effect === 'FatalBlow' || effect === 'Lethal');
+    const skill = {...base, isDealDamage: true,
+        effect: drain ? 'vampire' : magic ? 'magic_attack' : 'strong_attack',
+        damageModifier, cost, ...enchant,
+        // a skill is worth about a quarter of its damage per second of cooldown (class-balance.test.js keeps the budget);
+        // the awakened skills of the 3rd profession are long ones
+        cooldown: clamp(Math.max(Math.round(reuse * 4 + tier * 6), Math.ceil(damageModifier / 0.25), awakened ? 90 : 0), COOLDOWN_CLAMP[0], awakened ? 220 : COOLDOWN_CLAMP[1])};
+    if (drain) skill.vampirePower = 0.2;
+    if (fatal) skill.critChanceBonus = 30;
+    if (control) skill.debuff = {kind: 'stun', amount: 0, seconds: 3};
+    skill.description = `${damageModifier * 100 | 0}% урона${control ? ' и оглушение на 3 с' : ''}${drain ? ', возвращает 20% урона здоровьем' : ''}.`;
+    return skill;
+}
+
+function shares(rows) {
+    const top = Math.max(1, ...rows.filter(row => row.kind === 'damage').map(powerOf));
+    for (const row of rows) row.share = row.kind === 'damage' ? clamp(powerOf(row) / top, 0.55, 1) : 1;
+    return rows;
+}
+
+/** The skills a profession adds on top of its parent's kit (two, plus two awakened ones at the 3rd profession). */
+export function ownSkills(classId, family, tier, ancestorNames = new Set()) {
+    const meta = L2_CLASS_META[classId];
+    const promoteLevel = {2: 20, 3: 40, 4: 76}[tier];
+    let rows = shares(treeOf(classId));
+    // a thin tree (the Kamael Judicator teaches nine skills): borrow the parent's tree for what is missing
+    let parent = meta.parent;
+    while (rows.length < 4 && parent !== null && parent !== undefined) {
+        rows = rows.concat(shares(treeOf(parent)).filter(row => !rows.some(own => own.id === row.id)));
+        parent = L2_CLASS_META[parent]?.parent;
+    }
+    const used = new Set(ancestorNames);
+    const chosen = pick(rows, WANTS[family] || WANTS.warrior, used, tier, promoteLevel);
+    // a thin tree: repeat a skill of the tree rather than leaving a slot empty
+    for (const row of [...rows].sort((a, b) => powerOf(b) - powerOf(a))) if (chosen.length < 2 && !chosen.includes(row)) chosen.push(row);
+    const skills = chosen.map(row => build(row, {tier, family, slotNeed: promoteLevel}));
+    chosen.forEach(row => used.add(row.info.name));
+    if (tier === 4) {
+        let awakened = pick(rows, ['damage', family === 'priest' ? 'heal' : 'damage'], used, 4, promoteLevel + 4);
+        // a thin tree: the awakening may reuse a skill the profession already learned, stronger and with an essence
+        if (awakened.length < 2) awakened = awakened.concat(rows.filter(row => !awakened.includes(row)).sort((a, b) => powerOf(b) - powerOf(a)).slice(0, 2 - awakened.length));
+        skills.push(...awakened.map((row, index) => build(row, {tier, family, slotNeed: [76, 80][index], fixedNeed: true, awakened: true, essence: ESSENCES[(classId + index) % ESSENCES.length]})));
+    }
+    return skills;
+}
+
+/** Full kit (inherited + own, slots assigned) of every profession, built on the base kit of its family. */
 export function assembleProfessionSkills(baseSkills) {
     const result = {};
-    const build = className => {
-        if (result[className]) return result[className];
-        const parent = PROFESSION_PARENT[className];
-        const inherited = baseSkills[parent] || build(parent);
-        const firstSlot = inherited.length;
-        return result[className] = [
-            ...inherited.map(skill => ({...skill})),
-            ...[...professionSkills[className], ...(awakenedSkills[className] || [])].map((skill, index) => ({slot: firstSlot + index, ...skill}))
-        ];
+    const build = classId => {
+        const meta = L2_CLASS_META[classId];
+        if (result[meta.key]) return result[meta.key];
+        if (meta.level === 0) return result[meta.key] = baseSkills[meta.family].map(skill => ({...skill}));
+        const parentKit = build(meta.parent);
+        const parentMeta = L2_CLASS_META[meta.parent];
+        // a family change (a rogue becomes an archer) starts from the new family's base kit
+        const inherited = parentMeta.family === meta.family ? parentKit : [...baseSkills[meta.family].map(skill => ({...skill})), ...parentKit.slice(baseSkills[parentMeta.family].length).filter(skill => skill.tier)];
+        const names = new Set(inherited.map(skill => skill.name));
+        const added = ownSkills(classId, meta.family, meta.level + 1, names);
+        return result[meta.key] = [...inherited, ...added].map((skill, slot) => ({...skill, slot}));
     };
-    for (const className of Object.keys(PROFESSION_PARENT)) build(className);
+    for (const id of Object.keys(L2_CLASS_META)) build(Number(id));
     return result;
 }
+
+export const START_KIT_SLOTS = 3;

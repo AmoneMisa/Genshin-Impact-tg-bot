@@ -9,6 +9,7 @@ const REASONS = {
   level_too_low: 'Твой уровень слишком низкий.',
   not_enough_sp: 'Не хватает очков навыков (ОП).',
   not_enough_gold: 'Не хватает золота.',
+  not_enough_items: 'Не хватает нужной книги умения.',
 };
 
 const percent = value => `${Math.round(Number(value) * 10) / 10}%`;
@@ -40,10 +41,10 @@ export async function openPassivesGame({ api, haptic, renderState }) {
     const locked = !maxed && state.level < passive.needLvl;
     return `
       <article class="mail-letter buff-card ${passive.level ? 'pending' : 'claimed'}">
-        <div class="mail-head"><strong>${l2SkillIcon(passive.id)} ${escapeHtml(passive.name)} ${ROMAN[passive.level]}</strong>
+        <div class="mail-head"><strong>${l2SkillIcon(passive.name)} ${escapeHtml(passive.name)} ${ROMAN[passive.level] || passive.level}</strong>
           <small>${passive.level} / ${passive.maxLevel}</small></div>
         <p>${escapeHtml(passive.stat)}: ${passive.current ? escapeHtml(passive.current) : '—'}${maxed ? '' : ` → ${escapeHtml(passive.next)}`}</p>
-        ${maxed ? '' : `<button type="button" class="feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} ОП · ${passive.cost.gold} золота`}</button>`}
+        ${maxed ? '' : `<button type="button" class="feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} ОП${passive.cost.gold ? ` · ${passive.cost.gold} золота` : ''}${(passive.cost.items || []).map(item => ` · ${escapeHtml(item.name)} ×${item.count}`).join('')}`}</button>`}
       </article>`;
   }
 

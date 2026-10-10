@@ -6,6 +6,11 @@
 // fewer than three numbers means that buff tops out lower for the class. A
 // promoted class inherits the buffs of its parent and may improve them.
 
+import classStats from './classStatsTemplate.js';
+import { ARCHETYPES } from './classTree.js';
+import { resolveClassName } from '../functions/game/classes/legacyClasses.js';
+import { classFamily } from '../functions/game/classes/classFamily.js';
+
 /** Share of the potion's strength a buff gives at each buff level. */
 export const BUFF_LEVEL_FACTOR = Object.freeze({1: 0.5, 2: 0.75, 3: 1});
 
@@ -54,27 +59,32 @@ export const OWN_CLASS_BUFFS = Object.freeze({
   titan:        {haste: [42, 62]},
 });
 
-const PARENT = {
-  crusader: 'warrior', warden: 'warrior', phoenixKnight: 'crusader', bastion: 'warden',
-  elementalist: 'mage', warlock: 'mage', archmage: 'elementalist', soulReaper: 'warlock',
-  cleric: 'priest', inquisitor: 'priest', saint: 'cleric', judicator: 'inquisitor',
-  ranger: 'archer', sniper: 'archer', hawkeye: 'ranger', phantomShot: 'sniper',
-  assassin: 'rogue', trickster: 'rogue', shadowBlade: 'assassin', phantomDancer: 'trickster',
-  slayer: 'berserk', ironclad: 'berserk', warbringer: 'slayer', titan: 'ironclad',
-};
-
 /** buff id → unlock levels for a class, merging its ancestors (the earlier unlock and the higher cap win). */
 export function classBuffsFor(className) {
-  const chain = [];
-  for (let name = className; name; name = PARENT[name]) chain.push(name);
   const merged = {};
-  for (const name of chain.reverse()) {
-    for (const [buff, levels] of Object.entries(OWN_CLASS_BUFFS[name] || {})) {
+  const add = (owner) => {
+    for (const [buff, levels] of Object.entries(OWN_CLASS_BUFFS[owner] || {})) {
       const known = merged[buff] || [];
       const length = Math.max(known.length, levels.length);
       merged[buff] = Array.from({length}, (_, index) => Math.min(known[index] ?? Infinity, levels[index] ?? Infinity));
     }
+  };
+  // The tree is the real Lineage 2 one: a class has the buffs of its combat family and, for every profession on
+  // its way, those of the archetype (`like`) of that profession - the old tree's entry of the same shape.
+  let name = resolveClassName(className);
+  const chain = [];
+  while (name) {
+    const item = classStats.find(entry => entry.name === name);
+    if (!item) break;
+    chain.push(item);
+    name = item.parent;
   }
+  for (const item of chain.reverse()) {
+    if (item.tier === 1) add(item.family);
+    else if (item.like && ARCHETYPES[item.like]) add(ARCHETYPES[item.like][Math.min(item.tier, 3)].name);
+  }
+  // an old class name that is not part of the real tree still has its own row
+  if (!chain.length) add(className);
   return merged;
 }
 
@@ -84,4 +94,4 @@ export function buffLevelAt(className, buffId, characterLevel) {
   return levels.filter(unlock => characterLevel >= unlock).length;
 }
 
-export const canBuffOthers = className => SUPPORT_CLASSES.includes(className);
+export const canBuffOthers = className => classFamily(resolveClassName(className)) === 'priest' || SUPPORT_CLASSES.includes(className);

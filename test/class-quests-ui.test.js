@@ -12,21 +12,21 @@ import updatePlayerStats from '../functions/game/player/updatePlayerStats.js';
 
 function view(level = 25) {
   const session = { game: { stats: { lvl: level }, inventory: { gold: 1e6, crystals: 1e3, sp: 0 }, gameClass: { stats: { name: 'noClass' } }, effects: [] } };
-  changePlayerClass(session, 'warrior');
+  changePlayerClass(session, 'humanFighter');
   updatePlayerStats(session);
   return { session, view: getClassQuestView(session) };
 }
 
 test('profession cards show the mentor, the checklist and the right buttons per status', () => {
   const { session, view: first } = view();
-  const crusader = first.promotions.find(item => item.to === 'crusader');
+  const crusader = first.promotions.find(item => item.to === 'humanKnight');
   let html = promotionCard(crusader, 25);
-  assert.match(html, /data-cq-action="start" data-cq-to="crusader"/);
+  assert.match(html, /data-cq-action="start" data-cq-to="humanKnight"/);
   assert.match(html, /Командор Эльдрик/);
   assert.match(html, /cq-steps/);
 
-  startClassQuest(session, 'crusader');
-  const active = getClassQuestView(session).promotions.find(item => item.to === 'crusader');
+  startClassQuest(session, 'humanKnight');
+  const active = getClassQuestView(session).promotions.find(item => item.to === 'humanKnight');
   html = promotionCard(active, 25);
   assert.match(html, /data-cq-action="pay" disabled/, 'cannot pay before the other objectives are done');
   assert.match(html, /data-cq-action="abandon"/);

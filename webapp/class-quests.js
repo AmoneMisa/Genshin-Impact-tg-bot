@@ -25,7 +25,7 @@ const STATUS_LABEL = {
   blocked: 'Идёт другое задание',
 };
 
-const TIER_LABEL = { 2: '2-я профессия', 3: '3-я профессия' };
+const TIER_LABEL = { 2: '1-я профессия', 3: '2-я профессия', 4: '3-я профессия' };
 
 function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
@@ -160,7 +160,7 @@ export async function openClassQuests({ api, renderState, haptic, statusElement 
       <section class="cq-summary">
         <span class="cq-portrait" style="--art:url('${menuArtFor('profile', { className: state.className })}')" aria-hidden="true"></span>
         <div><small>Класс · ${state.tier}-й ранг</small><strong>${escapeHtml(state.classTitle)}</strong>
-        <em>2-я профессия — с 20 уровня, 3-я — с 40. Задания выполняются в боях с боссами.</em></div>
+        <em>1-я профессия — с 20 уровня, 2-я — с 40, 3-я — с 76. Задания выполняются в боях с боссами.</em></div>
       </section>
       <div class="cq-resources"><span>🪙 ${formatNumber(inv.gold)}</span><span>💎 ${formatNumber(inv.crystals)}</span><span>✦ ${formatNumber(inv.sp)} ОП</span></div>
       <div class="cq-list">${body}</div>`;

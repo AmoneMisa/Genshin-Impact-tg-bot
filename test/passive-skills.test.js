@@ -1,58 +1,102 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import getEquipStatByName from '../functions/game/player/getters/getEquipStatByName.js';
-import { PASSIVES, getPassivesState, learnPassive, passiveModifiers, PASSIVE_COST } from '../functions/game/player/passiveSkills.js';
-import { CLAN_SKILLS, getClanSkillsState, learnClanSkill, syncClanPerks, clanPerkModifiers } from '../functions/game/clans/clanPerks.js';
+import {
+  PASSIVE_SKILL_NAMES, SP_SCALE, getPassivesState, learnPassive, passiveModifiers, passiveTree,
+} from '../functions/game/player/passiveSkills.js';
+import { CLAN_SKILLS, getClanSkillsState, learnClanSkill, syncClanPerks, clanPerkModifiers, clanSkillLevel } from '../functions/game/clans/clanPerks.js';
 
-const player = (className = 'warrior', overrides = {}) => ({
-  game: { gameClass: { stats: { name: className } }, stats: { lvl: 80 }, inventory: { sp: 1000, gold: 1_000_000 }, equipmentStats: {}, ...overrides },
+const player = (className = 'duelist', overrides = {}) => ({
+  game: { gameClass: { stats: { name: className, family: 'berserk' } }, stats: { lvl: 85 }, inventory: { sp: 100_000, gold: 1_000_000, materials: {} }, equipmentStats: {}, ...overrides },
 });
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
+const idOf = (session, name) => getPassivesState(session).passives.find(passive => passive.name === name).id;
 
-test('every class family has passives and the stats are real', () => {
-  for (const family of ['warrior', 'berserk', 'archer', 'rogue', 'mage', 'priest']) {
-    assert.ok(getPassivesState(player(family)).passives.length >= 3, family);
-  }
-  assert.ok(PASSIVES.every(passive => passive.per !== 0));
+test('a class learns the real passives of its own tree and of its parents', () => {
+  const duelist = getPassivesState(player('duelist')).passives.map(passive => passive.name);
+  assert.ok(duelist.includes('Sword/Blunt Weapon Mastery') && duelist.includes('Heavy Armor Mastery'));
+  const archmage = getPassivesState(player('archmage')).passives.map(passive => passive.name);
+  assert.ok(archmage.includes('Boost Mana') && archmage.includes('Robe Mastery'));
+  assert.ok(!archmage.includes('Sword/Blunt Weapon Mastery'));
+  const kamael = getPassivesState(player('doombringer')).passives.map(passive => passive.name);
+  assert.ok(kamael.length > 10);
+  assert.ok(PASSIVE_SKILL_NAMES.length > 100);
 });
 
-test('learning a passive costs SP and gold and respects the level gate', () => {
-  const session = player();
-  assert.equal(learnPassive(session, 'weapon-mastery').ok, true);
-  assert.equal(session.game.inventory.sp, 1000 - PASSIVE_COST[0].sp);
-  assert.equal(session.game.inventory.gold, 1_000_000 - PASSIVE_COST[0].gold);
-  assert.equal(learnPassive(session, 'magic-mastery').reason, 'unknown_passive');
+test('learning a passive costs the real SP price (scaled), respects the level gate and the order of levels', () => {
+  const session = player('duelist');
+  const id = idOf(session, 'Sword/Blunt Weapon Mastery');
+  const row = passiveTree(88).find(entry => String(entry.id) === id).levels[0];
+  const result = learnPassive(session, id);
+  assert.equal(result.ok, true);
+  assert.equal(result.level, 1);
+  assert.equal(session.game.inventory.sp, 100_000 - row.sp);
+  assert.ok(row.sp >= 1 && SP_SCALE < 1);
+  assert.equal(learnPassive(session, 'nonsense').reason, 'unknown_passive');
+  assert.equal(learnPassive(session, id).level, 2, 'one level at a time');
 
-  const low = player('warrior', { stats: { lvl: 12 } });
-  learnPassive(low, 'weapon-mastery');
-  assert.equal(learnPassive(low, 'weapon-mastery').reason, 'level_too_low');
-  assert.equal(learnPassive(player('warrior', { inventory: { sp: 0, gold: 99999 } }), 'weapon-mastery').reason, 'not_enough_sp');
+  const low = player('duelist', { stats: { lvl: 12 } });
+  assert.equal(learnPassive(low, idOf(low, 'Sword/Blunt Weapon Mastery')).reason, 'level_too_low');
+  const poor = player('duelist', { inventory: { sp: 0, gold: 0, materials: {} } });
+  assert.equal(learnPassive(poor, idOf(poor, 'Sword/Blunt Weapon Mastery')).reason, 'not_enough_sp');
 });
 
-test('passives feed the stat pipeline and switch off with the class family', () => {
-  const session = player();
+test('a passive that needs its spellbook takes the real item', () => {
+  const session = player('duelist');
+  const id = idOf(session, 'Divine Inspiration');
+  assert.equal(learnPassive(session, id).reason, 'not_enough_items');
+  session.game.inventory.materials.l2_8618 = 1;
+  assert.equal(learnPassive(session, id).ok, true);
+  assert.equal(session.game.inventory.materials.l2_8618, 0);
+});
+
+test('passives feed the stat pipeline, need the right weapon and switch off with the class', () => {
+  const session = player('duelist');
   const before = getEquipStatByName(session, 'attackMul', true);
-  for (let i = 0; i < 3; i += 1) learnPassive(session, 'weapon-mastery');
-  near(getEquipStatByName(session, 'attackMul', true), before * 1.06);
-  session.game.gameClass.stats.name = 'mage';
+  const id = idOf(session, 'Sword/Blunt Weapon Mastery');
+  for (let i = 0; i < 12; i += 1) assert.equal(learnPassive(session, id).ok, true);
+  // a sword mastery counts only with a sword in hand
   near(getEquipStatByName(session, 'attackMul', true), before);
-  assert.deepEqual(passiveModifiers(session), {});
+  session.game.equipmentStats = { rightHand: { mainType: 'weapon', kind: 'oneHandedSword', slots: ['rightHand'], characteristics: {}, stats: [] } };
+  assert.ok(getEquipStatByName(session, 'attackMul', true) > before);
+  assert.ok(passiveModifiers(session).attackMul > 0);
+  session.game.gameClass.stats.name = 'archmage';
+  assert.equal(passiveModifiers(session).attackMul || 0, 0);
 });
 
-test('clan skills cost gold and an egg, and reach members through game.clanPerks', () => {
-  const clan = { level: 6, reputation: 9000, warehouse: { gold: 100000, egg_wyvern: 1 }, skills: {} };
-  const id = CLAN_SKILLS[0].id;
-  assert.equal(getClanSkillsState(clan).skills[0].canLearn, true);
-  assert.equal(learnClanSkill(clan, id).ok, true);
+test('clan skills are the real tree: real level, scaled reputation, gold and an egg from the warehouse', () => {
+  const body = CLAN_SKILLS.find(entry => entry.name === 'Clan Body');
+  assert.ok(body && body.maxLevel === 3);
+  assert.ok(CLAN_SKILLS.some(entry => entry.name === 'Clan Might') && CLAN_SKILLS.length >= 20);
+  const clan = { level: 5, reputation: 900, warehouse: { gold: 100000, egg_wyvern: 1 }, skills: {} };
+  const state = getClanSkillsState(clan).skills.find(skill => skill.id === body.id);
+  assert.equal(state.canLearn, true);
+  assert.equal(learnClanSkill({ ...clan, level: 4 }, body.id).reason, 'clan_level_too_low');
+  assert.equal(learnClanSkill(clan, body.id).ok, true);
   assert.equal(clan.warehouse.egg_wyvern, 0);
-  assert.equal(learnClanSkill(clan, id).reason, 'not_enough_eggs');
+  assert.equal(learnClanSkill(clan, body.id).reason, 'clan_level_too_low', 'level 2 asks for a higher clan');
+  clan.level = 7;
+  assert.equal(learnClanSkill(clan, body.id).reason, 'not_enough_reputation');
+  assert.equal(clanSkillLevel(clan, body.id), 1);
 
-  const session = player();
-  const base = getEquipStatByName(session, 'attackMul', true);
+  const session = player('duelist');
+  const base = getEquipStatByName(session, 'maxHpMul', true);
   assert.equal(syncClanPerks(session, clan), true);
-  near(getEquipStatByName(session, 'attackMul', true), base * 1.01);
+  near(getEquipStatByName(session, 'maxHpMul', true), base * 1.025);
   syncClanPerks(session, null);
   assert.deepEqual(clanPerkModifiers(session), {});
+});
+
+test('a clan skill meant for casters does not reach a fighter and the other way round', () => {
+  const might = CLAN_SKILLS.find(entry => entry.name === 'Clan Might');
+  const empower = CLAN_SKILLS.find(entry => entry.name === 'Clan Empower');
+  const fighter = player('duelist');
+  fighter.game.clanPerks = { [might.id]: 2, [empower.id]: 2 };
+  near(clanPerkModifiers(fighter).attackMul, might.per * 2);
+  const caster = player('archmage');
+  caster.game.gameClass.stats.family = 'mage';
+  caster.game.clanPerks = { [might.id]: 2, [empower.id]: 2 };
+  near(clanPerkModifiers(caster).attackMul, empower.per * 2);
 });
 
 import { augmentItem, canAugment, lifestoneKey } from '../functions/game/equipment/augment.js';

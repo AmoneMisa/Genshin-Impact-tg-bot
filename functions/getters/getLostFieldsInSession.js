@@ -5,6 +5,7 @@ import potionsInInventoryTemplate from '../../template/potionsInInventoryTemplat
 import classStatsTemplate from '../../template/classStatsTemplate.js';
 import classSkillsTemplate from '../../template/classSkillsTemplate.js';
 import { migrateSessionEquipment } from '../game/equipment/migrateEquipment.js';
+import { migrateSessionClass } from '../game/classes/migrateClasses.js';
 
 export default function (session) {
     if (!session.hasOwnProperty("whatsNewSettings")) {
@@ -147,5 +148,7 @@ export default function (session) {
 
     // Gear from before the Lineage 2 catalog (random stats, SS / SSS grades) becomes catalog items.
     migrateSessionEquipment(session);
+    // The old class tree becomes the real Lineage 2 one.
+    migrateSessionClass(session);
     clampLevel(session);
 }

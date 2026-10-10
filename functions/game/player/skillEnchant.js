@@ -31,7 +31,7 @@ const COOLDOWN_REDUCTION_PER_LEVEL = 0.02; // -2% cooldown per enchant level (ma
 
 // gold/crystals/ironOre/sp needed to go from level N to N+1: base * (N+1) * tier factor.
 const ENCHANT_COST_BASE = { gold: 2000, crystals: 5, ironOre: 15, sp: 20 };
-const TIER_COST_MULTIPLIER = {1: 1, 2: 1.5, 3: 2};
+const TIER_COST_MULTIPLIER = {1: 1, 2: 1.5, 3: 2, 4: 2.5};
 
 export function getSkillEnchantLevel(skill) {
     return Math.max(0, Math.min(SKILL_ENCHANT_MAX_LEVEL, skill?.enchantLevel || 0));

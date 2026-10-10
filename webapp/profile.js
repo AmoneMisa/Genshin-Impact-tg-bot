@@ -82,7 +82,7 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
         <span class="profile-class-art" aria-hidden="true"></span>
         <span class="profile-class-badge">${CLASS_ICONS[item.name] || '⚔️'}</span>
         <strong>${escapeHtml(item.title)}</strong>
-        <small>${active ? 'Текущий' : chosen ? 'Выбран' : `⚔ ${formatNumber(item.stats.attack)} · 🛡 ${formatNumber(item.stats.defence)}`}</small>
+        <small>${active ? 'Текущий' : chosen ? 'Выбран' : `${item.raceTitle ? `${escapeHtml(item.raceTitle)} · ` : ''}⚔ ${formatNumber(item.stats.attack)} · 🛡 ${formatNumber(item.stats.defence)}`}</small>
       </button>`;
   }
 

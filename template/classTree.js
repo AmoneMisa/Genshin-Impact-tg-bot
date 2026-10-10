@@ -7,6 +7,7 @@
 // its sibling. test/class-balance.test.js re-checks the result at other levels.
 import scaleClassStats from '../functions/game/player/scaleClassStats.js';
 import classPower from '../functions/game/player/classPower.js';
+import {L2_CLASS_META, START_CLASSES, raceOf} from './l2ClassMeta.js';
 
 export const MAX_EVASION = 140;
 
@@ -41,9 +42,15 @@ export const TUNE = {
   warlock: {evasion: 1.417, accuracy: 1.176, block: 1.387, criticalChance: 0.871},
 /* calibration:end */
 };
+// The same for the 3rd profession (tier 4, level 76), written by scripts/balance/calibrate-tree.mjs.
+export const TUNE_TIER4 = {
+/* calibration4:begin */
+/* calibration4:end */
+};
 export const SOLVE_LEVELS = [20, 40, 70];
 export const TIER_POWER_STEP = 1.12;
-export const PROMOTE_LEVEL = {2: 20, 3: 40};
+// real tree: the 1st profession at level 20, the 2nd at 40 and the 3rd at 76 (tiers 2, 3 and 4)
+export const PROMOTE_LEVEL = {2: 20, 3: 40, 4: 76};
 const ATTACK_SWING = 0.3;  // focus +1 = +30% attack, focus -1 = -30%
 const DEFENCE_SWING = 0.4; // focus +1 = -40% defence, focus -1 = +40%
 
@@ -145,7 +152,7 @@ export const CLASS_TREE = {
 };
 
 // Adds to `bases` everything the tree below them describes.
-function promote(parent, spec, tier) {
+function promote(parent, spec, tier, {tune = true} = {}) {
     const child = {...parent};
     child.name = spec.name;
     child.translateName = spec.translateName;
@@ -193,8 +200,8 @@ function promote(parent, spec, tier) {
     }
     child.maxHp = child.hp = Math.round((low + high) / 2);
 
-    // Duel calibration (see TUNE above).
-    for (const [field, factor] of Object.entries(TUNE[spec.name] || {})) {
+    // Duel calibration (see TUNE above); the 3rd profession is a second step on the same shape, so it is not tuned twice.
+    for (const [field, factor] of Object.entries(tune ? (tier >= 4 ? TUNE_TIER4 : TUNE)[spec.name] || {} : {})) {
         const value = child[field] * factor;
         child[field] = ['maxHp', 'evasion', 'accuracy', 'block'].includes(field) ? Math.round(value) : round(value);
     }
@@ -204,17 +211,50 @@ function promote(parent, spec, tier) {
     return child;
 }
 
-/** Flat list of every promoted class, parents before their children. */
+/** The shape of each old profession: ARCHETYPES.crusader[2] is its 2nd-profession spec, [3] the 3rd's. */
+export const ARCHETYPES = {};
+for (const branches of Object.values(CLASS_TREE)) {
+    for (const branch of branches) ARCHETYPES[branch.name] = {2: branch, 3: branch.next};
+}
+
+/**
+ * The real High Five tree (template/l2ClassMeta.js) as a flat list of classes, parents before their children:
+ * the start classes are the stat block of their family, every profession is solved from its parent (or, when the
+ * family changes, from the family's block) to the power of its tier with the shape of its `like` archetype.
+ * `bases` are the family blocks (warrior, mage, priest, archer, rogue, berserk).
+ */
 export function buildPromotedClasses(bases) {
+    const familyBlock = family => bases.find(base => base.name === family);
+    const blocks = new Map();
     const result = [];
-    for (const base of bases) {
-        const branches = CLASS_TREE[base.name];
-        if (!branches) continue;
-        for (const branch of branches) {
-            const second = promote(base, branch, 2);
-            result.push(second);
-            if (branch.next) result.push(promote(second, branch.next, 3));
+    const metas = Object.entries(L2_CLASS_META).map(([id, meta]) => ({id: Number(id), ...meta})).sort((a, b) => a.level - b.level || a.id - b.id);
+    for (const meta of metas) {
+        const tier = meta.level + 1;
+        let block;
+        if (meta.level === 0) {
+            const family = familyBlock(meta.family);
+            block = {...family, name: meta.key, translateName: meta.ru, family: meta.family, tier: 1, parent: null, promoteLvl: 0};
+        } else {
+            const parent = blocks.get(meta.parent);
+            // A profession takes the shape of its archetype (`like`) climbed from its family's block, whatever its
+            // parent looks like: classes of one family, shape and tier have the same numbers, so the tree stays fair.
+            let from = familyBlock(meta.family);
+            for (let level = 2; level < tier; level++) from = promote(from, ARCHETYPES[meta.like][Math.min(level, 3)], level, {tune: true});
+            const spec = ARCHETYPES[meta.like][Math.min(tier, 3)];
+            block = promote(from, spec, tier, {tune: true});
+            block.name = meta.key;
+            block.translateName = meta.ru;
+            block.description = spec.description;
+            block.family = meta.family;
+            block.parent = parent.name;
+            block.tier = tier;
+            block.promoteLvl = PROMOTE_LEVEL[tier];
         }
+        block.l2Id = meta.id;
+        block.like = meta.like;
+        block.race = raceOf(meta.id);
+        blocks.set(meta.id, block);
+        result.push(block);
     }
     return result;
 }

@@ -10,7 +10,7 @@ function session() {
     gameClass:{stats:{name:'mage',translateName:'Маг',attack:100,defence:50,speed:60,
       hp:49773,maxHp:49773,mp:16211,maxMp:16211,cp:10589,maxCp:10589,
       accuracy:20,evasion:15,criticalChance:5,criticalDamage:1.5},skills:[]},
-    effects:[],passives:{},clanPerks:{'clan-might':2},
+    effects:[],passives:{},clanPerks:{'376':2},
   }};
 }
 test('character snapshot exposes six base stats, six defenses and real clan bonuses',()=>{
@@ -19,8 +19,8 @@ test('character snapshot exposes six base stats, six defenses and real clan bonu
   assert.equal(dto.player.sp,2147483647);
   assert.deepEqual(dto.characteristics.map(stat=>stat.id),['STR','DEX','CON','INT','WIT','MEN']);
   assert.equal(dto.attributes.resist.length,6);
-  assert.equal(dto.clanPassives[0].bonus,'+2%');
-  assert.equal(dto.combat.find(stat=>stat.id==='attack').value,102);
+  assert.equal(dto.clanPassives[0].bonus,'+3%');
+  assert.equal(dto.combat.find(stat=>stat.id==='attack').value,103);
   assert.equal(dto.equipment.items.length,0);
 });
 test('effects discard expired, exhausted and zero shields, preserving timed and charge semantics',()=>{

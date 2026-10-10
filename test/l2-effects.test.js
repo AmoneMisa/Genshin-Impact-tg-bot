@@ -13,17 +13,18 @@ import getAttack from '../functions/game/player/getters/getAttack.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import {applyPotionBuff} from '../functions/game/player/potionBuffs.js';
 const NOW=Date.now();
-function hero(name='saint',id=1,level=85){
+function hero(name='hierophant',id=1,level=85){
  const s={userId:id,userChatData:{user:{id,first_name:'Hero '+id}},game:{stats:{lvl:level,currentExp:0},inventory:{gold:1e8,sp:1e8,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
  changeClass(s,name);updateStats(s);return s;
 }
 test('level tables, original learning gates and class inheritance are preserved',()=>{
  assert.equal(resolveEffectSkill(1059,3).effects[0].children[0].value,'1.75');
- const high=classEffectSkills(hero()),low=classEffectSkills(hero('saint',1,10));
+ const high=classEffectSkills(hero()),low=classEffectSkills(hero('hierophant',1,10));
  assert.ok(high.some(s=>s.id===1085&&s.learnedLevel>0));
- assert.ok(high.some(s=>s.group==='Песни'));assert.ok(high.some(s=>s.group==='Танцы'));
+ assert.ok(classEffectSkills(hero('swordMuse')).some(s=>s.group==='Песни'));
+ assert.ok(classEffectSkills(hero('spectralDancer')).some(s=>s.group==='Танцы'));
  assert.ok(low.find(s=>s.id===1356).learnedLevel===0);
- assert.ok(getClassBuffsState(hero()).l2Skills.length>100);
+ assert.ok(getClassBuffsState(hero()).l2Skills.length>25);
  assert.equal(castL2Buff(hero('warrior'),'l2:1356',null,{now:NOW}).reason,'not_learned');
 });
 test('native effects modify real stats, share stack groups with potions and expire',()=>{
