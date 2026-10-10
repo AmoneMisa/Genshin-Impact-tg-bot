@@ -9,6 +9,7 @@ import { itemRow, lootInfo } from '../hunt/lootTable.js';
 import { HUNT } from '../hunt/huntConfig.js';
 import getCurrentMp from '../player/getters/getCurrentMp.js';
 import {hennaOfDye, professionTier, professionLevel, TATTOO_MIN_TIER} from '../player/tattoos.js';
+import customSets from '../../../template/customSets.js';
 import skillUsagePayCost from '../player/skillUsagePayCost.js';
 
 // A recipe id is the catalog item it makes, or `recipe:<recipe item>` for a real recipe that makes a material
@@ -101,6 +102,12 @@ export function getRecipe(itemId) {
     for (const [family, part] of Object.entries(usesOf(item) || {})) {
         if (family === 'ironOre') ironOre = Math.max(1, Math.round(config().ironOre[index] * share * part));
         else materials[craftMaterialKey(family, item.grade)] = Math.max(1, Math.round(config().count[index] * share * part));
+    }
+
+    // the custom armor line costs more of the grade's materials than the real set it mirrors
+    if (item.custom) {
+        ironOre = Math.round(ironOre * customSets.craftFactor);
+        for (const key of Object.keys(materials)) materials[key] = Math.round(materials[key] * customSets.craftFactor);
     }
 
     const rates = config().successRate;

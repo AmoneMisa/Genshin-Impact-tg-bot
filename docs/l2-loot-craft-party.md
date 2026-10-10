@@ -77,3 +77,12 @@
 
 Доказательства даёт Гильдия по реальным курсам за то, что выпало из рыбы: Fish Oil 1, Greater 5, Premium 25, Fish Scale 4, Shiny Fish Scale 6, Fish Gem 10, Shiny Fish Gem 20, Thin Fish Bone 6, Thick Fish Bone 9. Масла и кости нужны и для красок, так что их приходится делить между мастерством и красками.
 
+
+## Custom armor sets (NG – S84)
+
+`template/customSets.js`: the game's own armor line next to the Lineage 2 sets — 8 grades × heavy / light / robe = 24 sets, 104 parts (`custom:<grade>:<type>:<part>`).
+
+- **Source:** crafted only, from the grade's crafting materials (`craft_binder/leather/fiber_<grade>` that the raid bosses drop) and iron ore, at 1.25× the generated recipe. They are not in shops, chests, gacha or drops; the recipe is learned like any other.
+- **Balance:** parts carry 92 % of the defence of the real set of the same grade and type; the full-set bonus is a ladder (tank: HP / defence / block, skirmisher: attack / speed / MP, caster: MP / attack / speed), worth 85–100 % of the real set in `test/custom-sets.test.js`.
+- **Weapons:** the line has none; custom weapons stay the very rare epic weapons (`template/epicWeapons.js`).
+- **Art:** the parts use the existing painted custom designs by kind and grade band (opal, dusk, nightweave …); named paintings per part can be added to `catalog-item-art.js` later.

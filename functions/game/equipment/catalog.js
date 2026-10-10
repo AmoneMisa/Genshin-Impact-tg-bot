@@ -4,6 +4,7 @@
 import { randomBytes } from 'node:crypto';
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
 import epicWeapons from '../../../template/epicWeapons.js';
+import customSets from '../../../template/customSets.js';
 import { classFamily } from '../classes/classFamily.js';
 
 export const ARMOR_TYPES = Object.freeze(['heavy', 'light', 'robe']);
@@ -161,6 +162,36 @@ function buildEpic(template, epic) {
     return item;
 }
 
+// The custom armor line (template/customSets.js): one crafted set per grade and armor type, built on the defence of
+// the Lineage 2 set of the same grade and type. Never sold, rolled or dropped as a finished item.
+export const customSetId = (gradeName, type) => `custom:${gradeName}:${type}`;
+
+function buildCustomArmor(template, grade, kind, config = customSets) {
+    const index = gradeIndex(grade.name, template);
+    const set = config.sets[kind.type]?.[index];
+    const noun = config.parts[kind.type]?.[kind.category];
+    const real = template.lineage.armor[kind.type][index][kind.category];
+    if (!set || !noun || real === undefined) return null;
+    const item = entry(template, grade, 'armor', kind, `${set.name} · ${noun}`, {
+        setId: customSetId(grade.name, kind.type),
+        setName: `Комплект «${set.name}»`,
+        custom: true,
+        lineage: {pDef: Math.round(real * config.defenceFactor), custom: true}
+    });
+    item.id = `custom:${grade.name}:${kind.type}:${kind.category}`;
+    item.characteristics.defence = defenceFromReal(template, index, real * config.defenceFactor);
+    return item;
+}
+
+/** The full-set bonus of a custom set by its set id, or null when the id is not a custom set. */
+export function customSetBonus(setId, config = customSets) {
+    const match = /^custom:([^:]+):([^:]+)$/.exec(String(setId || ''));
+    if (!match) return null;
+    const index = gradeIndex(match[1]);
+    const bonus = config.sets[match[2]]?.[index]?.bonus;
+    return bonus ? {...bonus} : null;
+}
+
 export function buildCatalog(template = equipmentTemplate) {
     const items = [];
     for (const grade of template.grades) {
@@ -174,6 +205,12 @@ export function buildCatalog(template = equipmentTemplate) {
         }
     }
     for (const epic of template.lineage.epic || []) items.push(buildEpic(template, epic));
+    for (const grade of template.grades) {
+        for (const kind of template.itemType.find(group => group.name === 'armor').kind) {
+            const part = buildCustomArmor(template, grade, kind);
+            if (part) items.push(part);
+        }
+    }
     for(const epic of epicWeapons) {
         const base=items.find(item=>item.id===`S84:weapon:${epic.kind}`);
         if(!base)continue;

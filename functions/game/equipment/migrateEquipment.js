@@ -31,9 +31,9 @@ function legacyArmorTarget(item) {
 function findDefinition(item, grade) {
     const catalog = getCatalog();
     const armor = item.mainType === 'armor' ? legacyArmorTarget(item) : null;
-    return catalog.find(entry => !entry.epic && entry.grade === grade && entry.mainType === item.mainType
+    return catalog.find(entry => !entry.epic && !entry.custom && entry.grade === grade && entry.mainType === item.mainType
             && entry.kind === (armor ? armor.kind : item.kind) && (!armor || entry.category === armor.category))
-        || catalog.find(entry => !entry.epic && entry.grade === grade && entry.mainType === item.mainType
+        || catalog.find(entry => !entry.epic && !entry.custom && entry.grade === grade && entry.mainType === item.mainType
             && Array.isArray(item.slots) && entry.slots.join() === item.slots.join())
         || null;
 }

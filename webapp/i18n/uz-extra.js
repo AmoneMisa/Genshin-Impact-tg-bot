@@ -1,8 +1,10 @@
 import character from './uz-character.js';
+import customSets from './uz-custom-sets.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
   ...character,
+  ...customSets,
   'Til / Язык': 'Til / Язык',
   'Language · Язык': 'Language · Til',
   // Short tokens that show up inside composed strings ("Ур. 5 · Маг").

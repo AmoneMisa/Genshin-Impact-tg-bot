@@ -1,7 +1,7 @@
 // What an equipped item adds on top of its fixed characteristics: the bonus of its enchant level and
 // the full-set bonus of its armor set. getEquipStatByName.js folds both into the combat stats.
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
-import { gradeIndex } from './catalog.js';
+import { gradeIndex, customSetBonus } from './catalog.js';
 
 const config = () => equipmentTemplate.enchant;
 
@@ -41,7 +41,9 @@ export function isFactorStat(name) {
 }
 
 /** The full-set bonus of an armor type at a grade: the real set's bonus converted to game stats (no-grade armor has none). */
-export function setBonusValues(gradeName, armorType) {
+export function setBonusValues(gradeName, armorType, setId = null) {
+    const custom = customSetBonus(setId);
+    if (custom) return custom;
     const index = gradeIndex(gradeName);
     const set = equipmentTemplate.lineage?.armor?.[armorType]?.[index];
     return set ? {...set.bonus} : {};
@@ -81,7 +83,7 @@ export function activeSets(equipmentStats) {
         return {
             setId: set.setId, name: set.name, grade: set.grade, type: set.type,
             pieces: parts.size, complete,
-            bonus: complete ? setBonusValues(set.grade, set.type) : {}
+            bonus: complete ? setBonusValues(set.grade, set.type, set.setId) : {}
         };
     });
 }

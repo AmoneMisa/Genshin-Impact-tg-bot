@@ -21,8 +21,8 @@ export default function generateRandomEquipment(currentLvl, grade, options = {})
     }
 
     const chosenGrade = pickGrade(currentLvl, grade, options.exact);
-    // Epic jewellery only drops from its raid boss.
-    let pool = getCatalog().filter(item => item.grade === chosenGrade.name && !item.epic);
+    // Epic jewellery only drops from its raid boss, custom sets are crafted.
+    let pool = getCatalog().filter(item => item.grade === chosenGrade.name && !item.epic && !item.custom);
 
     const mainType = options.mainType || pickMainType(pool);
     pool = pool.filter(item => item.mainType === mainType);
