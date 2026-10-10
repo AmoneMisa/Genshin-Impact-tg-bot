@@ -31,6 +31,8 @@ import { getEffectiveSkillCost } from '../functions/game/player/skillEnchant.js'
 import { bossStatusesDto, playerEffectsDto } from './bossEffects.js';
 import { armShots, clearShots, getShotsState } from '../functions/game/shots/shots.js';
 import { hasAmmo, spendAmmo } from '../functions/game/shots/ammo.js';
+import {getHotbar,HOTBAR_MAX} from '../functions/game/player/hotbar.js';
+import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
 
 export { bossStatusesDto, playerEffectsDto };
 
@@ -244,6 +246,7 @@ export async function getBossState(session, chatId, now = Date.now()) {
   const maxCp = number(getMaxCp(session, session.game.gameClass), 0);
   const currentCp = number(getCurrentCp(session, session.game.gameClass), 0);
   const respawnRemainMs = Math.max(0, number(session?.game?.respawnTime) - now);
+  const special = battleSpecialDto(session,now);
   const player = {
     name: session?.userId ? (await getUserName(session.userId, 'name') || 'Игрок') : 'Игрок',
     level: number(session?.game?.stats?.lvl, 1),
@@ -261,7 +264,10 @@ export async function getBossState(session, chatId, now = Date.now()) {
     maxMp,
     mpPercent: percent(currentMp, maxMp),
     respawnRemainMs,
-    skills,
+    skills: excludeToggleSkills(skills,special),
+    hotbar: getHotbar(session),
+    hotbarMax: HOTBAR_MAX,
+    special,
     // Potions for the quick-use bar in the fight.
     potions: potionBarDto(session),
     shots: getShotsState(session),

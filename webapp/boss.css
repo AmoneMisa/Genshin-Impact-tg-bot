@@ -238,6 +238,9 @@ button.mmo-frame:active { transform: scale(.99); }
 .mmo-link { border: 0; background: none; color: #d8b36a; font: inherit; text-decoration: underline; cursor: pointer; padding: 0; }
 
 .mmo-hotbar { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+.boss-panel .mmo-hotbar.icons-only { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; }
+.boss-panel .mmo-hotbar.icons-only .mmo-skill { min-height: 52px; aspect-ratio: 1; padding: 4px; align-content: center; justify-items: center; }
+@media(min-width:680px){.boss-panel .mmo-hotbar.icons-only{grid-template-columns:repeat(8,minmax(0,1fr))}}
 .mmo-skill {
   position: relative; overflow: hidden;
   display: grid; justify-items: center; gap: 2px;

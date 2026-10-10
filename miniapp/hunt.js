@@ -19,7 +19,7 @@ import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getUserName from '../functions/getters/getUserName.js';
-import { getHotbar, setHotbar, specialSkills, activateLifeStone, HOTBAR_MAX } from '../functions/game/player/hotbar.js';
+import { getHotbar, setHotbar, activateLifeStone, HOTBAR_MAX } from '../functions/game/player/hotbar.js';
 import { castL2Buff } from './l2Buffs.js';
 import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
 

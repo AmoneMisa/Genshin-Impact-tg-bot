@@ -1,6 +1,8 @@
 import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
 import {
-  damageMeter, encounterPanel, escapeHtml, formatDuration, formatNumber, hotbar, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
+  damageMeter, encounterPanel, escapeHtml, formatDuration, formatNumber, hotbar, hotbarChoice, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
+import {l2SkillIcon} from './art/l2-extra-art.js';
+import {l2EffectIcon} from './art/l2-effects-art.js';
 
 const REASONS = {
   already_summoned: 'Босс уже призван.',
@@ -50,6 +52,22 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   let timer = null;
   // Damage skills go to this target: 'boss' or a minion id.
   let selectedTarget = 'boss';
+  let skillTab='skills',editBar=false,barDraft=[];
+
+  function skillBarHtml(player) {
+    const max=player.hotbarMax||16;
+    const tabs=`<div class="hunt-bar-tabs" role="tablist"><button type="button" role="tab" aria-selected="${skillTab==='skills'}" data-bar-tab="skills" class="${skillTab==='skills'?'active':''}">Умения</button><button type="button" role="tab" aria-selected="${skillTab==='special'}" data-bar-tab="special" class="${skillTab==='special'?'active':''}">ЛС и переключаемые</button></div>`;
+    if(skillTab==='special')return tabs+`<div class="mmo-hotbar icons-only">${(player.special||[]).map(row=>`<button type="button" class="mmo-skill boss-skill special ${row.running?'on':''}" data-special="${escapeHtml(row.id)}" ${row.canUse&&!pending?'':'disabled'} title="${escapeHtml(row.name+' — '+(row.description||''))}" aria-label="${escapeHtml(row.name)}"><span class="mmo-skill-icon">${l2EffectIcon(row.id)||l2SkillIcon(row.iconId)||l2SkillIcon(row.name)}</span><small class="mmo-skill-cost">${formatNumber(row.costMp||0)}</small></button>`).join('')||'<p class="party-note">Нет навыков от ЛС и переключаемых навыков.</p>'}</div>`;
+    if(editBar)return tabs+`<div class="hunt-bar-edit"><small>Выбрано ${barDraft.length} из ${max}</small><div class="mmo-hotbar icons-only">${player.skills.map(skill=>hotbarChoice(skill,{on:barDraft.includes(skill.index),position:barDraft.indexOf(skill.index)+1})).join('')}</div><div class="hunt-bar-actions"><button type="button" class="hunt-toggle" data-bar-save ${barDraft.length?'':'disabled'}>Сохранить</button><button type="button" class="hunt-toggle" data-bar-cancel>Отмена</button></div></div>`;
+    return tabs+hotbar(player.skills,{chosen:player.hotbar})+`<div class="hunt-bar-actions"><button type="button" class="hunt-toggle" data-bar-edit>Выбрать навыки · ${(player.hotbar||[]).length}/${max}</button></div>`;
+  }
+
+  async function skillPanelAction(path,body,after=()=>{}) {
+    if(pending)return;pending=true;
+    try {const result=await api(path,{method:'POST',body:JSON.stringify(body)});if(result.state)renderState(result.state);after();await refresh();}
+    catch(error){feedback.textContent=error.payload?.message||error.message;}
+    finally {pending=false;renderAll();}
+  }
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay boss-overlay';
@@ -391,6 +409,16 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   }
 
   function bind() {
+    content.querySelectorAll('[data-bar-tab]').forEach(button=>button.addEventListener('click',()=>{skillTab=button.dataset.barTab;editBar=false;renderAll();}));
+    content.querySelector('[data-bar-edit]')?.addEventListener('click',()=>{editBar=true;barDraft=[...(state.player.hotbar||[])];renderAll();});
+    content.querySelector('[data-bar-cancel]')?.addEventListener('click',()=>{editBar=false;renderAll();});
+    content.querySelectorAll('[data-hotbar-toggle]').forEach(button=>button.addEventListener('click',()=>{
+      const index=Number(button.dataset.hotbarToggle);
+      if(barDraft.includes(index))barDraft=barDraft.filter(i=>i!==index);else if(barDraft.length<(state.player.hotbarMax||16))barDraft.push(index);else feedback.textContent='Можно выбрать максимум 16 навыков.';
+      renderAll();
+    }));
+    content.querySelector('[data-bar-save]')?.addEventListener('click',()=>skillPanelAction('/api/hunt/hotbar',{slots:barDraft},()=>{editBar=false;}));
+    content.querySelectorAll('[data-special]').forEach(button=>button.addEventListener('click',()=>skillPanelAction('/api/hunt/special',{id:button.dataset.special})));
     content.querySelectorAll('[data-boss-potion]').forEach(button => {
       button.addEventListener('click', () => drinkPotion(button.dataset.bossPotion));
     });
@@ -444,7 +472,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       ${encounterPanel(boss, selectedTarget)}
       ${bossAttacksPanel(boss)}
       ${player.respawnRemainMs > 0 ? `<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>` : ''}
-      ${hotbar(player.skills)}
+      ${skillBarHtml(player)}
       ${potionBar(player.potions, { disabled: pending || player.respawnRemainMs > 0 })}
       ${partyStrip(boss.damageList)}
       <div class="mmo-section-title"><strong>Урон рейда</strong><small>${boss.damageList.length} участников · <button type="button" class="mmo-link" data-boss-refresh>обновить</button></small></div>
