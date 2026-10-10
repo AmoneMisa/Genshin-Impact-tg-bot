@@ -1,6 +1,7 @@
 // Exercise the actual merchant, inventory and party screens with original L2 assets.
 import fs from 'node:fs';
 import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {getMerchantsState} from '../../miniapp/merchants.js';
@@ -26,6 +27,16 @@ changePlayerGameClass(session,'mage');updatePlayerStats(session);
 for(const key of ['scroll_A','blessed_S','craft_gem_D','seal_red','soul_blue_17','lifestone_top_S','attr_crystal_dark','l2_5965','l2_12374','l2_2133','l2_2134','l2_1','l2_1787'])addMaterial(session,key,10);
 const chat={members:[session]};session.ownerDocument=()=>chat;createParty(chat,session);
 try{
+ const gallery=await browser.newPage({viewport:{width:390,height:900}});
+ await gallery.goto(pathToFileURL(path.resolve('docs/l2-assets-preview.html')).href);
+ const crystals=gallery.locator('section').filter({has:gallery.getByRole('heading',{name:'Кристаллы души SA — все уровни 0–17',exact:true})});
+ assert.equal(await crystals.locator('figure').count(),54);
+ for(const colour of ['Красный','Синий','Зелёный'])for(let stage=0;stage<=17;stage++)assert.equal(await crystals.getByText(`${colour} SA · уровень ${stage}`,{exact:true}).count(),1);
+ await gallery.evaluate(async()=>{for(const image of document.images)await image.decode();});
+ assert.equal(await gallery.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'gallery overflow');
+ await crystals.screenshot({path:'docs/l2-sa-all-levels-390.png'});
+ await gallery.close();
+ console.log('Gallery: 54 SA crystals (three colours, levels 0–17), every image decoded');
  for(const width of [320,390,1100]){
   const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'}),errors=[],missing=[];
   page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)missing.push(r.url());});

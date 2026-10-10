@@ -87,12 +87,12 @@ const ROBE_ART = Object.freeze({ armor: 'mantle', gloves: 'bracers', greaves: 'l
 export function itemArtKey(kind, item = {}) {
   const original=L2_JEWELRY_IDENTITIES[catalogIdentity(item)];
   if(original && (item.mainType==='jewelry'||['ring','earring','amulet'].includes(kind)))return original;
+  const equipmentOriginal=L2_ITEM_IDENTITIES[catalogIdentity(item)];
+  if(equipmentOriginal)return equipmentOriginal;
   if(item.epicWeapon && keys.has('epic-weapon-'+item.epicWeapon))return 'epic-weapon-'+item.epicWeapon;
   if (item.epicBoss && keys.has(`epic-${item.epicBoss}`)) return `epic-${item.epicBoss}`;
   const namedArt = catalogArt.get(catalogIdentity(item));
   if (namedArt) return namedArt;
-  const missingOriginal=L2_ITEM_IDENTITIES[catalogIdentity(item)];
-  if(missingOriginal)return missingOriginal;
   const type = String(item.kind || '').toLowerCase();
   const grade = String(item.grade || '').trim().toUpperCase();
   if (kind === 'sword' && type === 'twohandedsword') kind = 'greatsword';

@@ -38,4 +38,4 @@ for key,art in plan['materials'].items():
             target=Path('webapp/art/items/v1')/f'{key}-{size}.webp'
             if target.exists():shutil.copyfile(dest/f'{art}-{size}.webp',target)
 for size in [128,256]:shutil.copyfile(dest/f"{plan['ui']['coin']}-{size}.webp",Path('webapp/art/ui/v1')/f'coin-{size}.webp')
-print(f"Converted {len(plan['assets'])} original client icons; weapon/armor paintings untouched.")
+print(f"Converted {len(plan['assets'])} original client icons; all catalogue equipment mapped to L2 icons.")

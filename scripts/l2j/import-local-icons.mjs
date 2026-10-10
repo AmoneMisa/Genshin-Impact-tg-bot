@@ -5,7 +5,6 @@ import path from 'node:path';
 import ITEMS from '../../template/l2Items.js';
 import MERCHANT from '../../template/merchantData.js';
 import {getCatalog} from '../../functions/game/equipment/catalog.js';
-import {CATALOG_ITEM_ART} from '../../webapp/art/catalog-item-art.js';
 import {lootInfo} from '../../functions/game/hunt/lootTable.js';
 const [source, definitions]=process.argv.slice(2);
 if(!source||!definitions)throw Error('Supply local icon and item XML folders');
@@ -69,11 +68,43 @@ for(const grade of ['A','S'])for(const [kind,name] of Object.entries({life:'Life
 for(const [kind,original] of Object.entries({gold:'etc_adena_i00',full:'weapon_small_sword_i00',piece:'etc_plate_silver_i00',recipe:'etc_recipe_white_i00',scroll:'etc_scroll_of_enchant_weapon_i05',lifestone:'etc_mineral_general_i03',attribute:'etc_fire_stone_i00',seal:'etc_water_rune_i00',dye:'etc_str_hena_i00',crystal:'etc_crystal_gold_i00',material:'etc_lump_gray_i00',consumable:'etc_potion_scarlet_i00',herb:'etc_herb_red_i00',other:'etc_adena_i00'}))categories[kind]=add('icon.'+original);
 fs.mkdirSync('.tmp',{recursive:true});
 const identities=Object.fromEntries(getCatalog().filter(item=>item.mainType==='jewelry'&&catalog[item.name.toLowerCase()]).map(item=>[[item.name,item.grade,item.kind,item.category].map(v=>String(v||'').trim().toLowerCase()).join('|'),catalog[item.name.toLowerCase()]]));
-const ready=new Set(CATALOG_ITEM_ART.map(item=>item.id)),equipment={},equipmentReferences=[];
+const equipment={},equipmentReferences=[];
 const clean=name=>name.toLowerCase().replace(/^sealed /,'').replace(/[^a-z0-9]/g,'');
 const slots={helmet:'head',gloves:'gloves',boots:'feet',greaves:'legs',body:'chest',fullBody:'fullarmor',bigShield:'lhand',smallShield:'lhand',sigill:'lhand'};
 const aliases={'Karmian Circlet':['Generic Circlet','armor_circlet_i00'],'Chain Gauntlets':['Chain Gloves','armor_t48_g_i00'],'Karmian Robe':['Karmian Tunic','armor_t53_u_i00'],'Sarnga':['Sarnga','weapon_sarnga_i00'],'Vesper Sheutjeh':['Vesper Schutze','weapon_vesper_schutze_i00'],'Vesper Magic Circlet':['Vesper Circlet','armor_circlet_i00'],'Vesper Gauntlets':['Vesper Gauntlet','armor_t94_g_i00'],'Vesper Magic Gloves':['Vesper Gloves','armor_t96_g_i00'],'Vesper Magic Boots':['Vesper Shoes','armor_t96_b_i00'],'Vesper Leather Armor':['Vesper Leather Breastplate','armor_t95_u_i00'],'Vesper Magic Robe':['Vesper Tunic','armor_t96_u_i00']};
-for(const item of getCatalog().filter(item=>item.mainType!=='jewelry'&&!ready.has(item.id))){
+const equivalentNames={
+ 'Strengthened Long Bow':'Strengthening Long Bow', 'Demon Dagger':"Demon's Dagger",
+ 'Devotion Robe':'Tunic of Devotion','Wooden Armor':'Wooden Breastplate',
+ 'Manticore Skin Armor':'Manticore Skin Shirt','Elven Mithril Robe':'Elven Mithril Tunic',
+ 'Avadon Helmet':'Avadon Circlet','Avadon Leather Helmet':'Avadon Circlet - Light Armor Use',
+ 'Avadon Magic Circlet':'Avadon Circlet - Robe','Avadon Gauntlets':'Avadon Gloves - Heavy Armor',
+ 'Avadon Leather Gloves':'Avadon Gloves - Light Armor','Avadon Magic Gloves':'Avadon Gloves - Robe',
+ 'Avadon Leather Boots':'Avadon Boots - Light Armor','Avadon Magic Boots':'Avadon Boots - Robe',
+ 'Avadon Magic Robe':'Avadon Robe','Tallum Leather Helmet':'Tallum Helmet - Light Armor Use',
+ 'Majestic Magic Circlet':'Majestic Circlet - Robe','Dark Crystal Gauntlets':'Dark Crystal Gloves - Heavy Armor',
+ 'Tallum Leather Gloves':'Tallum Gloves - Light Armor','Majestic Magic Gloves':'Majestic Gauntlets - Robe',
+ 'Tallum Leather Boots':'Tallum Boots - Light Armor','Majestic Magic Boots':'Majestic Boots - Robe',
+ 'Majestic Magic Robe':'Majestic Robe','Dynasty Magic Circlet':'Dynasty Circlet',
+ 'Dynasty Magic Gloves':'Dynasty Gloves','Dynasty Magic Boots':'Dynasty Shoes','Dynasty Magic Robe':'Dynasty Tunic',
+ 'Elven Mithril Gloves':'Elven Mithril Gloves of Fortune - 90-day limited period',
+};
+for(const [name,reference] of Object.entries(equivalentNames)){
+ const row=byName.get(reference.toLowerCase());if(row)aliases[name]=[row.name,row.icon.replace(/^icon\./,'')];
+}
+// Project-only low-grade parts use a matching client silhouette, with the reference recorded below.
+for(const [name,reference,icon] of [
+ ['Wooden Crossbow','Crossbow','weapon_rudecutter_crossbow_i00'],
+ ['Strengthened Long Bow','Strengthening Long Bow','weapon_strengthening_long_bow_i00'],
+ ['Devotion Circlet','Generic Circlet','armor_circlet_i00'],
+ ['Elven Mithril Circlet','Generic Circlet','armor_circlet_i00'],
+ ['Manticore Skin Helmet','Leather Helmet','armor_leather_helmet_i00'],
+ ['Drake Leather Helmet','Leather Helmet','armor_leather_helmet_i00'],
+ ...['Bronze','Wooden','Devotion'].flatMap(family=>[
+  [family+(family==='Bronze'?' Gauntlets':' Gloves'),'Gloves','armor_t06_g_i00'],
+  [family+' Boots','Leather Boots','armor_t09_b_i00'],
+ ]),
+])aliases[name]=[reference,icon];
+for(const item of getCatalog().filter(item=>item.mainType!=='jewelry')){
  let row=byName.get(item.name.toLowerCase())||[...byId.values()].find(row=>clean(row.name)===clean(item.name));
  if(!row&&aliases[item.name])row={name:aliases[item.name][0],icon:'icon.'+aliases[item.name][1]};
  if(!row&&item.mainType!=='weapon'){
@@ -87,5 +118,6 @@ for(const item of getCatalog().filter(item=>item.mainType!=='jewelry'&&!ready.ha
 const highlights=Object.fromEntries([...byName.values()].filter(row=>row.name==='Blank Scroll'||row.name==="Mammon's Varnish Enhancer"||/^SP Scroll/.test(row.name)).map(row=>[row.name,add(row.icon)]).filter(([,art])=>art));
 fs.writeFileSync('.tmp/l2-icon-import-plan.json',JSON.stringify({assets:Object.values(assets),materials,catalog,identities,equipment,equipmentReferences,categories,ui,highlights,missing:[...new Set(missing)]},null,2)+'\n');
 fs.writeFileSync('art-source/l2-redraw/missing-equipment.json',JSON.stringify(equipmentReferences,null,2)+'\n');
-console.log('Missing equipment supplied: '+equipmentReferences.length);
+console.log('Catalogue equipment supplied: '+equipmentReferences.length);
+console.log('Unmatched equipment: '+getCatalog().filter(item=>item.mainType!=='jewelry'&&!equipmentReferences.some(row=>row.id===item.id)).map(item=>item.name).join(', '));
 console.log(JSON.stringify({assets:Object.keys(assets).length,materials:Object.keys(materials).length,jewelry:Object.keys(catalog).length,missing:[...new Set(missing)]}));

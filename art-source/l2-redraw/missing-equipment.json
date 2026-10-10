@@ -1,5 +1,341 @@
 [
   {
+    "id": "noGrade:weapon:oneHandedSword",
+    "name": "Long Sword",
+    "reference": "Long Sword",
+    "art": "icon-weapon_long_sword_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:weapon:twoHandedSword",
+    "name": "Zweihander",
+    "reference": "Zweihander",
+    "art": "icon-weapon_zweihander_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:weapon:dagger",
+    "name": "Sword Breaker",
+    "reference": "Sword Breaker",
+    "art": "icon-weapon_sword_breaker_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:weapon:mace",
+    "name": "Willow Staff",
+    "reference": "Willow Staff",
+    "art": "icon-weapon_willow_staff_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:weapon:bow",
+    "name": "Composite Bow",
+    "reference": "Composite Bow",
+    "art": "icon-weapon_composition_bow_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:weapon:crossbow",
+    "name": "Wooden Crossbow",
+    "reference": "Crossbow",
+    "art": "icon-weapon_rudecutter_crossbow_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:weapon:blunt",
+    "name": "Club",
+    "reference": "Club",
+    "art": "icon-weapon_club_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:weapon:fists",
+    "name": "Viper Fang",
+    "reference": "Viper Fang",
+    "art": "icon-weapon_vipers_canine_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:armor:heavy:helmet",
+    "name": "Bronze Helmet",
+    "reference": "Bronze Helmet",
+    "art": "icon-armor_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:armor:light:helmet",
+    "name": "Wooden Helmet",
+    "reference": "Wooden Helmet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:armor:robe:helmet",
+    "name": "Devotion Circlet",
+    "reference": "Generic Circlet",
+    "art": "icon-armor_circlet_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:heavy:gloves",
+    "name": "Bronze Gauntlets",
+    "reference": "Gloves",
+    "art": "icon-armor_t06_g_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:light:gloves",
+    "name": "Wooden Gloves",
+    "reference": "Gloves",
+    "art": "icon-armor_t06_g_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:robe:gloves",
+    "name": "Devotion Gloves",
+    "reference": "Gloves",
+    "art": "icon-armor_t06_g_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:heavy:greaves",
+    "name": "Bronze Gaiters",
+    "reference": "Bronze Gaiters",
+    "art": "icon-armor_t34_l_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:armor:heavy:boots",
+    "name": "Bronze Boots",
+    "reference": "Leather Boots",
+    "art": "icon-armor_t09_b_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:light:boots",
+    "name": "Wooden Boots",
+    "reference": "Leather Boots",
+    "art": "icon-armor_t09_b_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:robe:boots",
+    "name": "Devotion Boots",
+    "reference": "Leather Boots",
+    "art": "icon-armor_t09_b_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:heavy:body",
+    "name": "Bronze Breastplate",
+    "reference": "Bronze Breastplate",
+    "art": "icon-armor_t34_u_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:armor:light:fullBody",
+    "name": "Wooden Armor",
+    "reference": "Wooden Breastplate",
+    "art": "icon-armor_t06_u_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:armor:robe:fullBody",
+    "name": "Devotion Robe",
+    "reference": "Tunic of Devotion",
+    "art": "icon-armor_t55_u_i00",
+    "exact": false
+  },
+  {
+    "id": "noGrade:shield:bigShield",
+    "name": "Bone Shield",
+    "reference": "Bone Shield",
+    "art": "icon-shield_bone_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:shield:smallShield",
+    "name": "Buckler",
+    "reference": "Buckler",
+    "art": "icon-shield_buckler_i00",
+    "exact": true
+  },
+  {
+    "id": "noGrade:shield:sigill",
+    "name": "Apprentice Sigil",
+    "reference": "Leather Shield",
+    "art": "icon-shield_leather_shield_i00",
+    "exact": false
+  },
+  {
+    "id": "D:weapon:oneHandedSword",
+    "name": "Elven Long Sword",
+    "reference": "Elven Long Sword",
+    "art": "icon-weapon_elven_long_sword_i00",
+    "exact": true
+  },
+  {
+    "id": "D:weapon:twoHandedSword",
+    "name": "Claymore",
+    "reference": "Claymore",
+    "art": "icon-weapon_claymore_i00",
+    "exact": true
+  },
+  {
+    "id": "D:weapon:dagger",
+    "name": "Mithril Dagger",
+    "reference": "Mithril Dagger",
+    "art": "icon-weapon_mithril_dagger_i00",
+    "exact": true
+  },
+  {
+    "id": "D:weapon:mace",
+    "name": "Ghost Staff",
+    "reference": "Ghost Staff",
+    "art": "icon-weapon_ghost_staff_i00",
+    "exact": true
+  },
+  {
+    "id": "D:weapon:bow",
+    "name": "Strengthened Long Bow",
+    "reference": "Strengthening Long Bow",
+    "art": "icon-weapon_strengthening_long_bow_i00",
+    "exact": false
+  },
+  {
+    "id": "D:weapon:crossbow",
+    "name": "Cranequin",
+    "reference": "Cranequin",
+    "art": "icon-weapon_hunting_gun_i00",
+    "exact": true
+  },
+  {
+    "id": "D:weapon:blunt",
+    "name": "Titan Hammer",
+    "reference": "Titan Hammer",
+    "art": "icon-weapon_giants_hammer_i00",
+    "exact": true
+  },
+  {
+    "id": "D:weapon:fists",
+    "name": "Bich'Hwa",
+    "reference": "Bich'Hwa",
+    "art": "icon-weapon_bichhwa_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:heavy:helmet",
+    "name": "Brigandine Helmet",
+    "reference": "Brigandine Helmet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:light:helmet",
+    "name": "Manticore Skin Helmet",
+    "reference": "Leather Helmet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": false
+  },
+  {
+    "id": "D:armor:robe:helmet",
+    "name": "Elven Mithril Circlet",
+    "reference": "Generic Circlet",
+    "art": "icon-armor_circlet_i00",
+    "exact": false
+  },
+  {
+    "id": "D:armor:heavy:gloves",
+    "name": "Brigandine Gauntlets",
+    "reference": "Brigandine Gauntlets",
+    "art": "icon-armor_t43_g_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:light:gloves",
+    "name": "Manticore Skin Gloves",
+    "reference": "Manticore Skin Gloves",
+    "art": "icon-armor_t42_g_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:robe:gloves",
+    "name": "Elven Mithril Gloves",
+    "reference": "Elven Mithril Gloves of Fortune - 90-day limited period",
+    "art": "icon-armor_t51_g_i00",
+    "exact": false
+  },
+  {
+    "id": "D:armor:heavy:greaves",
+    "name": "Brigandine Gaiters",
+    "reference": "Brigandine Gaiters",
+    "art": "icon-armor_t43_l_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:heavy:boots",
+    "name": "Brigandine Boots",
+    "reference": "Brigandine Boots",
+    "art": "icon-armor_t43_b_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:light:boots",
+    "name": "Manticore Skin Boots",
+    "reference": "Manticore Skin Boots",
+    "art": "icon-armor_t42_b_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:robe:boots",
+    "name": "Elven Mithril Boots",
+    "reference": "Elven Mithril Boots",
+    "art": "icon-armor_t51_b_i00",
+    "exact": true
+  },
+  {
+    "id": "D:armor:heavy:body",
+    "name": "Brigandine Breastplate",
+    "reference": "Mithril Breastplate",
+    "art": "icon-armor_t19_u_i00",
+    "exact": false
+  },
+  {
+    "id": "D:armor:light:fullBody",
+    "name": "Manticore Skin Armor",
+    "reference": "Manticore Skin Shirt",
+    "art": "icon-armor_t42_u_i00",
+    "exact": false
+  },
+  {
+    "id": "D:armor:robe:fullBody",
+    "name": "Elven Mithril Robe",
+    "reference": "Elven Mithril Tunic",
+    "art": "icon-armor_elven_tunic_i00",
+    "exact": false
+  },
+  {
+    "id": "D:shield:bigShield",
+    "name": "Square Shield",
+    "reference": "Square Shield",
+    "art": "icon-shield_square_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "D:shield:smallShield",
+    "name": "Plate Shield",
+    "reference": "Plate Shield",
+    "art": "icon-shield_plate_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "D:shield:sigill",
+    "name": "Mithril Sigil",
+    "reference": "Bronze Shield",
+    "art": "icon-shield_bronze_shield_i00",
+    "exact": false
+  },
+  {
     "id": "C:weapon:oneHandedSword",
     "name": "Samurai Longsword",
     "reference": "Samurai Longsword",
@@ -63,6 +399,13 @@
     "exact": true
   },
   {
+    "id": "C:armor:light:helmet",
+    "name": "Drake Leather Helmet",
+    "reference": "Leather Helmet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": false
+  },
+  {
     "id": "C:armor:robe:helmet",
     "name": "Karmian Circlet",
     "reference": "Generic Circlet",
@@ -75,6 +418,13 @@
     "reference": "Chain Gloves",
     "art": "icon-armor_t48_g_i00",
     "exact": false
+  },
+  {
+    "id": "C:armor:light:gloves",
+    "name": "Drake Leather Gloves",
+    "reference": "Drake Leather Gloves",
+    "art": "icon-armor_t21_g_i00",
+    "exact": true
   },
   {
     "id": "C:armor:robe:gloves",
@@ -98,6 +448,13 @@
     "exact": true
   },
   {
+    "id": "C:armor:light:boots",
+    "name": "Drake Leather Boots",
+    "reference": "Drake Leather Boots",
+    "art": "icon-armor_t21_b_i00",
+    "exact": true
+  },
+  {
     "id": "C:armor:robe:boots",
     "name": "Karmian Boots",
     "reference": "Karmian Boots",
@@ -110,6 +467,13 @@
     "reference": "Chain Mail Shirt",
     "art": "icon-armor_t48_u_i00",
     "exact": false
+  },
+  {
+    "id": "C:armor:light:fullBody",
+    "name": "Drake Leather Armor",
+    "reference": "Drake Leather Armor",
+    "art": "icon-armor_t21_ul_i00",
+    "exact": true
   },
   {
     "id": "C:armor:robe:fullBody",
@@ -126,10 +490,353 @@
     "exact": true
   },
   {
+    "id": "C:shield:smallShield",
+    "name": "Tower Shield",
+    "reference": "Tower Shield",
+    "art": "icon-shield_tower_shield_i00",
+    "exact": true
+  },
+  {
     "id": "C:shield:sigill",
     "name": "Mystic Sigil",
     "reference": "Tower Shield",
     "art": "icon-shield_tower_shield_i00",
+    "exact": false
+  },
+  {
+    "id": "B:weapon:oneHandedSword",
+    "name": "Sword of Damascus",
+    "reference": "Sword of Damascus",
+    "art": "icon-weapon_sword_of_damascus_i00",
+    "exact": true
+  },
+  {
+    "id": "B:weapon:twoHandedSword",
+    "name": "Guardian Sword",
+    "reference": "Guardian Sword",
+    "art": "icon-weapon_guardians_sword_i00",
+    "exact": true
+  },
+  {
+    "id": "B:weapon:dagger",
+    "name": "Demon Dagger",
+    "reference": "Demon's Dagger",
+    "art": "icon-weapon_demons_sword_i00",
+    "exact": false
+  },
+  {
+    "id": "B:weapon:mace",
+    "name": "Staff of Evil Spirits",
+    "reference": "Staff of Evil Spirits",
+    "art": "icon-weapon_staff_of_evil_sprit_i00",
+    "exact": true
+  },
+  {
+    "id": "B:weapon:bow",
+    "name": "Bow of Peril",
+    "reference": "Bow of Peril",
+    "art": "icon-weapon_hazard_bow_i00",
+    "exact": true
+  },
+  {
+    "id": "B:weapon:crossbow",
+    "name": "Hell Hound",
+    "reference": "Hell Hound",
+    "art": "icon-weapon_hell_hound_i00",
+    "exact": true
+  },
+  {
+    "id": "B:weapon:blunt",
+    "name": "Ice Storm Hammer",
+    "reference": "Ice Storm Hammer",
+    "art": "icon-weapon_ice_storm_hammer_i00",
+    "exact": true
+  },
+  {
+    "id": "B:weapon:fists",
+    "name": "Arthro Nail",
+    "reference": "Arthro Nail",
+    "art": "icon-weapon_arthro_nail_i00",
+    "exact": true
+  },
+  {
+    "id": "B:armor:heavy:helmet",
+    "name": "Avadon Helmet",
+    "reference": "Avadon Circlet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:light:helmet",
+    "name": "Avadon Leather Helmet",
+    "reference": "Avadon Circlet - Light Armor Use",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:robe:helmet",
+    "name": "Avadon Magic Circlet",
+    "reference": "Avadon Circlet - Robe",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:heavy:gloves",
+    "name": "Avadon Gauntlets",
+    "reference": "Avadon Gloves - Heavy Armor",
+    "art": "icon-armor_t66_g_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:light:gloves",
+    "name": "Avadon Leather Gloves",
+    "reference": "Avadon Gloves - Light Armor",
+    "art": "icon-armor_t67_g_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:robe:gloves",
+    "name": "Avadon Magic Gloves",
+    "reference": "Avadon Gloves - Robe",
+    "art": "icon-armor_t59_g_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:heavy:greaves",
+    "name": "Avadon Gaiters",
+    "reference": "Avadon Gaiters",
+    "art": "icon-armor_t66_l_i00",
+    "exact": true
+  },
+  {
+    "id": "B:armor:heavy:boots",
+    "name": "Avadon Boots",
+    "reference": "Sealed Avadon Boots",
+    "art": "icon-armor_t66_b_i02",
+    "exact": true
+  },
+  {
+    "id": "B:armor:light:boots",
+    "name": "Avadon Leather Boots",
+    "reference": "Avadon Boots - Light Armor",
+    "art": "icon-armor_t67_b_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:robe:boots",
+    "name": "Avadon Magic Boots",
+    "reference": "Avadon Boots - Robe",
+    "art": "icon-armor_t59_b_i00",
+    "exact": false
+  },
+  {
+    "id": "B:armor:heavy:body",
+    "name": "Avadon Breastplate",
+    "reference": "Avadon Breastplate",
+    "art": "icon-armor_t66_u_i00",
+    "exact": true
+  },
+  {
+    "id": "B:armor:light:fullBody",
+    "name": "Avadon Leather Armor",
+    "reference": "Avadon Leather Armor",
+    "art": "icon-armor_t67_ul_i00",
+    "exact": true
+  },
+  {
+    "id": "B:armor:robe:fullBody",
+    "name": "Avadon Magic Robe",
+    "reference": "Avadon Robe",
+    "art": "icon-armor_t59_ul_i00",
+    "exact": false
+  },
+  {
+    "id": "B:shield:bigShield",
+    "name": "Dark Dragon Shield",
+    "reference": "Dark Dragon Shield",
+    "art": "icon-shield_dark_dragon_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "B:shield:smallShield",
+    "name": "Masterpiece Shield",
+    "reference": "Masterpiece Shield",
+    "art": "icon-shield_masterpiece_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "B:shield:sigill",
+    "name": "Sage Sigil",
+    "reference": "Shield of Victory",
+    "art": "icon-shield_small_shield_i00",
+    "exact": false
+  },
+  {
+    "id": "A:weapon:oneHandedSword",
+    "name": "Sirra's Blade",
+    "reference": "Sirra's Blade",
+    "art": "icon-weapon_sirr_blade_i00",
+    "exact": true
+  },
+  {
+    "id": "A:weapon:twoHandedSword",
+    "name": "Sword of Ipos",
+    "reference": "Sword of Ipos",
+    "art": "icon-weapon_sword_of_ipos_i00",
+    "exact": true
+  },
+  {
+    "id": "A:weapon:dagger",
+    "name": "Naga Storm",
+    "reference": "Naga Storm",
+    "art": "icon-weapon_naga_storm_i00",
+    "exact": true
+  },
+  {
+    "id": "A:weapon:mace",
+    "name": "Cabrio's Hand",
+    "reference": "Cabrio's Hand",
+    "art": "icon-weapon_hand_of_cabrio_i00",
+    "exact": true
+  },
+  {
+    "id": "A:weapon:bow",
+    "name": "Soul Bow",
+    "reference": "Soul Bow",
+    "art": "icon-weapon_soul_bow_i00",
+    "exact": true
+  },
+  {
+    "id": "A:weapon:crossbow",
+    "name": "Reaper",
+    "reference": "Reaper",
+    "art": "icon-weapon_soul_shooter_i00",
+    "exact": true
+  },
+  {
+    "id": "A:weapon:blunt",
+    "name": "Doom Crusher",
+    "reference": "Doom Crusher",
+    "art": "icon-weapon_doom_crusher_i00",
+    "exact": true
+  },
+  {
+    "id": "A:weapon:fists",
+    "name": "Dragon Grinder",
+    "reference": "Dragon Grinder",
+    "art": "icon-weapon_dragon_grinder_i00",
+    "exact": true
+  },
+  {
+    "id": "A:armor:heavy:helmet",
+    "name": "Dark Crystal Helmet",
+    "reference": "Dark Crystal Helmet",
+    "art": "icon-armor_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "A:armor:light:helmet",
+    "name": "Tallum Leather Helmet",
+    "reference": "Tallum Helmet - Light Armor Use",
+    "art": "icon-armor_helmet_i00",
+    "exact": false
+  },
+  {
+    "id": "A:armor:robe:helmet",
+    "name": "Majestic Magic Circlet",
+    "reference": "Majestic Circlet - Robe",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": false
+  },
+  {
+    "id": "A:armor:heavy:gloves",
+    "name": "Dark Crystal Gauntlets",
+    "reference": "Dark Crystal Gloves - Heavy Armor",
+    "art": "icon-armor_t74_g_i00",
+    "exact": false
+  },
+  {
+    "id": "A:armor:light:gloves",
+    "name": "Tallum Leather Gloves",
+    "reference": "Tallum Gloves - Light Armor",
+    "art": "icon-armor_t78_g_i00",
+    "exact": false
+  },
+  {
+    "id": "A:armor:robe:gloves",
+    "name": "Majestic Magic Gloves",
+    "reference": "Majestic Gauntlets - Robe",
+    "art": "icon-armor_t85_g_i00",
+    "exact": false
+  },
+  {
+    "id": "A:armor:heavy:greaves",
+    "name": "Dark Crystal Gaiters",
+    "reference": "Dark Crystal Gaiters",
+    "art": "icon-armor_t74_l_i00",
+    "exact": true
+  },
+  {
+    "id": "A:armor:heavy:boots",
+    "name": "Dark Crystal Boots",
+    "reference": "Dark Crystal Boots",
+    "art": "icon-armor_t15_b_i00",
+    "exact": true
+  },
+  {
+    "id": "A:armor:light:boots",
+    "name": "Tallum Leather Boots",
+    "reference": "Tallum Boots - Light Armor",
+    "art": "icon-armor_t78_b_i00",
+    "exact": false
+  },
+  {
+    "id": "A:armor:robe:boots",
+    "name": "Majestic Magic Boots",
+    "reference": "Majestic Boots - Robe",
+    "art": "icon-armor_t85_b_i00",
+    "exact": false
+  },
+  {
+    "id": "A:armor:heavy:body",
+    "name": "Dark Crystal Breastplate",
+    "reference": "Dark Crystal Breastplate",
+    "art": "icon-armor_t74_u_i00",
+    "exact": true
+  },
+  {
+    "id": "A:armor:light:fullBody",
+    "name": "Tallum Leather Armor",
+    "reference": "Tallum Leather Armor",
+    "art": "icon-armor_t78_ul_i00",
+    "exact": true
+  },
+  {
+    "id": "A:armor:robe:fullBody",
+    "name": "Majestic Magic Robe",
+    "reference": "Majestic Robe",
+    "art": "icon-armor_t85_ul_i00",
+    "exact": false
+  },
+  {
+    "id": "A:shield:bigShield",
+    "name": "Shield of Nightmare",
+    "reference": "Shield of Nightmare",
+    "art": "icon-shield_shield_of_nightmare_i00",
+    "exact": true
+  },
+  {
+    "id": "A:shield:smallShield",
+    "name": "Shield of Nightmare II",
+    "reference": "Dark Crystal Shield",
+    "art": "icon-shield_dark_crystal_shield_i00",
+    "exact": false
+  },
+  {
+    "id": "A:shield:sigill",
+    "name": "Majestic Sigil",
+    "reference": "Dark Crystal Shield",
+    "art": "icon-shield_dark_crystal_shield_i00",
     "exact": false
   },
   {
@@ -217,6 +924,13 @@
     "exact": true
   },
   {
+    "id": "S:armor:light:gloves",
+    "name": "Draconic Leather Gloves",
+    "reference": "Draconic Leather Gloves",
+    "art": "icon-armor_t89_g_i00",
+    "exact": true
+  },
+  {
     "id": "S:armor:robe:gloves",
     "name": "Major Arcana Gloves",
     "reference": "Major Arcana Gloves",
@@ -280,10 +994,185 @@
     "exact": true
   },
   {
+    "id": "S:shield:smallShield",
+    "name": "Imperial Guard Shield",
+    "reference": "Dragon Shield",
+    "art": "icon-shield_shield_of_nightmare_i00",
+    "exact": false
+  },
+  {
     "id": "S:shield:sigill",
     "name": "Arcana Sigil",
     "reference": "Arcana Sigil",
     "art": "icon-arcana_sigil_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:oneHandedSword",
+    "name": "Dynasty Sword",
+    "reference": "Dynasty Sword",
+    "art": "icon-weapon_dynasty_blade_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:twoHandedSword",
+    "name": "Dynasty Blade",
+    "reference": "Dynasty Blade",
+    "art": "icon-weapon_dynasty_twohand_sword_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:dagger",
+    "name": "Dynasty Knife",
+    "reference": "Dynasty Knife",
+    "art": "icon-weapon_dynasty_dagger_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:mace",
+    "name": "Dynasty Mace",
+    "reference": "Dynasty Mace",
+    "art": "icon-weapon_dynasty_staff_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:bow",
+    "name": "Dynasty Bow",
+    "reference": "Dynasty Bow",
+    "art": "icon-weapon_dynasty_bow_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:crossbow",
+    "name": "Dynasty Crossbow",
+    "reference": "Dynasty Crossbow",
+    "art": "icon-weapon_dynasty_crossbow_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:blunt",
+    "name": "Dynasty Crusher",
+    "reference": "Dynasty Crusher",
+    "art": "icon-weapon_dynasty_crusher_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:weapon:fists",
+    "name": "Dynasty Bagh-Nakh",
+    "reference": "Dynasty Bagh-Nakh",
+    "art": "icon-weapon_dynasty_jamadhr_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:heavy:helmet",
+    "name": "Dynasty Helmet",
+    "reference": "Dynasty Helmet",
+    "art": "icon-armor_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:light:helmet",
+    "name": "Dynasty Leather Helmet",
+    "reference": "Dynasty Leather Helmet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:robe:helmet",
+    "name": "Dynasty Magic Circlet",
+    "reference": "Dynasty Circlet",
+    "art": "icon-armor_circlet_i00",
+    "exact": false
+  },
+  {
+    "id": "S80:armor:heavy:gloves",
+    "name": "Dynasty Gauntlets",
+    "reference": "Sealed Dynasty Gauntlets",
+    "art": "icon-armor_t91_g_i02",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:light:gloves",
+    "name": "Dynasty Leather Gloves",
+    "reference": "Dynasty Leather Gloves",
+    "art": "icon-armor_t92_g_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:robe:gloves",
+    "name": "Dynasty Magic Gloves",
+    "reference": "Dynasty Gloves",
+    "art": "icon-armor_t93_g_i00",
+    "exact": false
+  },
+  {
+    "id": "S80:armor:heavy:greaves",
+    "name": "Dynasty Gaiters",
+    "reference": "Dynasty Gaiters",
+    "art": "icon-armor_t91_l_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:heavy:boots",
+    "name": "Dynasty Boots",
+    "reference": "Dynasty Boots",
+    "art": "icon-armor_t91_b_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:light:boots",
+    "name": "Dynasty Leather Boots",
+    "reference": "Dynasty Leather Boots",
+    "art": "icon-armor_t92_b_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:robe:boots",
+    "name": "Dynasty Magic Boots",
+    "reference": "Dynasty Shoes",
+    "art": "icon-armor_t93_b_i00",
+    "exact": false
+  },
+  {
+    "id": "S80:armor:heavy:body",
+    "name": "Dynasty Breastplate",
+    "reference": "Dynasty Breastplate",
+    "art": "icon-armor_t91_u_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:light:fullBody",
+    "name": "Dynasty Leather Armor",
+    "reference": "Dynasty Leather Armor",
+    "art": "icon-armor_t92_u_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:armor:robe:fullBody",
+    "name": "Dynasty Magic Robe",
+    "reference": "Dynasty Tunic",
+    "art": "icon-armor_t93_u_i00",
+    "exact": false
+  },
+  {
+    "id": "S80:shield:bigShield",
+    "name": "Dynasty Shield",
+    "reference": "Dynasty Shield",
+    "art": "icon-shield_dynasty_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "S80:shield:smallShield",
+    "name": "Dynasty Guard Shield",
+    "reference": "Moirai Shield",
+    "art": "icon-weapon_tysandy_shield_i01",
+    "exact": false
+  },
+  {
+    "id": "S80:shield:sigill",
+    "name": "Dynasty Sigil",
+    "reference": "Dynasty Sigil",
+    "art": "icon-dynasty_sigil_i00",
     "exact": true
   },
   {
@@ -439,6 +1328,13 @@
     "reference": "Vesper Shield",
     "art": "icon-weapon_vesper_verteidiger_i01",
     "exact": true
+  },
+  {
+    "id": "S84:shield:smallShield",
+    "name": "Vesper Guard Shield",
+    "reference": "Vesper Sigil",
+    "art": "icon-verper_sigil_i00",
+    "exact": false
   },
   {
     "id": "S84:shield:sigill",
