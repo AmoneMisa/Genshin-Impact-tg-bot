@@ -596,4 +596,9 @@ export default {
   'Урон поглощён':'Zarar yutildi',
   'Игрок повержен':'O‘yinchi mag‘lub etildi',
   'Убийство мирного игрока: PK и карма':'Tinch o‘yinchini o‘ldirish: PK va karma',
+  '(есть':'(mavjud',
+  'древней адены':'qadimiy adena',
+  'Не хватает древней адены.':'Qadimiy adena yetarli emas.',
+  'SA оружия S-грейда и выше снять нельзя.':'S va undan yuqori darajadagi qurol SA sini olib bo‘lmaydi.',
+  'SA S-грейда и выше снять нельзя.':'S va undan yuqori darajadagi SA ni olib bo‘lmaydi.',
 };

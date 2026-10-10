@@ -1,6 +1,7 @@
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
 import {SOUL_COLORS,SOUL_MAX_STAGE,soulCrystalKey,SEAL_RATES} from '../../../template/soulCrystalData.js';
 import {ABSORPTION,SA_WEAPONS} from '../../../template/soulCrystalSource.js';
+import SA_PRICES from '../../../template/saPrices.js';
 import {getMaterialCount,spendMaterials,addMaterial} from '../player/materials.js';
 import {isActuallyEquipped} from './snapshots.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
@@ -11,9 +12,20 @@ const EPIC_SA_BASE={oneHandedSword:'Periel Sword',twoHandedSword:'Feather Eye Bl
 const baseName=item=>item?.epicWeapon?EPIC_SA_BASE[item.kind]:item?.name;
 export function saOptions(item){return item?.mainType==='weapon'&&['C','B','A','S','S80','S84'].includes(item.grade)?SA_WEAPONS[baseName(item)]||[]:[];}
 export function saDefinition(item){return item?.sa?saOptions(item).find(o=>o.id===item.sa.id&&o.color===item.sa.color&&o.stage===item.sa.stage)||null:null;}
-const FEE=Object.freeze({C:5000,B:15000,A:45000,S:120000,S80:300000,S84:600000});
-export function saInfo(session,item){const current=saDefinition(item),gold=FEE[item?.grade]||0,gemGrade=['S80','S84'].includes(item?.grade)?'S':item?.grade,gemKey=`craft_gem_${gemGrade}`,gems={C:4,B:6,A:8,S:12,S80:18,S84:24}[item?.grade]||0;
-  return saOptions(item).length?{current:current?{id:current.id,label:current.label,color:current.color,stage:current.stage}:null,legacy:!current&&Boolean(item.ability),gold,gemKey,gems,gemCount:getMaterialCount(session,gemKey),removeGold:Math.round(gold/4),equipped:isActuallyEquipped(session,item),options:saOptions(item).map(o=>({id:o.id,label:o.label,color:o.color,stage:o.stage,key:soulCrystalKey(o.color,o.stage),count:getMaterialCount(session,soulCrystalKey(o.color,o.stage)),effects:saBonuses(item,o),description:o.description}))}:null;
+// Real High Five prices (template/saPrices.js): install = Soul Crystal + Gemstones (+ adena up to B grade), removal = Ancient
+// Adena. High Five has no removal service for S grade and above, so those abilities are permanent.
+const stageOf=name=>Math.max(0,...(SA_WEAPONS[name]||[]).map(o=>o.stage));
+const PRICE_BY_STAGE=new Map(Object.entries(SA_PRICES).map(([name,price])=>[stageOf(name),price]));
+export function saPrice(item){
+  const name=baseName(item);if(SA_PRICES[name])return SA_PRICES[name];
+  // A weapon that has no retail recipe is priced like the weapons of the nearest crystal stage.
+  const stage=stageOf(name),near=[...PRICE_BY_STAGE.keys()].sort((a,b)=>Math.abs(a-stage)-Math.abs(b-stage)||a-b)[0];
+  return PRICE_BY_STAGE.get(near);
+}
+export function saInfo(session,item){const current=saDefinition(item),options=saOptions(item);
+  if(!options.length)return null;const p=saPrice(item);
+  const gemKey=`craft_gem_${p.gem}`,removeAa=p.removeAa||0;
+  return {current:current?{id:current.id,label:current.label,color:current.color,stage:current.stage}:null,legacy:!current&&Boolean(item.ability),gold:p.gold,gemKey,gems:p.gems,gemCount:getMaterialCount(session,gemKey),removeAa,removable:removeAa>0,aa:n(session.game.inventory.ancientAdena),equipped:isActuallyEquipped(session,item),options:options.map(o=>({id:o.id,label:o.label,color:o.color,stage:o.stage,key:soulCrystalKey(o.color,o.stage),count:getMaterialCount(session,soulCrystalKey(o.color,o.stage)),effects:saBonuses(item,o),description:o.description}))};
 }
 export function installWeaponSa(session,item,id){const info=saInfo(session,item),option=info?.options.find(o=>o.id===id);
   if(!option)return {ok:false,reason:'invalid_sa'};
@@ -29,7 +41,10 @@ export function installWeaponSa(session,item,id){const info=saInfo(session,item)
   item.stats=(item.stats||[]).filter(s=>!legacy||s.name!==legacy.stat||s.label!==legacy.label);item.ability=null;
   item.sa={id:option.id,color:option.color,stage:option.stage};return {ok:true,sa:item.sa};
 }
-export function removeWeaponSa(session,item){const info=saInfo(session,item);if(!info||!item.sa)return {ok:false,reason:'no_sa'};if(isActuallyEquipped(session,item))return {ok:false,reason:'sa_equipped'};if(n(session.game.inventory.gold)<info.removeGold)return {ok:false,reason:'not_enough_gold'};session.game.inventory.gold-=info.removeGold;item.sa=null;return {ok:true};}
+export function removeWeaponSa(session,item){const info=saInfo(session,item);if(!info||!item.sa)return {ok:false,reason:'no_sa'};if(isActuallyEquipped(session,item))return {ok:false,reason:'sa_equipped'};
+  if(!info.removable)return {ok:false,reason:'sa_permanent'};
+  if(n(session.game.inventory.ancientAdena)<info.removeAa)return {ok:false,reason:'not_enough_aa'};
+  session.game.inventory.ancientAdena=n(session.game.inventory.ancientAdena)-info.removeAa;item.sa=null;return {ok:true};}
 /** L2 effect values mapped to the existing game's stat scale. */
 export function saBonuses(item,option=saDefinition(item)){
   if(!option)return {};

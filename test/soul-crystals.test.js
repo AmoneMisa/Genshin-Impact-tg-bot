@@ -16,7 +16,7 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getStat from '../functions/game/player/getters/getEquipStatByName.js';
 import {applySoulHit,tickSoulDots,applySoulSpell,soulShotCost} from '../functions/game/equipment/soulCrystalCombat.js';
 import {advanceHunt} from '../functions/game/hunt/huntFight.js';
-const hero=(level=80)=>{const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:level,currentExp:0},inventory:{gold:5e6,crystals:0,ironOre:0,luckCoins:1000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};changePlayerGameClass(s,'mage');updatePlayerStats(s);return s;};
+const hero=(level=80)=>{const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:level,currentExp:0},inventory:{gold:5e7,crystals:0,ironOre:0,luckCoins:1000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};changePlayerGameClass(s,'mage');updatePlayerStats(s);return s;};
 const weapon=(id='S:weapon:mace')=>instantiate(findCatalogItem(id),7);
 const fund=(s,item,id='acumen')=>{const o=saOptions(item).find(o=>o.id===id),info=saInfo(s,item);assert.ok(o,id);addMaterial(s,soulCrystalKey(o.color,o.stage),1);addMaterial(s,info.gemKey,info.gems);return o;};
 test('shops cover all three colors: 0–13 adena, 14–17 COL, with monotonic prices',()=>{
@@ -27,17 +27,17 @@ test('shops cover all three colors: 0–13 adena, 14–17 COL, with monotonic pr
 test('SA consumes its exact color/stage and gemstones, preserving identity and other upgrades',()=>{
  const s=hero(),item=weapon();s.game.inventory.equipment.items.push(item);item.augment={stat:'maxHp',value:50};item.attribute={element:'fire',value:150};const original=structuredClone(item),o=fund(s,item);
  assert.equal(installWeaponSa(s,item,o.id).ok,true);assert.equal(getMaterialCount(s,'soul_red_13'),0);assert.equal(item.enchant,7);assert.equal(item.uid,original.uid);assert.deepEqual(item.augment,original.augment);assert.deepEqual(item.attribute,original.attribute);assert.equal(saInfo(s,item).current.label,'Acumen');
- assert.equal(installWeaponSa(s,item,o.id).reason,'sa_exists');assert.equal(removeWeaponSa(s,item).ok,true);assert.equal(getMaterialCount(s,'soul_red_13'),0);
+ assert.equal(installWeaponSa(s,item,o.id).reason,'sa_exists');assert.equal(removeWeaponSa(s,item).reason,'sa_permanent');assert.equal(item.sa.id,o.id);assert.equal(saInfo(s,item).gems,82);assert.equal(saInfo(s,item).gold,0);
 });
 test('missing/wrong-color crystal, missing gemstones and gold never partially spend',()=>{
- for(const missing of ['crystal','gems','gold']){const s=hero(),item=weapon(),o=fund(s,item);if(missing==='crystal'){s.game.inventory.materials.soul_red_13=0;addMaterial(s,'soul_blue_13');}if(missing==='gems')s.game.inventory.materials.craft_gem_S=0;if(missing==='gold')s.game.inventory.gold=0;const before=JSON.stringify(s.game.inventory);assert.equal(installWeaponSa(s,item,o.id).ok,false);assert.equal(JSON.stringify(s.game.inventory),before);assert.ok(!item.sa);}
+ for(const missing of ['crystal','gems','gold']){const s=hero(),item=weapon(missing==='gold'?'B:weapon:mace':'S:weapon:mace'),o=fund(s,item,saOptions(item)[0].id);if(missing==='crystal'){s.game.inventory.materials.soul_red_13=0;addMaterial(s,'soul_blue_13');}if(missing==='gems')s.game.inventory.materials.craft_gem_S=0;if(missing==='gold')s.game.inventory.gold=0;const before=JSON.stringify(s.game.inventory);assert.equal(installWeaponSa(s,item,o.id).ok,false);assert.equal(JSON.stringify(s.game.inventory),before);assert.ok(!item.sa);}
 });
 test('equipped snapshots block SA changes, stale item keys cannot repeat installation',()=>{
  const s=hero(),item=weapon();s.game.inventory.equipment.items.push(item);const o=fund(s,item);s.game.equipmentStats[item.slots[0]]=structuredClone(item);assert.equal(installWeaponSa(s,item,o.id).reason,'sa_equipped');s.game.equipmentStats={};const key=getEquipmentState(s).items[0].key;assert.equal(performEquipmentAction(s,key,'sa_install',{saId:o.id}).ok,true);assert.equal(performEquipmentAction(s,key,'sa_install',{saId:o.id}).reason,'stale_item');
 });
 test('Acumen and Mana Up affect the real combat getters once for a two-slot weapon',()=>{
  const s=hero(),item=weapon();fund(s,item);installWeaponSa(s,item,'acumen');s.game.equipmentStats={rightHand:structuredClone(item),leftHand:structuredClone(item)};assert.equal(getStat(s,'castingSpeedMul',true),1.15);
- s.game.equipmentStats={};removeWeaponSa(s,item);fund(s,item,'mana-up');s.game.equipmentStats[item.slots[0]]=item;const before=getMaxMp(s);s.game.equipmentStats={};installWeaponSa(s,item,'mana-up');s.game.equipmentStats[item.slots[0]]=item;assert.ok(Math.abs(getMaxMp(s)-Math.round(before*1.3))<=1);
+ s.game.equipmentStats={};const second=weapon();fund(s,second,'mana-up');s.game.equipmentStats[second.slots[0]]=second;const before=getMaxMp(s);s.game.equipmentStats={};installWeaponSa(s,second,'mana-up');s.game.equipmentStats[second.slots[0]]=second;assert.ok(Math.abs(getMaxMp(s)-Math.round(before*1.3))<=1);
 });
 test('normal absorption requires a selected crystal, correct monster, half HP and victory',()=>{
  const s=hero(40);addMaterial(s,'soul_red_0',2);assert.equal(selectSoulCrystal(s,'red',0).ok,true);const mob={mobId:'20584',hp:100,currentHp:51};assert.equal(chargeSoulCrystal(s,mob).reason,'soul_hp');mob.currentHp=50;assert.equal(chargeSoulCrystal(s,mob).ok,true);assert.equal(chargeSoulCrystal(s,mob).reason,'soul_already_charged');mob.currentHp=0;const r=absorbHuntSoul(s,mob,()=>0);assert.equal(r.stage,1);assert.equal(getMaterialCount(s,'soul_red_0'),1);assert.equal(getMaterialCount(s,'soul_red_1'),1);assert.equal(soulCrystalState(s).active.stage,1);
@@ -77,4 +77,18 @@ test('magic-triggered buffs expire and Miser reduces the actual shot count',()=>
 });
 test('stage 17 is consumed by original epic weapons, using the High Five top-weapon SA table',()=>{
  const s=hero(),item=weapon('epic-weapon:prism-sword');const o=fund(s,item,'focus');assert.equal(o.stage,17);assert.equal(o.color,'red');assert.equal(installWeaponSa(s,item,'focus').ok,true);assert.equal(getMaterialCount(s,'soul_red_17'),0);assert.ok(saInfo(s,item).options.find(o=>o.id==='health'&&o.color==='blue'));
+});
+
+test('SA prices are the real High Five ones; removal is paid in Ancient Adena and only exists below S grade',()=>{
+ const price=id=>saInfo(hero(),weapon(id));
+ assert.deepEqual([price('C:weapon:mace').gems,price('C:weapon:mace').gold,price('C:weapon:mace').removeAa],[555,1665000,83250]);
+ assert.deepEqual([price('B:weapon:mace').gems,price('B:weapon:mace').gold,price('B:weapon:mace').removeAa],[339,3390000,169500]);
+ assert.equal(price('S:weapon:mace').gems,82);assert.equal(price('S80:weapon:mace').gems,285);assert.equal(price('S84:weapon:mace').gems,623);
+ assert.equal(price('S84:weapon:mace').removable,false);
+ const s=hero(),item=weapon('B:weapon:mace'),o=fund(s,item,saOptions(item)[0].id);s.game.inventory.gold=3389999;
+ assert.equal(installWeaponSa(s,item,o.id).reason,'not_enough_gold');s.game.inventory.gold=3390000;
+ const gems=getMaterialCount(s,'craft_gem_B');assert.equal(installWeaponSa(s,item,o.id).ok,true);
+ assert.equal(s.game.inventory.gold,0);assert.equal(getMaterialCount(s,'craft_gem_B'),gems-339);
+ assert.equal(removeWeaponSa(s,item).reason,'not_enough_aa');s.game.inventory.ancientAdena=169500;
+ assert.equal(removeWeaponSa(s,item).ok,true);assert.equal(s.game.inventory.ancientAdena,0);assert.equal(item.sa,null);
 });
