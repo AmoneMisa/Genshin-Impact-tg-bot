@@ -131,12 +131,27 @@ export function kickMember(chat, leader, targetId) {
     return {ok: true, changed};
 }
 
+export function transferPartyLeadership(chat,leader,targetId){
+    const party=partyState(chat,leader);
+    if(!party)return {ok:false,reason:'no_party'};
+    if(party.leaderId!==id(leader.userId))return {ok:false,reason:'not_leader'};
+    const target=party.members.find(m=>id(m.userId)===id(targetId));
+    if(!target||target===leader||!isPlayer(target))return {ok:false,reason:'invalid_target'};
+    const cursor=Number(leader.game.party.lootTurn)||0;
+    party.members.forEach(m=>{m.game.party.leaderId=id(target.userId);m.game.party.lootTurn=cursor;});
+    const changed=[...party.members];
+    members(chat).forEach(m=>{let updated=false;for(const invite of m.game?.partyInvites||[])if(invite.partyId===party.id){invite.fromId=id(target.userId);updated=true;}if(updated&&!changed.includes(m))changed.push(m);});
+    return {ok:true,changed};
+}
+
 export function disbandParty(chat, leader) {
     const party = partyState(chat, leader);
     if (!party) return {ok: false, reason: 'no_party'};
     if (party.leaderId !== id(leader.userId)) return {ok: false, reason: 'not_leader'};
     party.members.forEach(member => setParty(member, null));
-    return {ok: true, changed: party.members};
+    const changed=[...party.members];
+    members(chat).forEach(m=>{const invites=m.game?.partyInvites||[];if(invites.some(i=>i.partyId===party.id)){m.game.partyInvites=invites.filter(i=>i.partyId!==party.id);if(!changed.includes(m))changed.push(m);}});
+    return {ok: true, changed};
 }
 
 /** Drops invites that have expired or whose party no longer exists. */

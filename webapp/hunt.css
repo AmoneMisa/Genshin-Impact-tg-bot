@@ -135,7 +135,8 @@
 
 .party-panel{display:grid;gap:10px}
 .party-members{display:grid;gap:8px}
-.party-member{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
+.party-member{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
+.party-member-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .party-member.me{outline:1px solid rgba(255,214,120,.45)}
 .party-member img{width:44px;height:44px;border-radius:8px;object-fit:cover}
 .party-member-body{flex:1;min-width:0;display:grid;gap:3px}

@@ -5,8 +5,8 @@
 // plus pending friendRequestsIn / friendRequestsOut (userId lists).
 // Presence comes from member.game.lastSeenAt, stamped when the Mini App opens.
 
-import { getEquipmentState } from './equipment.js';
-import calcGearScore from '../functions/game/player/calcGearScore.js';
+
+
 
 export const ONLINE_WINDOW_MS = 5 * 60 * 1000;
 export const LAST_SEEN_STAMP_MS = 60 * 1000;
@@ -182,42 +182,14 @@ export function setFriend(chat, userId, targetId, action) {
   return { ok: false, reason: 'invalid_action' };
 }
 
-function safeGearScore(game) {
-  try { return number(calcGearScore(game)); } catch { return 0; }
-}
-
-/** Public card of another player: identity, stats and equipped gear only. */
-export function getPlayerCard(chat, targetId, viewerId, { clanName = null, now = Date.now() } = {}) {
-  const member = findMember(chat, targetId);
-  if (!isListed(member)) return null;
-  const game = member.game || {};
-  const classStats = game.gameClass?.stats || {};
-  let equippedSlots = {};
-  let equipped = [];
-  try {
-    const equipment = getEquipmentState(member);
-    equippedSlots = equipment.equippedSlots;
-    equipped = equipment.items.filter(item => item.isUsed);
-  } catch {
-    // Players without equipment data simply show empty slots.
-  }
-  return {
-    ...memberRow(member, now),
-    clanName,
-    isSelf: String(targetId) === String(viewerId),
-    isFriend: friendIds(findMember(chat, viewerId)).includes(String(targetId)),
-    requestState: idList(findMember(chat, viewerId), 'friendRequestsIn').includes(String(targetId)) ? 'incoming'
-      : idList(findMember(chat, viewerId), 'friendRequestsOut').includes(String(targetId)) ? 'outgoing' : null,
-    stats: {
-      hp: number(classStats.maxHp ?? classStats.hp),
-      mp: number(classStats.maxMp ?? classStats.mp),
-      cp: number(classStats.maxCp ?? classStats.cp),
-      attack: number(classStats.damage ?? classStats.attack),
-      defense: number(classStats.defense ?? classStats.defence),
-      gearScore: safeGearScore(game),
-      sword: number(member.sword),
-    },
-    equippedSlots,
-    items: equipped,
-  };
+/** Identity and available interactions only; never disclose another player's build. */
+export function getPlayerCard(chat,targetId,viewerId,{clanName=null,targetInClan=Boolean(clanName),viewerClan=null,now=Date.now()}={}){
+ const member=findMember(chat,targetId),viewer=findMember(chat,viewerId);
+ if(!isListed(member))return null;
+ const self=String(targetId)===String(viewerId),role=viewerClan?.members?.find(m=>String(m.userId)===String(viewerId))?.role;
+ const party=viewer?.game?.party,targetParty=member.game?.party;
+ return {...memberRow(member,now),clanName,isSelf:self,isFriend:friendIds(viewer).includes(String(targetId)),requestState:idList(viewer,'friendRequestsIn').includes(String(targetId))?'incoming':idList(viewer,'friendRequestsOut').includes(String(targetId))?'outgoing':null,
+  canInviteClan:!self&&['owner','officer'].includes(role)&&!targetInClan&&!viewerClan.members.some(m=>String(m.userId)===String(targetId))&&viewerClan.members.length<30,
+  canInviteParty:!self&&!targetParty?.id&&(!party?.id||String(party.leaderId)===String(viewerId)&&chat.members.filter(m=>m.game?.party?.id===party.id).length<9),
+  canDuel:!self&&Boolean(viewerClan?.members?.some(m=>String(m.userId)===String(targetId)))&&Boolean(viewer?.game?.gameClass&&member.game?.gameClass)};
 }

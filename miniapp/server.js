@@ -1074,8 +1074,9 @@ const playerCard = guarded('player card', async (req, res, requestUrl) => {
   const context = await authorize(req);
   const targetId = requestUrl.searchParams.get('userId') || String(context.userId);
   const chat = await getChatSession(context.chatId);
-  const clan = await clanInfo(targetId);
-  const card = getPlayerCard(chat, targetId, context.userId, { clanName: clan.name });
+  const targetClan = await getClan(Number(targetId));
+  const viewerClan=await getClan(Number(context.userId));
+  const card = getPlayerCard(chat, targetId, context.userId, { clanName: targetClan?.name||null,targetInClan:Boolean(targetClan),viewerClan });
   if (!card) return sendJson(res, 404, { error: 'Игрок не найден в этом чате', reason: 'unknown_player' });
   return sendJson(res, 200, card);
 });
@@ -1801,7 +1802,7 @@ const fishingAction = guarded('fishing', async (req, res) => {
   return sendResult(res, result, context);
 });
 
-const PARTY_ACTIONS = new Set(['create', 'invite', 'accept', 'decline', 'leave', 'kick', 'disband', 'loot']);
+const PARTY_ACTIONS = new Set(['create', 'invite', 'accept', 'decline', 'leave', 'kick', 'disband', 'loot','transfer']);
 
 const partyState = guarded('party state', async (req, res) => {
   const context = await authorize(req);

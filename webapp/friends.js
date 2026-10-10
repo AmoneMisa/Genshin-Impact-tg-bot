@@ -4,7 +4,7 @@ import { escapeHtml } from './escape-html.js';
 // "Написать" link into Telegram.
 
 import { menuArtFor } from './menu-art.js';
-import { renderEquipmentPaperDoll } from './equipment-paper-doll.js';
+
 import {openTradeGame} from './trade.js';
 
 const REASONS = {
@@ -87,7 +87,7 @@ export function statsHtml(stats = {}) {
 /** Another player's card, on top of whatever is open. Resolves once it is shown, with `{ closed }`. */
 export async function openPlayerCard({ api, renderState, haptic = () => {}, userId, onChange = () => {} }) {
   let card = await api(`/api/player?userId=${encodeURIComponent(userId)}`);
-  let tab = 'gear';
+
   let pending = false;
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay player-card-overlay';
@@ -121,28 +121,34 @@ export async function openPlayerCard({ api, renderState, haptic = () => {}, user
           <em class="${card.online ? 'online' : ''}">${escapeHtml(card.text)}</em>
         </div>
       </section>
-      <nav class="fr-tabs"><button type="button" data-pc-tab="gear" class="${tab === 'gear' ? 'active' : ''}">Снаряжение</button><button type="button" data-pc-tab="stats" class="${tab === 'stats' ? 'active' : ''}">Статы</button></nav>
-      <div class="pc-tab" data-pc-tab-body></div>
       ${card.isSelf ? '' : `
       <div class="fr-actions">
         <button type="button" class="fr-btn gold" data-pc-trade>Обмен</button>
+        ${card.canInviteClan?'<button type="button" class="fr-btn gold" data-pc-clan>Пригласить в клан</button>':''}
+        ${card.canInviteParty?'<button type="button" class="fr-btn gold" data-pc-party>Пригласить в группу</button>':''}
+        ${card.canDuel?'<button type="button" class="fr-btn ghost" data-pc-duel>Кинуть дуэль</button>':''}
         <button type="button" class="fr-btn gold" data-pc-chat ${chatLink(card) ? '' : 'disabled'}>${chatLink(card) ? 'Написать' : 'Нет @username'}</button>
         <button type="button" class="fr-btn ${card.isFriend || card.requestState === 'outgoing' ? 'ghost' : 'blue'}" data-pc-friend>${friendLabel(card)}</button>
         ${card.requestState === 'incoming' ? '<button type="button" class="fr-btn ghost" data-pc-decline>Отклонить</button>' : ''}
       </div>`}`;
-    const tabBody = body.querySelector('[data-pc-tab-body]');
-    if (tab === 'gear') {
-      const doll = document.createElement('div');
-      tabBody.appendChild(doll);
-      renderEquipmentPaperDoll(doll, { equippedSlots: card.equippedSlots || {}, items: card.items || [] }, { portrait: portraitFor(card) });
-    } else {
-      tabBody.innerHTML = statsHtml(card.stats);
-    }
-    body.querySelectorAll('[data-pc-tab]').forEach(button => button.addEventListener('click', () => { tab = button.dataset.pcTab; haptic('light'); render(); }));
     body.querySelector('[data-pc-chat]')?.addEventListener('click', () => openChat(card, haptic));
     body.querySelector('[data-pc-trade]')?.addEventListener('click',()=>openTradeGame({api,renderState,haptic,targetId:card.userId}));
+    body.querySelector('[data-pc-clan]')?.addEventListener('click',()=>interact('/api/clan/activity',{action:'invite',targetId:card.userId},'Игрок приглашён в клан.'));
+    body.querySelector('[data-pc-party]')?.addEventListener('click',()=>interact('/api/party/action',{action:'invite',userId:card.userId},'Приглашение в группу отправлено.'));
+    body.querySelector('[data-pc-duel]')?.addEventListener('click',()=>interact('/api/clan/activity',{action:'pvp_fight',opponentId:card.userId},'Дуэль завершена.'));
     body.querySelector('[data-pc-friend]')?.addEventListener('click', () => toggleFriend());
     body.querySelector('[data-pc-decline]')?.addEventListener('click', () => toggleFriend('decline'));
+  }
+
+  async function interact(url,payload,message){
+    if(pending)return;pending=true;
+    try{
+      const result=await api(url,{method:'POST',body:JSON.stringify(payload)});
+      if(result.state)renderState?.(result.state);
+      feedback.textContent=result.message||result.result?.message||message;
+      card=await api(`/api/player?userId=${encodeURIComponent(userId)}`);render();haptic('light');
+    }catch(error){feedback.textContent=({not_leader:'Приглашать может только лидер группы.',party_full:'Группа заполнена.',target_in_party:'Игрок уже в группе.',owner_only:'Недостаточно прав в клане.',target_already_in_clan:'Игрок уже состоит в клане.',clan_full:'Клан заполнен.',pvp_cooldown:'Подожди до следующей дуэли.',pvp_opponent_no_class:'У соперника нет боевого класса.'})[error.payload?.reason]||error.message;}
+    finally{pending=false;}
   }
 
   async function toggleFriend(forced) {

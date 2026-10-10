@@ -67,7 +67,7 @@ export async function openPartyGame({ api, haptic, statusElement }) {
         ${bar('hp', member.hp, member.maxHp, { label: 'HP' })}
         ${bar('mp', member.mp, member.maxMp, { label: 'MP' })}
       </div>
-      ${amLeader && !member.me ? `<button type="button" class="equipment-action party-kick" data-party-kick="${escapeHtml(member.userId)}">Исключить</button>` : ''}
+      ${amLeader && !member.me ? `<div class="party-member-actions"><button type="button" class="equipment-action" data-party-transfer="${escapeHtml(member.userId)}">Передать лидерство</button><button type="button" class="equipment-action party-kick" data-party-kick="${escapeHtml(member.userId)}">Исключить</button></div>` : ''}
     </article>`;
   }
 
@@ -131,6 +131,7 @@ export async function openPartyGame({ api, haptic, statusElement }) {
   }
 
   function bind() {
+    content.querySelectorAll('[data-party-transfer]').forEach(button=>button.addEventListener('click',()=>act('transfer',{userId:button.dataset.partyTransfer})));
     content.querySelectorAll('[data-party-action]').forEach(button => button.addEventListener('click', () => act(button.dataset.partyAction)));
     content.querySelectorAll('[data-party-loot]').forEach(button => button.addEventListener('click', () => act('loot', { mode: button.dataset.partyLoot })));
     content.querySelectorAll('[data-party-invite]').forEach(button => button.addEventListener('click', () => act('invite', { userId: button.dataset.partyInvite })));

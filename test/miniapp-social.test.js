@@ -66,19 +66,30 @@ test('friends can be added and removed only for listed chat members', () => {
   assert.equal(setFriend(c, 1, '2', 'remove').reason, 'not_friend');
 });
 
-test('player card shows public stats and gear, never private inventory', () => {
+test('player card never reveals stats, gear or private inventory', () => {
   const card = getPlayerCard(chat(), 2, 1, { clanName: 'WhiteOrder', now: NOW });
   assert.equal(card.name, 'Lana');
   assert.equal(card.username, 'lana');
   assert.equal(card.clanName, 'WhiteOrder');
   assert.equal(card.isFriend, true);
   assert.equal(card.isSelf, false);
-  assert.equal(card.stats.hp, 120);
-  assert.equal(card.stats.attack, 30);
-  assert.ok(Array.isArray(card.items));
+  for(const key of ['stats','items','equippedSlots'])assert.equal(key in card,false);
   assert.equal('gold' in card, false);
   assert.equal(getPlayerCard(chat(), 4, 1), null);
   assert.equal(getPlayerCard(chat(), 1, 1).isSelf, true);
+});
+test('interaction buttons respect clan privileges, party leadership and shared-clan duels',()=>{
+ const c=chat(),clan={members:[{userId:1,role:'owner'}]};
+ assert.equal(getPlayerCard(c,3,1,{viewerClan:clan}).canInviteClan,true);
+ clan.members[0].role='member';assert.equal(getPlayerCard(c,3,1,{viewerClan:clan}).canInviteClan,false);
+ clan.members[0].role='officer';assert.equal(getPlayerCard(c,3,1,{viewerClan:clan,clanName:'Other'}).canInviteClan,false);
+ assert.equal(getPlayerCard(c,3,1,{viewerClan:clan,targetInClan:true,clanName:null}).canInviteClan,false);
+ clan.members.push({userId:3,role:'member'});assert.equal(getPlayerCard(c,3,1,{viewerClan:clan}).canInviteClan,false);
+ const viewer=c.members[0];viewer.game.party={id:'p1',leaderId:'2'};
+ assert.equal(getPlayerCard(c,3,1).canInviteParty,false);
+ viewer.game.party.leaderId='1';assert.equal(getPlayerCard(c,3,1).canInviteParty,true);
+ assert.equal(getPlayerCard(c,2,1,{viewerClan:clan}).canDuel,false);
+ clan.members.push({userId:2,role:'member'});assert.equal(getPlayerCard(c,2,1,{viewerClan:clan}).canDuel,true);
 });
 
 import { damageMeter, partyStrip } from '../webapp/boss-hud.js';

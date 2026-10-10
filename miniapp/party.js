@@ -1,7 +1,7 @@
 // Mini App face of the party system (functions/game/party/party.js): the screen state and its actions.
 import {
   LOOT_MODES, PARTY_MAX, PARTY_COST_STEP, acceptInvite, lootModeOf, setLootMode, createParty, declineInvite, disbandParty, findMember, invitePlayer, kickMember, leaveParty,
-  partyState, pruneInvites,
+  partyState, pruneInvites,transferPartyLeadership,
 } from '../functions/game/party/party.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
@@ -64,12 +64,17 @@ export function performPartyAction(session, action, body = {}, now = Date.now())
   let result;
   switch (action) {
     case 'create': result = createParty(chat, session, now); break;
-    case 'invite': result = invitePlayer(chat, session, body.userId, now); break;
+    case 'invite': {
+      if(!session.game.party?.id){const created=createParty(chat,session,now);if(!created.ok){result=created;break;}result=invitePlayer(chat,session,body.userId,now);if(result.ok)result.changed.push(session);else session.game.party=null;}
+      else result=invitePlayer(chat,session,body.userId,now);
+      break;
+    }
     case 'accept': result = acceptInvite(chat, session, String(body.partyId || ''), now); break;
     case 'decline': result = declineInvite(chat, session, String(body.partyId || '')); break;
     case 'leave': result = leaveParty(chat, session); break;
     case 'kick': result = kickMember(chat, session, body.userId); break;
     case 'disband': result = disbandParty(chat, session); break;
+    case 'transfer': result = transferPartyLeadership(chat,session,body.userId);break;
     case 'loot': result = setLootMode(chat, session, String(body.mode || '')); break;
     default: return {ok: false, reason: 'unknown_action'};
   }

@@ -5,12 +5,31 @@ import updateStats from '../functions/game/player/updatePlayerStats.js';
 import castSkill from '../functions/game/player/castSkill.js';
 import saveSession from '../functions/getters/saveSession.js';
 import {
-  PARTY_MAX, acceptInvite, createParty, declineInvite, disbandParty, invitePlayer, kickMember, leaveParty, partyMembers, partyState, partyTargets, partyCostFactor,
+  PARTY_MAX, acceptInvite, createParty, declineInvite, disbandParty, invitePlayer, kickMember, leaveParty, partyMembers, partyState, partyTargets, partyCostFactor,transferPartyLeadership,
 } from '../functions/game/party/party.js';
 import {castClassBuff, buffManaCost} from '../miniapp/buffs.js';
 import {getPartyState, performPartyAction} from '../miniapp/party.js';
 
 const NOW = Date.now();
+test('inviting from a player card creates a party and a failed invite leaves no new party',()=>{
+ const {at}=chatOf(2);
+ assert.equal(performPartyAction(at(1),'invite',{userId:99},NOW).ok,false);assert.equal(at(1).game.party,null);
+ assert.equal(performPartyAction(at(1),'invite',{userId:2},NOW).ok,true);assert.ok(at(1).game.party.id);assert.equal(at(2).game.partyInvites.length,1);
+});
+
+test('only the party leader can transfer leadership or disband, preserving loot and pending invitations',()=>{
+ const {chat,at}=chatOf(4);
+ createParty(chat,at(1),NOW);invitePlayer(chat,at(1),2,NOW);acceptInvite(chat,at(2),at(1).game.party.id,NOW);invitePlayer(chat,at(1),3,NOW);
+ at(1).game.party.lootTurn=7;
+ assert.equal(transferPartyLeadership(chat,at(2),1).reason,'not_leader');
+ assert.equal(disbandParty(chat,at(2)).reason,'not_leader');
+ assert.equal(transferPartyLeadership(chat,at(1),4).reason,'invalid_target');
+ assert.equal(transferPartyLeadership(chat,at(1),2).ok,true);
+ assert.equal(at(1).game.party.leaderId,'2');assert.equal(at(2).game.party.lootTurn,7);
+ assert.equal(at(3).game.partyInvites[0].fromId,'2');
+ assert.equal(disbandParty(chat,at(1)).reason,'not_leader');
+ assert.equal(disbandParty(chat,at(2)).ok,true);assert.equal(at(1).game.party,null);assert.deepEqual(at(3).game.partyInvites,[]);
+});
 
 function chatOf(count, className = 'warrior') {
   const saved = [];
