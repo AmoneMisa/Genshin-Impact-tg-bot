@@ -8,6 +8,7 @@
 import { addMaterial, getMaterials, getMaterialCount, materialInfo } from '../functions/game/player/materials.js';
 import { describeItemStats } from '../functions/game/equipment/describeStats.js';
 import { isTimedItem } from '../functions/game/equipment/timedItems.js';
+import { masterworkName } from '../functions/game/equipment/itemBonuses.js';
 import { memberName } from './social.js';
 import { hasInventoryRoom } from '../functions/game/builds/palaceCapacity.js';
 
@@ -44,7 +45,8 @@ export function sellableItems(session) {
 
 function viewOfEquipment(item) {
   return {
-    title: item.name || 'Предмет',
+    title: masterworkName(item) || 'Предмет',
+    masterwork: Boolean(item.masterwork),
     icon: item.mainType === 'weapon' ? '⚔️' : item.mainType === 'jewelry' ? '💍' : item.mainType === 'shield' ? '🛡️' : '🥋',
     grade: item.grade || 'noGrade',
     enchant: number(item.enchant),

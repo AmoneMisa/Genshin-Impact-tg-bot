@@ -2,6 +2,7 @@
 // respawn window - a fixed wait plus a random tail, like the real epic raids. The window is stored per
 // chat in chat.epicBosses[name] = {killedAt, respawnAt, kills}. A kill also rolls the boss's epic jewellery.
 import bossTemplates from '../../../template/bossTemplate.js';
+import {needsPass, partyNeeded} from '../../../template/epicPasses.js';
 import { findEpicItem, getCatalog, instantiate, canClassUse } from '../equipment/catalog.js';
 
 export const EPIC_WEAPON_CHANCE=0.1;
@@ -102,6 +103,8 @@ export function epicList(chat, now = Date.now()) {
             windowHours: template.epic.windowHours,
             jewelChance: template.epic.jewelChance,
             jewel: jewel ? {name: jewel.name, grade: jewel.grade, kind: jewel.kind, lineage: jewel.lineage} : null,
+            needsPass: needsPass(template.name),
+            partyMin: partyNeeded(template.name),
             weaponChance:EPIC_WEAPON_CHANCE,
             weapons:getCatalog().filter(item=>item.epicWeapon && item.raidBoss===template.name).map(item=>({name:item.name,kind:item.kind,grade:item.grade,minLevel:84})),
             ...status,

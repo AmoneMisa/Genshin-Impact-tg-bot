@@ -36,15 +36,24 @@ export function enchantExtras(item) {
 }
 
 // ---- masterwork ----
-// A masterwork (MW) item is the rare result of a craft. As in Lineage II every item has bonuses of its own: the
-// strength of the main stat, how much of its other characteristics it improves and the one stat it adds are fixed per
-// item (derived from its id), so two MW items never get the same bonus.
-const MASTERWORK_EXTRA_POOL = Object.freeze({
-    weapon: ['accuracy', 'criticalChance', 'evasion'],
-    armor: ['evasion', 'accuracy'],
-    shield: ['block', 'evasion'],
-    jewelry: ['accuracy', 'evasion'],
-});
+// Masterwork (MW) is a class of Lineage II items (template/masterworkItems.js, from l2j.ru): the lists name the stats
+// that each MW item improves. A craft of such an item can come out as the masterwork one (chance: the base chance and the
+// forge). The masterwork copy improves exactly the stats its l2j entry names, by an amount fixed per item (from its id).
+// It is shown with a yellow name and the postfix below.
+import masterworkTemplate from '../../../template/masterworkItems.js';
+
+export const MASTERWORK_POSTFIX = ' - MW';
+
+/** True when the item (a catalog item or a copy of it) belongs to the masterwork class of Lineage II. */
+export function isMasterworkClass(item) {
+    return Boolean(item?.name) && Object.hasOwn(masterworkTemplate, item.name);
+}
+
+/** The name shown to the player: a masterwork item carries the postfix. */
+export function masterworkName(item) {
+    const name = item?.name || '';
+    return item?.masterwork && name ? `${name}${MASTERWORK_POSTFIX}` : name;
+}
 
 function itemSeed(item) {
     let hash = 2166136261;
@@ -52,14 +61,16 @@ function itemSeed(item) {
     return hash;
 }
 
-/** The masterwork profile of an item: {main: share of the main stat, other: share of its other stats, extra: {stat, value}}. */
+/** {main, other, stats}: share added to the power/defence, share added to the other listed stats, the stats of the item. */
 export function masterworkProfile(item) {
     const seed = itemSeed(item);
-    const pool = MASTERWORK_EXTRA_POOL[item?.mainType] || MASTERWORK_EXTRA_POOL.armor;
+    const mainStat = item?.mainType === 'weapon' ? 'power' : 'defence';
+    const listed = masterworkTemplate[item?.name] || [];
     return {
         main: 0.06 + (seed % 9) / 100,
         other: 0.15 + ((seed >>> 4) % 6) / 20,
-        extra: {stat: pool[(seed >>> 8) % pool.length], value: 2 + ((seed >>> 12) % 4)},
+        // a class item without a named stat still gets its main stat improved
+        stats: listed.length ? listed : [mainStat],
     };
 }
 
@@ -67,16 +78,20 @@ export function masterworkProfile(item) {
 export function masterworkExtras(item) {
     if (!item?.masterwork) return {};
     const profile = masterworkProfile(item);
-    const mainStat = item.mainType === 'weapon' ? 'power' : 'defence';
     const extras = {};
-    for (const [name, raw] of Object.entries(item.characteristics || {})) {
-        const value = Number(raw);
-        if (!Number.isFinite(value) || name === 'randomDamage') continue;
-        if (name === mainStat) extras[name] = value * profile.main;
-        else if (isFactorStat(name)) extras[name] = (value - 1) * profile.other;
-        else if (value > 0) extras[name] = value * profile.other;
+    for (const name of profile.stats) {
+        const raw = Number(item.characteristics?.[name]);
+        if (!Number.isFinite(raw)) continue;
+        if (name === 'power' || name === 'defence') extras[name] = raw * profile.main;
+        else if (isFactorStat(name)) extras[name] = (raw - 1) * profile.other;
+        else if (raw > 0) extras[name] = raw * profile.other;
     }
-    extras[profile.extra.stat] = (extras[profile.extra.stat] || 0) + profile.extra.value;
+    // when none of the named stats exists on this copy, the main stat carries the bonus
+    if (!Object.keys(extras).length) {
+        const stat = item.mainType === 'weapon' ? 'power' : 'defence';
+        const base = Number(item.characteristics?.[stat]);
+        if (Number.isFinite(base) && base > 0) extras[stat] = base * profile.main;
+    }
     return extras;
 }
 

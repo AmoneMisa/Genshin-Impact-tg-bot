@@ -5,6 +5,7 @@ import equipmentTemplate from '../template/equipmentTemplate.js';
 import equipItem from '../functions/game/equipment/equipItem.js';
 import unequipItem from '../functions/game/equipment/unequipItem.js';
 import {forgeBonuses} from '../functions/game/builds/forgeBonuses.js';
+import {masterworkName} from '../functions/game/equipment/itemBonuses.js';
 import craftItem, {
   craftNeedExp,
   ensureCraft,
@@ -103,7 +104,7 @@ function sanitizeItem(session, item, index) {
     key: itemKey(item, index),
     index,
     uid: item?.uid || null,
-    name: item?.name || 'Неизвестный предмет',
+    name: masterworkName(item) || 'Неизвестный предмет',
     translatedName: item?.translatedName || item?.kind || 'Снаряжение',
     description: item?.description || '',
     grade: item?.grade || 'noGrade',

@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {getAcademyState, claimBounty, recordAcademyEvent, bountyQuality, bountyReward, startPassQuest, claimPass, hasEpicPass, consumeEpicPass, passTarget, passFee} from '../functions/game/academy/academy.js';
+import {getAcademyState, claimBounty, recordAcademyEvent, bountyQuality, bountyReward, startPassQuest, talkPassQuest, advancePassQuest, hasEpicPass, consumeEpicPass, grantEpicPass} from '../functions/game/academy/academy.js';
+import {needsPass, partyNeeded} from '../template/epicPasses.js';
 import {forgeBonuses, FORGE_MAX, reduceNeeds} from '../functions/game/builds/forgeBonuses.js';
 import {inventoryCapacity, warehouseCapacity, inventorySlotsUsed, hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
 import {enchantChance} from '../functions/game/equipment/enchantItem.js';
-import {enchantExtras, itemExtras, masterworkProfile} from '../functions/game/equipment/itemBonuses.js';
+import {enchantExtras, itemExtras, masterworkProfile, isMasterworkClass, masterworkName} from '../functions/game/equipment/itemBonuses.js';
 
 const hero = (builds = {}, extra = {}) => ({
     userId: 7,
@@ -35,18 +36,21 @@ test('the forge raises the risky enchant roll but not the safe levels', () => {
     assert.equal(enchantChance({grade: 'D', mainType: 'weapon', enchant: 0}, hero({forge: {currentLvl: 30}})), 1);
 });
 
-test('a masterwork item improves its own stats by an amount that is fixed per item', () => {
-    const a = {id: 'sword-a', mainType: 'weapon', characteristics: {power: 100, accuracy: 10}};
-    const b = {id: 'sword-b', mainType: 'weapon', characteristics: {power: 100, accuracy: 10}};
-    assert.deepEqual(itemExtras(a), {}, 'an ordinary item has no extras');
-    assert.equal(enchantExtras({...a, masterwork: true}).power, undefined);
-    const mwA = itemExtras({...a, masterwork: true});
-    const profile = masterworkProfile(a);
-    assert.ok(Math.abs(mwA.power - 100 * profile.main) < 1e-9);
-    assert.ok(profile.main >= 0.06 && profile.main <= 0.14);
-    assert.ok(mwA[profile.extra.stat] >= profile.extra.value);
-    assert.deepEqual(itemExtras({...a, masterwork: true}), mwA, 'stable for the same item');
-    assert.notDeepEqual(masterworkProfile(a), masterworkProfile(b), 'items have different bonuses');
+test('masterwork follows the l2j list: its own stats, fixed per item, with a yellow-name postfix', () => {
+    const ring = {id: 'ring', name: 'Majestic Ring', mainType: 'jewelry', characteristics: {defence: 10, maxMpMul: 1.1}};
+    assert.equal(isMasterworkClass(ring), true);
+    assert.equal(isMasterworkClass({name: 'Long Sword'}), false);
+    assert.deepEqual(itemExtras(ring), {}, 'an ordinary copy has no extras');
+    const mw = {...ring, masterwork: true};
+    const extras = itemExtras(mw);
+    // the l2j entry of the Majestic Ring names Max MP
+    assert.ok(extras.maxMpMul > 0, 'the named stat is improved');
+    assert.equal(extras.defence, undefined, 'a stat the entry does not name is left alone');
+    assert.deepEqual(itemExtras(mw), extras, 'stable for the same item');
+    assert.equal(masterworkName(mw), 'Majestic Ring - MW');
+    assert.equal(masterworkName(ring), 'Majestic Ring');
+    const other = {...mw, id: 'ring2', name: 'Avadon Breastplate', mainType: 'armor', characteristics: {defence: 100, maxHpMul: 1.1}};
+    assert.notDeepEqual(masterworkProfile(mw), masterworkProfile(other), 'items have different bonuses');
 });
 
 test('palace level sets inventory (80..250) and warehouse (60..500) size', () => {
@@ -81,18 +85,39 @@ test('academy orders grow with the building level and are paid once', () => {
     assert.equal(claimBounty(low, 'day', quest.id, now).reason, 'already_claimed');
 });
 
-test('an epic pass is earned by killing bosses and spent on the summon', () => {
+test('an epic pass is earned by a quest of dialogs, farming and drops, bound to the hero', () => {
     const player = hero({academy: {currentLvl: 1}});
     player.game.stats.lvl = 85;
-    const name = 'queenAnt';
-    assert.ok(passTarget(name) > 0);
+    const name = 'baium';
+    assert.equal(needsPass(name), true);
+    assert.equal(needsPass('zaken'), false);
+    assert.equal(partyNeeded('zaken'), 2);
+    assert.equal(partyNeeded('orfen'), 0);
     assert.equal(startPassQuest(player, name).ok, true);
-    assert.equal(claimPass(player, name).reason, 'quest_not_complete');
-    for (let kill = 0; kill < passTarget(name); kill++) recordAcademyEvent(player, 'boss_kill', {boss: {epic: false}});
-    const gold = player.game.inventory.gold;
-    assert.equal(claimPass(player, name).ok, true);
-    assert.equal(player.game.inventory.gold, gold - passFee(name));
+    let guard = 0;
+    while (player.game.academy.passQuests[name] && guard++ < 20) {
+        const view = getAcademyState(player).passes.find(pass => pass.name === name);
+        const step = view.step;
+        if (step.type === 'talk') {
+            const talked = talkPassQuest(player, name);
+            assert.equal(talked.ok, true);
+            assert.ok(talked.lines.length > 0);
+            continue;
+        }
+        // the step does not move on the wrong events
+        assert.equal(advancePassQuest(player, name).reason, 'quest_not_complete');
+        for (let n = 0; n < 400 && !getAcademyState(player).passes.find(pass => pass.name === name).step.done; n++) {
+            recordAcademyEvent(player, 'mob_kill', {mob: {level: 20}, random: () => 0});
+            recordAcademyEvent(player, 'mob_kill', {mob: {level: 80}, random: () => 0});
+            recordAcademyEvent(player, 'boss_kill', {boss: {epic: false}});
+        }
+        assert.equal(advancePassQuest(player, name).ok, true);
+    }
     assert.equal(hasEpicPass(player, name), true);
+    assert.equal(grantEpicPass(player, name), false, 'one pass at a time');
+    // it is not an item: nothing in the stocks that trade, mail, warehouse and auction move carries it
+    assert.equal(JSON.stringify(player.game.inventory).includes(name), false);
     assert.equal(consumeEpicPass(player, name), true);
     assert.equal(hasEpicPass(player, name), false);
+    assert.equal(grantEpicPass(player, name), true, 'a bought pass');
 });

@@ -1,3 +1,4 @@
+import { needsPass } from '../template/epicPasses.js';
 import {selectSoulCrystal,chargeSoulCrystal,exchangeSeals} from '../functions/game/equipment/soulCrystals.js';
 import {advanceHunt} from '../functions/game/hunt/huntFight.js';
 import {advanceFieldPvp,fieldPeers,useFieldPvpSkill} from '../functions/game/hunt/fieldPvp.js';
@@ -31,7 +32,7 @@ import {
   renameBuild,
 } from './builds.js';
 import { getArenaState, attackArena } from './arena.js';
-import { getAcademyState, claimBounty, startPassQuest, claimPass } from '../functions/game/academy/academy.js';
+import { getAcademyState, claimBounty, startPassQuest, talkPassQuest, advancePassQuest } from '../functions/game/academy/academy.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import { getBossState, getEpicState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
@@ -1627,14 +1628,14 @@ const academyState = guarded('academy state', async (req, res) => {
 const academyAction = guarded('academy action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  const actions = new Set(['claim', 'pass_start', 'pass_claim']);
+  const actions = new Set(['claim', 'pass_start', 'pass_talk', 'pass_next']);
   if (!actions.has(body.action)) throw httpError(400, 'Unknown academy action');
-  if (body.action === 'pass_claim') assertGoldUnlocked(context);
   const result = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const outcome = body.action === 'claim' ? claimBounty(context.session, String(body.scope || ''), String(body.id || ''))
       : body.action === 'pass_start' ? startPassQuest(context.session, String(body.name || ''))
-        : claimPass(context.session, String(body.name || ''));
+        : body.action === 'pass_talk' ? talkPassQuest(context.session, String(body.name || ''))
+          : advancePassQuest(context.session, String(body.name || ''));
     if (outcome.ok) await saveSession(context.session);
     return { ...outcome, academy: getAcademyState(context.session) };
   });
@@ -1716,7 +1717,7 @@ const bossSummon = guarded('boss summon', async (req, res) => {
   const result = await withLock(`${context.chatId}:boss`, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const summoned = await summonBossForMiniApp(context.session, context.chatId, epic);
-    if (summoned.ok && epic) await saveSession(context.session);
+    if (summoned.ok && epic && needsPass(epic)) await saveSession(context.session);
     return summoned;
   });
   context.session = await getSession(context.chatId, context.userId);

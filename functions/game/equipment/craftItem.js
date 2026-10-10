@@ -12,6 +12,7 @@ import {hennaOfDye, professionTier, professionLevel, TATTOO_MIN_TIER} from '../p
 import customSets from '../../../template/customSets.js';
 import skillUsagePayCost from '../player/skillUsagePayCost.js';
 import {forgeBonuses, reduceNeeds, MASTERWORK_BASE} from '../builds/forgeBonuses.js';
+import {isMasterworkClass} from './itemBonuses.js';
 import {hasInventoryRoom} from '../builds/palaceCapacity.js';
 import {recordAcademyEvent} from '../academy/academy.js';
 
@@ -232,7 +233,8 @@ export default function craftItem(session, itemId, {random = Math.random} = {}) 
         product = {key: recipe.productKey, name: recipe.productName, amount};
     } else if (success) {
         if (!inventory.equipment) inventory.equipment = {name: 'Экипировка', items: []};
-        masterwork = random() < MASTERWORK_BASE + forge.masterwork;
+        // only the items of the masterwork class of Lineage II can come out as masterwork
+        masterwork = isMasterworkClass(findCatalogItem(itemId)) && random() < MASTERWORK_BASE + forge.masterwork;
         item = instantiate(findCatalogItem(itemId));
         if (masterwork) item.masterwork = true;
         inventory.equipment.items.push(item);

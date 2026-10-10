@@ -134,6 +134,8 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     unknown_epic: 'Такого эпического босса нет.',
     epic_level_too_low: 'Твой уровень слишком низок для этого босса.',
     epic_cooldown: 'Босс ещё не вернулся — подожди окончания таймера.',
+    epic_pass_required: 'Нужен допуск к этому боссу: квест Академии или Донат-магазин.',
+    epic_party_required: 'Для этого босса нужна группа минимум из двух игроков.',
   };
   let epicTimer = 0;
   const epicDuration = (ms) => {

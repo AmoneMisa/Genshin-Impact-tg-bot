@@ -126,3 +126,7 @@
 .inventory-col { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .inventory-col img { width: 24px; height: 24px; object-fit: contain; }
 .inventory-col strong { flex: 1; padding: 7px 10px; border: 1px solid #514344; background: #08070b; text-align: right; color: #f3dca6; font: 600 13px/1.3 system-ui; overflow-wrap: anywhere; }
+
+/* Masterwork (MW) items: the name glows yellow instead of white (the postfix comes with the name). */
+.mw-name { color: #ffd84a !important; text-shadow: 0 0 8px rgba(255, 200, 40, .65), 0 1px 0 #000; }
+.inv-slot.mw, .store-slot.mw, .stock-slot.mw { border-color: #ffd84a; box-shadow: 0 0 8px rgba(255, 200, 40, .45); }

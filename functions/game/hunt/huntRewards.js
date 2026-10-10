@@ -77,7 +77,7 @@ export {LOOT_KINDS};
 export function grantKillRewards(session, mob, mobDef, {random = Math.random, now = Date.now()} = {}) {
     const level = Math.max(1, Number(session.game.stats?.lvl) || 1);
     const tier = mob.champion ? CHAMPIONS[mob.champion] : null;
-    recordAcademyEvent(session, 'mob_kill', {now});
+    recordAcademyEvent(session, 'mob_kill', {now, mob: {level: mob.level, zone: mob.zone}});
     const result = {exp: 0, sp: 0, gold: 0, items: [], shared: [], party: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
     // A party shares the loot of a kill by its loot mode (the killer keeps everything outside a party).
     const chat = typeof session.ownerDocument === 'function' ? session.ownerDocument() : null;

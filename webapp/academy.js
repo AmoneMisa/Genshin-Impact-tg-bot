@@ -12,7 +12,9 @@ const REASONS = {
   pass_owned: 'Допуск уже получен.',
   already_active: 'Это задание уже взято.',
   no_quest: 'Сначала возьми задание.',
-  quest_not_complete: 'Задание ещё не выполнено.',
+  quest_not_complete: 'Шаг ещё не выполнен.',
+  not_a_dialog: 'Сейчас нужно не говорить, а выполнить шаг.',
+  not_a_farm_step: 'Сейчас нужно поговорить с персонажем.',
   not_enough_gold: 'Недостаточно адены.',
 };
 
@@ -43,13 +45,22 @@ function bountyHtml(scope, quest, kinds) {
 }
 
 function passHtml(pass) {
-  const label = pass.owned ? 'Допуск получен' : pass.active ? (pass.progress >= pass.target ? `Сдать · ${fmt(pass.fee)} адены` : `${fmt(pass.progress)} / ${fmt(pass.target)} боссов`) : pass.canStart ? 'Взять задание' : `С ${pass.minLevel} ур.`;
-  const action = pass.active && pass.progress >= pass.target ? 'pass_claim' : 'pass_start';
-  const enabled = !pass.owned && (pass.active ? pass.progress >= pass.target : pass.canStart);
-  return `<article class="academy-row ${pass.owned ? 'done' : ''}">
-    <div><strong>${escapeHtml(pass.nameCall)}</strong><small>Победи ${fmt(pass.target)} боссов · взнос ${fmt(pass.fee)} адены</small></div>
-    <button type="button" class="city-btn" data-academy-pass="${action}:${escapeHtml(pass.name)}" ${enabled ? '' : 'disabled'}>${escapeHtml(label)}</button>
-  </article>`;
+  const head = `<strong>${escapeHtml(pass.nameCall)}</strong>`;
+  if (pass.owned) {
+    return `<article class="academy-row done"><div>${head}<small>Допуск получен · привязан к персонажу</small></div><button type="button" class="city-btn" disabled>Получен</button></article>`;
+  }
+  if (!pass.active) {
+    return `<article class="academy-row"><div>${head}<small>Квест: ${escapeHtml(pass.npc)} · с ${fmt(pass.minLevel)} ур. · или ${fmt(pass.price)} ${luckCoinHtml(14)} в Донат-магазине</small></div>
+      <button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}" ${pass.canStart ? '' : 'disabled'}>${pass.canStart ? 'Взять квест' : `С ${fmt(pass.minLevel)} ур.`}</button></article>`;
+  }
+  const step = pass.step;
+  const where = `Шаг ${fmt(pass.stepIndex + 1)} из ${fmt(pass.stepCount)}`;
+  if (step.type === 'talk') {
+    return `<article class="academy-row"><div>${head}<small>${where} · Поговори: ${escapeHtml(step.npc)}</small></div>
+      <button type="button" class="city-btn upgrade" data-academy-pass="pass_talk:${escapeHtml(pass.name)}">Поговорить</button></article>`;
+  }
+  return `<article class="academy-row ${step.done ? 'done' : ''}"><div>${head}<small>${where} · ${escapeHtml(step.text || '')}: ${fmt(step.progress)} / ${fmt(step.target)}</small></div>
+    <button type="button" class="city-btn" data-academy-pass="pass_next:${escapeHtml(pass.name)}" ${step.done ? '' : 'disabled'}>Дальше</button></article>`;
 }
 
 function mainQuestsHtml(view) {
@@ -62,6 +73,7 @@ function mainQuestsHtml(view) {
 
 export async function openAcademy({ api, haptic = () => {}, openMainQuests = () => {} } = {}) {
   let state = await api('/api/academy');
+  let dialog = null;
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay city-window academy-window';
   overlay.innerHTML = `<div class="overlay-backdrop" data-academy-close></div>
@@ -80,7 +92,8 @@ export async function openAcademy({ api, haptic = () => {}, openMainQuests = () 
       ${section('Ежедневные поручения', 'day')}
       ${section('Еженедельные поручения', 'week')}
       ${mainQuestsHtml(state.classQuests)}
-      <section class="city-block"><h4>Допуски к эпическим боссам</h4>${state.passes.map(passHtml).join('')}</section>
+      ${dialog ? `<section class="city-block academy-dialog"><h4>${escapeHtml(dialog.npc)}</h4>${dialog.lines.map(line => `<p>«${escapeHtml(line)}»</p>`).join('')}${dialog.done ? '<p><b>Допуск получен.</b></p>' : ''}</section>` : ''}
+      <section class="city-block"><h4>Допуски к эпическим боссам</h4><p class="city-desc">Закен требует группу из двух игроков, Орфен, Кора и Королева Муравьёв доступны в одиночку. Допуск привязан к персонажу: его нельзя продать, положить на хранение или передать.</p>${state.passes.map(passHtml).join('')}</section>
       <p class="city-feedback" aria-live="polite">${escapeHtml(message)}</p></div>`;
   }
 
@@ -88,6 +101,7 @@ export async function openAcademy({ api, haptic = () => {}, openMainQuests = () 
     try {
       const result = await api('/api/academy/action', { method: 'POST', body: JSON.stringify(payload) });
       state = result.academy || state;
+      dialog = result.lines ? { npc: result.npc, lines: result.lines, done: Boolean(result.done) } : null;
       haptic('medium');
       render();
     } catch (error) {

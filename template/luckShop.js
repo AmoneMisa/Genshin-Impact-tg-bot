@@ -14,10 +14,12 @@ import buffPotions from './buffPotions.js';
 import elixirs from './elixirs.js';
 import materials from './materialsTemplate.js';
 import { LIFESTONE_SHOP, lifestoneKey } from './augmentData.js';
+import { PASS_EPICS } from './epicPasses.js';
 
 export const LUCK_SHOP_GROUPS = Object.freeze([
   {id:'soul',title:'Кристаллы души 14–17'},
   { id: 'epic', title: 'Временные эпики' },
+  { id: 'passes', title: 'Допуски к эпик-боссам' },
   { id: 'lifestones', title: 'Камни жизни' },
   { id: 'scrolls', title: 'Свитки' },
   { id: 'elixirs', title: 'Эликсиры' },
@@ -78,7 +80,15 @@ const lifeStoneItems = Object.entries(LIFESTONE_SHOP.top).map(([grade, cost]) =>
 }));
 
 const soulCrystals=Object.entries(SOUL_COLORS).flatMap(([color,label])=>Object.entries(SOUL_COL_PRICES).map(([stage,cost])=>({id:'soul-'+color+'-'+stage,group:'soul',title:label+' кристалл души · '+stage+' ур.',icon:'💠',subtitle:'Для SA старших грейдов',cost,grant:{materials:{[soulCrystalKey(color,+stage)]:1}}})));
+// A pass is bound to the character: it is a counter of the hero (game.academy.passes), never an item.
+const passItems = Object.entries(PASS_EPICS).map(([name, config]) => ({
+  id: `pass-${name}`, group: 'passes', title: `Допуск: ${config.label}`, icon: '🗝️',
+  subtitle: `LVL ${config.minLevel}+ · привязан к персонажу, не продаётся и не передаётся`,
+  cost: config.cost, needLvl: config.minLevel, grant: { epicPass: name },
+}));
+
 export default Object.freeze([
+  ...passItems,
   ...soulCrystals,
   ...lifeStoneItems,
   ...scrolls,
