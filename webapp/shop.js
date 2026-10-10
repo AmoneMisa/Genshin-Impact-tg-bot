@@ -3,6 +3,69 @@ import {shotIcon} from './art/painted-icon-art.js';
 import { escapeHtml } from './escape-html.js';
 import { buildArtUrl } from './art/builds-art.js';
 import {flaskHtml} from './inventory.js';
+import { l2IconHtml, L2_CATEGORY_ART, L2_MATERIAL_ART, L2_JEWELRY_ART } from './art/l2-icon-art.js';
+import { openMerchantsGame } from './merchants.js';
+import { openExchangeGame } from './exchange.js';
+import { openBonusGame } from './bonus.js';
+import { openLuckShopGame } from './luck-shop.js';
+import { openAuctionGame } from './auction.js';
+
+// Keep the category window underneath the goods: closing a child returns here.
+export async function openShopGame(options) {
+  const merchant = (id, group) => () => openMerchantsGame({ ...options, initialMerchant: id, initialGroup: group });
+  const goods = category => () => openShopGoods({ ...options, initialCategory: category });
+  const categories = [
+    ['armor', 'Броня', 'icon-armor_elven_tunic_i00', merchant('armor')],
+    ['weapons', 'Оружие', L2_CATEGORY_ART.full, merchant('weapons')],
+    ['jewelry', 'Бижа', L2_JEWELRY_ART['blue coral ring'], merchant('jewelry')],
+    ['shots', 'Соски', L2_MATERIAL_ART.soulshot_S, goods('shots')],
+    ['arrows', 'Стрелы', L2_MATERIAL_ART.l2_17, merchant('weapons', 'ammo')],
+    ['potions', 'Банки', L2_CATEGORY_ART.consumable, goods('player')],
+    ['crystals', 'Кристаллы', L2_CATEGORY_ART.crystal, goods('soul')],
+    ['quest', 'Квест', L2_CATEGORY_ART.recipe, null, 'Квестовые товары пока не продаются.'],
+    ['dyes', 'Краски', L2_CATEGORY_ART.dye, merchant('mammon', 'dye')],
+    ['scrolls', 'Свитки', L2_CATEGORY_ART.scroll, merchant('mammon', 'scroll')],
+    ['life', 'ЛС', L2_CATEGORY_ART.lifestone, goods('stones')],
+    ['resources', 'Ресурсы', L2_CATEGORY_ART.material, merchant('alchemist')],
+    ['bonus', 'Бонус', L2_MATERIAL_ART.l2_1865, () => openBonusGame(options)],
+    ['exchange', 'Обменник', L2_CATEGORY_ART.gold, () => openExchangeGame(options)],
+    ['runes', 'Руны', L2_MATERIAL_ART.l2_8358, null, 'Руны пока не продаются.'],
+  ];
+  const overlay = document.createElement('section');
+  overlay.className = 'game-overlay l2-store-overlay';
+  overlay.innerHTML = `<div class="overlay-backdrop"></div>
+    <div class="overlay-panel l2-store-panel">
+      <header class="l2-store-title"><h2>Магазин</h2><button type="button" class="overlay-close" aria-label="Закрыть">×</button></header>
+      <div class="l2-store-ornament" aria-hidden="true"><span></span></div>
+      <div class="l2-store-grid">${categories.map(([id, label, art, open, reason]) => `<button type="button" class="l2-store-category" data-store-category="${id}" ${!open ? `aria-disabled="true" title="${reason}"` : ''}>${l2IconHtml(art)}<span>${label}</span></button>`).join('')}</div>
+      <div class="l2-store-notice" role="status" aria-live="polite"></div>
+      <footer class="l2-store-footer"><button type="button" data-store-all>Все товары</button><button type="button" data-store-premium>Магазин COL</button><button type="button" data-store-auction>Аукцион</button></footer>
+    </div>`;
+  const notice = overlay.querySelector('.l2-store-notice');
+  let opening = false;
+  async function launch(open, reason) {
+    if (opening) return;
+    options.haptic('light');
+    if (!open) { notice.textContent = reason; return; }
+    opening = true;
+    notice.textContent = 'Открываем раздел…';
+    try { await open(); notice.textContent = ''; }
+    catch (error) { notice.textContent = error.message || 'Не удалось открыть раздел.'; }
+    finally { opening = false; }
+  }
+  overlay.querySelectorAll('[data-store-category]').forEach(button => {
+    const entry = categories.find(([id]) => id === button.dataset.storeCategory);
+    button.addEventListener('click', () => launch(entry[3], entry[4]));
+  });
+  overlay.querySelector('[data-store-all]').addEventListener('click', () => launch(goods('all')));
+  overlay.querySelector('[data-store-premium]').addEventListener('click', () => launch(() => openLuckShopGame(options)));
+  overlay.querySelector('[data-store-auction]').addEventListener('click', () => launch(() => openAuctionGame(options)));
+  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
+  overlay.querySelector('.overlay-close').addEventListener('click', close);
+  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('visible'));
+}
 
 /** Item art: palace styles show their painting, the rest an emblem glyph. */
 export const ITEM_ICONS = Object.freeze({
@@ -53,9 +116,9 @@ function remain(until) {
   return `${minutes} мин.`;
 }
 
-export async function openShopGame({ api, renderState, haptic, statusElement }) {
+export async function openShopGoods({ api, renderState, haptic, statusElement, initialCategory = 'all' }) {
   let state = await api('/api/shop');
-  let category = 'all';
+  let category = initialCategory;
   let pending = false;
   let confirming = null;
   let timer = null;

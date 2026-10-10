@@ -33,8 +33,8 @@ function symbolHtml(symbol) {
   return `<small class="merchant-symbol">${stats} · ${symbol.level} ур. · ${symbol.dyes} красок</small>`;
 }
 
-export async function openMerchantsGame({ api, renderState, haptic, statusElement }) {
-  const query = { merchant: null, page: 1, grade: null, group: null, search: '', usable: true, affordable: false };
+export async function openMerchantsGame({ api, renderState, haptic, statusElement, initialMerchant = null, initialGroup = null }) {
+  const query = { merchant: initialMerchant, page: 1, grade: null, group: initialGroup, search: '', usable: true, affordable: false };
   let state = null;
   let tab = null;
   let pending = false;

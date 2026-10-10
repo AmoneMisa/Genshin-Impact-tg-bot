@@ -196,6 +196,8 @@ test('the state lists lots of the chat by category and sort, marks the viewer\'s
   assert.equal(all.lots.length, 3);
   assert.equal(all.mine.length, 2);
   assert.equal(all.fee, 0.05);
+  assert.equal(all.lots.find(lot => lot.kind === 'material').materialKey, 'scroll_A');
+  assert.deepEqual(all.lots.find(lot => lot.kind === 'potion').artPotion, {type:'buff', id:'might', size:undefined, bottleType:undefined});
   const cheap = await getAuctionState(a, store, { sort: 'cheap', now: NOW + HOUR });
   assert.deepEqual(cheap.lots.map(lot => lot.price), [100, 500, 900]);
   const potionsOnly = await getAuctionState(a, store, { kind: 'potion', now: NOW + HOUR });

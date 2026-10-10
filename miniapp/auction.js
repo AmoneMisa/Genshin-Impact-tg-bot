@@ -48,17 +48,18 @@ function viewOfEquipment(item) {
     grade: item.grade || 'noGrade',
     enchant: number(item.enchant),
     mainType: item.mainType || 'equipment',
+    artItem: {name: item.name, grade: item.grade, mainType: item.mainType, kind: item.kind, category: item.category},
     stats: describeItemStats(item).slice(0, 6).map(stat => stat.text),
   };
 }
 
 function viewOfPotion(potion) {
-  return { title: potion.name || 'Зелье', icon: '🧪', description: potion.description || '', grade: potion.grade || null };
+  return { title: potion.name || 'Зелье', icon: '🧪', description: potion.description || '', grade: potion.grade || null, artPotion: {type: potion.type, id: potion.id, size: potion.size, bottleType: potion.bottleType} };
 }
 
 function viewOfMaterial(key) {
   const info = materialInfo(key);
-  return { title: info.name, icon: info.icon || '✦', description: info.description || '' };
+  return { title: info.name, icon: info.icon || '✦', description: info.description || '', materialKey: key };
 }
 
 // ---- delivery of a lot's content ----
@@ -106,6 +107,10 @@ export async function mongoAuctionStore() {
 // ---- lots ----
 
 function lotDto(lot, viewerId, now) {
+  // Old listings also have the item in escrow; no migration is needed for art.
+  const art = lot.kind === 'equipment' ? viewOfEquipment(lot.payload?.item || {})
+    : lot.kind === 'potion' ? viewOfPotion(lot.payload?.potion || {})
+      : lot.payload?.key ? viewOfMaterial(lot.payload.key) : {};
   return {
     id: lot.id,
     kind: lot.kind,
@@ -115,6 +120,10 @@ function lotDto(lot, viewerId, now) {
     enchant: lot.view?.enchant ?? null,
     stats: lot.view?.stats || [],
     description: lot.view?.description || '',
+    mainType: art.mainType,
+    artItem: art.artItem,
+    artPotion: art.artPotion,
+    materialKey: art.materialKey,
     count: lot.count,
     price: lot.price,
     sellerName: lot.sellerName,
