@@ -1,3 +1,4 @@
+import {l2SkillIcon} from './art/l2-extra-art.js';
 import { escapeHtml } from './escape-html.js';
 export { escapeHtml };
 // MMO-style boss raid HUD (pure HTML builders, styled in boss.css):
@@ -38,7 +39,7 @@ export function statusIcons(list = []) {
   if (!list.length) return '<div class="mmo-statuses empty"></div>';
   return `<div class="mmo-statuses">${list.map(status => `
     <span class="mmo-status ${escapeHtml(status.id)}" title="${escapeHtml(status.label)}${status.description ? ` — ${escapeHtml(status.description)}` : ''}">
-      ${icon(STATUS_ICONS[status.id] || 'sparkle')}${status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
+      ${l2SkillIcon(status.iconKey || status.potionId || status.id) || icon(STATUS_ICONS[status.id] || 'sparkle')}${status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
     </span>`).join('')}</div>`;
 }
 
@@ -134,8 +135,7 @@ export function partyStrip(rows = []) {
 }
 
 function skillGlyph(skill,className='') {
-  if(skill.isDamage && ['mage','priest'].includes(familyOf(className)))return icon(skill.index===0?'wand-sparkles':skill.index===1?'cloud':'zap');
-  return icon(skill.isHeal?'heart':skill.isShield?'shield':skill.isDamage?'swords':skill.isBuff?'sparkles':skill.isDebuff?'cloud-fog':'wand-sparkles');
+  return l2SkillIcon(skill.name) || l2SkillIcon(skill.isHeal?'heal':skill.isShield?'shield':skill.isDebuff?'debuff':skill.isBuff?'buff':'damage');
 }
 
 /** Hotbar; `data-skill-cooldown` nodes are refreshed by the screen's ticker. */

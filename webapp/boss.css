@@ -365,3 +365,28 @@ button.mmo-frame:active { transform: scale(.99); }
 .boss-epic-panel .epic-note { margin:4px 2px 12px; color:var(--muted); font-size:12px; line-height:1.4; }
 .epic-card .epic-jewel { position:relative; z-index:1; margin:2px 0; color:#f1d9a4; font-size:12px; }
 .epic-card .epic-status { position:relative; z-index:1; margin:0; color:var(--muted); font-size:12px; }
+
+/* Client skill art keeps its original colours and stays inside the status frame. */
+.mmo-status .l2-client-icon{width:100%;height:100%;object-fit:contain}
+.mmo-skill-icon .l2-client-icon{width:32px;height:32px}
+/* Fishing sections contain several rows rather than a portrait and target bars. */
+.fishing-panel .mmo-frame{display:block;min-width:0;margin:12px 0;padding:14px}
+.fishing-panel .mmo-section-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.fishing-panel .mmo-section-title strong{min-width:0;overflow-wrap:anywhere}
+.fishing-panel .party-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.fishing-panel .party-actions button{flex:1 1 130px}
+.fishing-rods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.fishing-rods>span{display:block;min-width:0;border:1px solid var(--gold-dim);border-radius:4px;padding:8px;font-size:12px;overflow-wrap:anywhere}
+.fishing-rods>span.owned{border-color:var(--gold)}
+.fishing-rods>span.locked{opacity:.5}
+.fishing-rods small{display:block;margin-top:6px;color:var(--text-muted);font-size:11px;line-height:1.5}
+.fishing-fish{display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:start;gap:8px;margin:10px 0;padding:10px 0;border-bottom:1px solid var(--gold-dim)}
+.fishing-fish .shop-icon{width:32px;height:32px}
+.fishing-fish .shop-item-copy{min-width:0}
+.fishing-fish h3{font-size:14px;overflow-wrap:anywhere;margin:0 0 6px}
+.fishing-fish p{font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.fishing-fish button{max-width:85px;white-space:normal}
+.guild-row{display:block;padding:6px 0;font-size:12px;overflow-wrap:anywhere}
+.fishing-panel .merchant-filter{display:block;font-size:12px;line-height:1.6}
+.fishing-panel .equipment-action{max-width:100%;white-space:normal;line-height:1.4;padding:8px}
+.fishing-panel .party-note{overflow-wrap:anywhere}

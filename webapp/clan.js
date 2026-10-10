@@ -1,3 +1,4 @@
+import {l2SkillIcon} from './art/l2-extra-art.js';
 import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldArtUrl } from './art/world-art.js';
@@ -282,7 +283,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <div class="clan-warehouse">${skills.eggs.map(egg => `<article><span>${materialIcon(egg.key,'🥚')}</span><strong>${egg.count}</strong><small>${escapeHtml(egg.name)}</small></article>`).join('')}</div>
         ${skills.skills.map(skill => `
           <article class="clan-card">
-            <h4>${escapeHtml(skill.name)} · ${skill.level} / ${skill.maxLevel}</h4>
+            <h4>${l2SkillIcon(skill.id)} ${escapeHtml(skill.name)} · ${skill.level} / ${skill.maxLevel}</h4>
             <small>${escapeHtml(skill.stat)}: +${percent(skill.perLevel * skill.level, skill.perLevel < 1)}${skill.level < skill.maxLevel ? ` → +${percent(skill.perLevel * (skill.level + 1), skill.perLevel < 1)}` : ''}</small>
             ${skill.cost ? `<small>Нужно: ${skill.cost.clanLevel} ур. клана · ✦ ${formatNumber(skill.cost.reputation)} · 🪙 ${formatNumber(skill.cost.gold)} · ${materialIcon(skill.cost.egg,'🥚')} ${skill.cost.eggs} (${escapeHtml(skill.cost.eggName)})</small>
             ${skills.canManage ? `<button type="button" class="clan-play" data-clan-skill="${escapeHtml(skill.id)}" ${skill.canLearn ? '' : 'disabled'}>Изучить</button>` : ''}` : ''}

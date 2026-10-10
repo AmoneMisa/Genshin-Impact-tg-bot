@@ -52,8 +52,8 @@ test('unknown player text is escaped and unavailable passive learning stays disa
   assert.doesNotMatch(html,/<img src=x>/);
 });
 test('skill and element artwork uses local reviewed assets',()=>{
-  assert.match(characterSkillIcon('shield'),/\/art\/ui\/v1\/shield-128.webp/);
-  assert.match(characterSkillIcon('lifestone'),/\/art\/icons\/lifestone-128.webp/);
+  assert.match(characterSkillIcon('shield'),/\/art\/l2-extra\/icon-skill1040-32.webp/);
+  assert.match(characterSkillIcon('lifestone'),/\/art\/l2-extra\/icon-skill3123-32.webp/);
   const data=getCharacterState(session());
   assert.match(renderCharacterTab(data,'stats'),/element-fire-128.webp/);
 });

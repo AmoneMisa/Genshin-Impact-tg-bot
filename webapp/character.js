@@ -1,3 +1,4 @@
+import {l2SkillIcon} from './art/l2-extra-art.js';
 import { escapeHtml as esc } from './escape-html.js';
 import { icon } from './icons.js';
 import { paintedIconHtml, elementIcon } from './art/painted-icon-art.js';
@@ -22,7 +23,7 @@ const empty = text => '<p class="character-empty">' + esc(text) + '</p>';
 const action = (name,label,data='',disabled=false) => '<button type="button" data-character-action="' + name + '" ' + data + (disabled ? ' disabled' : '') + '><span class="character-button-label">' + label + '</span></button>';
 
 export function characterSkillIcon(key) {
-  const art = key === 'lifestone' ? paintedIconHtml('lifestone') : icon(SKILL_ICONS[key] || (/defen|shield|barrier|armor|tough/.test(key) ? 'shield' : /magic|empower|int/.test(key) ? 'wand-sparkles' : /crit|focus|accuracy/.test(key) ? 'target' : /speed|haste|agility/.test(key) ? 'wind' : /health|vital|heal/.test(key) ? 'heart' : 'book-open'));
+  const art = l2SkillIcon(key) || (key === 'lifestone' ? paintedIconHtml('lifestone') : icon(SKILL_ICONS[key] || (/defen|shield|barrier|armor|tough/.test(key) ? 'shield' : /magic|empower|int/.test(key) ? 'wand-sparkles' : /crit|focus|accuracy/.test(key) ? 'target' : /speed|haste|agility/.test(key) ? 'wind' : /health|vital|heal/.test(key) ? 'heart' : 'book-open')));
   return '<span class="character-skill-icon" aria-hidden="true">' + art + '</span>';
 }
 function meter(label,current,max) {
@@ -67,7 +68,7 @@ function itemDetails(item,slot) {
     + (item.set ? '<p class="character-note">Комплект: ' + esc(item.set.name || item.set.id) + '</p>' : '')
     + (item.timed ? row('Осталось дней',fmt(item.daysLeft)) : '')
     + '<div class="character-tools">' + action('unequip','Снять','data-key="' + esc(item.key) + '"',!item.isUsed || !item.key) + '</div>')
-    + attrHtml + (augmentation ? section('Аугментация ЛС',empty(augmentation.text) + (augmentation.skill ? empty(augmentation.skill.title + ': ' + augmentation.skill.name + ' · ' + augmentation.skill.text) : '')) : '');
+    + attrHtml + (augmentation ? section('Аугментация ЛС',empty(augmentation.text) + (augmentation.skill ? l2SkillIcon(augmentation.skill.id) + empty(augmentation.skill.title + ': ' + augmentation.skill.name + ' · ' + augmentation.skill.text) : '')) : '');
 }
 function listEntry(iconKey,title,copy,buttons='') {
   return '<article class="character-list-row">' + characterSkillIcon(iconKey) + '<div class="character-list-copy"><strong>' + esc(title) + '</strong><p>' + esc(copy) + '</p>' + buttons + '</div></article>';
@@ -109,7 +110,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
       ;
   }
   if (tab === 'skills') {
-    const active = (data.skills?.skills || []).map(skill=>listEntry(skill.power?.kind || 'utility',
+    const active = (data.skills?.skills || []).map(skill=>listEntry(skill.name,
       skill.name+' +'+skill.enchantLevel,
       skill.description+' · '+(skill.locked?'Откроется на '+skill.needLevel+' ур.':'MP '+fmt(skill.usage?.mp)+' · CD '+fmt(skill.usage?.cooldownSeconds)+' сек.'),
       action('skill-info','Описание и улучшение','data-skill-slot="'+skill.slot+'"'))).join('');
@@ -118,7 +119,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
       skill.cost ? '<small>Нужен '+skill.needLvl+' ур. · '+fmt(skill.cost.sp)+' SP · '+fmt(skill.cost.gold)+' Мора</small>'+action('learn','Изучить','data-passive-id="'+esc(skill.id)+'"',!skill.canLearn) : '<small>Максимальный уровень</small>')).join('');
     const ls = (data.equipment?.items || []).filter(item=>item.isUsed && item.augment?.current).map(item=>{
       const current = item.augment.current, skill = current.skill, activeState = item.augment.active;
-      return listEntry('lifestone',(skill?skill.title+': '+skill.name:'Бонус ЛС')+' · '+item.name,
+      return listEntry(skill?.id || 'lifestone',(skill?skill.title+': '+skill.name:'Бонус ЛС')+' · '+item.name,
         current.text+(skill?' · '+skill.text:''),
         activeState? action('ls-activate',activeState.cooldownMs>0 ? 'CD '+Math.ceil(activeState.cooldownMs/60000)+' мин.' : 'Активировать',
           'data-key="'+esc(item.key)+'"',activeState.cooldownMs>0):'');

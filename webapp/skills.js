@@ -1,3 +1,4 @@
+import {l2SkillIcon} from './art/l2-extra-art.js';
 import { escapeHtml } from './escape-html.js';
 import { materialIcon } from './material-icons.js';
 import { menuArtFor } from './menu-art.js';
@@ -88,7 +89,7 @@ function skillCard(skill, state) {
   return `
     <article class="skill-card kind-${escapeHtml(skill.power?.kind || 'utility')} tier-${skill.tier} ${skill.locked ? 'locked' : ''}" data-skill-card="${skill.slot}">
       <div class="skill-head">
-        <span class="skill-rune" aria-hidden="true">${SKILL_RUNES[skill.power?.kind] || SKILL_RUNES.utility}</span>
+        <span class="skill-rune" aria-hidden="true">${l2SkillIcon(skill.name) || l2SkillIcon(skill.power?.kind) || SKILL_RUNES.utility}</span>
         <div><strong>${escapeHtml(skill.name)}</strong><small>${skill.locked ? `🔒 Откроется на ${skill.needLevel} уровне` : `Нужен уровень ${skill.needLevel}`}${skill.tier > 1 ? ` · ${skill.tier}-я профессия` : ''}</small></div>
         <span class="skill-level">+${skill.enchantLevel}</span>
       </div>

@@ -1,3 +1,4 @@
+import {l2SkillIcon} from './art/l2-extra-art.js';
 import { escapeHtml } from './escape-html.js';
 
 // Class buffs: the seven Lineage II style buffs cast by the class itself.
@@ -48,7 +49,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
     const next = buff.level >= 1 && buff.nextLevelAt && buff.level < buff.maxLevel ? `<small>Следующий уровень: ${buff.nextLevelAt} ур.</small>` : '';
     return `
       <article class="mail-letter buff-card ${locked ? 'claimed' : 'pending'}">
-        <div class="mail-head"><strong>${escapeHtml(buff.name)} ${locked ? '' : ROMAN[buff.level]}</strong>
+        <div class="mail-head"><strong>${l2SkillIcon(buff.id)} ${escapeHtml(buff.name)} ${locked ? '' : ROMAN[buff.level]}</strong>
           <small>${locked ? `Откроется на ${buff.firstLevelAt} уровне` : buff.active ? `активен, ещё ${minutesLeft(buff.active.until)} мин.` : `уровень ${buff.level} из ${buff.maxLevel}`}</small></div>
         <p>${escapeHtml(buff.effect)}</p>
         ${next}

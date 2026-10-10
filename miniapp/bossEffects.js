@@ -25,6 +25,7 @@ export function playerEffectsDto(effects, respawnRemainMs = 0, now = Date.now())
     const known = EFFECT_LABELS[effect?.name] || { id: String(effect?.name || 'effect'), label: String(effect?.name || 'Эффект') };
     return {
       id: known.id,
+      ...(effect?.potionId ? {iconKey: effect.potionId} : {}),
       label: known.label,
       value: number(effect?.value ?? effect?.amount, 0) || null,
       // Charge-based effects count attacks, timed ones count seconds left.

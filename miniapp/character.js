@@ -41,7 +41,7 @@ export function characterEffects(session, now = Date.now()) {
   const ls = session?.game?.lsBuff;
   const skill = describeSkill(ls);
   if (skill && num(ls.until) > now) effects.push({
-    id:'ls:' + skill.id, name:skill.name, iconKey:'lifestone', source:'Активная аугментация ЛС',
+    id:'ls:' + skill.id, name:skill.name, iconKey:skill.id, source:'Активная аугментация ЛС',
     description:skill.text, until:num(ls.until), charges:null, kind:'buff',
   });
   return effects;

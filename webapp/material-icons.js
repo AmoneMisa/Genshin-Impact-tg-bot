@@ -1,3 +1,4 @@
+import {l2FishingIcon} from './art/l2-extra-art.js';
 import {paintedIconHtml} from './art/painted-icon-art.js';
 import {icon} from './icons.js';
 import {l2MaterialIcon} from './art/l2-icon-art.js';
@@ -27,7 +28,7 @@ export function materialIconInfo(key) {
 
 /** Image markup for a material, or the given emoji when it has no painting. */
 export function materialIcon(key, fallback = '✦') {
-  const original=l2MaterialIcon(key);
+  const original=l2FishingIcon(key)||l2MaterialIcon(key);
   if(original)return original;
   const info = materialIconInfo(key);
   if (!info) return icon('sparkle','mat-icon');

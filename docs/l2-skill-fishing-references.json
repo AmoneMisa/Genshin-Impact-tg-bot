@@ -1,0 +1,5315 @@
+{
+  "skillArt": {
+    "might": "icon-skill1068",
+    "shield": "icon-skill1040",
+    "haste": "icon-skill1086",
+    "focus": "icon-skill1077",
+    "guidance": "icon-skill1240",
+    "death-whisper": "icon-skill1242",
+    "wind-walk": "icon-skill1204",
+    "Тык палкой": "icon-skill0003",
+    "Взмах меча": "icon-skill0003",
+    "Ярость вампира": "icon-skill1234",
+    "Вожделение паладина": "icon-skill0003",
+    "Выстрел из посоха": "icon-skill1177",
+    "Грозовая стужа": "icon-skill1340",
+    "Лунная тень": "icon-skill1418",
+    "Удар скипетром": "icon-skill1177",
+    "Сияние утренней звезды": "icon-skill1218",
+    "Казнь святых": "icon-skill1265",
+    "Точный выстрел": "icon-skill0056",
+    "Прямо в яблочко": "icon-skill0056",
+    "Элементальная стрела": "icon-skill0019",
+    "Удар кинжалом": "icon-skill0016",
+    "Подлый укол": "icon-skill0016",
+    "Танец клинков": "icon-skill0261",
+    "Удар секирой": "icon-skill0003",
+    "Кровавая ярость": "icon-skill1234",
+    "Дробящий удар": "icon-skill0260",
+    "Удар возмездия": "icon-skill1234",
+    "Клятва света": "icon-skill1068",
+    "Несокрушимый щит": "icon-skill0110",
+    "Вызов": "icon-skill0028",
+    "Возрождение феникса": "icon-skill1016",
+    "Пылающий меч": "icon-skill1234",
+    "Огненное воскрешение": "icon-skill1016",
+    "Гнев феникса": "icon-skill1234",
+    "Крепость": "icon-skill0110",
+    "Неприступный бастион": "icon-skill0028",
+    "Стена света": "icon-skill1418",
+    "Последний рубеж": "icon-skill0110",
+    "Цепная молния": "icon-skill0279",
+    "Ледяной шип": "icon-skill1340",
+    "Похищение жизни": "icon-skill1234",
+    "Проклятие слабости": "icon-skill1164",
+    "Метеоритный дождь": "icon-skill1467",
+    "Ледяные оковы": "icon-skill1340",
+    "Звёздный шторм": "icon-skill1467",
+    "Разлом реальности": "icon-skill0279",
+    "Жатва душ": "icon-skill1234",
+    "Пожирание": "icon-skill1234",
+    "Жатва мира": "icon-skill1234",
+    "Бессмертие душ": "icon-skill1234",
+    "Малое исцеление": "icon-skill1218",
+    "Источник маны": "icon-skill1157",
+    "Священный огонь": "icon-skill1265",
+    "Кара небес": "icon-skill1265",
+    "Священное чудо": "icon-skill1218",
+    "Ореол": "icon-skill1418",
+    "Небесное исцеление": "icon-skill1218",
+    "Божественный щит": "icon-skill1418",
+    "Луч правосудия": "icon-skill1265",
+    "Приговор": "icon-skill1265",
+    "Гнев небес": "icon-skill1265",
+    "Последний суд": "icon-skill1265",
+    "Град стрел": "icon-skill0019",
+    "Охотничий азарт": "icon-skill1068",
+    "Выстрел в слабое место": "icon-skill0056",
+    "Бронебойная стрела": "icon-skill0101",
+    "Тысяча стрел": "icon-skill0019",
+    "Глаз сокола": "icon-skill1077",
+    "Дождь комет": "icon-skill0019",
+    "Зрение сокола": "icon-skill1077",
+    "Призрачная стрела": "icon-skill0056",
+    "Ночной охотник": "icon-skill0101",
+    "Выстрел судьбы": "icon-skill0056",
+    "Тьма над целью": "icon-skill0101",
+    "Удар в спину": "icon-skill0016",
+    "Смертельная метка": "icon-skill1077",
+    "Ослепление": "icon-skill0101",
+    "Тень": "icon-skill0922",
+    "Тысяча порезов": "icon-skill0261",
+    "Казнь из тени": "icon-skill0016",
+    "Танец тысячи клинков": "icon-skill0261",
+    "Поцелуй смерти": "icon-skill0016",
+    "Вихрь теней": "icon-skill0261",
+    "Дымовая завеса": "icon-skill0101",
+    "Затмение": "icon-skill0261",
+    "Бесконечный танец": "icon-skill0261",
+    "Рубка": "icon-skill0261",
+    "Неистовство": "icon-skill1062",
+    "Кровавая броня": "icon-skill0110",
+    "Железная плоть": "icon-skill0110",
+    "Громовой удар": "icon-skill0260",
+    "Боевой клич": "icon-skill1062",
+    "Рёв войны": "icon-skill1062",
+    "Кровавая жатва": "icon-skill1234",
+    "Землетрясение": "icon-skill0260",
+    "Несокрушимый": "icon-skill0110",
+    "Гнев гор": "icon-skill0260",
+    "Вечная твердь": "icon-skill0110",
+    "passive_duel_might": "icon-skill3238",
+    "passive_magic_power": "icon-skill3238",
+    "passive_magic_barrier": "icon-skill3238",
+    "passive_focus": "icon-skill3238",
+    "passive_guidance": "icon-skill3238",
+    "passive_haste": "icon-skill3238",
+    "passive_vitality": "icon-skill3238",
+    "passive_clarity": "icon-skill3238",
+    "chance_critical_anger": "icon-skill3080",
+    "chance_death_blow": "icon-skill3080",
+    "chance_magic_burst": "icon-skill3080",
+    "active_might": "icon-skill3123",
+    "active_empower": "icon-skill3123",
+    "active_haste": "icon-skill3123",
+    "active_shield": "icon-skill3123",
+    "active_focus": "icon-skill3123",
+    "weapon-mastery": "icon-skill0141",
+    "magic-mastery": "icon-skill0249",
+    "heavy-armor-mastery": "icon-skill0231",
+    "robe-mastery": "icon-skill0234",
+    "light-armor-mastery": "icon-skill0227",
+    "boost-hp": "icon-skill0211",
+    "boost-mana": "icon-skill0213",
+    "critical-power": "icon-skill0193",
+    "critical-chance": "icon-skill0137",
+    "accuracy": "icon-skill0256",
+    "quick-recovery": "icon-skill0228",
+    "healing-power": "icon-skill0436",
+    "toughness": "icon-skill0134",
+    "clan-might": "icon-skill0376",
+    "clan-shield": "icon-skill0377",
+    "clan-vitality": "icon-skill0370",
+    "clan-precision": "icon-skill0380",
+    "clan-agility": "icon-skill0381",
+    "clan-fury": "icon-skill0193",
+    "fishing": "icon-skill1312",
+    "pumping": "icon-skill1313",
+    "reeling": "icon-skill1314",
+    "fishing-expertise": "icon-skill1315",
+    "reflect": "icon-skill3238",
+    "hp_regen": "icon-skill1044",
+    "rage": "icon-skill1062",
+    "resistance": "icon-skill1036",
+    "life": "icon-skill1044",
+    "damageUp": "icon-skill1068",
+    "critChanceUp": "icon-skill1077",
+    "critDamageUp": "icon-skill1242",
+    "guard": "icon-skill0110",
+    "taunt": "icon-skill0028",
+    "evade": "icon-skill1087",
+    "armorBreak": "icon-skill0342",
+    "weaken": "icon-skill1164",
+    "stun": "icon-skill0101",
+    "enrage": "icon-skill1062",
+    "armored": "icon-skill0110",
+    "locked": "icon-skill1418",
+    "slow": "icon-skill1160",
+    "mute": "icon-skill1064",
+    "accuracyDown": "icon-skill0412",
+    "poison": "icon-skill1168",
+    "bleed": "icon-skill0096",
+    "addDamageToBoss": "icon-skill1068",
+    "addCritChanceToBoss": "icon-skill1077",
+    "addCritDamageToBoss": "icon-skill1242",
+    "damage": "icon-skill0003",
+    "heal": "icon-skill1218",
+    "restore": "icon-skill1157",
+    "buff": "icon-skill1068",
+    "debuff": "icon-skill1164",
+    "utility": "icon-skill1312",
+    "lifestone": "icon-skill3123"
+  },
+  "fishingArt": {
+    "l2_6411": "icon-etc_tuna_i07",
+    "l2_6412": "icon-etc_angler_i07",
+    "l2_6413": "icon-etc_bream_i07",
+    "l2_6414": "icon-etc_tuna_i07",
+    "l2_6415": "icon-etc_angler_i07",
+    "l2_6416": "icon-etc_bream_i07",
+    "l2_6417": "icon-etc_tuna_i07",
+    "l2_6418": "icon-etc_angler_i07",
+    "l2_6419": "icon-etc_bream_i07",
+    "l2_6420": "icon-etc_tuna_i06",
+    "l2_6421": "icon-etc_angler_i06",
+    "l2_6422": "icon-etc_bream_i06",
+    "l2_6423": "icon-etc_tuna_i06",
+    "l2_6424": "icon-etc_angler_i06",
+    "l2_6425": "icon-etc_bream_i06",
+    "l2_6426": "icon-etc_tuna_i06",
+    "l2_6427": "icon-etc_angler_i06",
+    "l2_6428": "icon-etc_bream_i06",
+    "l2_6429": "icon-etc_tuna_i01",
+    "l2_6430": "icon-etc_angler_i01",
+    "l2_6431": "icon-etc_bream_i01",
+    "l2_6432": "icon-etc_tuna_i01",
+    "l2_6433": "icon-etc_angler_i01",
+    "l2_6434": "icon-etc_bream_i01",
+    "l2_6435": "icon-etc_tuna_i01",
+    "l2_6436": "icon-etc_angler_i01",
+    "l2_6437": "icon-etc_bream_i01",
+    "l2_6438": "icon-etc_tuna_i02",
+    "l2_6439": "icon-etc_angler_i02",
+    "l2_6440": "icon-etc_bream_i02",
+    "l2_6441": "icon-etc_tuna_i02",
+    "l2_6442": "icon-etc_angler_i02",
+    "l2_6443": "icon-etc_bream_i02",
+    "l2_6444": "icon-etc_tuna_i02",
+    "l2_6445": "icon-etc_angler_i02",
+    "l2_6446": "icon-etc_bream_i02",
+    "l2_6447": "icon-etc_tuna_i08",
+    "l2_6448": "icon-etc_angler_i08",
+    "l2_6449": "icon-etc_bream_i08",
+    "l2_6450": "icon-etc_tuna_i08",
+    "l2_6451": "icon-etc_angler_i08",
+    "l2_6452": "icon-etc_bream_i08",
+    "l2_6453": "icon-etc_tuna_i08",
+    "l2_6454": "icon-etc_angler_i08",
+    "l2_6455": "icon-etc_bream_i08",
+    "l2_6456": "icon-etc_tuna_i04",
+    "l2_6457": "icon-etc_angler_i04",
+    "l2_6458": "icon-etc_bream_i04",
+    "l2_6459": "icon-etc_tuna_i04",
+    "l2_6460": "icon-etc_angler_i04",
+    "l2_6461": "icon-etc_bream_i04",
+    "l2_6462": "icon-etc_tuna_i04",
+    "l2_6463": "icon-etc_angler_i04",
+    "l2_6464": "icon-etc_bream_i04",
+    "l2_6465": "icon-etc_tuna_i03",
+    "l2_6466": "icon-etc_angler_i03",
+    "l2_6467": "icon-etc_bream_i03",
+    "l2_6468": "icon-etc_tuna_i03",
+    "l2_6469": "icon-etc_angler_i03",
+    "l2_6470": "icon-etc_bream_i03",
+    "l2_6471": "icon-etc_tuna_i03",
+    "l2_6472": "icon-etc_angler_i03",
+    "l2_6473": "icon-etc_bream_i03",
+    "l2_6474": "icon-etc_tuna_i00",
+    "l2_6475": "icon-etc_angler_i00",
+    "l2_6476": "icon-etc_bream_i00",
+    "l2_6477": "icon-etc_tuna_i00",
+    "l2_6478": "icon-etc_angler_i00",
+    "l2_6479": "icon-etc_bream_i00",
+    "l2_6480": "icon-etc_tuna_i00",
+    "l2_6481": "icon-etc_angler_i00",
+    "l2_6482": "icon-etc_bream_i00",
+    "l2_6483": "icon-etc_tuna_i05",
+    "l2_6484": "icon-etc_angler_i05",
+    "l2_6485": "icon-etc_bream_i05",
+    "l2_6486": "icon-etc_tuna_i05",
+    "l2_6487": "icon-etc_angler_i05",
+    "l2_6488": "icon-etc_bream_i05",
+    "l2_6489": "icon-etc_tuna_i05",
+    "l2_6490": "icon-etc_angler_i05",
+    "l2_6491": "icon-etc_bream_i05",
+    "l2_6492": "icon-etc_treasure_box_i07",
+    "l2_6493": "icon-etc_treasure_box_i07",
+    "l2_6494": "icon-etc_treasure_box_i07",
+    "l2_6495": "icon-etc_treasure_box_i06",
+    "l2_6496": "icon-etc_treasure_box_i06",
+    "l2_6497": "icon-etc_treasure_box_i06",
+    "l2_6498": "icon-etc_treasure_box_i01",
+    "l2_6499": "icon-etc_treasure_box_i01",
+    "l2_6500": "icon-etc_treasure_box_i01",
+    "l2_6501": "icon-etc_treasure_box_i02",
+    "l2_6502": "icon-etc_treasure_box_i02",
+    "l2_6503": "icon-etc_treasure_box_i02",
+    "l2_6504": "icon-etc_treasure_box_i08",
+    "l2_6505": "icon-etc_treasure_box_i08",
+    "l2_6506": "icon-etc_treasure_box_i08",
+    "l2_6507": "icon-etc_treasure_box_i04",
+    "l2_6508": "icon-etc_treasure_box_i04",
+    "l2_6509": "icon-etc_treasure_box_i04",
+    "l2_6510": "icon-etc_treasure_box_i03",
+    "l2_6511": "icon-etc_treasure_box_i03",
+    "l2_6512": "icon-etc_treasure_box_i03",
+    "l2_6513": "icon-etc_treasure_box_i00",
+    "l2_6514": "icon-etc_treasure_box_i00",
+    "l2_6515": "icon-etc_treasure_box_i00",
+    "l2_6516": "icon-etc_treasure_box_i05",
+    "l2_6517": "icon-etc_treasure_box_i05",
+    "l2_6518": "icon-etc_treasure_box_i05",
+    "l2_6529": "icon-weapon_fishing_rod_i00",
+    "l2_6530": "icon-weapon_fishing_rod_i01",
+    "l2_6531": "icon-weapon_fishing_rod_i02",
+    "l2_6532": "icon-weapon_fishing_rod_i03",
+    "l2_6533": "icon-weapon_fishing_rod_i04",
+    "l2_6534": "icon-weapon_fishing_rod_i05",
+    "l2_6535": "icon-etc_spirit_bullet_fish_i00",
+    "l2_6536": "icon-etc_spirit_bullet_fish_i01",
+    "l2_6537": "icon-etc_spirit_bullet_fish_i02",
+    "l2_6538": "icon-etc_spirit_bullet_fish_i03",
+    "l2_6539": "icon-etc_spirit_bullet_fish_i04",
+    "l2_6540": "icon-etc_spirit_bullet_fish_i05",
+    "l2_6904": "icon-etc_piece_of_cloth_blue_i00",
+    "l2_6905": "icon-etc_broken_crystal_green_i00",
+    "l2_6906": "icon-etc_braided_hemp_i00",
+    "l2_6907": "icon-etc_bark_blue_i00",
+    "l2_6908": "icon-etc_fish_oil_i00",
+    "l2_6909": "icon-etc_fish_oil_i01",
+    "l2_6910": "icon-etc_fish_oil_i02",
+    "l2_6911": "icon-etc_fish_scale_i00",
+    "l2_6912": "icon-etc_fish_scale_i01",
+    "l2_6913": "icon-etc_fish_gem_i00",
+    "l2_6914": "icon-etc_fish_gem_i01",
+    "l2_6915": "icon-etc_fang_gray_i00",
+    "l2_6916": "icon-etc_fang_ivory_i00",
+    "l2_6920": "icon-etc_recipe_green_i00",
+    "l2_6921": "icon-etc_recipe_green_i00",
+    "l2_6943": "icon-etc_recipe_green_i00",
+    "l2_6944": "icon-etc_recipe_green_i00",
+    "l2_6945": "icon-etc_recipe_green_i00",
+    "l2_6946": "icon-etc_recipe_green_i00",
+    "l2_6954": "icon-etc_recipe_green_i00",
+    "l2_6955": "icon-etc_recipe_green_i00",
+    "l2_6956": "icon-etc_recipe_green_i00",
+    "l2_6957": "icon-etc_recipe_green_i00",
+    "l2_6958": "icon-etc_recipe_green_i00",
+    "l2_6959": "icon-etc_recipe_green_i00",
+    "l2_6960": "icon-etc_recipe_green_i00",
+    "l2_6961": "icon-etc_recipe_green_i00",
+    "l2_6962": "icon-etc_recipe_green_i00",
+    "l2_6963": "icon-etc_recipe_green_i00",
+    "l2_6964": "icon-etc_recipe_green_i00",
+    "l2_6965": "icon-etc_recipe_green_i00",
+    "l2_6966": "icon-etc_recipe_green_i00",
+    "l2_6967": "icon-etc_recipe_green_i00",
+    "l2_6968": "icon-etc_recipe_green_i00",
+    "l2_6969": "icon-etc_recipe_green_i00",
+    "l2_6970": "icon-etc_recipe_green_i00",
+    "l2_6971": "icon-etc_recipe_green_i00",
+    "l2_6972": "icon-etc_recipe_green_i00",
+    "l2_6973": "icon-etc_recipe_green_i00",
+    "l2_6974": "icon-etc_recipe_green_i00",
+    "l2_6975": "icon-etc_recipe_green_i00",
+    "l2_6976": "icon-etc_recipe_green_i00",
+    "l2_6977": "icon-etc_recipe_green_i00",
+    "l2_6978": "icon-etc_recipe_green_i00",
+    "l2_6979": "icon-etc_recipe_green_i00",
+    "l2_6980": "icon-etc_recipe_green_i00",
+    "l2_6981": "icon-etc_recipe_green_i00",
+    "l2_6982": "icon-etc_recipe_green_i00",
+    "l2_6983": "icon-etc_recipe_green_i00",
+    "l2_6984": "icon-etc_recipe_green_i00",
+    "l2_6985": "icon-etc_recipe_green_i00",
+    "l2_6986": "icon-etc_recipe_green_i00",
+    "l2_6987": "icon-etc_recipe_green_i00",
+    "l2_6988": "icon-etc_recipe_green_i00",
+    "l2_6989": "icon-etc_recipe_green_i00",
+    "l2_6990": "icon-etc_recipe_green_i00",
+    "l2_6991": "icon-etc_recipe_green_i00",
+    "l2_6992": "icon-etc_recipe_green_i00",
+    "l2_6993": "icon-etc_recipe_green_i00",
+    "l2_6994": "icon-etc_recipe_green_i00",
+    "l2_6995": "icon-etc_recipe_green_i00",
+    "l2_6996": "icon-etc_recipe_green_i00",
+    "l2_6997": "icon-etc_recipe_green_i00",
+    "l2_6998": "icon-etc_recipe_green_i00",
+    "l2_6999": "icon-etc_recipe_green_i00",
+    "l2_7000": "icon-etc_recipe_green_i00",
+    "l2_7001": "icon-etc_recipe_green_i00",
+    "l2_7002": "icon-etc_recipe_green_i00",
+    "l2_7003": "icon-etc_recipe_green_i00",
+    "l2_7004": "icon-etc_recipe_green_i00",
+    "l2_7005": "icon-etc_recipe_green_i00",
+    "l2_7006": "icon-etc_recipe_green_i00",
+    "l2_7007": "icon-etc_recipe_green_i00",
+    "l2_7008": "icon-etc_recipe_green_i00",
+    "l2_7009": "icon-etc_recipe_green_i00",
+    "l2_7010": "icon-etc_recipe_green_i00",
+    "l2_7011": "icon-etc_recipe_green_i00",
+    "l2_7012": "icon-etc_recipe_green_i00",
+    "l2_7013": "icon-etc_recipe_green_i00",
+    "l2_7609": "icon-etc_ticket_i00",
+    "l2_7685": "icon-etc_braided_hemp_i00",
+    "l2_7686": "icon-etc_broken_crystal_green_i00",
+    "l2_7697": "icon-etc_broken_crystal_green_i00",
+    "l2_7698": "icon-etc_broken_crystal_green_i00",
+    "l2_7726": "icon-etc_tuna_i07",
+    "l2_7727": "icon-etc_angler_i07",
+    "l2_7728": "icon-etc_bream_i07",
+    "l2_7729": "icon-etc_tuna_i07",
+    "l2_7730": "icon-etc_angler_i07",
+    "l2_7731": "icon-etc_bream_i07",
+    "l2_7732": "icon-etc_tuna_i07",
+    "l2_7733": "icon-etc_angler_i07",
+    "l2_7734": "icon-etc_bream_i07",
+    "l2_7735": "icon-etc_tuna_i06",
+    "l2_7736": "icon-etc_angler_i06",
+    "l2_7737": "icon-etc_bream_i06",
+    "l2_7738": "icon-etc_tuna_i06",
+    "l2_7739": "icon-etc_angler_i06",
+    "l2_7740": "icon-etc_bream_i06",
+    "l2_7741": "icon-etc_tuna_i06",
+    "l2_7742": "icon-etc_angler_i06",
+    "l2_7743": "icon-etc_bream_i06",
+    "l2_7744": "icon-etc_tuna_i01",
+    "l2_7745": "icon-etc_angler_i01",
+    "l2_7746": "icon-etc_bream_i01",
+    "l2_7747": "icon-etc_tuna_i01",
+    "l2_7748": "icon-etc_angler_i01",
+    "l2_7749": "icon-etc_bream_i01",
+    "l2_7750": "icon-etc_tuna_i01",
+    "l2_7751": "icon-etc_angler_i01",
+    "l2_7752": "icon-etc_bream_i01",
+    "l2_7753": "icon-etc_tuna_i02",
+    "l2_7754": "icon-etc_angler_i02",
+    "l2_7755": "icon-etc_bream_i02",
+    "l2_7756": "icon-etc_tuna_i02",
+    "l2_7757": "icon-etc_angler_i02",
+    "l2_7758": "icon-etc_bream_i02",
+    "l2_7759": "icon-etc_tuna_i02",
+    "l2_7760": "icon-etc_angler_i02",
+    "l2_7761": "icon-etc_bream_i02",
+    "l2_7762": "icon-etc_tuna_i08",
+    "l2_7763": "icon-etc_angler_i08",
+    "l2_7764": "icon-etc_bream_i08",
+    "l2_7765": "icon-etc_tuna_i08",
+    "l2_7766": "icon-etc_angler_i08",
+    "l2_7767": "icon-etc_bream_i08",
+    "l2_7768": "icon-etc_tuna_i08",
+    "l2_7769": "icon-etc_angler_i08",
+    "l2_7770": "icon-etc_bream_i08",
+    "l2_7771": "icon-etc_tuna_i04",
+    "l2_7772": "icon-etc_angler_i04",
+    "l2_7773": "icon-etc_bream_i04",
+    "l2_7774": "icon-etc_tuna_i04",
+    "l2_7775": "icon-etc_angler_i04",
+    "l2_7776": "icon-etc_bream_i04",
+    "l2_7777": "icon-etc_tuna_i04",
+    "l2_7778": "icon-etc_angler_i04",
+    "l2_7779": "icon-etc_bream_i04",
+    "l2_7780": "icon-etc_tuna_i03",
+    "l2_7781": "icon-etc_angler_i03",
+    "l2_7782": "icon-etc_bream_i03",
+    "l2_7783": "icon-etc_tuna_i03",
+    "l2_7784": "icon-etc_angler_i03",
+    "l2_7785": "icon-etc_bream_i03",
+    "l2_7786": "icon-etc_tuna_i03",
+    "l2_7787": "icon-etc_angler_i03",
+    "l2_7788": "icon-etc_bream_i03",
+    "l2_7789": "icon-etc_tuna_i00",
+    "l2_7790": "icon-etc_angler_i00",
+    "l2_7791": "icon-etc_bream_i00",
+    "l2_7792": "icon-etc_tuna_i00",
+    "l2_7793": "icon-etc_angler_i00",
+    "l2_7794": "icon-etc_bream_i00",
+    "l2_7795": "icon-etc_tuna_i00",
+    "l2_7796": "icon-etc_angler_i00",
+    "l2_7797": "icon-etc_bream_i00",
+    "l2_7798": "icon-etc_tuna_i05",
+    "l2_7799": "icon-etc_angler_i05",
+    "l2_7800": "icon-etc_bream_i05",
+    "l2_7801": "icon-etc_tuna_i05",
+    "l2_7802": "icon-etc_angler_i05",
+    "l2_7803": "icon-etc_bream_i05",
+    "l2_7804": "icon-etc_tuna_i05",
+    "l2_7805": "icon-etc_angler_i05",
+    "l2_7806": "icon-etc_bream_i05",
+    "l2_8403": "icon-etc_tuna_i07",
+    "l2_8404": "icon-etc_angler_i07",
+    "l2_8405": "icon-etc_bream_i07",
+    "l2_8406": "icon-etc_tuna_i07",
+    "l2_8407": "icon-etc_angler_i07",
+    "l2_8408": "icon-etc_bream_i07",
+    "l2_8409": "icon-etc_tuna_i07",
+    "l2_8410": "icon-etc_angler_i07",
+    "l2_8411": "icon-etc_bream_i07",
+    "l2_8412": "icon-etc_tuna_i06",
+    "l2_8413": "icon-etc_angler_i06",
+    "l2_8414": "icon-etc_bream_i06",
+    "l2_8415": "icon-etc_tuna_i06",
+    "l2_8416": "icon-etc_angler_i06",
+    "l2_8417": "icon-etc_bream_i06",
+    "l2_8418": "icon-etc_tuna_i06",
+    "l2_8419": "icon-etc_angler_i06",
+    "l2_8420": "icon-etc_bream_i06",
+    "l2_8421": "icon-etc_tuna_i01",
+    "l2_8422": "icon-etc_angler_i01",
+    "l2_8423": "icon-etc_bream_i01",
+    "l2_8424": "icon-etc_tuna_i01",
+    "l2_8425": "icon-etc_angler_i01",
+    "l2_8426": "icon-etc_bream_i01",
+    "l2_8427": "icon-etc_tuna_i01",
+    "l2_8428": "icon-etc_angler_i01",
+    "l2_8429": "icon-etc_bream_i01",
+    "l2_8430": "icon-etc_tuna_i02",
+    "l2_8431": "icon-etc_angler_i02",
+    "l2_8432": "icon-etc_bream_i02",
+    "l2_8433": "icon-etc_tuna_i02",
+    "l2_8434": "icon-etc_angler_i02",
+    "l2_8435": "icon-etc_bream_i02",
+    "l2_8436": "icon-etc_tuna_i02",
+    "l2_8437": "icon-etc_angler_i02",
+    "l2_8438": "icon-etc_bream_i02",
+    "l2_8439": "icon-etc_tuna_i08",
+    "l2_8440": "icon-etc_angler_i08",
+    "l2_8441": "icon-etc_bream_i08",
+    "l2_8442": "icon-etc_tuna_i08",
+    "l2_8443": "icon-etc_angler_i08",
+    "l2_8444": "icon-etc_bream_i08",
+    "l2_8445": "icon-etc_tuna_i08",
+    "l2_8446": "icon-etc_angler_i08",
+    "l2_8447": "icon-etc_bream_i08",
+    "l2_8448": "icon-etc_tuna_i04",
+    "l2_8449": "icon-etc_angler_i04",
+    "l2_8450": "icon-etc_bream_i04",
+    "l2_8451": "icon-etc_tuna_i04",
+    "l2_8452": "icon-etc_angler_i04",
+    "l2_8453": "icon-etc_bream_i04",
+    "l2_8454": "icon-etc_tuna_i04",
+    "l2_8455": "icon-etc_angler_i04",
+    "l2_8456": "icon-etc_bream_i04",
+    "l2_8457": "icon-etc_tuna_i03",
+    "l2_8458": "icon-etc_angler_i03",
+    "l2_8459": "icon-etc_bream_i03",
+    "l2_8460": "icon-etc_tuna_i03",
+    "l2_8461": "icon-etc_angler_i03",
+    "l2_8462": "icon-etc_bream_i03",
+    "l2_8463": "icon-etc_tuna_i03",
+    "l2_8464": "icon-etc_angler_i03",
+    "l2_8465": "icon-etc_bream_i03",
+    "l2_8466": "icon-etc_tuna_i00",
+    "l2_8467": "icon-etc_angler_i00",
+    "l2_8468": "icon-etc_bream_i00",
+    "l2_8469": "icon-etc_tuna_i00",
+    "l2_8470": "icon-etc_angler_i00",
+    "l2_8471": "icon-etc_bream_i00",
+    "l2_8472": "icon-etc_tuna_i00",
+    "l2_8473": "icon-etc_angler_i00",
+    "l2_8474": "icon-etc_bream_i00",
+    "l2_8475": "icon-etc_tuna_i05",
+    "l2_8476": "icon-etc_angler_i05",
+    "l2_8477": "icon-etc_bream_i05",
+    "l2_8478": "icon-etc_tuna_i05",
+    "l2_8479": "icon-etc_angler_i05",
+    "l2_8480": "icon-etc_bream_i05",
+    "l2_8481": "icon-etc_tuna_i05",
+    "l2_8482": "icon-etc_angler_i05",
+    "l2_8483": "icon-etc_bream_i05",
+    "l2_8547": "icon-etc_box_of_adventure_1_i00"
+  },
+  "references": [
+    {
+      "key": "might",
+      "name": "might",
+      "group": "Баффы",
+      "referenceId": 1068,
+      "reference": "Might",
+      "original": "icon.skill1068",
+      "art": "icon-skill1068",
+      "exact": true
+    },
+    {
+      "key": "shield",
+      "name": "shield",
+      "group": "Баффы",
+      "referenceId": 1040,
+      "reference": "Shield",
+      "original": "icon.skill1040",
+      "art": "icon-skill1040",
+      "exact": true
+    },
+    {
+      "key": "haste",
+      "name": "haste",
+      "group": "Баффы",
+      "referenceId": 1086,
+      "reference": "Haste",
+      "original": "icon.skill1086",
+      "art": "icon-skill1086",
+      "exact": true
+    },
+    {
+      "key": "focus",
+      "name": "focus",
+      "group": "Баффы",
+      "referenceId": 1077,
+      "reference": "Focus",
+      "original": "icon.skill1077",
+      "art": "icon-skill1077",
+      "exact": true
+    },
+    {
+      "key": "guidance",
+      "name": "guidance",
+      "group": "Баффы",
+      "referenceId": 1240,
+      "reference": "Guidance",
+      "original": "icon.skill1240",
+      "art": "icon-skill1240",
+      "exact": true
+    },
+    {
+      "key": "death-whisper",
+      "name": "death-whisper",
+      "group": "Баффы",
+      "referenceId": 1242,
+      "reference": "Death Whisper",
+      "original": "icon.skill1242",
+      "art": "icon-skill1242",
+      "exact": true
+    },
+    {
+      "key": "wind-walk",
+      "name": "wind-walk",
+      "group": "Баффы",
+      "referenceId": 1204,
+      "reference": "Wind Walk",
+      "original": "icon.skill1204",
+      "art": "icon-skill1204",
+      "exact": true
+    },
+    {
+      "key": "Тык палкой",
+      "name": "Тык палкой",
+      "group": "Навыки персонажа",
+      "referenceId": 3,
+      "reference": "Power Strike",
+      "original": "icon.skill0003",
+      "art": "icon-skill0003",
+      "exact": false
+    },
+    {
+      "key": "Взмах меча",
+      "name": "Взмах меча",
+      "group": "Навыки персонажа",
+      "referenceId": 3,
+      "reference": "Power Strike",
+      "original": "icon.skill0003",
+      "art": "icon-skill0003",
+      "exact": false
+    },
+    {
+      "key": "Ярость вампира",
+      "name": "Ярость вампира",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Вожделение паладина",
+      "name": "Вожделение паладина",
+      "group": "Навыки персонажа",
+      "referenceId": 3,
+      "reference": "Power Strike",
+      "original": "icon.skill0003",
+      "art": "icon-skill0003",
+      "exact": false
+    },
+    {
+      "key": "Выстрел из посоха",
+      "name": "Выстрел из посоха",
+      "group": "Навыки персонажа",
+      "referenceId": 1177,
+      "reference": "Wind Strike",
+      "original": "icon.skill1177",
+      "art": "icon-skill1177",
+      "exact": false
+    },
+    {
+      "key": "Грозовая стужа",
+      "name": "Грозовая стужа",
+      "group": "Навыки персонажа",
+      "referenceId": 1340,
+      "reference": "Ice Vortex",
+      "original": "icon.skill1340",
+      "art": "icon-skill1340",
+      "exact": false
+    },
+    {
+      "key": "Лунная тень",
+      "name": "Лунная тень",
+      "group": "Навыки персонажа",
+      "referenceId": 1418,
+      "reference": "Celestial Shield",
+      "original": "icon.skill1418",
+      "art": "icon-skill1418",
+      "exact": false
+    },
+    {
+      "key": "Удар скипетром",
+      "name": "Удар скипетром",
+      "group": "Навыки персонажа",
+      "referenceId": 1177,
+      "reference": "Wind Strike",
+      "original": "icon.skill1177",
+      "art": "icon-skill1177",
+      "exact": false
+    },
+    {
+      "key": "Сияние утренней звезды",
+      "name": "Сияние утренней звезды",
+      "group": "Навыки персонажа",
+      "referenceId": 1218,
+      "reference": "Greater Battle Heal",
+      "original": "icon.skill1218",
+      "art": "icon-skill1218",
+      "exact": false
+    },
+    {
+      "key": "Казнь святых",
+      "name": "Казнь святых",
+      "group": "Навыки персонажа",
+      "referenceId": 1265,
+      "reference": "Solar Flare",
+      "original": "icon.skill1265",
+      "art": "icon-skill1265",
+      "exact": false
+    },
+    {
+      "key": "Точный выстрел",
+      "name": "Точный выстрел",
+      "group": "Навыки персонажа",
+      "referenceId": 56,
+      "reference": "Power Shot",
+      "original": "icon.skill0056",
+      "art": "icon-skill0056",
+      "exact": false
+    },
+    {
+      "key": "Прямо в яблочко",
+      "name": "Прямо в яблочко",
+      "group": "Навыки персонажа",
+      "referenceId": 56,
+      "reference": "Power Shot",
+      "original": "icon.skill0056",
+      "art": "icon-skill0056",
+      "exact": false
+    },
+    {
+      "key": "Элементальная стрела",
+      "name": "Элементальная стрела",
+      "group": "Навыки персонажа",
+      "referenceId": 19,
+      "reference": "Double Shot",
+      "original": "icon.skill0019",
+      "art": "icon-skill0019",
+      "exact": false
+    },
+    {
+      "key": "Удар кинжалом",
+      "name": "Удар кинжалом",
+      "group": "Навыки персонажа",
+      "referenceId": 16,
+      "reference": "Mortal Blow",
+      "original": "icon.skill0016",
+      "art": "icon-skill0016",
+      "exact": false
+    },
+    {
+      "key": "Подлый укол",
+      "name": "Подлый укол",
+      "group": "Навыки персонажа",
+      "referenceId": 16,
+      "reference": "Mortal Blow",
+      "original": "icon.skill0016",
+      "art": "icon-skill0016",
+      "exact": false
+    },
+    {
+      "key": "Танец клинков",
+      "name": "Танец клинков",
+      "group": "Навыки персонажа",
+      "referenceId": 261,
+      "reference": "Triple Sonic Slash",
+      "original": "icon.skill0261",
+      "art": "icon-skill0261",
+      "exact": false
+    },
+    {
+      "key": "Удар секирой",
+      "name": "Удар секирой",
+      "group": "Навыки персонажа",
+      "referenceId": 3,
+      "reference": "Power Strike",
+      "original": "icon.skill0003",
+      "art": "icon-skill0003",
+      "exact": false
+    },
+    {
+      "key": "Кровавая ярость",
+      "name": "Кровавая ярость",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Дробящий удар",
+      "name": "Дробящий удар",
+      "group": "Навыки персонажа",
+      "referenceId": 260,
+      "reference": "Hammer Crush",
+      "original": "icon.skill0260",
+      "art": "icon-skill0260",
+      "exact": false
+    },
+    {
+      "key": "Удар возмездия",
+      "name": "Удар возмездия",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Клятва света",
+      "name": "Клятва света",
+      "group": "Навыки персонажа",
+      "referenceId": 1068,
+      "reference": "Might",
+      "original": "icon.skill1068",
+      "art": "icon-skill1068",
+      "exact": false
+    },
+    {
+      "key": "Несокрушимый щит",
+      "name": "Несокрушимый щит",
+      "group": "Навыки персонажа",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "Вызов",
+      "name": "Вызов",
+      "group": "Навыки персонажа",
+      "referenceId": 28,
+      "reference": "Aggression",
+      "original": "icon.skill0028",
+      "art": "icon-skill0028",
+      "exact": false
+    },
+    {
+      "key": "Возрождение феникса",
+      "name": "Возрождение феникса",
+      "group": "Навыки персонажа",
+      "referenceId": 1016,
+      "reference": "Resurrection",
+      "original": "icon.skill1016",
+      "art": "icon-skill1016",
+      "exact": false
+    },
+    {
+      "key": "Пылающий меч",
+      "name": "Пылающий меч",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Огненное воскрешение",
+      "name": "Огненное воскрешение",
+      "group": "Навыки персонажа",
+      "referenceId": 1016,
+      "reference": "Resurrection",
+      "original": "icon.skill1016",
+      "art": "icon-skill1016",
+      "exact": false
+    },
+    {
+      "key": "Гнев феникса",
+      "name": "Гнев феникса",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Крепость",
+      "name": "Крепость",
+      "group": "Навыки персонажа",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "Неприступный бастион",
+      "name": "Неприступный бастион",
+      "group": "Навыки персонажа",
+      "referenceId": 28,
+      "reference": "Aggression",
+      "original": "icon.skill0028",
+      "art": "icon-skill0028",
+      "exact": false
+    },
+    {
+      "key": "Стена света",
+      "name": "Стена света",
+      "group": "Навыки персонажа",
+      "referenceId": 1418,
+      "reference": "Celestial Shield",
+      "original": "icon.skill1418",
+      "art": "icon-skill1418",
+      "exact": false
+    },
+    {
+      "key": "Последний рубеж",
+      "name": "Последний рубеж",
+      "group": "Навыки персонажа",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "Цепная молния",
+      "name": "Цепная молния",
+      "group": "Навыки персонажа",
+      "referenceId": 279,
+      "reference": "Lightning Strike",
+      "original": "icon.skill0279",
+      "art": "icon-skill0279",
+      "exact": false
+    },
+    {
+      "key": "Ледяной шип",
+      "name": "Ледяной шип",
+      "group": "Навыки персонажа",
+      "referenceId": 1340,
+      "reference": "Ice Vortex",
+      "original": "icon.skill1340",
+      "art": "icon-skill1340",
+      "exact": false
+    },
+    {
+      "key": "Похищение жизни",
+      "name": "Похищение жизни",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Проклятие слабости",
+      "name": "Проклятие слабости",
+      "group": "Навыки персонажа",
+      "referenceId": 1164,
+      "reference": "Curse Weakness",
+      "original": "icon.skill1164",
+      "art": "icon-skill1164",
+      "exact": false
+    },
+    {
+      "key": "Метеоритный дождь",
+      "name": "Метеоритный дождь",
+      "group": "Навыки персонажа",
+      "referenceId": 1467,
+      "reference": "Meteor",
+      "original": "icon.skill1467",
+      "art": "icon-skill1467",
+      "exact": false
+    },
+    {
+      "key": "Ледяные оковы",
+      "name": "Ледяные оковы",
+      "group": "Навыки персонажа",
+      "referenceId": 1340,
+      "reference": "Ice Vortex",
+      "original": "icon.skill1340",
+      "art": "icon-skill1340",
+      "exact": false
+    },
+    {
+      "key": "Звёздный шторм",
+      "name": "Звёздный шторм",
+      "group": "Навыки персонажа",
+      "referenceId": 1467,
+      "reference": "Meteor",
+      "original": "icon.skill1467",
+      "art": "icon-skill1467",
+      "exact": false
+    },
+    {
+      "key": "Разлом реальности",
+      "name": "Разлом реальности",
+      "group": "Навыки персонажа",
+      "referenceId": 279,
+      "reference": "Lightning Strike",
+      "original": "icon.skill0279",
+      "art": "icon-skill0279",
+      "exact": false
+    },
+    {
+      "key": "Жатва душ",
+      "name": "Жатва душ",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Пожирание",
+      "name": "Пожирание",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Жатва мира",
+      "name": "Жатва мира",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Бессмертие душ",
+      "name": "Бессмертие душ",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Малое исцеление",
+      "name": "Малое исцеление",
+      "group": "Навыки персонажа",
+      "referenceId": 1218,
+      "reference": "Greater Battle Heal",
+      "original": "icon.skill1218",
+      "art": "icon-skill1218",
+      "exact": false
+    },
+    {
+      "key": "Источник маны",
+      "name": "Источник маны",
+      "group": "Навыки персонажа",
+      "referenceId": 1157,
+      "reference": "Body To Mind",
+      "original": "icon.skill1157",
+      "art": "icon-skill1157",
+      "exact": false
+    },
+    {
+      "key": "Священный огонь",
+      "name": "Священный огонь",
+      "group": "Навыки персонажа",
+      "referenceId": 1265,
+      "reference": "Solar Flare",
+      "original": "icon.skill1265",
+      "art": "icon-skill1265",
+      "exact": false
+    },
+    {
+      "key": "Кара небес",
+      "name": "Кара небес",
+      "group": "Навыки персонажа",
+      "referenceId": 1265,
+      "reference": "Solar Flare",
+      "original": "icon.skill1265",
+      "art": "icon-skill1265",
+      "exact": false
+    },
+    {
+      "key": "Священное чудо",
+      "name": "Священное чудо",
+      "group": "Навыки персонажа",
+      "referenceId": 1218,
+      "reference": "Greater Battle Heal",
+      "original": "icon.skill1218",
+      "art": "icon-skill1218",
+      "exact": false
+    },
+    {
+      "key": "Ореол",
+      "name": "Ореол",
+      "group": "Навыки персонажа",
+      "referenceId": 1418,
+      "reference": "Celestial Shield",
+      "original": "icon.skill1418",
+      "art": "icon-skill1418",
+      "exact": false
+    },
+    {
+      "key": "Небесное исцеление",
+      "name": "Небесное исцеление",
+      "group": "Навыки персонажа",
+      "referenceId": 1218,
+      "reference": "Greater Battle Heal",
+      "original": "icon.skill1218",
+      "art": "icon-skill1218",
+      "exact": false
+    },
+    {
+      "key": "Божественный щит",
+      "name": "Божественный щит",
+      "group": "Навыки персонажа",
+      "referenceId": 1418,
+      "reference": "Celestial Shield",
+      "original": "icon.skill1418",
+      "art": "icon-skill1418",
+      "exact": false
+    },
+    {
+      "key": "Луч правосудия",
+      "name": "Луч правосудия",
+      "group": "Навыки персонажа",
+      "referenceId": 1265,
+      "reference": "Solar Flare",
+      "original": "icon.skill1265",
+      "art": "icon-skill1265",
+      "exact": false
+    },
+    {
+      "key": "Приговор",
+      "name": "Приговор",
+      "group": "Навыки персонажа",
+      "referenceId": 1265,
+      "reference": "Solar Flare",
+      "original": "icon.skill1265",
+      "art": "icon-skill1265",
+      "exact": false
+    },
+    {
+      "key": "Гнев небес",
+      "name": "Гнев небес",
+      "group": "Навыки персонажа",
+      "referenceId": 1265,
+      "reference": "Solar Flare",
+      "original": "icon.skill1265",
+      "art": "icon-skill1265",
+      "exact": false
+    },
+    {
+      "key": "Последний суд",
+      "name": "Последний суд",
+      "group": "Навыки персонажа",
+      "referenceId": 1265,
+      "reference": "Solar Flare",
+      "original": "icon.skill1265",
+      "art": "icon-skill1265",
+      "exact": false
+    },
+    {
+      "key": "Град стрел",
+      "name": "Град стрел",
+      "group": "Навыки персонажа",
+      "referenceId": 19,
+      "reference": "Double Shot",
+      "original": "icon.skill0019",
+      "art": "icon-skill0019",
+      "exact": false
+    },
+    {
+      "key": "Охотничий азарт",
+      "name": "Охотничий азарт",
+      "group": "Навыки персонажа",
+      "referenceId": 1068,
+      "reference": "Might",
+      "original": "icon.skill1068",
+      "art": "icon-skill1068",
+      "exact": false
+    },
+    {
+      "key": "Выстрел в слабое место",
+      "name": "Выстрел в слабое место",
+      "group": "Навыки персонажа",
+      "referenceId": 56,
+      "reference": "Power Shot",
+      "original": "icon.skill0056",
+      "art": "icon-skill0056",
+      "exact": false
+    },
+    {
+      "key": "Бронебойная стрела",
+      "name": "Бронебойная стрела",
+      "group": "Навыки персонажа",
+      "referenceId": 101,
+      "reference": "Stun Shot",
+      "original": "icon.skill0101",
+      "art": "icon-skill0101",
+      "exact": false
+    },
+    {
+      "key": "Тысяча стрел",
+      "name": "Тысяча стрел",
+      "group": "Навыки персонажа",
+      "referenceId": 19,
+      "reference": "Double Shot",
+      "original": "icon.skill0019",
+      "art": "icon-skill0019",
+      "exact": false
+    },
+    {
+      "key": "Глаз сокола",
+      "name": "Глаз сокола",
+      "group": "Навыки персонажа",
+      "referenceId": 1077,
+      "reference": "Focus",
+      "original": "icon.skill1077",
+      "art": "icon-skill1077",
+      "exact": false
+    },
+    {
+      "key": "Дождь комет",
+      "name": "Дождь комет",
+      "group": "Навыки персонажа",
+      "referenceId": 19,
+      "reference": "Double Shot",
+      "original": "icon.skill0019",
+      "art": "icon-skill0019",
+      "exact": false
+    },
+    {
+      "key": "Зрение сокола",
+      "name": "Зрение сокола",
+      "group": "Навыки персонажа",
+      "referenceId": 1077,
+      "reference": "Focus",
+      "original": "icon.skill1077",
+      "art": "icon-skill1077",
+      "exact": false
+    },
+    {
+      "key": "Призрачная стрела",
+      "name": "Призрачная стрела",
+      "group": "Навыки персонажа",
+      "referenceId": 56,
+      "reference": "Power Shot",
+      "original": "icon.skill0056",
+      "art": "icon-skill0056",
+      "exact": false
+    },
+    {
+      "key": "Ночной охотник",
+      "name": "Ночной охотник",
+      "group": "Навыки персонажа",
+      "referenceId": 101,
+      "reference": "Stun Shot",
+      "original": "icon.skill0101",
+      "art": "icon-skill0101",
+      "exact": false
+    },
+    {
+      "key": "Выстрел судьбы",
+      "name": "Выстрел судьбы",
+      "group": "Навыки персонажа",
+      "referenceId": 56,
+      "reference": "Power Shot",
+      "original": "icon.skill0056",
+      "art": "icon-skill0056",
+      "exact": false
+    },
+    {
+      "key": "Тьма над целью",
+      "name": "Тьма над целью",
+      "group": "Навыки персонажа",
+      "referenceId": 101,
+      "reference": "Stun Shot",
+      "original": "icon.skill0101",
+      "art": "icon-skill0101",
+      "exact": false
+    },
+    {
+      "key": "Удар в спину",
+      "name": "Удар в спину",
+      "group": "Навыки персонажа",
+      "referenceId": 16,
+      "reference": "Mortal Blow",
+      "original": "icon.skill0016",
+      "art": "icon-skill0016",
+      "exact": false
+    },
+    {
+      "key": "Смертельная метка",
+      "name": "Смертельная метка",
+      "group": "Навыки персонажа",
+      "referenceId": 1077,
+      "reference": "Focus",
+      "original": "icon.skill1077",
+      "art": "icon-skill1077",
+      "exact": false
+    },
+    {
+      "key": "Ослепление",
+      "name": "Ослепление",
+      "group": "Навыки персонажа",
+      "referenceId": 101,
+      "reference": "Stun Shot",
+      "original": "icon.skill0101",
+      "art": "icon-skill0101",
+      "exact": false
+    },
+    {
+      "key": "Тень",
+      "name": "Тень",
+      "group": "Навыки персонажа",
+      "referenceId": 922,
+      "reference": "Hide",
+      "original": "icon.skill0922",
+      "art": "icon-skill0922",
+      "exact": false
+    },
+    {
+      "key": "Тысяча порезов",
+      "name": "Тысяча порезов",
+      "group": "Навыки персонажа",
+      "referenceId": 261,
+      "reference": "Triple Sonic Slash",
+      "original": "icon.skill0261",
+      "art": "icon-skill0261",
+      "exact": false
+    },
+    {
+      "key": "Казнь из тени",
+      "name": "Казнь из тени",
+      "group": "Навыки персонажа",
+      "referenceId": 16,
+      "reference": "Mortal Blow",
+      "original": "icon.skill0016",
+      "art": "icon-skill0016",
+      "exact": false
+    },
+    {
+      "key": "Танец тысячи клинков",
+      "name": "Танец тысячи клинков",
+      "group": "Навыки персонажа",
+      "referenceId": 261,
+      "reference": "Triple Sonic Slash",
+      "original": "icon.skill0261",
+      "art": "icon-skill0261",
+      "exact": false
+    },
+    {
+      "key": "Поцелуй смерти",
+      "name": "Поцелуй смерти",
+      "group": "Навыки персонажа",
+      "referenceId": 16,
+      "reference": "Mortal Blow",
+      "original": "icon.skill0016",
+      "art": "icon-skill0016",
+      "exact": false
+    },
+    {
+      "key": "Вихрь теней",
+      "name": "Вихрь теней",
+      "group": "Навыки персонажа",
+      "referenceId": 261,
+      "reference": "Triple Sonic Slash",
+      "original": "icon.skill0261",
+      "art": "icon-skill0261",
+      "exact": false
+    },
+    {
+      "key": "Дымовая завеса",
+      "name": "Дымовая завеса",
+      "group": "Навыки персонажа",
+      "referenceId": 101,
+      "reference": "Stun Shot",
+      "original": "icon.skill0101",
+      "art": "icon-skill0101",
+      "exact": false
+    },
+    {
+      "key": "Затмение",
+      "name": "Затмение",
+      "group": "Навыки персонажа",
+      "referenceId": 261,
+      "reference": "Triple Sonic Slash",
+      "original": "icon.skill0261",
+      "art": "icon-skill0261",
+      "exact": false
+    },
+    {
+      "key": "Бесконечный танец",
+      "name": "Бесконечный танец",
+      "group": "Навыки персонажа",
+      "referenceId": 261,
+      "reference": "Triple Sonic Slash",
+      "original": "icon.skill0261",
+      "art": "icon-skill0261",
+      "exact": false
+    },
+    {
+      "key": "Рубка",
+      "name": "Рубка",
+      "group": "Навыки персонажа",
+      "referenceId": 261,
+      "reference": "Triple Sonic Slash",
+      "original": "icon.skill0261",
+      "art": "icon-skill0261",
+      "exact": false
+    },
+    {
+      "key": "Неистовство",
+      "name": "Неистовство",
+      "group": "Навыки персонажа",
+      "referenceId": 1062,
+      "reference": "Berserker Spirit",
+      "original": "icon.skill1062",
+      "art": "icon-skill1062",
+      "exact": false
+    },
+    {
+      "key": "Кровавая броня",
+      "name": "Кровавая броня",
+      "group": "Навыки персонажа",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "Железная плоть",
+      "name": "Железная плоть",
+      "group": "Навыки персонажа",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "Громовой удар",
+      "name": "Громовой удар",
+      "group": "Навыки персонажа",
+      "referenceId": 260,
+      "reference": "Hammer Crush",
+      "original": "icon.skill0260",
+      "art": "icon-skill0260",
+      "exact": false
+    },
+    {
+      "key": "Боевой клич",
+      "name": "Боевой клич",
+      "group": "Навыки персонажа",
+      "referenceId": 1062,
+      "reference": "Berserker Spirit",
+      "original": "icon.skill1062",
+      "art": "icon-skill1062",
+      "exact": false
+    },
+    {
+      "key": "Рёв войны",
+      "name": "Рёв войны",
+      "group": "Навыки персонажа",
+      "referenceId": 1062,
+      "reference": "Berserker Spirit",
+      "original": "icon.skill1062",
+      "art": "icon-skill1062",
+      "exact": false
+    },
+    {
+      "key": "Кровавая жатва",
+      "name": "Кровавая жатва",
+      "group": "Навыки персонажа",
+      "referenceId": 1234,
+      "reference": "Vampiric Claw",
+      "original": "icon.skill1234",
+      "art": "icon-skill1234",
+      "exact": false
+    },
+    {
+      "key": "Землетрясение",
+      "name": "Землетрясение",
+      "group": "Навыки персонажа",
+      "referenceId": 260,
+      "reference": "Hammer Crush",
+      "original": "icon.skill0260",
+      "art": "icon-skill0260",
+      "exact": false
+    },
+    {
+      "key": "Несокрушимый",
+      "name": "Несокрушимый",
+      "group": "Навыки персонажа",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "Гнев гор",
+      "name": "Гнев гор",
+      "group": "Навыки персонажа",
+      "referenceId": 260,
+      "reference": "Hammer Crush",
+      "original": "icon.skill0260",
+      "art": "icon-skill0260",
+      "exact": false
+    },
+    {
+      "key": "Вечная твердь",
+      "name": "Вечная твердь",
+      "group": "Навыки персонажа",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "passive_duel_might",
+      "name": "Дуэльная мощь",
+      "group": "Умения ЛС",
+      "referenceId": 3243,
+      "reference": "Item Skill: Duel Might",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "passive_magic_power",
+      "name": "Магическая мощь",
+      "group": "Умения ЛС",
+      "referenceId": 3241,
+      "reference": "Item Skill: Empower",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "passive_magic_barrier",
+      "name": "Магический барьер",
+      "group": "Умения ЛС",
+      "referenceId": 3245,
+      "reference": "Item Skill: Magic Barrier",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "passive_focus",
+      "name": "Фокус",
+      "group": "Умения ЛС",
+      "referenceId": 3249,
+      "reference": "Item Skill: Focus",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "passive_guidance",
+      "name": "Наведение",
+      "group": "Умения ЛС",
+      "referenceId": 3248,
+      "reference": "Item Skill: Guidance",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "passive_haste",
+      "name": "Ускорение",
+      "group": "Умения ЛС",
+      "referenceId": 3238,
+      "reference": "Item Skill: Prayer",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "passive_vitality",
+      "name": "Живучесть",
+      "group": "Умения ЛС",
+      "referenceId": 3238,
+      "reference": "Item Skill: Prayer",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "passive_clarity",
+      "name": "Ясность",
+      "group": "Умения ЛС",
+      "referenceId": 3258,
+      "reference": "Item Skill: Clarity",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "chance_critical_anger",
+      "name": "Критический гнев",
+      "group": "Умения ЛС",
+      "referenceId": 3217,
+      "reference": "Item Skill: Duel Might",
+      "original": "icon.skill3080",
+      "art": "icon-skill3080",
+      "exact": false
+    },
+    {
+      "key": "chance_death_blow",
+      "name": "Смертельный удар",
+      "group": "Умения ЛС",
+      "referenceId": 3223,
+      "reference": "Item Skill: Focus",
+      "original": "icon.skill3080",
+      "art": "icon-skill3080",
+      "exact": false
+    },
+    {
+      "key": "chance_magic_burst",
+      "name": "Магический всплеск",
+      "group": "Умения ЛС",
+      "referenceId": 3216,
+      "reference": "Item Skill: Empower",
+      "original": "icon.skill3080",
+      "art": "icon-skill3080",
+      "exact": false
+    },
+    {
+      "key": "active_might",
+      "name": "Мощь",
+      "group": "Умения ЛС",
+      "referenceId": 3132,
+      "reference": "Item Skill: Might",
+      "original": "icon.skill3123",
+      "art": "icon-skill3123",
+      "exact": false
+    },
+    {
+      "key": "active_empower",
+      "name": "Усиление",
+      "group": "Умения ЛС",
+      "referenceId": 3133,
+      "reference": "Item Skill: Empower",
+      "original": "icon.skill3123",
+      "art": "icon-skill3123",
+      "exact": false
+    },
+    {
+      "key": "active_haste",
+      "name": "Рывок",
+      "group": "Умения ЛС",
+      "referenceId": 3123,
+      "reference": "Item Skill: Heal",
+      "original": "icon.skill3123",
+      "art": "icon-skill3123",
+      "exact": false
+    },
+    {
+      "key": "active_shield",
+      "name": "Щит",
+      "group": "Умения ЛС",
+      "referenceId": 3135,
+      "reference": "Item Skill: Shield",
+      "original": "icon.skill3123",
+      "art": "icon-skill3123",
+      "exact": false
+    },
+    {
+      "key": "active_focus",
+      "name": "Сосредоточение",
+      "group": "Умения ЛС",
+      "referenceId": 3141,
+      "reference": "Item Skill: Focus",
+      "original": "icon.skill3123",
+      "art": "icon-skill3123",
+      "exact": false
+    },
+    {
+      "key": "weapon-mastery",
+      "name": "weapon-mastery",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 141,
+      "reference": "Weapon Mastery",
+      "original": "icon.skill0141",
+      "art": "icon-skill0141",
+      "exact": false
+    },
+    {
+      "key": "magic-mastery",
+      "name": "magic-mastery",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 249,
+      "reference": "Weapon Mastery",
+      "original": "icon.skill0249",
+      "art": "icon-skill0249",
+      "exact": false
+    },
+    {
+      "key": "heavy-armor-mastery",
+      "name": "heavy-armor-mastery",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 231,
+      "reference": "Heavy Armor Mastery",
+      "original": "icon.skill0231",
+      "art": "icon-skill0231",
+      "exact": false
+    },
+    {
+      "key": "robe-mastery",
+      "name": "robe-mastery",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 234,
+      "reference": "Robe Mastery",
+      "original": "icon.skill0234",
+      "art": "icon-skill0234",
+      "exact": false
+    },
+    {
+      "key": "light-armor-mastery",
+      "name": "light-armor-mastery",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 227,
+      "reference": "Light Armor Mastery",
+      "original": "icon.skill0227",
+      "art": "icon-skill0227",
+      "exact": false
+    },
+    {
+      "key": "boost-hp",
+      "name": "boost-hp",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 211,
+      "reference": "Boost HP",
+      "original": "icon.skill0211",
+      "art": "icon-skill0211",
+      "exact": false
+    },
+    {
+      "key": "boost-mana",
+      "name": "boost-mana",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 213,
+      "reference": "Boost Mana",
+      "original": "icon.skill0213",
+      "art": "icon-skill0213",
+      "exact": false
+    },
+    {
+      "key": "critical-power",
+      "name": "critical-power",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 193,
+      "reference": "Critical Damage",
+      "original": "icon.skill0193",
+      "art": "icon-skill0193",
+      "exact": false
+    },
+    {
+      "key": "critical-chance",
+      "name": "critical-chance",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 137,
+      "reference": "Critical Chance",
+      "original": "icon.skill0137",
+      "art": "icon-skill0137",
+      "exact": false
+    },
+    {
+      "key": "accuracy",
+      "name": "accuracy",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 256,
+      "reference": "Accuracy",
+      "original": "icon.skill0256",
+      "art": "icon-skill0256",
+      "exact": false
+    },
+    {
+      "key": "quick-recovery",
+      "name": "quick-recovery",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 228,
+      "reference": "Fast Spell Casting",
+      "original": "icon.skill0228",
+      "art": "icon-skill0228",
+      "exact": false
+    },
+    {
+      "key": "healing-power",
+      "name": "healing-power",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 436,
+      "reference": "Divine Lore",
+      "original": "icon.skill0436",
+      "art": "icon-skill0436",
+      "exact": false
+    },
+    {
+      "key": "toughness",
+      "name": "toughness",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 134,
+      "reference": "Toughness",
+      "original": "icon.skill0134",
+      "art": "icon-skill0134",
+      "exact": false
+    },
+    {
+      "key": "clan-might",
+      "name": "clan-might",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 376,
+      "reference": "Clan Might",
+      "original": "icon.skill0376",
+      "art": "icon-skill0376",
+      "exact": false
+    },
+    {
+      "key": "clan-shield",
+      "name": "clan-shield",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 377,
+      "reference": "Clan Shield",
+      "original": "icon.skill0377",
+      "art": "icon-skill0377",
+      "exact": false
+    },
+    {
+      "key": "clan-vitality",
+      "name": "clan-vitality",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 370,
+      "reference": "Clan Body",
+      "original": "icon.skill0370",
+      "art": "icon-skill0370",
+      "exact": false
+    },
+    {
+      "key": "clan-precision",
+      "name": "clan-precision",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 380,
+      "reference": "Clan Guidance",
+      "original": "icon.skill0380",
+      "art": "icon-skill0380",
+      "exact": false
+    },
+    {
+      "key": "clan-agility",
+      "name": "clan-agility",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 381,
+      "reference": "Clan Agility",
+      "original": "icon.skill0381",
+      "art": "icon-skill0381",
+      "exact": false
+    },
+    {
+      "key": "clan-fury",
+      "name": "clan-fury",
+      "group": "Пассивные и клановые навыки",
+      "referenceId": 193,
+      "reference": "Critical Damage",
+      "original": "icon.skill0193",
+      "art": "icon-skill0193",
+      "exact": false
+    },
+    {
+      "key": "fishing",
+      "name": "fishing",
+      "group": "Рыболовные навыки",
+      "referenceId": 1312,
+      "reference": "Fishing",
+      "original": "icon.skill1312",
+      "art": "icon-skill1312",
+      "exact": true
+    },
+    {
+      "key": "pumping",
+      "name": "pumping",
+      "group": "Рыболовные навыки",
+      "referenceId": 1313,
+      "reference": "Pumping",
+      "original": "icon.skill1313",
+      "art": "icon-skill1313",
+      "exact": true
+    },
+    {
+      "key": "reeling",
+      "name": "reeling",
+      "group": "Рыболовные навыки",
+      "referenceId": 1314,
+      "reference": "Reeling",
+      "original": "icon.skill1314",
+      "art": "icon-skill1314",
+      "exact": true
+    },
+    {
+      "key": "fishing-expertise",
+      "name": "fishing-expertise",
+      "group": "Рыболовные навыки",
+      "referenceId": 1315,
+      "reference": "Fishing Expertise",
+      "original": "icon.skill1315",
+      "art": "icon-skill1315",
+      "exact": true
+    },
+    {
+      "key": "reflect",
+      "name": "reflect",
+      "group": "Боевые эффекты",
+      "referenceId": 3259,
+      "reference": "Item Skill: Reflect Damage",
+      "original": "icon.skill3238",
+      "art": "icon-skill3238",
+      "exact": false
+    },
+    {
+      "key": "hp_regen",
+      "name": "hp_regen",
+      "group": "Боевые эффекты",
+      "referenceId": 1044,
+      "reference": "Regeneration",
+      "original": "icon.skill1044",
+      "art": "icon-skill1044",
+      "exact": false
+    },
+    {
+      "key": "rage",
+      "name": "rage",
+      "group": "Боевые эффекты",
+      "referenceId": 1062,
+      "reference": "Berserker Spirit",
+      "original": "icon.skill1062",
+      "art": "icon-skill1062",
+      "exact": false
+    },
+    {
+      "key": "resistance",
+      "name": "resistance",
+      "group": "Боевые эффекты",
+      "referenceId": 1036,
+      "reference": "Magic Barrier",
+      "original": "icon.skill1036",
+      "art": "icon-skill1036",
+      "exact": false
+    },
+    {
+      "key": "life",
+      "name": "life",
+      "group": "Боевые эффекты",
+      "referenceId": 1044,
+      "reference": "Regeneration",
+      "original": "icon.skill1044",
+      "art": "icon-skill1044",
+      "exact": false
+    },
+    {
+      "key": "damageUp",
+      "name": "damageUp",
+      "group": "Боевые эффекты",
+      "referenceId": 1068,
+      "reference": "Might",
+      "original": "icon.skill1068",
+      "art": "icon-skill1068",
+      "exact": false
+    },
+    {
+      "key": "critChanceUp",
+      "name": "critChanceUp",
+      "group": "Боевые эффекты",
+      "referenceId": 1077,
+      "reference": "Focus",
+      "original": "icon.skill1077",
+      "art": "icon-skill1077",
+      "exact": false
+    },
+    {
+      "key": "critDamageUp",
+      "name": "critDamageUp",
+      "group": "Боевые эффекты",
+      "referenceId": 1242,
+      "reference": "Death Whisper",
+      "original": "icon.skill1242",
+      "art": "icon-skill1242",
+      "exact": false
+    },
+    {
+      "key": "guard",
+      "name": "guard",
+      "group": "Боевые эффекты",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "taunt",
+      "name": "taunt",
+      "group": "Боевые эффекты",
+      "referenceId": 28,
+      "reference": "Aggression",
+      "original": "icon.skill0028",
+      "art": "icon-skill0028",
+      "exact": false
+    },
+    {
+      "key": "evade",
+      "name": "evade",
+      "group": "Боевые эффекты",
+      "referenceId": 1087,
+      "reference": "Agility",
+      "original": "icon.skill1087",
+      "art": "icon-skill1087",
+      "exact": false
+    },
+    {
+      "key": "armorBreak",
+      "name": "armorBreak",
+      "group": "Боевые эффекты",
+      "referenceId": 342,
+      "reference": "Touch of Death",
+      "original": "icon.skill0342",
+      "art": "icon-skill0342",
+      "exact": false
+    },
+    {
+      "key": "weaken",
+      "name": "weaken",
+      "group": "Боевые эффекты",
+      "referenceId": 1164,
+      "reference": "Curse Weakness",
+      "original": "icon.skill1164",
+      "art": "icon-skill1164",
+      "exact": false
+    },
+    {
+      "key": "stun",
+      "name": "stun",
+      "group": "Боевые эффекты",
+      "referenceId": 101,
+      "reference": "Stun Shot",
+      "original": "icon.skill0101",
+      "art": "icon-skill0101",
+      "exact": false
+    },
+    {
+      "key": "enrage",
+      "name": "enrage",
+      "group": "Боевые эффекты",
+      "referenceId": 1062,
+      "reference": "Berserker Spirit",
+      "original": "icon.skill1062",
+      "art": "icon-skill1062",
+      "exact": false
+    },
+    {
+      "key": "armored",
+      "name": "armored",
+      "group": "Боевые эффекты",
+      "referenceId": 110,
+      "reference": "Ultimate Defense",
+      "original": "icon.skill0110",
+      "art": "icon-skill0110",
+      "exact": false
+    },
+    {
+      "key": "locked",
+      "name": "locked",
+      "group": "Боевые эффекты",
+      "referenceId": 1418,
+      "reference": "Celestial Shield",
+      "original": "icon.skill1418",
+      "art": "icon-skill1418",
+      "exact": false
+    },
+    {
+      "key": "slow",
+      "name": "slow",
+      "group": "Боевые эффекты",
+      "referenceId": 1160,
+      "reference": "Slow",
+      "original": "icon.skill1160",
+      "art": "icon-skill1160",
+      "exact": false
+    },
+    {
+      "key": "mute",
+      "name": "mute",
+      "group": "Боевые эффекты",
+      "referenceId": 1064,
+      "reference": "Silence",
+      "original": "icon.skill1064",
+      "art": "icon-skill1064",
+      "exact": false
+    },
+    {
+      "key": "accuracyDown",
+      "name": "accuracyDown",
+      "group": "Боевые эффекты",
+      "referenceId": 412,
+      "reference": "Sand Bomb",
+      "original": "icon.skill0412",
+      "art": "icon-skill0412",
+      "exact": false
+    },
+    {
+      "key": "poison",
+      "name": "poison",
+      "group": "Боевые эффекты",
+      "referenceId": 1168,
+      "reference": "Curse Poison",
+      "original": "icon.skill1168",
+      "art": "icon-skill1168",
+      "exact": false
+    },
+    {
+      "key": "bleed",
+      "name": "bleed",
+      "group": "Боевые эффекты",
+      "referenceId": 96,
+      "reference": "Bleed",
+      "original": "icon.skill0096",
+      "art": "icon-skill0096",
+      "exact": false
+    },
+    {
+      "key": "addDamageToBoss",
+      "name": "addDamageToBoss",
+      "group": "Боевые эффекты",
+      "referenceId": 1068,
+      "reference": "Might",
+      "original": "icon.skill1068",
+      "art": "icon-skill1068",
+      "exact": false
+    },
+    {
+      "key": "addCritChanceToBoss",
+      "name": "addCritChanceToBoss",
+      "group": "Боевые эффекты",
+      "referenceId": 1077,
+      "reference": "Focus",
+      "original": "icon.skill1077",
+      "art": "icon-skill1077",
+      "exact": false
+    },
+    {
+      "key": "addCritDamageToBoss",
+      "name": "addCritDamageToBoss",
+      "group": "Боевые эффекты",
+      "referenceId": 1242,
+      "reference": "Death Whisper",
+      "original": "icon.skill1242",
+      "art": "icon-skill1242",
+      "exact": false
+    },
+    {
+      "key": "damage",
+      "name": "damage",
+      "group": "Боевые эффекты",
+      "referenceId": 3,
+      "reference": "Power Strike",
+      "original": "icon.skill0003",
+      "art": "icon-skill0003",
+      "exact": false
+    },
+    {
+      "key": "heal",
+      "name": "heal",
+      "group": "Боевые эффекты",
+      "referenceId": 1218,
+      "reference": "Greater Battle Heal",
+      "original": "icon.skill1218",
+      "art": "icon-skill1218",
+      "exact": false
+    },
+    {
+      "key": "restore",
+      "name": "restore",
+      "group": "Боевые эффекты",
+      "referenceId": 1157,
+      "reference": "Body To Mind",
+      "original": "icon.skill1157",
+      "art": "icon-skill1157",
+      "exact": false
+    },
+    {
+      "key": "buff",
+      "name": "buff",
+      "group": "Боевые эффекты",
+      "referenceId": 1068,
+      "reference": "Might",
+      "original": "icon.skill1068",
+      "art": "icon-skill1068",
+      "exact": false
+    },
+    {
+      "key": "debuff",
+      "name": "debuff",
+      "group": "Боевые эффекты",
+      "referenceId": 1164,
+      "reference": "Curse Weakness",
+      "original": "icon.skill1164",
+      "art": "icon-skill1164",
+      "exact": false
+    },
+    {
+      "key": "utility",
+      "name": "utility",
+      "group": "Боевые эффекты",
+      "referenceId": 1312,
+      "reference": "Fishing",
+      "original": "icon.skill1312",
+      "art": "icon-skill1312",
+      "exact": false
+    },
+    {
+      "key": "lifestone",
+      "name": "lifestone",
+      "group": "Боевые эффекты",
+      "referenceId": 3123,
+      "reference": "Item Skill: Heal",
+      "original": "icon.skill3123",
+      "art": "icon-skill3123",
+      "exact": false
+    }
+  ],
+  "fishingReferences": [
+    {
+      "id": 6411,
+      "name": "Small Nimble Green Fish",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_6411",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 6412,
+      "name": "Small Ugly Green Fish",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_6412",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 6413,
+      "name": "Small Pudgy Green Fish",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_6413",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 6414,
+      "name": "Nimble Green Fish",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_6414",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 6415,
+      "name": "Ugly Green Fish",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_6415",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 6416,
+      "name": "Pudgy Green Fish",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_6416",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 6417,
+      "name": "Large Nimble Green Fish",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_6417",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 6418,
+      "name": "Large Ugly Green Fish",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_6418",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 6419,
+      "name": "Large Pudgy Green Fish",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_6419",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 6420,
+      "name": "Small Jade Nimble Fish",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_6420",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 6421,
+      "name": "Small Jade Ugly Fish",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_6421",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 6422,
+      "name": "Small Jade Fat Fish",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_6422",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 6423,
+      "name": "Jade Nimble Fish",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_6423",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 6424,
+      "name": "Jade Ugly Fish",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_6424",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 6425,
+      "name": "Jade Fat Fish",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_6425",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 6426,
+      "name": "Big Jade Nimble Fish",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_6426",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 6427,
+      "name": "Big Jade Ugly Fish",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_6427",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 6428,
+      "name": "Big Jade Fat Fish",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_6428",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 6429,
+      "name": "Small Blue Nimble Fish",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_6429",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 6430,
+      "name": "Small Blue Ugly Fish",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_6430",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 6431,
+      "name": "Small Blue Fat Fish",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_6431",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 6432,
+      "name": "Blue Nimble Fish",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_6432",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 6433,
+      "name": "Blue Ugly Fish",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_6433",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 6434,
+      "name": "Blue Fat Fish",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_6434",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 6435,
+      "name": "Big Blue Nimble Fish",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_6435",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 6436,
+      "name": "Big Blue Ugly Fish",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_6436",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 6437,
+      "name": "Big Blue Fat Fish",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_6437",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 6438,
+      "name": "Small Yellow Nimble Fish",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_6438",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 6439,
+      "name": "Small Yellow Ugly Fish",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_6439",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 6440,
+      "name": "Small Yellow Fat Fish",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_6440",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 6441,
+      "name": "Yellow Nimble Fish",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_6441",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 6442,
+      "name": "Yellow Ugly Fish",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_6442",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 6443,
+      "name": "Yellow Fat Fish",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_6443",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 6444,
+      "name": "Big Yellow Nimble Fish",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_6444",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 6445,
+      "name": "Big Yellow Ugly Fish",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_6445",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 6446,
+      "name": "Big Yellow Fat Fish",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_6446",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 6447,
+      "name": "Small Orange Nimble Fish",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_6447",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 6448,
+      "name": "Small Orange Ugly Fish",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_6448",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 6449,
+      "name": "Small Orange Fat Fish",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_6449",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 6450,
+      "name": "Orange Nimble Fish",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_6450",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 6451,
+      "name": "Orange Ugly Fish",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_6451",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 6452,
+      "name": "Orange Fat Fish",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_6452",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 6453,
+      "name": "Big Orange Nimble Fish",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_6453",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 6454,
+      "name": "Big Orange Ugly Fish",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_6454",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 6455,
+      "name": "Big Orange Fat Fish",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_6455",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 6456,
+      "name": "Small Purple Nimble Fish",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_6456",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 6457,
+      "name": "Small Purple Ugly Fish",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_6457",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 6458,
+      "name": "Small Purple Fat Fish",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_6458",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 6459,
+      "name": "Purple Nimble Fish",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_6459",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 6460,
+      "name": "Purple Ugly Fish",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_6460",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 6461,
+      "name": "Purple Fat Fish",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_6461",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 6462,
+      "name": "Big Purple Nimble Fish",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_6462",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 6463,
+      "name": "Big Purple Ugly Fish",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_6463",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 6464,
+      "name": "Big Purple Fat Fish",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_6464",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 6465,
+      "name": "Small Red Nimble Fish",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_6465",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 6466,
+      "name": "Small Red Ugly Fish",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_6466",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 6467,
+      "name": "Small Red Fat Fish",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_6467",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 6468,
+      "name": "Red Nimble Fish",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_6468",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 6469,
+      "name": "Red Ugly Fish",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_6469",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 6470,
+      "name": "Red Fat Fish",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_6470",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 6471,
+      "name": "Big Red Nimble Fish",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_6471",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 6472,
+      "name": "Big Red Ugly Fish",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_6472",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 6473,
+      "name": "Big Red Fat Fish",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_6473",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 6474,
+      "name": "Small White Nimble Fish",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_6474",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 6475,
+      "name": "Small White Ugly Fish",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_6475",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 6476,
+      "name": "Small White Fat Fish",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_6476",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 6477,
+      "name": "White Nimble Fish",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_6477",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 6478,
+      "name": "White Ugly Fish",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_6478",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 6479,
+      "name": "White Fat Fish",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_6479",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 6480,
+      "name": "Big White Nimble Fish",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_6480",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 6481,
+      "name": "Big White Ugly Fish",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_6481",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 6482,
+      "name": "Big White Fat Fish",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_6482",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 6483,
+      "name": "Small Black Nimble Fish",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_6483",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 6484,
+      "name": "Small Black Ugly Fish",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_6484",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 6485,
+      "name": "Small Black Fat Fish",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_6485",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 6486,
+      "name": "Black Nimble Fish",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_6486",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 6487,
+      "name": "Black Ugly Fish",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_6487",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 6488,
+      "name": "Black Fat Fish",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_6488",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 6489,
+      "name": "Big Black Nimble Fish",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_6489",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 6490,
+      "name": "Big Black Ugly Fish",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_6490",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 6491,
+      "name": "Big Black Fat Fish",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_6491",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 6492,
+      "name": "Small Green Treasure Chest",
+      "icon": "icon.etc_treasure_box_i07",
+      "key": "l2_6492",
+      "art": "icon-etc_treasure_box_i07"
+    },
+    {
+      "id": 6493,
+      "name": "Green Treasure Chest",
+      "icon": "icon.etc_treasure_box_i07",
+      "key": "l2_6493",
+      "art": "icon-etc_treasure_box_i07"
+    },
+    {
+      "id": 6494,
+      "name": "Big Green Treasure Chest",
+      "icon": "icon.etc_treasure_box_i07",
+      "key": "l2_6494",
+      "art": "icon-etc_treasure_box_i07"
+    },
+    {
+      "id": 6495,
+      "name": "Small Jade Treasure Chest",
+      "icon": "icon.etc_treasure_box_i06",
+      "key": "l2_6495",
+      "art": "icon-etc_treasure_box_i06"
+    },
+    {
+      "id": 6496,
+      "name": "Jade Treasure Chest",
+      "icon": "icon.etc_treasure_box_i06",
+      "key": "l2_6496",
+      "art": "icon-etc_treasure_box_i06"
+    },
+    {
+      "id": 6497,
+      "name": "Big Jade Treasure Chest",
+      "icon": "icon.etc_treasure_box_i06",
+      "key": "l2_6497",
+      "art": "icon-etc_treasure_box_i06"
+    },
+    {
+      "id": 6498,
+      "name": "Small Blue Treasure Chest",
+      "icon": "icon.etc_treasure_box_i01",
+      "key": "l2_6498",
+      "art": "icon-etc_treasure_box_i01"
+    },
+    {
+      "id": 6499,
+      "name": "Blue Treasure Chest",
+      "icon": "icon.etc_treasure_box_i01",
+      "key": "l2_6499",
+      "art": "icon-etc_treasure_box_i01"
+    },
+    {
+      "id": 6500,
+      "name": "Big Blue Treasure Chest",
+      "icon": "icon.etc_treasure_box_i01",
+      "key": "l2_6500",
+      "art": "icon-etc_treasure_box_i01"
+    },
+    {
+      "id": 6501,
+      "name": "Small Yellow Treasure Chest",
+      "icon": "icon.etc_treasure_box_i02",
+      "key": "l2_6501",
+      "art": "icon-etc_treasure_box_i02"
+    },
+    {
+      "id": 6502,
+      "name": "Yellow Treasure Chest",
+      "icon": "icon.etc_treasure_box_i02",
+      "key": "l2_6502",
+      "art": "icon-etc_treasure_box_i02"
+    },
+    {
+      "id": 6503,
+      "name": "Big Yellow Treasure Chest",
+      "icon": "icon.etc_treasure_box_i02",
+      "key": "l2_6503",
+      "art": "icon-etc_treasure_box_i02"
+    },
+    {
+      "id": 6504,
+      "name": "Small Orange Treasure Chest",
+      "icon": "icon.etc_treasure_box_i08",
+      "key": "l2_6504",
+      "art": "icon-etc_treasure_box_i08"
+    },
+    {
+      "id": 6505,
+      "name": "Orange Treasure Chest",
+      "icon": "icon.etc_treasure_box_i08",
+      "key": "l2_6505",
+      "art": "icon-etc_treasure_box_i08"
+    },
+    {
+      "id": 6506,
+      "name": "Big Orange Treasure Chest",
+      "icon": "icon.etc_treasure_box_i08",
+      "key": "l2_6506",
+      "art": "icon-etc_treasure_box_i08"
+    },
+    {
+      "id": 6507,
+      "name": "Small Purple Treasure Chest",
+      "icon": "icon.etc_treasure_box_i04",
+      "key": "l2_6507",
+      "art": "icon-etc_treasure_box_i04"
+    },
+    {
+      "id": 6508,
+      "name": "Purple Treasure Chest",
+      "icon": "icon.etc_treasure_box_i04",
+      "key": "l2_6508",
+      "art": "icon-etc_treasure_box_i04"
+    },
+    {
+      "id": 6509,
+      "name": "Big Purple Treasure Chest",
+      "icon": "icon.etc_treasure_box_i04",
+      "key": "l2_6509",
+      "art": "icon-etc_treasure_box_i04"
+    },
+    {
+      "id": 6510,
+      "name": "Small Red Treasure Chest",
+      "icon": "icon.etc_treasure_box_i03",
+      "key": "l2_6510",
+      "art": "icon-etc_treasure_box_i03"
+    },
+    {
+      "id": 6511,
+      "name": "Red Treasure Chest",
+      "icon": "icon.etc_treasure_box_i03",
+      "key": "l2_6511",
+      "art": "icon-etc_treasure_box_i03"
+    },
+    {
+      "id": 6512,
+      "name": "Big Red Treasure Chest",
+      "icon": "icon.etc_treasure_box_i03",
+      "key": "l2_6512",
+      "art": "icon-etc_treasure_box_i03"
+    },
+    {
+      "id": 6513,
+      "name": "Small White Treasure Chest",
+      "icon": "icon.etc_treasure_box_i00",
+      "key": "l2_6513",
+      "art": "icon-etc_treasure_box_i00"
+    },
+    {
+      "id": 6514,
+      "name": "White Treasure Chest",
+      "icon": "icon.etc_treasure_box_i00",
+      "key": "l2_6514",
+      "art": "icon-etc_treasure_box_i00"
+    },
+    {
+      "id": 6515,
+      "name": "Big White Treasure Chest",
+      "icon": "icon.etc_treasure_box_i00",
+      "key": "l2_6515",
+      "art": "icon-etc_treasure_box_i00"
+    },
+    {
+      "id": 6516,
+      "name": "Small Black Treasure Chest",
+      "icon": "icon.etc_treasure_box_i05",
+      "key": "l2_6516",
+      "art": "icon-etc_treasure_box_i05"
+    },
+    {
+      "id": 6517,
+      "name": "Black Treasure Chest",
+      "icon": "icon.etc_treasure_box_i05",
+      "key": "l2_6517",
+      "art": "icon-etc_treasure_box_i05"
+    },
+    {
+      "id": 6518,
+      "name": "Big Black Treasure Chest",
+      "icon": "icon.etc_treasure_box_i05",
+      "key": "l2_6518",
+      "art": "icon-etc_treasure_box_i05"
+    },
+    {
+      "id": 6529,
+      "name": "Baby Duck Rod",
+      "icon": "icon.weapon_fishing_rod_i00",
+      "key": "l2_6529",
+      "art": "icon-weapon_fishing_rod_i00"
+    },
+    {
+      "id": 6530,
+      "name": "Albatross Rod",
+      "icon": "icon.weapon_fishing_rod_i01",
+      "key": "l2_6530",
+      "art": "icon-weapon_fishing_rod_i01"
+    },
+    {
+      "id": 6531,
+      "name": "Pelican Rod",
+      "icon": "icon.weapon_fishing_rod_i02",
+      "key": "l2_6531",
+      "art": "icon-weapon_fishing_rod_i02"
+    },
+    {
+      "id": 6532,
+      "name": "KingFisher Rod",
+      "icon": "icon.weapon_fishing_rod_i03",
+      "key": "l2_6532",
+      "art": "icon-weapon_fishing_rod_i03"
+    },
+    {
+      "id": 6533,
+      "name": "Cygnus Pole",
+      "icon": "icon.weapon_fishing_rod_i04",
+      "key": "l2_6533",
+      "art": "icon-weapon_fishing_rod_i04"
+    },
+    {
+      "id": 6534,
+      "name": "Triton Pole",
+      "icon": "icon.weapon_fishing_rod_i05",
+      "key": "l2_6534",
+      "art": "icon-weapon_fishing_rod_i05"
+    },
+    {
+      "id": 6535,
+      "name": "Fishing Shot (No-Grade)",
+      "icon": "icon.etc_spirit_bullet_fish_i00",
+      "key": "l2_6535",
+      "art": "icon-etc_spirit_bullet_fish_i00"
+    },
+    {
+      "id": 6536,
+      "name": "Fishing Shot (D-Grade)",
+      "icon": "icon.etc_spirit_bullet_fish_i01",
+      "key": "l2_6536",
+      "art": "icon-etc_spirit_bullet_fish_i01"
+    },
+    {
+      "id": 6537,
+      "name": "Fishing Shot (C-Grade)",
+      "icon": "icon.etc_spirit_bullet_fish_i02",
+      "key": "l2_6537",
+      "art": "icon-etc_spirit_bullet_fish_i02"
+    },
+    {
+      "id": 6538,
+      "name": "Fishing Shot (B-Grade)",
+      "icon": "icon.etc_spirit_bullet_fish_i03",
+      "key": "l2_6538",
+      "art": "icon-etc_spirit_bullet_fish_i03"
+    },
+    {
+      "id": 6539,
+      "name": "Fishing Shot (A-Grade)",
+      "icon": "icon.etc_spirit_bullet_fish_i04",
+      "key": "l2_6539",
+      "art": "icon-etc_spirit_bullet_fish_i04"
+    },
+    {
+      "id": 6540,
+      "name": "Fishing Shot (S-Grade)",
+      "icon": "icon.etc_spirit_bullet_fish_i05",
+      "key": "l2_6540",
+      "art": "icon-etc_spirit_bullet_fish_i05"
+    },
+    {
+      "id": 6904,
+      "name": "Party Mask Fabric",
+      "icon": "icon.etc_piece_of_cloth_blue_i00",
+      "key": "l2_6904",
+      "art": "icon-etc_piece_of_cloth_blue_i00"
+    },
+    {
+      "id": 6905,
+      "name": "Hair Pin Piece",
+      "icon": "icon.etc_broken_crystal_green_i00",
+      "key": "l2_6905",
+      "art": "icon-etc_broken_crystal_green_i00"
+    },
+    {
+      "id": 6906,
+      "name": "Pirate's Eye Patch Material",
+      "icon": "icon.etc_braided_hemp_i00",
+      "key": "l2_6906",
+      "art": "icon-etc_braided_hemp_i00"
+    },
+    {
+      "id": 6907,
+      "name": "Monocle Piece",
+      "icon": "icon.etc_bark_blue_i00",
+      "key": "l2_6907",
+      "art": "icon-etc_bark_blue_i00"
+    },
+    {
+      "id": 6908,
+      "name": "Fish Oil",
+      "icon": "icon.etc_fish_oil_i00",
+      "key": "l2_6908",
+      "art": "icon-etc_fish_oil_i00"
+    },
+    {
+      "id": 6909,
+      "name": "Greater Fish Oil",
+      "icon": "icon.etc_fish_oil_i01",
+      "key": "l2_6909",
+      "art": "icon-etc_fish_oil_i01"
+    },
+    {
+      "id": 6910,
+      "name": "Premium Fish Oil",
+      "icon": "icon.etc_fish_oil_i02",
+      "key": "l2_6910",
+      "art": "icon-etc_fish_oil_i02"
+    },
+    {
+      "id": 6911,
+      "name": "Fish Scale",
+      "icon": "icon.etc_fish_scale_i00",
+      "key": "l2_6911",
+      "art": "icon-etc_fish_scale_i00"
+    },
+    {
+      "id": 6912,
+      "name": "Shiny Fish Scale",
+      "icon": "icon.etc_fish_scale_i01",
+      "key": "l2_6912",
+      "art": "icon-etc_fish_scale_i01"
+    },
+    {
+      "id": 6913,
+      "name": "Fish Gem",
+      "icon": "icon.etc_fish_gem_i00",
+      "key": "l2_6913",
+      "art": "icon-etc_fish_gem_i00"
+    },
+    {
+      "id": 6914,
+      "name": "Shiny Fish Gem",
+      "icon": "icon.etc_fish_gem_i01",
+      "key": "l2_6914",
+      "art": "icon-etc_fish_gem_i01"
+    },
+    {
+      "id": 6915,
+      "name": "Thin Fish Bone",
+      "icon": "icon.etc_fang_gray_i00",
+      "key": "l2_6915",
+      "art": "icon-etc_fang_gray_i00"
+    },
+    {
+      "id": 6916,
+      "name": "Thick Fish Bone",
+      "icon": "icon.etc_fang_ivory_i00",
+      "key": "l2_6916",
+      "art": "icon-etc_fang_ivory_i00"
+    },
+    {
+      "id": 6920,
+      "name": "Recipe: Greater Fish Oil (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6920",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6921,
+      "name": "Recipe: Premium Fish Oil(100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6921",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6943,
+      "name": "Recipe: Dye Potion - A (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6943",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6944,
+      "name": "Recipe: Dye Potion - B (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6944",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6945,
+      "name": "Recipe: Dye Potion - C (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6945",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6946,
+      "name": "Recipe: Dye Potion - D (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6946",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6954,
+      "name": "Recipe: Dye of STR (Str+1 Con-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6954",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6955,
+      "name": "Recipe: Dye of STR (Str+1 Dex-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6955",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6956,
+      "name": "Recipe: Dye of CON (Con+1 Str-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6956",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6957,
+      "name": "Recipe: Dye of CON (Con+1 Dex-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6957",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6958,
+      "name": "Recipe: Dye of DEX (Dex+1 Str-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6958",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6959,
+      "name": "Recipe: Dye of DEX (Dex+1 Con-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6959",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6960,
+      "name": "Recipe: Dye of INT (Int+1 Men-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6960",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6961,
+      "name": "Recipe: Dye of INT (Int+1 Wit-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6961",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6962,
+      "name": "Recipe: Dye of MEN (Men+1 Int-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6962",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6963,
+      "name": "Recipe: Dye of MEN (Men+1 Wit-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6963",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6964,
+      "name": "Recipe: Dye of WIT(Wit+1 Int-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6964",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6965,
+      "name": "Recipe: Dye of WIT(Wit+1 Men-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6965",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6966,
+      "name": "Recipe: Greater Dye of STR (Str+1 Con-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6966",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6967,
+      "name": "Recipe: Greater Dye of STR (Str+1 Dex-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6967",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6968,
+      "name": "Recipe: Greater Dye of CON (Con+1 Str-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6968",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6969,
+      "name": "Recipe: Greater Dye of CON (Con+1 Dex-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6969",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6970,
+      "name": "Recipe: Greater Dye of DEX (Dex+1 Str-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6970",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6971,
+      "name": "Recipe: Greater Dye of DEX (Dex+1 Con-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6971",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6972,
+      "name": "Recipe: Greater Dye of INT (Int+1 Men-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6972",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6973,
+      "name": "Recipe: Greater Dye of INT (Int+1 Wit-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6973",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6974,
+      "name": "Recipe: Greater Dye of MEN (Men+1 Int-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6974",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6975,
+      "name": "Recipe: Greater Dye of MEN (Men+1 Wit-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6975",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6976,
+      "name": "Recipe: Greater Dye of WIT(Wit+1 Int-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6976",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6977,
+      "name": "Recipe: Greater Dye of WIT(Wit+1 Men-1) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6977",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6978,
+      "name": "Recipe: Greater Dye of STR (Str+2 Con-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6978",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6979,
+      "name": "Recipe: Greater Dye of STR (Str+2 Dex-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6979",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6980,
+      "name": "Recipe: Greater Dye of CON (Con+2 Str-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6980",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6981,
+      "name": "Recipe: Greater Dye of CON (Con+2 Dex-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6981",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6982,
+      "name": "Recipe: Greater Dye of DEX (Dex+2 Str-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6982",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6983,
+      "name": "Recipe: Greater Dye of DEX (Dex+2 Con-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6983",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6984,
+      "name": "Recipe: Greater Dye of INT (Int+2 Men-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6984",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6985,
+      "name": "Recipe: Greater Dye of INT (Int+2 Wit-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6985",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6986,
+      "name": "Recipe: Greater Dye of MEN (Men+2 Int-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6986",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6987,
+      "name": "Recipe: Greater Dye of MEN (Men+2 Wit-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6987",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6988,
+      "name": "Recipe: Greater Dye of WIT(Wit+2 Int-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6988",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6989,
+      "name": "Recipe: Greater Dye of WIT(Wit+2 Men-2) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6989",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6990,
+      "name": "Recipe: Greater Dye of STR (Str+3 Con-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6990",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6991,
+      "name": "Recipe: Greater Dye of STR (Str+3 Dex-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6991",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6992,
+      "name": "Recipe: Greater Dye of CON (Con+3 Str-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6992",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6993,
+      "name": "Recipe: Greater Dye of CON (Con+3 Dex-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6993",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6994,
+      "name": "Recipe: Greater Dye of DEX (Dex+3 Str-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6994",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6995,
+      "name": "Recipe: Greater Dye of DEX (Dex+3 Con-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6995",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6996,
+      "name": "Recipe: Greater Dye of INT (Int+3 Men-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6996",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6997,
+      "name": "Recipe: Greater Dye of INT (Int+3 Wit-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6997",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6998,
+      "name": "Recipe: Greater Dye of MEN (Men+3 Int-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6998",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 6999,
+      "name": "Recipe: Greater Dye of MEN (Men+3 Wit-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_6999",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7000,
+      "name": "Recipe: Greater Dye of WIT(Wit+3 Int-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7000",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7001,
+      "name": "Recipe: Greater Dye of WIT(Wit+3 Men-3) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7001",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7002,
+      "name": "Recipe: Greater Dye of STR (Str+4 Con-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7002",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7003,
+      "name": "Recipe: Greater Dye of STR (Str+4 Dex-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7003",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7004,
+      "name": "Recipe: Greater Dye of CON (Con+4 Str-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7004",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7005,
+      "name": "Recipe: Greater Dye of CON (Con+4 Dex-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7005",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7006,
+      "name": "Recipe: Greater Dye of DEX (Dex+4 Str-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7006",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7007,
+      "name": "Recipe: Greater Dye of DEX (Dex+4 Con-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7007",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7008,
+      "name": "Recipe: Greater Dye of INT (Int+4 Men-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7008",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7009,
+      "name": "Recipe: Greater Dye of INT (Int+4 Wit-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7009",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7010,
+      "name": "Recipe: Greater Dye of MEN (Men+4 Int-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7010",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7011,
+      "name": "Recipe: Greater Dye of MEN (Men+4 Wit-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7011",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7012,
+      "name": "Recipe: Greater Dye of WIT(Wit+4 Int-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7012",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7013,
+      "name": "Recipe: Greater Dye of WIT(Wit+4 Men-4) (100%)",
+      "icon": "icon.etc_recipe_green_i00",
+      "key": "l2_7013",
+      "art": "icon-etc_recipe_green_i00"
+    },
+    {
+      "id": 7609,
+      "name": "Proof of Catching a Fish",
+      "icon": "icon.etc_ticket_i00",
+      "key": "l2_7609",
+      "art": "icon-etc_ticket_i00"
+    },
+    {
+      "id": 7685,
+      "name": "Outlaw's Eyepatch Strap",
+      "icon": "icon.etc_braided_hemp_i00",
+      "key": "l2_7685",
+      "art": "icon-etc_braided_hemp_i00"
+    },
+    {
+      "id": 7686,
+      "name": "Maiden's Hairpin Piece",
+      "icon": "icon.etc_broken_crystal_green_i00",
+      "key": "l2_7686",
+      "art": "icon-etc_broken_crystal_green_i00"
+    },
+    {
+      "id": 7697,
+      "name": "Piece of Forget-me-not Hairpin",
+      "icon": "icon.etc_broken_crystal_green_i00",
+      "key": "l2_7697",
+      "art": "icon-etc_broken_crystal_green_i00"
+    },
+    {
+      "id": 7698,
+      "name": "Piece of Daisy Hairpin",
+      "icon": "icon.etc_broken_crystal_green_i00",
+      "key": "l2_7698",
+      "art": "icon-etc_broken_crystal_green_i00"
+    },
+    {
+      "id": 7726,
+      "name": "Small Nimble Green Fish - For Beginners",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_7726",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 7727,
+      "name": "Small Ugly Green Fish - For Beginners",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_7727",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 7728,
+      "name": "Small Pudgy Green Fish - For Beginners",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_7728",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 7729,
+      "name": "Nimble Green Fish - For Beginners",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_7729",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 7730,
+      "name": "Ugly Green Fish - For Beginners",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_7730",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 7731,
+      "name": "Pudgy Green Fish - For Beginners",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_7731",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 7732,
+      "name": "Large Nimble Green Fish - For Beginners",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_7732",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 7733,
+      "name": "Large Ugly Green Fish - For Beginners",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_7733",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 7734,
+      "name": "Large Pudgy Green Fish - For Beginners",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_7734",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 7735,
+      "name": "Small Jade Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_7735",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 7736,
+      "name": "Small Jade Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_7736",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 7737,
+      "name": "Small Jade Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_7737",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 7738,
+      "name": "Jade Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_7738",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 7739,
+      "name": "Jade Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_7739",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 7740,
+      "name": "Jade Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_7740",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 7741,
+      "name": "Large Jade Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_7741",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 7742,
+      "name": "Large Jade Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_7742",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 7743,
+      "name": "Large Jade Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_7743",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 7744,
+      "name": "Small Blue Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_7744",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 7745,
+      "name": "Small Blue Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_7745",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 7746,
+      "name": "Small Blue Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_7746",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 7747,
+      "name": "Blue Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_7747",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 7748,
+      "name": "Blue Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_7748",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 7749,
+      "name": "Blue Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_7749",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 7750,
+      "name": "Large Blue Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_7750",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 7751,
+      "name": "Large Blue Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_7751",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 7752,
+      "name": "Large Blue Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_7752",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 7753,
+      "name": "Small Yellow Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_7753",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 7754,
+      "name": "Small Yellow Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_7754",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 7755,
+      "name": "Small Yellow Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_7755",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 7756,
+      "name": "Yellow Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_7756",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 7757,
+      "name": "Yellow Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_7757",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 7758,
+      "name": "Yellow Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_7758",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 7759,
+      "name": "Large Yellow Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_7759",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 7760,
+      "name": "Large Yellow Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_7760",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 7761,
+      "name": "Large Yellow Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_7761",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 7762,
+      "name": "Small Orange Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_7762",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 7763,
+      "name": "Small Orange Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_7763",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 7764,
+      "name": "Small Orange Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_7764",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 7765,
+      "name": "Orange Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_7765",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 7766,
+      "name": "Orange Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_7766",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 7767,
+      "name": "Orange Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_7767",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 7768,
+      "name": "Large Orange Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_7768",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 7769,
+      "name": "Large Orange Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_7769",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 7770,
+      "name": "Large Orange Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_7770",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 7771,
+      "name": "Small Purple Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_7771",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 7772,
+      "name": "Small Purple Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_7772",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 7773,
+      "name": "Small Purple Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_7773",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 7774,
+      "name": "Purple Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_7774",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 7775,
+      "name": "Purple Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_7775",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 7776,
+      "name": "Purple Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_7776",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 7777,
+      "name": "Large Purple Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_7777",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 7778,
+      "name": "Large Purple Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_7778",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 7779,
+      "name": "Large Purple Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_7779",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 7780,
+      "name": "Small Red Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_7780",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 7781,
+      "name": "Small Red Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_7781",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 7782,
+      "name": "Small Red Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_7782",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 7783,
+      "name": "Red Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_7783",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 7784,
+      "name": "Red Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_7784",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 7785,
+      "name": "Red Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_7785",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 7786,
+      "name": "Large Red Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_7786",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 7787,
+      "name": "Large Red Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_7787",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 7788,
+      "name": "Large Red Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_7788",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 7789,
+      "name": "Small White Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_7789",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 7790,
+      "name": "Small White Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_7790",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 7791,
+      "name": "Small White Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_7791",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 7792,
+      "name": "White Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_7792",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 7793,
+      "name": "White Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_7793",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 7794,
+      "name": "White Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_7794",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 7795,
+      "name": "Large White Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_7795",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 7796,
+      "name": "Large White Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_7796",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 7797,
+      "name": "Large White Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_7797",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 7798,
+      "name": "Small Black Nimble Fish: For Beginners",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_7798",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 7799,
+      "name": "Small Black Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_7799",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 7800,
+      "name": "Small Black Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_7800",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 7801,
+      "name": "Black Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_7801",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 7802,
+      "name": "Black Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_7802",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 7803,
+      "name": "Black Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_7803",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 7804,
+      "name": "Large Black Nimble Fish - For Beginners",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_7804",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 7805,
+      "name": "Large Black Ugly Fish - For Beginners",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_7805",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 7806,
+      "name": "Large Black Fat Fish - For Beginners",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_7806",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 8403,
+      "name": "Small Nimble Green Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_8403",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 8404,
+      "name": "Small Ugly Green Fish - Upper Grade",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_8404",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 8405,
+      "name": "Small Pudgy Green Fish - Upper Grade",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_8405",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 8406,
+      "name": "Nimble Green Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_8406",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 8407,
+      "name": "Ugly Green Fish - Upper Grade",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_8407",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 8408,
+      "name": "Pudgy Green Fish - Upper Grade",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_8408",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 8409,
+      "name": "Large Nimble Green Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i07",
+      "key": "l2_8409",
+      "art": "icon-etc_tuna_i07"
+    },
+    {
+      "id": 8410,
+      "name": "Large Ugly Green Fish - Upper Grade",
+      "icon": "icon.etc_angler_i07",
+      "key": "l2_8410",
+      "art": "icon-etc_angler_i07"
+    },
+    {
+      "id": 8411,
+      "name": "Large Pudgy Green Fish - Upper Grade",
+      "icon": "icon.etc_bream_i07",
+      "key": "l2_8411",
+      "art": "icon-etc_bream_i07"
+    },
+    {
+      "id": 8412,
+      "name": "Small Jade Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_8412",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 8413,
+      "name": "Small Jade Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_8413",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 8414,
+      "name": "Small Jade Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_8414",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 8415,
+      "name": "Jade Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_8415",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 8416,
+      "name": "Jade Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_8416",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 8417,
+      "name": "Jade Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_8417",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 8418,
+      "name": "Large Jade Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i06",
+      "key": "l2_8418",
+      "art": "icon-etc_tuna_i06"
+    },
+    {
+      "id": 8419,
+      "name": "Large Jade Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i06",
+      "key": "l2_8419",
+      "art": "icon-etc_angler_i06"
+    },
+    {
+      "id": 8420,
+      "name": "Large Jade Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i06",
+      "key": "l2_8420",
+      "art": "icon-etc_bream_i06"
+    },
+    {
+      "id": 8421,
+      "name": "Small Blue Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_8421",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 8422,
+      "name": "Small Blue Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_8422",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 8423,
+      "name": "Small Blue Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_8423",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 8424,
+      "name": "Blue Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_8424",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 8425,
+      "name": "Blue Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_8425",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 8426,
+      "name": "Blue Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_8426",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 8427,
+      "name": "Large Blue Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i01",
+      "key": "l2_8427",
+      "art": "icon-etc_tuna_i01"
+    },
+    {
+      "id": 8428,
+      "name": "Large Blue Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i01",
+      "key": "l2_8428",
+      "art": "icon-etc_angler_i01"
+    },
+    {
+      "id": 8429,
+      "name": "Large Blue Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i01",
+      "key": "l2_8429",
+      "art": "icon-etc_bream_i01"
+    },
+    {
+      "id": 8430,
+      "name": "Small Yellow Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_8430",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 8431,
+      "name": "Small Yellow Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_8431",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 8432,
+      "name": "Small Yellow Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_8432",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 8433,
+      "name": "Yellow Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_8433",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 8434,
+      "name": "Yellow Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_8434",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 8435,
+      "name": "Yellow Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_8435",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 8436,
+      "name": "Large Yellow Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i02",
+      "key": "l2_8436",
+      "art": "icon-etc_tuna_i02"
+    },
+    {
+      "id": 8437,
+      "name": "Large Yellow Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i02",
+      "key": "l2_8437",
+      "art": "icon-etc_angler_i02"
+    },
+    {
+      "id": 8438,
+      "name": "Large Yellow Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i02",
+      "key": "l2_8438",
+      "art": "icon-etc_bream_i02"
+    },
+    {
+      "id": 8439,
+      "name": "Small Orange Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_8439",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 8440,
+      "name": "Small Orange Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_8440",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 8441,
+      "name": "Small Orange Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_8441",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 8442,
+      "name": "Orange Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_8442",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 8443,
+      "name": "Orange Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_8443",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 8444,
+      "name": "Orange Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_8444",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 8445,
+      "name": "Large Orange Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i08",
+      "key": "l2_8445",
+      "art": "icon-etc_tuna_i08"
+    },
+    {
+      "id": 8446,
+      "name": "Large Orange Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i08",
+      "key": "l2_8446",
+      "art": "icon-etc_angler_i08"
+    },
+    {
+      "id": 8447,
+      "name": "Large Orange Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i08",
+      "key": "l2_8447",
+      "art": "icon-etc_bream_i08"
+    },
+    {
+      "id": 8448,
+      "name": "Small Purple Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_8448",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 8449,
+      "name": "Small Purple Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_8449",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 8450,
+      "name": "Small Purple Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_8450",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 8451,
+      "name": "Purple Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_8451",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 8452,
+      "name": "Purple Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_8452",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 8453,
+      "name": "Purple Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_8453",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 8454,
+      "name": "Large Purple Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i04",
+      "key": "l2_8454",
+      "art": "icon-etc_tuna_i04"
+    },
+    {
+      "id": 8455,
+      "name": "Large Purple Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i04",
+      "key": "l2_8455",
+      "art": "icon-etc_angler_i04"
+    },
+    {
+      "id": 8456,
+      "name": "Large Purple Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i04",
+      "key": "l2_8456",
+      "art": "icon-etc_bream_i04"
+    },
+    {
+      "id": 8457,
+      "name": "Small Red Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_8457",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 8458,
+      "name": "Small Red Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_8458",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 8459,
+      "name": "Small Red Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_8459",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 8460,
+      "name": "Red Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_8460",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 8461,
+      "name": "Red Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_8461",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 8462,
+      "name": "Red Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_8462",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 8463,
+      "name": "Large Red Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i03",
+      "key": "l2_8463",
+      "art": "icon-etc_tuna_i03"
+    },
+    {
+      "id": 8464,
+      "name": "Large Red Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i03",
+      "key": "l2_8464",
+      "art": "icon-etc_angler_i03"
+    },
+    {
+      "id": 8465,
+      "name": "Large Red Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i03",
+      "key": "l2_8465",
+      "art": "icon-etc_bream_i03"
+    },
+    {
+      "id": 8466,
+      "name": "Small White Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_8466",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 8467,
+      "name": "Small White Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_8467",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 8468,
+      "name": "Small White Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_8468",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 8469,
+      "name": "White Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_8469",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 8470,
+      "name": "White Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_8470",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 8471,
+      "name": "White Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_8471",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 8472,
+      "name": "Large White Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i00",
+      "key": "l2_8472",
+      "art": "icon-etc_tuna_i00"
+    },
+    {
+      "id": 8473,
+      "name": "Large White Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i00",
+      "key": "l2_8473",
+      "art": "icon-etc_angler_i00"
+    },
+    {
+      "id": 8474,
+      "name": "Large White Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i00",
+      "key": "l2_8474",
+      "art": "icon-etc_bream_i00"
+    },
+    {
+      "id": 8475,
+      "name": "Small Black Nimble Fish: Upper Grade",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_8475",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 8476,
+      "name": "Small Black Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_8476",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 8477,
+      "name": "Small Black Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_8477",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 8478,
+      "name": "Black Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_8478",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 8479,
+      "name": "Black Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_8479",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 8480,
+      "name": "Black Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_8480",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 8481,
+      "name": "Large Black Nimble Fish - Upper Grade",
+      "icon": "icon.etc_tuna_i05",
+      "key": "l2_8481",
+      "art": "icon-etc_tuna_i05"
+    },
+    {
+      "id": 8482,
+      "name": "Large Black Ugly Fish - Upper Grade",
+      "icon": "icon.etc_angler_i05",
+      "key": "l2_8482",
+      "art": "icon-etc_angler_i05"
+    },
+    {
+      "id": 8483,
+      "name": "Large Black Fat Fish - Upper Grade",
+      "icon": "icon.etc_bream_i05",
+      "key": "l2_8483",
+      "art": "icon-etc_bream_i05"
+    },
+    {
+      "id": 8547,
+      "name": "Old Box",
+      "icon": "icon.etc_box_of_adventure_1_i00",
+      "key": "l2_8547",
+      "art": "icon-etc_box_of_adventure_1_i00"
+    }
+  ],
+  "assets": [
+    {
+      "key": "icon-skill1068",
+      "original": "icon.skill1068"
+    },
+    {
+      "key": "icon-skill1040",
+      "original": "icon.skill1040"
+    },
+    {
+      "key": "icon-skill1086",
+      "original": "icon.skill1086"
+    },
+    {
+      "key": "icon-skill1077",
+      "original": "icon.skill1077"
+    },
+    {
+      "key": "icon-skill1240",
+      "original": "icon.skill1240"
+    },
+    {
+      "key": "icon-skill1242",
+      "original": "icon.skill1242"
+    },
+    {
+      "key": "icon-skill1204",
+      "original": "icon.skill1204"
+    },
+    {
+      "key": "icon-skill0003",
+      "original": "icon.skill0003"
+    },
+    {
+      "key": "icon-skill1234",
+      "original": "icon.skill1234"
+    },
+    {
+      "key": "icon-skill1177",
+      "original": "icon.skill1177"
+    },
+    {
+      "key": "icon-skill1340",
+      "original": "icon.skill1340"
+    },
+    {
+      "key": "icon-skill1418",
+      "original": "icon.skill1418"
+    },
+    {
+      "key": "icon-skill1218",
+      "original": "icon.skill1218"
+    },
+    {
+      "key": "icon-skill1265",
+      "original": "icon.skill1265"
+    },
+    {
+      "key": "icon-skill0056",
+      "original": "icon.skill0056"
+    },
+    {
+      "key": "icon-skill0019",
+      "original": "icon.skill0019"
+    },
+    {
+      "key": "icon-skill0016",
+      "original": "icon.skill0016"
+    },
+    {
+      "key": "icon-skill0261",
+      "original": "icon.skill0261"
+    },
+    {
+      "key": "icon-skill0260",
+      "original": "icon.skill0260"
+    },
+    {
+      "key": "icon-skill0110",
+      "original": "icon.skill0110"
+    },
+    {
+      "key": "icon-skill0028",
+      "original": "icon.skill0028"
+    },
+    {
+      "key": "icon-skill1016",
+      "original": "icon.skill1016"
+    },
+    {
+      "key": "icon-skill0279",
+      "original": "icon.skill0279"
+    },
+    {
+      "key": "icon-skill1164",
+      "original": "icon.skill1164"
+    },
+    {
+      "key": "icon-skill1467",
+      "original": "icon.skill1467"
+    },
+    {
+      "key": "icon-skill1157",
+      "original": "icon.skill1157"
+    },
+    {
+      "key": "icon-skill0101",
+      "original": "icon.skill0101"
+    },
+    {
+      "key": "icon-skill0922",
+      "original": "icon.skill0922"
+    },
+    {
+      "key": "icon-skill1062",
+      "original": "icon.skill1062"
+    },
+    {
+      "key": "icon-skill3238",
+      "original": "icon.skill3238"
+    },
+    {
+      "key": "icon-skill3080",
+      "original": "icon.skill3080"
+    },
+    {
+      "key": "icon-skill3123",
+      "original": "icon.skill3123"
+    },
+    {
+      "key": "icon-skill0141",
+      "original": "icon.skill0141"
+    },
+    {
+      "key": "icon-skill0249",
+      "original": "icon.skill0249"
+    },
+    {
+      "key": "icon-skill0231",
+      "original": "icon.skill0231"
+    },
+    {
+      "key": "icon-skill0234",
+      "original": "icon.skill0234"
+    },
+    {
+      "key": "icon-skill0227",
+      "original": "icon.skill0227"
+    },
+    {
+      "key": "icon-skill0211",
+      "original": "icon.skill0211"
+    },
+    {
+      "key": "icon-skill0213",
+      "original": "icon.skill0213"
+    },
+    {
+      "key": "icon-skill0193",
+      "original": "icon.skill0193"
+    },
+    {
+      "key": "icon-skill0137",
+      "original": "icon.skill0137"
+    },
+    {
+      "key": "icon-skill0256",
+      "original": "icon.skill0256"
+    },
+    {
+      "key": "icon-skill0228",
+      "original": "icon.skill0228"
+    },
+    {
+      "key": "icon-skill0436",
+      "original": "icon.skill0436"
+    },
+    {
+      "key": "icon-skill0134",
+      "original": "icon.skill0134"
+    },
+    {
+      "key": "icon-skill0376",
+      "original": "icon.skill0376"
+    },
+    {
+      "key": "icon-skill0377",
+      "original": "icon.skill0377"
+    },
+    {
+      "key": "icon-skill0370",
+      "original": "icon.skill0370"
+    },
+    {
+      "key": "icon-skill0380",
+      "original": "icon.skill0380"
+    },
+    {
+      "key": "icon-skill0381",
+      "original": "icon.skill0381"
+    },
+    {
+      "key": "icon-skill1312",
+      "original": "icon.skill1312"
+    },
+    {
+      "key": "icon-skill1313",
+      "original": "icon.skill1313"
+    },
+    {
+      "key": "icon-skill1314",
+      "original": "icon.skill1314"
+    },
+    {
+      "key": "icon-skill1315",
+      "original": "icon.skill1315"
+    },
+    {
+      "key": "icon-skill1044",
+      "original": "icon.skill1044"
+    },
+    {
+      "key": "icon-skill1036",
+      "original": "icon.skill1036"
+    },
+    {
+      "key": "icon-skill1087",
+      "original": "icon.skill1087"
+    },
+    {
+      "key": "icon-skill0342",
+      "original": "icon.skill0342"
+    },
+    {
+      "key": "icon-skill1160",
+      "original": "icon.skill1160"
+    },
+    {
+      "key": "icon-skill1064",
+      "original": "icon.skill1064"
+    },
+    {
+      "key": "icon-skill0412",
+      "original": "icon.skill0412"
+    },
+    {
+      "key": "icon-skill1168",
+      "original": "icon.skill1168"
+    },
+    {
+      "key": "icon-skill0096",
+      "original": "icon.skill0096"
+    },
+    {
+      "key": "icon-etc_tuna_i07",
+      "original": "icon.etc_tuna_i07"
+    },
+    {
+      "key": "icon-etc_angler_i07",
+      "original": "icon.etc_angler_i07"
+    },
+    {
+      "key": "icon-etc_bream_i07",
+      "original": "icon.etc_bream_i07"
+    },
+    {
+      "key": "icon-etc_tuna_i06",
+      "original": "icon.etc_tuna_i06"
+    },
+    {
+      "key": "icon-etc_angler_i06",
+      "original": "icon.etc_angler_i06"
+    },
+    {
+      "key": "icon-etc_bream_i06",
+      "original": "icon.etc_bream_i06"
+    },
+    {
+      "key": "icon-etc_tuna_i01",
+      "original": "icon.etc_tuna_i01"
+    },
+    {
+      "key": "icon-etc_angler_i01",
+      "original": "icon.etc_angler_i01"
+    },
+    {
+      "key": "icon-etc_bream_i01",
+      "original": "icon.etc_bream_i01"
+    },
+    {
+      "key": "icon-etc_tuna_i02",
+      "original": "icon.etc_tuna_i02"
+    },
+    {
+      "key": "icon-etc_angler_i02",
+      "original": "icon.etc_angler_i02"
+    },
+    {
+      "key": "icon-etc_bream_i02",
+      "original": "icon.etc_bream_i02"
+    },
+    {
+      "key": "icon-etc_tuna_i08",
+      "original": "icon.etc_tuna_i08"
+    },
+    {
+      "key": "icon-etc_angler_i08",
+      "original": "icon.etc_angler_i08"
+    },
+    {
+      "key": "icon-etc_bream_i08",
+      "original": "icon.etc_bream_i08"
+    },
+    {
+      "key": "icon-etc_tuna_i04",
+      "original": "icon.etc_tuna_i04"
+    },
+    {
+      "key": "icon-etc_angler_i04",
+      "original": "icon.etc_angler_i04"
+    },
+    {
+      "key": "icon-etc_bream_i04",
+      "original": "icon.etc_bream_i04"
+    },
+    {
+      "key": "icon-etc_tuna_i03",
+      "original": "icon.etc_tuna_i03"
+    },
+    {
+      "key": "icon-etc_angler_i03",
+      "original": "icon.etc_angler_i03"
+    },
+    {
+      "key": "icon-etc_bream_i03",
+      "original": "icon.etc_bream_i03"
+    },
+    {
+      "key": "icon-etc_tuna_i00",
+      "original": "icon.etc_tuna_i00"
+    },
+    {
+      "key": "icon-etc_angler_i00",
+      "original": "icon.etc_angler_i00"
+    },
+    {
+      "key": "icon-etc_bream_i00",
+      "original": "icon.etc_bream_i00"
+    },
+    {
+      "key": "icon-etc_tuna_i05",
+      "original": "icon.etc_tuna_i05"
+    },
+    {
+      "key": "icon-etc_angler_i05",
+      "original": "icon.etc_angler_i05"
+    },
+    {
+      "key": "icon-etc_bream_i05",
+      "original": "icon.etc_bream_i05"
+    },
+    {
+      "key": "icon-etc_treasure_box_i07",
+      "original": "icon.etc_treasure_box_i07"
+    },
+    {
+      "key": "icon-etc_treasure_box_i06",
+      "original": "icon.etc_treasure_box_i06"
+    },
+    {
+      "key": "icon-etc_treasure_box_i01",
+      "original": "icon.etc_treasure_box_i01"
+    },
+    {
+      "key": "icon-etc_treasure_box_i02",
+      "original": "icon.etc_treasure_box_i02"
+    },
+    {
+      "key": "icon-etc_treasure_box_i08",
+      "original": "icon.etc_treasure_box_i08"
+    },
+    {
+      "key": "icon-etc_treasure_box_i04",
+      "original": "icon.etc_treasure_box_i04"
+    },
+    {
+      "key": "icon-etc_treasure_box_i03",
+      "original": "icon.etc_treasure_box_i03"
+    },
+    {
+      "key": "icon-etc_treasure_box_i00",
+      "original": "icon.etc_treasure_box_i00"
+    },
+    {
+      "key": "icon-etc_treasure_box_i05",
+      "original": "icon.etc_treasure_box_i05"
+    },
+    {
+      "key": "icon-weapon_fishing_rod_i00",
+      "original": "icon.weapon_fishing_rod_i00"
+    },
+    {
+      "key": "icon-weapon_fishing_rod_i01",
+      "original": "icon.weapon_fishing_rod_i01"
+    },
+    {
+      "key": "icon-weapon_fishing_rod_i02",
+      "original": "icon.weapon_fishing_rod_i02"
+    },
+    {
+      "key": "icon-weapon_fishing_rod_i03",
+      "original": "icon.weapon_fishing_rod_i03"
+    },
+    {
+      "key": "icon-weapon_fishing_rod_i04",
+      "original": "icon.weapon_fishing_rod_i04"
+    },
+    {
+      "key": "icon-weapon_fishing_rod_i05",
+      "original": "icon.weapon_fishing_rod_i05"
+    },
+    {
+      "key": "icon-etc_spirit_bullet_fish_i00",
+      "original": "icon.etc_spirit_bullet_fish_i00"
+    },
+    {
+      "key": "icon-etc_spirit_bullet_fish_i01",
+      "original": "icon.etc_spirit_bullet_fish_i01"
+    },
+    {
+      "key": "icon-etc_spirit_bullet_fish_i02",
+      "original": "icon.etc_spirit_bullet_fish_i02"
+    },
+    {
+      "key": "icon-etc_spirit_bullet_fish_i03",
+      "original": "icon.etc_spirit_bullet_fish_i03"
+    },
+    {
+      "key": "icon-etc_spirit_bullet_fish_i04",
+      "original": "icon.etc_spirit_bullet_fish_i04"
+    },
+    {
+      "key": "icon-etc_spirit_bullet_fish_i05",
+      "original": "icon.etc_spirit_bullet_fish_i05"
+    },
+    {
+      "key": "icon-etc_piece_of_cloth_blue_i00",
+      "original": "icon.etc_piece_of_cloth_blue_i00"
+    },
+    {
+      "key": "icon-etc_broken_crystal_green_i00",
+      "original": "icon.etc_broken_crystal_green_i00"
+    },
+    {
+      "key": "icon-etc_braided_hemp_i00",
+      "original": "icon.etc_braided_hemp_i00"
+    },
+    {
+      "key": "icon-etc_bark_blue_i00",
+      "original": "icon.etc_bark_blue_i00"
+    },
+    {
+      "key": "icon-etc_fish_oil_i00",
+      "original": "icon.etc_fish_oil_i00"
+    },
+    {
+      "key": "icon-etc_fish_oil_i01",
+      "original": "icon.etc_fish_oil_i01"
+    },
+    {
+      "key": "icon-etc_fish_oil_i02",
+      "original": "icon.etc_fish_oil_i02"
+    },
+    {
+      "key": "icon-etc_fish_scale_i00",
+      "original": "icon.etc_fish_scale_i00"
+    },
+    {
+      "key": "icon-etc_fish_scale_i01",
+      "original": "icon.etc_fish_scale_i01"
+    },
+    {
+      "key": "icon-etc_fish_gem_i00",
+      "original": "icon.etc_fish_gem_i00"
+    },
+    {
+      "key": "icon-etc_fish_gem_i01",
+      "original": "icon.etc_fish_gem_i01"
+    },
+    {
+      "key": "icon-etc_fang_gray_i00",
+      "original": "icon.etc_fang_gray_i00"
+    },
+    {
+      "key": "icon-etc_fang_ivory_i00",
+      "original": "icon.etc_fang_ivory_i00"
+    },
+    {
+      "key": "icon-etc_recipe_green_i00",
+      "original": "icon.etc_recipe_green_i00"
+    },
+    {
+      "key": "icon-etc_ticket_i00",
+      "original": "icon.etc_ticket_i00"
+    },
+    {
+      "key": "icon-etc_box_of_adventure_1_i00",
+      "original": "icon.etc_box_of_adventure_1_i00"
+    }
+  ]
+}

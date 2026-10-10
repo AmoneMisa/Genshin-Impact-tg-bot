@@ -1,3 +1,4 @@
+import {l2SkillIcon} from './art/l2-extra-art.js';
 import { escapeHtml } from './escape-html.js';
 
 // Passive skills (Lineage II): permanent class bonuses learned with skill points and gold.
@@ -39,7 +40,7 @@ export async function openPassivesGame({ api, haptic, renderState }) {
     const locked = !maxed && state.level < passive.needLvl;
     return `
       <article class="mail-letter buff-card ${passive.level ? 'pending' : 'claimed'}">
-        <div class="mail-head"><strong>${escapeHtml(passive.name)} ${ROMAN[passive.level]}</strong>
+        <div class="mail-head"><strong>${l2SkillIcon(passive.id)} ${escapeHtml(passive.name)} ${ROMAN[passive.level]}</strong>
           <small>${passive.level} / ${passive.maxLevel}</small></div>
         <p>${escapeHtml(passive.stat)}: ${passive.current ? escapeHtml(passive.current) : '—'}${maxed ? '' : ` → ${escapeHtml(passive.next)}`}</p>
         ${maxed ? '' : `<button type="button" class="feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} ОП · ${passive.cost.gold} золота`}</button>`}

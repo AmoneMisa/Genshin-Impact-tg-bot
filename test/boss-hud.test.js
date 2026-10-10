@@ -18,7 +18,7 @@ test('target frame shows the boss portrait, HP, timer and statuses, and toggles 
   assert.match(html, /\/art\/bosses\/kivaha\.webp/);
   assert.match(html, /mmo-bar hp/);
   assert.match(html, /mmo-bar time/);
-  assert.match(html, /ui-icon-mirror-round[^>]+\.webp/);
+  assert.match(html, /icon-skill3238-32\.webp/);
   assert.match(rewardsPanel({ gold: { min: 1, max: 2 } }), /data-boss-rewards hidden/);
 });
 
