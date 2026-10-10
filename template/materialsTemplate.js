@@ -60,7 +60,7 @@ const CRAFT_FAMILIES = {
     binder: {icon: '🧪', label: 'Связующее', names: ['Coarse Bone Powder', 'Animal Bone', 'Varnish of Purity', 'Stem', 'Mold Glue', 'Mold Hardener', 'Mold Lubricant', 'Synthetic Cokes']},
     leather: {icon: '🟫', label: 'Кожа', names: ['Leather', 'Crafted Leather', 'High Grade Suede', 'Compound Braid', 'Mithril Hide', 'Drake Hide', 'Dynasty Hide', 'Vesper Hide']},
     fiber: {icon: '🧵', label: 'Ткань', names: ['Cloth', 'Metallic Fiber', 'Silk Thread', 'Reinforced Silk', 'Spirit Cloth', 'Moonstone Weave', 'Celestial Weave', 'Astral Weave']},
-    gem: {icon: '💎', label: 'Камень', names: ['Coral', 'Silver Nugget', 'Moonstone', 'Sapphire', 'Ruby', 'Diamond', 'Black Pearl', 'Nephrite Pearl']},
+    gem: {icon: '💎', label: 'Камень', names: ['Coral', 'Gemstone D', 'Gemstone C', 'Gemstone B', 'Gemstone A', 'Gemstone S', 'Black Pearl', 'Nephrite Pearl']},
 };
 const craftMaterials = Object.entries(CRAFT_FAMILIES).flatMap(([family, info]) => CRAFT_GRADES.map((grade, index) => ({
     key: `craft_${family}_${grade}`,

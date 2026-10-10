@@ -17,7 +17,7 @@ export default {
     equipment: 'b87b374b677770639f38078df7312d12966f76e0',
     gacha: '27ad6b31182582c9c64cd4ffc9f0f299912cfe13',
     levels: '13ff4ec3b0927f7ad6de23b1c94e22d1722a3610',
-    materials: 'bf4e0a5b36994b7a488cfc6890d5bbb681ab14b7',
+    materials: '949a86d6438154e7d966992cfd2ef1ae57717fea',
     potions: '5fa80eee2a5056a6bff07cef79b3bcc29d019df6',
     pvpSign: '3d59ea38a7317f5aa8410df1fa1002c5903033d6',
     shop: '8e037c3d4da83eaa34d2ea7718c42fe89516e204',

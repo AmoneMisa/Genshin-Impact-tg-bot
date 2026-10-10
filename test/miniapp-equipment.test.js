@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getEquipmentState, performEquipmentAction, craftEquipmentItem, learnEquipmentRecipe, buyEnchantScroll } from '../miniapp/equipment.js';
 import { findCatalogItem, instantiate } from '../functions/game/equipment/catalog.js';
+import { craftOptions } from '../functions/game/equipment/craftItem.js';
+
+// These tests check the generated recipe formula; real High Five recipes are covered by real-recipes.test.js.
+craftOptions.real = false;
 
 function item(overrides = {}) {
   return {

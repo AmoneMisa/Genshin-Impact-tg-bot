@@ -359,7 +359,9 @@ export function performEquipmentAction(session, key, action, options = {}) {
 
 // Crafting has no existing item to key against (it creates one), so it has its own exports.
 function recipeRow(session, recipe) {
-  const item = findCatalogItem(recipe.id);
+  const item = findCatalogItem(recipe.id) || {
+    name: recipe.productName, translatedName: `×${recipe.amount}`, mainType: 'material', category: 'material', kind: 'material', slots: [], lineage: null,
+  };
   const craft = ensureCraft(session);
   const learned = isRecipeLearned(session, recipe);
   const level = asNumber(session?.game?.stats?.lvl, 1);
@@ -375,6 +377,8 @@ function recipeRow(session, recipe) {
     lineage: item.lineage || null,
     successRate: recipe.successRate,
     gold: recipe.gold,
+    mp: asNumber(recipe.mp),
+    real: Boolean(recipe.real),
     learnPrice: recipe.learnPrice,
     craftLevel: recipe.craftLevel,
     minLevel: recipe.minLevel,
@@ -410,6 +414,7 @@ export function craftEquipmentItem(session, itemId) {
       requiredLevel: result.requiredLevel,
       requiredCraftLevel: result.requiredCraftLevel,
       missing: result.missing,
+      mp: result.mp,
       equipment: getEquipmentState(session),
     };
   }
@@ -422,6 +427,7 @@ export function craftEquipmentItem(session, itemId) {
     exp: result.exp,
     leveledUp: result.leveledUp,
     item: result.item ? sanitizeItem(session, result.item, items.length - 1) : null,
+    product: result.product || null,
     equipment: getEquipmentState(session),
   };
 }

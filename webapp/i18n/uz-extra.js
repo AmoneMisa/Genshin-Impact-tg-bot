@@ -617,4 +617,5 @@ export default {
   'Столько предметов нет.':'Buncha buyum yo‘q.',
   'Травы':'O‘tlar',
   'Части и камни для сборки':'Yig‘ish uchun qismlar va toshlar',
+  'Не хватает MP для ковки.':'Yasash uchun MP yetarli emas.',
 };

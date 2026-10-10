@@ -1,12 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import craftItem, {
-  craftMaterialKey, craftNeedExp, ensureCraft, getRecipe, isRecipeLearned, learnRecipe, listRecipes, missingForRecipe, rollCraftDrops, visibleRecipes,
+  craftOptions, craftMaterialKey, craftNeedExp, ensureCraft, getRecipe, isRecipeLearned, learnRecipe, listRecipes, missingForRecipe, rollCraftDrops, visibleRecipes,
 } from '../functions/game/equipment/craftItem.js';
 import { getCatalog } from '../functions/game/equipment/catalog.js';
 import equipmentTemplate from '../template/equipmentTemplate.js';
 import materialsTemplate from '../template/materialsTemplate.js';
 import { addMaterial, getMaterialCount } from '../functions/game/player/materials.js';
+
+// This file tests the generated recipe formula; the real High Five recipes are covered by real-recipes.test.js.
+craftOptions.real = false;
 
 function player(overrides = {}) {
   return {

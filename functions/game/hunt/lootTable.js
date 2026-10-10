@@ -40,6 +40,9 @@ export function lootInfo(itemId) {
     const name = item.name;
     const scroll = name.match(/^(Blessed )?Scroll: Enchant (?:Weapon|Armor) \((\w+)-Grade\)/);
     if (scroll) return {key: `${scroll[1] ? 'blessed' : 'scroll'}_${scroll[2]}`, kind: 'scroll'};
+    // Gemstones are the game's own gem family: SA installs and real recipes spend the same item.
+    const gem = name.match(/^Gemstone ([DCBAS])$/);
+    if (gem) return {key: `craft_gem_${gem[1]}`, kind: 'material'};
     const crystal = name.match(/^Crystal \((\w)-Grade\)$/);
     if (crystal) return {key: `crystal_${crystal[1]}`, kind: 'crystal'};
     const stone = name.match(/^(Mid-Grade |High-Grade |Top-Grade )?Life Stone - Level (\d+)/);

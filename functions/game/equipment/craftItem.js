@@ -4,8 +4,20 @@
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
 import { getCatalog, findCatalogItem, gradeIndex, instantiate, slotShareKey, canClassUse } from './catalog.js';
 import { addMaterial, getMaterialCount, materialInfo, spendMaterials } from '../player/materials.js';
+import { realRecipeByName, realRecipeByItem, splitIngredients, intermediateRecipes } from './realRecipes.js';
+import { itemRow, lootInfo } from '../hunt/lootTable.js';
+import { HUNT } from '../hunt/huntConfig.js';
+import getCurrentMp from '../player/getters/getCurrentMp.js';
+import skillUsagePayCost from '../player/skillUsagePayCost.js';
+
+// A recipe id is the catalog item it makes, or `recipe:<recipe item>` for a real recipe that makes a material
+// (alloys, patterns ... the real chain behind the S-grade items).
+const MATERIAL_RECIPE = 'recipe:';
 
 const config = () => equipmentTemplate.craft;
+
+/** `real: false` falls back to the generated recipes everywhere (the tests of the generated formula use it). */
+export const craftOptions = {real: true};
 
 // Share of the grade's price / material needs by what the item is (same weights as the sell price).
 const SHARE = {weapon: 1, up: 0.8, fullBody: 1.2, down: 0.5, helmet: 0.35, gloves: 0.3, boots: 0.3, shield: 0.5, jewelry: 0.4};
@@ -33,11 +45,49 @@ function usesOf(item) {
     return uses[item.mainType];
 }
 
+/** A real High Five recipe as a recipe row of the game (gold scaled like the adena drops, MP as in the real craft). */
+function realRow(id, grade, real, extra = {}) {
+    const {materials, adena} = splitIngredients(real);
+    // In High Five some recipes list their own recipe item as an ingredient: it is then consumed by every craft.
+    const consumed = real.ingredients.some(([itemId]) => itemId === real.recipeItem);
+    const book = itemRow(real.recipeItem);
+    return {
+        id, grade,
+        gold: Math.round(adena * HUNT.goldScale),
+        learnPrice: consumed ? 0 : Math.max(1, Math.round((book?.price || 0) * HUNT.goldScale)),
+        bookKey: consumed ? null : `l2_${real.recipeItem}`,
+        ironOre: 0,
+        materials,
+        successRate: real.rate / 100,
+        craftLevel: real.level,
+        minLevel: 0,
+        mp: real.mp,
+        real: true,
+        recipeItem: real.recipeItem,
+        ...extra,
+    };
+}
+
+function materialRecipe(recipeItem) {
+    const real = realRecipeByItem(recipeItem);
+    if (!real) return null;
+    const product = lootInfo(real.product), item = itemRow(real.product);
+    return realRow(`${MATERIAL_RECIPE}${recipeItem}`, 'noGrade', real, {
+        productKey: product.key, productName: item?.name || product.key, amount: real.amount,
+    });
+}
+
 /** What it takes to craft a catalog item: materials, gold, success chance, required skill level. */
 export function getRecipe(itemId) {
+    if (String(itemId).startsWith(MATERIAL_RECIPE)) return materialRecipe(Number(String(itemId).slice(MATERIAL_RECIPE.length)));
     const item = findCatalogItem(itemId);
     // epic jewellery cannot be crafted
     if (!item || item.epic) return null;
+    const real = craftOptions.real ? realRecipeByName(item.name) : null;
+    if (real) {
+        const grade = equipmentTemplate.grades[gradeIndex(item.grade)];
+        return realRow(item.id, item.grade, real, {minLevel: grade.lvl.from});
+    }
     const index = gradeIndex(item.grade);
     const grade = equipmentTemplate.grades[index];
     const share = SHARE[slotShareKey(item)] ?? 1;
@@ -80,6 +130,12 @@ export function learnRecipe(session, itemId) {
     if ((Number(session.game.stats?.lvl) || 1) < recipe.minLevel) return {ok: false, reason: 'level_too_low', requiredLevel: recipe.minLevel};
     if (craft.level < recipe.craftLevel) return {ok: false, reason: 'craft_level_too_low', requiredCraftLevel: recipe.craftLevel};
     const inventory = session.game.inventory;
+    // The recipe book of High Five is learned by reading it; without one the shop price is paid.
+    if (recipe.bookKey && getMaterialCount(session, recipe.bookKey) > 0) {
+        spendMaterials(session, {[recipe.bookKey]: 1});
+        craft.recipes.push(recipe.id);
+        return {ok: true, price: 0, book: true};
+    }
     if ((Number(inventory.gold) || 0) < recipe.learnPrice) return {ok: false, reason: 'not_enough_gold', price: recipe.learnPrice};
 
     inventory.gold -= recipe.learnPrice;
@@ -127,11 +183,14 @@ export default function craftItem(session, itemId, {random = Math.random} = {}) 
 
     const missing = missingForRecipe(session, recipe);
     if (Object.keys(missing).length) return {ok: false, reason: 'not_enough_materials', missing};
+    const mp = Math.max(0, Number(recipe.mp) || 0);
+    if (mp > getCurrentMp(session, session.game.gameClass)) return {ok: false, reason: 'not_enough_mp', mp};
 
     const inventory = session.game.inventory;
     spendMaterials(session, recipe.materials);
     inventory.ironOre -= recipe.ironOre;
     inventory.gold -= recipe.gold;
+    if (mp) skillUsagePayCost(session, 'mp', mp);
 
     const success = random() < recipe.successRate;
     const exp = config().exp;
@@ -139,22 +198,33 @@ export default function craftItem(session, itemId, {random = Math.random} = {}) 
     const leveledUp = gainExp(session, gained);
 
     let item = null;
-    if (success) {
+    let product = null;
+    if (success && recipe.productKey) {
+        addMaterial(session, recipe.productKey, recipe.amount);
+        product = {key: recipe.productKey, name: recipe.productName, amount: recipe.amount};
+    } else if (success) {
         if (!inventory.equipment) inventory.equipment = {name: 'Экипировка', items: []};
         item = instantiate(findCatalogItem(itemId));
         inventory.equipment.items.push(item);
     }
-    return {ok: true, success, item, exp: gained, leveledUp, craft: {level: craft.level, exp: craft.exp}, recipe};
+    return {ok: true, success, item, product, exp: gained, leveledUp, craft: {level: craft.level, exp: craft.exp}, recipe};
 }
 
 /** The recipes a player can sensibly look at: grades up to a few levels ahead, for items their class can use. */
 export function visibleRecipes(session) {
     const level = Number(session.game.stats?.lvl) || 1;
     const className = session.game.gameClass?.stats?.name;
-    return listRecipes().filter(recipe => {
+    const items = listRecipes().filter(recipe => {
         const item = findCatalogItem(recipe.id);
         return recipe.minLevel <= level + 5 && canClassUse(className, item);
     });
+    // The real chain behind them: alloys, patterns and the like, shown under the highest grade that needs them.
+    const gradeOf = new Map();
+    for (const recipe of items.filter(entry => entry.real).sort((x, y) => gradeIndex(x.grade) - gradeIndex(y.grade))) {
+        for (const sub of intermediateRecipes([realRecipeByItem(recipe.recipeItem)]).values()) gradeOf.set(sub.recipeItem, recipe.grade);
+    }
+    const rows = [...gradeOf].map(([recipeItem, grade]) => ({...getRecipe(`${MATERIAL_RECIPE}${recipeItem}`), grade}));
+    return items.concat(rows);
 }
 
 /** Display rows of a recipe's materials with how many the player has. */
