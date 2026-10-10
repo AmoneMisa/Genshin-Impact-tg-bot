@@ -1,6 +1,7 @@
 import { bar, escapeHtml, formatNumber } from './boss-hud.js';
 import { icon } from './icons.js';
 import { classArtUrl } from './boss-stage.js';
+import {L2_UI_ART,l2IconHtml} from './art/l2-icon-art.js';
 
 // Parties of up to nine players of the chat. A buff cast by a member (class buffs and buff skills) reaches the
 // whole party; the leader invites, kicks and disbands.
@@ -33,7 +34,7 @@ export async function openPartyGame({ api, haptic, statusElement }) {
       <header class="ds-head">
         <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
         <h2>Группа</h2>
-        <span class="ds-round" aria-hidden="true">${icon('users')}</span>
+        <span class="ds-round" aria-hidden="true"><img class="mat-icon" src="/art/icons/party-emblem-128.webp" srcset="/art/icons/party-emblem-128.webp 1x, /art/icons/party-emblem-256.webp 2x" width="24" height="24" alt=""></span>
       </header>
       <div data-party-content></div>
       <div class="boss-feedback" data-party-feedback aria-live="polite"></div>
@@ -60,8 +61,9 @@ export async function openPartyGame({ api, haptic, statusElement }) {
     return `<article class="party-member ${member.me ? 'me' : ''}">
       <img src="${classArtUrl(member.className, member.gender)}" alt="" width="44" height="44">
       <div class="party-member-body">
-        <strong>${escapeHtml(member.name)}${member.leader ? ' ★' : ''}</strong>
+        <strong>${escapeHtml(member.name)}${member.leader ? ' '+l2IconHtml(L2_UI_ART.leader) : ''}</strong>
         <small>${escapeHtml(member.classTitle)} · ${formatNumber(member.level)} ур.</small>
+        ${bar('cp', member.cp||0, member.maxCp||1, { label: 'CP' })}
         ${bar('hp', member.hp, member.maxHp, { label: 'HP' })}
         ${bar('mp', member.mp, member.maxMp, { label: 'MP' })}
       </div>
@@ -95,8 +97,8 @@ export async function openPartyGame({ api, haptic, statusElement }) {
           <div class="party-members">${party.members.map(member => memberHtml(member, party.amLeader)).join('')}</div></section>
         <section class="mmo-frame party-loot"><div class="mmo-section-title"><strong>Добыча</strong><small>адена делится поровну</small></div>
           ${party.amLeader
-            ? `<div class="party-loot-modes">${state.lootModes.map(mode => `<button type="button" class="equipment-filter ${party.loot === mode ? 'active' : ''}" data-party-loot="${mode}">${LOOT_LABELS[mode][0]}</button>`).join('')}</div>`
-            : `<strong>${LOOT_LABELS[party.loot][0]}</strong>`}
+            ? `<div class="party-loot-modes">${state.lootModes.map(mode => `<button type="button" class="equipment-filter ${party.loot === mode ? 'active' : ''}" data-party-loot="${mode}">${mode==='turn'?icon('rotate-cw'):l2IconHtml(L2_UI_ART['loot-'+mode])} ${LOOT_LABELS[mode][0]}</button>`).join('')}</div>`
+            : `<strong>${party.loot==='turn'?icon('rotate-cw'):l2IconHtml(L2_UI_ART['loot-'+party.loot])} ${LOOT_LABELS[party.loot][0]}</strong>`}
           <p class="party-note">${LOOT_LABELS[party.loot][1]}</p></section>
         ${party.amLeader ? candidatesHtml(party) : ''}
         <div class="party-actions">
@@ -145,5 +147,6 @@ export async function openPartyGame({ api, haptic, statusElement }) {
 
   document.body.append(overlay);
   render();
+  requestAnimationFrame(()=>overlay.classList.add('visible'));
   if (statusElement) statusElement.textContent = 'Группа';
 }

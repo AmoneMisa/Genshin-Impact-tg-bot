@@ -1,5 +1,6 @@
 import {paintedIconHtml} from './art/painted-icon-art.js';
 import {icon} from './icons.js';
+import {l2MaterialIcon} from './art/l2-icon-art.js';
 // Painted icons for enchant and crafting materials (art-source/icons, docs/imagegen-prompts.md 5f).
 // The paintings are neutral gold; each grade gets its colour from a CSS hue turn (see .mat-icon in equipment.css).
 const ICONS = Object.freeze({scroll: 'scroll', blessed: 'scroll-blessed', crystal: 'crystal'});
@@ -26,6 +27,8 @@ export function materialIconInfo(key) {
 
 /** Image markup for a material, or the given emoji when it has no painting. */
 export function materialIcon(key, fallback = '✦') {
+  const original=l2MaterialIcon(key);
+  if(original)return original;
   const info = materialIconInfo(key);
   if (!info) return icon('sparkle','mat-icon');
   if(info.color)return '<img class="mat-icon soul-'+info.color+'" src="/art/icons/crystal-128.webp" width="22" height="22" alt="" style="filter:hue-rotate('+({red:315,green:65,blue:170}[info.color])+'deg) saturate(1.8)">';

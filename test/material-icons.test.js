@@ -17,7 +17,8 @@ test('enchant and crafting materials map onto paintings, unknown items use a pai
   assert.equal(materialIconInfo('scroll_X'), null);
   assert.match(materialIcon('skill_scroll', '📜'), /<img/);
   assert.doesNotMatch(materialIcon('skill_scroll', '📜'), /📜|svg/);
-  assert.match(materialIcon('scroll_A'), /class="mat-icon grade-tint-a" src="\/art\/icons\/scroll-128\.webp"/);
+  assert.match(materialIcon('scroll_A'), /src="\/art\/l2\/icon-etc_scroll_of_enchant_weapon_i04-128\.webp"/);
+  assert.doesNotMatch(materialIcon('scroll_A'), /grade-tint|hue-rotate/);
 });
 
 test('every enchant / crafting material has a painted icon in both sizes', () => {

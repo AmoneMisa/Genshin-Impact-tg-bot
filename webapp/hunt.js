@@ -1,4 +1,5 @@
 import {materialIcon} from './material-icons.js';
+import {l2CategoryIcon} from './art/l2-icon-art.js';
 import {huntZoneUrl,huntMobUrl} from './art/hunt-art.js';
 import {shotIcon,elementIcon,championIcon} from './art/painted-icon-art.js';
 import { bar, escapeHtml, formatDuration, formatNumber, hotbar, playerFrame, potionBar, statusIcons } from './boss-hud.js';
@@ -210,7 +211,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     return '<div class="hunt-drop-groups">'+LOOT_GROUPS.map(([kind,label])=>{
       const rows = drops.filter(d=>(d.kind||'other')===kind);
       if (!rows.length) return '';
-      return '<details class="hunt-drop-group" '+(OPEN_LOOT.includes(kind)?'open':'')+'><summary>'+escapeHtml(label)+' · '+rows.length+'</summary><div class="hunt-drop-table">'+rows.map(dropRow).join('')+'</div></details>';
+      return '<details class="hunt-drop-group" '+(OPEN_LOOT.includes(kind)?'open':'')+'><summary>'+l2CategoryIcon(kind)+' '+escapeHtml(label)+' · '+rows.length+'</summary><div class="hunt-drop-table">'+rows.map(dropRow).join('')+'</div></details>';
     }).join('')+'</div>';
   }
   function zoneLootHtml(zone) {

@@ -14,11 +14,13 @@ test('every real hunting enemy and zone resolves to published mobile paintings',
  assert.match(insect.prompt,/beetle/);assert.match(insect.prompt,/no spider/);
  assert.equal(fs.existsSync('webapp/art/hunt/mobs/spider-128.webp'),false);
 });
-test('materials keep quality and element tinting and shots cannot become scroll art',()=>{
+test('materials keep original quality and element art and shots cannot become scroll art',()=>{
  assert.deepEqual(materialIconInfo('lifestone_top_S84'),{icon:'lifestone',grade:'S84',quality:'top'});
- assert.match(materialIcon('lifestone_top_S84'),/quality-tint-top/);
- for(const element of ['fire','water','wind','earth','holy','dark'])assert.match(materialIcon('attr_jewel_'+element),new RegExp('element-tint-'+element));
- assert.match(shotIcon('blessed','S84'),/blessed-spiritshot-128.webp/);
+ assert.match(materialIcon('lifestone_top_S84'),/etc_mineral_unique_i03-128.webp/);
+ const jewels=['fire','water','wind','earth','holy','dark'].map(element=>materialIcon('attr_jewel_'+element));
+ assert.equal(new Set(jewels).size,6);
+ for(const jewel of jewels){assert.match(jewel,/art\/l2\//);assert.doesNotMatch(jewel,/hue-rotate|element-tint/);}
+ assert.match(shotIcon('blessed','S84'),/etc_spell_shot_gold_i01-128.webp/);
  const fallback=paintedIconHtml('../../unknown');
  assert.match(fallback,/<img[^>]+\.webp/);
  assert.doesNotMatch(fallback,/\.\.\/|✦|<svg/);

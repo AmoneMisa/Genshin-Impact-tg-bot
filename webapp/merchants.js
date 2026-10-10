@@ -1,6 +1,9 @@
 import { materialIcon } from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { icon } from './icons.js';
+import {L2_UI_ART,l2IconHtml} from './art/l2-icon-art.js';
+import {itemArtKey,itemArtSources} from './art/items-art.js';
+import {normalizeLootKind} from './loot-renderer.js';
 
 // The merchants: equipment, gemstones, dyes, recipe books, ammunition and scrolls sold as in the real Lineage II
 // shops. The server filters and pages the stock, so only one page of a merchant is ever loaded.
@@ -83,7 +86,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   function priceHtml(item) {
     const parts = [];
     if (item.cost.gold) parts.push(`🪙 ${number(item.cost.gold)}`);
-    if (item.cost.aa) parts.push(`AA ${number(item.cost.aa)}`);
+    if (item.cost.aa) parts.push(`${materialIcon('aa')} AA ${number(item.cost.aa)}`);
     for (const material of item.cost.materials) {
       parts.push(`<span class="${material.have >= material.need ? '' : 'missing'}">${materialIcon(material.key)} ${escapeHtml(material.name)} ${number(material.have)}/${number(material.need)}</span>`);
     }
@@ -95,7 +98,13 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     const note = !item.canUse
       ? (item.useReason === 'level_too_low' ? `Нужен ${item.minLevel} уровень` : 'Не подходит твоему классу')
       : item.kind === 'sp' ? `+${number(item.amount)} ОП` : item.amount > 1 ? `×${number(item.amount)}` : '';
-    const art = item.kind === 'equipment' ? icon('shield') : item.key ? materialIcon(item.key, escapeHtml(item.icon || '✦')) : '✦';
+    let art=item.key?materialIcon(item.key,escapeHtml(item.icon||'✦')):icon('sparkle');
+    if(item.kind==='equipment'){
+      const [grade,mainType,kind,slot]=String(item.itemId||item.id.slice(3)).split(':');
+      const definition={name:item.name,grade,mainType,kind,category:slot||kind};
+      const image=itemArtSources(itemArtKey(normalizeLootKind(definition),definition));
+      art=`<img class="merchant-equipment-art" src="${image.src}" srcset="${image.srcset}" sizes="48px" width="48" height="48" alt="" loading="lazy" decoding="async">`;
+    }
     return `<article class="shop-item merchant-item ${item.canPay && item.canUse ? '' : 'poor'} ${armed ? 'armed' : ''}">
       <span class="shop-icon">${art}</span>
       <div class="shop-item-copy">
@@ -133,16 +142,17 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
 
   function render() {
     if (!state) { body.innerHTML = '<div class="shop-empty">Загрузка…</div>'; return; }
-    wallet.innerHTML = `🪙 ${number(state.gold)} · AA ${number(state.aa)}`;
+    wallet.innerHTML = `${materialIcon('gold')} ${number(state.gold)} · ${materialIcon('aa')} ${number(state.aa)}`;
     const active = tab || state.merchant;
-    tabs.innerHTML = state.merchants.map(merchant => `<button type="button" data-tab="${escapeHtml(merchant.id)}" class="${merchant.id === active ? 'active' : ''}">${escapeHtml(merchant.title)}</button>`).join('')
+    tabs.innerHTML = state.merchants.map(merchant => `<button type="button" data-tab="${escapeHtml(merchant.id)}" class="${merchant.id === active ? 'active' : ''}">${l2IconHtml(L2_UI_ART['merchant-'+merchant.id])} ${escapeHtml(merchant.title)}</button>`).join('')
       + `<button type="button" data-tab="${CONVERT_TAB}" class="${active === CONVERT_TAB ? 'active' : ''}">Боеприпасы</button>`;
     const ammo = state.ammo ? `<p class="merchant-note">В руках: ${escapeHtml(state.ammo.name)} — ${number(state.ammo.count)} шт.</p>` : '';
     if (active === CONVERT_TAB) {
       body.innerHTML = ammo + convertHtml();
     } else {
       const meta = state.merchants.find(merchant => merchant.id === state.merchant);
-      body.innerHTML = `${ammo}<p class="merchant-note">${escapeHtml(meta?.subtitle || '')}</p>${filtersHtml()}
+      const banner=L2_UI_ART['merchant-'+state.merchant]?`<img class="merchant-banner" src="/art/merchants/${state.merchant}-720.webp" srcset="/art/merchants/${state.merchant}-480.webp 480w, /art/merchants/${state.merchant}-720.webp 720w" sizes="(max-width: 600px) calc(100vw - 40px), 560px" width="720" height="480" alt="${escapeHtml(meta?.title || '')}" decoding="async">`:'';
+      body.innerHTML = `${banner}${ammo}<p class="merchant-note">${escapeHtml(meta?.subtitle || '')}</p>${filtersHtml()}
         <div class="shop-list">${state.items.length ? state.items.map(itemCard).join('') : '<div class="shop-empty">Ничего не найдено.</div>'}</div>
         <div class="pager"><button type="button" class="equipment-action" data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>←</button>
           <span>${state.page} / ${state.pages} · ${number(state.total)}</span>

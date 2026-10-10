@@ -1,4 +1,5 @@
 // Reviewed paintings; related actions reuse one cached image.
+import {L2_UI_ART,l2IconUrl} from './l2-icon-art.js';
 export const UI_ICON_ART = Object.freeze({
   "settings": "settings",
   "mail": "mail",
@@ -97,6 +98,7 @@ export const UI_ICON_ART = Object.freeze({
   "diamond": "diamond"
 });
 export function uiIconUrl(name, size=128) {
+ if(L2_UI_ART[name])return l2IconUrl(L2_UI_ART[name],size);
  const key=Object.hasOwn(UI_ICON_ART,name)?UI_ICON_ART[name]:null;
  return key?`/art/ui/v1/${key}-${size===256?256:128}.webp`:null;
 }

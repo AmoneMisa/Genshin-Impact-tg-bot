@@ -51,6 +51,8 @@ export function getInventoryState(session) {
   const maxHp = Math.max(1, number(getMaxHp(session, gameClass), 1));
   const mp = Math.max(0, number(getCurrentMp(session, gameClass)));
   const maxMp = Math.max(1, number(getMaxMp(session, gameClass), 1));
+  const cp = Math.max(0, number(getCurrentCp(session, gameClass)));
+  const maxCp = Math.max(1, number(getMaxCp(session, gameClass), 1));
 
   return {
     resources: {
@@ -58,7 +60,7 @@ export function getInventoryState(session) {
       crystals: Math.max(0, number(inventory.crystals)),
       ironOre: Math.max(0, number(inventory.ironOre)),
     },
-    player: { hp, maxHp, mp, maxMp },
+    player: { cp, maxCp, hp, maxHp, mp, maxMp },
     arena: {
       tokens: Math.max(0, number(arenaValue(arenaItems, 'tokens'))),
       pvpSign: arenaValue(arenaItems, 'pvpSign', null),

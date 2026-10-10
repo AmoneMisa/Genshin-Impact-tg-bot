@@ -2,6 +2,7 @@ import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldIconHtml } from './art/world-art.js';
 import {SPECIAL_ITEM_ART} from './art/special-item-art.js';
+import {L2_MATERIAL_ART,l2IconUrl,l2CategoryIcon} from './art/l2-icon-art.js';
 const REASONS = {
   potion_not_found: 'Зелье больше недоступно. Обнови инвентарь.',
   potion_empty: 'Это зелье закончилось.',
@@ -33,11 +34,25 @@ export function potionTone(item) {
 export function flaskHtml(item) {
   const token=item?.type==='buff'?item.id:item?.type==='hp'&&item.bottleType==='elixir'?'hp-elixir':`${item?.type}-${item?.size}`;
   const key='potion-'+token;
+  const original=L2_MATERIAL_ART[item?.id]||L2_MATERIAL_ART[key];
+  if(original)return `<img class="inv-potion-art l2-client-icon" src="${l2IconUrl(original)}" srcset="${l2IconUrl(original)} 1x, ${l2IconUrl(original,256)} 2x" width="64" height="64" alt="" loading="lazy" decoding="async">`;
   if(SPECIAL_ITEM_ART.includes(key))return `<img class="inv-potion-art" src="/art/items/v1/${key}-128.webp" srcset="/art/items/v1/${key}-128.webp 128w, /art/items/v1/${key}-256.webp 256w" sizes="64px" width="64" height="96" alt="" loading="lazy" decoding="async">`;
   return `<span class="inv-flask tone-${potionTone(item)}" aria-hidden="true"><i class="inv-liquid"></i><i class="inv-bubbles"></i></span>`;
 }
 
 const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+const MATERIAL_GROUPS=[['full','Снаряжение целиком'],['piece','Части и камни для сборки'],['recipe','Рецепты'],['scroll','Свитки заточки'],['lifestone','Камни жизни'],['attribute','Камни атрибутов'],['seal','Камни печати'],['dye','Краски'],['crystal','Кристаллы'],['material','Материалы'],['consumable','Расходники'],['herb','Травы'],['other','Прочее']];
+function materialGroup(item){
+ if(item.kind)return item.kind;
+ const prefix=String(item.key).split('_')[0];
+ return {scroll:'scroll',blessed:'scroll',safe:'scroll',lifestone:'lifestone',attr:'attribute',seal:'seal',soul:'crystal',crystal:'crystal',craft:'material',soulshot:'consumable',spiritshot:'consumable'}[prefix]||'other';
+}
+function materialBag(items){
+ return MATERIAL_GROUPS.map(([kind,label])=>{
+  const rows=items.filter(item=>materialGroup(item)===kind);if(!rows.length)return '';
+  return `<details class="inventory-material-group" open><summary>${l2CategoryIcon(kind)} ${label} · ${rows.length}</summary><div class="inventory-meta">${rows.map(item=>`<article><span>${materialIcon(item.key)}</span><div><small>${escapeHtml(item.name)}</small><strong>${formatNumber(item.count)}</strong></div>${item.sellPrice?`<button type="button" class="inv-sell" data-inventory-sell="${escapeHtml(item.key)}" title="Продать всё">Продать · ${formatNumber(item.sellPrice*item.count)} 🪙</button>`:''}</article>`).join('')}</div></details>`;
+ }).join('');
+}
 
 export async function openInventoryGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/inventory');
@@ -80,8 +95,9 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       </article>`;
     return `
       <section class="inventory-vitals">
-        ${bar('hp', '❤ HP', state.player.hp, state.player.maxHp, before.hp)}
-        ${bar('mp', '🔹 MP', state.player.mp, state.player.maxMp, before.mp)}
+        ${bar('cp', 'CP', state.player.cp||0, state.player.maxCp||1, before.cp||0)}
+        ${bar('hp', 'HP', state.player.hp, state.player.maxHp, before.hp)}
+        ${bar('mp', 'MP', state.player.mp, state.player.maxMp, before.mp)}
       </section>`;
   }
 
@@ -113,7 +129,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   function resultHtml() {
     if (!lastResult) return '';
     if(lastResult.resource==='buff')return `<section class="inventory-result"><div><strong>${escapeHtml(lastResult.potion?.name||'Эффект активен')}</strong><small>20 минут · повторное использование обновляет время</small></div></section>`;
-    const resource = lastResult.resource === 'mp' ? 'MP' : 'HP';
+    const resource = lastResult.resource === 'cp' ? 'CP' : lastResult.resource === 'mp' ? 'MP' : 'HP';
     return `<section class="inventory-result ${lastResult.resource === 'mp' ? 'mp' : 'hp'}"><span>+</span><div><strong>${formatNumber(lastResult.restored)} ${resource}</strong><small>${escapeHtml(lastResult.potion?.name || '')}</small></div></section>`;
   }
 
@@ -131,7 +147,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <div class="inv-bag">${state.potions.map(slotHtml).join('')}${'<span class="inv-slot blank" aria-hidden="true"></span>'.repeat(emptySlots)}</div>
         ${detailHtml()}
       </section>
-      ${state.materials?.length?`<section class="inventory-section"><div class="inventory-title"><strong>Материалы и заряды</strong></div><div class="inventory-meta">${state.materials.map(item=>`<article><span>${materialIcon(item.key,escapeHtml(item.icon||'✦'))}</span><div><small>${escapeHtml(item.name)}</small><strong>${formatNumber(item.count)}</strong></div>${item.sellPrice?`<button type="button" class="inv-sell" data-inventory-sell="${escapeHtml(item.key)}" title="Продать всё">Продать · ${formatNumber(item.sellPrice*item.count)} 🪙</button>`:''}</article>`).join('')}</div></section>`:''}
+      ${state.materials?.length?`<section class="inventory-section"><div class="inventory-title"><strong>Материалы и заряды</strong></div>${materialBag(state.materials)}</section>`:''}
       <section class="inventory-resources">
         <article><span>🪙</span><strong>${formatNumber(state.resources.gold)}</strong></article>
         <article><span>💎</span><strong>${formatNumber(state.resources.crystals)}</strong></article>

@@ -1,0 +1,548 @@
+[
+  {
+    "id": "C:weapon:oneHandedSword",
+    "name": "Samurai Longsword",
+    "reference": "Samurai Longsword",
+    "art": "icon-weapon_samurai_longsword_i00",
+    "exact": true
+  },
+  {
+    "id": "C:weapon:twoHandedSword",
+    "name": "Berserker Blade",
+    "reference": "Berserker Blade",
+    "art": "icon-weapon_berserker_blade_i00",
+    "exact": true
+  },
+  {
+    "id": "C:weapon:dagger",
+    "name": "Crystal Dagger",
+    "reference": "Crystal Dagger",
+    "art": "icon-weapon_crystal_dagger_i00",
+    "exact": true
+  },
+  {
+    "id": "C:weapon:mace",
+    "name": "Demon's Staff",
+    "reference": "Demon's Staff",
+    "art": "icon-weapon_demons_staff_i00",
+    "exact": true
+  },
+  {
+    "id": "C:weapon:bow",
+    "name": "Eminence Bow",
+    "reference": "Eminence Bow",
+    "art": "icon-weapon_eminence_bow_i00",
+    "exact": true
+  },
+  {
+    "id": "C:weapon:crossbow",
+    "name": "Sharpshooter",
+    "reference": "Sharpshooter",
+    "art": "icon-weapon_taslam_i00",
+    "exact": true
+  },
+  {
+    "id": "C:weapon:blunt",
+    "name": "Yaksa Mace",
+    "reference": "Yaksa Mace",
+    "art": "icon-weapon_yaksa_mace_i00",
+    "exact": true
+  },
+  {
+    "id": "C:weapon:fists",
+    "name": "Fisted Blade",
+    "reference": "Fisted Blade",
+    "art": "icon-weapon_fist_blade_i00",
+    "exact": true
+  },
+  {
+    "id": "C:armor:heavy:helmet",
+    "name": "Chain Helmet",
+    "reference": "Chain Helmet",
+    "art": "icon-armor_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "C:armor:robe:helmet",
+    "name": "Karmian Circlet",
+    "reference": "Generic Circlet",
+    "art": "icon-armor_circlet_i00",
+    "exact": false
+  },
+  {
+    "id": "C:armor:heavy:gloves",
+    "name": "Chain Gauntlets",
+    "reference": "Chain Gloves",
+    "art": "icon-armor_t48_g_i00",
+    "exact": false
+  },
+  {
+    "id": "C:armor:robe:gloves",
+    "name": "Karmian Gloves",
+    "reference": "Karmian Gloves",
+    "art": "icon-armor_t53_g_i00",
+    "exact": true
+  },
+  {
+    "id": "C:armor:heavy:greaves",
+    "name": "Chain Gaiters",
+    "reference": "Chain Gaiters",
+    "art": "icon-armor_t48_l_i00",
+    "exact": true
+  },
+  {
+    "id": "C:armor:heavy:boots",
+    "name": "Chain Boots",
+    "reference": "Chain Boots",
+    "art": "icon-armor_t48_b_i00",
+    "exact": true
+  },
+  {
+    "id": "C:armor:robe:boots",
+    "name": "Karmian Boots",
+    "reference": "Karmian Boots",
+    "art": "icon-armor_t53_b_i00",
+    "exact": true
+  },
+  {
+    "id": "C:armor:heavy:body",
+    "name": "Chain Breastplate",
+    "reference": "Chain Mail Shirt",
+    "art": "icon-armor_t48_u_i00",
+    "exact": false
+  },
+  {
+    "id": "C:armor:robe:fullBody",
+    "name": "Karmian Robe",
+    "reference": "Karmian Tunic",
+    "art": "icon-armor_t53_u_i00",
+    "exact": false
+  },
+  {
+    "id": "C:shield:bigShield",
+    "name": "Full Plate Shield",
+    "reference": "Full Plate Shield",
+    "art": "icon-shield_full_plate_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "C:shield:sigill",
+    "name": "Mystic Sigil",
+    "reference": "Tower Shield",
+    "art": "icon-shield_tower_shield_i00",
+    "exact": false
+  },
+  {
+    "id": "S:weapon:oneHandedSword",
+    "name": "Forgotten Blade",
+    "reference": "Forgotten Blade",
+    "art": "icon-weapon_forgotten_blade_i00",
+    "exact": true
+  },
+  {
+    "id": "S:weapon:twoHandedSword",
+    "name": "Heaven's Divider",
+    "reference": "Heaven's Divider",
+    "art": "icon-weapon_heavens_divider_i00",
+    "exact": true
+  },
+  {
+    "id": "S:weapon:dagger",
+    "name": "Angel Slayer",
+    "reference": "Angel Slayer",
+    "art": "icon-weapon_angel_slayer_i00",
+    "exact": true
+  },
+  {
+    "id": "S:weapon:mace",
+    "name": "Arcana Mace",
+    "reference": "Arcana Mace",
+    "art": "icon-weapon_arcana_mace_i00",
+    "exact": true
+  },
+  {
+    "id": "S:weapon:bow",
+    "name": "Draconic Bow",
+    "reference": "Draconic Bow",
+    "art": "icon-weapon_draconic_bow_i00",
+    "exact": true
+  },
+  {
+    "id": "S:weapon:crossbow",
+    "name": "Sarnga",
+    "reference": "Sarnga",
+    "art": "icon-weapon_sarnga_i00",
+    "exact": true
+  },
+  {
+    "id": "S:weapon:blunt",
+    "name": "Dragon Hunter Axe",
+    "reference": "Dragon Hunter Axe",
+    "art": "icon-weapon_dragon_hunter_axe_i00",
+    "exact": true
+  },
+  {
+    "id": "S:weapon:fists",
+    "name": "Claw of Ashton Family",
+    "reference": "Claw of Ashton Family",
+    "art": "icon-weapon_demon_splinter_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:heavy:helmet",
+    "name": "Imperial Crusader Helmet",
+    "reference": "Imperial Crusader Helmet",
+    "art": "icon-armor_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:light:helmet",
+    "name": "Draconic Leather Helmet",
+    "reference": "Draconic Leather Helmet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:robe:helmet",
+    "name": "Major Arcana Circlet",
+    "reference": "Major Arcana Circlet",
+    "art": "icon-armor_circlet_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:heavy:gloves",
+    "name": "Imperial Crusader Gauntlets",
+    "reference": "Imperial Crusader Gauntlets",
+    "art": "icon-armor_t88_g_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:robe:gloves",
+    "name": "Major Arcana Gloves",
+    "reference": "Major Arcana Gloves",
+    "art": "icon-armor_t90_g_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:heavy:greaves",
+    "name": "Imperial Crusader Gaiters",
+    "reference": "Imperial Crusader Gaiters",
+    "art": "icon-armor_t88_l_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:heavy:boots",
+    "name": "Imperial Crusader Boots",
+    "reference": "Imperial Crusader Boots",
+    "art": "icon-armor_t88_b_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:light:boots",
+    "name": "Draconic Leather Boots",
+    "reference": "Draconic Leather Boots",
+    "art": "icon-armor_t89_b_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:robe:boots",
+    "name": "Major Arcana Boots",
+    "reference": "Major Arcana Boots",
+    "art": "icon-armor_t90_b_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:heavy:body",
+    "name": "Imperial Crusader Breastplate",
+    "reference": "Imperial Crusader Breastplate",
+    "art": "icon-armor_t88_u_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:light:fullBody",
+    "name": "Draconic Leather Armor",
+    "reference": "Draconic Leather Armor",
+    "art": "icon-armor_t89_ul_i00",
+    "exact": true
+  },
+  {
+    "id": "S:armor:robe:fullBody",
+    "name": "Major Arcana Robe",
+    "reference": "Major Arcana Robe",
+    "art": "icon-armor_t90_ul_i00",
+    "exact": true
+  },
+  {
+    "id": "S:shield:bigShield",
+    "name": "Imperial Crusader Shield",
+    "reference": "Imperial Crusader Shield",
+    "art": "icon-shield_imperial_crusader_shield_i00",
+    "exact": true
+  },
+  {
+    "id": "S:shield:sigill",
+    "name": "Arcana Sigil",
+    "reference": "Arcana Sigil",
+    "art": "icon-arcana_sigil_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:weapon:oneHandedSword",
+    "name": "Vesper Cutter",
+    "reference": "Vesper Cutter",
+    "art": "icon-weapon_vesper_cutter_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:weapon:twoHandedSword",
+    "name": "Vesper Slasher",
+    "reference": "Vesper Slasher",
+    "art": "icon-weapon_vesper_slasher_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:weapon:dagger",
+    "name": "Vesper Shaper",
+    "reference": "Vesper Shaper",
+    "art": "icon-weapon_vesper_shaper_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:weapon:mace",
+    "name": "Vesper Caster",
+    "reference": "Vesper Caster",
+    "art": "icon-weapon_vesper_caster_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:weapon:bow",
+    "name": "Vesper Thrower",
+    "reference": "Vesper Thrower",
+    "art": "icon-weapon_vesper_thrower_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:weapon:crossbow",
+    "name": "Vesper Sheutjeh",
+    "reference": "Vesper Schutze",
+    "art": "icon-weapon_vesper_schutze_i00",
+    "exact": false
+  },
+  {
+    "id": "S84:weapon:blunt",
+    "name": "Vesper Retributer",
+    "reference": "Vesper Retributer",
+    "art": "icon-weapon_vesper_retributer_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:weapon:fists",
+    "name": "Vesper Fighter",
+    "reference": "Vesper Fighter",
+    "art": "icon-weapon_vesper_fighter_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:heavy:helmet",
+    "name": "Vesper Helmet",
+    "reference": "Vesper Helmet",
+    "art": "icon-armor_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:light:helmet",
+    "name": "Vesper Leather Helmet",
+    "reference": "Vesper Leather Helmet",
+    "art": "icon-armor_leather_helmet_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:robe:helmet",
+    "name": "Vesper Magic Circlet",
+    "reference": "Vesper Circlet",
+    "art": "icon-armor_circlet_i00",
+    "exact": false
+  },
+  {
+    "id": "S84:armor:heavy:gloves",
+    "name": "Vesper Gauntlets",
+    "reference": "Vesper Gauntlet",
+    "art": "icon-armor_t94_g_i00",
+    "exact": false
+  },
+  {
+    "id": "S84:armor:light:gloves",
+    "name": "Vesper Leather Gloves",
+    "reference": "Vesper Leather Gloves",
+    "art": "icon-armor_t95_g_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:robe:gloves",
+    "name": "Vesper Magic Gloves",
+    "reference": "Vesper Gloves",
+    "art": "icon-armor_t96_g_i00",
+    "exact": false
+  },
+  {
+    "id": "S84:armor:heavy:greaves",
+    "name": "Vesper Gaiters",
+    "reference": "Vesper Gaiters",
+    "art": "icon-armor_t94_l_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:heavy:boots",
+    "name": "Vesper Boots",
+    "reference": "Vesper Boots",
+    "art": "icon-armor_t94_b_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:light:boots",
+    "name": "Vesper Leather Boots",
+    "reference": "Vesper Leather Boots",
+    "art": "icon-armor_t95_b_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:robe:boots",
+    "name": "Vesper Magic Boots",
+    "reference": "Vesper Shoes",
+    "art": "icon-armor_t96_b_i00",
+    "exact": false
+  },
+  {
+    "id": "S84:armor:heavy:body",
+    "name": "Vesper Breastplate",
+    "reference": "Vesper Breastplate",
+    "art": "icon-armor_t94_u_i00",
+    "exact": true
+  },
+  {
+    "id": "S84:armor:light:fullBody",
+    "name": "Vesper Leather Armor",
+    "reference": "Vesper Leather Breastplate",
+    "art": "icon-armor_t95_u_i00",
+    "exact": false
+  },
+  {
+    "id": "S84:armor:robe:fullBody",
+    "name": "Vesper Magic Robe",
+    "reference": "Vesper Tunic",
+    "art": "icon-armor_t96_u_i00",
+    "exact": false
+  },
+  {
+    "id": "S84:shield:bigShield",
+    "name": "Vesper Shield",
+    "reference": "Vesper Shield",
+    "art": "icon-weapon_vesper_verteidiger_i01",
+    "exact": true
+  },
+  {
+    "id": "S84:shield:sigill",
+    "name": "Vesper Sigil",
+    "reference": "Vesper Sigil",
+    "art": "icon-verper_sigil_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:shadow-scythe",
+    "name": "Коса ночного затмения",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:solar-scythe",
+    "name": "Коса солнечного рассвета",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:prism-sword",
+    "name": "Меч радужного света",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:lifeblade",
+    "name": "Клинок алой жизни",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:rainbow-scythe",
+    "name": "Коса семи стихий",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:astral-sword",
+    "name": "Меч звёздной бездны",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:eclipse-greatsword",
+    "name": "Двуручный меч затмения",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:solar-bow",
+    "name": "Лук солнечного венца",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:tide-trident",
+    "name": "Посох приливов",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:wind-staff",
+    "name": "Посох небесного вихря",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:nature-axe",
+    "name": "Секира древнего леса",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:song-staff",
+    "name": "Посох звёздной песни",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:crystal-crossbow",
+    "name": "Арбалет кристального шторма",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  },
+  {
+    "id": "epic-weapon:dragon-claws",
+    "name": "Когти огненного дракона",
+    "reference": "_",
+    "art": "icon-armor_iron_boots_i00",
+    "exact": true
+  }
+]

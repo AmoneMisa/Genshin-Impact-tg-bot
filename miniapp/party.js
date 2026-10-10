@@ -7,6 +7,8 @@ import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
+import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
+import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import { memberName } from './social.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
@@ -24,7 +26,7 @@ function memberDto(member, session, leaderId) {
     className: gameClass?.stats?.name || 'noClass',
     classTitle: gameClass?.stats?.translateName || gameClass?.stats?.name || 'Без класса',
     gender: member.gender === 'female' ? 'female' : 'male',
-    hp, maxHp, mp, maxMp,
+    cp:number(getCurrentCp(member,gameClass)),maxCp:Math.max(1,number(getMaxCp(member,gameClass),1)),hp, maxHp, mp, maxMp,
     leader: String(member.userId) === String(leaderId),
     me: String(member.userId) === String(session.userId),
   };

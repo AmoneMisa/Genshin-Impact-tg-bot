@@ -145,6 +145,11 @@
 .party-actions{display:flex;gap:8px;flex-wrap:wrap}
 .party-note,.party-empty p{font:12px/1.5 system-ui;opacity:.85}
 .party-loot-modes{display:flex;gap:6px;flex-wrap:wrap;padding:6px 0}
+.party-panel .mmo-frame{display:block;min-width:0;margin:10px 0;}
+.party-panel .mmo-section-title{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.party-member .mat-icon{width:18px;height:18px;border-radius:0;object-fit:contain;}
+.party-member-body strong{overflow-wrap:anywhere;}
+.party-loot-modes .equipment-filter{display:flex;align-items:center;gap:4px;min-width:0;}
 
 .merchant-note{font:12px/1.5 system-ui;opacity:.8;margin:0 0 6px}
 .merchant-filter{display:flex;gap:8px;align-items:center;font:12px/1.4 system-ui;padding:4px 2px}

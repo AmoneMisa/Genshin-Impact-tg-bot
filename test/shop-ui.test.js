@@ -8,7 +8,7 @@ test('every shop item gets an emblem or its painting', () => {
     const html = itemIconHtml(item);
     if (item.command.startsWith('palace') && item.command !== 'palaceChangeName') assert.match(html, /shop-icon art[^>]*\/art\/builds\/palace\//, item.command);
     else if (item.potionId) assert.match(html, /inv-flask|inv-potion-art/, item.command);
-    else if(item.command.startsWith('soul-'))assert.match(html,/art\/icons\/crystal-128.webp/,item.command);
+    else if(item.command.startsWith('soul-'))assert.match(html,/art\/l2\/icon-etc_soul_stone_i0[012]-128.webp/,item.command);
     else assert.ok(ITEM_ICONS[item.command], `${item.command} has an icon`);
   }
   assert.match(itemIconHtml({ command: 'potionMp180', category: 'player' }), /shop-icon mp/);

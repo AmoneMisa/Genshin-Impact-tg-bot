@@ -1,6 +1,7 @@
 // Curated artwork. Asset names are allowlisted; item names never become URLs.
 import { CATALOG_ITEM_ART } from './catalog-item-art.js';
 import { SPECIAL_ITEM_ART } from './special-item-art.js';
+import {L2_JEWELRY_IDENTITIES,L2_ITEM_IDENTITIES,l2IconUrl} from './l2-icon-art.js';
 export const BASE_ITEM_ART_KEYS = Object.freeze([
   'sword', 'greatsword', 'dagger', 'staff', 'bow', 'crossbow', 'hammer', 'shield',
   'sigil', 'helmet', 'armor', 'mantle', 'gloves', 'bracers', 'gauntlets',
@@ -84,10 +85,14 @@ const catalogIdentity = item => [item.name,item.grade,item.kind,item.category].m
 const catalogArt = new Map(CATALOG_ITEM_ART.map(entry=>[catalogIdentity(entry),entry.key]));
 const ROBE_ART = Object.freeze({ armor: 'mantle', gloves: 'bracers', greaves: 'leg-wraps', boots: 'anklets' });
 export function itemArtKey(kind, item = {}) {
+  const original=L2_JEWELRY_IDENTITIES[catalogIdentity(item)];
+  if(original && (item.mainType==='jewelry'||['ring','earring','amulet'].includes(kind)))return original;
   if(item.epicWeapon && keys.has('epic-weapon-'+item.epicWeapon))return 'epic-weapon-'+item.epicWeapon;
   if (item.epicBoss && keys.has(`epic-${item.epicBoss}`)) return `epic-${item.epicBoss}`;
   const namedArt = catalogArt.get(catalogIdentity(item));
   if (namedArt) return namedArt;
+  const missingOriginal=L2_ITEM_IDENTITIES[catalogIdentity(item)];
+  if(missingOriginal)return missingOriginal;
   const type = String(item.kind || '').toLowerCase();
   const grade = String(item.grade || '').trim().toUpperCase();
   if (kind === 'sword' && type === 'twohandedsword') kind = 'greatsword';
@@ -98,6 +103,7 @@ export function itemArtKey(kind, item = {}) {
   return keys.has(kind) ? kind : 'relic';
 }
 export function itemArtSources(key, reveal = false) {
+  if(l2IconUrl(key))return {src:l2IconUrl(key,reveal?256:128),srcset:[128,256,512].map(size=>`${l2IconUrl(key,size)} ${size}w`).join(', '),sizes:reveal?'(max-width: 390px) 190px, 220px':'96px'};
   const safe = keys.has(key) ? key : 'relic';
   const url = size => `/art/items/v1/${safe}-${size}.webp`;
   return {
