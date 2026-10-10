@@ -82,7 +82,7 @@
 
 `template/customSets.js`: the game's own armor line next to the Lineage 2 sets — 8 grades × heavy / light / robe = 24 sets, 104 parts (`custom:<grade>:<type>:<part>`).
 
-- **Source:** crafted only, from the grade's crafting materials (`craft_binder/leather/fiber_<grade>` that the raid bosses drop) and iron ore, at 1.25× the generated recipe. They are not in shops, chests, gacha or drops; the recipe is learned like any other.
+- **Source:** crafted, or dropped by monsters. Crafting uses the grade's crafting materials (`craft_binder/leather/fiber_<grade>` that the raid bosses drop) and iron ore, at 1.25× the generated recipe; the recipe is learned like any other. A kill also rolls one finished part of the monster's grade at half the mean chance of the real equipment, piece and recipe drops of that grade (`functions/game/equipment/customDrops.js`), with the same server drop rate, level gap, champion and party loot rules. Not in shops, chests or gacha.
 - **Balance:** parts carry 92 % of the defence of the real set of the same grade and type; the full-set bonus is a ladder (tank: HP / defence / block, skirmisher: attack / speed / MP, caster: MP / attack / speed), worth 85–100 % of the real set in `test/custom-sets.test.js`.
 - **Weapons:** the line has none; custom weapons stay the very rare epic weapons (`template/epicWeapons.js`).
 - **Art:** the parts use the existing painted custom designs by kind and grade band (opal, dusk, nightweave …); named paintings per part can be added to `catalog-item-art.js` later.

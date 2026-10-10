@@ -1,5 +1,6 @@
 // Uzbek names of the custom armor sets (template/customSets.js): set, part and full-set labels.
 export default {
+  "Деталь авторского комплекта": "Muallif to'plamining qismi",
   "Комплект «{0}»": "«{0}» to'plami",
   "Нагрудник": "Ko'krak zirhi",
   "Поножи": "Oyoq himoyasi",

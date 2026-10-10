@@ -13,6 +13,8 @@ import { lootDistributor, expShares } from '../party/party.js';
 import { enchantGradeForLevel } from '../equipment/enchantDrops.js';
 import { gainExp, levelNeed } from '../player/vitality.js';
 import setLevel, { spForLevelUp } from '../player/setLevel.js';
+import {customDropChance, pickCustomPart} from '../equipment/customDrops.js';
+import {instantiate} from '../equipment/catalog.js';
 import getRandom from '../../getters/getRandom.js';
 
 const HIGH_LEVEL_PENALTY = Object.freeze({'-3': 0.97, '-4': 0.67, '-5': 0.42, '-6': 0.25, '-7': 0.15, '-8': 0.09, '-9': 0.05, '-10': 0.03});
@@ -53,6 +55,7 @@ export function huntDropPreview(level, mobDef, champion = null) {
         const info = materialInfo(drop.key);
         rows.push({key: drop.key, name: info.name || drop.name, icon: info.icon, kind: drop.kind, min: drop.min, max: drop.max, chance: drop.chance * rateOf(drop) * gap});
     }
+    rows.push({key: 'custom-armor', name: 'Деталь авторского комплекта', icon: '🛡️', kind: 'full', min: 1, max: 1, chance: customDropChance(mobDef.level) * HUNT.dropRate * gap});
     if (mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
         const chances = STONE_CHANCE[champion || 'normal'];
         for (const stone of ['stone', 'crystal', 'jewel']) if (chances[stone] > 0) {
@@ -139,6 +142,21 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     for (const drop of lootRows(mobDef?.id ?? mob.mobId)) {
         const rolls = dropRolls(drop.chance * rateOf(drop) * itemGap * (tier ? tier.drops : 1), random);
         if (rolls > 0) give(drop.key, getRandom(drop.min, drop.max) * rolls);
+    }
+
+    // a part of the custom armor line: finished equipment, rarer than the real finished items
+    if (mobDef && dropRolls(customDropChance(mob.level) * HUNT.dropRate * itemGap * (tier ? tier.drops : 1), random) > 0) {
+        const receiver = distributor.pick();
+        const part = pickCustomPart(mob.level, receiver.game?.gameClass?.stats?.name, random);
+        if (part) {
+            const inventory = receiver.game.inventory;
+            if (!inventory.equipment) inventory.equipment = {name: 'Экипировка', items: []};
+            inventory.equipment.items.push(instantiate(part));
+            if (receiver !== session) {
+                receiver.needsSave = true;
+                result.shared.push({userId: String(receiver.userId), name: nameOf(receiver), item: part.id, itemName: part.name, icon: '🛡️', amount: 1});
+            } else result.items.push({item: part.id, name: part.name, icon: '🛡️', amount: 1});
+        }
     }
 
     // attribute stones of the mob's element (the grade of the hero's gear must be able to carry them)

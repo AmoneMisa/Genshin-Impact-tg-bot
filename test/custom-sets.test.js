@@ -104,3 +104,35 @@ test('the line is crafted from the grade materials, dearer than the generated fo
   assert.equal(made.item.id, 'custom:A:heavy:helmet');
   assert.equal(made.item.custom, true);
 });
+
+test('custom parts also drop from monsters, at half the rate of the real equipment drops of that grade', async () => {
+  const {customDropChance, realFullChance, CUSTOM_DROP_SHARE, pickCustomPart} = await import('../functions/game/equipment/customDrops.js');
+  const {grantKillRewards, huntDropPreview} = await import('../functions/game/hunt/huntRewards.js');
+  const {buildMob} = await import('../functions/game/hunt/huntMobs.js');
+  const zones = (await import('../template/huntingTemplate.js')).default;
+  const changeClass = (await import('../functions/game/player/changePlayerGameClass.js')).default;
+  const updateStats = (await import('../functions/game/player/updatePlayerStats.js')).default;
+
+  for (const grade of equipmentTemplate.grades) assert.ok(realFullChance(grade.name) > 0);
+  assert.equal(CUSTOM_DROP_SHARE < 1, true);
+  for (const level of [10, 30, 45, 55, 70, 78, 82, 85]) {
+    const grade = equipmentTemplate.grades.find(entry => entry.lvl.from <= level && level <= entry.lvl.to);
+    assert.ok(customDropChance(level) < realFullChance(grade.name), `level ${level}`);
+    assert.equal(pickCustomPart(level, 'warrior', () => 0).grade, grade.name);
+  }
+
+  const zone = zones.find(entry => entry.id === 'talking-island') || zones[0];
+  const mobDef = zone.mobs[0];
+  const session = {userId: 1, userChatData: {user: {id: 1}}, game: {stats: {lvl: mobDef.level, currentExp: 0, needExp: 1}, inventory: {gold: 0, sp: 0, materials: {}, potions: {items: []}, equipment: {items: []}}, equipmentStats: {}, effects: [], builds: {}, respawnTime: 0}};
+  changeClass(session, 'warrior');
+  updateStats(session);
+  const mob = buildMob(zone, mobDef, {random: () => 0});
+  assert.ok(huntDropPreview(mobDef.level, mobDef).some(row => row.key === 'custom-armor' && row.chance > 0));
+  const rewards = grantKillRewards(session, mob, mobDef, {random: () => 0, now: 1_800_000_000_000});
+  const part = session.game.inventory.equipment.items.find(item => item.custom);
+  assert.ok(part, 'a custom part of the grade dropped');
+  assert.equal(part.grade, 'noGrade');
+  assert.ok(rewards.items.some(row => row.item === part.id));
+  const never = grantKillRewards(session, buildMob(zone, mobDef, {random: () => 0}), mobDef, {random: () => 0.999999, now: 1_800_000_000_000});
+  assert.equal(never.items.some(row => String(row.item).startsWith('custom:')), false);
+});
