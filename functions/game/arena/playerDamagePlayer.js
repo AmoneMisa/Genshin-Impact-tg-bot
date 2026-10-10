@@ -1,3 +1,4 @@
+import {applySoulHit,tickSoulDots,applySoulSpell,soulBackCritical} from '../equipment/soulCrystalCombat.js';
 import { dealsDamage } from '../player/skillSimulation.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
 import getMaxCp from '../player/getters/getMaxCp.js';
@@ -100,7 +101,7 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             defence: getDefence(defender, defender.game.gameClass),
             additionalDamageMul: getAdditionalDamageMul(defender, defender.game.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(defender, defender.game.gameClass),
-            increasePvpDamage: isArena ? getPvpSign(defender).increasePvpDamage : 1,
+            increasePvpDamage: isArena ? getPvpSign(defender).increasePvpDamage * getEquipStatByName(defender,"pvpDamageMul",true) : 1,
             decreaseIncomingPvpDamage: isArena ? getPvpSign(defender).decreaseIncomingPvpDamage : 1,
             attributes: attributeProfile(defender),
             chances: equippedChanceSkills(defender)
@@ -166,16 +167,21 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             defence: getDefence(attacker, attacker.game.gameClass),
             additionalDamageMul: getAdditionalDamageMul(attacker, attacker.game.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.game.gameClass),
-            increasePvpDamage: isArena ? getPvpSign(attacker).increasePvpDamage : 1,
+            increasePvpDamage: isArena ? getPvpSign(attacker).increasePvpDamage * getEquipStatByName(attacker,"pvpDamageMul",true) : 1,
             decreaseIncomingPvpDamage: isArena ? getPvpSign(attacker).decreaseIncomingPvpDamage : 1,
             attributes: attributeProfile(attacker),
             chances: equippedChanceSkills(attacker)
         };
     }
 
+    for(const [fighter,session] of [[attackerObj,attacker],[defenderObj,defender]]){
+        fighter.soulSession=session?.game?{userId:session.userId,userChatData:session.userChatData,game:{...session.game,saBuffs:[...(session.game.saBuffs||[])],gameClass:{...session.game.gameClass,stats:{...session.game.gameClass.stats}}}}:null;
+    }
     attackerObj.cooldowns = attackerObj.skills.map(_ => 0);
 
     attackerObj.fx = newFx();
+    const soulEpoch=Date.now();
+    attackerObj.soulEpoch=soulEpoch;defenderObj.soulEpoch=soulEpoch;
     defenderObj.fx = newFx();
     attackerObj.taken = 0;
     defenderObj.taken = 0;
@@ -183,6 +189,11 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
     // Auto-fight: both sides play their skills every second until time runs out or
     // one of them falls. A fallen fighter stays down (no regeneration back to life).
     for (let t = 0; t < battleTime; t++) {
+        for(const fighter of [attackerObj,defenderObj]){
+            const target={currentHp:fighter.hp+fighter.cp,soulDots:fighter.soulDots||[],listOfDamage:[]};
+            const damage=tickSoulDots(target,t*1000);fighter.soulDots=target.soulDots;if(damage)applyDamage(fighter,damage);
+        }
+        if(attackerObj.hp<=0||defenderObj.hp<=0)break;
         useSkills(attackerObj, defenderObj, isArena, t);
         if (defenderActs && defenderObj.hp > 0) useSkills(defenderObj, attackerObj, isArena, t);
 
@@ -251,6 +262,7 @@ function calculateDamage(skill, attackerObj, defenderObj, isArena, t = 0) {
     const hits = Math.max(1, Math.floor(skill.hits || 1));
     let total = 0;
     let landed = 0;
+    let critical=false;
 
     // Charges of damage / crit buffs are spent once per skill, not per hit.
     const buffs = {
@@ -269,7 +281,7 @@ function calculateDamage(skill, attackerObj, defenderObj, isArena, t = 0) {
         // Магические классы: см. комментарий в истории - бросок попадания пропускается, только если
         // защитник на 8 и более уровней выше.
         if (!magic || (defenderObj.lvl - attackerObj.lvl < 8)) {
-            const diff = limit(attackerObj.accuracy - defenderObj.evasion, -25, 10);
+            const diff = limit(attackerObj.accuracy*(1-active(attackerObj.fx,'accuracyDown',t)) - defenderObj.evasion, -25, 10);
             isHit = Math.random() < chanceToHitTemplate[diff + 25] / 100;
         }
 
@@ -279,6 +291,7 @@ function calculateDamage(skill, attackerObj, defenderObj, isArena, t = 0) {
 
         if (isHit) {
             damage = calcSkillDamage(skill, attackerObj, defenderObj, buffs, t);
+            critical ||= attackerObj.lastCritical;
             // Проверка на блок урона
             const blockRate = (defenderObj.block - 1) / (135 - 1);
             // Минимальный шанс заблокировать урон - 1.75%, максимальный - 65%.
@@ -304,7 +317,7 @@ function calculateDamage(skill, attackerObj, defenderObj, isArena, t = 0) {
         total += damage;
     }
 
-    return {damage: total, hits, hit: landed > 0};
+    return {damage: total, hits, hit: landed > 0,critical};
 }
 
 function calcSkillDamage(skill, attackerObj, defenderObj, buffs, t) {
@@ -325,8 +338,9 @@ function calcSkillDamage(skill, attackerObj, defenderObj, buffs, t) {
     dmg *= pvpFactor(attackerObj.attributes, defenderObj.attributes);
     dmg *= chanceSkillFactor(attackerObj.chances);
 
-    const critChance = Math.min(100, attackerObj.criticalChance + (skill.critChanceBonus || 0) + getRouteBonus(skill).critBonus + buffs.critChance);
-    if (getRandom(1, 100) <= critChance) {
+    const critChance = Math.min(100, (attackerObj.criticalChance + (skill.critChanceBonus || 0) + getRouteBonus(skill).critBonus + buffs.critChance)*(attackerObj.soulSession?soulBackCritical(attackerObj.soulSession,skill):1));
+    attackerObj.lastCritical=getRandom(1,100)<=critChance;
+    if (attackerObj.lastCritical) {
         dmg *= attackerObj.criticalDamage * (1 + buffs.critDamage / 100);
     }
 
@@ -420,6 +434,9 @@ function applyDebuff(target, debuff, t, power = 1) {
     } else if (debuff.kind === 'weaken') {
         target.fx.weaken = Math.min(0.5, debuff.amount / 100 * power);
         target.fx.weakenUntil = t + (debuff.seconds || 10);
+    } else if(['slow','accuracyDown','mute'].includes(debuff.kind)){
+        target.fx[debuff.kind]=Math.min(debuff.kind==='mute'?1:.5,debuff.amount/100*power);
+        target.fx[`${debuff.kind}Until`]=t+(debuff.seconds||10);
     }
 }
 
@@ -433,15 +450,19 @@ function restoreMana(obj, share) {
 // played when ready. Taunt does nothing in a one-on-one fight.
 function useSkills(attackerObj, defenderObj, isArena = false, t = 0) {
     if (attackerObj.fx.stunUntil > t) return;
+    const soul=attackerObj.soulSession;
+    if(soul)soul.soulNow=attackerObj.soulEpoch+t*1000;
+    if(soul){soul.game.gameClass.stats.hp=attackerObj.hp;attackerObj.maxHp=getMaxHp(soul);attackerObj.attack=getAttack(soul);attackerObj.criticalChance=Math.min(getCriticalChance(soul)+getCriticalChanceMultiplier(soul),100);}
 
     for (let j = 0; j < attackerObj.skills.length; j++) {
         let skill = attackerObj.skills[j];
         const damages = dealsDamage(skill);
+        if(isMagicClass(attackerObj.className)&&active(attackerObj.fx,'mute',t)>0)continue;
         const heals = skill.isHeal && !skill.isDealDamage;
         const shields = skill.isShield && !skill.isDealDamage;
         const utility = !damages && !heals && !shields;
 
-        const price = getEffectiveSkillCost(skill, attackerObj.maxHp);
+        const price = getEffectiveSkillCost(skill, attackerObj.maxHp,soul);
         if (attackerObj.cooldowns[j] <= 0 && attackerObj.hp > price.costHp && attackerObj.mp >= price.cost) {
             const ownHpShare = attackerObj.hp / attackerObj.maxHp;
             const power = getSkillPowerMultiplier(skill);
@@ -449,6 +470,12 @@ function useSkills(attackerObj, defenderObj, isArena = false, t = 0) {
             if (damages) {
                 const result = calculateDamage(skill, attackerObj, defenderObj, isArena, t);
                 applyDamage(defenderObj, result.damage);
+                if(soul&&result.hit){
+                    const target={hp:defenderObj.maxHp,currentHp:defenderObj.hp,soulDots:defenderObj.soulDots||[],debuffs:[],listOfDamage:[]};
+                    const sa=applySoulHit(soul,target,{critical:result.critical,dealt:result.damage,now:t*1000});defenderObj.soulDots=target.soulDots;
+                    if(sa.drain)gainHp(attackerObj,Math.ceil(result.damage*sa.drain));
+                    for(const effect of sa.effects)if(effect.applied)applyDebuff(defenderObj,{kind:effect.kind,amount:(effect.amount||0)*100,seconds:effect.seconds||10},t);
+                }
 
                 const vampire = (skill.vampirePower || 0) + getRouteBonus(skill).vampire;
                 if (vampire > 0) gainHp(attackerObj, Math.ceil(result.damage * vampire));
@@ -480,7 +507,10 @@ function useSkills(attackerObj, defenderObj, isArena = false, t = 0) {
             }
 
             // Haste shortens the cooldown the skill is put on.
-            attackerObj.cooldowns[j] = Math.ceil(skill.cooldown * getSkillCooldownMultiplier(skill) * (1 - active(attackerObj.fx, 'haste', t)));
+            if(soul)applySoulSpell(soul,skill,soul.soulNow);
+            const soulSpeed=soul?getEquipStatByName(soul,isMagicClass(attackerObj.className)?'castingSpeedMul':'attackSpeedMul',true):1;
+            const soulReuse=soul?getEquipStatByName(soul,'skillCooltimeMul',true):1;
+            attackerObj.cooldowns[j] = Math.max(Math.ceil(skill.cooldown*.35),Math.ceil(skill.cooldown * getSkillCooldownMultiplier(skill) * soulReuse/soulSpeed / (1-active(attackerObj.fx,'slow',t)) * (1 - active(attackerObj.fx, 'haste', t))));
             attackerObj.hp -= price.costHp;
             attackerObj.mp -= price.cost;
 

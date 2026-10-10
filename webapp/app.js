@@ -112,6 +112,7 @@ const launchers = {
   exchange: openExchangeGame,
   boss: openBossGame,
   hunt: openHuntGame,
+  catacombs: options=>openHuntGame({...options,initialZoneKind:'catacomb'}),
   chest: openChestGame,
   gacha: openGachaGame,
   equipment: options => openCharacterPage(options, 'equipment'),
@@ -187,6 +188,9 @@ function render(state) {
   $('crystals').textContent = formatNumber(state.player.crystals);
   $('luck-coins').textContent = formatNumber(state.player.luckCoins);
   $('ore').textContent = formatNumber(state.player.ironOre);
+  for (const id of ['gold', 'crystals', 'luck-coins', 'ore']) {
+    $(id).title = `${$(id).getAttribute('aria-label')}: ${$(id).textContent}`;
+  }
 
   const cards = featuresForTab(state.features, activeTab).map(feature => {
     const unavailable = feature.available === false;
@@ -234,6 +238,7 @@ function renderGearDot() {
 function renderTabs() {
   $('bottom-nav').innerHTML = navHtml(activeTab, badges);
   const isCity = activeTab === 'city';
+  document.querySelector('.top-hud')?.classList.toggle('is-city-compact', isCity);
   document.querySelectorAll('[data-tab-panel]').forEach(node => {
     node.hidden = (node.dataset.tabPanel === 'city') !== isCity;
   });

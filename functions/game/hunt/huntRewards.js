@@ -1,3 +1,4 @@
+import {absorbHuntSoul} from '../equipment/soulCrystals.js';
 // What a dead mob pays. The numbers are the Lineage II (High Five) rules on our scale:
 //  - experience only while the hero and the mob are less than 11 levels apart (and the high-level
 //    penalty table after level 84); it is the mob's real share of a level step, so x5 rate and
@@ -28,6 +29,25 @@ export function dropGapFactor(heroLevel, mobLevel, {min, max, floor}) {
     if (diff <= min) return 1;
     if (diff >= max) return floor;
     return 1 - (1 - floor) * (diff - min) / (max - min);
+}
+
+/** Uses the same effective probabilities and quantities as grantKillRewards, without rolling. */
+export function huntDropPreview(level, mobDef, champion = null) {
+    if (!mobDef) return [];
+    const tier = CHAMPIONS[champion];
+    const rows = [];
+    const row = (key, min, max, chance) => {
+        const info = materialInfo(key);
+        rows.push({key, name: info.name, icon: info.icon, min, max, chance: Math.min(100, chance)});
+    };
+    if (mobDef.gold) rows.push({key: 'gold', name: 'Адена', icon: '🪙', min: Math.max(1, Math.round(mobDef.gold.min * HUNT.goldScale)), max: Math.max(1, Math.round(mobDef.gold.max * HUNT.goldScale)), chance: Math.min(100, mobDef.gold.chance * dropGapFactor(level, mobDef.level, HUNT.adenaGap))});
+    const factor = HUNT.dropRate * dropGapFactor(level, mobDef.level, HUNT.itemGap) * (tier?.drops || 1);
+    for (const drop of mobDef.drops || []) row(drop.key, drop.min, drop.max, drop.chance * factor);
+    if (mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
+        const chances = STONE_CHANCE[champion || 'normal'];
+        for (const stone of ['stone', 'crystal', 'jewel']) if (chances[stone] > 0) row(attributeKey(stone, mobDef.dropElement), 1, 1, chances[stone] * 100);
+    }
+    return rows.sort((a, b) => b.chance - a.chance);
 }
 
 /** Rolls (and credits) the reward of one kill. The caller saves the session. */
@@ -79,5 +99,6 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
             if (chances[stone] > 0 && random() < chances[stone]) give(attributeKey(stone, mobDef.dropElement), 1);
         }
     }
+    result.soulCrystal=absorbHuntSoul(session,mob,random);
     return result;
 }

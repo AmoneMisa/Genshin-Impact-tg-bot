@@ -2,11 +2,12 @@
 // Features without a painting keep their icon-only card.
 import { portraitFamily } from './class-family.js';
 
-export const MENU_ART = Object.freeze(['boss', 'chest', 'arena', 'shop', 'builds', 'steal', 'inventory', 'gacha', 'hunt']);
+export const MENU_ART = Object.freeze(['boss', 'chest', 'arena', 'shop', 'builds', 'steal', 'inventory', 'gacha', 'hunt', 'passives', 'luckShop', 'auction']);
 const CLASS_ART = new Set(['noClass', 'warrior', 'archer', 'mage', 'priest']);
 
 /** The character card shows the player's own class and gender. */
 export function menuArtFor(featureId, player = {}) {
+  if(featureId==='catacombs')return '/art/hunt/zones/catacombs-480.webp';
   if (featureId === 'profile') {
     const family = portraitFamily(player.className);
     const cls = CLASS_ART.has(family) ? family : 'noClass';

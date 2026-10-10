@@ -1,0 +1,1293 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171914">
+  <title>WhitesLove · Дизайн игровых окон</title>
+<style>.mmo-hud {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 14px;
+  padding: 13px;
+  border-color: rgba(211, 180, 117, .28);
+  background:
+    linear-gradient(90deg, rgba(8,10,18,.94), rgba(19,22,35,.84)),
+    radial-gradient(circle at 14% 10%, rgba(188,156,255,.12), transparent 33%);
+  box-shadow:
+    0 22px 58px rgba(0,0,0,.30),
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    inset 0 -18px 36px rgba(0,0,0,.18);
+}
+
+.mmo-hud::before,
+.mmo-hud::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.mmo-hud::before {
+  inset: 4px;
+  border: 1px solid rgba(209,177,112,.13);
+  border-radius: 20px;
+  clip-path: polygon(0 0, 34% 0, 37% 3px, 63% 3px, 66% 0, 100% 0, 100% 100%, 66% 100%, 63% calc(100% - 3px), 37% calc(100% - 3px), 34% 100%, 0 100%);
+}
+
+.mmo-hud::after {
+  width: 270px;
+  height: 270px;
+  right: -110px;
+  top: -170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94,129,211,.16), transparent 68%);
+  filter: blur(5px);
+}
+
+.hero-crest {
+  min-width: 0;
+  display: grid;
+  place-items: center;
+}
+
+.hero-portrait-shell {
+  position: relative;
+  width: 92px;
+  height: 104px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(215,182,115,.40);
+  border-radius: 18px 18px 22px 22px;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(143,123,199,.28), transparent 38%),
+    linear-gradient(155deg, #252633, #0d0f18 62%);
+  box-shadow:
+    inset 0 0 0 3px rgba(0,0,0,.32),
+    inset 0 0 28px rgba(180,143,86,.08),
+    0 10px 26px rgba(0,0,0,.28);
+}
+
+.hero-portrait-shell::before,
+.hero-portrait-shell::after {
+  content: "◆";
+  position: absolute;
+  color: #c9a86b;
+  font-size: 11px;
+  text-shadow: 0 0 10px rgba(219,184,112,.28);
+}
+
+.hero-portrait-shell::before { left: -5px; top: 8px; }
+.hero-portrait-shell::after { right: -5px; bottom: 8px; }
+
+.hero-sigil {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 48px;
+  line-height: 1;
+  color: #d9d4e7;
+  text-shadow:
+    0 0 16px rgba(151,128,218,.42),
+    0 2px 0 rgba(0,0,0,.7);
+  transform: translateY(-5px);
+}
+
+.mmo-hud .level-orb {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 43px;
+  height: 43px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px solid rgba(224,189,116,.58);
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255,255,255,.26), transparent 30%),
+    linear-gradient(145deg, #58472f, #17151a 68%);
+  box-shadow:
+    inset 0 0 0 3px rgba(0,0,0,.42),
+    0 5px 13px rgba(0,0,0,.35),
+    0 0 14px rgba(204,169,101,.12);
+}
+
+.mmo-hud .level-orb span { font-size: 17px; }
+.mmo-hud .level-orb small { margin-top: 1px; font-size: 6px; letter-spacing: .12em; color: #d7bb86; }
+
+.mmo-hud .hero-copy {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+
+.mmo-hud .hero-row {
+  min-width: 0;
+  align-items: flex-start;
+}
+
+.hero-identity {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.hero-identity small {
+  color: #998f9e;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+
+.hero-identity strong {
+  font-family: Georgia, "Times New Roman", serif;
+  color: #f1ecf4;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  text-shadow: 0 1px 0 #000;
+}
+
+.mmo-hud .hero-row > span {
+  padding: 4px 7px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 999px;
+  background: rgba(255,255,255,.035);
+  color: #aaa4b6;
+  font-size: 8px;
+}
+
+.hud-stack {
+  display: grid;
+  gap: 4px;
+}
+
+.hud-meter {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 27px minmax(0,1fr) minmax(72px, auto);
+  align-items: center;
+  gap: 7px;
+}
+
+.hud-label {
+  color: #d6d0dc;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-shadow: 0 1px 1px #000;
+}
+
+.hud-meter > strong {
+  min-width: 0;
+  color: #e9e5ed;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 760;
+  text-align: right;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px #000;
+}
+
+.hud-track {
+  position: relative;
+  height: 11px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #090b11, #171a22);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,.8),
+    0 1px 0 rgba(255,255,255,.035);
+}
+
+.hud-track::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 2;
+  border-top: 1px solid rgba(255,255,255,.12);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.hud-track i {
+  position: absolute;
+  inset: 1px auto 1px 1px;
+  width: 0;
+  border-radius: 2px;
+  transition: width .45s cubic-bezier(.2,.8,.2,1);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.24);
+}
+
+.hud-track b {
+  position: absolute;
+  z-index: 3;
+  inset: 1px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hud-track b::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: 0;
+  width: 28px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+  transform: translateX(-34px) skewX(-18deg);
+  will-change: transform, opacity;
+  animation: hud-sheen 4.8s ease-in-out infinite;
+}
+
+.hud-meter.hp .hud-track i { background: linear-gradient(180deg, #d94c50, #8b1f29 62%, #60141b); box-shadow: inset 0 1px 1px rgba(255,206,206,.38), 0 0 7px rgba(214,59,67,.22); }
+.hud-meter.mp .hud-track i { background: linear-gradient(180deg, #438bdc, #2453a2 62%, #18366f); box-shadow: inset 0 1px 1px rgba(204,229,255,.36), 0 0 7px rgba(67,139,220,.22); }
+.hud-meter.cp .hud-track i { background: linear-gradient(180deg, #e0b752, #a87922 62%, #735015); box-shadow: inset 0 1px 1px rgba(255,241,184,.36), 0 0 7px rgba(224,183,82,.20); }
+.hud-meter.exp .hud-track i { background: linear-gradient(180deg, #ab75df, #6f3fa5 62%, #4d297a); box-shadow: inset 0 1px 1px rgba(238,219,255,.36), 0 0 7px rgba(171,117,223,.20); }
+
+.hud-meter.sp .hud-label,
+.hud-meter.sp > strong { color: #a9d7c8; }
+
+.sp-track i {
+  width: 100%;
+  opacity: .68;
+  background:
+    repeating-linear-gradient(90deg, rgba(99,190,162,.48) 0 10px, rgba(60,110,98,.28) 10px 12px),
+    linear-gradient(180deg, #65c5aa, #377b68);
+}
+
+.hud-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #8f8999;
+  font-size: 8px;
+}
+
+.hud-status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #91cdb7;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.hud-status-dot::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #80dfbd;
+  box-shadow: 0 0 8px rgba(128,223,189,.6);
+}
+
+/* The track is at most ~300px wide; translating 340px clears it on every layout
+   without reading the container width, keeping the sweep on the compositor. */
+@keyframes hud-sheen {
+  0%, 65% { transform: translateX(-34px) skewX(-18deg); opacity: 0; }
+  72% { opacity: 1; }
+  88% { transform: translateX(340px) skewX(-18deg); opacity: .35; }
+  100% { transform: translateX(340px) skewX(-18deg); opacity: 0; }
+}
+
+@media (min-width: 680px) {
+  .mmo-hud { grid-template-columns: 116px minmax(0,1fr); padding: 15px 16px; }
+  .hero-portrait-shell { width: 102px; height: 114px; }
+  .hero-sigil { font-size: 54px; }
+  .hud-meter { grid-template-columns: 30px minmax(0,1fr) 98px; }
+  .hud-track { height: 12px; }
+}
+
+@media (max-width: 430px) {
+  .mmo-hud { grid-template-columns: 78px minmax(0,1fr); gap: 10px; padding: 10px; }
+  .hero-portrait-shell { width: 72px; height: 94px; border-radius: 15px 15px 18px 18px; }
+  .hero-sigil { font-size: 38px; }
+  .mmo-hud .level-orb { width: 37px; height: 37px; bottom: -7px; }
+  .mmo-hud .level-orb span { font-size: 14px; }
+  .hero-identity strong { font-size: 15px; }
+  .hud-meter { grid-template-columns: 23px minmax(0,1fr) 65px; gap: 5px; }
+  .hud-meter > strong { font-size: 8px; }
+  .hud-label { font-size: 11px; }
+  .hud-track { height: 9px; }
+}
+
+@media (max-width: 340px) {
+  .mmo-hud { grid-template-columns: 1fr; }
+  .hero-crest { display: none; }
+}
+
+/* Painted class portrait inside the crest (hud.js sets --portrait). */
+.hero-portrait-shell.has-portrait {
+  background: var(--portrait) center 18% / cover no-repeat, #0d0f18;
+  overflow: visible;
+}
+.hero-portrait-shell.has-portrait .hero-sigil { opacity: 0; }
+.hero-portrait-shell.has-portrait .level-orb { z-index: 1; }
+
+
+/* ------------------------------------------------------------------ */
+/* Top HUD: steel frame with portrait, wide CP/HP/MP bars, resources.  */
+/* ------------------------------------------------------------------ */
+.top-hud {
+  --steel: #7d725f; --txt: #eef2f7;
+  position: sticky; top: 0; z-index: 15;
+  margin: calc(-1 * var(--safe-top, 0px)) -18px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 6px) 8px 8px;
+  background: linear-gradient(180deg, rgba(5, 8, 14, .96), rgba(5, 8, 14, .9));
+  color: var(--txt);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.th-frame {
+  position: relative; display: grid; gap: 5px; padding: 5px;
+  border: 2px solid var(--steel); border-radius: 3px;
+  background: linear-gradient(180deg, #0c1624, #070b13 60%);
+  box-shadow: 0 0 0 1px #000, inset 0 0 0 1px rgba(125, 190, 255, .18), 0 8px 20px rgba(0, 0, 0, .6);
+}
+.th-frame::before, .th-frame::after {
+  content: ""; position: absolute; top: -3px; width: 9px; height: 9px;
+  background: linear-gradient(135deg, #a89b82, #4a4233); border: 1px solid #000;
+}
+.th-frame::before { left: -3px; }
+.th-frame::after { right: -3px; }
+
+.th-id { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 6px; align-items: center; padding-bottom: 5px; border-bottom: 1px solid rgba(125, 160, 200, .18); }
+.top-portrait.hero-portrait-shell {
+  width: 42px; height: 44px; border-radius: 2px; cursor: pointer;
+  border: 2px solid #5b6f86; box-shadow: 0 0 0 1px #000, inset 0 0 0 1px rgba(0, 0, 0, .6);
+}
+.top-portrait.hero-portrait-shell::before, .top-portrait.hero-portrait-shell::after { display: none; }
+.top-portrait .hero-sigil { font-size: 22px; }
+.th-level {
+  min-width: 34px; height: 38px; padding: 0 4px; display: grid; place-items: center;
+  border: 1px solid #42586f; background: linear-gradient(180deg, #0f1a29, #08101b);
+  box-shadow: 0 0 0 1px #000, inset 0 0 8px rgba(0, 0, 0, .7);
+  font: 600 20px/1 system-ui, sans-serif; color: #d9f2ff; text-shadow: 0 0 8px rgba(120, 210, 255, .5);
+}
+.th-name { min-width: 0; }
+.th-name strong { display: block; font: 700 17px/1.1 system-ui, sans-serif; color: #fff; text-shadow: 0 1px 2px #000; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-sub { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; margin-top: 1px; }
+.th-name small { font: 500 12px/1.1 system-ui, sans-serif; color: #a9a8c9; }
+.th-btns { display: flex; gap: 5px; }
+.top-icon {
+  position: relative; width: 36px; height: 36px; padding: 0; display: grid; place-items: center;
+  border: 2px solid #4e5a68; border-radius: 2px;
+  background: linear-gradient(180deg, #121c2b, #0a111b);
+  box-shadow: 0 0 0 1px #000, inset 0 0 6px rgba(0, 0, 0, .7);
+}
+.top-icon .ui-icon { width: 22px; height: 22px; }
+.top-icon:active, .top-portrait:active { transform: scale(.94); }
+.th-btns #fullscreen { display: none; }
+@media (min-width: 430px) { .th-btns #fullscreen { display: grid; } }
+
+.th-bars { display: grid; gap: 3px; }
+.top-bar { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; gap: 4px; }
+.top-bar > span { font: 700 14px/1 system-ui, sans-serif; color: #e9eef5; padding-left: 3px; }
+.top-bar-track {
+  position: relative; overflow: hidden; height: 20px; border-radius: 2px;
+  border: 1px solid #000; background: #05070c;
+  box-shadow: 0 0 0 1px #3c4350, inset 0 2px 3px rgba(0, 0, 0, .85);
+}
+.top-bar-track i { position: absolute; inset: 1px auto 1px 1px; max-width: calc(100% - 2px); transition: width .6s cubic-bezier(.2, .8, .3, 1); }
+.top-bar-track i::after { content: ""; position: absolute; inset: 0 0 52% 0; background: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .05)); }
+.top-bar-track b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 600 15px/1 system-ui, sans-serif; color: #fff; text-shadow: 0 1px 2px #000, 0 0 3px #000; }
+.top-bar.cp i { background: linear-gradient(180deg, #f1c43a, #b8860f); }
+.top-bar.hp i { background: linear-gradient(180deg, #f0262e, #a60b14); }
+.top-bar.mp i { background: linear-gradient(180deg, #2f8cff, #0a47c4); }
+
+.top-resources { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding-top: 5px; border-top: 1px solid rgba(125, 160, 200, .18); }
+.top-res {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr) 26px; align-items: center; gap: 4px;
+  height: 36px; padding: 0 4px; border: 1px solid rgba(90, 130, 170, .35); background: rgba(5, 9, 16, .7);
+}
+.top-res > img { width: 30px; height: 30px; object-fit: contain; justify-self: center; filter: drop-shadow(0 1px 2px #000); }
+.top-res strong { font: 500 19px/1 system-ui, sans-serif; color: #f2f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-res .resource-plus {
+  position: static; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none;
+  font: 400 30px/24px system-ui, sans-serif; color: #f4cf9a; text-shadow: 0 0 6px rgba(244, 190, 120, .45);
+}
+.top-res > i { width: 26px; }
+
+.th-foot { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 6px; padding-top: 4px; border-top: 1px solid rgba(125, 160, 200, .18); }
+.th-charges { display: flex; gap: 2px; }
+.th-charges i {
+  position: relative; width: 26px; height: 26px;
+  border: 1px solid #3f6178; outline: 1px solid #000;
+  background: linear-gradient(180deg, #0b2233, #07131f);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .7), inset 0 0 6px rgba(0, 0, 0, .8);
+}
+.th-charges i::after {
+  content: ""; position: absolute; inset: 3px;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  background: #1b3446;
+}
+.th-charges i.on { border-color: #4fb4d4; background: linear-gradient(180deg, #0d3a52, #082638); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .6), inset 0 0 8px rgba(60, 200, 240, .45), 0 0 6px rgba(60, 200, 240, .35); }
+.th-charges i.on::after { background: radial-gradient(circle, #fff 0 18%, #8cf1ff 40%, #1cc6f0 100%); filter: drop-shadow(0 0 3px #3fe0ff); }
+.th-thin { display: grid; gap: 3px; }
+.th-thin .top-bar { grid-template-columns: 1fr; }
+.th-thin .top-bar > span { display: none; }
+.th-thin .top-bar-track { height: 11px; border-radius: 3px; }
+.th-thin { align-content: center; }
+.th-thin .top-bar-track b { display: none; }
+.top-bar.exp i { background: linear-gradient(180deg, #c06bff, #7a1fd1); }
+.top-bar.vit i { background: linear-gradient(180deg, #2fe0a0, #0b9a68); }
+
+@media (max-width: 359px) {
+  .th-name strong { font-size: 15px; }
+  .top-res strong { font-size: 16px; }
+  .top-bar-track b { font-size: 13px; }
+}
+@media (min-width: 680px) { .top-hud { margin-left: -24px; margin-right: -24px; padding-left: 16px; padding-right: 16px; } }
+
+/* City overview: keep the same live meters and actions in a compact frame. */
+.top-hud.is-city-compact .th-frame { gap: 4px; padding: 5px 6px; }
+.is-city-compact .th-id { gap: 5px; padding-bottom: 4px; }
+.is-city-compact .top-portrait.hero-portrait-shell { width: 34px; height: 38px; }
+.is-city-compact .th-level { min-width: 26px; height: 30px; font-size: 16px; }
+.is-city-compact .th-name strong { font-size: 14px; }
+.is-city-compact .th-name small { font-size: 11px; }
+.is-city-compact .top-bar { grid-template-columns: 23px minmax(0, 1fr); gap: 3px; }
+.is-city-compact .top-bar > span { font-size: 11px; padding-left: 0; }
+.is-city-compact .th-bars { gap: 3px; }
+.is-city-compact .th-bars .top-bar-track { height: 14px; }
+.is-city-compact .th-bars .top-bar-track b { font-size: 11px; }
+.is-city-compact .top-resources { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding-top: 4px; }
+.is-city-compact .top-res {
+  position: relative; grid-template-columns: 17px minmax(0, 1fr); gap: 2px;
+  height: 30px; padding: 0 3px;
+}
+.is-city-compact .top-res > img { width: 17px; height: 20px; }
+.is-city-compact .top-res strong { font-size: 11px; }
+/* The whole currency cell is the touch target; counters retain full values. */
+.is-city-compact .top-res .resource-plus { position: absolute; inset: 0; width: 100%; height: 100%; font-size: 0; }
+.is-city-compact .top-res:has(.resource-plus) { padding-right: 9px; }
+.is-city-compact .top-res:has(.resource-plus)::after { content: '+'; position: absolute; right: 2px; top: 2px; color: #d9bc7d; font: 10px/1 system-ui; pointer-events: none; }
+.is-city-compact .resource-plus:focus-visible { outline: 2px solid #f3dca6; outline-offset: 1px; }
+.is-city-compact .top-res > i { display: none; }
+.is-city-compact .th-foot { padding-top: 3px; gap: 5px; }
+.is-city-compact .th-charges i { width: 17px; height: 17px; }
+.is-city-compact .th-thin { gap: 3px; }
+.is-city-compact .th-thin .top-bar { grid-template-columns: 1fr; }
+.is-city-compact .th-thin .top-bar-track { height: 6px; }
+@media (max-width: 359px) {
+  .is-city-compact .th-name strong { font-size: 12px; }
+  .is-city-compact .top-res strong { font-size: 10px; }
+}
+
+:root { color-scheme: dark; --ink:#dedcca; --muted:#99998b; --gold:#c9ac70; --line:#66634c; --panel:#20231e; --green:#a9c687; --red:#ec9b8c; }
+* { box-sizing:border-box; }
+body { margin:0; background:#111510; color:var(--ink); font:13px/1.45 'Segoe UI',Arial,sans-serif; }
+button,input,select { font:inherit; }
+button { cursor:pointer; color:inherit; }
+button:disabled { cursor:default; opacity:.42; }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { outline:2px solid #e3c98f; outline-offset:3px; }
+button,input,select { min-height:36px; }
+.lab-sidebar { position:fixed; inset:0 auto 0 0; width:248px; padding:30px 22px; border-right:1px solid #32382e; background:#151a14; }
+.brand { display:flex; gap:12px; align-items:center; text-decoration:none; color:#e3d9bd; font:22px Georgia,serif; }
+.brand>span { display:grid; place-items:center; width:42px; height:48px; border:1px solid #8e794f; background:linear-gradient(145deg,#3a3827,#171b15); color:#d8be81; }
+.brand small { display:block; margin-top:6px; font:9px 'Segoe UI',sans-serif; letter-spacing:2px; color:#949783; }
+.sidebar-label { margin:42px 0 15px; color:#7d856f; font-size:9px; letter-spacing:2px; }
+#lab-nav { display:grid; gap:4px; max-height:calc(100vh - 330px); overflow-y:auto; scrollbar-width:thin; scrollbar-color:#69684d transparent; }
+#lab-nav a { display:flex; align-items:center; gap:13px; min-height:43px; padding:10px; color:#a5ac9b; text-decoration:none; border:1px solid transparent; }
+#lab-nav a small { color:#69725e; font-size:10px; }
+#lab-nav a.active { color:#ebd9ae; border-color:#645b3d; background:linear-gradient(90deg,#343622,#222719); }
+.sidebar-note { margin-top:35px; padding-top:20px; border-top:1px solid #34382b; color:#89917e; font-size:11px; }
+.sidebar-note b { color:#b7b99f; font-weight:500; }
+.sidebar-note small { color:#76806d; }
+.workspace { margin-left:248px; padding:38px 48px 25px; max-width:1280px; }
+.lab-heading { display:flex; justify-content:space-between; gap:15px; margin-bottom:25px; }
+.eyebrow { margin:0 0 8px; color:#8c997c; letter-spacing:2.2px; font-size:9px; }
+h1 { margin:0 0 8px; font:32px Georgia,serif; color:#e6dec6; }
+#screen-description { color:#97a08c; margin:0; max-width:570px; }
+.edition { color:#76806e; letter-spacing:2px; text-align:right; font-size:9px; }
+.edition b { display:block; margin-top:10px; color:#b3a277; font:18px Georgia,serif; }
+.canvas { display:flex; justify-content:center; align-items:flex-start; min-height:670px; padding:32px; border:1px solid #333a2d; background:radial-gradient(ellipse at 50% 0,#333b2b55,transparent 60%),repeating-linear-gradient(135deg,#ffffff02 0 1px,transparent 1px 9px),#1a2017; }
+.screen { width:390px; max-width:100%; }
+.lab-footer { display:flex; justify-content:space-between; align-items:center; gap:12px; padding-top:14px; color:#7f8a74; font-size:10px; }
+.text-button { padding:4px 0; border:0; background:none; color:#b6ab88; }
+.window { position:relative; border:1px solid #c2b187; outline:2px solid #37382a; background:linear-gradient(135deg,#313428ee,#171b17f5 65%); box-shadow:inset 0 0 0 3px #0c100c,inset 0 0 0 4px #74705a55,0 18px 35px #0007; border-radius:9px 9px 3px 3px; }
+.window::before { content:'◇'; position:absolute; z-index:2; top:-12px; left:calc(50% - 24px); width:48px; text-align:center; font:20px Georgia; color:#c7b48a; background:linear-gradient(transparent 47%,#252a20 47% 65%,transparent 65%); text-shadow:0 1px #000; }
+.window-title { position:relative; display:flex; align-items:center; justify-content:center; min-height:36px; padding:7px 38px 6px; background:linear-gradient(#a99c7733,#0a100877); border-bottom:1px solid #757059; color:#dfd9c2; text-shadow:0 1px #000; font-size:12px; }
+.window-title button { position:absolute; right:5px; top:0; width:34px; min-height:34px; border:0; background:none; font:23px Georgia; color:#c7b58a; }
+.window-title small { position:absolute; right:40px; color:#9d9f89; font-size:10px; }
+.window-body { padding:12px; }
+.window-body> :first-child { margin-top:0; }
+.window-body> :last-child { margin-bottom:0; }
+.tabs { display:flex; gap:3px; border-bottom:1px solid #68634c; margin-bottom:12px; }
+.tabs button { min-height:34px; padding:5px 11px; border:1px solid #69634d; border-bottom:0; background:linear-gradient(#4a4935,#262b20); border-radius:3px 3px 0 0; font-size:11px; color:#a5a791; }
+.tabs button.active { color:#ead9ad; background:linear-gradient(#797051,#333629); box-shadow:inset 0 1px #cfc09855; }
+.section-label { display:flex; justify-content:space-between; margin:12px 0 7px; color:#b7b797; font-size:11px; }
+.section-label small { color:#888e79; font-size:10px; }
+.rule { height:1px; background:#67634a66; margin:12px 0; }
+.muted { color:var(--muted); }
+.gold { color:#e3c577; }
+.positive { color:var(--green); }
+.negative { color:var(--red); }
+.stat-row { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:4px 0; color:#aeb19b; font-size:12px; }
+.stat-row b { font-weight:500; font-variant-numeric:tabular-nums; color:#e6d4a3; }
+.stat-row b.positive { color:var(--green); }
+.stat-row b.negative { color:var(--red); }
+.note { margin:9px 0; color:#9fa591; font-size:11px; line-height:1.6; }
+.inset { padding:9px; border:1px solid #65654b66; background:#090e0966; }
+.actions { display:flex; gap:8px; padding-top:12px; border-top:1px solid #69644a88; margin-top:12px; }
+.actions button { flex:1; }
+.l2-button { min-height:40px; padding:6px 12px; border:1px solid #a79b77; border-radius:3px; background:linear-gradient(#686247,#282c20); box-shadow:inset 0 0 0 2px #161b13,inset 0 3px #cfc49833,0 2px 2px #0005; color:#e2d9bc; text-shadow:0 1px #000; }
+.l2-button.primary { background:linear-gradient(#8b7948,#413922); border-color:#c4ad70; color:#f3e0af; }
+.item-slot { position:relative; display:grid; place-items:center; aspect-ratio:1; border:1px solid #66694e; background:radial-gradient(ellipse,#3c462c66,#090e09 80%); box-shadow:inset 0 0 0 1px #000,inset 0 0 12px #0009; min-height:0; padding:2px; overflow:hidden; }
+button.item-slot { min-height:40px; }
+.item-slot img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 3px #000); }
+.item-slot.selected { border-color:#e4d19a; box-shadow:inset 0 0 0 1px #a69c72,0 0 8px #ccbc7744; }
+.item-slot.empty { color:#4f5845; font:22px Georgia; }
+.item-slot .enchant { position:absolute; left:3px; top:2px; color:#f4cf81; font-size:9px; line-height:1; text-shadow:0 1px 2px #000; }
+.item-slot .grade { position:absolute; right:2px; top:2px; color:#cec8a5; font-size:8px; background:#1e251b; padding:0 2px; }
+.item-slot .count { position:absolute; right:3px; bottom:2px; color:#eee8d3; font-size:9px; text-shadow:0 1px #000; }
+.grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:3px; }
+.equipment-scene { display:grid; grid-template-columns:42px minmax(0,1fr) 42px; gap:8px; margin-bottom:14px; }
+.equipment-column { display:grid; gap:5px; align-content:start; }
+.hero-stage { position:relative; min-height:263px; display:flex; justify-content:center; align-items:flex-end; background:radial-gradient(ellipse at 50% 75%,#a1935144,transparent 65%),linear-gradient(transparent,#121910); overflow:hidden; }
+.hero-stage::after { content:''; position:absolute; width:86%; height:26px; border:1px solid #9a9258; border-radius:50%; bottom:15px; box-shadow:0 0 20px #aa9a5a33,inset 0 0 20px #aa9a5a22; }
+.hero-stage img { position:relative; z-index:1; width:100%; height:263px; object-fit:contain; }
+.hero-stage>span { position:absolute; bottom:4px; z-index:2; color:#aead8f; letter-spacing:2px; font-size:9px; }
+.wallet { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; padding:9px 0 0; color:#a3a68d; font-size:11px; }
+.wallet strong { color:#ebd484; font-weight:500; font-variant-numeric:tabular-nums; }
+.weight { height:5px; width:90px; background:#070d07; border:1px solid #6a6246; }
+.weight i { display:block; height:100%; width:18%; background:#a18f45; }
+.item-head { display:flex; gap:10px; align-items:center; padding-bottom:9px; border-bottom:1px solid #67634a99; }
+.item-head .item-slot { width:45px; flex-shrink:0; }
+.item-head h3 { margin:0; color:#e8dfc1; font-size:12px; font-weight:500; }
+.item-head p { margin:4px 0 0; color:#b7ad82; font-size:11px; }
+.tooltip { margin-top:12px; padding:9px; border:1px solid #867b55; background:#0e120dee; box-shadow:inset 0 0 0 1px #000,0 10px 20px #0003; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.attributes { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.attribute { text-align:center; background:#131a10; border:1px solid #62674766; padding:7px 2px; }
+.attribute small { color:#9fa78c; font-size:10px; display:block; }
+.attribute b { color:#dfd6b5; font:18px Georgia; }
+.tattoo-slots { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0 12px; }
+.tattoo-slot { padding:8px 3px; text-align:center; border:1px solid #777052; background:#10170e; min-height:96px; }
+.tattoo-slot>span { display:block; font:30px/1.3 Georgia; color:#bbae7b; }
+.tattoo-slot small { color:#9ba284; display:block; font-size:9px; }
+.tattoo-slot button { border:0; background:none; min-height:30px; color:#c6b887; font-size:10px; }
+.dye-row { display:flex; gap:9px; align-items:center; padding:8px; width:100%; text-align:left; border:1px solid transparent; border-bottom-color:#6d705144; background:#ffffff03; min-height:63px; }
+.dye-row:nth-child(even) { background:#ffffff07; }
+.dye-row.selected { background:#86805225; border-color:#b4a573; }
+.dye-icon { position:relative; width:34px; height:39px; flex-shrink:0; display:grid; place-items:center; color:#ddd6b1; font:bold 20px Georgia; background:radial-gradient(ellipse at 50% 30%,var(--dye-color),#242814 73%); border:1px solid #9e956555; box-shadow:inset 0 0 0 3px #121b0b99; border-radius:7px 7px 12px 12px; }
+.dye-icon::before { content:''; position:absolute; width:23px; height:4px; top:1px; border:1px solid #bbab74; background:#686047; }
+.dye-copy { flex:1; min-width:0; }
+.dye-copy b { display:block; color:#e0dcc6; font-size:11px; font-weight:500; }
+.dye-copy small { font-size:10px; color:#aba787; }
+.dye-stock { color:#a9b88e; font-size:10px; white-space:nowrap; }
+.preview-stat { display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #59614355; color:#aeb39d; }
+.preview-stat strong { color:#e0d7b8; font-size:14px; font-weight:500; }
+.preview-stat em { font-style:normal; color:#7b856c; padding:0 8px; }
+.select-row { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:12px 0; color:#b5b99f; font-size:11px; }
+select,input { background:#141b10; color:#ddd5b7; border:1px solid #797457; padding:5px 8px; border-radius:2px; min-width:0; }
+.select-row select { max-width:67%; }
+.enchant-stage { position:relative; display:flex; justify-content:center; align-items:center; gap:25px; min-height:150px; background:radial-gradient(ellipse,#8c753126,transparent 68%),#10170e88; border:1px solid #535c4166; }
+.enchant-stage .item-slot { width:72px; border-color:#b79f5d; }
+.enchant-stage .item-slot img { max-height:68px; }
+.stage-arrow { color:#baa975; font:25px Georgia; }
+.chance { margin:10px 0; }
+.chance>div { height:6px; border:1px solid #6d7152; background:#0a1009; }
+.chance i { display:block; height:100%; background:linear-gradient(90deg,#71835c,#c8b76b); }
+.chance p { display:flex; justify-content:space-between; margin:4px 0; color:#949e85; font-size:10px; }
+.chance b { color:#d5c18c; }
+.materials { display:flex; gap:7px; }
+.material { flex:1; padding:7px; display:flex; align-items:center; gap:5px; border:1px solid #5f664766; background:#0b120a55; font-size:10px; color:#a9b29a; }
+.material img { width:27px; height:27px; object-fit:contain; }
+.result { padding:13px; margin:10px 0; background:#8fa86a12; border:1px solid #819c5b; text-align:center; color:#d4e0b6; }
+.result.fail { background:#ae684419; border-color:#a57855; color:#e5b89e; }
+.skill-entry { display:flex; align-items:center; gap:9px; padding:8px; background:#ffffff04; border:1px solid #62684b66; margin-bottom:4px; width:100%; text-align:left; }
+.skill-entry.selected { border-color:#b6a779; background:#87744422; }
+.skill-entry img { width:35px; height:35px; object-fit:contain; }
+.skill-entry b { display:block; color:#dcd8bc; font-weight:500; font-size:12px; }
+.skill-entry small { font-size:10px; color:#9ea88e; }
+.route-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+.route-grid button { padding:7px 2px; min-height:57px; background:#151d11; border:1px solid #576040; color:#aeb59a; font-size:11px; }
+.route-grid button.active { border-color:#c5ae71; background:linear-gradient(#6a62413b,#383e2344); color:#ead6a2; }
+.route-grid button span { display:block; font:19px Georgia; margin-bottom:3px; }
+.route-grid button span img {width:25px;height:25px;object-fit:contain;}
+.dye-icon img {width:30px;height:34px;object-fit:contain;}
+.trade-slot { position:relative; }
+.trade-slot .item-slot { width:100%; }
+.trade-slot label { display:block; font-size:9px; color:#a6ad92; margin-top:4px; }
+.trade-slot input { width:100%; padding:3px; min-height:29px; font-size:10px; }
+.trade-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
+.sale-result { color:#c9d4b2; padding:10px; border:1px solid #819267; background:#15200e; margin-top:10px; }
+.toast { position:fixed; bottom:22px; left:50%; transform:translate(-50%,20px); max-width:calc(100% - 24px); padding:12px 18px; background:#363d29; border:1px solid #b2a274; color:#eee0b9; opacity:0; pointer-events:none; transition:opacity .2s,transform .2s; z-index:10; }
+.toast.visible { opacity:1; transform:translate(-50%,0); }
+.forge-wallet { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin:10px 0; padding:10px; border:1px solid #69634c; background:#10160d; color:#aeb69c; font-size:11px; }
+.forge-wallet b { color:#d8c692; font-weight:500; }
+.forge-selection { display:grid; gap:5px; max-height:240px; overflow-y:auto; margin:10px 0; padding:2px; scrollbar-width:thin; scrollbar-color:#787455 #11190e; }
+.forge-gear { display:flex; gap:9px; align-items:center; padding:7px; width:100%; background:#10170c99; border:1px solid #62684c; text-align:left; min-height:60px; }
+.forge-gear.selected,.forge-option.selected { border-color:#c6b281; background:#77744333; }
+.forge-gear>.item-slot,.forge-option>.item-slot,.forge-bag-item>.item-slot { width:40px; height:40px; flex-shrink:0; }
+.forge-gear>span:last-child { min-width:0; }
+.forge-gear b,.forge-bag-item b { font-size:11px; font-weight:500; color:#ded6ba; display:block; overflow-wrap:anywhere; }
+.forge-gear small,.forge-bag-item small { display:block; color:#929e81; font-size:10px; }
+.forge-tags { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:3px; }
+.forge-gear .forge-tags,.forge-bag-item .forge-tags { justify-content:flex-start; margin-top:4px; }
+.forge-tags>span { display:inline-block; padding:1px 4px; border:1px solid #787d5866; background:#6b714422; font-size:9px; line-height:1.5; color:#b2b695; }
+.forge-options { display:grid; gap:5px; margin:10px 0; }
+.forge-option { display:flex; gap:9px; align-items:center; min-height:60px; background:#131d0e; border:1px solid #5e6949; padding:9px; text-align:left; }
+.forge-option b { color:#e0d7b9; font-size:11px; font-weight:500; display:block; }
+.forge-option small { color:#a1ae8c; font-size:10px; display:block; margin-top:3px; }
+.soul-crystal { width:34px; flex-shrink:0; font:34px Georgia; text-shadow:0 0 10px currentColor; }
+.soul-crystal.blue { color:#87b5e3; }.soul-crystal.green { color:#b8ca82; }.soul-crystal.red { color:#e4a69b; }
+.forge-transform { display:grid; grid-template-columns:1fr 25px 1fr; align-items:center; padding:15px 8px; text-align:center; border:1px solid #6c704e; background:linear-gradient(90deg,#28301a66,#95875911,#34391d55); font-size:10px; color:#a9b091; }
+.forge-transform b { display:block; margin-top:7px; font-size:13px; font-weight:500; color:#ddd3b1; }
+.forge-transform em,.forge-flow em { font:20px Georgia; color:#b5a570; }
+.forge-flow { display:flex; justify-content:center; gap:9px; align-items:center; flex-wrap:wrap; padding:12px 6px; margin:10px 0; border:1px solid #616b4755; color:#c7c49e; background:#161e1155; font-size:11px; }
+.forge-demo-actions { display:grid; gap:6px; margin-top:12px; }
+.forge-service { padding:10px; background:linear-gradient(90deg,#69624733,transparent); border-left:2px solid #bca574; margin-bottom:12px; }
+.forge-service b { display:block; color:#dbc68c; font:16px Georgia; }
+.forge-service span { display:block; color:#9ca783; font-size:11px; margin-top:4px; }
+.forge-cost { margin-bottom:10px; }
+.forge-cost .stat-row { font-size:11px; }
+.forge-cost .stat-row>span { flex:1; min-width:0; }
+.forge-cost .stat-row>b { text-align:right; max-width:60%; white-space:normal; }
+.catacomb-art { min-height:185px; display:flex; flex-direction:column; justify-content:flex-end; padding:16px; background-position:center; background-size:cover; border:1px solid #76855a; margin-bottom:12px; }
+.catacomb-art>span { letter-spacing:4px; font-size:9px; color:#c1c296; }
+.catacomb-art h3 { margin:7px 0; font:22px Georgia; color:#e7d6a3; text-shadow:0 2px 3px #000; }
+.catacomb-art small { color:#b8c2a5; font-size:10px; }
+.zone-level { width:32px; flex-shrink:0; color:#bcba8f; font:23px Georgia; text-align:center; }
+.seal-stone-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+.seal-stone-cell { display:grid; justify-items:center; padding:12px 3px; background:#111b0e; border:1px solid #697750; }
+.seal-stone-cell>span { font:27px Georgia; color:var(--stone-color); text-shadow:0 0 8px var(--stone-color); }
+.seal-stone-cell b { color:#dfd3a8; font-weight:500; margin:3px 0; }
+.seal-stone-cell small { color:#a4af8b; font-size:9px; text-align:center; }
+.seal-exchange-list { display:grid; gap:6px; }
+.seal-exchange-row { display:grid; grid-template-columns:27px minmax(0,1fr) 74px; align-items:center; gap:6px; padding:10px 7px; border:1px solid #626f4d; background:#111b0d; }
+.seal-glyph { font:26px Georgia; color:var(--stone-color); }
+.seal-exchange-row b { display:block; color:#d7d0af; font-size:11px; font-weight:500; }
+.seal-exchange-row small { display:block; color:#9fa987; font-size:10px; }
+.seal-exchange-row input { width:100%; min-height:38px; font-size:11px; padding:4px; }
+.combat-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; }
+.combat-detail { display:flex; align-items:center; justify-content:space-between; gap:5px; padding:8px 5px; border-bottom:1px solid #616b4855; color:#acb598; font-size:10px; }
+.combat-detail strong { color:#e2d4a6; font-size:12px; font-weight:500; white-space:nowrap; }
+.forge-bag { display:grid; gap:5px; margin:10px 0; }
+.forge-bag-item { display:flex; gap:7px; align-items:center; padding:8px; border:1px solid #656b4e; background:#151c1055; }
+.forge-bag-item>div { min-width:0; flex:1; }
+.forge-bag-item button { border:1px solid #8b825f; background:#272c1b; padding:5px; color:#d0c193; font-size:10px; }
+.forge-shortcuts { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin:10px 0; }
+.forge-shortcuts .l2-button { padding:5px; font-size:11px; }
+/* The compact city header uses the production HUD rules. */
+.city-demo { background:#090e13; border:1px solid #6b715d; overflow:hidden; }
+.city-demo .top-hud { margin:0; padding:6px; position:relative; top:auto; }
+.city-demo .top-icon img { width:22px; height:22px; object-fit:contain; }
+.city-demo .hero-portrait-shell { background:center/cover url('../webapp/art/classes/mage-male.webp'); }
+.city-landscape { position:relative; min-height:390px; background:linear-gradient(#09101922,#0b10166b),url('../webapp/art/world/v1/city/map-portrait-768.webp') center top/cover; display:flex; flex-direction:column; align-items:center; padding:35px 18px 18px; }
+.city-landscape h2 { margin:0; font:42px Georgia; color:#e8cd86; text-shadow:0 3px 6px #000; }
+.city-landscape>small { color:#d3bb81; letter-spacing:7px; }
+.city-landscape p { margin:10px 0; font:14px Georgia; color:#e0d7b8; text-shadow:0 2px 3px #000; }
+.city-quest-demo { width:100%; margin-top:auto; border:1px solid #b39a57; background:#101611da; padding:13px; display:flex; align-items:center; gap:10px; }
+.city-quest-demo img { width:36px; height:36px; object-fit:contain; }
+.city-quest-demo strong { display:block; font:17px Georgia; color:#e1c280; }
+.city-quest-demo small { color:#c2c7b1; }
+.city-nav-demo { display:flex; justify-content:space-around; padding:12px 5px; background:#10160f; border-top:1px solid #7d7351; }
+.city-nav-demo button { display:grid; justify-items:center; gap:5px; border:0; background:none; color:#a6ab94; font-size:10px; }
+.city-nav-demo img { width:26px; height:26px; object-fit:contain; }
+.city-nav-demo button.active { color:#e6cd8f; }
+@media (max-width:900px) {
+  .lab-sidebar { position:relative; width:auto; padding:20px; border-right:0; border-bottom:1px solid #333b2c; }
+  .brand { font-size:19px; } .brand>span { width:35px; height:39px; }
+  .sidebar-label,.sidebar-note { display:none; }
+  #lab-nav { display:flex; overflow-x:auto; overflow-y:hidden; max-height:none; margin-top:16px; gap:5px; }
+  #lab-nav a { flex:none; min-height:40px; padding:7px 10px; font-size:12px; }
+  #lab-nav a small { display:none; }
+  .workspace { margin-left:0; padding:23px 20px; }
+  .canvas { padding:24px 18px; min-height:0; }
+}
+@media (max-width:460px) {
+  .workspace { padding:20px 8px; } .lab-heading { padding:0 8px; }
+  h1 { font-size:26px; } .edition { display:none; }
+  #screen-description { font-size:11px; }
+  .canvas { padding:18px 0; background:none; border:0; }
+  .window-body { padding:10px; } .lab-footer { padding:5px 8px; }
+  .lab-footer span { max-width:160px; }
+  .city-landscape h2 { font-size:36px; }
+  .tabs button { padding:5px 8px; }
+}
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; animation:none!important; } }
+</style></head>
+<body>
+  <aside class="lab-sidebar">
+    <a class="brand" href="#city"><span>W</span><div>WhitesLove<small>GAME · DESIGN ATELIER</small></div></a>
+    <p class="sidebar-label">ИГРОВЫЕ ОКНА / 01</p>
+    <nav id="lab-nav" aria-label="Макеты игровых окон"></nav>
+    <div class="sidebar-note"><b>Lineage II → WhitesLove</b><p>Тёмное стекло, тонкая бронза, предметная сетка и плотная типографика.</p><small>Интерактивный дизайн. Данные и операции демонстрационные.</small></div>
+  </aside>
+  <main class="workspace">
+    <header class="lab-heading"><div><p class="eyebrow">WHITESLOVE / INTERFACE STUDIES</p><h1 id="screen-title">Город</h1><p id="screen-description"></p></div><span class="edition">L2 INSPIRED<br><b>01 — 17</b></span></header>
+    <div class="canvas"><div id="screen" class="screen"></div></div>
+    <footer class="lab-footer"><span>Мобильное окно · адаптируется от 320 px</span><button id="reset" class="text-button" type="button">Сбросить пример</button></footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script>
+(()=>{
+// Proposed WhitesLove rules for the design prototype, not live character mutations.
+const TATTOO_RULES = Object.freeze({ slots:3, dyesPerSymbol:10, refund:5, bonusCap:5, minimumStat:1, applyFee:145000, removeFee:72500 });
+const DYES = Object.freeze([
+  { id:'int-men', name:'Краска интеллекта', plus:'INT', minus:'MEN', amount:4, color:'#9473b5', glyph:'✧' },
+  { id:'wit-men', name:'Краска мудрости', plus:'WIT', minus:'MEN', amount:4, color:'#718dbe', glyph:'✦' },
+  { id:'con-str', name:'Краска выносливости', plus:'CON', minus:'STR', amount:4, color:'#b58265', glyph:'❖' },
+  { id:'dex-con', name:'Краска ловкости', plus:'DEX', minus:'CON', amount:4, color:'#91a95d', glyph:'ϟ' },
+  { id:'str-dex', name:'Краска силы', plus:'STR', minus:'DEX', amount:4, color:'#b16c69', glyph:'⋈' },
+]);
+
+function tattooStats(base, symbols) {
+  const gains = {}, losses = {};
+  for (const id of symbols) {
+    const dye = DYES.find(dye => dye.id === id);
+    if (!dye) continue;
+    gains[dye.plus] = (gains[dye.plus] || 0) + dye.amount;
+    losses[dye.minus] = (losses[dye.minus] || 0) + dye.amount;
+  }
+  return Object.fromEntries(Object.entries(base).map(([stat,value]) => [stat,value + Math.min(TATTOO_RULES.bonusCap,gains[stat] || 0) - (losses[stat] || 0)]));
+}
+
+function tattooPreview(state, id) {
+  const dye = DYES.find(dye => dye.id === id);
+  const before = tattooStats(state.base,state.symbols);
+  const after = tattooStats(state.base,[...state.symbols,id]);
+  let reason = '';
+  if (!dye) reason = 'Выберите краску.';
+  else if (state.symbols.length >= TATTOO_RULES.slots) reason = 'Все три слота заняты. Сначала снимите символ.';
+  else if ((state.stock[id] || 0) < TATTOO_RULES.dyesPerSymbol) reason = 'Нужно 10 красок одного типа.';
+  else if (state.gold < TATTOO_RULES.applyFee) reason = 'Недостаточно золота для нанесения.';
+  else if (Object.values(after).some(value => value < TATTOO_RULES.minimumStat)) reason = 'Характеристика не может стать ниже 1.';
+  else if (after[dye.plus] <= before[dye.plus]) reason = 'Для этой характеристики уже достигнут бонус +5.';
+  return { before,after,reason,allowed:!reason };
+}
+
+function applyTattoo(state, id) {
+  const preview = tattooPreview(state,id);
+  if (!preview.allowed) return { ok:false,reason:preview.reason };
+  state.symbols.push(id);
+  state.stock[id] -= TATTOO_RULES.dyesPerSymbol;
+  state.gold -= TATTOO_RULES.applyFee;
+  return { ok:true };
+}
+
+function removeTattoo(state, index) {
+  const id = state.symbols[index];
+  if (!Number.isInteger(index) || !id) return { ok:false,reason:'Символ не найден.' };
+  if (state.gold < TATTOO_RULES.removeFee) return { ok:false,reason:'Недостаточно золота для снятия.' };
+  state.symbols.splice(index,1);
+  state.stock[id] = (state.stock[id] || 0) + TATTOO_RULES.refund;
+  state.gold -= TATTOO_RULES.removeFee;
+  return { ok:true };
+}
+
+// Design-only adaptation. Prices, rates, bonuses and drops are illustrative.
+const SEAL_STONES = Object.freeze({blue:{name:'Синий камень печати',rate:3,color:'#79b4e2'},green:{name:'Зелёный камень печати',rate:5,color:'#9cba73'},red:{name:'Красный камень печати',rate:10,color:'#d3897b'}});
+const FORGE_CATALOG = Object.freeze({
+  arcana:{name:'Посох Тайн · Arcana Mace',grade:'S',type:'weapon',slot:'weapon',art:'weapon-mace',stats:{pAtk:225,mAtk:175},masterwork:{mAtk:12},stage:13,sa:['acumen','mana','regen']},
+  darkGloves:{name:'Перчатки Тёмного Кристалла',grade:'A',type:'armor',slot:'gloves',art:'armor-robe-gloves',stats:{pDef:48},masterwork:{castingSpeed:10}},
+  arcanaGloves:{name:'Перчатки Аркана',grade:'S',type:'armor',slot:'gloves',art:'armor-robe-gloves',stats:{pDef:55},masterwork:{mAtk:12}},
+  dynasty:{name:'Мантия Династии',grade:'S80',type:'armor',slot:'body',art:'armor-robe-fullbody',set:'dynasty',stats:{pDef:110},masterwork:{mAtk:18}},
+  dynastyGloves:{name:'Перчатки Династии',grade:'S80',type:'armor',slot:'gloves',art:'armor-robe-gloves',set:'dynasty',stats:{pDef:62},masterwork:{castingSpeed:18}},
+  dynastyHelmet:{name:'Шлем Династии',grade:'S80',type:'armor',slot:'helmet',art:'armor-robe-helmet',set:'dynasty',stats:{pDef:54},masterwork:{mDef:10}},
+  dynastyBoots:{name:'Сапоги Династии',grade:'S80',type:'armor',slot:'boots',art:'armor-robe-boots',set:'dynasty',stats:{pDef:62},masterwork:{mDef:12}},
+  elegiaBoots:{name:'Сапоги Элегии',grade:'S84',type:'armor',slot:'boots',art:'armor-robe-boots',set:'elegia',stats:{pDef:85},masterwork:{mDef:20}},
+  elegia:{name:'Мантия Элегии',grade:'S84',type:'armor',slot:'body',art:'armor-robe-fullbody',set:'elegia',stats:{pDef:150},masterwork:{mAtk:24}},
+  elegiaGloves:{name:'Перчатки Элегии',grade:'S84',type:'armor',slot:'gloves',art:'armor-robe-gloves',set:'elegia',stats:{pDef:85},masterwork:{castingSpeed:24}},
+  elegiaHelmet:{name:'Шлем Элегии',grade:'S84',type:'armor',slot:'helmet',art:'armor-robe-helmet',set:'elegia',stats:{pDef:72},masterwork:{mDef:16}},
+  cloakZaken:{name:'Плащ Закена',grade:'S80',type:'cloak',slot:'cloak',artPath:'../webapp/art/items/v1/cloak-dusk-128.webp',boss:'Закен · сложный режим',call:'Призыв Закена',stats:{pDef:20},bonus:{darkResist:15}},
+  cloakFreya:{name:'Плащ Фреи',grade:'S84',type:'cloak',slot:'cloak',artPath:'../webapp/art/items/v1/cloak-starfield-128.webp',boss:'Фрея · обычный / экстремальный режим',call:'Призыв Фреи',stats:{pDef:30},bonus:{waterResist:15}},
+  cloakFrintezza:{name:'Плащ Фринтеззы',grade:'S80',type:'cloak',slot:'cloak',artPath:'../webapp/art/items/v1/cloak-128.webp',boss:'Алый Ван Халиша',call:'Призыв Фринтеззы',stats:{pDef:20},bonus:{fireResist:15}},
+  freya:{name:'Ожерелье Фреи',grade:'S84',type:'jewelry',slot:'necklace',artPath:'../webapp/art/items/v1/epic-valakas-128.webp',epic:true,boss:'Фрея',stats:{mDef:114},bonus:{maxMp:50,mpRegen:.23,healPower:10,waterResist:10},blessed:{stats:{mDef:132},bonus:{maxMp:50,mpRegen:.46,healPower:15,waterResist:15}}},
+  beleth:{name:'Кольцо Белефа',grade:'S80',type:'jewelry',slot:'ring',artPath:'../webapp/art/items/v1/epic-core-128.webp',epic:true,boss:'Белеф',stats:{mDef:48},bonus:{maxHp:105,maxMp:38,mentalResist:10},blessed:{stats:{mDef:64},bonus:{maxHp:160,maxMp:50,mentalResist:15}}},
+  zaken:{name:'Серьга Закена',grade:'S',type:'jewelry',slot:'earring',artPath:'../webapp/art/items/v1/epic-zaken-128.webp',epic:true,boss:'Закен',stats:{mDef:60},bonus:{maxMp:31,healPower:10},blessed:{grade:'S84',stats:{mDef:71},bonus:{maxMp:37,healPower:15,darkResist:15}}},
+  queenAnt:{name:'Кольцо Королевы Муравьёв',grade:'B',type:'jewelry',slot:'ring',artPath:'../webapp/art/items/v1/epic-queenAnt-128.webp',epic:true,boss:'Королева Муравьёв',stats:{mDef:48},bonus:{physicalCrit:4},blessed:{stats:{mDef:64},bonus:{physicalCrit:6}}},
+  core:{name:'Кольцо Ядра',grade:'B',type:'jewelry',slot:'ring',artPath:'../webapp/art/items/v1/epic-core-128.webp',epic:true,boss:'Ядро',stats:{mDef:48},bonus:{evasion:2},blessed:{stats:{mDef:64},bonus:{evasion:3}}},
+  orfen:{name:'Серьга Орфен',grade:'B',type:'jewelry',slot:'earring',artPath:'../webapp/art/items/v1/epic-orfen-128.webp',epic:true,boss:'Орфен',stats:{mDef:60},bonus:{healPower:6},blessed:{stats:{mDef:78},bonus:{healPower:10}}},
+  baium:{name:'Кольцо Баюма',grade:'S',type:'jewelry',slot:'ring',artPath:'../webapp/art/items/v1/epic-baium-128.webp',epic:true,boss:'Баюм',stats:{mDef:48},bonus:{attackSpeedMul:.04,castingSpeedMul:.04},blessed:{stats:{mDef:66},bonus:{attackSpeedMul:.06,castingSpeedMul:.06}}},
+  antharas:{name:'Серьга Антараса',grade:'S84',type:'jewelry',slot:'earring',artPath:'../webapp/art/items/v1/epic-antharas-128.webp',epic:true,boss:'Антарас',stats:{mDef:94},bonus:{maxMp:37,healPower:10},blessed:{stats:{mDef:112},bonus:{maxMp:50,healPower:15}}},
+  valakas:{name:'Ожерелье Валакаса',grade:'S84',type:'jewelry',slot:'necklace',artPath:'../webapp/art/items/v1/epic-valakas-128.webp',epic:true,boss:'Валакас',stats:{mDef:125},bonus:{maxHp:445,mAtkMul:.08},blessed:{stats:{mDef:145},bonus:{maxHp:600,mAtkMul:.12}}},
+  frintezza:{name:'Ожерелье Фринтеззы',grade:'A',type:'jewelry',slot:'necklace',artPath:'../webapp/art/items/v1/epic-frintezza-128.webp',epic:true,boss:'Фринтезза',stats:{mDef:95},bonus:{mentalResist:10},blessed:{stats:{mDef:120},bonus:{mentalResist:15}}},
+  arcanaRing:{name:'Кольцо Аркана',grade:'S',type:'jewelry',slot:'ring',art:'jewelry-ring',stats:{mDef:48},masterwork:{mDef:8}},
+});
+const FORGE_RECIPES = Object.freeze([
+  {id:'darkGloves',gold:60000,materials:{parts:12,alloy:8},rate:60,foundationRate:5},
+  {id:'arcanaGloves',gold:90000,materials:{parts:18,alloy:12},rate:60,foundationRate:5},
+  {id:'dynasty',gold:180000,materials:{parts:30,alloy:24,gemS:4},rate:60,foundationRate:5},
+  {id:'dynastyGloves',gold:140000,materials:{parts:24,alloy:18,gemS:3},rate:60,foundationRate:5},
+  {id:'elegiaBoots',gold:280000,materials:{parts:40,alloy:30,gemS:8},rate:60,foundationRate:5},
+  {id:'elegia',gold:360000,materials:{parts:40,alloy:30,gemS:4},rate:60,foundationRate:5},
+  {id:'elegiaGloves',gold:280000,materials:{parts:30,alloy:24,gemS:4},rate:60,foundationRate:5},
+  {id:'elegiaHelmet',gold:300000,materials:{parts:30,alloy:24,gemS:4},rate:60,foundationRate:5},
+  {id:'arcanaRing',gold:75000,materials:{parts:15,alloy:10},rate:100,foundationRate:5},
+]);
+const MATERIAL_NAMES = Object.freeze({parts:'Ключевые части',alloy:'Сплав',gemS:'Gemstone S',varnish:'Лак Маммона',essence1:'Эссенция Династии I',essence2:'Эссенция Династии II',...Object.fromEntries(['freya','beleth','zaken','queenAnt','core','orfen','baium','antharas','valakas','frintezza'].map(id=>[`soul_${id}`,`Бутыль души · ${FORGE_CATALOG[id].boss}`]))});
+const ARMOR_SETS = Object.freeze({dynasty:{name:'Династия',grade:'S80',slots:['body','helmet','gloves','boots']},elegia:{name:'Элегия',grade:'S84',slots:['body','helmet','gloves','boots']}});
+const SA_OPTIONS = Object.freeze({
+  acumen:{name:'Acumen · Проницательность',color:'red',effect:'Скорость магии +15%',bonus:{castingSpeedMul:.15}},
+  mana:{name:'Mana Up · Мана',color:'blue',effect:'Максимум MP +30%',bonus:{maxMpMul:.30}},
+  regen:{name:'MP Regeneration · Восстановление',color:'green',effect:'Восстановление MP +1',bonus:{mpRegen:1}},
+});
+const DYNASTY_PROFILES = Object.freeze({
+  enchanter:{name:'Чародей',family:'mage',bonus:{mAtkMul:.08,castingSpeedMul:.05},text:'М. атака +8%, скорость магии +5%'},
+  healer:{name:'Целитель',family:'priest',bonus:{maxMpMul:.08,healPowerMul:.05},text:'MP +8%, сила лечения +5%'},
+});
+const CATACOMBS = Object.freeze([
+  {id:'apostate',name:'Катакомбы Отступников',level:50,blue:180,green:90,red:30,energy:1,damage:80},
+  {id:'witch',name:'Катакомбы Ведьм',level:65,blue:300,green:140,red:60,energy:2,damage:140},
+  {id:'forbidden',name:'Катакомбы Запретного Пути',level:78,blue:450,green:220,red:100,energy:3,damage:220},
+]);
+function makeForgeItem(templateId,uid,overrides={}) {
+  return {uid,templateId,enchant:0,quality:'ordinary',sealed:true,equipped:false,sa:null,shoulder:null,...overrides};
+}
+function createForgeState() {
+  return {gold:9000000,aa:50000,level:84,family:'mage',energy:12,hp:49773,
+    seals:{blue:25000,green:10000,red:5000},materials:{parts:250,alloy:250,gemS:120,varnish:40,essence1:3,essence2:2,...Object.fromEntries(Object.entries(FORGE_CATALOG).filter(([,info])=>info.epic).map(([id])=>[`soul_${id}`,2]))},
+    soulCrystals:{'blue:13':3,'green:13':2,'red:13':2},nextUid:7,
+    gear:[makeForgeItem('arcana','forge-0',{sealed:false,enchant:6,equipped:true}),
+      makeForgeItem('dynastyGloves','forge-1',{quality:'foundation'}),
+      makeForgeItem('dynasty','forge-2'),makeForgeItem('arcanaRing','forge-3'),makeForgeItem('elegiaBoots','forge-4'),
+      makeForgeItem('dynastyHelmet','forge-5',{sealed:false,equipped:true}),makeForgeItem('dynastyBoots','forge-6',{sealed:false,equipped:true})],
+    baseCombat:{pAtk:150,mAtk:420,pDef:500,mDef:380,attackSpeed:340,castingSpeed:650,accuracy:160,evasion:140,physicalCrit:12,magicalCrit:5,moveSpeed:120,maxHp:49773,maxMp:16211,maxCp:10589,mpRegen:3,healPower:100},
+  };
+}
+function forgeItemInfo(item) {const info=item?FORGE_CATALOG[item.templateId]:null;return item?.epicTier==='blessed'&&info?.blessed?.grade?{...info,grade:info.blessed.grade}:info;}
+function forgeGear(state,uid) {return state.gear.find(item=>item.uid===uid);}
+function costReason(state,cost) {
+  if((cost.gold||0)>state.gold)return 'Недостаточно обычной адены.';
+  if((cost.aa||0)>state.aa)return 'Недостаточно древней адены (AA).';
+  for(const [key,count] of Object.entries(cost.materials||{}))if((state.materials[key]||0)<count)return `Не хватает: ${MATERIAL_NAMES[key]}.`;
+  for(const [key,count] of Object.entries(cost.soulCrystals||{}))if((state.soulCrystals[key]||0)<count)return 'Не хватает кристалла души нужного цвета и ступени.';
+  return '';
+}
+function spendForgeCost(state,cost) {
+  state.gold-=cost.gold||0;state.aa-=cost.aa||0;
+  for(const [key,count] of Object.entries(cost.materials||{}))state.materials[key]-=count;
+  for(const [key,count] of Object.entries(cost.soulCrystals||{}))state.soulCrystals[key]-=count;
+}
+function ready(cost,reason='') {return {cost,reason,allowed:!reason};}
+function processReason(item) {return !item?'Выберите предмет.':item.equipped?'Сначала снимите предмет.':'';}
+function craftPreview(state,recipeId) {
+  const recipe=FORGE_RECIPES.find(recipe=>recipe.id===recipeId);
+  if(!recipe)return ready({},'Рецепт недоступен.');
+  const cost={gold:recipe.gold,materials:recipe.materials};return {...ready(cost,costReason(state,cost)),recipe};
+}
+function craftForgeItem(state,recipeId,outcome='ordinary') {
+  const preview=craftPreview(state,recipeId);
+  if(!['ordinary','foundation','failure'].includes(outcome))return {ok:false,reason:'Неизвестный исход.'};
+  if(!preview.allowed)return {ok:false,reason:preview.reason};
+  // The UI chooses a demonstration outcome. Production must roll on the server.
+  if(outcome==='failure'&&preview.recipe.rate===100)return {ok:false,reason:'Этот рецепт не может завершиться неудачей.'};
+  spendForgeCost(state,preview.cost);
+  if(outcome==='failure')return {ok:true,failed:true};
+  const item=makeForgeItem(recipeId,`forge-${state.nextUid++}`,{quality:outcome});state.gear.push(item);
+  return {ok:true,item};
+}
+function masterworkPreview(state,uid) {
+  const item=forgeGear(state,uid),info=forgeItemInfo(item);
+  const cost={gold:info?.grade==='S84'?240000:120000,materials:{varnish:info?.grade==='S84'?12:info?.grade==='S80'?7:4}};
+  return ready(cost,processReason(item)||(!info?.masterwork?'Для этого предмета Masterwork недоступен.':'')||(item.quality!=='foundation'?'Требуется заготовка Foundation.':'')||costReason(state,cost));
+}
+function refineMasterwork(state,uid) {
+  const preview=masterworkPreview(state,uid);if(!preview.allowed)return {ok:false,reason:preview.reason};
+  spendForgeCost(state,preview.cost);const item=forgeGear(state,uid);item.quality='masterwork';return {ok:true,item};
+}
+function unsealPreview(state,uid) {
+  const item=forgeGear(state,uid),info=forgeItemInfo(item);
+  const cost=info?.type==='cloak'?{gold:info.grade==='S84'?200000:100000}:info?.grade==='S80'?{gold:180000,materials:{gemS:8}}:info?.grade==='S84'?{gold:360000,materials:{gemS:16}}:{aa:info?.grade==='A'?12000:25000};
+  return ready(cost,processReason(item)||(!item.sealed?'Предмет уже распечатан.':item.quality==='foundation'?'Сначала обработайте Foundation в Masterwork.':'')||costReason(state,cost));
+}
+function unsealForgeItem(state,uid) {
+  const preview=unsealPreview(state,uid);if(!preview.allowed)return {ok:false,reason:preview.reason};
+  spendForgeCost(state,preview.cost);const item=forgeGear(state,uid);item.sealed=false;return {ok:true,item};
+}
+function saPreview(state,uid,optionId) {
+  const item=forgeGear(state,uid),info=forgeItemInfo(item),option=SA_OPTIONS[optionId];
+  if(!info||!option||!info.sa?.includes(optionId))return ready({},'Этот SA несовместим с оружием.');
+  const key=`${option.color}:${info.stage}`,cost={gold:90000,materials:{gemS:12},soulCrystals:{[key]:1}};
+  return {...ready(cost,processReason(item)||(item.sealed?'Сначала распечатайте оружие.':item.quality==='foundation'?'Сначала обработайте Foundation.':item.sa?'Сначала снимите установленный SA.':'')||costReason(state,cost)),key,option};
+}
+function installSa(state,uid,optionId) {
+  const preview=saPreview(state,uid,optionId);if(!preview.allowed)return {ok:false,reason:preview.reason};
+  spendForgeCost(state,preview.cost);forgeGear(state,uid).sa=optionId;return {ok:true};
+}
+function removeSa(state,uid) {
+  const item=forgeGear(state,uid),cost={gold:30000},reason=processReason(item)||(!item.sa?'SA не установлен.':'')||costReason(state,cost);
+  if(reason)return {ok:false,reason};spendForgeCost(state,cost);item.sa=null;return {ok:true};
+}
+function shoulderPreview(state,uid,profileId,tier=1) {
+  const item=forgeGear(state,uid),info=forgeItemInfo(item),profile=DYNASTY_PROFILES[profileId];
+  const cost={gold:tier===2?160000:80000,materials:{[tier===2?'essence2':'essence1']:1}};
+  const reason=processReason(item)||(![1,2].includes(tier)?'Неизвестная ступень плеч.':'')
+    ||(info.set!=='dynasty'||info.slot!=='body'?'Плечи устанавливаются на нагрудник Династии.':'')
+    ||(item.sealed||item.quality==='foundation'?'Сначала обработайте и распечатайте нагрудник.':'')
+    ||(!profile||profile.family!==state.family?'Специализация плеч не подходит классу.':'')
+    ||(tier===1&&item.shoulder?'Плечи I уже установлены.':tier===2&&(!item.shoulder||item.shoulder.tier!==1||item.shoulder.profile!==profileId)?'Для улучшения нужны плечи I той же специализации.':'')
+    ||costReason(state,cost);
+  return ready(cost,reason);
+}
+function installShoulder(state,uid,profileId,tier=1) {
+  const preview=shoulderPreview(state,uid,profileId,tier);if(!preview.allowed)return {ok:false,reason:preview.reason};
+  spendForgeCost(state,preview.cost);forgeGear(state,uid).shoulder={profile:profileId,tier};return {ok:true};
+}
+function sealExchangePreview(state,counts) {
+  let aa=0,total=0;
+  for(const key of Object.keys(counts))if(!SEAL_STONES[key])return {allowed:false,reason:'Неизвестный камень.',aa:0};
+  for(const [key,info] of Object.entries(SEAL_STONES)) {
+    const count=counts[key]??0;
+    if(!Number.isSafeInteger(count)||count<0||count>(state.seals[key]||0))return {allowed:false,reason:'Укажите целое количество в пределах запасов.',aa:0};
+    aa+=count*info.rate;total+=count;
+  }
+  if(!total)return {allowed:false,reason:'Выберите камни для обмена.',aa:0};
+  if(!Number.isSafeInteger(aa+state.aa))return {allowed:false,reason:'Слишком большая сумма обмена.',aa:0};
+  return {allowed:true,reason:'',aa};
+}
+function exchangeSealStones(state,counts) {
+  const preview=sealExchangePreview(state,counts);if(!preview.allowed)return {ok:false,reason:preview.reason};
+  for(const key of Object.keys(SEAL_STONES))state.seals[key]-=counts[key]||0;
+  state.aa+=preview.aa;return {ok:true,aa:preview.aa};
+}
+function farmCatacomb(state,id) {
+  const zone=CATACOMBS.find(zone=>zone.id===id);
+  const reason=!zone?'Катакомбы не найдены.':state.level<zone.level?'Недостаточный уровень.':state.energy<zone.energy?'Не хватает энергии похода.':state.hp<=zone.damage?'Недостаточно HP для следующего боя.':'';
+  if(reason)return {ok:false,reason};state.energy-=zone.energy;state.hp-=zone.damage;
+  for(const key of Object.keys(SEAL_STONES))state.seals[key]+=zone[key];return {ok:true,drops:{blue:zone.blue,green:zone.green,red:zone.red}};
+}
+function fullHighGradeSet(state) {
+  const items=state.gear.filter(item=>item.equipped&&!item.sealed&&item.quality!=='foundation');
+  return Object.entries(ARMOR_SETS).find(([id,set])=>['S80','S84'].includes(set.grade)&&set.slots.every(slot=>items.some(item=>{const info=forgeItemInfo(item);return info?.set===id&&info.slot===slot&&['S80','S84'].includes(info.grade);})))?.[0]||null;
+}
+function equipPreview(state,uid) {
+  const item=forgeGear(state,uid),info=forgeItemInfo(item);
+  const reason=!info?'Предмет не найден.':item.equipped?'':item.sealed||item.quality==='foundation'?'Нельзя надеть запечатанный предмет или Foundation.':info.type==='cloak'&&!fullHighGradeSet(state)?'Для плаща нужен полный надетый комплект S80 или выше.':'';
+  return ready({},reason);
+}
+function equipForgeItem(state,uid) {
+  const preview=equipPreview(state,uid);if(!preview.allowed)return {ok:false,reason:preview.reason};
+  const item=forgeGear(state,uid),info=forgeItemInfo(item);
+  if(item.equipped){item.equipped=false;}else{
+  for(const other of state.gear)if(forgeItemInfo(other)?.slot===info.slot)other.equipped=false;
+  item.equipped=true;}
+  const removedCloaks=[];
+  if(!fullHighGradeSet(state))for(const other of state.gear)if(other.equipped&&forgeItemInfo(other)?.type==='cloak'){other.equipped=false;removedCloaks.push(other.uid);}
+  return {ok:true,removedCloaks};
+}
+function addRaidReward(state,templateId,variant='drop') {
+  const info=FORGE_CATALOG[templateId];
+  if(!info||(!info.epic&&info.type!=='cloak')||!['drop','soul'].includes(variant)||(variant==='soul'&&info.type!=='cloak'))return {ok:false,reason:'Награда недоступна.'};
+  const item=makeForgeItem(templateId,`forge-${state.nextUid++}`,{sealed:info.type==='cloak'&&variant==='drop',bound:variant==='soul',variant,epicTier:'normal'});state.gear.push(item);return {ok:true,item};
+}
+function blessedEpicPreview(state,uid) {
+  const item=forgeGear(state,uid),info=forgeItemInfo(item),cost={gold:1000000,materials:{[`soul_${item?.templateId}`]:1}};
+  return ready(cost,processReason(item)||(!info?.epic||!info.blessed?'Требуется эпическая бижутерия.':'')||(item.sealed||item.quality==='foundation'?'Предмет должен быть распечатан и обработан.':'')||(item.epicTier==='blessed'?'Эпик уже улучшен до Blessed.':'')||costReason(state,cost));
+}
+function blessEpic(state,uid) {
+  const preview=blessedEpicPreview(state,uid);if(!preview.allowed)return {ok:false,reason:preview.reason};
+  spendForgeCost(state,preview.cost);const item=forgeGear(state,uid);item.epicTier='blessed';return {ok:true,item};
+}
+function forgeItemStats(item) {
+  const info=forgeItemInfo(item);if(!info)return {};
+  const values={...(item.epicTier==='blessed'?info.blessed?.stats:info.stats)};
+  if(info.type==='weapon'){values.pAtk+=(item.enchant||0)*6;values.mAtk+=(item.enchant||0)*4;}
+  else if(info.type==='armor')values.pDef+=(item.enchant||0)*2;
+  else if(info.type==='jewelry')values.mDef+=(item.enchant||0)*2;
+  if(item.quality==='masterwork')for(const [key,value] of Object.entries(info.masterwork||{}))values[key]=(values[key]||0)+value;
+  return values;
+}
+function dynastySetActive(state) {
+  const slots=new Set(state.gear.filter(item=>item.equipped&&!item.sealed&&item.quality!=='foundation'&&forgeItemInfo(item)?.set==='dynasty').map(item=>forgeItemInfo(item).slot));
+  return ['body','gloves','helmet','boots'].every(slot=>slots.has(slot));
+}
+function forgeCombatStats(state,baseStats=null) {
+  const stats={...state.baseCombat},multipliers={};
+  const addBonus=bonus=>{for(const [key,value] of Object.entries(bonus||{}))if(key.endsWith('Mul'))multipliers[key.slice(0,-3)]=(multipliers[key.slice(0,-3)]||0)+value;else stats[key]=(stats[key]||0)+value;};
+  for(const item of state.gear.filter(item=>item.equipped&&!item.sealed&&item.quality!=='foundation'&&(forgeItemInfo(item)?.type!=='cloak'||fullHighGradeSet(state)))) {
+    const info=forgeItemInfo(item);
+    addBonus(forgeItemStats(item));addBonus(item.epicTier==='blessed'?info.blessed?.bonus:info.bonus);if(item.sa)addBonus(SA_OPTIONS[item.sa]?.bonus);
+    if(item.shoulder&&dynastySetActive(state)){const profile=DYNASTY_PROFILES[item.shoulder.profile];if(profile?.family===state.family)for(const [key,value] of Object.entries(profile.bonus))addBonus({[key]:value*(item.shoulder.tier===2?1.5:1)});}
+  }
+  for(const [key,value] of Object.entries(multipliers))stats[key]*=1+value;
+  if(baseStats&&state.base) {
+    const scale=(key,stat,rate)=>{stats[key]*=rate**((baseStats[stat]-state.base[stat])*.5);};
+    scale('pAtk','STR',1.036);scale('mAtk','INT',1.02);scale('mDef','MEN',1.01);scale('castingSpeed','WIT',1.05);scale('maxHp','CON',1.03);scale('maxMp','MEN',1.01);
+    stats.accuracy+=(baseStats.DEX-state.base.DEX)*.3;stats.evasion+=(baseStats.DEX-state.base.DEX)*.3;
+    stats.physicalCrit+=(baseStats.DEX-state.base.DEX)*.3;stats.magicalCrit+=(baseStats.WIT-state.base.WIT)*.4;
+  }
+  return Object.fromEntries(Object.entries(stats).map(([key,value])=>[key,Math.round(value*10)/10]));
+}
+
+
+function createEconomyScreens({getState,windowHtml,row,section,button,img,ui,fmt,esc,toast}) {
+  let saUid='forge-0',saId='acumen',mwUid='forge-1',unsealUid='forge-3',shoulderUid='forge-2',profile='enchanter',recipeId='dynastyGloves',zoneId='witch';
+  let exchangeCounts={blue:0,green:0,red:0},craftResult='',farmResult='',lastResult='',cloakId='cloakFreya',cloakUid=null,epicId='freya',epicUid=null;
+  const artwork = info => info.artPath||`../webapp/art/items/v1/catalog-${['S','S84'].includes(info.grade)?'s80':info.grade.toLowerCase()}-${info.art}-128.webp`;
+  const name = item => `${item.epicTier==='blessed'?'Blessed · ':''}${item.variant==='soul'?'Душевный · ':''}${item.sealed?'Запечатано · ':''}${item.quality==='foundation'?'Foundation · ':item.quality==='masterwork'?'Masterwork · ':''}${forgeItemInfo(item).name}`;
+  const stateTags = item => `<span class="forge-tags">${item.epicTier==='blessed'?'<span class="gold">Blessed</span>':''}${item.bound?'<span>Привязан</span>':''}${item.sealed?'<span>Печать</span>':''}${item.quality==='foundation'?'<span>Foundation</span>':''}${item.quality==='masterwork'?'<span class="gold">MW</span>':''}${item.sa?'<span class="positive">SA</span>':''}${item.shoulder?`<span>Плечи ${item.shoulder.tier}</span>`:''}${item.equipped?'<span class="positive">Надето</span>':''}</span>`;
+  function gearList(filter,selected,screen) {
+    const gear=getState().gear.filter(filter).filter(item=>screen!=='unseal'||forgeItemInfo(item).type!=='cloak'&&!forgeItemInfo(item).epic);
+    return `<div class="forge-selection">${gear.map(item=>`<button type="button" class="forge-gear ${item.uid===selected?'selected':''}" data-action="forge-pick" data-uid="${item.uid}" data-screen="${screen}" aria-pressed="${item.uid===selected}"><span class="item-slot">${img(artwork(forgeItemInfo(item)))}</span><span><b>${esc(name(item))}</b><small>${forgeItemInfo(item).grade} · +${item.enchant}</small>${stateTags(item)}</span></button>`).join('')||'<p class="note">Подходящих предметов пока нет. Создайте их в кузнице.</p>'}</div>`;
+  }
+  function summary(item) {
+    if(!item)return '<p class="note">Выберите предмет.</p>';
+    const labels={pAtk:'Физ. атака · P. Atk',mAtk:'Маг. атака · M. Atk',pDef:'Физ. защита · P. Def',mDef:'Маг. защита · M. Def',castingSpeed:'Скорость магии'};
+    return `<div class="inset">${row('Предмет',esc(forgeItemInfo(item).name))}${row('Грейд',forgeItemInfo(item).grade)}${row('Состояние',stateTags(item))}${Object.entries(forgeItemStats(item)).map(([key,value])=>row(labels[key]||key,fmt(value))).join('')}${item.sa?row('SA',SA_OPTIONS[item.sa].effect):''}${item.shoulder?row('Плечи',`${DYNASTY_PROFILES[item.shoulder.profile].name} · ${item.shoulder.tier}`)+row('Бонус плеч',item.equipped&&dynastySetActive(getState())?'Активен':'Нужен надетый полный комплект')+'<p class="note">Эффект плеч требует полного комплекта Династии: нагрудник, шлем, перчатки и сапоги.</p>':''}</div>`;
+  }
+  function costs(cost={}) {
+    const state=getState();
+    return `<div class="inset forge-cost">${cost.gold?row('Адена',`${fmt(state.gold)} / ${fmt(cost.gold)}`,state.gold<cost.gold?'negative':''):''}${cost.aa?row('Древняя адена · AA',`${fmt(state.aa)} / ${fmt(cost.aa)}`,state.aa<cost.aa?'negative':''):''}${Object.entries(cost.materials||{}).map(([key,count])=>row(MATERIAL_NAMES[key],`${fmt(state.materials[key]||0)} / ${fmt(count)}`,(state.materials[key]||0)<count?'negative':'')).join('')}${Object.entries(cost.soulCrystals||{}).map(([key,count])=>row(`Кристалл души · ${key}`,`${state.soulCrystals[key]||0} / ${count}`)).join('')}</div>`;
+  }
+  const warning = preview => preview.reason?`<p class="note negative">${esc(preview.reason)}</p>`:'';
+  const message = () => lastResult?`<div class="result forge-operation-result" role="status">${esc(lastResult)}</div>`:'';
+  const balance = () => `<div class="forge-wallet"><span>Адена <b>${fmt(getState().gold)}</b></span><span>AA <b>${fmt(getState().aa)}</b></span></div>`;
+  const equippedControl = item => item?`${warning(equipPreview(getState(),item.uid))}<div class="actions">${button(item.equipped?'Снять предмет':'Надеть предмет',`forge-equip-${item.uid}`,'',!equipPreview(getState(),item.uid).allowed)}</div>`:'';
+  function sa() {
+    const state=getState(),item=forgeGear(state,saUid),info=forgeItemInfo(item),preview=saPreview(state,saUid,saId);
+    return windowHtml('Кузнец · Кристалл души',`${gearList(item=>forgeItemInfo(item).type==='weapon',saUid,'sa')}${summary(item)}${equippedControl(item)}${section('Особая способность · один SA')}<div class="forge-options">${(info?.sa||[]).map(id=>`<button type="button" class="forge-option ${id===saId?'selected':''}" data-action="sa-option" data-value="${id}" aria-pressed="${id===saId}"><span class="soul-crystal ${SA_OPTIONS[id].color}">◆</span><span><b>${SA_OPTIONS[id].name}</b><small>${SA_OPTIONS[id].effect} · ${SA_OPTIONS[id].color}, ступень ${info.stage}</small></span></button>`).join('')}</div>${section('До → после')}<div class="inset">${row('SA',`${item?.sa?SA_OPTIONS[item.sa].name:'Не установлен'} → ${SA_OPTIONS[saId].name}`)}${row('Заточка',`+${item?.enchant||0} → +${item?.enchant||0}`)}${row('Результат',SA_OPTIONS[saId].effect)}</div>${section('Требуется для установки')}${costs(preview.cost)}${warning(preview)}${message()}<p class="note">SA, Masterwork и аугментация — отдельные улучшения. Снятие SA стоит 30 000 адены; кристалл не возвращается.</p><div class="actions">${button('Снять SA','sa-remove','',!item?.sa||item.equipped||state.gold<30000)}${button('Установить SA','sa-install','primary',!preview.allowed)}</div><div class="actions">${button('Характеристики','status')}</div>`);
+  }
+  function masterwork() {
+    const state=getState(),item=forgeGear(state,mwUid),info=forgeItemInfo(item),preview=masterworkPreview(state,mwUid);
+    return windowHtml('Маммон · Создание Masterwork',`${gearList(item=>item.quality!=='ordinary',mwUid,'masterwork')}${summary(item)}${section('Foundation → Masterwork')}<div class="forge-transform"><span>Заготовка<br><b>Foundation</b></span><em>→</em><span>Обработанный предмет<br><b class="gold">Masterwork</b></span></div><p class="note">Foundation получается при крафте. До обработки заготовку нельзя надеть. Качество и печать независимы: запечатанный Foundation станет запечатанным Masterwork.</p>${section('Особый бонус предмета')}<div class="inset">${Object.entries(info?.masterwork||{}).map(([key,value])=>row(({mAtk:'М. атака',mDef:'М. защита',castingSpeed:'Скорость магии'})[key]||key,'+'+value,'positive')).join('')}${row('Заточка / SA / плечи','Сохраняются')}${row('Печать',item?.sealed?'Сохранится':'Без печати')}</div>${section('Материалы Маммона')}${costs(preview.cost)}${warning(preview)}${message()}<div class="actions">${button('Крафт','craft')}${button('Обработать','mw-refine','primary',!preview.allowed)}</div><div class="actions">${button('Распечатка','unseal')}</div>`);
+  }
+  function craft() {
+    const state=getState(),preview=craftPreview(state,recipeId),info=FORGE_CATALOG[recipeId];
+    return windowHtml('Кузница · Запечатанный крафт',`<div class="forge-flow"><span>Рецепт</span><em>→</em><span>Крафт</span><em>→</em><span>Печать</span></div><div class="forge-selection">${FORGE_RECIPES.map(recipe=>`<button type="button" class="forge-gear ${recipe.id===recipeId?'selected':''}" data-action="forge-recipe" data-value="${recipe.id}"><span class="item-slot">${img(artwork(FORGE_CATALOG[recipe.id]))}</span><span><b>${FORGE_CATALOG[recipe.id].name}</b><small>${FORGE_CATALOG[recipe.id].grade} · рецепт ${recipe.rate}%</small></span></button>`).join('')}</div>${section('Выбранный рецепт')}<div class="inset">${row('Результат',esc(info.name))}${row('Обычный результат','Запечатанный предмет')}${row('Редкий результат','Запечатанный Foundation')}${row('Успех крафта',preview.recipe.rate+' %')}${row('Foundation при успехе',preview.recipe.foundationRate+' % · пример')}</div>${section('Будет потрачено за попытку')}${costs(preview.cost)}<p class="note">При неудаче расходуются материалы и адена. Foundation сначала обрабатывается в Masterwork, затем снимается печать.</p>${warning(preview)}${craftResult}<div class="forge-demo-actions">${button('Обычный · пример','craft-ordinary','primary',!preview.allowed)}${button('Foundation · пример','craft-foundation','',!preview.allowed)}${button('Неудача · пример','craft-failure','',!preview.allowed||preview.recipe.rate===100)}</div><div class="actions">${button('Masterwork','masterwork')}${button('Распечатка','unseal')}</div><p class="note">Выбор исхода служит для просмотра макета. Реальные рецепты и вероятность определяются сервером.</p>`);
+  }
+  function unseal() {
+    const state=getState(),item=forgeGear(state,unsealUid),preview=unsealPreview(state,unsealUid),info=forgeItemInfo(item);
+    return windowHtml('Распечатка · Маммон / Ишума',`<div class="forge-service"><b>${['S80','S84'].includes(info?.grade)?'Маэстро Ишума':'Кузнец Маммон'}</b><span>${['S80','S84'].includes(info?.grade)?'Gemstone S + обычная адена':'Древняя адена · AA'}</span></div>${gearList(item=>forgeItemInfo(item).type!=='weapon',unsealUid,'unseal')}${summary(item)}${section('Снятие печати')}<div class="forge-transform"><span>Запечатанный<br><b>${info?.grade||'—'}</b></span><em>→</em><span>Доступен для экипировки<br><b class="positive">Без печати</b></span></div><p class="note">Заточка, Masterwork и остальные свойства сохраняются. У Foundation сначала завершите обработку. Повторная распечатка не расходует ресурсы.</p>${section('Требуется для выбранного предмета')}${costs(preview.cost)}${warning(preview)}${message()}<div class="actions">${button('Камни → AA','aa')}${button('Распечатать','forge-unseal','primary',!preview.allowed)}</div>${equippedControl(item)}`);
+  }
+  function catacombs() {
+    const state=getState(),zone=CATACOMBS.find(zone=>zone.id===zoneId);
+    const allowed=state.level>=zone.level&&state.energy>=zone.energy&&state.hp>zone.damage;
+    return windowHtml('Катакомбы · Камни печати',`<div class="catacomb-art" style="background-image:linear-gradient(transparent,#111a11),url('../webapp/art/hunt/zones/a-480.webp')"><span>SEVEN SIGNS</span><h3>${zone.name}</h3><small>Уровень ${zone.level}+ · Нежить и хранители печати</small></div><div class="forge-options">${CATACOMBS.map(z=>`<button type="button" class="forge-option ${z.id===zoneId?'selected':''}" data-action="catacomb-zone" data-value="${z.id}"><span class="zone-level">${z.level}</span><span><b>${z.name}</b><small>Энергия ${z.energy} · урон за бой ${z.damage}</small></span></button>`).join('')}</div><div class="inset">${row('Уровень героя',state.level)}${row('HP',fmt(state.hp))}${row('Энергия похода',state.energy+' / 12')}</div>${section('Награда победы · демонстрационная')}<div class="seal-stone-grid">${Object.entries(SEAL_STONES).map(([key,stone])=>`<div class="seal-stone-cell"><span style="--stone-color:${stone.color}">◆</span><b>+${zone[key]}</b><small>${stone.name}</small></div>`).join('')}</div><p class="note">Победа расходует энергию и HP, добавляет камни в общий инвентарь. Кристаллы души для SA и Gemstone S — другие материалы.</p>${farmResult}<div class="actions">${button('Обменять на AA','aa')}${button('Победа · пример','catacomb-farm','primary',!allowed)}</div>${!allowed?'<p class="note negative">Проверьте уровень, HP и оставшуюся энергию. Для нового примера нажмите «Сбросить пример».</p>':''}`);
+  }
+  function aa() {
+    const state=getState(),preview=sealExchangePreview(state,exchangeCounts);
+    return windowHtml('Жрец · Обмен камней на AA',`${balance()}<p class="note">Камни печати из катакомб обмениваются на древнюю адену. В адаптации WhitesLove обмен доступен постоянно.</p><div class="seal-exchange-list">${Object.entries(SEAL_STONES).map(([key,stone])=>`<label class="seal-exchange-row"><span class="seal-glyph" style="--stone-color:${stone.color}">◆</span><span><b>${stone.name}</b><small>Есть ${fmt(state.seals[key])} · 1 = ${stone.rate} AA</small></span><input type="number" min="0" max="${state.seals[key]}" step="1" data-seal-count="${key}" aria-label="Количество: ${stone.name}" value="${exchangeCounts[key]}"></label>`).join('')}</div><div class="actions">${button('Все камни','aa-all')}${button('Очистить','aa-clear')}</div>${section('Итог обмена')}<div class="inset">${row('Получите','<span id="aa-reward">'+fmt(preview.aa)+'</span> AA')}${row('После обмена','<span id="aa-after">'+fmt(state.aa+preview.aa)+'</span> AA')}</div><p class="note negative" id="aa-reason">${preview.reason}</p><p class="note">AA используется для распечатки A/S. Для S80/S84 нужны Gemstone S и обычная адена; эти валюты не подменяют друг друга.</p>${message()}<div class="actions">${button('Катакомбы','catacombs')}${button('Обменять','aa-exchange','primary',!preview.allowed)}</div><div class="actions">${button('К распечатке','unseal')}</div>`);
+  }
+  function shoulders() {
+    const state=getState(),item=forgeGear(state,shoulderUid),nextTier=item?.shoulder?.tier===1?2:1,preview=shoulderPreview(state,shoulderUid,profile,nextTier);
+    return windowHtml('Династия · Наплечники',`${gearList(item=>forgeItemInfo(item).set==='dynasty'&&forgeItemInfo(item).slot==='body',shoulderUid,'shoulders')}${summary(item)}${equippedControl(item)}${section('Специализация нагрудника')}<div class="forge-options">${Object.entries(DYNASTY_PROFILES).map(([id,p])=>`<button type="button" class="forge-option ${profile===id?'selected':''}" data-action="shoulder-profile" data-value="${id}" aria-pressed="${id===profile}"><span class="item-slot">${img(ui('shield'))}</span><span><b>${p.name}</b><small>${p.text}${p.family!==state.family?' · другой класс':''}</small></span></button>`).join('')}</div><div class="forge-flow"><span>Мантия Династии</span><em>→</em><span>Плечи I</span><em>→</em><span>Плечи II</span></div><p class="note">Плечи — улучшение нагрудника, а не отдельный слот экипировки. Эссенция I открывает специализацию, эссенция II усиливает её. Заточка и качество сохраняются.</p><div class="inset">${row('Следующая ступень',nextTier===2?'Плечи II':'Плечи I')}${row('Специализация',DYNASTY_PROFILES[profile].name)}${row('Бонус I',DYNASTY_PROFILES[profile].text)}${row('Бонус II',profile==='enchanter'?'М. атака +12%, скорость магии +7,5%':'MP +12%, сила лечения +7,5%')}</div>${section('Требуется для улучшения')}${costs(preview.cost)}${warning(preview)}${message()}<div class="actions">${button('Распечатка','unseal')}${button(nextTier===2?'Улучшить до II':'Установить плечи I','shoulder-install','primary',!preview.allowed)}</div><div class="actions">${button('Характеристики','status')}</div>`);
+  }
+  function inventorySection() {
+    const state=getState();
+    return `${section('Предметы кузницы · общее состояние')}<div class="forge-bag">${state.gear.map(item=>`<div class="forge-bag-item"><span class="item-slot">${img(artwork(forgeItemInfo(item)))}</span><div><b>${esc(name(item))}</b>${stateTags(item)}<small>${Object.entries(forgeItemStats(item)).map(([key,value])=>`${key} ${value}`).join(' · ')}</small>${!equipPreview(state,item.uid).allowed?`<small class="negative">${esc(equipPreview(state,item.uid).reason)}</small>`:''}</div><button type="button" data-action="forge-equip-${item.uid}" ${!equipPreview(state,item.uid).allowed?'disabled':''}>${item.equipped?'Снять':'Надеть'}</button></div>`).join('')}</div><div class="forge-shortcuts">${button('Крафт','craft')}${button('Распечатка','unseal')}${button('SA','sa')}${button('Плащи РБ','cloaks')}${button('Эпик → Blessed','epics')}</div>`;
+  }
+  function bonusRows(bonus) {
+    const labels={maxHp:'Максимум HP',maxMp:'Максимум MP',mpRegen:'Восстановление MP',healPower:'Сила лечения',waterResist:'Защита от воды',darkResist:'Защита от тьмы',fireResist:'Защита от огня',mentalResist:'Ментальная защита, %',physicalCrit:'Физ. крит, %',evasion:'Уклонение',mAtkMul:'М. атака',attackSpeedMul:'Скорость атаки',castingSpeedMul:'Скорость магии'};
+    return Object.entries(bonus||{}).map(([key,value])=>row(labels[key]||key,'+'+fmt(key.endsWith('Mul')?value*100:value)+(key.endsWith('Mul')?'%':''),'positive')).join('');
+  }
+  function cloaks() {
+    const state=getState(),info=FORGE_CATALOG[cloakId],item=forgeGear(state,cloakUid),setId=fullHighGradeSet(state),set=ARMOR_SETS[setId||'dynasty'];
+    const progress=set.slots.map(slot=>{const labels={body:'Нагрудник',helmet:'Шлем',gloves:'Перчатки',boots:'Сапоги'};const present=state.gear.some(i=>i.equipped&&!i.sealed&&i.quality!=='foundation'&&forgeItemInfo(i)?.set===(setId||'dynasty')&&forgeItemInfo(i).slot===slot);return row(labels[slot],present?'Надето':'Не хватает',present?'positive':'negative');}).join('');
+    return windowHtml('Плащи · Наследие рейд-боссов',`${section('Слот плаща · полный комплект S80+')}<div class="inset">${row('Слот',setId?'Открыт · '+set.name:'Закрыт',setId?'positive':'negative')}${progress}</div><p class="note">Все части одного комплекта должны быть надеты и распечатаны. При снятии или замене части плащ автоматически снимается. В примере доступны Династия и Элегия.</p><div class="forge-options">${Object.entries(FORGE_CATALOG).filter(([,i])=>i.type==='cloak').map(([id,i])=>`<button type="button" class="forge-option ${cloakId===id?'selected':''}" data-action="cloak-option" data-value="${id}"><span class="item-slot">${img(artwork(i))}</span><span><b>${i.name}</b><small>${i.grade} · ${i.boss}</small></span></button>`).join('')}</div>${section(info.name)}<div class="inset">${row('Грейд',info.grade)}${row('Физ. защита',info.stats.pDef)}${bonusRows(info.bonus)}${row('Особый навык',info.call)}${row('Откат призыва','30 минут')}${row('Заточка / SA / аугментация','Недоступны')}</div><p class="note">Дроп РБ: запечатанный плащ, после распечатки можно передавать. Душевный плащ: квестовая версия, без печати, привязана к персонажу. Навык призыва показан в карточке; телепортация в макете не выполняется.</p>${section('Получение · демонстрация')}<div class="actions">${button('Дроп РБ · пример','cloak-drop','primary')}${button('Квест · пример','cloak-soul')}</div>${gearList(i=>forgeItemInfo(i).type==='cloak',cloakUid,'cloaks')}${item?summary(item)+row('Передача',item.bound||item.sealed?'Недоступна':'Разрешена')+equippedControl(item):''}${item?.sealed?costs(unsealPreview(state,item.uid).cost)+`<p class="note">Распечатка у Ткача · обычная адена. Цена — пример.</p><div class="actions">${button('Снять печать','cloak-unseal','primary',!unsealPreview(state,item.uid).allowed)}</div>`:''}${message()}<div class="actions">${button('Крафт комплекта','craft')}${button('Инвентарь','inventory')}</div>`);
+  }
+  function epics() {
+    const state=getState(),info=FORGE_CATALOG[epicId],item=forgeGear(state,epicUid),selected=forgeItemInfo(item)||info,preview=blessedEpicPreview(state,epicUid);
+    return windowHtml('Эпическая бижутерия · Blessed',`<p class="note">Фрея и Белеф добавлены в каталог. Универсальное улучшение всех эпиков — адаптация WhitesLove. Бонусы и цена ниже демонстрационные.</p><div class="forge-selection">${Object.entries(FORGE_CATALOG).filter(([,i])=>i.epic).map(([id,i])=>`<button type="button" class="forge-gear ${id===epicId?'selected':''}" data-action="epic-option" data-value="${id}"><span class="item-slot">${img(artwork(i))}</span><span><b>${i.name}</b><small>${i.grade} · ${i.boss}</small></span></button>`).join('')}</div><div class="actions">${button('Дроп эпика · пример','epic-drop','primary')}</div>${gearList(i=>forgeItemInfo(i).epic,epicUid,'epics')}${section('Обычный → Blessed')}<div class="inset">${row('Эпик',selected.name)}${row('Маг. защита',`${selected.stats.mDef} → ${selected.blessed.stats.mDef}`)}${row('Заточка',`+${item?.enchant||0} → +${item?.enchant||0}`)}${row('Предмет / привязка','Сохраняются')}${row('Результат','Blessed · '+selected.name)}</div>${section('Бонусы обычного эпика')}<div class="inset">${bonusRows(selected.bonus)}</div>${section('Бонусы Blessed')}<div class="inset">${bonusRows(selected.blessed.bonus)}</div><p class="note">Благословение заменяет обычные бонусы усиленными. Нужна бутыль души именно этого РБ; SA-кристалл и камни катакомб её не заменяют. Предмет требуется снять.</p>${item?summary(item)+equippedControl(item)+costs(preview.cost):'<p class="note">Получите эпик для демонстрации улучшения.</p>'}${warning(preview)}${message()}<div class="actions">${button('Улучшить до Blessed','epic-bless','primary',!preview.allowed)}${button('Характеристики','status')}</div>`);
+  }
+  function handle(action,node) {
+    const state=getState();let result;
+    if(action==='forge-pick'){const screen=node.dataset.screen;if(screen==='sa')saUid=node.dataset.uid;if(screen==='masterwork')mwUid=node.dataset.uid;if(screen==='unseal')unsealUid=node.dataset.uid;if(screen==='shoulders')shoulderUid=node.dataset.uid;if(screen==='cloaks')cloakUid=node.dataset.uid;if(screen==='epics'){epicUid=node.dataset.uid;epicId=forgeGear(state,epicUid).templateId;}lastResult='';return true;}
+    if(action==='cloak-option'){cloakId=node.dataset.value;cloakUid=state.gear.find(i=>i.templateId===cloakId)?.uid||null;lastResult='';return true;}
+    if(action==='epic-option'){epicId=node.dataset.value;epicUid=state.gear.find(i=>i.templateId===epicId)?.uid||null;lastResult='';return true;}
+    if(action==='sa-option'){saId=node.dataset.value;lastResult='';return true;}
+    if(action==='forge-recipe'){recipeId=node.dataset.value;craftResult='';return true;}
+    if(action==='shoulder-profile'){profile=node.dataset.value;lastResult='';return true;}
+    if(action==='catacomb-zone'){zoneId=node.dataset.value;farmResult='';return true;}
+    if(action.startsWith('forge-equip-'))result=equipForgeItem(state,action.slice('forge-equip-'.length));
+    else if(action==='sa-install')result=installSa(state,saUid,saId);
+    else if(action==='sa-remove')result=removeSa(state,saUid);
+    else if(action==='mw-refine'){result=refineMasterwork(state,mwUid);if(result.ok)unsealUid=mwUid;}
+    else if(action==='forge-unseal')result=unsealForgeItem(state,unsealUid);
+    else if(action==='cloak-drop'||action==='cloak-soul'){result=addRaidReward(state,cloakId,action==='cloak-soul'?'soul':'drop');if(result.ok)cloakUid=result.item.uid;}
+    else if(action==='cloak-unseal')result=unsealForgeItem(state,cloakUid);
+    else if(action==='epic-drop'){result=addRaidReward(state,epicId);if(result.ok)epicUid=result.item.uid;}
+    else if(action==='epic-bless')result=blessEpic(state,epicUid);
+    else if(action==='shoulder-install'){const item=forgeGear(state,shoulderUid);result=installShoulder(state,shoulderUid,profile,item?.shoulder?.tier===1?2:1);}
+    else if(action.startsWith('craft-')){result=craftForgeItem(state,recipeId,action.slice(6));if(result.ok){craftResult=`<div class="result ${result.failed?'fail':''}" role="status">${result.failed?'Крафт не удался. Материалы потрачены.':esc(name(result.item))+' создан. Предмет добавлен в инвентарь.'}</div>`;if(result.item){unsealUid=result.item.uid;if(result.item.quality==='foundation')mwUid=result.item.uid;}}}
+    else if(action==='catacomb-farm'){result=farmCatacomb(state,zoneId);if(result.ok)farmResult=`<div class="result" role="status">Победа! Камни печати добавлены: ${Object.entries(result.drops).map(([key,count])=>`${SEAL_STONES[key].name} +${count}`).join(', ')}.</div>`;}
+    else if(action==='aa-all'){exchangeCounts={...state.seals};lastResult='';return true;}
+    else if(action==='aa-clear'){exchangeCounts={blue:0,green:0,red:0};lastResult='';return true;}
+    else if(action==='aa-exchange'){result=exchangeSealStones(state,exchangeCounts);if(result.ok){exchangeCounts={blue:0,green:0,red:0};lastResult=`Получено ${fmt(result.aa)} AA.`;}}
+    else return false;
+    if(result?.ok){if(!['aa-exchange','catacomb-farm'].includes(action)&&!action.startsWith('craft-'))lastResult=result.removedCloaks?.length?'Комплект разобран. Плащ снят и остался в инвентаре.':'Готово. Предмет и ресурсы обновлены.';toast(result.failed?'Показан неудачный исход крафта.':'Демонстрационное состояние обновлено.');}
+    else toast(result?.reason||'Действие недоступно.');
+    return true;
+  }
+  function input(node) {
+    const key=node.dataset.sealCount;if(!key)return false;
+    exchangeCounts[key]=node.value===''?0:Number(node.value);
+    const preview=sealExchangePreview(getState(),exchangeCounts);
+    document.getElementById('aa-reward').textContent=fmt(preview.aa);document.getElementById('aa-after').textContent=fmt(getState().aa+preview.aa);
+    document.getElementById('aa-reason').textContent=preview.reason;
+    document.querySelector('[data-action="aa-exchange"]').disabled=!preview.allowed;return true;
+  }
+  function reset(){saUid='forge-0';saId='acumen';mwUid='forge-1';unsealUid='forge-3';shoulderUid='forge-2';profile='enchanter';recipeId='dynastyGloves';zoneId='witch';exchangeCounts={blue:0,green:0,red:0};craftResult='';farmResult='';lastResult='';cloakId='cloakFreya';cloakUid=null;epicId='freya';epicUid=null;}
+  return {renderers:{sa,masterwork,craft,unseal,catacombs,aa,shoulders,cloaks,epics},handle,input,reset,inventorySection,balance};
+}
+
+
+const screens = [
+  ['city','Город','Компактная шапка: герой, CP / HP / MP, четыре валюты и тонкие шкалы опыта и Vitality.'],
+  ['cloaks','Плащи РБ','Полный комплект S80+ открывает слот. Плащи Закена, Фреи и Фринтеззы: дроп, распечатка и душевная версия.'],
+  ['epics','Эпики · Blessed','Фрея, Белеф и остальные эпики. Сравнение обычной и Blessed версии, бутыль души соответствующего РБ.'],
+  ['status','Состояние','Плотное окно характеристик. SP находится здесь; базовые параметры отделены от боевых.'],
+  ['inventory','Инвентарь','Персонаж между слотами экипировки, фильтры предметов и сетка с грейдом, заточкой и количеством.'],
+  ['item','Предмет','Информационная карточка: свойства, прибавки от заточки, комплект и особые эффекты.'],
+  ['trade','Торговая лавка','Выбор из инвентаря → слоты продажи → цена за штуку → итог перед открытием лавки.'],
+  ['tattoos','Тату и краски','Три символа, краски с обменом характеристик и точное сравнение до нанесения.'],
+  ['weapon','Заточка оружия','Предмет и свиток, шанс, материалы, последствия неудачи и результат попытки.'],
+  ['skills','Заточка навыков','Выбор навыка и пути, сравнение до / после, необходимые книги, SP и золото.'],
+  ['sa','SA · Кристалл души','Особая способность оружия: цвет и ступень кристалла, установка и снятие, сохранение заточки.'],
+  ['masterwork','Masterwork','Редкая заготовка Foundation превращается в Masterwork. Печать и особый бонус показаны отдельно.'],
+  ['craft','Запечатанный крафт','Рецепт, материалы и исходы крафта: обычная запечатанная вещь, Foundation или неудача.'],
+  ['unseal','Распечатка','Маммон: A/S за древнюю адену. Ишума: S80/S84 за Gemstone S и обычную адену.'],
+  ['catacombs','Катакомбы','Походы за синими, зелёными и красными камнями печати. Общие запасы, энергия и HP.'],
+  ['aa','Обмен на AA','Камни печати → древняя адена. Выбор количества, курс и итог перед обменом.'],
+  ['shoulders','Плечи Династии','Специализация нагрудника через эссенцию I, улучшение эссенцией II и влияние на характеристики.'],
+];
+const $ = id => document.getElementById(id);
+const fmt = value => new Intl.NumberFormat('ru-RU').format(value);
+const esc = value => String(value).replace(/[&<>"']/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const ui = name => `../webapp/art/ui/v1/${({'flask-conical':'potion-mp',castle:'palace','user-round':'spirit',dices:'dice-icon','shopping-cart':'shopping-basket'})[name]||name}-128.webp`;
+const art = name => `../webapp/art/items/v1/catalog-s80-${name}-128.webp`;
+const img = (url,cls='') => `<img src="${url}" class="${cls}" alt="" decoding="async">`;
+const row = (label,value,cls='') => `<div class="stat-row"><span>${label}</span><b class="${cls}">${value}</b></div>`;
+const section = title => `<div class="section-label"><span>${title}</span></div>`;
+const button = (label,action,cls='',disabled=false) => `<button type="button" class="l2-button ${cls}" data-action="${action}" ${disabled?'disabled':''}>${label}</button>`;
+const windowHtml = (title,body,meta='') => `<article class="window"><header class="window-title">${title}${meta?`<small>${meta}</small>`:''}<button type="button" data-action="close" aria-label="Закрыть окно">×</button></header><div class="window-body">${body}</div></article>`;
+const items = [
+  { name:'Меч Архангела', type:'weapon',url:art('weapon-onehandedsword'),grade:'S',enchant:6,pAtk:350,mAtk:256 },
+  { name:'Посох Звёздного света',type:'weapon',url:ui('staff'),grade:'S',enchant:4 },
+  { name:'Мантия Элегии',type:'armor',url:art('armor-robe-fullbody'),grade:'S80' },
+  { name:'Шлем Элегии',type:'armor',url:art('armor-robe-helmet'),grade:'S80' },
+  { name:'Перчатки Элегии',type:'armor',url:art('armor-robe-gloves'),grade:'S80' },
+  { name:'Кольцо Элегии',type:'jewelry',url:art('jewelry-ring'),grade:'S80' },
+  { name:'Свиток заточки',type:'other',url:'../webapp/art/icons/scroll-128.webp',count:24 },
+  { name:'Благословенный свиток',type:'other',url:'../webapp/art/icons/scroll-blessed-128.webp',count:8 },
+  { name:'Кристалл атрибута',type:'other',url:'../webapp/art/icons/attr-crystal-128.webp',count:12 },
+  { name:'Книга гигантов',type:'other',url:ui('book-open'),count:3 },
+  { name:'Зелье защиты',type:'other',url:ui('potion-shield'),count:30 },
+  { name:'Кристаллы',type:'other',url:ui('crystal'),count:1650 },
+];
+function slot(item,index,selected=false,action='select-item') {
+  if (!item) return '<div class="item-slot empty" aria-hidden="true"></div>';
+  return `<button type="button" class="item-slot ${selected?'selected':''}" data-action="${action}" data-index="${index}" aria-label="${esc(item.name)}${item.enchant?' +'+item.enchant:''}" aria-pressed="${selected}">${img(item.url)}${item.enchant?`<b class="enchant">+${item.enchant}</b>`:''}${item.grade?`<b class="grade">${item.grade}</b>`:''}${item.count?`<b class="count">${fmt(item.count)}</b>`:''}</button>`;
+}
+let active = 'city', filter = 'all', chosen = 0, trade = [], prices = {}, shopOpen = false;
+let dyeId = 'wit-men', tattooMode = 'apply', pendingRemoval = null;
+let scroll = 'blessed', weaponLevel = 6, weaponResult = '', skillLevel = 2, route = 'power', skillResult = '', skillId = 0, skillTab = 'active';
+let weaponDestroyed = false;
+let skillLevels = [2,2];
+const freshState = () => ({ ...createForgeState(),base:{STR:22,DEX:21,CON:27,INT:41,WIT:20,MEN:39},symbols:[],stock:Object.fromEntries(DYES.map(dye=>[dye.id,30])),sp:9200000,books:3,scrolls:{normal:24,blessed:8} });
+let model = freshState();
+function meter(label,current,max) { return `<div class="top-bar ${label.toLowerCase()}"><span>${label}</span><div class="top-bar-track"><i style="width:${current/max*100}%"></i><b>${fmt(current)} / ${fmt(max)}</b></div></div>`; }
+function city() {
+  const currencies = [['coin',33000,'Золото'],['crystal',1650,'Кристаллы'],['luck',0,'Монеты удачи'],['ore',165,'Руда']];
+  return `<div class="city-demo"><header class="top-hud is-city-compact" aria-label="Состояние персонажа"><div class="th-frame"><div class="th-id"><button type="button" class="hero-portrait-shell top-portrait" data-action="status" aria-label="Персонаж"></button><div class="th-level">24</div><div class="th-name"><strong>White Amorality</strong><div class="th-sub"><small>Маг</small></div></div><div class="th-btns"><button type="button" class="top-icon" data-action="mail" aria-label="Почта">${img(ui('mail'))}</button><button type="button" class="top-icon" data-action="settings" aria-label="Настройки">${img(ui('settings'))}</button></div></div><div class="th-bars">${meter('CP',10589,10589)}${meter('HP',49773,49773)}${meter('MP',16211,16211)}</div><div class="top-resources">${currencies.map(([key,value,label])=>`<div class="top-res">${img(key==='luck'?'../webapp/art/world/v1/currency/luck-coin-128.webp':ui(key))}<strong title="${label}: ${fmt(value)}">${fmt(value)}</strong>${key==='ore'?'<i></i>':`<button class="resource-plus" type="button" data-action="currency" aria-label="Пополнить: ${label}">+</button>`}</div>`).join('')}</div><div class="th-foot"><div class="th-charges"><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="th-thin"><div class="top-bar exp"><div class="top-bar-track"><i style="width:62%"></i></div></div><div class="top-bar vit"><div class="top-bar-track"><i style="width:90%"></i></div></div></div></div></div></header><div class="city-landscape"><h2>WhitesLove</h2><small>GAME</small><p>Больше, чем игра — наше королевство</p><div class="city-quest-demo">${img(ui('coin'))}<div><strong>Урожай готов</strong><small>Собери ресурсы золотой шахты</small></div></div></div><nav class="city-nav-demo" aria-label="Разделы">${[['city','castle','Город'],['status','user-round','Герой'],['weapon','swords-icon','Бой'],['skills','dices','Игры'],['inventory','users','Клан'],['trade','shopping-cart','Магазин']].map(([id,key,label])=>`<button type="button" class="${id==='city'?'active':''}" data-action="${id}">${img(ui(key))}<span>${label}</span></button>`).join('')}</nav></div>`;
+}
+function status() {
+  const stats = tattooStats(model.base,model.symbols);
+  const combat=forgeCombatStats(model,stats);
+  const combatRows=[['pAtk','Физ. атака · P. Atk'],['mAtk','Маг. атака · M. Atk'],['pDef','Физ. защита · P. Def'],['mDef','Маг. защита · M. Def'],['attackSpeed','Скорость атаки'],['castingSpeed','Скорость магии'],['accuracy','Точность'],['evasion','Уклонение'],['physicalCrit','Физ. крит, %'],['magicalCrit','Маг. крит, %'],['moveSpeed','Скорость бега'],['mpRegen','Восстановление MP']];
+  return windowHtml('Состояние персонажа',`<div class="item-head"><div class="item-slot" style="width:44px">${img('../webapp/art/classes/mage-male.webp')}</div><div><h3>White Amorality</h3><p>Маг · Уровень ${model.level}</p></div></div><div class="th-bars" style="margin:12px 0">${meter('CP',combat.maxCp,combat.maxCp)}${meter('HP',Math.min(model.hp,combat.maxHp),combat.maxHp)}${meter('MP',combat.maxMp,combat.maxMp)}</div>${row('Опыт','62,00 %')}${row('SP',fmt(model.sp))}${row('Vitality','×15 · 18 000')}${section('Боевые характеристики · раздельные значения')}<div class="combat-detail-grid">${combatRows.map(([key,label])=>`<div class="combat-detail"><span>${label}</span><strong data-combat-stat="${key}">${fmt(combat[key])}</strong></div>`).join('')}</div><p class="note">В примере учитываются надетые вещи кузницы, их заточка, SA, Masterwork, плечи и тату. Формулы и бонусы — адаптация для WhitesLove.</p>${forgeWindows.balance()}${section('Базовые параметры')}<div class="attributes">${Object.entries(stats).map(([key,value])=>`<div class="attribute"><small>${key}</small><b>${value}</b>${value!==model.base[key]?`<small class="positive">${model.base[key]} ${value>model.base[key]?'+':''}${value-model.base[key]}</small>`:''}</div>`).join('')}</div>${section('Нанесённые символы')}<div class="tattoo-slots">${[0,1,2].map(index=>{const dye=DYES.find(d=>d.id===model.symbols[index]);return `<div class="tattoo-slot"><span>${dye?dyeIcon(dye):""}</span><small>${dye?`${dye.plus} +4 / ${dye.minus} −4`:'Пустой слот'}</small></div>`;}).join('')}</div><div class="actions">${button('Инвентарь','inventory')}${button('Тату и краски','tattoos','primary')}</div>`);
+}
+function filters() { return `<div class="tabs" aria-label="Категории предметов">${[['all','Все'],['weapon','Оружие'],['armor','Броня'],['jewelry','Биж.'],['other','Прочее']].map(([id,label])=>`<button type="button" data-action="filter" data-value="${id}" class="${id===filter?'active':''}" aria-pressed="${id===filter}">${label}</button>`).join('')}</div>`; }
+function itemCard(item=items[chosen]) {
+  return `<div class="tooltip"><div class="item-head"><div class="item-slot">${img(item.url)}</div><div><h3><span class="gold">${item.enchant?'+'+item.enchant+' ':''}</span>${item.name}</h3><p>${item.type==='weapon'?'Оружие / Одноручное':item.type==='armor'?'Доспех / Магический':item.type==='jewelry'?'Бижутерия':'Расходуемый предмет'} ${item.grade?'· '+item.grade:''}</p></div></div>${item.type==='weapon'?`${row('Физ. атака','350 <span class="muted">(292</span> <span class="positive">+58</span><span class="muted">)</span>')}${row('Маг. атака','256 <span class="muted">(222</span> <span class="positive">+34</span><span class="muted">)</span>')}${row('Скорость атаки','Быстро')}${row('Заряд души','×1')}${row('Вес','1 520')}`:item.type==='armor'?`${row('Физ. защита','204')}${row('Вес','4 140')}`:item.type==='jewelry'?`${row('Маг. защита','92')}${row('Вес','150')}`:row('Количество',fmt(item.count||1))}${section(item.type==='weapon'?'〈Свойство кристалла души〉':item.type==='armor'?'〈Комплект Элегии〉':'〈Свойства〉')}<p class="note">${item.type==='weapon'?'Увеличивает скорость магии на 15%. Наносит дополнительный урон в PvP.':item.type==='armor'?'INT +2, WIT +2, MEN −2. Комплект: мантия, шлем, перчатки и сапоги.':item.type==='jewelry'?'Усиливает магическую защиту персонажа.':'Материал для улучшения. Хранится в инвентаре.'}</p>${item.type==='weapon'?`${section('〈Эффекты аугментации〉')}${row('Физ. защита','+25,97')}${row('Восстановление HP','+0,29')}<p class="note gold">Нельзя продать или выбросить.</p>`:''}</div>`;
+}
+function inventory() {
+  const visible=items.map((item,index)=>({item,index})).filter(({item})=>filter==='all'||filter===item.type);
+  return windowHtml('Инвентарь',`<div class="equipment-scene"><div class="equipment-column">${[3,4,2,5,0].map(index=>slot(items[index],index,false)).join('')}</div><div class="hero-stage">${img('../webapp/art/world/v1/heroes/mage-male-512.webp')}<span>WHITE AMORALITY</span></div><div class="equipment-column">${[5,5,1].map(index=>slot(items[index],index,false)).join('')}${slot(null)}${slot(null)}</div></div>${filters()}<div class="grid">${visible.map(({item,index})=>slot(item,index,index===chosen)).join('')}${Array.from({length:Math.max(0,24-visible.length)},()=>slot(null)).join('')}</div><div class="wallet"><span>Золото <strong>${fmt(model.gold)}</strong></span><span>Вес · 18,6 % <div class="weight"><i></i></div></span></div>${itemCard()}<div class="actions">${button('Подробнее','item')}${button('Заточить','weapon','primary')}</div>`, '24 / 120');
+}
+function item() { return windowHtml('Описание предмета',itemCard()+`<div class="actions">${button('В инвентарь','inventory')}${button('Заточка','weapon','primary',items[chosen].type!=='weapon')}</div>`); }
+function tradeWindow() {
+  const total=trade.reduce((sum,index)=>sum+(prices[index]||0),0);
+  return windowHtml('Личная торговая лавка · Продажа',`${section('Выберите предметы из инвентаря')}<div class="grid">${items.slice(0,9).map((item,index)=>slot(item,index,trade.includes(index),'trade-add')).join('')}</div>${section(`Продажа · ${trade.length} / 4`)}<div class="trade-grid">${Array.from({length:4},(_,i)=>{const index=trade[i];return index===undefined?slot(null):`<div class="trade-slot">${slot(items[index],index,true,'trade-remove')}<label>Цена за 1 шт.<input type="number" min="1" max="999999999" data-price="${index}" value="${prices[index]||10000}" aria-label="Цена: ${items[index].name}" ${shopOpen?'disabled':''}></label></div>`;}).join('')}</div><p class="note">Выбрана 1 штука каждого предмета. Нажмите слот продажи, чтобы убрать предмет.</p><div class="select-row"><label for="sale-message">Сообщение лавки</label><input id="sale-message" maxlength="40" placeholder="Снаряжение для мага" ${shopOpen?'disabled':''}></div><div class="inset">${row('Вы получите',`<span id="sale-total">${fmt(total)}</span> золота`)}${row('Баланс',fmt(model.gold))}</div>${shopOpen?'<div class="sale-result">Лавка открыта в макете. Предметы выставлены; продажи здесь не происходят.</div>':''}<div class="actions">${button('Закрыть лавку','trade-stop','',!shopOpen)}${button('Открыть лавку','trade-start','primary',shopOpen||!trade.length||trade.some(i=>!prices[i]))}</div>`);
+}
+function dyeIcon(dye) { return `<span class="dye-icon" style="--dye-color:${dye.color}">${img(ui("flask-conical"))}</span>`; }
+function tattoos() {
+  const dye=DYES.find(d=>d.id===dyeId), preview=tattooPreview(model,dyeId);
+  const existing=tattooStats(model.base,model.symbols);
+  const after=pendingRemoval!==null?tattooStats(model.base,model.symbols.filter((_,index)=>index!==pendingRemoval)):preview.after;
+  return windowHtml('Мастер символов',`<div class="tabs"><button type="button" data-action="tattoo-tab" data-value="apply" class="${tattooMode==='apply'?'active':''}">Нанести символ</button><button type="button" data-action="tattoo-tab" data-value="remove" class="${tattooMode==='remove'?'active':''}">Снять символ</button></div><div class="tattoo-slots">${[0,1,2].map(index=>{const d=DYES.find(d=>d.id===model.symbols[index]);return `<div class="tattoo-slot"><span>${d?dyeIcon(d):""}</span><small>${d?`${d.plus} +4 / ${d.minus} −4`:'Свободный слот'}</small>${d&&tattooMode==='remove'?`<button type="button" data-action="remove-select" data-index="${index}">${pendingRemoval===index?'Выбран':'Выбрать'}</button>`:''}</div>`;}).join('')}</div>${tattooMode==='apply'?`${section('Краски в инвентаре')}<div>${DYES.map(d=>`<button type="button" class="dye-row ${d.id===dyeId?'selected':''}" data-action="dye" data-value="${d.id}" aria-pressed="${d.id===dyeId}">${dyeIcon(d)}<span class="dye-copy"><b>${d.name}</b><small><span class="positive">${d.plus} +4</span> / <span class="negative">${d.minus} −4</span></small></span><span class="dye-stock">${model.stock[d.id]} / 10</span></button>`).join('')}</div>`:'<p class="note">Выберите нанесённый символ. Снятие возвращает 5 красок того же типа.</p>'}${section('Характеристики · до → после')}<div class="two-col">${Object.entries(existing).map(([key,value])=>`<div class="preview-stat"><span>${key}</span><strong>${value}<em>→</em><span class="${after[key]>value?'positive':after[key]<value?'negative':''}">${tattooMode==='remove'&&pendingRemoval===null?value:after[key]}</span></strong></div>`).join('')}</div><p class="note">Бонус от тату — до +5 на характеристику. Штрафы складываются полностью; минимальное значение — 1.</p><div class="inset">${row(tattooMode==='apply'?'Нанесение':'Снятие',`${fmt(tattooMode==='apply'?TATTOO_RULES.applyFee:TATTOO_RULES.removeFee)} золота`)}${row('Баланс',fmt(model.gold))}${tattooMode==='apply'?row('Будет потрачено',`10 красок · ${dye.plus} +4 / ${dye.minus} −4`):row('Будет возвращено','5 красок')}</div>${tattooMode==='apply'&&preview.reason?`<p class="note negative">${preview.reason}</p>`:''}<div class="actions">${button('Состояние','status')}${tattooMode==='apply'?button('Нанести символ','tattoo-apply','primary',!preview.allowed):button('Подтвердить снятие','tattoo-remove','primary',pendingRemoval===null||model.gold<TATTOO_RULES.removeFee)}</div>`);
+}
+function materials(entries) { return `<div class="materials">${entries.map(([url,label,value])=>`<div class="material">${img(url)}<div>${label}<br><span class="gold">${value}</span></div></div>`).join('')}</div>`; }
+function weapon() {
+  const safe=weaponLevel<3, chance=safe?100:66, count=model.scrolls[scroll];
+  return windowHtml('Зачаровать предмет',`<div class="item-head"><div class="item-slot">${img(items[0].url)}</div><div><h3><span class="gold">+${weaponLevel}</span> Меч Архангела</h3><p>Одноручный меч · S · Надет</p></div></div><div class="select-row"><label for="scroll-type">Свиток</label><select id="scroll-type" data-select="scroll"><option value="normal" ${scroll==='normal'?'selected':''}>Обычный · ${model.scrolls.normal} шт.</option><option value="blessed" ${scroll==='blessed'?'selected':''}>Благословенный · ${model.scrolls.blessed} шт.</option></select></div><div class="enchant-stage"><div class="item-slot">${img(items[0].url)}<b class="enchant">+${weaponLevel}</b></div><span class="stage-arrow">+</span><div class="item-slot">${img(scroll==='blessed'?'../webapp/art/icons/scroll-blessed-128.webp':'../webapp/art/icons/scroll-128.webp')}</div></div><div class="chance"><div><i style="width:${chance}%"></i></div><p><span>Шанс успеха · демонстрационный</span><b>${chance} %</b></p></div>${section('После успешной заточки')}<div class="inset">${row('Заточка',`+${weaponLevel} → <span class="positive">+${weaponLevel+1}</span>`)}${row('Физ. атака',`${292+weaponLevel*9} → <span class="positive">${292+(weaponLevel+1)*9}</span>`)}${row('Маг. атака',`${222+weaponLevel*5} → <span class="positive">${222+(weaponLevel+1)*5}</span>`)}</div>${section('Требуется для улучшения')}${materials([[scroll==='blessed'?'../webapp/art/icons/scroll-blessed-128.webp':'../webapp/art/icons/scroll-128.webp','Свиток',`${count} / 1`],[ui('coin'),'Золото',`${fmt(model.gold)} / 30 000`]])}<p class="note ${safe?'positive':'negative'}">${safe?'Безопасная заточка: до +3 включительно.':scroll==='blessed'?'Неудача: оружие останется, заточка сбросится до +0. Свиток и золото будут потрачены.':'Неудача: оружие будет разрушено. Свиток и золото будут потрачены.'}</p>${weaponResult}<div class="actions">${button('Успех · пример','weapon-success','primary',!count||model.gold<30000)}${button('Неудача · пример','weapon-fail','',safe||!count||model.gold<30000)}</div><p class="note">Кнопки показывают оба исхода. Реальные шансы и стоимость определяет игровая система.</p>`);
+}
+const skillDefs=[{name:'Великое лечение',icon:'heart',power:2192,amount:110,unit:'HP'}, {name:'Магический удар',icon:'staff',power:1780,amount:90,unit:'урона'}];
+function skills() {
+  const sk=skillDefs[skillId], resource='стоимость MP', before=route==='power'?`${sk.power+skillLevel*sk.amount} ${sk.unit}`:route==='cost'?`${100-skillLevel*2} MP`:`${9+skillLevel*.3} сек.`, after=route==='power'?`${sk.power+(skillLevel+1)*sk.amount} ${sk.unit}`:route==='cost'?`${100-(skillLevel+1)*2} MP`:`${(9+(skillLevel+1)*.3).toFixed(1)} сек.`;
+  const ready=model.books>0&&model.sp>=250000&&model.gold>=100000;
+  return windowHtml('Улучшение умения',`<div class="tabs"><button type="button" data-action="skill-tab" data-value="active" class="${skillTab==='active'?'active':''}">Активные</button><button type="button" data-action="skill-tab" data-value="passive" class="${skillTab==='passive'?'active':''}">Пассивные</button></div>${skillTab==='passive'?'<div class="inset"><p class="note">Пассивные умения этого персонажа пока недоступны для заточки.</p></div>':`${skillDefs.map((s,index)=>`<button type="button" class="skill-entry ${skillId===index?'selected':''}" data-action="skill" data-index="${index}">${img(ui(s.icon))}<span><b>${s.name} <span class="gold">+${skillId===index?skillLevel:0}</span></b><small>Активное умение · Ур. 33</small></span></button>`).join('')}${section('Путь улучшения')}<div class="route-grid">${[['power','element-fire','Мощность'],['cost','coin','Стоимость'],['time','hourglass','Время']].map(([id,glyph,label])=>`<button type="button" data-action="route" data-value="${id}" class="${route===id?'active':''}" aria-pressed="${route===id}"><span>${img(ui(glyph))}</span>${label}</button>`).join('')}</div><p class="note">В макете пути можно свободно сравнивать. В игре смена выбранного пути — отдельное действие с ценой и подтверждением.</p><div class="two-col"><div class="inset"><div class="section-label">До улучшения</div>${img(ui(sk.icon),'skill-art')}<p class="gold">+${skillLevel} ${route==='power'?'Мощность':route==='cost'?'Стоимость':'Время'}</p><small class="muted">${route==='power'?'Сила умения':route==='cost'?resource:'Длительность'}</small><p>${before}</p></div><div class="inset"><div class="section-label">После улучшения</div>${img(ui(sk.icon),'skill-art')}<p class="gold">+${skillLevel+1} ${route==='power'?'Мощность':route==='cost'?'Стоимость':'Время'}</p><small class="muted">${route==='power'?'Сила умения':route==='cost'?resource:'Длительность'}</small><p class="positive">${after}</p></div></div>${section('Требуется для улучшения')}${materials([[ui('book-open'),'Книга гигантов',`${model.books} / 1`]])}<div class="inset" style="margin-top:8px">${row('SP',`${fmt(model.sp)} / 250 000`)}${row('Золото',`${fmt(model.gold)} / 100 000`)}</div><p class="note">Баланс и стоимость здесь демонстрационные. Результат примера — успешное улучшение.</p>${skillResult}<div class="actions">${button('Улучшить · пример','skill-upgrade','primary',!ready)}</div>`}`);
+}
+const forgeWindows=createEconomyScreens({getState:()=>model,windowHtml,row,section,button,img,ui,fmt,esc,toast});
+const renderers={city,status,inventory,item,trade:tradeWindow,tattoos,weapon,skills,...forgeWindows.renderers};
+function render(focusAction=null) {
+  const screen=screens.find(s=>s[0]===active);
+  $('screen-title').textContent=screen[1]; $('screen-description').textContent=screen[2];
+  $('lab-nav').innerHTML=screens.map(([id,label],index)=>`<a href="#${id}" class="${id===active?'active':''}" ${id===active?'aria-current="page"':''}><small>${String(index+1).padStart(2,'0')}</small>${label}</a>`).join('');
+  $('screen').innerHTML=renderers[active]();
+  const illustration={sa:'../webapp/art/icons/crystal-128.webp',masterwork:'../webapp/art/icons/gem-128.webp',craft:'../webapp/art/icons/binder-128.webp',unseal:'../webapp/art/icons/scroll-128.webp',catacombs:'../webapp/art/hunt/zones/catacombs-480.webp',aa:'../webapp/art/icons/crystal-128.webp',shoulders:'../webapp/art/icons/leather-128.webp',cloaks:'../webapp/art/icons/fiber-128.webp',epics:'../webapp/art/icons/gem-128.webp',tattoos:'../webapp/art/icons/attr-stone-128.webp',skills:ui('book-open'),weapon:'../webapp/art/icons/scroll-blessed-128.webp'}[active];
+  if(illustration)$('screen').querySelector('.window-body')?.insertAdjacentHTML('afterbegin','<img class="mechanic-illustration" src="'+illustration+'" alt="" style="display:block;width:'+(active==='catacombs'?'100%':'48px')+';height:'+(active==='catacombs'?'140px':'48px')+';object-fit:'+(active==='catacombs'?'cover':'contain')+';margin:0 0 10px;border-radius:4px">');
+  if(active==='inventory')$('screen').querySelector('.window-body').insertAdjacentHTML('beforeend',forgeWindows.inventorySection());
+  $('screen').querySelectorAll('.skill-art').forEach(node=>{node.style.width='36px';node.style.height='36px';node.style.objectFit='contain';});
+  if(focusAction) $('screen').querySelector(`[data-action="${focusAction}"]:not(:disabled)`)?.focus({preventScroll:true});
+}
+function navigate(id) { if(renderers[id]) location.hash=id; }
+let toastTimer;
+function toast(text) { $('toast').textContent=text; $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),3500); }
+$('screen').addEventListener('click',event=>{
+  const node=event.target.closest('[data-action]'); if(!node||node.disabled)return;
+  const action=node.dataset.action,index=Number(node.dataset.index),value=node.dataset.value;
+  if(renderers[action]) { navigate(action); return; }
+  if(action==='close') { navigate('city'); return; }
+  if(forgeWindows.handle(action,node)){render(action);return;}
+  if(['mail','settings','currency'].includes(action)) { toast('Переход в соответствующее игровое окно. Здесь показан дизайн шапки.');return; }
+  if(action==='filter')filter=value;
+  if(action==='select-item'){chosen=index;render();return;}
+  if(action==='trade-add') {
+    if(shopOpen){toast('Сначала закройте лавку.');return;}
+    if(trade.includes(index)){trade=trade.filter(i=>i!==index);}else if(trade.length<4){trade.push(index);prices[index]=10000;}else{toast('Все четыре слота продажи заняты.');return;}
+  }
+  if(action==='trade-remove'&&!shopOpen) trade=trade.filter(i=>i!==index);
+  if(action==='trade-start') { if(!trade.length||trade.some(i=>!prices[i]))return;shopOpen=true;toast('Лавка открыта в демонстрационном режиме.'); }
+  if(action==='trade-stop')shopOpen=false;
+  if(action==='dye')dyeId=value;
+  if(action==='tattoo-tab'){tattooMode=value;pendingRemoval=null;}
+  if(action==='remove-select')pendingRemoval=index;
+  if(action==='tattoo-apply'){const result=applyTattoo(model,dyeId);toast(result.ok?'Символ нанесён. Потрачено 10 красок и 145 000 золота.':result.reason);}
+  if(action==='tattoo-remove'){const result=removeTattoo(model,pendingRemoval);pendingRemoval=null;toast(result.ok?'Символ снят. Возвращено 5 красок.':result.reason);}
+  if(action==='weapon-success'||action==='weapon-fail') {
+    if(weaponDestroyed){toast('Оружие разрушено. Сбросьте пример, чтобы повторить.');return;}
+    if(!model.scrolls[scroll]||model.gold<30000)return;
+    model.scrolls[scroll]--;model.gold-=30000;
+    if(action==='weapon-success'){weaponLevel++;weaponResult=`<div class="result">Предмет успешно зачарован!<br><strong>Меч Архангела +${weaponLevel}</strong></div>`;}
+    else { weaponLevel=0;weaponResult=`<div class="result fail">${scroll==='blessed'?'Неудача. Оружие сохранено, заточка +0.':'Неудача. Оружие разрушено в примере.'}</div>`;weaponDestroyed=scroll==='normal'; }
+  }
+  if(action==='route'){route=value;skillResult='';}
+  if(action==='skill'){skillId=index;skillLevel=skillLevels[index];skillResult='';}
+  if(action==='skill-tab')skillTab=value;
+  if(action==='skill-upgrade'&&model.books>0&&model.sp>=250000&&model.gold>=100000){model.books--;model.sp-=250000;model.gold-=100000;skillLevel++;skillLevels[skillId]=skillLevel;skillResult=`<div class="result">Умение улучшено до +${skillLevel}.</div>`;}
+  render(action);
+});
+$('screen').addEventListener('change',event=>{if(event.target.dataset.select==='scroll'){scroll=event.target.value;if(!weaponDestroyed)weaponResult='';render();}});
+$('screen').addEventListener('input',event=>{
+  const node=event.target;if(forgeWindows.input(node))return;if(node.dataset.price===undefined)return;
+  const amount=Number(node.value);prices[Number(node.dataset.price)]=Number.isInteger(amount)&&amount>0&&amount<=999999999?amount:0;
+  $('sale-total').textContent=fmt(trade.reduce((sum,index)=>sum+(prices[index]||0),0));
+  $('screen').querySelector('[data-action="trade-start"]').disabled=shopOpen||!trade.length||trade.some(i=>!prices[i]);
+});
+$('reset').addEventListener('click',()=>{model=freshState();forgeWindows.reset();trade=[];prices={};shopOpen=false;weaponLevel=6;weaponResult='';weaponDestroyed=false;scroll='blessed';skillLevels=[2,2];skillLevel=2;skillResult='';pendingRemoval=null;render();toast('Демонстрационные данные сброшены.');});
+window.addEventListener('hashchange',()=>{active=renderers[location.hash.slice(1)]?location.hash.slice(1):'city';render();});
+active=renderers[location.hash.slice(1)]?location.hash.slice(1):'city';render();
+
+})();
+</script>
+</body>
+</html>

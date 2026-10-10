@@ -18,7 +18,7 @@ test('target frame shows the boss portrait, HP, timer and statuses, and toggles 
   assert.match(html, /\/art\/bosses\/kivaha\.webp/);
   assert.match(html, /mmo-bar hp/);
   assert.match(html, /mmo-bar time/);
-  assert.match(html, /🪞/);
+  assert.match(html, /ui-icon-mirror-round[^>]+\.webp/);
   assert.match(rewardsPanel({ gold: { min: 1, max: 2 } }), /data-boss-rewards hidden/);
 });
 
@@ -26,6 +26,9 @@ test('player frame shows class portrait, HP/MP/CP and effects with counts', () =
   const html = playerFrame({ name: 'A<b>', level: 3, className: 'mage', gender: 'female', hp: 1, maxHp: 2, mp: 1, maxMp: 2, cp: 1, maxCp: 2, effects: [{ id: 'damageUp', label: 'x', count: 4 }] });
   assert.match(html, /mage-female\.webp/);
   assert.match(html, /mmo-bar cp/);
+  assert.ok(html.indexOf('mmo-bar cp') < html.indexOf('mmo-bar hp'));
+  assert.ok(html.indexOf('mmo-bar hp') < html.indexOf('mmo-bar mp'));
+  assert.doesNotMatch(html, /<svg|🪞|◆/);
   assert.match(html, /<em>4<\/em>/);
   assert.ok(!html.includes('<b>A<b>'), 'names are escaped');
 });

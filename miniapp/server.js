@@ -1,3 +1,6 @@
+import {selectSoulCrystal,chargeSoulCrystal,exchangeSeals} from '../functions/game/equipment/soulCrystals.js';
+import {advanceHunt} from '../functions/game/hunt/huntFight.js';
+import {advanceFieldPvp,fieldPeers,useFieldPvpSkill} from '../functions/game/hunt/fieldPvp.js';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -97,7 +100,7 @@ import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
-import { fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp } from './hunt.js';
+import { fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
@@ -1429,16 +1432,16 @@ const equipmentState = guarded('equipment state', async (req, res) => {
 const equipmentAction = guarded('equipment action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (['enchant', 'augment', 'attribute', 'attribute_clear'].includes(body.action)) assertGoldUnlocked(context);
+  if (['enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove'].includes(body.action)) assertGoldUnlocked(context);
   if (typeof body.key !== 'string' || !body.key) {
     throw httpError(400, 'equipment key is required');
   }
-  if (!['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'ls_activate', 'crystallize'].includes(body.action)) {
+  if (!['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize'].includes(body.action)) {
     throw httpError(400, 'action must be equip, unequip, sell, enchant, augment, attribute, attribute_clear, ls_activate or crystallize');
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = performEquipmentAction(context.session, body.key, body.action, { blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null, tier: typeof body.tier === 'string' ? body.tier : null, element: typeof body.element === 'string' ? body.element : null });
+    const updated = performEquipmentAction(context.session, body.key, body.action, { saId: typeof body.saId==='string'?body.saId:null, blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null, tier: typeof body.tier === 'string' ? body.tier : null, element: typeof body.element === 'string' ? body.element : null });
     if (updated.ok) await saveSession(context.session);
     return updated;
   });
@@ -1615,9 +1618,17 @@ const huntLock = context => `${context.chatId}:${context.userId}:inventory`;
 async function huntAnswer(context, run) {
   return withLock(huntLock(context), async () => {
     context.session = await getSession(context.chatId, context.userId);
+    const chat=context.session.ownerDocument();
+    const pvpChanged=advanceFieldPvp(chat);
     const result = await run(context.session);
-    const hunt = await getHuntState(context.session);
-    if (result.ok !== false || hunt.changed) await saveSession(context.session);
+    const hunt = await getHuntState(context.session,Date.now(),fieldPeers(chat,context.session));
+    if (result.ok !== false || hunt.changed || result.changed || pvpChanged) {
+      // PvP changes other members of the chat (damage, effects, deaths); saveSession only marks the caller dirty.
+      if (pvpChanged || result.changed) chat.members.forEach((member, index) => {
+        if (member !== context.session && (member.game?.hunt?.field || member.game?.worldPvp)) chat.markModified(`members.${index}`);
+      });
+      await saveSession(context.session);
+    }
     return { ...result, hunt };
   });
 }
@@ -1635,13 +1646,40 @@ const huntStart = guarded('hunt start', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const huntMove = guarded('hunt move', async (req, res) => {
+  const context = await authorize(req), body = await readJsonBody(req);
+  return sendResult(res, await huntAnswer(context, session => moveHuntForMiniApp(session, body.direction)), context);
+});
+const huntTarget = guarded('hunt target', async (req, res) => {
+  const context = await authorize(req), body = await readJsonBody(req);
+  return sendResult(res, await huntAnswer(context, session => targetHuntForMiniApp(session, body.targetId)), context);
+});
+
 const huntSkill = guarded('hunt skill', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
   const skillIndex = Number(body.skillIndex);
   if (!Number.isInteger(skillIndex) || skillIndex < 0) throw httpError(400, 'skillIndex must be a non-negative integer');
-  const result = await huntAnswer(context, session => useHuntSkillForMiniApp(session, skillIndex));
+  const result = await huntAnswer(context, session => body.targetUserId != null
+    ? useFieldPvpSkill(session.ownerDocument(),session,body.targetUserId,skillIndex,{force:body.force===true})
+    : useHuntSkillForMiniApp(session, skillIndex));
   return sendResult(res, result, context);
+});
+
+const soulSelect=guarded('soul select',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  const result=await huntAnswer(context,session=>selectSoulCrystal(session,body.color,body.stage));
+  return sendResult(res,result,context);
+});
+const soulCharge=guarded('soul charge',async(req,res)=>{
+  const context=await authorize(req);
+  const result=await huntAnswer(context,session=>{const swings=advanceHunt(session);return {...chargeSoulCrystal(session,session.game.hunt?.mob),changed:swings.length>0};});
+  return sendResult(res,result,context);
+});
+const sealExchange=guarded('seal exchange',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);assertGoldUnlocked(context);
+  const result=await huntAnswer(context,session=>exchangeSeals(session,body.counts));
+  return sendResult(res,result,context);
 });
 
 const huntFlee = guarded('hunt flee', async (req, res) => {
@@ -1846,8 +1884,13 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/boss') return bossState(req, res);
     if (route === 'GET /api/hunt') return huntState(req, res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
+    if (route === 'POST /api/hunt/move') return huntMove(req, res);
+    if (route === 'POST /api/hunt/target') return huntTarget(req, res);
     if (route === 'POST /api/hunt/skill') return huntSkill(req, res);
     if (route === 'POST /api/hunt/flee') return huntFlee(req, res);
+    if (route === 'POST /api/soul/select') return soulSelect(req, res);
+    if (route === 'POST /api/hunt/soul') return soulCharge(req, res);
+    if (route === 'POST /api/catacombs/exchange') return sealExchange(req, res);
     if (route === 'POST /api/shots/auto') return shotsAuto(req, res);
     if (route === 'GET /api/boss/epic') return bossEpic(req, res);
     if (route === 'POST /api/boss/summon') return bossSummon(req, res);

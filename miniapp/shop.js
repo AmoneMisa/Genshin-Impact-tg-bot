@@ -2,6 +2,7 @@ import shopTemplate from '../template/shopTemplate.js';
 import shopSellItem from '../functions/game/shop/shopSellItem.js';
 
 const CATEGORY_LABELS = {
+  soul: 'Кристаллы души 0–13',
   boss: 'Для босса',
   player: 'Для игрока',
   sword: 'Для меча',

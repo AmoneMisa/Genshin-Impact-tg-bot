@@ -366,8 +366,6 @@
 .th-name strong { display: block; font: 700 17px/1.1 system-ui, sans-serif; color: #fff; text-shadow: 0 1px 2px #000; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .th-sub { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; margin-top: 1px; }
 .th-name small { font: 500 12px/1.1 system-ui, sans-serif; color: #a9a8c9; }
-.th-sp { font: 700 11px/1.1 system-ui, sans-serif; color: #7fe7ff; white-space: nowrap; }
-.th-sp b { font-weight: 600; color: #fff; }
 .th-btns { display: flex; gap: 5px; }
 .top-icon {
   position: relative; width: 36px; height: 36px; padding: 0; display: grid; place-items: center;
@@ -438,3 +436,38 @@
   .top-bar-track b { font-size: 13px; }
 }
 @media (min-width: 680px) { .top-hud { margin-left: -24px; margin-right: -24px; padding-left: 16px; padding-right: 16px; } }
+
+/* City overview: keep the same live meters and actions in a compact frame. */
+.top-hud.is-city-compact .th-frame { gap: 4px; padding: 5px 6px; }
+.is-city-compact .th-id { gap: 5px; padding-bottom: 4px; }
+.is-city-compact .top-portrait.hero-portrait-shell { width: 34px; height: 38px; }
+.is-city-compact .th-level { min-width: 26px; height: 30px; font-size: 16px; }
+.is-city-compact .th-name strong { font-size: 14px; }
+.is-city-compact .th-name small { font-size: 11px; }
+.is-city-compact .top-bar { grid-template-columns: 23px minmax(0, 1fr); gap: 3px; }
+.is-city-compact .top-bar > span { font-size: 11px; padding-left: 0; }
+.is-city-compact .th-bars { gap: 3px; }
+.is-city-compact .th-bars .top-bar-track { height: 14px; }
+.is-city-compact .th-bars .top-bar-track b { font-size: 11px; }
+.is-city-compact .top-resources { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding-top: 4px; }
+.is-city-compact .top-res {
+  position: relative; grid-template-columns: 17px minmax(0, 1fr); gap: 2px;
+  height: 30px; padding: 0 3px;
+}
+.is-city-compact .top-res > img { width: 17px; height: 20px; }
+.is-city-compact .top-res strong { font-size: 11px; }
+/* The whole currency cell is the touch target; counters retain full values. */
+.is-city-compact .top-res .resource-plus { position: absolute; inset: 0; width: 100%; height: 100%; font-size: 0; }
+.is-city-compact .top-res:has(.resource-plus) { padding-right: 9px; }
+.is-city-compact .top-res:has(.resource-plus)::after { content: '+'; position: absolute; right: 2px; top: 2px; color: #d9bc7d; font: 10px/1 system-ui; pointer-events: none; }
+.is-city-compact .resource-plus:focus-visible { outline: 2px solid #f3dca6; outline-offset: 1px; }
+.is-city-compact .top-res > i { display: none; }
+.is-city-compact .th-foot { padding-top: 3px; gap: 5px; }
+.is-city-compact .th-charges i { width: 17px; height: 17px; }
+.is-city-compact .th-thin { gap: 3px; }
+.is-city-compact .th-thin .top-bar { grid-template-columns: 1fr; }
+.is-city-compact .th-thin .top-bar-track { height: 6px; }
+@media (max-width: 359px) {
+  .is-city-compact .th-name strong { font-size: 12px; }
+  .is-city-compact .top-res strong { font-size: 10px; }
+}

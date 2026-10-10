@@ -17,6 +17,7 @@ const LABELS = {
     healPowerMul: 'Исцеление навыками',
     healPowerPotionsMul: 'Исцеление зельями',
     skillCooltimeMul: 'Перезарядка навыков',
+    castingSpeedMul:'Скорость магии',attackSpeedMul:'Скорость атаки',criticalChanceMul:'Шанс критического удара',pvpDamageMul:'Урон в PvP',skillMpCostMul:'Расход MP',vampirism:'Вампиризм',weightLimitMul:'Лимит веса',
 };
 
 const POINT_PERCENT = new Set(['power', 'defencePower']);

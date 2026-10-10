@@ -153,5 +153,6 @@ jobs:
           # Trust-on-first-use: the host key is fetched on each run. Pin it under a
           # secret/variable if you want a hard check.
           ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+          # Same update the server runs by hand: pull, recreate changed containers, prune old images.
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "$DEPLOY_USER@$DEPLOY_HOST" \
-            'cd /opt/genshin-bot && docker compose pull bot && docker compose up -d bot && docker compose ps bot'
+            'cd /opt/genshin-bot && ./docker/update.sh'

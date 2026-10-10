@@ -8,16 +8,9 @@ export { escapeHtml };
 import { bossArtUrl, classArtUrl } from './boss-stage.js';
 import { flaskHtml } from './inventory.js';
 import { familyOf } from './class-family.js';
+import {icon,emojiIconName} from './icons.js';
 
-export const STATUS_ICONS = Object.freeze({
-  // boss skills
-  reflect: '🪞', hp_regen: '✚', rage: '🔥', resistance: '🛡️', life: '❤️',
-  // player effects
-  shield: '🛡️', damageUp: '⚔️', critChanceUp: '🎯', critDamageUp: '💥', dead: '💀',
-  guard: '🛡', taunt: '📣', evade: '💨', haste: '⚡',
-  // boss debuffs / states
-  armorBreak: '🔨', weaken: '📉', stun: '💫', enrage: '😡', armored: '🪨', locked: '🔒',
-});
+export const STATUS_ICONS = Object.freeze({reflect:'mirror-round',hp_regen:'heart',rage:'flame',resistance:'shield',life:'heart',shield:'shield',damageUp:'swords',critChanceUp:'target',critDamageUp:'bomb',dead:'skull',guard:'shield',taunt:'flag',evade:'wind',haste:'zap',armorBreak:'hammer',weaken:'cloud-fog',stun:'orbit',enrage:'angry',armored:'shield',locked:'lock',slow:'hourglass',mute:'volume-x',accuracyDown:'cloud-fog',poison:'flask-conical',bleed:'droplet'});
 
 const CLASS_COLORS = Object.freeze({ warrior: '#d9744a', archer: '#6fcf6b', mage: '#8f7bff', priest: '#f1d27a', rogue: '#4fd1c5', berserk: '#e0483c', noClass: '#a8a8b8' });
 const classColor = className => CLASS_COLORS[familyOf(className)] || CLASS_COLORS.noClass;
@@ -45,7 +38,7 @@ export function statusIcons(list = []) {
   if (!list.length) return '<div class="mmo-statuses empty"></div>';
   return `<div class="mmo-statuses">${list.map(status => `
     <span class="mmo-status ${escapeHtml(status.id)}" title="${escapeHtml(status.label)}${status.description ? ` — ${escapeHtml(status.description)}` : ''}">
-      ${STATUS_ICONS[status.id] || '✦'}${status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
+      ${icon(STATUS_ICONS[status.id] || 'sparkle')}${status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
     </span>`).join('')}</div>`;
 }
 
@@ -72,7 +65,7 @@ export function targetFrame(boss) {
     <span class="mmo-frame-body">
       <span class="mmo-frame-title"><strong>${escapeHtml(boss.nameCall || boss.name)}</strong><small>Босс · награды ▾</small></span>
       ${bar('hp', boss.currentHp, boss.hp)}
-      ${bar('time', 0, 0, { label: '⏳', percent: timePercent, text: formatDuration(boss.remainMs) })}
+      ${bar('time', 0, 0, { label: 'TIME', percent: timePercent, text: formatDuration(boss.remainMs) })}
       ${statusIcons(encounterStatuses(boss))}
       ${summonsProgress(boss.summons, boss.level)}
     </span>
@@ -110,13 +103,14 @@ export function potionBar(potions = [], { disabled = false } = {}) {
 
 export function playerFrame(player) {
   return `
-  <section class="mmo-frame player-frame">
+  <section class="mmo-frame player-frame" data-pvp="${['pk','flagged'].includes(player.pvp?.status)?player.pvp.status:'neutral'}">
     <span class="mmo-portrait player" style="--portrait:url('${classArtUrl(player.className, player.gender)}')"><em>${formatNumber(player.level)}</em></span>
     <span class="mmo-frame-body">
       <span class="mmo-frame-title"><strong>${escapeHtml(player.name || 'Ты')}</strong><small>Ур. ${formatNumber(player.level)}</small></span>
+      ${player.maxCp ? bar('cp', player.cp, player.maxCp) : ''}
       ${bar('hp', player.hp, player.maxHp)}
       ${bar('mp', player.mp, player.maxMp)}
-      ${player.maxCp ? bar('cp', player.cp, player.maxCp) : ''}
+      ${player.pvp?`<small class="mmo-pvp-status">${player.pvp.status==='pk'?`${icon('skull')} PK · карма ${formatNumber(player.pvp.karma)}`:player.pvp.status==='flagged'?`${icon('flag')} PvP · <span data-pvp-flag data-until="${Date.now()+player.pvp.flagRemainMs}">${formatDuration(player.pvp.flagRemainMs)}</span>`:'Мирный'} · PvP ${player.pvp.pvpKills} / PK ${player.pvp.pkKills}</small>`:''}
       ${statusIcons(player.effects || [])}
     </span>
   </section>`;
@@ -139,23 +133,19 @@ export function partyStrip(rows = []) {
   </section>`;
 }
 
-function skillGlyph(skill) {
-  if (skill.isHeal) return '✚';
-  if (skill.isShield) return '🛡️';
-  if (skill.isDamage) return '⚔️';
-  if (skill.isBuff) return '⬆';
-  if (skill.isDebuff) return '⬇';
-  return '✦';
+function skillGlyph(skill,className='') {
+  if(skill.isDamage && ['mage','priest'].includes(familyOf(className)))return icon(skill.index===0?'wand-sparkles':skill.index===1?'cloud':'zap');
+  return icon(skill.isHeal?'heart':skill.isShield?'shield':skill.isDamage?'swords':skill.isBuff?'sparkles':skill.isDebuff?'cloud-fog':'wand-sparkles');
 }
 
 /** Hotbar; `data-skill-cooldown` nodes are refreshed by the screen's ticker. */
-export function hotbar(skills = []) {
+export function hotbar(skills = [],{className=''}={}) {
   return `<div class="mmo-hotbar">${skills.map(skill => {
     const type = skill.isDamage ? 'damage' : skill.isHeal ? 'heal' : skill.isShield ? 'shield' : 'utility';
-    const cost = skill.locked ? `🔒 ур. ${formatNumber(skill.needLevel)}` : skill.costHp > 0 ? `❤️${formatNumber(skill.costHp)}` : `🔹${formatNumber(skill.costMp)}`;
+    const cost = skill.locked ? `${icon('lock')} ур. ${formatNumber(skill.needLevel)}` : skill.costHp > 0 ? `HP ${formatNumber(skill.costHp)}` : `MP ${formatNumber(skill.costMp)}`;
     return `
     <button type="button" class="mmo-skill boss-skill ${type}${skill.locked ? ' locked' : ''}${skill.tier > 1 ? ` tier-${skill.tier}` : ''}" data-skill="${skill.index}" ${skill.canUse ? '' : 'disabled'} title="${escapeHtml(skill.description)}${skill.tags?.length ? ` · ${escapeHtml(skill.tags.join(' · '))}` : ''}">
-      <span class="mmo-skill-icon">${skillGlyph(skill)}</span>
+      <span class="mmo-skill-icon">${skillGlyph(skill,className)}</span>
       <span class="mmo-skill-cooldown" data-skill-cooldown data-until="${skill.cooldownUntil || 0}" data-total="${skill.cooldownMs || 0}">${skill.cooldownMs > 0 ? formatDuration(skill.cooldownMs) : ''}</span>
       <strong>${escapeHtml(skill.name)}</strong>
       <small>${cost}</small>
@@ -201,10 +191,10 @@ export function bossAttacksPanel(boss) {
   <section class="mmo-frame boss-attacks">
     <div class="mmo-section-title"><strong>Атаки босса</strong><small data-boss-next data-until="${Date.now() + (Number(boss.nextAttackMs) || 0)}">${boss.damageList?.length ? 'готовится…' : 'ждёт первого удара'}</small></div>
     <div class="boss-attack-list">${attacks.map(attack => `
-      <span class="boss-attack ${attack.target}" title="${escapeHtml(attack.description)}"><i>${escapeHtml(attack.icon)}</i><b>${escapeHtml(attack.name)}</b><small>${attack.target === 'all' ? 'по всем' : attack.target === 'multi' ? `по ${attack.count || 2}` : 'по одному'}</small></span>`).join('')}</div>
+      <span class="boss-attack ${attack.target}" title="${escapeHtml(attack.description)}"><i>${icon(emojiIconName(attack.icon)||'swords')}</i><b>${escapeHtml(attack.name)}</b><small>${attack.target === 'all' ? 'по всем' : attack.target === 'multi' ? `по ${attack.count || 2}` : 'по одному'}</small></span>`).join('')}</div>
     ${log.length ? `<ol class="boss-attack-feed">${log.map((record, index) => `
       <li class="${index === 0 ? 'latest' : ''} ${record.hits.some(hit => hit.you) ? 'hit-you' : ''}">
-        <i>${escapeHtml(record.icon)}</i>
+        <i>${icon(emojiIconName(record.icon)||'swords')}</i>
         <div><strong>${escapeHtml(record.name)}</strong><small>${record.hits.map(hit => `${escapeHtml(hit.you ? 'ты' : hit.name)} −${formatNumber(hit.dmg)}${hit.killed ? ' 💀' : ''}`).join(' · ') || 'промах'}</small></div>
       </li>`).join('')}</ol>` : ''}
   </section>`;

@@ -1,4 +1,5 @@
 import calcBossHit from './bossHit.js';
+import {bossDebuffAmount} from './bossDebuffs.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
 import { getBossAttacks, getMinionAttacks } from '../../../template/bossAttacksTemplate.js';
 import { evadeChance, guardReduction, isTaunting } from '../player/skillEffects.js';
@@ -80,7 +81,7 @@ function applyHit(member, dmg, now) {
 /** One attack landing on its targets. Returns the per-fighter hit rows. */
 function strike(attack, targets, boss, { now, random, damage, scale, unitPower = 1 }) {
     return targets.map(member => {
-        const evade = evadeChance(member, now);
+        const evade = Math.min(.75,evadeChance(member, now)+bossDebuffAmount(boss,'accuracyDown',now));
         if (evade > 0 && random() < evade) {
             return { userId: String(member.userId), name: memberName(member), dmg: 0, absorbed: 0, lost: 0, hp: member.game.gameClass.stats.hp, killed: false, evaded: true };
         }
@@ -129,7 +130,7 @@ export default function bossCastAttack(members, boss, { now = Date.now(), random
 
     const attacks = getBossAttacks(boss.name);
     const phase = Number(boss.phaseIndex) || 0;
-    const ultimate = attacks.find(attack => attack.ultimate && (attack.unlock || 0) <= phase);
+    const ultimate = bossDebuffAmount(boss,'mute',now)>0?null:attacks.find(attack => attack.ultimate && (attack.unlock || 0) <= phase);
     const every = Number(bossTemplateFor(boss)?.combat?.ultimateEvery) || DEFAULT_ULTIMATE_EVERY;
 
     if (boss.charging && ultimate && boss.charging.key === ultimate.key && now >= boss.charging.readyAt) {

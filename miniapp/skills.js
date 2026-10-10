@@ -95,8 +95,8 @@ export function skillTags(skill) {
   return tags;
 }
 
-function usageState(skill, maxHp) {
-  const { cost, costHp } = getEffectiveSkillCost(skill, maxHp);
+function usageState(skill, maxHp, session) {
+  const { cost, costHp } = getEffectiveSkillCost(skill, maxHp, session);
   return {
     mp: number(cost),
     hp: number(costHp),
@@ -170,10 +170,10 @@ function skillState(session, skill, playerLevel) {
     enchantLevel: level,
     maxEnchantLevel: SKILL_ENCHANT_MAX_LEVEL,
     power: powerState(skill, getSkillPowerMultiplier(skill)),
-    usage: usageState(skill, maxHp),
+    usage: usageState(skill, maxHp, session),
     next: nextSkill ? {
       power: powerState(nextSkill, getSkillPowerMultiplier(nextSkill)),
-      usage: usageState(nextSkill, maxHp),
+      usage: usageState(nextSkill, maxHp, session),
     } : null,
     upgradeCost: costView,
     canUpgrade: Boolean(upgradeCost && canAfford(session, inventory, upgradeCost)),

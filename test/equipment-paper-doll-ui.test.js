@@ -75,5 +75,7 @@ test('portrait mode stands the class painting in the middle with slots in side c
   assert.match(container.innerHTML,/data-slot="rightRing"[^>]*--portrait-x:91%/);
   for(const [slot] of PAPER_DOLL_SLOTS)assert.ok(PORTRAIT_SLOT_LAYOUT[slot],`${slot} has a portrait position`);
   renderEquipmentPaperDoll(container,{equippedSlots:{},items:[]});
-  assert.doesNotMatch(container.innerHTML,/has-portrait/);
+  assert.match(container.innerHTML,/has-portrait/);
+  assert.match(container.innerHTML,/\/art\/world\/v1\/heroes\/noClass-male-512\.webp/);
+  assert.doesNotMatch(container.innerHTML,/<svg|◇/);
 });

@@ -65,7 +65,7 @@ test('scrolls, elixirs and craft sets are delivered whole', () => {
 
 test('the shop lists categories with items; rented epic gear is offered by class', () => {
   const state = getLuckShopState(player(90, 5, 'warrior'), NOW);
-  assert.deepEqual(state.groups.map(group => group.id), ['epic', 'lifestones', 'scrolls', 'elixirs', 'craft', 'buffs', 'crystals', 'tries']);
+  assert.deepEqual(state.groups.map(group => group.id), ['soul', 'epic', 'lifestones', 'scrolls', 'elixirs', 'craft', 'buffs', 'crystals', 'tries']);
   assert.ok(state.items.filter(item => item.group === 'epic').length >= 5);
   const mage = getLuckShopState(player(90, 5, 'mage'), NOW).items.filter(item => item.group === 'epic').map(item => item.title);
   const warrior = state.items.filter(item => item.group === 'epic').map(item => item.title);

@@ -17,6 +17,7 @@ export const ITEM_ICONS = Object.freeze({
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 
 export function itemIconHtml(item) {
+  const soul=item.command.match(/^soul-(red|green|blue)-(\d+)$/);if(soul)return '<span class="shop-icon">'+materialIcon('soul_'+soul[1]+'_'+soul[2])+'</span>';
   const life=item.command.match(/^lifestoneMid-(C|B|A|S)$/);if(life)return '<span class="shop-icon">'+materialIcon('lifestone_mid_'+life[1],'🔮')+'</span>';
   const shot=item.command.match(/^shot-(soulshot|spiritshot|blessed)-(noGrade|D|C|B|A|S|S80|S84)$/);if(shot)return '<span class="shop-icon">'+shotIcon(shot[1],shot[2])+'</span>';
   if(item.potionId)return `<span class="shop-icon">${flaskHtml({type:'buff',id:item.potionId})}</span>`;

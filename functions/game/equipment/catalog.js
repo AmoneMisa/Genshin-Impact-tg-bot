@@ -105,12 +105,7 @@ function buildWeapon(template, grade, kind) {
         lineage: {pAtk: real.p, mAtk: real.m, ...(real.derived ? {derived: true} : {})}
     });
     item.characteristics.power = Math.round(power * 10) / 10;
-    const ability = template.weaponAbility[kind.type];
-    const tier = index - gradeIndex('S', template);
-    if (ability && tier >= 0) {
-        item.stats = [{name: ability.stat, value: ability.values[tier], label: ability.label}];
-        item.ability = ability.label;
-    }
+    // New weapons receive their special ability only when a Soul Crystal is installed.
     return item;
 }
 

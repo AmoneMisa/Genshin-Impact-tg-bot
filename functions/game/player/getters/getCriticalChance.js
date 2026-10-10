@@ -7,5 +7,5 @@ export default function (session, gameClass) {
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    return Math.min(100, stats.criticalChance + getEquipStatByName(session, "criticalChance"));
+    return Math.min(100, (stats.criticalChance + getEquipStatByName(session, "criticalChance"))*getEquipStatByName(session,"criticalChanceMul",true));
 };

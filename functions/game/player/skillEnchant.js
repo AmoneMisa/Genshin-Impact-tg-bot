@@ -1,3 +1,5 @@
+import getEquipStatByName from './getters/getEquipStatByName.js';
+import {soulSkillCost} from '../equipment/soulCrystalCombat.js';
 /**
  * Lineage2-style skill enchanting: spend gold + crystals + ironOre + SP (skill
  * points, earned on level-up and from bosses — see setLevel.js / bossSendLoot.js)
@@ -54,9 +56,10 @@ export function getSkillCooldownMultiplier(skill) {
 // mp/hp cost after the enchant's cost reduction — never below 1 if the base
 // cost was itself positive, so a skill can never become fully free. `maxHp`
 // turns a percentage hp cost (`costHpPct`) into points.
-export function getEffectiveSkillCost(skill, maxHp = 0) {
+export function getEffectiveSkillCost(skill, maxHp = 0, session = null) {
     const multiplier = getSkillCostMultiplier(skill);
-    const cost = skill?.cost > 0 ? Math.max(1, Math.floor(skill.cost * multiplier)) : 0;
+    const baseCost = skill?.cost > 0 ? Math.max(1, Math.floor(skill.cost * multiplier * (session?getEquipStatByName(session,'skillMpCostMul',true):1))) : 0;
+    const cost=session?soulSkillCost(session,skill,baseCost):baseCost;
     const baseHp = Math.max(skill?.costHp > 0 ? skill.costHp : 0, skill?.costHpPct > 0 ? Math.ceil(maxHp * skill.costHpPct) : 0);
     const costHp = baseHp > 0 ? Math.max(1, Math.floor(baseHp * multiplier)) : 0;
     return { cost, costHp };

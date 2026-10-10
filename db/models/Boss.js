@@ -25,6 +25,7 @@ const bossSchema = new mongoose.Schema({
     stunUntil: { type: Number, default: 0 },
     stunImmuneUntil: { type: Number, default: 0 },
     debuffs: { type: Array, default: [] },
+    soulDots: {type:Array,default:[]},
     charging: Object,
     castCount: { type: Number, default: 0 },
     eventLog: { type: Array, default: [] }

@@ -1,11 +1,15 @@
+import {materialIcon} from './material-icons.js';
 import {huntZoneUrl,huntMobUrl} from './art/hunt-art.js';
 import {shotIcon,elementIcon,championIcon} from './art/painted-icon-art.js';
 import { bar, escapeHtml, formatDuration, formatNumber, hotbar, playerFrame, potionBar, statusIcons } from './boss-hud.js';
+import {icon,emojiIconName} from './icons.js';
+import {classArtUrl} from './boss-stage.js';
 
 // Hunting fields (Lineage II style): pick a zone, fight one mob at a time in real time with skills,
 // potions and shots. Blue and red champions are tougher and pay much more.
 
-const REASONS = {
+const REASONS = {no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
+  pvp_invalid_target:'Игрок недоступен для нападения.',pvp_not_here:'Игрок покинул локацию.',pvp_out_of_range:'Подойди ближе к игроку.',pvp_force_required:'Для атаки мирного игрока включи принудительную атаку.',pvp_stunned:'Ты оглушён.',pvp_silenced:'Магия заблокирована молчанием.',
   unknown_zone: 'Такой зоны нет.',
   already_fighting: 'Ты уже сражаешься.',
   dead: 'Персонаж погиб и ещё не воскрес.',
@@ -25,11 +29,15 @@ const POTION_REASONS = {
 const ELEMENT_ICONS = Object.fromEntries(['fire','water','wind','earth','holy','dark'].map(element=>[element,elementIcon(element)]));
 const CHAMPION = { blue: { icon: championIcon('blue'), label: 'Синий чемпион' }, red: { icon: championIcon('red'), label: 'Красный чемпион' } };
 
-export async function openHuntGame({ api, renderState, haptic, statusElement }) {
+export async function openHuntGame({ api, renderState, haptic, statusElement,initialZoneKind='field' }) {
   let state = await api('/api/hunt');
+  let zoneKind=initialZoneKind==='catacomb'?'catacomb':'field';
   let pending = false;
   let feedback = '';
   let lastLog = state.log?.[0]?.text || '';
+  let dropOpen = false;
+  let playerTarget = null;
+  let forceAttack = false;
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay hunt-overlay';
@@ -39,7 +47,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
       <header class="ds-head">
         <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
         <h2>Охотничьи поля</h2>
-        <span class="ds-round" aria-hidden="true">🗡️</span>
+        <span class="ds-round" aria-hidden="true">${icon('swords')}</span>
       </header>
       <div data-hunt-content></div>
       <div class="boss-feedback" data-hunt-feedback aria-live="polite"></div>
@@ -88,6 +96,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
   function describeResult(payload) {
     const result = payload.result || {};
     let text = 'Навык использован.';
+    if(result.missed)return 'Промах.';
     if (result.type === 'damage') {
       text = `Урон: ${formatNumber(result.dmg)}${result.isHasCritical ? ' · КРИТ' : ''}`;
       if (result.hits?.length > 1) text += ` · ${result.hits.length} удара`;
@@ -100,22 +109,25 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
     if (payload.shots) text += ` · заряды −${payload.shots.spent}`;
     if (payload.killed && payload.rewards) {
       const r = payload.rewards;
-      const items = (r.items || []).map(item => `${item.icon} ${item.name} ×${item.amount}`).join(', ');
-      text = `${r.champion ? `${CHAMPION[r.champion].icon} ` : '🏆'} Враг повержен: +${formatNumber(r.exp)} опыта${r.bonus > 1 ? ` (Vitality ×${r.bonus})` : ''}, +${formatNumber(r.sp)} ОП${r.gold ? `, +${formatNumber(r.gold)} 🪙` : ''}${items ? `, ${items}` : ''}${r.leveledUp ? ' · НОВЫЙ УРОВЕНЬ!' : ''}`;
+      const items = (r.items || []).map(item => `${item.name} ×${item.amount}`).join(', ');
+      text = `${r.champion ? `${CHAMPION[r.champion].label} · ` : ''}Враг повержен: +${formatNumber(r.exp)} опыта${r.bonus > 1 ? ` (Vitality ×${r.bonus})` : ''}, +${formatNumber(r.sp)} ОП${r.gold ? `, +${formatNumber(r.gold)} адены` : ''}${items ? `, ${items}` : ''}${r.leveledUp ? ' · НОВЫЙ УРОВЕНЬ!' : ''}`;
     }
+    if(payload.rewards?.soulCrystal){const r=payload.rewards.soulCrystal;text+=' · Кристалл души: '+(r.outcome==='success'?r.from+' → '+r.stage:'ступень не изменилась');}
+    if(playerTarget){const loss=[[result.cpLost,'CP'],[result.hpLost,'HP']].filter(([amount])=>amount>0).map(([amount,resource])=>'−'+formatNumber(amount)+' '+resource).join(' · ');if(loss)text=loss;if(payload.killed)text+=payload.pk?' · Убийство мирного игрока: PK и карма':' · Игрок повержен';}
     return text;
   }
 
   async function start(zone) {
     const payload = await run('/api/hunt/start', { zone }, { heavy: true });
-    if (payload) say(payload.hunt.mob ? `${payload.hunt.mob.champion ? `${CHAMPION[payload.hunt.mob.champion].label} ` : ''}${payload.hunt.mob.name} нападает!` : 'Врага нет.');
+    if (payload) say('Ты на поле боя. Выбери цель и используй навык, либо подойди к монстрам.');
     render();
   }
 
-  async function skill(index) {
-    const payload = await run('/api/hunt/skill', { skillIndex: Number(index) }, { heavy: true });
+  async function skill(index, ctrlKey=false) {
+    const payload = await run('/api/hunt/skill', { skillIndex: Number(index), ...(playerTarget?{targetUserId:playerTarget,force:forceAttack || ctrlKey}:{}) }, { heavy: true });
     if (payload) {
-      say(describeResult(payload));
+      if(playerTarget && payload.result?.type==='damage')say(payload.killed?(payload.pk?'Убийство мирного игрока: PK и карма':'Игрок повержен'):'');
+      else say(describeResult(payload));
       if (payload.killed && payload.rewards?.champion) haptic('heavy');
     }
     render();
@@ -123,7 +135,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
 
   async function flee() {
     const payload = await run('/api/hunt/flee');
-    if (payload) say('Ты отступил.');
+    if (payload) say('Ты покинул поле боя.');
     render();
   }
 
@@ -152,7 +164,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
 
   function shotsHtml() {
     const shots = state.shots;
-    if (!shots?.grade) return '<div class="hunt-shots off"><span>🔸 Заряды</span><small>Надень оружие, чтобы использовать заряды.</small></div>';
+    if (!shots?.grade) return '<div class="hunt-shots off"><span>'+shotIcon('spiritshot','noGrade')+' Заряды</span><small>Надень оружие, чтобы использовать заряды.</small></div>';
     const kinds = shots.kinds.map(kind => `<em title="${escapeHtml(kind.label)}">${shotIcon(kind.id,shots.grade,kind.icon)} ${formatNumber(kind.count)}</em>`).join('');
     return `<div class="hunt-shots ${shots.enabled ? 'on' : ''}">
       <span>Заряды ${shots.grade === 'noGrade' ? 'NG' : escapeHtml(shots.grade)} · ${shots.perCast}/удар</span>${kinds}
@@ -163,72 +175,110 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
   function vitalityHtml() {
     const vit = state.vitality;
     if (!vit) return '';
-    return `<div class="hunt-vitality" title="Vitality усиливает опыт, пока полоса не опустеет">
-      ${bar('vit', 0, 0, { label: 'VIT', percent: (vit.points / vit.max) * 100, text: `опыт ×${Math.round(vit.rate * vit.bonus * 10) / 10} · ${formatNumber(vit.points)}` })}
-    </div>`;
+      return `<div class="hunt-vitality" title="${formatNumber(vit.points)} / ${formatNumber(vit.max)} · Vitality усиливает опыт, пока полоса не опустеет"><span>Vitality</span><div class="hunt-vit-track"><i style="width:${Math.max(0,Math.min(100,vit.max>0?vit.points/vit.max*100:0))}%"></i><b>Опыт ×${Math.round(vit.rate * vit.bonus * 10) / 10}</b></div></div>`;
   }
 
   function mobFrame(mob) {
     const champion = mob.champion ? CHAMPION[mob.champion] : null;
     const statuses = [];
     if (mob.stunned) statuses.push({ id: 'stun', label: 'Оглушён' });
+    for (const buff of mob.buffs || []) statuses.push({id:'damageUp',label:'Атака усилена',count:Math.ceil(buff.remainMs/1000)});
     for (const debuff of mob.debuffs || []) {
       if (debuff.kind === 'stun') continue;
       statuses.push({ id: debuff.kind, label: debuff.kind === 'armorBreak' ? 'Броня разбита' : 'Ослаблен', description: `−${Math.round(debuff.amount * 100)}%`, count: Math.ceil(debuff.remainMs / 1000) });
     }
     return `
     <section class="mmo-frame target-frame hunt-mob ${mob.champion ? `champion ${mob.champion}` : ''}">
-      <span class="mmo-portrait boss hunt-mob-icon"><em>${formatNumber(mob.level)}</em>${huntMobUrl(mob)?`<img class="hunt-mob-art" src="${huntMobUrl(mob)}" srcset="${huntMobUrl(mob)} 1x, ${huntMobUrl(mob,256)} 2x" width="64" height="64" alt="" decoding="async">`:'👾'}${champion?`<span class="hunt-champion-badge">${champion.icon}</span>`:''}</span>
+      <span class="mmo-portrait boss hunt-mob-icon"><em>${formatNumber(mob.level)}</em>${huntMobUrl(mob)?`<img class="hunt-mob-art" src="${huntMobUrl(mob)}" srcset="${huntMobUrl(mob)} 1x, ${huntMobUrl(mob,256)} 2x" width="64" height="64" alt="" decoding="async">`:icon('ghost')}${champion?`<span class="hunt-champion-badge">${champion.icon}</span>`:''}</span>
       <span class="mmo-frame-body">
-        <span class="mmo-frame-title"><strong>${escapeHtml(mob.name)}</strong><small>${champion ? escapeHtml(champion.label) : 'Моб'}${mob.element ? ` · ${ELEMENT_ICONS[mob.element] || ''}` : ''}</small></span>
+        <span class="mmo-frame-title"><strong>${escapeHtml(mob.name)}</strong><small>${champion ? escapeHtml(champion.label) : escapeHtml(mob.role || 'Моб')}${mob.element ? ` · ${ELEMENT_ICONS[mob.element] || ''}` : ''}</small></span>
         ${bar('hp', mob.currentHp, mob.hp)}
-        <span class="hunt-swing"><small data-hunt-next data-until="${Date.now() + mob.nextAttackMs}" data-total="${mob.attackMs}">…</small><i data-hunt-swing></i></span>
+        ${!state.field||mob.aggro?`<span class="hunt-swing"><small data-hunt-next data-until="${Date.now() + mob.nextAttackMs}" data-total="${mob.attackMs}">…</small><i data-hunt-swing></i></span>`:'<small class="hunt-peace">Не в бою · выбор цели не вызывает агрессию</small>'}
         ${statusIcons(statuses)}
       </span>
     </section>`;
   }
 
+  function dropsHtml(drops = []) {
+    return '<div class="hunt-drop-table">'+drops.map(d=>'<div>'+materialIcon(d.key,escapeHtml(d.icon))+'<span>'+escapeHtml(d.name)+'<small>×'+formatNumber(d.min)+(d.min===d.max?'':'–'+formatNumber(d.max))+'</small></span><b>'+new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(d.chance)+'%</b></div>').join('')+'</div>';
+  }
+
+  function fieldHtml() {
+    const field=state.field;if(!field)return '';
+    const zone=state.zones.find(z=>z.id===state.zone),art=huntZoneUrl(zone);
+    return '<section class="hunt-battlefield"><div class="hunt-field-head"><strong>'+escapeHtml(field.title)+'</strong><small>'+field.mobs.filter(m=>m.aggro).length+' в бою</small></div><div class="hunt-ground" '+(art?'style="--field-art:url('+art+')"':'')+'>'
+      +field.mobs.map(m=>'<button type="button" class="hunt-actor '+(!playerTarget&&m.instanceId===field.target?'selected ':'')+(m.aggro?'aggro':'')+'" data-target="'+escapeHtml(m.instanceId)+'" style="left:'+m.x*100+'%;top:'+m.y*70+'%" aria-pressed="'+(!playerTarget&&m.instanceId===field.target)+'"><span class="hunt-actor-portrait">'+(huntMobUrl(m)?'<img src="'+huntMobUrl(m)+'" alt="">':icon('ghost'))+'<i>'+m.level+'</i></span><span class="hunt-actor-hp"><i style="width:'+m.hpPercent+'%"></i></span><strong>'+escapeHtml(m.name)+'</strong><small>'+(m.stunned?'Оглушён':m.aggro?'Атакует':m.aggressive?'Агрессивный':m.role||'Мирный')+'</small></button>').join('')
+      +'<span class="hunt-hero-marker" style="left:'+field.x*100+'%;top:'+Math.min(90,field.y*70+30)+'%"><img src="'+classArtUrl(state.player.className,state.player.gender)+'" alt=""><small>Ты</small></span>'
+      +(field.mobs.length?'':'<div class="hunt-field-cleared">Поле зачищено!<br><small>Забери добычу и выбери следующую локацию.</small></div>')
+      +'</div><div class="hunt-movement"><button data-move="left" aria-label="Влево">←</button><button data-move="forward">Подойти ↑</button><button data-move="back">Отойти ↓</button><button data-move="right" aria-label="Вправо">→</button></div><p>Близкие агрессивные мобы нападают сами. Соседи помогают атакованной цели.</p></section>';
+  }
+
+  function peersHtml() {
+    if(!state.field)return '';
+    return '<section class="hunt-peers"><div class="mmo-section-title"><strong>'+icon('users')+' Игроки в локации</strong><small>'+ (state.players?.length || 0)+'</small></div>'
+      +(state.players?.length?'<div class="hunt-peer-list">'+state.players.map(p=>'<button class="hunt-peer pvp-'+p.pvp.status+' '+(String(p.userId)===String(playerTarget)?'selected':'')+'" data-pvp-target="'+p.userId+'" aria-pressed="'+(String(p.userId)===String(playerTarget))+'"><img src="'+classArtUrl(p.className,p.gender)+'" alt=""><span><strong>'+escapeHtml(p.name)+'</strong><small>'+p.level+' ур. · '+(p.pvp.status==='pk'?'PK':p.pvp.status==='flagged'?'PvP':'Мирный')+'</small></span>'+icon(p.pvp.status==='pk'?'skull':p.pvp.status==='flagged'?'flag':'user')+'</button>').join('')+'</div>':'<p>Других игроков рядом нет.</p>')+'</section>';
+  }
+
+  function pvpTargetHtml(peer) {
+    return '<section class="hunt-pvp-target"><small>Выбран игрок</small>'+playerFrame(peer)+'<label class="hunt-force"><input type="checkbox" data-force-attack '+(forceAttack?'checked':'')+'> Принудительная атака (Ctrl)</label>'
+      +(peer.pvp.status==='neutral'?'<p>Убийство мирного игрока даёт PK и карму. Если он ответит атакой, бой станет PvP.</p>':'<p>Игрок доступен для атаки без принудительного режима.</p>')+'</section>';
+  }
+
   function zonesHtml() {
-    const zones = state.zones;
-    return `<div class="hunt-zones">${zones.map(zone => `
+    const zones = state.zones.filter(z=>(z.kind||'field')===zoneKind);
+    return `<div class="equipment-filters"><button data-zone-kind="field" class="equipment-filter ${zoneKind==='field'?'active':''}">Поля</button><button data-zone-kind="catacomb" class="equipment-filter ${zoneKind==='catacomb'?'active':''}">Катакомбы · 6 локаций</button></div><div class="hunt-zones">${zones.map(zone => `
       <article class="hunt-zone ${zone.recommended ? 'recommended' : ''} ${zone.reachable ? '' : 'far'}">
         ${huntZoneUrl(zone)?`<img class="hunt-zone-art" src="${huntZoneUrl(zone)}" srcset="${huntZoneUrl(zone)} 1x, ${huntZoneUrl(zone,960)} 2x" width="480" height="160" alt="" loading="lazy" decoding="async">`:''}
         <div class="hunt-zone-head"><strong>${escapeHtml(zone.title)}</strong><small>ур. ${zone.min}–${zone.max}${zone.recommended ? ' · для тебя' : ''}</small></div>
-        <p class="hunt-zone-mobs">${zone.mobs.map(mob => `${mob.element ? ELEMENT_ICONS[mob.element] : ''}${escapeHtml(mob.name)} ${mob.level}`).join(' · ')}</p>
-        <button type="button" class="equipment-action forge-action" data-zone="${escapeHtml(zone.id)}" ${zone.reachable ? '' : 'disabled'}>${zone.reachable ? 'Охотиться' : 'Опыт не даётся'}</button>
+        <details class="hunt-zone-loot"><summary>Монстры и дроп · ${zone.mobs.length}</summary>${zone.mobs.map(mob=>`<details><summary>${escapeHtml(mob.name)} · ${mob.level} ур.</summary>${dropsHtml(mob.drops)}</details>`).join('')}</details>
+        <button type="button" class="equipment-action forge-action" data-zone="${escapeHtml(zone.id)}" ${zone.reachable ? '' : 'disabled'}>${zone.reachable ? 'Войти на поле боя' : 'Опыт не даётся'}</button>
       </article>`).join('')}</div>`;
   }
 
+  function soulHtml(){const soul=state.soulCrystals;if(!soul)return '';const names={red:'Красный',green:'Зелёный',blue:'Синий'},active=soul.active;return '<section class="mmo-frame hunt-soul"><strong>'+materialIcon(active?'soul_'+active.color+'_'+active.stage:'soul_red_0')+' Кристалл души '+(active?'· '+names[active.color]+' '+active.stage+' ур.':'· не выбран')+'</strong><p>С 40 уровня. Используй на подходящем монстре при HP ≤ 50%, затем победи. 10+ — прокачка на рейдах.</p><div class="select-row"><label for="hunt-soul-select">Кристалл</label><select id="hunt-soul-select" data-soul-select><option value="">Не выбран</option>'+soul.stock.map(o=>'<option value="'+o.color+':'+o.stage+'" '+(active?.color===o.color&&active?.stage===o.stage?'selected':'')+'>'+names[o.color]+' · '+o.stage+' ур. ×'+o.count+'</option>').join('')+'</select></div>'+(state.mob?'<button class="equipment-action forge-action" data-soul-charge '+(soul.charge?.ok?'':'disabled')+'>Поглотить душу</button><small>'+escapeHtml(soul.charge?.ok?'Готов к использованию':REASONS[soul.charge?.reason]||'')+'</small>':'')+'<p>Камни печати → AA · баланс '+formatNumber(soul.aa)+'</p><div>'+Object.entries(soul.seals).map(([c,o])=>materialIcon('seal_'+c)+' '+formatNumber(o.count)+' × '+o.rate+' AA').join(' · ')+'</div><button class="equipment-action forge-action" data-seal-exchange '+(Object.values(soul.seals).some(o=>o.count>0)?'':'disabled')+'>Обменять все камни на AA</button></section>';}
   function lastHtml() {
     const last = state.last;
     if (!last) return '';
-    const items = (last.items || []).map(item => `${item.icon} ${escapeHtml(item.name)} ×${item.amount}`).join(', ');
+    const items = (last.items || []).map(item => `${materialIcon(item.item)} ${escapeHtml(item.name)} ×${item.amount}`).join(', ');
     return `<section class="mmo-frame hunt-last">
       <div class="mmo-section-title"><strong>${last.champion ? `${CHAMPION[last.champion].icon} ` : ''}Последняя добыча: ${escapeHtml(last.name)}</strong><small>убито: ${formatNumber(state.kills)}</small></div>
-      <p>+${formatNumber(last.exp)} опыта · +${formatNumber(last.sp)} ОП${last.gold ? ` · +${formatNumber(last.gold)} 🪙` : ''}${items ? `<br>${items}` : ''}</p>
+      <p>+${formatNumber(last.exp)} опыта · +${formatNumber(last.sp)} ОП${last.gold ? ` · +${formatNumber(last.gold)} ${icon('coin')}` : ''}${items ? `<br>${items}` : ''}</p>
     </section>`;
   }
 
   function logHtml() {
-    if (!state.log?.length) return '';
-    return `<ol class="hunt-log">${state.log.map(row => `<li><i>${escapeHtml(row.icon)}</i><span>${escapeHtml(row.text)}</span></li>`).join('')}</ol>`;
+    const rows=[...(state.log||[]),...(state.pvpLog||[]).map(row=>({...row,icon:'⚔️'}))].sort((a,b)=>a.agoMs-b.agoMs).slice(0,8);
+    if (!rows.length) return '';
+    return `<section class="hunt-journal"><small>Журнал боя</small><ol class="hunt-log">${rows.map(row => `<li><i>${icon(row.icon==='⚑'?'flag':emojiIconName(row.icon)||'swords')}</i><span>${escapeHtml(row.text)}</span></li>`).join('')}</ol></section>`;
   }
 
   function render() {
     const player = state.player;
     const dead = player.respawnRemainMs > 0;
+    const peer=state.players?.find(p=>String(p.userId)===String(playerTarget));
+    if(!peer)playerTarget=null;
     const body = [];
-    if (state.mob) {
-      body.push(mobFrame(state.mob));
+    if (state.mob || state.field) {
+      body.push(fieldHtml());
+      body.push(peersHtml());
+      if(peer)body.push(pvpTargetHtml(peer));
+      else if(state.mob){body.push(mobFrame(state.mob));body.push('<details class="hunt-target-drops" '+(dropOpen?'open':'')+'><summary>Дроп выбранного монстра · '+(state.mob.drops?.length||0)+'</summary>'+dropsHtml(state.mob.drops)+'<small>Шансы с учётом уровня и типа чемпиона. Каждый предмет разыгрывается отдельно.</small></details>');}
       body.push(playerFrame(player));
       if (dead) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
-      body.push(hotbar(player.skills));
+      body.push('<section class="hunt-controls">');
+      body.push(hotbar(player.skills,{className:player.className}));
       body.push(potionBar(player.potions, { disabled: pending || dead }));
       body.push(shotsHtml());
-      body.push(vitalityHtml());
+      if(!peer)body.push(vitalityHtml());
       body.push('<button type="button" class="hunt-flee" data-flee>Отступить</button>');
+      body.push('</section>');
       body.push(logHtml());
+      if(!peer){
+        body.push(lastHtml());
+        body.push('<details class="hunt-extra"><summary>Кристалл души и камни печати</summary>'+soulHtml()+'</details>');
+      }
     } else {
+      body.push(soulHtml());
       body.push(playerFrame(player));
       body.push(vitalityHtml());
       body.push(potionBar(player.potions, { disabled: pending || dead }));
@@ -245,7 +295,16 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
   }
 
   function bind() {
-    content.querySelectorAll('[data-skill]').forEach(button => button.addEventListener('click', () => skill(button.dataset.skill)));
+    content.querySelectorAll('[data-pvp-target]').forEach(b=>b.addEventListener('click',()=>{playerTarget=b.dataset.pvpTarget;forceAttack=false;render();}));
+    content.querySelector('[data-force-attack]')?.addEventListener('change',e=>{forceAttack=e.target.checked;});
+    content.querySelector('.hunt-target-drops')?.addEventListener('toggle', e=>{dropOpen=e.target.open;});
+    content.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',async()=>{playerTarget=null;forceAttack=false;await run('/api/hunt/target',{targetId:b.dataset.target});render();}));
+    content.querySelectorAll('[data-move]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/hunt/move',{direction:b.dataset.move});render();}));
+    content.querySelectorAll('[data-zone-kind]').forEach(b=>b.addEventListener('click',()=>{zoneKind=b.dataset.zoneKind;render();}));
+    content.querySelector('[data-soul-select]')?.addEventListener('change',async e=>{const [color,stage]=e.target.value.split(':');await run('/api/soul/select',{color:color||null,stage:Number(stage)});render();});
+    content.querySelector('[data-soul-charge]')?.addEventListener('click',async()=>{const p=await run('/api/hunt/soul');if(p)say('Кристалл использован. Победи монстра для попытки прокачки.');render();});
+    content.querySelector('[data-seal-exchange]')?.addEventListener('click',async()=>{const counts=Object.fromEntries(Object.entries(state.soulCrystals.seals).map(([c,o])=>[c,o.count]));const p=await run('/api/catacombs/exchange',{counts});if(p)say('Получено '+formatNumber(p.aa)+' AA.');render();});
+    content.querySelectorAll('[data-skill]').forEach(button => button.addEventListener('click', e => skill(button.dataset.skill,e.ctrlKey)));
     content.querySelectorAll('[data-boss-potion]').forEach(button => button.addEventListener('click', () => drink(button.dataset.bossPotion)));
     content.querySelectorAll('[data-zone]').forEach(button => button.addEventListener('click', () => start(button.dataset.zone)));
     content.querySelector('[data-flee]')?.addEventListener('click', flee);
@@ -254,7 +313,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
 
   // The mob swings in real time: poll while a fight is on, show new swings, and tick the timers locally.
   async function poll() {
-    if (pending || !overlay.isConnected || !state.mob) return;
+    if (pending || !overlay.isConnected || (!state.mob && !state.field)) return;
     try {
       const next = await api('/api/hunt');
       // Countdowns tick locally; only real changes re-render.
@@ -264,7 +323,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
       state = next;
       if (top && top !== lastLog) {
         lastLog = top;
-        say(top);
+          if(!playerTarget)say(top);
         if (/бьёт/.test(top)) haptic('medium');
       }
       render();
@@ -274,6 +333,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement }) 
   }
 
   function tick() {
+    content.querySelectorAll('[data-pvp-flag]').forEach(node=>{node.textContent=formatDuration(Math.max(0,Number(node.dataset.until)-Date.now()));});
     content.querySelectorAll('[data-skill-cooldown]').forEach(node => {
       const remain = Math.max(0, Number(node.dataset.until || 0) - Date.now());
       node.textContent = remain > 0 ? formatDuration(remain) : '';

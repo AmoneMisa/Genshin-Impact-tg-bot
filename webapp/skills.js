@@ -1,8 +1,9 @@
 import { escapeHtml } from './escape-html.js';
 import { materialIcon } from './material-icons.js';
 import { menuArtFor } from './menu-art.js';
+import {icon} from './icons.js';
 
-export const SKILL_RUNES = Object.freeze({ damage: '⚔️', heal: '✚', shield: '🛡️', buff: '⬆', debuff: '⬇', restore: '🔹', utility: '✦' });
+export const SKILL_RUNES = Object.freeze({damage:icon('swords'),heal:icon('heart'),shield:icon('shield'),buff:icon('sparkles'),debuff:icon('cloud-fog'),restore:icon('droplet'),utility:icon('wand-sparkles')});
 
 const REASONS = {
   invalid_skill: 'Навык не найден. Обнови список и попробуй снова.',

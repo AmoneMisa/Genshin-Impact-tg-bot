@@ -748,3 +748,9 @@ Edit this painted royal basketball court: remove the basketball on the floor and
 The 26 exact delivered prompts are recorded in [art-source/ui-icons/prompts.md](../art-source/ui-icons/prompts.md), with job keys, source paths and original built-in imagegen output paths in [jobs.json](../art-source/ui-icons/jobs.json). These transparent paintings cover utility buttons, navigation, card suits, dice and crossed swords. No reference files were consumed in this batch.
 
 Reviewed sources and shared aliases are in `art-source/ui-icons/catalog.json`; 95 icon names reuse 58 paintings. Build transparent 128/256 WebP delivery with `npm run ui-art:build`. See [STATUS.md](../art-source/ui-icons/STATUS.md) for verification and scope.
+
+## 13. Deferred polish: menu cards
+
+Three menu paintings delivered on 10 October 2026: `passives`, `luckShop`, `auction`. Exact master style, full prompts and generation paths: [menu/PROMPTS.md](../art-source/polish/menu/PROMPTS.md) and [menu/jobs.json](../art-source/polish/menu/jobs.json). Generated with the built-in imagegen tool, one call per asset, without external references. No text or spiders. Opaque paintings; quiet lower third preserves menu labels.
+
+Default delivery is 480px WebP, with 960px siblings. Rebuild via `scripts/ui/build-menu-polish.py`. These paintings are integrated through the explicit `MENU_ART` allowlist. See [STATUS.md](../art-source/polish/STATUS.md) for local verification and remaining polish.

@@ -1,3 +1,4 @@
+import {SOUL_COLORS,SOUL_COL_PRICES,soulCrystalKey} from './soulCrystalData.js';
 // "Донат-магазин": what Coins of Luck (the donation currency, bought with Telegram Stars) buy.
 // Prices are in coins; edit them here. Rented (timed) epic equipment is built per player in
 // miniapp/luck.js, because what is offered depends on the character's class.
@@ -15,6 +16,7 @@ import materials from './materialsTemplate.js';
 import { LIFESTONE_SHOP, lifestoneKey } from './augmentData.js';
 
 export const LUCK_SHOP_GROUPS = Object.freeze([
+  {id:'soul',title:'Кристаллы души 14–17'},
   { id: 'epic', title: 'Временные эпики' },
   { id: 'lifestones', title: 'Камни жизни' },
   { id: 'scrolls', title: 'Свитки' },
@@ -75,7 +77,9 @@ const lifeStoneItems = Object.entries(LIFESTONE_SHOP.top).map(([grade, cost]) =>
   subtitle: `Аугментация оружия и бижутерии грейда ${grade}; у оружия — навык с шансом 80%`, cost, grant: { materials: { [lifestoneKey(grade, 'top')]: 1 } },
 }));
 
+const soulCrystals=Object.entries(SOUL_COLORS).flatMap(([color,label])=>Object.entries(SOUL_COL_PRICES).map(([stage,cost])=>({id:'soul-'+color+'-'+stage,group:'soul',title:label+' кристалл души · '+stage+' ур.',icon:'💠',subtitle:'Для SA старших грейдов',cost,grant:{materials:{[soulCrystalKey(color,+stage)]:1}}})));
 export default Object.freeze([
+  ...soulCrystals,
   ...lifeStoneItems,
   ...scrolls,
   ...elixirItems,

@@ -68,8 +68,8 @@ test('the encounter panel lists minions as targets, flags required units and war
 test('boss statuses include enrage, minion shield, lock, stun and debuffs', () => {
   const list = encounterStatuses({ statuses: [{ id: 'reflect', label: 'Зеркало' }], enrage: 30, shielded: 50, locked: true, stunned: true, debuffs: [{ kind: 'armorBreak', amount: 0.3, remainMs: 4500 }, { kind: 'stun', amount: 0, remainMs: 1000 }] });
   assert.deepEqual(list.map(item => item.id), ['reflect', 'enrage', 'armored', 'locked', 'stun', 'armorBreak']);
-  assert.match(statusIcons(list), /😡/);
-  assert.match(targetFrame({ name: 'kivaha', level: 1, hp: 10, currentHp: 5, remainMs: 1000, aliveTime: 1, enrage: 20 }), /😡/);
+  assert.match(statusIcons(list), /ui-icon-angry[^>]+\.webp/);
+  assert.match(targetFrame({ name: 'kivaha', level: 1, hp: 10, currentHp: 5, remainMs: 1000, aliveTime: 1, enrage: 20 }), /ui-icon-angry[^>]+\.webp/);
 });
 
 test('locked skills show the unlock level and are disabled; profession skills are tier-marked', () => {
@@ -77,10 +77,10 @@ test('locked skills show the unlock level and are disabled; profession skills ar
     { index: 3, name: 'Метеоритный дождь', description: '', isDamage: true, costMp: 330, canUse: false, locked: true, needLevel: 44, tier: 3, tags: ['Серия ×5'], cooldownMs: 0 },
     { index: 4, name: 'Клятва', description: '', isBuff: true, costMp: 90, canUse: true, tier: 2, cooldownMs: 0 },
   ]);
-  assert.match(html, /🔒 ур\. 44/);
+  assert.match(html, /ui-icon-lock[^>]+\.webp[\s\S]*ур\. 44/);
   assert.match(html, /mmo-skill boss-skill damage locked tier-3/);
   assert.match(html, /Серия ×5/);
-  assert.match(html, /⬆/);
+  assert.match(html, /ui-icon-sparkles[^>]+\.webp/);
 });
 
 test('multi-target and charging attacks read well in the attack panel', () => {

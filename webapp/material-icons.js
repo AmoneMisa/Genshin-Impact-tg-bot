@@ -9,6 +9,7 @@ const GRADES = Object.freeze(['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'])
 /** {icon, grade} of an enchant / crafting material key, or null for any other material. */
 export function materialIconInfo(key) {
   const parts = String(key || '').split('_');
+  if(['soul','seal'].includes(parts[0])&&['red','green','blue'].includes(parts[1])&&(parts[0]==='seal'&&parts.length===2||parts.length===3&&/^(?:[0-9]|1[0-7])$/.test(parts[2])))return {icon:'crystal',color:parts[1]};
   if(parts[0]==='lifestone' && GRADES.includes(parts.at(-1)) && (parts.length===2 || parts.length===3 && ['mid','high','top'].includes(parts[1])))return {icon:'lifestone',grade:parts.at(-1),quality:parts.length===3?parts[1]:'normal'};
   if(parts[0]==='attr' && parts.length===3 && ['stone','crystal','jewel'].includes(parts[1]) && ['fire','water','wind','earth','holy','dark'].includes(parts[2]))return {icon:'attr-'+parts[1],element:parts[2]};
   if(parts[0]==='egg' && parts.length===2 && ['wyvern','dragon','ancient'].includes(parts[1]))return {icon:'egg-'+parts[1]};
@@ -27,6 +28,7 @@ export function materialIconInfo(key) {
 export function materialIcon(key, fallback = '✦') {
   const info = materialIconInfo(key);
   if (!info) return icon('sparkle','mat-icon');
+  if(info.color)return '<img class="mat-icon soul-'+info.color+'" src="/art/icons/crystal-128.webp" width="22" height="22" alt="" style="filter:hue-rotate('+({red:315,green:65,blue:170}[info.color])+'deg) saturate(1.8)">';
   if(['lifestone','attr-stone','attr-crystal','attr-jewel','soulshot','spiritshot','egg-wyvern','egg-dragon','egg-ancient'].includes(info.icon))return paintedIconHtml(info.icon,info.quality?'quality-tint-'+info.quality:info.element?'element-tint-'+info.element:info.grade?'grade-tint-'+info.grade.toLowerCase():'',fallback);
   const url = size => `/art/icons/${info.icon}-${size}.webp`;
   return `<img class="mat-icon grade-tint-${info.grade.toLowerCase()}" src="${url(128)}" srcset="${url(128)} 1x, ${url(256)} 2x" width="22" height="22" alt="" loading="lazy" decoding="async" draggable="false">`;

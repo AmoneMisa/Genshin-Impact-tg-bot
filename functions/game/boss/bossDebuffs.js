@@ -5,7 +5,7 @@
 //                interrupted. A stunned boss shrugs off further stuns for a
 //                while, so it cannot be chain-locked.
 export const STUN_IMMUNITY_MS = 20 * 1000;
-const AMOUNT_CAP = {armorBreak: 0.6, weaken: 0.5};
+const AMOUNT_CAP = {armorBreak: 0.6, weaken: 0.5,slow:0.5,accuracyDown:0.5,mute:1};
 
 function mark(boss, field) {
     boss.markModified?.(field);

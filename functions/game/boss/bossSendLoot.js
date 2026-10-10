@@ -1,4 +1,5 @@
 import getRandom from "../../getters/getRandom.js";
+import {absorbRaidSouls} from '../equipment/soulCrystals.js';
 import generateRandomEquipment from "../../game/equipment/generateRandomEquipment.js";
 import getValueByChance from "../../getters/getValueByChance.js";
 import getBossLoot from "./getters/getBossLoot.js";
@@ -125,6 +126,10 @@ export default async function(boss, chatId) {
         gotLoot[firstPlaceUserId].firstPlaceEquipment = item.name;
     }
 
+    for(const result of absorbRaidSouls(playedSessions,boss.name)){
+        gotLoot[result.userId].soulCrystal=result;
+        if(result.outcome==='success')gotLoot[result.userId].items.push({item:`soul_${result.color}_${result.stage}`,name:`Кристалл души ${result.from} → ${result.stage}`,icon:'💠',amount:1});
+    }
     await chat.save();
     if (template?.epic) {
         // A failed egg award must not lose the loot that is already saved.

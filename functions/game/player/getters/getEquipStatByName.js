@@ -1,3 +1,5 @@
+import {saStat} from '../../equipment/soulCrystals.js';
+import {soulBuffStat} from '../../equipment/soulCrystalCombat.js';
 // "power"/"defencePower" are stored (and displayed, see getItemString.js) as
 // weapon-power POINTS (e.g. 45, meaning +45%), unlike every other multiplicative
 // stat (attackMul, criticalDamage, incomingDamageModifier, ...) which is stored
@@ -70,6 +72,9 @@ export default function (session, statName, isMul = false) {
             }
         }
 
+        const soul=saStat(session,slot,statName,isMul);
+        if(soul!==null){if(isMul)totalStatValue*=soul;else totalStatValue+=soul;}
+
         // The Life Stone bonus of a weapon.
         const augment = augmentStat(slot, statName, isMul);
         if (augment !== null) {
@@ -93,5 +98,5 @@ export default function (session, statName, isMul = false) {
     }
 
     const potionBonus=potionStatBonus(session,statName,isMul)*(isMul ? extraStatBonus(session,statName,true) : 1);
-    return isMul ? totalStatValue*potionBonus : totalStatValue+potionBonus+extraStatBonus(session,statName);
+    return isMul ? totalStatValue*potionBonus*soulBuffStat(session,statName,true) : totalStatValue+potionBonus+extraStatBonus(session,statName)+soulBuffStat(session,statName,false);
 }

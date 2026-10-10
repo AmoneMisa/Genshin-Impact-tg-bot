@@ -1,4 +1,5 @@
 import bossReflectDamage from '../boss/bossReflectDamage.js';
+import {applySoulHit,tickSoulDots} from '../equipment/soulCrystalCombat.js';
 import calcDamage from '../boss/calcDamage.js';
 import getBossDefence from '../boss/getBossStats/getBossDefence.js';
 import userVampireSkill from './userVampireSkill.js';
@@ -36,6 +37,7 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
     if (!boss) {
         throw new Error("Босс не найден!");
     }
+    tickSoulDots(boss,now);
 
     const template = bossTemplateFor(boss);
     const unit = targetId && targetId !== 'boss' ? findUnit(boss, targetId) : null;
@@ -70,7 +72,13 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
         }
     } else {
         const shield = armorShield(boss, template);
-        const landing = Math.ceil(total * (1 - shield));
+        let landing = Math.ceil(total * (1 - shield));
+        if (boss.playerTarget) {
+            const absorbed = Math.min(boss.playerTarget.shield, landing);
+            boss.playerTarget.shield -= absorbed;
+            landing -= absorbed;
+            result.shieldAbsorbed = absorbed;
+        }
         const floor = aliveRequiredUnits(boss).length ? 1 : 0;
         const dealt = Math.max(0, Math.min(landing, boss.currentHp - floor));
         boss.currentHp -= dealt;
@@ -80,7 +88,9 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
         result.locked = floor === 1 && boss.currentHp <= 1 && dealt < landing;
     }
 
-    const vampirePower = (skill.vampirePower || 0) + getRouteBonus(skill).vampire;
+    const soul=unit?{drain:0,effects:[]}:applySoulHit(session,boss,{critical:isHasCritical,dealt:result.dealt,now});
+    result.soulEffects=soul.effects;
+    const vampirePower = (skill.vampirePower || 0) + getRouteBonus(skill).vampire + soul.drain;
     if (vampirePower > 0 && result.dealt > 0) {
         result.vampire = userVampireSkill({vampirePower}, result.dealt);
         playerStats.hp = Math.ceil(Math.min(

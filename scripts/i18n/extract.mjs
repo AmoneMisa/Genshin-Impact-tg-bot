@@ -13,7 +13,8 @@ import { fileURLToPath } from 'url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SCAN = ['webapp', 'miniapp', 'dictionaries', 'template', 'functions', 'db/templates.js'];
-const SKIP_DIRS = new Set(['node_modules', 'art', 'models', 'vendor', 'i18n']);
+// The Russian design lab is a review artifact; it does not ship as a localized game screen.
+const SKIP_DIRS = new Set(['node_modules', 'art', 'models', 'vendor', 'i18n', 'design']);
 const CYRILLIC = /[А-Яа-яЁё]/;
 const REGEX_PREV = new Set(['(', ',', '=', ':', '[', '!', '&', '|', '?', '{', '}', ';', '+', '-', '*', '%', '<', '>', '~', '^']);
 

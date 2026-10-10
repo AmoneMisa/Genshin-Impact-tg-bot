@@ -1,3 +1,4 @@
+import {saInfo,saBonuses,installWeaponSa,removeWeaponSa,soulCrystalState} from '../functions/game/equipment/soulCrystals.js';
 import { createHash } from 'node:crypto';
 import { daysLeft, expireTimedItems, isTimedItem } from '../functions/game/equipment/timedItems.js';
 import equipmentTemplate from '../template/equipmentTemplate.js';
@@ -28,7 +29,7 @@ import {
   scrollPrice,
 } from '../functions/game/equipment/enchantItem.js';
 import { activeSets, getEnchantLevel, maxEnchantLevel, safeEnchantLevel } from '../functions/game/equipment/itemBonuses.js';
-import { describeItemStats } from '../functions/game/equipment/describeStats.js';
+import { describeItemStats,describeStat } from '../functions/game/equipment/describeStats.js';
 import { canClassUse } from '../functions/game/equipment/catalog.js';
 import { isActuallyEquipped } from '../functions/game/equipment/snapshots.js';
 import { getMaterialCount } from '../functions/game/player/materials.js';
@@ -36,7 +37,7 @@ import { augmentInfo, augmentItem } from '../functions/game/equipment/augment.js
 import { addAttribute, attributeInfo, clearAttribute } from '../functions/game/equipment/attributes.js';
 import { activateSkill } from '../functions/game/equipment/lifestoneSkills.js';
 
-const ACTIONS = new Set(['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'ls_activate', 'crystallize']);
+const ACTIONS = new Set(['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize']);
 
 function asNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -76,6 +77,7 @@ function itemFingerprint(item, index) {
     cost: asNumber(item?.cost),
     isUsed: Boolean(item?.isUsed),
     enchant: getEnchantLevel(item),
+    sa:item?.sa||null,
   });
 
   return createHash('sha256').update(stable).digest('hex').slice(0, 16);
@@ -119,8 +121,9 @@ function sanitizeItem(session, item, index) {
     // Items no longer have random quality / durability; the fields stay so older clients render.
     quality: null,
     persistence: null,
-    stats: describeItemStats(item),
+    stats: [...describeItemStats(item),...Object.entries(saBonuses(item)).map(([key,value])=>describeStat(key,value))],
     ability: item?.ability || null,
+    sa:saInfo(session,item),
     epic: Boolean(item?.epic),
     epicBoss: item?.epicBoss || null,
     epicWeapon:item?.epicWeapon || null,
@@ -220,6 +223,7 @@ export function getEquipmentState(session) {
   return {
     ...resources,
     resources,
+    soulCrystals:soulCrystalState(session),
     count: sanitized.length,
     equippedCount: sanitized.filter((item) => item.isUsed).length,
     maxForgeLevel: maxEnchantLevel(),
@@ -272,6 +276,11 @@ export function performEquipmentAction(session, key, action, options = {}) {
 
     unequipItem(session, item);
     return { ok: true, action, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
+  }
+
+  if(action==='sa_install'||action==='sa_remove'){
+    const result=action==='sa_install'?installWeaponSa(session,item,options.saId):removeWeaponSa(session,item);
+    return {...result,action,item:sanitizeItem(session,item,index),equipment:getEquipmentState(session)};
   }
 
   if (action === 'attribute') {

@@ -165,8 +165,9 @@
 .mmo-frame::after { bottom: -5px; left: calc(50% - 4px); }
 button.mmo-frame { cursor: pointer; }
 button.mmo-frame:active { transform: scale(.99); }
-.mmo-frame-body { display: grid; gap: 5px; min-width: 0; }
-.mmo-frame-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.mmo-frame-body { display: grid; grid-template-columns:minmax(0,1fr); gap: 5px; min-width: 0; }
+.mmo-frame-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; min-width:0; }
+.mmo-frame-title strong {min-width:0;}
 .mmo-frame-title strong { font: 700 17px/1.1 var(--serif); color: #f3dca6; text-shadow: 0 1px 0 #000, 0 0 12px rgba(216, 179, 106, .25); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mmo-frame-title small { font-size: 11px; color: rgba(243, 220, 166, .6); white-space: nowrap; }
 

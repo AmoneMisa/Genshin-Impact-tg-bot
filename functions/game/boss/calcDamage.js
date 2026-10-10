@@ -1,4 +1,5 @@
 import getRandom from '../../getters/getRandom.js';
+import {soulBackCritical} from '../equipment/soulCrystalCombat.js';
 import getRandomWithoutFloor from '../../getters/getRandomWithoutFloor.js';
 import getAttack from '../player/getters/getAttack.js';
 import getBossDefence from './getBossStats/getBossDefence.js';
@@ -13,9 +14,11 @@ import getEquipStatByName from '../player/getters/getEquipStatByName.js';
 import { getSkillPowerMultiplier } from '../player/skillEnchant.js';
 import { bossDebuffAmount } from './bossDebuffs.js';
 import { getRouteBonus } from '../player/skillRoutes.js';
-import { attackFactor, attributeProfile, normalizeElement } from '../equipment/attributes.js';
+import { attackFactor, attributeProfile, normalizeElement, pvpFactor } from '../equipment/attributes.js';
+import {fieldPvpEffect} from '../hunt/fieldPvpState.js';
 import { chanceSkillFactor, equippedChanceSkills } from '../equipment/lifestoneSkills.js';
 import { shotBoost } from '../shots/shots.js';
+import { huntDebuff } from '../hunt/huntAi.js';
 
 /**
  * One hit of `skill` from `session` on the boss (or on a minion, via
@@ -39,6 +42,7 @@ export default function (session, skill, boss, options = {}) {
 
     let criticalChanceMultiplier = getCriticalChanceMultiplier(session);
     let criticalChance = getCriticalChance(session) + criticalChanceMultiplier + (skill.critChanceBonus || 0) + getRouteBonus(skill).critBonus;
+    criticalChance*=soulBackCritical(session,skill);
 
     if (criticalChance > 100) {
         criticalChance = 100;
@@ -51,15 +55,22 @@ export default function (session, skill, boss, options = {}) {
     criticalDamage *= criticalDamageMultiplier;
 
     let attack = getAttack(session, session.game.gameClass);
+    attack *= 1 - fieldPvpEffect(session, 'weaken', now);
+    if (boss.hunt) attack *= 1 - huntDebuff(session, 'weaken', now);
     let damageMultiplier = getDamageMultiplier(session.game.effects);
-    let bossDefence = (defence ?? (boss.hunt ? boss.hunt.defence : getBossDefence(boss, template))) * (1 - bossDebuffAmount(boss, 'armorBreak', now));
+    let bossDefence = (defence ?? boss.playerTarget?.defence ?? (boss.hunt ? boss.hunt.defence : getBossDefence(boss, template))) * (1 - bossDebuffAmount(boss, 'armorBreak', now));
     let additionalDamageMul = (getAdditionalDamageMul(session) / 100) + 1;
 
     dmg = 70 * attack / bossDefence * modifier * additionalDamageMul;
     dmg *= damageMultiplier;
     // The weapon's element against the boss's (minions have none), and the chance skills of a Life Stone weapon.
     // A hunt mob (boss.hunt) has its own element; a boss's minion has none.
-    if (boss.hunt) dmg *= attackFactor(attributeProfile(session).attack, boss.hunt.element || null);
+    if (boss.playerTarget) {
+        dmg *= pvpFactor(attributeProfile(session), boss.playerTarget.attributes);
+        dmg *= getEquipStatByName(session,'pvpDamageMul',true);
+        dmg *= boss.playerTarget.incoming * (1 - boss.playerTarget.guard);
+    }
+    else if (boss.hunt) dmg *= attackFactor(attributeProfile(session).attack, boss.hunt.element || null);
     else if (defence === undefined) dmg *= attackFactor(attributeProfile(session).attack, normalizeElement(template?.element));
     dmg *= chanceSkillFactor(equippedChanceSkills(session));
     // Soulshots / Spiritshots armed for this skill.

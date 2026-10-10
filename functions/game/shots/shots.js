@@ -4,6 +4,7 @@
 // The boost is handed to the damage code through a one-skill slot: armShots() before castSkill,
 // clearShots() after it; calcDamage reads shotBoost().
 import { SHOTS_PER_CAST, SHOT_KINDS, shotKey } from '../../../template/shotsData.js';
+import {soulShotCost} from '../equipment/soulCrystalCombat.js';
 import { isMagicClass } from '../classes/classFamily.js';
 import { uniqueEquipped } from '../equipment/itemBonuses.js';
 import { getMaterialCount, spendMaterials } from '../player/materials.js';
@@ -51,7 +52,7 @@ export function armShots(session, skill) {
     if (!skill?.isDealDamage || !session?.game?.autoShots) return null;
     const grade = weaponGrade(session);
     if (!grade) return null;
-    const need = SHOTS_PER_CAST[grade] || 1;
+    const need = soulShotCost(session,SHOTS_PER_CAST[grade] || 1);
     for (const id of shotKindsFor(session)) {
         const key = shotKey(id, grade);
         if (getMaterialCount(session, key) < need) continue;

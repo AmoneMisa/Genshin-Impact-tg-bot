@@ -1,3 +1,4 @@
+import {SOUL_MATERIALS} from './soulCrystalData.js';
 import {SHOT_GRADES, SHOT_KINDS, gradeLabel, shotKey} from './shotsData.js';
 import {ATTRIBUTE_TIERS, ELEMENTS, LIFESTONE_GRADES, LIFESTONE_TIERS, attributeKey, lifestoneKey} from './augmentData.js';
 
@@ -69,6 +70,7 @@ const craftMaterials = Object.entries(CRAFT_FAMILIES).flatMap(([family, info]) =
 })));
 
 export default [
+    ...SOUL_MATERIALS,
     ...lifeStones,
     ...attributeStones,
     ...shots,

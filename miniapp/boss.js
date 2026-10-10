@@ -47,7 +47,7 @@ export function skillDto(session, skill, index, now = Date.now()) {
   const cooldownMs = Math.max(0, cooldownUntil - now);
   const hp = getCurrentHp(session, session.game.gameClass);
   const mp = getCurrentMp(session, session.game.gameClass);
-  const effectiveCost = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass));
+  const effectiveCost = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass), session);
   const costHp = Math.max(0, number(effectiveCost.costHp));
   const costMp = Math.max(0, number(effectiveCost.cost));
   const needLevel = Math.max(0, number(skill?.needLvl));
@@ -387,7 +387,7 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex, targe
     }
   }
 
-  const { cost, costHp } = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass));
+  const { cost, costHp } = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass), session);
   const costCount = costHp > 0 ? costHp : cost;
   const costType = costHp > 0 ? 'hp' : 'mp';
   skillUsagePayCost(session, costType, costCount);

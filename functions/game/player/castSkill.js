@@ -1,4 +1,5 @@
 import userDealDamage from './userDealDamage.js';
+import {applySoulSpell} from '../equipment/soulCrystalCombat.js';
 import useHealSkill from './useHealSkill.js';
 import useShieldSkill from './useShieldSkill.js';
 import getMaxHp from './getters/getMaxHp.js';
@@ -29,6 +30,7 @@ function restoreMana(session, share) {
  */
 export default function castSkill(session, boss, skill, options = {}) {
     const result = resolveSkill(session, boss, skill, options);
+    applySoulSpell(session,skill,options.now??Date.now());
     // Route bonuses that apply to any kind of skill.
     const route = getRouteBonus(skill);
     const now = options.now ?? Date.now();

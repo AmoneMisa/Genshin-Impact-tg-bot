@@ -1,3 +1,4 @@
+import {SOUL_COLORS,SOUL_GOLD_PRICES,soulCrystalKey} from './soulCrystalData.js';
 import buffPotions from './buffPotions.js';
 import {LIFESTONE_SHOP, lifestoneKey} from './augmentData.js';
 import {SHOT_GRADES, SHOT_KINDS, SHOT_PACK, SHOT_PACK_PRICE, gradeLabel, shotKey} from './shotsData.js';
@@ -18,7 +19,9 @@ const shotPacks = SHOT_KINDS.flatMap(kind => SHOT_GRADES.map(grade => ({
     message: `ты получил ${SHOT_PACK} зарядов (${gradeLabel(grade)}). Включи автозаряды в бою.`,
 })));
 
+const soulCrystals=Object.entries(SOUL_COLORS).flatMap(([color,label])=>SOUL_GOLD_PRICES.map((cost,stage)=>({name:label+' кристалл души · '+stage+' ур.',cost,time:1,command:'soul-'+color+'-'+stage,category:'soul',repeatable:true,material:{key:soulCrystalKey(color,stage),amount:1},message:'Кристалл для прокачки и установки SA в оружие.'})));
 export default [
+    ...soulCrystals,
     ...midLifeStones,
     ...shotPacks,
     ...buffPotions.map(p=>({name:p.name,cost:p.cost,time:1,command:'potionBuff-'+p.id,potionId:p.id,message:'ты получил '+p.name+'. Используй его в инвентаре.',category:'player'})),

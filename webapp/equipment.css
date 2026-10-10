@@ -114,3 +114,36 @@
 .quality-tint-top {filter:hue-rotate(230deg)}
 .champion-tint-blue {filter:hue-rotate(155deg) saturate(1.5)}
 .champion-tint-red {filter:hue-rotate(320deg) saturate(1.7)}
+.upgrade-card {padding:0;overflow:hidden;border-radius:10px;background:linear-gradient(150deg,#26272b,#14171a);border-color:#65583c;opacity:1}
+.forge-item-hero {display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px;padding:16px;align-items:center;background:radial-gradient(ellipse at 0 50%,#73633c30,transparent 80%)}
+.forge-item-hero .forge-mini-loot {height:96px;width:82px;margin:0;overflow:hidden;display:grid;place-items:center}
+.forge-item-hero .forge-mini-loot .loot-render {width:82px;height:96px;transform:none}
+.forge-item-hero h3 {font:600 16px/1.3 system-ui;margin:6px 0;color:#f1e4bf;overflow-wrap:anywhere}
+.forge-grade {font:10px system-ui;letter-spacing:.08em;color:#bca87c;text-transform:uppercase}
+.forge-progress {font:600 20px system-ui;color:#e6c877}
+.forge-progress span {font-size:13px;color:#8e8b82;margin:0 6px}
+.forge-stat-table {margin:0;padding:0 16px 12px;display:grid;gap:5px}
+.forge-stat-table div {display:flex;justify-content:space-between;gap:10px;font:11px/1.4 system-ui}
+.forge-stat-table dt {display:none}
+.forge-stat-table dd {margin:0;color:#b8c4cc}
+.forge-mechanic {border-top:1px solid #68614b55;margin:0;min-width:0}
+.forge-mechanic summary {display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;list-style:none;font:600 12px/1.4 system-ui;color:#e1d3ad}
+.forge-mechanic summary::-webkit-details-marker {display:none}
+.forge-mechanic summary>span:not(.forge-chevron) {min-width:0;flex:1}
+.forge-mechanic summary small {display:block;font:11px/1.4 system-ui;color:#a7acae;margin-top:2px}
+.forge-mechanic .forge-chevron {margin-left:auto;color:#bcaa7b;transition:transform .2s}
+.forge-mechanic[open] .forge-chevron {transform:rotate(180deg)}
+.forge-mechanic-body {display:grid;gap:9px;padding:0 16px 16px;min-width:0}
+.forge-mechanic-body p,.forge-mechanic-body>small {margin:0;color:#9ca8b1;font:11px/1.6 system-ui}
+.forge-price {display:flex;align-items:center;gap:6px;justify-content:space-between;font:11px/1.5 system-ui;color:#aaa89e}
+.forge-price b {margin-left:auto;white-space:nowrap;color:#dfcd9c;font-weight:500}
+.forge-mechanic-body .forge-warning {color:#dca580;padding:8px;border-left:2px solid #b6784d;background:#b6784d0c}
+.forge-mechanic-body .forge-action {font:600 12px/1.4 system-ui;min-height:40px;border-radius:5px;padding:9px;white-space:normal}
+.forge-option {display:flex;align-items:center;gap:10px;width:100%;padding:10px;border:1px solid #655b42;background:#131719;color:#e5d5ac;border-radius:5px;text-align:left;font:600 12px system-ui;cursor:pointer}
+.forge-option>span {flex:1;min-width:0}
+.forge-option small {display:block;color:#8e9ea7;font:11px/1.5 system-ui;margin-top:3px}
+.forge-option b {color:#baa575;font-size:15px}
+.forge-option:disabled {opacity:.45;cursor:default}
+.forge-sa-benefits {display:grid;gap:5px;color:#b4cdb6;font:11px/1.5 system-ui}
+.forge-sa-benefits p {margin:0}
+.equipment-overlay .forge-mechanic-body .forge-action {font:600 12px/1.4 system-ui}

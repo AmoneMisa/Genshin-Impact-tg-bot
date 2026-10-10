@@ -1,3 +1,7 @@
+import {withLock} from '../general/chatLock.js';
+import {tickSoulDots} from '../game/equipment/soulCrystalCombat.js';
+import {bossDebuffAmount} from '../game/boss/bossDebuffs.js';
+import bossSendLoot from '../game/boss/bossSendLoot.js';
 import Boss from '../../db/models/Boss.js';
 import Chat from '../../db/models/Chat.js';
 import bossCastAttack, { bossAttackMessage, minionCasts, nextAttackDelay } from '../game/boss/bossCastAttack.js';
@@ -19,18 +23,27 @@ export default async function bossLiveAttacks(now = Date.now()) {
         $or: [{ nextAttackAt: { $exists: false } }, { nextAttackAt: null }, { nextAttackAt: { $lte: now } }],
     });
 
-    for (const boss of bosses) {
+    for (const found of bosses) {
+      await withLock(String(found.chatId),async()=>{
+        const boss=await Boss.findById(found._id);
+        if(!boss||boss.currentHp<=0||boss.hp<=0||boss.aliveTime<=now)return;
+        tickSoulDots(boss,now);
+        if(boss.currentHp<=0){
+            await bossSendLoot(boss,boss.chatId);
+            boss.skill=null;boss.currentHp=0;boss.hp=0;boss.listOfDamage=[];boss.minions=[];boss.soulDots=[];
+            await boss.save();return;
+        }
         const fighterIds = new Set((boss.listOfDamage || []).map(row => String(row.id)));
-        boss.nextAttackAt = now + nextAttackDelay();
+        boss.nextAttackAt = now + nextAttackDelay()/(1-bossDebuffAmount(boss,'slow',now));
         if (!fighterIds.size) {
             await boss.save();
-            continue;
+            return;
         }
 
         const chat = await Chat.findOne({ chatId: boss.chatId });
         if (!chat) {
             await boss.save();
-            continue;
+            return;
         }
 
         const fighters = chat.members.filter(member => fighterIds.has(String(member.userId)));
@@ -45,7 +58,7 @@ export default async function bossLiveAttacks(now = Date.now()) {
         }
         records.push(...minionCasts(fighters, boss, { now }));
         await boss.save();
-        if (!records.length) continue;
+        if (!records.length) return;
 
         // Write only the hit fighters' HP / shield / respawn, so a concurrent
         // purchase or skill in the Mini App isn't overwritten by a stale chat.
@@ -72,5 +85,6 @@ export default async function bossLiveAttacks(now = Date.now()) {
                     .catch(error => console.error('[boss] attack message', error));
             }
         }
+      });
     }
 }

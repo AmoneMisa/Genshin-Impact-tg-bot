@@ -1,5 +1,8 @@
 // Zones and mobs of the hunting fields: lookup, reference curves, and building a fresh mob for a fight.
-import zones from '../../../template/huntingTemplate.js';
+import fields from '../../../template/huntingTemplate.js';
+import catacombs from '../../../template/catacombsTemplate.js';
+const catIds=new Set(catacombs.map(z=>z.id));
+const zones=[...fields.filter(z=>!catIds.has(z.id)),...catacombs].sort((a,b)=>a.level-b.level);
 import getClassStats from '../player/getters/getGameClassStatsFromTemplate.js';
 import { CHAMPIONS, CHAMPION_MIN_LEVEL, HUNT } from './huntConfig.js';
 import { MAX_LEVEL } from '../player/vitality.js';
@@ -86,7 +89,7 @@ export function buildMob(zone, mobDef, {now = Date.now(), random = Math.random, 
         hp,
         currentHp: hp,
         stats: {lvl: mobDef.level},
-        hunt: {defence, element: mobDef.element || null, atk: attackRelative(mobDef) * (tier ? tier.atk : 1)},
+        hunt: {defence, element: mobDef.element || null,magic:mobDef.mAtk>mobDef.pAtk, atk: attackRelative(mobDef) * (tier ? tier.atk : 1)},
         listOfDamage: [],
         minions: [],
         debuffs: [],

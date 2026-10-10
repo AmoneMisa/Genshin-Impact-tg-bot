@@ -62,6 +62,7 @@ function itemDetails(item,slot) {
   return section(item.name,
     '<div class="character-item-head"><div><small>' + esc(item.isUsed ? 'Надет' : 'В инвентаре') + '</small></div></div>'
     + '<div class="character-item-meta">' + row('Грейд',item.grade === 'noGrade' ? 'NG' : item.grade) + row('Заточка','+' + (item.enchant || 0)) + '</div>'
+    + (item.sa?row('SA',item.sa.current?esc(item.sa.current.label)+' · '+item.sa.current.stage:'—'):'')
     + lineage + lines + (item.description ? '<p class="character-note">' + esc(item.description) + '</p>' : '')
     + (item.set ? '<p class="character-note">Комплект: ' + esc(item.set.name || item.set.id) + '</p>' : '')
     + (item.timed ? row('Осталось дней',fmt(item.daysLeft)) : '')

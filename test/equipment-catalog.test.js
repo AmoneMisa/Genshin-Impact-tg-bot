@@ -73,7 +73,7 @@ test('every grade has the same complete catalog with unique ids and real names',
       assert.match(item.name, /\S/, item.id);
       assert.ok(!/undefined/.test(item.name), item.name);
       assert.ok(item.slots.length >= 1 && item.classOwner.length >= 1, item.id);
-      assert.equal(item.stats.length, ['S', 'S80', 'S84'].includes(grade) && item.mainType === 'weapon' ? 1 : 0, `${item.id}: special ability only on S-grade weapons`);
+      assert.equal(item.stats.length, 0, `${item.id}: new weapons require a Soul Crystal for their special ability`);
     }
   }
   const weapons = catalog.filter((item) => item.grade === 'S84' && item.mainType === 'weapon').map((item) => item.name);
@@ -329,7 +329,7 @@ test('old items become catalog items: SS/SSS turn into S80/S84, the forge level 
   assert.equal(migrated.name, 'Dynasty Sword');
   assert.equal(migrated.enchant, 7);
   assert.equal(migrated.version, 2);
-  assert.deepEqual(migrated.stats, [{ name: 'criticalChance', value: 6, label: 'Фокус' }], 'random rolls are replaced by the fixed ability');
+  assert.deepEqual(migrated.stats, [], 'random rolls are removed; new SA requires a crystal');
   assert.equal(migrateItem(migrated), migrated, 'already migrated');
   assert.equal(migrateItem({ ...legacy, grade: 'SSS', mainType: 'armor', kind: 'robe', category: 'helmet', slots: ['helmet'], forgeLevel: 99 }).enchant, 10);
   assert.equal(migrateItem({ ...legacy, kind: 'no-such-kind', slots: ['nowhere'] }), null);

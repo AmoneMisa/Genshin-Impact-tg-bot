@@ -1,3 +1,4 @@
+import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { luckCoinHtml } from './currency-icons.js';
 
@@ -49,7 +50,7 @@ export async function openLuckShopGame({ api, renderState, haptic, statusElement
     const disabled = pending || !item.affordable || item.full || item.locked;
     return `
       <article class="mail-letter pending luck-item">
-        <div class="mail-head"><strong>${item.icon} ${escapeHtml(item.title)}</strong><small>${formatNumber(item.cost)} ${luckCoinHtml(14)}</small></div>
+        <div class="mail-head"><strong>${item.id?.startsWith('soul-')?materialIcon(item.id.replaceAll('-','_')):item.icon} ${escapeHtml(item.title)}</strong><small>${formatNumber(item.cost)} ${luckCoinHtml(14)}</small></div>
         ${item.subtitle ? `<p>${escapeHtml(item.subtitle)}</p>` : ''}
         <button type="button" class="feedback-submit" data-luck-buy="${escapeHtml(item.id)}" ${disabled ? 'disabled' : ''}>${buttonLabel(item)}</button>
       </article>`;
