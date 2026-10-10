@@ -68,7 +68,7 @@ try {
     assert.equal(await page.locator('.auction-table tbody tr').count(),width<=600?6:12);
     assert.equal(await page.locator('.auction-panel select').count(),0,'no native dropdowns');
     assert.ok(await page.locator('[data-auction-search]').getAttribute('placeholder'));
-    assert.equal(await page.locator('[data-auction-search]').evaluate(n=>getComputedStyle(n).borderRadius),'2px','input style survives global theme');
+    assert.equal(await page.locator('[data-auction-search]').evaluate(n=>getComputedStyle(n).borderRadius),'8px','input follows shared control style');
     await page.locator('[data-dropdown=type] summary').click();
     await page.locator('[data-dropdown=type] [data-choice=material]').click();
     assert.equal(await page.locator('.auction-table tbody tr').count(),1,'custom category filter');
