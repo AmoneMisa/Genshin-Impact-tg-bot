@@ -98,7 +98,7 @@ test('inventory caps image resolution and loads lazily; reveals load eagerly', (
   assert.match(reveal,/loading="eager"/);
   assert.match(thumb,/width="512" height="768"/);
   assert.doesNotMatch(thumb+reveal,/<svg|<canvas|\.glb|Desktop/);
-  assert.equal(itemArtSources('../../secret').src,'/art/items/v1/relic-128.webp');
+  assert.equal(itemArtSources('../../secret').src,'/art/items/l2-style/relic-128.webp');
 });
 
 test('daily sword keeps the real length and selects three distinct painted silhouettes', () => {

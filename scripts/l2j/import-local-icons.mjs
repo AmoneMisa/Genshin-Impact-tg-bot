@@ -20,7 +20,7 @@ for(const file of walk(definitions).filter(f=>f.endsWith('.xml'))){
 }
 const assets={},materials={},catalog={},categories={},ui={},missing=[];
 function add(icon){
- icon=icon?.toLowerCase().replace(/^(branchsys2?)\.icon\./,'$1.');if(!icon||!files.has(icon)){if(icon)missing.push(icon);return null;}
+ icon=icon?.toLowerCase().replace(/^(branchsys2?)\.icon\./,'$1.').replace('feud_load_cloak','feud_lord_cloak');if(!icon||!files.has(icon)){if(icon)missing.push(icon);return null;}
  const key=icon.replaceAll('.','-');assets[key]={key,source:files.get(icon),original:path.basename(files.get(icon)),sizes:[128,256,512]};return key;
 }
 function named(name){return add(byName.get(name.toLowerCase())?.icon);}
@@ -69,7 +69,7 @@ for(const [kind,original] of Object.entries({gold:'etc_adena_i00',full:'weapon_s
 fs.mkdirSync('.tmp',{recursive:true});
 const identities=Object.fromEntries(getCatalog().filter(item=>item.mainType==='jewelry'&&catalog[item.name.toLowerCase()]).map(item=>[[item.name,item.grade,item.kind,item.category].map(v=>String(v||'').trim().toLowerCase()).join('|'),catalog[item.name.toLowerCase()]]));
 const equipment={},equipmentReferences=[];
-const clean=name=>name.toLowerCase().replace(/^sealed /,'').replace(/[^a-z0-9]/g,'');
+const clean=name=>name.toLowerCase().replace(/^sealed /,'').replace(/[^\p{L}\p{N}]/gu,'');
 const slots={helmet:'head',gloves:'gloves',boots:'feet',greaves:'legs',body:'chest',fullBody:'fullarmor',bigShield:'lhand',smallShield:'lhand',sigill:'lhand'};
 const aliases={'Karmian Circlet':['Generic Circlet','armor_circlet_i00'],'Chain Gauntlets':['Chain Gloves','armor_t48_g_i00'],'Karmian Robe':['Karmian Tunic','armor_t53_u_i00'],'Sarnga':['Sarnga','weapon_sarnga_i00'],'Vesper Sheutjeh':['Vesper Schutze','weapon_vesper_schutze_i00'],'Vesper Magic Circlet':['Vesper Circlet','armor_circlet_i00'],'Vesper Gauntlets':['Vesper Gauntlet','armor_t94_g_i00'],'Vesper Magic Gloves':['Vesper Gloves','armor_t96_g_i00'],'Vesper Magic Boots':['Vesper Shoes','armor_t96_b_i00'],'Vesper Leather Armor':['Vesper Leather Breastplate','armor_t95_u_i00'],'Vesper Magic Robe':['Vesper Tunic','armor_t96_u_i00']};
 const equivalentNames={
@@ -105,7 +105,10 @@ for(const [name,reference,icon] of [
  ]),
 ])aliases[name]=[reference,icon];
 for(const item of getCatalog().filter(item=>item.mainType!=='jewelry')){
- let row=byName.get(item.name.toLowerCase())||[...byId.values()].find(row=>clean(row.name)===clean(item.name));
+ if(item.epicWeapon)continue; // Custom painted weapons have no original client item.
+ const expectedType=item.mainType==='weapon'?'Weapon':'Armor';
+ let row=byName.get(item.name.toLowerCase())||[...byId.values()].find(row=>row.type===expectedType&&clean(row.name)===clean(item.name));
+ if(row?.type&&row.type!==expectedType)row=null;
  if(!row&&aliases[item.name])row={name:aliases[item.name][0],icon:'icon.'+aliases[item.name][1]};
  if(!row&&item.mainType!=='weapon'){
   const grade=item.grade==='noGrade'?'NONE':item.grade;
@@ -116,8 +119,23 @@ for(const item of getCatalog().filter(item=>item.mainType!=='jewelry')){
  equipmentReferences.push({id:item.id,name:item.name,reference:row.name,art,exact:clean(row.name)===clean(item.name)});
 }
 const highlights=Object.fromEntries([...byName.values()].filter(row=>row.name==='Blank Scroll'||row.name==="Mammon's Varnish Enhancer"||/^SP Scroll/.test(row.name)).map(row=>[row.name,add(row.icon)]).filter(([,art])=>art));
-fs.writeFileSync('.tmp/l2-icon-import-plan.json',JSON.stringify({assets:Object.values(assets),materials,catalog,identities,equipment,equipmentReferences,categories,ui,highlights,missing:[...new Set(missing)]},null,2)+'\n');
+const cloaks=[...byId.values()].filter(row=>row.type==='Armor'&&row.slot==='back'&&!/Not In Use|Test Cloak| - Event/.test(row.name)).map(row=>({...row,art:add(row.icon)}));
+const armorSets=[];
+const setDirectory=process.argv[4]||'.tmp/l2-high-five/armorsets';
+if(fs.existsSync(setDirectory))for(const file of walk(setDirectory).filter(file=>file.endsWith('.xml'))){
+ for(const m of fs.readFileSync(file,'utf8').matchAll(/<set id="(\d+)">([\s\S]*?)<\/set>/g)){
+  const parts=[...m[2].matchAll(/<(chest|legs|head|gloves|feet|shield) id="(\d+)"/g)].map(part=>{
+   const row=byId.get(+part[2]);return {slot:part[1],id:+part[2],name:row?.name||'Unknown item '+part[2],icon:row?.icon,art:add(row?.icon)};
+  });
+  const skillNames=[...m[2].matchAll(/<skill [^>]+\/>\s*<!--\s*(.*?)\s*-->/g)].map(skill=>skill[1]);
+  const chest=byId.get(parts.find(part=>part.slot==='chest')?.id);
+  const name=skillNames.find(name=>!/^Equip Set Items|Set Items/i.test(name))||chest?.name||'Armor set '+m[1];
+  armorSets.push({id:+m[1],name,file:path.basename(file),grade:chest?.grade,armor:chest?.armor,parts});
+ }
+}
+fs.writeFileSync('.tmp/l2-icon-import-plan.json',JSON.stringify({assets:Object.values(assets),materials,catalog,identities,equipment,equipmentReferences,categories,ui,highlights,cloaks,armorSets,missing:[...new Set(missing)]},null,2)+'\n');
 fs.writeFileSync('art-source/l2-redraw/missing-equipment.json',JSON.stringify(equipmentReferences,null,2)+'\n');
 console.log('Catalogue equipment supplied: '+equipmentReferences.length);
-console.log('Unmatched equipment: '+getCatalog().filter(item=>item.mainType!=='jewelry'&&!equipmentReferences.some(row=>row.id===item.id)).map(item=>item.name).join(', '));
+console.log('High Five sets: '+armorSets.length+'; cloaks: '+cloaks.length);
+console.log('Unmatched equipment: '+getCatalog().filter(item=>item.mainType!=='jewelry'&&!item.epicWeapon&&!equipmentReferences.some(row=>row.id===item.id)).map(item=>item.name).join(', '));
 console.log(JSON.stringify({assets:Object.keys(assets).length,materials:Object.keys(materials).length,jewelry:Object.keys(catalog).length,missing:[...new Set(missing)]}));

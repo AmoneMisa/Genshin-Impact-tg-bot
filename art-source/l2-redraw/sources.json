@@ -14441,5 +14441,1890 @@
       32,
       32
     ]
+  },
+  {
+    "key": "icon-armor_back04",
+    "original": "icon.armor_back04.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_back05",
+    "original": "icon.armor_back05.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_back06",
+    "original": "icon.armor_back06.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_back07",
+    "original": "icon.armor_back07.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_back08",
+    "original": "icon.armor_back08.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_back09",
+    "original": "icon.armor_back09.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_back01",
+    "original": "icon.armor_back01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-vesper_cloack_i00",
+    "original": "icon.vesper_cloack_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-feud_lord_cloak_i01",
+    "original": "icon.feud_lord_cloak_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "branchsys2-7anni_cloack_i00",
+    "original": "branchsys2.7anni_cloack_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "branchsys2-7anni_cloack_i01",
+    "original": "branchsys2.7anni_cloack_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "branchsys2-7anni_cloack_i02",
+    "original": "branchsys2.7anni_cloack_i02.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "branchsys2-br_zaken_cloak_i00",
+    "original": "branchsys2.br_zaken_cloak_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "branchsys2-br_freya_cloak_i00",
+    "original": "branchsys2.br_freya_cloak_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "branchsys2-br_frintessa_cloak_i00",
+    "original": "branchsys2.br_frintessa_cloak_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t74_b_i00",
+    "original": "icon.armor_t74_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t77_ul_i00",
+    "original": "icon.armor_t77_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t77_g_i00",
+    "original": "icon.armor_t77_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t77_b_i00",
+    "original": "icon.armor_t77_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t75_u_i00",
+    "original": "icon.armor_t75_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t75_l_i00",
+    "original": "icon.armor_t75_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t75_g_i00",
+    "original": "icon.armor_t75_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t75_b_i00",
+    "original": "icon.armor_t75_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t79_u_i00",
+    "original": "icon.armor_t79_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t79_l_i00",
+    "original": "icon.armor_t79_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t79_g_i00",
+    "original": "icon.armor_t79_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t79_b_i00",
+    "original": "icon.armor_t79_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t76_ul_i00",
+    "original": "icon.armor_t76_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t76_g_i00",
+    "original": "icon.armor_t76_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t76_b_i00",
+    "original": "icon.armor_t76_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t80_ul_i00",
+    "original": "icon.armor_t80_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t80_g_i00",
+    "original": "icon.armor_t80_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t80_b_i00",
+    "original": "icon.armor_t80_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t83_ul_i00",
+    "original": "icon.armor_t83_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t83_g_i00",
+    "original": "icon.armor_t83_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t83_b_i00",
+    "original": "icon.armor_t83_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t81_ul_i00",
+    "original": "icon.armor_t81_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t81_g_i00",
+    "original": "icon.armor_t81_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t81_b_i00",
+    "original": "icon.armor_t81_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t84_ul_i00",
+    "original": "icon.armor_t84_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t84_g_i00",
+    "original": "icon.armor_t84_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t84_b_i00",
+    "original": "icon.armor_t84_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t82_ul_i00",
+    "original": "icon.armor_t82_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t82_g_i00",
+    "original": "icon.armor_t82_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t82_b_i00",
+    "original": "icon.armor_t82_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t15_l_i00",
+    "original": "icon.armor_t15_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t15_g_i00",
+    "original": "icon.armor_t15_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t64_g_i00",
+    "original": "icon.armor_t64_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t64_b_i00",
+    "original": "icon.armor_t64_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t66_b_i00",
+    "original": "icon.armor_t66_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t69_g_i00",
+    "original": "icon.armor_t69_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t69_b_i00",
+    "original": "icon.armor_t69_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t72_g_i00",
+    "original": "icon.armor_t72_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t72_b_i00",
+    "original": "icon.armor_t72_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t70_g_i00",
+    "original": "icon.armor_t70_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t70_b_i00",
+    "original": "icon.armor_t70_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t73_g_i00",
+    "original": "icon.armor_t73_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t73_b_i00",
+    "original": "icon.armor_t73_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1001_ul_i00",
+    "original": "icon.armor_t1001_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1001_g_i00",
+    "original": "icon.armor_t1001_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1001_b_i00",
+    "original": "icon.armor_t1001_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1002_ul_i00",
+    "original": "icon.armor_t1002_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1002_g_i00",
+    "original": "icon.armor_t1002_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1002_b_i00",
+    "original": "icon.armor_t1002_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1003_ul_i00",
+    "original": "icon.armor_t1003_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1003_g_i00",
+    "original": "icon.armor_t1003_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1003_b_i00",
+    "original": "icon.armor_t1003_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1004_ul_i00",
+    "original": "icon.armor_t1004_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1004_g_i00",
+    "original": "icon.armor_t1004_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1004_b_i00",
+    "original": "icon.armor_t1004_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1005_ul_i00",
+    "original": "icon.armor_t1005_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1005_g_i00",
+    "original": "icon.armor_t1005_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1005_b_i00",
+    "original": "icon.armor_t1005_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1006_ul_i00",
+    "original": "icon.armor_t1006_ul_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1006_g_i00",
+    "original": "icon.armor_t1006_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t1006_b_i00",
+    "original": "icon.armor_t1006_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t19_l_i00",
+    "original": "icon.armor_t19_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t13_b_i00",
+    "original": "icon.armor_t13_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t41_g_i00",
+    "original": "icon.armor_t41_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t91_g_i00",
+    "original": "icon.armor_t91_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t92_l_i00",
+    "original": "icon.armor_t92_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t93_l_i00",
+    "original": "icon.armor_t93_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t55_l_i00",
+    "original": "icon.armor_t55_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t91_uk_i00",
+    "original": "icon.armor_t91_uk_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t91_uw_i00",
+    "original": "icon.armor_t91_uw_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t91_uf_i00",
+    "original": "icon.armor_t91_uf_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t91_uke_i00",
+    "original": "icon.armor_t91_uke_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t92_ud_i00",
+    "original": "icon.armor_t92_ud_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t92_ub_i00",
+    "original": "icon.armor_t92_ub_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t93_uh_i00",
+    "original": "icon.armor_t93_uh_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t93_ue_i00",
+    "original": "icon.armor_t93_ue_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t93_us_i00",
+    "original": "icon.armor_t93_us_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t93_uw_i00",
+    "original": "icon.armor_t93_uw_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t100_u_i00",
+    "original": "icon.armor_t100_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t100_l_i00",
+    "original": "icon.armor_t100_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t100_g_i00",
+    "original": "icon.armor_t100_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t100_b_i00",
+    "original": "icon.armor_t100_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t101_u_i00",
+    "original": "icon.armor_t101_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t101_l_i00",
+    "original": "icon.armor_t101_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t101_g_i00",
+    "original": "icon.armor_t101_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t101_b_i00",
+    "original": "icon.armor_t101_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t102_u_i00",
+    "original": "icon.armor_t102_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t102_l_i00",
+    "original": "icon.armor_t102_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t102_g_i00",
+    "original": "icon.armor_t102_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t102_b_i00",
+    "original": "icon.armor_t102_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t97_u_i00",
+    "original": "icon.armor_t97_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t97_l_i00",
+    "original": "icon.armor_t97_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t97_g_i00",
+    "original": "icon.armor_t97_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t97_b_i00",
+    "original": "icon.armor_t97_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-heavengate_shield_i01",
+    "original": "icon.heavengate_shield_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t98_u_i00",
+    "original": "icon.armor_t98_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t98_l_i00",
+    "original": "icon.armor_t98_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t98_g_i00",
+    "original": "icon.armor_t98_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t98_b_i00",
+    "original": "icon.armor_t98_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t99_u_i00",
+    "original": "icon.armor_t99_u_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t99_l_i00",
+    "original": "icon.armor_t99_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t99_g_i00",
+    "original": "icon.armor_t99_g_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t99_b_i00",
+    "original": "icon.armor_t99_b_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_l_i00",
+    "original": "icon.armor_t95_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_l_i00",
+    "original": "icon.armor_t96_l_i00.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_u_i01",
+    "original": "icon.armor_t94_u_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_l_i01",
+    "original": "icon.armor_t94_l_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_g_i01",
+    "original": "icon.armor_t94_g_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_b_i01",
+    "original": "icon.armor_t94_b_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_u_i01",
+    "original": "icon.armor_t95_u_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_l_i01",
+    "original": "icon.armor_t95_l_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_g_i01",
+    "original": "icon.armor_t95_g_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_b_i01",
+    "original": "icon.armor_t95_b_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_u_i01",
+    "original": "icon.armor_t96_u_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_l_i01",
+    "original": "icon.armor_t96_l_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_g_i01",
+    "original": "icon.armor_t96_g_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_b_i01",
+    "original": "icon.armor_t96_b_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_u_i03",
+    "original": "icon.armor_t94_u_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_l_i03",
+    "original": "icon.armor_t94_l_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_g_i03",
+    "original": "icon.armor_t94_g_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t94_b_i03",
+    "original": "icon.armor_t94_b_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-evilgate_shield_i01",
+    "original": "icon.evilgate_shield_i01.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_u_i03",
+    "original": "icon.armor_t95_u_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_l_i03",
+    "original": "icon.armor_t95_l_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_g_i03",
+    "original": "icon.armor_t95_g_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t95_b_i03",
+    "original": "icon.armor_t95_b_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_u_i03",
+    "original": "icon.armor_t96_u_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_l_i03",
+    "original": "icon.armor_t96_l_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_g_i03",
+    "original": "icon.armor_t96_g_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
+  },
+  {
+    "key": "icon-armor_t96_b_i03",
+    "original": "icon.armor_t96_b_i03.png",
+    "sizes": [
+      128,
+      256,
+      512
+    ],
+    "originalSize": [
+      32,
+      32
+    ]
   }
 ]

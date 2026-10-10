@@ -1,0 +1,2306 @@
+[
+  {
+    "key": "sword",
+    "label": "sword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "sword-32.webp",
+    "source": "../v1/sword-512.webp"
+  },
+  {
+    "key": "greatsword",
+    "label": "greatsword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "greatsword-32.webp",
+    "source": "../v1/greatsword-512.webp"
+  },
+  {
+    "key": "dagger",
+    "label": "dagger",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "dagger-32.webp",
+    "source": "../v1/dagger-512.webp"
+  },
+  {
+    "key": "staff",
+    "label": "staff",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "staff-32.webp",
+    "source": "../v1/staff-512.webp"
+  },
+  {
+    "key": "bow",
+    "label": "bow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "bow-32.webp",
+    "source": "../v1/bow-512.webp"
+  },
+  {
+    "key": "crossbow",
+    "label": "crossbow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "crossbow-32.webp",
+    "source": "../v1/crossbow-512.webp"
+  },
+  {
+    "key": "hammer",
+    "label": "hammer",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "hammer-32.webp",
+    "source": "../v1/hammer-512.webp"
+  },
+  {
+    "key": "shield",
+    "label": "shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "shield-32.webp",
+    "source": "../v1/shield-512.webp"
+  },
+  {
+    "key": "sigil",
+    "label": "sigil",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "sigil-32.webp",
+    "source": "../v1/sigil-512.webp"
+  },
+  {
+    "key": "helmet",
+    "label": "helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "helmet-32.webp",
+    "source": "../v1/helmet-512.webp"
+  },
+  {
+    "key": "armor",
+    "label": "armor",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "armor-32.webp",
+    "source": "../v1/armor-512.webp"
+  },
+  {
+    "key": "mantle",
+    "label": "mantle",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "mantle-32.webp",
+    "source": "../v1/mantle-512.webp"
+  },
+  {
+    "key": "gloves",
+    "label": "gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "gloves-32.webp",
+    "source": "../v1/gloves-512.webp"
+  },
+  {
+    "key": "bracers",
+    "label": "bracers",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "bracers-32.webp",
+    "source": "../v1/bracers-512.webp"
+  },
+  {
+    "key": "gauntlets",
+    "label": "gauntlets",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "gauntlets-32.webp",
+    "source": "../v1/gauntlets-512.webp"
+  },
+  {
+    "key": "greaves",
+    "label": "greaves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "greaves-32.webp",
+    "source": "../v1/greaves-512.webp"
+  },
+  {
+    "key": "leg-wraps",
+    "label": "leg-wraps",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "leg-wraps-32.webp",
+    "source": "../v1/leg-wraps-512.webp"
+  },
+  {
+    "key": "boots",
+    "label": "boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "boots-32.webp",
+    "source": "../v1/boots-512.webp"
+  },
+  {
+    "key": "anklets",
+    "label": "anklets",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "anklets-32.webp",
+    "source": "../v1/anklets-512.webp"
+  },
+  {
+    "key": "cloak",
+    "label": "cloak",
+    "group": "Плащи",
+    "background": "armor",
+    "vertical": false,
+    "icon": "cloak-32.webp",
+    "source": "../v1/cloak-512.webp"
+  },
+  {
+    "key": "ring",
+    "label": "ring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "ring-32.webp",
+    "source": "../v1/ring-512.webp"
+  },
+  {
+    "key": "earring",
+    "label": "earring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "earring-32.webp",
+    "source": "../v1/earring-512.webp"
+  },
+  {
+    "key": "amulet",
+    "label": "amulet",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "amulet-32.webp",
+    "source": "../v1/amulet-512.webp"
+  },
+  {
+    "key": "tiara",
+    "label": "tiara",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "tiara-32.webp",
+    "source": "../v1/tiara-512.webp"
+  },
+  {
+    "key": "relic",
+    "label": "relic",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "relic-32.webp",
+    "source": "../v1/relic-512.webp"
+  },
+  {
+    "key": "fists-low",
+    "label": "fists-low",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "fists-low-32.webp",
+    "source": "../v1/fists-low-512.webp"
+  },
+  {
+    "key": "fists-mid",
+    "label": "fists-mid",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "fists-mid-32.webp",
+    "source": "../v1/fists-mid-512.webp"
+  },
+  {
+    "key": "fists-high",
+    "label": "fists-high",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "fists-high-32.webp",
+    "source": "../v1/fists-high-512.webp"
+  },
+  {
+    "key": "staff-sun",
+    "label": "staff-sun",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "staff-sun-32.webp",
+    "source": "../v1/staff-sun-512.webp"
+  },
+  {
+    "key": "sword-prismatic",
+    "label": "sword-prismatic",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "sword-prismatic-32.webp",
+    "source": "../v1/sword-prismatic-512.webp"
+  },
+  {
+    "key": "ring-filigree",
+    "label": "ring-filigree",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "ring-filigree-32.webp",
+    "source": "../v1/ring-filigree-512.webp"
+  },
+  {
+    "key": "ring-winged",
+    "label": "ring-winged",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "ring-winged-32.webp",
+    "source": "../v1/ring-winged-512.webp"
+  },
+  {
+    "key": "bow-rose",
+    "label": "bow-rose",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "bow-rose-32.webp",
+    "source": "../v1/bow-rose-512.webp"
+  },
+  {
+    "key": "mantle-royal",
+    "label": "mantle-royal",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "mantle-royal-32.webp",
+    "source": "../v1/mantle-royal-512.webp"
+  },
+  {
+    "key": "armor-prismatic",
+    "label": "armor-prismatic",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "armor-prismatic-32.webp",
+    "source": "../v1/armor-prismatic-512.webp"
+  },
+  {
+    "key": "gauntlets-raven",
+    "label": "gauntlets-raven",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "gauntlets-raven-32.webp",
+    "source": "../v1/gauntlets-raven-512.webp"
+  },
+  {
+    "key": "boots-raven",
+    "label": "boots-raven",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "boots-raven-32.webp",
+    "source": "../v1/boots-raven-512.webp"
+  },
+  {
+    "key": "tiara-night",
+    "label": "tiara-night",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "tiara-night-32.webp",
+    "source": "../v1/tiara-night-512.webp"
+  },
+  {
+    "key": "earring-sun",
+    "label": "earring-sun",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "earring-sun-32.webp",
+    "source": "../v1/earring-sun-512.webp"
+  },
+  {
+    "key": "amulet-butterfly",
+    "label": "amulet-butterfly",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "amulet-butterfly-32.webp",
+    "source": "../v1/amulet-butterfly-512.webp"
+  },
+  {
+    "key": "helmet-obsidian",
+    "label": "helmet-obsidian",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "helmet-obsidian-32.webp",
+    "source": "../v1/helmet-obsidian-512.webp"
+  },
+  {
+    "key": "greaves-obsidian",
+    "label": "greaves-obsidian",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "greaves-obsidian-32.webp",
+    "source": "../v1/greaves-obsidian-512.webp"
+  },
+  {
+    "key": "shield-dragon",
+    "label": "shield-dragon",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "shield-dragon-32.webp",
+    "source": "../v1/shield-dragon-512.webp"
+  },
+  {
+    "key": "hammer-dragon",
+    "label": "hammer-dragon",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "hammer-dragon-32.webp",
+    "source": "../v1/hammer-dragon-512.webp"
+  },
+  {
+    "key": "cloak-starfield",
+    "label": "cloak-starfield",
+    "group": "Плащи",
+    "background": "armor",
+    "vertical": false,
+    "icon": "cloak-starfield-32.webp",
+    "source": "../v1/cloak-starfield-512.webp"
+  },
+  {
+    "key": "sigil-nebula",
+    "label": "sigil-nebula",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "sigil-nebula-32.webp",
+    "source": "../v1/sigil-nebula-512.webp"
+  },
+  {
+    "key": "dagger-shadow",
+    "label": "dagger-shadow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "dagger-shadow-32.webp",
+    "source": "../v1/dagger-shadow-512.webp"
+  },
+  {
+    "key": "crossbow-shadow",
+    "label": "crossbow-shadow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "crossbow-shadow-32.webp",
+    "source": "../v1/crossbow-shadow-512.webp"
+  },
+  {
+    "key": "greatsword-solar",
+    "label": "greatsword-solar",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "greatsword-solar-32.webp",
+    "source": "../v1/greatsword-solar-512.webp"
+  },
+  {
+    "key": "bracers-crystal",
+    "label": "bracers-crystal",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "bracers-crystal-32.webp",
+    "source": "../v1/bracers-crystal-512.webp"
+  },
+  {
+    "key": "anklets-crystal",
+    "label": "anklets-crystal",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "anklets-crystal-32.webp",
+    "source": "../v1/anklets-crystal-512.webp"
+  },
+  {
+    "key": "leg-wraps-tidal",
+    "label": "leg-wraps-tidal",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "leg-wraps-tidal-32.webp",
+    "source": "../v1/leg-wraps-tidal-512.webp"
+  },
+  {
+    "key": "gloves-alchemist",
+    "label": "gloves-alchemist",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "gloves-alchemist-32.webp",
+    "source": "../v1/gloves-alchemist-512.webp"
+  },
+  {
+    "key": "relic-eclipse",
+    "label": "relic-eclipse",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "relic-eclipse-32.webp",
+    "source": "../v1/relic-eclipse-512.webp"
+  },
+  {
+    "key": "sword-opal",
+    "label": "sword-opal",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "sword-opal-32.webp",
+    "source": "../v1/sword-opal-512.webp"
+  },
+  {
+    "key": "armor-opal",
+    "label": "armor-opal",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "armor-opal-32.webp",
+    "source": "../v1/armor-opal-512.webp"
+  },
+  {
+    "key": "bow-verdant",
+    "label": "bow-verdant",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "bow-verdant-32.webp",
+    "source": "../v1/bow-verdant-512.webp"
+  },
+  {
+    "key": "mantle-astral",
+    "label": "mantle-astral",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "mantle-astral-32.webp",
+    "source": "../v1/mantle-astral-512.webp"
+  },
+  {
+    "key": "staff-jade",
+    "label": "staff-jade",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "staff-jade-32.webp",
+    "source": "../v1/staff-jade-512.webp"
+  },
+  {
+    "key": "shield-seraph",
+    "label": "shield-seraph",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "shield-seraph-32.webp",
+    "source": "../v1/shield-seraph-512.webp"
+  },
+  {
+    "key": "helmet-seraph",
+    "label": "helmet-seraph",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "helmet-seraph-32.webp",
+    "source": "../v1/helmet-seraph-512.webp"
+  },
+  {
+    "key": "amulet-ruby",
+    "label": "amulet-ruby",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "amulet-ruby-32.webp",
+    "source": "../v1/amulet-ruby-512.webp"
+  },
+  {
+    "key": "earring-ruby",
+    "label": "earring-ruby",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "earring-ruby-32.webp",
+    "source": "../v1/earring-ruby-512.webp"
+  },
+  {
+    "key": "tiara-crescent",
+    "label": "tiara-crescent",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "tiara-crescent-32.webp",
+    "source": "../v1/tiara-crescent-512.webp"
+  },
+  {
+    "key": "gauntlets-dusk",
+    "label": "gauntlets-dusk",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "gauntlets-dusk-32.webp",
+    "source": "../v1/gauntlets-dusk-512.webp"
+  },
+  {
+    "key": "greaves-dusk",
+    "label": "greaves-dusk",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "greaves-dusk-32.webp",
+    "source": "../v1/greaves-dusk-512.webp"
+  },
+  {
+    "key": "boots-dusk",
+    "label": "boots-dusk",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "boots-dusk-32.webp",
+    "source": "../v1/boots-dusk-512.webp"
+  },
+  {
+    "key": "cloak-dusk",
+    "label": "cloak-dusk",
+    "group": "Плащи",
+    "background": "armor",
+    "vertical": false,
+    "icon": "cloak-dusk-32.webp",
+    "source": "../v1/cloak-dusk-512.webp"
+  },
+  {
+    "key": "dagger-tide",
+    "label": "dagger-tide",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "dagger-tide-32.webp",
+    "source": "../v1/dagger-tide-512.webp"
+  },
+  {
+    "key": "hammer-opal",
+    "label": "hammer-opal",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "hammer-opal-32.webp",
+    "source": "../v1/hammer-opal-512.webp"
+  },
+  {
+    "key": "greatsword-dawn",
+    "label": "greatsword-dawn",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "greatsword-dawn-32.webp",
+    "source": "../v1/greatsword-dawn-512.webp"
+  },
+  {
+    "key": "sigil-dawn",
+    "label": "sigil-dawn",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "sigil-dawn-32.webp",
+    "source": "../v1/sigil-dawn-512.webp"
+  },
+  {
+    "key": "crossbow-spectral",
+    "label": "crossbow-spectral",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "crossbow-spectral-32.webp",
+    "source": "../v1/crossbow-spectral-512.webp"
+  },
+  {
+    "key": "relic-spectral",
+    "label": "relic-spectral",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "relic-spectral-32.webp",
+    "source": "../v1/relic-spectral-512.webp"
+  },
+  {
+    "key": "bracers-ruby",
+    "label": "bracers-ruby",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "bracers-ruby-32.webp",
+    "source": "../v1/bracers-ruby-512.webp"
+  },
+  {
+    "key": "anklets-ruby",
+    "label": "anklets-ruby",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "anklets-ruby-32.webp",
+    "source": "../v1/anklets-ruby-512.webp"
+  },
+  {
+    "key": "gloves-sapphire",
+    "label": "gloves-sapphire",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "gloves-sapphire-32.webp",
+    "source": "../v1/gloves-sapphire-512.webp"
+  },
+  {
+    "key": "leg-wraps-pearl",
+    "label": "leg-wraps-pearl",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "leg-wraps-pearl-32.webp",
+    "source": "../v1/leg-wraps-pearl-512.webp"
+  },
+  {
+    "key": "helmet-shadowleather",
+    "label": "helmet-shadowleather",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "helmet-shadowleather-32.webp",
+    "source": "../v1/helmet-shadowleather-512.webp"
+  },
+  {
+    "key": "armor-shadowleather",
+    "label": "armor-shadowleather",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "armor-shadowleather-32.webp",
+    "source": "../v1/armor-shadowleather-512.webp"
+  },
+  {
+    "key": "greaves-shadowleather",
+    "label": "greaves-shadowleather",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "greaves-shadowleather-32.webp",
+    "source": "../v1/greaves-shadowleather-512.webp"
+  },
+  {
+    "key": "boots-shadowleather",
+    "label": "boots-shadowleather",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "boots-shadowleather-32.webp",
+    "source": "../v1/boots-shadowleather-512.webp"
+  },
+  {
+    "key": "helmet-sapphireguard",
+    "label": "helmet-sapphireguard",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "helmet-sapphireguard-32.webp",
+    "source": "../v1/helmet-sapphireguard-512.webp"
+  },
+  {
+    "key": "armor-sapphireguard",
+    "label": "armor-sapphireguard",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "armor-sapphireguard-32.webp",
+    "source": "../v1/armor-sapphireguard-512.webp"
+  },
+  {
+    "key": "greaves-sapphireguard",
+    "label": "greaves-sapphireguard",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "greaves-sapphireguard-32.webp",
+    "source": "../v1/greaves-sapphireguard-512.webp"
+  },
+  {
+    "key": "boots-sapphireguard",
+    "label": "boots-sapphireguard",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "boots-sapphireguard-32.webp",
+    "source": "../v1/boots-sapphireguard-512.webp"
+  },
+  {
+    "key": "helmet-nightweave",
+    "label": "helmet-nightweave",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "helmet-nightweave-32.webp",
+    "source": "../v1/helmet-nightweave-512.webp"
+  },
+  {
+    "key": "armor-nightweave",
+    "label": "armor-nightweave",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "armor-nightweave-32.webp",
+    "source": "../v1/armor-nightweave-512.webp"
+  },
+  {
+    "key": "gloves-nightweave",
+    "label": "gloves-nightweave",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "gloves-nightweave-32.webp",
+    "source": "../v1/gloves-nightweave-512.webp"
+  },
+  {
+    "key": "greaves-nightweave",
+    "label": "greaves-nightweave",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "greaves-nightweave-32.webp",
+    "source": "../v1/greaves-nightweave-512.webp"
+  },
+  {
+    "key": "boots-nightweave",
+    "label": "boots-nightweave",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "boots-nightweave-32.webp",
+    "source": "../v1/boots-nightweave-512.webp"
+  },
+  {
+    "key": "epic-queenAnt",
+    "label": "epic-queenAnt",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-queenAnt-32.webp",
+    "source": "../v1/epic-queenAnt-512.webp"
+  },
+  {
+    "key": "epic-core",
+    "label": "epic-core",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-core-32.webp",
+    "source": "../v1/epic-core-512.webp"
+  },
+  {
+    "key": "epic-orfen",
+    "label": "epic-orfen",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-orfen-32.webp",
+    "source": "../v1/epic-orfen-512.webp"
+  },
+  {
+    "key": "epic-zaken",
+    "label": "epic-zaken",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-zaken-32.webp",
+    "source": "../v1/epic-zaken-512.webp"
+  },
+  {
+    "key": "epic-baium",
+    "label": "epic-baium",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-baium-32.webp",
+    "source": "../v1/epic-baium-512.webp"
+  },
+  {
+    "key": "epic-antharas",
+    "label": "epic-antharas",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-antharas-32.webp",
+    "source": "../v1/epic-antharas-512.webp"
+  },
+  {
+    "key": "epic-valakas",
+    "label": "epic-valakas",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-valakas-32.webp",
+    "source": "../v1/epic-valakas-512.webp"
+  },
+  {
+    "key": "epic-frintezza",
+    "label": "epic-frintezza",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "epic-frintezza-32.webp",
+    "source": "../v1/epic-frintezza-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-heavy-body",
+    "label": "Dark Crystal Breastplate",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-heavy-body-32.webp",
+    "source": "../v1/catalog-a-armor-heavy-body-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-heavy-boots",
+    "label": "Dark Crystal Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-heavy-boots-32.webp",
+    "source": "../v1/catalog-a-armor-heavy-boots-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-heavy-gloves",
+    "label": "Dark Crystal Gauntlets",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-heavy-gloves-32.webp",
+    "source": "../v1/catalog-a-armor-heavy-gloves-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-heavy-greaves",
+    "label": "Dark Crystal Gaiters",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-heavy-greaves-32.webp",
+    "source": "../v1/catalog-a-armor-heavy-greaves-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-heavy-helmet",
+    "label": "Dark Crystal Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-heavy-helmet-32.webp",
+    "source": "../v1/catalog-a-armor-heavy-helmet-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-light-boots",
+    "label": "Tallum Leather Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-light-boots-32.webp",
+    "source": "../v1/catalog-a-armor-light-boots-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-light-fullbody",
+    "label": "Tallum Leather Armor",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-light-fullbody-32.webp",
+    "source": "../v1/catalog-a-armor-light-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-light-gloves",
+    "label": "Tallum Leather Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-light-gloves-32.webp",
+    "source": "../v1/catalog-a-armor-light-gloves-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-light-helmet",
+    "label": "Tallum Leather Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-light-helmet-32.webp",
+    "source": "../v1/catalog-a-armor-light-helmet-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-robe-boots",
+    "label": "Majestic Magic Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-robe-boots-32.webp",
+    "source": "../v1/catalog-a-armor-robe-boots-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-robe-fullbody",
+    "label": "Majestic Magic Robe",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-robe-fullbody-32.webp",
+    "source": "../v1/catalog-a-armor-robe-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-robe-gloves",
+    "label": "Majestic Magic Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-robe-gloves-32.webp",
+    "source": "../v1/catalog-a-armor-robe-gloves-512.webp"
+  },
+  {
+    "key": "catalog-a-armor-robe-helmet",
+    "label": "Majestic Magic Circlet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-a-armor-robe-helmet-32.webp",
+    "source": "../v1/catalog-a-armor-robe-helmet-512.webp"
+  },
+  {
+    "key": "catalog-a-jewelry-earring",
+    "label": "Majestic Earring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-a-jewelry-earring-32.webp",
+    "source": "../v1/catalog-a-jewelry-earring-512.webp"
+  },
+  {
+    "key": "catalog-a-jewelry-necklace",
+    "label": "Majestic Necklace",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-a-jewelry-necklace-32.webp",
+    "source": "../v1/catalog-a-jewelry-necklace-512.webp"
+  },
+  {
+    "key": "catalog-a-jewelry-ring",
+    "label": "Majestic Ring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-a-jewelry-ring-32.webp",
+    "source": "../v1/catalog-a-jewelry-ring-512.webp"
+  },
+  {
+    "key": "catalog-a-shield-bigshield",
+    "label": "Shield of Nightmare",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-a-shield-bigshield-32.webp",
+    "source": "../v1/catalog-a-shield-bigshield-512.webp"
+  },
+  {
+    "key": "catalog-a-shield-sigill",
+    "label": "Majestic Sigil",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-a-shield-sigill-32.webp",
+    "source": "../v1/catalog-a-shield-sigill-512.webp"
+  },
+  {
+    "key": "catalog-a-shield-smallshield",
+    "label": "Shield of Nightmare II",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-a-shield-smallshield-32.webp",
+    "source": "../v1/catalog-a-shield-smallshield-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-blunt",
+    "label": "Doom Crusher",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-a-weapon-blunt-32.webp",
+    "source": "../v1/catalog-a-weapon-blunt-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-bow",
+    "label": "Soul Bow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-a-weapon-bow-32.webp",
+    "source": "../v1/catalog-a-weapon-bow-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-crossbow",
+    "label": "Reaper",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-a-weapon-crossbow-32.webp",
+    "source": "../v1/catalog-a-weapon-crossbow-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-dagger",
+    "label": "Naga Storm",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-a-weapon-dagger-32.webp",
+    "source": "../v1/catalog-a-weapon-dagger-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-fists",
+    "label": "Dragon Grinder",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-a-weapon-fists-32.webp",
+    "source": "../v1/catalog-a-weapon-fists-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-mace",
+    "label": "Cabrio's Hand",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-a-weapon-mace-32.webp",
+    "source": "../v1/catalog-a-weapon-mace-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-onehandedsword",
+    "label": "Sirra's Blade",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-a-weapon-onehandedsword-32.webp",
+    "source": "../v1/catalog-a-weapon-onehandedsword-512.webp"
+  },
+  {
+    "key": "catalog-a-weapon-twohandedsword",
+    "label": "Sword of Ipos",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-a-weapon-twohandedsword-32.webp",
+    "source": "../v1/catalog-a-weapon-twohandedsword-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-heavy-body",
+    "label": "Avadon Breastplate",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-heavy-body-32.webp",
+    "source": "../v1/catalog-b-armor-heavy-body-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-heavy-boots",
+    "label": "Avadon Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-heavy-boots-32.webp",
+    "source": "../v1/catalog-b-armor-heavy-boots-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-heavy-gloves",
+    "label": "Avadon Gauntlets",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-heavy-gloves-32.webp",
+    "source": "../v1/catalog-b-armor-heavy-gloves-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-heavy-greaves",
+    "label": "Avadon Gaiters",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-heavy-greaves-32.webp",
+    "source": "../v1/catalog-b-armor-heavy-greaves-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-heavy-helmet",
+    "label": "Avadon Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-heavy-helmet-32.webp",
+    "source": "../v1/catalog-b-armor-heavy-helmet-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-light-boots",
+    "label": "Avadon Leather Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-light-boots-32.webp",
+    "source": "../v1/catalog-b-armor-light-boots-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-light-fullbody",
+    "label": "Avadon Leather Armor",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-light-fullbody-32.webp",
+    "source": "../v1/catalog-b-armor-light-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-light-gloves",
+    "label": "Avadon Leather Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-light-gloves-32.webp",
+    "source": "../v1/catalog-b-armor-light-gloves-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-light-helmet",
+    "label": "Avadon Leather Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-light-helmet-32.webp",
+    "source": "../v1/catalog-b-armor-light-helmet-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-robe-boots",
+    "label": "Avadon Magic Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-robe-boots-32.webp",
+    "source": "../v1/catalog-b-armor-robe-boots-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-robe-fullbody",
+    "label": "Avadon Magic Robe",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-robe-fullbody-32.webp",
+    "source": "../v1/catalog-b-armor-robe-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-robe-gloves",
+    "label": "Avadon Magic Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-robe-gloves-32.webp",
+    "source": "../v1/catalog-b-armor-robe-gloves-512.webp"
+  },
+  {
+    "key": "catalog-b-armor-robe-helmet",
+    "label": "Avadon Magic Circlet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-b-armor-robe-helmet-32.webp",
+    "source": "../v1/catalog-b-armor-robe-helmet-512.webp"
+  },
+  {
+    "key": "catalog-b-jewelry-earring",
+    "label": "Sage's Earring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-b-jewelry-earring-32.webp",
+    "source": "../v1/catalog-b-jewelry-earring-512.webp"
+  },
+  {
+    "key": "catalog-b-jewelry-necklace",
+    "label": "Sage's Necklace",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-b-jewelry-necklace-32.webp",
+    "source": "../v1/catalog-b-jewelry-necklace-512.webp"
+  },
+  {
+    "key": "catalog-b-jewelry-ring",
+    "label": "Sage's Ring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-b-jewelry-ring-32.webp",
+    "source": "../v1/catalog-b-jewelry-ring-512.webp"
+  },
+  {
+    "key": "catalog-b-shield-bigshield",
+    "label": "Dark Dragon Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-b-shield-bigshield-32.webp",
+    "source": "../v1/catalog-b-shield-bigshield-512.webp"
+  },
+  {
+    "key": "catalog-b-shield-sigill",
+    "label": "Sage Sigil",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-b-shield-sigill-32.webp",
+    "source": "../v1/catalog-b-shield-sigill-512.webp"
+  },
+  {
+    "key": "catalog-b-shield-smallshield",
+    "label": "Masterpiece Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-b-shield-smallshield-32.webp",
+    "source": "../v1/catalog-b-shield-smallshield-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-blunt",
+    "label": "Ice Storm Hammer",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-b-weapon-blunt-32.webp",
+    "source": "../v1/catalog-b-weapon-blunt-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-bow",
+    "label": "Bow of Peril",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-b-weapon-bow-32.webp",
+    "source": "../v1/catalog-b-weapon-bow-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-crossbow",
+    "label": "Hell Hound",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-b-weapon-crossbow-32.webp",
+    "source": "../v1/catalog-b-weapon-crossbow-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-dagger",
+    "label": "Demon Dagger",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-b-weapon-dagger-32.webp",
+    "source": "../v1/catalog-b-weapon-dagger-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-fists",
+    "label": "Arthro Nail",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-b-weapon-fists-32.webp",
+    "source": "../v1/catalog-b-weapon-fists-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-mace",
+    "label": "Staff of Evil Spirits",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-b-weapon-mace-32.webp",
+    "source": "../v1/catalog-b-weapon-mace-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-onehandedsword",
+    "label": "Sword of Damascus",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-b-weapon-onehandedsword-32.webp",
+    "source": "../v1/catalog-b-weapon-onehandedsword-512.webp"
+  },
+  {
+    "key": "catalog-b-weapon-twohandedsword",
+    "label": "Guardian Sword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-b-weapon-twohandedsword-32.webp",
+    "source": "../v1/catalog-b-weapon-twohandedsword-512.webp"
+  },
+  {
+    "key": "catalog-c-armor-light-boots",
+    "label": "Drake Leather Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-c-armor-light-boots-32.webp",
+    "source": "../v1/catalog-c-armor-light-boots-512.webp"
+  },
+  {
+    "key": "catalog-c-armor-light-fullbody",
+    "label": "Drake Leather Armor",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-c-armor-light-fullbody-32.webp",
+    "source": "../v1/catalog-c-armor-light-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-c-armor-light-gloves",
+    "label": "Drake Leather Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-c-armor-light-gloves-32.webp",
+    "source": "../v1/catalog-c-armor-light-gloves-512.webp"
+  },
+  {
+    "key": "catalog-c-armor-light-helmet",
+    "label": "Drake Leather Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-c-armor-light-helmet-32.webp",
+    "source": "../v1/catalog-c-armor-light-helmet-512.webp"
+  },
+  {
+    "key": "catalog-c-shield-smallshield",
+    "label": "Tower Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-c-shield-smallshield-32.webp",
+    "source": "../v1/catalog-c-shield-smallshield-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-heavy-body",
+    "label": "Brigandine Breastplate",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-heavy-body-32.webp",
+    "source": "../v1/catalog-d-armor-heavy-body-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-heavy-boots",
+    "label": "Brigandine Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-heavy-boots-32.webp",
+    "source": "../v1/catalog-d-armor-heavy-boots-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-heavy-gloves",
+    "label": "Brigandine Gauntlets",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-heavy-gloves-32.webp",
+    "source": "../v1/catalog-d-armor-heavy-gloves-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-heavy-greaves",
+    "label": "Brigandine Gaiters",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-heavy-greaves-32.webp",
+    "source": "../v1/catalog-d-armor-heavy-greaves-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-heavy-helmet",
+    "label": "Brigandine Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-heavy-helmet-32.webp",
+    "source": "../v1/catalog-d-armor-heavy-helmet-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-light-boots",
+    "label": "Manticore Skin Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-light-boots-32.webp",
+    "source": "../v1/catalog-d-armor-light-boots-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-light-fullbody",
+    "label": "Manticore Skin Armor",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-light-fullbody-32.webp",
+    "source": "../v1/catalog-d-armor-light-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-light-gloves",
+    "label": "Manticore Skin Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-light-gloves-32.webp",
+    "source": "../v1/catalog-d-armor-light-gloves-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-light-helmet",
+    "label": "Manticore Skin Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-light-helmet-32.webp",
+    "source": "../v1/catalog-d-armor-light-helmet-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-robe-boots",
+    "label": "Elven Mithril Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-robe-boots-32.webp",
+    "source": "../v1/catalog-d-armor-robe-boots-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-robe-fullbody",
+    "label": "Elven Mithril Robe",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-robe-fullbody-32.webp",
+    "source": "../v1/catalog-d-armor-robe-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-robe-gloves",
+    "label": "Elven Mithril Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-robe-gloves-32.webp",
+    "source": "../v1/catalog-d-armor-robe-gloves-512.webp"
+  },
+  {
+    "key": "catalog-d-armor-robe-helmet",
+    "label": "Elven Mithril Circlet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-d-armor-robe-helmet-32.webp",
+    "source": "../v1/catalog-d-armor-robe-helmet-512.webp"
+  },
+  {
+    "key": "catalog-d-jewelry-earring",
+    "label": "Omen Beast's Eye Earring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-d-jewelry-earring-32.webp",
+    "source": "../v1/catalog-d-jewelry-earring-512.webp"
+  },
+  {
+    "key": "catalog-d-jewelry-necklace",
+    "label": "Elven Necklace",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-d-jewelry-necklace-32.webp",
+    "source": "../v1/catalog-d-jewelry-necklace-512.webp"
+  },
+  {
+    "key": "catalog-d-jewelry-ring",
+    "label": "Mithril Ring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-d-jewelry-ring-32.webp",
+    "source": "../v1/catalog-d-jewelry-ring-512.webp"
+  },
+  {
+    "key": "catalog-d-shield-bigshield",
+    "label": "Square Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-d-shield-bigshield-32.webp",
+    "source": "../v1/catalog-d-shield-bigshield-512.webp"
+  },
+  {
+    "key": "catalog-d-shield-sigill",
+    "label": "Mithril Sigil",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-d-shield-sigill-32.webp",
+    "source": "../v1/catalog-d-shield-sigill-512.webp"
+  },
+  {
+    "key": "catalog-d-shield-smallshield",
+    "label": "Plate Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-d-shield-smallshield-32.webp",
+    "source": "../v1/catalog-d-shield-smallshield-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-blunt",
+    "label": "Titan Hammer",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-d-weapon-blunt-32.webp",
+    "source": "../v1/catalog-d-weapon-blunt-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-bow",
+    "label": "Strengthened Long Bow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-d-weapon-bow-32.webp",
+    "source": "../v1/catalog-d-weapon-bow-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-crossbow",
+    "label": "Cranequin",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-d-weapon-crossbow-32.webp",
+    "source": "../v1/catalog-d-weapon-crossbow-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-dagger",
+    "label": "Mithril Dagger",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-d-weapon-dagger-32.webp",
+    "source": "../v1/catalog-d-weapon-dagger-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-fists",
+    "label": "Bich'Hwa",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-d-weapon-fists-32.webp",
+    "source": "../v1/catalog-d-weapon-fists-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-mace",
+    "label": "Ghost Staff",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-d-weapon-mace-32.webp",
+    "source": "../v1/catalog-d-weapon-mace-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-onehandedsword",
+    "label": "Elven Long Sword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-d-weapon-onehandedsword-32.webp",
+    "source": "../v1/catalog-d-weapon-onehandedsword-512.webp"
+  },
+  {
+    "key": "catalog-d-weapon-twohandedsword",
+    "label": "Claymore",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-d-weapon-twohandedsword-32.webp",
+    "source": "../v1/catalog-d-weapon-twohandedsword-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-heavy-body",
+    "label": "Bronze Breastplate",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-heavy-body-32.webp",
+    "source": "../v1/catalog-nograde-armor-heavy-body-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-heavy-boots",
+    "label": "Bronze Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-heavy-boots-32.webp",
+    "source": "../v1/catalog-nograde-armor-heavy-boots-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-heavy-gloves",
+    "label": "Bronze Gauntlets",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-heavy-gloves-32.webp",
+    "source": "../v1/catalog-nograde-armor-heavy-gloves-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-heavy-greaves",
+    "label": "Bronze Gaiters",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-heavy-greaves-32.webp",
+    "source": "../v1/catalog-nograde-armor-heavy-greaves-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-heavy-helmet",
+    "label": "Bronze Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-heavy-helmet-32.webp",
+    "source": "../v1/catalog-nograde-armor-heavy-helmet-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-light-boots",
+    "label": "Wooden Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-light-boots-32.webp",
+    "source": "../v1/catalog-nograde-armor-light-boots-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-light-fullbody",
+    "label": "Wooden Armor",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-light-fullbody-32.webp",
+    "source": "../v1/catalog-nograde-armor-light-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-light-gloves",
+    "label": "Wooden Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-light-gloves-32.webp",
+    "source": "../v1/catalog-nograde-armor-light-gloves-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-light-helmet",
+    "label": "Wooden Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-light-helmet-32.webp",
+    "source": "../v1/catalog-nograde-armor-light-helmet-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-robe-boots",
+    "label": "Devotion Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-robe-boots-32.webp",
+    "source": "../v1/catalog-nograde-armor-robe-boots-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-robe-fullbody",
+    "label": "Devotion Robe",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-robe-fullbody-32.webp",
+    "source": "../v1/catalog-nograde-armor-robe-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-robe-gloves",
+    "label": "Devotion Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-robe-gloves-32.webp",
+    "source": "../v1/catalog-nograde-armor-robe-gloves-512.webp"
+  },
+  {
+    "key": "catalog-nograde-armor-robe-helmet",
+    "label": "Devotion Circlet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-nograde-armor-robe-helmet-32.webp",
+    "source": "../v1/catalog-nograde-armor-robe-helmet-512.webp"
+  },
+  {
+    "key": "catalog-nograde-jewelry-earring",
+    "label": "Coral Earring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-nograde-jewelry-earring-32.webp",
+    "source": "../v1/catalog-nograde-jewelry-earring-512.webp"
+  },
+  {
+    "key": "catalog-nograde-jewelry-necklace",
+    "label": "Magic Necklace",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-nograde-jewelry-necklace-32.webp",
+    "source": "../v1/catalog-nograde-jewelry-necklace-512.webp"
+  },
+  {
+    "key": "catalog-nograde-jewelry-ring",
+    "label": "Blue Coral Ring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-nograde-jewelry-ring-32.webp",
+    "source": "../v1/catalog-nograde-jewelry-ring-512.webp"
+  },
+  {
+    "key": "catalog-nograde-shield-bigshield",
+    "label": "Bone Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-nograde-shield-bigshield-32.webp",
+    "source": "../v1/catalog-nograde-shield-bigshield-512.webp"
+  },
+  {
+    "key": "catalog-nograde-shield-sigill",
+    "label": "Apprentice Sigil",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-nograde-shield-sigill-32.webp",
+    "source": "../v1/catalog-nograde-shield-sigill-512.webp"
+  },
+  {
+    "key": "catalog-nograde-shield-smallshield",
+    "label": "Buckler",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-nograde-shield-smallshield-32.webp",
+    "source": "../v1/catalog-nograde-shield-smallshield-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-blunt",
+    "label": "Club",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-nograde-weapon-blunt-32.webp",
+    "source": "../v1/catalog-nograde-weapon-blunt-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-bow",
+    "label": "Composite Bow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-nograde-weapon-bow-32.webp",
+    "source": "../v1/catalog-nograde-weapon-bow-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-crossbow",
+    "label": "Wooden Crossbow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-nograde-weapon-crossbow-32.webp",
+    "source": "../v1/catalog-nograde-weapon-crossbow-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-dagger",
+    "label": "Sword Breaker",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-nograde-weapon-dagger-32.webp",
+    "source": "../v1/catalog-nograde-weapon-dagger-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-fists",
+    "label": "Viper Fang",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-nograde-weapon-fists-32.webp",
+    "source": "../v1/catalog-nograde-weapon-fists-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-mace",
+    "label": "Willow Staff",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-nograde-weapon-mace-32.webp",
+    "source": "../v1/catalog-nograde-weapon-mace-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-onehandedsword",
+    "label": "Long Sword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-nograde-weapon-onehandedsword-32.webp",
+    "source": "../v1/catalog-nograde-weapon-onehandedsword-512.webp"
+  },
+  {
+    "key": "catalog-nograde-weapon-twohandedsword",
+    "label": "Zweihander",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-nograde-weapon-twohandedsword-32.webp",
+    "source": "../v1/catalog-nograde-weapon-twohandedsword-512.webp"
+  },
+  {
+    "key": "catalog-s-armor-light-gloves",
+    "label": "Draconic Leather Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s-armor-light-gloves-32.webp",
+    "source": "../v1/catalog-s-armor-light-gloves-512.webp"
+  },
+  {
+    "key": "catalog-s-shield-smallshield",
+    "label": "Imperial Guard Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s-shield-smallshield-32.webp",
+    "source": "../v1/catalog-s-shield-smallshield-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-heavy-body",
+    "label": "Dynasty Breastplate",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-heavy-body-32.webp",
+    "source": "../v1/catalog-s80-armor-heavy-body-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-heavy-boots",
+    "label": "Dynasty Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-heavy-boots-32.webp",
+    "source": "../v1/catalog-s80-armor-heavy-boots-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-heavy-gloves",
+    "label": "Dynasty Gauntlets",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-heavy-gloves-32.webp",
+    "source": "../v1/catalog-s80-armor-heavy-gloves-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-heavy-greaves",
+    "label": "Dynasty Gaiters",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-heavy-greaves-32.webp",
+    "source": "../v1/catalog-s80-armor-heavy-greaves-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-heavy-helmet",
+    "label": "Dynasty Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-heavy-helmet-32.webp",
+    "source": "../v1/catalog-s80-armor-heavy-helmet-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-light-boots",
+    "label": "Dynasty Leather Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-light-boots-32.webp",
+    "source": "../v1/catalog-s80-armor-light-boots-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-light-fullbody",
+    "label": "Dynasty Leather Armor",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-light-fullbody-32.webp",
+    "source": "../v1/catalog-s80-armor-light-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-light-gloves",
+    "label": "Dynasty Leather Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-light-gloves-32.webp",
+    "source": "../v1/catalog-s80-armor-light-gloves-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-light-helmet",
+    "label": "Dynasty Leather Helmet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-light-helmet-32.webp",
+    "source": "../v1/catalog-s80-armor-light-helmet-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-robe-boots",
+    "label": "Dynasty Magic Boots",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-robe-boots-32.webp",
+    "source": "../v1/catalog-s80-armor-robe-boots-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-robe-fullbody",
+    "label": "Dynasty Magic Robe",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-robe-fullbody-32.webp",
+    "source": "../v1/catalog-s80-armor-robe-fullbody-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-robe-gloves",
+    "label": "Dynasty Magic Gloves",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-robe-gloves-32.webp",
+    "source": "../v1/catalog-s80-armor-robe-gloves-512.webp"
+  },
+  {
+    "key": "catalog-s80-armor-robe-helmet",
+    "label": "Dynasty Magic Circlet",
+    "group": "Броня и экипировка",
+    "background": "armor",
+    "vertical": false,
+    "icon": "catalog-s80-armor-robe-helmet-32.webp",
+    "source": "../v1/catalog-s80-armor-robe-helmet-512.webp"
+  },
+  {
+    "key": "catalog-s80-jewelry-earring",
+    "label": "Dynasty Earring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-s80-jewelry-earring-32.webp",
+    "source": "../v1/catalog-s80-jewelry-earring-512.webp"
+  },
+  {
+    "key": "catalog-s80-jewelry-necklace",
+    "label": "Dynasty Necklace",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-s80-jewelry-necklace-32.webp",
+    "source": "../v1/catalog-s80-jewelry-necklace-512.webp"
+  },
+  {
+    "key": "catalog-s80-jewelry-ring",
+    "label": "Dynasty Ring",
+    "group": "Бижутерия",
+    "background": "jewelry",
+    "vertical": false,
+    "icon": "catalog-s80-jewelry-ring-32.webp",
+    "source": "../v1/catalog-s80-jewelry-ring-512.webp"
+  },
+  {
+    "key": "catalog-s80-shield-bigshield",
+    "label": "Dynasty Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s80-shield-bigshield-32.webp",
+    "source": "../v1/catalog-s80-shield-bigshield-512.webp"
+  },
+  {
+    "key": "catalog-s80-shield-sigill",
+    "label": "Dynasty Sigil",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s80-shield-sigill-32.webp",
+    "source": "../v1/catalog-s80-shield-sigill-512.webp"
+  },
+  {
+    "key": "catalog-s80-shield-smallshield",
+    "label": "Dynasty Guard Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s80-shield-smallshield-32.webp",
+    "source": "../v1/catalog-s80-shield-smallshield-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-blunt",
+    "label": "Dynasty Crusher",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s80-weapon-blunt-32.webp",
+    "source": "../v1/catalog-s80-weapon-blunt-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-bow",
+    "label": "Dynasty Bow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s80-weapon-bow-32.webp",
+    "source": "../v1/catalog-s80-weapon-bow-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-crossbow",
+    "label": "Dynasty Crossbow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s80-weapon-crossbow-32.webp",
+    "source": "../v1/catalog-s80-weapon-crossbow-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-dagger",
+    "label": "Dynasty Knife",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-s80-weapon-dagger-32.webp",
+    "source": "../v1/catalog-s80-weapon-dagger-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-fists",
+    "label": "Dynasty Bagh-Nakh",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s80-weapon-fists-32.webp",
+    "source": "../v1/catalog-s80-weapon-fists-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-mace",
+    "label": "Dynasty Mace",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-s80-weapon-mace-32.webp",
+    "source": "../v1/catalog-s80-weapon-mace-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-onehandedsword",
+    "label": "Dynasty Sword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-s80-weapon-onehandedsword-32.webp",
+    "source": "../v1/catalog-s80-weapon-onehandedsword-512.webp"
+  },
+  {
+    "key": "catalog-s80-weapon-twohandedsword",
+    "label": "Dynasty Blade",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "catalog-s80-weapon-twohandedsword-32.webp",
+    "source": "../v1/catalog-s80-weapon-twohandedsword-512.webp"
+  },
+  {
+    "key": "catalog-s84-shield-smallshield",
+    "label": "Vesper Guard Shield",
+    "group": "Щиты",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "catalog-s84-shield-smallshield-32.webp",
+    "source": "../v1/catalog-s84-shield-smallshield-512.webp"
+  },
+  {
+    "key": "epic-weapon-shadow-scythe",
+    "label": "epic-weapon-shadow-scythe",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-shadow-scythe-32.webp",
+    "source": "../v1/epic-weapon-shadow-scythe-512.webp"
+  },
+  {
+    "key": "epic-weapon-solar-scythe",
+    "label": "epic-weapon-solar-scythe",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-solar-scythe-32.webp",
+    "source": "../v1/epic-weapon-solar-scythe-512.webp"
+  },
+  {
+    "key": "epic-weapon-prism-sword",
+    "label": "epic-weapon-prism-sword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-prism-sword-32.webp",
+    "source": "../v1/epic-weapon-prism-sword-512.webp"
+  },
+  {
+    "key": "epic-weapon-lifeblade",
+    "label": "epic-weapon-lifeblade",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-lifeblade-32.webp",
+    "source": "../v1/epic-weapon-lifeblade-512.webp"
+  },
+  {
+    "key": "epic-weapon-rainbow-scythe",
+    "label": "epic-weapon-rainbow-scythe",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-rainbow-scythe-32.webp",
+    "source": "../v1/epic-weapon-rainbow-scythe-512.webp"
+  },
+  {
+    "key": "epic-weapon-astral-sword",
+    "label": "epic-weapon-astral-sword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-astral-sword-32.webp",
+    "source": "../v1/epic-weapon-astral-sword-512.webp"
+  },
+  {
+    "key": "epic-weapon-eclipse-greatsword",
+    "label": "epic-weapon-eclipse-greatsword",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-eclipse-greatsword-32.webp",
+    "source": "../v1/epic-weapon-eclipse-greatsword-512.webp"
+  },
+  {
+    "key": "epic-weapon-solar-bow",
+    "label": "epic-weapon-solar-bow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "epic-weapon-solar-bow-32.webp",
+    "source": "../v1/epic-weapon-solar-bow-512.webp"
+  },
+  {
+    "key": "epic-weapon-tide-trident",
+    "label": "epic-weapon-tide-trident",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-tide-trident-32.webp",
+    "source": "../v1/epic-weapon-tide-trident-512.webp"
+  },
+  {
+    "key": "epic-weapon-wind-staff",
+    "label": "epic-weapon-wind-staff",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-wind-staff-32.webp",
+    "source": "../v1/epic-weapon-wind-staff-512.webp"
+  },
+  {
+    "key": "epic-weapon-nature-axe",
+    "label": "epic-weapon-nature-axe",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "epic-weapon-nature-axe-32.webp",
+    "source": "../v1/epic-weapon-nature-axe-512.webp"
+  },
+  {
+    "key": "epic-weapon-song-staff",
+    "label": "epic-weapon-song-staff",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": true,
+    "icon": "epic-weapon-song-staff-32.webp",
+    "source": "../v1/epic-weapon-song-staff-512.webp"
+  },
+  {
+    "key": "epic-weapon-crystal-crossbow",
+    "label": "epic-weapon-crystal-crossbow",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "epic-weapon-crystal-crossbow-32.webp",
+    "source": "../v1/epic-weapon-crystal-crossbow-512.webp"
+  },
+  {
+    "key": "epic-weapon-dragon-claws",
+    "label": "epic-weapon-dragon-claws",
+    "group": "Оружие",
+    "background": "weapon",
+    "vertical": false,
+    "icon": "epic-weapon-dragon-claws-32.webp",
+    "source": "../v1/epic-weapon-dragon-claws-512.webp"
+  }
+]

@@ -11,9 +11,14 @@ import {createParty} from '../../functions/game/party/party.js';
 import changePlayerGameClass from '../../functions/game/player/changePlayerGameClass.js';
 import updatePlayerStats from '../../functions/game/player/updatePlayerStats.js';
 import {addMaterial} from '../../functions/game/player/materials.js';
-import {L2_MATERIAL_ART,L2_JEWELRY_ART,L2_ITEM_IDENTITIES,L2_CATEGORY_ART,L2_UI_ART} from '../../webapp/art/l2-icon-art.js';
+import {L2_MATERIAL_ART,L2_JEWELRY_ART,L2_ITEM_IDENTITIES,L2_CATEGORY_ART,L2_UI_ART,L2_HF_CLOAKS,L2_HF_ARMOR_SETS} from '../../webapp/art/l2-icon-art.js';
+import {ITEM_ART_KEYS} from '../../webapp/art/items-art.js';
 const root=path.resolve('webapp');
-const art=new Set([...Object.values(L2_MATERIAL_ART),...Object.values(L2_JEWELRY_ART),...Object.values(L2_ITEM_IDENTITIES),...Object.values(L2_CATEGORY_ART),...Object.values(L2_UI_ART)]);
+for(const key of ITEM_ART_KEYS)for(const size of [32,64,128,256,512]){
+ const file=path.join(root,'art/items/l2-style',`${key}-${size}.webp`);
+ const bytes=fs.readFileSync(file);assert.equal(bytes.toString('ascii',0,4),'RIFF',file);assert.equal(bytes.toString('ascii',8,12),'WEBP',file);
+}
+const art=new Set([...Object.values(L2_MATERIAL_ART),...Object.values(L2_JEWELRY_ART),...Object.values(L2_ITEM_IDENTITIES),...Object.values(L2_CATEGORY_ART),...Object.values(L2_UI_ART),...L2_HF_CLOAKS.map(row=>row.art),...L2_HF_ARMOR_SETS.flatMap(row=>row.parts.map(part=>part.art))]);
 for(const key of art)for(const size of [128,256,512]){
  const file=path.join(root,'art/l2',`${key}-${size}.webp`);assert.ok(fs.existsSync(file),file);
  const bytes=fs.readFileSync(file);assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WEBP');
@@ -37,6 +42,31 @@ try{
  await crystals.screenshot({path:'docs/l2-sa-all-levels-390.png'});
  await gallery.close();
  console.log('Gallery: 54 SA crystals (three colours, levels 0–17), every image decoded');
+ for(const width of [320,390,1100]){
+  const page=await browser.newPage({viewport:{width,height:900}});
+  await page.goto(pathToFileURL(path.resolve('docs/l2-painted-icons-preview.html')).href);
+  await page.evaluate(async()=>Promise.all([...document.images].map(image=>image.decode())));
+  assert.equal(await page.locator('figure').count(),ITEM_ART_KEYS.length);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'painted gallery overflow');
+  const sizes=await page.locator('.samples img:first-child').evaluateAll(images=>images.every(image=>image.naturalWidth===32&&image.naturalHeight===32));
+  assert.equal(sizes,true,'native 32×32 icon size');
+  if(width===390)await page.screenshot({path:'docs/l2-painted-icons-390.png'});
+  await page.close();
+ }
+ console.log('Painted collection: 256 native 32×32 icons verified at 320/390/1100px');
+ for(const width of [320,390,1100]){
+  const page=await browser.newPage({viewport:{width,height:900}});
+  await page.goto(pathToFileURL(path.resolve('docs/l2-high-five-equipment-preview.html')).href);
+  await page.evaluate(async()=>Promise.all([...document.images].map(image=>image.decode())));
+  assert.equal(await page.locator('article').count(),L2_HF_ARMOR_SETS.length);
+  assert.equal(await page.locator('.grid>figure').count(),L2_HF_CLOAKS.length);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'High Five equipment gallery overflow');
+  await page.locator('#search').fill('Moirai');
+  assert.ok(await page.locator('article:visible').count()>0);
+  if(width===390)await page.screenshot({path:'docs/l2-high-five-equipment-390.png'});
+  await page.close();
+ }
+ console.log(`${L2_HF_ARMOR_SETS.length} High Five set configurations and ${L2_HF_CLOAKS.length} cloaks verified`);
  for(const width of [320,390,1100]){
   const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'}),errors=[],missing=[];
   page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)missing.push(r.url());});
