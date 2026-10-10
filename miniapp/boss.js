@@ -14,7 +14,7 @@ import { potionShare } from '../functions/game/player/potionRestore.js';
 import { addMaterial, materialInfo } from '../functions/game/player/materials.js';
 import { recordQuestEvent } from '../functions/game/classes/classQuests.js';
 import { hasEpicPass, consumeEpicPass } from '../functions/game/academy/academy.js';
-import { needsPass, partyNeeded } from '../template/epicPasses.js';
+import { needsPass, partyNeeded, leaderOnly } from '../template/epicPasses.js';
 import { partyState } from '../functions/game/party/party.js';
 import { bossDebuffList, isBossStunned } from '../functions/game/boss/bossDebuffs.js';
 import { aliveRequiredUnits, aliveUnits, armorShield, bossTemplateFor, findUnit } from '../functions/game/boss/bossUnits.js';
@@ -331,22 +331,26 @@ async function clearUnfoughtBoss(boss) {
 
 export async function summonBossForMiniApp(session, chatId, epicName = null) {
   let epicTemplate = null;
+  let passHolder = session;
   if (epicName) {
     epicTemplate = getEpicTemplate(epicName);
     if (!epicTemplate) return { ok: false, reason: 'unknown_epic', boss: await getBossState(session, chatId) };
     if (number(session?.game?.stats?.lvl, 1) < epicTemplate.epic.minLevel) {
       return { ok: false, reason: 'epic_level_too_low', requiredLevel: epicTemplate.epic.minLevel, boss: await getBossState(session, chatId) };
     }
-    if (needsPass(epicName) && !hasEpicPass(session, epicName)) {
-      return { ok: false, reason: 'epic_pass_required', boss: await getBossState(session, chatId) };
-    }
     const chat = await Chat.findOne({ chatId: Number(chatId) });
     const partyMin = partyNeeded(epicName);
-    if (partyMin) {
-      const group = partyState(chat, session);
-      if ((group?.members.length || 0) < partyMin) {
-        return { ok: false, reason: 'epic_party_required', minParty: partyMin, boss: await getBossState(session, chatId) };
-      }
+    const group = partyMin ? partyState(chat, session) : null;
+    if (partyMin && (group?.members.length || 0) < partyMin) {
+      return { ok: false, reason: 'epic_party_required', minParty: partyMin, boss: await getBossState(session, chatId) };
+    }
+    // the pass: the summoner's own, or only the party leader's for a boss that takes a full party
+    passHolder = session;
+    if (needsPass(epicName) && leaderOnly(epicName) && group) {
+      passHolder = group.members.find(member => String(member.userId) === String(group.leaderId)) || session;
+    }
+    if (needsPass(epicName) && !hasEpicPass(passHolder, epicName)) {
+      return { ok: false, reason: 'epic_pass_required', leaderOnly: leaderOnly(epicName), boss: await getBossState(session, chatId) };
     }
     const status = epicStatus(chat, epicName);
     if (!status.available) {
@@ -362,7 +366,10 @@ export async function summonBossForMiniApp(session, chatId, epicName = null) {
   }
 
   const boss = await summonBoss(chatId, epicTemplate);
-  if (epicName && needsPass(epicName)) consumeEpicPass(session, epicName);
+  if (epicName && needsPass(epicName)) {
+    consumeEpicPass(passHolder, epicName);
+    if (passHolder !== session) passHolder.needsSave = true;
+  }
   return {
     ok: true,
     action: 'summon',

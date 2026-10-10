@@ -2,7 +2,7 @@
 // never raided. Fighters of epic raid bosses and the top of the weekly arena also earn a few.
 // Spent in the Donate shop (template/luckShop.js) plus rented epic equipment built here.
 
-import { hasEpicPass, grantEpicPass } from '../functions/game/academy/academy.js';
+import { passCount, grantEpicPass, PASS_HOLD_MAX } from '../functions/game/academy/academy.js';
 import luckShop, { LUCK_SHOP_GROUPS, TIMED_EPIC_PRICE } from '../template/luckShop.js';
 import { addPotionById } from '../functions/game/player/potionBuffs.js';
 import elixirs from '../template/elixirs.js';
@@ -83,8 +83,7 @@ function isFull(session, item) {
   const grant = item.grant || {};
   if (grant.arenaChances) return number(game.arenaChances) >= ARENA_CHANCES_CAP;
   if (grant.stealChances) return number(game.chanceToSteal) >= STEAL_CHANCES_CAP;
-  // one pass of a boss is held at a time
-  if (grant.epicPass) return hasEpicPass(session, grant.epicPass);
+  if (grant.epicPass) return passCount(session, grant.epicPass) >= PASS_HOLD_MAX;
   return false;
 }
 

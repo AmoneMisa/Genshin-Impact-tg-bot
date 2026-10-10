@@ -10,7 +10,7 @@
 //   passQuests: {bossName: {progress, startedAt}}, passes: {bossName: count}
 // }
 import {getEpicTemplate} from '../boss/epicBosses.js';
-import {PASS_EPICS, needsPass} from '../../../template/epicPasses.js';
+import {PASS_EPICS, PARTY_EPICS, needsPass} from '../../../template/epicPasses.js';
 import {spForLevelUp} from '../player/setLevel.js';
 import {addMaterial} from '../player/materials.js';
 import {getClassQuestView} from '../classes/classQuests.js';
@@ -104,11 +104,19 @@ export function refreshBounties(session, now = Date.now()) {
  * Counts a gameplay event for the orders and the epic pass quests.
  * Events: mob_kill, boss_kill, craft, enchant. Returns how many steps moved.
  */
+/** True when the monster is one the step names: its zone and its name. */
+function inHuntOfStep(step, mob) {
+    if (step.zone && mob?.zone !== step.zone) return false;
+    if (Array.isArray(step.mobs) && step.mobs.length && !step.mobs.includes(mob?.name)) return false;
+    return number(mob?.level) >= number(step.minLevel);
+}
+
 export function recordAcademyEvent(session, type, {count = 1, boss = null, mob = null, now = Date.now(), random = Math.random} = {}) {
-    if (!session?.game) return 0;
+    if (!session?.game) return {moved: 0, drops: []};
     const academy = ensureAcademy(session);
     refreshBounties(session, now);
     let moved = 0;
+    const drops = [];
     for (const period of Object.values(academy.bounties)) {
         for (const quest of period.quests) {
             if (quest.claimed || BOUNTY_KINDS[quest.kind].event !== type || quest.progress >= quest.target) continue;
@@ -124,15 +132,20 @@ export function recordAcademyEvent(session, type, {count = 1, boss = null, mob =
         if (step.type === 'mobKills' && type === 'mob_kill' && number(mob?.level) >= number(step.minLevel)) {
             quest.progress = Math.min(target, number(quest.progress) + 1);
             moved++;
-        } else if (step.type === 'collect' && type === 'mob_kill' && number(mob?.level) >= number(step.minLevel) && random() < number(step.chance)) {
-            quest.progress = Math.min(target, number(quest.progress) + 1);
+        } else if (step.type === 'collect' && type === 'mob_kill' && inHuntOfStep(step, mob) && random() < number(step.chance)) {
+            // the quest item is the pass itself: it is in the hero's hands the moment it drops
+            const amount = Math.max(1, Math.min(number(step.amount, 1), target - number(quest.progress)));
+            quest.progress = Math.min(target, number(quest.progress) + amount);
+            academy.passes[name] = Math.min(PASS_HOLD_MAX, number(academy.passes[name]) + amount);
             moved++;
+            drops.push({pass: name, item: step.item, amount});
+            if (quest.progress >= target && quest.step >= PASS_EPICS[name].steps.length - 1) delete academy.passQuests[name];
         } else if (step.type === 'bossKills' && type === 'boss_kill' && !boss?.epic) {
             quest.progress = Math.min(target, number(quest.progress) + 1);
             moved++;
         }
     }
-    return moved;
+    return {moved, drops};
 }
 
 function payReward(session, reward) {
@@ -156,6 +169,8 @@ export function claimBounty(session, scope, id, now = Date.now()) {
 
 // ---- epic passes ----
 
+export const PASS_HOLD_MAX = 20;
+
 export const passSteps = name => PASS_EPICS[name]?.steps || [];
 
 /** A step is complete when its target is reached; a dialog step completes by talking. */
@@ -166,7 +181,6 @@ export function startPassQuest(session, name) {
     const template = getEpicTemplate(name);
     const academy = ensureAcademy(session);
     if (template && number(session.game.stats?.lvl, 1) < template.epic.minLevel) return {ok: false, reason: 'level_too_low', requiredLevel: template.epic.minLevel};
-    if (number(academy.passes[name]) > 0) return {ok: false, reason: 'pass_owned'};
     if (academy.passQuests[name]) return {ok: false, reason: 'already_active'};
     academy.passQuests[name] = {step: 0, progress: 0, startedAt: Date.now()};
     return {ok: true};
@@ -209,14 +223,15 @@ export function claimPass(session, name) {
     return talkPassQuest(session, name);
 }
 
-export const hasEpicPass = (session, name) => number(ensureAcademy(session).passes[name]) > 0;
+export const passCount = (session, name) => number(ensureAcademy(session).passes[name]);
+export const hasEpicPass = (session, name) => passCount(session, name) > 0;
 
-/** Gives a pass (bought for Coins of Luck). A hero holds one of each. */
+/** Gives a pass (bought for Coins of Luck). A hero holds several of each, up to PASS_HOLD_MAX. */
 export function grantEpicPass(session, name) {
     if (!needsPass(name)) return false;
     const academy = ensureAcademy(session);
-    if (number(academy.passes[name]) > 0) return false;
-    academy.passes[name] = 1;
+    if (number(academy.passes[name]) >= PASS_HOLD_MAX) return false;
+    academy.passes[name] = number(academy.passes[name]) + 1;
     return true;
 }
 
@@ -259,11 +274,13 @@ export function getAcademyState(session, now = Date.now()) {
                 stepCount: steps.length,
                 step: current ? {
                     type: current.type, npc: current.npc || null, text: current.text || null, item: current.item || null,
-                    target: stepTarget(current), progress: current.type === 'talk' ? 0 : number(quest.progress),
+                    target: stepTarget(current), amount: number(current.amount, 1), progress: current.type === 'talk' ? 0 : number(quest.progress),
                     done: current.type === 'talk' ? true : number(quest.progress) >= stepTarget(current),
                 } : null,
-                canStart: level >= number(template?.epic.minLevel) && !quest && number(academy.passes[name]) <= 0,
+                canStart: level >= number(template?.epic.minLevel) && !quest,
                 price: config.cost,
+                partyMin: number(PARTY_EPICS[name]),
+                leaderOnly: Boolean(config.leaderOnly),
             };
         }),
         classQuests: getClassQuestView(session),

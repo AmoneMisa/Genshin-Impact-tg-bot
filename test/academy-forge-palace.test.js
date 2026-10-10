@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {getAcademyState, claimBounty, recordAcademyEvent, bountyQuality, bountyReward, startPassQuest, talkPassQuest, advancePassQuest, hasEpicPass, consumeEpicPass, grantEpicPass} from '../functions/game/academy/academy.js';
-import {needsPass, partyNeeded} from '../template/epicPasses.js';
+import {getAcademyState, claimBounty, recordAcademyEvent, bountyQuality, bountyReward, startPassQuest, talkPassQuest, passCount, hasEpicPass, consumeEpicPass, grantEpicPass} from '../functions/game/academy/academy.js';
+import {needsPass, partyNeeded, leaderOnly, PASS_EPICS} from '../template/epicPasses.js';
 import {forgeBonuses, FORGE_MAX, reduceNeeds} from '../functions/game/builds/forgeBonuses.js';
 import {inventoryCapacity, warehouseCapacity, inventorySlotsUsed, hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
 import {enchantChance} from '../functions/game/equipment/enchantItem.js';
@@ -85,7 +85,7 @@ test('academy orders grow with the building level and are paid once', () => {
     assert.equal(claimBounty(low, 'day', quest.id, now).reason, 'already_claimed');
 });
 
-test('an epic pass is earned by a quest of dialogs, farming and drops, bound to the hero', () => {
+test('the quest item of an epic is the pass: N of them drop from the named monsters of the zone, bound to the hero', () => {
     const player = hero({academy: {currentLvl: 1}});
     player.game.stats.lvl = 85;
     const name = 'baium';
@@ -93,31 +93,38 @@ test('an epic pass is earned by a quest of dialogs, farming and drops, bound to 
     assert.equal(needsPass('zaken'), false);
     assert.equal(partyNeeded('zaken'), 2);
     assert.equal(partyNeeded('orfen'), 0);
+    // Frintezza takes a party of four, and only the leader needs the pass
+    assert.equal(partyNeeded('frintezza'), 4);
+    assert.equal(leaderOnly('frintezza'), true);
+    assert.equal(leaderOnly('baium'), false);
+    // Valakas is the quickest: the best chance and the most items in one drop
+    const chance = n => PASS_EPICS[n].steps.find(step => step.type === 'collect').chance;
+    const amount = n => PASS_EPICS[n].steps.find(step => step.type === 'collect').amount;
+    assert.ok(chance('valakas') > chance('baium') && chance('baium') > chance('antharas') && chance('antharas') > chance('frintezza'));
+    assert.equal(amount('valakas'), 3);
+    const mob = {level: 75, zone: 'catacomb-dark-omens', name: 'Lilim Slayer'};
+    // nothing drops before the quest is taken
+    assert.deepEqual(recordAcademyEvent(player, 'mob_kill', {mob, random: () => 0}).drops, []);
     assert.equal(startPassQuest(player, name).ok, true);
-    let guard = 0;
-    while (player.game.academy.passQuests[name] && guard++ < 20) {
-        const view = getAcademyState(player).passes.find(pass => pass.name === name);
-        const step = view.step;
-        if (step.type === 'talk') {
-            const talked = talkPassQuest(player, name);
-            assert.equal(talked.ok, true);
-            assert.ok(talked.lines.length > 0);
-            continue;
-        }
-        // the step does not move on the wrong events
-        assert.equal(advancePassQuest(player, name).reason, 'quest_not_complete');
-        for (let n = 0; n < 400 && !getAcademyState(player).passes.find(pass => pass.name === name).step.done; n++) {
-            recordAcademyEvent(player, 'mob_kill', {mob: {level: 20}, random: () => 0});
-            recordAcademyEvent(player, 'mob_kill', {mob: {level: 80}, random: () => 0});
-            recordAcademyEvent(player, 'boss_kill', {boss: {epic: false}});
-        }
-        assert.equal(advancePassQuest(player, name).ok, true);
+    assert.equal(talkPassQuest(player, name).ok, true);
+    // other zones and other monsters do not carry it, and the chance is a chance
+    assert.deepEqual(recordAcademyEvent(player, 'mob_kill', {mob: {...mob, zone: 'hot-springs'}, random: () => 0}).drops, []);
+    assert.deepEqual(recordAcademyEvent(player, 'mob_kill', {mob: {...mob, name: 'Wolf'}, random: () => 0}).drops, []);
+    assert.deepEqual(recordAcademyEvent(player, 'mob_kill', {mob, random: () => 0.99}).drops, []);
+    const step = getAcademyState(player).passes.find(pass => pass.name === name).step;
+    const target = step.target;
+    assert.equal(step.amount, 2, 'Baium drops two at a time');
+    assert.ok(target >= 5);
+    for (let n = step.amount; n <= target; n += step.amount) {
+        const drop = recordAcademyEvent(player, 'mob_kill', {mob, random: () => 0});
+        assert.deepEqual(drop.drops, [{pass: name, item: 'Окровавленная ткань', amount: step.amount}]);
+        assert.equal(passCount(player, name), n, 'every item is one entry');
     }
-    assert.equal(hasEpicPass(player, name), true);
-    assert.equal(grantEpicPass(player, name), false, 'one pass at a time');
+    assert.equal(player.game.academy.passQuests[name], undefined, 'the quest ends with the last item');
+    assert.deepEqual(recordAcademyEvent(player, 'mob_kill', {mob, random: () => 0}).drops, []);
     // it is not an item: nothing in the stocks that trade, mail, warehouse and auction move carries it
     assert.equal(JSON.stringify(player.game.inventory).includes(name), false);
     assert.equal(consumeEpicPass(player, name), true);
-    assert.equal(hasEpicPass(player, name), false);
+    assert.equal(passCount(player, name), target - 1);
     assert.equal(grantEpicPass(player, name), true, 'a bought pass');
 });

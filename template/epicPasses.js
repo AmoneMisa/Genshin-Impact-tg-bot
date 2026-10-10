@@ -1,18 +1,23 @@
 // Entering an epic raid boss (Lineage II). The open-world raids (Queen Ant, Core, Orfen) take a hero alone. Zaken takes
-// a party of two. Baium, Frintezza, Antharas and Valakas need a pass: bought for Coins of Luck in the Donate shop or
-// earned with a quest of the Academy (steps: dialogs with the NPC, farming mobs, quest item drops, raid bosses).
+// a party of two. Baium, Frintezza, Antharas and Valakas need a pass, and the pass IS the quest item of the real game
+// (Blooded Fabric, the seal of the tomb, the Portal Stone, the Floating Stone). As in the original quest, the hero takes
+// the quest from the NPC and then collects N of the items from the named monsters of the named hunting zone; every
+// item that drops is one entry. The same pass is bought for Coins of Luck in the Donate shop.
+//
+// Difficulty, easiest first: Valakas (3 items in one drop, the best chance), Baium, Antharas, Frintezza (the rarest drop).
+// Frintezza takes a party of four and the pass of its leader only: the other members need none.
+//
 // A pass is bound to the character: it lives in game.academy.passes, so it cannot be put on the auction, into the
-// warehouse, the mail or a trade.
+// warehouse, the mail or a trade. One pass opens one entry.
 
 /** Epic bosses that need a party of at least this many members to be called. */
-export const PARTY_EPICS = Object.freeze({zaken: 2});
+export const PARTY_EPICS = Object.freeze({zaken: 2, frintezza: 4});
 
 /**
- * Steps:
- *   talk      {npc, lines}                 press "Поговорить": the NPC's lines are shown, the step is done
- *   mobKills  {target, minLevel}           kill monsters of this level or above in the hunting zones
- *   collect   {item, target, chance, minLevel}  a quest item drops from such monsters with this chance
- *   bossKills {target}                     take part in the kill of ordinary bosses
+ * Steps of the quest of a pass:
+ *   talk     {npc, lines}                       press "Поговорить": the NPC's lines are shown
+ *   collect  {item, target, amount, chance, zone, mobs, text}   the pass itself drops from the named monsters of the
+ *                                                      zone, `amount` at a time; done when `target` have been collected
  */
 export const PASS_EPICS = Object.freeze({
     baium: {
@@ -24,20 +29,15 @@ export const PASS_EPICS = Object.freeze({
         steps: [
             {type: 'talk', npc: 'Привратник Вихря', lines: [
                 'Баюм спит в кристальном склепе, и разбудить его может лишь тот, кто принесёт ему кровь, пролитую на поле боя.',
-                'Принеси мне окровавленную ткань — её находят на тех, кто пал от рук воинов в диких землях.',
-                'Но сперва докажи, что ты способен пережить встречу со спящим демоном.',
+                'Окровавленную ткань находят на тех, кто пал от рук воинов в диких землях. Она нужна один раз — склеп примет её и закроется.',
             ]},
-            {type: 'mobKills', target: 80, minLevel: 70, text: 'Победи монстров 70+ уровня'},
-            {type: 'collect', item: 'Окровавленная ткань', target: 6, chance: 0.06, minLevel: 70, text: 'Добудь окровавленную ткань'},
-            {type: 'bossKills', target: 3, text: 'Победи обычных боссов'},
-            {type: 'talk', npc: 'Привратник Вихря', lines: [
-                'Ткань пропитана достаточно. Вихрь откроет тебе путь к склепу.',
-                'Помни: Баюм не прощает шума. Иди и не оглядывайся.',
-            ]},
+            {type: 'collect', item: 'Окровавленная ткань', target: 8, amount: 2, chance: 0.10, zone: 'catacomb-dark-omens', mobs: ['Lilim Slayer', 'Nephilim Royal Guard', 'Tomb Guard'],
+             text: 'Добудь предметы: Катакомба Тёмных Знамений — Лилим-убийцы, королевские стражи нефилимов и стражи гробниц'},
         ],
     },
     frintezza: {
         label: 'Фринтезза',
+        leaderOnly: true,
         minLevel: 80,
         cost: 60,
         title: 'Печать Имперской гробницы',
@@ -45,15 +45,10 @@ export const PASS_EPICS = Object.freeze({
         steps: [
             {type: 'talk', npc: 'Хранитель гробницы', lines: [
                 'Имперская гробница закрыта печатью, которую не снять простой силой.',
-                'Говорят, осколки печати носят на себе порождения проклятого замка.',
-                'Собери их — и я впущу тебя к Тёмному маэстро.',
+                'Говорят, печати носят на себе порождения проклятого замка. Одна печать открывает гробницу один раз.',
             ]},
-            {type: 'mobKills', target: 100, minLevel: 75, text: 'Победи монстров 75+ уровня'},
-            {type: 'collect', item: 'Осколок печати гробницы', target: 4, chance: 0.05, minLevel: 75, text: 'Добудь осколки печати'},
-            {type: 'bossKills', target: 4, text: 'Победи обычных боссов'},
-            {type: 'talk', npc: 'Хранитель гробницы', lines: [
-                'Печать собрана. Музыка Фринтеззы зовёт — но не каждый выдержит её до конца.',
-            ]},
+            {type: 'collect', item: 'Печать Имперской гробницы', target: 4, amount: 2, chance: 0.05, zone: 'wall-of-argos', mobs: ['Disciples of Punishment', 'Disciples of Authority'],
+             text: 'Добудь предметы: Стена Аргоса — Ученики Наказания и Ученики Власти'},
         ],
     },
     antharas: {
@@ -67,12 +62,8 @@ export const PASS_EPICS = Object.freeze({
                 'Антарас дремлет в логове, и тропа к нему закрыта для всех без портального камня.',
                 'Такие камни носят твари долины. Они редки, а тот, кто тратит силы зря, не получит ни одного.',
             ]},
-            {type: 'mobKills', target: 120, minLevel: 72, text: 'Победи монстров 72+ уровня'},
-            {type: 'collect', item: 'Портальный камень', target: 3, chance: 0.04, minLevel: 72, text: 'Добудь портальные камни'},
-            {type: 'bossKills', target: 5, text: 'Победи обычных боссов'},
-            {type: 'talk', npc: 'Страж долины драконов', lines: [
-                'Камни при тебе. Земной дракон ждёт — и пощады он не знает.',
-            ]},
+            {type: 'collect', item: 'Портальный камень', target: 6, amount: 2, chance: 0.07, zone: 'primeval-isle', mobs: ['Velociraptor', 'Ornithomimus'],
+             text: 'Добудь предметы: Первобытный остров — велоцирапторы и орнитомимы'},
         ],
     },
     valakas: {
@@ -84,15 +75,10 @@ export const PASS_EPICS = Object.freeze({
         steps: [
             {type: 'talk', npc: 'Хранитель вулкана', lines: [
                 'Валакас спит под вулканом, и огонь бережёт его покой.',
-                'Лишь плавучий камень может пронести тебя над потоками лавы.',
-                'Добудь камни у обитателей огненных земель и докажи, что тебе по силам их жар.',
+                'Лишь плавучий камень может пронести тебя над потоками лавы. Добудь его у обитателей огненных земель.',
             ]},
-            {type: 'mobKills', target: 150, minLevel: 75, text: 'Победи монстров 75+ уровня'},
-            {type: 'collect', item: 'Плавучий камень', target: 3, chance: 0.03, minLevel: 75, text: 'Добудь плавучие камни'},
-            {type: 'bossKills', target: 6, text: 'Победи обычных боссов'},
-            {type: 'talk', npc: 'Хранитель вулкана', lines: [
-                'Камни выдержат жар. Огненный дракон проснётся — будь готов.',
-            ]},
+            {type: 'collect', item: 'Плавучий камень', target: 9, amount: 3, chance: 0.14, zone: 'hot-springs', mobs: ['Hot Springs Yeti', 'Hot Springs Nepenthes', 'Hot Springs Flava'],
+             text: 'Добудь предметы: Горячие источники — йети, непентесы и флавы горячих источников'},
         ],
     },
 });
@@ -100,3 +86,5 @@ export const PASS_EPICS = Object.freeze({
 export const passEpicNames = () => Object.keys(PASS_EPICS);
 export const needsPass = name => Object.hasOwn(PASS_EPICS, name);
 export const partyNeeded = name => PARTY_EPICS[name] || 0;
+/** The pass of such a boss is spent from the party leader only. */
+export const leaderOnly = name => Boolean(PASS_EPICS[name]?.leaderOnly);

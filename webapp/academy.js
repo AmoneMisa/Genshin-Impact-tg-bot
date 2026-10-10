@@ -46,8 +46,10 @@ function bountyHtml(scope, quest, kinds) {
 
 function passHtml(pass) {
   const head = `<strong>${escapeHtml(pass.nameCall)}</strong>`;
-  if (pass.owned) {
-    return `<article class="academy-row done"><div>${head}<small>Допуск получен · привязан к персонажу</small></div><button type="button" class="city-btn" disabled>Получен</button></article>`;
+  const have = pass.owned ? `${escapeHtml(pass.title)} ×${fmt(pass.owned)} · привязан к персонажу` : '';
+  if (!pass.active && pass.owned) {
+    return `<article class="academy-row done"><div>${head}<small>${have}</small></div>
+      <button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}" ${pass.canStart ? '' : 'disabled'}>Ещё квест</button></article>`;
   }
   if (!pass.active) {
     return `<article class="academy-row"><div>${head}<small>Квест: ${escapeHtml(pass.npc)} · с ${fmt(pass.minLevel)} ур. · или ${fmt(pass.price)} ${luckCoinHtml(14)} в Донат-магазине</small></div>
@@ -59,8 +61,9 @@ function passHtml(pass) {
     return `<article class="academy-row"><div>${head}<small>${where} · Поговори: ${escapeHtml(step.npc)}</small></div>
       <button type="button" class="city-btn upgrade" data-academy-pass="pass_talk:${escapeHtml(pass.name)}">Поговорить</button></article>`;
   }
-  return `<article class="academy-row ${step.done ? 'done' : ''}"><div>${head}<small>${where} · ${escapeHtml(step.text || '')}: ${fmt(step.progress)} / ${fmt(step.target)}</small></div>
-    <button type="button" class="city-btn" data-academy-pass="pass_next:${escapeHtml(pass.name)}" ${step.done ? '' : 'disabled'}>Дальше</button></article>`;
+  // the quest item is the pass: it drops by itself, there is nothing to hand in
+  return `<article class="academy-row"><div>${head}<small>${where} · ${escapeHtml(step.text || '')} · ${fmt(step.progress)} / ${fmt(step.target)}${have ? ` · ${have}` : ''}</small></div>
+    <button type="button" class="city-btn" disabled>Ищи в бою</button></article>`;
 }
 
 function mainQuestsHtml(view) {
@@ -93,7 +96,7 @@ export async function openAcademy({ api, haptic = () => {}, openMainQuests = () 
       ${section('Еженедельные поручения', 'week')}
       ${mainQuestsHtml(state.classQuests)}
       ${dialog ? `<section class="city-block academy-dialog"><h4>${escapeHtml(dialog.npc)}</h4>${dialog.lines.map(line => `<p>«${escapeHtml(line)}»</p>`).join('')}${dialog.done ? '<p><b>Допуск получен.</b></p>' : ''}</section>` : ''}
-      <section class="city-block"><h4>Допуски к эпическим боссам</h4><p class="city-desc">Закен требует группу из двух игроков, Орфен, Кора и Королева Муравьёв доступны в одиночку. Допуск привязан к персонажу: его нельзя продать, положить на хранение или передать.</p>${state.passes.map(passHtml).join('')}</section>
+      <section class="city-block"><h4>Допуски к эпическим боссам</h4><p class="city-desc">Закен требует группу от двух игроков, Фринтезза — от четырёх, и допуск нужен только лидеру группы. Орфен, Кора и Королева Муравьёв доступны в одиночку. Допуск привязан к персонажу: его нельзя продать, положить на хранение или передать.</p>${state.passes.map(passHtml).join('')}</section>
       <p class="city-feedback" aria-live="polite">${escapeHtml(message)}</p></div>`;
   }
 
