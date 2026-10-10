@@ -27,10 +27,10 @@ const KIND_LABELS = { all: 'Всё', equipment: 'Снаряжение', potion: 
 const SORT_LABELS = { new: 'Новые', cheap: 'Дешевле', expensive: 'Дороже' };
 const formatNumber = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 const TYPES = {all:'Все',weapon:'Оружие',armor:'Доспехи',shield:'Щиты',jewelry:'Бижутерия',potion:'Припасы',material:'Ресурсы'};
-function dropdown(name, label, value, choices) {
+export function dropdown(name, label, value, choices) {
   return `<details class="auction-dropdown" data-dropdown="${name}"><summary aria-label="${label}">${escapeHtml(choices.find(([id])=>id===value)?.[1]||label)}</summary><div class="auction-dropdown-options">${choices.map(([id,text])=>`<button type="button" data-choice="${escapeHtml(id)}" aria-pressed="${value===id}">${escapeHtml(text)}</button>`).join('')}</div></details>`;
 }
-function auctionArt(entry) {
+export function auctionArt(entry) {
   if(entry.kind==='material')return entry.materialKey ? materialIcon(entry.materialKey) : l2CategoryIcon('material');
   if(entry.kind==='potion')return entry.artPotion ? flaskHtml(entry.artPotion) : l2CategoryIcon('consumable');
   const item=entry.artItem || {name:entry.title,grade:entry.grade,mainType:entry.mainType};

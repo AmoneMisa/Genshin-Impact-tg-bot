@@ -1,3 +1,5 @@
+import {openWarehouseGame} from './warehouse.js';
+import {openTradeGame} from './trade.js';
 import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldIconHtml } from './art/world-art.js';
@@ -72,11 +74,13 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <button class="inv-round" type="button" data-inventory-refresh aria-label="Обновить">↻</button>
       </header>
       <p class="overlay-copy" hidden>Ресурсы и предметы читаются из той же Mongo-сессии. Снаряжение и гача уже имеют отдельные экраны; здесь можно использовать расходники.</p>
-      <div data-inventory-content></div>
+      <div class="storage-actions"><button type="button" class="clan-play" data-personal-warehouse>Хранилище</button><button type="button" class="clan-play" data-personal-trade>Обмен</button></div><div data-inventory-content></div>
       <div class="utility-feedback" data-inventory-feedback aria-live="polite"></div>
     </div>`;
 
   const content = overlay.querySelector('[data-inventory-content]');
+  overlay.querySelector('[data-personal-warehouse]').onclick=()=>openWarehouseGame({api,renderState,haptic,onClose:()=>refresh()});
+  overlay.querySelector('[data-personal-trade]').onclick=()=>openTradeGame({api,renderState,haptic,onClose:()=>refresh()});
   const feedback = overlay.querySelector('[data-inventory-feedback]');
   const close = () => {
     overlay.classList.add('closing');

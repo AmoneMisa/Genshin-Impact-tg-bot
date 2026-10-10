@@ -11,6 +11,8 @@ import { openPlayerProfile } from './profile.js';
 import { openEquipmentGame } from './equipment.js';
 import { openSkillsGame } from './skills.js';
 import { openBuffsGame } from './buffs.js';
+import {openWarehouseGame} from './warehouse.js';
+import {openTradeGame} from './trade.js';
 
 export const CHARACTER_TABS = [['stats','Статы'],['equipment','Эквип'],['skills','Навыки'],['effects','Эффекты']];
 const LEFT = [['head','Голова','user'],['leftEar','Л. ухо','gem'],['up','Верх','shield'],['hands','Руки','hand'],['leftHand','Л. рука','shield'],['leftRing','Л. кольцо','circle'],['legs','Ноги','user']];
@@ -107,7 +109,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
     return '<div class="character-doll"><img class="character-body-art" src="'+esc(source)+'" alt="'+esc('Облик класса')+'">'+slots(LEFT,'left')+slots(RIGHT,'right')+'</div>'
       +itemDetails(equippedItemForSlot(equipment,slot),slot)
       +(sets?section('Комплекты',sets):'')
-      +'<div class="character-tools">'+action('inventory',icon('backpack')+'Инвентарь')+action('forge',icon('hammer')+'Кузница')+'</div>'
+      +'<div class="character-tools">'+action('inventory',icon('backpack')+'Инвентарь')+action('forge',icon('hammer')+'Кузница')+action('warehouse','Хранилище')+action('trade','Обмен')+'</div>'
       ;
   }
   if (tab === 'skills') {
@@ -231,6 +233,8 @@ export async function openCharacterPage(options,initialTab='stats') {
       if(name==='tab-equipment'){selectTab('equipment');return;}
       if(name==='tab-skills'){selectTab('skills');return;}
       if(name==='appearance')return await child(openPlayerProfile);
+      if(name==='warehouse')return await child(openWarehouseGame);
+      if(name==='trade')return await child(openTradeGame);
       if(name==='inventory'||name==='forge')return await child(openEquipmentGame,{initialView:name==='forge'?'forge':'inventory'});
       if(name==='skill-info')return await child(openSkillsGame);
       if(name==='buff-target')return await child(openBuffsGame);

@@ -4,7 +4,7 @@ import calcReputationPoints from '../functions/game/clans/calcReputationPoints.j
 import getInvestigationBonus from '../functions/game/clans/getInvestigationBonus.js';
 import clanInvestigations from '../dictionaries/clanInvestigations.js';
 import { getClanSkillsState, learnClanSkill } from '../functions/game/clans/clanPerks.js';
-import { getClanHallState, upgradeHall, depositGlory } from '../functions/game/clans/clanHall.js';
+import { getClanHallState, upgradeHall, depositGlory, setHallSkillEnabled } from '../functions/game/clans/clanHall.js';
 import clanTasks, { CLAN_TASKS_BONUS_XP } from '../dictionaries/clanTasks.js';
 
 function number(value, fallback = 0) {
@@ -255,6 +255,7 @@ export async function prepareClanProgressionAction(userId, playerSession, action
   if (action === 'investigation_cancel') return { clan, result: cancelClanInvestigation(clan, userId, canManage), savePlayer: false };
   if (action === 'skill_learn') return { clan, result: canManage ? learnClanSkill(clan, String(body.id || '')) : { ok: false, reason: 'not_allowed' }, savePlayer: false };
   if (action === 'hall_upgrade') return { clan, result: canManage ? upgradeHall(clan) : { ok: false, reason: 'not_allowed' }, savePlayer: false };
+  if (action === 'hall_skill_toggle') return {clan,result:canManage?setHallSkillEnabled(clan,body.key,body.enabled):{ok:false,reason:'not_allowed'},savePlayer:false};
   if (action === 'hall_deposit') return { clan, result: depositGlory(clan, playerSession), savePlayer: true };
   if (action === 'task_claim') return { clan, result: claimClanTask(clan, playerSession, userId, body.taskKey), savePlayer: true };
   if (action === 'task_claim_bonus') return { clan, result: claimClanTasksBonus(clan, userId), savePlayer: false };

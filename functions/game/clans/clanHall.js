@@ -78,6 +78,7 @@ export const hallLevel = clan => Math.max(1, Math.min(HALL_MAX_LEVEL, Math.floor
 
 /** The level a skill of the hall has: its own maximum, and no more than the hall level. */
 export const hallSkillLevel = (clan, key) => {
+    if (clan?.hall?.disabledSkills?.[key]) return 0;
     const skill = skillByKey(key);
     return skill ? Math.min(skill.values.length, hallLevel(clan)) : 0;
 };
@@ -146,16 +147,28 @@ export function getClanHallState(clan, now = Date.now()) {
         teleports: HALL_LEVELS.slice(0, hall.level).flatMap(row => row.teleports),
         next: next ? {level: next.level, glory: next.glory, gold: next.gold, canUpgrade: missing.length === 0, missing} : null,
         skills: HALL_SKILLS.map(skill => {
-            const level = hallSkillLevel(clan, skill.key);
+            const level = Math.min(skill.values.length, hallLevel(clan));
             return {
                 key: skill.key, name: skill.name, level, maxLevel: skill.values.length,
                 current: level ? text(skill, level) : null,
                 next: level < skill.values.length ? text(skill, level + 1) : null,
                 needsHallLevel: Math.min(skill.values.length, level + 1),
                 active: Boolean(skill.effects?.length || skill.points),
+                enabled: !hall.disabledSkills?.[skill.key],
+                levels: skill.values.map((_,index)=>({level:index+1,text:text(skill,index+1)})),
             };
         }),
     };
+}
+
+export function setHallSkillEnabled(clan, key, enabled) {
+    const skill = skillByKey(key);
+    if (!skill || !(skill.effects?.length || skill.points)) return {ok:false,reason:'unknown_hall_skill'};
+    if (typeof enabled !== 'boolean') return {ok:false,reason:'invalid_hall_setting'};
+    const hall = ensureHall(clan);
+    hall.disabledSkills ||= {};
+    if (enabled) delete hall.disabledSkills[key]; else hall.disabledSkills[key] = true;
+    return {ok:true,message:`${skill.name}: ${enabled?'включено':'выключено'}.`};
 }
 
 /** Raises the hall by a level: Glory points must be gathered, the gold is paid from the warehouse. The caller saves the clan. */

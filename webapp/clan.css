@@ -145,3 +145,38 @@
 .clan-hall-bid input::placeholder{color:#94899e}
 .clan-hall-bid input:focus{outline:2px solid #c7a35b;outline-offset:2px}
 @media(min-width:680px){.clan-hall-lots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Gold scrollbars and spacing apply to the live panel and its nested scrollers. */
+.clan-panel,.clan-panel *{scrollbar-width:thin;scrollbar-color:#9b7b43 #100d16}
+.clan-panel::-webkit-scrollbar,.clan-panel *::-webkit-scrollbar{width:7px;height:7px}
+.clan-panel::-webkit-scrollbar-track,.clan-panel *::-webkit-scrollbar-track{background:#100d16;border-radius:8px}
+.clan-panel::-webkit-scrollbar-thumb,.clan-panel *::-webkit-scrollbar-thumb{background:#9b7b43;border:2px solid #100d16;border-radius:8px}
+.clan-panel::-webkit-scrollbar-button,.clan-panel *::-webkit-scrollbar-button{display:none}
+.clan-actions-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:6px 0}
+.clan-hall-settings{gap:18px;padding:16px}
+.clan-hall-settings .clan-hall-art{aspect-ratio:21/9;margin:0}
+.hall-management{display:grid;gap:20px;min-width:0}
+.hall-sidebar,.hall-content{display:grid;align-content:start;gap:16px;min-width:0}
+.hall-emblem{display:grid;gap:6px;padding:12px;border:1px solid var(--gold-dim);border-radius:8px;background:#100d16}
+.hall-emblem strong{font:700 16px var(--serif);color:#f3dca6}
+.hall-emblem span,.hall-note{font:12px/1.55 system-ui;color:#b9acbe}
+.hall-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hall-menu button,.hall-levels button{min-height:40px;border:1px solid var(--gold-dim);border-radius:7px;background:linear-gradient(#29212e,#15111c);color:#d6c9db;font:600 12px/1.35 system-ui;padding:8px}
+.hall-menu button[aria-pressed=true],.hall-levels button[aria-pressed=true]{border-color:var(--gold);color:#fbeccb;background:linear-gradient(#5f4824,#2d2216)}
+.hall-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0;padding:12px;border:1px solid #49394c;border-radius:8px;background:#110e18;font:12px/1.5 system-ui}
+.hall-summary div{display:grid;gap:4px}.hall-summary dt{color:#a89aaf}.hall-summary dd{margin:0;font-weight:700;color:#f3dca6}
+.hall-levels{display:flex;flex-wrap:wrap;gap:8px}.hall-levels button{min-width:48px}
+.hall-services{display:grid;gap:12px;max-height:min(58vh,540px);overflow-y:auto;padding-right:8px;overscroll-behavior:contain}
+.hall-service{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:start;padding:14px 12px;border:1px solid #705735;border-radius:9px;background:linear-gradient(110deg,#302331,#17111c);box-shadow:inset 0 1px 0 #ffffff09}
+.hall-service-icon{display:grid;place-items:center;width:36px;height:36px;border:1px solid #8d724a;background:#08070a;box-sizing:border-box}.hall-service-icon img{width:32px;height:32px}
+.hall-service-body{display:grid;gap:8px;min-width:0}.hall-service-body h4{font:700 14px/1.4 var(--serif);overflow-wrap:anywhere}.hall-service-body h4 small{color:#b4a183;font:11px system-ui;white-space:nowrap}
+.hall-service-body p{margin:0;color:#e1d6e6;font:12px/1.6 system-ui}.hall-service-requirement{font:11px/1.5 system-ui;color:#ac9cac}
+.hall-switch{display:flex;align-items:center;gap:6px;min-height:32px;padding:5px 8px;border:1px solid #69536d;border-radius:18px;background:#17131c;color:#c6b9ca;font:600 11px system-ui}
+.hall-switch i{width:9px;height:9px;border:1px solid #766876;border-radius:50%;background:#5b4f5d}.hall-switch.on{border-color:#528568;color:#c6e4ce}.hall-switch.on i{background:#55c58a;border-color:#83d8a6;box-shadow:0 0 6px #55c58a66}.hall-switch:disabled{cursor:default;opacity:.75}
+.hall-unavailable{max-width:54px;font:10px/1.4 system-ui;color:#a698aa;text-align:right}
+.hall-development{display:grid;align-content:start;gap:16px;padding:16px;border:1px solid #705735;border-radius:9px;background:#17111c}
+.hall-note{margin:0}.hall-requirements{display:flex;flex-wrap:wrap;gap:12px;font:13px/1.5 system-ui;color:#e1c995}.hall-requirements span{display:inline-flex;align-items:center;gap:8px}.hall-requirements img{width:24px;height:24px}
+.hall-destinations{display:grid;gap:10px;list-style:none;padding:0;margin:0;font:13px/1.5 system-ui;color:#dacee0}.hall-destinations li{padding:10px 12px;border:1px solid #49394c;border-radius:7px}
+@media(min-width:680px){.hall-management{grid-template-columns:155px minmax(0,1fr)}.hall-menu,.hall-summary{grid-template-columns:1fr}}
+@media(max-width:679px){.hall-emblem{display:flex;align-items:center;justify-content:space-between;gap:12px}.hall-menu{grid-template-columns:repeat(3,minmax(0,1fr))}.hall-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;font-size:11px}}
+@media(max-width:360px){.clan-hall-settings{padding:12px}.hall-service{gap:8px;padding:12px 10px}.hall-service-body h4{font-size:13px}}

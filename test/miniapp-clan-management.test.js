@@ -24,6 +24,15 @@ function makeClan() {
   };
 }
 
+test('only two co-leaders may be appointed, including after leadership transfer',()=>{
+ const clan=makeClan();clan.members.push({userId:4,role:'member'});
+ assert.equal(promoteClanMember(clan,1,3).ok,true);
+ assert.equal(promoteClanMember(clan,1,4).reason,'co_leaders_full');
+ assert.equal(transferClanOwnership(clan,1,4).ok,true);
+ assert.equal(clan.members.filter(m=>m.role==='officer').length,2);
+ assert.equal(clan.members.find(m=>m.userId===1).role,'member');
+});
+
 test('application review is owner/officer only and only removes the target id', () => {
   const clan = makeClan();
 

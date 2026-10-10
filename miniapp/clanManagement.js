@@ -3,6 +3,7 @@ import getClan from '../functions/game/clans/getClan.js';
 import getUserName from '../functions/getters/getUserName.js';
 import { MAX_CLAN_MEMBERS } from './clan.js';
 import calcReputationPoints from '../functions/game/clans/calcReputationPoints.js';
+import {MAX_CO_LEADERS} from '../functions/game/clans/warehouseAccess.js';
 
 const KICK_COOLDOWN = 5 * 60 * 1000;
 const CLASS_KEYS = ['noClass', 'priest', 'mage', 'archer', 'warrior', 'berserk'];
@@ -165,8 +166,9 @@ export function promoteClanMember(clan, userId, targetId) {
   if (!clan || String(clan.owner) !== String(userId)) return { ok: false, reason: 'owner_only' };
   const member = findMember(clan, targetId);
   if (!member || member.role === 'owner') return { ok: false, reason: 'invalid_role_target' };
+  if (member.role!=='officer'&&clan.members.filter(m=>m.role==='officer').length>=MAX_CO_LEADERS) return {ok:false,reason:'co_leaders_full'};
   member.role = 'officer';
-  return { ok: true, message: 'Участник назначен офицером.' };
+  return { ok: true, message: 'Участник назначен со-лидером.' };
 }
 
 export function demoteClanMember(clan, userId, targetId) {
@@ -182,8 +184,8 @@ export function transferClanOwnership(clan, userId, targetId) {
   const target = findMember(clan, targetId);
   if (!target || target.role === 'owner') return { ok: false, reason: 'invalid_role_target' };
   const previous = findMember(clan, userId);
-  if (previous) previous.role = 'officer';
   target.role = 'owner';
+  if (previous) previous.role = clan.members.filter(m=>m.role==='officer').length<MAX_CO_LEADERS?'officer':'member';
   clan.owner = Number(targetId);
   return {
     ok: true,

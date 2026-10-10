@@ -34,16 +34,27 @@ try {for(const width of [320,390,1100]){
  await page.locator('[data-clan-tab=hall]').click();
  await page.locator('.clan-hall-art').evaluateAll(nodes=>Promise.all(nodes.map(n=>{n.loading='eager';return n.decode();})));
  assert.equal(await page.locator('.clan-hall-art').count(),1);
+ await page.locator('.hall-service-icon img').evaluateAll(nodes=>Promise.all(nodes.map(n=>n.decode())));
+ assert.equal(await page.locator('.hall-service-icon img').count(),hall.skills.length);
+ assert.equal(await page.locator('.clan-panel').evaluate(n=>getComputedStyle(n).scrollbarColor),'rgb(155, 123, 67) rgb(16, 13, 22)');
+ await page.locator('[data-hall-section=development]').click();
+ assert.equal(await page.locator('.clan-actions-row').evaluate(n=>getComputedStyle(n).gap),'12px');
+ await page.locator('[data-hall-section=skills]').click();
+ await page.locator('[data-hall-level="1"]').click();
+ assert.equal(await page.locator('[data-hall-level="1"]').getAttribute('aria-pressed'),'true');
+ await page.locator('[data-hall-level="3"]').click();
+ await page.locator('[data-hall-skill=greed]').click();
+ assert.ok(await page.evaluate(()=>posts.some(p=>p.action==='hall_skill_toggle'&&p.key==='greed'&&p.enabled===false)));
  assert.equal(await page.locator('.clan-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
- if(width===390){
+ if(width===390||width===1100){
   // Capture the entire sections without the live overlay's scroll clipping.
   await page.addStyleTag({content:'.clan-overlay{position:static!important;height:auto!important;max-height:none!important}.clan-panel{position:static!important;height:auto!important;max-height:none!important;overflow:visible!important}.overlay-backdrop{display:none!important}body{overflow:visible!important}'});
   await page.locator('.clan-panel img').evaluateAll(nodes=>Promise.all(nodes.map(n=>{n.loading='eager';return n.decode();})));
-  await page.locator('.clan-activities').first().screenshot({path:'docs/clan-hall-390.png'});
+  await page.locator('.clan-hall-settings').screenshot({path:width===390?'docs/clan-hall-390.png':'docs/clan-hall-desktop.png'});
  }
  await page.locator('[data-hall-tab=auction]').click();
  await page.locator('.clan-hall-art').evaluate(n=>{n.loading='eager';return n.decode();});
- assert.equal(await page.locator('[data-hall-bid]').count(),5);
+ assert.equal(await page.locator('[data-hall-bid]').count(),1);
  assert.equal(await page.locator('.clan-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
  if(width===390){
   await page.locator('.clan-panel img').evaluateAll(nodes=>Promise.all(nodes.map(n=>{n.loading='eager';return n.decode();})));

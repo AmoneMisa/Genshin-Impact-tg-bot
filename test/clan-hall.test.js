@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  HALL_LEVELS, HALL_SKILLS, ensureHall, getClanHallState, upgradeHall, depositGlory, giveGloryCoins, hallModifiers, hallPerks, hallPoints, hallSkillLevel, EPIC_GLORY_COINS,
+  HALL_LEVELS, HALL_SKILLS, ensureHall, getClanHallState, upgradeHall, depositGlory, giveGloryCoins, hallModifiers, hallPerks, hallPoints, hallSkillLevel, EPIC_GLORY_COINS, setHallSkillEnabled,
 } from '../functions/game/clans/clanHall.js';
 import { syncClanPerks, clanPerkModifiers } from '../functions/game/clans/clanPerks.js';
 import getEquipStatByName from '../functions/game/player/getters/getEquipStatByName.js';
@@ -16,6 +16,20 @@ function hero(className = 'duelist') {
   return session;
 }
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
+test('Hall switches remove and restore the actual perk while retaining its learned level',()=>{
+ const clan={hall:{level:3},warehouse:{gold:0}};
+ assert.equal(hallPerks(clan)['hall:greed'],3);
+ assert.equal(setHallSkillEnabled(clan,'greed',false).ok,true);
+ assert.equal(hallPerks(clan)['hall:greed'],undefined);
+ const dto=getClanHallState(clan).skills.find(s=>s.key==='greed');
+ assert.equal(dto.enabled,false);assert.equal(dto.level,3);assert.equal(dto.levels.length,4);
+ assert.equal(setHallSkillEnabled(clan,'greed',true).ok,true);
+ assert.equal(hallPerks(clan)['hall:greed'],3);
+ const before=JSON.stringify(clan);
+ assert.equal(setHallSkillEnabled(clan,'mental-crush',false).ok,false);
+ assert.equal(setHallSkillEnabled(clan,'greed','false').ok,false);
+ assert.equal(JSON.stringify(clan),before);
+});
 
 test('the hall has five levels; a level needs the Glory of the clan and gold of the warehouse', () => {
   assert.equal(HALL_LEVELS.length, 5);

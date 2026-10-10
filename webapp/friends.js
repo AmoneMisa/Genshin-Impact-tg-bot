@@ -5,6 +5,7 @@ import { escapeHtml } from './escape-html.js';
 
 import { menuArtFor } from './menu-art.js';
 import { renderEquipmentPaperDoll } from './equipment-paper-doll.js';
+import {openTradeGame} from './trade.js';
 
 const REASONS = {
   already_friend: 'Этот игрок уже в друзьях.',
@@ -84,7 +85,7 @@ export function statsHtml(stats = {}) {
 }
 
 /** Another player's card, on top of whatever is open. Resolves once it is shown, with `{ closed }`. */
-export async function openPlayerCard({ api, haptic = () => {}, userId, onChange = () => {} }) {
+export async function openPlayerCard({ api, renderState, haptic = () => {}, userId, onChange = () => {} }) {
   let card = await api(`/api/player?userId=${encodeURIComponent(userId)}`);
   let tab = 'gear';
   let pending = false;
@@ -124,6 +125,7 @@ export async function openPlayerCard({ api, haptic = () => {}, userId, onChange 
       <div class="pc-tab" data-pc-tab-body></div>
       ${card.isSelf ? '' : `
       <div class="fr-actions">
+        <button type="button" class="fr-btn gold" data-pc-trade>Обмен</button>
         <button type="button" class="fr-btn gold" data-pc-chat ${chatLink(card) ? '' : 'disabled'}>${chatLink(card) ? 'Написать' : 'Нет @username'}</button>
         <button type="button" class="fr-btn ${card.isFriend || card.requestState === 'outgoing' ? 'ghost' : 'blue'}" data-pc-friend>${friendLabel(card)}</button>
         ${card.requestState === 'incoming' ? '<button type="button" class="fr-btn ghost" data-pc-decline>Отклонить</button>' : ''}
@@ -138,6 +140,7 @@ export async function openPlayerCard({ api, haptic = () => {}, userId, onChange 
     }
     body.querySelectorAll('[data-pc-tab]').forEach(button => button.addEventListener('click', () => { tab = button.dataset.pcTab; haptic('light'); render(); }));
     body.querySelector('[data-pc-chat]')?.addEventListener('click', () => openChat(card, haptic));
+    body.querySelector('[data-pc-trade]')?.addEventListener('click',()=>openTradeGame({api,renderState,haptic,targetId:card.userId}));
     body.querySelector('[data-pc-friend]')?.addEventListener('click', () => toggleFriend());
     body.querySelector('[data-pc-decline]')?.addEventListener('click', () => toggleFriend('decline'));
   }
@@ -172,7 +175,7 @@ export async function openPlayerCard({ api, haptic = () => {}, userId, onChange 
   return { closed };
 }
 
-export async function openFriendsGame({ api, haptic, statusElement }) {
+export async function openFriendsGame({ api, renderState, haptic, statusElement }) {
   let social = await api('/api/social');
   let tab = 'friends';
   let picking = false;
@@ -249,7 +252,7 @@ export async function openFriendsGame({ api, haptic, statusElement }) {
     }
     body.querySelectorAll('[data-fr-chat]').forEach(button => button.addEventListener('click', event => { event.stopPropagation(); openChat(findPerson(button.dataset.frChat), haptic); }));
     body.querySelectorAll('[data-fr-open]').forEach(row => {
-      const open = () => openPlayerCard({ api, haptic, userId: row.dataset.frOpen, onChange: next => { social = next; render(); } });
+      const open = () => openPlayerCard({ api, renderState, haptic, userId: row.dataset.frOpen, onChange: next => { social = next; render(); } });
       row.addEventListener('click', open);
       row.addEventListener('keydown', event => { if (event.key === 'Enter') open(); });
     });

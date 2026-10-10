@@ -99,6 +99,8 @@ import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
 import {castL2Buff} from './l2Buffs.js';
 import {bidForClanHall} from './clanHallAuction.js';
+import {warehouseFor,transferWarehouse} from './warehouse.js';
+import {tradeFor,performTrade} from './trade.js';
 import { getPartyState, performPartyAction } from './party.js';
 import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchants.js';
 import { getTattooState, performTattooAction } from './tattoos.js';
@@ -1280,6 +1282,28 @@ const clanState = guarded('clan state', async (req, res) => {
   return sendJson(res, 200, dashboard);
 });
 
+const warehouseState=guarded('warehouse state',async(req,res,url)=>{
+  const context=await authorize(req),scope=url.searchParams.get('scope')||'character';
+  if(!['character','clan'].includes(scope))throw httpError(400,'Unknown warehouse');
+  return sendJson(res,200,await warehouseFor(context.chatId,context.userId,scope));
+});
+const warehouseTransfer=guarded('warehouse transfer',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  if(body.kind==='currency'&&body.ref==='gold')assertGoldUnlocked(context);
+  const result=await withLock('clan:global',()=>withLock(String(context.chatId),()=>transferWarehouse(context.chatId,context.userId,body)));
+  context.session=await getSession(context.chatId,context.userId);
+  return sendJson(res,result.ok?200:409,{...result,warehouse:await warehouseFor(context.chatId,context.userId,body.scope||'character'),state:stateFor(context)});
+});
+const tradeRead=guarded('trade state',async(req,res)=>{
+  const context=await authorize(req);return sendJson(res,200,await tradeFor(context.chatId,context.userId));
+});
+const tradeAction=guarded('trade action',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  const result=await withLock(String(context.chatId),()=>performTrade(context.chatId,context.userId,body));
+  context.session=await getSession(context.chatId,context.userId);
+  return sendJson(res,result.ok?200:409,{...result,tradeState:await tradeFor(context.chatId,context.userId),state:stateFor(context)});
+});
+
 const clanAction = guarded('clan action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
@@ -1362,7 +1386,7 @@ const clanActivity = guarded('clan activity', async (req, res) => {
   if (body.action === 'upgrade_member' || body.action === 'hall_bid') assertGoldUnlocked(context);
   const competitionActions = new Set(['pvp_fight', 'war_declare', 'war_attack']);
   const managementActions = new Set(['application_accept', 'application_reject', 'invite', 'kick', 'promote', 'demote', 'transfer', 'settings_update']);
-  const progressionActions = new Set(['hall_upgrade', 'hall_deposit', 'hall_bid', 'investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus', 'skill_learn']);
+  const progressionActions = new Set(['hall_upgrade', 'hall_deposit', 'hall_bid', 'hall_skill_toggle', 'investigation_start', 'investigation_fund', 'investigation_complete', 'investigation_cancel', 'task_claim', 'task_claim_bonus', 'skill_learn']);
   const rtaActions = new Set(['rta_join', 'rta_leave', 'rta_battle']);
   const allowed = new Set(['boss_summon', ...rtaActions, 'boss_attack', 'shop_buy', 'upgrade_member', 'upgrade_building', ...competitionActions, ...managementActions, ...progressionActions]);
   if (!allowed.has(body.action)) {
@@ -1393,6 +1417,10 @@ const clanActivity = guarded('clan activity', async (req, res) => {
       if (result.ok) {
         if (prepared.savePlayer) await saveSession(context.session);
         if (prepared.clan) await prepared.clan.save();
+        if (body.action === 'hall_skill_toggle') {
+          syncClanPerks(context.session, prepared.clan);
+          await saveSession(context.session);
+        }
       }
     } else {
       const prepared = await prepareClanActivity(context.userId, context.session, body.action, body);
@@ -1992,6 +2020,10 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/class-quests') return classQuestsState(req, res);
     if (route === 'POST /api/class-quests') return classQuestsAction(req, res);
     if (route === 'GET /api/inventory') return inventoryState(req, res);
+    if (route === 'GET /api/warehouse') return warehouseState(req,res,requestUrl);
+    if (route === 'POST /api/warehouse/transfer') return warehouseTransfer(req,res);
+    if (route === 'GET /api/trade') return tradeRead(req,res);
+    if (route === 'POST /api/trade/action') return tradeAction(req,res);
     if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
     if (route === 'POST /api/inventory/sell') return inventorySell(req, res);
     if (route === 'GET /api/exchange') return exchangeState(req, res);

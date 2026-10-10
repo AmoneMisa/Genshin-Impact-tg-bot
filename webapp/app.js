@@ -37,6 +37,8 @@ import { openSkillsGame } from './skills.js';
 import { openClassQuests } from './class-quests.js';
 import { openFormsGame } from './forms.js';
 import { openInventoryGame } from './inventory.js';
+import {openWarehouseGame} from './warehouse.js';
+import {openTradeGame} from './trade.js';
 import { openExchangeGame } from './exchange.js';
 import { openUpdatesGame } from './updates.js';
 import { openFeedbackGame } from './feedback.js';
@@ -113,6 +115,8 @@ const launchers = {
   classQuests: openClassQuests,
   forms: openFormsGame,
   inventory: openInventoryGame,
+  warehouse: openWarehouseGame,
+  trade: openTradeGame,
   exchange: openExchangeGame,
   boss: openBossGame,
   hunt: openHuntGame,
