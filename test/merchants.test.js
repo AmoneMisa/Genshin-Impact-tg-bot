@@ -131,3 +131,13 @@ test('arrows and bolts are sold in packs of a hundred at the real price of one',
   assert.equal(buyEntry(player, 'weapons', pack.id).ok, true);
   assert.equal(getMaterialCount(player, 'l2_1342'), 100);
 });
+
+test('a dye row shows the pair of stats of its symbol, the level and the number of dyes', () => {
+  const player = hero('warrior', 85, {gold: 1e9});
+  const town = getMerchantsState(player, {merchant: 'alchemist', search: 'Dye of STR (Str+1 Con-3)'}).items[0];
+  assert.deepEqual(town.symbol, {stats: {STR: 1, CON: -3}, level: 28, dyes: 10});
+  const mammon = getMerchantsState(player, {merchant: 'mammon', group: 'dye', search: 'Greater Dye of STR (Str+4 Con-4)'}).items[0];
+  assert.deepEqual(mammon.symbol.stats, {STR: 4, CON: -4});
+  assert.equal(mammon.cost.aa, 174000);
+  assert.equal(getMerchantsState(player, {merchant: 'weapons'}).items[0].symbol, null);
+});

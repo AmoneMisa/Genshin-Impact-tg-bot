@@ -21,6 +21,14 @@ const REASONS = {
 const number = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 const gradeText = grade => (grade === 'noGrade' ? 'NG' : String(grade || ''));
 const CONVERT_TAB = 'convert';
+const STAT_NAMES = { STR: 'Сила', DEX: 'Ловкость', CON: 'Выносливость', INT: 'Интеллект', WIT: 'Мудрость', MEN: 'Дух' };
+
+/** The pair of a dye: the gain in green, the loss in red. */
+function symbolHtml(symbol) {
+  const stats = Object.entries(symbol.stats).sort((a, b) => b[1] - a[1])
+    .map(([stat, value]) => `<b class="${value > 0 ? 'plus' : 'minus'}">${STAT_NAMES[stat] || stat} ${value > 0 ? '+' : ''}${value}</b>`).join(' · ');
+  return `<small class="merchant-symbol">${stats} · ${symbol.level} ур. · ${symbol.dyes} красок</small>`;
+}
 
 export async function openMerchantsGame({ api, renderState, haptic, statusElement }) {
   const query = { merchant: null, page: 1, grade: null, group: null, search: '', usable: true, affordable: false };
@@ -92,6 +100,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
       <span class="shop-icon">${art}</span>
       <div class="shop-item-copy">
         <h3>${escapeHtml(item.name)}${item.grade ? ` <small>${escapeHtml(gradeText(item.grade))}</small>` : ''}</h3>
+        ${item.symbol ? symbolHtml(item.symbol) : ''}
         <p>${armed ? 'Нажми ещё раз, чтобы купить' : `${escapeHtml(note)}${note ? ' · ' : ''}${priceHtml(item)}`}</p>
       </div>
       <button type="button" class="shop-price ${armed ? 'confirming' : ''}" data-buy="${escapeHtml(item.id)}" ${item.canPay && item.canUse ? '' : 'disabled'}>${armed ? '✓' : 'Купить'}</button>

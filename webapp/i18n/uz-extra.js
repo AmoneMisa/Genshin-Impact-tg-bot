@@ -734,4 +734,5 @@ export default {
   'Только то, что мне по карману':'Faqat menga yetadigani',
   'Тяжёлая броня':'Og‘ir zirh',
   'Чёрный торговец Маммона меняет стрелы на болты и обратно один к одному, бесплатно. Нужны для луков и арбалетов своего грейда.':'Mammonning qora savdogari o‘qlarni boltlarga va aksincha birga bir, bepul almashtiradi. O‘z darajasidagi kamon va arbaletlar uchun kerak.',
+  '{0} · {1} ур. · {2} красок':'{0} · {1}-daraja · {2} bo‘yoq',
 };

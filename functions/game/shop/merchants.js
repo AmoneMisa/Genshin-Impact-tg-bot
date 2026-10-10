@@ -11,6 +11,7 @@ import {addMaterial, getMaterialCount, materialInfo, spendMaterials} from '../pl
 import {lootInfo, itemRow} from '../hunt/lootTable.js';
 import {HUNT} from '../hunt/huntConfig.js';
 import {AMMO_IDS} from '../shots/ammo.js';
+import {hennaOfDye} from '../player/tattoos.js';
 
 export const MERCHANTS = Object.freeze([
     {id: 'weapons', title: 'Торговец оружием', subtitle: 'Оружие без грейда, D и C за адену', currency: 'gold'},
@@ -177,6 +178,8 @@ export function merchantRows(session, merchantId) {
         const info = entry.kind === 'material' ? materialInfo(entry.key) : null;
         return {
             id: entry.id, kind: entry.kind, name: entry.name, grade: entry.grade || null, amount: entry.amount || 1,
+            // a dye shows what its symbol does (the pair of stats) and the level and dyes it takes
+            symbol: entry.group === 'dye' && hennaOfDye(entry.realId) ? {stats: hennaOfDye(entry.realId).stats, level: hennaOfDye(entry.realId).level, dyes: hennaOfDye(entry.realId).wear[0]} : null,
             minLevel: entry.minLevel || 0, estimated: Boolean(entry.estimated), key: entry.key || null, icon: info?.icon || null,
             cost: {
                 gold: cost.gold, aa: cost.aa,

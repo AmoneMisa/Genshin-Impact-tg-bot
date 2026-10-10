@@ -167,3 +167,6 @@
 .tattoo-dyes{display:grid;gap:8px;padding:6px 0}
 .tattoo-dye{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
 .tattoo-dye.poor{opacity:.7}
+.merchant-symbol{display:block;font:11px/1.5 system-ui;opacity:.95}
+.merchant-symbol .plus{color:#8fd694}
+.merchant-symbol .minus{color:#e07a6a}
