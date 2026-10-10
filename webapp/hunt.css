@@ -64,6 +64,9 @@
 .hunt-hero-marker>span {display:grid;place-items:center;width:32px;height:32px;border:1px solid #79b9b7;border-radius:50%;background:#16393ae0}
 .hunt-movement {display:grid;grid-template-columns:36px 1fr 1fr 36px;gap:5px;padding:10px}
 .hunt-movement button {min-height:36px;border:1px solid #6c6044;border-radius:4px;background:#222a2a;color:#dcd2b8;font:11px system-ui;cursor:pointer}
+.hunt-movement button {display:flex;align-items:center;justify-content:center;gap:6px;}
+.hunt-movement .ui-icon {width:16px;height:16px;}
+.hunt-movement .hunt-move-down {rotate:90deg;}
 .hunt-battlefield>p {margin:0;padding:0 12px 10px;color:#97a39e;font:10px/1.5 system-ui}
 .hunt-peace {display:block;font-size:10px;color:#99afaa;margin-top:5px}
 .hunt-drop-table {display:grid;gap:7px;padding:9px 0}

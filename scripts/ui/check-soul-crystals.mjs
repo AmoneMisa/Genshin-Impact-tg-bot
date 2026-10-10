@@ -58,17 +58,20 @@ try{
   assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);if(width===390)await page.locator('.hunt-panel').screenshot({path:'docs/catacombs-live-390.png'});
   await page.locator('[data-zone="catacomb-forbidden-path"]').click();await page.waitForSelector('.hunt-battlefield');
   assert.equal(await page.locator('.hunt-actor').count(),3);
+  assert.equal(await page.locator('.hunt-movement img[src$=".webp"]').count(),4);
+  assert.doesNotMatch(await page.locator('.hunt-movement').innerText(),/[←→↑↓]/);
   await page.locator('.hunt-actor').nth(2).click();assert.equal(session.game.hunt.field.target,session.game.hunt.field.mobs[2].instanceId);
   session.game.hunt.mob.name='Nephilim Commander';session.game.hunt.mob.element='dark';
   await page.locator('.hunt-actor').nth(2).click();
+  await page.waitForFunction(()=>document.querySelector('.hunt-mob .mmo-frame-title strong')?.textContent==='Nephilim Commander');
   const frameFits=await page.locator('.hunt-mob').evaluate(frame=>{
    const bounds=frame.getBoundingClientRect();
    return [...frame.querySelectorAll('.mmo-frame-title,.mmo-frame-title strong,.mmo-frame-title small,.mmo-bar,.mmo-bar-track')].every(node=>{const r=node.getBoundingClientRect();return r.left>=bounds.left+1 && r.right<=bounds.right-1 && r.bottom<=bounds.bottom-1;});
-  });assert.ok(frameFits,'long mob name, role and HP stay within frame at '+width);
+  });if(!frameFits)await page.locator('.hunt-mob').screenshot({path:'.tmp/overflow-'+width+'.png'});assert.ok(frameFits,'long mob name, role and HP stay within frame at '+width);
   if(width===390)await page.locator('.hunt-mob').screenshot({path:'docs/hunt-mob-frame-390.png'});
   for(let step=0;step<3;step++)await page.locator('[data-move="forward"]').click();
   assert.ok(session.game.hunt.field.mobs.some(m=>m.aggro));
-  await page.locator('.hunt-target-drops summary').click();assert.ok(await page.locator('.hunt-target-drops .hunt-drop-table>div').count()>0);
+  await page.locator('.hunt-target-drops>summary').click();assert.ok(await page.locator('.hunt-target-drops .hunt-drop-table>div').count()>0);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'battlefield overflow '+width);
   await page.locator('.hunt-actor img').evaluateAll(nodes=>Promise.all(nodes.map(n=>n.decode())));
   if(width===390){await page.locator('.hunt-battlefield').scrollIntoViewIfNeeded();await page.locator('.hunt-panel').screenshot({path:'docs/hunt-battlefield-390.png'});}
