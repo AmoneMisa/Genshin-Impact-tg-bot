@@ -9,6 +9,7 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import { memberName } from './social.js';
+import { partyCostFactor, partyTargets } from '../functions/game/party/party.js';
 
 export const BUFF_CAST_COOLDOWN_MS = 20_000;
 const OTHERS_COST_MULTIPLIER = 1.5;
@@ -61,6 +62,7 @@ export function getClassBuffsState(session, now = Date.now()) {
   const effects = session?.game?.effects || [];
   const cooldowns = session?.game?.buffCastAt || {};
   const support = canBuffOthers(className);
+  const partySize = partyAudience(session).length;
 
   const buffs = buffPotions.map(definition => {
     const unlocks = learned[definition.id] || [];
@@ -77,7 +79,7 @@ export function getClassBuffsState(session, now = Date.now()) {
       nextLevelAt: unlocks[buffLevel] ?? null,
       firstLevelAt: unlocks[0] ?? null,
       effect: describeBuff(definition, BUFF_LEVEL_FACTOR[shown]),
-      cost: buffManaCost(session, shown),
+      cost: partySize > 1 ? Math.ceil(buffManaCost(session, shown) * partyCostFactor(partySize)) : buffManaCost(session, shown),
       costOthers: support ? buffManaCost(session, shown, true) : null,
       cooldownUntil: Math.max(0, number(cooldowns[definition.id])),
       active: active ? { until: number(active.until), factor: number(active.factor, 1) } : null,
@@ -89,6 +91,7 @@ export function getClassBuffsState(session, now = Date.now()) {
     classTitle,
     level,
     support,
+    partySize,
     mp: number(getCurrentMp(session, session.game.gameClass)),
     maxMp: Math.max(1, number(getMaxMp(session, session.game.gameClass), 1)),
     durationMinutes: Math.round(buffPotions[0].seconds / 60),
@@ -97,7 +100,17 @@ export function getClassBuffsState(session, now = Date.now()) {
   };
 }
 
-/** Casts a class buff on yourself or, for support classes, on another player of the chat. */
+/** The players a buff cast by `session` reaches when it is meant for the party. */
+function partyAudience(session) {
+  if (!session?.game?.party?.id) return [];
+  const chat = typeof session.ownerDocument === 'function' ? session.ownerDocument() : null;
+  return chat ? partyTargets(chat, session) : [];
+}
+
+/**
+ * Casts a class buff on yourself, on another player of the chat (support classes) or on the party. A player who is in a
+ * party always buffs the whole party; the cost grows with the number of members.
+ */
 export function castClassBuff(session, buffId, targetId = null, now = Date.now()) {
   const definition = buffPotions.find(potion => potion.id === buffId);
   if (!definition) return { ok: false, reason: 'unknown_buff' };
@@ -107,9 +120,12 @@ export function castClassBuff(session, buffId, targetId = null, now = Date.now()
   if (buffLevel < 1) return { ok: false, reason: 'not_learned' };
   if (number(getCurrentHp(session, session.game.gameClass)) <= 0) return { ok: false, reason: 'player_dead' };
 
-  const self = targetId === null || targetId === undefined || String(targetId) === String(session.userId);
+  const wantsSelf = targetId === null || targetId === undefined || String(targetId) === String(session.userId);
+  const party = wantsSelf ? partyAudience(session) : [];
+  const forParty = party.length > 1;
+  const self = wantsSelf && !forParty;
   let target = session;
-  if (!self) {
+  if (!wantsSelf) {
     if (!canBuffOthers(className)) return { ok: false, reason: 'self_only' };
     target = chatMembers(session).find(member => String(member.userId) === String(targetId));
     if (!isListed(target)) return { ok: false, reason: 'unknown_player' };
@@ -121,20 +137,31 @@ export function castClassBuff(session, buffId, targetId = null, now = Date.now()
   }
 
   if (!target.game) target.game = {};
-  const cost = buffManaCost(session, buffLevel, !self);
+  const cost = forParty
+    ? Math.ceil(buffManaCost(session, buffLevel, false) * partyCostFactor(party.length))
+    : buffManaCost(session, buffLevel, !self);
   const mp = number(getCurrentMp(session, session.game.gameClass));
   if (mp < cost) return { ok: false, reason: 'not_enough_mp', cost, mp };
 
   session.game.gameClass.stats.mp = mp - cost;
   session.game.buffCastAt[buffId] = now + BUFF_CAST_COOLDOWN_MS;
   const factor = BUFF_LEVEL_FACTOR[buffLevel];
-  const effect = applyPotionBuff(target, buffId, now, { factor });
+  const audience = forParty ? party : [target];
+  let effect = null;
+  for (const member of audience) {
+    if (!member.game) member.game = {};
+    const applied = applyPotionBuff(member, buffId, now, { factor });
+    if (member === session || member === target) effect = effect || applied;
+    if (member !== session) member.needsSave = true;
+  }
+  effect = effect || applyPotionBuff(session, buffId, now, { factor });
   return {
     ok: true,
     buff: buffId,
     level: buffLevel,
     onSelf: self,
-    targetName: self ? null : memberName(target),
+    party: forParty ? party.map(member => String(member.userId)) : null,
+    targetName: self || forParty ? null : memberName(target),
     until: effect.until,
     kept: number(effect.factor, 1) > factor,
     spent: cost,

@@ -36,6 +36,7 @@ export const GROUP_ONLY_FEATURE_IDS = Object.freeze([
   'selfMute',
   'chatSettings',
   'friends',
+  'party',
   'auction',
 ]);
 
@@ -46,6 +47,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'skills', title: 'Навыки', subtitle: 'Прокачка умений и ОП', icon: '⚡', status: 'webgl' },
   { id: 'classQuests', title: 'Профессии', subtitle: 'Квесты 2-й и 3-й профессии', icon: '🎓', status: 'webgl' },
   { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
+  { id: 'party', title: 'Группа', subtitle: 'До 9 игроков · баффы на всех', icon: '👥', status: 'webgl' },
   { id: 'buffs', title: 'Баффы', subtitle: 'Усиления класса на 20 минут', icon: '✨', status: 'webgl' },
   { id: 'passives', title: 'Пассивные навыки', subtitle: 'Постоянные бонусы класса за ОП', icon: '🛡️', status: 'webgl' },
   { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },

@@ -1,5 +1,6 @@
 import userDealDamage from './userDealDamage.js';
 import {applySoulSpell} from '../equipment/soulCrystalCombat.js';
+import {partyTargets} from '../party/party.js';
 import useHealSkill from './useHealSkill.js';
 import useShieldSkill from './useShieldSkill.js';
 import getMaxHp from './getters/getMaxHp.js';
@@ -28,8 +29,24 @@ function restoreMana(session, share) {
  *   debuff  - {debuffs: [...]} on the boss
  *   restore - {restoredMp}
  */
+/** A buff skill reaches the whole party of the caster: the same buffs, at the caster's skill level. */
+function shareBuffsWithParty(session, skill, now) {
+    if (!session?.game?.party?.id || typeof session.ownerDocument !== 'function') return [];
+    if (!skill.buffs?.length || skill.isDealDamage) return [];
+    const shared = [];
+    for (const member of partyTargets(session.ownerDocument(), session)) {
+        if (member === session) continue;
+        applySkillBuffs(member, skill, skill.buffs, now);
+        member.needsSave = true;
+        shared.push(String(member.userId));
+    }
+    return shared;
+}
+
 export default function castSkill(session, boss, skill, options = {}) {
     const result = resolveSkill(session, boss, skill, options);
+    const party = shareBuffsWithParty(session, skill, options.now ?? Date.now());
+    if (party.length) result.party = party;
     applySoulSpell(session,skill,options.now??Date.now());
     // Route bonuses that apply to any kind of skill.
     const route = getRouteBonus(skill);

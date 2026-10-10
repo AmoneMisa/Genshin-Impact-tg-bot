@@ -13,6 +13,11 @@ export default async function saveSession(session) {
     // the old JSON model is being migrated. Mark the whole member dirty so
     // nested mutations are never lost by Mongoose change tracking.
     chat.markModified(`members.${index}`);
+    // Other members changed in the same action (party buffs, ...) flag themselves with `needsSave`.
+    chat.members.forEach((member, memberIndex) => {
+        if (member?.needsSave && memberIndex !== index) chat.markModified(`members.${memberIndex}`);
+        if (member?.needsSave) member.needsSave = false;
+    });
     await chat.save();
     return session;
 }

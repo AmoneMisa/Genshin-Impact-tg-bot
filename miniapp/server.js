@@ -97,6 +97,7 @@ import {
 } from './adminTools.js';
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
+import { getPartyState, performPartyAction } from './party.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
@@ -1658,6 +1659,32 @@ const huntStart = guarded('hunt start', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const PARTY_ACTIONS = new Set(['create', 'invite', 'accept', 'decline', 'leave', 'kick', 'disband']);
+
+const partyState = guarded('party state', async (req, res) => {
+  const context = await authorize(req);
+  const state = await withLock(`${context.chatId}:party`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const current = getPartyState(context.session);
+    if (current.changed) await saveSession(context.session);
+    return current;
+  });
+  return sendJson(res, 200, state);
+});
+
+const partyAction = guarded('party action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  if (!PARTY_ACTIONS.has(body.action)) throw httpError(400, 'unknown party action');
+  const result = await withLock(`${context.chatId}:party`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const done = performPartyAction(context.session, body.action, body);
+    if (done.ok) await saveSession(context.session);
+    return { ...done, party: getPartyState(context.session) };
+  });
+  return sendResult(res, result, context);
+});
+
 const huntLoot = guarded('hunt loot', async (req, res) => {
   const context = await authorize(req), body = await readJsonBody(req);
   context.session = await getSession(context.chatId, context.userId);
@@ -1903,6 +1930,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/boss') return bossState(req, res);
     if (route === 'GET /api/hunt') return huntState(req, res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
+    if (route === 'GET /api/party') return partyState(req, res);
+    if (route === 'POST /api/party/action') return partyAction(req, res);
     if (route === 'POST /api/hunt/loot') return huntLoot(req, res);
     if (route === 'POST /api/hunt/move') return huntMove(req, res);
     if (route === 'POST /api/hunt/target') return huntTarget(req, res);

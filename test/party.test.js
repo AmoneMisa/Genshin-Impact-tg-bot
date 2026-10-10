@@ -1,0 +1,152 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import changeClass from '../functions/game/player/changePlayerGameClass.js';
+import updateStats from '../functions/game/player/updatePlayerStats.js';
+import castSkill from '../functions/game/player/castSkill.js';
+import saveSession from '../functions/getters/saveSession.js';
+import {
+  PARTY_MAX, acceptInvite, createParty, declineInvite, disbandParty, invitePlayer, kickMember, leaveParty, partyMembers, partyState, partyTargets, partyCostFactor,
+} from '../functions/game/party/party.js';
+import {castClassBuff, buffManaCost} from '../miniapp/buffs.js';
+import {getPartyState, performPartyAction} from '../miniapp/party.js';
+
+const NOW = Date.now();
+
+function chatOf(count, className = 'warrior') {
+  const saved = [];
+  const chat = {members: [], markModified: path => saved.push(path), save: async () => {}};
+  for (let userId = 1; userId <= count; userId += 1) {
+    const session = {
+      userId, userChatData: {user: {id: userId, first_name: `Hero ${userId}`}},
+      game: {stats: {lvl: 85, currentExp: 0}, inventory: {gold: 0, materials: {}, equipment: {items: []}, potions: {items: []}}, equipmentStats: {}, effects: [], builds: {}, respawnTime: 0},
+      ownerDocument: () => chat,
+    };
+    changeClass(session, className);
+    updateStats(session);
+    chat.members.push(session);
+  }
+  return {chat, saved, at: index => chat.members[index - 1]};
+}
+
+function fullParty(count) {
+  const world = chatOf(count);
+  const leader = world.at(1);
+  assert.equal(createParty(world.chat, leader, NOW).ok, true);
+  for (let userId = 2; userId <= count; userId += 1) {
+    assert.equal(invitePlayer(world.chat, leader, userId, NOW).ok, true);
+    assert.equal(acceptInvite(world.chat, world.at(userId), leader.game.party.id, NOW).ok, true);
+  }
+  return {...world, leader};
+}
+
+test('a party holds up to nine players and refuses the tenth', () => {
+  const world = fullParty(9);
+  assert.equal(PARTY_MAX, 9);
+  assert.equal(partyMembers(world.chat, world.leader).length, 9);
+  assert.equal(partyState(world.chat, world.at(5)).leaderId, '1');
+  const extra = chatOf(10);
+  const leader = extra.at(1);
+  createParty(extra.chat, leader, NOW);
+  for (let userId = 2; userId <= 9; userId += 1) { invitePlayer(extra.chat, leader, userId, NOW); acceptInvite(extra.chat, extra.at(userId), leader.game.party.id, NOW); }
+  assert.equal(invitePlayer(extra.chat, leader, 10, NOW).reason, 'party_full');
+  // an invitation sent before the party filled up cannot be used afterwards either
+  extra.at(10).game.partyInvites = [{partyId: leader.game.party.id, fromId: '1', until: NOW + 1000}];
+  assert.equal(acceptInvite(extra.chat, extra.at(10), leader.game.party.id, NOW).reason, 'party_full');
+});
+
+test('only the leader invites and kicks; invites expire and can be declined', () => {
+  const world = chatOf(4);
+  const [a, b, c] = [world.at(1), world.at(2), world.at(3)];
+  assert.equal(invitePlayer(world.chat, a, 2, NOW).reason, 'no_party');
+  createParty(world.chat, a, NOW);
+  assert.equal(createParty(world.chat, a, NOW).reason, 'already_in_party');
+  invitePlayer(world.chat, a, 2, NOW);
+  assert.equal(acceptInvite(world.chat, b, a.game.party.id, NOW + 6 * 60 * 1000).reason, 'no_invite');
+  invitePlayer(world.chat, a, 2, NOW);
+  assert.equal(declineInvite(world.chat, b, a.game.party.id).ok, true);
+  assert.equal(acceptInvite(world.chat, b, a.game.party.id, NOW).reason, 'no_invite');
+  invitePlayer(world.chat, a, 2, NOW); acceptInvite(world.chat, b, a.game.party.id, NOW);
+  assert.equal(invitePlayer(world.chat, b, 3, NOW).reason, 'not_leader');
+  assert.equal(kickMember(world.chat, b, 1).reason, 'not_leader');
+  invitePlayer(world.chat, a, 3, NOW); acceptInvite(world.chat, c, a.game.party.id, NOW);
+  assert.equal(kickMember(world.chat, a, 3).ok, true);
+  assert.equal(c.game.party, null);
+  assert.equal(invitePlayer(world.chat, a, 2, NOW).reason, 'already_member');
+});
+
+test('leaving passes the leadership on and a party of one disbands', () => {
+  const world = fullParty(3);
+  assert.equal(leaveParty(world.chat, world.leader).ok, true);
+  assert.equal(world.leader.game.party, null);
+  assert.equal(partyState(world.chat, world.at(2)).leaderId, '2');
+  assert.equal(partyState(world.chat, world.at(3)).leaderId, '2');
+  leaveParty(world.chat, world.at(3));
+  assert.equal(world.at(2).game.party, null, 'the last member is left alone: no party');
+  const again = fullParty(4);
+  assert.equal(disbandParty(again.chat, again.at(2)).reason, 'not_leader');
+  assert.equal(disbandParty(again.chat, again.leader).ok, true);
+  assert.ok(again.chat.members.every(member => !member.game.party));
+});
+
+test('a class buff reaches the whole party, costs more per member and skips the dead', () => {
+  const world = fullParty(4);
+  world.at(4).game.gameClass.stats.hp = 0;
+  const caster = world.leader;
+  const solo = buffManaCost(caster, 3);
+  const mp = caster.game.gameClass.stats.mp;
+  const cast = castClassBuff(caster, 'might', null, NOW);
+  assert.equal(cast.ok, true);
+  assert.deepEqual(cast.party.sort(), ['1', '2', '3']);
+  assert.equal(cast.spent, Math.ceil(solo * partyCostFactor(3)));
+  assert.equal(caster.game.gameClass.stats.mp, mp - cast.spent);
+  for (const userId of [1, 2, 3]) assert.ok(world.at(userId).game.effects.some(effect => effect.potionId === 'might'), `member ${userId}`);
+  assert.ok(!world.at(4).game.effects.some(effect => effect.potionId === 'might'), 'a dead member is not buffed');
+  assert.equal(world.at(2).needsSave, true);
+});
+
+test('a player outside a party still buffs only themselves', () => {
+  const world = chatOf(2);
+  const cast = castClassBuff(world.at(1), 'might', null, NOW);
+  assert.equal(cast.ok, true);
+  assert.equal(cast.party, null);
+  assert.equal(cast.onSelf, true);
+  assert.ok(!world.at(2).game.effects.some(effect => effect.potionId === 'might'));
+});
+
+test('a buff skill of a member is applied to everyone in the party', () => {
+  const world = fullParty(3);
+  const guard = {name: 'Guard', cooldown: 1, cost: 0, isBuff: true, buffs: [{kind: 'guard', amount: 20, seconds: 30}]};
+  const result = castSkill(world.leader, null, guard, {now: NOW});
+  assert.deepEqual(result.party.sort(), ['2', '3']);
+  for (const userId of [1, 2, 3]) assert.ok(world.at(userId).game.effects.some(effect => effect.name === 'guard'), `member ${userId}`);
+  // a member who is not in a party (or a lone caster) shares nothing
+  const alone = chatOf(2);
+  assert.equal(castSkill(alone.at(1), null, guard, {now: NOW}).party, undefined);
+  assert.ok(!alone.at(2).game.effects.some(effect => effect.name === 'guard'));
+});
+
+test('partyTargets falls back to the caster alone and saveSession writes party members that changed', async () => {
+  const world = chatOf(2);
+  assert.deepEqual(partyTargets(world.chat, world.at(1)).map(member => member.userId), [1]);
+  const party = fullParty(3);
+  castClassBuff(party.leader, 'might', null, NOW);
+  await saveSession(party.leader);
+  assert.ok(party.saved.includes('members.0') && party.saved.includes('members.1') && party.saved.includes('members.2'));
+  assert.equal(party.at(2).needsSave, false);
+});
+
+test('the mini app state lists the party, invitations and who can be invited', () => {
+  const world = chatOf(4);
+  assert.equal(performPartyAction(world.at(1), 'create', {}, NOW).ok, true);
+  assert.equal(performPartyAction(world.at(1), 'invite', {userId: 2}, NOW).ok, true);
+  const leaderView = getPartyState(world.at(1), NOW);
+  assert.equal(leaderView.party.amLeader, true);
+  assert.deepEqual(leaderView.candidates.map(candidate => [candidate.userId, candidate.invited]), [['2', true], ['3', false], ['4', false]]);
+  const invited = getPartyState(world.at(2), NOW);
+  assert.equal(invited.party, null);
+  assert.equal(invited.invites.length, 1);
+  assert.equal(invited.invites[0].fromName, 'Hero 1');
+  assert.equal(performPartyAction(world.at(2), 'accept', {partyId: invited.invites[0].partyId}, NOW).ok, true);
+  assert.equal(getPartyState(world.at(1), NOW).party.members.length, 2);
+  assert.equal(performPartyAction(world.at(2), 'nonsense', {}, NOW).reason, 'unknown_action');
+});

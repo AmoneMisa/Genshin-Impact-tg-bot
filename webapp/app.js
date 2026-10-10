@@ -3,6 +3,7 @@ import { openLanguageGame } from './language.js';
 import { openBuffsGame } from './buffs.js';
 import { openPassivesGame } from './passives.js';
 import { openHuntGame } from './hunt.js';
+import { openPartyGame } from './party.js';
 import { openLuckShopGame } from './luck-shop.js';
 import { openAuctionGame } from './auction.js';
 import { startItemArt } from './item-art-runtime.js';
@@ -112,6 +113,7 @@ const launchers = {
   exchange: openExchangeGame,
   boss: openBossGame,
   hunt: openHuntGame,
+  party: openPartyGame,
   catacombs: options=>openHuntGame({...options,initialZoneKind:'catacomb'}),
   chest: openChestGame,
   gacha: openGachaGame,

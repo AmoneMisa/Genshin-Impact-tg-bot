@@ -129,3 +129,15 @@
 .hunt-drop-groups{display:grid;gap:6px;padding:6px 0}
 .hunt-drop-group>summary{font:600 11px/1.4 system-ui;cursor:pointer;padding:4px 0;color:var(--muted,#b9ad94)}
 .hunt-loot-wait{font:11px/1.4 system-ui;opacity:.7;padding:8px 0}
+
+.party-panel{display:grid;gap:10px}
+.party-members{display:grid;gap:8px}
+.party-member{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
+.party-member.me{outline:1px solid rgba(255,214,120,.45)}
+.party-member img{width:44px;height:44px;border-radius:8px;object-fit:cover}
+.party-member-body{flex:1;min-width:0;display:grid;gap:3px}
+.party-member-body small{opacity:.75}
+.party-invite,.party-candidate{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:6px 0}
+.party-invite span,.party-candidate span{flex:1;min-width:0}
+.party-actions{display:flex;gap:8px;flex-wrap:wrap}
+.party-note,.party-empty p{font:12px/1.5 system-ui;opacity:.85}
