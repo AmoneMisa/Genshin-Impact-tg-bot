@@ -101,6 +101,7 @@ import {castL2Buff} from './l2Buffs.js';
 import {bidForClanHall} from './clanHallAuction.js';
 import {warehouseFor,transferWarehouse} from './warehouse.js';
 import {tradeFor,performTrade} from './trade.js';
+import {mailboxFor,playerMailPending} from './mail.js';
 import { getPartyState, performPartyAction } from './party.js';
 import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchants.js';
 import { getTattooState, performTattooAction } from './tattoos.js';
@@ -896,17 +897,27 @@ const socialFriend = guarded('social friend', async (req, res) => {
 
 const mailState = guarded('mail state', async (req, res) => {
   const context = await authorize(req);
-  const mail = await withLock(`${context.chatId}:${context.userId}:mail`, async () => {
-    context.session = await getSession(context.chatId, context.userId);
-    return getMailbox(context.session);
-  });
-  return sendJson(res, 200, mail);
+  const result = await mailboxFor(context.chatId, context.userId);
+  return sendJson(res, result.ok ? 200 : 409, result.mail || result);
+});
+
+const mailAction = guarded('mail action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await mailboxFor(context.chatId, context.userId, body);
+  context.session = await getSession(context.chatId, context.userId);
+  return sendResult(res, result, context);
 });
 
 const mailClaim = guarded('mail claim', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
   if (body.id !== undefined && typeof body.id !== 'string') throw httpError(400, 'id must be a string');
+  if (body.id) {
+    const result = await mailboxFor(context.chatId, context.userId, {action:'claim',id:body.id});
+    context.session = await getSession(context.chatId, context.userId);
+    return sendResult(res, result, context);
+  }
   const result = await withLock(`${context.chatId}:${context.userId}:mail`, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const claimed = body.id ? claimMail(context.session, body.id) : claimAllMail(context.session);
@@ -1067,7 +1078,7 @@ const badges = guarded('badges', async (req, res) => {
   if (String(context.chatId) !== String(context.userId)) {
     try { bossAlive = Boolean(await getAliveBoss(context.chatId)); } catch { bossAlive = false; }
   }
-  return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive, mail: pendingMailCount(context.session) }));
+  return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive, mail: pendingMailCount(context.session) + playerMailPending(chat, context.userId) }));
 });
 
 const playerCard = guarded('player card', async (req, res, requestUrl) => {
@@ -2046,6 +2057,7 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/passives') return passivesState(req, res);
     if (route === 'POST /api/passives/learn') return passivesLearn(req, res);
     if (route === 'GET /api/mail') return mailState(req, res);
+    if (route === 'POST /api/mail/action') return mailAction(req, res);
     if (route === 'POST /api/mail/claim') return mailClaim(req, res);
     if (route === 'POST /api/promo/redeem') return promoRedeem(req, res);
     if (route === 'GET /api/notices') return noticesState(req, res);

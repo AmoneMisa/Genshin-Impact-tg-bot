@@ -4,6 +4,8 @@
 
 import luckShop, { LUCK_SHOP_GROUPS, TIMED_EPIC_PRICE } from '../template/luckShop.js';
 import { addPotionById } from '../functions/game/player/potionBuffs.js';
+import elixirs from '../template/elixirs.js';
+import buffPotions from '../template/buffPotions.js';
 import { addMaterial } from '../functions/game/player/materials.js';
 import { addStarShield, starShieldAmount } from '../functions/game/builds/starShield.js';
 import { canClassUse, getCatalog, gradeInfo } from '../functions/game/equipment/catalog.js';
@@ -56,6 +58,9 @@ export function getLuckShopState(session, now = Date.now()) {
     group: item.group,
     title: item.title,
     icon: item.icon,
+    artMaterial: Object.keys(item.grant?.materials || {})[0] || null,
+    artPotion: item.grant?.potion ? [...elixirs,...buffPotions].find(p=>p.id===item.grant.potion.id) || null : null,
+    artItem: item.id?.startsWith(TIMED_PREFIX) ? getCatalog().find(entry=>entry.id===item.id.slice(TIMED_PREFIX.length)) : null,
     subtitle: item.subtitle || '',
     cost: item.cost,
     affordable: coins >= item.cost,

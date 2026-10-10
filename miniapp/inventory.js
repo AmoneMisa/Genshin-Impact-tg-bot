@@ -45,7 +45,7 @@ function potionDto(item, index) {
 export function getInventoryState(session) {
   const inventory = session?.game?.inventory || {};
   const arenaItems = inventory?.arena?.items || [];
-  const potions = (inventory?.potions?.items || []).map(potionDto);
+  const potions = (inventory?.potions?.items || []).map(potionDto).filter(item=>item.count>0);
   const gameClass = session?.game?.gameClass;
   const hp = Math.max(0, number(getCurrentHp(session, gameClass)));
   const maxHp = Math.max(1, number(getMaxHp(session, gameClass), 1));

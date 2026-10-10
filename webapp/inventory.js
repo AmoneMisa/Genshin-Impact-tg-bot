@@ -60,6 +60,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   let state = await api('/api/inventory');
   let pending = false;
   let lastResult = null;
+  let toastTimer = 0;
   let selectedKey = null;
   let previousPlayer = null; // vitals before the last potion, to animate the fill
 
@@ -76,13 +77,14 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       <p class="overlay-copy" hidden>Ресурсы и предметы читаются из той же Mongo-сессии. Снаряжение и гача уже имеют отдельные экраны; здесь можно использовать расходники.</p>
       <div class="storage-actions"><button type="button" class="clan-play" data-personal-warehouse>Хранилище</button><button type="button" class="clan-play" data-personal-trade>Обмен</button></div><div data-inventory-content></div>
       <div class="utility-feedback" data-inventory-feedback aria-live="polite"></div>
-    </div>`;
+    </div><div class="inventory-toast" data-inventory-toast role="status" hidden></div>`;
 
   const content = overlay.querySelector('[data-inventory-content]');
   overlay.querySelector('[data-personal-warehouse]').onclick=()=>openWarehouseGame({api,renderState,haptic,onClose:()=>refresh()});
   overlay.querySelector('[data-personal-trade]').onclick=()=>openTradeGame({api,renderState,haptic,onClose:()=>refresh()});
   const feedback = overlay.querySelector('[data-inventory-feedback]');
   const close = () => {
+    window.clearTimeout(toastTimer);
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
   };
@@ -138,14 +140,14 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   }
 
   function render() {
+    state.potions=state.potions.filter(potion=>potion.count>0);
     if (!selectedKey || !state.potions.some(potion => potion.key === selectedKey)) {
-      selectedKey = state.potions.find(potion => potion.count > 0)?.key || state.potions[0]?.key || null;
+      selectedKey = state.potions[0]?.key || null;
     }
-    const emptySlots = Math.max(0, 8 - state.potions.length);
+    const emptySlots = Math.max(0, 12 - state.potions.length);
     content.innerHTML = `
       ${vitalsHtml()}
       ${state.buffs?.length?`<p class="inv-hint">${state.buffs.map(buff=>`${escapeHtml(buff.name)} · ${Math.max(0,Math.ceil((buff.until-Date.now())/60000))} мин.`).join(' · ')}</p>`:''}
-      ${resultHtml()}
       <section class="inventory-section">
         <div class="inventory-title"><strong>Сумка</strong><small>${formatNumber(state.counts.potions)} зелий</small></div>
         <div class="inv-bag">${state.potions.map(slotHtml).join('')}${'<span class="inv-slot blank" aria-hidden="true"></span>'.repeat(emptySlots)}</div>
@@ -227,9 +229,12 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       previousPlayer = { ...state.player };
       state = payload.inventory;
       lastResult = payload;
+      const toast = overlay.querySelector('[data-inventory-toast]');
+      toast.innerHTML = resultHtml();
+      toast.hidden = false;
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => { toast.hidden = true; toast.innerHTML = ''; }, 3500);
       if (payload.state) renderState(payload.state);
-      const resource = payload.resource === 'mp' ? 'MP' : 'HP';
-      feedback.textContent = `+${formatNumber(payload.restored)} ${resource}.`;
       statusElement.textContent = `Инвентарь: использовано ${payload.potion?.name || 'зелье'}.`;
       haptic('light');
       render();

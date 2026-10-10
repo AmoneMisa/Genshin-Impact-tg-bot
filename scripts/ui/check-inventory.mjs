@@ -1,0 +1,45 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {getInventoryState,useInventoryPotion} from '../../miniapp/inventory.js';
+const require=createRequire(path.resolve(process.env.PLAYWRIGHT_PACKAGE||'package.json'));
+const {chromium}=require('playwright');
+const browser=await chromium.launch({headless:true,executablePath:process.env.DESIGN_BROWSER});
+const root=path.resolve('webapp');
+const styles=[...fs.readFileSync(path.join(root,'index.html'),'utf8').matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>`<link rel="stylesheet" href="${m[1]}">`).join('');
+try{for(const width of [320,390,540,1100]){
+ const session={game:{equipmentStats:{},gameClass:{stats:{name:'warrior',hp:1000,maxHp:5000,mp:100,maxMp:400},skills:[]},inventory:{gold:32500,crystals:1635,ironOre:145,potions:{items:[{type:'hp',size:'small',count:0,power:180,name:'Пустое зелье'},{type:'mp',size:'small',count:1,power:180,name:'Маленькое зелье восстановления МП',description:'Восстанавливает МП в количестве 180 единиц'}]}}}};
+ const page=await browser.newPage({viewport:{width,height:950}}),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ await page.route('**/*',route=>{
+  const url=new URL(route.request().url());
+  if(url.pathname==='/api/inventory')return route.fulfill({json:getInventoryState(session)});
+  if(url.pathname==='/api/inventory/use')return route.fulfill({json:useInventoryPotion(session,route.request().postDataJSON().key)});
+  if(url.pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body></body>`});
+  const file=path.resolve(root,'.'+url.pathname);
+  if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.fulfill({status:404});
+  return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
+ });
+ await page.goto('http://127.0.0.1:4321/fixture.html');
+ await page.evaluate(async()=>{const {startEmojiIcons}=await import('/icons.js');startEmojiIcons();const {openInventoryGame}=await import('/inventory.js');await openInventoryGame({haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),api:async(url,options)=>(await fetch(url,{headers:{'Content-Type':'application/json'},...options})).json()});});
+ assert.equal(await page.locator('[data-inventory-select]').count(),1);
+ assert.equal(await page.locator('[data-inventory-select]').getAttribute('data-inventory-select'),'1');
+ assert.equal(await page.locator('.inventory-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
+ assert.equal(await page.locator('.inv-slot img').evaluate(n=>n.getBoundingClientRect().width),48);
+ await page.locator('.inventory-panel img').evaluateAll(nodes=>Promise.all(nodes.map(n=>{n.loading='eager';return n.decode();})));
+ if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/inventory-potions-390.png'});
+ await page.locator('[data-inventory-potion]').click();
+ await page.locator('[data-inventory-potion]').waitFor({state:'detached'});
+ assert.equal(session.game.inventory.potions.items[1].count,0);
+ assert.equal(await page.locator('[data-inventory-select]').count(),0);
+ assert.equal(await page.locator('.inv-detail').count(),0);
+ assert.equal(await page.locator('[data-inventory-content] .inventory-result').count(),0);
+ assert.equal(await page.locator('[data-inventory-toast]').isVisible(),true);
+ assert.equal(await page.locator('[data-inventory-toast]').evaluate(n=>getComputedStyle(n).position),'fixed');
+ assert.equal(await page.locator('.inv-vital>i').first().evaluate(n=>n.getBoundingClientRect().height),14);
+ if(width===390)await page.screenshot({path:'docs/inventory-toast-390.png'});
+ await page.locator('[data-inventory-toast]').waitFor({state:'hidden',timeout:5000});
+ if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/inventory-empty-390.png'});
+ assert.deepEqual(errors,[]);await page.close();console.log(`Inventory layout and last-potion consumption verified at ${width}px`);
+}}finally{await browser.close();}

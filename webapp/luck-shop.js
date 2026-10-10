@@ -1,6 +1,8 @@
 import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { luckCoinHtml } from './currency-icons.js';
+import {icon,emojiIconName} from './icons.js';
+import {auctionArt} from './auction.js';
 
 // "Донат-магазин": where Coins of Luck (bought with Telegram Stars) are spent. Goods are split into
 // categories (tabs): rented epic gear, scrolls, elixirs, craft sets, buffs, crystals and tries.
@@ -26,7 +28,7 @@ export async function openLuckShopGame({ api, renderState, haptic, statusElement
   overlay.className = 'game-overlay luck-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass feedback-panel">
+    <div class="overlay-panel glass feedback-panel luck-shop-panel">
       <header class="ds-head">
         <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
         <h2>Донат-магазин</h2>
@@ -49,23 +51,30 @@ export async function openLuckShopGame({ api, renderState, haptic, statusElement
   function itemHtml(item) {
     const disabled = pending || !item.affordable || item.full || item.locked;
     return `
-      <article class="mail-letter pending luck-item">
-        <div class="mail-head"><strong>${item.id?.startsWith('soul-')?materialIcon(item.id.replaceAll('-','_')):item.icon} ${escapeHtml(item.title)}</strong><small>${formatNumber(item.cost)} ${luckCoinHtml(14)}</small></div>
-        ${item.subtitle ? `<p>${escapeHtml(item.subtitle)}</p>` : ''}
-        <button type="button" class="feedback-submit" data-luck-buy="${escapeHtml(item.id)}" ${disabled ? 'disabled' : ''}>${buttonLabel(item)}</button>
+      <article class="shop-item luck-item">
+        <span class="shop-icon">${itemArt(item)}</span><div class="shop-item-copy"><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.subtitle||'')}</p><small>${formatNumber(item.cost)} ${luckCoinHtml(14)}</small></div>
+        <button type="button" class="shop-price" data-luck-buy="${escapeHtml(item.id)}" ${disabled ? 'disabled' : ''}>${buttonLabel(item)}</button>
       </article>`;
+  }
+
+  function itemArt(item){
+    if(!item)return icon('gift');
+    if(item.artMaterial)return materialIcon(item.artMaterial);
+    if(item.artPotion)return auctionArt({kind:'potion',artPotion:item.artPotion});
+    if(item.artItem)return auctionArt({kind:'equipment',artItem:item.artItem});
+    return item.id?.startsWith('soul-')?materialIcon(item.id.replaceAll('-','_')):icon(emojiIconName(item.icon)||'gift');
   }
 
   function render() {
     if (!state.groups.some(entry => entry.id === group)) group = state.groups[0]?.id || group;
     body.innerHTML = `
-      <div class="feedback-card">
+      <div class="luck-wallet">
         <div class="feedback-intro"><span>${luckCoinHtml(32)}</span><div><strong>Монеты удачи: ${formatNumber(state.coins)}</strong>
-          <p>Донатная валюта: покупается за Telegram Stars в «Обменнике», не воруется. Немного монет дают за эпических боссов и топ-10 арены.${state.shield ? ` Кристаллы отсюда защищены от ограбления: ${formatNumber(state.shield.amount)} 💎.` : ''}</p></div></div>
-        <button type="button" class="feedback-submit" data-luck-exchange>Купить монеты за Звёзды</button>
+          <p>За Telegram Stars, эпических боссов и топ арены.${state.shield ? ` Защищено ${formatNumber(state.shield.amount)} кристаллов.` : ''}</p></div></div>
+        <button type="button" class="clan-play" data-luck-exchange>Купить COL за Звёзды</button>
       </div>
-      <nav class="fr-tabs luck-tabs" aria-label="Категории">${state.groups.map(entry => `<button type="button" data-luck-group="${escapeHtml(entry.id)}" class="${entry.id === group ? 'active' : ''}">${escapeHtml(entry.title)}</button>`).join('')}</nav>
-      <div class="mail-list">${state.items.filter(item => item.group === group).map(itemHtml).join('')}</div>
+      <nav class="l2-store-grid luck-categories" aria-label="Категории">${state.groups.map(entry => `<button type="button" data-luck-group="${escapeHtml(entry.id)}" aria-pressed="${entry.id===group}" class="l2-store-category ${entry.id === group ? 'active' : ''}">${itemArt(state.items.find(item=>item.group===entry.id))}<span>${escapeHtml(entry.title)}</span></button>`).join('')}</nav>
+      <div class="shop-list">${state.items.filter(item => item.group === group).map(itemHtml).join('')}</div>
       ${feedback.text ? `<div class="feedback-result ${feedback.kind}">${escapeHtml(feedback.text)}</div>` : ''}`;
     body.querySelectorAll('[data-luck-buy]').forEach(button => button.addEventListener('click', () => buy(button.dataset.luckBuy)));
     body.querySelectorAll('[data-luck-group]').forEach(button => button.addEventListener('click', () => { group = button.dataset.luckGroup; haptic?.('light'); render(); }));

@@ -154,6 +154,11 @@
 
 .merchant-note{font:12px/1.5 system-ui;opacity:.8;margin:0 0 6px}
 .merchant-filter{display:flex;gap:8px;align-items:center;font:12px/1.4 system-ui;padding:4px 2px}
+.merchant-filter input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:0 0 18px;width:18px;height:18px;margin:0;position:relative;border:1px solid #806543;border-radius:4px;background:#100d16;cursor:pointer}
+.merchant-filter input[type=checkbox]:checked{border-color:#d8b36a;background:linear-gradient(#67502b,#302315)}
+.merchant-filter input[type=checkbox]:checked::after{content:'';position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fbeccb;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.merchant-filter input[type=checkbox]:focus-visible{outline:2px solid #bca4e8;outline-offset:3px}
+.merchant-filter input[type=checkbox]:disabled{opacity:.45;cursor:default}
 .merchant-item .missing{color:#e07a6a}
 .merchants-panel .shop-categories{overflow-x:auto}
 .pager{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0;font:12px/1.4 system-ui}
@@ -173,6 +178,35 @@
 .tattoo-dyes{display:grid;gap:8px;padding:6px 0}
 .tattoo-dye{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
 .tattoo-dye.poor{opacity:.7}
+.tattoos-panel{min-width:0;scrollbar-width:thin;scrollbar-color:#9b7b43 #100d16}
+.tattoos-panel [data-content]{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.tattoos-panel .mmo-frame{display:block;min-width:0;width:auto;margin:0;box-sizing:border-box}
+.tattoos-panel .mmo-section-title{flex-wrap:wrap;gap:8px;margin:4px 0 12px;min-width:0}
+.tattoos-panel .mmo-section-title small{min-width:0;overflow-wrap:anywhere;line-height:1.5}
+.tattoos-panel .equipment-filters{display:flex;flex-wrap:wrap;gap:6px;overflow:visible;min-width:0;margin-bottom:12px}
+.tattoos-panel .merchant-filter{min-width:0;align-items:flex-start;line-height:1.5;margin:6px 0}
+.tattoos-panel .merchant-filter input{margin-top:1px}
+.tattoos-panel .tattoo-slot,.tattoos-panel .tattoo-totals>span{min-width:0;overflow-wrap:anywhere}
+.tattoos-panel .tattoo-slot small{line-height:1.5}
+.tattoos-panel .tattoo-totals small{font:11px/1.4 system-ui}
+.tattoos-panel .tattoo-dye{display:grid;grid-template-columns:40px minmax(0,1fr);min-width:0;align-items:start}
+.tattoos-panel .tattoo-dye .shop-icon{width:40px;min-width:0}
+.tattoos-panel .tattoo-dye .shop-price{grid-column:2;justify-self:start;max-width:100%;white-space:normal}
+.tattoos-panel .tattoo-dye .shop-item-copy{min-width:0;overflow-wrap:anywhere}
+.tattoos-panel .tattoo-dye h3{white-space:normal;font-size:14px}
+.tattoos-panel .tattoo-dye p{display:flex;flex-wrap:wrap;gap:6px}
+.tattoos-panel .ds-head{min-width:0;grid-template-columns:34px minmax(0,1fr) 34px;gap:8px}
+.tattoos-panel .ds-head h2{font-size:clamp(18px,5vw,24px);white-space:normal;overflow-wrap:anywhere}
+
+.fishing-panel{min-width:0;scrollbar-width:thin;scrollbar-color:#9b7b43 #100d16}
+.fishing-panel .mmo-frame{display:block;grid-template-columns:none;width:auto;min-width:0;box-sizing:border-box;padding:16px;margin:14px 0}
+.fishing-panel .mmo-section-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;justify-content:space-between}
+.fishing-panel .mmo-section-title strong{min-width:0;overflow-wrap:anywhere}.fishing-panel .mmo-section-title small{margin:0;font:11px system-ui}
+.fishing-panel .party-note{font:12px/1.6 system-ui;margin:12px 0;overflow-wrap:anywhere}
+.fishing-rod-catalog{margin-top:16px;border-top:1px solid #514344;padding-top:14px}.fishing-rod-catalog summary{font:600 13px system-ui;color:#d8b36a;cursor:pointer}
+.fishing-panel .fishing-rods{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:12px}
+.fishing-rods>article{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:center;border:1px solid #514344;border-radius:7px;padding:10px;background:#100c14;font:12px/1.5 system-ui;min-width:0}
+.fishing-rods>article.owned{border-color:#d8b36a}.fishing-rods>article.locked{opacity:.6}.fishing-rods>article>img{width:40px!important;height:40px!important;object-fit:contain}.fishing-rods strong{font-size:12px;overflow-wrap:anywhere}.fishing-rods b{color:#d8b36a}.fishing-rods small{display:block;margin-top:5px;font-size:11px;color:#a99f8b}
 .merchant-symbol{display:block;font:11px/1.5 system-ui;opacity:.95}
 .merchant-symbol .plus{color:#8fd694}
 .merchant-symbol .minus{color:#e07a6a}

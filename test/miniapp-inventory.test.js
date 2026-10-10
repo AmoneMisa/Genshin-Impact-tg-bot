@@ -48,6 +48,15 @@ test('inventory state exposes resources, arena items and migrated category count
   assert.equal(state.player.mp, 100);
   assert.equal(state.player.maxMp, 400);
 });
+test('empty potions are hidden without shifting the keys used to drink remaining stacks',()=>{
+ const session=player();session.game.inventory.potions.items[0].count=0;
+ assert.deepEqual(getInventoryState(session).potions.map(p=>p.key),['1','2']);
+ const result=useInventoryPotion(session,'2');assert.equal(result.ok,true);
+ assert.equal(session.game.inventory.potions.items[2].count,0);
+ assert.deepEqual(result.inventory.potions.map(p=>p.key),['1']);
+ session.game.inventory.potions.items[1].count=0;
+ assert.deepEqual(getInventoryState(session).potions,[]);
+});
 
 test('HP potion restores additively and decrements only its own stack', () => {
   const session = player();

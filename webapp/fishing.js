@@ -72,7 +72,7 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
   }
 
   function rodsHtml() {
-    return `<div class="fishing-rods">${state.rods.map(rod => `<span class="${rod.owned ? 'owned' : ''} ${rod.usable ? '' : 'locked'}">${materialIcon(`l2_${rod.item}`)} ${escapeHtml(rod.name)} <b>${rod.grade === 'noGrade' ? 'NG' : rod.grade}</b><small>${rod.level} ур. · скорость ${rod.damage} · ${number(rod.limit)} рыб в день${rod.owned ? ' · есть' : ''}</small></span>`).join('')}</div>`;
+    return `<details class="fishing-rod-catalog"><summary>Удочки · ${state.rods.length}</summary><div class="fishing-rods">${state.rods.map(rod => `<article class="${rod.owned ? 'owned' : ''} ${rod.usable ? '' : 'locked'}">${materialIcon(`l2_${rod.item}`)}<div><strong>${escapeHtml(rod.name)} <b>${rod.grade === 'noGrade' ? 'NG' : rod.grade}</b></strong><small>${rod.level} ур. · скорость ${rod.damage}<br>${number(rod.limit)} рыб в день${rod.owned ? ' · есть' : ''}</small></div></article>`).join('')}</div></details>`;
   }
 
   function fishHtml() {

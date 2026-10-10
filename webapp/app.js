@@ -250,7 +250,7 @@ function renderGearDot() {
 function renderTabs() {
   $('bottom-nav').innerHTML = navHtml(activeTab, badges);
   const isCity = activeTab === 'city';
-  document.querySelector('.top-hud')?.classList.toggle('is-city-compact', isCity);
+  document.querySelector('.top-hud')?.classList.add('is-city-compact');
   document.querySelectorAll('[data-tab-panel]').forEach(node => {
     node.hidden = (node.dataset.tabPanel === 'city') !== isCity;
   });
