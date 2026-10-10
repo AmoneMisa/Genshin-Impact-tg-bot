@@ -125,3 +125,7 @@
 .hunt-journal .hunt-log i {flex-shrink:0}
 .hunt-panel .boss-feedback {font:11px/1.4 system-ui;margin:0;padding:7px 10px;border-radius:4px;background:#1e2823;color:#d2dfd1;text-align:left;min-height:0}
 .hunt-panel .boss-feedback:empty {display:none}
+
+.hunt-drop-groups{display:grid;gap:6px;padding:6px 0}
+.hunt-drop-group>summary{font:600 11px/1.4 system-ui;cursor:pointer;padding:4px 0;color:var(--muted,#b9ad94)}
+.hunt-loot-wait{font:11px/1.4 system-ui;opacity:.7;padding:8px 0}

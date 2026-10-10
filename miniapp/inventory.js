@@ -1,5 +1,6 @@
-import materialDefinitions from '../template/materialsTemplate.js';
-import {getMaterialCount} from '../functions/game/player/materials.js';
+import {getMaterialCount, listMaterials, spendMaterials} from '../functions/game/player/materials.js';
+import {l2SellPrice} from '../functions/game/hunt/lootTable.js';
+import {HUNT} from '../functions/game/hunt/huntConfig.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
@@ -67,7 +68,7 @@ export function getInventoryState(session) {
       gacha: Array.isArray(inventory?.gacha?.items) ? inventory.gacha.items.length : 0,
       potions: potions.reduce((sum, item) => sum + item.count, 0),
     },
-    materials:materialDefinitions.map(item=>({key:item.key,name:item.name,icon:item.icon,count:getMaterialCount(session,item.key)})).filter(item=>item.count>0),
+    materials:listMaterials(session).map(item=>({key:item.key,name:item.name,icon:item.icon,count:item.count,kind:item.kind||null,sellPrice:l2SellPrice(item.key,HUNT.goldScale)})),
     potions,
     buffs:activePotionBuffs(session).map(e=>({id:e.potionId,name:e.name,until:e.until})),
   };
@@ -145,4 +146,18 @@ export function useInventoryPotion(session, rawKey) {
     potion: potionDto(potion, index),
     inventory: getInventoryState(session),
   };
+}
+
+/** Sells collectable High Five items (pieces, recipes, full items, herbs ...) to the shop for half their real price. */
+export function sellLoot(session, rawKey, rawCount = null) {
+  const key = String(rawKey || '');
+  const price = l2SellPrice(key, HUNT.goldScale);
+  if (!price) return { ok: false, reason: 'not_sellable', inventory: getInventoryState(session) };
+  const owned = getMaterialCount(session, key);
+  const count = rawCount === null || rawCount === undefined || rawCount === 'all' ? owned : Math.floor(number(rawCount));
+  if (!Number.isSafeInteger(count) || count < 1 || count > owned) return { ok: false, reason: 'invalid_count', inventory: getInventoryState(session) };
+  spendMaterials(session, { [key]: count });
+  const gold = price * count;
+  session.game.inventory.gold = number(session.game.inventory.gold) + gold;
+  return { ok: true, action: 'sell', key, count, gold, inventory: getInventoryState(session) };
 }

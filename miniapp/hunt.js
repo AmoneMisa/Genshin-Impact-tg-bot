@@ -4,7 +4,7 @@ import {soulCrystalState,soulChargeInfo} from '../functions/game/equipment/soulC
 import { CHAMPIONS, HUNT } from '../functions/game/hunt/huntConfig.js';
 import { getZones } from '../functions/game/hunt/huntMobs.js';
 import { advanceHunt, ensureHunt, fleeHunt, mobDto, enterHuntField, moveHuntField, selectHuntTarget, useHuntSkill } from '../functions/game/hunt/huntFight.js';
-import { huntDropPreview } from '../functions/game/hunt/huntRewards.js';
+import { huntDropPreview, LOOT_KINDS } from '../functions/game/hunt/huntRewards.js';
 import { getZone, getMobDef } from '../functions/game/hunt/huntMobs.js';
 import {fieldPvpStatus,fieldPvpSkillBlock} from '../functions/game/hunt/fieldPvpState.js';
 import {memberName} from './social.js';
@@ -35,7 +35,7 @@ function zoneDto(zone, level) {
         // The hero earns experience here while less than 11 levels apart (the real High Five rule).
         recommended: Math.abs(level - zone.level) <= 4,
         reachable: Math.abs(level - zone.level) < HUNT.expMaxGap,
-        mobs: zone.mobs.map(mob => ({id: mob.id, name: mob.name, level: mob.level, element: mob.element, drops: huntDropPreview(level, mob)})),
+        mobs: zone.mobs.map(mob => ({id: mob.id, name: mob.name, level: mob.level, element: mob.element})),
     };
 }
 
@@ -107,3 +107,16 @@ export const targetHuntForMiniApp = (session, targetId) => selectHuntTarget(sess
 export const useHuntSkillForMiniApp = (session, skillIndex, now = Date.now()) => useHuntSkill(session, skillIndex, {now});
 export const fleeHuntForMiniApp = (session, now = Date.now()) => fleeHunt(session, now);
 export const setAutoShotsForMiniApp = (session, enabled) => ({ok: true, enabled: setAutoShots(session, enabled), shots: getShotsState(session)});
+
+/** The real drop tables of one zone, per monster, for the level of the viewer (heavy, so not part of the screen state). */
+export function getZoneLoot(session, zoneId) {
+    const zone = getZones().find(entry => entry.id === String(zoneId));
+    if (!zone) return {ok: false, reason: 'unknown_zone'};
+    const level = Math.max(1, number(session.game.stats?.lvl, 1));
+    return {
+        ok: true,
+        zone: zone.id,
+        kinds: LOOT_KINDS.map(kind => ({id: kind.id, label: kind.label, icon: kind.icon})),
+        mobs: zone.mobs.map(mob => ({id: mob.id, name: mob.name, level: mob.level, drops: huntDropPreview(level, mob)})),
+    };
+}

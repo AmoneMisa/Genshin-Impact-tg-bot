@@ -11,6 +11,8 @@ const REASONS = {
   cp_full: 'CP уже полностью восстановлено.',
   level_too_low: 'Твой уровень слишком низкий для этого эликсира.',
   unsupported_potion: 'Этот предмет пока нельзя использовать в Mini App.',
+  not_sellable: 'Этот предмет нельзя продать.',
+  invalid_count: 'Столько предметов нет.',
 };
 
 function formatNumber(value) {
@@ -129,7 +131,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <div class="inv-bag">${state.potions.map(slotHtml).join('')}${'<span class="inv-slot blank" aria-hidden="true"></span>'.repeat(emptySlots)}</div>
         ${detailHtml()}
       </section>
-      ${state.materials?.length?`<section class="inventory-section"><div class="inventory-title"><strong>Материалы и заряды</strong></div><div class="inventory-meta">${state.materials.map(item=>`<article><span>${materialIcon(item.key,escapeHtml(item.icon||'✦'))}</span><div><small>${escapeHtml(item.name)}</small><strong>${formatNumber(item.count)}</strong></div></article>`).join('')}</div></section>`:''}
+      ${state.materials?.length?`<section class="inventory-section"><div class="inventory-title"><strong>Материалы и заряды</strong></div><div class="inventory-meta">${state.materials.map(item=>`<article><span>${materialIcon(item.key,escapeHtml(item.icon||'✦'))}</span><div><small>${escapeHtml(item.name)}</small><strong>${formatNumber(item.count)}</strong></div>${item.sellPrice?`<button type="button" class="inv-sell" data-inventory-sell="${escapeHtml(item.key)}" title="Продать всё">Продать · ${formatNumber(item.sellPrice*item.count)} 🪙</button>`:''}</article>`).join('')}</div></section>`:''}
       <section class="inventory-resources">
         <article><span>🪙</span><strong>${formatNumber(state.resources.gold)}</strong></article>
         <article><span>💎</span><strong>${formatNumber(state.resources.crystals)}</strong></article>
@@ -149,6 +151,24 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   function bind() {
     content.querySelectorAll('[data-inventory-select]').forEach(button => {
       button.addEventListener('click', () => { selectedKey = button.dataset.inventorySelect; haptic('light'); render(); });
+    });
+    content.querySelectorAll('[data-inventory-sell]').forEach(button => {
+      button.addEventListener('click', async () => {
+        if (pending) return;
+        pending = true;
+        try {
+          const payload = await api('/api/inventory/sell', { method: 'POST', body: JSON.stringify({ key: button.dataset.inventorySell }) });
+          state = payload.inventory;
+          feedback.textContent = `Продано за ${formatNumber(payload.gold)} 🪙.`;
+          haptic('light');
+        } catch (error) {
+          if (error.payload?.inventory) state = error.payload.inventory;
+          feedback.textContent = REASONS[error.payload?.reason] || error.message;
+        } finally {
+          pending = false;
+          render();
+        }
+      });
     });
     content.querySelectorAll('[data-inventory-potion]').forEach(button => {
       button.addEventListener('click', () => usePotion(button.dataset.inventoryPotion));

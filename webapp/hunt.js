@@ -199,8 +199,29 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     </section>`;
   }
 
+  const LOOT_GROUPS = [['gold','Адена'],['full','Снаряжение целиком'],['piece','Части и камни для сборки'],['recipe','Рецепты'],['scroll','Свитки заточки'],['lifestone','Камни жизни'],['attribute','Камни атрибутов'],['seal','Камни печати'],['dye','Краски'],['crystal','Кристаллы'],['material','Материалы'],['consumable','Расходники'],['herb','Травы'],['other','Прочее']];
+  const OPEN_LOOT = ['gold','full','piece','scroll','lifestone','seal'];
+  const lootCache = {}, lootOpen = new Set();
+  const chanceText = value => value >= 100 ? '×' + new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(value/100) : new Intl.NumberFormat('ru-RU',{maximumFractionDigits:value < 1 ? 3 : 2}).format(value)+'%';
+  function dropRow(d) {
+    return '<div>'+materialIcon(d.key,escapeHtml(d.icon))+'<span>'+escapeHtml(d.name)+'<small>×'+formatNumber(d.min)+(d.min===d.max?'':'–'+formatNumber(d.max))+'</small></span><b>'+chanceText(d.chance)+'</b></div>';
+  }
   function dropsHtml(drops = []) {
-    return '<div class="hunt-drop-table">'+drops.map(d=>'<div>'+materialIcon(d.key,escapeHtml(d.icon))+'<span>'+escapeHtml(d.name)+'<small>×'+formatNumber(d.min)+(d.min===d.max?'':'–'+formatNumber(d.max))+'</small></span><b>'+new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(d.chance)+'%</b></div>').join('')+'</div>';
+    return '<div class="hunt-drop-groups">'+LOOT_GROUPS.map(([kind,label])=>{
+      const rows = drops.filter(d=>(d.kind||'other')===kind);
+      if (!rows.length) return '';
+      return '<details class="hunt-drop-group" '+(OPEN_LOOT.includes(kind)?'open':'')+'><summary>'+escapeHtml(label)+' · '+rows.length+'</summary><div class="hunt-drop-table">'+rows.map(dropRow).join('')+'</div></details>';
+    }).join('')+'</div>';
+  }
+  function zoneLootHtml(zone) {
+    const loot = lootCache[zone.id];
+    if (!loot) return '<p class="hunt-loot-wait">Загружаю таблицу дропа…</p>';
+    return loot.mobs.map(mob=>'<details><summary>'+escapeHtml(mob.name)+' · '+mob.level+' ур. · '+mob.drops.length+' предметов</summary>'+dropsHtml(mob.drops)+'</details>').join('');
+  }
+  async function loadZoneLoot(zoneId) {
+    if (lootCache[zoneId]) return;
+    try { lootCache[zoneId] = await api('/api/hunt/loot', { method: 'POST', body: JSON.stringify({ zone: zoneId }) }); } catch (error) { return; }
+    render();
   }
 
   function fieldHtml() {
@@ -230,7 +251,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       <article class="hunt-zone ${zone.recommended ? 'recommended' : ''} ${zone.reachable ? '' : 'far'}">
         ${huntZoneUrl(zone)?`<img class="hunt-zone-art" src="${huntZoneUrl(zone)}" srcset="${huntZoneUrl(zone)} 1x, ${huntZoneUrl(zone,960)} 2x" width="480" height="160" alt="" loading="lazy" decoding="async">`:''}
         <div class="hunt-zone-head"><strong>${escapeHtml(zone.title)}</strong><small>ур. ${zone.min}–${zone.max}${zone.recommended ? ' · для тебя' : ''}</small></div>
-        <details class="hunt-zone-loot"><summary>Монстры и дроп · ${zone.mobs.length}</summary>${zone.mobs.map(mob=>`<details><summary>${escapeHtml(mob.name)} · ${mob.level} ур.</summary>${dropsHtml(mob.drops)}</details>`).join('')}</details>
+        <details class="hunt-zone-loot" data-loot-zone="${escapeHtml(zone.id)}" ${lootOpen.has(zone.id)?'open':''}><summary>Монстры и дроп · ${zone.mobs.length}</summary>${lootOpen.has(zone.id)?zoneLootHtml(zone):''}</details>
         <button type="button" class="equipment-action forge-action" data-zone="${escapeHtml(zone.id)}" ${zone.reachable ? '' : 'disabled'}>${zone.reachable ? 'Войти на поле боя' : 'Опыт не даётся'}</button>
       </article>`).join('')}</div>`;
   }
@@ -298,6 +319,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelectorAll('[data-pvp-target]').forEach(b=>b.addEventListener('click',()=>{playerTarget=b.dataset.pvpTarget;forceAttack=false;render();}));
     content.querySelector('[data-force-attack]')?.addEventListener('change',e=>{forceAttack=e.target.checked;});
     content.querySelector('.hunt-target-drops')?.addEventListener('toggle', e=>{dropOpen=e.target.open;});
+    content.querySelectorAll('[data-loot-zone]').forEach(d=>d.addEventListener('toggle',e=>{if(e.target!==d)return;const id=d.dataset.lootZone;if(d.open){if(lootOpen.has(id))return;lootOpen.add(id);if(lootCache[id])render();else{lootOpen.add(id);d.insertAdjacentHTML('beforeend','<p class="hunt-loot-wait">Загружаю таблицу дропа…</p>');loadZoneLoot(id);}}else lootOpen.delete(id);}));
     content.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',async()=>{playerTarget=null;forceAttack=false;await run('/api/hunt/target',{targetId:b.dataset.target});render();}));
     content.querySelectorAll('[data-move]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/hunt/move',{direction:b.dataset.move});render();}));
     content.querySelectorAll('[data-zone-kind]').forEach(b=>b.addEventListener('click',()=>{zoneKind=b.dataset.zoneKind;render();}));

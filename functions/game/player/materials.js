@@ -1,4 +1,5 @@
 import materialsTemplate from '../../../template/materialsTemplate.js';
+import {l2MaterialInfo} from '../hunt/lootTable.js';
 
 /** Read-only view of the material counters (old inventories have none). */
 function readMaterials(session) {
@@ -38,7 +39,7 @@ export function spendMaterials(session, items = {}) {
 }
 
 export function materialInfo(key) {
-    return materialsTemplate.find(item => item.key === key) || {key, name: key, icon: '✦', description: ''};
+    return materialsTemplate.find(item => item.key === key) || (String(key).startsWith('l2_') && l2MaterialInfo(key)) || {key, name: key, icon: '✦', description: ''};
 }
 
 /** Display rows for everything the player owns, template order first. */

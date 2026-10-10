@@ -48,7 +48,7 @@ import {
   abandonClassQuestForMiniApp,
   promoteClassForMiniApp,
 } from './classQuests.js';
-import { getInventoryState, useInventoryPotion } from './inventory.js';
+import { getInventoryState, sellLoot, useInventoryPotion } from './inventory.js';
 import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
 import { createStarInvoice, getStarsState, mongoStarStore } from './stars.js';
 import bot from '../bot.js';
@@ -100,7 +100,7 @@ import { castClassBuff, getClassBuffsState } from './buffs.js';
 import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
-import { fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
+import { getZoneLoot, fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
@@ -645,6 +645,18 @@ const inventoryUse = guarded('inventory use', async (req, res) => {
     return used;
   });
 
+  return sendResult(res, result, context);
+});
+
+const inventorySell = guarded('inventory sell', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const sold = sellLoot(context.session, body.key, body.count ?? null);
+    if (sold.ok) await saveSession(context.session);
+    return sold;
+  });
   return sendResult(res, result, context);
 });
 
@@ -1646,6 +1658,12 @@ const huntStart = guarded('hunt start', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const huntLoot = guarded('hunt loot', async (req, res) => {
+  const context = await authorize(req), body = await readJsonBody(req);
+  context.session = await getSession(context.chatId, context.userId);
+  return sendJson(res, 200, getZoneLoot(context.session, String(body.zone || '')));
+});
+
 const huntMove = guarded('hunt move', async (req, res) => {
   const context = await authorize(req), body = await readJsonBody(req);
   return sendResult(res, await huntAnswer(context, session => moveHuntForMiniApp(session, body.direction)), context);
@@ -1822,6 +1840,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/class-quests') return classQuestsAction(req, res);
     if (route === 'GET /api/inventory') return inventoryState(req, res);
     if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
+    if (route === 'POST /api/inventory/sell') return inventorySell(req, res);
     if (route === 'GET /api/exchange') return exchangeState(req, res);
     if (route === 'POST /api/exchange/buy') return exchangeBuy(req, res);
     if (route === 'POST /api/stars/invoice') return starsInvoice(req, res);
@@ -1884,6 +1903,7 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/boss') return bossState(req, res);
     if (route === 'GET /api/hunt') return huntState(req, res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
+    if (route === 'POST /api/hunt/loot') return huntLoot(req, res);
     if (route === 'POST /api/hunt/move') return huntMove(req, res);
     if (route === 'POST /api/hunt/target') return huntTarget(req, res);
     if (route === 'POST /api/hunt/skill') return huntSkill(req, res);

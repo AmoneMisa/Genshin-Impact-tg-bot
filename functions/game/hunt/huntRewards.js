@@ -8,6 +8,7 @@ import {absorbHuntSoul} from '../equipment/soulCrystals.js';
 import { CHAMPIONS, HUNT, STONE_CHANCE } from './huntConfig.js';
 import { addMaterial, materialInfo } from '../player/materials.js';
 import { attributeKey, ATTRIBUTE_GRADES } from '../equipment/attributes.js';
+import { lootRows, LOOT_KINDS } from './lootTable.js';
 import { enchantGradeForLevel } from '../equipment/enchantDrops.js';
 import { gainExp, levelNeed } from '../player/vitality.js';
 import setLevel, { spForLevelUp } from '../player/setLevel.js';
@@ -31,24 +32,37 @@ export function dropGapFactor(heroLevel, mobLevel, {min, max, floor}) {
     return 1 - (1 - floor) * (diff - min) / (max - min);
 }
 
+/** The real drop table of a monster is rolled at x1 for seal stones and at HUNT.dropRate for everything else. */
+const rateOf = row => (row.kind === 'seal' ? 1 : HUNT.dropRate);
+
+/** How many times a row pays: its chance above 100% is guaranteed copies (as on a rated server), the rest a roll. */
+export function dropRolls(chancePercent, random) {
+    const expected = chancePercent / 100;
+    return Math.floor(expected) + (random() < expected - Math.floor(expected) ? 1 : 0);
+}
+
 /** Uses the same effective probabilities and quantities as grantKillRewards, without rolling. */
 export function huntDropPreview(level, mobDef, champion = null) {
     if (!mobDef) return [];
     const tier = CHAMPIONS[champion];
     const rows = [];
-    const row = (key, min, max, chance) => {
-        const info = materialInfo(key);
-        rows.push({key, name: info.name, icon: info.icon, min, max, chance: Math.min(100, chance)});
-    };
-    if (mobDef.gold) rows.push({key: 'gold', name: 'Адена', icon: '🪙', min: Math.max(1, Math.round(mobDef.gold.min * HUNT.goldScale)), max: Math.max(1, Math.round(mobDef.gold.max * HUNT.goldScale)), chance: Math.min(100, mobDef.gold.chance * dropGapFactor(level, mobDef.level, HUNT.adenaGap))});
-    const factor = HUNT.dropRate * dropGapFactor(level, mobDef.level, HUNT.itemGap) * (tier?.drops || 1);
-    for (const drop of mobDef.drops || []) row(drop.key, drop.min, drop.max, drop.chance * factor);
+    if (mobDef.gold) rows.push({key: 'gold', name: 'Адена', icon: '🪙', kind: 'gold', min: Math.max(1, Math.round(mobDef.gold.min * HUNT.goldScale)), max: Math.max(1, Math.round(mobDef.gold.max * HUNT.goldScale)), chance: Math.min(100, mobDef.gold.chance * dropGapFactor(level, mobDef.level, HUNT.adenaGap))});
+    const gap = dropGapFactor(level, mobDef.level, HUNT.itemGap) * (tier?.drops || 1);
+    for (const drop of lootRows(mobDef.id)) {
+        const info = materialInfo(drop.key);
+        rows.push({key: drop.key, name: info.name || drop.name, icon: info.icon, kind: drop.kind, min: drop.min, max: drop.max, chance: drop.chance * rateOf(drop) * gap});
+    }
     if (mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
         const chances = STONE_CHANCE[champion || 'normal'];
-        for (const stone of ['stone', 'crystal', 'jewel']) if (chances[stone] > 0) row(attributeKey(stone, mobDef.dropElement), 1, 1, chances[stone] * 100);
+        for (const stone of ['stone', 'crystal', 'jewel']) if (chances[stone] > 0) {
+            const key = attributeKey(stone, mobDef.dropElement), info = materialInfo(key);
+            rows.push({key, name: info.name, icon: info.icon, kind: 'attribute', min: 1, max: 1, chance: chances[stone] * 100});
+        }
     }
     return rows.sort((a, b) => b.chance - a.chance);
 }
+
+export {LOOT_KINDS};
 
 /** Rolls (and credits) the reward of one kill. The caller saves the session. */
 export function grantKillRewards(session, mob, mobDef, {random = Math.random, now = Date.now()} = {}) {
@@ -78,9 +92,8 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
         session.game.inventory.gold = (Number(session.game.inventory.gold) || 0) + result.gold;
     }
 
-    // items of the real drop table, mapped onto our materials
+    // items of the real drop table: every row rolls on its own, a chance above 100% gives guaranteed copies
     const itemGap = dropGapFactor(level, mob.level, HUNT.itemGap);
-    const chanceFactor = HUNT.dropRate * itemGap * (tier ? tier.drops : 1);
     const give = (key, amount) => {
         addMaterial(session, key, amount);
         const info = materialInfo(key);
@@ -88,8 +101,9 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
         if (row) row.amount += amount;
         else result.items.push({item: key, name: info.name, icon: info.icon, amount});
     };
-    for (const drop of mobDef?.drops || []) {
-        if (random() < Math.min(1, drop.chance / 100 * chanceFactor)) give(drop.key, getRandom(drop.min, drop.max));
+    for (const drop of lootRows(mobDef?.id ?? mob.mobId)) {
+        const rolls = dropRolls(drop.chance * rateOf(drop) * itemGap * (tier ? tier.drops : 1), random);
+        if (rolls > 0) give(drop.key, getRandom(drop.min, drop.max) * rolls);
     }
 
     // attribute stones of the mob's element (the grade of the hero's gear must be able to carry them)

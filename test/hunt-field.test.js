@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {enterHuntField, advanceHunt, ensureHunt, moveHuntField, selectHuntTarget, useHuntSkill, fleeHunt} from '../functions/game/hunt/huntFight.js';
 import {getZone, getMobDef} from '../functions/game/hunt/huntMobs.js';
-import {huntDropPreview, dropGapFactor} from '../functions/game/hunt/huntRewards.js';
+import {huntDropPreview, dropGapFactor, dropRolls} from '../functions/game/hunt/huntRewards.js';
+import {lootRows, lootInfo, l2SellPrice} from '../functions/game/hunt/lootTable.js';
+import {materialInfo} from '../functions/game/player/materials.js';
 import {HUNT, CHAMPIONS} from '../functions/game/hunt/huntConfig.js';
 import {getHuntState} from '../miniapp/hunt.js';
 import {applyBossDebuff} from '../functions/game/boss/bossDebuffs.js';
@@ -75,12 +77,26 @@ test('killed actors leave the battlefield and pay once; fleeing clears combat st
  assert.equal(fleeHunt(s,NOW+100).ok,true);assert.equal(h.field,null);assert.deepEqual(h.playerDebuffs,[]);
 });
 
-test('drop preview uses actual scaled rates, champion bonuses and level penalties',()=>{
- const zone=getZone('catacomb-forbidden-path'),mob=zone.mobs[0],level=mob.level+8;
- const rows=huntDropPreview(level,mob,'red');
- for(const drop of mob.drops){const row=rows.find(r=>r.key===drop.key);assert.ok(row);assert.equal(row.chance,Math.min(100,drop.chance*HUNT.dropRate*dropGapFactor(level,mob.level,HUNT.itemGap)*CHAMPIONS.red.drops));assert.equal(row.min,drop.min);assert.equal(row.max,drop.max);}
+test('drop preview is the real High Five table with the rates, champion bonus and level penalty applied',()=>{
+ const zone=getZone('catacomb-heretic'),mob=zone.mobs.find(m=>m.name==='Lith Medium'),level=mob.level+8;
+ const rows=huntDropPreview(level,mob,'red'),real=lootRows(mob.id);
+ assert.ok(real.length>5);
+ const gap=dropGapFactor(level,mob.level,HUNT.itemGap)*CHAMPIONS.red.drops;
+ for(const drop of real){const row=rows.find(r=>r.key===drop.key);assert.ok(row,drop.name);assert.equal(row.chance,drop.chance*(drop.kind==='seal'?1:HUNT.dropRate)*gap);assert.equal(row.min,drop.min);assert.equal(row.max,drop.max);assert.equal(row.kind,drop.kind);}
+ // seal stones are the real 70% x1; the table also lists full items, recipes and materials with real names
+ assert.equal(real.find(r=>r.name==='Blue Seal Stone').chance,70);
+ assert.ok(['full','recipe','material'].every(kind=>real.some(r=>r.kind===kind)));
  const gold=rows.find(r=>r.key==='gold');if(gold)assert.equal(gold.min,Math.max(1,Math.round(mob.gold.min*HUNT.goldScale)));
  assert.ok(getMobDef(zone,mob.id));
+});
+test('a chance above 100% pays guaranteed copies plus a roll for the rest',()=>{
+ assert.equal(dropRolls(70,()=>0.5),1);assert.equal(dropRolls(70,()=>0.9),0);
+ assert.equal(dropRolls(250,()=>0.4),3);assert.equal(dropRolls(250,()=>0.6),2);assert.equal(dropRolls(300,()=>0.99),3);
+});
+test('real items that have no counterpart in the game are collectable under their real names',()=>{
+ const info=materialInfo('l2_9530');assert.equal(info.name,'Sealed Dynasty Breast Plate Piece');assert.equal(info.kind,'piece');
+ assert.equal(l2SellPrice('l2_9530',1),Math.floor(91551/2));assert.equal(l2SellPrice('scroll_S',1),0);
+ assert.equal(lootInfo(5575).key,'l2_5575');assert.equal(lootInfo(6360).key,'seal_blue');
 });
 
 test('aggressive actors pursue the player, stop at range, and cannot move during stun',()=>{

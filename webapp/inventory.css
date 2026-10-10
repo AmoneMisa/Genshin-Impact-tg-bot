@@ -81,3 +81,5 @@
 @keyframes inv-bubble { 0%, 60% { opacity: 0; transform: translateY(0); } 70% { opacity: .9; } 100% { opacity: 0; transform: translateY(-16px); } }
 @keyframes inv-drink { 0% { transform: rotate(0); } 40% { transform: rotate(-35deg) translateY(-4px); } 80% { transform: rotate(-35deg) translateY(-4px); } 100% { transform: rotate(0); } }
 @media (prefers-reduced-motion: reduce) { .inv-bubbles, .inv-flask.drinking, .inv-potion-art.drinking, .inventory-result, .inv-detail { animation: none !important; } .inv-vital b { transition: none; } }
+
+.inv-sell{margin-left:auto;font:11px/1.3 system-ui;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,214,120,.4);background:rgba(0,0,0,.35);color:inherit}
