@@ -97,6 +97,7 @@ import {
 } from './adminTools.js';
 import { rememberLanguage } from './language.js';
 import { castClassBuff, getClassBuffsState } from './buffs.js';
+import {castL2Buff} from './l2Buffs.js';
 import { getPartyState, performPartyAction } from './party.js';
 import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchants.js';
 import { getTattooState, performTattooAction } from './tattoos.js';
@@ -979,9 +980,12 @@ const adminNotice = guarded('admin notice', async (req, res) => {
 
 const classBuffsState = guarded('class buffs state', async (req, res) => {
   const context = await authorize(req);
-  const buffs = await withLock(`${context.chatId}:buffs`, async () => {
+  const buffs = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return getClassBuffsState(context.session);
+    const changed=advanceFieldPvp(context.session.ownerDocument());
+    const result=getClassBuffsState(context.session);
+    if(changed||context.session.needsSave)await saveSession(context.session);
+    return result;
   });
   return sendJson(res, 200, buffs);
 });
@@ -992,11 +996,13 @@ const classBuffsCast = guarded('class buffs cast', async (req, res) => {
   if (typeof body.buffId !== 'string' || !['string', 'number', 'undefined'].includes(typeof body.targetId)) {
     throw httpError(400, 'buffId is required');
   }
-  const result = await withLock(`${context.chatId}:buffs`, async () => {
+  const result = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const cast = castClassBuff(context.session, body.buffId, body.targetId ?? null);
-    if (cast.ok) await saveSession(context.session);
-    return { ...cast, buffs: getClassBuffsState(context.session) };
+    const advanced=advanceFieldPvp(context.session.ownerDocument());
+    const cast = body.buffId.startsWith('l2:') ? castL2Buff(context.session,body.buffId,body.targetId??null,{force:body.force===true}) : castClassBuff(context.session, body.buffId, body.targetId ?? null);
+    const buffs=getClassBuffsState(context.session);
+    if (cast.ok||advanced||context.session.needsSave) await saveSession(context.session);
+    return { ...cast, buffs };
   });
   return sendResult(res, result, context);
 });

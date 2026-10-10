@@ -381,6 +381,7 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex, targe
   if (canUse === 4) {
     return { ok: false, reason: 'no_ammo', boss: await getBossState(session, chatId) };
   }
+  if(canUse===5)return {ok:false,reason:'effect_blocked',boss:await getBossState(session,chatId)};
 
   // A damage skill may be aimed at one of the boss's minions.
   let target = null;

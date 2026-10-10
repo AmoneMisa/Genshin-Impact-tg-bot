@@ -4,6 +4,7 @@ import calcDamage from '../boss/calcDamage.js';
 import getBossDefence from '../boss/getBossStats/getBossDefence.js';
 import userVampireSkill from './userVampireSkill.js';
 import getMaxHp from './getters/getMaxHp.js';
+import {l2RawStat,l2OnDamageReceived,l2PreventDeath,l2OnHostileAction} from './l2Effects.js';
 import { applyBossDebuff } from '../boss/bossDebuffs.js';
 import { advanceBossPhases } from '../boss/bossPhases.js';
 import { applySkillBuffs } from './skillEffects.js';
@@ -34,6 +35,7 @@ function creditDamage(boss, userId, dmg) {
  * `dmg` is what the skill rolled in total, `dealt` what actually landed.
  */
 export default function (session, boss, skill, {targetId = null, now = Date.now()} = {}) {
+    l2OnHostileAction(session,now);
     if (!boss) {
         throw new Error("Босс не найден!");
     }
@@ -90,7 +92,7 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
 
     const soul=unit?{drain:0,effects:[]}:applySoulHit(session,boss,{critical:isHasCritical,dealt:result.dealt,now});
     result.soulEffects=soul.effects;
-    const vampirePower = (skill.vampirePower || 0) + getRouteBonus(skill).vampire + soul.drain;
+    const vampirePower = (skill.vampirePower || 0) + getRouteBonus(skill).vampire + soul.drain + (skill.effect==='common_attack'?l2RawStat(session,'absorbDam',false,now)/100:0);
     if (vampirePower > 0 && result.dealt > 0) {
         result.vampire = userVampireSkill({vampirePower}, result.dealt);
         playerStats.hp = Math.ceil(Math.min(
@@ -108,12 +110,14 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
         applySkillBuffs(session, skill, skill.buffs, now);
     }
 
-    if (!unit && boss.skill?.effect && (boss.skill.effect.includes("reflect") || boss.skill.effect.includes("rage"))) {
-        result.reflectDamage = bossReflectDamage(boss, result.dealt);
+    if(!unit&&!boss.playerTarget)l2OnDamageReceived(boss,session,result.dealt,now);
+    const nativeReflect=!unit&&!boss.playerTarget&&skill.effect==='common_attack'?Math.ceil(result.dealt*Math.min(100,l2RawStat(boss,'reflectDam',false,now))/100):0;
+    if (nativeReflect>0 || (!unit && boss.skill?.effect && (boss.skill.effect.includes("reflect") || boss.skill.effect.includes("rage")))) {
+        result.reflectDamage = nativeReflect+(boss.skill?.effect?bossReflectDamage(boss, result.dealt):0);
         playerStats.hp -= Math.min(playerStats.hp, result.reflectDamage);
         session.game.gameClass.stats.hp = playerStats.hp;
 
-        if (playerStats.hp === 0) {
+        if (playerStats.hp === 0&&!l2PreventDeath(session,now)) {
             session.game.respawnTime = new Date().getTime() + 60 * 1000; // Минута на респаун персонажа
         }
     }

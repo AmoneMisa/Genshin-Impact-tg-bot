@@ -5,6 +5,7 @@
 //                interrupted. A stunned boss shrugs off further stuns for a
 //                while, so it cannot be chain-locked.
 export const STUN_IMMUNITY_MS = 20 * 1000;
+import {l2ActionBlock} from '../player/l2Effects.js';
 const AMOUNT_CAP = {armorBreak: 0.6, weaken: 0.5,slow:0.5,accuracyDown:0.5,mute:1};
 
 function mark(boss, field) {
@@ -52,7 +53,7 @@ export function bossDebuffAmount(boss, kind, now = Date.now()) {
 }
 
 export function isBossStunned(boss, now = Date.now()) {
-    return Number(boss?.stunUntil) > now;
+    return Number(boss?.stunUntil) > now || Boolean(l2ActionBlock(boss,{},now));
 }
 
 /** Display rows for the HUD. */

@@ -10,6 +10,7 @@
 import { ATTRIBUTE_GRADES, ATTRIBUTE_TIERS, ELEMENTS, attributeKey } from '../../../template/augmentData.js';
 import { getMaterialCount, spendMaterials } from '../player/materials.js';
 import { gradeIndex } from './catalog.js';
+import {l2RawStat} from '../player/l2Effects.js';
 import { uniqueEquipped } from './itemBonuses.js';
 import { isActuallyEquipped, syncEquippedSnapshot } from './snapshots.js';
 
@@ -80,6 +81,7 @@ export function clearAttribute(session, item) {
 export function attributeProfile(session) {
     const result = {attack: null, resist: {}};
     const stats = session?.game?.equipmentStats;
+    for(const element of ['fire','water','wind','earth','holy','dark']){const bonus=l2RawStat(session,element+'Res');if(bonus)result.resist[element]=bonus;}
     if (!stats) return result;
     for (const item of uniqueEquipped(stats)) {
         const attribute = item?.attribute;

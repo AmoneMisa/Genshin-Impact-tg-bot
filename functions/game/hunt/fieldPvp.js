@@ -1,3 +1,4 @@
+import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2PreventDeath,l2TransferDamage,l2RawStat} from '../player/l2Effects.js';
 // Live per-skill PvP in hunting locations. All participants must come from one freshly loaded Chat.
 import {advanceHunt} from './huntFight.js';
 import {HUNT} from './huntConfig.js';
@@ -47,16 +48,26 @@ function saveEffects(defender, proxy) {
 }
 
 /** PvP damages CP before HP. A dead target is handled once, while holding the chat lock. */
-function takeDamage(chat, attacker, defender, damage, now) {
+export function takeDamage(chat, attacker, defender, damage, now) {
+    if(l2HasControl(defender,'Invincible',now))return {cpLost:0,hpLost:0,killed:false,pk:false};
+    damage=l2TransferDamage(defender,damage,now);
     const stats = defender.game.gameClass.stats;
     const hpBefore = getCurrentHp(defender);
     const cpBefore = Math.max(0,getCurrentCp(defender));
     const cpLost = Math.min(cpBefore,Math.max(0,damage));
     const hpLost = Math.min(hpBefore,Math.max(0,damage-cpLost));
     stats.cp = cpBefore-cpLost; stats.hp = hpBefore-hpLost;
-    const killed = hpBefore > 0 && stats.hp <= 0;
+    l2OnDamageReceived(defender,attacker,cpLost+hpLost,now);
+    const killed = hpBefore > 0 && stats.hp <= 0 && !l2PreventDeath(defender,now);
     let pk = false;
-    if (killed) {
+    if (killed) pk=finishL2PvpDeath(chat,attacker,defender,now);
+    return {cpLost,hpLost,killed,pk};
+}
+
+export function finishL2PvpDeath(chat,attacker,defender,now){
+    delete defender.game.l2PendingDeath;
+    defender.needsSave=true;if(attacker)attacker.needsSave=true;
+    let pk=false;
         const victimStatus = fieldPvpStatus(defender,now).status;
         if (attacker && id(attacker)!==id(defender)) {
             const state = ensureFieldPvp(attacker);
@@ -70,14 +81,15 @@ function takeDamage(chat, attacker, defender, damage, now) {
         defender.game.respawnTime=now+HUNT.respawnMs;
         defender.game.hunt.field=null;defender.game.hunt.mob=null;
         fieldPvpLog(defender,`${attacker?name(attacker):'Игрок'} убил тебя${pk?' · PK':''}.`,now);
-    }
-    return {cpLost,hpLost,killed,pk};
+    return pk;
 }
 
 /** Settle damaging SA effects for every member before actions or state responses. */
 export function advanceFieldPvp(chat, now = Date.now()) {
     let changed=false;
     for(const defender of chat.members || []) {
+        if(defender.game?.l2PendingDeath&&defender.game.gameClass?.stats?.hp<=0){finishL2PvpDeath(chat,member(chat,defender.game.l2PendingDeath.sourceId),defender,now);changed=true;}
+        if(defender.game?.gameClass?.stats?.hp>0){const tick=tickL2Effects(defender,now,{hp:getMaxHp(defender)});changed ||= tick.changed;if(defender.game.gameClass.stats.hp<=0&&tick.killerId&&!l2PreventDeath(defender,now))finishL2PvpDeath(chat,member(chat,tick.killerId),defender,now);}
         const dots=defender.game?.worldPvp?.effects?.soulDots;
         if(!dots?.length || !(defender.game.gameClass?.stats?.hp>0))continue;
         // A fighter who left the field (or went idle) is no longer in the fight: the effects wear off, no kills are credited.
@@ -135,6 +147,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
         attacker.game.stats.inFightTimer=now+90000;defender.game.stats.inFightTimer=now+90000;
         attacker.game.hunt.lastActionAt=now;defender.game.hunt.lastActionAt=now;
         hit=takeDamage(chat,attacker,defender,result.dealt || 0,now);
+        if(skill.effect==='common_attack'&&result.dealt>0){const reflected=Math.ceil(result.dealt*Math.min(100,l2RawStat(defender,'reflectDam',false,now))/100);if(reflected>0)result.reflectDamage=takeDamage(chat,defender,attacker,reflected,now);}
         if(!hit.killed)saveEffects(defender,proxy);
         const loss=result.missed?'Промах':[[hit.cpLost,'CP'],[hit.hpLost,'HP']].filter(([amount])=>amount>0).map(([amount,resource])=>`−${amount} ${resource}`).join(' · ') || (result.type==='debuff'?'Враг ослаблен':'Урон поглощён');
         fieldPvpLog(defender,`${name(attacker)} атакует: ${loss}.`,now);

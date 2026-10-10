@@ -1,5 +1,6 @@
 import {saStat} from '../../equipment/soulCrystals.js';
 import {soulBuffStat} from '../../equipment/soulCrystalCombat.js';
+import {l2StatBonus} from '../l2Effects.js';
 // "power"/"defencePower" are stored (and displayed, see getItemString.js) as
 // weapon-power POINTS (e.g. 45, meaning +45%), unlike every other multiplicative
 // stat (attackMul, criticalDamage, incomingDamageModifier, ...) which is stored
@@ -18,7 +19,8 @@ import { activeSets, enchantExtras, uniqueEquipped } from '../../equipment/itemB
 
 export default function (session, statName, isMul = false) {
     if (!session.game || !session.game.equipmentStats) {
-        const bonus=potionStatBonus(session,statName,isMul);
+        const potion=potionStatBonus(session,statName,isMul),lineage=l2StatBonus(session,statName,isMul);
+        const bonus=isMul?potion*lineage:potion+lineage;
         return isMul ? bonus : 1+bonus;
     }
 
@@ -98,5 +100,5 @@ export default function (session, statName, isMul = false) {
     }
 
     const potionBonus=potionStatBonus(session,statName,isMul)*(isMul ? extraStatBonus(session,statName,true) : 1);
-    return isMul ? totalStatValue*potionBonus*soulBuffStat(session,statName,true) : totalStatValue+potionBonus+extraStatBonus(session,statName)+soulBuffStat(session,statName,false);
+    return isMul ? totalStatValue*potionBonus*soulBuffStat(session,statName,true)*l2StatBonus(session,statName,true) : totalStatValue+potionBonus+extraStatBonus(session,statName)+soulBuffStat(session,statName,false)+l2StatBonus(session,statName,false);
 }

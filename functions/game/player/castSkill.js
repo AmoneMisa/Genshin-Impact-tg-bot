@@ -1,4 +1,5 @@
 import userDealDamage from './userDealDamage.js';
+import {l2OnHostileAction} from './l2Effects.js';
 import {applySoulSpell} from '../equipment/soulCrystalCombat.js';
 import {partyTargets} from '../party/party.js';
 import useHealSkill from './useHealSkill.js';
@@ -44,6 +45,7 @@ function shareBuffsWithParty(session, skill, now) {
 }
 
 export default function castSkill(session, boss, skill, options = {}) {
+    if(skill.isDealDamage||skill.debuff||skill.debuffs?.length)l2OnHostileAction(session,options.now??Date.now());
     const result = resolveSkill(session, boss, skill, options);
     const party = shareBuffsWithParty(session, skill, options.now ?? Date.now());
     if (party.length) result.party = party;

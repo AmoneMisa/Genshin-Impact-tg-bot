@@ -2,6 +2,7 @@
 // imports so they can be used (and tested) without a bot token or MongoDB.
 
 import { getBossAttacks } from '../template/bossAttacksTemplate.js';
+import {l2EffectRows} from '../functions/game/player/l2Effects.js';
 
 function number(value, fallback = 0) {
   const parsed = Number(value);
@@ -25,6 +26,7 @@ export function playerEffectsDto(effects, respawnRemainMs = 0, now = Date.now())
     const known = EFFECT_LABELS[effect?.name] || { id: String(effect?.name || 'effect'), label: String(effect?.name || 'Эффект') };
     return {
       id: known.id,
+      ...(effect?.l2SkillId ? {id:'l2:'+effect.l2SkillId,iconKey:'l2:'+effect.l2SkillId,label:effect.name} : {}),
       ...(effect?.potionId ? {iconKey: effect.potionId} : {}),
       label: known.label,
       value: number(effect?.value ?? effect?.amount, 0) || null,
@@ -39,8 +41,8 @@ export function playerEffectsDto(effects, respawnRemainMs = 0, now = Date.now())
 /** Boss status icons: its active skill (reflect, regen, rage, ...). */
 export function bossStatusesDto(boss) {
   const skill = boss?.skill;
-  if (!skill || !skill.effect) return [];
-  return [{ id: String(skill.effect), label: skill.name || String(skill.effect), description: skill.description || '' }];
+  if (!skill || !skill.effect) return l2EffectRows(boss);
+  return [{ id: String(skill.effect), label: skill.name || String(skill.effect), description: skill.description || '' },...l2EffectRows(boss)];
 }
 
 /** The boss's own attacks, for the "Атаки босса" row. */

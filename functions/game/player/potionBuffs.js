@@ -1,5 +1,6 @@
 import buffPotions from '../../../template/buffPotions.js';
 import potionsInInventoryTemplate from '../../../template/potionsInInventoryTemplate.js';
+import {LEGACY_L2_BUFFS,resolveEffectSkill} from './l2Effects.js';
 
 // Lineage II style buffs. They come from potions (full strength) and from class
 // buff skills (template/classBuffs.js, scaled by a buff level). Both live in
@@ -49,7 +50,11 @@ export function applyPotionBuff(session,id,now=Date.now(),{factor=1}={}) {
   current.until=Math.max(Number(current.until),until);
   return current;
  }
- session.game.effects=session.game.effects.filter(e=>e?.potionId!==id);
+ const native=LEGACY_L2_BUFFS[id];
+ const original=resolveEffectSkill(native);
+ const nativeCurrent=session.game.effects.find(e=>e.l2SkillId&&Number(e.until)>now&&resolveEffectSkill(e.l2SkillId,e.level)?.fields.abnormalType===original?.fields.abnormalType);
+ if(nativeCurrent&&resolveEffectSkill(nativeCurrent.l2SkillId,nativeCurrent.level).strength>=original.levels*strength){nativeCurrent.until=Math.max(nativeCurrent.until,until);return nativeCurrent;}
+ session.game.effects=session.game.effects.filter(e=>e?.potionId!==id && !(e?.l2SkillId && resolveEffectSkill(e.l2SkillId,e.level)?.fields.abnormalType===resolveEffectSkill(native)?.fields.abnormalType));
  const effect={name:definition.name,potionId:id,amount:0,until,factor:strength};
  session.game.effects.push(effect);return effect;
 }

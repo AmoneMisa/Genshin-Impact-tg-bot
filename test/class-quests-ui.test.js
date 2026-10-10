@@ -68,8 +68,8 @@ test('the encounter panel lists minions as targets, flags required units and war
 test('boss statuses include enrage, minion shield, lock, stun and debuffs', () => {
   const list = encounterStatuses({ statuses: [{ id: 'reflect', label: 'Зеркало' }], enrage: 30, shielded: 50, locked: true, stunned: true, debuffs: [{ kind: 'armorBreak', amount: 0.3, remainMs: 4500 }, { kind: 'stun', amount: 0, remainMs: 1000 }] });
   assert.deepEqual(list.map(item => item.id), ['reflect', 'enrage', 'armored', 'locked', 'stun', 'armorBreak']);
-  assert.match(statusIcons(list), /ui-icon-angry[^>]+\.webp/);
-  assert.match(targetFrame({ name: 'kivaha', level: 1, hp: 10, currentHp: 5, remainMs: 1000, aliveTime: 1, enrage: 20 }), /ui-icon-angry[^>]+\.webp/);
+  assert.match(statusIcons(list), /icon-skill1062[^>]+\.webp/);
+  assert.match(targetFrame({ name: 'kivaha', level: 1, hp: 10, currentHp: 5, remainMs: 1000, aliveTime: 1, enrage: 20 }), /icon-skill1062[^>]+\.webp/);
 });
 
 test('locked skills show the unlock level and are disabled; profession skills are tier-marked', () => {
@@ -80,7 +80,7 @@ test('locked skills show the unlock level and are disabled; profession skills ar
   assert.match(html, /ui-icon-lock[^>]+\.webp[\s\S]*ур\. 44/);
   assert.match(html, /mmo-skill boss-skill damage locked tier-3/);
   assert.match(html, /Серия ×5/);
-  assert.match(html, /ui-icon-sparkles[^>]+\.webp/);
+  assert.match(html, /icon-skill1068[^>]+\.webp/);
 });
 
 test('multi-target and charging attacks read well in the attack panel', () => {

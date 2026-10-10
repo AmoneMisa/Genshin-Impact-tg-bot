@@ -1,0 +1,11 @@
+.buffs-overlay .party-actions{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0;flex-wrap:wrap}
+.buffs-overlay .party-actions button{min-width:44px;min-height:40px;padding:8px 16px;border:1px solid #75623a;border-radius:5px;background:linear-gradient(#353126,#1b1b17);color:#ded2ad;font:inherit;cursor:pointer}
+.buffs-overlay .party-actions button[aria-pressed="true"]{border-color:#bba064;background:linear-gradient(#786034,#403019);color:#fff0c6}
+.buffs-overlay .party-actions button:disabled{opacity:.45;cursor:default}
+.buffs-overlay .feedback-field input:not([type="checkbox"]),.buffs-overlay .feedback-field select{display:block;width:100%;min-width:0;min-height:40px;padding:8px 10px;border:1px solid #6b604a;border-radius:4px;background:#151611;color:#e5dbc3;font:inherit}
+.buffs-overlay .feedback-field{display:block;margin:12px 0}
+.buffs-overlay .feedback-field>span{display:block;margin-bottom:6px}
+.buffs-overlay .feedback-field input[type="checkbox"]{accent-color:#b99a56;vertical-align:middle;margin-right:6px}
+.buffs-overlay .buff-card .mail-head strong{display:flex;align-items:center;gap:6px;min-width:0;overflow-wrap:anywhere}
+.buffs-overlay .buff-card p{overflow-wrap:anywhere}
+.buffs-overlay .buff-card small{display:block;margin:4px 0}

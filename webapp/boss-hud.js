@@ -1,4 +1,5 @@
 import {l2SkillIcon} from './art/l2-extra-art.js';
+import {l2EffectIcon} from './art/l2-effects-art.js';
 import { escapeHtml } from './escape-html.js';
 export { escapeHtml };
 // MMO-style boss raid HUD (pure HTML builders, styled in boss.css):
@@ -39,7 +40,7 @@ export function statusIcons(list = []) {
   if (!list.length) return '<div class="mmo-statuses empty"></div>';
   return `<div class="mmo-statuses">${list.map(status => `
     <span class="mmo-status ${escapeHtml(status.id)}" title="${escapeHtml(status.label)}${status.description ? ` — ${escapeHtml(status.description)}` : ''}">
-      ${l2SkillIcon(status.iconKey || status.potionId || status.id) || icon(STATUS_ICONS[status.id] || 'sparkle')}${status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
+      ${l2EffectIcon(status.iconKey || status.id) || l2SkillIcon(status.iconKey || status.potionId || status.id) || icon(STATUS_ICONS[status.id] || 'sparkle')}${status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
     </span>`).join('')}</div>`;
 }
 

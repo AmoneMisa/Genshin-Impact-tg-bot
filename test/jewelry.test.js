@@ -57,7 +57,7 @@ test('previews map jewellery and robe helmets to their own kinds', () => {
 test('every jewellery kind has a distinct WebP painting', () => {
   for (const kind of ['ring', 'earring', 'amulet', 'tiara']) {
     assert.equal(itemArtKey(kind), kind);
-    assert.equal(itemArtSources(kind).src, '/art/items/v1/'+kind+'-128.webp');
+    assert.equal(itemArtSources(kind).src, '/art/items/l2-style/'+kind+'-128.webp');
   }
 });
 

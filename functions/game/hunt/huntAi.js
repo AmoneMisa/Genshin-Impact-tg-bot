@@ -2,6 +2,7 @@
 export const AI_ROLES = ['fighter', 'healer', 'mage'];
 export const AI_LABELS = {fighter: 'Воин', healer: 'Целитель', mage: 'Маг'};
 import {isBossStunned} from '../boss/bossDebuffs.js';
+import {l2HasControl,l2MoveMultiplier} from '../player/l2Effects.js';
 
 export function huntDebuff(session, kind, now) {
     return (session.game.hunt?.playerDebuffs || []).find(e => e.kind === kind && e.until > now)?.amount || 0;
@@ -11,7 +12,8 @@ export function mobBuff(mob, kind, now) {
     return (mob.buffs || []).find(e => e.kind === kind && e.until > now)?.amount || 0;
 }
 
-export function aggroNearby(hunt, now) {
+export function aggroNearby(hunt, now,session=null) {
+    if(session&&['SilentMove','Hide','FakeDeath'].some(kind=>l2HasControl(session,kind,now)))return;
     for (const mob of hunt.field?.mobs || []) {
         if (mob.currentHp <= 0 || mob.aggro || !mob.aggressive) continue;
         const distance = Math.hypot(mob.x - hunt.field.x, mob.y - hunt.field.y);
@@ -40,16 +42,17 @@ export function pursuePlayer(hunt, now) {
         if (!mob.aggro || mob.currentHp <= 0) continue;
         const seconds = Math.max(0, Math.min(5, (now - (mob.lastMoveAt ?? now)) / 1000));
         mob.lastMoveAt = now;
-        if (isBossStunned(mob, now)) continue;
+        if (isBossStunned(mob, now)||l2HasControl(mob,'Root',now)||l2HasControl(mob,'ImmobileBuff',now)) continue;
         const dx = hunt.field.x - mob.x, dy = hunt.field.y - mob.y, distance = Math.hypot(dx, dy);
         const stop = mob.ai === 'mage' ? .4 : .2;
-        const step = Math.min(Math.max(0, distance - stop), seconds * .09);
+        const step = Math.min(Math.max(0, distance - stop), seconds * .09*l2MoveMultiplier(mob,now));
         if (step > 0) {mob.x += dx / distance * step; mob.y += dy / distance * step; moved = true;}
     }
     return moved;
 }
 
-export function canMobReach(hunt, mob) {
+export function canMobReach(hunt, mob,session=null,now=Date.now()) {
+    if(session&&['Hide','FakeDeath'].some(kind=>l2HasControl(session,kind,now)))return false;
     if (!hunt.field || !mob.ai) return true;
     return Math.hypot(mob.x - hunt.field.x, mob.y - hunt.field.y) <= (mob.ai === 'mage' ? .45 : .26);
 }

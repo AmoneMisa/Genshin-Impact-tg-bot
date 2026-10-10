@@ -3,6 +3,7 @@ import listChatIds from '../getters/listChatIds.js';
 import Chat from "../../db/models/Chat.js";
 import getMaxMp from "../game/player/getters/getMaxMp.js";
 import getCurrentMp from "../game/player/getters/getCurrentMp.js";
+import {l2RawStat} from '../game/player/l2Effects.js';
 
 /**
  * Регенерация MP у игроков
@@ -42,7 +43,7 @@ export default async function regenMp() {
                 }
 
                 // Скорость регена
-                const mpRegenSpeed = gameClass.stats.mpRestoreSpeed || 0;
+                const mpRegenSpeed = (gameClass.stats.mpRestoreSpeed || 0)*l2RawStat(member,'regMp',true)+l2RawStat(member,'regMp',false);
 
                 // Применяем реген
                 gameClass.stats.mp = Math.min(maxMp, currentMp + mpRegenSpeed);

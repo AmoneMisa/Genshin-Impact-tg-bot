@@ -29,7 +29,7 @@ export function characterEffects(session, now = Date.now()) {
     return {
       id: String(effect.potionId || effect.name || 'effect') + ':' + index,
       name: potion ? potion.name.replace(/^Зелье\s+/, '') : LABELS[effect.name] || String(effect.name || 'Эффект'),
-      iconKey: effect.potionId || effect.name || 'utility',
+      iconKey: effect.l2SkillId ? 'l2:'+effect.l2SkillId : effect.potionId || effect.name || 'utility',
       source: potion ? 'Бафф / зелье' : 'Боевой эффект',
       description: potion ? describeBuff(potion, Math.min(1.3, Math.max(.1, num(effect.factor) || 1)))
         : effect.value != null ? 'Значение: ' + num(effect.value) : effect.amount != null ? 'Бонус: ' + num(effect.amount) * (['guard','evade','haste'].includes(effect.name) ? 100 : 1) + '%' : '',

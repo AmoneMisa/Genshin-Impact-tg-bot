@@ -19,6 +19,8 @@ import {fieldPvpEffect} from '../hunt/fieldPvpState.js';
 import { chanceSkillFactor, equippedChanceSkills } from '../equipment/lifestoneSkills.js';
 import { shotBoost } from '../shots/shots.js';
 import { huntDebuff } from '../hunt/huntAi.js';
+import {l2HasControl,l2RawStat,l2TraitDamage} from '../player/l2Effects.js';
+import {isMagicClass} from '../classes/classFamily.js';
 
 /**
  * One hit of `skill` from `session` on the boss (or on a minion, via
@@ -58,11 +60,14 @@ export default function (session, skill, boss, options = {}) {
     attack *= 1 - fieldPvpEffect(session, 'weaken', now);
     if (boss.hunt) attack *= 1 - huntDebuff(session, 'weaken', now);
     let damageMultiplier = getDamageMultiplier(session.game.effects);
+    if(l2HasControl(boss,'Invincible',now))return {dmg:0,isHasCritical:false};
     let bossDefence = (defence ?? boss.playerTarget?.defence ?? (boss.hunt ? boss.hunt.defence : getBossDefence(boss, template))) * (1 - bossDebuffAmount(boss, 'armorBreak', now));
+    if(!boss.playerTarget)bossDefence*=Math.max(.05,l2RawStat(boss,isMagicClass(session.game.gameClass.stats.name)?'mDef':'pDef',true,now));
     let additionalDamageMul = (getAdditionalDamageMul(session) / 100) + 1;
 
     dmg = 70 * attack / bossDefence * modifier * additionalDamageMul;
     dmg *= damageMultiplier;
+    dmg *= l2TraitDamage(session,boss,now);
     // The weapon's element against the boss's (minions have none), and the chance skills of a Life Stone weapon.
     // A hunt mob (boss.hunt) has its own element; a boss's minion has none.
     if (boss.playerTarget) {

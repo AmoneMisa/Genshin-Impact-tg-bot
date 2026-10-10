@@ -1,3 +1,4 @@
+import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Effects.js';
 // A real-time fight with one mob of a hunting zone. The mob lives in session.game.hunt.mob and swings
 // every few seconds; the swings that fell due since the last request are applied when the player
 // acts or the screen refreshes (nothing runs in the background). The player casts skills (cost,
@@ -24,6 +25,7 @@ import { spendAmmo } from '../shots/ammo.js';
 import { recordQuestEvent } from '../classes/classQuests.js';
 import { AI_ROLES, AI_LABELS, aggroNearby, provokeMob, mobBuff, mobAiTurn, pursuePlayer, canMobReach } from './huntAi.js';
 import {fieldPvpSkillBlock,reduceHuntKarma,fieldPvpEffect} from './fieldPvpState.js';
+import {tickL2Effects,l2ActionBlock,l2HasControl,l2RawStat,l2MoveMultiplier} from '../player/l2Effects.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
 export const IDLE_MS = 2 * 60 * 1000;
@@ -63,11 +65,13 @@ export function mobHit(session, mob, now, random = Math.random) {
     const resist = resistFactor(attributeProfile(session).resist, mob.hunt.element);
     const spread = 0.9 + random() * 0.2;
     const crit = random() < 0.05 ? 1.5 : 1;
-    return Math.max(1, Math.round(base * mitigation * incoming * weaken * resist * spread * crit * (1 + mobBuff(mob, 'power', now))));
+    return Math.max(1, Math.round(base * mitigation * incoming * weaken * resist * spread * crit * (1 + mobBuff(mob, 'power', now))*l2RawStat(mob,mob.hunt?.magic?'mAtk':'pAtk',true,now)));
 }
 
 /** Shield first, then HP; a hero at 0 HP starts the respawn timer. */
 function applyHit(session, dmg, now) {
+    if(l2HasControl(session,'Invincible',now))return {absorbed:dmg,lost:0,killed:false};
+    dmg=l2TransferDamage(session,dmg,now);
     const stats = session.game.gameClass.stats;
     stats.hp = Math.min(number(stats.hp), getMaxHp(session, session.game.gameClass));
     const shield = (session.game.effects || []).find(effect => effect.name === 'shield' && effect.value > 0);
@@ -75,7 +79,8 @@ function applyHit(session, dmg, now) {
     if (shield) shield.value -= absorbed;
     const lost = Math.min(stats.hp, dmg - absorbed);
     stats.hp = Math.max(0, stats.hp - lost);
-    const killed = stats.hp === 0;
+    l2OnDamageReceived(session,null,lost,now);
+    const killed = stats.hp === 0 && !l2PreventDeath(session,now);
     if (killed) session.game.respawnTime = now + HUNT.respawnMs;
     return {absorbed, lost, killed};
 }
@@ -85,6 +90,7 @@ function applyHit(session, dmg, now) {
  * for IDLE_MS walks away; a hero that dies ends the fight.
  */
 export function advanceHunt(session, now = Date.now(), random = Math.random) {
+    tickL2Effects(session,now,{hp:getMaxHp(session)});
     const hunt = ensureHunt(session);
     if (!hunt.field) return advanceSingleHunt(session, now, random);
     if (now - number(hunt.lastActionAt) > IDLE_MS) {
@@ -93,12 +99,12 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
         pushLog(hunt, '💨', 'Ты покинул поле боя после долгого бездействия.', now);
         return [{text: 'Поле боя покинуто.'}];
     }
-    aggroNearby(hunt, now);
+    aggroNearby(hunt, now,session);
     pursuePlayer(hunt, now);
     const selected = hunt.field.target;
     const written = [];
     for (const mob of [...hunt.field.mobs]) {
-        if (!mob.aggro || mob.currentHp <= 0) continue;
+        if (!mob.aggro) continue;
         hunt.mob = mob;
         written.push(...advanceSingleHunt(session, now, random));
         if (isDead(session, now)) { hunt.field = null; hunt.mob = null; return written; }
@@ -113,6 +119,7 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
     const hunt = session.game.hunt;
     const mob = hunt.mob;
     if (!mob) return [];
+    tickL2Effects(mob,now);
     const written = [];
     const note = (icon, text) => { pushLog(hunt, icon, text, now); written.push({icon, text}); };
 
@@ -124,27 +131,29 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
     if (isDead(session, now)) return written;
     const dotDamage=tickSoulDots(mob,now);
     if(dotDamage)note('🩸',`Эффект SA: −${dotDamage} HP у ${mob.name}.`);
-    if(mob.currentHp<=0){finishKill(session,hunt,mob,{random,now});note('🏆',`${mob.name} повержен эффектом SA.`);return written;}
+    if(mob.currentHp<=0){finishKill(session,hunt,mob,{random,now});note('🏆',`${mob.name} повержен боевым эффектом.`);return written;}
 
     let swings = 0;
     while (mob.currentHp > 0 && mob.nextAttackAt <= now && swings < HUNT.maxCatchUp) {
         const at = mob.nextAttackAt;
-        mob.nextAttackAt = at + mob.attackMs / (1-bossDebuffAmount(mob,'slow',at));
+        mob.nextAttackAt = at + mob.attackMs / (1-bossDebuffAmount(mob,'slow',at)) / Math.max(.05,l2RawStat(mob,mob.hunt?.magic?'mAtkSpd':'pAtkSpd',true,at));
         swings++;
         if (isBossStunned(mob, at)) { note('💫', `${mob.name} оглушён и пропускает удар.`); continue; }
-        if(mob.hunt?.magic&&bossDebuffAmount(mob,'mute',at)>0)continue;
+        if(mob.hunt?.magic&&(bossDebuffAmount(mob,'mute',at)>0||l2HasControl(mob,'Mute',at)))continue;
         if (bossDebuffAmount(mob, 'mute', at) <= 0 && mobAiTurn(session, mob, at, note)) continue;
-        if (!canMobReach(hunt, mob)) continue;
+        if (!canMobReach(hunt, mob,session,at)) continue;
         if (random() < Math.min(.75,evadeChance(session, at)+bossDebuffAmount(mob,'accuracyDown',at))) { note('💨', `Ты уклонился от удара ${mob.name}.`); continue; }
         const raw = mobHit(session, mob, at, random);
         const dmg = Math.max(1, Math.round(raw * (1 - guardReduction(session, at))));
         const hit = applyHit(session, dmg, at);
+        if(!mob.hunt?.magic&&hit.lost>0){mob.currentHp=Math.max(0,mob.currentHp-Math.ceil(hit.lost*Math.min(100,l2RawStat(session,'reflectDam',false,at))/100));}
         note('⚔️', `${mob.name} бьёт: −${hit.lost + hit.absorbed}${hit.absorbed ? ` (щит ${hit.absorbed})` : ''}`);
         if (hit.killed) {
             hunt.mob = null;
             note('💀', `${mob.name} победил тебя. Ты воскреснешь через минуту.`);
             return written;
         }
+        if(mob.currentHp<=0){finishKill(session,hunt,mob,{random,now});return written;}
     }
     // Swings still overdue after the cap are dropped: a pause is not a stack of hits.
     if (mob.nextAttackAt <= now) mob.nextAttackAt = now + mob.attackMs;
@@ -206,14 +215,16 @@ export function selectHuntTarget(session, targetId, now = Date.now()) {
 }
 
 export function moveHuntField(session, direction, now = Date.now()) {
+    const abnormal=l2ActionBlock(session,{move:true},now);if(abnormal)return {ok:false,reason:abnormal};
     const changed = advanceHunt(session, now).length > 0;
     const hunt = ensureHunt(session);
     if (!hunt.field || isDead(session, now)) return {ok: false, reason: 'no_field', changed};
     if (!['forward', 'back', 'left', 'right'].includes(direction)) return {ok: false, reason: 'invalid_move', changed};
-    if (direction === 'forward' || direction === 'back') hunt.field.y = clamp(hunt.field.y + (direction === 'forward' ? -.2 : .2), .15, .95);
-    else hunt.field.x = clamp(hunt.field.x + (direction === 'left' ? -.2 : .2), .1, .9);
+    const step=.2*l2MoveMultiplier(session,now);
+    if (direction === 'forward' || direction === 'back') hunt.field.y = clamp(hunt.field.y + (direction === 'forward' ? -step : step), .15, .95);
+    else hunt.field.x = clamp(hunt.field.x + (direction === 'left' ? -step : step), .1, .9);
     hunt.lastActionAt = now;
-    aggroNearby(hunt, now);
+    aggroNearby(hunt, now,session);
     return {ok: true};
 }
 
@@ -247,6 +258,7 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
     if (usable === 1) return fail('not_enough_resource');
     if (usable === 2) return fail('cooldown');
     if (usable === 4) return fail('no_ammo');
+    if (usable === 5) return fail('effect_blocked');
 
     if (hunt.field && (skill.isDealDamage || skill.debuff || skill.debuffs?.length || skill.buffs?.some(b => b.kind === 'taunt'))) provokeMob(hunt, mob, now);
 

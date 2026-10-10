@@ -1,4 +1,5 @@
 import {l2SkillIcon} from './art/l2-extra-art.js';
+import {l2EffectIcon} from './art/l2-effects-art.js';
 import { escapeHtml as esc } from './escape-html.js';
 import { icon } from './icons.js';
 import { paintedIconHtml, elementIcon } from './art/painted-icon-art.js';
@@ -23,7 +24,7 @@ const empty = text => '<p class="character-empty">' + esc(text) + '</p>';
 const action = (name,label,data='',disabled=false) => '<button type="button" data-character-action="' + name + '" ' + data + (disabled ? ' disabled' : '') + '><span class="character-button-label">' + label + '</span></button>';
 
 export function characterSkillIcon(key) {
-  const art = l2SkillIcon(key) || (key === 'lifestone' ? paintedIconHtml('lifestone') : icon(SKILL_ICONS[key] || (/defen|shield|barrier|armor|tough/.test(key) ? 'shield' : /magic|empower|int/.test(key) ? 'wand-sparkles' : /crit|focus|accuracy/.test(key) ? 'target' : /speed|haste|agility/.test(key) ? 'wind' : /health|vital|heal/.test(key) ? 'heart' : 'book-open')));
+  const art = l2EffectIcon(key) || l2SkillIcon(key) || (key === 'lifestone' ? paintedIconHtml('lifestone') : icon(SKILL_ICONS[key] || (/defen|shield|barrier|armor|tough/.test(key) ? 'shield' : /magic|empower|int/.test(key) ? 'wand-sparkles' : /crit|focus|accuracy/.test(key) ? 'target' : /speed|haste|agility/.test(key) ? 'wind' : /health|vital|heal/.test(key) ? 'heart' : 'book-open')));
   return '<span class="character-skill-icon" aria-hidden="true">' + art + '</span>';
 }
 function meter(label,current,max) {

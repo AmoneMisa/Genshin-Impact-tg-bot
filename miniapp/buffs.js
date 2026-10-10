@@ -10,6 +10,8 @@ import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import { memberName } from './social.js';
 import { partyCostFactor, partyTargets } from '../functions/game/party/party.js';
+import {getL2BuffsState,castL2Buff} from './l2Buffs.js';
+import {l2ActionBlock,tickL2Effects} from '../functions/game/player/l2Effects.js';
 
 export const BUFF_CAST_COOLDOWN_MS = 20_000;
 const OTHERS_COST_MULTIPLIER = 1.5;
@@ -57,6 +59,7 @@ function chatMembers(session) {
 const isListed = member => member && !member.isHided && !member.userChatData?.user?.is_bot;
 
 export function getClassBuffsState(session, now = Date.now()) {
+  tickL2Effects(session,now);
   const { className, classTitle, level } = profile(session);
   const learned = classBuffsFor(className);
   const effects = session?.game?.effects || [];
@@ -96,6 +99,9 @@ export function getClassBuffsState(session, now = Date.now()) {
     maxMp: Math.max(1, number(getMaxMp(session, session.game.gameClass), 1)),
     durationMinutes: Math.round(buffPotions[0].seconds / 60),
     buffs,
+    l2Skills: getL2BuffsState(session,now),
+    selectedMob: session.game.hunt?.mob ? {id:'mob',name:session.game.hunt.mob.name} : null,
+    effectTargets: chatMembers(session).filter(isListed).map(member=>({userId:String(member.userId),name:memberName(member)})),
     players: support ? chatMembers(session).filter(isListed).map(member => ({ userId: String(member.userId), name: memberName(member) })) : [],
   };
 }
@@ -112,10 +118,12 @@ function partyAudience(session) {
  * party always buffs the whole party; the cost grows with the number of members.
  */
 export function castClassBuff(session, buffId, targetId = null, now = Date.now()) {
+  if(String(buffId).startsWith('l2:'))return castL2Buff(session,buffId,targetId,{now});
   const definition = buffPotions.find(potion => potion.id === buffId);
   if (!definition) return { ok: false, reason: 'unknown_buff' };
 
   const { className, level } = profile(session);
+  const block=l2ActionBlock(session,{magic:true},now);if(block)return {ok:false,reason:block};
   const buffLevel = buffLevelAt(className, buffId, level);
   if (buffLevel < 1) return { ok: false, reason: 'not_learned' };
   if (number(getCurrentHp(session, session.game.gameClass)) <= 0) return { ok: false, reason: 'player_dead' };

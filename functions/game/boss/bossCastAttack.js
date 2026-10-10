@@ -1,3 +1,5 @@
+import {l2HasControl} from '../player/l2Effects.js';
+import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Effects.js';
 import calcBossHit from './bossHit.js';
 import {bossDebuffAmount} from './bossDebuffs.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
@@ -65,6 +67,8 @@ function pickTargets(attack, fighters, boss, random, now) {
 
 /** Shield first, then HP; a fighter brought to 0 HP starts the respawn timer. */
 function applyHit(member, dmg, now) {
+    if(l2HasControl(member,'Invincible',now))return {absorbed:dmg,lost:0,killed:false};
+    dmg=l2TransferDamage(member,dmg,now);
     const player = member.game;
     // Clamp a possibly-corrupted stored hp before the damage math.
     player.gameClass.stats.hp = Math.min(player.gameClass.stats.hp, getMaxHp(member, player.gameClass));
@@ -73,7 +77,8 @@ function applyHit(member, dmg, now) {
     if (shield) shield.value -= absorbed;
     const lost = Math.min(player.gameClass.stats.hp, dmg - absorbed);
     player.gameClass.stats.hp = Math.max(0, player.gameClass.stats.hp - lost);
-    const killed = player.gameClass.stats.hp === 0;
+    l2OnDamageReceived(member,null,lost,now);
+    const killed = player.gameClass.stats.hp === 0 && !l2PreventDeath(member,now);
     if (killed) player.respawnTime = now + RESPAWN_MS;
     return { absorbed, lost, killed };
 }

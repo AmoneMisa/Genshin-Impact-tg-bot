@@ -1,4 +1,5 @@
 import {isMagicClass} from '../classes/classFamily.js';
+import {l2ActionBlock} from '../player/l2Effects.js';
 
 export const PVP_FLAG_MS = 120000;
 export const FIELD_PRESENCE_MS = 20000;
@@ -18,6 +19,8 @@ export function fieldPvpEffect(session, kind, now = Date.now()) {
 }
 
 export function fieldPvpSkillBlock(session, skill, now) {
+    const abnormal=l2ActionBlock(session,{magic:isMagicClass(session.game.gameClass?.stats?.name),attack:Boolean(skill?.isDealDamage)},now);
+    if(abnormal)return abnormal;
     if ((session.game.worldPvp?.effects?.stunUntil || 0) > now) return 'pvp_stunned';
     if (fieldPvpEffect(session, 'mute', now) > 0 && isMagicClass(session.game.gameClass?.stats?.name)) return 'pvp_silenced';
     return null;

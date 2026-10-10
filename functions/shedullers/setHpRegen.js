@@ -4,6 +4,8 @@ import Chat from "../../db/models/Chat.js";
 import isPlayerInFight from "../game/player/isPlayerInFight.js";
 import getMaxHp from "../game/player/getters/getMaxHp.js";
 import getCurrentHp from "../game/player/getters/getCurrentHp.js";
+import {advanceFieldPvp} from '../game/hunt/fieldPvp.js';
+import {l2RawStat} from '../game/player/l2Effects.js';
 
 /**
  * Регенерация HP у игроков
@@ -14,7 +16,7 @@ export default async function regenHp() {
         await withLock(chatId, async () => {
             const chat = await Chat.findOne({ chatId });
             if (!chat) return;
-            let updated = false;
+            let updated = advanceFieldPvp(chat);
 
             for (const member of chat.members) {
                 if (member.userChatData?.user?.is_bot) continue;
@@ -39,7 +41,7 @@ export default async function regenHp() {
                 if (currentHp <= 0) continue;
 
                 // Скорость регена
-                let hpRegenSpeed = gameClass.stats.hpRestoreSpeed || 0;
+                let hpRegenSpeed = (gameClass.stats.hpRestoreSpeed || 0)*l2RawStat(member,'regHp',true)+l2RawStat(member,'regHp',false);
 
                 // В бою реген медленнее
                 if (isPlayerInFight(member)) {
@@ -52,6 +54,7 @@ export default async function regenHp() {
             }
 
             if (updated) {
+                chat.members.forEach((member,index)=>{if(member.needsSave){chat.markModified(`members.${index}`);member.needsSave=false;}});
                 await chat.save();
             }
         });
