@@ -13,7 +13,7 @@ for p in Path('.tmp/l2-high-five/all-skills').rglob('*.xml'):
 selected={id:s for id,s in all_skills.items() if s.findtext('operateType') in ['A2','A3','T','DA2'] or s.findtext('isDebuff') in ['true','#isDebuff'] or s.findtext('abnormalType')}
 # Instant cancellation/cleansing belongs to this system as well.
 for id,s in all_skills.items():
-    if any(e.get('name','').startswith('Dispel') for e in s.findall('.//effect')):selected[id]=s
+    if any(e.get('name','').startswith('Dispel') for e in s.findall('.//effect')) or (id<2000 and any(e.get('name')=='Summon' for e in s.findall('./effects/effect'))):selected[id]=s
 pending=list(selected)
 while pending:
     s=selected[pending.pop()]
@@ -40,6 +40,7 @@ for id,s in sorted(selected.items()):
     fields={c.tag:c.text.strip() for c in s if not len(c) and c.text and c.text.strip()}
     tables={t.get('name'):t.text.split() for t in s.findall('table') if t.text}
     effects=[tree(e) for e in s.findall('./effects/effect')]
+    if any(e.get('name')=='Summon' for e in effects):group='Питомцы'
     # Chance/conditional skills retain their conditions rather than becoming unconditional stats.
     definitions[id]={'id':id,'name':s.get('name'),'levels':int(s.get('levels','1')),'kind':kind,'operate':operate,'fields':fields,'tables':tables,'effects':effects,'conditions':[tree(e) for e in s.findall('conditions')],'group':group,'art':art}
     catalog.append({'id':id,'name':s.get('name'),'kind':kind,'group':group,'operate':operate,'levels':int(s.get('levels','1')),'abnormalType':fields.get('abnormalType'),'icon':icon or None,'art':art,'scope':'player' if id<2000 else 'item' if id<4000 else 'npc' if id<7000 else 'special'})

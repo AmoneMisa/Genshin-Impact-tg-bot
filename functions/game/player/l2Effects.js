@@ -1,7 +1,8 @@
 // High Five abnormal effects. Stored records contain IDs/levels/time only; values come from trusted XML.
 import {L2_EFFECT_SKILLS,L2_EFFECT_LEARN,L2_CLASSES} from '../../../template/l2EffectSkills.js';
 import {isMagicClass} from '../classes/classFamily.js';
-export const L2_EFFECT_LIMITS=Object.freeze({buff:24,debuff:16,music:12});
+export const L2_EFFECT_LIMITS=Object.freeze({buff:24,debuff:16,music:12,pet:1});
+export const isL2PetSkill=skill=>skill?.effects?.some(e=>e.name==='Summon')||false;
 export const PROJECT_L2_CLASSES=Object.freeze({noClass:0,warrior:0,crusader:5,phoenixKnight:90,warden:6,bastion:91,mage:10,elementalist:12,archmage:94,warlock:13,soulReaper:95,priest:15,cleric:17,saint:98,inquisitor:16,judicator:97,archer:7,ranger:9,hawkeye:92,sniper:24,phantomShot:102,rogue:7,assassin:8,shadowBlade:93,trickster:34,phantomDancer:107,berserk:1,slayer:2,warbringer:88,ironclad:3,titan:89});
 const n=(v,d=0)=>Number.isFinite(Number(v))?Number(v):d;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -17,14 +18,19 @@ export function resolveEffectSkill(id,level=1){
  const fields=Object.fromEntries(Object.entries(source.fields).map(([key,value])=>[key,effectValue(source,value,actual)]));
  const effects=source.effects.map(e=>resolveNode(source,e,actual));
  const hostile=fields.isDebuff==='true'||(!['SELF','PARTY','PET','SUMMON'].includes(fields.targetType)&&(n(fields.effectPoint)<0||effects.some(e=>/^(Physical|Magical|Energy).*Damage|^FatalBlow$|^HpDrain$|^CpDamPercent$|^GetAgro$|^TargetMe/.test(e.name))));
- return {...source,kind:hostile?'debuff':'buff',level:actual,fields,effects,seconds:n(fields.abnormalTime,source.operate==='T'?3600:20),strength:n(fields.abnormalLevel,actual),mp:n(fields.mpConsume)+n(fields.mpInitialConsume),reuseMs:Math.max(1000,n(fields.reuseDelay,2000))};
+ const summon=effects.find(e=>e.name==='Summon');
+ const lifetime=summon?.children?.find(e=>e.tag==='lifeTime')?.value;
+ return {...source,kind:summon?'buff':hostile?'debuff':'buff',level:actual,fields,effects,seconds:n(lifetime,n(fields.abnormalTime,source.operate==='T'?3600:20)),strength:n(fields.abnormalLevel,actual),mp:n(fields.mpConsume)+n(fields.mpInitialConsume),reuseMs:Math.max(1000,n(fields.reuseDelay,2000))};
 }
 export function classEffectSkills(session,{includeLocked=true}={}){
  const name=session?.game?.gameClass?.stats?.name||'noClass';
- const classes=new Set();let current=String(PROJECT_L2_CLASSES[name]??0);
+ const nativeId=Object.keys(L2_CLASSES).find(id=>L2_CLASSES[id].name.replace(/[^a-z0-9]/gi,'').toLowerCase()===name.replace(/[^a-z0-9]/gi,'').toLowerCase());
+ const classes=new Set();let current=String(PROJECT_L2_CLASSES[name]??nativeId??0);
  while(current&&!classes.has(current)){classes.add(current);current=L2_CLASSES[current]?.parent;}
  // Our support line covers the L2 buffer professions; the dancer retains its original song/dance tree.
  if(['cleric','saint'].includes(name))for(const id of [17,30,43,51,52,98,104,105,115,116,21,34,100,107])classes.add(String(id));
+ // The project's summoner line covers the three original servitor professions.
+ if(['warlock','soulReaper'].includes(name))for(const id of [14,28,41,96,104,111])classes.add(String(id));
  const byId=new Map();const playerLevel=n(session?.game?.stats?.lvl,1);
  for(const classId of classes)for(const row of L2_EFFECT_LEARN[classId]||[]){
   const skill=L2_EFFECT_SKILLS[row.id];if(!skill||skill.operate==='P')continue;
@@ -56,7 +62,7 @@ export function l2HasControl(target,control,now=Date.now()){
  return activeL2Effects(target,now).some(({skill})=>skill.effects.some(e=>e.name===control));
 }
 export function l2ActionBlock(target,{magic=false,move=false,attack=false}={},now=Date.now()){
- for(const control of ['Stun','Sleep','Paralyze','Petrification','Fear','FakeDeath'])if(l2HasControl(target,control,now))return 'effect_'+control.toLowerCase();
+ for(const control of ['Stun','Sleep','Paralyze','Petrification','Fear','FakeDeath','Betray','Distrust'])if(l2HasControl(target,control,now))return 'effect_'+control.toLowerCase();
  if(move&&(l2HasControl(target,'Root',now)||l2HasControl(target,'ImmobileBuff',now)))return 'effect_root';
  if(!move&&magic&&l2HasControl(target,'Mute',now))return 'effect_silence';
  if(!move&&!magic&&l2HasControl(target,'PhysicalMute',now))return 'effect_physical_silence';
@@ -66,6 +72,7 @@ export function l2ActionBlock(target,{magic=false,move=false,attack=false}={},no
 export function l2RawStat(target,stat,isMul=false,now=Date.now()){
  let total=isMul?1:0;
  for(const {skill} of activeL2Effects(target,now))for(const e of skill.effects){
+  if(e.name==='ServitorShare'&&isMul)total*=n(params(e)[stat],1);
   if(e.name==='MaxHp'&&stat==='maxHp'){
    const p=params(e);if(isMul&&p.type==='PER')total*=1+n(p.power)/100;else if(!isMul&&p.type!=='PER')total+=n(p.power);
   }
@@ -97,7 +104,7 @@ export function l2Resistance(target,trait,now=Date.now()){
 }
 export const LEGACY_L2_BUFFS=Object.freeze({might:1068,shield:1040,haste:1086,focus:1077,guidance:1240,'death-whisper':1242,'wind-walk':1204});
 const legacyGroups=Object.fromEntries(Object.entries(LEGACY_L2_BUFFS).map(([key,id])=>[key,L2_EFFECT_SKILLS[id].fields.abnormalType]));
-const category=s=>s.group==='Песни'||s.group==='Танцы'?'music':s.kind;
+const category=s=>isL2PetSkill(s)?'pet':s.group==='Песни'||s.group==='Танцы'?'music':s.kind;
 export function removeL2Effects(target,{kind=null,slot=null,max=Infinity,rate=100,maxLevel=Infinity}={},now=Date.now(),random=Math.random){
  let removed=0;
  assign(target,records(target).filter(e=>{
@@ -135,12 +142,12 @@ export function applyL2Effect(caster,target,id,level=1,{now=Date.now(),random=Ma
    else removed+=removeL2Effects(target,{kind:String(p.slot||'debuff').toLowerCase()==='buff'?'buff':'debuff',max:n(p.max,Infinity),rate:n(p.rate,100)},now,random);
   }
  }
- const timed=['A2','A3','T','DA2'].includes(skill.operate)||Boolean(skill.fields.abnormalTime);
+ const timed=isL2PetSkill(skill)||['A2','A3','T','DA2'].includes(skill.operate)||Boolean(skill.fields.abnormalTime);
  if(!timed)return {ok:true,applied:removed>0,removed};
  const cat=category(skill);
  const list=records(target).filter(e=>!e.l2SkillId||n(e.until)>now).filter(e=>{
   if(e.potionId&&legacyGroups[e.potionId]===group)return false;
-  const s=e.l2SkillId?resolveEffectSkill(e.l2SkillId,e.level):null;return !s||(s.fields.abnormalType||'SKILL_'+s.id)!==group;
+  const s=e.l2SkillId?resolveEffectSkill(e.l2SkillId,e.level):null;return !s||(!isL2PetSkill(skill)||!isL2PetSkill(s))&&(s.fields.abnormalType||'SKILL_'+s.id)!==group;
  });
  const same=list.filter(e=>e.l2SkillId?category(resolveEffectSkill(e.l2SkillId,e.level))===cat:cat==='buff'&&e.potionId);
  if(same.length>=L2_EFFECT_LIMITS[cat]){const oldest=same.sort((a,b)=>n(a.startedAt)-n(b.startedAt))[0];list.splice(list.indexOf(oldest),1);}
@@ -191,6 +198,11 @@ export function l2OnDamageReceived(target,attacker,damage,now=Date.now(),random=
 }
 export function l2OnHostileAction(target,now=Date.now()){
  for(const {record,skill} of activeL2Effects(target,now))if(skill.effects.some(e=>e.name==='Hide'))record.until=now;
+}
+/** Summons are mana-only skills: a temporary companion adds a hit to successful attacks. */
+export function l2CompanionDamage(target,damage,now=Date.now()){
+ const pet=activeL2Effects(target,now).find(({skill})=>isL2PetSkill(skill));
+ return pet&&damage>0?Math.floor(damage*Math.min(.6,.2+.02*(pet.skill.level-1))):0;
 }
 export function l2PreventDeath(target,now=Date.now()){
  const effect=activeL2Effects(target,now).find(({skill})=>skill.effects.some(e=>e.name==='ResurrectionSpecial'));

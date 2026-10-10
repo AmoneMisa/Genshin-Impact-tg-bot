@@ -14,6 +14,18 @@
       "scope": "player"
     },
     {
+      "id": 13,
+      "name": "Summon Siege Golem",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill0013",
+      "art": "icon-skill0013",
+      "scope": "player"
+    },
+    {
       "id": 18,
       "name": "Aura of Hate",
       "kind": "debuff",
@@ -35,6 +47,18 @@
       "abnormalType": null,
       "icon": "icon.skill0021",
       "art": "icon-skill0021",
+      "scope": "player"
+    },
+    {
+      "id": 25,
+      "name": "Summon Mechanic Golem",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 9,
+      "abnormalType": null,
+      "icon": "icon.skill0025",
+      "art": "icon-skill0025",
       "scope": "player"
     },
     {
@@ -1010,6 +1034,18 @@
       "scope": "player"
     },
     {
+      "id": 283,
+      "name": "Summon Dark Panther",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 7,
+      "abnormalType": null,
+      "icon": "icon.skill0283",
+      "art": "icon-skill0283",
+      "scope": "player"
+    },
+    {
       "id": 286,
       "name": "Provoke",
       "kind": "debuff",
@@ -1091,6 +1127,30 @@
       "abnormalType": "POSSESSION",
       "icon": "icon.skill0298",
       "art": "icon-skill0298",
+      "scope": "player"
+    },
+    {
+      "id": 299,
+      "name": "Summon Wild Hog Cannon",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill0299",
+      "art": "icon-skill0299",
+      "scope": "player"
+    },
+    {
+      "id": 301,
+      "name": "Summon Big Boom",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 5,
+      "abnormalType": null,
+      "icon": "icon.skill0301",
+      "art": "icon-skill0301",
       "scope": "player"
     },
     {
@@ -2039,6 +2099,18 @@
       "abnormalType": "COUNTER_SKILL",
       "icon": "icon.skill0447",
       "art": "icon-skill0447",
+      "scope": "player"
+    },
+    {
+      "id": 448,
+      "name": "Summon Swoop Cannon",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill0448",
+      "art": "icon-skill0448",
       "scope": "player"
     },
     {
@@ -3362,6 +3434,18 @@
       "scope": "player"
     },
     {
+      "id": 710,
+      "name": "Divine Summoner Summon Divine Beast",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill_transform_etc",
+      "art": "icon-skill_transform_etc",
+      "scope": "player"
+    },
+    {
       "id": 711,
       "name": "Divine Summoner Transfer Pain",
       "kind": "buff",
@@ -4490,6 +4574,18 @@
       "scope": "player"
     },
     {
+      "id": 912,
+      "name": "Summon Imperial Phoenix",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill0912",
+      "art": "icon-skill0912",
+      "scope": "player"
+    },
+    {
       "id": 913,
       "name": "Deflect Magic",
       "kind": "buff",
@@ -5582,6 +5678,42 @@
       "scope": "player"
     },
     {
+      "id": 1111,
+      "name": "Summon Kat the Cat",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 18,
+      "abnormalType": null,
+      "icon": "icon.skill1111",
+      "art": "icon-skill1111",
+      "scope": "player"
+    },
+    {
+      "id": 1128,
+      "name": "Summon Shadow",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 18,
+      "abnormalType": null,
+      "icon": "icon.skill1128",
+      "art": "icon-skill1128",
+      "scope": "player"
+    },
+    {
+      "id": 1129,
+      "name": "Summon Reanimated Man",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 7,
+      "abnormalType": null,
+      "icon": "icon.skill1129",
+      "art": "icon-skill1129",
+      "scope": "player"
+    },
+    {
       "id": 1139,
       "name": "Servitor Magic Shield",
       "kind": "buff",
@@ -5651,6 +5783,18 @@
       "abnormalType": "PA_UP",
       "icon": "icon.skill1146",
       "art": "icon-skill1146",
+      "scope": "player"
+    },
+    {
+      "id": 1154,
+      "name": "Summon Corrupted Man",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 6,
+      "abnormalType": null,
+      "icon": "icon.skill1154",
+      "art": "icon-skill1154",
       "scope": "player"
     },
     {
@@ -5927,6 +6071,54 @@
       "abnormalType": "RESIST_POISON",
       "icon": "icon.skill1224",
       "art": "icon-skill1224",
+      "scope": "player"
+    },
+    {
+      "id": 1225,
+      "name": "Summon Mew the Cat",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 18,
+      "abnormalType": null,
+      "icon": "icon.skill1225",
+      "art": "icon-skill1225",
+      "scope": "player"
+    },
+    {
+      "id": 1226,
+      "name": "Summon Boxer the Unicorn",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 18,
+      "abnormalType": null,
+      "icon": "icon.skill1226",
+      "art": "icon-skill1226",
+      "scope": "player"
+    },
+    {
+      "id": 1227,
+      "name": "Summon Mirage the Unicorn",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 18,
+      "abnormalType": null,
+      "icon": "icon.skill1227",
+      "art": "icon-skill1227",
+      "scope": "player"
+    },
+    {
+      "id": 1228,
+      "name": "Summon Silhouette",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 18,
+      "abnormalType": null,
+      "icon": "icon.skill1228",
+      "art": "icon-skill1228",
       "scope": "player"
     },
     {
@@ -6278,6 +6470,42 @@
       "scope": "player"
     },
     {
+      "id": 1276,
+      "name": "Summon Kai the Cat",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 14,
+      "abnormalType": null,
+      "icon": "icon.skill1276",
+      "art": "icon-skill1276",
+      "scope": "player"
+    },
+    {
+      "id": 1277,
+      "name": "Summon Merrow the Unicorn",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 14,
+      "abnormalType": null,
+      "icon": "icon.skill1277",
+      "art": "icon-skill1277",
+      "scope": "player"
+    },
+    {
+      "id": 1278,
+      "name": "Summon Soulless",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 14,
+      "abnormalType": null,
+      "icon": "icon.skill1278",
+      "art": "icon-skill1278",
+      "scope": "player"
+    },
+    {
       "id": 1282,
       "name": "Pa'agrian Haste",
       "kind": "buff",
@@ -6563,6 +6791,54 @@
       "abnormalType": "PD_UP_SPECIAL",
       "icon": "icon.skill1327",
       "art": "icon-skill1327",
+      "scope": "player"
+    },
+    {
+      "id": 1331,
+      "name": "Summon Feline Queen",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 10,
+      "abnormalType": null,
+      "icon": "icon.skill1331",
+      "art": "icon-skill1331",
+      "scope": "player"
+    },
+    {
+      "id": 1332,
+      "name": "Summon Seraphim the Unicorn",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 10,
+      "abnormalType": null,
+      "icon": "icon.skill1332",
+      "art": "icon-skill1332",
+      "scope": "player"
+    },
+    {
+      "id": 1333,
+      "name": "Summon Nightshade",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 10,
+      "abnormalType": null,
+      "icon": "icon.skill1333",
+      "art": "icon-skill1333",
+      "scope": "player"
+    },
+    {
+      "id": 1334,
+      "name": "Summon Cursed Man",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 7,
+      "abnormalType": null,
+      "icon": "icon.skill1334",
+      "art": "icon-skill1334",
       "scope": "player"
     },
     {
@@ -7187,6 +7463,42 @@
       "abnormalType": null,
       "icon": "icon.skill1402",
       "art": "icon-skill1402",
+      "scope": "player"
+    },
+    {
+      "id": 1406,
+      "name": "Summon Feline King",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill1406",
+      "art": "icon-skill1406",
+      "scope": "player"
+    },
+    {
+      "id": 1407,
+      "name": "Summon Magnus the Unicorn",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill1407",
+      "art": "icon-skill1407",
+      "scope": "player"
+    },
+    {
+      "id": 1408,
+      "name": "Summon Spectral Lord",
+      "kind": "buff",
+      "group": "Питомцы",
+      "operate": "A1",
+      "levels": 1,
+      "abnormalType": null,
+      "icon": "icon.skill1408",
+      "art": "icon-skill1408",
       "scope": "player"
     },
     {

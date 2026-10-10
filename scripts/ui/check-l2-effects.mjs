@@ -18,6 +18,7 @@ try{
   await page.locator('#search').fill('1068');assert.equal(await page.locator('article[data-id="1068"]').count(),1);await decode();
   await page.locator('#search').fill('');await page.locator('#group').selectOption({label:'Песни'});assert.ok(await page.locator('article').count()>0);await decode();
   await page.locator('#group').selectOption({label:'Танцы'});assert.ok(await page.locator('article').count()>0);await decode();
+  await page.locator('#group').selectOption({label:'Питомцы'});assert.ok(await page.locator('article').count()>=26);await decode();
   await page.locator('#group').selectOption('');await page.locator('#art').selectOption('no');assert.equal(await page.locator('article img').count(),0);assert.ok(await page.locator('.missing').count()>0);
   await page.locator('#art').selectOption('');await decode();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'horizontal overflow');

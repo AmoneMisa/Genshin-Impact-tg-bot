@@ -10,6 +10,7 @@ import fishing from '../../template/fishingData.js';
 import {getFishingState} from '../../functions/game/fishing/fishing.js';
 import {getSkillsState} from '../../miniapp/skills.js';
 import {getClassBuffsState} from '../../miniapp/buffs.js';
+import {castL2Buff} from '../../miniapp/l2Buffs.js';
 import {getPassivesState} from '../../functions/game/player/passiveSkills.js';
 const require=createRequire(path.resolve(process.env.PLAYWRIGHT_PACKAGE||'package.json'));
 const {chromium}=require('playwright');
@@ -32,6 +33,7 @@ try{for(const width of [320,390,1100]){
   const pathname=new URL(route.request().url()).pathname;
   if(pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body></body>`});
   if(pathname.startsWith('/api/')){
+   if(pathname==='/api/buffs/cast'){const request=route.request().postDataJSON();const result=castL2Buff(session,request.buffId,request.targetId);return route.fulfill({status:result.ok?200:409,contentType:'application/json',body:JSON.stringify({...result,buffs:getClassBuffsState(session)})});}
    const data=pathname==='/api/fishing'?{fishing:getFishingState(session)}:pathname==='/api/skills'?getSkillsState(session):pathname==='/api/buffs'?getClassBuffsState(session):pathname==='/api/passives'?getPassivesState(session):null;
    return route.fulfill({status:data?200:404,contentType:'application/json',body:JSON.stringify(data)});
   }
@@ -49,5 +51,16 @@ try{for(const width of [320,390,1100]){
   if(width===390)await page.locator(panel+' .overlay-panel').screenshot({path:'docs/l2-'+module+'-icons-390.png'});
   await page.locator(panel).evaluate(n=>n.remove());
  }
- assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);await page.close();console.log('Verified galleries and 4 live windows at '+width+'px');
+ const oldName=session.game.gameClass.stats.name,oldTitle=session.game.gameClass.stats.translateName;
+ session.game.gameClass.stats.name='warlock';session.game.gameClass.stats.translateName='Призыватель';session.game.l2CastAt={};session.game.effects=[];
+ await page.evaluate(async()=>{const {openBuffsGame}=await import('/buffs.js');await openBuffsGame({api:async(p,o)=>(await fetch(p,o)).json()});});
+ await page.locator('[data-effect-kind="pet"]').click();
+ assert.ok(await page.locator('.buff-card').count()>0,'pet skills');assert.equal(await page.locator('[data-buff-target]').count(),0,'summon needs no target');
+ await page.locator('.buffs-overlay').evaluate(n=>Promise.all([...n.querySelectorAll('img')].map(i=>i.decode())));
+ await page.locator('[data-buff-cast="l2:1111"]').click();await page.waitForFunction(()=>document.querySelector('.feedback-result')?.textContent.includes('питомец призван'));
+ assert.ok(session.game.effects.some(e=>e.l2SkillId===1111),'summon saved');
+ assert.equal(await page.locator('.buffs-overlay .overlay-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'pets overflow');
+ if(width===390)await page.locator('.buffs-overlay .overlay-panel').screenshot({path:'docs/l2-pets-icons-390.png'});
+ session.game.gameClass.stats.name=oldName;session.game.gameClass.stats.translateName=oldTitle;
+ assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);await page.close();console.log('Verified galleries, 4 live windows and mana-only pet casting at '+width+'px');
 }}finally{await browser.close();}

@@ -10,6 +10,7 @@ import {classArtUrl} from './boss-stage.js';
 // potions and shots. Blue and red champions are tougher and pay much more.
 
 const REASONS = {no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
+  effect_betray:'На тебе предательство.',effect_distrust:'На тебе смятение.',
   pvp_invalid_target:'Игрок недоступен для нападения.',pvp_not_here:'Игрок покинул локацию.',pvp_out_of_range:'Подойди ближе к игроку.',pvp_force_required:'Для атаки мирного игрока включи принудительную атаку.',pvp_stunned:'Ты оглушён.',pvp_silenced:'Магия заблокирована молчанием.',
   unknown_zone: 'Такой зоны нет.',
   already_fighting: 'Ты уже сражаешься.',

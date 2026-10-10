@@ -18,7 +18,7 @@ const REASONS = {
   pvp_out_of_range: 'Подойди ближе к цели.',
   pvp_force_required: 'Для атаки мирного игрока включи принудительную атаку.',
   effect_condition: 'Не выполнено условие использования этого умения.',
-  requires_pet: 'Для этого умения нужен питомец.',
+  effect_betray:'На тебе предательство.',effect_distrust:'На тебе смятение.',
   requires_transformation:'Для этого умения нужна система трансформаций.',
   requires_corpse:'Для этого умения нужна доступная мёртвая цель.',
   effect_fakedeath:'Сначала выключи притворную смерть.',
@@ -59,6 +59,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
     const cooling = buff.cooldownUntil > now && !(buff.toggle&&buff.active);
     const forOthers = state.support && target;
     const cost = forOthers ? buff.costOthers : buff.cost;
+    const actionLabel=buff.group==='Питомцы'?'Призвать':'Наложить';
     const next = buff.level >= 1 && buff.nextLevelAt && buff.level < buff.maxLevel ? `<small>Следующий уровень: ${buff.nextLevelAt} ур.</small>` : '';
     return `
       <article class="mail-letter buff-card ${locked ? 'claimed' : 'pending'}">
@@ -67,7 +68,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
         <p>${escapeHtml(buff.effect)}</p>
         ${buff.seconds!=null?`<small>${buff.toggle?'Переключаемый эффект':`Длительность: ${buff.seconds} сек.`} · ${escapeHtml(buff.group||'')}</small>`:''}
         ${next}
-        ${locked ? '' : `<button type="button" class="feedback-submit" data-buff-cast="${escapeHtml(buff.id)}" ${cooling ? 'disabled' : ''}>${cooling ? 'Восстанавливается…' : `Наложить · ${cost} МП`}</button>`}
+        ${locked ? '' : `<button type="button" class="feedback-submit" data-buff-cast="${escapeHtml(buff.id)}" ${cooling ? 'disabled' : ''}>${cooling ? 'Восстанавливается…' : `${actionLabel} · ${cost} МП`}</button>`}
       </article>`;
   }
 
@@ -75,16 +76,16 @@ export async function openBuffsGame({ api, haptic, renderState }) {
     const native=state.l2Skills||[];
     const names=new Set(native.map(s=>s.name));
     const all=[...state.buffs.filter(s=>!names.has(s.name)),...native];
-    const filtered=all.filter(s=>(s.kind||'buff')===kind&&(s.name+' '+s.effect+' '+(s.group||'')).toLowerCase().includes(search.toLowerCase()));
+    const filtered=all.filter(s=>(s.group==='Питомцы'?'pet':s.kind||'buff')===kind&&(s.name+' '+s.effect+' '+(s.group||'')).toLowerCase().includes(search.toLowerCase()));
     const pages=Math.max(1,Math.ceil(filtered.length/20));page=Math.min(page,pages-1);
     const visible=filtered.slice(page*20,page*20+20);
     body.innerHTML = `
       <div class="feedback-card">
         <div class="feedback-intro"><span>${l2EffectIcon('l2:1068')}</span><div><strong>${escapeHtml(state.classTitle)} · ${state.level} ур.</strong>
           <p>Уровни умений растут вместе с персонажем. Мана: ${state.mp} / ${state.maxMp}. Лимиты: 24 баффа, 12 песен и танцев, 16 дебаффов.</p></div></div>
-        <div class="party-actions"><button type="button" data-effect-kind="buff" aria-pressed="${kind==='buff'}">Баффы</button><button type="button" data-effect-kind="debuff" aria-pressed="${kind==='debuff'}">Дебаффы</button></div>
+        <div class="party-actions"><button type="button" data-effect-kind="buff" aria-pressed="${kind==='buff'}">Баффы</button><button type="button" data-effect-kind="debuff" aria-pressed="${kind==='debuff'}">Дебаффы</button><button type="button" data-effect-kind="pet" aria-pressed="${kind==='pet'}">Питомцы</button></div>
         <label class="feedback-field"><span>Поиск по названию или эффекту</span><input data-effect-search value="${escapeHtml(search)}" placeholder="Acumen, танец, защита…"></label>
-        ${state.support||kind==='debuff' ? `<label class="feedback-field"><span>Цель</span>
+        ${kind!=='pet'&&(state.support||kind==='debuff') ? `<label class="feedback-field"><span>Цель</span>
           <select data-buff-target><option value="">${kind==='debuff'?'Выбранный монстр'+(state.selectedMob?' · '+escapeHtml(state.selectedMob.name):''):'На себя'}</option>${(state.effectTargets||state.players).map(player => `<option value="${escapeHtml(player.userId)}" ${player.userId === target ? 'selected' : ''}>${escapeHtml(player.name)}</option>`).join('')}</select></label>` : ''}
         ${kind==='debuff'&&target?`<label class="feedback-field"><span><input type="checkbox" data-effect-force ${force?'checked':''}> Принудительная атака мирного игрока (PvP / PK)</span></label>`:''}
       </div>
@@ -105,7 +106,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
       const payload = await api('/api/buffs/cast', { method: 'POST', body: JSON.stringify({ buffId, targetId: target || (kind==='debuff'?'mob':undefined),force }) });
       state = payload.buffs;
       const name = [...state.buffs,...(state.l2Skills||[])].find(buff => buff.id === buffId)?.name || buffId;
-      feedback = { kind: 'success', text: payload.resisted?`${name}: цель сопротивляется.`:payload.toggledOff?`${name}: эффект выключен.`:payload.onSelf ? `${name} наложен на тебя.` : `${name} наложен на ${payload.targetName}.` };
+      feedback = { kind: 'success', text: payload.resisted?`${name}: цель сопротивляется.`:payload.toggledOff?`${name}: эффект выключен.`:payload.summoned?`${name}: питомец призван.`:payload.onSelf ? `${name} наложен на тебя.` : `${name} наложен на ${payload.targetName}.` };
       renderState?.(payload.state);
     } catch (error) {
       if (error.payload?.buffs) state = error.payload.buffs;
