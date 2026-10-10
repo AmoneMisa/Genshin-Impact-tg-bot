@@ -4,6 +4,7 @@ import calcReputationPoints from '../functions/game/clans/calcReputationPoints.j
 import getInvestigationBonus from '../functions/game/clans/getInvestigationBonus.js';
 import clanInvestigations from '../dictionaries/clanInvestigations.js';
 import { getClanSkillsState, learnClanSkill } from '../functions/game/clans/clanPerks.js';
+import { getClanHallState, upgradeHall, depositGlory } from '../functions/game/clans/clanHall.js';
 import clanTasks, { CLAN_TASKS_BONUS_XP } from '../dictionaries/clanTasks.js';
 
 function number(value, fallback = 0) {
@@ -155,9 +156,10 @@ function investigationsState(clan) {
   return { completed: completedDefs, active: activeState, startable: active ? [] : startable };
 }
 
-export function getClanProgressionState(clan, userId) {
+export function getClanProgressionState(clan, userId, playerSession = null) {
   if (!clan) return null;
   return {
+    hall: { ...getClanHallState(clan), coins: Math.max(0, Math.floor(number(playerSession?.game?.inventory?.gloryCoins))), canManage: String(clan.owner) === String(userId) || findMember(clan, userId)?.role === 'officer' },
     investigations: investigationsState(clan),
     tasks: tasksState(clan, userId),
     skills: { ...getClanSkillsState(clan), canManage: String(clan.owner) === String(userId) || findMember(clan, userId)?.role === 'officer' },
@@ -252,6 +254,8 @@ export async function prepareClanProgressionAction(userId, playerSession, action
   if (action === 'investigation_complete') return { clan, result: completeClanInvestigation(clan, userId), savePlayer: false };
   if (action === 'investigation_cancel') return { clan, result: cancelClanInvestigation(clan, userId, canManage), savePlayer: false };
   if (action === 'skill_learn') return { clan, result: canManage ? learnClanSkill(clan, String(body.id || '')) : { ok: false, reason: 'not_allowed' }, savePlayer: false };
+  if (action === 'hall_upgrade') return { clan, result: canManage ? upgradeHall(clan) : { ok: false, reason: 'not_allowed' }, savePlayer: false };
+  if (action === 'hall_deposit') return { clan, result: depositGlory(clan, playerSession), savePlayer: true };
   if (action === 'task_claim') return { clan, result: claimClanTask(clan, playerSession, userId, body.taskKey), savePlayer: true };
   if (action === 'task_claim_bonus') return { clan, result: claimClanTasksBonus(clan, userId), savePlayer: false };
 

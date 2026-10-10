@@ -10,7 +10,7 @@ export default {
     chanceToHit: '94e7e762fa16259c9a0e4b09da4dd53252f239cb',
     clanApplicationConditions: 'ead98d421cba3223befcb8d08a6570f240c00d34',
     classQuests: '425a194ecc0f9b7ad6e6baff0d4403cd129fd4da',
-    classSkills: '5b589720699475d97410f7556f9b0d9c2bf55353',
+    classSkills: '6b5c51fbd665190fae17b2a69bedae78ab98b0fd',
     classStats: '7c1ac79f8accd016c98d9cf5ca7b354336209037',
     elements: '13f9b0fa6d48788b929c6f9122301585512e70b4',
     elementsSynergy: '11691c0fe9efe7de3a4c8eb233722c64ca98d2f3',

@@ -35,6 +35,16 @@
 - Кубики (`functions/game/player/cubics.js`): Storm, Vampiric, Phantom, Life, Aqua, Spark, Binding, Viper, Attractive, Smart и массовые версии у Варлока, Храмовника, Рыцаря Шилен и призывателей. Держится 1 + уровень Cubic Mastery кубиков по 20 минут; каждый удар получает добавку, Vampiric возвращает часть здоровьем, Life лечит хозяина.
 - Воскрешение (`functions/game/player/revival.js`): Resurrection (Клирик, Епископ, Оракулы) и Mass Resurrection (Епископ) поднимают павшего игрока или всех павших отряда; реальные уровни, мана и откат. У реального навыка доля восстановленного опыта становится долей здоровья (25–67%). Salvation и Soul of the Phoenix — воскрешение при смерти (`ResurrectionSpecial`).
 
+## Панель умений в бою
+
+- На панели только картинки умений, цена маны в правом верхнем углу; название (у реальных умений английское) и описание — во всплывающей подсказке.
+- До 16 умений игрок выбирает сам («Настроить панель», порядок — по очереди нажатия), выбор хранится в `game.hotbar` (`functions/game/player/hotbar.js`, `POST /api/hunt/hotbar`).
+- Вторая вкладка — активное умение камня жизни оружия и переключаемые умения класса (`POST /api/hunt/special`).
+
+## Зал клана (Scryde)
+
+`functions/game/clans/clanHall.js`: 5 уровней зала, каждый требует накопленной славы клана и золота склада; уровень открывает уровни 18 навыков зала (Greed, Hunter, Clarity, Elementalism, Treatment, Excellence, Savage, Reinforcement, Ghost Form, Guidance, Murder, Ambidexter, Courage, Renewal действуют; Mental Crush, Bash, Persistence, Strength пока без эффекта). Монеты славы дают убийства игроков в PvP и рейды на Valakas, Antharas, Baium; монета, переданная кланом, — 1 очко славы. Залы фарма сами копят славу по часам. Классовые навыки обновления сервера — `template/scrydeSpells.js` (Witchcraft, King Fury, Magnus Fury, Touch of Eva, Mental Weakness, пассивы Doomcryer и святых).
+
 ## Клановые навыки в боях
 
 Копия клановых навыков хранится в сессии и обновляется при запросах владельца. Перед боем на арене, набегом, дуэлью клана и боем РТА оба участника получают текущие навыки клана (`functions/game/clans/ensureClanPerks.js`); отряд РТА обновляется перед боем.

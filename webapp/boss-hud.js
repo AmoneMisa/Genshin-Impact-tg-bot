@@ -139,19 +139,41 @@ function skillGlyph(skill,className='') {
   return l2SkillIcon(skill.name) || l2SkillIcon(skill.isHeal?'heal':skill.isShield?'shield':skill.isDebuff?'debuff':skill.isBuff?'buff':'damage');
 }
 
-/** Hotbar; `data-skill-cooldown` nodes are refreshed by the screen's ticker. */
-export function hotbar(skills = [],{className=''}={}) {
-  return `<div class="mmo-hotbar">${skills.map(skill => {
-    const type = skill.isDamage ? 'damage' : skill.isHeal ? 'heal' : skill.isShield ? 'shield' : 'utility';
-    const cost = skill.locked ? `${icon('lock')} ур. ${formatNumber(skill.needLevel)}` : skill.costHp > 0 ? `HP ${formatNumber(skill.costHp)}` : `MP ${formatNumber(skill.costMp)}`;
-    return `
-    <button type="button" class="mmo-skill boss-skill ${type}${skill.locked ? ' locked' : ''}${skill.tier > 1 ? ` tier-${skill.tier}` : ''}" data-skill="${skill.index}" ${skill.canUse ? '' : 'disabled'} title="${escapeHtml(skill.description)}${skill.tags?.length ? ` · ${escapeHtml(skill.tags.join(' · '))}` : ''}">
-      <span class="mmo-skill-icon">${skillGlyph(skill,className)}</span>
+/**
+ * Hotbar: only the picture of a skill and its cost in the top right corner. The name (real skills keep their English
+ * name) and the description are the tooltip. `chosen` is the list of skill indexes the player put on the bar (all when
+ * omitted). `data-skill-cooldown` nodes are refreshed by the screen's ticker.
+ */
+export function hotbar(skills = [], {className = '', chosen = null} = {}) {
+  const list = Array.isArray(chosen) ? chosen.map(index => skills.find(skill => skill.index === index)).filter(Boolean) : skills;
+  return `<div class="mmo-hotbar icons-only">${list.map(skill => hotbarButton(skill, className)).join('')}</div>`;
+}
+
+// a health cost is long (13 876): thousands are shortened to fit the corner of a picture
+const compact = value => (value >= 1000 ? `${Math.round(value / 100) / 10}k` : formatNumber(value));
+
+function hotbarButton(skill, className) {
+  const type = skill.isDamage ? 'damage' : skill.isHeal ? 'heal' : skill.isShield ? 'shield' : 'utility';
+  // locked: the level it opens at; a skill paid in health shows HP; otherwise the mana
+  const cost = skill.locked ? `${icon('lock')} ур. ${formatNumber(skill.needLevel)}` : skill.costHp > 0 ? `HP ${compact(skill.costHp)}` : formatNumber(skill.costMp);
+  const tags = (skill.tags || []).join(', ');
+  const label = [skill.name, skill.description, tags].filter(Boolean).join(' — ');
+  return `
+    <button type="button" class="mmo-skill boss-skill ${type}${skill.locked ? ' locked' : ''}${skill.tier > 1 ? ` tier-${skill.tier}` : ''}" data-skill="${skill.index}" ${skill.canUse ? '' : 'disabled'} title="${escapeHtml(label)}" aria-label="${escapeHtml(skill.name)}">
+      <span class="mmo-skill-icon">${skillGlyph(skill, className)}</span>
       <span class="mmo-skill-cooldown" data-skill-cooldown data-until="${skill.cooldownUntil || 0}" data-total="${skill.cooldownMs || 0}">${skill.cooldownMs > 0 ? formatDuration(skill.cooldownMs) : ''}</span>
-      <strong>${escapeHtml(skill.name)}</strong>
-      <small>${cost}</small>
+      <small class="mmo-skill-cost">${cost}</small>
     </button>`;
-  }).join('')}</div>`;
+}
+
+/** One picture of a skill for the chooser of the bar (a number when it is on the bar). */
+export function hotbarChoice(skill, {className = '', on = false, position = 0} = {}) {
+  const label = skill.description ? `${skill.name} — ${skill.description}` : skill.name;
+  return `
+    <button type="button" class="mmo-skill boss-skill choice ${on ? 'on' : ''}${skill.locked ? ' locked' : ''}" data-hotbar-toggle="${skill.index}" title="${escapeHtml(label)}" aria-label="${escapeHtml(skill.name)}" aria-pressed="${on}">
+      <span class="mmo-skill-icon">${skillGlyph(skill, className)}</span>
+      <small class="mmo-skill-cost">${on ? position : ''}</small>
+    </button>`;
 }
 
 /** Ranked damage meter; bars are relative to the top damage dealer. */

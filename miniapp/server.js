@@ -106,7 +106,7 @@ import { clanPerksStale, syncClanPerks } from '../functions/game/clans/clanPerks
 import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
-import { getZoneLoot, fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
+import { getZoneLoot, fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, setHotbarForMiniApp, useSpecialForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
@@ -1822,6 +1822,17 @@ const huntSkill = guarded('hunt skill', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const huntHotbar = guarded('hunt hotbar', async (req, res) => {
+  const context = await authorize(req), body = await readJsonBody(req);
+  if (!Array.isArray(body.slots)) throw httpError(400, 'slots must be an array');
+  return sendResult(res, await huntAnswer(context, session => setHotbarForMiniApp(session, body.slots)), context);
+});
+const huntSpecial = guarded('hunt special', async (req, res) => {
+  const context = await authorize(req), body = await readJsonBody(req);
+  if (typeof body.id !== 'string' || !body.id) throw httpError(400, 'id is required');
+  return sendResult(res, await huntAnswer(context, session => useSpecialForMiniApp(session, body.id)), context);
+});
+
 const soulSelect=guarded('soul select',async(req,res)=>{
   const context=await authorize(req),body=await readJsonBody(req);
   const result=await huntAnswer(context,session=>selectSoulCrystal(session,body.color,body.stage));
@@ -2055,6 +2066,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/hunt/move') return huntMove(req, res);
     if (route === 'POST /api/hunt/target') return huntTarget(req, res);
     if (route === 'POST /api/hunt/skill') return huntSkill(req, res);
+    if (route === 'POST /api/hunt/hotbar') return huntHotbar(req, res);
+    if (route === 'POST /api/hunt/special') return huntSpecial(req, res);
     if (route === 'POST /api/hunt/flee') return huntFlee(req, res);
     if (route === 'POST /api/soul/select') return soulSelect(req, res);
     if (route === 'POST /api/hunt/soul') return soulCharge(req, res);

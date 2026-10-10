@@ -12,6 +12,7 @@ import {L2_CLASS_META} from '../../../template/l2ClassMeta.js';
 import classStats from '../../../template/classStatsTemplate.js';
 import {getMaterialCount, spendMaterials, materialInfo} from './materials.js';
 import {resolveClassName} from '../classes/legacyClasses.js';
+import {CLASS_PASSIVES} from '../../../template/scrydeSpells.js';
 
 /** Real SP -> game SP: the whole tree of a 3rd profession costs a few thousand SP, about what a hero earns. */
 export const SP_SCALE = 1 / 20000;
@@ -89,6 +90,12 @@ export function passiveTree(classId) {
             // the same level in two classes of the chain: the cheaper, earlier one
             if (!known || row.need < known.need || row.sp < known.sp) entry.levels.set(level, row);
         }
+    }
+    // the passives the Scryde class update gave to classes of the chain
+    const keys = chainOf(classId).map(id => L2_CLASS_META[id].key);
+    for (const extra of CLASS_PASSIVES) {
+        if (!extra.classes.some(key => keys.includes(key))) continue;
+        skills.set(extra.id, {id: extra.id, name: extra.name, info: {stats: extra.stats}, levels: new Map([[1, {level: 1, need: extra.needLevel, sp: extra.sp, items: []}]])});
     }
     const result = [...skills.values()].map(entry => ({...entry, levels: [...entry.levels.values()].sort((a, b) => a.level - b.level)})).filter(entry => entry.levels.length);
     result.sort((a, b) => a.name.localeCompare(b.name));

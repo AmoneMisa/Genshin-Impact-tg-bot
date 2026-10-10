@@ -123,6 +123,12 @@ const clanSchema = new mongoose.Schema({
         default: {}
     },
 
+    // Clan Hall development ({ level, glory, lastTickAt }), see functions/game/clans/clanHall.js.
+    hall: {
+        type: Object,
+        default: {}
+    },
+
     // Moderation bookkeeping (e.g. per-actor kick cooldowns) that doesn't belong
     // to any single activity above.
     moderation: {
@@ -151,6 +157,7 @@ clanSchema.pre("save", function () {
     this.markModified("moderation");
     this.markModified("skills");
     this.markModified("rta");
+    this.markModified("hall");
 });
 
 export default mongoose.model("Clan", clanSchema);

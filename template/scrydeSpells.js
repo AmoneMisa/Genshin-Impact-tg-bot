@@ -90,9 +90,35 @@ export const CLASS_SKILLS = Object.freeze([
         skill: {effect: 'buff', isBuff: true, isSelf: true, cooldown: 90, cost: 200, buffs: [{kind: 'guard', amount: 10, seconds: 60}, {kind: 'haste', amount: 8, seconds: 60}]},
     },
     {
-        name: 'Might of Heaven', description: 'Кара богов: урон святой магией врагам. Не работает на персонажей.',
+        // reworked: power 108, can be cast on any target, given to the Hierophant and Shillien Saint as well
+        name: 'Might of Heaven', description: 'Кара богов: урон святой магией врагам (сила 108). Не работает на персонажей.',
         classes: ['bishop', 'cardinal', 'elvenElder', 'evasSaint', 'shillienElder', 'shillienSaint', 'prophet', 'hierophant'], needLvl: 40,
-        skill: {effect: 'magic_attack', isDealDamage: true, damageModifier: 5, cooldown: 24, cost: 180},
+        skill: {effect: 'magic_attack', isDealDamage: true, damageModifier: 6.5, cooldown: 28, cost: 180},
+    },
+    {
+        name: 'Witchcraft', description: 'Безэлементный урон (сила 108): 40% нанесённого урона возвращается здоровьем. Не работает на персонажей.',
+        classes: ['mysticMuse', 'archmage'], needLvl: 76,
+        skill: {effect: 'vampire', isDealDamage: true, damageModifier: 6.5, vampirePower: 0.4, cooldown: 30, cost: 200},
+    },
+    {
+        name: 'King Fury', description: 'Умение питомца: урон и защита в PvE +35%, скорость атаки +30%, скорость +10, поглощение 8% урона HP на 1 час. Не работает на Олимпиаде.',
+        classes: ['arcanaLord'], needLvl: 76,
+        skill: {effect: 'buff', isBuff: true, isSelf: true, cooldown: 600, cost: 150, buffs: [{kind: 'damage', amount: 35, charges: 200}, {kind: 'guard', amount: 35, seconds: 3600}, {kind: 'haste', amount: 30, seconds: 3600}]},
+    },
+    {
+        name: 'Magnus Fury', description: 'Умение питомца: урон в PvE +100%, защита в PvE +50% на 1 час, скорость магии +30%, откат умений -30%. Не работает на Олимпиаде.',
+        classes: ['elementalMaster'], needLvl: 76,
+        skill: {effect: 'buff', isBuff: true, isSelf: true, cooldown: 600, cost: 180, buffs: [{kind: 'damage', amount: 100, charges: 200}, {kind: 'guard', amount: 50, seconds: 3600}, {kind: 'haste', amount: 30, seconds: 3600}]},
+    },
+    {
+        name: 'Mental Weakness', description: 'При Aggression на врага с шансом 75% снижает его маг. защиту на 13% на 10 с.',
+        classes: ['evasTemplar'], needLvl: 76,
+        skill: {effect: 'debuff', isSelf: false, cooldown: 20, cost: 60, debuff: {kind: 'armorBreak', amount: 13, seconds: 10}},
+    },
+    {
+        name: 'Touch of Eva', description: 'Урон и защита в PvE +25%. Не работает вместе с Spirit of Shilen и Flame Icon.',
+        classes: ['evasTemplar'], needLvl: 76,
+        skill: {effect: 'buff', isBuff: true, isSelf: true, cooldown: 120, cost: 90, buffs: [{kind: 'damage', amount: 25, charges: 60}, {kind: 'guard', amount: 25, seconds: 600}]},
     },
     {
         name: 'Appetite Destruction', description: 'С 52 уровня: физ. атака +25%, шанс крита +25% и мощность крита +25% у отряда на 15 с.',
@@ -103,5 +129,25 @@ export const CLASS_SKILLS = Object.freeze([
         name: 'Vampiric Rage', description: 'Умение теперь доступно Пророку: поглощение 9% HP от нанесённого урона.',
         classes: ['prophet', 'hierophant'], needLvl: 20,
         skill: {effect: 'buff', isBuff: true, isSelf: true, cooldown: 45, cost: 90, buffs: [{kind: 'damage', amount: 15, charges: 4}]},
+    },
+]);
+
+/**
+ * Passive skills the server gave to classes (class balance update). `stats` are real stat nodes like those of the passives of
+ * the class trees (passiveSkills.js converts them); `when` is the weapon the bonus needs. They are learned for skill points.
+ */
+export const CLASS_PASSIVES = Object.freeze([
+    {
+        id: 'scryde-magic-two-handed-mastery', name: 'Magic Two-Handed Weapon Mastery', needLevel: 76, sp: 4,
+        classes: ['hierophant', 'evasSaint', 'shillienSaint', 'cardinal'],
+        stats: [{tag: 'mul', stat: 'mAtk', value: [1.15], when: ['BLUNT']}, {tag: 'mul', stat: 'mDef', value: [1.15], when: ['BLUNT']}],
+    },
+    {
+        id: 'scryde-bow-mastery', name: 'Bow Mastery', needLevel: 76, sp: 4, classes: ['doomCryer'],
+        stats: [{tag: 'mul', stat: 'pAtk', value: [1.15], when: ['BOW']}],
+    },
+    {
+        id: 'scryde-archers-will', name: "Archer's Will", needLevel: 76, sp: 2, classes: ['doomCryer'],
+        stats: [{tag: 'add', stat: 'accCombat', value: [4], when: ['BOW']}],
     },
 ]);

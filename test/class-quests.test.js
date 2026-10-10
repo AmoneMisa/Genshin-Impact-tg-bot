@@ -139,7 +139,7 @@ test('the full line works: base -> 2nd -> 3rd, with the 3rd class learning four 
     finish(session);
     assert.equal(promoteClass(session, to).ok, true, to);
   }
-  assert.equal(session.game.gameClass.skills.length, 11);
+  assert.equal(session.game.gameClass.skills.filter(skill => !skill.scryde).length, 11);
   assert.equal(getClassQuestView(session).maxTier, true);
   assert.deepEqual(session.game.classQuest.completed, ['humanWizard', 'warlock', 'arcanaLord']);
 });

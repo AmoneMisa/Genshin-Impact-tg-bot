@@ -40,7 +40,7 @@ export const TEMPLATES = Object.freeze([
     {key: 'chanceToHit', source: chanceToHit, version: 1},
     {key: 'clanApplicationConditions', source: clanApplicationConditions, version: 1},
     {key: 'classQuests', source: classQuests, version: 2},
-    {key: 'classSkills', source: classSkills, version: 5},
+    {key: 'classSkills', source: classSkills, version: 6},
     {key: 'classStats', source: classStats, version: 8},
     {key: 'elements', source: elements, version: 1},
     {key: 'elementsSynergy', source: elementsSynergy, version: 1},

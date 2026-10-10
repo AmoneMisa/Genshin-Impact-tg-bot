@@ -147,7 +147,7 @@ export async function getClanDashboard(userId, playerSession = null) {
       activities: await getClanActivitiesState(clan, userId, playerSession),
       competition: await getClanCompetitionState(clan, playerSession, userId),
       management: await getClanManagementState(clan, userId, playerSession),
-      progression: getClanProgressionState(clan, userId),
+      progression: getClanProgressionState(clan, userId, playerSession),
       rta: await getRtaState(clan, userId),
     };
   }

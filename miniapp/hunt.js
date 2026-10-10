@@ -19,6 +19,9 @@ import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getUserName from '../functions/getters/getUserName.js';
+import { getHotbar, setHotbar, specialSkills, activateLifeStone, HOTBAR_MAX } from '../functions/game/player/hotbar.js';
+import { castL2Buff } from './l2Buffs.js';
+import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -45,6 +48,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
     const hunt = ensureHunt(session);
     const game = session.game;
     const gameClass = game.gameClass;
+    const special = battleSpecialDto(session,now);
     if(hunt.field) hunt.field.seenAt=now;
     const level = Math.max(1, number(game.stats?.lvl, 1));
     const maxHp = getMaxHp(session, gameClass);
@@ -81,8 +85,11 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
             cp, maxCp, cpPercent: percent(cp, maxCp),
             effects: [...fieldPlayerDto(session,now).effects, ...playerEffectsDto([],respawnRemainMs,now), ...(hunt.playerDebuffs || []).filter(e => e.until > now).map(e => ({id: e.kind, label: 'Атаки ослаблены', value: e.amount, count: Math.ceil((e.until - now) / 1000)}))],
             respawnRemainMs,
-            skills: (gameClass?.skills || []).map((skill, index) => {const dto=skillDto(session,skill,index,now);return {...dto,canUse:dto.canUse && !fieldPvpSkillBlock(session,skill,now)};}),
+            skills: excludeToggleSkills((gameClass?.skills || []).map((skill, index) => {const dto=skillDto(session,skill,index,now);return {...dto,canUse:dto.canUse && !fieldPvpSkillBlock(session,skill,now)};}),special),
             potions: potionBarDto(session),
+            hotbar: getHotbar(session),
+            hotbarMax: HOTBAR_MAX,
+            special,
         },
     };
 }
@@ -105,6 +112,16 @@ export const moveHuntForMiniApp = (session, direction) => moveHuntField(session,
 export const targetHuntForMiniApp = (session, targetId) => selectHuntTarget(session, targetId);
 
 export const useHuntSkillForMiniApp = (session, skillIndex, now = Date.now()) => useHuntSkill(session, skillIndex, {now});
+export const setHotbarForMiniApp = (session, slots) => setHotbar(session, slots);
+/** The second tab of the skill bar: a Life Stone skill (`ls`) or a toggle skill of the class (`l2:<id>`). */
+export function useSpecialForMiniApp(session, id, now = Date.now()) {
+    if (String(id).startsWith('ls:')) {
+        const result = activateLifeStone(session, now);
+        return result.ok ? {ok: true, name: result.name, seconds: result.seconds, changed: true} : {ok: false, reason: result.reason, cooldownMs: result.cooldownMs};
+    }
+    if (String(id).startsWith('l2:')) return castL2Buff(session, id, null, {now});
+    return {ok: false, reason: 'unknown_special'};
+}
 export const fleeHuntForMiniApp = (session, now = Date.now()) => fleeHunt(session, now);
 export const setAutoShotsForMiniApp = (session, enabled) => ({ok: true, enabled: setAutoShots(session, enabled), shots: getShotsState(session)});
 

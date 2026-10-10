@@ -3,6 +3,9 @@ import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldArtUrl } from './art/world-art.js';
 const REASONS = {
+  hall_max_level: 'Зал клана уже развит до максимума.',
+  hall_not_enough_glory: 'Клану не хватает славы для следующего уровня зала.',
+  no_glory_coins: 'У тебя нет монет славы.',
   already_in_clan: 'Ты уже состоишь в клане.',
   invalid_name: 'Название клана должно быть от 1 до 40 символов.',
   name_taken: 'Клан с таким названием уже существует.',
@@ -272,11 +275,35 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       </section>`;
   }
 
+  // The Clan Hall: five levels, Glory points, and the skills every member has while in the clan.
+  function hallHtml() {
+    const hall = dashboard.progression?.hall;
+    if (!hall) return '';
+    const next = hall.next;
+    const need = next ? `Нужно: ✦ ${formatNumber(next.glory)} славы · 🪙 ${formatNumber(next.gold)} в хранилище` : 'Зал развит до максимума.';
+    return `
+      <section class="clan-section clan-activities">
+        <h4>Зал клана · ${hall.level} / ${hall.maxLevel}</h4>
+        <p class="clan-motto">Слава клана: ${formatNumber(hall.glory)}${hall.farmGloryPerHour ? ` · +${hall.farmGloryPerHour} в час с залов фарма` : ''}. Бонус к шансу заточки +${Math.round(hall.enchantBonus * 100)}% · магазин зала ${hall.shopLevel} ур.</p>
+        <p class="clan-motto">Телепорты: ${hall.teleports.map(escapeHtml).join(' · ')}</p>
+        <div class="clan-actions-row">
+          <button type="button" class="clan-play" data-hall-deposit ${hall.coins > 0 ? '' : 'disabled'}>Передать монеты славы · ${formatNumber(hall.coins)}</button>
+          ${next && hall.canManage ? `<button type="button" class="clan-play" data-hall-upgrade ${next.canUpgrade ? '' : 'disabled'}>Развить до ${next.level} ур.</button>` : ''}
+        </div>
+        <small class="clan-motto">${need}</small>
+        ${hall.skills.map(skill => `
+          <article class="clan-card">
+            <h4>${l2SkillIcon(skill.name)} ${escapeHtml(skill.name)} · ${skill.level} / ${skill.maxLevel}${skill.active ? '' : ' · нет эффекта'}</h4>
+            <small>${skill.current ? escapeHtml(skill.current) : '—'}${skill.next ? ` → ${escapeHtml(skill.next)} (зал ${skill.needsHallLevel} ур.)` : ''}</small>
+          </article>`).join('')}
+      </section>`;
+  }
+
   function skillsTabHtml() {
     const skills = dashboard.progression?.skills;
     if (!skills) return '';
     const percent = (value, unit) => (unit ? `${Math.round(value * 1000) / 10}%` : `${value}`);
-    return `
+    return `${hallHtml()}
       <section class="clan-section clan-activities">
         <h4>Клановые навыки</h4>
         <p class="clan-motto">Навык изучается за золото, репутацию и яйца из хранилища (яйца выпадают с эпических боссов). Бонус получают все участники клана${skills.canManage ? '.' : '; изучают глава и офицеры.'}</p>
@@ -660,6 +687,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-rta-leave]').forEach(button => button.addEventListener('click', () => activity({ action: 'rta_leave', userId: button.dataset.clanRtaLeave === 'me' ? undefined : Number(button.dataset.clanRtaLeave) })));
     content.querySelectorAll('[data-clan-rta-battle]').forEach(button => button.addEventListener('click', () => activity({ action: 'rta_battle', opponentId: button.dataset.clanRtaBattle })));
     content.querySelectorAll('[data-clan-skill]').forEach(button => button.addEventListener('click', () => activity({ action: 'skill_learn', id: button.dataset.clanSkill })));
+    content.querySelector('[data-hall-deposit]')?.addEventListener('click', () => activity({ action: 'hall_deposit' }));
+    content.querySelector('[data-hall-upgrade]')?.addEventListener('click', () => activity({ action: 'hall_upgrade' }));
     content.querySelectorAll('[data-clan-task-claim]').forEach(button => button.addEventListener('click', () => activity({ action: 'task_claim', taskKey: button.dataset.clanTaskClaim })));
     content.querySelector('[data-clan-task-bonus]')?.addEventListener('click', () => activity({ action: 'task_claim_bonus' }));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {

@@ -41,7 +41,7 @@ for skill_id, skill in data['skills'].items():
                 original.convert('RGBA').resize((size, size), Image.Resampling.NEAREST).save(dest / f'{key}-{size}.webp', lossless=True)
         published += 1
 # the special skills of the Scryde server (template/scrydeSpells.js) that the client does not have take the icon of a kin skill
-for name, like in {'Deadly Smash': 'Mortal Blow', 'Song of Spirit': 'Song of Vitality', 'Appetite Destruction': 'Chant of Victory', 'Mass Buff': 'Chant of Victory'}.items():
+for name, like in {'Deadly Smash': 'Mortal Blow', 'Song of Spirit': 'Song of Vitality', 'Appetite Destruction': 'Chant of Victory', 'Mass Buff': 'Chant of Victory', 'Witchcraft': 'Drain Health', 'King Fury': 'Chant of Victory', 'Magnus Fury': 'Chant of Victory', 'Mental Weakness': 'Entangle', 'Touch of Eva': 'Shield of Faith', 'Magic Two-Handed Weapon Mastery': 'Weapon Mastery', 'Magic Wound': 'Weapon Mastery'}.items():
     if name not in art and like in art:
         art[name] = art[like]
 Path('webapp/art/l2-class-skill-art.js').write_text(

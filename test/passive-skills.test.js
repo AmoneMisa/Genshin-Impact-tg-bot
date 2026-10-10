@@ -80,6 +80,8 @@ test('clan skills are the real tree: real level, scaled reputation, gold and an 
   assert.equal(clanSkillLevel(clan, body.id), 1);
 
   const session = player('duelist');
+  // every clan has a hall of level 1 (its own skills), so the baseline is the clan without the learned skill
+  syncClanPerks(session, { ...clan, skills: {} });
   const base = getEquipStatByName(session, 'maxHpMul', true);
   assert.equal(syncClanPerks(session, clan), true);
   near(getEquipStatByName(session, 'maxHpMul', true), base * 1.025);

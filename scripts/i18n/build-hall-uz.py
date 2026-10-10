@@ -1,0 +1,70 @@
+"""Writes webapp/i18n/uz-hall.js: Uzbek texts of the Clan Hall (functions/game/clans/clanHall.js) and of the class update
+skills of the Scryde server (template/scrydeSpells.js)."""
+import json
+import re
+
+UZ = {
+    "· +{0} в час с залов фарма": "· soatiga +{0} ferma zallaridan",
+    "· нет эффекта": "· ta'siri yo'q",
+    "→ {0} (зал {1} ур.)": "→ {0} (zal {1}-daraja)",
+    "Адена, дроп, спойл и эполеты +{0}%": "Adena, drop, spoil va epoletlar +{0}%",
+    "Безэлементный урон (сила 108): 40% нанесённого урона возвращается здоровьем. Не работает на персонажей.": "Elementsiz zarar (kuch 108): yetkazilgan zararning 40% i sog'liq sifatida qaytadi. O'yinchilarga ta'sir qilmaydi.",
+    "Город клана": "Klan shahri",
+    "Долина драконов": "Ajdarlar vodiysi",
+    "Зал клана · {0} / {1}": "Klan zali · {0} / {1}",
+    "Зал клана уже развит до максимума.": "Klan zali allaqachon maksimal darajada.",
+    "Зал клана: уровень {0}.": "Klan zali: {0}-daraja.",
+    "Зал развит до максимума.": "Zal maksimal darajada.",
+    "Защита в PvP воинов ближнего боя +{0}%": "Yaqin jang jangchilarining PvP himoyasi +{0}%",
+    "Защита от всех стихий +{0}": "Barcha elementlardan himoya +{0}",
+    "Защита от луков +{0}% (нет эффекта в игре)": "Yoylardan himoya +{0}% (o'yinda ta'siri yo'q)",
+    "Защита щита +{0}%": "Qalqon himoyasi +{0}%",
+    "Кара богов: урон святой магией врагам (сила 108). Не работает на персонажей.": "Xudolar jazosi: dushmanlarga muqaddas sehr zarari (kuch 108). O'yinchilarga ta'sir qilmaydi.",
+    "Клану не хватает славы для следующего уровня зала.": "Klanga zalning keyingi darajasi uchun shuhrat yetishmaydi.",
+    "Логово Антараса": "Antaras uyasi",
+    "Логово Валакаса": "Valakas uyasi",
+    "Логово муравьёв": "Chumolilar uyasi",
+    "Минимальный шанс ментальных атак +{0}% (нет эффекта в игре)": "Aqliy hujumlarning minimal ehtimoli +{0}% (o'yinda ta'siri yo'q)",
+    "Минимальный шанс шоковых атак +{0}% (нет эффекта в игре)": "Shok hujumlarining minimal ehtimoli +{0}% (o'yinda ta'siri yo'q)",
+    "Монет славы передано: {0}.": "Shuhrat tangalari topshirildi: {0}.",
+    "Нужно: ✦ {0} славы · 🪙 {1} в хранилище": "Kerak: ✦ {0} shuhrat · 🪙 {1} omborda",
+    "Остров Молитв": "Ibodat oroli",
+    "Откат умений -{0}%": "Mahorat qayta tiklanishi -{0}%",
+    "Паган": "Pagan",
+    "Передать монеты славы · {8}": "Shuhrat tangalarini topshirish · {8}",
+    "При Aggression на врага с шансом 75% снижает его маг. защиту на 13% на 10 с.": "Aggression dushmanga ishlatilganda 75% ehtimol bilan uning sehrli himoyasi 10 s ga 13% kamayadi.",
+    "Развить до {1} ур.": "{1}-darajaga rivojlantirish",
+    "Расход MP умений -{0}%, восстановление MP +{0}": "Mahorat MP sarfi -{0}%, MP tiklanishi +{0}",
+    "Сады Генезиса": "Genezis bog'lari",
+    "Седьмая печать (SoA)": "Ettinchi muhr (SoA)",
+    "Сила крита с кинжалом +{0}%": "Xanjar bilan kritik kuchi +{0}%",
+    "Сила лечения +{0}%": "Davolash kuchi +{0}%",
+    "Скорость магии с двуручным дробящим +{0}%": "Ikki qo'llik urma qurol bilan sehr tezligi +{0}%",
+    "Слава клана: {2}{3}. Бонус к шансу заточки +{4}% · магазин зала {5} ур.": "Klan shuhrati: {2}{3}. Charxlash ehtimoli bonusi +{4}% · zal do'koni {5}-daraja.",
+    "Сопротивление параличу +{0}% (нет эффекта в игре)": "Falajga qarshilik +{0}% (o'yinda ta'siri yo'q)",
+    "Телепорты: {6}": "Teleportlar: {6}",
+    "Точность +{0}": "Aniqlik +{0}",
+    "У тебя нет монет славы.": "Sendа shuhrat tangalari yo'q.",
+    "Уклонение +{0}, на 3 уровне -1% получаемого урона": "Chaqqonlik +{0}, 3-darajada olinadigan zarar -1%",
+    "Умение питомца: урон в PvE +100%, защита в PvE +50% на 1 час, скорость магии +30%, откат умений -30%. Не работает на Олимпиаде.": "Uy hayvoni mahorati: PvE zarar +100%, PvE himoya +50%, 1 soat, sehr tezligi +30%, mahorat qayta tiklanishi -30%. Olimpiadada ishlamaydi.",
+    "Умение питомца: урон и защита в PvE +35%, скорость атаки +30%, скорость +10, поглощение 8% урона HP на 1 час. Не работает на Олимпиаде.": "Uy hayvoni mahorati: PvE zarar va himoya +35%, hujum tezligi +30%, tezlik +10, zararning 8% i HP sifatida so'riladi, 1 soat. Olimpiadada ishlamaydi.",
+    "Урон в PvP +{0}%": "PvP zarar +{0}%",
+    "Урон и защита в PvE +{0}%": "PvE zarar va himoya +{0}%",
+    "Урон и защита в PvE +25%. Не работает вместе с Spirit of Shilen и Flame Icon.": "PvE zarar va himoya +25%. Spirit of Shilen va Flame Icon bilan birga ishlamaydi.",
+    "Характеристики +1: {0}": "Xususiyatlar +1: {0}",
+}
+UZ["Навык изучается за золото, репутацию и яйца из хранилища (яйца выпадают с эпических боссов). Бонус получают все участники клана{1}"] = "Ko'nikma oltin, obro' va ombordagi tuxumlar evaziga o'rganiladi (tuxumlar epik bosslardan tushadi). Bonusni klanning barcha a'zolari oladi{0}".replace("{0}", "{1}")
+UZ["У тебя нет монет славы."] = "Senda shuhrat tangalari yo'q."
+UZ["Сила крита с кинжалом +{0}%"] = "Xanjar bilan kritik kuchi +{0}%"
+
+bad = [value for value in UZ.values() if re.search('[А-Яа-яЁё]', value)]
+print('values with Cyrillic:', bad)
+body = ''.join('  %s: %s,\n' % (json.dumps(key, ensure_ascii=False), json.dumps(value, ensure_ascii=False)) for key, value in UZ.items())
+open('webapp/i18n/uz-hall.js', 'w', encoding='utf8').write(
+    "// Uzbek texts of the Clan Hall and of the class update skills. Generated by scripts/i18n/build-hall-uz.py.\nexport default {\n" + body + "};\n")
+path = 'webapp/i18n/uz-extra.js'
+text = open(path, encoding='utf8').read()
+if 'uz-hall.js' not in text:
+    text = text.replace("import scryde from './uz-scryde.js';", "import scryde from './uz-scryde.js';\nimport hall from './uz-hall.js';", 1)
+    text = text.replace("  ...scryde,\n", "  ...scryde,\n  ...hall,\n", 1)
+    open(path, 'w', encoding='utf8').write(text)

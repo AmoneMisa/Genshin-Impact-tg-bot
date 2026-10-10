@@ -16,6 +16,7 @@ import setLevel, { spForLevelUp } from '../player/setLevel.js';
 import {customDropChance, pickCustomPart} from '../equipment/customDrops.js';
 import {instantiate} from '../equipment/catalog.js';
 import getRandom from '../../getters/getRandom.js';
+import getEquipStatByName from '../player/getters/getEquipStatByName.js';
 
 const HIGH_LEVEL_PENALTY = Object.freeze({'-3': 0.97, '-4': 0.67, '-5': 0.42, '-6': 0.25, '-7': 0.15, '-8': 0.09, '-9': 0.05, '-10': 0.03});
 
@@ -37,6 +38,8 @@ export function dropGapFactor(heroLevel, mobLevel, {min, max, floor}) {
 
 /** The real drop table of a monster is rolled at x1 for seal stones and at HUNT.dropRate for everything else. */
 const rateOf = row => (row.kind === 'seal' ? 1 : HUNT.dropRate);
+// Greed of the Clan Hall: adena, drop and spoil of a clan member
+const greedOf = session => getEquipStatByName(session, 'dropRateMul', true);
 
 /** How many times a row pays: its chance above 100% is guaranteed copies (as on a rated server), the rest a roll. */
 export function dropRolls(chancePercent, random) {
@@ -110,7 +113,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     // gold
     const adenaGap = dropGapFactor(level, mob.level, HUNT.adenaGap);
     if (mobDef?.gold && random() < Math.min(1, mobDef.gold.chance / 100 * adenaGap)) {
-        const total = Math.max(1, Math.round(getRandom(mobDef.gold.min, mobDef.gold.max) * HUNT.goldScale));
+        const total = Math.max(1, Math.round(getRandom(mobDef.gold.min, mobDef.gold.max) * HUNT.goldScale * greedOf(session)));
         // adena is split equally between the members of a party; the killer gets the remainder
         const members = distributor.members, each = Math.floor(total / members.length);
         for (const member of members) {
@@ -140,7 +143,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
         else result.items.push({item: key, name: info.name, icon: info.icon, amount});
     };
     for (const drop of lootRows(mobDef?.id ?? mob.mobId)) {
-        const rolls = dropRolls(drop.chance * rateOf(drop) * itemGap * (tier ? tier.drops : 1), random);
+        const rolls = dropRolls(drop.chance * rateOf(drop) * (drop.kind === 'seal' ? 1 : greedOf(session)) * itemGap * (tier ? tier.drops : 1), random);
         if (rolls > 0) give(drop.key, getRandom(drop.min, drop.max) * rolls);
     }
 

@@ -175,3 +175,17 @@
 .merchant-symbol{display:block;font:11px/1.5 system-ui;opacity:.95}
 .merchant-symbol .plus{color:#8fd694}
 .merchant-symbol .minus{color:#e07a6a}
+
+/* The skill bar shows only pictures: the cost sits in the top right corner, the name is the tooltip. */
+.hunt-controls .mmo-hotbar.icons-only{grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px}
+.hunt-controls .mmo-hotbar.icons-only .mmo-skill{min-height:52px;aspect-ratio:1;padding:4px;align-content:center;justify-items:center}
+.mmo-hotbar.icons-only .mmo-skill-cost{white-space:nowrap;position:absolute;top:2px;right:3px;z-index:2;padding:0 4px;border-radius:6px;background:rgba(8,10,12,.78);font:700 10px/1.5 system-ui;color:#9fc0ff;text-shadow:0 0 3px #000}
+.mmo-hotbar.icons-only .mmo-skill-cooldown{top:50%;left:50%;transform:translate(-50%,-50%)}
+.mmo-hotbar.icons-only .mmo-skill.choice{opacity:.55}
+.mmo-hotbar.icons-only .mmo-skill.choice.on{opacity:1;box-shadow:0 0 0 2px #d8b36a inset}
+.mmo-hotbar.icons-only .mmo-skill.special.on{box-shadow:0 0 0 2px #6fd39a inset}
+.hunt-bar-tabs{display:flex;gap:6px;margin-bottom:8px}
+.hunt-bar-tabs button{flex:1;padding:6px 8px;border-radius:8px;border:1px solid rgba(216,179,106,.35);background:rgba(20,20,22,.6);color:#d8cbb0;font:600 12px/1.2 system-ui}
+.hunt-bar-tabs button.active{background:rgba(216,179,106,.18);color:#f3dca6;border-color:#d8b36a}
+.hunt-bar-actions{display:flex;gap:8px;margin-top:8px}
+.hunt-bar-edit>small{display:block;margin-bottom:6px;color:#a9b4b1}

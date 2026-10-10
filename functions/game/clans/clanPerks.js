@@ -8,6 +8,7 @@
 // this game has no use for (resist shock / hold / sleep, Clan Imperium ...) are learnable and listed, but give
 // nothing. Residence and territory skills are given by castles and are not part of the clan's own tree.
 import l2 from '../../../template/l2Classes.js';
+import { hallModifiers, hallPerks } from './clanHall.js';
 
 export const CLAN_PERK_REFRESH_MS = 10 * 60 * 1000;
 /** The real reputation points of a level on this game's reputation rating (a clan's prestige, see calcReputationPoints.js). */
@@ -101,6 +102,8 @@ export function clanPerkModifiers(session) {
     if (!perks || typeof perks !== 'object') return result;
     const family = session?.game?.gameClass?.stats?.family || null;
     const caster = family ? casterFamilies.has(family) : null;
+    // the Clan Hall skills (hall:<key>) ride on the same copy
+    for (const [stat, value] of Object.entries(hallModifiers(session))) result[stat] = (result[stat] || 0) + value;
     for (const entry of CLAN_SKILLS) {
         if (!entry.stat) continue;
         const level = clampTo(entry, perks[entry.id]);
@@ -115,7 +118,7 @@ export function clanPerkModifiers(session) {
 /** Copies the clan's skill levels to the member's session; `clan` null clears them. Returns true when changed. */
 export function syncClanPerks(session, clan, now = Date.now()) {
     if (!session?.game) return false;
-    const next = {};
+    const next = {...hallPerks(clan)};
     for (const entry of CLAN_SKILLS) {
         const level = clanSkillLevel(clan, entry.id);
         if (level) next[entry.id] = level;

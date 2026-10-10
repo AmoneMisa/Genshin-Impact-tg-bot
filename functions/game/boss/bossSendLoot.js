@@ -1,4 +1,5 @@
 import getRandom from "../../getters/getRandom.js";
+import {EPIC_GLORY_COINS, giveGloryCoins} from "../clans/clanHall.js";
 import {absorbRaidSouls} from '../equipment/soulCrystals.js';
 import generateRandomEquipment from "../../game/equipment/generateRandomEquipment.js";
 import getValueByChance from "../../getters/getValueByChance.js";
@@ -98,6 +99,13 @@ export default async function(boss, chatId) {
     if (template?.epic) {
         markEpicKilled(chat, boss.name);
         // Coins of Luck for everyone who fought the raid boss, whatever their place.
+        const gloryCoins = EPIC_GLORY_COINS[boss.name] || 0;
+        if (gloryCoins) {
+            for (const member of playedSessions) {
+                giveGloryCoins(member, gloryCoins);
+                gotLoot[member.userId].items.push({item: "gloryCoins", name: "Монеты славы", icon: "🏅", amount: gloryCoins});
+            }
+        }
         const luckCoins = epicLuckCoins(boss.name);
         if (luckCoins) {
             for (const member of playedSessions) {

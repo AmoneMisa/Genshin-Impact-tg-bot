@@ -102,7 +102,7 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             additionalDamageMul: getAdditionalDamageMul(defender, defender.game.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(defender, defender.game.gameClass),
             increasePvpDamage: isArena ? getPvpSign(defender).increasePvpDamage * getEquipStatByName(defender,"pvpDamageMul",true) : 1,
-            decreaseIncomingPvpDamage: isArena ? getPvpSign(defender).decreaseIncomingPvpDamage : 1,
+            decreaseIncomingPvpDamage: isArena ? Math.min(0.8, getPvpSign(defender).decreaseIncomingPvpDamage + (Number(getEquipStatByName(defender, "pvpDefence")) || 0)) : 1,
             attributes: attributeProfile(defender),
             chances: equippedChanceSkills(defender)
         };
@@ -168,7 +168,7 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
             additionalDamageMul: getAdditionalDamageMul(attacker, attacker.game.gameClass),
             incomingDamageModifier: getIncomingDamageModifier(attacker, attacker.game.gameClass),
             increasePvpDamage: isArena ? getPvpSign(attacker).increasePvpDamage * getEquipStatByName(attacker,"pvpDamageMul",true) : 1,
-            decreaseIncomingPvpDamage: isArena ? getPvpSign(attacker).decreaseIncomingPvpDamage : 1,
+            decreaseIncomingPvpDamage: isArena ? Math.min(0.8, getPvpSign(attacker).decreaseIncomingPvpDamage + (Number(getEquipStatByName(attacker, "pvpDefence")) || 0)) : 1,
             attributes: attributeProfile(attacker),
             chances: equippedChanceSkills(attacker)
         };

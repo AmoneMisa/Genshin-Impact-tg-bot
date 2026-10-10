@@ -2,6 +2,7 @@ import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2PreventDeath,l2TransferD
 // Live per-skill PvP in hunting locations. All participants must come from one freshly loaded Chat.
 import {advanceHunt} from './huntFight.js';
 import {HUNT} from './huntConfig.js';
+import {giveGloryCoins, PVP_GLORY_COINS} from '../clans/clanHall.js';
 import {ensureFieldPvp, fieldIsPresent, fieldPvpStatus, fieldPvpEffect, fieldPvpSkillBlock, fieldPvpLog, PVP_FLAG_MS} from './fieldPvpState.js';
 import castSkill from '../player/castSkill.js';
 import isPlayerCanUseSkill from '../player/isPlayerCanUseSkill.js';
@@ -73,7 +74,7 @@ export function finishL2PvpDeath(chat,attacker,defender,now){
             const state = ensureFieldPvp(attacker);
             pk = victimStatus === 'neutral';
             if (pk) {state.pkKills=(state.pkKills || 0)+1; state.karma=(state.karma || 0)+300*state.pkKills;}
-            else state.pvpKills=(state.pvpKills || 0)+1;
+            else {state.pvpKills=(state.pvpKills || 0)+1;giveGloryCoins(attacker,PVP_GLORY_COINS);}
             fieldPvpLog(attacker,`${name(defender)} повержен${pk?' · PK':''}.`,now);
         }
         const state = ensureFieldPvp(defender);

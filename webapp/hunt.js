@@ -2,7 +2,9 @@ import {materialIcon} from './material-icons.js';
 import {l2CategoryIcon} from './art/l2-icon-art.js';
 import {huntZoneUrl,huntMobUrl} from './art/hunt-art.js';
 import {shotIcon,elementIcon,championIcon} from './art/painted-icon-art.js';
-import { bar, escapeHtml, formatDuration, formatNumber, hotbar, playerFrame, potionBar, statusIcons } from './boss-hud.js';
+import { bar, escapeHtml, formatDuration, formatNumber, hotbar, hotbarChoice, playerFrame, potionBar, statusIcons } from './boss-hud.js';
+import { l2SkillIcon } from './art/l2-extra-art.js';
+import {l2EffectIcon} from './art/l2-effects-art.js';
 import {icon,emojiIconName} from './icons.js';
 import {classArtUrl} from './boss-stage.js';
 
@@ -34,6 +36,7 @@ const CHAMPION = { blue: { icon: championIcon('blue'), label: 'Синий чем
 export async function openHuntGame({ api, renderState, haptic, statusElement,initialZoneKind='field' }) {
   let state = await api('/api/hunt');
   let zoneKind=initialZoneKind==='catacomb'?'catacomb':'field';
+  let skillTab = 'skills'; let editBar = false; let barDraft = [];
   let pending = false;
   let feedback = '';
   let lastLog = state.log?.[0]?.text || '';
@@ -275,6 +278,32 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     return `<section class="hunt-journal"><small>Журнал боя</small><ol class="hunt-log">${rows.map(row => `<li><i>${icon(row.icon==='⚑'?'flag':emojiIconName(row.icon)||'swords')}</i><span>${escapeHtml(row.text)}</span></li>`).join('')}</ol></section>`;
   }
 
+  // The skill bar: the skills the player put on it (up to 16), and a second tab with Life Stone and toggle skills.
+  function skillBarHtml(player) {
+    const max = player.hotbarMax || 16;
+    const tabs = `<div class="hunt-bar-tabs" role="tablist">
+      <button type="button" role="tab" aria-selected="${skillTab === 'skills'}" class="${skillTab === 'skills' ? 'active' : ''}" data-bar-tab="skills">Умения</button>
+      <button type="button" role="tab" aria-selected="${skillTab === 'special'}" class="${skillTab === 'special' ? 'active' : ''}" data-bar-tab="special">ЛС и переключаемые</button>
+    </div>`;
+    if (skillTab === 'special') {
+      const rows = (player.special || []).map(row => `
+        <button type="button" class="mmo-skill boss-skill special ${row.running ? 'on' : ''}" data-special="${escapeHtml(row.id)}" ${row.canUse && !pending ? '' : 'disabled'} title="${escapeHtml(row.name+' — '+(row.description||''))}" aria-label="${escapeHtml(row.name)}">
+          <span class="mmo-skill-icon">${l2EffectIcon(row.id) || l2SkillIcon(row.iconId) || l2SkillIcon(row.name) || icon('sparkles')}</span>
+          <small class="mmo-skill-cost">${formatNumber(row.costMp||0)}</small>
+          <span class="mmo-skill-cooldown">${row.cooldownMs > 0 && row.type === 'ls' ? formatDuration(row.cooldownMs) : ''}</span>
+        </button>`).join('');
+      return `${tabs}<div class="mmo-hotbar icons-only">${rows || '<p class="party-note">Нет особых умений: нужен камень жизни на оружии или переключаемые умения класса.</p>'}</div>`;
+    }
+    if (editBar) {
+      const all = player.skills.map(skill => hotbarChoice(skill, {className: player.className, on: barDraft.includes(skill.index), position: barDraft.indexOf(skill.index) + 1})).join('');
+      return `${tabs}<div class="hunt-bar-edit"><small>Выбрано ${barDraft.length} из ${max}. Порядок — по очереди нажатия.</small>
+        <div class="mmo-hotbar icons-only">${all}</div>
+        <div class="hunt-bar-actions"><button type="button" class="hunt-toggle" data-bar-save ${barDraft.length ? '' : 'disabled'}>Сохранить</button><button type="button" class="hunt-toggle" data-bar-cancel>Отмена</button></div></div>`;
+    }
+    return `${tabs}${hotbar(player.skills, {className: player.className, chosen: player.hotbar})}
+      <div class="hunt-bar-actions"><button type="button" class="hunt-toggle" data-bar-edit>Настроить панель · ${(player.hotbar || []).length}/${max}</button></div>`;
+  }
+
   function render() {
     const player = state.player;
     const dead = player.respawnRemainMs > 0;
@@ -289,7 +318,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       body.push(playerFrame(player));
       if (dead) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
       body.push('<section class="hunt-controls">');
-      body.push(hotbar(player.skills,{className:player.className}));
+      body.push(skillBarHtml(player));
       body.push(potionBar(player.potions, { disabled: pending || dead }));
       body.push(shotsHtml());
       if(!peer)body.push(vitalityHtml());
@@ -329,6 +358,26 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelector('[data-soul-charge]')?.addEventListener('click',async()=>{const p=await run('/api/hunt/soul');if(p)say('Кристалл использован. Победи монстра для попытки прокачки.');render();});
     content.querySelector('[data-seal-exchange]')?.addEventListener('click',async()=>{const counts=Object.fromEntries(Object.entries(state.soulCrystals.seals).map(([c,o])=>[c,o.count]));const p=await run('/api/catacombs/exchange',{counts});if(p)say('Получено '+formatNumber(p.aa)+' AA.');render();});
     content.querySelectorAll('[data-skill]').forEach(button => button.addEventListener('click', e => skill(button.dataset.skill,e.ctrlKey)));
+    content.querySelectorAll('[data-bar-tab]').forEach(button => button.addEventListener('click', () => { skillTab = button.dataset.barTab; editBar = false; render(); }));
+    content.querySelector('[data-bar-edit]')?.addEventListener('click', () => { editBar = true; barDraft = [...(state.player.hotbar || [])]; render(); });
+    content.querySelector('[data-bar-cancel]')?.addEventListener('click', () => { editBar = false; render(); });
+    content.querySelectorAll('[data-hotbar-toggle]').forEach(button => button.addEventListener('click', () => {
+      const index = Number(button.dataset.hotbarToggle), max = state.player.hotbarMax || 16;
+      if (barDraft.includes(index)) barDraft = barDraft.filter(item => item !== index);
+      else if (barDraft.length < max) barDraft.push(index);
+      else say(`На панели не больше ${max} умений.`);
+      render();
+    }));
+    content.querySelector('[data-bar-save]')?.addEventListener('click', async () => {
+      const payload = await run('/api/hunt/hotbar', { slots: barDraft });
+      if (payload) { editBar = false; say('Панель умений сохранена.'); }
+      render();
+    });
+    content.querySelectorAll('[data-special]').forEach(button => button.addEventListener('click', async () => {
+      const payload = await run('/api/hunt/special', { id: button.dataset.special });
+      if (payload) say(payload.name ? `${payload.name}: включено.` : payload.toggledOff ? 'Умение выключено.' : 'Умение включено.');
+      render();
+    }));
     content.querySelectorAll('[data-boss-potion]').forEach(button => button.addEventListener('click', () => drink(button.dataset.bossPotion)));
     content.querySelectorAll('[data-zone]').forEach(button => button.addEventListener('click', () => start(button.dataset.zone)));
     content.querySelector('[data-flee]')?.addEventListener('click', flee);
