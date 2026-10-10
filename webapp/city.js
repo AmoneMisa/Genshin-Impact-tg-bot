@@ -7,10 +7,12 @@ export { escapeHtml };
 import { buildingArtSources } from './art/world-buildings.js';
 import { worldArtUrl } from './art/world-art.js';
 import { icon } from './icons.js';
+import { luckCoinHtml } from './currency-icons.js';
 
 export const RESOURCE_META = Object.freeze({
   gold: { label: 'Золото', icon: '🪙' },
   crystals: { label: 'Кристаллы', icon: '💎' },
+  moonDew: { label: 'Лунная роса', icon: '💧' },
   ironOre: { label: 'Руда', icon: '⛏️' },
   experience: { label: 'Опыт', icon: '✦' },
   sp: { label: 'ОП', icon: '✧' },
@@ -26,6 +28,7 @@ export const REASONS = Object.freeze({
   not_upgrading: 'Улучшение уже завершилось.',
   no_production: 'Эта постройка не производит ресурсы.',
   upgrading: 'Во время улучшения ресурсы собирать нельзя.',
+  no_vitality: 'Нет виталити: опыт из построек собрать нельзя.',
   nothing_to_collect: 'Пока нечего собирать.',
   type_unavailable: 'У этой постройки нельзя менять облик.',
   type_not_owned: 'Этот облик ещё не куплен.',
@@ -92,7 +95,7 @@ function progressHtml(build) {
 
 function actionButton(build) {
   if (build.upgrading) {
-    return `<button type="button" class="city-btn speedup" data-city-action="speedup" data-build="${escapeHtml(build.id)}" ${build.canSpeedup ? '' : 'disabled'}>Ускорить${build.speedupCost ? ` · ${formatNumber(build.speedupCost)} 💎` : ' · бесплатно'}</button>`;
+    return `<button type="button" class="city-btn speedup" data-city-action="speedup" data-build="${escapeHtml(build.id)}" ${build.canSpeedup ? '' : 'disabled'}>Ускорить${build.speedupCost ? ` · ${formatNumber(build.speedupCost)} ${build.speedupCurrency === 'luckCoins' ? luckCoinHtml(14) : '🪙'}` : ' · бесплатно'}</button>`;
   }
   if (build.currentLevel >= build.maxLevel) return '<button type="button" class="city-btn" disabled>Максимум</button>';
   return `<button type="button" class="city-btn upgrade" data-city-action="upgrade" data-build="${escapeHtml(build.id)}" ${build.canUpgrade ? '' : 'disabled'} title="${escapeHtml(REASONS[build.blockedReason] || '')}">Улучшить</button>`;
@@ -185,6 +188,12 @@ function requirementsHtml(requirements) {
   return rows.length ? `<ul class="city-reqs">${rows.join('')}</ul>` : '';
 }
 
+function perksHtml(perks) {
+  if (!perks?.length) return '';
+  return `<section class="city-block"><h4>Бонусы уровня</h4>${perks.map(perk => `
+      <div class="city-stat"><span>${escapeHtml(perk.label)}</span><strong>${escapeHtml(perk.value)}${perk.next && perk.next !== perk.value ? ` <i class="city-arrow">→</i> <em class="city-gain">${escapeHtml(perk.next)}</em>` : ''}</strong></div>`).join('')}</section>`;
+}
+
 /** The building's own window. */
 export function buildingWindow(build) {
   const resource = build.resourceType ? RESOURCE_META[build.resourceType] || { label: build.resourceType, icon: '✦' } : null;
@@ -205,6 +214,8 @@ export function buildingWindow(build) {
       <div class="city-stat"><span>${resource.icon} ${escapeHtml(resource.label)} в час</span><strong>${formatNumber(build.productionPerHour)}${build.nextProductionPerHour > build.productionPerHour ? ` <i class="city-arrow">→</i> <em class="city-gain">${formatNumber(build.nextProductionPerHour)}</em>` : ''}</strong></div>
       <div class="city-stat"><span>Накоплено</span><strong>${formatNumber(build.resourceCollected)}</strong></div>
       ${build.maxWorkHoursWithoutCollection ? `<div class="city-stat"><span>Склад заполняется за</span><strong>${formatNumber(build.maxWorkHoursWithoutCollection)} ч</strong></div>` : ''}
+      ${build.storageCap ? `<div class="city-stat"><span>Предел накопления</span><strong>${formatNumber(build.storageCap)}</strong></div>` : ''}
+      ${build.resourceType === 'experience' ? '<p class="city-note">Сбор опыта тратит виталити.</p>' : ''}
       <button type="button" class="city-btn collect" data-city-action="collect" data-build="${escapeHtml(build.id)}" ${build.canCollect ? '' : 'disabled'}>Собрать</button>
     </section>` : ''}
     <section class="city-block"><h4>${build.upgrading ? 'Улучшение идёт' : build.currentLevel >= build.maxLevel ? 'Максимальный уровень' : `Улучшение до ${formatNumber(build.nextLevel)}`}</h4>
@@ -212,6 +223,8 @@ export function buildingWindow(build) {
       ${actionButton(build)}
       ${!build.upgrading && build.blockedReason && build.currentLevel < build.maxLevel ? `<p class="city-note">${escapeHtml(REASONS[build.blockedReason] || '')}</p>` : ''}
     </section>
+    ${build.id === 'academy' ? '<button type="button" class="city-btn upgrade" data-city-academy>Задания Академии</button>' : ''}
+    ${perksHtml(build.perks)}
     ${types}
     ${treasury}
     ${build.canRename ? `<button type="button" class="city-btn ghost" data-city-action="rename" data-build="${escapeHtml(build.id)}">Переименовать</button>` : ''}
@@ -302,6 +315,11 @@ export async function mountCity(container, { api, haptic = () => {}, onState = (
 
   function onClick(event) {
     if (event.target.closest('[data-city-close]')) { closeWindow(); return; }
+    if (event.target.closest('[data-city-academy]')) {
+      event.stopPropagation();
+      import('./academy.js').then(({ openAcademy }) => openAcademy({ api, haptic, openMainQuests: () => import('./class-quests.js').then(({ openClassQuests }) => openClassQuests({ api, haptic, renderState: onState, statusElement: document.createElement('span') })) })).catch(() => {});
+      return;
+    }
     const actionButton = event.target.closest('[data-city-action]');
     if (actionButton) {
       event.stopPropagation();

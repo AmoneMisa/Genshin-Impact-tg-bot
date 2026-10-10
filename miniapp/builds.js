@@ -1,4 +1,7 @@
-import { gainExp } from '../functions/game/player/vitality.js';
+import { gainExp, readVitality } from '../functions/game/player/vitality.js';
+import { buildStorageCap } from '../functions/game/builds/buildYield.js';
+import { forgeBonuses, FORGE_MAX_LEVEL } from '../functions/game/builds/forgeBonuses.js';
+import { PALACE_MAX_LEVEL, inventoryCapacity, warehouseCapacity, inventoryUsage } from '../functions/game/builds/palaceCapacity.js';
 import buildsTemplate from '../template/buildsTemplate.js';
 import getBuildFromTemplate from '../functions/game/builds/getBuildFromTemplate.js';
 import calculateUpgradeCosts from '../functions/game/builds/calculateUpgradeCosts.js';
@@ -8,7 +11,13 @@ import calculateIncreaseGuardedResources from '../functions/game/builds/calculat
 import setLevel from '../functions/game/player/setLevel.js';
 
 const DEFAULT_MAX_LEVEL = 30;
-const SPEEDUP_CRYSTALS_PER_HOUR = 30;
+// What the buildings are built from: moon dew, not the crystals of the premium purse.
+const BUILD_RESOURCES = ['gold', 'moonDew', 'ironOre'];
+// A hero that had crystals before the split starts with the same amount of dew, up to this.
+const DEW_STARTER_CAP = 10_000;
+// Speeding a build up: adena per started hour for the early levels, Coins of Luck from this level on.
+const SPEEDUP_ADENA_PER_HOUR_PER_LEVEL = 1500;
+const SPEEDUP_COL_FROM_LEVEL = 11;
 const FREE_SPEEDUP_WINDOW_MS = 15 * 60 * 1000;
 // Computed per call: the template can be replaced from Mongo after this module loads.
 const activeBuildNames = () => Object.entries(buildsTemplate)
@@ -32,13 +41,27 @@ function getGame(session) {
 function getInventory(session) {
   const game = getGame(session);
   if (!game.inventory) game.inventory = {};
-  for (const resource of ['gold', 'crystals', 'ironOre']) {
+  if (game.inventory.moonDew === undefined || game.inventory.moonDew === null) {
+    game.inventory.moonDew = Math.min(DEW_STARTER_CAP, Math.max(0, asNumber(game.inventory.crystals)));
+  }
+  for (const resource of ['gold', 'crystals', 'ironOre', 'moonDew', 'luckCoins']) {
     game.inventory[resource] = asNumber(game.inventory[resource]);
   }
   return game.inventory;
 }
 
+/** What it costs to finish an upgrade to `nextLevel` now: {currency, amount}; the last minutes are free. */
+export function speedupPrice(nextLevel, remainingMs) {
+  const level = Math.max(2, asNumber(nextLevel, 2));
+  const currency = level >= SPEEDUP_COL_FROM_LEVEL ? 'luckCoins' : 'gold';
+  if (remainingMs <= FREE_SPEEDUP_WINDOW_MS) return { currency, amount: 0 };
+  const hours = Math.ceil(remainingMs / 3_600_000);
+  return { currency, amount: currency === 'gold' ? hours * SPEEDUP_ADENA_PER_HOUR_PER_LEVEL * level : hours * Math.ceil(level / 2) };
+}
+
 function getResourceType(template) {
+  // an older stored template still says "crystals": the buildings now make moon dew
+  if (template?.resourcesType === 'crystals') return 'moonDew';
   if (template?.resourcesType) return template.resourcesType;
   if (template?.type === 'experience') return 'experience';
   return null;
@@ -81,14 +104,14 @@ function getUpgradeCost(buildName, currentLevel) {
   if (!cost) return null;
   return {
     gold: Math.max(0, asNumber(cost.gold)),
-    crystals: Math.max(0, asNumber(cost.crystals)),
+    moonDew: Math.max(0, asNumber(cost.moonDew ?? cost.crystals)),
     ironOre: Math.max(0, asNumber(cost.ironOre)),
   };
 }
 
 function resourceRequirements(inventory, cost) {
   if (!cost) return [];
-  return ['gold', 'crystals', 'ironOre'].map((resource) => ({
+  return BUILD_RESOURCES.map((resource) => ({
     resource,
     required: cost[resource],
     current: asNumber(inventory?.[resource]),
@@ -161,6 +184,32 @@ function sanitizeTypes(template, build) {
     premium: Boolean(type.isPayment),
     bonus: type.bonus?.description || null,
   }));
+}
+
+const pct = value => `${Math.round(value * 1000) / 10}%`;
+
+/** What the building's level gives besides production: [{label, value, next}] rows for its window. */
+function buildPerks(session, buildName, currentLevel) {
+  const nextSession = (patch) => ({ game: { ...session.game, builds: { ...session.game.builds, [buildName]: { ...session.game.builds[buildName], currentLvl: currentLevel + 1, ...patch } } } });
+  if (buildName === 'palace') {
+    const usage = inventoryUsage(session);
+    const next = currentLevel < PALACE_MAX_LEVEL ? nextSession() : null;
+    return [
+      { label: 'Инвентарь (слотов)', value: `${usage.used} / ${inventoryCapacity(session)}`, next: next ? inventoryCapacity(next) : null },
+      { label: 'Личное хранилище (слотов)', value: String(warehouseCapacity(session)), next: next ? warehouseCapacity(next) : null },
+    ];
+  }
+  if (buildName === 'forge') {
+    const now = forgeBonuses(session);
+    const next = currentLevel < FORGE_MAX_LEVEL ? forgeBonuses(nextSession()) : null;
+    const row = (label, key) => ({ label, value: pct(now[key]), next: next ? pct(next[key]) : null });
+    return [
+      row('Шанс крафта', 'craft'), row('Шанс заточки', 'enchant'), row('Шанс мастерской работы (MW)', 'masterwork'),
+      row('Шанс двойного крафта', 'doubleCraft'), row('Кристаллов при кристаллизации', 'crystals'),
+      { label: 'Экономия материалов', value: now.saveChance ? `${pct(now.saveChance)} шанс на −${pct(now.saveShare)}` : '—', next: next ? `${pct(next.saveChance)} шанс на −${pct(next.saveShare)}` : null },
+    ];
+  }
+  return [];
 }
 
 function ensureBuildDefaults(session) {
@@ -255,10 +304,10 @@ function buildState(session, buildName, now = Date.now()) {
   const affordability = resourceRequirements(inventory, cost);
   const canAfford = affordability.every((item) => item.met);
   const resourceType = getResourceType(template);
-  const resourceCollected = Math.max(0, asNumber(build.resourceCollected));
-  const speedupCost = upgrading
-    ? (remainingMs <= FREE_SPEEDUP_WINDOW_MS ? 0 : Math.ceil(remainingMs / 3_600_000) * SPEEDUP_CRYSTALS_PER_HOUR)
-    : 0;
+  const storageCap = buildStorageCap(session, resourceType);
+  const resourceCollected = Math.min(storageCap, Math.max(0, asNumber(build.resourceCollected)));
+  const speedup = upgrading ? speedupPrice(currentLevel + 1, remainingMs) : { currency: 'gold', amount: 0 };
+  const speedupCost = speedup.amount;
 
   let blockedReason = null;
   if (currentLevel >= maxLevel) blockedReason = 'max_level';
@@ -284,10 +333,12 @@ function buildState(session, buildName, now = Date.now()) {
     requirements,
     canUpgrade: !blockedReason,
     blockedReason,
-    canSpeedup: upgrading && asNumber(inventory.crystals) >= speedupCost,
+    canSpeedup: upgrading && asNumber(inventory[speedup.currency]) >= speedupCost,
     speedupCost,
+    speedupCurrency: speedup.currency,
     resourceType,
     resourceCollected,
+    storageCap: Number.isFinite(storageCap) ? storageCap : null,
     productionPerHour: resourceType ? calculateProductionPerHour(buildName, build) : 0,
     nextProductionPerHour: resourceType && currentLevel < maxLevel ? calculateProductionPerHour(buildName, { ...build, currentLvl: nextLevel }) : null,
     maxWorkHoursWithoutCollection: asNumber(template.maxWorkHoursWithoutCollection),
@@ -296,6 +347,7 @@ function buildState(session, buildName, now = Date.now()) {
     availableTypes: sanitizeTypes(template, build),
     canRename: Boolean(game.builds?.palace?.canChangeName),
     treasury: template.bonusEffect ? calculateIncreaseGuardedResources(template, currentLevel) : null,
+    perks: buildPerks(session, buildName, currentLevel),
   };
 }
 
@@ -306,6 +358,8 @@ export function getBuildsState(session, now = Date.now()) {
     resources: {
       gold: asNumber(inventory.gold),
       crystals: asNumber(inventory.crystals),
+      moonDew: asNumber(inventory.moonDew),
+      luckCoins: asNumber(inventory.luckCoins),
       ironOre: asNumber(inventory.ironOre),
     },
     playerLevel: asNumber(session?.game?.stats?.lvl, 1),
@@ -334,7 +388,7 @@ export function startBuildUpgrade(session, buildName, now = Date.now()) {
   }
 
   const inventory = getInventory(session);
-  for (const resource of ['gold', 'crystals', 'ironOre']) {
+  for (const resource of BUILD_RESOURCES) {
     inventory[resource] = asNumber(inventory[resource]) - asNumber(state.upgradeCost?.[resource]);
   }
   build.upgradeStartedAt = now;
@@ -358,11 +412,11 @@ export function speedupBuildUpgrade(session, buildName, now = Date.now()) {
 
   const state = buildState(session, buildName, now);
   const inventory = getInventory(session);
-  if (asNumber(inventory.crystals) < state.speedupCost) {
+  if (asNumber(inventory[state.speedupCurrency]) < state.speedupCost) {
     return { ok: false, reason: 'resources', build: state, builds: getBuildsState(session, now) };
   }
 
-  inventory.crystals = asNumber(inventory.crystals) - state.speedupCost;
+  inventory[state.speedupCurrency] = asNumber(inventory[state.speedupCurrency]) - state.speedupCost;
   build.currentLvl = Math.min(getMaxLevel(buildsTemplate[buildName]), asNumber(build.currentLvl, 1) + 1);
   build.upgradeStartedAt = null;
   if ('upgradeTimerId' in build) build.upgradeTimerId = null;
@@ -370,7 +424,7 @@ export function speedupBuildUpgrade(session, buildName, now = Date.now()) {
   return {
     ok: true,
     action: 'speedup',
-    spentCrystals: state.speedupCost,
+    spent: { currency: state.speedupCurrency, amount: state.speedupCost },
     build: buildState(session, buildName, now),
     builds: getBuildsState(session, now),
   };
@@ -390,13 +444,19 @@ export function collectBuildResources(session, buildName, now = Date.now()) {
     return { ok: false, reason: 'upgrading', build: buildState(session, buildName, now), builds: getBuildsState(session, now) };
   }
 
-  const amount = Math.max(0, Math.ceil(asNumber(build.resourceCollected)));
+  // experience and skill points are capped like the offline farm; what does not fit is lost
+  const amount = Math.max(0, Math.min(buildStorageCap(session, resourceType), Math.ceil(asNumber(build.resourceCollected))));
   if (!amount) {
     return { ok: false, reason: 'nothing_to_collect', build: buildState(session, buildName, now), builds: getBuildsState(session, now) };
   }
+  // the experience is paid with Vitality: an empty bar gives nothing
+  if (resourceType === 'experience' && readVitality(session, now).points < 1) {
+    return { ok: false, reason: 'no_vitality', build: buildState(session, buildName, now), builds: getBuildsState(session, now) };
+  }
 
+  let gained = amount;
   if (resourceType === 'experience') {
-    gainExp(session, amount);
+    gained = gainExp(session, amount, { now }).gained;
     setLevel(session);
   } else {
     const inventory = getInventory(session);
@@ -411,6 +471,7 @@ export function collectBuildResources(session, buildName, now = Date.now()) {
     action: 'collect',
     resourceType,
     amount,
+    gained,
     build: buildState(session, buildName, now),
     builds: getBuildsState(session, now),
   };

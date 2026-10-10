@@ -12,7 +12,7 @@ export default function (upgradeCostsArray, level) {
             level: previousLevel,
             gold: Math.round(previousCost.gold * costIncreaseFactor),
             ironOre: Math.round(previousCost.ironOre * costIncreaseFactor),
-            crystals: Math.round(previousCost.crystals * costIncreaseFactor)
+            moonDew: Math.round((previousCost.moonDew ?? previousCost.crystals ?? 0) * costIncreaseFactor)
         };
 
         upgradeCosts.push(currentCost); // Добавляем стоимость для текущего уровня в массив

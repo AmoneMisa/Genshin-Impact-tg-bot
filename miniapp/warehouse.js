@@ -3,12 +3,13 @@ import Chat from '../db/models/Chat.js';
 import Clan from '../db/models/Clan.js';
 import {goldLockForMember,GOLD_LOCK_REASON} from '../functions/game/general/goldLock.js';
 import {canDepositClan,canWithdrawClan,coLeaders} from '../functions/game/clans/warehouseAccess.js';
-import {stockRows,storageSlots,STORAGE_SLOTS,transferStock} from './itemTransfer.js';
+import {stockRows,storageSlots,STORAGE_SLOTS,transferStock,intoInventory} from './itemTransfer.js';
+import {warehouseCapacity,inventoryCapacity,inventorySlotsUsed} from '../functions/game/builds/palaceCapacity.js';
 export function warehouseDto(player,clan=null,scope='character'){
  const store=scope==='clan'?clan?.warehouse:player?.game?.warehouse;
  const inventory=player.game?.inventory||{};
  const rows=stockRows(inventory).filter(row=>scope!=='clan'||row.kind!=='equipment'||!hasAugment(inventory.equipment.items.find(i=>i.uid===row.ref)));
- return {scope,title:scope==='clan'?'Хранилище клана':'Личное хранилище',canDeposit:scope!=='clan'||canDepositClan(clan,player.userId),canWithdraw:scope!=='clan'||canWithdrawClan(clan,player.userId),maxSlots:STORAGE_SLOTS,slots:storageSlots(store||{}),stored:stockRows(store||{}),inventory:rows,coLeaders:coLeaders(clan).map(m=>String(m.userId)),history:scope==='clan'?(clan?.warehouse?.history||[]).slice(-20).reverse():[]};
+ return {scope,title:scope==='clan'?'Хранилище клана':'Личное хранилище',canDeposit:scope!=='clan'||canDepositClan(clan,player.userId),canWithdraw:scope!=='clan'||canWithdrawClan(clan,player.userId),maxSlots:scope==='clan'?STORAGE_SLOTS:warehouseCapacity(player),slots:storageSlots(store||{}),inventorySlots:{used:inventorySlotsUsed(inventory),capacity:inventoryCapacity(player)},stored:stockRows(store||{}),inventory:rows,coLeaders:coLeaders(clan).map(m=>String(m.userId)),history:scope==='clan'?(clan?.warehouse?.history||[]).slice(-20).reverse():[]};
 }
 const hasAugment=item=>Boolean(item?.augment||item?.augmentation);
 export function moveWarehouse(player,clan,body,now=Date.now()){
@@ -21,7 +22,8 @@ export function moveWarehouse(player,clan,body,now=Date.now()){
  const count=Number(body.count);
  if(!['number','string'].includes(typeof body.count))return {ok:false,reason:'invalid_count'};
  if(typeof body.count==='string'&&!/^\d+$/.test(body.count.trim()))return {ok:false,reason:'invalid_count'};
- const result=transferStock(direction==='deposit'?inventory:store,direction==='deposit'?store:inventory,{kind:body.kind,ref:String(body.ref||''),count},{limit:direction==='deposit'?STORAGE_SLOTS:Infinity});
+ const depositLimit=scope==='clan'?STORAGE_SLOTS:warehouseCapacity(player);
+ const result=transferStock(direction==='deposit'?inventory:store,direction==='deposit'?store:inventory,{kind:body.kind,ref:String(body.ref||''),count},direction==='deposit'?{limit:depositLimit}:intoInventory(inventoryCapacity(player)));
  if(result.ok){
   if(scope==='clan'){
    clan.warehouse=store;store.history=[...(store.history||[]),{userId:String(player.userId),direction,title:result.title,count,at:now}].slice(-100);

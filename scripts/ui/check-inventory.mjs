@@ -2,7 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import {getInventoryState,useInventoryPotion} from '../../miniapp/inventory.js';
+import {discardInventoryItem,getInventoryState,useInventoryPotion} from '../../miniapp/inventory.js';
+import {getEquipmentState,performEquipmentAction} from '../../miniapp/equipment.js';
+import {sellableItems} from '../../miniapp/auction.js';
 const require=createRequire(path.resolve(process.env.PLAYWRIGHT_PACKAGE||'package.json'));
 const {chromium}=require('playwright');
 const browser=await chromium.launch({headless:true,executablePath:process.env.DESIGN_BROWSER});
@@ -16,6 +18,10 @@ try{for(const width of [320,390,540,1100]){
   const url=new URL(route.request().url());
   if(url.pathname==='/api/inventory')return route.fulfill({json:getInventoryState(session)});
   if(url.pathname==='/api/inventory/use')return route.fulfill({json:useInventoryPotion(session,route.request().postDataJSON().key)});
+  if(url.pathname==='/api/inventory/discard')return route.fulfill({json:discardInventoryItem(session,route.request().postDataJSON())});
+  if(url.pathname==='/api/equipment')return route.fulfill({json:getEquipmentState(session)});
+  if(url.pathname==='/api/equipment/action'){const body=route.request().postDataJSON();return route.fulfill({json:performEquipmentAction(session,body.key,body.action)});}
+  if(url.pathname==='/api/auction')return route.fulfill({json:{sellable:sellableItems(session),lots:[],mine:[],gold:session.game.inventory.gold,fee:.05,hours:48}});
   if(url.pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body></body>`});
   const file=path.resolve(root,'.'+url.pathname);
   if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.fulfill({status:404});
@@ -41,5 +47,26 @@ try{for(const width of [320,390,540,1100]){
  if(width===390)await page.screenshot({path:'docs/inventory-toast-390.png'});
  await page.locator('[data-inventory-toast]').waitFor({state:'hidden',timeout:5000});
  if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/inventory-empty-390.png'});
+ assert.equal(await page.locator('.inventory-resources').count(),0);
+ assert.equal(await page.locator('.inventory-adena strong').textContent(),new Intl.NumberFormat('ru-RU').format(32500));
+ assert.equal(await page.locator('[data-inventory-discard]').isDisabled(),true);
+ session.game.stats={lvl:80};
+ session.game.inventory.materials={crystal_S:7};
+ session.game.inventory.equipment={items:[{uid:'inventory-test-sword',name:'Test Sword',grade:'D',mainType:'weapon',category:'sword',kind:'oneHandedSword',slots:['rightHand'],stats:[],cost:10000}]};
+ await page.locator('[data-inventory-refresh]').click();await page.locator('[data-inventory-equipment]').waitFor();
+ await page.locator('[data-inventory-material="crystal_S"]').click();
+ assert.equal(await page.locator('[data-inventory-crystallize]').isDisabled(),true);
+ await page.locator('[data-inventory-discard]').click();await page.locator('.stock-quantity').waitFor();await page.locator('.stock-quantity input').fill('2');await page.locator('.stock-quantity button[type=submit]').click();
+ await page.waitForFunction(()=>document.querySelector('.utility-feedback')?.textContent==='Предмет выброшен.');
+ assert.equal(session.game.inventory.materials.crystal_S,5);assert.equal(session.game.inventory.crystals,1635);
+ await page.locator('[data-inventory-equipment]').click();assert.equal(await page.locator('[data-inventory-crystallize]').isDisabled(),false);
+ await page.locator('[data-inventory-auction]').click();await page.locator('[data-sell-price]').waitFor();assert.equal(await page.locator('[data-sell-confirm]').isVisible(),true);
+ await page.locator('.auction-panel .overlay-close').click();await page.locator('.auction-panel').waitFor({state:'detached'});
+ await page.locator('[data-inventory-equipment]').click();
+ if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/inventory-actions-390.png',animations:'disabled'});
+ await page.locator('[data-inventory-crystallize]').click();await page.locator('.stock-quantity button[type=submit]').click();await page.locator('[data-inventory-equipment]').waitFor({state:'detached'});
+ assert.ok(session.game.inventory.materials.crystal_D>0);assert.equal(session.game.inventory.crystals,1635);
+ await page.locator('[data-inventory-craft]').click();await page.locator('.equipment-panel').waitFor();assert.equal(await page.locator('[data-equipment-panel=forge]').isVisible(),true);
+ await page.locator('.equipment-panel .overlay-close').click();await page.locator('.equipment-panel').waitFor({state:'detached'});
  assert.deepEqual(errors,[]);await page.close();console.log(`Inventory layout and last-potion consumption verified at ${width}px`);
 }}finally{await browser.close();}

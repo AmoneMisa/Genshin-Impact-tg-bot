@@ -9,6 +9,7 @@ import { addMaterial, getMaterials, getMaterialCount, materialInfo } from '../fu
 import { describeItemStats } from '../functions/game/equipment/describeStats.js';
 import { isTimedItem } from '../functions/game/equipment/timedItems.js';
 import { memberName } from './social.js';
+import { hasInventoryRoom } from '../functions/game/builds/palaceCapacity.js';
 
 export const AUCTION_HOURS = 48;
 export const AUCTION_FEE = 0.05;
@@ -239,6 +240,7 @@ export async function buyLot(session, store, lotId, now = Date.now()) {
 
   const inventory = inventoryOf(session);
   if (!inventory) return { ok: false, reason: 'inventory_missing' };
+  if (!hasInventoryRoom(session)) return { ok: false, reason: 'inventory_full' };
   if (Math.max(0, number(inventory.gold)) < lot.price) return { ok: false, reason: 'not_enough_gold', missing: lot.price - number(inventory.gold) };
 
   // Whoever flips the status first wins; a second buyer gets 'lot_gone'.

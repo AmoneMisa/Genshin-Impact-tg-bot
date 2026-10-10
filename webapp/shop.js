@@ -10,6 +10,7 @@ import { openBonusGame } from './bonus.js';
 import { openLuckShopGame } from './luck-shop.js';
 import { openAuctionGame } from './auction.js';
 import {icon} from './icons.js';
+import {storeViewHtml, bindStoreView} from './store-view.js';
 
 // Keep the category window underneath the goods: closing a child returns here.
 export async function openShopGame(options) {
@@ -123,6 +124,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
   let category = initialCategory;
   let pending = false;
   let confirming = null;
+  let selectedCommand = null;
   let timer = null;
   let purchased = null; // flashes the bought row once after re-render
   let page = 1;
@@ -210,14 +212,23 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
       ? `<button type="button" class="equipment-action" data-shop-page="${page - 1}" ${page <= 1 ? 'disabled' : ''}>←</button><span>${page} / ${pages} · ${matching.length}</span><button type="button" class="equipment-action" data-shop-page="${page + 1}" ${page >= pages ? 'disabled' : ''}>→</button>`
       : '';
     pager.querySelectorAll('[data-shop-page]').forEach((button) => button.addEventListener('click', () => { page = Number(button.dataset.shopPage); confirming = null; renderItems(); }));
-    list.innerHTML = items.length ? items.map(itemCard).join('') : '<div class="shop-empty">Ничего не найдено.</div>';
-    list.querySelectorAll('.shop-item').forEach((node, index) => node.style.setProperty('--i', String(index)));
-    if (purchased) {
-      list.querySelector(`[data-shop-buy="${CSS.escape(purchased)}"]`)?.closest('.shop-item')?.classList.add('bought');
-      purchased = null;
-    }
-    list.querySelectorAll('[data-shop-buy]').forEach((button) => {
-      button.addEventListener('click', () => buy(button.dataset.shopBuy));
+    if (!items.some(item => item.command === selectedCommand)) selectedCommand = null;
+    const storeItems = items.map(item => ({
+      id: item.command,
+      iconHtml: itemIconHtml(item),
+      name: item.name,
+      note: item.onCooldown ? `Доступно через: ${remain(item.resetAt)}` : item.categoryLabel,
+      description: item.message || '',
+      requires: [{ iconHtml: materialIcon('gold'), label: 'Адена', need: item.cost, have: Number(state.gold) || 0 }],
+      canBuy: !item.onCooldown && item.canAfford,
+    }));
+    list.innerHTML = storeViewHtml({ items: storeItems, selectedId: selectedCommand });
+    purchased = null;
+    bindStoreView(list, {
+      onSelect: command => { selectedCommand = command; haptic('light'); renderItems(); },
+      onQuantity: () => {},
+      onConfirm: () => buy(selectedCommand),
+      onCancel: () => { selectedCommand = null; renderItems(); },
     });
   }
 
@@ -228,14 +239,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
   }
 
   async function buy(command) {
-    if (pending) return;
-    if (confirming !== command) {
-      confirming = command;
-      feedback.textContent = 'Нажми ещё раз, чтобы подтвердить покупку.';
-      haptic('medium');
-      renderItems();
-      return;
-    }
+    if (pending || !command) return;
 
     pending = true;
     confirming = null;

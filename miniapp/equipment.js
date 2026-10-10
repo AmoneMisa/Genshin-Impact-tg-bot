@@ -4,6 +4,7 @@ import { daysLeft, expireTimedItems, isTimedItem } from '../functions/game/equip
 import equipmentTemplate from '../template/equipmentTemplate.js';
 import equipItem from '../functions/game/equipment/equipItem.js';
 import unequipItem from '../functions/game/equipment/unequipItem.js';
+import {forgeBonuses} from '../functions/game/builds/forgeBonuses.js';
 import craftItem, {
   craftNeedExp,
   ensureCraft,
@@ -37,7 +38,7 @@ import { augmentInfo, augmentItem } from '../functions/game/equipment/augment.js
 import { addAttribute, attributeInfo, clearAttribute } from '../functions/game/equipment/attributes.js';
 import { activateSkill } from '../functions/game/equipment/lifestoneSkills.js';
 
-const ACTIONS = new Set(['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize']);
+const ACTIONS = new Set(['equip', 'unequip', 'sell', 'discard', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize']);
 
 function asNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -142,7 +143,8 @@ function sanitizeItem(session, item, index) {
     safeEnchant: safeEnchantLevel(item),
     enchantable,
     canEnchant: enchantable && !maxed,
-    enchantChance: enchantable && !maxed ? enchantChance(item) : null,
+    enchantChance: enchantable && !maxed ? enchantChance(item, session) : null,
+    masterwork: Boolean(item?.masterwork),
     scrolls: enchantable ? {
       plain: getMaterialCount(session, scrollKey(item.grade)),
       blessed: getMaterialCount(session, blessedKey(item.grade)),
@@ -228,6 +230,7 @@ export function getEquipmentState(session) {
     equippedCount: sanitized.filter((item) => item.isUsed).length,
     maxForgeLevel: maxEnchantLevel(),
     maxEnchant: maxEnchantLevel(),
+    forge: forgeBonuses(session),
     equippedSlots,
     sets: getSetsState(session),
     items: sanitized,
@@ -331,6 +334,13 @@ export function performEquipmentAction(session, key, action, options = {}) {
     };
   }
 
+  if (action === 'discard') {
+    if (isEquipped || item.isUsed) return {ok:false,reason:'item_equipped',equipment:getEquipmentState(session)};
+    if (item.augment) return {ok:false,reason:'augmented_item',equipment:getEquipmentState(session)};
+    getItems(session).splice(index, 1);
+    return {ok:true,action,equipment:getEquipmentState(session)};
+  }
+
   if (isTimedItem(item) && (action === 'crystallize' || action === 'sell')) {
     return { ok: false, reason: 'timed_item', equipment: getEquipmentState(session) };
   }
@@ -429,6 +439,9 @@ export function craftEquipmentItem(session, itemId) {
     leveledUp: result.leveledUp,
     item: result.item ? sanitizeItem(session, result.item, items.length - 1) : null,
     product: result.product || null,
+    doubled: Boolean(result.doubled),
+    masterwork: Boolean(result.masterwork),
+    saved: result.saved || 0,
     equipment: getEquipmentState(session),
   };
 }

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getInventoryState, useInventoryPotion } from '../miniapp/inventory.js';
+import { discardInventoryItem, getInventoryState, useInventoryPotion } from '../miniapp/inventory.js';
+import {performEquipmentAction} from '../miniapp/equipment.js';
 
 function player() {
   return {
@@ -40,13 +41,50 @@ test('inventory state exposes resources, arena items and migrated category count
   const session = player();
   const state = getInventoryState(session);
 
-  assert.deepEqual(state.resources, { gold: 1234, crystals: 56, ironOre: 78 });
+  assert.deepEqual(state.resources, { gold: 1234, ironOre: 78, luckCoins: 0 });
+  assert.deepEqual(state.slots, { used: 4, capacity: 80 });
   assert.deepEqual(state.arena, { tokens: 9, pvpSign: 'bronze' });
   assert.deepEqual(state.counts, { equipment: 1, gacha: 2, potions: 4 });
   assert.equal(state.player.hp, 1000);
   assert.equal(state.player.maxHp, 5000);
   assert.equal(state.player.mp, 100);
   assert.equal(state.player.maxMp, 400);
+});
+
+test('grade crystals remain items, separate from building currency, including after crystallization',()=>{
+  const session=player();
+  session.game.inventory.materials={crystal_S:7};
+  session.game.inventory.equipment.items=[{uid:'s-weapon',name:'Test S',grade:'S',mainType:'weapon',slots:['rightHand'],cost:10000,stats:[]}];
+  const state=getInventoryState(session);
+  assert.equal(state.materials.find(row=>row.key==='crystal_S').count,7);
+  assert.equal(state.materials.find(row=>row.key==='crystal_S').id,1462);
+  assert.equal('crystals' in state.resources,false);
+  const result=performEquipmentAction(session,state.equipment[0].key,'crystallize');
+  assert.equal(result.ok,true);
+  assert.ok(session.game.inventory.materials.crystal_S>7);
+  assert.equal(session.game.inventory.crystals,56);
+});
+
+test('discard validates quantity and ownership, pays nothing, and rejects stale or worn equipment',()=>{
+  const session=player();session.game.inventory.materials={crystal_S:7};
+  const initial=getInventoryState(session),potion=initial.potions[0];
+  for(const count of [0,-1,1.5,100])assert.equal(discardInventoryItem(session,{kind:'potion',ref:potion.ref,count}).ok,false);
+  assert.equal(discardInventoryItem(session,{kind:'material',ref:'gold',count:1}).ok,false);
+  assert.equal(discardInventoryItem(session,{kind:'material',ref:'crystal_S',count:2}).ok,true);
+  assert.equal(session.game.inventory.materials.crystal_S,5);
+  assert.equal(discardInventoryItem(session,{kind:'potion',ref:potion.ref,count:1}).ok,true);
+  assert.equal(session.game.inventory.potions.items[0].count,1);
+  const item={uid:'test',name:'Test',grade:'D',mainType:'weapon',slots:['rightHand'],stats:[],isUsed:true,cost:999};
+  session.game.inventory.equipment.items=[item];
+  session.game.equipmentStats.rightHand={...item};
+  let key=getInventoryState(session).equipment[0].key;
+  assert.equal(discardInventoryItem(session,{kind:'equipment',ref:key}).reason,'item_equipped');
+  item.isUsed=false;key=getInventoryState(session).equipment[0].key;
+  session.game.equipmentStats={};key=getInventoryState(session).equipment[0].key;
+  assert.equal(discardInventoryItem(session,{kind:'equipment',ref:key}).ok,true);
+  assert.equal(discardInventoryItem(session,{kind:'equipment',ref:key}).ok,false);
+  assert.equal(session.game.inventory.gold,1234);
+  assert.equal(session.game.inventory.crystals,56);
 });
 test('empty potions are hidden without shifting the keys used to drink remaining stacks',()=>{
  const session=player();session.game.inventory.potions.items[0].count=0;

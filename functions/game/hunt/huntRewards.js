@@ -5,6 +5,8 @@ import {absorbHuntSoul} from '../equipment/soulCrystals.js';
 //    Vitality (vitality.js) apply on top, exactly like on a x5 server;
 //  - gold and item drops fade when the hero is far above the mob (adena from 8 levels, items from 5);
 //  - a champion multiplies experience and the chance of every drop.
+import {hasInventoryRoom} from '../builds/palaceCapacity.js';
+import {recordAcademyEvent} from '../academy/academy.js';
 import { CHAMPIONS, HUNT, STONE_CHANCE } from './huntConfig.js';
 import { addMaterial, materialInfo } from '../player/materials.js';
 import { attributeKey, ATTRIBUTE_GRADES } from '../equipment/attributes.js';
@@ -75,6 +77,7 @@ export {LOOT_KINDS};
 export function grantKillRewards(session, mob, mobDef, {random = Math.random, now = Date.now()} = {}) {
     const level = Math.max(1, Number(session.game.stats?.lvl) || 1);
     const tier = mob.champion ? CHAMPIONS[mob.champion] : null;
+    recordAcademyEvent(session, 'mob_kill', {now});
     const result = {exp: 0, sp: 0, gold: 0, items: [], shared: [], party: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
     // A party shares the loot of a kill by its loot mode (the killer keeps everything outside a party).
     const chat = typeof session.ownerDocument === 'function' ? session.ownerDocument() : null;
@@ -151,7 +154,8 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     if (mobDef && dropRolls(customDropChance(mob.level) * HUNT.dropRate * itemGap * (tier ? tier.drops : 1), random) > 0) {
         const receiver = distributor.pick();
         const part = pickCustomPart(mob.level, receiver.game?.gameClass?.stats?.name, random);
-        if (part) {
+        // a full bag leaves the item on the ground
+        if (part && hasInventoryRoom(receiver)) {
             const inventory = receiver.game.inventory;
             if (!inventory.equipment) inventory.equipment = {name: 'Экипировка', items: []};
             inventory.equipment.items.push(instantiate(part));

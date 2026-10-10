@@ -7,7 +7,11 @@ import {
   collectBuildResources,
   changeBuildType,
   renameBuild,
+  speedupBuildUpgrade,
+  speedupPrice,
 } from '../miniapp/builds.js';
+import { buildExpCap, buildSpCap } from '../functions/game/builds/buildYield.js';
+import { levelNeed, readVitality } from '../functions/game/player/vitality.js';
 
 function session(overrides = {}) {
   const base = {
@@ -54,7 +58,7 @@ test('building preparation restores production fields for trainee area', () => {
 test('starting gold mine upgrade deducts exact configured resources', () => {
   const player = session({
     game: {
-      inventory: { gold: 1_000, crystals: 100, ironOre: 100 },
+      inventory: { gold: 1_000, crystals: 100, moonDew: 100, ironOre: 100 },
       builds: {
         goldMine: { currentLvl: 1, upgradeStartedAt: null, lastCollectAt: null, resourceCollected: 0 },
       },
@@ -66,7 +70,8 @@ test('starting gold mine upgrade deducts exact configured resources', () => {
 
   assert.equal(result.ok, true);
   assert.equal(player.game.inventory.gold, 680);
-  assert.equal(player.game.inventory.crystals, 78);
+  assert.equal(player.game.inventory.moonDew, 78);
+  assert.equal(player.game.inventory.crystals, 100, 'the premium crystals are not spent on buildings');
   assert.equal(player.game.inventory.ironOre, 90);
   assert.equal(player.game.builds.goldMine.upgradeStartedAt, now);
 });
@@ -91,24 +96,57 @@ test('finished level-one upgrade uses target level duration and settles once', (
   assert.equal(player.game.builds.goldMine.currentLvl, 2);
 });
 
-test('trainee area collection awards experience and clears stored production', () => {
+test('trainee area collection awards experience, capped by the level step, and spends Vitality', () => {
   const player = session({
     game: {
       builds: {
-        traineeArea: { currentLvl: 1, upgradeStartedAt: null, lastCollectAt: null, resourceCollected: 321 },
+        traineeArea: { currentLvl: 1, upgradeStartedAt: null, lastCollectAt: null, resourceCollected: 1_000_000 },
       },
     },
   });
+  const cap = buildExpCap(player);
 
   const result = collectBuildResources(player, 'traineeArea', 123_456);
 
   assert.equal(result.ok, true);
   assert.equal(result.resourceType, 'experience');
-  assert.equal(result.amount, 321);
-  // x5 rate and full Vitality (x3): 321 * 15 = 4815 experience.
-  assert.equal(player.game.stats.currentExp, 4815);
+  assert.equal(result.amount, cap);
+  // x5 rate and full Vitality (x3) on the capped amount
+  assert.equal(result.gained, cap * 15);
+  assert.ok(cap * 15 <= levelNeed(10) * 0.4, 'a collection is a part of a level step');
+  assert.ok(readVitality(player, 123_456).points < 20000, 'collecting experience drains Vitality');
   assert.equal(player.game.builds.traineeArea.resourceCollected, 0);
   assert.equal(player.game.builds.traineeArea.lastCollectAt, 123_456);
+});
+
+test('an empty Vitality bar blocks collecting building experience', () => {
+  const player = session({
+    game: {
+      vitality: { points: 0, at: 123_456 },
+      builds: { traineeArea: { currentLvl: 1, upgradeStartedAt: null, lastCollectAt: null, resourceCollected: 50 } },
+    },
+  });
+  const result = collectBuildResources(player, 'traineeArea', 123_456);
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, 'no_vitality');
+  assert.equal(player.game.builds.traineeArea.resourceCollected, 50);
+});
+
+test('academy skill points are capped and the crystal lake makes moon dew, not crystals', () => {
+  const player = session({
+    game: {
+      builds: {
+        academy: { currentLvl: 1, upgradeStartedAt: null, lastCollectAt: null, resourceCollected: 99_999 },
+        crystalLake: { currentLvl: 1, upgradeStartedAt: null, lastCollectAt: null, resourceCollected: 40 },
+      },
+    },
+  });
+  const sp = collectBuildResources(player, 'academy', 1_000);
+  assert.equal(sp.amount, buildSpCap(player));
+  const dew = collectBuildResources(player, 'crystalLake', 1_000);
+  assert.equal(dew.resourceType, 'moonDew');
+  assert.equal(player.game.inventory.moonDew, 10_040);
+  assert.equal(player.game.inventory.crystals, 10_000);
 });
 
 test('palace type change requires ownership and rename consumes one card', () => {
@@ -139,4 +177,22 @@ test('palace type change requires ownership and rename consumes one card', () =>
   assert.equal(renamed.ok, true);
   assert.equal(player.game.builds.palace.customName, 'Лунный дворец');
   assert.equal(player.game.builds.palace.canChangeName, false);
+});
+
+test('speeding a build up costs adena on early levels and Coins of Luck from level 11', () => {
+  assert.deepEqual(speedupPrice(5, 2 * 3_600_000), { currency: 'gold', amount: 2 * 1500 * 5 });
+  assert.deepEqual(speedupPrice(20, 3 * 3_600_000), { currency: 'luckCoins', amount: 3 * 10 });
+  assert.equal(speedupPrice(20, 10 * 60_000).amount, 0);
+
+  const player = session({
+    game: {
+      inventory: { gold: 20_000, luckCoins: 0, crystals: 500 },
+      builds: { palace: { currentLvl: 1, upgradeStartedAt: Date.now(), lastCollectAt: null } },
+    },
+  });
+  const result = speedupBuildUpgrade(player, 'palace', Date.now());
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.spent, { currency: 'gold', amount: 2 * 1500 * 2 });
+  assert.equal(player.game.inventory.gold, 20_000 - 6_000);
+  assert.equal(player.game.inventory.crystals, 500, 'crystals are not used');
 });

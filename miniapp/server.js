@@ -31,6 +31,7 @@ import {
   renameBuild,
 } from './builds.js';
 import { getArenaState, attackArena } from './arena.js';
+import { getAcademyState, claimBounty, startPassQuest, claimPass } from '../functions/game/academy/academy.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import { getBossState, getEpicState, summonBossForMiniApp, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
@@ -48,7 +49,7 @@ import {
   abandonClassQuestForMiniApp,
   promoteClassForMiniApp,
 } from './classQuests.js';
-import { getInventoryState, sellLoot, useInventoryPotion } from './inventory.js';
+import { discardInventoryItem, getInventoryState, sellLoot, useInventoryPotion } from './inventory.js';
 import { getExchangeState, buyCrystalsForMiniApp } from './exchange.js';
 import { createStarInvoice, getStarsState, mongoStarStore } from './stars.js';
 import bot from '../bot.js';
@@ -685,6 +686,18 @@ const inventorySell = guarded('inventory sell', async (req, res) => {
     const sold = sellLoot(context.session, body.key, body.count ?? null);
     if (sold.ok) await saveSession(context.session);
     return sold;
+  });
+  return sendResult(res, result, context);
+});
+
+const inventoryDiscard = guarded('inventory discard', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const result = await withLock(`${context.chatId}:${context.userId}:inventory`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const discarded = discardInventoryItem(context.session, body);
+    if (discarded.ok) await saveSession(context.session);
+    return discarded;
   });
   return sendResult(res, result, context);
 });
@@ -1600,6 +1613,34 @@ const buildsState = guarded('builds state', async (req, res) => {
   return sendJson(res, 200, builds);
 });
 
+const academyState = guarded('academy state', async (req, res) => {
+  const context = await authorize(req);
+  const state = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const view = getAcademyState(context.session);
+    await saveSession(context.session);
+    return view;
+  });
+  return sendJson(res, 200, state);
+});
+
+const academyAction = guarded('academy action', async (req, res) => {
+  const context = await authorize(req);
+  const body = await readJsonBody(req);
+  const actions = new Set(['claim', 'pass_start', 'pass_claim']);
+  if (!actions.has(body.action)) throw httpError(400, 'Unknown academy action');
+  if (body.action === 'pass_claim') assertGoldUnlocked(context);
+  const result = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const outcome = body.action === 'claim' ? claimBounty(context.session, String(body.scope || ''), String(body.id || ''))
+      : body.action === 'pass_start' ? startPassQuest(context.session, String(body.name || ''))
+        : claimPass(context.session, String(body.name || ''));
+    if (outcome.ok) await saveSession(context.session);
+    return { ...outcome, academy: getAcademyState(context.session) };
+  });
+  return sendResult(res, result, context);
+});
+
 const buildsAction = guarded('builds action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
@@ -1674,7 +1715,9 @@ const bossSummon = guarded('boss summon', async (req, res) => {
   const epic = typeof body?.epic === 'string' && body.epic ? body.epic : null;
   const result = await withLock(`${context.chatId}:boss`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return summonBossForMiniApp(context.session, context.chatId, epic);
+    const summoned = await summonBossForMiniApp(context.session, context.chatId, epic);
+    if (summoned.ok && epic) await saveSession(context.session);
+    return summoned;
   });
   context.session = await getSession(context.chatId, context.userId);
   if (result.ok && String(context.chatId) !== String(context.userId)) {
@@ -2038,6 +2081,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/trade/action') return tradeAction(req,res);
     if (route === 'POST /api/inventory/use') return inventoryUse(req, res);
     if (route === 'POST /api/inventory/sell') return inventorySell(req, res);
+    if (route === 'POST /api/inventory/discard') return inventoryDiscard(req, res);
     if (route === 'GET /api/exchange') return exchangeState(req, res);
     if (route === 'POST /api/exchange/buy') return exchangeBuy(req, res);
     if (route === 'POST /api/stars/invoice') return starsInvoice(req, res);
@@ -2094,6 +2138,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/equipment/craft') return equipmentCraft(req, res);
     if (route === 'POST /api/equipment/scroll') return equipmentScroll(req, res);
     if (route === 'POST /api/equipment/recipe') return equipmentRecipe(req, res);
+    if (route === 'GET /api/academy') return academyState(req, res);
+    if (route === 'POST /api/academy/action') return academyAction(req, res);
     if (route === 'GET /api/builds') return buildsState(req, res);
     if (route === 'POST /api/builds/action') return buildsAction(req, res);
     if (route === 'GET /api/arena') return arenaState(req, res, requestUrl);

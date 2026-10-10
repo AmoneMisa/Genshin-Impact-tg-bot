@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 import Chat from '../db/models/Chat.js';
 import {memberName} from './social.js';
 import {goldLockForMember,GOLD_LOCK_REASON} from '../functions/game/general/goldLock.js';
-import {stockRows,validateStock,transferStock} from './itemTransfer.js';
+import {stockRows,validateStock,transferStock,intoInventory} from './itemTransfer.js';
+import {inventoryCapacity} from '../functions/game/builds/palaceCapacity.js';
 export const TRADE_MS=10*60*1000,TRADE_SLOTS=12;
 const participant=(t,id)=>String(t.from)===String(id)||String(t.to)===String(id);
 const live=(t,now)=>['invited','active'].includes(t.status)&&t.expiresAt>now;
@@ -65,8 +66,8 @@ export function actTrade(chat,userId,body,now=Date.now()){
  const accepted={...trade.accepted,[userId]:trade.revision};
  if(accepted[trade.from]!==trade.revision||accepted[trade.to]!==trade.revision){trade.accepted=accepted;return {ok:true,message:'Подтверждено. Ждём второго игрока.'};}
  const left=structuredClone(stock(a)),right=structuredClone(stock(b));
- for(const [from,to,rows] of [[left,right,trade.offers[trade.from]],[right,left,trade.offers[trade.to]]])for(const row of rows){
-  const moved=transferStock(from,to,row);if(!moved.ok)return moved;
+ for(const [from,to,rows,receiver] of [[left,right,trade.offers[trade.from],b],[right,left,trade.offers[trade.to],a]])for(const row of rows){
+  const moved=transferStock(from,to,row,intoInventory(inventoryCapacity(receiver)));if(!moved.ok)return moved;
  }
  a.game.inventory=left;b.game.inventory=right;trade.accepted=accepted;trade.status='completed';trade.completedAt=now;
  return {ok:true,completed:true,message:'Обмен завершён.'};

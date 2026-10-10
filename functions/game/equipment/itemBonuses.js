@@ -25,11 +25,15 @@ export function enchantFraction(level, safe = config().safe) {
     return fraction;
 }
 
-/** Extra stats an item gets from its enchant level: weapons gain power, everything else defence. */
+/** A masterwork item (rare result of a craft) is this share stronger than an ordinary one. */
+export const MASTERWORK_SHARE = 0.1;
+
+/** Extra stats an item gets from its enchant level and masterwork: weapons gain power, everything else defence. */
 export function enchantExtras(item) {
     const level = getEnchantLevel(item);
-    if (!level) return {};
-    const fraction = enchantFraction(level, safeEnchantLevel(item));
+    const masterwork = item?.masterwork ? MASTERWORK_SHARE : 0;
+    if (!level && !masterwork) return {};
+    const fraction = (level ? enchantFraction(level, safeEnchantLevel(item)) : 0) + masterwork;
     const stat = item.mainType === 'weapon' ? 'power' : 'defence';
     const base = Number(item.characteristics?.[stat]) || 0;
     return base ? {[stat]: base * fraction} : {};

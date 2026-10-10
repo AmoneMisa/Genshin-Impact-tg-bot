@@ -49,7 +49,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
   { id: 'fishing', title: 'Рыбалка', subtitle: 'Удочка, автоловля, дневной лимит', icon: '🎣', status: 'webgl' },
   { id: 'tattoos', title: 'Символы', subtitle: 'Краски меняют характеристики: до трёх символов', icon: '🎨', status: 'webgl' },
-  { id: 'merchants', title: 'Торговцы', subtitle: 'Оружие, броня, самоцветы и свитки как в Lineage 2', icon: '⚖️', status: 'webgl' },
+  { id: 'merchants', title: 'Торговцы', subtitle: 'Оружие, броня, самоцветы и свитки', icon: '⚖️', status: 'webgl' },
   { id: 'party', title: 'Группа', subtitle: 'До 9 игроков · баффы на всех', icon: '👥', status: 'webgl' },
   { id: 'buffs', title: 'Баффы', subtitle: 'Усиления класса на 20 минут', icon: '✨', status: 'webgl' },
   { id: 'passives', title: 'Пассивные навыки', subtitle: 'Постоянные бонусы класса за ОП', icon: '🛡️', status: 'webgl' },

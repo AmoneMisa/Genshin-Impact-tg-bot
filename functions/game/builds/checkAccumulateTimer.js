@@ -2,6 +2,7 @@ import Chat from '../../../db/models/Chat.js';
 import buildsTemplate from '../../../template/buildsTemplate.js';
 import calculateIncreaseInResourceExtraction from './calculateIncreaseInResourceExtraction.js';
 import settleBuildUpgrade from './settleBuildUpgrade.js';
+import {buildStorageCap} from './buildYield.js';
 import debugMessage from "../../tgBotFunctions/debugMessage.js";
 import getUserName from "../../getters/getUserName.js";
 import sendMessage from "../../tgBotFunctions/sendMessage.js";
@@ -96,12 +97,14 @@ async function tickChat(chatId) {
                     build.lastCollectAt = currentTime;
                 }
 
-                if (Number(build.currentLvl) === 1) {
-                    build.resourceCollected += Math.ceil(Number(buildTemplate.productionPerHour));
-                } else {
-                    build.resourceCollected += Math.ceil(Number(buildTemplate.productionPerHour)
+                let produced = Math.ceil(Number(buildTemplate.productionPerHour));
+                if (Number(build.currentLvl) !== 1) {
+                    produced = Math.ceil(Number(buildTemplate.productionPerHour)
                         * calculateIncreaseInResourceExtraction(buildName, Number(build.currentLvl)));
                 }
+                // experience and skill points stop at the cap of the hero's level (see buildYield.js)
+                const kind = buildTemplate.resourcesType || (buildTemplate.type === 'experience' ? 'experience' : null);
+                build.resourceCollected = Math.min(buildStorageCap(member, kind), build.resourceCollected + produced);
 
                 updated = true;
             }

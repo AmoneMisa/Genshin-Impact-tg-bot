@@ -17,6 +17,7 @@ import { normalizeElement } from "../equipment/attributes.js";
 import { gainExp } from "../player/vitality.js";
 import { rollCraftDrops } from "../equipment/craftItem.js";
 import { recordQuestEvent } from "../classes/classQuests.js";
+import { recordAcademyEvent } from "../academy/academy.js";
 import { giveBuffPotionDrop } from "./buffPotionDrops.js";
 
 export default async function(boss, chatId) {
@@ -70,6 +71,8 @@ export default async function(boss, chatId) {
             type: "boss_kill",
             boss: {name: boss.name, tier: template?.tier || 1, element: template?.element}
         });
+
+        recordAcademyEvent(member, 'boss_kill', {boss: {epic: Boolean(template?.epic)}});
 
         gotLoot[userId] = {
             stats: member.game.stats,

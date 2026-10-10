@@ -3,15 +3,16 @@ import mongoose from 'mongoose';
 import Chat from '../db/models/Chat.js';
 import {getMailbox,claimMail} from './promo.js';
 import {memberName} from './social.js';
-import {stockRows,transferStock} from './itemTransfer.js';
+import {stockRows,transferStock,intoInventory} from './itemTransfer.js';
+import {inventoryCapacity} from '../functions/game/builds/palaceCapacity.js';
 import {goldLockForMember,GOLD_LOCK_REASON} from '../functions/game/general/goldLock.js';
 
 export const MAIL_POSTAGE=100, MAIL_SLOTS=12, MAIL_LIFETIME=15*86400000;
 const member=(chat,id)=>chat.members.find(m=>String(m.userId)===String(id));
 const inventory=m=>m?.game?.inventory||{};
 const fail=reason=>({ok:false,reason});
-function moveAll(source,target){
-  for(const row of stockRows(source)){const result=transferStock(source,target,row);if(!result.ok)return result;}
+function moveAll(source,target,options={}){
+  for(const row of stockRows(source)){const result=transferStock(source,target,row,options);if(!result.ok)return result;}
   return {ok:true};
 }
 // Unclaimed attachments always return to the sender; expiry never destroys them.
@@ -84,7 +85,7 @@ export function actMail(chat,userId,body,now=Date.now()){
       if(!Number.isSafeInteger((senderStock.gold||0)+letter.price))return fail('invalid_count');
       target.gold-=letter.price;senderStock.gold=(senderStock.gold||0)+letter.price;
     }
-    const moved=moveAll(source,target);if(!moved.ok)return moved;
+    const moved=moveAll(source,target,intoInventory(inventoryCapacity(me)));if(!moved.ok)return moved;
     me.game.inventory=target;if(letter.price)sender.game.inventory=senderStock;
     letter.stock=source;letter.status='claimed';letter.claimedAt=now;
     return {ok:true,message:letter.price?'Платёж отправлен, вложения получены.':'Письмо получено.'};

@@ -19,14 +19,14 @@ export default {
         upgradeCosts: [{
             level: 2,
             gold: 500,
-            crystals: 15,
+            moonDew: 15,
             ironOre: 20
         }],
         resourcesType: "sp"
     },
     goldMine: {
         name: "Золотая шахта",
-        description: "Основное место для добычи золота. Работает до 36 часов автономно. Если вы не соберёте золото после 36 часов непрерывной работы шахты, оно перестанет накапливаться.",
+        description: "Основное место для добычи адены. Работает до 36 часов автономно. Если вы не соберёте адену после 36 часов непрерывной работы шахты, она перестанет накапливаться.",
         startLvl: 1,
         updateCostGold: 300,
         updateCostCrystal: 20,
@@ -46,15 +46,15 @@ export default {
         upgradeCosts: [{
             level: 2,
             gold: 320,
-            crystals: 22,
+            moonDew: 22,
             ironOre: 10
         }],
         resourcesType: "gold"
     },
     crystalLake: {
         startLvl: 1,
-        name: "Озеро кристаллов",
-        description: "Кристальное озеро, которое производит для Вас некоторое количество кристаллов, нужных для развития Вашего персонажа и Ваших построек. Работает непрерывно до 72 часов. Доступно для постройки от 2 уровня дворца",
+        name: "Озеро лунной росы",
+        description: "Тихое озеро, из которого по каплям собирается лунная роса — материал для улучшения Ваших построек. Это не кристаллы: кристаллы в постройках не используются. Работает непрерывно до 72 часов. Доступно для постройки от 2 уровня дворца",
         productionPerHour: 50,
         maxWorkHoursWithoutCollection: 72,
         upgradeRequirements: [
@@ -186,9 +186,9 @@ export default {
             // Далее для каждого следующего уровня требуется уровень дворца на 1 больше
         ],
         upgradeCosts: [
-            {level: 2, gold: 7500, ironOre: 40, crystals: 0},
-            {level: 3, gold: 10000, ironOre: 60, crystals: 0},
-            {level: 4, gold: 12500, ironOre: 80, crystals: 0},
+            {level: 2, gold: 7500, ironOre: 40, moonDew: 0},
+            {level: 3, gold: 10000, ironOre: 60, moonDew: 0},
+            {level: 4, gold: 12500, ironOre: 80, moonDew: 0},
             // Далее для каждого следующего уровня стоимость увеличивается
         ],
         upgradeTime: [{
@@ -200,7 +200,7 @@ export default {
         }, {
             level: 5, time: 0.55,
         }], // часы
-        resourcesType: "crystals",
+        resourcesType: "moonDew",
         available: true
     },
     shop: {
@@ -228,7 +228,7 @@ export default {
             level: 5, time: 6,
         }], // часы
         upgradeCosts: [{
-            level: 2, gold: 2000, ironOre: 60, crystals: 300
+            level: 2, gold: 2000, ironOre: 60, moonDew: 300
         }],
         maxLvl: 30,
         upgradeRequirements: [
@@ -453,7 +453,7 @@ export default {
             level: 5, time: 0.55,
         }], // часы
         upgradeCosts: [{
-            level: 2, gold: 4900, ironOre: 30, crystals: 420
+            level: 2, gold: 4900, ironOre: 30, moonDew: 420
         }],
         maxLvl: 30,
         type: "experience",
@@ -732,9 +732,9 @@ export default {
             // Далее для каждого следующего уровня требуется уровень дворца на 1 больше
         ],
         upgradeCosts: [
-            {level: 2, gold: 800, ironOre: 30, crystals: 0},
-            {level: 3, gold: 1500, ironOre: 45, crystals: 0},
-            {level: 4, gold: 3780, ironOre: 60, crystals: 0},
+            {level: 2, gold: 800, ironOre: 30, moonDew: 0},
+            {level: 3, gold: 1500, ironOre: 45, moonDew: 0},
+            {level: 4, gold: 3780, ironOre: 60, moonDew: 0},
             // Далее для каждого следующего уровня стоимость увеличивается
         ],
         buildCost: {
@@ -747,55 +747,70 @@ export default {
     forge: {
         name: "Кузня",
         startLvl: 1,
-        description: "Кузня Вашего дворца - в зависимости от уровня, позволяет прокачивать, чинить, полировать, улучшать экипировку.",
+        description: "Кузня Вашего дворца. С ростом уровня (до 30) повышает шанс крафта, заточки, мастерской работы и двойного крафта, иногда экономит материалы и даёт больше кристаллов при кристаллизации.",
         upgradeRequirements: [
-            {
-                level: 2, buildRequirements: [{name: "palace", level: 2}]
-            },
-            {
-                level: 3, buildRequirements: [{name: "palace", level: 4}]
-            },
-            {
-                level: 4, buildRequirements: [{name: "palace", level: 5}]
-            },
-            {
-                level: 5, buildRequirements: [{name: "palace", level: 7}]
-            },
-            {
-                level: 6, buildRequirements: [{name: "palace", level: 10}]
-            },
-            {
-                level: 7, buildRequirements: [{name: "palace", level: 14}]
-            },
-            {
-                level: 8, buildRequirements: [{name: "palace", level: 17}]
-            },
-            {
-                level: 9, buildRequirements: [{name: "palace", level: 22}]
-            },
-            {
-                level: 10, buildRequirements: [{name: "palace", level: 25}]
-            },
-            {
-                level: 11, buildRequirements: [{name: "palace", level: 28}]
-            },
-            {
-                level: 12, buildRequirements: [{name: "palace", level: 30}]
-            }],
-        upgradeCosts: [
-            {level: 2, gold: 35800, ironOre: 240, crystals: 500},
-            {level: 3, gold: 58500, ironOre: 425, crystals: 640},
-            {level: 4, gold: 83780, ironOre: 885, crystals: 680},
-            {level: 5, gold: 155900, ironOre: 1520, crystals: 795},
-            {level: 6, gold: 194250, ironOre: 2585, crystals: 920},
-            {level: 7, gold: 250000, ironOre: 2640, crystals: 1150},
-            {level: 8, gold: 320000, ironOre: 3730, crystals: 2585},
-            {level: 9, gold: 535980, ironOre: 3890, crystals: 3980},
-            {level: 10, gold: 620500, ironOre: 4400, crystals: 5450},
-            {level: 11, gold: 845000, ironOre: 6260, crystals: 7950},
-            {level: 12, gold: 1569000, ironOre: 72500, crystals: 15000},
+            {level: 2, buildRequirements: [{name: "palace", level: 2}]},
+            {level: 3, buildRequirements: [{name: "palace", level: 3}]},
+            {level: 4, buildRequirements: [{name: "palace", level: 4}]},
+            {level: 5, buildRequirements: [{name: "palace", level: 5}]},
+            {level: 6, buildRequirements: [{name: "palace", level: 6}]},
+            {level: 7, buildRequirements: [{name: "palace", level: 7}]},
+            {level: 8, buildRequirements: [{name: "palace", level: 8}]},
+            {level: 9, buildRequirements: [{name: "palace", level: 9}]},
+            {level: 10, buildRequirements: [{name: "palace", level: 10}]},
+            {level: 11, buildRequirements: [{name: "palace", level: 11}]},
+            {level: 12, buildRequirements: [{name: "palace", level: 12}]},
+            {level: 13, buildRequirements: [{name: "palace", level: 13}]},
+            {level: 14, buildRequirements: [{name: "palace", level: 14}]},
+            {level: 15, buildRequirements: [{name: "palace", level: 15}]},
+            {level: 16, buildRequirements: [{name: "palace", level: 16}]},
+            {level: 17, buildRequirements: [{name: "palace", level: 17}]},
+            {level: 18, buildRequirements: [{name: "palace", level: 18}]},
+            {level: 19, buildRequirements: [{name: "palace", level: 19}]},
+            {level: 20, buildRequirements: [{name: "palace", level: 20}]},
+            {level: 21, buildRequirements: [{name: "palace", level: 21}]},
+            {level: 22, buildRequirements: [{name: "palace", level: 22}]},
+            {level: 23, buildRequirements: [{name: "palace", level: 23}]},
+            {level: 24, buildRequirements: [{name: "palace", level: 24}]},
+            {level: 25, buildRequirements: [{name: "palace", level: 25}]},
+            {level: 26, buildRequirements: [{name: "palace", level: 26}]},
+            {level: 27, buildRequirements: [{name: "palace", level: 27}]},
+            {level: 28, buildRequirements: [{name: "palace", level: 28}]},
+            {level: 29, buildRequirements: [{name: "palace", level: 29}]},
+            {level: 30, buildRequirements: [{name: "palace", level: 30}]}
         ],
-        maxLvl: 12,
+        upgradeCosts: [
+            {level: 2, gold: 35800, ironOre: 240, moonDew: 500},
+            {level: 3, gold: 58500, ironOre: 425, moonDew: 640},
+            {level: 4, gold: 83780, ironOre: 885, moonDew: 680},
+            {level: 5, gold: 155900, ironOre: 1520, moonDew: 795},
+            {level: 6, gold: 194250, ironOre: 2585, moonDew: 920},
+            {level: 7, gold: 250000, ironOre: 2640, moonDew: 1150},
+            {level: 8, gold: 320000, ironOre: 3730, moonDew: 2585},
+            {level: 9, gold: 535980, ironOre: 3890, moonDew: 3980},
+            {level: 10, gold: 620500, ironOre: 4400, moonDew: 5450},
+            {level: 11, gold: 845000, ironOre: 6260, moonDew: 7950},
+            {level: 12, gold: 963300, ironOre: 7011, moonDew: 8904},
+            {level: 13, gold: 1098200, ironOre: 7852, moonDew: 9972},
+            {level: 14, gold: 1251900, ironOre: 8794, moonDew: 11169},
+            {level: 15, gold: 1427200, ironOre: 9849, moonDew: 12509},
+            {level: 16, gold: 1627000, ironOre: 11031, moonDew: 14010},
+            {level: 17, gold: 1854800, ironOre: 12355, moonDew: 15691},
+            {level: 18, gold: 2114500, ironOre: 13838, moonDew: 17574},
+            {level: 19, gold: 2410500, ironOre: 15499, moonDew: 19683},
+            {level: 20, gold: 2748000, ironOre: 17359, moonDew: 22045},
+            {level: 21, gold: 3132700, ironOre: 19442, moonDew: 24690},
+            {level: 22, gold: 3571300, ironOre: 21775, moonDew: 27653},
+            {level: 23, gold: 4071300, ironOre: 24388, moonDew: 30971},
+            {level: 24, gold: 4641300, ironOre: 27315, moonDew: 34688},
+            {level: 25, gold: 5291100, ironOre: 30593, moonDew: 38851},
+            {level: 26, gold: 6031900, ironOre: 34264, moonDew: 43513},
+            {level: 27, gold: 6876400, ironOre: 38376, moonDew: 48735},
+            {level: 28, gold: 7839100, ironOre: 42981, moonDew: 54583},
+            {level: 29, gold: 8936600, ironOre: 48139, moonDew: 61133},
+            {level: 30, gold: 10187700, ironOre: 53916, moonDew: 68469},
+        ],
+        maxLvl: 30,
         available: true
     }
 };

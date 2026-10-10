@@ -1,5 +1,8 @@
 import {sellableItems} from './auction.js';
 import {isTimedItem} from '../functions/game/equipment/timedItems.js';
+import {inventorySlotsUsed} from '../functions/game/builds/palaceCapacity.js';
+/** Options of a transfer into an inventory: it holds `capacity` slots (the palace level sets it). */
+export const intoInventory=capacity=>({limit:capacity,slots:inventorySlotsUsed});
 export const STORAGE_SLOTS=250;
 export const CURRENCIES={gold:'Адена',crystals:'Кристаллы',ironOre:'Железная руда'};
 export const potionKey=p=>p?.id||`${p?.type}:${p?.bottleType}:${p?.power}:${p?.size}`;
@@ -27,13 +30,14 @@ export function validateStock(stock,{kind,ref,count}){
  return {ok:false,reason:'invalid_kind'};
 }
 /** Validate everything before changing either stock; equipment metadata is kept intact. */
-export function transferStock(source,target,request,{limit=Infinity}={}){
+export function transferStock(source,target,request,{limit=Infinity,slots=null}={}){
  const checked=validateStock(source,request);if(!checked.ok)return checked;
  const {kind,ref,count}=request;
  const row=stockRows(source).find(r=>r.kind===kind&&r.ref===ref);
  const existing=stockRows(target).find(r=>r.kind===kind&&r.ref===ref);
  if(kind==='equipment'&&target?.equipment?.items?.some(i=>i.uid===ref))return {ok:false,reason:'duplicate_item'};
- if(!existing&&storageSlots(target)>=limit)return {ok:false,reason:'warehouse_full'};
+ if(slots){if(kind!=='currency'&&!existing&&slots(target)>=limit)return {ok:false,reason:'inventory_full'};}
+ else if(!existing&&storageSlots(target)>=limit)return {ok:false,reason:'warehouse_full'};
  const destination=kind==='currency'?target[ref]:kind==='material'?target.materials?.[ref]:kind==='potion'?target.potions?.items?.find(p=>potionKey(p)===ref)?.count:0;
  if(kind!=='equipment'&&(!Number.isSafeInteger(destination??0)||(destination??0)<0||!Number.isSafeInteger((destination??0)+count)))return {ok:false,reason:'invalid_count'};
  if(kind==='equipment'){

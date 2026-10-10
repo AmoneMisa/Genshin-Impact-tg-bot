@@ -13,7 +13,7 @@ const ENCHANT_GRADES = ['D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
 const enchantMaterials = ENCHANT_GRADES.flatMap(grade => [
     {key: `scroll_${grade}`, name: `Свиток заточки (${grade})`, icon: '📜', description: `Заточка снаряжения грейда ${grade}. Выше безопасного уровня предмет может разрушиться.`},
     {key: `blessed_${grade}`, name: `Благословенный свиток (${grade})`, icon: '✨', description: `Заточка снаряжения грейда ${grade}: при неудаче предмет не ломается, а возвращается на безопасный уровень.`},
-    {key: `crystal_${grade}`, name: `Кристалл ${grade}`, icon: '💠', description: `Остаётся от разрушенного или кристаллизованного снаряжения грейда ${grade}. Идёт на свитки заточки.`},
+    {key: `crystal_${grade}`, ...(grade==='S'?{id:1462}:{}), name: `Кристалл ${grade}`, icon: '💠', description: `Остаётся от разрушенного или кристаллизованного снаряжения грейда ${grade}. Идёт на свитки заточки.`},
 ]);
 
 // Typed scrolls (Lineage II): blessed ones drop a failed item back to the safe level, indestructible

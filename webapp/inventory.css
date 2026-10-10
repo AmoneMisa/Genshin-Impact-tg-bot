@@ -101,3 +101,28 @@
 .inventory-panel .inv-vital{position:relative;display:grid;grid-template-columns:23px minmax(0,1fr);align-items:center;gap:3px}
 .inventory-panel .inv-vital>div{display:contents}.inventory-panel .inv-vital>div>span{font:700 11px/14px system-ui}.inventory-panel .inv-vital>div>strong{position:absolute;top:0;left:26px;right:0;z-index:1;text-align:center;font:700 11px/14px system-ui;text-shadow:0 1px 2px #000;pointer-events:none}
 .inventory-panel .inv-vital>i{height:14px;grid-column:2;box-sizing:border-box}
+.inventory-panel .inv-slot img{display:block;width:48px;height:48px;max-width:100%;object-fit:contain}
+.inventory-footer{position:sticky;bottom:-16px;z-index:2;display:grid;gap:8px;margin:4px -2px -2px;padding:12px 2px 4px;border-top:1px solid #6b5326;background:#100d16}
+.inventory-wallet{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.inventory-adena{display:flex;align-items:center;gap:8px;min-width:0}
+.inventory-adena img{width:24px;height:24px;object-fit:contain}
+.inventory-adena strong{flex:1;padding:7px 10px;border:1px solid #514344;background:#08070b;text-align:right;color:#f3dca6;font:600 13px/1.3 system-ui;overflow-wrap:anywhere}
+.inventory-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.inventory-tools [data-inventory-craft]{grid-column:1/-1}
+.inventory-footer button{min-height:38px;padding:7px 10px;border:1px solid #8d713e;border-radius:5px;background:linear-gradient(#392d1c,#201911);color:#eee4cf;font:600 12px/1.4 system-ui;overflow-wrap:anywhere}
+.inventory-footer button:disabled{opacity:.4;cursor:default}
+.inventory-footer button:not(:disabled):hover{border-color:#d8b36a;background:#47361c}
+.inventory-panel .inv-detail>img{width:48px;height:48px;object-fit:contain}
+.top-res[hidden],body:has(.game-overlay:not(.city-window)) .top-res:has(#crystals){display:none!important}
+
+/* L2-style bag: filter tabs over one grid of icons, adena and Coins of Luck at the bottom. */
+.inv-tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+.inv-tabs button { flex: 1 0 auto; min-height: 32px; padding: 6px 10px; border: 1px solid #514344; border-bottom: 0; border-radius: 6px 6px 0 0; background: #15111c; color: rgba(238, 228, 207, .7); font: 600 12px/1.2 system-ui; }
+.inv-tabs button.active { background: #2a2233; border-color: #d8b36a; color: #f3dca6; }
+.inv-bag.l2-bag { border-radius: 0 6px 6px 6px; max-height: 330px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #9b7b43 #100d16; }
+.inv-plus { position: absolute; left: 3px; top: 2px; font: 800 11px/1 system-ui; font-style: normal; color: #ffe08a; text-shadow: 0 0 3px #000, 0 0 3px #000; }
+.inv-worn { position: absolute; right: 3px; top: 3px; width: 8px; height: 8px; border-radius: 50%; background: #5cd16b; box-shadow: 0 0 4px #000; }
+.inventory-wallet { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+.inventory-col { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.inventory-col img { width: 24px; height: 24px; object-fit: contain; }
+.inventory-col strong { flex: 1; padding: 7px 10px; border: 1px solid #514344; background: #08070b; text-align: right; color: #f3dca6; font: 600 13px/1.3 system-ui; overflow-wrap: anywhere; }

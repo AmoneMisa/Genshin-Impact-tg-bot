@@ -6,6 +6,8 @@ import { gradeInfo, slotShareKey } from './catalog.js';
 import { getEnchantLevel, maxEnchantLevel, safeEnchantLevel } from './itemBonuses.js';
 import { isActuallyEquipped, syncEquippedSnapshot } from './snapshots.js';
 import unequipItem from './unequipItem.js';
+import {forgeBonuses} from '../builds/forgeBonuses.js';
+import {recordAcademyEvent} from '../academy/academy.js';
 
 export const scrollKey = grade => `scroll_${grade}`;
 export const blessedKey = grade => `blessed_${grade}`;
@@ -24,8 +26,10 @@ export function isEnchantable(item) {
 }
 
 /** Chance that the next scroll works: certain up to the safe level, `chance` above it. */
-export function enchantChance(item) {
-    return getEnchantLevel(item) < safeEnchantLevel(item) ? 1 : config().chance;
+export function enchantChance(item, session = null) {
+    if (getEnchantLevel(item) < safeEnchantLevel(item)) return 1;
+    // the forge adds to the risky rolls
+    return Math.min(1, config().chance + (session ? forgeBonuses(session).enchant : 0));
 }
 
 /** Crystals the item falls apart into (the grade's crystals by what kind of item it is). */
@@ -70,10 +74,11 @@ export function enchantItem(session, item, { blessed = false, scroll = null } = 
     const resets = blessed || scroll === 'blessedTyped';
     if (!spendMaterials(session, { [key]: 1 })) return { ok: false, reason: 'no_scroll', scroll: key };
 
-    const chance = enchantChance(item);
+    const chance = enchantChance(item, session);
     if (Math.random() < chance) {
         item.enchant = level + 1;
         syncEquippedSnapshot(session, item);
+        recordAcademyEvent(session, 'enchant');
         return { ok: true, outcome: 'success', level: item.enchant, chance };
     }
 
@@ -96,10 +101,12 @@ export function enchantItem(session, item, { blessed = false, scroll = null } = 
 /** Breaks an item down into crystals on purpose. */
 export function crystallizeItem(session, item) {
     if (!isEnchantable(item)) return { ok: false, reason: 'not_enchantable' };
-    const crystals = crystalYield(item);
+    // the forge gives more crystals for a crystallization done on purpose
+    const bonus = forgeBonuses(session).crystals;
+    const crystals = Math.round(crystalYield(item) * (1 + bonus));
     destroy(session, item);
     addMaterial(session, crystalKey(item.grade), crystals);
-    return { ok: true, crystals, grade: item.grade };
+    return { ok: true, crystals, grade: item.grade, bonus };
 }
 
 /**

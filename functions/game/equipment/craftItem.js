@@ -11,6 +11,9 @@ import getCurrentMp from '../player/getters/getCurrentMp.js';
 import {hennaOfDye, professionTier, professionLevel, TATTOO_MIN_TIER} from '../player/tattoos.js';
 import customSets from '../../../template/customSets.js';
 import skillUsagePayCost from '../player/skillUsagePayCost.js';
+import {forgeBonuses, reduceNeeds, MASTERWORK_BASE} from '../builds/forgeBonuses.js';
+import {hasInventoryRoom} from '../builds/palaceCapacity.js';
+import {recordAcademyEvent} from '../academy/academy.js';
 
 // A recipe id is the catalog item it makes, or `recipe:<recipe item>` for a real recipe that makes a material
 // (alloys, patterns ... the real chain behind the S-grade items).
@@ -196,31 +199,52 @@ export default function craftItem(session, itemId, {random = Math.random} = {}) 
 
     const missing = missingForRecipe(session, recipe);
     if (Object.keys(missing).length) return {ok: false, reason: 'not_enough_materials', missing};
+    // a new item or a new kind of material needs a free slot (the palace level sets the bag size)
+    const needsSlot = recipe.productKey ? getMaterialCount(session, recipe.productKey) <= 0 : true;
+    if (needsSlot && !hasInventoryRoom(session, recipe.productKey ? 1 : 2)) return {ok: false, reason: 'inventory_full'};
     const mp = Math.max(0, Number(recipe.mp) || 0);
     if (mp > getCurrentMp(session, session.game.gameClass)) return {ok: false, reason: 'not_enough_mp', mp};
 
     const inventory = session.game.inventory;
-    spendMaterials(session, recipe.materials);
-    inventory.ironOre -= recipe.ironOre;
+    // the forge: sometimes the craft takes a part of the materials less
+    const forge = forgeBonuses(session);
+    const saved = forge.saveChance > 0 && random() < forge.saveChance ? forge.saveShare : 0;
+    const spent = saved ? reduceNeeds({...recipe.materials, ironOre: recipe.ironOre}, saved) : {...recipe.materials, ironOre: recipe.ironOre};
+    const {ironOre: spentOre, ...spentMaterials} = spent;
+    spendMaterials(session, spentMaterials);
+    inventory.ironOre -= spentOre;
     inventory.gold -= recipe.gold;
     if (mp) skillUsagePayCost(session, 'mp', mp);
 
-    const success = random() < recipe.successRate;
+    const success = random() < Math.min(1, recipe.successRate + forge.craft);
     const exp = config().exp;
     const gained = (success ? exp.success : exp.fail) + exp.perGrade * gradeIndex(recipe.grade);
     const leveledUp = gainExp(session, gained);
 
     let item = null;
     let product = null;
+    let doubled = false;
+    let masterwork = false;
     if (success && recipe.productKey) {
-        addMaterial(session, recipe.productKey, recipe.amount);
-        product = {key: recipe.productKey, name: recipe.productName, amount: recipe.amount};
+        doubled = forge.doubleCraft > 0 && random() < forge.doubleCraft;
+        const amount = recipe.amount * (doubled ? 2 : 1);
+        addMaterial(session, recipe.productKey, amount);
+        product = {key: recipe.productKey, name: recipe.productName, amount};
     } else if (success) {
         if (!inventory.equipment) inventory.equipment = {name: 'Экипировка', items: []};
+        masterwork = random() < MASTERWORK_BASE + forge.masterwork;
         item = instantiate(findCatalogItem(itemId));
+        if (masterwork) item.masterwork = true;
         inventory.equipment.items.push(item);
+        doubled = forge.doubleCraft > 0 && random() < forge.doubleCraft;
+        if (doubled) {
+            const twin = instantiate(findCatalogItem(itemId));
+            if (masterwork) twin.masterwork = true;
+            inventory.equipment.items.push(twin);
+        }
     }
-    return {ok: true, success, item, product, exp: gained, leveledUp, craft: {level: craft.level, exp: craft.exp}, recipe};
+    if (success) recordAcademyEvent(session, 'craft');
+    return {ok: true, success, item, product, doubled, masterwork, saved, exp: gained, leveledUp, craft: {level: craft.level, exp: craft.exp}, recipe};
 }
 
 /** The recipes a player can sensibly look at: grades up to a few levels ahead, for items their class can use. */

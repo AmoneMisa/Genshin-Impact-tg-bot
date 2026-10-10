@@ -4,6 +4,7 @@ import { icon } from './icons.js';
 import {L2_UI_ART,l2IconHtml} from './art/l2-icon-art.js';
 import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
+import {storeViewHtml, bindStoreView} from './store-view.js';
 
 // The merchants: equipment, gemstones, dyes, recipe books, ammunition and scrolls sold as in the real Lineage II
 // shops. The server filters and pages the stock, so only one page of a merchant is ever loaded.
@@ -38,7 +39,8 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   let state = null;
   let tab = null;
   let pending = false;
-  let confirming = null;
+  let selectedId = null;
+  let quantity = 1;
   let searchTimer = 0;
 
   const overlay = document.createElement('section');
@@ -93,8 +95,8 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     return parts.join(' · ');
   }
 
-  function itemCard(item) {
-    const armed = confirming === item.id;
+  /** One merchant entry as the store window's item: what it is, what it costs and what the player has. */
+  function storeItem(item) {
     const note = !item.canUse
       ? (item.useReason === 'level_too_low' ? `Нужен ${item.minLevel} уровень` : 'Не подходит твоему классу')
       : item.kind === 'sp' ? `+${number(item.amount)} ОП` : item.amount > 1 ? `×${number(item.amount)}` : '';
@@ -105,15 +107,16 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
       const image=itemArtSources(itemArtKey(normalizeLootKind(definition),definition));
       art=`<img class="merchant-equipment-art" src="${image.src}" srcset="${image.srcset}" sizes="48px" width="48" height="48" alt="" loading="lazy" decoding="async">`;
     }
-    return `<article class="shop-item merchant-item ${item.canPay && item.canUse ? '' : 'poor'} ${armed ? 'armed' : ''}">
-      <span class="shop-icon">${art}</span>
-      <div class="shop-item-copy">
-        <h3>${escapeHtml(item.name)}${item.grade ? ` <small>${escapeHtml(gradeText(item.grade))}</small>` : ''}</h3>
-        ${item.symbol ? symbolHtml(item.symbol) : ''}
-        <p>${armed ? 'Нажми ещё раз, чтобы купить' : `${escapeHtml(note)}${note ? ' · ' : ''}${priceHtml(item)}`}</p>
-      </div>
-      <button type="button" class="shop-price ${armed ? 'confirming' : ''}" data-buy="${escapeHtml(item.id)}" ${item.canPay && item.canUse ? '' : 'disabled'}>${armed ? '✓' : 'Купить'}</button>
-    </article>`;
+    const requires = [];
+    if (item.cost.gold) requires.push({ iconHtml: materialIcon('gold'), label: 'Адена', need: item.cost.gold, have: Number(state.gold) || 0 });
+    if (item.cost.aa) requires.push({ iconHtml: materialIcon('aa'), label: 'Древняя адена', need: item.cost.aa, have: Number(state.aa) || 0 });
+    for (const material of item.cost.materials) requires.push({ iconHtml: materialIcon(material.key), label: material.name, need: material.need, have: material.have });
+    return {
+      id: item.id, iconHtml: art, name: item.name, grade: item.grade ? gradeText(item.grade) : '',
+      badge: item.amount > 1 ? `×${number(item.amount)}` : '', note,
+      extraHtml: item.symbol ? symbolHtml(item.symbol) : '', requires,
+      canBuy: Boolean(item.canPay && item.canUse), countable: item.kind !== 'equipment', maxCount: 1000,
+    };
   }
 
   function filtersHtml() {
@@ -153,7 +156,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
       const meta = state.merchants.find(merchant => merchant.id === state.merchant);
       const banner=L2_UI_ART['merchant-'+state.merchant]?`<img class="merchant-banner" src="/art/merchants/${state.merchant}-720.webp" srcset="/art/merchants/${state.merchant}-480.webp 480w, /art/merchants/${state.merchant}-720.webp 720w" sizes="(max-width: 600px) calc(100vw - 40px), 560px" width="720" height="480" alt="${escapeHtml(meta?.title || '')}" decoding="async">`:'';
       body.innerHTML = `${banner}${ammo}<p class="merchant-note">${escapeHtml(meta?.subtitle || '')}</p>${filtersHtml()}
-        <div class="shop-list">${state.items.length ? state.items.map(itemCard).join('') : '<div class="shop-empty">Ничего не найдено.</div>'}</div>
+        ${storeViewHtml({ items: state.items.map(storeItem), selectedId, quantity })}
         <div class="pager"><button type="button" class="equipment-action" data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>←</button>
           <span>${state.page} / ${state.pages} · ${number(state.total)}</span>
           <button type="button" class="equipment-action" data-page="${state.page + 1}" ${state.page >= state.pages ? 'disabled' : ''}>→</button></div>`;
@@ -163,7 +166,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
 
   function bind() {
     tabs.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => {
-      confirming = null;
+      selectedId = null;
       haptic('light');
       if (button.dataset.tab === CONVERT_TAB) { tab = CONVERT_TAB; render(); return; }
       tab = null;
@@ -171,8 +174,8 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
       query.page = 1; query.grade = null; query.group = null; query.search = '';
       load();
     }));
-    body.querySelectorAll('[data-grade]').forEach(button => button.addEventListener('click', () => { query.grade = button.dataset.grade || null; query.page = 1; confirming = null; load(); }));
-    body.querySelector('[data-group]')?.addEventListener('change', event => { query.group = event.target.value || null; query.page = 1; confirming = null; load(); });
+    body.querySelectorAll('[data-grade]').forEach(button => button.addEventListener('click', () => { query.grade = button.dataset.grade || null; query.page = 1; selectedId = null; load(); }));
+    body.querySelector('[data-group]')?.addEventListener('change', event => { query.group = event.target.value || null; query.page = 1; selectedId = null; load(); });
     body.querySelector('[data-usable]')?.addEventListener('change', event => { query.usable = event.target.checked; query.page = 1; load(); });
     body.querySelector('[data-affordable]')?.addEventListener('change', event => { query.affordable = event.target.checked; query.page = 1; load(); });
     body.querySelector('[data-search]')?.addEventListener('input', event => {
@@ -180,23 +183,20 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
       const value = event.target.value;
       searchTimer = window.setTimeout(() => { query.search = value; query.page = 1; load(); }, 350);
     });
-    body.querySelectorAll('[data-page]').forEach(button => button.addEventListener('click', () => { query.page = Number(button.dataset.page); confirming = null; load(); }));
-    body.querySelectorAll('[data-buy]').forEach(button => button.addEventListener('click', () => buy(button.dataset.buy)));
+    body.querySelectorAll('[data-page]').forEach(button => button.addEventListener('click', () => { query.page = Number(button.dataset.page); selectedId = null; load(); }));
+    bindStoreView(body, {
+      onSelect: id => { selectedId = id; quantity = 1; haptic('light'); render(); },
+      onQuantity: value => { quantity = value; render(); body.querySelector('[data-store-quantity]')?.focus(); },
+      onConfirm: () => buy(selectedId),
+      onCancel: () => { selectedId = null; quantity = 1; render(); },
+    });
     body.querySelectorAll('[data-convert]').forEach(button => button.addEventListener('click', () => convert(button.dataset.convert)));
   }
 
   async function buy(entryId) {
-    if (pending) return;
-    if (confirming !== entryId) {
-      confirming = entryId;
-      feedback.textContent = 'Нажми ещё раз, чтобы подтвердить покупку.';
-      haptic('medium');
-      render();
-      return;
-    }
-    confirming = null;
+    if (pending || !entryId) return;
     haptic('heavy');
-    const response = await load('/api/merchants/buy', { merchant: state.merchant, entry: entryId, query: { ...query, merchant: state.merchant } });
+    const response = await load('/api/merchants/buy', { merchant: state.merchant, entry: entryId, count: quantity, query: { ...query, merchant: state.merchant } });
     if (response?.ok) {
       if (response.state) renderState(response.state);
       feedback.textContent = `Куплено: ${response.entry.name}.`;

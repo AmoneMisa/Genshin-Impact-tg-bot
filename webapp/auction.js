@@ -38,7 +38,7 @@ export function auctionArt(entry) {
   return `<img src="${art.src}" srcset="${art.srcset}" sizes="32px" width="32" height="32" alt="" loading="lazy" decoding="async">`;
 }
 
-export async function openAuctionGame({ api, renderState, haptic, statusElement }) {
+export async function openAuctionGame({ api, renderState, haptic, statusElement, initialItem=null, onClose }) {
   let kind = 'all';
   let sort = 'new';
   let tab = 'lots';
@@ -49,6 +49,11 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
   const PAGE_SIZE = window.matchMedia('(max-width: 600px)').matches ? 6 : 12;
   const load = () => api(`/api/auction?kind=${encodeURIComponent(kind)}&sort=${encodeURIComponent(sort)}`);
   let state = await load();
+  if(initialItem){
+    tab='sell';
+    const entry=state.sellable.find(row=>row.kind===initialItem.kind&&row.ref===initialItem.ref);
+    if(entry)selected={kind:entry.kind,ref:entry.ref,title:entry.title,max:entry.count};
+  }
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay auction-overlay';
@@ -62,7 +67,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement 
       <div data-auction-body></div>
     </div>`;
   const body = overlay.querySelector('[data-auction-body]');
-  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
+  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => {overlay.remove();onClose?.();}, 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
   overlay.addEventListener('click',event=>{

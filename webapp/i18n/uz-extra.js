@@ -4,6 +4,8 @@ import classTree from './uz-class-tree.js';
 import scryde from './uz-scryde.js';
 import hall from './uz-hall.js';
 import l2Effects from './uz-l2-effects.js';
+import buildDew from './uz-build-dew.js';
+import ciFixes from './uz-ci-fixes.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
@@ -12,6 +14,8 @@ export default {
   ...classTree,
   ...scryde,
   ...hall,
+  ...buildDew,
+  ...ciFixes,
   ...l2Effects,
   'Til / Язык': 'Til / Язык',
   'Language · Язык': 'Language · Til',
@@ -679,7 +683,7 @@ export default {
   'Неверное количество.':'Noto‘g‘ri miqdor.',
   'Недостаточно древней адены.':'Qadimiy adena yetarli emas.',
   'Оружие без грейда, D и C за адену':'Darajasiz, D va C qurollar adena evaziga',
-  'Оружие, броня, самоцветы и свитки как в Lineage 2':'Lineage 2 dagidek qurol, zirh, qimmatbaho toshlar va o‘ramlar',
+  'Оружие, броня, самоцветы и свитки':'Qurol, zirh, qimmatbaho toshlar va o‘ramlar',
   'Самоцветы, рецепты и лак Маммона за адену':'Qimmatbaho toshlar, retseptlar va Mammon laki adena evaziga',
   'Твой класс не может носить этот предмет.':'Sening sinfing bu buyumni kiya olmaydi.',
   'Товар больше не продаётся.':'Tovar endi sotilmaydi.',

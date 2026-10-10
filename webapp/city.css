@@ -323,9 +323,9 @@
 .city-arrow { font-style: normal; opacity: .6; }
 .city-gain { font-style: normal; color: #6fe0a3; }
 
-.city.has-map { background: linear-gradient(rgba(7,8,14,.18),rgba(7,8,14,.45)),var(--city-map) center top / 100% auto no-repeat; }
+.city.has-map { background: linear-gradient(rgba(7,8,14,.18),rgba(7,8,14,.45)),var(--city-map) center top / cover no-repeat; }
 .city.has-map .city-grid { position: relative; isolation: isolate; }
-.city.has-map .city-grid::before { content: ''; position: absolute; z-index: -1; inset: -80px -12px 0; background: linear-gradient(rgba(7,8,14,.28),rgba(7,8,14,.55)),var(--city-map) center bottom / auto 200% no-repeat; mask-image: linear-gradient(transparent,#000 100px); -webkit-mask-image: linear-gradient(transparent,#000 100px); pointer-events: none; }
+.city.has-map .city-grid::before { content: none; }
 .city.has-map .city-sky { display: none; background-image: none; }
 .city.has-map .city-title { min-height: 210px; }
 .city.has-map .city-card.banner { max-width: 320px; }

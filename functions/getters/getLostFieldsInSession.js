@@ -97,6 +97,7 @@ export default function (session) {
             },
             gold: 0,
             crystals: 0,
+            moonDew: 0,
             ironOre: 0,
             sp: 0, // skill points, earned on level-up — spent enchanting skills (see skillEnchant.js)
             potions: {

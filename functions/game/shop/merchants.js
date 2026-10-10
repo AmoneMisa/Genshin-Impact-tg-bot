@@ -7,6 +7,7 @@
 import DATA from '../../../template/merchantData.js';
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
 import {canClassUse, findCatalogItem, getCatalog, gradeIndex, instantiate} from '../equipment/catalog.js';
+import {hasInventoryRoom} from '../builds/palaceCapacity.js';
 import {addMaterial, getMaterialCount, materialInfo, spendMaterials} from '../player/materials.js';
 import {lootInfo, itemRow} from '../hunt/lootTable.js';
 import {HUNT} from '../hunt/huntConfig.js';
@@ -166,6 +167,7 @@ export function buyEntry(session, merchantId, entryId, rawCount = 1) {
     if (!Number.isSafeInteger(count) || count < 1 || count > 1000) return {ok: false, reason: 'invalid_count'};
     const availability = entryAvailability(session, entry);
     if (!availability.ok) return availability;
+    if (entry.kind === 'equipment' && !hasInventoryRoom(session)) return {ok: false, reason: 'inventory_full'};
     const cost = entryCost(entry, count);
     const lack = lackOf(session, cost);
     if (lack) return {ok: false, reason: lack, cost};

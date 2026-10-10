@@ -52,9 +52,9 @@ test('upgrading lot shows a live progress bar and a speed-up with its crystal co
   const progress = upgradeProgress(build({ upgrading: true, remainingMs: 3000, upgradeStartedAt: now - 1000 }), now);
   assert.equal(progress.endAt, now + 3000);
   assert.equal(Math.round(progress.percent), 25);
-  const html = buildingCard(build({ upgrading: true, remainingMs: 7_500_000, upgradeStartedAt: Date.now() - 1000, canSpeedup: true, speedupCost: 30, canCollect: false }));
+  const html = buildingCard(build({ upgrading: true, remainingMs: 7_500_000, upgradeStartedAt: Date.now() - 1000, canSpeedup: true, speedupCost: 30, speedupCurrency: 'gold', canCollect: false }));
   assert.match(html, /city-progress/);
-  assert.match(html, /data-city-action="speedup"[^>]*>Ускорить · 30 💎/);
+  assert.match(html, /data-city-action="speedup"[^>]*>Ускорить · 30 🪙/);
   assert.doesNotMatch(html, /data-city-action="upgrade"/);
   assert.equal(formatDuration(7_500_000), '2ч 5м 0с');
 });

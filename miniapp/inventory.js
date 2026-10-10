@@ -11,6 +11,10 @@ import getEquipStatByName from '../functions/game/player/getters/getEquipStatByN
 import potionRestore, { potionShare } from '../functions/game/player/potionRestore.js';
 import buffPotions from '../template/buffPotions.js';
 import {applyPotionBuff,activePotionBuffs} from '../functions/game/player/potionBuffs.js';
+import {getEquipmentState,performEquipmentAction} from './equipment.js';
+import {inventoryUsage} from '../functions/game/builds/palaceCapacity.js';
+
+const potionRef = item => item?.id || `${item?.type}:${item?.bottleType}:${item?.power}:${item?.size}`;
 
 function number(value, fallback = 0) {
   const parsed = Number(value);
@@ -25,6 +29,7 @@ function arenaValue(items, key, fallback = 0) {
 function potionDto(item, index) {
   return {
     key: String(index),
+    ref: potionRef(item),
     index,
     type: item?.type || 'hp',
     bottleType: item?.bottleType || 'potion',
@@ -44,6 +49,7 @@ function potionDto(item, index) {
 
 export function getInventoryState(session) {
   const inventory = session?.game?.inventory || {};
+  const equipment = getEquipmentState(session).items;
   const arenaItems = inventory?.arena?.items || [];
   const potions = (inventory?.potions?.items || []).map(potionDto).filter(item=>item.count>0);
   const gameClass = session?.game?.gameClass;
@@ -57,9 +63,10 @@ export function getInventoryState(session) {
   return {
     resources: {
       gold: Math.max(0, number(inventory.gold)),
-      crystals: Math.max(0, number(inventory.crystals)),
       ironOre: Math.max(0, number(inventory.ironOre)),
+      luckCoins: Math.max(0, number(inventory.luckCoins)),
     },
+    slots: inventoryUsage(session),
     player: { cp, maxCp, hp, maxHp, mp, maxMp },
     arena: {
       tokens: Math.max(0, number(arenaValue(arenaItems, 'tokens'))),
@@ -70,10 +77,34 @@ export function getInventoryState(session) {
       gacha: Array.isArray(inventory?.gacha?.items) ? inventory.gacha.items.length : 0,
       potions: potions.reduce((sum, item) => sum + item.count, 0),
     },
-    materials:listMaterials(session).map(item=>({key:item.key,name:item.name,icon:item.icon,count:item.count,kind:item.kind||null,sellPrice:l2SellPrice(item.key,HUNT.goldScale)})),
+    materials:listMaterials(session).map(item=>({key:item.key,id:item.id||null,name:item.name,description:item.description||'',icon:item.icon,count:item.count,kind:item.kind||null,sellPrice:l2SellPrice(item.key,HUNT.goldScale)})),
     potions,
+    equipment,
     buffs:activePotionBuffs(session).map(e=>({id:e.potionId,name:e.name,until:e.until})),
   };
+}
+
+/** Discard owned items only; no gold or building resources are awarded or spent. */
+export function discardInventoryItem(session, {kind,ref,count=1} = {}) {
+  const fail = reason => ({ok:false,reason,inventory:getInventoryState(session)});
+  const amount=Number(count);
+  if(!Number.isSafeInteger(amount)||amount<1)return fail('invalid_count');
+  if(kind==='equipment'){
+    if(amount!==1)return fail('invalid_count');
+    const result=performEquipmentAction(session,ref,'discard');
+    return {...result,inventory:getInventoryState(session)};
+  }
+  if(kind==='material'){
+    if(typeof ref!=='string'||!listMaterials(session).some(row=>row.key===ref))return fail('item_not_found');
+    if(amount>getMaterialCount(session,ref))return fail('invalid_count');
+    spendMaterials(session,{[ref]:amount});
+  }else if(kind==='potion'){
+    const item=session?.game?.inventory?.potions?.items?.find(row=>potionRef(row)===ref&&number(row.count)>0);
+    if(!item)return fail('item_not_found');
+    if(amount>number(item.count))return fail('invalid_count');
+    item.count-=amount;
+  }else return fail('invalid_kind');
+  return {ok:true,action:'discard',count:amount,inventory:getInventoryState(session)};
 }
 
 export function useInventoryPotion(session, rawKey) {
