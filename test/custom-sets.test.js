@@ -42,7 +42,7 @@ test('there is one custom set for every grade and armor type, with every part of
       assert.equal(new Set(own.map(item => item.name)).size, own.length);
     }
   }
-  assert.ok(customItems().every(item => !item.epic && item.setName.startsWith('Комплект')));
+  assert.ok(customItems().every(item => !item.epic && item.setName.endsWith(' Set')));
   assert.equal(getCatalog().filter(item => item.custom && item.mainType !== 'armor').length, 0, 'the line has no weapons');
 });
 
@@ -71,7 +71,7 @@ test('a full custom set gives its bonus, a partial one does not; the real sets a
   const full = wearer('warrior', 78, pieces);
   const [set] = activeSets(full.game.equipmentStats);
   assert.equal(set.complete, true);
-  assert.equal(set.name, 'Комплект «Обсидиановый бастион»');
+  assert.equal(set.name, 'Obsidian Bastion Set');
   assert.deepEqual(set.bonus, customSets.sets.heavy[5].bonus);
   assert.ok(getEquipStatByName(full, 'maxHpMul', true) > getEquipStatByName(partial, 'maxHpMul', true));
   assert.equal(setBonusValues('S', 'heavy').defenceMul, 1.08, 'Imperial Crusader keeps its real bonus');

@@ -39,7 +39,7 @@ test('a boss kill puts buff potions into the winners inventories and the loot re
     assert.equal(potionCount(player), 1, `player ${player.userId}`);
     const line = loot[player.userId].items.find(item => item.item.startsWith('potion-'));
     assert.ok(line, 'potion listed in the loot');
-    assert.match(line.name, /^Зелье /);
+    assert.match(line.name, / Potion$/);
     assert.equal(line.amount, 1);
   }
 });

@@ -93,6 +93,15 @@ function playerClassName(session) {
   return session?.game?.gameClass?.stats?.name || null;
 }
 
+const CYRILLIC = /[А-Яа-яЁё]/;
+
+/** Items are named in English only: an item saved with an older Russian name shows the catalog name of its id. */
+function englishNamed(item) {
+  if (!item?.id || !CYRILLIC.test(String(item.name || ''))) return item;
+  const fresh = findCatalogItem(item.id);
+  return fresh && !CYRILLIC.test(fresh.name) ? { ...item, name: fresh.name, setName: fresh.setName ?? item.setName } : item;
+}
+
 function sanitizeItem(session, item, index) {
   const enchant = getEnchantLevel(item);
   const enchantable = isEnchantable(item);
@@ -104,7 +113,7 @@ function sanitizeItem(session, item, index) {
     key: itemKey(item, index),
     index,
     uid: item?.uid || null,
-    name: masterworkName(item) || 'Неизвестный предмет',
+    name: masterworkName(englishNamed(item)) || 'Unknown item',
     translatedName: item?.translatedName || item?.kind || 'Снаряжение',
     description: item?.description || '',
     grade: item?.grade || 'noGrade',
@@ -135,7 +144,7 @@ function sanitizeItem(session, item, index) {
     collection:item?.collection || null,
     // the real Lineage 2 numbers of the item (P.Atk / M.Atk / P.Def / M.Def)
     lineage: item?.lineage || null,
-    set: item?.setId ? { id: item.setId, name: item.setName || null } : null,
+    set: item?.setId ? { id: item.setId, name: englishNamed(item).setName || null } : null,
     enchant,
     // The forge milestone art reads the enchant level under its old name.
     forgeLevel: enchant,

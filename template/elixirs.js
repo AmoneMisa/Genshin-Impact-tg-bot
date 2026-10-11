@@ -5,9 +5,9 @@ const GRADES = [
   {grade: 'S', needLvl: 76, power: 100},
 ];
 const KINDS = [
-  {type: 'hp', id: 'life', name: 'Эликсир жизни', text: 'здоровья'},
-  {type: 'mp', id: 'spirit', name: 'Эликсир духа', text: 'маны'},
-  {type: 'cp', id: 'cp', name: 'Эликсир CP', text: 'боевых очков (CP)'},
+  {type: 'hp', id: 'life', name: 'Elixir of Life', text: 'здоровья'},
+  {type: 'mp', id: 'spirit', name: 'Elixir of Mental Strength', text: 'маны'},
+  {type: 'cp', id: 'cp', name: 'Elixir of CP', text: 'боевых очков (CP)'},
 ];
 
 export default GRADES.flatMap(({grade, needLvl, power}) => KINDS.map(({type, id, name, text}) => ({

@@ -174,7 +174,7 @@ function buildCustomArmor(template, grade, kind, config = customSets) {
     if (!set || !noun || real === undefined) return null;
     const item = entry(template, grade, 'armor', kind, `${set.name} · ${noun}`, {
         setId: customSetId(grade.name, kind.type),
-        setName: `Комплект «${set.name}»`,
+        setName: `${set.name} Set`,
         custom: true,
         lineage: {pDef: Math.round(real * config.defenceFactor), custom: true}
     });

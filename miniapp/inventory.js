@@ -8,6 +8,7 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getEquipStatByName from '../functions/game/player/getters/getEquipStatByName.js';
+import potionsTemplate from '../template/potionsInInventoryTemplate.js';
 import potionRestore, { potionShare } from '../functions/game/player/potionRestore.js';
 import buffPotions from '../template/buffPotions.js';
 import {applyPotionBuff,activePotionBuffs} from '../functions/game/player/potionBuffs.js';
@@ -26,6 +27,14 @@ function arenaValue(items, key, fallback = 0) {
   return entry ? entry[key] : fallback;
 }
 
+/** Potions are named in English only: a stored potion with a Russian name takes the name of its template. */
+function templateName(item) {
+  if (!/[А-Яа-яЁё]/.test(String(item?.name || ''))) return null;
+  const same = potionsTemplate.find(row => (item.id && row.id === item.id) ||
+    (!item.id && !row.id && row.type === item.type && row.bottleType === item.bottleType && Number(row.power) === Number(item.power)));
+  return same?.name || null;
+}
+
 function potionDto(item, index) {
   return {
     key: String(index),
@@ -38,7 +47,7 @@ function potionDto(item, index) {
     power: Math.max(0, number(item?.power)),
     // Share of the maximum a flat potion restores at the least (0 for elixirs, which are percentages).
     share: Math.round(potionShare(item) * 100),
-    name: item?.name || `Зелье ${index + 1}`,
+    name: templateName(item) || item?.name || `Potion ${index + 1}`,
     description: item?.description || '',
     id:item?.id || null,
     seconds:item?.seconds || null,

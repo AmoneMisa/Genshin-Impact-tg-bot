@@ -60,7 +60,7 @@ export function customPartRows(mobLevel) {
     }
     return [...byType.entries()].map(([type, {count, item}]) => ({
         key: `custom:${grade}:${type}`,
-        name: `${item.setName || 'Авторский комплект'} · деталь`,
+        name: `${item.setName || 'Custom Set'} · Part`,
         icon: '🛡️',
         kind: 'full',
         min: 1,
