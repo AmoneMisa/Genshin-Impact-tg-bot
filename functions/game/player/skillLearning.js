@@ -30,7 +30,8 @@ export function skillLearnCost(skill) {
 }
 
 export function isSkillLearned(session, skill) {
-    if (!skill?.l2Id) return true;
+    // the first kit of the start class (no profession tier) is known from the start
+    if (!skill?.l2Id || !skill.tier) return true;
     return Boolean(session?.game?.learnedSkills?.[skill.l2Id]);
 }
 

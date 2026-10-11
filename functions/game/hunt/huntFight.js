@@ -26,6 +26,7 @@ import { recordQuestEvent } from '../classes/classQuests.js';
 import { AI_ROLES, AI_LABELS, aggroNearby, provokeMob, mobBuff, mobAiTurn, pursuePlayer, canMobReach } from './huntAi.js';
 import {fieldPvpSkillBlock,reduceHuntKarma,fieldPvpEffect} from './fieldPvpState.js';
 import {tickL2Effects,l2ActionBlock,l2HasControl,l2RawStat,l2MoveMultiplier} from '../player/l2Effects.js';
+import {roomLayout, roomById, adjacent, slotPositions} from './huntRooms.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
 export const IDLE_MS = 2 * 60 * 1000;
@@ -37,6 +38,14 @@ export function ensureHunt(session) {
     const game = session.game;
     if (!game.hunt || typeof game.hunt !== 'object') game.hunt = {zone: null, mob: null, kills: 0, log: []};
     if (!Array.isArray(game.hunt.log)) game.hunt.log = [];
+    const field = game.hunt.field;
+    if (field && !field.room) {
+        // a field saved before the rooms: it is the entrance room of its zone
+        field.room = roomLayout(getZone(game.hunt.zone)).startId;
+        field.rooms = {};
+        field.visited = [field.room];
+        field.respawns = [];
+    }
     if (game.hunt.field) game.hunt.mob = game.hunt.field.mobs.find(m => m.instanceId === game.hunt.field.target) || null;
     return game.hunt;
 }
@@ -99,6 +108,7 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
         pushLog(hunt, '💨', 'Ты покинул поле боя после долгого бездействия.', now);
         return [{text: 'Поле боя покинуто.'}];
     }
+    settleRespawns(session, hunt, now, random);
     aggroNearby(hunt, now,session);
     pursuePlayer(hunt, now);
     const selected = hunt.field.target;
@@ -160,6 +170,69 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
     return written;
 }
 
+
+/** Builds every monster of a room at its slots: roles cycle fighter / healer / mage, a third of them start aggressive. */
+function populateRoom(session, zone, room, {now, random, count = room.cap, prefix = `${now}:${room.id}`}) {
+    const offset = Math.min(zone.mobs.length - 1, Math.floor(random() * zone.mobs.length));
+    return slotPositions(count).map((slot, index) => {
+        const mob = buildMob(zone, zone.mobs[(offset + index) % zone.mobs.length], {now, random, className: session.game.gameClass.stats.name});
+        const legacy = count === 3;
+        return {...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length], aggressive: legacy ? index !== 1 : index % 3 === 0,
+            aggro: false, x: slot.x, y: slot.y, buffs: []};
+    });
+}
+
+/** Monsters killed in the room come back after HUNT.mobRespawnMs; those of the rooms left behind wait there. */
+function settleRespawns(session, hunt, now, random) {
+    const field = hunt.field;
+    if (!field.respawns?.length) return;
+    const due = field.respawns.filter(entry => entry.at <= now);
+    if (!due.length) return;
+    field.respawns = field.respawns.filter(entry => entry.at > now);
+    const zone = getZone(hunt.zone);
+    for (const entry of due) {
+        const room = roomById(zone, entry.room);
+        if (!room) continue;
+        const bucket = entry.room === field.room ? field.mobs : (field.rooms[entry.room] ||= {mobs: []}).mobs;
+        if (bucket.length >= room.cap) continue;
+        field.seq = number(field.seq) + 1;
+        const [fresh] = populateRoom(session, zone, room, {now, random, count: 1, prefix: `${now}:${room.id}:r${field.seq}`});
+        // a new monster appears somewhere in the upper part of the area
+        fresh.x = .12 + random() * .76;
+        fresh.y = .12 + random() * .43;
+        fresh.aggressive = random() < .35;
+        fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];
+        bucket.push(fresh);
+    }
+    if (!field.target && field.mobs.length) field.target = field.mobs[0].instanceId;
+    hunt.mob = field.mobs.find(m => m.instanceId === field.target) || null;
+}
+
+/** Walks into a neighbouring room of a catacomb. A hero in a fight with a monster cannot walk away. */
+function enterRoom(session, hunt, roomIdValue, now, random) {
+    const zone = getZone(hunt.zone);
+    const field = hunt.field;
+    const from = roomById(zone, field.room), to = roomById(zone, roomIdValue);
+    if (!to || !adjacent(from, to)) return {ok: false, reason: 'room_not_adjacent'};
+    if (field.mobs.some(mob => mob.aggro && mob.currentHp > 0)) return {ok: false, reason: 'room_in_combat'};
+    field.rooms[from.id] = {mobs: field.mobs};
+    const stored = field.rooms[to.id];
+    delete field.rooms[to.id];
+    field.seq = number(field.seq) + 1;
+    field.mobs = stored ? stored.mobs : populateRoom(session, zone, to, {now, random, prefix: `${now}:${to.id}:e${field.seq}`});
+    // monsters killed there while the hero was away that were due to return come in at once
+    for (const mob of field.mobs) { mob.aggro = false; mob.lastMoveAt = now; }
+    field.room = to.id;
+    field.x = .5;
+    field.y = .95;
+    field.target = field.mobs[0]?.instanceId || null;
+    field.visited = [...new Set([...(field.visited || []), to.id])];
+    hunt.mob = field.mobs[0] || null;
+    hunt.lastActionAt = now;
+    pushLog(hunt, '🚪', `${to.name}: ${field.mobs.length ? `монстров здесь ${field.mobs.length}.` : 'здесь пусто, монстры вернутся позже.'}`, now);
+    return {ok: true, room: to.id};
+}
+
 /** Starts a fight in a zone (a random mob of it unless `mobId` names one). */
 export function startHunt(session, zoneId, {now = Date.now(), random = Math.random, mobId = null, champion} = {}) {
     const zone = getZone(zoneId);
@@ -189,14 +262,12 @@ export function enterHuntField(session, zoneId, {now = Date.now(), random = Math
     if (hunt.mob || hunt.field) return {ok: false, reason: 'already_fighting'};
     if (isDead(session, now)) return {ok: false, reason: 'dead'};
     if (!session.game.gameClass?.skills?.length) return {ok: false, reason: 'no_combat_class'};
-    const offset = Math.min(zone.mobs.length - 1, Math.floor(random() * zone.mobs.length));
-    const mobs = Array.from({length: 3}, (_, index) => {
-        const mob = buildMob(zone, zone.mobs[(offset + index) % zone.mobs.length], {now, random, className: session.game.gameClass.stats.name});
-        return {...mob, instanceId: `${now}:${index}`, ai: AI_ROLES[index], aggressive: index !== 1, aggro: false, x: [.2, .5, .8][index], y: [.3, .5, .3][index], buffs: []};
-    });
+    const layout = roomLayout(zone);
+    const room = roomById(zone, layout.startId);
+    const mobs = populateRoom(session, zone, room, {now, random});
     hunt.zone = zone.id;
-    hunt.field = {mobs, target: mobs[0].instanceId, x: .5, y: .95, seenAt: now};
-    hunt.mob = mobs[0];
+    hunt.field = {mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
+    hunt.mob = mobs[0] || null;
     hunt.playerDebuffs = [];
     hunt.lastActionAt = now;
     pushLog(hunt, '⚑', `${zone.title}: выбери цель или подойди к монстрам.`, now);
@@ -214,11 +285,12 @@ export function selectHuntTarget(session, targetId, now = Date.now()) {
     return {ok: true};
 }
 
-export function moveHuntField(session, direction, now = Date.now()) {
+export function moveHuntField(session, direction, now = Date.now(), random = Math.random) {
     const abnormal=l2ActionBlock(session,{move:true},now);if(abnormal)return {ok:false,reason:abnormal};
     const changed = advanceHunt(session, now).length > 0;
     const hunt = ensureHunt(session);
     if (!hunt.field || isDead(session, now)) return {ok: false, reason: 'no_field', changed};
+    if (String(direction).startsWith('room:')) return {...enterRoom(session, hunt, String(direction).slice(5), now, random), changed};
     if (!['forward', 'back', 'left', 'right'].includes(direction)) return {ok: false, reason: 'invalid_move', changed};
     const step=.2*l2MoveMultiplier(session,now);
     if (direction === 'forward' || direction === 'back') hunt.field.y = clamp(hunt.field.y + (direction === 'forward' ? -step : step), .15, .95);
@@ -294,6 +366,7 @@ function finishKill(session,hunt,mob,{random,now}){
     hunt.kills=number(hunt.kills)+1;hunt.last={name:mob.name,level:mob.level,champion:mob.champion,...rewards};
     if (hunt.field) {
         hunt.field.mobs = hunt.field.mobs.filter(m => m.instanceId !== mob.instanceId);
+        (hunt.field.respawns ||= []).push({at: now + HUNT.mobRespawnMs, room: hunt.field.room});
         hunt.field.target = hunt.field.mobs[0]?.instanceId || null;
         hunt.mob = hunt.field.mobs[0] || null;
     } else hunt.mob=null;

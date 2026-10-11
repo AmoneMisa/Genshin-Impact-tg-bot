@@ -90,7 +90,7 @@ export function potionBar(potions = [], { disabled = false } = {}) {
   if (!potions.length) return '';
   return `<div class="boss-potions">${potions.map(potion => {
     const empty = !(Number(potion.count) > 0) || potion.key == null;
-    const unit = potion.type === 'mp' ? 'MP' : 'HP';
+    const unit = potion.type === 'mp' ? 'MP' : potion.type === 'cp' ? 'CP' : 'HP';
     const power = potion.bottleType === 'elixir'
       ? `${unit} +${formatNumber(potion.power)}%`
       : potion.share > 0 ? `${unit} ≥${formatNumber(potion.power)} · ${potion.share}%` : `${unit} +${formatNumber(potion.power)}`;
@@ -157,7 +157,7 @@ function hotbarButton(skill, className) {
   // locked: the level it opens at; a skill paid in health shows HP; otherwise the mana
   const cost = skill.locked ? `${icon('lock')} ур. ${formatNumber(skill.needLevel)}` : skill.costHp > 0 ? `HP ${compact(skill.costHp)}` : formatNumber(skill.costMp);
   const tags = (skill.tags || []).join(', ');
-  const label = [skill.name, skill.description, tags].filter(Boolean).join(' — ');
+  const label = [skill.name, skill.l2Power ? `Power ${skill.l2Power}` : '', skill.description, tags].filter(Boolean).join(' — ');
   return `
     <button type="button" class="mmo-skill boss-skill ${type}${skill.locked ? ' locked' : ''}${skill.tier > 1 ? ` tier-${skill.tier}` : ''}" data-skill="${skill.index}" ${skill.canUse ? '' : 'disabled'} title="${escapeHtml(label)}" aria-label="${escapeHtml(skill.name)}">
       <span class="mmo-skill-icon">${skillGlyph(skill, className)}</span>

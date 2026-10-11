@@ -86,3 +86,5 @@
 .skill-route-chosen { display: grid; gap: 2px; }
 .skill-route-chosen b { color: #f3dca6; font: 700 13px/1.2 var(--serif); }
 .skill-route-reset { opacity: .75; }
+.skill-l2 { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 6px; }
+.skill-l2 span { padding: 2px 7px; border-radius: 999px; border: 1px solid rgba(216, 179, 106, .35); background: rgba(216, 179, 106, .08); color: #f1dca4; font: 600 11px/1.4 system-ui, sans-serif; }

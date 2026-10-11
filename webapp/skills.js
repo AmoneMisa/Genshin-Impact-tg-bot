@@ -97,6 +97,7 @@ function skillCard(skill, state) {
       </div>
       <div class="skill-pips" aria-label="Улучшение ${skill.enchantLevel} из ${skill.maxEnchantLevel}">${enchantPips(skill.enchantLevel, skill.maxEnchantLevel)}</div>
       <p>${escapeHtml(skill.description)}</p>
+      ${skill.l2Level ? `<div class="skill-l2"><span>Skill Lv ${formatNumber(skill.l2Level)}/${formatNumber(skill.l2MaxLevel)}</span>${skill.l2Power ? `<span>Power ${formatNumber(skill.l2Power)}</span>` : ''}</div>` : ''}
       ${skill.tags?.length ? `<div class="skill-tags">${skill.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
       ${transition}
       ${skill.learn ? `<div class="skill-upgrade-cost"><small>Умение не изучено</small><strong>✦ ${formatNumber(skill.learn.sp)} ОП</strong></div>

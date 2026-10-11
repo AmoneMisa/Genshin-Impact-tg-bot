@@ -15,7 +15,7 @@ import { lootDistributor, expShares } from '../party/party.js';
 import { enchantGradeForLevel } from '../equipment/enchantDrops.js';
 import { gainExp, levelNeed } from '../player/vitality.js';
 import setLevel, { spForLevelUp } from '../player/setLevel.js';
-import {customDropChance, pickCustomPart} from '../equipment/customDrops.js';
+import {customDropChance, pickCustomPart, customPartRows} from '../equipment/customDrops.js';
 import {instantiate} from '../equipment/catalog.js';
 import getRandom from '../../getters/getRandom.js';
 import getEquipStatByName from '../player/getters/getEquipStatByName.js';
@@ -60,7 +60,7 @@ export function huntDropPreview(level, mobDef, champion = null) {
         const info = materialInfo(drop.key);
         rows.push({key: drop.key, name: info.name || drop.name, icon: info.icon, kind: drop.kind, min: drop.min, max: drop.max, chance: drop.chance * rateOf(drop) * gap});
     }
-    rows.push({key: 'custom-armor', name: 'Деталь авторского комплекта', icon: '🛡️', kind: 'full', min: 1, max: 1, chance: customDropChance(mobDef.level) * HUNT.dropRate * gap});
+    rows.push(...customPartRows(mobDef.level).map(row => ({...row, chance: row.share * customDropChance(mobDef.level) * HUNT.dropRate * gap})));
     if (mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
         const chances = STONE_CHANCE[champion || 'normal'];
         for (const stone of ['stone', 'crystal', 'jewel']) if (chances[stone] > 0) {

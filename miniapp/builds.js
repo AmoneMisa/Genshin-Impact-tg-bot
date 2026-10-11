@@ -3,6 +3,7 @@ import { buildStorageCap } from '../functions/game/builds/buildYield.js';
 import { forgeBonuses, FORGE_MAX_LEVEL } from '../functions/game/builds/forgeBonuses.js';
 import { PALACE_MAX_LEVEL, inventoryCapacity, warehouseCapacity, inventoryUsage } from '../functions/game/builds/palaceCapacity.js';
 import buildsTemplate from '../template/buildsTemplate.js';
+import { bountyQuality } from '../functions/game/academy/academy.js';
 import getBuildFromTemplate from '../functions/game/builds/getBuildFromTemplate.js';
 import calculateUpgradeCosts from '../functions/game/builds/calculateUpgradeCosts.js';
 import calculateIncreaseUpgradeTime from '../functions/game/builds/calculateUpgradeTime.js';
@@ -207,6 +208,12 @@ function buildPerks(session, buildName, currentLevel) {
       row('Шанс крафта', 'craft'), row('Шанс заточки', 'enchant'), row('Шанс мастерской работы (MW)', 'masterwork'),
       row('Шанс двойного крафта', 'doubleCraft'), row('Кристаллов при кристаллизации', 'crystals'),
       { label: 'Экономия материалов', value: now.saveChance ? `${pct(now.saveChance)} шанс на −${pct(now.saveShare)}` : '—', next: next ? `${pct(next.saveChance)} шанс на −${pct(next.saveShare)}` : null },
+    ];
+  }
+  if (buildName === 'academy') {
+    const next = currentLevel < buildsTemplate.academy.maxLvl ? nextSession() : null;
+    return [
+      { label: 'Качество поручений', value: `${bountyQuality(session)} / 5`, next: next ? `${bountyQuality(next)} / 5` : null },
     ];
   }
   return [];

@@ -5,8 +5,8 @@ import { icon } from './icons.js';
 export const NAV_TABS = Object.freeze([
   { id: 'city', label: 'Город', title: 'Город', hint: 'Ваше королевство', icon: 'castle' },
   { id: 'hero', label: 'Герой', title: 'Ваш герой', hint: 'Персонаж и снаряжение', icon: 'user-round', features: ['profile', 'skills', 'passives', 'tattoos', 'buffs', 'classQuests', 'equipment', 'inventory', 'titles', 'horoscope', 'mail', 'help', 'updates', 'feedback', 'admin'] },
-  { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['hunt', 'catacombs', 'party', 'boss', 'arena', 'steal', 'elements'] },
-  { id: 'games', label: 'Игры', title: 'Игры и награды', hint: 'Удача и развлечения', icon: 'dices', features: ['fishing', 'chest', 'gacha', 'bonus', 'sword', 'arcade', 'point21'] },
+  { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['hunt', 'catacombs', 'party', 'boss', 'arena', 'steal'] },
+  { id: 'games', label: 'Игры', title: 'Игры и награды', hint: 'Удача и развлечения', icon: 'dices', features: ['fishing', 'chest', 'gacha', 'bonus', 'sword', 'arcade', 'point21', 'elements'] },
   { id: 'clan', label: 'Клан', title: 'Клан и друзья', hint: 'Сообщество', icon: 'users', features: ['clan', 'friends', 'forms', 'transfer'] },
   { id: 'trade', label: 'Магазин', title: 'Магазин и обмен', hint: 'Покупки и валюта', icon: 'shopping-cart', features: ['shop', 'merchants', 'exchange', 'luckShop', 'auction'] },
   // Opened from the gear in the header, not from the bottom bar.

@@ -109,3 +109,30 @@ test('aggressive actors pursue the player, stop at range, and cannot move during
  advanceHunt(s,NOW+10000,()=>.5);advanceHunt(s,NOW+14000,()=>.5);
  assert.ok(distance()<=.201);assert.ok(distance()>=.199);
 });
+
+test('a killed monster comes back, a catacomb is a grid of rooms with big and small ones', async()=>{
+ const {roomLayout,roomById}=await import('../functions/game/hunt/huntRooms.js');
+ const zone=getZone('catacomb-forbidden-path'),layout=roomLayout(zone);
+ assert.equal(layout.rooms.length,12);
+ const caps=layout.rooms.map(r=>r.cap),big=layout.rooms.filter(r=>r.big);
+ assert.ok(big.length>=2&&big.every(r=>r.cap>=11&&r.cap<=12));
+ assert.ok(layout.rooms.filter(r=>!r.big).every(r=>r.cap>=3&&r.cap<=5));
+ assert.equal(roomById(zone,layout.startId).cap,3);
+ const s=fixture(),h=s.game.hunt;
+ const field=h.field;
+ const gone=field.mobs[0];gone.currentHp=0;gone.aggro=false;
+ field.respawns.push({at:NOW+HUNT.mobRespawnMs,room:field.room});field.mobs=field.mobs.slice(1);
+ advanceHunt(s,NOW+1000,()=>.5);assert.equal(field.mobs.length,2);
+ advanceHunt(s,NOW+HUNT.mobRespawnMs+1,()=>.5);assert.equal(field.mobs.length,3);
+ // walk to a neighbouring room: it fills to its capacity, the monsters left behind stay
+ const next=layout.rooms.find(r=>r.row===0&&r.col===1);
+ field.mobs.forEach(m=>{m.aggro=false;});
+ assert.equal(moveHuntField(s,'room:'+next.id,NOW+HUNT.mobRespawnMs+2).ok,true);
+ assert.equal(h.field.room,next.id);assert.equal(h.field.mobs.length,next.cap);
+ assert.equal(h.field.rooms[layout.startId].mobs.length,3);
+ const far=layout.rooms.find(r=>r.row===2&&r.col===3);
+ assert.equal(moveHuntField(s,'room:'+far.id,NOW+HUNT.mobRespawnMs+3).reason,'room_not_adjacent');
+ h.field.mobs[0].aggro=true;
+ const back=layout.rooms.find(r=>r.id===layout.startId);
+ assert.equal(moveHuntField(s,'room:'+back.id,NOW+HUNT.mobRespawnMs+4).reason,'room_in_combat');
+});

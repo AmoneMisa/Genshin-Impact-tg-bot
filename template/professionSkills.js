@@ -219,16 +219,18 @@ export function ownSkills(classId, family, tier, ancestorNames = new Set()) {
 }
 
 /** Full kit (inherited + own, slots assigned) of every profession, built on the base kit of its family. */
-export function assembleProfessionSkills(baseSkills) {
+export function assembleProfessionSkills(baseSkills, startClasses = {}) {
     const result = {};
     const build = classId => {
         const meta = L2_CLASS_META[classId];
         if (result[meta.key]) return result[meta.key];
-        if (meta.level === 0) return result[meta.key] = baseSkills[meta.family].map(skill => ({...skill}));
+        if (meta.level === 0) return result[meta.key] = (startClasses[meta.key] || baseSkills[meta.family]).map(skill => ({...skill}));
         const parentKit = build(meta.parent);
         const parentMeta = L2_CLASS_META[meta.parent];
         // a family change (a rogue becomes an archer) starts from the new family's base kit
-        const inherited = parentMeta.family === meta.family ? parentKit : [...baseSkills[meta.family].map(skill => ({...skill})), ...parentKit.slice(baseSkills[parentMeta.family].length).filter(skill => skill.tier)];
+        const ownBase = baseSkills[meta.family].map(skill => ({...skill}));
+        const ownBaseNames = new Set(ownBase.map(skill => skill.name));
+        const inherited = parentMeta.family === meta.family ? parentKit : [...ownBase, ...parentKit.slice(baseSkills[parentMeta.family].length).filter(skill => skill.tier && !ownBaseNames.has(skill.name))];
         const names = new Set(inherited.map(skill => skill.name));
         const added = ownSkills(classId, meta.family, meta.level + 1, names);
         // the class balance skills of the Scryde server (template/scrydeSpells.js) come after the real ones

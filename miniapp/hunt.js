@@ -6,6 +6,7 @@ import { getZones } from '../functions/game/hunt/huntMobs.js';
 import { advanceHunt, ensureHunt, fleeHunt, mobDto, enterHuntField, moveHuntField, selectHuntTarget, useHuntSkill } from '../functions/game/hunt/huntFight.js';
 import { huntDropPreview, LOOT_KINDS } from '../functions/game/hunt/huntRewards.js';
 import { getZone, getMobDef } from '../functions/game/hunt/huntMobs.js';
+import { roomLayout, roomById, adjacent, groundHeight } from '../functions/game/hunt/huntRooms.js';
 import {fieldPvpStatus,fieldPvpSkillBlock} from '../functions/game/hunt/fieldPvpState.js';
 import {memberName} from './social.js';
 import { potionBarDto, skillDto } from './boss.js';
@@ -65,12 +66,12 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
         zones: getZones().map(zone => zoneDto(zone, level)),
         zone: hunt.zone,
         mob: hunt.mob ? {...mobDto(hunt.mob, now), drops: huntDropPreview(level, getMobDef(getZone(hunt.mob.zone), hunt.mob.mobId), hunt.mob.champion)} : null,
-        field: hunt.field ? {x: hunt.field.x, y: hunt.field.y, target: hunt.field.target, title: getZone(hunt.zone)?.title, mobs: hunt.field.mobs.map(m => mobDto(m, now))} : null,
+        field: hunt.field ? fieldDto(hunt, now) : null,
         players: peers.map(peer => fieldPlayerDto(peer,now)),
         pvpLog: (game.worldPvp?.log || []).map(row=>({...row,agoMs:Math.max(0,now-row.at)})),
         kills: number(hunt.kills),
         last: hunt.last || null,
-        log: hunt.log.map(row => ({icon: row.icon, text: row.text, agoMs: Math.max(0, now - number(row.at))})),
+        log: hunt.log.map(row => ({icon: row.icon, text: row.text, at: number(row.at), agoMs: Math.max(0, now - number(row.at))})),
         champions: Object.values(CHAMPIONS).map(({id, label, chance, hp: hpMul, exp, drops}) => ({id, label, chance, hp: hpMul, exp, drops})),
         vitality: getVitalityState(session, now),
         shots: getShotsState(session),
@@ -91,6 +92,37 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
             hotbarMax: HOTBAR_MAX,
             special,
         },
+    };
+}
+
+/** The battle area: the monsters of the room the hero stands in, the room itself and the map of a catacomb. */
+function fieldDto(hunt, now) {
+    const field = hunt.field;
+    const zone = getZone(hunt.zone);
+    const layout = roomLayout(zone);
+    const current = roomById(zone, field.room) || layout.rooms[0];
+    const visited = new Set(field.visited || [current.id]);
+    const pending = (field.respawns || []).filter(entry => entry.room === current.id);
+    const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
+    return {
+        x: field.x, y: field.y, target: field.target,
+        title: zone?.title,
+        room: {id: current.id, name: current.name, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
+        map: layout.map ? {
+            cols: layout.cols, rows: layout.rows,
+            rooms: layout.rooms.map(room => ({
+                id: room.id, row: room.row, col: room.col, big: room.big, cap: room.cap,
+                current: room.id === current.id,
+                visited: visited.has(room.id),
+                adjacent: adjacent(current, room),
+                // a room the hero knows shows its name and how many monsters stand there now
+                name: visited.has(room.id) ? room.name : '',
+                mobs: room.id === current.id ? field.mobs.length : visited.has(room.id) ? (field.rooms?.[room.id]?.mobs.length ?? 0) : null,
+            })),
+        } : null,
+        respawning: pending.length,
+        nextSpawnMs,
+        mobs: field.mobs.map(m => mobDto(m, now)),
     };
 }
 

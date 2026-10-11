@@ -9,7 +9,7 @@ export const HUNT = Object.freeze({
     defencePerAttack: 0.8,
     damageScale: 10,
     // A level-matched mob's hit, in percent of the target's max HP, before defence.
-    hitPct: 4,
+    hitPct: 8,
     // A mob above the hero's level hits harder, below it softer (per level of difference).
     levelHitStep: 0.06,
     levelHitMin: -5,
@@ -19,6 +19,8 @@ export const HUNT = Object.freeze({
     // Swings applied in one go after a long pause (the hero is not left to die offline).
     maxCatchUp: 4,
     respawnMs: 60 * 1000,
+    // A killed monster of a field or a room comes back after this long.
+    mobRespawnMs: 30 * 1000,
     // Real High Five rates: experience stops at this level gap; drops fade between the min and max gap.
     expMaxGap: 11,
     adenaGap: Object.freeze({min: 8, max: 15, floor: 0.1}),

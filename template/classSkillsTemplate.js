@@ -17,6 +17,7 @@
 //   tier            - class tier that teaches it (1 base, 2, 3)
 
 import {assembleProfessionSkills} from './professionSkills.js';
+import {buildStartKits} from './startKits.js';
 
 const baseSkills = {
     noClass: [{
@@ -315,4 +316,8 @@ const baseSkills = {
     }]
 };
 
-export default {...baseSkills, ...assembleProfessionSkills(baseSkills)};
+// The first skills are real High Five skills of the start class (template/startKits.js): the invented kit above
+// only supplies the numbers of its slots.
+const startKits = buildStartKits(baseSkills);
+const realBase = {...baseSkills, ...startKits.families};
+export default {...realBase, ...assembleProfessionSkills(realBase, startKits.classes)};

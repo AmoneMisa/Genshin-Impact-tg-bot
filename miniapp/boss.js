@@ -1,3 +1,4 @@
+import { l2SkillAt } from '../functions/game/player/skillLevel.js';
 import Chat from '../db/models/Chat.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import summonBoss from '../functions/game/boss/summonBoss.js';
@@ -58,8 +59,13 @@ export function skillDto(session, skill, index, now = Date.now()) {
   const costMp = Math.max(0, number(effectiveCost.cost));
   const needLevel = Math.max(0, number(skill?.needLvl));
   const locked = needLevel > number(session?.game?.stats?.lvl, 1);
+  // the real Lineage II skill: its level for this hero and the power of that level
+  const real = l2SkillAt(skill?.l2Id, number(session?.game?.stats?.lvl, 1));
 
   return {
+    l2Power: real && real.power >= 1 ? Math.round(real.power) : null,
+    l2Level: real ? real.level : null,
+    l2MaxLevel: real ? real.maxLevel : null,
     slot: Number.isFinite(Number(skill?.slot)) ? Number(skill.slot) : index,
     index,
     name: skill?.name || `Навык ${index + 1}`,
@@ -181,10 +187,14 @@ async function expireBossIfNeeded(boss, chatId, now = Date.now()) {
 export function potionBarDto(session) {
   const owned = getInventoryState(session).potions;
   const same = (a, b) => a.type === b.type && (a.bottleType || 'potion') === (b.bottleType || 'potion') && number(a.power) === number(b.power);
-  const bar = potionsTemplate.map(template => {
+  // Buff potions are drunk from the inventory before the fight; the quick bar holds restoring potions only.
+  const restoring = potion => potion.type !== 'buff';
+  const bar = potionsTemplate.filter(restoring).map(template => {
     const item = owned.find(potion => same(potion, template) && potion.count > 0) || owned.find(potion => same(potion, template));
     return {
       key: item && item.count > 0 ? item.key : null,
+      id: template.id || null,
+      size: template.size || '',
       type: template.type,
       bottleType: template.bottleType,
       power: number(template.power),
@@ -193,8 +203,8 @@ export function potionBarDto(session) {
       count: item ? item.count : 0,
     };
   });
-  const extra = owned.filter(potion => potion.count > 0 && !potionsTemplate.some(template => same(potion, template)));
-  return [...bar, ...extra.map(({ key, type, bottleType, power, share, name, count }) => ({ key, type, bottleType, power, share, name, count }))];
+  const extra = owned.filter(potion => restoring(potion) && potion.count > 0 && !potionsTemplate.some(template => same(potion, template)));
+  return [...bar, ...extra.map(({ key, id, size, type, bottleType, power, share, name, count }) => ({ key, id, size, type, bottleType, power, share, name, count }))];
 }
 
 /** Minions, phases, charging ultimate, stun and debuffs of the encounter. */

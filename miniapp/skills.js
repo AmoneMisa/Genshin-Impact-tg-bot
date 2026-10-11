@@ -9,6 +9,7 @@ import {
 } from '../functions/game/player/skillEnchant.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import { isSkillLearned, learnSkill, skillLearnCost } from '../functions/game/player/skillLearning.js';
+import { l2SkillAt } from '../functions/game/player/skillLevel.js';
 import { getMaterialCount, listMaterials, materialInfo } from '../functions/game/player/materials.js';
 import {
   ROUTES, ROUTE_MAX_LEVEL, ROUTE_MIN_SKILL_LEVEL, ROUTE_RESET_FEE,
@@ -170,7 +171,12 @@ function skillState(session, skill, playerLevel) {
     ? { ...upgradeCost, ...(upgradeCost.items ? { items: itemRows(session, upgradeCost.items) } : {}) }
     : null;
 
+  const real = l2SkillAt(skill?.l2Id, playerLevel);
   return {
+    // the real Lineage II skill: its level for this hero and the power of that level
+    l2Power: real && real.power >= 1 ? Math.round(real.power) : null,
+    l2Level: real ? real.level : null,
+    l2MaxLevel: real ? real.maxLevel : null,
     slot: number(skill?.slot),
     name: String(skill?.name || 'Навык'),
     description: String(skill?.description || ''),

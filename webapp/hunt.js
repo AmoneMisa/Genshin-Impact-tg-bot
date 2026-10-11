@@ -1,5 +1,5 @@
 import {materialIcon} from './material-icons.js';
-import {l2CategoryIcon} from './art/l2-icon-art.js';
+import {l2CategoryIcon,l2IconHtml,L2_HF_ARMOR_SETS} from './art/l2-icon-art.js';
 import {huntZoneUrl,huntMobUrl} from './art/hunt-art.js';
 import {shotIcon,elementIcon,championIcon} from './art/painted-icon-art.js';
 import { bar, escapeHtml, formatDuration, formatNumber, hotbar, hotbarChoice, playerFrame, potionBar, statusIcons } from './boss-hud.js';
@@ -7,11 +7,12 @@ import { l2SkillIcon } from './art/l2-extra-art.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
 import {icon,emojiIconName} from './icons.js';
 import {classArtUrl} from './boss-stage.js';
+import {systemToast} from './system-toasts.js';
 
 // Hunting fields (Lineage II style): pick a zone, fight one mob at a time in real time with skills,
 // potions and shots. Blue and red champions are tougher and pay much more.
 
-const REASONS = {no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
+const REASONS = {room_in_combat:'Нельзя уйти из комнаты, пока монстры в бою: сначала победи их или отступи.',room_not_adjacent:'В эту комнату нельзя пройти напрямую.',no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
   effect_betray:'На тебе предательство.',effect_distrust:'На тебе смятение.',
   pvp_invalid_target:'Игрок недоступен для нападения.',pvp_not_here:'Игрок покинул локацию.',pvp_out_of_range:'Подойди ближе к игроку.',pvp_force_required:'Для атаки мирного игрока включи принудительную атаку.',pvp_stunned:'Ты оглушён.',pvp_silenced:'Магия заблокирована молчанием.',
   unknown_zone: 'Такой зоны нет.',
@@ -70,7 +71,20 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
-  const say = text => { feedback = text; feedbackNode.textContent = text; };
+  // the system chat floats over the screen instead of taking room in the page
+  const say = text => { feedback = ''; systemToast(text); };
+  let lastLogAt = null;
+  function floatNewLog() {
+    const rows = [...(state?.log || []), ...(state?.pvpLog || [])].filter(row => Number(row.at) > 0).sort((a, b) => a.at - b.at);
+    if (!rows.length) return;
+    // the first state only sets the mark: the old journal is not replayed
+    if (lastLogAt !== null) {
+      for (const row of rows.filter(row => row.at > lastLogAt)) {
+        systemToast(row.text, icon(row.icon === '⚑' ? 'flag' : emojiIconName(row.icon) || 'swords'));
+      }
+    }
+    lastLogAt = Math.max(lastLogAt || 0, rows.at(-1).at);
+  }
 
   function take(payload) {
     if (payload?.hunt) state = payload.hunt;
@@ -208,8 +222,17 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   const OPEN_LOOT = ['gold','full','piece','scroll','lifestone','seal'];
   const lootCache = {}, lootOpen = new Set();
   const chanceText = value => value >= 100 ? '×' + new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(value/100) : new Intl.NumberFormat('ru-RU',{maximumFractionDigits:value < 1 ? 3 : 2}).format(value)+'%';
+  // the custom set part has no item id of its own: it shows the client icon of the Lineage II set of its grade and type
+  function customPartIcon(d) {
+    const match = /^custom:([^:]+):([^:]+)$/.exec(String(d.key));
+    if (!match) return '';
+    const grade = match[1] === 'noGrade' ? 'NONE' : match[1], armor = {heavy:'HEAVY', light:'LIGHT', robe:'MAGIC'}[match[2]];
+    const set = L2_HF_ARMOR_SETS.find(row => row.grade === grade && row.armor === armor);
+    const part = set?.parts.find(row => row.slot === 'chest') || set?.parts[0];
+    return (part && l2IconHtml(part.art)) || l2CategoryIcon('full');
+  }
   function dropRow(d) {
-    return '<div>'+materialIcon(d.key,escapeHtml(d.icon))+'<span>'+escapeHtml(d.name)+'<small>×'+formatNumber(d.min)+(d.min===d.max?'':'–'+formatNumber(d.max))+'</small></span><b>'+chanceText(d.chance)+'</b></div>';
+    return '<div>'+(customPartIcon(d)||materialIcon(d.key,escapeHtml(d.icon)))+'<span>'+escapeHtml(d.name)+'<small>×'+formatNumber(d.min)+(d.min===d.max?'':'–'+formatNumber(d.max))+'</small></span><b>'+chanceText(d.chance)+'</b></div>';
   }
   function dropsHtml(drops = []) {
     return '<div class="hunt-drop-groups">'+LOOT_GROUPS.map(([kind,label])=>{
@@ -229,13 +252,25 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     render();
   }
 
+  // The map of a catacomb: a grid of rooms, the neighbours of the current one are the way forward.
+  function mapHtml(field){
+    const map=field.map;if(!map)return '';
+    const cells=map.rooms.map(r=>{
+      const label=r.visited?escapeHtml(r.name):'Не исследовано';
+      const count=r.mobs===null?'?':r.mobs+'/'+r.cap;
+      const cls='hunt-room'+(r.current?' current':'')+(r.big?' big':'')+(r.visited?' visited':'')+(r.adjacent?' near':'');
+      return '<button type="button" class="'+cls+'" '+(r.adjacent?'data-room="'+escapeHtml(r.id)+'"':'disabled')+' style="grid-column:'+(r.col+1)+';grid-row:'+(r.row+1)+'" title="'+label+' · '+(r.big?'большая':'малая')+' комната" aria-label="'+label+(r.current?' (ты здесь)':'')+'"><b>'+(r.current?icon('flag'):r.big?'▣':'▫')+'</b><small>'+count+'</small></button>';
+    }).join('');
+    return '<div class="hunt-map" style="grid-template-columns:repeat('+map.cols+',1fr)">'+cells+'</div>';
+  }
   function fieldHtml() {
     const field=state.field;if(!field)return '';
     const zone=state.zones.find(z=>z.id===state.zone),art=huntZoneUrl(zone);
-    return '<section class="hunt-battlefield"><div class="hunt-field-head"><strong>'+escapeHtml(field.title)+'</strong><small>'+field.mobs.filter(m=>m.aggro).length+' в бою</small></div><div class="hunt-ground" '+(art?'style="--field-art:url('+art+')"':'')+'>'
+    const room=field.room||{};
+    return '<section class="hunt-battlefield"><div class="hunt-field-head"><strong>'+escapeHtml(field.title)+(field.map?' · '+escapeHtml(room.name||''):'')+'</strong><small>'+field.mobs.filter(m=>m.aggro).length+' в бою · монстров: '+field.mobs.length+(room.cap?'/'+room.cap:'')+'</small></div>'+mapHtml(field)+'<div class="hunt-ground" style="'+(art?'--field-art:url('+art+');':'')+'height:'+(room.height||260)+'px">'
       +field.mobs.map(m=>'<button type="button" class="hunt-actor '+(!playerTarget&&m.instanceId===field.target?'selected ':'')+(m.aggro?'aggro':'')+'" data-target="'+escapeHtml(m.instanceId)+'" style="left:'+m.x*100+'%;top:'+m.y*70+'%" aria-pressed="'+(!playerTarget&&m.instanceId===field.target)+'"><span class="hunt-actor-portrait">'+(huntMobUrl(m)?'<img src="'+huntMobUrl(m)+'" alt="">':icon('ghost'))+'<i>'+m.level+'</i></span><span class="hunt-actor-hp"><i style="width:'+m.hpPercent+'%"></i></span><strong>'+escapeHtml(m.name)+'</strong><small>'+(m.stunned?'Оглушён':m.aggro?'Атакует':m.aggressive?'Агрессивный':m.role||'Мирный')+'</small></button>').join('')
       +'<span class="hunt-hero-marker" style="left:'+field.x*100+'%;top:'+Math.min(90,field.y*70+30)+'%"><img src="'+classArtUrl(state.player.className,state.player.gender)+'" alt=""><small>Ты</small></span>'
-      +(field.mobs.length?'':'<div class="hunt-field-cleared">Поле зачищено!<br><small>Забери добычу и выбери следующую локацию.</small></div>')
+      +(field.mobs.length?'':'<div class="hunt-field-cleared">'+(field.map?'В комнате пусто':'Поле зачищено')+'<br><small>'+(field.respawning?'Новые монстры появятся через '+Math.max(1,Math.ceil(field.nextSpawnMs/1000))+' с.':'Забери добычу и выбери следующую локацию.')+'</small></div>')
       +'</div><div class="hunt-movement"><button data-move="left" aria-label="Влево">'+icon('chevron-left')+'</button><button data-move="forward">'+icon('arrow-up')+'<span>Подойти</span></button><button data-move="back">'+icon('chevron-right','hunt-move-down')+'<span>Отойти</span></button><button data-move="right" aria-label="Вправо">'+icon('chevron-right')+'</button></div><p>Близкие агрессивные мобы нападают сами. Соседи помогают атакованной цели.</p></section>';
   }
 
@@ -270,12 +305,6 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       <div class="mmo-section-title"><strong>${last.champion ? `${CHAMPION[last.champion].icon} ` : ''}Последняя добыча: ${escapeHtml(last.name)}</strong><small>убито: ${formatNumber(state.kills)}</small></div>
       <p>+${formatNumber(last.exp)} опыта · +${formatNumber(last.sp)} ОП${last.gold ? ` · +${formatNumber(last.gold)} ${icon('coin')}` : ''}${items ? `<br>${items}` : ''}</p>
     </section>`;
-  }
-
-  function logHtml() {
-    const rows=[...(state.log||[]),...(state.pvpLog||[]).map(row=>({...row,icon:'⚔️'}))].sort((a,b)=>a.agoMs-b.agoMs).slice(0,8);
-    if (!rows.length) return '';
-    return `<section class="hunt-journal"><small>Журнал боя</small><ol class="hunt-log">${rows.map(row => `<li><i>${icon(row.icon==='⚑'?'flag':emojiIconName(row.icon)||'swords')}</i><span>${escapeHtml(row.text)}</span></li>`).join('')}</ol></section>`;
   }
 
   // The skill bar: the skills the player put on it (up to 16), and a second tab with Life Stone and toggle skills.
@@ -324,7 +353,6 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       if(!peer)body.push(vitalityHtml());
       body.push('<button type="button" class="hunt-flee" data-flee>Отступить</button>');
       body.push('</section>');
-      body.push(logHtml());
       if(!peer){
         body.push(lastHtml());
         body.push('<details class="hunt-extra"><summary>Кристалл души и камни печати</summary>'+soulHtml()+'</details>');
@@ -337,10 +365,10 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       body.push(shotsHtml());
       if (dead) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
       body.push(lastHtml());
-      body.push(logHtml());
       body.push(`<div class="mmo-section-title"><strong>Зоны</strong><small>🔵 синий: ×3 опыта · 🔴 красный: ×8 опыта и добычи</small></div>`);
       body.push(zonesHtml());
     }
+    floatNewLog();
     content.innerHTML = body.join('');
     if (!feedback) feedbackNode.textContent = '';
     bind();
@@ -352,6 +380,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelector('.hunt-target-drops')?.addEventListener('toggle', e=>{dropOpen=e.target.open;});
     content.querySelectorAll('[data-loot-zone]').forEach(d=>d.addEventListener('toggle',e=>{if(e.target!==d)return;const id=d.dataset.lootZone;if(d.open){if(lootOpen.has(id))return;lootOpen.add(id);if(lootCache[id])render();else{lootOpen.add(id);d.insertAdjacentHTML('beforeend','<p class="hunt-loot-wait">Загружаю таблицу дропа…</p>');loadZoneLoot(id);}}else lootOpen.delete(id);}));
     content.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',async()=>{playerTarget=null;forceAttack=false;await run('/api/hunt/target',{targetId:b.dataset.target});render();}));
+    content.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',async()=>{playerTarget=null;await run('/api/hunt/move',{direction:'room:'+b.dataset.room});render();}));
     content.querySelectorAll('[data-move]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/hunt/move',{direction:b.dataset.move});render();}));
     content.querySelectorAll('[data-zone-kind]').forEach(b=>b.addEventListener('click',()=>{zoneKind=b.dataset.zoneKind;render();}));
     content.querySelector('[data-soul-select]')?.addEventListener('change',async e=>{const [color,stage]=e.target.value.split(':');await run('/api/soul/select',{color:color||null,stage:Number(stage)});render();});

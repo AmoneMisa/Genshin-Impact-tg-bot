@@ -30,7 +30,8 @@ const name = s => s.userChatData?.user?.first_name || s.userChatData?.user?.user
 
 export function fieldPeers(chat, session, now = Date.now()) {
     if (!fieldIsPresent(session,now)) return [];
-    return (chat.members || []).filter(s => id(s) !== id(session) && !s.isHided && !s.userChatData?.user?.is_bot && fieldIsPresent(s,now) && s.game.hunt.zone === session.game.hunt.zone);
+    return (chat.members || []).filter(s => id(s) !== id(session) && !s.isHided && !s.userChatData?.user?.is_bot && fieldIsPresent(s,now) && s.game.hunt.zone === session.game.hunt.zone
+        && (s.game.hunt.field.room || null) === (session.game.hunt.field.room || null));
 }
 
 function proxyFor(defender, now) {

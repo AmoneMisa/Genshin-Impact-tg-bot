@@ -21,6 +21,7 @@ import { shotBoost } from '../shots/shots.js';
 import { huntDebuff } from '../hunt/huntAi.js';
 import {l2HasControl,l2RawStat,l2TraitDamage} from '../player/l2Effects.js';
 import {isMagicClass} from '../classes/classFamily.js';
+import {skillPowerFactor, skillLevelPenalty} from '../player/skillLevel.js';
 
 /**
  * One hit of `skill` from `session` on the boss (or on a minion, via
@@ -36,6 +37,9 @@ export default function (session, skill, boss, options = {}) {
     let dmg;
     let template = bossesTemplate.find(bossTemplate => bossTemplate.name === boss.name);
     let modifier = (skill.damageModifier || 1) * getSkillPowerMultiplier(skill);
+    const heroLevel = Number(session.game.stats?.lvl) || 1;
+    // the level of the real skill the hero has learned: the lower levels hit softer
+    modifier *= skillPowerFactor(skill, heroLevel);
 
     // Execute skills hit harder once the target is low.
     if (skill.executeBelow && hpShare <= skill.executeBelow) {
@@ -84,6 +88,15 @@ export default function (session, skill, boss, options = {}) {
     if (getRandom(1, 100) <= criticalChance) {
         isHasCritical = true;
         dmg *= criticalDamage;
+    }
+
+    // a skill far below the monster's level: mostly misses, and what lands is a scratch
+    const penalty = skillLevelPenalty(skill, Number(boss.stats?.lvl ?? boss.level) || 0, heroLevel);
+    if (penalty.factor < 1) {
+        const roll = options.random ? options.random() : Math.random();
+        if (roll < penalty.missChance) return {dmg: 0, isHasCritical: false, missed: true};
+        dmg = Math.max(1, dmg * penalty.factor);
+        isHasCritical = false;
     }
 
     if (consume) {

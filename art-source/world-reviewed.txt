@@ -61,6 +61,6 @@ games/event-winter
 city/map-portrait
 arena/rank-iron
 arena/rank-ruby
-currency/luck-coin
+currency/coin-of-luck
 clan/clan-hall
 clan/clan-hall-auction

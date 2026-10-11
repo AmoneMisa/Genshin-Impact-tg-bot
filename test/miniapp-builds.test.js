@@ -132,7 +132,7 @@ test('an empty Vitality bar blocks collecting building experience', () => {
   assert.equal(player.game.builds.traineeArea.resourceCollected, 50);
 });
 
-test('academy skill points are capped and the crystal lake makes moon dew, not crystals', () => {
+test('the academy produces nothing and the crystal lake makes moon dew, not crystals', () => {
   const player = session({
     game: {
       builds: {
@@ -142,7 +142,8 @@ test('academy skill points are capped and the crystal lake makes moon dew, not c
     },
   });
   const sp = collectBuildResources(player, 'academy', 1_000);
-  assert.equal(sp.amount, buildSpCap(player));
+  assert.equal(sp.ok, false);
+  assert.equal(sp.reason, 'no_production');
   const dew = collectBuildResources(player, 'crystalLake', 1_000);
   assert.equal(dew.resourceType, 'moonDew');
   assert.equal(player.game.inventory.moonDew, 10_040);

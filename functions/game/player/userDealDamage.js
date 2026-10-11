@@ -53,8 +53,10 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
     const hits = [];
     let isHasCritical = false;
     let total = 0;
+    let missedHits = 0;
     for (let i = 0; i < hitCount; i++) {
-        const {dmg, isHasCritical: crit} = calcDamage(session, skill, boss, {consume: i === 0, defence, hpShare, now});
+        const {dmg, isHasCritical: crit, missed: hitMissed} = calcDamage(session, skill, boss, {consume: i === 0, defence, hpShare, now});
+        if (hitMissed) missedHits++;
         hits.push({dmg, crit});
         total += dmg;
         isHasCritical = isHasCritical || crit;
@@ -67,7 +69,7 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
     const cubic=cubicDamage(session,total,now);
     total+=cubic.damage;
     const userId = session.userChatData.user.id;
-    const result = {isHasCritical, dmg: total, dealt: 0, hits, companionDamage, cubicDamage: cubic.damage, vampire: 0, reflectDamage: 0, target: 'boss'};
+    const result = {isHasCritical, dmg: total, dealt: 0, missed: missedHits === hitCount, hits, companionDamage, cubicDamage: cubic.damage, vampire: 0, reflectDamage: 0, target: 'boss'};
 
     if (unit) {
         const dealt = Math.min(total, unit.currentHp);

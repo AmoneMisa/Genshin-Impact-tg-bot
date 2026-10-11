@@ -13,7 +13,7 @@ function hero(className = 'paladin', level = 60, sp = 1000) {
   updatePlayerStats(session);
   return session;
 }
-const professionSkill = session => session.game.gameClass.skills.find(skill => skill.l2Id && skill.needLvl <= session.game.stats.lvl);
+const professionSkill = session => session.game.gameClass.skills.find(skill => skill.l2Id && skill.tier && skill.needLvl <= session.game.stats.lvl);
 
 test('the base kit needs no learning, a profession skill is learned for skill points before it can be used', () => {
   const session = hero();
@@ -38,7 +38,7 @@ test('the base kit needs no learning, a profession skill is learned for skill po
 
 test('learning is refused below the skill level or without skill points, and changes nothing', () => {
   const low = hero('paladin', 25);
-  const hard = low.game.gameClass.skills.find(skill => skill.l2Id && skill.needLvl > 25);
+  const hard = low.game.gameClass.skills.find(skill => skill.l2Id && skill.tier && skill.needLvl > 25);
   assert.equal(learnSkill(low, hard.slot).reason, 'level_too_low');
   const poor = hero('paladin', 60, 0);
   const skill = professionSkill(poor);

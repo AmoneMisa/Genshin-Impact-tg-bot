@@ -127,7 +127,10 @@ test('custom parts also drop from monsters, at half the rate of the real equipme
   changeClass(session, 'warrior');
   updateStats(session);
   const mob = buildMob(zone, mobDef, {random: () => 0});
-  assert.ok(huntDropPreview(mobDef.level, mobDef).some(row => row.key === 'custom-armor' && row.chance > 0));
+  const customRows = huntDropPreview(mobDef.level, mobDef).filter(row => row.key.startsWith('custom:'));
+  assert.ok(customRows.length > 0 && customRows.every(row => row.chance > 0 && row.name.includes('·')), 'named rows per armor type');
+  const summed = customRows.reduce((sum, row) => sum + row.chance, 0);
+  assert.ok(Math.abs(summed - customDropChance(mobDef.level) * (await import('../functions/game/hunt/huntConfig.js')).HUNT.dropRate) / summed < 0.5);
   const rewards = grantKillRewards(session, mob, mobDef, {random: () => 0, now: 1_800_000_000_000});
   const part = session.game.inventory.equipment.items.find(item => item.custom);
   assert.ok(part, 'a custom part of the grade dropped');
