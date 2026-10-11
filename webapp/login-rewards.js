@@ -1,19 +1,14 @@
 import {escapeHtml as esc} from './escape-html.js';
 import {icon} from './icons.js';
 import {materialIcon} from './material-icons.js';
+import {loginItemArt} from './art/login-item-art.js';
+import {createGamePopup} from './game-popup.js';
 
 const REASONS={day_changed:'Наступил новый день. Календарь обновлён.',already_claimed:'Сегодня награда уже получена.',inventory_full:'Освободите место в инвентаре.',coupon_missing:'Купон больше недоступен.',invalid_choice:'Выберите награду из списка.',level_too_low:'Сохраните купон до нужного уровня.',not_fallen:'Персонаж уже жив.'};
 const number=value=>new Intl.NumberFormat('ru-RU').format(value||0);
 function rewardIcon(row) {
     const key=row.key||'';
-    if(key.startsWith('login_')){
-        const grade=key.split('_').at(-1);
-        if(key.includes('_shots_'))return materialIcon(`soulshot_${grade==='NG'?'noGrade':grade}`);
-        if(key.includes('_fishing_'))return materialIcon('l2_7609');
-        if(key.includes('_buff_'))return materialIcon('l2_1539');
-        if(key.includes('_resurrection_'))return materialIcon('l2_3936');
-        return icon(key.includes('_box_')?'gift':key.includes('_shadow_weapon_')?'sword':key.includes('_shadow_armor_')?'shield':key.includes('_shadow_jewelry_')?'gem':key.includes('_fame_')?'crown':'sparkle');
-    }
+    if(key.startsWith('login_'))return loginItemArt(key);
     if(key.startsWith('l2_')||key.startsWith('bound_'))return materialIcon(key);
     return icon(key==='ironOre'?'pickaxe':key==='gold'||key==='ancientAdena'?'coins':'sparkle');
 }
@@ -26,11 +21,9 @@ function dayHtml(day,state) {
 
 export async function openLoginRewards({api,renderState,haptic=()=>{},onClose,initialTab='calendar',initialKey=null}) {
     let state=await api('/api/login-rewards'),tab=initialTab,selectedDay=null,selectedKey=initialKey,pending=false,timer;
-    const overlay=document.createElement('section');overlay.className='game-overlay login-overlay';
-    overlay.innerHTML=`<div class="overlay-backdrop"></div><div class="overlay-panel login-panel"><header class="login-head"><div><small>Награды за вход</small><h2>Календарь</h2></div><button type="button" class="overlay-close" aria-label="Закрыть">${icon('x')}</button></header><div data-login-content></div><p class="login-feedback" data-login-feedback role="status" aria-live="polite"></p></div>`;
+    const popup=createGamePopup({title:'Награды за вход',className:'login-overlay',panelClass:'login-panel',body:'<div data-login-content></div><p class="login-feedback" data-login-feedback role="status" aria-live="polite"></p>',canClose:()=>!pending,onClose:()=>{clearTimeout(timer);onClose?.();}});
+    const {overlay}=popup;
     const content=overlay.querySelector('[data-login-content]'),feedback=overlay.querySelector('[data-login-feedback]');
-    const close=()=>{if(pending)return;clearTimeout(timer);overlay.remove();onClose?.();};
-    overlay.querySelector('.overlay-close').onclick=close;overlay.querySelector('.overlay-backdrop').onclick=close;
     function detail() {
         const coupon=state.coupons.find(c=>c.key===selectedKey);
         if(coupon){const required=coupon.choices.length>0;
@@ -75,6 +68,6 @@ export async function openLoginRewards({api,renderState,haptic=()=>{},onClose,in
     }
     async function reset(){if(!overlay.isConnected)return;if(pending){timer=setTimeout(reset,1000);return;}try{state=await api('/api/login-rewards');if(!overlay.isConnected)return;selectedDay=null;render();schedule();}catch(error){if(!overlay.isConnected)return;feedback.textContent=error.message;timer=setTimeout(reset,60000);}}
     function schedule(){clearTimeout(timer);timer=setTimeout(reset,Math.max(1000,state.nextResetAt-state.serverNow+250));}
-    document.body.append(overlay);render();schedule();requestAnimationFrame(()=>overlay.classList.add('visible'));overlay.querySelector('.overlay-close').focus();
+    render();popup.show();schedule();
     return overlay;
 }

@@ -137,7 +137,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   /** The bag of the current filter: one grid of icons, empty cells fill the last row. */
   function bagSlots() {
     const potions = state.potions.map(slotHtml);
-    const equipment = (state.equipment || []).map(item => `<button type="button" class="inv-slot ${selectedKind === 'equipment' && selectedKey === item.key ? 'selected' : ''}" data-inventory-equipment="${escapeHtml(item.key)}" title="${escapeHtml(item.name)}${item.isUsed ? ' · Надето' : ''}" aria-label="${escapeHtml(item.name)}">${equipmentArt(item)}${item.enchant ? `<i class="inv-plus">+${item.enchant}</i>` : ''}${item.isUsed ? '<i class="inv-worn" aria-hidden="true"></i>' : ''}</button>`);
+    const equipment = (state.equipment || []).map(item => `<button type="button" class="inv-slot ${item.shadow?'is-shadow-item':''} ${selectedKind === 'equipment' && selectedKey === item.key ? 'selected' : ''}" data-inventory-equipment="${escapeHtml(item.key)}" title="${escapeHtml(item.name)}${item.isUsed ? ' · Надето' : ''}" aria-label="${escapeHtml(item.name)}">${equipmentArt(item)}${item.enchant ? `<i class="inv-plus">+${item.enchant}</i>` : ''}${item.isUsed ? '<i class="inv-worn" aria-hidden="true"></i>' : ''}</button>`);
     const materialSlot = item => `<button type="button" class="inv-slot ${selectedKind === 'material' && selectedKey === item.key ? 'selected' : ''}" data-inventory-material="${escapeHtml(item.key)}" title="${escapeHtml(item.name)} ×${item.count}" aria-label="${escapeHtml(item.name)} ×${item.count}">${materialIcon(item.key)}<em>${formatNumber(item.count)}</em></button>`;
     const materials = state.materials || [];
     const supplies = materials.filter(isSupplyMaterial).map(materialSlot);
@@ -172,7 +172,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   }
 
   function selectedItem(){return (selectedKind==='equipment'?state.equipment||[]:selectedKind==='material'?state.materials||[]:state.potions).find(item=>item.key===selectedKey);}
-  function equipmentArt(item){const art=itemArtSources(itemArtKey(normalizeLootKind(item),item));return `<img src="${art.src}" srcset="${art.srcset}" width="48" height="48" sizes="48px" alt="" loading="lazy" decoding="async">`;}
+  function equipmentArt(item){const art=itemArtSources(itemArtKey(normalizeLootKind(item),item));return `<img class="${item.shadow?'is-shadow-item':''}" src="${art.src}" srcset="${art.srcset}" width="48" height="48" sizes="48px" alt="" loading="lazy" decoding="async">`;}
   function selectedRow(){const item=selectedItem();if(!item)return null;return {kind:selectedKind,ref:selectedKind==='potion'?item.ref:selectedKind==='equipment'?item.uid:item.key,title:item.name,count:selectedKind==='equipment'?1:item.count,artPotion:item,artItem:item,materialKey:item.key};}
 
   function resultHtml() {
