@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 import fs from "fs";
-import process from 'node:process'
-
-process.loadEnvFile('.env');
-const MONGO_URI = process.env.MONGO_URL;
-// 1. Подключение к MongoDB
-mongoose.connect(MONGO_URI);
+// Connection and transaction support are checked by db/db.js before main().
 
 const User = mongoose.model("users", new mongoose.Schema({}, {strict: false}));
 const Chat = mongoose.model("chats", new mongoose.Schema({}, {strict: false}));

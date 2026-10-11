@@ -268,3 +268,5 @@ docker compose up -d --no-deps bot
 ```
 
 **Данные.** Лог ошибок хранится в томе `bot-state`, база — в томе `mongo-data`; оба переживают пересборку и перезапуск.
+
+**Транзакции MongoDB.** Сохранение игры требует replica set или sharded cluster. Встроенный Compose уже настраивает `rs0`; для отдельной MongoDB см. [настройку replica set](docs/mongodb-replica-set.md). Бот проверяет поддержку транзакций перед запуском.
