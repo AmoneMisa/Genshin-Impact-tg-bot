@@ -26,7 +26,7 @@ const HOUR_MS = 60 * 60 * 1000;
 
 /** Coins of Luck every fighter gets for killing an epic raid boss: 5 for the easiest, 50 for the hardest. */
 export const EPIC_LUCK_COINS = Object.freeze({
-    queenAnt: 5, core: 8, orfen: 12, zaken: 18, baium: 25, frintezza: 32, freya: 36, beleth: 38, antharas: 40, valakas: 50,
+    queenAnt: 5, core: 8, orfen: 12, zaken: 18, baium: 25, frintezza: 32, freya: 36, beleth: 38, antharas: 40, freyaExtreme: 48, valakas: 50,
 });
 
 export const epicLuckCoins = name => EPIC_LUCK_COINS[name] || 0;
@@ -36,7 +36,7 @@ export const EPIC_EGGS = Object.freeze({
     queenAnt: {key: 'egg_wyvern', count: 1}, core: {key: 'egg_wyvern', count: 1}, orfen: {key: 'egg_wyvern', count: 2},
     zaken: {key: 'egg_dragon', count: 1}, baium: {key: 'egg_dragon', count: 1}, frintezza: {key: 'egg_dragon', count: 2},
     antharas: {key: 'egg_ancient', count: 1}, valakas: {key: 'egg_ancient', count: 1},
-    beleth: {key: 'egg_ancient', count: 1}, freya: {key: 'egg_ancient', count: 1},
+    beleth: {key: 'egg_ancient', count: 1}, freya: {key: 'egg_ancient', count: 1}, freyaExtreme: {key: 'egg_ancient', count: 2},
 });
 
 export const epicEgg = name => EPIC_EGGS[name] || bossTemplates.find(boss => boss.name === name)?.world?.egg || null;

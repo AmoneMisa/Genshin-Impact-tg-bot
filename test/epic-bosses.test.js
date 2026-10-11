@@ -21,7 +21,7 @@ const HOUR = 3_600_000;
 
 test('every epic raid boss has a plan, attacks, an essence and a unique piece of epic jewellery', () => {
   const epics = epicTemplates();
-  assert.deepEqual(epics.map(boss => boss.name), ['queenAnt', 'core', 'orfen', 'zaken', 'baium', 'frintezza', 'antharas', 'valakas', 'beleth', 'freya']);
+  assert.deepEqual(epics.map(boss => boss.name), ['queenAnt', 'core', 'orfen', 'zaken', 'baium', 'frintezza', 'antharas', 'valakas', 'beleth', 'freya', 'freyaExtreme']);
   for (const boss of epics) {
     assert.equal(boss.weight, 0);
     assert.ok(boss.phases.length >= 3 && boss.minions.length >= 2, boss.name);
@@ -46,7 +46,7 @@ test('the epic jewellery are the real Lineage 2 pieces with real M.Def', () => {
     queenAnt: ['Ring of Queen Ant', 'B', 48], core: ['Ring of Core', 'A', 48], orfen: ['Earring of Orfen', 'A', 71],
     zaken: ["Zaken's Earring", 'S', 71], baium: ['Ring of Baium', 'S', 48], antharas: ['Earring of Antharas', 'S', 71],
     valakas: ['Necklace of Valakas', 'S', 95], frintezza: ["Frintezza's Necklace", 'S', 95],
-    beleth: ['Ring of Beleth', 'S', 48], freya: ["Freya's Necklace", 'S', 95],
+    beleth: ['Ring of Beleth', 'S', 48], freya: ["Freya's Necklace", 'S', 95], freyaExtreme: ["Freya's Earring", 'S', 71],
   };
   for (const [boss, [name, grade, mDef]] of Object.entries(expected)) {
     const item = findEpicItem(boss);
@@ -71,7 +71,7 @@ test('epic jewellery never comes from random drops or the forge, and ordinary su
   withSeed(6, () => {
     for (let i = 0; i < 500; i++) assert.equal(Boolean(getRandomBoss(Math.random).epic), false);
   });
-  assert.equal(getCatalog().filter(item => item.epicBoss).length, 10);
+  assert.equal(getCatalog().filter(item => item.epicBoss).length, 11);
 });
 
 test('wearing an epic piece raises the stats it promises', () => {
@@ -126,7 +126,7 @@ test('a kill starts the chat respawn timer; the boss is unavailable until it run
   assert.equal(markEpicKilled(chat, 'kivaha'), null, 'ordinary bosses have no timer');
 
   const list = epicList(chat, now + 100 * HOUR);
-  assert.equal(list.length, 10);
+  assert.equal(list.length, 11);
   assert.equal(list.find(entry => entry.name === 'baium').jewel.name, 'Ring of Baium');
 });
 

@@ -215,6 +215,20 @@ epicBosses.push(
             {at: 0.2, icon: "🌨️", say: "Вечная зима смыкается: Фрея в ярости!", summon: ["frost_wisp", "frost_wisp"], enrage: 0.5}
         ],
         sp: [68, 105], loot: [1.6, 1.6, 4.9]
+    }),
+    epicBoss({
+        name: "freyaExtreme", nameCall: "Фрею (экстрим)", title: "Ледяная королева в полной силе", element: "water", art: "radjahal",
+        description: "Фрея без поблажек: рыцари и духи приходят чаще, буран бьёт сильнее, а ошибок группа не прощается. Ждёт только слаженный отряд.",
+        respawn: [72, 12], minLevel: 74, jewelChance: 0.55,
+        attack: 48, defence: 38, damage: [680, 900], crit: [65, 2.25], hpMul: 6.5, dangerPct: 7.2, armored: 0.45, ultimateEvery: 3,
+        minions: [unit("ice_knight", "Ледяной рыцарь", "🛡️", {hpPct: 0.09, power: 1.05, sp: [11, 19], description: "Страж ледяного трона."}), unit("frost_wisp", "Морозный дух", "❄️", {hpPct: 0.06, power: 0.95, sp: [10, 17], description: "Холодный дух метели."}), unit("ice_golem", "Ледяной голем", "🗿", {hpPct: 0.1, power: 1.2, sp: [12, 20], description: "Глыба льда, что не знает усталости."})],
+        phases: [
+            {at: 0.85, icon: "🛡️", say: "Фрея созывает всю ледяную стражу!", summon: ["ice_knight", "ice_knight", "frost_wisp"]},
+            {at: 0.6, icon: "🗿", say: "Из льда встают големы!", summon: ["ice_golem", "ice_knight"]},
+            {at: 0.35, icon: "❄️", say: "Метель сходит с цепи!", summon: ["frost_wisp", "frost_wisp", "ice_golem"], enrage: 0.35},
+            {at: 0.15, icon: "🌨️", say: "Вечная зима — и ни одного шанса!", summon: ["ice_golem", "ice_golem"], enrage: 0.7}
+        ],
+        sp: [90, 140], loot: [2.0, 2.0, 6.2]
     })
 );
 

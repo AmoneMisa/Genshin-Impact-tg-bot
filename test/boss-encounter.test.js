@@ -43,9 +43,9 @@ function fighter(id, extra = {}) {
 
 const flat = () => 1_000;
 
-test('the roster: 11 ordinary and 10 epic bosses, two pairs, two hydra heads, every boss with a plan', () => {
+test('the roster: 11 ordinary and 11 epic bosses, two pairs, two hydra heads, every boss with a plan', () => {
   assert.equal(bosses.filter(boss => !boss.epic).length, 11);
-  assert.equal(bosses.filter(boss => boss.epic).length, 10);
+  assert.equal(bosses.filter(boss => boss.epic).length, 11);
   assert.equal(bosses.filter(boss => boss.pair).length, 2);
   for (const boss of bosses) {
     assert.ok(boss.combat.dangerPct > 0 && boss.combat.hpMul > 0, boss.name);

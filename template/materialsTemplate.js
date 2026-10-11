@@ -95,6 +95,7 @@ export default [
     {key: 'essence_baium', name: 'Essence of Baium', icon: '💎', description: 'Осколок кристального трона. Падает с Баюма.'},
     {key: 'essence_beleth', name: 'Essence of Beleth', icon: '💍', description: 'Осколок Кольца подчинения. Падает с Белефа.'},
     {key: 'essence_freya', name: 'Essence of Freya', icon: '❄️', description: 'Осколок вечного льда. Падает с Фреи.'},
+    {key: 'essence_freyaExtreme', name: 'Essence of Freya (Extreme)', icon: '🌨️', description: 'Осколок абсолютного льда. Падает с Фреи в режиме «экстрим».'},
     {key: 'essence_frintezza', name: 'Essence of Frintezza', icon: '🎻', description: 'Струна тёмной скрипки. Падает с Фринтеззы.'},
     {key: 'essence_antharas', name: 'Essence of Antharas', icon: '🐲', description: 'Чешуя земного дракона. Падает с Антараса.'},
     {key: 'essence_valakas', name: 'Essence of Valakas', icon: '🌋', description: 'Лавовый коготь. Падает с Валакаса.'},

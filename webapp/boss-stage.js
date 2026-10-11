@@ -38,6 +38,7 @@ export const BOSS_ART = Object.freeze({
   frintezza: { element: 3, tint: [0.8, 0.5, 1.0] },
   beleth: { element: 3, tint: [0.55, 0.35, 0.85], art: 'fjorina' },
   freya: { element: 2, tint: [0.6, 0.85, 1.0], art: 'radjahal' },
+  freyaExtreme: { element: 2, tint: [0.75, 0.92, 1.0], art: 'radjahal' },
 });
 
 /** Shader skill ids and the delay (s) from cast to impact. */

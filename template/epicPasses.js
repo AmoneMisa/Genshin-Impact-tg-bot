@@ -12,7 +12,7 @@
 
 /** Epic bosses that need a party of at least this many members to be called. */
 // A pass boss is not a solo fight: its hit points are sized by this party (worldBosses.js) and it cannot be called alone.
-export const PARTY_EPICS = Object.freeze({zaken: 2, freya: 2, baium: 4, frintezza: 4, beleth: 4, antharas: 5, valakas: 6});
+export const PARTY_EPICS = Object.freeze({zaken: 2, freya: 2, baium: 4, frintezza: 4, beleth: 4, freyaExtreme: 5, antharas: 5, valakas: 6});
 
 /**
  * Steps of the quest of a pass:
