@@ -1,5 +1,6 @@
 import { escapeHtml } from './escape-html.js';
 import { luckCoinHtml } from './currency-icons.js';
+import {ensureFeatureStyles} from './feature-styles.js';
 // The Academy window: daily and weekly orders (quality follows the Academy's level), epic raid passes and
 // the entry to the main profession quests.
 
@@ -75,14 +76,15 @@ function mainQuestsHtml(view) {
 }
 
 export async function openAcademy({ api, haptic = () => {}, openMainQuests = () => {} } = {}) {
+  await ensureFeatureStyles();
   let state = await api('/api/academy');
   let dialog = null;
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay city-window academy-window';
+  overlay.setAttribute('aria-label','Академия');
   overlay.innerHTML = `<div class="overlay-backdrop" data-academy-close></div>
     <div class="overlay-panel city-window-panel"><button type="button" class="overlay-close icon-button" data-academy-close aria-label="Закрыть">×</button>
     <div class="city-window-content" data-academy-body></div></div>`;
-  document.body.appendChild(overlay);
   const body = overlay.querySelector('[data-academy-body]');
 
   function render(message = '') {
@@ -119,7 +121,13 @@ export async function openAcademy({ api, haptic = () => {}, openMainQuests = () 
     if (claim) { const [scope, id] = claim.dataset.academyClaim.split(':'); act({ action: 'claim', scope, id }); return; }
     const pass = event.target.closest('[data-academy-pass]');
     if (pass) { const [action, ...rest] = pass.dataset.academyPass.split(':'); act({ action, name: rest.join(':') }); return; }
-    if (event.target.closest('[data-academy-main]')) { overlay.remove(); openMainQuests(); }
+    const main = event.target.closest('[data-academy-main]');
+    if (main && !main.disabled) {
+      main.disabled = true;
+      Promise.resolve().then(openMainQuests).then(() => overlay.remove()).catch(error => render(error.message));
+    }
   });
   render();
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('visible'));
 }

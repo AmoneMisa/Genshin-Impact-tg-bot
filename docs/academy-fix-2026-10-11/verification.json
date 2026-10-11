@@ -1,0 +1,26 @@
+[
+  {
+    "width": 320,
+    "visible": true,
+    "interactive": true,
+    "featureStylesLoaded": true,
+    "loadErrorShown": true,
+    "retry": true,
+    "professionErrorShown": true,
+    "professionOpens": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "visible": true,
+    "interactive": true,
+    "featureStylesLoaded": true,
+    "loadErrorShown": true,
+    "retry": true,
+    "professionErrorShown": true,
+    "professionOpens": true,
+    "overflow": false,
+    "errors": []
+  }
+]
