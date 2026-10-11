@@ -1,0 +1,9 @@
+{
+  "sourceLine": "const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);",
+  "unhandled": {
+    "name": "TypeError",
+    "code": "ERR_INVALID_URL",
+    "message": "Invalid URL"
+  },
+  "response": "No response within 300 ms"
+}

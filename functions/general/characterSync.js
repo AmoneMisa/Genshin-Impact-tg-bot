@@ -5,7 +5,8 @@
 //   - when chats are loaded, the copy of every member is replaced by the shared record (hydrateChats);
 //   - when a chat is saved, a member that changed is written back to the shared record (persistChat).
 // A copy that was loaded before somebody else changed the hero (a scheduler that walks thousands of chats) is stale
-// and is dropped instead of overwriting the newer record. The store is injected so the logic is testable.
+// unchanged copies adopt the newer record; conflicting mutations abort the action instead of overwriting it.
+// The store is injected so the logic is testable.
 import crypto from 'node:crypto';
 
 /** The member fields that belong to the hero; everything else (userId, userChatData, hidden flag, message ids) stays per chat. */
@@ -14,10 +15,19 @@ export const SHARED_KEYS = Object.freeze([
     'chestCounter', 'chosenChests', 'chestTries', 'changeClassTimer', 'user',
 ]);
 
-/** A copy loaded this recently is the result of the current request: it wins over a newer record (last write wins). */
+/** Retained for tools that classify old snapshots; freshness never bypasses revision checks. */
 export const FRESH_MS = 60 * 1000;
 
 const state = new WeakMap(); // member -> {hash, at}
+export const forgetSync = member => state.delete(member);
+
+export function characterConflict(userId) {
+    const error = new Error('Character changed concurrently; refresh and retry the action');
+    error.status = 409;
+    error.reason = 'character_conflict';
+    error.userId = userId;
+    return error;
+}
 
 const plain = value => (value && typeof value.toObject === 'function' ? value.toObject() : value);
 const clone = value => (value === undefined ? undefined : JSON.parse(JSON.stringify(plain(value))));
@@ -43,7 +53,7 @@ function adopt(member, record, now) {
 }
 
 /**
- * store: {find(userIds) -> records, insert(record) -> record|null, update(userId, expectedRev|null, data, hash) -> record|null}
+ * store: {find(userIds) -> records, insert(record) -> record|null, update(userId, expectedRev, data, hash) -> record|null}
  * Replaces the copy of every member (that has a game) with the shared record.
  */
 export async function hydrateChats(chats, store, now = Date.now()) {
@@ -72,6 +82,7 @@ export async function persistChat(chat, store, now = Date.now()) {
         if (!record) {
             const data = sharedOf(member);
             const created = await store.insert({userId, rev: 1, data, hash: hashOf(data)});
+            if (!created) throw characterConflict(userId);
             if (created) { member.syncRev = created.rev; state.set(member, {hash: created.hash, at: now}); records.set(userId, created); }
             continue;
         }
@@ -80,13 +91,16 @@ export async function persistChat(chat, store, now = Date.now()) {
         const data = sharedOf(member);
         const hash = hashOf(data);
         if (known && known.hash === hash && member.syncRev === record.rev) continue;
+        // Even identical resulting balances can be two separate debits. A changed local snapshot
+        // must not acknowledge a newer revision and then credit another recipient.
+        if (member.syncRev !== record.rev) {
+            if (known && known.hash === hash) { adopt(member, record, now); continue; }
+            throw characterConflict(userId);
+        }
         if (hash === record.hash) { member.syncRev = record.rev; state.set(member, {hash, at: now}); continue; }
-        const current = member.syncRev === record.rev;
-        const fresh = known && now - known.at <= FRESH_MS;
-        if (!current && !fresh) { adopt(member, record, now); continue; }
-        const written = await store.update(userId, current ? record.rev : null, data, hash);
+        const written = await store.update(userId, record.rev, data, hash);
         if (written) { member.syncRev = written.rev; state.set(member, {hash, at: now}); records.set(userId, written); }
-        else { const latest = (await store.find([userId]))[0]; if (latest) adopt(member, latest, now); }
+        else throw characterConflict(userId);
     }
 }
 

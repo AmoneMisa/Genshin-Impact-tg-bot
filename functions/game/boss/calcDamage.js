@@ -23,6 +23,7 @@ import { huntDebuff } from '../hunt/huntAi.js';
 import {l2HasControl,l2RawStat,l2TraitDamage} from '../player/l2Effects.js';
 import {isMagicClass} from '../classes/classFamily.js';
 import {skillPowerFactor, skillLevelPenalty} from '../player/skillLevel.js';
+import {skillCombatType} from '../player/combatType.js';
 
 /**
  * One hit of `skill` from `session` on the boss (or on a minion, via
@@ -61,13 +62,16 @@ export default function (session, skill, boss, options = {}) {
     let criticalDamageMultiplier = getCriticalDamageMultiplier(session);
     criticalDamage *= criticalDamageMultiplier;
 
-    let attack = getAttack(session, session.game.gameClass);
+    const damageType = skillCombatType(skill, session.game.gameClass);
+    let attack = getAttack(session, session.game.gameClass, damageType);
     attack *= 1 - fieldPvpEffect(session, 'weaken', now);
     if (boss.hunt) attack *= 1 - huntDebuff(session, 'weaken', now);
     let damageMultiplier = getDamageMultiplier(session.game.effects);
     if(l2HasControl(boss,'Invincible',now))return {dmg:0,isHasCritical:false};
-    let bossDefence = (defence ?? boss.playerTarget?.defence ?? (boss.hunt ? boss.hunt.defence : getBossDefence(boss, template))) * (1 - bossDebuffAmount(boss, 'armorBreak', now));
-    if(!boss.playerTarget)bossDefence*=Math.max(.05,l2RawStat(boss,isMagicClass(session.game.gameClass.stats.name)?'mDef':'pDef',true,now));
+    const defenceKey = damageType === 'magic' ? 'mDef' : 'pDef';
+    let bossDefence = (defence ?? boss.playerTarget?.[defenceKey] ?? boss.playerTarget?.defence ?? (boss.hunt ? boss.hunt[defenceKey] ?? boss.hunt.defence : getBossDefence(boss, template, 1, damageType))) * (damageType === 'physical' ? 1 - bossDebuffAmount(boss, 'armorBreak', now) : 1);
+    if(!boss.playerTarget)bossDefence*=Math.max(.05,l2RawStat(boss,defenceKey,true,now));
+    bossDefence = Math.max(1, bossDefence);
     let additionalDamageMul = (getAdditionalDamageMul(session) / 100) + 1;
 
     dmg = 70 * attack / bossDefence * modifier * additionalDamageMul;
@@ -78,12 +82,12 @@ export default function (session, skill, boss, options = {}) {
     if (boss.playerTarget) {
         dmg *= pvpFactor(attributeProfile(session), boss.playerTarget.attributes);
         dmg *= getEquipStatByName(session,'pvpDamageMul',true);
-        dmg *= l2RawStat(session,isMagicClass(session.game.gameClass.stats.name)?'pvpMagicalDmg':'pvpPhysSkillsDmg',true,now);
+        dmg *= l2RawStat(session,damageType==='magic'?'pvpMagicalDmg':'pvpPhysSkillsDmg',true,now);
         dmg *= boss.playerTarget.incoming * (1 - boss.playerTarget.guard);
     }
     else if (boss.hunt) dmg *= attackFactor(attributeProfile(session).attack, boss.hunt.resist || {});
     else if (defence === undefined) dmg *= attackFactor(attributeProfile(session).attack, NPC_ATTRIBUTES[template?.world?.npcId] || {});
-    dmg *= chanceSkillFactor(equippedChanceSkills(session));
+    dmg *= chanceSkillFactor(equippedChanceSkills(session), Math.random, damageType);
     // Soulshots / Spiritshots armed for this skill.
     dmg *= shotBoost(session);
 

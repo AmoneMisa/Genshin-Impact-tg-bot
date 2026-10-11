@@ -6,6 +6,7 @@
 import { SHOTS_PER_CAST, SHOT_KINDS, shotKey } from '../../../template/shotsData.js';
 import {soulShotCost} from '../equipment/soulCrystalCombat.js';
 import { isMagicClass } from '../classes/classFamily.js';
+import {skillCombatType} from '../player/combatType.js';
 import { uniqueEquipped } from '../equipment/itemBonuses.js';
 import { getMaterialCount, spendMaterials } from '../player/materials.js';
 
@@ -53,7 +54,8 @@ export function armShots(session, skill) {
     const grade = weaponGrade(session);
     if (!grade) return null;
     const need = soulShotCost(session,SHOTS_PER_CAST[grade] || 1);
-    for (const id of shotKindsFor(session)) {
+    const kinds = skillCombatType(skill, session.game.gameClass) === 'magic' ? ['blessed', 'spiritshot'] : ['soulshot'];
+    for (const id of kinds) {
         const key = shotKey(id, grade);
         if (getMaterialCount(session, key) < need) continue;
         spendMaterials(session, {[key]: need});

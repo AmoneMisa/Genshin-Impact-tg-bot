@@ -26,7 +26,7 @@ const CRIT_BONUS_SHARE = 0.6;
  * Base hit of `source` (the boss, or a minion through `unitPower`) on `member`.
  * `random` is injectable for tests.
  */
-export default function calcBossHit(boss, member, {now = Date.now(), random = Math.random, unitPower = 1} = {}) {
+export default function calcBossHit(boss, member, {now = Date.now(), random = Math.random, unitPower = 1, damageType = 'physical'} = {}) {
     const template = bossTemplateFor(boss);
     const gameClass = member.game.gameClass;
     const level = Math.max(1, Number(member.game?.stats?.lvl) || 1);
@@ -35,7 +35,7 @@ export default function calcBossHit(boss, member, {now = Date.now(), random = Ma
     const dangerPct = Number(template?.combat?.dangerPct) || DEFAULT_DANGER_PCT;
     const base = getMaxHp(member, gameClass) * dangerPct / 100;
     const levelScale = 1 + LEVEL_DANGER_STEP * (bossLevel - 1);
-    const mitigation = damageMitigation(getDefence(member, gameClass), level);
+    const mitigation = damageMitigation(getDefence(member, gameClass, damageType), level);
     const incoming = getIncomingDamageModifier(member, gameClass);
     const enrage = 1 + (Number(boss.enrage) || 0);
     const weaken = 1 - bossDebuffAmount(boss, 'weaken', now);

@@ -91,7 +91,7 @@ function strike(attack, targets, boss, { now, random, damage, scale, unitPower =
             return { userId: String(member.userId), name: memberName(member), dmg: 0, absorbed: 0, lost: 0, hp: member.game.gameClass.stats.hp, killed: false, evaded: true };
         }
         const guard = guardReduction(member, now);
-        const base = Math.ceil(damage(boss, member, { now, random, unitPower }));
+        const base = Math.ceil(damage(boss, member, { now, random, unitPower, damageType: attack.damageType || 'physical' }));
         const dmg = Math.max(1, Math.ceil(base * attack.power * scale * (1 - guard)));
         const { absorbed, lost, killed } = applyHit(member, dmg, now);
         return {

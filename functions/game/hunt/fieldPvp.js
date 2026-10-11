@@ -18,7 +18,7 @@ import getIncomingDamageModifier from '../player/getters/getIncomingDamageModifi
 import getAccuracy from '../player/getters/getAccuracy.js';
 import getEvasion from '../player/getters/getEvasion.js';
 import {guardReduction,evadeChance} from '../player/skillEffects.js';
-import {isMagicClass} from '../classes/classFamily.js';
+import {skillCombatType} from '../player/combatType.js';
 import {attributeProfile} from '../equipment/attributes.js';
 import {armShots,clearShots} from '../shots/shots.js';
 import {spendAmmo} from '../shots/ammo.js';
@@ -42,7 +42,7 @@ function proxyFor(defender, now) {
     return {
         name:'field-player', hp:getMaxHp(defender)+getMaxCp(defender), currentHp:Math.max(0,getCurrentHp(defender))+Math.max(0,getCurrentCp(defender)),
         stats:{lvl:defender.game.stats.lvl}, minions:[], listOfDamage:[], ...effects,
-        playerTarget:{defence:Math.max(1,getDefence(defender)), attributes:attributeProfile(defender), incoming:getIncomingDamageModifier(defender), guard:guardReduction(defender,now), shield:Math.max(0,(defender.game.effects || []).find(e=>e.name==='shield')?.value || 0)},
+        playerTarget:{pDef:Math.max(1,getDefence(defender,undefined,'physical')),mDef:Math.max(1,getDefence(defender,undefined,'magic')), attributes:attributeProfile(defender), incoming:getIncomingDamageModifier(defender), guard:guardReduction(defender,now), shield:Math.max(0,(defender.game.effects || []).find(e=>e.name==='shield')?.value || 0)},
     };
 }
 
@@ -128,7 +128,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
     const usable=isPlayerCanUseSkill(attacker,skill);
     if(usable!==0)return fail({1:'not_enough_resource',2:'cooldown',3:'skill_locked',4:'no_ammo'}[usable]);
     const hostile=Boolean(skill.isDealDamage || skill.debuff || skill.debuffs?.length);
-    const magic=isMagicClass(attacker.game.gameClass.stats.name);
+    const magic=skillCombatType(skill,attacker.game.gameClass)==='magic';
     const distance=Math.hypot(attacker.game.hunt.field.x-defender.game.hunt.field.x,attacker.game.hunt.field.y-defender.game.hunt.field.y);
     if(hostile && distance > (magic? .65 : .35))return fail('pvp_out_of_range');
     const victimStatus=fieldPvpStatus(defender,now).status;

@@ -23,9 +23,10 @@ export function scaleModifier(value,isMul,factor=1) {
  return isMul ? 1+(value-1)*factor : value*factor;
 }
 
-export function potionStatBonus(session,stat,isMul=false,now=Date.now()) {
+export function potionStatBonus(session,stat,isMul=false,now=Date.now(),damageType) {
  let result=isMul?1:0;
  for(const effect of activePotionBuffs(session,now)) {
+  if(damageType==='magic' && ['might','shield'].includes(effect.potionId) && ['attackMul','defenceMul'].includes(stat)) continue;
   // Resolve modifiers from trusted definitions, not a client-supplied item.
   const value=buffPotions.find(p=>p.id===effect.potionId).modifiers[stat];
   if(value===undefined) continue;

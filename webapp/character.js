@@ -1,3 +1,4 @@
+import {characteristicIcon,polishIcon} from './art/polish-icon-art.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
 import { escapeHtml as esc } from './escape-html.js';
@@ -83,13 +84,13 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
     const attrs = data.attributes || {};
     const xp = player.level >= player.maxLevel ? 100 : Math.min(100, Math.max(0,(player.currentExp || 0)/Math.max(1,player.needExp)*100));
     const base = '<div class="character-base">' + (data.characteristics || []).map(stat =>
-      '<button type="button" data-base-stat="' + esc(stat.id) + '" title="' + esc(stat.text) + '"><span>' + esc(stat.id) + '</span><b>' + fmt(stat.total) + '</b></button>').join('') + '</div><div data-base-detail></div>';
+      '<button type="button" data-base-stat="' + esc(stat.id) + '" title="' + esc(stat.text) + '"><span class="character-stat-label">' + characteristicIcon(stat.id) + esc(stat.id) + '</span><b>' + fmt(stat.total) + '</b></button>').join('') + '</div><div data-base-detail></div>';
     return section('Состояние',meter('CP',player.cp,player.maxCp)+meter('HP',player.hp,player.maxHp)+meter('MP',player.mp,player.maxMp)
       +row('SP',fmt(player.sp))+row('Опыт',player.level >= player.maxLevel ? 'MAX' : fmt(player.currentExp)+' / '+fmt(player.needExp))
       +'<div class="character-xp"><i style="width:'+xp+'%"></i></div>'
-      + (player.vitality ? row('Vitality','×'+fmt(player.vitality.rate*player.vitality.bonus)+' · '+fmt(player.vitality.points)) : ''))
+      + (player.vitality ? row(polishIcon('vitality')+'Vitality','×'+fmt(player.vitality.rate*player.vitality.bonus)+' · '+fmt(player.vitality.points)) : ''))
       +section('Базовые характеристики',base)
-      +section('Боевые характеристики',(data.combat || []).map(stat=>row(esc(stat.label),fmt(stat.value))).join(''))
+      +section('Боевые характеристики','<div class="character-combat">'+(data.combat || []).map(stat=>row(esc(stat.label),fmt(stat.value))).join('')+'</div>')
       +section('Атрибут атаки',attrs.attack ? row('<span class="character-element-label">'+elementIcon(attrs.attack.element)+esc(attrs.attack.label)+'</span>',fmt(attrs.attack.value)) : empty('Оружие без атрибута.'))
       +section('Защита от стихий · сумма экипировки',elementTable(attrs.resist))
       +'<div class="character-tools">'+action('appearance',icon('user')+'Класс и облик')+'</div>';

@@ -1,3 +1,4 @@
+import {createPoller} from './polling.js';
 import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
 import {
   damageMeter, encounterPanel, escapeHtml, formatDuration, formatNumber, hotbar, hotbarChoice, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
@@ -211,7 +212,8 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     }, 1000);
     async function challenge(button) {
       if (pending || button.disabled) return;
-      pending = true;
+      pollTimer?.invalidate();
+    pending = true;
       overlay.classList.add('busy');
       haptic('heavy');
       try {
@@ -246,7 +248,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   let pollTimer = null;
   const close = () => {
     if (timer) window.clearInterval(timer);
-    window.clearInterval(pollTimer);
+    pollTimer?.stop();
     stage?.destroy();
     stage = null;
     overlay.classList.add('closing');
@@ -262,10 +264,11 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
 
   // Live combat: poll while the raid is on and play the boss's new casts.
   let lastCastAt = state.active ? Number(state.boss.attackLog?.[0]?.at) || 0 : 0;
-  async function poll() {
+  async function poll({signal,current}) {
     if (pending || !overlay.isConnected || !state.active) return;
     try {
-      const next = await api(bossPath());
+      const next = await api(bossPath(), {signal});
+      if (!current() || pending || !overlay.isConnected) return;
       const cast = next.active ? next.boss.attackLog?.[0] : null;
       // Countdowns tick locally; only real changes re-render.
       const clockless = value => JSON.stringify(value, (key, v) => (/Ms$/.test(key) ? 0 : v));
@@ -282,13 +285,12 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
           feedback.textContent = `${cast.icon} ${state.boss.nameCall || state.boss.name}: «${cast.name}» — ${mine.killed ? 'ты повержен(-а)!' : `−${formatNumber(mine.dmg)} HP`}`;
         }
       }
-    } catch {
-      // Keep the last state; the next poll retries.
-    }
+    } catch (error) { throw error; }
   }
 
   async function summon() {
     if (pending) return;
+    pollTimer?.invalidate();
     pending = true;
     overlay.classList.add('busy');
     feedback.textContent = 'Призываем клановый босс…';
@@ -368,6 +370,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
 
   async function useSkill(index) {
     if (pending) return;
+    pollTimer?.invalidate();
     pending = true;
     overlay.classList.add('busy', 'fighting');
     feedback.textContent = 'Считаем действие на сервере…';
@@ -420,6 +423,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
 
   async function drinkPotion(key) {
     if (pending) return;
+    pollTimer?.invalidate();
     pending = true;
     overlay.classList.add('busy');
     try {
@@ -541,5 +545,5 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   timer = window.setInterval(tick, 1000);
-  pollTimer = window.setInterval(poll, 2500);
+  pollTimer = createPoller(poll, {interval:2500,enabled:()=>!pending && overlay.isConnected && !overlay.classList.contains('closing')});
 }

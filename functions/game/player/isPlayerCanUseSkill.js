@@ -2,13 +2,13 @@ import getSkillCooldown from './getters/getSkillCooldown.js';
 import isEnoughResourcesForUseSkill from './isEnoughResourcesForUseSkill.js';
 import {hasAmmo} from '../shots/ammo.js';
 import {l2ActionBlock} from './l2Effects.js';
-import {isMagicClass} from '../classes/classFamily.js';
+import {skillCombatType} from './combatType.js';
 import {isSkillLearned} from './skillLearning.js';
 
 // 0 - can be used; 1 - not enough mp/hp; 2 - on cooldown; 3 - the player's level is too low or the skill is not learned
 // yet (skillLearning.js); 4 - no arrows / bolts.
 export default function (session, skill) {
-    if(l2ActionBlock(session,{magic:isMagicClass(session?.game?.gameClass?.stats?.name),attack:Boolean(skill?.isDealDamage)}))return 5;
+    if(l2ActionBlock(session,{magic:skillCombatType(skill,session?.game?.gameClass)==='magic',attack:Boolean(skill?.isDealDamage)}))return 5;
     // turned to stone by a raid boss (worldBosses.js): nothing can be done until it wears off
     if ((Number(session?.game?.petrifiedUntil) || 0) > Date.now()) return 5;
     if ((Number(skill?.needLvl) || 0) > (Number(session?.game?.stats?.lvl) || 1)) {

@@ -7,6 +7,10 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import zlib from 'zlib';
+import {promisify} from 'node:util';
+import {bundlePageAssets} from './pageAssets.js';
+import {requestUrl as parseRequestUrl,requestBoundary} from './requestBoundary.js';
+const gzip = promisify(zlib.gzip);
 import { withLock as sharedLock } from '../functions/general/chatLock.js';
 import { fileURLToPath } from 'url';
 import { token, myId } from '../config.js';
@@ -180,14 +184,18 @@ function safeStaticPath(root, urlPath) {
   return resolved;
 }
 
-function serveFile(res, root, urlPath) {
+async function serveFile(res, root, urlPath) {
   let filePath = safeStaticPath(root, urlPath);
   if (!filePath) return false;
-  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) filePath = path.join(filePath, 'index.html');
-  if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) return false;
+  let stat;
+  try {
+    stat = await fs.promises.stat(filePath);
+    if (stat.isDirectory()) { filePath = path.join(filePath, 'index.html'); stat = await fs.promises.stat(filePath); }
+  } catch (error) { if (['ENOENT','ENOTDIR'].includes(error.code)) return false; throw error; }
+  if (!stat.isFile()) return false;
 
   const ext = path.extname(filePath).toLowerCase();
-  const stat = fs.statSync(filePath);
+
   const headers = {
     'content-type': MIME[ext] || 'application/octet-stream',
     'x-content-type-options': 'nosniff',
@@ -202,11 +210,11 @@ function serveFile(res, root, urlPath) {
     return true;
   }
   if (COMPRESSIBLE.has(ext) && acceptsGzip(res.req)) {
-    sendGzip(res, headers, `${filePath}|${headers.etag}`, () => fs.readFileSync(filePath));
+    sendGzip(res, headers, `${filePath}|${headers.etag}`, () => fs.promises.readFile(filePath));
     return true;
   }
   res.writeHead(200, headers);
-  fs.createReadStream(filePath).pipe(res);
+  fs.createReadStream(filePath).on('error', error => res.destroy(error)).pipe(res);
   return true;
 }
 
@@ -224,42 +232,32 @@ function etagMatches(req, etag) {
   return Boolean(header) && header.split(',').some(tag => tag.trim() === etag || tag.trim() === '*');
 }
 
-function sendGzip(res, headers, key, read) {
+async function sendGzip(res, headers, key, read) {
+  try {
   let body = gzipCache.get(key);
   if (!body) {
-    body = zlib.gzipSync(read(), { level: 9 });
+    body = Promise.resolve().then(read).then(value => gzip(value, {level:6}));
     if (gzipCache.size > 400) gzipCache.clear();
     gzipCache.set(key, body);
   }
+  body = await body;
+  if (res.destroyed) return;
   res.writeHead(200, { ...headers, 'content-encoding': 'gzip', vary: 'accept-encoding', 'content-length': body.length });
   res.end(body);
+  } catch (error) { gzipCache.delete(key); if (!res.destroyed) sendApiError(res, 'compression', error); }
 }
 
 // The page links ~40 feature stylesheets; each is a render-blocking request on
 // a phone. Concatenate them (in their original order) into one hashed bundle and
 // rewrite index.html on the fly. All CSS urls are absolute, so nothing breaks.
-const STYLESHEET_LINK = /<link rel="stylesheet" href="(\/[^"]+\.css)" \/>\s*/g;
-const NEWLINE = String.fromCharCode(10);
 let pageCache = null;
 
 function buildPage() {
   const html = fs.readFileSync(path.join(WEBAPP_DIR, 'index.html'), 'utf8');
-  const files = [...html.matchAll(STYLESHEET_LINK)].map(match => match[1]);
-  if (!files.length) return { html, css: '', cssPath: null };
-
-  const css = files.map(file => fs.readFileSync(path.join(WEBAPP_DIR, file), 'utf8')).join(NEWLINE);
-  const cssPath = `/bundle.${crypto.createHash('sha1').update(css).digest('hex').slice(0, 10)}.css`;
-  let inserted = false;
-  const bundled = html.replace(STYLESHEET_LINK, () => {
-    if (inserted) return '';
-    inserted = true;
-    return `<link rel="stylesheet" href="${cssPath}" />${NEWLINE}  `;
-  });
-  return { html: bundled, css, cssPath };
+  return bundlePageAssets(html, file => fs.readFileSync(path.join(WEBAPP_DIR, file), 'utf8'));
 }
 
 function getPage() {
-  if (process.env.NODE_ENV !== 'production') return buildPage();
   pageCache ||= buildPage();
   return pageCache;
 }
@@ -267,16 +265,17 @@ function getPage() {
 function servePage(res, urlPath) {
   try {
     const page = getPage();
-    if (page.cssPath && urlPath === page.cssPath) {
+    const bundle = page.bundles.find(bundle => bundle.path === urlPath);
+    if (bundle) {
       const headers = {
         'content-type': MIME['.css'],
         'cache-control': 'public, max-age=31536000, immutable',
         'x-content-type-options': 'nosniff',
       };
-      if (acceptsGzip(res.req)) sendGzip(res, headers, `css|${page.cssPath}`, () => page.css);
+      if (acceptsGzip(res.req)) sendGzip(res, headers, `css|${bundle.path}`, () => bundle.css);
       else {
         res.writeHead(200, headers);
-        res.end(page.css);
+        res.end(bundle.css);
       }
       return true;
     }
@@ -377,7 +376,7 @@ async function authorize(req) {
   rememberLanguage(validated.user.id, req.headers['x-app-lang']);
 
   const chatId = resolveGameChatId(validated);
-  const session = await getSession(chatId, validated.user.id);
+  const session = await getSession(chatId, validated.user.id, {persist:false});
   // Clan skills reach the stat code through the session; the copy is refreshed every few minutes
   // and persisted by whichever action saves the session next.
   if (clanPerksStale(session)) {
@@ -432,6 +431,7 @@ function sendResult(res, result, context) {
 }
 
 function sendApiError(res, scope, error) {
+  if (error.code === 112 || error.name === 'VersionError') return sendJson(res,409,{ok:false,reason:'character_conflict',error:'Character changed concurrently; refresh and retry the action'});
   if (error.reason === GOLD_LOCK_REASON) return sendJson(res, 409, { ok: false, reason: error.reason, error: error.message });
   if (error.status && error.status < 500) console.warn(`[miniapp] ${scope}: ${error.status} ${error.message}`);
   else console.error(`[miniapp] ${scope}:`, error);
@@ -464,11 +464,14 @@ function validateArcadeGameId(gameId) {
 
 const bootstrap = guarded('bootstrap', async (req, res) => {
   const context = await authorize(req);
+  return withLock(`${context.chatId}:bootstrap`, async () => {
+  context.session = await getSession(context.chatId, context.userId);
   // Presence for friends lists; throttled inside stampLastSeen.
   if (stampLastSeen(context.session)) {
     try { await saveSession(context.session); } catch (error) { console.warn('last seen stamp failed', error.message); }
   }
   return sendJson(res, 200, stateFor(context));
+  });
 });
 
 const updatesState = guarded('updates state', async (req, res) => {
@@ -2156,8 +2159,9 @@ export default function startMiniAppServer() {
   const port = Number(process.env.MINI_APP_PORT || process.env.PORT || 8080);
   const host = process.env.MINI_APP_HOST || '0.0.0.0';
 
-  const server = http.createServer(async (req, res) => {
-    const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  getPage(); // Prepare the stylesheet bundle before accepting requests.
+  const handleRequest = async (req, res) => {
+    const requestUrl = parseRequestUrl(req);
     const route = `${req.method} ${requestUrl.pathname}`;
 
     if (route === 'GET /healthz') return sendJson(res, 200, { ok: true });
@@ -2285,26 +2289,27 @@ export default function startMiniAppServer() {
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/game-assets/')) {
       const assetPath = requestUrl.pathname.slice('/game-assets/'.length);
-      if (serveFile(res, GAME_ASSETS_DIR, assetPath)) return;
+      if (await serveFile(res, GAME_ASSETS_DIR, assetPath)) return;
       return sendJson(res, 404, { error: 'Asset not found' });
     }
 
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/vendor/three/')) {
       const vendorPath = requestUrl.pathname.slice('/vendor/three/'.length);
-      if (THREE_PUBLIC_PREFIXES.some(prefix => vendorPath.startsWith(prefix)) && serveFile(res, THREE_DIR, vendorPath)) return;
+      if (THREE_PUBLIC_PREFIXES.some(prefix => vendorPath.startsWith(prefix)) && await serveFile(res, THREE_DIR, vendorPath)) return;
       return sendJson(res, 404, { error: 'Asset not found' });
     }
 
     if (req.method === 'GET' && servePage(res, requestUrl.pathname)) return;
-    if (req.method === 'GET' && serveFile(res, WEBAPP_DIR, requestUrl.pathname)) return;
+    if (req.method === 'GET' && await serveFile(res, WEBAPP_DIR, requestUrl.pathname)) return;
     // A missing model must 404: the SPA fallback below would hand the glTF
     // loader an HTML page with status 200.
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/models/')) return sendJson(res, 404, { error: 'Model not found' });
     if (req.method === 'GET' && requestUrl.pathname.startsWith('/art/')) return sendJson(res, 404, { error: 'Artwork not found' });
     if (req.method === 'GET' && servePage(res, '/index.html')) return;
-    if (req.method === 'GET' && serveFile(res, WEBAPP_DIR, '/index.html')) return;
+    if (req.method === 'GET' && await serveFile(res, WEBAPP_DIR, '/index.html')) return;
     return sendJson(res, 404, { error: 'Not found' });
-  });
+  };
+  const server = http.createServer(requestBoundary(handleRequest, (res,error) => sendApiError(res,'request',error)));
 
   server.listen(port, host, () => {
     console.log(`[miniapp] WebGL Mini App listening on http://${host}:${port}`);

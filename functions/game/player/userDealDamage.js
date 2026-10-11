@@ -4,6 +4,7 @@ import calcDamage from '../boss/calcDamage.js';
 import getBossDefence from '../boss/getBossStats/getBossDefence.js';
 import userVampireSkill from './userVampireSkill.js';
 import getMaxHp from './getters/getMaxHp.js';
+import {skillCombatType} from './combatType.js';
 import {cubicDamage} from './cubics.js';
 import {l2RawStat,l2OnDamageReceived,l2PreventDeath,l2OnHostileAction,l2CompanionDamage} from './l2Effects.js';
 import { applyBossDebuff } from '../boss/bossDebuffs.js';
@@ -47,7 +48,7 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
     const hpShare = unit
         ? unit.currentHp / unit.hp
         : (boss.hp > 0 ? boss.currentHp / boss.hp : 1);
-    const defence = unit ? getBossDefence(boss, template) * unit.defMul : undefined;
+    const defence = unit ? getBossDefence(boss, template, 1, skillCombatType(skill, session.game.gameClass)) * unit.defMul : undefined;
 
     const hitCount = Math.max(1, Math.floor(skill.hits || 1));
     const hits = [];

@@ -3,6 +3,7 @@ import getCriticalChance from "../player/getters/getCriticalChance.js";
 import getCriticalDamage from "../player/getters/getCriticalDamage.js";
 import getRandom from "../../getters/getRandom.js";
 import getRandomWithoutFloor from "../../getters/getRandomWithoutFloor.js";
+import {combatType} from '../player/combatType.js';
 
 /**
  * Applies a single player attack against a clan boss.
@@ -27,7 +28,8 @@ const FEROCITY_CRIT_DAMAGE_PER_LEVEL = 0.05; // +5% crit damage
 
 export default function (session, boss, upgrades = {}, damageMultiplier = 1) {
     const gameClass = session.game.gameClass;
-    const attack = getAttack(session, gameClass);
+    const damageType = combatType(gameClass);
+    const attack = getAttack(session, gameClass, damageType);
 
     // Players without a chosen class have no attack stat → NaN.
     if (!Number.isFinite(attack) || attack <= 0) {
@@ -40,9 +42,9 @@ export default function (session, boss, upgrades = {}, damageMultiplier = 1) {
 
     const critChance = Math.min(100, getCriticalChance(session, gameClass) + criticalLevel * CRITICAL_CHANCE_PER_LEVEL);
     const critDamage = getCriticalDamage(session, gameClass) * (1 + ferocityLevel * FEROCITY_CRIT_DAMAGE_PER_LEVEL);
-    const defence = boss.defence || 1;
+    const defence = boss[damageType === 'magic' ? 'mDef' : 'pDef'] ?? boss.defence ?? 1;
 
-    let dmg = BASE_DAMAGE_FACTOR * attack / defence;
+    let dmg = BASE_DAMAGE_FACTOR * attack / Math.max(1, defence);
     dmg *= 1 + powerLevel * POWER_DAMAGE_PER_LEVEL;
     dmg *= damageMultiplier;
     dmg = Math.ceil(dmg * getRandomWithoutFloor(0.9, 1.1));

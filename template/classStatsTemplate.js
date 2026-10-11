@@ -195,4 +195,8 @@ for (const base of baseClasses) base.family = base.name;
 const familyBlocks = baseClasses.filter(base => base.name !== 'noClass').map(base => ({...base}));
 for (const base of baseClasses) if (base.name !== 'noClass') base.legacy = true;
 export const FAMILY_BLOCKS = familyBlocks;
-export default [...baseClasses, ...buildPromotedClasses(familyBlocks)];
+// Both channels inherit the legacy baseline until explicitly balanced per profession.
+export default [...baseClasses, ...buildPromotedClasses(familyBlocks)].map(stats=>({...stats,
+    pAtk:stats.pAtk ?? stats.attack,mAtk:stats.mAtk ?? stats.attack,
+    pDef:stats.pDef ?? stats.defence,mDef:stats.mDef ?? stats.defence,
+}));

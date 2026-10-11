@@ -7,15 +7,15 @@ import { activeSkillModifiers, passiveSkillModifiers } from '../equipment/lifest
 import { baseStatDelta } from './baseStats.js';
 import { scrydeModifiers } from './scrydeBuffer.js';
 
-function sources(session) {
-    return [passiveModifiers(session), clanPerkModifiers(session), passiveSkillModifiers(session), activeSkillModifiers(session), scrydeModifiers(session)];
+function sources(session, damageType) {
+    return [passiveModifiers(session, damageType), clanPerkModifiers(session, damageType), passiveSkillModifiers(session, damageType), activeSkillModifiers(session, Date.now(), damageType), scrydeModifiers(session)];
 }
 
 /** The extra bonus for one stat: 1.x when `isMul`, an addend otherwise (0 when there is none). */
-export default function extraStatBonus(session, statName, isMul = false) {
+export default function extraStatBonus(session, statName, isMul = false, damageType) {
     let result = isMul ? 1 : 0;
-    const deltas = sources(session).map(modifiers => modifiers[statName]);
-    deltas.push(baseStatDelta(session, statName));
+    const deltas = sources(session, damageType).map(modifiers => modifiers[statName]);
+    deltas.push(baseStatDelta(session, statName, damageType));
     for (const delta of deltas) {
         if (typeof delta !== 'number' || delta === 0) continue;
         if (isMul) result *= Math.max(0, 1 + delta);

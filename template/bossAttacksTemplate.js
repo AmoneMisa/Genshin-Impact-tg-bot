@@ -182,6 +182,19 @@ const minionFallback = [
     { key: "minion_strike", name: "Удар", icon: "💢", target: "single", power: 1, weight: 1, description: "Простой удар свиты." },
 ];
 
+// Contact, weapon and rock hits are physical; the other authored casts are spells.
+const physicalAttacks = new Set([
+    'serpent_lash','ice_fist','frost_stomp','avalanche','strangling_vine','thorn_burst',
+    'gale_claw','boulder_slam','tremor','shard_volley','cave_in','bone_spears',
+    'triple_bite','tail_sweep','fire_fist','spark_dagger','shadow_claw',
+    'swarm_call','mandible_snap','magma_fist','quake','cave_collapse','witch_talon',
+    'feather_blades','shadow_cutlass','phantom_slash','demon_claw','crystal_lance',
+    'bow_strike','rock_barrage','lava_claw','crush','minion_strike',
+]);
+for (const attacks of [...Object.values(bossAttacks), fallback, minionFallback]) {
+    for (const attack of attacks) attack.damageType = physicalAttacks.has(attack.key) ? 'physical' : 'magic';
+}
+
 export function getBossAttacks(bossName) {
     if (bossAttacks[bossName]) return bossAttacks[bossName];
     // a world boss casts the skills of its real data (functions/game/boss/worldBosses.js)

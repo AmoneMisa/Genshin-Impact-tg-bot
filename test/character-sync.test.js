@@ -46,7 +46,7 @@ test('a change in one chat reaches the other chat when it is loaded', async () =
     assert.equal(b.members[0].syncRev, 2);
 });
 
-test('a stale copy does not overwrite a newer hero, a fresh one wins', async () => {
+test('a changed stale copy is rejected even when recently loaded', async () => {
     const store = fakeStore();
     const first = chatOf(member(1, {stats: {lvl: 10}, inventory: {gold: 5}}));
     await persistChat(first, store, 0);
@@ -60,9 +60,10 @@ test('a stale copy does not overwrite a newer hero, a fresh one wins', async () 
     assert.equal(store.rows.get(1).data.game.inventory.gold, 1);
     // the scheduler saves its old copy long after it was loaded: dropped
     scheduler.members[0].game.inventory.gold = 6;
-    await persistChat(scheduler, store, FRESH_MS + 5000);
+    await assert.rejects(persistChat(scheduler, store, FRESH_MS + 5000),{reason:'character_conflict'});
     assert.equal(store.rows.get(1).data.game.inventory.gold, 1);
-    assert.equal(scheduler.members[0].game.inventory.gold, 1, 'the copy takes the newer hero');
+    await hydrateChats([scheduler],store);
+    assert.equal(scheduler.members[0].game.inventory.gold, 1);
 });
 
 test('only hero fields are shared and the highest level is the hero of a user', () => {

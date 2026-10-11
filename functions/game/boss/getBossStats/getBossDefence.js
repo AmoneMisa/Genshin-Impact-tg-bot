@@ -1,4 +1,5 @@
-export default function (boss, bossTemplate, modifier = 1) {
+export default function (boss, bossTemplate, modifier = 1, damageType = 'physical') {
     let lvl = boss.stats.lvl;
-    return Math.ceil(bossTemplate.stats.defence * Math.pow(1.55, lvl - 1) * modifier);
+    const base = bossTemplate.stats[damageType === 'magic' ? 'mDef' : 'pDef'] ?? bossTemplate.stats.defence;
+    return Math.ceil(base * Math.pow(1.55, lvl - 1) * modifier);
 };

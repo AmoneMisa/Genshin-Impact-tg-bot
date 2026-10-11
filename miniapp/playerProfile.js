@@ -16,6 +16,10 @@ function statDto(stats = {}) {
   return {
     attack: number(stats.attack),
     defence: number(stats.defence),
+    pAtk: number(stats.pAtk ?? stats.attack),
+    mAtk: number(stats.mAtk ?? stats.attack),
+    pDef: number(stats.pDef ?? stats.defence),
+    mDef: number(stats.mDef ?? stats.defence),
     maxHp: number(stats.maxHp ?? stats.hp),
     maxMp: number(stats.maxMp ?? stats.mp),
     maxCp: number(stats.maxCp ?? stats.cp),

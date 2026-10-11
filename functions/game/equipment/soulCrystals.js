@@ -47,10 +47,11 @@ export function removeWeaponSa(session,item){const info=saInfo(session,item);if(
   if(n(session.game.inventory.ancientAdena)<info.removeAa)return {ok:false,reason:'not_enough_aa'};
   session.game.inventory.ancientAdena=n(session.game.inventory.ancientAdena)-info.removeAa;item.sa=null;return {ok:true};}
 /** L2 effect values mapped to the existing game's stat scale. */
-export function saBonuses(item,option=saDefinition(item)){
+export function saBonuses(item,option=saDefinition(item),damageType){
   if(!option)return {};
   const out={},put=(name,value,mul=false)=>{out[name]=mul?(out[name]||1)*value:(out[name]||0)+value;};
   for(const e of option.effects||[]){let value=e.op==='sub'?-e.value:e.value;const mul=e.op==='mul';
+    if(damageType && (damageType==='magic' ? ['pAtk','pDef'] : ['mAtk','mDef']).includes(e.stat))continue;
     const mapping={critRate:'criticalChance',accCombat:'accuracy',rEvas:'evasion',maxHp:'maxHp',maxMp:'maxMp',pAtkSpd:'attackSpeed',mAtkSpd:'castingSpeed',regMp:'mpRestoreSpeed',regHp:'hpRestoreSpeed',pAtk:'attack',mAtk:'attack',critDmg:'criticalDamage',critDmgAdd:'criticalDamage',vampiric:'vampirism',pvpPhysDmg:'pvpDamageMul',pvpPhysSkillsDmg:'pvpDamageMul',pvpMagicalDmg:'pvpDamageMul',mReuse:'skillCooltimeMul',mpConsum:'skillMpCostMul'};
     if(e.stat==='absorbDam'){put('vampirism',value/100);continue;}
     if(e.stat==='physicalMpConsumeRate'){put('skillMpCostMul',value,true);continue;}
@@ -68,10 +69,10 @@ export function saBonuses(item,option=saDefinition(item)){
   }
   return out;
 }
-export function saStat(session,item,name,isMul){const option=saDefinition(item);if(!option)return null;
+export function saStat(session,item,name,isMul,damageType){const option=saDefinition(item);if(!option)return null;
   // Converted weapons provide their PvP multiplier through the added native passive.
   if(item.pvp&&name==='pvpDamageMul')return isMul?1:0;
-  const value=saBonuses(item,option)[name];if(value===undefined)return null;
+  const value=saBonuses(item,option,damageType)[name];if(value===undefined)return null;
   if(option.hpBelow<100){const stats=session.game.gameClass?.stats||{};if(n(stats.hp)>getMaxHp(session)*option.hpBelow/100)return null;}
   return value;
 }

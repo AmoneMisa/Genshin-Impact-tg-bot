@@ -52,9 +52,10 @@ function instantEffects(caster,target,skill,now,random=Math.random){
   }
   if(['PhysicalDamage','MagicalDamage','PhysicalSoulDamage','MagicalSoulDamage','EnergyDamage','FatalBlow','HpDrain','MagicalDamageMp','PhysicalDamageMute'].includes(effect.name)){
    if(l2HasControl(target,'Invincible',now))continue;
-   const defence=stats?getDefence(target):n(target.hunt?.defence,100);
+    const damageType = effect.name.startsWith('Magical') || (effect.name==='HpDrain' && Number(skill.fields.isMagic)===1) ? 'magic' : 'physical';
+   const defence=stats?getDefence(target,undefined,damageType):n(target.hunt?.[damageType==='magic'?'mDef':'pDef'] ?? target.hunt?.defence,100);
    const factor=Math.max(.1,Math.min(6,1+power/1000));
-   const base=Math.ceil(70*getAttack(caster)/Math.max(1,defence)*factor);
+   const base=Math.ceil(70*getAttack(caster,undefined,damageType)/Math.max(1,defence)*factor);
    const amount=base+l2CompanionDamage(caster,base,now);
    const before=stats?n(stats.hp):n(target.currentHp);const lost=Math.min(before,amount);
    if(stats){const chat=typeof caster.ownerDocument==='function'?caster.ownerDocument():null;if(chat)takeDamage(chat,caster,target,amount,now);}

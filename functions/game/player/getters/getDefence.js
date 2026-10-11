@@ -1,16 +1,19 @@
 import getPlayerGameClass from './getPlayerGameClass.js';
 import getEquipStatByName from './getEquipStatByName.js';
 import isHasPenalty from '../../equipment/isHasPenalty.js';
+import {combatType} from '../combatType.js';
 
-export default function (session, gameClass) {
+export default function (session, gameClass, damageType) {
     if (!gameClass) {
         gameClass = session.game.gameClass;
     }
 
     let {stats} = getPlayerGameClass(gameClass);
-    let totalValue = Math.round((stats.defence * getEquipStatByName(session, "defenceMul", true)
-        * getEquipStatByName(session, "defencePower", true)
-        + getEquipStatByName(session, "defence")));
+    const type = combatType(gameClass, damageType);
+    const base = stats[type === 'magic' ? 'mDef' : 'pDef'] ?? stats.defence;
+    let totalValue = Math.round((base * getEquipStatByName(session, "defenceMul", true, type)
+        * getEquipStatByName(session, "defencePower", true, type)
+        + getEquipStatByName(session, "defence", false, type)));
 
     if (isHasPenalty(session)) {
         totalValue *= 0.45;

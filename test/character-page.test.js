@@ -20,7 +20,9 @@ test('character snapshot exposes six base stats, six defenses and real clan bonu
   assert.deepEqual(dto.characteristics.map(stat=>stat.id),['STR','DEX','CON','INT','WIT','MEN']);
   assert.equal(dto.attributes.resist.length,6);
   assert.equal(dto.clanPassives[0].bonus,'+3%');
-  assert.equal(dto.combat.find(stat=>stat.id==='attack').value,103);
+  assert.equal(dto.combat.find(stat=>stat.id==='pAtk').value,103);
+  assert.equal(dto.combat.find(stat=>stat.id==='mAtk').value,100);
+  assert.deepEqual(dto.combat.slice(0,4).map(stat=>stat.id),['pAtk','mAtk','pDef','mDef']);
   assert.equal(dto.equipment.items.length,0);
 });
 test('effects discard expired, exhausted and zero shields, preserving timed and charge semantics',()=>{

@@ -1,4 +1,5 @@
 import { escapeHtml } from './escape-html.js';
+import {ensureFeatureStyles} from './feature-styles.js';
 
 // "Hello" popups written by the admin, shown when the Mini App opens. A player
 // can hide one for the rest of the day; the choice lives on the device, keyed
@@ -46,6 +47,7 @@ export async function showHelloNotices({ api, haptic }) {
     return;
   }
   const queue = visibleNotices(notices || [], load(), todayKey());
+  if (queue.length) await ensureFeatureStyles();
   const next = () => {
     const notice = queue.shift();
     if (!notice) return;
@@ -59,7 +61,7 @@ export async function showHelloNotices({ api, haptic }) {
         <h2>${escapeHtml(notice.title)}</h2>
         <p>${escapeHtml(notice.body).replace(/\n/g, '<br>')}</p>
         <label class="notice-skip"><input type="checkbox" data-notice-skip /> Больше не показывать сегодня</label>
-        <button type="button" class="feedback-submit" data-notice-ok>Понятно</button>
+        <button type="button" class="feedback-submit" data-notice-ok data-dismiss>Понятно</button>
       </div>`;
     const close = () => {
       if (overlay.querySelector('[data-notice-skip]').checked) save(dismissForToday(load(), notice, todayKey()));

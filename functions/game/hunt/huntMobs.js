@@ -81,6 +81,7 @@ export function buildMob(zone, mobDef, {now = Date.now(), random = Math.random, 
     const tier = champion ? CHAMPIONS[champion] : null;
     const hp = Math.max(1, Math.round(HUNT.killCasts * referenceHit(mobDef.level, className) * clamp(relative(mobDef, 'hp'), 0.4, 3) * (tier ? tier.hp : 1)));
     const defence = defenceFor(mobDef.level, clamp(relative(mobDef, 'pDef'), 0.5, 2));
+    const magicDefence = mobDef.mDef > 0 ? defenceFor(mobDef.level, clamp(relative(mobDef, 'mDef'), 0.5, 2)) : defence;
     const attackMs = Math.round(HUNT.attackMs * 253 / (mobDef.attackSpeed || 253));
     const element=mobDef.element||Object.entries(NPC_ATTRIBUTE_ATTACKS[mobDef.id]||{}).sort((a,b)=>b[1]-a[1])[0]?.[0]||null;
     return {
@@ -93,7 +94,7 @@ export function buildMob(zone, mobDef, {now = Date.now(), random = Math.random, 
         hp,
         currentHp: hp,
         stats: {lvl: mobDef.level},
-        hunt: {defence, resist: mobDef.resist || {}, element,attributeAttack:Math.max(0,...Object.values(NPC_ATTRIBUTE_ATTACKS[mobDef.id]||{})),magic:mobDef.mAtk>mobDef.pAtk, atk: attackRelative(mobDef) * (tier ? tier.atk : 1)},
+        hunt: {defence,pDef:defence,mDef:magicDefence, resist: mobDef.resist || {}, element,attributeAttack:Math.max(0,...Object.values(NPC_ATTRIBUTE_ATTACKS[mobDef.id]||{})),magic:mobDef.mAtk>mobDef.pAtk, atk: attackRelative(mobDef) * (tier ? tier.atk : 1)},
         listOfDamage: [],
         minions: [],
         debuffs: [],

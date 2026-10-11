@@ -10,6 +10,8 @@ export default function (session) {
 
     session.game.gameClass.stats.attack = Math.ceil(template.attack * Math.pow(1.105, session.game.stats.lvl - 1) + 8);
     session.game.gameClass.stats.defence = Math.ceil(template.defence * Math.pow(1.102, session.game.stats.lvl - 1) + 6);
+    for (const stat of ['pAtk','mAtk']) session.game.gameClass.stats[stat] = Math.ceil((template[stat] ?? template.attack) * Math.pow(1.105, session.game.stats.lvl - 1) + 8);
+    for (const stat of ['pDef','mDef']) session.game.gameClass.stats[stat] = Math.ceil((template[stat] ?? template.defence) * Math.pow(1.102, session.game.stats.lvl - 1) + 6);
     session.game.gameClass.stats.hp = Math.ceil(template.maxHp * session.game.stats.lvl * 1.036) + 45;
     session.game.gameClass.stats.maxHp = Math.ceil(template.maxHp * session.game.stats.lvl * 1.036) + 45;
     session.game.gameClass.stats.mp = Math.ceil(template.maxMp * session.game.stats.lvl * 1.0375) + 25;

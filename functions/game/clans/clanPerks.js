@@ -96,7 +96,7 @@ export const clanSkillLevel = (clan, id) => {
 const casterFamilies = new Set(['mage', 'priest']);
 
 /** Stat deltas of the clan perks a member has right now. */
-export function clanPerkModifiers(session) {
+export function clanPerkModifiers(session, damageType) {
     const result = {};
     const perks = session?.game?.clanPerks;
     if (!perks || typeof perks !== 'object') return result;
@@ -109,7 +109,9 @@ export function clanPerkModifiers(session) {
         const level = clampTo(entry, perks[entry.id]);
         if (!level) continue;
         // a family is only known for classes of the new tree; an unknown one gets both kinds
-        if (caster !== null && ((entry.who === 'fighters' && caster) || (entry.who === 'casters' && !caster))) continue;
+        if (damageType) {
+            if ((entry.who === 'fighters' && damageType === 'magic') || (entry.who === 'casters' && damageType === 'physical')) continue;
+        } else if (caster !== null && ((entry.who === 'fighters' && caster) || (entry.who === 'casters' && !caster))) continue;
         result[entry.stat] = (result[entry.stat] || 0) + entry.per * level;
     }
     return result;

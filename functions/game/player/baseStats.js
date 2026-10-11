@@ -49,9 +49,9 @@ const isMagic = session => isMagicClass(className(session));
  * The delta the characteristics add to a combat stat, in the form getEquipStatByName.js folds it in
  * (0.04 on a "Mul" stat is +4%, on a plain stat it is points). 0 for every stat they do not touch.
  */
-export function baseStatDelta(session, statName) {
+export function baseStatDelta(session, statName, damageType) {
     switch (statName) {
-        case 'attackMul': return shareOf(session, isMagic(session) ? 'INT' : 'STR');
+        case 'attackMul': return shareOf(session, (damageType ? damageType === 'magic' : isMagic(session)) ? 'INT' : 'STR');
         case 'maxHpMul': return shareOf(session, 'CON');
         case 'maxMpMul': return shareOf(session, 'MEN');
         case 'speedMul': return shareOf(session, 'DEX');

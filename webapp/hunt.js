@@ -1,3 +1,4 @@
+import {createPoller} from './polling.js';
 import {materialIcon} from './material-icons.js';
 import {updateDeathPopup} from './death-popup.js';
 import {displayedPosition} from './map-rendering.js';
@@ -67,7 +68,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   let pollTimer = 0;
   const close = () => {
     cancelAnimationFrame(animation);window.clearInterval(timer);
-    window.clearInterval(pollTimer);
+    pollTimer?.stop();
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
   };
@@ -96,6 +97,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
 
   async function run(path, body, { heavy = false } = {}) {
     if (pending) return null;
+    pollTimer?.invalidate();
     pending = true;
     overlay.classList.add('busy');
     haptic(heavy ? 'heavy' : 'light');
@@ -164,6 +166,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
 
   async function drink(key) {
     if (pending) return;
+    pollTimer?.invalidate();
     pending = true;
     try {
       haptic('light');
@@ -432,10 +435,11 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   // The mob swings in real time: poll while a fight is on, show new swings, and tick the timers locally.
-  async function poll() {
+  async function poll({signal,current}) {
     if (pending || document.hidden || !overlay.isConnected || (!state.mob && !state.field)) return;
     try {
-      const next = await api('/api/hunt');
+      const next = await api('/api/hunt', {signal});
+      if (!current() || pending || !overlay.isConnected) return;
       // Countdowns tick locally; only real changes re-render.
       const clockless = value => JSON.stringify(value, (key, v) => (/Ms$/.test(key) ? 0 : v));
       if (clockless(next) === clockless(state)) { state = next; return; }
@@ -447,9 +451,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
         if (/бьёт/.test(top)) haptic('medium');
       }
       render();
-    } catch {
-      // keep the last state; the next poll retries
-    }
+    } catch (error) { throw error; }
   }
 
   function tick() {
@@ -476,5 +478,5 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   document.body.appendChild(overlay);animation=requestAnimationFrame(animate);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   timer = window.setInterval(tick, 200);
-  pollTimer = window.setInterval(poll, 2000);
+  pollTimer = createPoller(poll, {interval:2000,enabled:()=>!pending && overlay.isConnected && !overlay.classList.contains('closing')});
 }

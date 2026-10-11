@@ -1,0 +1,1806 @@
+[
+  {
+    "width": 320,
+    "screen": "character",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "7px 6px 5px",
+      "border": "1px solid rgb(169, 162, 141)",
+      "radius": "0px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close",
+        "text": "Закрыть",
+        "width": 24,
+        "height": 24
+      },
+      {
+        "class": "",
+        "text": "Обновить",
+        "width": 24,
+        "height": 24
+      },
+      {
+        "class": "",
+        "text": "Статы",
+        "width": 71,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Эквип",
+        "width": 71,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Навыки",
+        "width": 71,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Эффекты",
+        "width": 71,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "STR40",
+        "width": 90,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "DEX30",
+        "width": 90,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "CON43",
+        "width": 90,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "INT21",
+        "width": 90,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "WIT11",
+        "width": 90,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "MEN25",
+        "width": 90,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Класс и облик",
+        "width": 286,
+        "height": 29
+      }
+    ],
+    "frames": [
+      {
+        "class": "character-title",
+        "width": 290,
+        "padding": "2px 4px",
+        "parent": "overlay-panel character-panel",
+        "parentBorder": "1px"
+      },
+      {
+        "class": "character-section",
+        "width": 286,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 241,
+        "padding": "0px",
+        "parent": "character-meter cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 241,
+        "padding": "0px",
+        "parent": "character-meter hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 241,
+        "padding": "0px",
+        "parent": "character-meter mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 286,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 286,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 286,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 286,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 286,
+        "padding": "4px 25px",
+        "parent": "character-tools",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel character-panel"
+    ],
+    "modalName": null,
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "inventory",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close inv-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "inv-round",
+        "text": "Обновить",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "clan-play",
+        "text": "Хранилище",
+        "width": 118,
+        "height": 36
+      },
+      {
+        "class": "clan-play",
+        "text": "Обмен",
+        "width": 80,
+        "height": 36
+      },
+      {
+        "class": "active",
+        "text": "Все",
+        "width": 41,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Снаряжение",
+        "width": 93,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Расходники",
+        "width": 88,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Материалы",
+        "width": 87,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Выбросить",
+        "width": 84,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Крафт",
+        "width": 278,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "",
+        "width": 252,
+        "padding": "0px",
+        "parent": "inv-vital cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 252,
+        "padding": "0px",
+        "parent": "inv-vital hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 252,
+        "padding": "0px",
+        "parent": "inv-vital mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-bag l2-bag",
+        "width": 278,
+        "padding": "8px",
+        "parent": "inventory-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-detail tone-mp",
+        "width": 278,
+        "padding": "12px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 278,
+        "padding": "7px 10px",
+        "parent": "inventory-tools",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass inventory-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "wallet": {
+      "text": "33 000",
+      "width": 56.890625,
+      "height": 49.78125,
+      "lineHeight": "16.9px"
+    },
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "fishing",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 652.578125,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "ds-round",
+        "text": "Где взять удочку и соски",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "",
+        "text": "Ловля",
+        "width": 65,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Улов",
+        "width": 65,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Гильдия",
+        "width": 65,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Удочки",
+        "width": 65,
+        "height": 38
+      },
+      {
+        "class": "equipment-action ",
+        "text": "Автоловля",
+        "width": 244,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "mmo-frame",
+        "width": 278,
+        "padding": "16px",
+        "parent": "fishing-tab-body",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "fishing-scene",
+        "width": 244,
+        "padding": "0px",
+        "parent": "mmo-frame",
+        "parentBorder": "1px"
+      },
+      {
+        "class": "equipment-action forge-action",
+        "width": 244,
+        "padding": "8px",
+        "parent": "party-actions",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "equipment-action ",
+        "width": 244,
+        "padding": "8px",
+        "parent": "party-actions",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass fishing-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "luck-shop",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "clan-play",
+        "text": "Купить COL за Звёзды",
+        "width": 278,
+        "height": 36
+      },
+      {
+        "class": "shop-price",
+        "text": "Купить",
+        "width": 248,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "feedback-intro",
+        "width": 278,
+        "padding": "12px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "clan-play",
+        "width": 278,
+        "padding": "6px 16px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-stock",
+        "width": 278,
+        "padding": "8px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-selection",
+        "width": 278,
+        "padding": "14px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "shop-price",
+        "width": 248,
+        "padding": "9px 18px",
+        "parent": "luck-selection",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass feedback-panel luck-shop-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "arcade",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 642.75,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close arcade-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 44
+      },
+      {
+        "class": "arcade-round",
+        "text": "Обновить",
+        "width": 34,
+        "height": 44
+      }
+    ],
+    "frames": [
+      {
+        "class": "arcade-tabs",
+        "width": 278,
+        "padding": "0px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-stage as-basketball painted-game",
+        "width": 278,
+        "padding": "0px",
+        "parent": "arcade-arena",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-btn gold",
+        "width": 278,
+        "padding": "8px 14px",
+        "parent": "",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel arcade-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "chest",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 495.78125,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "chest-back",
+        "text": "Назад",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "chest-help",
+        "text": "Правила",
+        "width": 34,
+        "height": 34
+      }
+    ],
+    "frames": [
+      {
+        "class": "chest-possible",
+        "width": 278,
+        "padding": "10px 12px",
+        "parent": "overlay-panel chest-panel",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel chest-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "exchange",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 462.734375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ex-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      }
+    ],
+    "frames": [
+      {
+        "class": "ex-altar",
+        "width": 278,
+        "padding": "18px 10px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "exchange-buy",
+        "width": 278,
+        "padding": "1px 6px",
+        "parent": "exchange-form",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass exchange-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "warehouse",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 656.375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close",
+        "text": "Закрыть",
+        "width": 38,
+        "height": 36
+      },
+      {
+        "class": "",
+        "text": "Внести",
+        "width": 65,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Забрать",
+        "width": 71,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "stock-grid",
+        "width": 278,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "stock-grid",
+        "width": 278,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass storage-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "shop",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 591,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close",
+        "text": "Закрыть",
+        "width": 32,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Все товары",
+        "width": 89,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Магазин COL",
+        "width": 89,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Аукцион",
+        "width": 89,
+        "height": 32
+      }
+    ],
+    "frames": [],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel l2-store-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "feedback",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 590.1875,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      }
+    ],
+    "frames": [
+      {
+        "class": "feedback-intro",
+        "width": 278,
+        "padding": "16px 18px",
+        "parent": "feedback-card",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 278,
+        "padding": "15px 16px",
+        "parent": "feedback-field",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "feedback-submit",
+        "width": 278,
+        "padding": "13px 18px",
+        "parent": "feedback-card",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass feedback-panel"
+    ],
+    "modalName": null,
+    "focus": "TEXTAREA",
+    "focusAfterLastTab": "<body><button id=\"behind\">Background action</button><section class=\"game-overlay feedback-overlay visible\" role=\"dialog\" aria-modal=\"true\">\n    <div class=\"over",
+    "focusAfterSecondTab": "<button id=\"behind\">Background action</button>",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "help",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "active",
+        "text": "Как пользоваться",
+        "width": 136,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Команды чата",
+        "width": 136,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 278,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass help-panel"
+    ],
+    "modalName": null,
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "character",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "7px 6px 5px",
+      "border": "1px solid rgb(169, 162, 141)",
+      "radius": "0px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close",
+        "text": "Закрыть",
+        "width": 24,
+        "height": 24
+      },
+      {
+        "class": "",
+        "text": "Обновить",
+        "width": 24,
+        "height": 24
+      },
+      {
+        "class": "",
+        "text": "Статы",
+        "width": 89,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Эквип",
+        "width": 89,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Навыки",
+        "width": 89,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Эффекты",
+        "width": 89,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "STR40",
+        "width": 113,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "DEX30",
+        "width": 113,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "CON43",
+        "width": 113,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "INT21",
+        "width": 113,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "WIT11",
+        "width": 113,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "MEN25",
+        "width": 113,
+        "height": 27
+      },
+      {
+        "class": "",
+        "text": "Класс и облик",
+        "width": 356,
+        "height": 29
+      }
+    ],
+    "frames": [
+      {
+        "class": "character-title",
+        "width": 360,
+        "padding": "2px 4px",
+        "parent": "overlay-panel character-panel",
+        "parentBorder": "1px"
+      },
+      {
+        "class": "character-section",
+        "width": 356,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 311,
+        "padding": "0px",
+        "parent": "character-meter cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 311,
+        "padding": "0px",
+        "parent": "character-meter hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 311,
+        "padding": "0px",
+        "parent": "character-meter mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 356,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 356,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 356,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-section",
+        "width": 356,
+        "padding": "0px",
+        "parent": "character-scroll",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 356,
+        "padding": "4px 25px",
+        "parent": "character-tools",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel character-panel"
+    ],
+    "modalName": null,
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "inventory",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close inv-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "inv-round",
+        "text": "Обновить",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "clan-play",
+        "text": "Хранилище",
+        "width": 118,
+        "height": 36
+      },
+      {
+        "class": "clan-play",
+        "text": "Обмен",
+        "width": 80,
+        "height": 36
+      },
+      {
+        "class": "active",
+        "text": "Все",
+        "width": 49,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Снаряжение",
+        "width": 101,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Расходники",
+        "width": 96,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Материалы",
+        "width": 95,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Выбросить",
+        "width": 84,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Кристаллизация",
+        "width": 171,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Выставить на аукцион",
+        "width": 171,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Крафт",
+        "width": 348,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "",
+        "width": 322,
+        "padding": "0px",
+        "parent": "inv-vital cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 322,
+        "padding": "0px",
+        "parent": "inv-vital hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 322,
+        "padding": "0px",
+        "parent": "inv-vital mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-bag l2-bag",
+        "width": 348,
+        "padding": "8px",
+        "parent": "inventory-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-detail tone-mp",
+        "width": 348,
+        "padding": "12px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 348,
+        "padding": "7px 10px",
+        "parent": "inventory-tools",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass inventory-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "wallet": {
+      "text": "33 000",
+      "width": 91.890625,
+      "height": 32.890625,
+      "lineHeight": "16.9px"
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "fishing",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 628.875,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "ds-round",
+        "text": "Где взять удочку и соски",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "",
+        "text": "Ловля",
+        "width": 83,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Улов",
+        "width": 83,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Гильдия",
+        "width": 83,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Удочки",
+        "width": 83,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "mmo-frame",
+        "width": 348,
+        "padding": "16px",
+        "parent": "fishing-tab-body",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "fishing-scene",
+        "width": 314,
+        "padding": "0px",
+        "parent": "mmo-frame",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass fishing-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "luck-shop",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "clan-play",
+        "text": "Купить COL за Звёзды",
+        "width": 348,
+        "height": 36
+      },
+      {
+        "class": "shop-price",
+        "text": "Купить",
+        "width": 318,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "feedback-intro",
+        "width": 348,
+        "padding": "12px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "clan-play",
+        "width": 348,
+        "padding": "6px 16px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-stock",
+        "width": 348,
+        "padding": "8px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-selection",
+        "width": 348,
+        "padding": "14px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "shop-price",
+        "width": 318,
+        "padding": "9px 18px",
+        "parent": "luck-selection",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass feedback-panel luck-shop-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "arcade",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 686.5,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close arcade-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 44
+      },
+      {
+        "class": "arcade-round",
+        "text": "Обновить",
+        "width": 34,
+        "height": 44
+      }
+    ],
+    "frames": [
+      {
+        "class": "arcade-tabs",
+        "width": 348,
+        "padding": "0px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-stage as-basketball painted-game",
+        "width": 348,
+        "padding": "0px",
+        "parent": "arcade-arena",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-btn gold",
+        "width": 348,
+        "padding": "8px 14px",
+        "parent": "",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel arcade-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "chest",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 575.765625,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "chest-back",
+        "text": "Назад",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "chest-help",
+        "text": "Правила",
+        "width": 34,
+        "height": 34
+      }
+    ],
+    "frames": [
+      {
+        "class": "chest-possible",
+        "width": 348,
+        "padding": "10px 12px",
+        "parent": "overlay-panel chest-panel",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel chest-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "exchange",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 462.734375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ex-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      }
+    ],
+    "frames": [
+      {
+        "class": "ex-altar",
+        "width": 348,
+        "padding": "18px 10px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "exchange-buy",
+        "width": 348,
+        "padding": "1px 6px",
+        "parent": "exchange-form",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass exchange-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "warehouse",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 552.375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close",
+        "text": "Закрыть",
+        "width": 38,
+        "height": 36
+      },
+      {
+        "class": "",
+        "text": "Внести",
+        "width": 65,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Забрать",
+        "width": 71,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "stock-grid",
+        "width": 348,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "stock-grid",
+        "width": 348,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass storage-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "shop",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 591,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close",
+        "text": "Закрыть",
+        "width": 32,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Все товары",
+        "width": 112,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Магазин COL",
+        "width": 112,
+        "height": 32
+      },
+      {
+        "class": "",
+        "text": "Аукцион",
+        "width": 112,
+        "height": 32
+      }
+    ],
+    "frames": [],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel l2-store-panel"
+    ],
+    "modalName": null,
+    "focus": "BODY",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "feedback",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 572.0625,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      }
+    ],
+    "frames": [
+      {
+        "class": "feedback-intro",
+        "width": 348,
+        "padding": "16px 18px",
+        "parent": "feedback-card",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 348,
+        "padding": "15px 16px",
+        "parent": "feedback-field",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "feedback-submit",
+        "width": 348,
+        "padding": "13px 18px",
+        "parent": "feedback-card",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass feedback-panel"
+    ],
+    "modalName": null,
+    "focus": "TEXTAREA",
+    "focusAfterLastTab": "<body><button id=\"behind\">Background action</button><section class=\"game-overlay feedback-overlay visible\" role=\"dialog\" aria-modal=\"true\">\n    <div class=\"over",
+    "focusAfterSecondTab": "<button id=\"behind\">Background action</button>",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "help",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [
+      {
+        "class": "overlay-close ds-round",
+        "text": "Закрыть",
+        "width": 34,
+        "height": 34
+      },
+      {
+        "class": "active",
+        "text": "Как пользоваться",
+        "width": 171,
+        "height": 38
+      },
+      {
+        "class": "",
+        "text": "Команды чата",
+        "width": 171,
+        "height": 38
+      }
+    ],
+    "frames": [
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "help-guide-card",
+        "width": 348,
+        "padding": "11px",
+        "parent": "help-guide-grid",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [
+      "overlay-backdrop",
+      "overlay-panel glass help-panel"
+    ],
+    "modalName": null,
+    "focus": "BUTTON",
+    "errors": []
+  }
+]

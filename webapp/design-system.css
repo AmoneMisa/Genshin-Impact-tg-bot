@@ -6,6 +6,11 @@
  * focus, motion and per-mode accent variables.
  */
 :root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
   --surface-page: #0b0a10;
   --surface-panel: rgba(18, 14, 22, .97);
   --surface-glass: rgba(20, 16, 24, .72);
@@ -867,3 +872,59 @@ a:focus-visible {
 .death-panel [data-death-options] { display: grid; gap: 8px; }
 .death-panel button { min-height: 44px; padding: 10px; }
 .death-panel [data-death-error]:empty { display: none; }
+
+/* Shared mobile window contract. Artwork stays local to each screen. */
+.game-overlay .overlay-panel { backdrop-filter: none; }
+.game-overlay .overlay-close,
+.game-overlay button.ds-round,
+.game-overlay button.mmo-round,
+.game-overlay [data-dismiss],
+.game-overlay [data-close],
+.game-overlay .character-title button { min-width:44px;min-height:44px; }
+.game-overlay .character-tabs button,
+.game-overlay .character-base button,
+.game-overlay .inv-tabs button,
+.game-overlay .warehouse-tabs button,
+.game-overlay .stock-tabs button,
+.game-overlay .help-tabs button,
+.game-overlay .help-filters button,
+.game-overlay .inventory-footer button { min-height:44px; }
+.game-overlay.character-overlay > .character-panel {
+  padding:var(--space-3);border-radius:var(--radius-md,14px);border:1px solid var(--border-soft);
+  background:var(--surface-panel);box-shadow:0 16px 50px #0008;
+}
+.game-overlay.character-overlay > .character-panel::before { display:none; }
+.character-panel .character-title { height:auto;min-height:44px;padding:0;border:0;background:none;gap:var(--space-2); }
+.character-panel .character-title h2 { font:700 21px/1.2 var(--serif);color:var(--gold-bright); }
+.character-panel .character-tabs { gap:var(--space-1);padding-bottom:var(--space-2); }
+.character-panel .character-tabs button { border-color:var(--border-soft);background:var(--surface-control);box-shadow:none;color:var(--text-soft); }
+.character-panel .character-tabs button[aria-selected=true] { border-color:var(--gold);background:var(--button-gold);color:var(--text); }
+.character-panel .character-section { border:0;border-bottom:1px solid var(--border-soft);background:none;margin-bottom:var(--space-2); }
+.character-panel .character-section h3 { background:none;border:0;padding:var(--space-2) 0;color:var(--gold-bright); }
+.character-panel .character-section-body { padding:0; }
+.character-panel .character-base button { background:var(--surface-control);border-color:var(--border-soft); }
+.fishing-overlay .fishing-tab-body > .mmo-frame { padding:0;border:0;border-radius:0;background:none;box-shadow:none; }
+.feedback-overlay .feedback-intro { padding:0;border:0;border-radius:0;background:none;gap:var(--space-2); }
+.help-overlay .help-guide-card { border:0;border-bottom:1px solid var(--border-soft);border-radius:0;background:none;padding:var(--space-2) 0; }
+.inventory-panel .inventory-wallet { grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2); }
+.inventory-panel .inventory-adena strong,
+.inventory-panel .inventory-col strong { min-width:0;padding:4px 0;border:0;background:none;white-space:nowrap;overflow-wrap:normal;font-size:12px; }
+.inventory-panel .inventory-tools { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.inventory-panel .inventory-tools [data-inventory-craft] { grid-column:auto; }
+.static-effects .overlay-backdrop { backdrop-filter:none; }
+.static-effects #webgl { display:none; }
+.static-effects { background:radial-gradient(ellipse at top,#27202f,#0b0a10 75%); }
+@media (prefers-reduced-motion:reduce) {
+  .overlay-backdrop { backdrop-filter:none; }
+  body .game-overlay *, body .game-overlay *::before, body .game-overlay *::after { animation:none;transition:none; }
+}
+.game-overlay :is(.inv-round,.arcade-round,.shop-round,.chest-back,.chest-help),
+.game-overlay.storage-overlay .storage-panel header .overlay-close { min-width:44px;min-height:44px; }
+.game-overlay :is(.clan-play,.shop-price),
+.game-overlay .character-tools button,
+.game-overlay .fishing-tabs button,
+.game-overlay .storage-tabs button,
+.game-overlay .l2-store-footer button,
+.game-overlay .shop-categories button { min-height:44px; }
+.fishing-overlay .fishing-tab-body > .mmo-frame::before,
+.fishing-overlay .fishing-tab-body > .mmo-frame::after { display:none; }

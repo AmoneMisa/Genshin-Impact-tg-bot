@@ -114,8 +114,8 @@ export function l2RawStat(target,stat,isMul=false,now=Date.now()){
  }
  return total;
 }
-export function l2StatBonus(session,stat,isMul=false,now=Date.now()){
- const magic=isMagicClass(session?.game?.gameClass?.stats?.name);
+export function l2StatBonus(session,stat,isMul=false,now=Date.now(),damageType){
+ const magic=damageType ? damageType==='magic' : isMagicClass(session?.game?.gameClass?.stats?.name);
  const mul={attackMul:magic?'mAtk':'pAtk',defenceMul:magic?'mDef':'pDef',maxHpMul:'maxHp',maxMpMul:'maxMp',maxCpMul:'maxCp',criticalChanceMul:magic?'mCritRate':'critRate',criticalDamage:magic?'mCritPower':'critDmg',attackSpeedMul:'pAtkSpd',castingSpeedMul:'mAtkSpd',healPowerMul:'healEffect',hpRegenMul:'regHp',mpRegenMul:'regMp',mpRestoreSpeedMul:'regMp',skillCooltimeMul:magic?'mReuse':'pReuse',skillMpCostMul:magic?'magicalMpConsumeRate':'physicalMpConsumeRate'};
  const flat={attack:magic?'mAtk':'pAtk',defence:magic?'mDef':'pDef',accuracy:'accCombat',evasion:'rEvas',speed:'runSpd',maxHp:'maxHp',maxMp:'maxMp',maxCp:'maxCp',criticalChance:magic?'mCritRate':'critRate',mpRestoreSpeed:'regMp',STR:'STR',DEX:'DEX',CON:'CON',INT:'INT',WIT:'WIT',MEN:'MEN'};
  if(isMul&&mul[stat])return clamp(l2RawStat(session,mul[stat],true,now) * (stat==='healPowerMul' ? 1+l2RawStat(session,'healEffect',false,now)/100 : 1),.05,10);

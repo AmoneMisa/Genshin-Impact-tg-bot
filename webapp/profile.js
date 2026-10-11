@@ -94,7 +94,8 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
       <section class="profile-chosen">
         <p>${escapeHtml(item.description)}</p>
         <div class="profile-class-stats">
-          <span>⚔ ${formatNumber(item.stats.attack)}</span><span>🛡 ${formatNumber(item.stats.defence)}</span>
+          <span>Физ. атака ${formatNumber(item.stats.pAtk ?? item.stats.attack)}</span><span>Маг. атака ${formatNumber(item.stats.mAtk ?? item.stats.attack)}</span>
+          <span>Физ. защита ${formatNumber(item.stats.pDef ?? item.stats.defence)}</span><span>Маг. защита ${formatNumber(item.stats.mDef ?? item.stats.defence)}</span>
           <span>❤ ${formatNumber(item.stats.maxHp)}</span><span>⚡ ${formatNumber(item.stats.speed)}</span>
         </div>
         <button type="button" class="profile-confirm" data-profile-class="${escapeHtml(item.name)}" ${blocked ? 'disabled' : ''}>Стать: ${escapeHtml(item.title)}</button>
@@ -124,8 +125,10 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
       </section>
       ${isPrivateContext ? '<p class="profile-hint">Смена пола доступна только из группового чата.</p>' : ''}
       <section class="profile-stats">
-        ${stat('Атака', current.stats.attack, '⚔️')}
-        ${stat('Защита', current.stats.defence, '🛡️')}
+        ${stat('Физ. атака', current.stats.pAtk ?? current.stats.attack, '⚔️')}
+        ${stat('Маг. атака', current.stats.mAtk ?? current.stats.attack, '✨')}
+        ${stat('Физ. защита', current.stats.pDef ?? current.stats.defence, '🛡️')}
+        ${stat('Маг. защита', current.stats.mDef ?? current.stats.defence, '🔮')}
         ${stat('HP', current.stats.maxHp, '❤')}
         ${stat('MP', current.stats.maxMp, '🔹')}
         ${stat('CP', current.stats.maxCp, '🔸')}

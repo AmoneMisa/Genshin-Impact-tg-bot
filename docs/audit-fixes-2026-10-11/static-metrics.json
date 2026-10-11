@@ -1,0 +1,73 @@
+{
+  "initialCssFiles": 10,
+  "initialCssBytes": 100859,
+  "initialCssGzip": 22527,
+  "modules": 29,
+  "jsBytes": 118871,
+  "jsGzip": 41861,
+  "cssFiles": 53,
+  "cssBytes": 496494,
+  "cssGzip": 99165,
+  "largestModules": [
+    {
+      "file": "webapp/city.js",
+      "bytes": 21062,
+      "gzip": 6833
+    },
+    {
+      "file": "webapp/app.js",
+      "bytes": 18183,
+      "gzip": 4913
+    },
+    {
+      "file": "webapp/vfx.js",
+      "bytes": 11484,
+      "gzip": 3325
+    },
+    {
+      "file": "webapp/renderer.js",
+      "bytes": 9103,
+      "gzip": 3424
+    },
+    {
+      "file": "webapp/icons.js",
+      "bytes": 5612,
+      "gzip": 2293
+    },
+    {
+      "file": "webapp/art/builds-art.js",
+      "bytes": 5610,
+      "gzip": 936
+    },
+    {
+      "file": "webapp/glyph-center.js",
+      "bytes": 5051,
+      "gzip": 2063
+    },
+    {
+      "file": "webapp/nav.js",
+      "bytes": 4500,
+      "gzip": 2026
+    },
+    {
+      "file": "webapp/class-family.js",
+      "bytes": 3804,
+      "gzip": 1337
+    },
+    {
+      "file": "webapp/overlay-a11y.js",
+      "bytes": 3681,
+      "gzip": 1376
+    },
+    {
+      "file": "webapp/i18n/dom.js",
+      "bytes": 3646,
+      "gzip": 1363
+    },
+    {
+      "file": "webapp/i18n/engine.js",
+      "bytes": 3474,
+      "gzip": 1492
+    }
+  ]
+}

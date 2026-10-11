@@ -131,6 +131,10 @@
 .character-panel .character-section h3{padding:4px 5px;line-height:14px;color:#e1e8ee;background:linear-gradient(#12314766,#04131c);border-color:#254354}
 .character-section-body{padding:3px 5px}
 .character-row{padding:3px 0;min-height:23px}
+.character-combat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px}
+.character-combat .character-row{display:flex;align-items:baseline;justify-content:space-between;gap:4px;min-width:0;font-size:11px;text-align:left}
+.character-combat .character-row>span{min-width:0;overflow-wrap:anywhere}
+.character-combat .character-row>strong{flex:none;white-space:nowrap}
 .character-base button{min-height:27px;padding:3px;font-size:11px}
 .character-empty,.character-note{margin:4px 0;font-size:11px;line-height:1.35}
 .character-meter{margin:3px 0;grid-template-columns:27px minmax(0,1fr)}
@@ -171,3 +175,9 @@
 .character-panel .character-button-label{display:block;flex:1;width:100%;text-align:center;line-height:1.2}
 .character-panel button:has(.character-button-label>.ui-icon){padding-inline:25px}
 .character-panel .character-button-label>.ui-icon{position:absolute;left:6px;top:50%;transform:translateY(-50%);width:16px;height:16px;margin:0;vertical-align:initial}
+
+/* Reviewed characteristic paintings retain compact mobile stat controls. */
+.polish-icon{display:inline-block;width:24px;height:24px;object-fit:contain;vertical-align:middle;flex-shrink:0}
+.character-stat-label{display:inline-flex;align-items:center;gap:3px;min-width:0}
+.character-stat-label .polish-icon{width:18px;height:18px}
+.character-row>span:has(.polish-icon){display:inline-flex;align-items:center;justify-content:center;gap:5px}

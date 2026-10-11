@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { hydrateChats, persistChat } from "../../functions/general/characterSync.js";
-import { characterStore } from "../../functions/general/characterStore.js";
+import {atomicChatSave} from '../../functions/general/atomicChatSave.js';
+import { storeForSession } from "../../functions/general/characterStore.js";
 import { persistGuests } from "../../functions/general/partyGuests.js";
 
 const chatSchema = new mongoose.Schema({
@@ -58,7 +59,7 @@ const chatSchema = new mongoose.Schema({
             }
         }
     }]
-}, { timestamps: true });
+}, { timestamps: true, optimisticConcurrency:true });
 
 // game / members contain Mixed (Object) sub-paths. Mongoose does not track deep
 // mutations on Mixed types, so `chat.save()` would silently drop changes made via
@@ -66,9 +67,9 @@ const chatSchema = new mongoose.Schema({
 chatSchema.pre("save", async function () {
     this.markModified("game");
     // One hero for all chats: write the members that changed to the shared record, take the newer ones from it.
-    await persistChat(this, characterStore);
+    await persistChat(this, storeForSession(this.$session()));
     // heroes of a cross-chat party that are not members of this chat
-    await persistGuests(this, characterStore);
+    await persistGuests(this, storeForSession(this.$session()));
     this.markModified("members");
 });
 
@@ -76,8 +77,15 @@ chatSchema.pre("save", async function () {
 for (const operation of ["find", "findOne", "findOneAndUpdate"]) {
     chatSchema.post(operation, async function (result) {
         if (!result) return;
-        await hydrateChats(Array.isArray(result) ? result : [result], characterStore);
+        await hydrateChats(Array.isArray(result) ? result : [result], storeForSession(this.getOptions().session));
     });
 }
 
-export default mongoose.model("Chat", chatSchema);
+const Chat = mongoose.model("Chat", chatSchema);
+const originalSave = Chat.prototype.save;
+// Chat and every shared hero it changes commit together. An existing transaction (trade,
+// warehouse, mail) is reused; a revision conflict aborts the whole operation, never just its debit.
+Chat.prototype.save = async function(options = {}) {
+    return atomicChatSave(this, options, originalSave, () => mongoose.startSession());
+};
+export default Chat;

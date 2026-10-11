@@ -1,5 +1,5 @@
 // Reviewed paintings; related actions reuse one cached image.
-import {L2_UI_ART,l2IconUrl} from './l2-icon-art.js';
+import {L2_UI_ART,l2IconUrl} from './l2-ui-art.js';
 export const UI_ICON_ART = Object.freeze({
   "settings": "settings",
   "mail": "mail",

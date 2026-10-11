@@ -330,3 +330,6 @@
 .city.has-map .city-title { min-height: 210px; }
 .city.has-map .city-card.banner { max-width: 320px; }
 @media (max-width: 679px) { .city::after { animation: none; } }
+
+/* The atlas shortcut belongs to the city and must be styled before atlas assets load. */
+.city-world-map{display:block;margin:8px auto;padding:12px 18px;border:1px solid var(--border-strong, #b89b61);border-radius:12px;background:var(--surface-control, #263032);color:var(--text, #e9e4d8)}

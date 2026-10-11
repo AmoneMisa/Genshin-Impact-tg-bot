@@ -1,0 +1,39 @@
+{
+  "initialTotal": 100,
+  "transferA": true,
+  "transferB": true,
+  "balances": [
+    {
+      "id": 1,
+      "gold": 30
+    },
+    {
+      "id": 2,
+      "gold": 80
+    },
+    {
+      "id": 3,
+      "gold": 70
+    }
+  ],
+  "finalTotal": 180,
+  "writes": [
+    {
+      "id": 1,
+      "expectedRev": 1
+    },
+    {
+      "id": 2,
+      "expectedRev": 1
+    },
+    {
+      "id": 1,
+      "expectedRev": null
+    },
+    {
+      "id": 3,
+      "expectedRev": 1
+    }
+  ],
+  "limitation": "Pure domain/store reproduction; no production DB or live API used."
+}

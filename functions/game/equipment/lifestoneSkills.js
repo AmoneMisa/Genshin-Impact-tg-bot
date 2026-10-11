@@ -17,7 +17,7 @@ const chance = (id, name, chanceBase, chancePer, mulBase, mulPer, extra = {}) =>
 export const LS_SKILLS = Object.freeze([
     passive('duel_might', 'Дуэльная мощь', 'Атака', 'attackMul', 0.015, { for: 'physical' }),
     passive('magic_power', 'Магическая мощь', 'Атака', 'attackMul', 0.015, { for: 'magic' }),
-    passive('magic_barrier', 'Магический барьер', 'Защита', 'defenceMul', 0.015),
+    passive('magic_barrier', 'Магический барьер', 'Маг. защита', 'defenceMul', 0.015, {damageType: 'magic'}),
     passive('focus', 'Фокус', 'Шанс крита', 'criticalChance', 0.8, { flat: true }),
     passive('guidance', 'Наведение', 'Точность', 'accuracy', 1.2, { flat: true }),
     passive('haste', 'Ускорение', 'Скорость боя', 'speedMul', 0.01),
@@ -29,7 +29,7 @@ export const LS_SKILLS = Object.freeze([
     active('might', 'Мощь', 'Атака', 'attackMul', 0.04, { for: 'physical' }),
     active('empower', 'Усиление', 'Атака', 'attackMul', 0.05, { for: 'magic' }),
     active('haste', 'Рывок', 'Скорость боя', 'speedMul', 0.03),
-    active('shield', 'Щит', 'Защита', 'defenceMul', 0.05),
+    active('shield', 'Щит', 'Физ. защита', 'defenceMul', 0.05, {damageType: 'physical'}),
     active('focus', 'Сосредоточение', 'Шанс крита', 'criticalChance', 2, { flat: true }),
 ].map(Object.freeze));
 
@@ -90,26 +90,29 @@ export function equippedSkills(session) {
 }
 
 /** Stat deltas of the passive skills of worn weapons. */
-export function passiveSkillModifiers(session) {
+const matchesDamage = (skill, type) => !type || !(skill.damageType || skill.for) || (skill.damageType || skill.for) === type;
+
+export function passiveSkillModifiers(session, damageType) {
     const result = {};
     for (const { skill, level } of equippedSkills(session)) {
-        if (skill.kind === 'passive') result[skill.stat] = (result[skill.stat] || 0) + bonusAt(skill, level);
+        if (skill.kind === 'passive' && matchesDamage(skill, damageType)) result[skill.stat] = (result[skill.stat] || 0) + bonusAt(skill, level);
     }
     return result;
 }
 
 /** Stat deltas of a running active skill (session.game.lsBuff = {id, level, until, readyAt}). */
-export function activeSkillModifiers(session, now = Date.now()) {
+export function activeSkillModifiers(session, now = Date.now(), damageType) {
     const buff = session?.game?.lsBuff;
     const skill = skillById(buff?.id);
-    if (!skill || skill.kind !== 'active' || number(buff.until) <= now) return {};
+    if (!skill || skill.kind !== 'active' || number(buff.until) <= now || !matchesDamage(skill, damageType)) return {};
     return { [skill.stat]: bonusAt(skill, Math.max(1, number(buff.level, 1))) };
 }
 
 /** Damage factor from the chance skills of the worn weapons: 1 when none fires. */
-export function chanceSkillFactor(chances, random = Math.random) {
+export function chanceSkillFactor(chances, random = Math.random, damageType) {
     let factor = 1;
     for (const { skill, level } of chances || []) {
+        if (!matchesDamage(skill, damageType)) continue;
         if (random() < skillChance(skill, level)) factor *= 1 + skillMultiplier(skill, level);
     }
     return factor;

@@ -32,6 +32,7 @@ import getRandom from '../../getters/getRandom.js';
 import { attributeProfile, pvpFactor } from '../equipment/attributes.js';
 import { chanceSkillFactor, equippedChanceSkills } from '../equipment/lifestoneSkills.js';
 import lodash from 'lodash';
+import {skillCombatType} from '../player/combatType.js';
 
 /**
  * Share (0..100) of a fighter's combined hp + cp pool that the opponent has NOT taken
@@ -175,6 +176,11 @@ export default function (attacker, defender, defenderIsBot = false, attackerIsBo
     }
 
     for(const [fighter,session] of [[attackerObj,attacker],[defenderObj,defender]]){
+        const gameClass = session.game?.gameClass || session.gameClass;
+        fighter.pAtk = getAttack(session, gameClass, 'physical');
+        fighter.mAtk = getAttack(session, gameClass, 'magic');
+        fighter.pDef = getDefence(session, gameClass, 'physical');
+        fighter.mDef = getDefence(session, gameClass, 'magic');
         fighter.soulSession=session?.game?{userId:session.userId,userChatData:session.userChatData,game:{...session.game,saBuffs:[...(session.game.saBuffs||[])],gameClass:{...session.game.gameClass,stats:{...session.game.gameClass.stats}}}}:null;
     }
     attackerObj.cooldowns = attackerObj.skills.map(_ => 0);
@@ -258,7 +264,8 @@ function spendCharge(fx, name) {
  * its own. Returns {damage, hits, hit} (damage already includes the arena medal).
  */
 function calculateDamage(skill, attackerObj, defenderObj, isArena, t = 0) {
-    const magic = isMagicClass(attackerObj.className);
+    const damageType = skillCombatType(skill, {name: attackerObj.className});
+    const magic = damageType === 'magic';
     const hits = Math.max(1, Math.floor(skill.hits || 1));
     let total = 0;
     let landed = 0;
@@ -266,6 +273,8 @@ function calculateDamage(skill, attackerObj, defenderObj, isArena, t = 0) {
 
     // Charges of damage / crit buffs are spent once per skill, not per hit.
     const buffs = {
+        attack: attackerObj.soulSession ? getAttack(attackerObj.soulSession, undefined, damageType) : attackerObj[magic ? 'mAtk' : 'pAtk'],
+        defence: defenderObj.soulSession ? getDefence(defenderObj.soulSession, undefined, damageType) : defenderObj[magic ? 'mDef' : 'pDef'],
         damage: chargeBuff(attackerObj.fx, 'damage'),
         critChance: chargeBuff(attackerObj.fx, 'critChance'),
         critDamage: chargeBuff(attackerObj.fx, 'critDamage'),
@@ -330,13 +339,14 @@ function calcSkillDamage(skill, attackerObj, defenderObj, buffs, t) {
         modifier *= 1 + (skill.executeBonus || 0);
     }
 
-    const defence = defenderObj.defence * (1 - active(defenderObj.fx, 'armorBreak', t));
-    dmg = 70 * attackerObj.attack / defence * modifier * attackerObj.additionalDamageMul;
+    const damageType = skillCombatType(skill, {name: attackerObj.className});
+    const defence = Math.max(1, buffs.defence * (damageType === 'physical' ? 1 - active(defenderObj.fx, 'armorBreak', t) : 1));
+    dmg = 70 * buffs.attack / defence * modifier * attackerObj.additionalDamageMul;
     dmg *= attackerObj.damageMultiplier;
     dmg *= 1 + buffs.damage / 100;
     // Weapon element against the defender's armor resistance, and Life Stone chance skills.
     dmg *= pvpFactor(attackerObj.attributes, defenderObj.attributes);
-    dmg *= chanceSkillFactor(attackerObj.chances);
+    dmg *= chanceSkillFactor(attackerObj.chances, Math.random, damageType);
 
     const critChance = Math.min(100, (attackerObj.criticalChance + (skill.critChanceBonus || 0) + getRouteBonus(skill).critBonus + buffs.critChance)*(attackerObj.soulSession?soulBackCritical(attackerObj.soulSession,skill):1));
     attackerObj.lastCritical=getRandom(1,100)<=critChance;
@@ -457,7 +467,7 @@ function useSkills(attackerObj, defenderObj, isArena = false, t = 0) {
     for (let j = 0; j < attackerObj.skills.length; j++) {
         let skill = attackerObj.skills[j];
         const damages = dealsDamage(skill);
-        if(isMagicClass(attackerObj.className)&&active(attackerObj.fx,'mute',t)>0)continue;
+        if(skillCombatType(skill,{name:attackerObj.className})==='magic'&&active(attackerObj.fx,'mute',t)>0)continue;
         const heals = skill.isHeal && !skill.isDealDamage;
         const shields = skill.isShield && !skill.isDealDamage;
         const utility = !damages && !heals && !shields;

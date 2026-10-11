@@ -95,9 +95,14 @@ const MAX_DPR = 1.5;
 const LOW_END_MAX_DPR = 1;
 
 export function startWebGL(canvas) {
+  const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const lowEnd = lowEndDevice();
+  if (motion?.matches || lowEnd || navigator.connection?.saveData) {
+    document.body.classList.add('static-effects');
+    return {transition() {}};
+  }
   const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'high-performance' });
   if (!gl) throw new Error('WebGL is not supported by this Telegram client');
-  const lowEnd = lowEndDevice();
   const frameMs = lowEnd ? LOW_END_FRAME_MS : FRAME_MS;
   const maxDpr = lowEnd ? LOW_END_MAX_DPR : MAX_DPR;
   let lastDrawn = -Infinity;
@@ -163,14 +168,19 @@ export function startWebGL(canvas) {
 
   const started = performance.now();
   let last = started;
+  let frameId = 0;
+  const paused = () => document.hidden || motion?.matches || document.body.classList.contains('modal-open');
+  function schedule() { if (!frameId && !paused() && !contextLost) frameId = requestAnimationFrame(frame); }
   function frame(now) {
+    frameId = 0;
+    if (paused() || contextLost) return;
     const dt = Math.min(.1, Math.max(0, (now - last) / 1000));
     last = now;
     const ease = 1 - Math.exp(-dt * 4.5);
     smoothPointer.x += (pointer.x - smoothPointer.x) * ease;
     smoothPointer.y += (pointer.y - smoothPointer.y) * ease;
     // Skip the draw while the app is hidden or inside the frame budget; the pointer easing above still runs.
-    if (contextLost || document.hidden || now - lastDrawn < frameMs) { requestAnimationFrame(frame); return; }
+    if (now - lastDrawn < frameMs) { schedule(); return; }
     lastDrawn = now;
     resize();
     const transitionProgress = Math.min(1, Math.max(0, (now - transitionStarted) / 720));
@@ -181,9 +191,13 @@ export function startWebGL(canvas) {
     gl.uniform1f(transitionUniform, transitionValue);
     gl.uniform3f(transitionColorUniform, transitionColor[0], transitionColor[1], transitionColor[2]);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-    requestAnimationFrame(frame);
+    schedule();
   }
-  requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange', schedule);
+  motion?.addEventListener?.('change', schedule);
+  canvas.addEventListener('webglcontextrestored', schedule);
+  new MutationObserver(schedule).observe(document.body, {attributes:true,attributeFilter:['class']});
+  schedule();
 
   return {
     transition(mode = 'default') {

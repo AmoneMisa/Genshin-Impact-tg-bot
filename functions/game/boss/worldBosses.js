@@ -12,6 +12,7 @@ import hunting from '../../../template/huntingTemplate.js';
 import catacombs from '../../../template/catacombsTemplate.js';
 import {lootInfo, itemRow} from '../hunt/lootTable.js';
 import {lifestoneKey} from '../../../template/augmentData.js';
+import {skillCombatType} from '../player/combatType.js';
 
 /** A hero this many levels away (either way) is petrified by the raid curse and gets nothing. */
 export const LEVEL_GAP = 11;
@@ -78,9 +79,10 @@ const BUFF = /(haste|might|shield|resist|buff|power|speed up|berserk|rage|concen
 const attackOf = (skill, index) => {
     const name = skill.name.replace(/^BOSS\s+/i, '');
     const key = `l2_${skill.id}_${index}`;
-    if (AREA.test(name)) return {key, name, icon: '🌋', target: 'all', power: 0.75, weight: 2, description: `${name}: hits the whole party.`};
-    if (CONTROL.test(name)) return {key, name, icon: '☠', target: 'multi', count: 2, power: 1, weight: 2, description: `${name}: hits two fighters.`};
-    return {key, name, icon: '⚔', target: 'single', power: 1.5, weight: 3, description: `${name}: hits the strongest fighter.`};
+    const damageType = skillCombatType(skill);
+    if (AREA.test(name)) return {key, name, damageType, icon: '🌋', target: 'all', power: 0.75, weight: 2, description: `${name}: hits the whole party.`};
+    if (CONTROL.test(name)) return {key, name, damageType, icon: '☠', target: 'multi', count: 2, power: 1, weight: 2, description: `${name}: hits two fighters.`};
+    return {key, name, damageType, icon: '⚔', target: 'single', power: 1.5, weight: 3, description: `${name}: hits the strongest fighter.`};
 };
 
 /** The engine attacks of a boss, from the real skills it casts. */
@@ -89,7 +91,7 @@ export function attacksOf(row) {
     const unique = [...new Map(casts.map(skill => [skill.name, skill])).values()].slice(0, 6);
     const attacks = unique.map((skill, index) => attackOf(skill, index));
     if (!attacks.some(attack => attack.target === 'single')) {
-        attacks.unshift({key: 'strike', name: 'Strike', icon: '⚔', target: 'single', power: 1.5, weight: 3, description: 'A heavy blow at the strongest fighter.'});
+        attacks.unshift({key: 'strike', name: 'Strike', damageType: 'physical', icon: '⚔', target: 'single', power: 1.5, weight: 3, description: 'A heavy blow at the strongest fighter.'});
     }
     // the strongest skill of a boss that has several is its charged ultimate
     if (attacks.length >= 3) {
@@ -153,6 +155,7 @@ export function combatOf(row) {
         armored: 0,
         ultimateEvery: 6,
         defenceRel: clamp(row.pDef / reference, 0.7, 2.5),
+        magicDefenceRel: clamp((row.mDef ?? row.pDef) / reference, 0.7, 2.5),
         magic: row.mAtk > row.pAtk,
     };
 }
@@ -176,12 +179,12 @@ export function worldTemplate(row) {
         tier,
         weight: 0,
         epic: {respawnHours, windowHours, minLevel: Math.max(1, row.level - LEVEL_GAP), maxLevel: row.level + LEVEL_GAP, jewelChance: 0},
-        world: {raid: true, npcId: row.id, level: row.level, location: `Логово ${row.name} · ${zone.title}`, zone: zone.id, race: row.race, hp: row.hp, defenceRel: combat.defenceRel, magic: combat.magic, egg: eggOf(row.level)},
+        world: {raid: true, npcId: row.id, level: row.level, location: `Логово ${row.name} · ${zone.title}`, zone: zone.id, race: row.race, hp: row.hp, defenceRel: combat.defenceRel, magicDefenceRel: combat.magicDefenceRel, magic: combat.magic, egg: eggOf(row.level)},
         art: ART[row.id % ART.length],
         description: `${row.name}: рейд-босс ${row.level} уровня. Логово — ${zone.title}.`,
         listOfDamage: [],
         availableSkills: ['reflect', 'hp_regen'],
-        stats: {attack: Math.max(1, Math.round(row.pAtk / 20)), defence: Math.max(1, Math.round(row.pDef / 20)), minDamage: Math.round(row.pAtk * 0.6), maxDamage: Math.round(row.pAtk),
+        stats: {attack: Math.max(1, Math.round(row.pAtk / 20)), defence: Math.max(1, Math.round(row.pDef / 20)), pDef: Math.max(1, Math.round(row.pDef / 20)), mDef: Math.max(1, Math.round((row.mDef ?? row.pDef) / 20)), minDamage: Math.round(row.pAtk * 0.6), maxDamage: Math.round(row.pAtk),
             criticalChance: clamp(row.critical * 10, 20, 50), criticalDamage: 1.8, lvl: 1, currentSummons: 0, needSummons: 3},
         combat: {hpMul: combat.hpMul, dangerPct: combat.dangerPct, armored: 0, ultimateEvery: combat.ultimateEvery},
         minions: [],
@@ -213,7 +216,7 @@ export function epicWorld(name) {
     return {
         ...(EPIC_RULES[name] || {}),
         npcId: id, level: row.level, location: EPIC_LOCATION[name] || nearestZone(row.level).title, zone: nearestZone(row.level).id, race: row.race,
-        hp: row.hp, defenceRel: combat.defenceRel, magic: combat.magic, egg: null, drops: dropsOf(row), dangerPct: combat.dangerPct,
+        hp: row.hp, defenceRel: combat.defenceRel, magicDefenceRel: combat.magicDefenceRel, magic: combat.magic, egg: null, drops: dropsOf(row), dangerPct: combat.dangerPct,
         jewelChance: EPIC_REFERENCE[id]?.drops.find(drop => drop.id === EPIC_REFERENCE[id].jewelId)?.chance / 100,
         reference: EPIC_REFERENCE[id]?.stats,
         attacks: row.skills.length >= 2 ? attacksOf(row) : null,

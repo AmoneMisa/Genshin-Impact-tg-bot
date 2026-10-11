@@ -22,7 +22,7 @@ async function getChatMemberCached(chatId, userId) {
     return data;
 }
 
-export default async function(chatId, userId) {
+export default async function(chatId, userId, {persist = true} = {}) {
     const userIdStr = userId.toString();
 
     let chatMemberData;
@@ -32,6 +32,11 @@ export default async function(chatId, userId) {
         throw new Error(`${chatId} ${userIdStr} - getChatMember error: ${e}`);
     }
 
+    if (!persist) {
+        const user = await User.findOne({userId:userIdStr}) || new User({...userTemplate,userId:userIdStr});
+        user.userChatData = chatMemberData;
+        return user;
+    }
     await User.updateOne(
         { userId: userIdStr },
         {

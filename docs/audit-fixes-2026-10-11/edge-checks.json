@@ -1,0 +1,54 @@
+{
+  "nestedModal": {
+    "tabTrap": true,
+    "shiftTabTrap": true,
+    "returnToParent": true,
+    "returnToBackground": true,
+    "backgroundRestored": true
+  },
+  "chestEscape": true,
+  "wallet": [
+    {
+      "gold": 33000,
+      "text": "33 000",
+      "title": "33 000",
+      "width": 103,
+      "height": 23.59375,
+      "overflow": false,
+      "whiteSpace": "nowrap"
+    },
+    {
+      "gold": 1234567,
+      "text": "1,2 млн",
+      "title": "1 234 567",
+      "width": 103,
+      "height": 23.59375,
+      "overflow": false,
+      "whiteSpace": "nowrap"
+    },
+    {
+      "gold": 9007199254740991,
+      "text": "9007,2 трлн",
+      "title": "9 007 199 254 740 991",
+      "width": 103,
+      "height": 23.59375,
+      "overflow": false,
+      "whiteSpace": "nowrap"
+    }
+  ],
+  "gpu": {
+    "active": 8,
+    "paused": 0,
+    "resumed": 8
+  },
+  "lowEnd": {
+    "static": true,
+    "hasContext": false
+  },
+  "startup": {
+    "deferredCssAbsent": true,
+    "itemCatalogAbsent": true,
+    "inventoryAbsent": true,
+    "errors": []
+  }
+}

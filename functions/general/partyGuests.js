@@ -3,7 +3,7 @@
 // records built from the shared character, kept in chat.$locals.guests (never in chat.members, so a guest does not
 // become a member of the chat). Whatever a request changes on a guest (health, loot, experience, buffs) is written back
 // to its shared record when the chat is saved (persistGuests, called by the Chat save hook).
-import {sharedOf, hashOf} from './characterSync.js';
+import {sharedOf, hashOf, characterConflict} from './characterSync.js';
 
 const guestsOf = chat => chat?.$locals?.guests || [];
 
@@ -49,5 +49,6 @@ export async function persistGuests(chat, store) {
         if (hash === guest.__baseline) continue;
         const written = await store.update(Number(guest.userId), guest.syncRev, data, hash);
         if (written) { guest.syncRev = written.rev; guest.__baseline = hash; }
+          else throw characterConflict(Number(guest.userId));
     }
 }

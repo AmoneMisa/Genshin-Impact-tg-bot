@@ -37,7 +37,7 @@
 .profile-genders button:disabled:not(.active) { opacity: .6; }
 .profile-hint { margin: 0; text-align: center; font-size: 11px; color: rgba(238, 228, 207, .6); }
 
-.profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.profile-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .profile-stats article { display: grid; grid-template-columns: 22px 1fr; gap: 6px; align-items: center; padding: 8px; border-radius: 6px; border: 1px solid rgba(216, 179, 106, .16); background: #0f0c15; }
 .profile-stats span { font-size: 16px; text-align: center; }
 .profile-stats small { display: block; font-size: 11px; color: rgba(238, 228, 207, .6); }

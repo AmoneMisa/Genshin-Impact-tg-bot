@@ -70,7 +70,8 @@ export function mobHit(session, mob, now, random = Math.random) {
     const level = Math.max(1, number(session.game.stats?.lvl, 1));
     const gap = clamp(mob.level - level, HUNT.levelHitMin, HUNT.levelHitMax);
     const base = getMaxHp(session, gameClass) * HUNT.hitPct / 100 * mob.hunt.atk * (1 + HUNT.levelHitStep * gap);
-    const mitigation = damageMitigation(getDefence(session, gameClass) * (1-fieldPvpEffect(session,'armorBreak',now)), level);
+    const damageType = mob.hunt?.magic ? 'magic' : 'physical';
+    const mitigation = damageMitigation(getDefence(session, gameClass, damageType) * (damageType === 'physical' ? 1-fieldPvpEffect(session,'armorBreak',now) : 1), level);
     const incoming = getIncomingDamageModifier(session, gameClass);
     const weaken = 1 - bossDebuffAmount(mob, 'weaken', now);
     const resist = resistFactor(attributeProfile(session).resist, mob.hunt.element, mob.hunt.attributeAttack || 0);

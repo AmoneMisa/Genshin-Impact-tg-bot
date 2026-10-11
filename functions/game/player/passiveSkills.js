@@ -13,6 +13,7 @@ import classStats from '../../../template/classStatsTemplate.js';
 import {getMaterialCount, spendMaterials, materialInfo} from './materials.js';
 import {resolveClassName} from '../classes/legacyClasses.js';
 import {CLASS_PASSIVES} from '../../../template/scrydeSpells.js';
+import {matchesCombatStat} from './combatType.js';
 
 /** Real SP -> game SP: the whole tree of a 3rd profession costs a few thousand SP, about what a hero earns. */
 export const SP_SCALE = 1 / 20000;
@@ -139,9 +140,10 @@ function conditionHolds(when, worn, session) {
 }
 
 /** The game-stat deltas one passive gives at a level: [{stat, delta, when}] (flat points or a share of the stat). */
-export function passiveDeltas(info, level) {
+export function passiveDeltas(info, level, damageType) {
     const out = [];
     for (const node of info.stats || []) {
+        if (!matchesCombatStat(node.stat, damageType)) continue;
         const map = STAT_MAP[node.stat];
         if (!map) continue;
         const value = node.value?.[Math.min(node.value.length, Math.max(1, level)) - 1];
@@ -160,7 +162,7 @@ export function passiveDeltas(info, level) {
 }
 
 /** Stat deltas of every active passive: {attackMul: 0.04, evasion: 4}. */
-export function passiveModifiers(session) {
+export function passiveModifiers(session, damageType) {
     const result = {};
     const classId = classIdOf(session);
     if (classId === undefined) return result;
@@ -168,7 +170,7 @@ export function passiveModifiers(session) {
     for (const passive of passiveTree(classId)) {
         const level = learnedLevel(session, passive.id);
         if (!level) continue;
-        for (const row of passiveDeltas(passive.info, level)) {
+        for (const row of passiveDeltas(passive.info, level, damageType)) {
             if (!conditionHolds(row.when, worn, session)) continue;
             result[row.stat] = (result[row.stat] || 0) + row.delta;
         }

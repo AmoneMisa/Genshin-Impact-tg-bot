@@ -1,0 +1,870 @@
+[
+  {
+    "width": 320,
+    "screen": "character",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "12px",
+      "border": "1px solid rgba(216, 179, 106, 0.22)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "character-meter-track",
+        "width": 241,
+        "padding": "0px",
+        "parent": "character-meter cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 241,
+        "padding": "0px",
+        "parent": "character-meter hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 241,
+        "padding": "0px",
+        "parent": "character-meter mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 274,
+        "padding": "4px 25px",
+        "parent": "character-tools",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": null,
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "inventory",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "",
+        "width": 252,
+        "padding": "0px",
+        "parent": "inv-vital cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 252,
+        "padding": "0px",
+        "parent": "inv-vital hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 252,
+        "padding": "0px",
+        "parent": "inv-vital mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-bag l2-bag",
+        "width": 278,
+        "padding": "8px",
+        "parent": "inventory-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-detail tone-mp",
+        "width": 278,
+        "padding": "12px",
+        "parent": "",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-1",
+    "focus": "BUTTON",
+    "wallet": {
+      "text": "33 000",
+      "width": 103,
+      "height": 23.59375,
+      "lineHeight": "15.6px"
+    },
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "fishing",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 585.0625,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "fishing-scene",
+        "width": 278,
+        "padding": "0px",
+        "parent": "mmo-frame",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-2",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "luck-shop",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "feedback-intro",
+        "width": 278,
+        "padding": "12px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "clan-play",
+        "width": 278,
+        "padding": "6px 16px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-stock",
+        "width": 278,
+        "padding": "8px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-selection",
+        "width": 278,
+        "padding": "14px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "shop-price",
+        "width": 248,
+        "padding": "9px 18px",
+        "parent": "luck-selection",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-3",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "arcade",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 642.75,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "arcade-tabs",
+        "width": 278,
+        "padding": "0px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-stage as-basketball painted-game",
+        "width": 278,
+        "padding": "0px",
+        "parent": "arcade-arena",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-btn gold",
+        "width": 278,
+        "padding": "8px 14px",
+        "parent": "",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-4",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "chest",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 505.78125,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "chest-possible",
+        "width": 278,
+        "padding": "10px 12px",
+        "parent": "overlay-panel chest-panel",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-5",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "exchange",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 472.734375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "ex-altar",
+        "width": 278,
+        "padding": "18px 10px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "exchange-buy",
+        "width": 278,
+        "padding": "1px 6px",
+        "parent": "exchange-form",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-6",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "warehouse",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 666.375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "stock-grid",
+        "width": 278,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "stock-grid",
+        "width": 278,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-7",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "shop",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 613,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-8",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "feedback",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 538.0625,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "",
+        "width": 278,
+        "padding": "15px 16px",
+        "parent": "feedback-field",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "feedback-submit",
+        "width": 278,
+        "padding": "13px 18px",
+        "parent": "feedback-card",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-9",
+    "focus": "BUTTON",
+    "focusAfterLastTab": "<button class=\"overlay-close ds-round\" type=\"button\" aria-label=\"Закрыть\"><img class=\"ui-icon ui-icon-chevron-left\" src=\"/art/ui/v1/chevron-right-128.webp\" srcs",
+    "focusAfterSecondTab": "<textarea rows=\"8\" maxlength=\"3000\" placeholder=\"Опиши, что случилось или что хочется изменить…\" data-feedback-message=\"\"></textarea>",
+    "errors": []
+  },
+  {
+    "width": 320,
+    "screen": "help",
+    "panel": {
+      "width": 304,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 302,
+      "clientWidth": 302
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-10",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "character",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "12px",
+      "border": "1px solid rgba(216, 179, 106, 0.22)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "character-meter-track",
+        "width": 311,
+        "padding": "0px",
+        "parent": "character-meter cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 311,
+        "padding": "0px",
+        "parent": "character-meter hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "character-meter-track",
+        "width": 311,
+        "padding": "0px",
+        "parent": "character-meter mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 344,
+        "padding": "4px 25px",
+        "parent": "character-tools",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": null,
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "inventory",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "",
+        "width": 322,
+        "padding": "0px",
+        "parent": "inv-vital cp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 322,
+        "padding": "0px",
+        "parent": "inv-vital hp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "",
+        "width": 322,
+        "padding": "0px",
+        "parent": "inv-vital mp",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-bag l2-bag",
+        "width": 348,
+        "padding": "8px",
+        "parent": "inventory-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "inv-detail tone-mp",
+        "width": 348,
+        "padding": "12px",
+        "parent": "",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-1",
+    "focus": "BUTTON",
+    "wallet": {
+      "text": "33 000",
+      "width": 138,
+      "height": 23.59375,
+      "lineHeight": "15.6px"
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "fishing",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 598.53125,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "fishing-scene",
+        "width": 348,
+        "padding": "0px",
+        "parent": "mmo-frame",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-2",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "luck-shop",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "feedback-intro",
+        "width": 348,
+        "padding": "12px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "clan-play",
+        "width": 348,
+        "padding": "6px 16px",
+        "parent": "luck-wallet",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-stock",
+        "width": 348,
+        "padding": "8px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "luck-selection",
+        "width": 348,
+        "padding": "14px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "shop-price",
+        "width": 318,
+        "padding": "9px 18px",
+        "parent": "luck-selection",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-3",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "arcade",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 686.5,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "arcade-tabs",
+        "width": 348,
+        "padding": "0px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-stage as-basketball painted-game",
+        "width": 348,
+        "padding": "0px",
+        "parent": "arcade-arena",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "arcade-btn gold",
+        "width": 348,
+        "padding": "8px 14px",
+        "parent": "",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-4",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "chest",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 585.765625,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "chest-possible",
+        "width": 348,
+        "padding": "10px 12px",
+        "parent": "overlay-panel chest-panel",
+        "parentBorder": "1px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-5",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "exchange",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 472.734375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "ex-altar",
+        "width": 348,
+        "padding": "18px 10px",
+        "parent": "",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "exchange-buy",
+        "width": 348,
+        "padding": "1px 6px",
+        "parent": "exchange-form",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-6",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "warehouse",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 562.375,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "stock-grid",
+        "width": 348,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "stock-grid",
+        "width": 348,
+        "padding": "5px",
+        "parent": "stock-section",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-7",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "shop",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 613,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-8",
+    "focus": "BUTTON",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "feedback",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 538.0625,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [
+      {
+        "class": "",
+        "width": 348,
+        "padding": "15px 16px",
+        "parent": "feedback-field",
+        "parentBorder": "0px"
+      },
+      {
+        "class": "feedback-submit",
+        "width": 348,
+        "padding": "13px 18px",
+        "parent": "feedback-card",
+        "parentBorder": "0px"
+      }
+    ],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-9",
+    "focus": "BUTTON",
+    "focusAfterLastTab": "<button class=\"overlay-close ds-round\" type=\"button\" aria-label=\"Закрыть\"><img class=\"ui-icon ui-icon-chevron-left\" src=\"/art/ui/v1/chevron-right-128.webp\" srcs",
+    "focusAfterSecondTab": "<textarea rows=\"8\" maxlength=\"3000\" placeholder=\"Опиши, что случилось или что хочется изменить…\" data-feedback-message=\"\"></textarea>",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "screen": "help",
+    "panel": {
+      "width": 374,
+      "x": 8,
+      "y": 8,
+      "height": 704,
+      "padding": "14px 12px 16px",
+      "border": "1px solid rgb(107, 83, 38)",
+      "radius": "14px",
+      "scrollWidth": 372,
+      "clientWidth": 372
+    },
+    "pageOverflow": false,
+    "smallButtons": [],
+    "frames": [],
+    "blurLayers": [],
+    "modalName": "game-dialog-title-10",
+    "focus": "BUTTON",
+    "errors": []
+  }
+]

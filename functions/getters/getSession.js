@@ -3,6 +3,7 @@ import getChatSession from "./getChatSession.js";
 import getUser from "./getUser.js";
 import { attachGuests } from "../general/partyGuests.js";
 import { characterStore, guestUsers } from "../general/characterStore.js";
+import {withLock} from '../general/chatLock.js';
 
 /**
  * Гарантированно возвращает участника чата:
@@ -12,9 +13,10 @@ import { characterStore, guestUsers } from "../general/characterStore.js";
  * - не допускает дублей в Chat.members
  * - возвращает Mongoose subdocument, пригодный для сохранения
  */
-export default async function(chatId, userId) {
+export default async function(chatId, userId, {persist = true} = {}) {
+    return withLock(String(chatId), async () => {
     const userIdStr = userId.toString();
-    const chat = await getChatSession(chatId);
+    const chat = await getChatSession(chatId, {create:persist});
 
     let memberIndex = chat.members.findIndex(m => m.userId?.toString() === userIdStr);
     let dirty = false;
@@ -33,14 +35,14 @@ export default async function(chatId, userId) {
     const member = chat.members[memberIndex];
     member.userId = userId;
 
-    const user = await getUser(chatId, userId);
+    const user = await getUser(chatId, userId, {persist});
     const before = JSON.stringify(member.toObject?.() ?? member);
     member.userChatData = user.userChatData;
 
     getLostFieldsInSession(member);
     // Only write when something actually changed: this runs on every request,
     // and a needless whole-document save can clobber concurrent updates.
-    if (dirty || JSON.stringify(member.toObject?.() ?? member) !== before) {
+    if (persist && (dirty || JSON.stringify(member.toObject?.() ?? member) !== before)) {
         chat.markModified(`members.${memberIndex}`);
         await chat.save();
     }
@@ -50,4 +52,5 @@ export default async function(chatId, userId) {
     if (partyIds.length) await attachGuests(chat, { partyIds }, { store: characterStore, users: guestUsers });
 
     return member;
+    });
 }

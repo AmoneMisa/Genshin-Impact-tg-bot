@@ -10,6 +10,20 @@ import worldFixes from './uz-world-fixes.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
+  'Не удалось загрузить оформление. Попробуйте открыть окно ещё раз.': "Bezakni yuklab bo'lmadi. Oynani yana ochib ko'ring.",
+  'Окно игры': "O'yin oynasi",
+  'Открой игру командой /play или /start. Здания в городе открывают игры, инвентарь, постройки и анкеты.': "O'yinni /play yoki /start buyrug'i bilan oching. Shahardagi binolar o'yinlar, inventar, inshootlar va anketalarni ochadi.",
+  'Нашёл баг или есть идея? Открой «Связь с разработчиком» в Mini App.': "Xato topdingizmi yoki fikringiz bormi? Mini App ichida «Dasturchi bilan aloqa»ni oching.",
+  'Физ. атака': 'Jism. hujum',
+  'Маг. атака': 'Sehr. hujum',
+  'Физ. защита': 'Jism. himoya',
+  'Маг. защита': 'Sehr. himoya',
+  'Физ. атака {1}': 'Jism. hujum {1}',
+  'Маг. атака {2}': 'Sehr. hujum {2}',
+  'Физ. защита {3}': 'Jism. himoya {3}',
+  'Маг. защита {4}': 'Sehr. himoya {4}',
+  'Стать: {9}': "Bo'lish: {9}",
+  'Физическая защита +15% на 20 минут.': 'Jismoniy himoya 20 daqiqaga +15%.',
   ...character,
   ...customSets,
   ...classTree,

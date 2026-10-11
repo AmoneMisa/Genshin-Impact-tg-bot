@@ -1,0 +1,70 @@
+{
+  "modules": 104,
+  "jsBytes": 1200897,
+  "jsGzip": 345288,
+  "cssFiles": 53,
+  "cssBytes": 492086,
+  "cssGzip": 98274,
+  "largestModules": [
+    {
+      "file": "webapp/art/l2-icon-art.js",
+      "bytes": 159804,
+      "gzip": 23605
+    },
+    {
+      "file": "webapp/art/l2-effects-art.js",
+      "bytes": 70224,
+      "gzip": 13655
+    },
+    {
+      "file": "webapp/clan.js",
+      "bytes": 52987,
+      "gzip": 12686
+    },
+    {
+      "file": "webapp/hunt.js",
+      "bytes": 39847,
+      "gzip": 13169
+    },
+    {
+      "file": "webapp/equipment.js",
+      "bytes": 39012,
+      "gzip": 10306
+    },
+    {
+      "file": "webapp/l2-boss-art.js",
+      "bytes": 36735,
+      "gzip": 5647
+    },
+    {
+      "file": "webapp/art/l2-class-skill-art.js",
+      "bytes": 34375,
+      "gzip": 8437
+    },
+    {
+      "file": "webapp/boss.js",
+      "bytes": 32341,
+      "gzip": 9870
+    },
+    {
+      "file": "webapp/art/catalog-item-art.js",
+      "bytes": 27606,
+      "gzip": 3011
+    },
+    {
+      "file": "webapp/world-map.js",
+      "bytes": 27532,
+      "gzip": 9069
+    },
+    {
+      "file": "webapp/boss-stage.js",
+      "bytes": 24387,
+      "gzip": 8223
+    },
+    {
+      "file": "webapp/character.js",
+      "bytes": 24150,
+      "gzip": 8002
+    }
+  ]
+}

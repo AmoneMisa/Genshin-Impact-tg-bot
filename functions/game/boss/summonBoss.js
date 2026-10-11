@@ -73,6 +73,8 @@ export default async function(chatId, template = null, {memberCount = null, hero
         boss.world = {npcId: world.npcId, level, baseLevel: world.level, location: world.location, adaptive: Boolean(world.adaptive), instance: Boolean(world.instance)};
         boss.hunt = {
             defence: heroStats(level).attack * HUNT.defencePerAttack / HUNT.damageScale * world.defenceRel,
+            pDef: heroStats(level).attack * HUNT.defencePerAttack / HUNT.damageScale * world.defenceRel,
+            mDef: heroStats(level).attack * HUNT.defencePerAttack / HUNT.damageScale * (world.magicDefenceRel ?? world.defenceRel),
             element: bossTemplate.element || null, magic: world.magic,
         };
         boss.markModified('world');

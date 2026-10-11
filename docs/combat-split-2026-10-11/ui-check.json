@@ -1,0 +1,430 @@
+[
+  {
+    "width": 320,
+    "large": false,
+    "columns": "132px 132px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака33 000",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Маг. атака16 500",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Физ. защита4 500",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Маг. защита3 000",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Скорость60",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Точность20",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Уклонение15",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Шанс крита5",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Крит. урон1,5",
+        "overflow": false,
+        "width": 132
+      }
+    ],
+    "errors": [],
+    "screenshot": "character-320.png"
+  },
+  {
+    "width": 320,
+    "large": false,
+    "columns": "136px 136px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака33 000",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Маг. атака16 500",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Физ. защита4 500",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Маг. защита3 000",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "HP5 000",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "MP400",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "CP600",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Скорость60",
+        "overflow": false,
+        "width": 134
+      }
+    ],
+    "errors": [],
+    "screenshot": "profile-320.png"
+  },
+  {
+    "width": 320,
+    "large": true,
+    "columns": "132px 132px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Маг. атака2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Физ. защита2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Маг. защита2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Скорость2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Точность2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Уклонение2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Шанс крита2 147 483 647",
+        "overflow": false,
+        "width": 132
+      },
+      {
+        "text": "Крит. урон2 147 483 647",
+        "overflow": false,
+        "width": 132
+      }
+    ],
+    "errors": [],
+    "screenshot": "character-320-large.png"
+  },
+  {
+    "width": 320,
+    "large": true,
+    "columns": "136px 136px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака2 147 483 647",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Маг. атака2 147 483 647",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Физ. защита2 147 483 647",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Маг. защита2 147 483 647",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "HP5 000",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "MP400",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "CP600",
+        "overflow": false,
+        "width": 134
+      },
+      {
+        "text": "Скорость60",
+        "overflow": false,
+        "width": 134
+      }
+    ],
+    "errors": [],
+    "screenshot": "profile-320-large.png"
+  },
+  {
+    "width": 390,
+    "large": false,
+    "columns": "167px 167px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака33 000",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Маг. атака16 500",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Физ. защита4 500",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Маг. защита3 000",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Скорость60",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Точность20",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Уклонение15",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Шанс крита5",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Крит. урон1,5",
+        "overflow": false,
+        "width": 167
+      }
+    ],
+    "errors": [],
+    "screenshot": "character-390.png"
+  },
+  {
+    "width": 390,
+    "large": false,
+    "columns": "171px 171px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака33 000",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Маг. атака16 500",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Физ. защита4 500",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Маг. защита3 000",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "HP5 000",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "MP400",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "CP600",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Скорость60",
+        "overflow": false,
+        "width": 169
+      }
+    ],
+    "errors": [],
+    "screenshot": "profile-390.png"
+  },
+  {
+    "width": 390,
+    "large": true,
+    "columns": "167px 167px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Маг. атака2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Физ. защита2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Маг. защита2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Скорость2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Точность2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Уклонение2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Шанс крита2 147 483 647",
+        "overflow": false,
+        "width": 167
+      },
+      {
+        "text": "Крит. урон2 147 483 647",
+        "overflow": false,
+        "width": 167
+      }
+    ],
+    "errors": [],
+    "screenshot": "character-390-large.png"
+  },
+  {
+    "width": 390,
+    "large": true,
+    "columns": "171px 171px",
+    "pageOverflow": false,
+    "panelOverflow": false,
+    "rows": [
+      {
+        "text": "Физ. атака2 147 483 647",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Маг. атака2 147 483 647",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Физ. защита2 147 483 647",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Маг. защита2 147 483 647",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "HP5 000",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "MP400",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "CP600",
+        "overflow": false,
+        "width": 169
+      },
+      {
+        "text": "Скорость60",
+        "overflow": false,
+        "width": 169
+      }
+    ],
+    "errors": [],
+    "screenshot": "profile-390-large.png"
+  }
+]

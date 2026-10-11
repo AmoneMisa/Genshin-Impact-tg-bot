@@ -1,3 +1,4 @@
+const walletNumber = value => new Intl.NumberFormat('ru-RU',{notation:Number(value)>=1e6?'compact':'standard',maximumFractionDigits:1}).format(value||0);
 import {openWarehouseGame} from './warehouse.js';
 import {openTradeGame} from './trade.js';
 import {stockQuantity} from './stock-quantity.js';
@@ -195,7 +196,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <div class="inventory-title"><small>${state.slots ? `${formatNumber(state.slots.used)} / ${formatNumber(state.slots.capacity)}` : ''}</small></div>
       </section>
       ${detailHtml()}
-      <footer class="inventory-footer"><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong>${formatNumber(state.resources.gold)}</strong></span><span class="inventory-col" title="Монеты удачи">${luckCoinHtml(24)}<strong>${formatNumber(state.resources.luckCoins)}</strong></span><button type="button" data-inventory-discard ${!item||item.isUsed||item.augment?.current?'disabled':''}>Выбросить</button></div><div class="inventory-tools"><button type="button" data-inventory-crystallize ${selectedKind!=='equipment'||!item?.enchantable||item.isUsed||item.timed?'disabled':''}>Кристаллизация</button><button type="button" data-inventory-auction ${!row||item.isUsed||item.timed||selectedKind==='equipment'&&!item.uid?'disabled':''}>Выставить на аукцион</button><button type="button" data-inventory-craft>Крафт</button></div></footer>`;
+      <footer class="inventory-footer"><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong title="${formatNumber(state.resources.gold)}">${walletNumber(state.resources.gold)}</strong></span><span class="inventory-col" title="Монеты удачи">${luckCoinHtml(24)}<strong title="${formatNumber(state.resources.luckCoins)}">${walletNumber(state.resources.luckCoins)}</strong></span></div><div class="inventory-tools"><button type="button" data-inventory-discard ${!item||item.isUsed||item.augment?.current?'disabled':''}>Выбросить</button><button type="button" data-inventory-crystallize ${selectedKind!=='equipment'||!item?.enchantable||item.isUsed||item.timed?'disabled':''}>Кристаллизация</button><button type="button" data-inventory-auction ${!row||item.isUsed||item.timed||selectedKind==='equipment'&&!item.uid?'disabled':''}>Выставить на аукцион</button><button type="button" data-inventory-craft>Крафт</button></div></footer>`;
     bind();
     // Vitals glide from the pre-potion value to the new one.
     requestAnimationFrame(() => content.querySelectorAll('[data-fill]').forEach(fill => { fill.style.width = `${fill.dataset.fill}%`; }));

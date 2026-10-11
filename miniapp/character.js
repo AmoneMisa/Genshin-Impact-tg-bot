@@ -61,7 +61,10 @@ export function getCharacterState(session, context = {}, now = Date.now()) {
   const state = createMiniAppState(session, context);
   const raw = session?.game?.gameClass?.stats || {};
   const getters = [
-    ['attack','Атака',getAttack,raw.attack], ['defence','Защита',getDefence,raw.defence],
+    ['pAtk','Физ. атака',s=>getAttack(s,s.game.gameClass,'physical'),raw.pAtk ?? raw.attack],
+    ['mAtk','Маг. атака',s=>getAttack(s,s.game.gameClass,'magic'),raw.mAtk ?? raw.attack],
+    ['pDef','Физ. защита',s=>getDefence(s,s.game.gameClass,'physical'),raw.pDef ?? raw.defence],
+    ['mDef','Маг. защита',s=>getDefence(s,s.game.gameClass,'magic'),raw.mDef ?? raw.defence],
     ['speed','Скорость',getSpeed,raw.speed], ['accuracy','Точность',getAccuracy,raw.accuracy],
     ['evasion','Уклонение',getEvasion,raw.evasion], ['criticalChance','Шанс крита',getCriticalChance,raw.criticalChance],
     ['criticalDamage','Крит. урон',getCriticalDamage,raw.criticalDamage],
