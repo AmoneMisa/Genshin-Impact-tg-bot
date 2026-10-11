@@ -19,6 +19,7 @@ import { rollCraftDrops } from "../equipment/craftItem.js";
 import { recordQuestEvent } from "../classes/classQuests.js";
 import { recordAcademyEvent } from "../academy/academy.js";
 import { giveBuffPotionDrop } from "./buffPotionDrops.js";
+import { adaptiveDrops } from "./worldBosses.js";
 
 export default async function(boss, chatId) {
     if (boss.currentHp > 0) {
@@ -49,7 +50,11 @@ export default async function(boss, chatId) {
         const loot = getBossLoot(boss);
 
         // x5 rate and Vitality bonus, see functions/game/player/vitality.js
-        const {gained: expAmount} = gainExp(member, getExperienceReward(i, loot));
+        // an adaptive epic pays by the level of the hero: the experience follows it above the original level of the boss
+        const adaptiveFactor = template?.world?.adaptive
+            ? Math.max(1, Math.min(4, (Number(member.game.stats?.lvl) || 1) / Math.max(1, Number(template.world.level) || 1)))
+            : 1;
+        const {gained: expAmount} = gainExp(member, Math.round(getExperienceReward(i, loot) * adaptiveFactor));
 
         const gotGold = getGoldReward(i, loot);
         member.game.inventory.gold += gotGold;
@@ -158,7 +163,10 @@ export default async function(boss, chatId) {
 
 /** Skill points and upgrade materials for one fighter; the top three get better odds. */
 function getBossDrops(template, member, place) {
-    const drops = template?.drops;
+    // an adaptive epic drops Life Stones of the level of the hero
+    const drops = template?.world?.adaptive && template.drops
+        ? adaptiveDrops(template.drops, Math.max(Number(template.world.level) || 1, Number(member.game.stats?.lvl) || 1))
+        : template?.drops;
     // Enchant scrolls and crystals of the fighter's own gear grade drop from every boss.
     const enchantItems = [
         ...rollEnchantDrops(member, {tier: template?.tier || 1, place}),

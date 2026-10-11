@@ -10,14 +10,18 @@ import { spawnMinions } from './bossUnits.js';
 import lodash from 'lodash';
 import {referenceHit, heroStats} from '../hunt/huntMobs.js';
 import {HUNT} from '../hunt/huntConfig.js';
+import {CASTS_PER_PARTY_MEMBER, HP_CAST_CAP} from './worldBosses.js';
+import {partyNeeded} from '../../../template/epicPasses.js';
 
 /** Hit points of a world boss: the casts a bare warrior of its level needs, from the real hit points of the data. */
-function worldHp(world) {
-    const casts = Math.max(150, Math.min(4000, Math.round(Math.sqrt(world.hp / 1000) * 12)));
-    return Math.max(1, Math.round(casts * referenceHit(world.level, 'warrior')));
+function worldHp(world, level, partyMin) {
+    const real = Math.max(150, Math.round(Math.sqrt(world.hp / 1000) * 12));
+    // a boss that asks for a party is sized by it: one hero cannot land that many casts in the time of the fight
+    const casts = Math.min(HP_CAST_CAP, Math.max(real, partyMin * CASTS_PER_PARTY_MEMBER));
+    return Math.max(1, Math.round(casts * referenceHit(level, 'warrior')));
 }
 
-export default async function(chatId, template = null, {memberCount = null} = {}) {
+export default async function(chatId, template = null, {memberCount = null, heroLevel = null} = {}) {
     let bossTemplate = template || getRandomBoss();
     let boss = await getBossByName(chatId, bossTemplate.name);
 
@@ -32,7 +36,9 @@ export default async function(chatId, template = null, {memberCount = null} = {}
 
     const now = Date.now();
     boss.skill = getBossSkill(boss.name);
-    boss.hp = world ? worldHp(world) : await getBossHp(boss.skill, chatId, bossTemplate, memberCount);
+    // an adaptive epic has the level of the hero who calls it (never below its own)
+    const level = world ? (world.adaptive ? Math.max(world.level, Number(heroLevel) || 0) : world.level) : 0;
+    boss.hp = world ? worldHp(world, level, partyNeeded(bossTemplate.name)) : await getBossHp(boss.skill, chatId, bossTemplate, memberCount);
     boss.currentHp = boss.hp;
     boss.listOfDamage = [];
     boss.aliveTime = now + 15 * 60 * 1000;
@@ -64,9 +70,9 @@ export default async function(chatId, template = null, {memberCount = null} = {}
 
     if (world) {
         // a monster of the real level: its defence follows the hunting formulas, so the damage of a hero is what it is on the fields
-        boss.world = {npcId: world.npcId, level: world.level, location: world.location};
+        boss.world = {npcId: world.npcId, level, baseLevel: world.level, location: world.location, adaptive: Boolean(world.adaptive), instance: Boolean(world.instance)};
         boss.hunt = {
-            defence: heroStats(world.level).attack * HUNT.defencePerAttack / HUNT.damageScale * world.defenceRel,
+            defence: heroStats(level).attack * HUNT.defencePerAttack / HUNT.damageScale * world.defenceRel,
             element: bossTemplate.element || null, magic: world.magic,
         };
         boss.markModified('world');

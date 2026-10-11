@@ -1702,8 +1702,13 @@ const arenaAttack = guarded('arena attack', async (req, res) => {
 // and fights in the hidden chat of the clan (clanScope.js). Without a clan there is no clan boss (scope 0).
 async function bossScope(context, worldName = null) {
   if (worldName) {
-    const scope = scopeOfName(String(worldName));
+    let scope = scopeOfName(String(worldName));
     if (scope === null) throw httpError(404, 'unknown world boss');
+    // an instance: the copy of the hero's party (no party: a scope where no boss ever stands)
+    if (EPIC_RULES[String(worldName)]?.instance) {
+      const partyId = context.session?.game?.party?.id;
+      scope = partyId ? instanceScopeId(String(worldName), partyId) : worldScopeId(1);
+    }
     return { scope, clan: null, world: String(worldName) };
   }
   const clan = await getClan(Number(context.userId));
@@ -1722,8 +1727,8 @@ const bossState = guarded('boss state', async (req, res, requestUrl) => {
 });
 
 const bossEpic = guarded('boss epic', async (req, res) => {
-  await authorize(req);
-  return sendJson(res, 200, await getEpicState());
+  const context = await authorize(req);
+  return sendJson(res, 200, await getEpicState(context.session));
 });
 
 const bossSummon = guarded('boss summon', async (req, res) => {

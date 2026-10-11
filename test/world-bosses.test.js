@@ -73,3 +73,29 @@ test('a petrified hero cannot use a skill; bounties give the clan boss sigil rar
     assert.ok(hero && bounty);
     assert.equal(getMaterialCount(hero, 'clan_boss_token'), 0);
 });
+
+test('pass bosses need a party and are sized by it; instances and adaptive epics follow their rules', async () => {
+    const {partyNeeded} = await import('../template/epicPasses.js');
+    const {EPIC_RULES, instanceScopeId, INSTANCE_LOCK_MS, CASTS_PER_PARTY_MEMBER, HP_CAST_CAP, adaptiveDrops, BOSS_GCD_MS} = await import('../functions/game/boss/worldBosses.js');
+    for (const name of ['zaken', 'baium', 'frintezza', 'antharas', 'valakas']) assert.ok(partyNeeded(name) >= 2, name);
+    for (const name of ['queenAnt', 'core', 'orfen']) assert.equal(partyNeeded(name), 0, name);
+    // a party of the required size has to land this many casts: more than one hero fits in a fight of fifteen minutes
+    const heroCasts = 15 * 60 * 1000 / BOSS_GCD_MS;
+    for (const name of ['baium', 'antharas', 'valakas']) {
+        assert.ok(Math.min(HP_CAST_CAP, partyNeeded(name) * CASTS_PER_PARTY_MEMBER) > heroCasts, `${name} cannot be solo`);
+    }
+    assert.ok(EPIC_RULES.zaken.instance && EPIC_RULES.frintezza.instance);
+    assert.equal(INSTANCE_LOCK_MS, 3 * 24 * 3600 * 1000);
+    assert.notEqual(instanceScopeId('zaken', 'p1'), instanceScopeId('zaken', 'p2'));
+    assert.equal(instanceScopeId('zaken', 'p1'), instanceScopeId('zaken', 'p1'));
+
+    for (const name of ['queenAnt', 'core', 'orfen']) {
+        const boss = getEpicTemplate(name);
+        assert.ok(boss.world.adaptive, name);
+        assert.equal(boss.epic.minLevel, boss.world.level, 'from the original level');
+        assert.equal(boss.epic.maxLevel, null, 'no ceiling');
+    }
+    const core = getEpicTemplate('core');
+    assert.ok(adaptiveDrops(core.drops, 80).items.some(item => /^lifestone_S80/.test(item.item)));
+    assert.ok(adaptiveDrops(core.drops, 40).items.some(item => item.item === 'lifestone_C'));
+});

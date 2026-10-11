@@ -73,4 +73,11 @@ export default {
   "Ты вступаешь в бой.": "Sen jangga kirasan.",
   "Убит {9} раз": "{9} marta o'ldirilgan",
   "Эпики и рейд-боссы живут в своих логовах и общие для всех игроков. Разница в уровне больше {0} превращает героя в камень и лишает награды. Клановый босс призывается Печатью клана.": "Epiklar va reyd bosslari o'z makonlarida yashaydi va barcha o'yinchilar uchun umumiy. Darajadagi farq {0} dan oshsa, qahramon toshga aylanadi va mukofotdan mahrum bo'ladi. Klan bossi Klan muhri bilan chaqiriladi.",
+  "Адаптивный: от уровня босса и выше, сила и награда растут с твоим уровнем": "Moslashuvchan: boss darajasidan boshlab va undan yuqori, kuch va mukofot darajang bilan o'sadi",
+  "Возрождение {0}–{1} ч": "Qayta tug'ilish {0}–{1} soat",
+  "Дроп: {13} предметов{14} · Камни жизни": "O'lja: {13} ta buyum{14} · Hayot toshlari",
+  "Инстанс уже пройден: следующий вход и награда доступны через трое суток.": "Instans allaqachon o'tilgan: keyingi kirish va mukofot uch kundan keyin.",
+  "Инстанс: вход группой от {0} · награда и вход раз в 3 суток для каждого": "Instans: {0} kishidan guruh bilan kirish · har bir kishi uchun mukofot va kirish 3 sutkada bir marta",
+  "Нужна группа от {0} игроков": "{0} o'yinchidan guruh kerak",
+  "Убит {8} раз": "{8} marta o'ldirilgan",
 };

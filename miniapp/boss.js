@@ -17,7 +17,7 @@ import { recordQuestEvent } from '../functions/game/classes/classQuests.js';
 import { hasEpicPass, consumeEpicPass } from '../functions/game/academy/academy.js';
 import { needsPass, partyNeeded, leaderOnly } from '../template/epicPasses.js';
 import { partyState } from '../functions/game/party/party.js';
-import { LEVEL_GAP, scopeOfName } from '../functions/game/boss/worldBosses.js';
+import { LEVEL_GAP, scopeOfName, INSTANCE_LOCK_MS, BOSS_GCD_MS, instanceScopeId, EPIC_RULES } from '../functions/game/boss/worldBosses.js';
 import Boss from '../db/models/Boss.js';
 import { getMaterialCount, spendMaterials } from '../functions/game/player/materials.js';
 import { bossDebuffList, isBossStunned } from '../functions/game/boss/bossDebuffs.js';
@@ -325,18 +325,32 @@ export async function getBossState(session, chatId, now = Date.now()) {
   };
 }
 
+const lockOf = (session, name) => session?.game?.instanceLocks?.[name] || null;
+
 /** The world bosses (epics and raid bosses of the real data) with where they stand, their respawn timers and fights. */
-export async function getEpicState(now = Date.now()) {
+export async function getEpicState(session = null, now = Date.now()) {
   const templates = worldBossTemplates();
-  const scopes = templates.map(template => scopeOfName(template.name)).filter(id => id !== null);
+  const scopes = templates.filter(template => !EPIC_RULES[template.name]?.instance).map(template => scopeOfName(template.name)).filter(id => id !== null);
+  const partyId = session?.game?.party?.id || null;
+  // the copies of the instanced bosses of the hero's party
+  const instances = partyId ? templates.filter(template => EPIC_RULES[template.name]?.instance).map(template => ({ name: template.name, scope: instanceScopeId(template.name, partyId) })) : [];
   const [chats, alive] = await Promise.all([
     Chat.find({ chatId: { $in: scopes } }, { chatId: 1, epicBosses: 1 }).lean(),
-    Boss.find({ chatId: { $in: scopes }, currentHp: { $gt: 0 }, aliveTime: { $gt: now } }, { name: 1, hp: 1, currentHp: 1 }).lean(),
+    Boss.find({ chatId: { $in: [...scopes, ...instances.map(item => item.scope)] }, currentHp: { $gt: 0 }, aliveTime: { $gt: now } }, { name: 1, hp: 1, currentHp: 1 }).lean(),
   ]);
   const records = {};
   for (const chat of chats) Object.assign(records, chat.epicBosses || {});
   const fighting = Object.fromEntries(alive.map(boss => [boss.name, percent(number(boss.currentHp), number(boss.hp))]));
-  return { bosses: worldBossList(records, fighting, now) };
+  const list = worldBossList(records, fighting, now).map(entry => {
+    const rules = EPIC_RULES[entry.name] || {};
+    const extra = { adaptive: Boolean(rules.adaptive), instance: Boolean(rules.instance) };
+    if (!rules.instance) return { ...entry, ...extra };
+    // an instance has no shared timer: the hero's own lock of three days decides
+    const lock = lockOf(session, entry.name);
+    const remainMs = Math.max(0, number(lock?.until) - now);
+    return { ...entry, ...extra, available: remainMs === 0, remainMs, respawnAt: remainMs ? number(lock.until) : 0, hasParty: Boolean(partyId) };
+  });
+  return { bosses: list };
 }
 
 // An unfought ordinary boss (nobody has hit it yet) makes way for an epic challenge.
@@ -375,6 +389,13 @@ export async function summonBossForMiniApp(session, chatId, epicName = null, {me
     if (partyMin && (group?.members.length || 0) < partyMin) {
       return { ok: false, reason: 'epic_party_required', minParty: partyMin, boss: await getBossState(session, chatId) };
     }
+    // an instance: each hero enters it once in three days (the reward comes with the entry)
+    if (epicTemplate.world?.instance) {
+      const lockedMember = (group?.members || [session]).find(member => number(lockOf(member, epicName)?.until) > Date.now());
+      if (lockedMember) {
+        return { ok: false, reason: 'instance_locked', remainMs: number(lockOf(lockedMember, epicName).until) - Date.now(), boss: await getBossState(session, chatId) };
+      }
+    }
     // the pass: the summoner's own, or only the party leader's for a boss that takes a full party
     passHolder = session;
     if (needsPass(epicName) && leaderOnly(epicName) && group) {
@@ -383,7 +404,7 @@ export async function summonBossForMiniApp(session, chatId, epicName = null, {me
     if (needsPass(epicName) && !hasEpicPass(passHolder, epicName)) {
       return { ok: false, reason: 'epic_pass_required', leaderOnly: leaderOnly(epicName), boss: await getBossState(session, chatId) };
     }
-    const status = epicStatus(chat, epicName);
+    const status = epicTemplate.world?.instance ? { available: true } : epicStatus(chat, epicName);
     if (!status.available) {
       return { ok: false, reason: 'epic_cooldown', remainMs: status.remainMs, respawnAt: status.respawnAt, boss: await getBossState(session, chatId) };
     }
@@ -396,7 +417,16 @@ export async function summonBossForMiniApp(session, chatId, epicName = null, {me
     }
   }
 
-  const boss = await summonBoss(chatId, epicTemplate, {memberCount});
+  const boss = await summonBoss(chatId, epicTemplate, {memberCount, heroLevel: number(session?.game?.stats?.lvl, 1)});
+  if (epicTemplate?.world?.instance) {
+    // every member of the party enters with the summoner: three days until the next entry and the next reward
+    const group = partyState(await Chat.findOne({ chatId: Number(chatId) }), session);
+    for (const member of group?.members || [session]) {
+      if (!member.game.instanceLocks) member.game.instanceLocks = {};
+      member.game.instanceLocks[epicName] = { until: Date.now() + INSTANCE_LOCK_MS, scope: chatId };
+      if (member !== session) member.needsSave = true;
+    }
+  }
   if (!epicName) spendMaterials(session, { [CLAN_BOSS_TOKEN]: 1 });
   if (epicName && needsPass(epicName)) {
     consumeEpicPass(passHolder, epicName);
@@ -424,19 +454,40 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex, targe
     return { ok: false, reason: 'dead', boss: await getBossState(session, chatId) };
   }
 
-  // The raid curse: a hero far from the level of a world boss is turned to stone and takes no part in the reward.
-  const world = bossTemplateFor(boss)?.world;
+  // World bosses: the level rules, the instance lock and a pause between casts.
+  const template = bossTemplateFor(boss);
+  const world = boss.world || template?.world;
   if (world) {
     const stoneUntil = number(session.game.petrifiedUntil);
     if (stoneUntil > Date.now()) return { ok: false, reason: 'petrified', remainMs: stoneUntil - Date.now(), boss: await getBossState(session, chatId) };
-    const gap = Math.abs(number(session.game.stats?.lvl, 1) - world.level);
-    if (gap > LEVEL_GAP) {
+    const heroLevel = number(session.game.stats?.lvl, 1);
+    const adaptive = Boolean(world.adaptive);
+    // an adaptive epic takes heroes of its original level and above; the others a level range of LEVEL_GAP
+    if (adaptive && heroLevel < number(world.baseLevel, world.level)) {
+      return { ok: false, reason: 'epic_level_too_low', requiredLevel: number(world.baseLevel, world.level), boss: await getBossState(session, chatId) };
+    }
+    const gap = Math.abs(heroLevel - number(world.level));
+    if (!adaptive && gap > LEVEL_GAP) {
       session.game.petrifiedUntil = Date.now() + PETRIFY_MS;
       boss.listOfDamage = (boss.listOfDamage || []).filter(row => String(row.id) !== String(userId));
       boss.markModified?.('listOfDamage');
       await boss.save();
       return { ok: false, reason: 'petrified', cursed: true, gap, remainMs: PETRIFY_MS, changed: true, boss: await getBossState(session, chatId) };
     }
+    if (world.instance) {
+      const lock = lockOf(session, boss.name);
+      if (lock && number(lock.until) > Date.now() && String(lock.scope) !== String(chatId)) {
+        return { ok: false, reason: 'instance_locked', remainMs: number(lock.until) - Date.now(), boss: await getBossState(session, chatId) };
+      }
+      if (!lock || number(lock.until) <= Date.now()) {
+        // a member who joined the party after the entry takes the lock with the first cast
+        if (!session.game.instanceLocks) session.game.instanceLocks = {};
+        session.game.instanceLocks[boss.name] = { until: Date.now() + INSTANCE_LOCK_MS, scope: chatId };
+      }
+    }
+    const lastCast = number(session.game.lastWorldCastAt);
+    if (Date.now() - lastCast < BOSS_GCD_MS) return { ok: false, reason: 'cooldown', boss: await getBossState(session, chatId) };
+    session.game.lastWorldCastAt = Date.now();
   }
 
   const skillIndex = Number(rawSkillIndex);

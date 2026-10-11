@@ -35,7 +35,7 @@ export const TEMPLATES = Object.freeze([
     {key: 'bossAttacks', source: bossAttacks, version: 3},
     {key: 'bossLoot', source: bossLoot, version: 2},
     {key: 'bossSkills', source: bossSkills, version: 1},
-    {key: 'bosses', source: bosses, version: 4},
+    {key: 'bosses', source: bosses, version: 5},
     {key: 'builds', source: builds, version: 4},
     {key: 'chanceToHit', source: chanceToHit, version: 1},
     {key: 'clanApplicationConditions', source: clanApplicationConditions, version: 1},

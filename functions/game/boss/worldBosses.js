@@ -31,6 +31,32 @@ const EPIC_LOCATION = Object.freeze({
     baium: 'Tower of Insolence, Baium\'s Lair', frintezza: 'Imperial Tomb, Frintezza\'s Lair', antharas: 'Antharas\' Lair', valakas: 'Valakas\' Lair',
 });
 
+/**
+ * How an epic is entered.
+ *   instance  every party fights its own copy; each hero may enter once per INSTANCE_LOCK_MS and gets the reward once
+ *   adaptive  an open-world epic that grows with the hero: it is for heroes of the original level and above, its
+ *             level, damage and reward follow the level of the hero who calls it
+ * The others (Baium, Antharas, Valakas) stand in their lairs for everybody within the level range, and need a party.
+ */
+export const EPIC_RULES = Object.freeze({
+    queenAnt: {adaptive: true}, core: {adaptive: true}, orfen: {adaptive: true},
+    zaken: {instance: true}, frintezza: {instance: true},
+    baium: {}, antharas: {}, valakas: {},
+});
+export const INSTANCE_LOCK_MS = 3 * 24 * 60 * 60 * 1000;
+/** Casts of a bare warrior that one member of the required party has to land: a fight of a full party fits the 15 minutes. */
+export const CASTS_PER_PARTY_MEMBER = 600;
+export const HP_CAST_CAP = 9000;
+/** The shortest pause between two casts of one hero in a world fight (a hero cannot be a machine gun). */
+export const BOSS_GCD_MS = 1200;
+
+/** The hidden chat of one party's copy of an instanced boss. */
+export function instanceScopeId(name, partyId) {
+    let hash = 5381;
+    for (const char of `${name}|${partyId}`) hash = ((hash * 33) ^ char.charCodeAt(0)) >>> 0;
+    return -(7e12 + hash);
+}
+
 const zones = [...hunting, ...catacombs];
 const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
 const nearestZone = level => zones.reduce((best, zone) => (Math.abs(zone.level - level) < Math.abs(best.level - level) ? zone : best), zones[0]);
@@ -101,6 +127,12 @@ export function dropsOf(row) {
     return {sp: [Math.round(row.level * 4), Math.round(row.level * 7)], items: [...best.values()]};
 }
 
+/** The drop of an adaptive epic for a hero of this level: Life Stones and the egg follow the higher of the two levels. */
+export function adaptiveDrops(drops, level) {
+    const grade = level >= 80 ? 'S80' : level >= 76 ? 'S' : level >= 61 ? 'A' : level >= 52 ? 'B' : 'C';
+    return {...drops, items: drops.items.map(item => (item.item.startsWith('lifestone_') ? {...item, item: lifestoneKey(grade)} : item))};
+}
+
 /** The egg every clan with a fighter gets for the kill: wyverns of the middle levels, dragons, then the ancient. */
 export const eggOf = level => (level >= 75 ? {key: 'egg_ancient', count: 1} : level >= 60 ? {key: 'egg_dragon', count: 1} : level >= 40 ? {key: 'egg_wyvern', count: 1} : null);
 
@@ -166,6 +198,7 @@ export function epicWorld(name) {
     if (!row) return null;
     const combat = combatOf(row);
     return {
+        ...(EPIC_RULES[name] || {}),
         npcId: id, level: row.level, location: EPIC_LOCATION[name] || nearestZone(row.level).title, zone: nearestZone(row.level).id, race: row.race,
         hp: row.hp, defenceRel: combat.defenceRel, magic: combat.magic, egg: null, drops: dropsOf(row), dangerPct: combat.dangerPct,
         attacks: row.skills.length >= 2 ? attacksOf(row) : null,

@@ -5,7 +5,7 @@ export default {
     bossAttacks: '6e468fb700da67af689a4df9e9b8e47df00ba16b',
     bossLoot: 'c37316f6c5599c9b5a1df240c1b9ed690241f0e2',
     bossSkills: '3190e1ac14fb9c8c62450401897902a7c98e65e6',
-    bosses: 'fc9ad1a85afd8c3199d5069a3a522c8ad254d343',
+    bosses: '347575f2b2686032207dab8c6d15d414faa21b4e',
     builds: '221c833c5bbaa19b5515384c2023dcaaa53f399e',
     chanceToHit: '94e7e762fa16259c9a0e4b09da4dd53252f239cb',
     clanApplicationConditions: 'ead98d421cba3223befcb8d08a6570f240c00d34',

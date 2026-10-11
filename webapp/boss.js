@@ -118,6 +118,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     epic_cooldown: 'Босс ещё не вернулся — подожди окончания таймера.',
     epic_pass_required: 'Нужен допуск к этому боссу: квест Академии или Донат-магазин. Для Фринтеззы он нужен только лидеру группы.',
     epic_party_required: 'Для этого босса нужна группа из нужного числа игроков: Закен — от 2, Фринтезза — от 4.',
+    instance_locked: 'Инстанс уже пройден: следующий вход и награда доступны через трое суток.',
     epic_level_too_high: 'Твой уровень слишком высок для этого босса: разница больше 11 уровней.',
     petrified: 'Проклятие рейда: ты обращён в камень и не получишь награду. Вернись, когда оно спадёт.',
   };
@@ -151,10 +152,13 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       <div class="forge-costs">
         <span class="forge-cost">Ур. ${entry.level}</span>
         <span class="forge-cost">Допуск: ${entry.minLevel}–${entry.maxLevel || '…'}</span>
-        <span class="forge-cost">Возрождение ${entry.respawnHours}–${entry.respawnHours + entry.windowHours} ч</span>
+        ${entry.instance ? '' : `<span class="forge-cost">Возрождение ${entry.respawnHours}–${entry.respawnHours + entry.windowHours} ч</span>`}
         <span class="forge-cost">Убит ${entry.kills || 0} раз</span>
       </div>
       ${entry.location ? `<p class="epic-jewel">📍 ${escapeHtml(entry.location)}</p>` : ''}
+      ${entry.instance ? `<p class="epic-jewel">Инстанс: вход группой от ${entry.partyMin || 2} · награда и вход раз в 3 суток для каждого</p>` : ''}
+      ${entry.adaptive ? '<p class="epic-jewel">Адаптивный: от уровня босса и выше, сила и награда растут с твоим уровнем</p>' : ''}
+      ${!entry.instance && entry.partyMin ? `<p class="epic-jewel">Нужна группа от ${entry.partyMin} игроков</p>` : ''}
       <p class="epic-jewel">Дроп: ${entry.drops || 0} предметов${entry.egg ? ' · яйцо клану' : ''} · Камни жизни</p>
       ${jewel ? `<p class="epic-jewel">💍 ${escapeHtml(jewel.name)} · ${escapeHtml(jewel.grade)}${real ? ` · ${escapeHtml(real)}` : ''} · шанс ${Math.round(entry.jewelChance * 100)}%</p>` : ''}
       ${entry.weapons?.length ? `<p class="epic-jewel">Эпическое оружие · S84 · ур. 84 · шанс ${Math.round(entry.weaponChance * 100)}%<br>${entry.weapons.map(weapon=>escapeHtml(weapon.name)).join(' · ')}</p>` : ''}
