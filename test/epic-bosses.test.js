@@ -16,8 +16,26 @@ import getAttack from '../functions/game/player/getters/getAttack.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getRandomBoss from '../functions/game/boss/getters/getRandomBoss.js';
 import withSeed from './helpers/seededRandom.js';
+import fs from 'node:fs';
+import {itemArtKey, itemArtSources} from '../webapp/art/items-art.js';
 
 const HOUR = 3_600_000;
+
+test('extreme Freya drops the blessed S84 necklace with its original icon and necklace slot', () => {
+  const reward = rollEpicJewel(getEpicTemplate('freyaExtreme'), [{id: 42, damage: 100}], () => 0);
+  assert.equal(reward.id, 42);
+  assert.equal(reward.item.name, 'Blessed Necklace of Freya');
+  assert.equal(reward.item.grade, 'S84');
+  assert.equal(reward.item.kind, 'necklace');
+  assert.deepEqual(reward.item.slots, ['necklace']);
+  assert.equal(reward.item.lineage.mDef, 132);
+  assert.equal(reward.item.lineage.itemId, 16026);
+  assert.equal(reward.item.characteristics.maxMp, 50);
+  const key = itemArtKey('amulet', reward.item);
+  assert.equal(key, 'icon-accessary_queen_of_ice_necklace_i00');
+  for (const source of itemArtSources(key).srcset.split(', ')) assert.ok(fs.existsSync(`webapp${source.split(' ')[0]}`));
+  assert.equal(rollEpicJewel(getEpicTemplate('freya'), [{id: 42, damage: 100}], () => 0).item.name, 'Necklace of Freya');
+});
 
 test('every epic raid boss has a plan, attacks, an essence and a unique piece of epic jewellery', () => {
   const epics = epicTemplates();
@@ -44,9 +62,9 @@ test('every epic raid boss has a plan, attacks, an essence and a unique piece of
 test('the epic jewellery are the real Lineage 2 pieces with real M.Def', () => {
   const expected = {
     queenAnt: ['Ring of Queen Ant', 'B', 48], core: ['Ring of Core', 'A', 48], orfen: ['Earring of Orfen', 'A', 71],
-    zaken: ["Zaken's Earring", 'S', 71], baium: ['Ring of Baium', 'S', 48], antharas: ['Earring of Antharas', 'S', 71],
-    valakas: ['Necklace of Valakas', 'S', 95], frintezza: ["Frintezza's Necklace", 'S', 95],
-    beleth: ['Ring of Beleth', 'S', 48], freya: ["Freya's Necklace", 'S', 95], freyaExtreme: ["Freya's Earring", 'S', 71],
+    zaken: ['Earring of Zaken', 'S', 71], baium: ['Ring of Baium', 'S', 48], antharas: ['Earring of Antharas', 'S', 94],
+    valakas: ['Necklace of Valakas', 'S', 125], frintezza: ['Necklace of Frintezza', 'A', 95],
+    beleth: ['Ring of Beleth', 'S', 48], freya: ['Necklace of Freya', 'S84', 125], freyaExtreme: ['Blessed Necklace of Freya', 'S84', 132],
   };
   for (const [boss, [name, grade, mDef]] of Object.entries(expected)) {
     const item = findEpicItem(boss);
@@ -89,7 +107,7 @@ test('wearing an epic piece raises the stats it promises', () => {
   session.game.inventory.equipment.items.push(necklace);
   assert.equal(equipItem(session, necklace), 0);
   assert.ok(getAttack(session) > attack * 1.039);
-  assert.ok(getMaxHp(session) > hp * 1.03);
+  assert.ok(getMaxHp(session) - hp >= 445);
 });
 
 test('respawn windows follow the real epic order: a day and a half, two days, five, eight, eleven', () => {
@@ -148,7 +166,7 @@ test('the jewel drops by chance to a fighter in proportion to the damage they de
     if (!result) continue;
     drops++;
     wins[result.id]++;
-    assert.equal(result.item.name, "Zaken's Earring");
+    assert.equal(result.item.name, 'Earring of Zaken');
     assert.equal(result.item.enchant, 0);
   }
   assert.ok(Math.abs(drops / trials - template.epic.jewelChance) < 0.03, `${drops / trials}`);

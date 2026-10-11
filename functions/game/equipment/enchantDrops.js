@@ -66,7 +66,7 @@ export function rollAttributeDrops(member, {element = null, tier = 1, place = 10
     const luck = place <= 3 ? 1.5 : 1;
     const rank = epic ? 3 : tier;
     const drops = [];
-    for (const stone of ATTRIBUTE_TIERS) {
+    for (const stone of ATTRIBUTE_TIERS.filter(t=>!t.legacy)) {
         const drop = ATTRIBUTE_DROPS[stone.id];
         if (rank < drop.minTier || random() >= Math.min(1, drop.chance * luck)) continue;
         const key = attributeKey(stone.id, element);

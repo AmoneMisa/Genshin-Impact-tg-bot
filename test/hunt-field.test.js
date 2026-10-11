@@ -26,8 +26,9 @@ test('selection is peaceful, approach provokes only nearby aggressive actors',()
  const id=h.field.mobs[2].instanceId;
  assert.equal(selectHuntTarget(s,id,NOW).ok,true);
  advanceHunt(s,NOW+1000,()=>.5);assert.equal(s.game.gameClass.stats.hp,hp);
- moveHuntField(s,'forward',NOW+1000);moveHuntField(s,'forward',NOW+1000);moveHuntField(s,'forward',NOW+1000);
- assert.deepEqual(h.field.mobs.map(m=>m.aggro),[true,false,true]);
+ assert.equal(moveHuntField(s,{x:.2,y:.3},NOW+1000).ok,true);
+ assert.deepEqual(h.field.mobs.map(m=>m.aggro),[false,false,false]);
+ advanceHunt(s,NOW+20000,()=>.5);assert.equal(h.field.mobs[0].aggro,true);
  assert.equal(moveHuntField(s,'teleport',NOW+1000).ok,false);
  assert.equal(selectHuntTarget(s,'forged-id',NOW+1000).ok,false);
 });
@@ -128,11 +129,13 @@ test('a killed monster comes back, a catacomb is a grid of rooms with big and sm
  const next=layout.rooms.find(r=>r.row===0&&r.col===1);
  field.mobs.forEach(m=>{m.aggro=false;});
  assert.equal(moveHuntField(s,'room:'+next.id,NOW+HUNT.mobRespawnMs+2).ok,true);
+ assert.equal(h.field.room,layout.startId,'walking is not instant');
+ advanceHunt(s,NOW+HUNT.mobRespawnMs+20000,()=>.5);
  assert.equal(h.field.room,next.id);assert.equal(h.field.mobs.length,next.cap);
  assert.equal(h.field.rooms[layout.startId].mobs.length,3);
  const far=layout.rooms.find(r=>r.row===2&&r.col===3);
  assert.equal(moveHuntField(s,'room:'+far.id,NOW+HUNT.mobRespawnMs+3).reason,'room_not_adjacent');
  h.field.mobs[0].aggro=true;
  const back=layout.rooms.find(r=>r.id===layout.startId);
- assert.equal(moveHuntField(s,'room:'+back.id,NOW+HUNT.mobRespawnMs+4).reason,'room_in_combat');
+ assert.equal(moveHuntField(s,'room:'+back.id,NOW+HUNT.mobRespawnMs+20001).ok,true,'monsters can follow a train between rooms');
 });

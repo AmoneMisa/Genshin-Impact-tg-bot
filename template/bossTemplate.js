@@ -648,9 +648,9 @@ const withWorld = boss => {
         ...boss,
         world,
         // an adaptive epic takes the heroes of its level and above; the others a range of LEVEL_GAP either way
-        epic: world.adaptive
-            ? {...boss.epic, minLevel: world.level, maxLevel: null}
-            : {...boss.epic, minLevel: Math.max(1, world.level - LEVEL_GAP), maxLevel: world.level + LEVEL_GAP},
+        epic: {...boss.epic, jewelChance: Number.isFinite(world.jewelChance) ? world.jewelChance : boss.epic.jewelChance,
+            minLevel: world.adaptive ? world.level : Math.max(1, world.level - LEVEL_GAP),
+            maxLevel: world.adaptive ? null : world.level + LEVEL_GAP},
         combat: {...boss.combat, dangerPct: Math.max(boss.combat?.dangerPct || 0, world.dangerPct)},
         drops: {...boss.drops, items: [...(boss.drops?.items || []), ...world.drops.items.filter(item => !(boss.drops?.items || []).some(own => own.item === item.item))]},
     };

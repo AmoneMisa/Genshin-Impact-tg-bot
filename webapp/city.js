@@ -171,11 +171,12 @@ export function cityHtml(state) {
     <div class="city-sky" aria-hidden="true"></div>
     <header class="city-title">
       ${icon('crown', 'city-crown')}
-      <strong>WhitesLove</strong>
+      <strong>Reality of Lineage</strong>
       <span class="city-game" aria-hidden="true"><i></i>GAME<i></i></span>
       <small>Больше, чем игра — наше королевство</small>
     </header>
     ${questHtml(cityQuest(buildings))}
+    <button type="button" class="city-world-map" data-open-feature="hunt">Атлас · карта мира Lineage II</button>
     ${palace ? buildingCard(palace, { banner: true }) : ''}
     <div class="city-grid">${others.map(build => buildingCard(build)).join('')}</div>
   </section>`;

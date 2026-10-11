@@ -1,0 +1,60 @@
+{
+  "assets": [
+    {
+      "file": "world.webp",
+      "url": "https://cdn.jsdelivr.net/gh/L2jBrasil/L2BaseMap@7c02bfdf829004e024a5f4ade32ebfbfacbac4e1/images/maps/clear-map.webp",
+      "bytes": 401770
+    },
+    {
+      "file": "24_18.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/24_18.jpg",
+      "bytes": 1194790
+    },
+    {
+      "file": "22_13.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/22_13.jpg",
+      "bytes": 876368
+    },
+    {
+      "file": "23_24.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/23_24.jpg",
+      "bytes": 1169538
+    },
+    {
+      "file": "22_19.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/22_19.jpg",
+      "bytes": 1109713
+    },
+    {
+      "file": "20_22.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/20_22.jpg",
+      "bytes": 1275966
+    },
+    {
+      "file": "24_16.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/24_16.jpg",
+      "bytes": 1143213
+    },
+    {
+      "file": "21_16.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/21_16.jpg",
+      "bytes": 1090037
+    },
+    {
+      "file": "19_21.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/19_21.jpg",
+      "bytes": 1144499
+    },
+    {
+      "file": "22_22.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/22_22.jpg",
+      "bytes": 1174818
+    },
+    {
+      "file": "17_22.jpg",
+      "url": "https://cdn.jsdelivr.net/gh/npetrovski/l2-world-map@0751a218798b1b759ff3555c7b48a025df49e332/Maps/17_22.jpg",
+      "bytes": 1071139
+    }
+  ],
+  "missing": []
+}

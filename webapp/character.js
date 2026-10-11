@@ -60,7 +60,7 @@ function itemDetails(item,slot) {
   const lineage = Object.entries(item.lineage || {}).filter(([key,value]) => ['pAtk','mAtk','pDef','mDef'].includes(key) && Number.isFinite(Number(value)))
     .map(([key,value]) => row(esc(({pAtk:'P. Atk',mAtk:'M. Atk',pDef:'P. Def',mDef:'M. Def'})[key]),fmt(value))).join('');
   const attrHtml = attr?.side === 'armor'
-    ? section('Защитный атрибут',elementTable(current ? [current] : []))
+    ? section('Защитный атрибут',elementTable(attr.currents || (current ? [current] : [])))
     : current ? section('Атрибут атаки',row('<span class="character-element-label">' + elementIcon(current.element) + esc(current.label) + '</span>',fmt(current.value)))
     : empty(attr ? 'Атрибут не установлен.' : 'Атрибуция этого предмета недоступна.');
   return section(item.name,

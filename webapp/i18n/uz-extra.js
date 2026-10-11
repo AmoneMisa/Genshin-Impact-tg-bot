@@ -58,7 +58,7 @@ export default {
   'Этот бафф ещё не изучен.': "Bu buff hali o'rganilmagan.",
   // Coins of Luck (donation currency) and the Luck shop.
   '. Потратить их можно в «Лавке удачи».': ". Ularni «Omad do'koni»da sarflashing mumkin.",
-  '{0} монет удачи в игре WhitesLove{1}. Зачислим в этот игровой чат.': "WhitesLove o'yinida {0} omad tangasi{1}. Shu o'yin chatiga o'tkaziladi.",
+  '{0} монет удачи в игре Reality of Lineage{1}. Зачислим в этот игровой чат.': "Reality of Lineage o'yinida {0} omad tangasi{1}. Shu o'yin chatiga o'tkaziladi.",
   '{0} Монеты удачи за Звёзды': '{0} Yulduzlarga omad tangalari',
   '+3 попытки арены': '+3 arena urinishi',
   '+3 попытки ограбления': '+3 talonchilik urinishi',

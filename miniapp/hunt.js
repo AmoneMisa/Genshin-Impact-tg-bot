@@ -19,10 +19,13 @@ import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
+import getSpeed from '../functions/game/player/getters/getSpeed.js';
 import getUserName from '../functions/getters/getUserName.js';
 import { getHotbar, setHotbar, activateLifeStone, HOTBAR_MAX } from '../functions/game/player/hotbar.js';
 import { castL2Buff } from './l2Buffs.js';
 import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
+import {reviveEntries} from '../functions/game/player/revival.js';
+import {markWorldDeath} from '../functions/game/world/death.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -59,14 +62,17 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
     const maxCp = number(getMaxCp(session, gameClass));
     const cp = number(getCurrentCp(session, gameClass));
     const respawnRemainMs = Math.max(0, number(game.respawnTime) - now);
+    if(hp<=0)markWorldDeath(session,now);
     return {
         // true when mob swings were applied: the session has to be saved
         changed: swings.length > 0,
+        now,world:{mode:game.world?.mode,channel:game.world?.channel,walkHome:game.world?.walkHome,death:game.world?.death||null},
+        resurrections:reviveEntries(session,now).filter(s=>s.level>0),
         soulCrystals:{...soulCrystalState(session),charge:soulChargeInfo(session,hunt.mob)},
         zones: getZones().map(zone => zoneDto(zone, level)),
         zone: hunt.zone,
         mob: hunt.mob ? {...mobDto(hunt.mob, now), drops: huntDropPreview(level, getMobDef(getZone(hunt.mob.zone), hunt.mob.mobId), hunt.mob.champion)} : null,
-        field: hunt.field ? fieldDto(hunt, now) : null,
+        field: hunt.field ? fieldDto(hunt, now, session) : null,
         players: peers.map(peer => fieldPlayerDto(peer,now)),
         pvpLog: (game.worldPvp?.log || []).map(row=>({...row,agoMs:Math.max(0,now-row.at)})),
         kills: number(hunt.kills),
@@ -96,7 +102,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
 }
 
 /** The battle area: the monsters of the room the hero stands in, the room itself and the map of a catacomb. */
-function fieldDto(hunt, now) {
+function fieldDto(hunt, now, session) {
     const field = hunt.field;
     const zone = getZone(hunt.zone);
     const layout = roomLayout(zone);
@@ -105,7 +111,7 @@ function fieldDto(hunt, now) {
     const pending = (field.respawns || []).filter(entry => entry.room === current.id);
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
     return {
-        x: field.x, y: field.y, target: field.target,
+    x: field.x, y: field.y, runSpeed:getSpeed(session), walls:field.walls||[], path: field.path || [], moveAt: field.moveAt, floor: field.floor || 1, floors:zone?.floors||(zone?.id==='tower-of-insolence'?14:1), target: field.target,
         title: zone?.title,
         room: {id: current.id, name: current.name, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
         map: layout.map ? {

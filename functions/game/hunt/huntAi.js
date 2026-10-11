@@ -3,6 +3,7 @@ export const AI_ROLES = ['fighter', 'healer', 'mage'];
 export const AI_LABELS = {fighter: 'Воин', healer: 'Целитель', mage: 'Маг'};
 import {isBossStunned} from '../boss/bossDebuffs.js';
 import {l2HasControl,l2MoveMultiplier} from '../player/l2Effects.js';
+import {findPath,advancePath} from '../world/navigation.js';
 
 export function huntDebuff(session, kind, now) {
     return (session.game.hunt?.playerDebuffs || []).find(e => e.kind === kind && e.until > now)?.amount || 0;
@@ -46,7 +47,13 @@ export function pursuePlayer(hunt, now) {
         const dx = hunt.field.x - mob.x, dy = hunt.field.y - mob.y, distance = Math.hypot(dx, dy);
         const stop = mob.ai === 'mage' ? .4 : .2;
         const step = Math.min(Math.max(0, distance - stop), seconds * .09*l2MoveMultiplier(mob,now));
-        if (step > 0) {mob.x += dx / distance * step; mob.y += dy / distance * step; moved = true;}
+        if (step > 0) {
+            if(hunt.field.walls?.length){
+                if(!mob.path?.length||Math.hypot((mob.destination?.x||0)-hunt.field.x,(mob.destination?.y||0)-hunt.field.y)>.08){mob.destination={x:hunt.field.x,y:hunt.field.y};mob.path=findPath(mob,mob.destination,hunt.field.walls)||[];mob.moveAt=now-seconds*1000;}
+                advancePath(mob,now,.09*2000*l2MoveMultiplier(mob,now));
+            }else{mob.x += dx / distance * step; mob.y += dy / distance * step;}
+            moved = true;
+        }
     }
     return moved;
 }

@@ -1,3 +1,4 @@
+import {EPIC_JEWELRY} from './l2EpicJewelry.js';
 // Lineage 2 (High Five) equipment. Grades are the Lineage 2 ones (no-grade, D, C, B, A, S, S80, S84): a grade
 // is the level band an item is meant for (wearing it below the band is penalised, see isHasPenalty.js).
 // Items are fixed named catalog entries (functions/game/equipment/catalog.js) built from `lineage`: real
@@ -607,20 +608,24 @@ export default {
             ]
         },
         // Epic jewellery: dropped only by the epic raid bosses (template/bossTemplate.js). Real names, grades and
-        // M.Def; the extra `bonus` stats are game balance, not the real Lineage 2 effects.
+        // M.Def and MP. Permanent original effects are applied by player/l2Effects.js.
         epic: [
-            {id: 'queenAnt', name: 'Ring of Queen Ant', boss: 'queenAnt', kind: 'ring', grade: 'B', mDef: 48, bonus: {maxHpMul: 1.03}},
-            {id: 'core', name: 'Ring of Core', boss: 'core', kind: 'ring', grade: 'A', mDef: 48, bonus: {attackMul: 1.02, maxHpMul: 1.02}},
-            {id: 'orfen', name: 'Earring of Orfen', boss: 'orfen', kind: 'earring', grade: 'A', mDef: 71, bonus: {speed: 3, mpRestoreSpeed: 0.05}},
-            {id: 'zaken', name: "Zaken's Earring", boss: 'zaken', kind: 'earring', grade: 'S', mDef: 71, bonus: {accuracy: 4, criticalChance: 2}},
-            {id: 'baium', name: 'Ring of Baium', boss: 'baium', kind: 'ring', grade: 'S', mDef: 48, bonus: {maxHpMul: 1.04, hpRestoreSpeed: 0.1}},
-            {id: 'antharas', name: 'Earring of Antharas', boss: 'antharas', kind: 'earring', grade: 'S', mDef: 71, bonus: {maxHpMul: 1.03, defenceMul: 1.02}},
-            {id: 'valakas', name: 'Necklace of Valakas', boss: 'valakas', kind: 'necklace', grade: 'S', mDef: 95, bonus: {attackMul: 1.04, maxHpMul: 1.03}},
-            {id: 'frintezza', name: "Frintezza's Necklace", boss: 'frintezza', kind: 'necklace', grade: 'S', mDef: 95, bonus: {attackMul: 1.03, maxMpMul: 1.06, speed: 2}},
-            {id: 'beleth', name: 'Ring of Beleth', boss: 'beleth', kind: 'ring', grade: 'S', mDef: 48, bonus: {attackMul: 1.03, criticalChance: 2}},
-            {id: 'freya', name: "Freya's Necklace", boss: 'freya', kind: 'necklace', grade: 'S', mDef: 95, bonus: {maxHpMul: 1.05, defenceMul: 1.03}},
-            {id: 'freyaExtreme', name: "Freya's Earring", boss: 'freyaExtreme', kind: 'earring', grade: 'S', mDef: 71, bonus: {maxHpMul: 1.05, defenceMul: 1.04, attackMul: 1.03}}
-        ],
+            {id: 'queenAnt', itemId: 6660, kind: 'ring'},
+            {id: 'core', itemId: 6662, kind: 'ring'},
+            {id: 'orfen', itemId: 6661, kind: 'earring'},
+            {id: 'zaken', itemId: 6659, kind: 'earring'},
+            {id: 'baium', itemId: 6658, kind: 'ring'},
+            {id: 'antharas', itemId: 6656, kind: 'earring'},
+            {id: 'valakas', itemId: 6657, kind: 'necklace'},
+            {id: 'frintezza', itemId: 8191, kind: 'necklace'},
+            {id: 'beleth', itemId: 10314, kind: 'ring'},
+            {id: 'freya', itemId: 16025, kind: 'necklace'},
+            {id: 'freyaExtreme', itemId: 16026, kind: 'necklace'}
+        ].map(({id, itemId, kind}) => {
+            const original = EPIC_JEWELRY[itemId];
+            return {id, boss: id, kind, name: original.name, grade: original.grade, mDef: original.mDef,
+                lineage: {...original}, bonus: {maxMp: original.maxMp}};
+        }),
         bodyReference: 9
     }
 };

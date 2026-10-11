@@ -1,4 +1,6 @@
 import {materialIcon} from './material-icons.js';
+import {updateDeathPopup} from './death-popup.js';
+import {displayedPosition} from './map-rendering.js';
 import {l2CategoryIcon,l2IconHtml,L2_HF_ARMOR_SETS} from './art/l2-icon-art.js';
 import {huntZoneUrl,huntMobUrl} from './art/hunt-art.js';
 import {shotIcon,elementIcon,championIcon} from './art/painted-icon-art.js';
@@ -34,7 +36,7 @@ const POTION_REASONS = {
 const ELEMENT_ICONS = Object.fromEntries(['fire','water','wind','earth','holy','dark'].map(element=>[element,elementIcon(element)]));
 const CHAMPION = { blue: { icon: championIcon('blue'), label: 'Синий чемпион' }, red: { icon: championIcon('red'), label: 'Красный чемпион' } };
 
-export async function openHuntGame({ api, renderState, haptic, statusElement,initialZoneKind='field' }) {
+export async function openHuntGame({ api, renderState, haptic, statusElement,initialZoneKind='field',onOpenAtlas }) {
   let state = await api('/api/hunt');
   let zoneKind=initialZoneKind==='catacomb'?'catacomb':'field';
   let skillTab = 'skills'; let editBar = false; let barDraft = [];
@@ -60,10 +62,11 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     </div>`;
   const content = overlay.querySelector('[data-hunt-content]');
   const feedbackNode = overlay.querySelector('[data-hunt-feedback]');
+  let animation=0,receivedAt=Date.now();
   let timer = 0;
   let pollTimer = 0;
   const close = () => {
-    window.clearInterval(timer);
+    cancelAnimationFrame(animation);window.clearInterval(timer);
     window.clearInterval(pollTimer);
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
@@ -87,7 +90,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   function take(payload) {
-    if (payload?.hunt) state = payload.hunt;
+    if (payload?.hunt){state = payload.hunt;receivedAt=Date.now();}
     if (payload?.state) renderState(payload.state);
   }
 
@@ -137,6 +140,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   async function start(zone) {
+    if(state.world?.mode){close();if(onOpenAtlas)onOpenAtlas();else{const {openWorldMap}=await import('./world-map.js');openWorldMap({api,renderState,haptic,statusElement});}return;}
     const payload = await run('/api/hunt/start', { zone }, { heavy: true });
     if (payload) say('Ты на поле боя. Выбери цель и используй навык, либо подойди к монстрам.');
     render();
@@ -154,7 +158,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
 
   async function flee() {
     const payload = await run('/api/hunt/flee');
-    if (payload) say('Ты покинул поле боя.');
+    if (payload) say('Свиток применяется 15 секунд. Движение и урон прерывают применение.');
     render();
   }
 
@@ -268,10 +272,12 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const zone=state.zones.find(z=>z.id===state.zone),art=huntZoneUrl(zone);
     const room=field.room||{};
     return '<section class="hunt-battlefield"><div class="hunt-field-head"><strong>'+escapeHtml(field.title)+(field.map?' · '+escapeHtml(room.name||''):'')+'</strong><small>'+field.mobs.filter(m=>m.aggro).length+' в бою · монстров: '+field.mobs.length+(room.cap?'/'+room.cap:'')+'</small></div>'+mapHtml(field)+'<div class="hunt-ground" style="'+(art?'--field-art:url('+art+');':'')+'height:'+(room.height||260)+'px">'
-      +field.mobs.map(m=>'<button type="button" class="hunt-actor '+(!playerTarget&&m.instanceId===field.target?'selected ':'')+(m.aggro?'aggro':'')+'" data-target="'+escapeHtml(m.instanceId)+'" style="left:'+m.x*100+'%;top:'+m.y*70+'%" aria-pressed="'+(!playerTarget&&m.instanceId===field.target)+'"><span class="hunt-actor-portrait">'+(huntMobUrl(m)?'<img src="'+huntMobUrl(m)+'" alt="">':icon('ghost'))+'<i>'+m.level+'</i></span><span class="hunt-actor-hp"><i style="width:'+m.hpPercent+'%"></i></span><strong>'+escapeHtml(m.name)+'</strong><small>'+(m.stunned?'Оглушён':m.aggro?'Атакует':m.aggressive?'Агрессивный':m.role||'Мирный')+'</small></button>').join('')
-      +'<span class="hunt-hero-marker" style="left:'+field.x*100+'%;top:'+Math.min(90,field.y*70+30)+'%"><img src="'+classArtUrl(state.player.className,state.player.gender)+'" alt=""><small>Ты</small></span>'
+      +(field.walls||[]).map(w=>'<span class="hunt-wall" style="left:'+w.x*100+'%;top:'+w.y*100+'%;width:'+w.w*100+'%;height:'+w.h*100+'%"></span>').join('')
+      +(state.players||[]).map(p=>'<button class="hunt-player-marker" data-pvp-target="'+p.userId+'" style="left:'+p.x*100+'%;top:'+p.y*100+'%"><img src="'+classArtUrl(p.className,p.gender)+'" alt=""><small>'+escapeHtml(p.name)+'</small></button>').join('')
+      +field.mobs.map(m=>'<button type="button" class="hunt-actor '+(!playerTarget&&m.instanceId===field.target?'selected ':'')+(m.aggro?'aggro':'')+'" data-target="'+escapeHtml(m.instanceId)+'" style="left:'+m.x*100+'%;top:'+m.y*100+'%" aria-pressed="'+(!playerTarget&&m.instanceId===field.target)+'"><span class="hunt-actor-portrait">'+(huntMobUrl(m)?'<img src="'+huntMobUrl(m)+'" alt="">':icon('ghost'))+'<i>'+m.level+'</i></span><span class="hunt-actor-hp"><i style="width:'+m.hpPercent+'%"></i></span><strong>'+escapeHtml(m.name)+'</strong><small>'+(m.stunned?'Оглушён':m.aggro?'Атакует':m.aggressive?'Агрессивный':m.role||'Мирный')+'</small></button>').join('')
+      +'<span class="hunt-hero-marker" style="left:'+field.x*100+'%;top:'+field.y*100+'%"><img src="'+classArtUrl(state.player.className,state.player.gender)+'" alt=""><small>Ты</small></span>'
       +(field.mobs.length?'':'<div class="hunt-field-cleared">'+(field.map?'В комнате пусто':'Поле зачищено')+'<br><small>'+(field.respawning?'Новые монстры появятся через '+Math.max(1,Math.ceil(field.nextSpawnMs/1000))+' с.':'Забери добычу и выбери следующую локацию.')+'</small></div>')
-      +'</div><div class="hunt-movement"><button data-move="left" aria-label="Влево">'+icon('chevron-left')+'</button><button data-move="forward">'+icon('arrow-up')+'<span>Подойти</span></button><button data-move="back">'+icon('chevron-right','hunt-move-down')+'<span>Отойти</span></button><button data-move="right" aria-label="Вправо">'+icon('chevron-right')+'</button></div><p>Близкие агрессивные мобы нападают сами. Соседи помогают атакованной цели.</p></section>';
+      +'</div><p>Тап по полу — бежать к точке. Тап по монстру — выбрать цель.</p><button data-world-exit>Пешком к городу</button><button data-world-stairs="-1">Этаж ниже</button><button data-world-stairs="1">Этаж выше</button><span> · Этаж '+field.floor+' / '+field.floors+'</span></section>';
   }
 
   function peersHtml() {
@@ -281,6 +287,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   function pvpTargetHtml(peer) {
+    if(peer.hp<=0)return '<section class="hunt-pvp-target">'+playerFrame(peer)+(state.resurrections||[]).map(s=>`<button data-revive="${escapeHtml(s.id)}" ${pending||s.cooldownUntil>state.now||state.player.mp<s.cost?'disabled':''}>${escapeHtml(s.name)}</button>`).join('')+'</section>';
     return '<section class="hunt-pvp-target"><small>Выбран игрок</small>'+playerFrame(peer)+'<label class="hunt-force"><input type="checkbox" data-force-attack '+(forceAttack?'checked':'')+'> Принудительная атака (Ctrl)</label>'
       +(peer.pvp.status==='neutral'?'<p>Убийство мирного игрока даёт PK и карму. Если он ответит атакой, бой станет PvP.</p>':'<p>Игрок доступен для атаки без принудительного режима.</p>')+'</section>';
   }
@@ -335,7 +342,8 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
 
   function render() {
     const player = state.player;
-    const dead = player.respawnRemainMs > 0;
+    const dead = player.hp<=0 || player.respawnRemainMs > 0;
+    updateDeathPopup({dead:player.hp<=0,world:state.world,api,onResolved:next=>{if(next.hunt)state=next.hunt;render();}});
     const peer=state.players?.find(p=>String(p.userId)===String(playerTarget));
     if(!peer)playerTarget=null;
     const body = [];
@@ -345,13 +353,13 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       if(peer)body.push(pvpTargetHtml(peer));
       else if(state.mob){body.push(mobFrame(state.mob));body.push('<details class="hunt-target-drops" '+(dropOpen?'open':'')+'><summary>Дроп выбранного монстра · '+(state.mob.drops?.length||0)+'</summary>'+dropsHtml(state.mob.drops)+'<small>Шансы с учётом уровня и типа чемпиона. Каждый предмет разыгрывается отдельно.</small></details>');}
       body.push(playerFrame(player));
-      if (dead) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
+      if (dead&&!state.world?.mode) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
       body.push('<section class="hunt-controls">');
       body.push(skillBarHtml(player));
       body.push(potionBar(player.potions, { disabled: pending || dead }));
       body.push(shotsHtml());
       if(!peer)body.push(vitalityHtml());
-      body.push('<button type="button" class="hunt-flee" data-flee>Отступить</button>');
+      body.push('<button type="button" class="hunt-flee" data-flee>Свиток возвращения</button>');
       body.push('</section>');
       if(!peer){
         body.push(lastHtml());
@@ -363,7 +371,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       body.push(vitalityHtml());
       body.push(potionBar(player.potions, { disabled: pending || dead }));
       body.push(shotsHtml());
-      if (dead) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
+      if (dead&&!state.world?.mode) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
       body.push(lastHtml());
       body.push(`<div class="mmo-section-title"><strong>Зоны</strong><small>🔵 синий: ×3 опыта · 🔴 красный: ×8 опыта и добычи</small></div>`);
       body.push(zonesHtml());
@@ -375,13 +383,20 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   function bind() {
+    content.querySelectorAll('[data-revive]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/world/action',{action:'revive',skillId:b.dataset.revive,userId:playerTarget});render();}));
     content.querySelectorAll('[data-pvp-target]').forEach(b=>b.addEventListener('click',()=>{playerTarget=b.dataset.pvpTarget;forceAttack=false;render();}));
     content.querySelector('[data-force-attack]')?.addEventListener('change',e=>{forceAttack=e.target.checked;});
     content.querySelector('.hunt-target-drops')?.addEventListener('toggle', e=>{dropOpen=e.target.open;});
     content.querySelectorAll('[data-loot-zone]').forEach(d=>d.addEventListener('toggle',e=>{if(e.target!==d)return;const id=d.dataset.lootZone;if(d.open){if(lootOpen.has(id))return;lootOpen.add(id);if(lootCache[id])render();else{lootOpen.add(id);d.insertAdjacentHTML('beforeend','<p class="hunt-loot-wait">Загружаю таблицу дропа…</p>');loadZoneLoot(id);}}else lootOpen.delete(id);}));
     content.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',async()=>{playerTarget=null;forceAttack=false;await run('/api/hunt/target',{targetId:b.dataset.target});render();}));
     content.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',async()=>{playerTarget=null;await run('/api/hunt/move',{direction:'room:'+b.dataset.room});render();}));
-    content.querySelectorAll('[data-move]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/hunt/move',{direction:b.dataset.move});render();}));
+    content.querySelector('.hunt-ground')?.addEventListener('click',async e=>{
+      if(e.target.closest('button'))return;
+      const rect=e.currentTarget.getBoundingClientRect();
+      await run('/api/hunt/move',{point:{x:(e.clientX-rect.left)/rect.width,y:(e.clientY-rect.top)/rect.height}});render();
+    });
+    content.querySelector('[data-world-exit]')?.addEventListener('click',async()=>{await run('/api/world/action',{action:'walk_exit'});render();});
+    content.querySelectorAll('[data-world-stairs]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/world/action',{action:'floor',floor:(state.field?.floor||1)+Number(b.dataset.worldStairs)});render();}));
     content.querySelectorAll('[data-zone-kind]').forEach(b=>b.addEventListener('click',()=>{zoneKind=b.dataset.zoneKind;render();}));
     content.querySelector('[data-soul-select]')?.addEventListener('change',async e=>{const [color,stage]=e.target.value.split(':');await run('/api/soul/select',{color:color||null,stage:Number(stage)});render();});
     content.querySelector('[data-soul-charge]')?.addEventListener('click',async()=>{const p=await run('/api/hunt/soul');if(p)say('Кристалл использован. Победи монстра для попытки прокачки.');render();});
@@ -415,7 +430,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
 
   // The mob swings in real time: poll while a fight is on, show new swings, and tick the timers locally.
   async function poll() {
-    if (pending || !overlay.isConnected || (!state.mob && !state.field)) return;
+    if (pending || document.hidden || !overlay.isConnected || (!state.mob && !state.field)) return;
     try {
       const next = await api('/api/hunt');
       // Countdowns tick locally; only real changes re-render.
@@ -453,8 +468,9 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     }
   }
 
+  function animate(){if(!document.hidden&&state.field){const actor=displayedPosition(state.field,Date.now()-receivedAt);const node=content.querySelector('.hunt-hero-marker');if(node){node.style.left=actor.x*100+'%';node.style.top=actor.y*100+'%';}}animation=requestAnimationFrame(animate);}
   render();
-  document.body.appendChild(overlay);
+  document.body.appendChild(overlay);animation=requestAnimationFrame(animate);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   timer = window.setInterval(tick, 200);
   pollTimer = window.setInterval(poll, 2000);

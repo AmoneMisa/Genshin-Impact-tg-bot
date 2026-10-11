@@ -7,9 +7,10 @@
 //   - the drop table is the real one; the Life Stones (farm) and the eggs of the clans are added by level
 import WORLD from '../../../template/worldBosses.js';
 import LOOT from '../../../template/l2Loot.js';
+import EPIC_REFERENCE from '../../../template/l2EpicReference.js';
 import hunting from '../../../template/huntingTemplate.js';
 import catacombs from '../../../template/catacombsTemplate.js';
-import {lootInfo} from '../hunt/lootTable.js';
+import {lootInfo, itemRow} from '../hunt/lootTable.js';
 import {lifestoneKey} from '../../../template/augmentData.js';
 
 /** A hero this many levels away (either way) is petrified by the raid curse and gets nothing. */
@@ -22,15 +23,15 @@ export const isWorldScope = chatId => Number(chatId) <= -WORLD_SCOPE_BASE;
 
 /** The grand bosses that the game already treats as epics (their jewellery, passes and weapons are theirs). */
 export const EPIC_NPC = Object.freeze({
-    29001: 'queenAnt', 29006: 'core', 29014: 'orfen', 29022: 'zaken', 29020: 'baium', 29045: 'frintezza', 29068: 'antharas', 29028: 'valakas',
+    29001: 'queenAnt', 29006: 'core', 29014: 'orfen', 29022: 'zaken', 29020: 'baium', 29047: 'frintezza', 29068: 'antharas', 29028: 'valakas',
     29118: 'beleth', 29179: 'freya', 29180: 'freyaExtreme',
 });
 
 /** Where the real bosses of the epics stand (the lairs of the raids of the original game). */
 const EPIC_LOCATION = Object.freeze({
     beleth: 'Замок Белефа', freya: 'Ледяной чертог Фреи', freyaExtreme: 'Ледяной чертог Фреи (экстрим)',
-    queenAnt: 'Ant Nest', core: 'Cruma Tower, Core\'s Chamber', orfen: 'Orfen\'s Nest', zaken: 'Zaken\'s Castle',
-    baium: 'Tower of Insolence, Baium\'s Lair', frintezza: 'Imperial Tomb, Frintezza\'s Lair', antharas: 'Antharas\' Lair', valakas: 'Valakas\' Lair',
+    queenAnt: 'Муравейник (Ant Nest)', core: 'Башня Крумы, 3-й этаж (Cruma Tower)', orfen: 'Море Спор (Sea of Spores)', zaken: 'Остров Дьявола, корабль Закена (Devil\'s Isle)',
+    baium: 'Башня Дерзости, 14-й этаж (Tower of Insolence)', frintezza: 'Имперская Гробница (Imperial Tomb)', antharas: 'Логово Антараса (Antharas\' Lair)', valakas: 'Кузница Богов, логово Валакаса (Forge of the Gods)',
 });
 
 /**
@@ -107,7 +108,10 @@ const phasesOf = row => {
 
 /** The drop of a boss: the real list as materials of the game, Life Stones for the farm and the usual boss goods. */
 export function dropsOf(row) {
-    const real = (LOOT[row.id] || []).map(([id, min, max, chance]) => {
+    const reference = EPIC_REFERENCE[row.id];
+    const source = reference ? reference.drops.filter(drop => drop.id !== 57 && drop.id !== reference.jewelId)
+        .map(drop => [drop.id, drop.min, drop.max, drop.chance]) : (LOOT[row.id] || []);
+    const real = source.map(([id, min, max, chance]) => {
         const info = lootInfo(id);
         return {item: info.key, chance: Math.min(1, chance / 100), min, max};
     });
@@ -193,6 +197,13 @@ export function worldTemplate(row) {
 const byId = new Map(WORLD.map(row => [row.id, row]));
 const epicIds = new Set(Object.keys(EPIC_NPC).map(Number));
 
+/** Custom RB weapon: half the rarest original full weapon's chance, at most 10%. */
+export function epicWeaponChance(name) {
+    const reference = Object.values(EPIC_REFERENCE).find(row => row.name === name);
+    const chances = reference?.drops.filter(drop => itemRow(drop.id)?.type === 'Weapon' && drop.chance > 0).map(drop => drop.chance / 100) || [];
+    return chances.length ? Math.min(0.1, Math.min(...chances) / 2) : 0;
+}
+
 /** The world data of an epic of the game: its real level, stats, location and drop. */
 export function epicWorld(name) {
     const id = Number(Object.keys(EPIC_NPC).find(key => EPIC_NPC[key] === name));
@@ -203,6 +214,8 @@ export function epicWorld(name) {
         ...(EPIC_RULES[name] || {}),
         npcId: id, level: row.level, location: EPIC_LOCATION[name] || nearestZone(row.level).title, zone: nearestZone(row.level).id, race: row.race,
         hp: row.hp, defenceRel: combat.defenceRel, magic: combat.magic, egg: null, drops: dropsOf(row), dangerPct: combat.dangerPct,
+        jewelChance: EPIC_REFERENCE[id]?.drops.find(drop => drop.id === EPIC_REFERENCE[id].jewelId)?.chance / 100,
+        reference: EPIC_REFERENCE[id]?.stats,
         attacks: row.skills.length >= 2 ? attacksOf(row) : null,
     };
 }

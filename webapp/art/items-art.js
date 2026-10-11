@@ -85,6 +85,7 @@ const catalogIdentity = item => [item.name,item.grade,item.kind,item.category].m
 const catalogArt = new Map(CATALOG_ITEM_ART.map(entry=>[catalogIdentity(entry),entry.key]));
 const ROBE_ART = Object.freeze({ armor: 'mantle', gloves: 'bracers', greaves: 'leg-wraps', boots: 'anklets' });
 export function itemArtKey(kind, item = {}) {
+  if(['freya','freyaExtreme'].includes(item.epicBoss))return 'icon-accessary_queen_of_ice_necklace_i00';
   if(item.epicWeapon && keys.has('epic-weapon-'+item.epicWeapon))return 'epic-weapon-'+item.epicWeapon;
   const namedArt = catalogArt.get(catalogIdentity(item));
   if (namedArt) return namedArt;

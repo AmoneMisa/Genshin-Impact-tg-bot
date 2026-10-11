@@ -30,6 +30,9 @@ export function syncEquippedSnapshot(session, item) {
         equipped.stats = item.stats;
         equipped.augment = item.augment;
         equipped.attribute = item.attribute;
+        equipped.attributes = item.attributes;
+        equipped.attributeVersion = item.attributeVersion;
         equipped.sa = item.sa;
+        equipped.pvp = item.pvp;
     }
 }

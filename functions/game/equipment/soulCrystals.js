@@ -28,6 +28,7 @@ export function saInfo(session,item){const current=saDefinition(item),options=sa
   return {current:current?{id:current.id,label:current.label,color:current.color,stage:current.stage}:null,legacy:!current&&Boolean(item.ability),gold:p.gold,gemKey,gems:p.gems,gemCount:getMaterialCount(session,gemKey),removeAa,removable:removeAa>0,aa:n(session.game.inventory.ancientAdena),equipped:isActuallyEquipped(session,item),options:options.map(o=>({id:o.id,label:o.label,color:o.color,stage:o.stage,key:soulCrystalKey(o.color,o.stage),count:getMaterialCount(session,soulCrystalKey(o.color,o.stage)),effects:saBonuses(item,o),description:o.description}))};
 }
 export function installWeaponSa(session,item,id){const info=saInfo(session,item),option=info?.options.find(o=>o.id===id);
+    if(item?.pvp)return {ok:false,reason:'pvp_item_ineligible'};
   if(!option)return {ok:false,reason:'invalid_sa'};
   if(isActuallyEquipped(session,item))return {ok:false,reason:'sa_equipped'};
   if(item.sa)return {ok:false,reason:'sa_exists'};
@@ -41,7 +42,7 @@ export function installWeaponSa(session,item,id){const info=saInfo(session,item)
   item.stats=(item.stats||[]).filter(s=>!legacy||s.name!==legacy.stat||s.label!==legacy.label);item.ability=null;
   item.sa={id:option.id,color:option.color,stage:option.stage};return {ok:true,sa:item.sa};
 }
-export function removeWeaponSa(session,item){const info=saInfo(session,item);if(!info||!item.sa)return {ok:false,reason:'no_sa'};if(isActuallyEquipped(session,item))return {ok:false,reason:'sa_equipped'};
+export function removeWeaponSa(session,item){const info=saInfo(session,item);if(item?.pvp)return {ok:false,reason:"pvp_item_ineligible"};if(!info||!item.sa)return {ok:false,reason:'no_sa'};if(isActuallyEquipped(session,item))return {ok:false,reason:'sa_equipped'};
   if(!info.removable)return {ok:false,reason:'sa_permanent'};
   if(n(session.game.inventory.ancientAdena)<info.removeAa)return {ok:false,reason:'not_enough_aa'};
   session.game.inventory.ancientAdena=n(session.game.inventory.ancientAdena)-info.removeAa;item.sa=null;return {ok:true};}
@@ -68,6 +69,8 @@ export function saBonuses(item,option=saDefinition(item)){
   return out;
 }
 export function saStat(session,item,name,isMul){const option=saDefinition(item);if(!option)return null;
+  // Converted weapons provide their PvP multiplier through the added native passive.
+  if(item.pvp&&name==='pvpDamageMul')return isMul?1:0;
   const value=saBonuses(item,option)[name];if(value===undefined)return null;
   if(option.hpBelow<100){const stats=session.game.gameClass?.stats||{};if(n(stats.hp)>getMaxHp(session)*option.hpBelow/100)return null;}
   return value;

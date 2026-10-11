@@ -69,7 +69,7 @@ export async function createStarInvoice({ store, api, chatId, userId, packId, no
   try {
     const url = await api.createInvoiceLink({
       title: pack.title,
-      description: `${pack.coins} монет удачи в игре WhitesLove${bonus ? ` и бонус первой покупки +${bonus}` : ''}. Зачислим в этот игровой чат.`,
+      description: `${pack.coins} монет удачи в игре Reality of Lineage${bonus ? ` и бонус первой покупки +${bonus}` : ''}. Зачислим в этот игровой чат.`,
       payload: String(purchase.id),
       provider_token: '',
       currency: STARS_CURRENCY,

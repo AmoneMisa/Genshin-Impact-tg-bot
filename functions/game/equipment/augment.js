@@ -59,7 +59,7 @@ const gradeStep = grade => Math.max(0, AUGMENT_GRADES.indexOf(grade));
 export const isEpicItem = item => Boolean(item?.epic || item?.epicWeapon || item?.epicBoss);
 
 export const canAugment = item => (item?.mainType === 'weapon' || item?.mainType === 'jewelry')
-    && !isEpicItem(item) && AUGMENT_GRADES.includes(item.grade) && Boolean(gradeInfo(item.grade));
+      && !item.pvp && !isEpicItem(item) && AUGMENT_GRADES.includes(item.grade) && Boolean(gradeInfo(item.grade));
 
 /** Display form of an augment: "Атака +4.8%", "Сила +2", plus the weapon skill if there is one. */
 export function describeAugment(augment) {

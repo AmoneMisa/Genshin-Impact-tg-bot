@@ -2,6 +2,8 @@
 import {L2_EFFECT_SKILLS,L2_EFFECT_LEARN,L2_CLASSES} from '../../../template/l2EffectSkills.js';
 import {isMagicClass} from '../classes/classFamily.js';
 import classStats from '../../../template/classStatsTemplate.js';
+import {EPIC_PASSIVES, EPIC_JEWELRY} from '../../../template/l2EpicJewelry.js';
+import {PVP_PASSIVES,PVP_TRIGGERS} from '../../../template/l2PvpConversions.js';
 export const L2_EFFECT_LIMITS=Object.freeze({buff:24,debuff:16,music:12,pet:1});
 export const isL2PetSkill=skill=>skill?.effects?.some(e=>e.name==='Summon')||false;
 export const PROJECT_L2_CLASSES=Object.freeze({noClass:0,warrior:0,crusader:5,phoenixKnight:90,warden:6,bastion:91,mage:10,elementalist:12,archmage:94,warlock:13,soulReaper:95,priest:15,cleric:17,saint:98,inquisitor:16,judicator:97,archer:7,ranger:9,hawkeye:92,sniper:24,phantomShot:102,rogue:7,assassin:8,shadowBlade:93,trickster:34,phantomDancer:107,berserk:1,slayer:2,warbringer:88,ironclad:3,titan:89});
@@ -14,7 +16,7 @@ export function effectValue(skill,value,level=1){
 }
 const resolveNode=(skill,node,level)=>({...node,...(node.value!==undefined?{value:effectValue(skill,node.value,level)}:{}),...(node.children?{children:node.children.map(c=>resolveNode(skill,c,level))}:{})});
 export function resolveEffectSkill(id,level=1){
- const source=L2_EFFECT_SKILLS[Number(String(id).replace(/^l2:/,''))];if(!source)return null;
+ const key=Number(String(id).replace(/^l2:/,''));const source=L2_EFFECT_SKILLS[key]||PVP_TRIGGERS[key];if(!source)return null;
  const actual=clamp(Math.floor(n(level,1)),1,source.levels);
  const fields=Object.fromEntries(Object.entries(source.fields).map(([key,value])=>[key,effectValue(source,value,actual)]));
  const effects=source.effects.map(e=>resolveNode(source,e,actual));
@@ -50,6 +52,30 @@ const assign=(target,list)=>{if(target.game)target.game.effects=list;else target
 export function activeL2Effects(target,now=Date.now()){
  return records(target).filter(e=>e?.l2SkillId&&n(e.until)>now).map(e=>({record:e,skill:resolveEffectSkill(e.l2SkillId,e.level)})).filter(e=>e.skill);
 }
+/** Permanent jewelry effects never consume buff slots or get dispelled. Same passive does not stack. */
+export function equippedEpicEffects(target) {
+ const skills = new Map();
+ for (const item of Object.values(target?.game?.equipmentStats || {})) {
+  if (!item?.isFilled || !item.epicBoss) continue;
+  const original = EPIC_JEWELRY[item.lineage?.itemId];
+  for (const row of original?.skills || []) {
+   if ((skills.get(row.id)?.level || 0) < row.level) skills.set(row.id, row);
+  }
+ }
+ return [...skills.values()].map(row => {
+  const source = EPIC_PASSIVES[row.id];
+  const effects = source.effects.map(effect => resolveNode(source,effect,row.level)).map(effect => ({...effect,
+   // MP is already present in the item characteristics; Freya's XML also repeats it in the passive.
+   children: effect.children?.filter(node => node.stat !== 'maxMp')}));
+  return {record:{passive:true},skill:{...source,level:row.level,effects}};
+ });
+}
+export function equippedPvpEffects(target){
+ const rows=new Map();
+ for(const item of Object.values(target?.game?.equipmentStats||{}))if(item?.isFilled&&item.pvp)for(const row of item.pvp.skills||[])if(!rows.has(row.id)||rows.get(row.id).level<row.level)rows.set(row.id,row);
+ return [...rows.values()].filter(row=>PVP_PASSIVES[row.id]).map(row=>{const source=PVP_PASSIVES[row.id];const effects=source.effects.map(e=>resolveNode(source,e,row.level)).map(e=>e.name==='Buff'?{...e,children:e.children?.filter(n=>n.stat?.startsWith('pvp')||n.stat==='atkCountMax')}:e);return {record:{passive:true},skill:{...source,level:row.level,effects}};});
+}
+const statEffects = (target,now) => [...activeL2Effects(target,now), ...equippedEpicEffects(target), ...equippedPvpEffects(target)];
 const params=e=>Object.fromEntries((e.children||[]).filter(c=>c.value!==undefined).map(c=>[c.tag,c.value]));
 function statNodeValue(target,node){
  if(node.value!==undefined)return node.value;
@@ -71,7 +97,7 @@ export function l2ActionBlock(target,{magic=false,move=false,attack=false}={},no
 }
 export function l2RawStat(target,stat,isMul=false,now=Date.now()){
  let total=isMul?1:0;
- for(const {record,skill} of activeL2Effects(target,now))for(const e of skill.effects){
+ for(const {record,skill} of statEffects(target,now))for(const e of skill.effects){
   // `scale` weakens a buff that a server gives at a part of its power (Scryde dances and songs at 50%)
   const scale=record?.scale===undefined?1:n(record.scale,1);
   if(e.name==='ServitorShare'&&isMul)total*=n(params(e)[stat],1);
@@ -90,16 +116,16 @@ export function l2RawStat(target,stat,isMul=false,now=Date.now()){
 }
 export function l2StatBonus(session,stat,isMul=false,now=Date.now()){
  const magic=isMagicClass(session?.game?.gameClass?.stats?.name);
- const mul={attackMul:magic?'mAtk':'pAtk',defenceMul:magic?'mDef':'pDef',maxHpMul:'maxHp',maxMpMul:'maxMp',maxCpMul:'maxCp',criticalChanceMul:magic?'mCritRate':'critRate',criticalDamage:magic?'mCritPower':'critDmg',attackSpeedMul:'pAtkSpd',castingSpeedMul:'mAtkSpd',healPowerMul:'healEffect',hpRegenMul:'regHp',mpRegenMul:'regMp',skillCooltimeMul:magic?'mReuse':'pReuse',skillMpCostMul:magic?'magicalMpConsumeRate':'physicalMpConsumeRate'};
- const flat={attack:magic?'mAtk':'pAtk',defence:magic?'mDef':'pDef',accuracy:'accCombat',evasion:'rEvas',speed:'runSpd',maxHp:'maxHp',maxMp:'maxMp',maxCp:'maxCp',criticalChance:magic?'mCritRate':'critRate'};
- if(isMul&&mul[stat])return clamp(l2RawStat(session,mul[stat],true,now),.05,10);
+ const mul={attackMul:magic?'mAtk':'pAtk',defenceMul:magic?'mDef':'pDef',maxHpMul:'maxHp',maxMpMul:'maxMp',maxCpMul:'maxCp',criticalChanceMul:magic?'mCritRate':'critRate',criticalDamage:magic?'mCritPower':'critDmg',attackSpeedMul:'pAtkSpd',castingSpeedMul:'mAtkSpd',healPowerMul:'healEffect',hpRegenMul:'regHp',mpRegenMul:'regMp',mpRestoreSpeedMul:'regMp',skillCooltimeMul:magic?'mReuse':'pReuse',skillMpCostMul:magic?'magicalMpConsumeRate':'physicalMpConsumeRate'};
+ const flat={attack:magic?'mAtk':'pAtk',defence:magic?'mDef':'pDef',accuracy:'accCombat',evasion:'rEvas',speed:'runSpd',maxHp:'maxHp',maxMp:'maxMp',maxCp:'maxCp',criticalChance:magic?'mCritRate':'critRate',mpRestoreSpeed:'regMp',STR:'STR',DEX:'DEX',CON:'CON',INT:'INT',WIT:'WIT',MEN:'MEN'};
+ if(isMul&&mul[stat])return clamp(l2RawStat(session,mul[stat],true,now) * (stat==='healPowerMul' ? 1+l2RawStat(session,'healEffect',false,now)/100 : 1),.05,10);
  if(!isMul&&flat[stat])return l2RawStat(session,flat[stat],false,now);
  return isMul?1:0;
 }
 export function l2Resistance(target,trait,now=Date.now()){
  trait=({ROOT:'HOLD',BLEEDING:'BLEED',SILENCE:'DERANGEMENT'}[trait]||trait);
  let value=0;
- for(const {skill} of activeL2Effects(target,now))for(const effect of skill.effects){
+ for(const {skill} of statEffects(target,now))for(const effect of skill.effects){
   if(effect.name==='DefenceTrait')value+=n(params(effect)[trait]);
  }
  return clamp(value-l2RawStat(target,'debuffVuln',false,now),-100,100);
@@ -139,6 +165,7 @@ export function applyL2Effect(caster,target,id,level=1,{now=Date.now(),random=Ma
  if(existing&&existing.skill.strength>skill.strength)return {ok:true,applied:false,kept:true,until:existing.record.until};
  let removed=0;
  for(const e of skill.effects){const p=params(e);
+  if(e.name==='CpHeal'&&target.game?.gameClass?.stats){const stats=target.game.gameClass.stats;stats.cp=Math.min(n(stats.maxCp),n(stats.cp)+n(p.power));}
   if(e.name.startsWith('DispelBy')){
    if(p.dispel){for(const entry of String(p.dispel).split(';')){const [slot,level]=entry.split(',');removed+=removeL2Effects(target,{slot,maxLevel:level===undefined?Infinity:n(level),max:n(p.max,Infinity),rate:n(p.rate,100)},now,random);}}
    else removed+=removeL2Effects(target,{kind:String(p.slot||'debuff').toLowerCase()==='buff'?'buff':'debuff',max:n(p.max,Infinity),rate:n(p.rate,100)},now,random);
@@ -189,17 +216,32 @@ export function l2EffectRows(target,now=Date.now()){
 }
 export function l2OnDamageReceived(target,attacker,damage,now=Date.now(),random=Math.random){
  if(!(damage>0))return;
- const snapshot=activeL2Effects(target,now);
+ const snapshot=statEffects(target,now);
  for(const {record,skill} of snapshot){
   if(skill.effects.some(e=>e.name==='Sleep'||e.name==='Hide'))record.until=now;
   for(const e of skill.effects)if(e.name==='TriggerSkillByDamageReceived'){
    const p=params(e),level=n(attacker?.game?.stats?.lvl,attacker?.level||1);
-   if(damage>=n(p.minDamage)&&level>=n(p.minAttackerLevel,1)&&level<=n(p.maxAttackerLevel,99)&&random()*100<n(p.chance))applyL2Effect(target,p.targetType==='SELF'?target:attacker,n(p.skillId),n(p.skillLevel,1),{now,random,guaranteed:true});
+   const pvp=Boolean(PVP_PASSIVES[skill.id]),reuse=pvp?(target.game.pvpTriggerReuse||={}):null;
+   if(pvp&&(!attacker?.game||reuse[p.skillId]>now))continue;
+   if(damage>=n(p.minDamage)&&level>=n(p.minAttackerLevel,1)&&level<=n(p.maxAttackerLevel,99)&&random()*100<n(p.chance)){applyL2Effect(target,p.targetType==='SELF'?target:attacker,n(p.skillId),n(p.skillLevel,1),{now,random,guaranteed:true});if(reuse)reuse[p.skillId]=now+n(resolveEffectSkill(p.skillId,p.skillLevel)?.fields.reuseDelay,10000);}
   }
  }
 }
 export function l2OnHostileAction(target,now=Date.now()){
  for(const {record,skill} of activeL2Effects(target,now))if(skill.effects.some(e=>e.name==='Hide'))record.until=now;
+}
+/** Native PvP weapon procs run on direct player hits, with their own static reuse. */
+export function l2OnDamageDealt(attacker,target,damage,now=Date.now(),random=Math.random){
+ if(!attacker?.game||!target?.game||damage<=0||target.game.gameClass?.stats?.hp<=0)return;
+ const reuse=attacker.game.pvpTriggerReuse||={};
+ for(const {skill} of equippedPvpEffects(attacker))for(const e of skill.effects)if(e.name==='TriggerSkillByDamageDealt'){
+  const p=params(e),level=n(attacker.game.stats?.lvl,1),trigger=resolveEffectSkill(p.skillId,p.skillLevel);
+  if(!trigger||trigger.effects.some(e=>e.name==='PhysicalDamage')||reuse[p.skillId]>now||damage<n(p.minDamage)||level<n(p.minAttackerLevel,1)||level>n(p.maxAttackerLevel,100)||random()*100>=n(p.chance))continue;
+  const recipient=p.targetType==='SELF'?attacker:target;
+  if(l2HasControl(recipient,'Invincible',now))continue;
+  applyL2Effect(attacker,recipient,n(p.skillId),n(p.skillLevel,1),{now,random,guaranteed:true});
+  reuse[p.skillId]=now+n(trigger.fields.reuseDelay,10000);recipient.needsSave=true;
+ }
 }
 /** Summons are mana-only skills: a temporary companion adds a hit to successful attacks. */
 export function l2CompanionDamage(target,damage,now=Date.now()){
@@ -216,7 +258,7 @@ export function l2MoveMultiplier(target,now=Date.now()){return clamp(l2RawStat(t
 export function l2TraitDamage(caster,target,now=Date.now()){
  const race=String(target?.race||target?.hunt?.race||'').toUpperCase();
  const trait=({INSECT:'BUG_WEAKNESS',BUG:'BUG_WEAKNESS',ANIMAL:'ANIMAL_WEAKNESS',PLANT:'PLANT_WEAKNESS',BEAST:'BEAST_WEAKNESS',DRAGON:'DRAGON_WEAKNESS',UNDEAD:'UNDEAD_WEAKNESS'})[race];
- let bonus=0;for(const {skill} of activeL2Effects(caster,now))for(const effect of skill.effects)if(effect.name==='AttackTrait')bonus+=n(params(effect)[trait]);
+ let bonus=0;for(const {skill} of statEffects(caster,now))for(const effect of skill.effects)if(effect.name==='AttackTrait')bonus+=n(params(effect)[trait]);
  return 1+bonus/100;
 }
 /** Transfer only to the living nearby caster, and never recurse through another transfer. */

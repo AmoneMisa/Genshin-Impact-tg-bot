@@ -1,6 +1,6 @@
 // Real High Five numbers (L2J Mobius hennaList.xml, Mammon multisell) for the +4/-4 Greater Dye: 10 dyes and 628 000 adena
 // to apply, 5 dyes back for 125 600 adena to cancel. One dye costs 174 000 Ancient Adena at the Merchant of Mammon.
-// The three slots and the +5 cap are WhitesLove rules; this is a design prototype, not live character mutations.
+// The three slots and the +5 cap are Reality of Lineage rules; this is a design prototype, not live character mutations.
 export const TATTOO_RULES = Object.freeze({ slots:3, dyesPerSymbol:10, refund:5, bonusCap:5, minimumStat:1, applyFee:628000, removeFee:125600, dyePriceAa:174000 });
 export const DYES = Object.freeze([
   { id:'int-men', name:'Краска интеллекта', plus:'INT', minus:'MEN', amount:4, color:'#9473b5', glyph:'✧' },

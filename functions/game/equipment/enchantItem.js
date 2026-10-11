@@ -22,7 +22,7 @@ const config = () => equipmentTemplate.enchant;
 
 /** No-grade gear has no scrolls or crystals (as in Lineage 2). */
 export function isEnchantable(item) {
-    return Boolean(item) && item.grade !== 'noGrade' && Boolean(gradeInfo(item.grade));
+    return Boolean(item) && !item.cloak && item.grade !== 'noGrade' && Boolean(gradeInfo(item.grade));
 }
 
 /** Chance that the next scroll works: certain up to the safe level, `chance` above it. */

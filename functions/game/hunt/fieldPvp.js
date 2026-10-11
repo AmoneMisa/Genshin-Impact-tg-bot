@@ -1,4 +1,4 @@
-import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2PreventDeath,l2TransferDamage,l2RawStat} from '../player/l2Effects.js';
+import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2OnDamageDealt,l2PreventDeath,l2TransferDamage,l2RawStat} from '../player/l2Effects.js';
 // Live per-skill PvP in hunting locations. All participants must come from one freshly loaded Chat.
 import {advanceHunt} from './huntFight.js';
 import {HUNT} from './huntConfig.js';
@@ -25,13 +25,16 @@ import {spendAmmo} from '../shots/ammo.js';
 import {tickSoulDots} from '../equipment/soulCrystalCombat.js';
 
 const id = s => String(s.userId);
-const member = (chat,userId) => chat.members?.find(s => id(s) === String(userId));
+const members=chat=>[...(chat.members||[]),...(chat.$locals?.guests||[])];
+const member = (chat,userId) => members(chat).find(s => id(s) === String(userId));
 const name = s => s.userChatData?.user?.first_name || s.userChatData?.user?.username || `Игрок ${s.userId}`;
 
 export function fieldPeers(chat, session, now = Date.now()) {
     if (!fieldIsPresent(session,now)) return [];
-    return (chat.members || []).filter(s => id(s) !== id(session) && !s.isHided && !s.userChatData?.user?.is_bot && fieldIsPresent(s,now) && s.game.hunt.zone === session.game.hunt.zone
-        && (s.game.hunt.field.room || null) === (session.game.hunt.field.room || null));
+    return members(chat).filter(s => id(s) !== id(session) && !s.isHided && !s.userChatData?.user?.is_bot && (fieldIsPresent(s,now)||(s.game?.world&&s.game.gameClass?.stats?.hp<=0&&s.game.hunt?.field)) && s.game.hunt.zone === session.game.hunt.zone
+        && (s.game.hunt.field.room || null) === (session.game.hunt.field.room || null)
+        && (s.game.hunt.field.floor || 1) === (session.game.hunt.field.floor || 1)
+        && (s.game.world?.instanceId || null) === (session.game.world?.instanceId || null));
 }
 
 function proxyFor(defender, now) {
@@ -81,7 +84,8 @@ export function finishL2PvpDeath(chat,attacker,defender,now){
         const state = ensureFieldPvp(defender);
         state.flagUntil=0;state.effects={};state.deathAt=now;
         defender.game.respawnTime=now+HUNT.respawnMs;
-        defender.game.hunt.field=null;defender.game.hunt.mob=null;
+        if(defender.game.world&&defender.game.hunt.field){const f=defender.game.hunt.field;f.path=[];delete f.pendingRoom;for(const mob of f.mobs||[])mob.aggro=false;}
+        else {defender.game.hunt.field=null;defender.game.hunt.mob=null;}
         fieldPvpLog(defender,`${attacker?name(attacker):'Игрок'} убил тебя${pk?' · PK':''}.`,now);
     return pk;
 }
@@ -117,7 +121,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
     advanceFieldPvp(chat,now);
     advanceHunt(attacker,now,random);advanceHunt(defender,now,random);
     const fail=reason=>({ok:false,reason,changed:true});
-    if(!fieldIsPresent(attacker,now) || !fieldIsPresent(defender,now) || attacker.game.hunt.zone !== defender.game.hunt.zone) return fail('pvp_not_here');
+    if(!fieldIsPresent(attacker,now) || !fieldIsPresent(defender,now) || attacker.game.hunt.zone !== defender.game.hunt.zone || attacker.game.hunt.field.room !== defender.game.hunt.field.room || (attacker.game.hunt.field.floor||1)!==(defender.game.hunt.field.floor||1) || (attacker.game.world?.instanceId||null)!==(defender.game.world?.instanceId||null)) return fail('pvp_not_here');
     const skill=attacker.game.gameClass.skills?.[skillIndex];
     if(!Number.isInteger(skillIndex) || !skill)return fail('invalid_skill');
     const block=fieldPvpSkillBlock(attacker,skill,now);if(block)return fail(block);
@@ -149,6 +153,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
         attacker.game.stats.inFightTimer=now+90000;defender.game.stats.inFightTimer=now+90000;
         attacker.game.hunt.lastActionAt=now;defender.game.hunt.lastActionAt=now;
         hit=takeDamage(chat,attacker,defender,result.dealt || 0,now);
+        l2OnDamageDealt(attacker,defender,hit.cpLost+hit.hpLost,now,random);
         if(skill.effect==='common_attack'&&result.dealt>0){const reflected=Math.ceil(result.dealt*Math.min(100,l2RawStat(defender,'reflectDam',false,now))/100);if(reflected>0)result.reflectDamage=takeDamage(chat,defender,attacker,reflected,now);}
         if(!hit.killed)saveEffects(defender,proxy);
         const loss=result.missed?'Промах':[[hit.cpLost,'CP'],[hit.hpLost,'HP']].filter(([amount])=>amount>0).map(([amount,resource])=>`−${amount} ${resource}`).join(' · ') || (result.type==='debuff'?'Враг ослаблен':'Урон поглощён');

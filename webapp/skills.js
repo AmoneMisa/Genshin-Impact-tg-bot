@@ -102,6 +102,7 @@ function skillCard(skill, state) {
       ${transition}
       ${skill.learn ? `<div class="skill-upgrade-cost"><small>Умение не изучено</small><strong>✦ ${formatNumber(skill.learn.sp)} ОП</strong></div>
       <button type="button" data-skill-learn="${skill.slot}" ${skill.learn.canLearn ? '' : 'disabled'}>${skill.locked ? `Нужен ${skill.needLevel} уровень` : 'Изучить'}</button>` : `<div class="skill-upgrade-cost"><small>${maxed ? 'Максимальный уровень' : 'Улучшение'}</small><strong>${escapeHtml(costText(skill.upgradeCost))}</strong></div>
+      ${skill.enchantChance<1?`<small class="skill-enchant-warning">${Math.round(skill.enchantChance*100)}% · При неудаче заточка сбрасывается. Mastery сохраняет уровень.</small>`:''}
       <button type="button" data-skill-upgrade="${skill.slot}" ${maxed || !skill.canUpgrade ? 'disabled' : ''}>
         ${maxed ? 'MAX' : skill.canUpgrade ? `Улучшить до +${skill.enchantLevel + 1}` : missingItems ? 'Не хватает материалов' : 'Не хватает ресурсов'}
       </button>
@@ -194,7 +195,7 @@ export async function openSkillsGame({ api, renderState, haptic, statusElement }
         });
         state = payload.skills;
         if (payload.state) renderState(payload.state);
-        feedbackText = `${payload.skillName} улучшен до +${payload.level}.`;
+        feedbackText = payload.success===false?`${payload.skillName}: заточка не удалась, уровень +${payload.level}.`:`${payload.skillName} улучшен до +${payload.level}.`;
         enchanted = Number(button.dataset.skillUpgrade);
         haptic('heavy');
       } catch (error) {

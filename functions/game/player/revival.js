@@ -13,6 +13,8 @@ import { partyState } from '../party/party.js';
 import getCurrentHp from './getters/getCurrentHp.js';
 import getCurrentMp from './getters/getCurrentMp.js';
 import getMaxHp from './getters/getMaxHp.js';
+import {nearbyCorpse} from '../world/death.js';
+import {l2ActionBlock} from './l2Effects.js';
 
 export const REVIVE_SKILLS = Object.freeze({1016: {mass: false}, 1254: {mass: true}});
 export const REVIVE_IDS = new Set(Object.keys(REVIVE_SKILLS).map(Number));
@@ -89,18 +91,20 @@ export function castRevival(session, rawId, targetId = null, {now = Date.now()} 
     const skill = revivalSkills(session).find(entry => entry.id === id && entry.learned > 0);
     if (!skill) return {ok: false, reason: 'not_learned'};
     if (isFallen(session, now)) return {ok: false, reason: 'player_dead'};
+    const blocked=l2ActionBlock(session,{magic:true},now);if(blocked)return {ok:false,reason:blocked};
     if (n(session.game.l2CastAt?.[id]) > now) return {ok: false, reason: 'cooldown'};
 
     const chat = typeof session.ownerDocument === 'function' ? session.ownerDocument() : null;
     let fallen;
     if (REVIVE_SKILLS[id].mass) {
         // the fallen are not "party targets" of a buff (those are the living), so the whole party is looked at
-        fallen = (chat ? partyState(chat, session)?.members || [] : []).filter(member => member !== session && isFallen(member, now));
+        fallen = (chat ? partyState(chat, session)?.members || [] : []).filter(member => member !== session && isFallen(member, now)&&nearbyCorpse(session,member));
         if (!fallen.length) return {ok: false, reason: 'not_fallen'};
     } else {
-        const target = targetId == null || targetId === '' ? null : chat?.members?.find(member => String(member.userId) === String(targetId) && !member.userChatData?.user?.is_bot);
+        const target = targetId == null || targetId === '' ? null : [...(chat?.members||[]),...(chat?.$locals?.guests||[])].find(member => String(member.userId) === String(targetId) && !member.isHided&&!member.userChatData?.user?.is_bot);
         if (!target || target === session) return {ok: false, reason: 'unknown_player'};
         if (!isFallen(target, now)) return {ok: false, reason: 'not_fallen'};
+        if(!nearbyCorpse(session,target))return {ok:false,reason:'revival_too_far'};
         fallen = [target];
     }
 
@@ -117,6 +121,8 @@ export function castRevival(session, rawId, targetId = null, {now = Date.now()} 
         stats.hp = Math.max(1, Math.round(max * share));
         member.game.respawnTime = 0;
         delete member.game.l2PendingDeath;
+        if(member.game.world){delete member.game.world.died;delete member.game.world.death;}
+        if(member.game.hunt?.field){const f=member.game.hunt.field;f.path=[];delete f.pendingRoom;f.seenAt=now;f.moveAt=now;member.game.hunt.lastActionAt=now;for(const mob of f.mobs||[])mob.aggro=false;}
         member.needsSave = true;
         return {userId: String(member.userId), name: member.userChatData?.user?.first_name || member.userChatData?.user?.username || String(member.userId), hp: stats.hp};
     });

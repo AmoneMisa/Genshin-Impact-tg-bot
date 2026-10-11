@@ -113,6 +113,9 @@ import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
 import { getZoneLoot, fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, setHotbarForMiniApp, useSpecialForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
+import {worldState,worldAction,advanceWorld,ensureWorld,enterWorldInstance,bindWorldInstances} from '../functions/game/world/world.js';
+import {worldRequestState} from './world.js';
+import {loadWorldInstances,saveWorldInstances} from './worldInstances.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
@@ -1044,14 +1047,16 @@ const classBuffsCast = guarded('class buffs cast', async (req, res) => {
   if (typeof body.buffId !== 'string' || !['string', 'number', 'undefined'].includes(typeof body.targetId)) {
     throw httpError(400, 'buffId is required');
   }
-  const result = await withLock(context.chatId, async () => {
+  const result = await withLock('clan:world',()=>withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
+    await loadWorldInstances(context.session);
+    bindWorldInstances(context.session.ownerDocument());
     const advanced=advanceFieldPvp(context.session.ownerDocument());
     const cast = (body.buffId.startsWith('l2:') || body.buffId.startsWith('scryde:')) ? castL2Buff(context.session,body.buffId,body.targetId??null,{force:body.force===true}) : castClassBuff(context.session, body.buffId, body.targetId ?? null);
     const buffs=getClassBuffsState(context.session);
-    if (cast.ok||advanced||context.session.needsSave) await saveSession(context.session);
+    if (cast.ok||advanced||context.session.needsSave){await saveWorldInstances(context.session);await saveSession(context.session);}
     return { ...cast, buffs };
-  });
+  }));
   return sendResult(res, result, context);
 });
 
@@ -1776,9 +1781,12 @@ const huntLock = context => `${context.chatId}:${context.userId}:inventory`;
 
 // Every hunt answer carries the whole screen; mob swings that fell due are applied (and saved) on the way.
 async function huntAnswer(context, run) {
-  return withLock(huntLock(context), async () => {
+  return withLock('clan:world',()=>withLock(huntLock(context), async () => {
     context.session = await getSession(context.chatId, context.userId);
+    await loadWorldInstances(context.session);
     const chat=context.session.ownerDocument();
+    bindWorldInstances(chat);
+    advanceWorld(context.session);
     const pvpChanged=advanceFieldPvp(chat);
     const result = await run(context.session);
     const hunt = await getHuntState(context.session,Date.now(),fieldPeers(chat,context.session));
@@ -1787,10 +1795,11 @@ async function huntAnswer(context, run) {
       if (pvpChanged || result.changed) chat.members.forEach((member, index) => {
         if (member !== context.session && (member.game?.hunt?.field || member.game?.worldPvp)) chat.markModified(`members.${index}`);
       });
+      bindWorldInstances(chat);await saveWorldInstances(context.session);
       await saveSession(context.session);
     }
     return { ...result, hunt };
-  });
+  }));
 }
 
 const huntState = guarded('hunt state', async (req, res) => {
@@ -1799,10 +1808,28 @@ const huntState = guarded('hunt state', async (req, res) => {
   return sendJson(res, 200, result.hunt);
 });
 
+const worldRequest = guarded('world map', async (req,res) => {
+  const context=await authorize(req),body=req.method==='POST'?await readJsonBody(req):null;
+  const result=await withLock('clan:world',()=>withLock(huntLock(context),async()=>{
+    context.session=await getSession(context.chatId,context.userId);
+    const outcome=await worldRequestState(context.session,body);
+    await saveWorldInstances(context.session);
+    const hunt=body?await getHuntState(context.session,Date.now(),fieldPeers(context.session.ownerDocument(),context.session)):undefined;
+    await saveSession(context.session);
+    return {...outcome,hunt};
+  }));
+  if(req.method==='GET'&&new URL(req.url,'http://local').searchParams.get('live')==='1'){for(const key of ['cities','regions','locations','npcs','shop'])delete result.world[key];result.world.holdings=result.world.holdings.map(({id,owner,siege})=>({id,owner,siege}));}
+  return sendResult(res,result,context);
+});
+
 const huntStart = guarded('hunt start', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  const result = await huntAnswer(context, session => startHuntForMiniApp(session, body.zone));
+  const result = await huntAnswer(context, session => {
+    const world=ensureWorld(session);
+    if(world.mode!=='location'||world.location!==body.zone)return {ok:false,reason:'gatekeeper_required'};
+    return startHuntForMiniApp(session,body.zone);
+  });
   return sendResult(res, result, context);
 });
 
@@ -1919,7 +1946,7 @@ const huntLoot = guarded('hunt loot', async (req, res) => {
 
 const huntMove = guarded('hunt move', async (req, res) => {
   const context = await authorize(req), body = await readJsonBody(req);
-  return sendResult(res, await huntAnswer(context, session => moveHuntForMiniApp(session, body.direction)), context);
+  return sendResult(res, await huntAnswer(context, session => moveHuntForMiniApp(session, body.point || body.direction)), context);
 });
 const huntTarget = guarded('hunt target', async (req, res) => {
   const context = await authorize(req), body = await readJsonBody(req);
@@ -1966,7 +1993,7 @@ const sealExchange=guarded('seal exchange',async(req,res)=>{
 
 const huntFlee = guarded('hunt flee', async (req, res) => {
   const context = await authorize(req);
-  const result = await huntAnswer(context, session => fleeHuntForMiniApp(session));
+  const result = await huntAnswer(context, session => worldAction(session,{action:'escape'}));
   return sendResult(res, result, context);
 });
 
@@ -2175,6 +2202,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/arena/attack') return arenaAttack(req, res);
     if (route === 'GET /api/boss') return bossState(req, res, requestUrl);
     if (route === 'GET /api/hunt') return huntState(req, res);
+    if (route === 'GET /api/world' || route === 'POST /api/world/action') return worldRequest(req,res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
     if (route === 'POST /api/fishing') return fishingAction(req, res);
     if (route === 'GET /api/tattoos') return tattoosState(req, res);

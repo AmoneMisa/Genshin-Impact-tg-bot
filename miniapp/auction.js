@@ -32,7 +32,7 @@ const potionKey = potion => potion?.id || `${potion?.type}:${potion?.bottleType}
 export function sellableItems(session) {
   const inventory = inventoryOf(session);
   const equipment = (inventory?.equipment?.items || [])
-    .filter(item => item?.uid && !item.isUsed && !isTimedItem(item))
+    .filter(item => item?.uid && !item.isUsed && !isTimedItem(item) && !item.pvp && !item.bound && !item.noTrade && item.tradeable !== false)
     .map(item => ({ kind: 'equipment', ref: item.uid, ...viewOfEquipment(item), count: 1 }));
   const potions = (inventory?.potions?.items || [])
     .filter(potion => number(potion.count) > 0)

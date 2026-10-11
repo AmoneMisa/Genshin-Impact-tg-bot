@@ -1,5 +1,5 @@
 /*
- * WhitesLove Mini App design system.
+ * Reality of Lineage Mini App design system.
  *
  * Feature stylesheets own layout and mode-specific artwork. This file is loaded
  * last and owns the shared visual grammar: surfaces, controls, semantic states,
@@ -817,3 +817,53 @@ a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
  .game-overlay > .overlay-panel,.game-overlay.visible > .overlay-panel { transform: none; transition: none; }
 }
+
+/* Shared atlas and combat dialogs. Feature styles own positioning only. */
+.game-dialog-panel {
+  padding: var(--dialog-padding, 16px);
+  color: var(--text);
+  background: var(--surface-panel);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+}
+.game-dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.game-dialog-heading h2 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: var(--gold-bright);
+  font: 700 21px/1.2 var(--serif);
+}
+.game-dialog-panel button {
+  min-height: var(--control-height);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xs);
+  background: var(--surface-control);
+  color: var(--text-soft);
+}
+.game-dialog-heading [data-dismiss] {
+  flex-shrink: 0;
+  width: 34px;
+  min-height: 34px;
+  padding: 0;
+}
+.death-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 15000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(4, 5, 12, .85);
+}
+.death-panel { --dialog-padding: 20px; width: min(100%, 360px); }
+.death-panel p { font-size: 14px; line-height: 1.45; }
+.death-panel [data-death-options] { display: grid; gap: 8px; }
+.death-panel button { min-height: 44px; padding: 10px; }
+.death-panel [data-death-error]:empty { display: none; }

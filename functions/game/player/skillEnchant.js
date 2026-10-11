@@ -101,7 +101,8 @@ export function getSkillEnchantCost(skill) {
 
 // Attempts to enchant a skill by one level, deducting resources from the
 // player's inventory. Mutates `skill`/`inventory` in place; caller saves.
-export function enchantSkill(skill, inventory) {
+export const getSkillEnchantChance=skill=>skill?.l2Id?Math.max(.25,.95-getSkillEnchantLevel(skill)*.07):1;
+export function enchantSkill(skill, inventory, {safe=false,random=Math.random}={}) {
     const cost = getSkillEnchantCost(skill);
     if (!cost) {
         return { ok: false, reason: "max_level" };
@@ -121,6 +122,7 @@ export function enchantSkill(skill, inventory) {
     }
 
     const owner = {game: {inventory}};
+    if(safe && getMaterialCount(owner,'l2_9627')<1)return {ok:false,reason:'no_mastery',cost};
     const missing = Object.entries(cost.items || {}).filter(([key, amount]) => getMaterialCount(owner, key) < amount);
     if (missing.length) {
         return { ok: false, reason: "not_enough_items", cost, missing: Object.fromEntries(missing) };
@@ -131,7 +133,11 @@ export function enchantSkill(skill, inventory) {
     inventory.ironOre -= cost.ironOre;
     inventory.sp -= cost.sp;
     spendMaterials(owner, cost.items);
-    skill.enchantLevel = getSkillEnchantLevel(skill) + 1;
+    if(safe)spendMaterials(owner,{l2_9627:1});
+    const before=getSkillEnchantLevel(skill);
+    const chance=getSkillEnchantChance(skill);
+    const success=random()<chance;
+    skill.enchantLevel = success?before+1:safe?before:0;
 
-    return { ok: true, level: skill.enchantLevel, cost };
+    return { ok: true, success, safe, chance, level: skill.enchantLevel, cost };
 }

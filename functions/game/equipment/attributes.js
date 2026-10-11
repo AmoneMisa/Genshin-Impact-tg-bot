@@ -1,12 +1,5 @@
-// Attributes (Lineage II elements). A weapon carries one element and hits harder with it; armor pieces and
-// shields carry an element and resist hits of it. Attribute stones are dropped by bosses of the same
-// element; every stone adds points until the item reaches the cap of the stone tier (a stone carries a
-// weapon up to 25, a crystal up to 75, a jewel up to 150; armor takes a fraction).
-//
-//   attack:  damage x (1 + points x 0.15%)   - x1.5 against a boss of the opposite element, x0.5 against its own
-//   resist:  damage x (1 - points x 0.2%)    - the resistances of all worn pieces add up (150 at most)
-//
-// The attribute is stored as item.attribute = {element, value}.
+// H5: one attack element; armor has up to three defenses without opposite pairs.
+// Legacy item.attribute values remain readable without changing their meaning.
 import { ATTRIBUTE_GRADES, ATTRIBUTE_TIERS, ELEMENTS, attributeKey } from '../../../template/augmentData.js';
 import { getMaterialCount, spendMaterials } from '../player/materials.js';
 import { gradeIndex } from './catalog.js';
@@ -14,6 +7,7 @@ import {l2RawStat} from '../player/l2Effects.js';
 import {hallElementResist} from '../clans/clanHall.js';
 import { uniqueEquipped } from './itemBonuses.js';
 import { isActuallyEquipped, syncEquippedSnapshot } from './snapshots.js';
+import {ATTRIBUTE_ITEMS, CLOAK_ATTRIBUTES} from '../../../template/l2AttributeRules.js';
 
 export { ATTRIBUTE_GRADES, ATTRIBUTE_TIERS, ELEMENTS, attributeKey };
 
@@ -35,7 +29,15 @@ export function normalizeElement(value) {
     return BOSS_ELEMENT[value] || null;
 }
 
-export const canAttribute = item => ['weapon', 'armor', 'shield'].includes(item?.mainType) && ATTRIBUTE_GRADES.includes(item.grade);
+export const canAttribute = item => Boolean(item && ATTRIBUTE_GRADES.includes(item.grade)
+    && (item.mainType === 'weapon' || (item.mainType === 'armor' && ['body','greaves','fullBody','helmet','gloves','boots'].includes(item.category)))
+    && (item.elementEnabled === true || ATTRIBUTE_ITEMS[item.name] || item.epicWeapon || item.custom));
+
+// Read legacy armor as the defense it originally granted. Migration never flips an old stone.
+export function armorAttributes(item) {
+    if (item?.attributes && typeof item.attributes === 'object') return item.attributes;
+    return item?.attribute?.value > 0 && elementInfo(item.attribute.element) ? {[item.attribute.element]: Number(item.attribute.value)} : {};
+}
 
 const sideOf = item => (item.mainType === 'weapon' ? 'weapon' : 'armor');
 
@@ -49,31 +51,42 @@ export function describeAttribute(attribute) {
 }
 
 /** Adds the points of one stone. Returns {ok, attribute} or {ok: false, reason}. */
-export function addAttribute(session, item, element, tier) {
+export function addAttribute(session, item, element, tier, {random = Math.random} = {}) {
     if (!item || !canAttribute(item)) return {ok: false, reason: 'not_attributable'};
     if (item.timed) return {ok: false, reason: 'timed_item'};
     if (!elementInfo(element) || !tierInfo(tier)) return {ok: false, reason: 'unknown_stone'};
-    const current = item.attribute;
-    if (current?.value > 0 && current.element !== element) return {ok: false, reason: 'wrong_element'};
+    const weapon = item.mainType === 'weapon';
+    const defense = weapon ? element : elementInfo(element).opposite;
+    const attributes = {...armorAttributes(item)};
+    const current = weapon ? item.attribute : {element: defense, value: attributes[defense] || 0};
+    if (weapon && current?.value > 0 && current.element !== element) return {ok: false, reason: 'wrong_element'};
+    if (!weapon && attributes[element] > 0) return {ok: false, reason: 'opposite_element'};
+    if (!weapon && !attributes[defense] && Object.keys(attributes).filter(k => attributes[k] > 0).length >= 3) return {ok: false, reason: 'attribute_slots_full'};
 
     const limits = tierInfo(tier)[sideOf(item)];
     const value = Number(current?.value) || 0;
     if (value >= limits.cap) return {ok: false, reason: 'attribute_tier_max', cap: limits.cap};
     if (!spendMaterials(session, {[attributeKey(tier, element)]: 1})) return {ok: false, reason: 'no_attribute_stone', stone: attributeKey(tier, element)};
 
-    item.attribute = {element, value: Math.min(limits.cap, value + limits.add)};
+    if (random() >= tierInfo(tier).chance) return {ok: true, success: false, attribute: current, consumed: true};
+    const next = Math.min(limits.cap, value + (weapon && value === 0 ? 20 : limits.add));
+    if (weapon) item.attribute = {element, value: next};
+    else {item.attributes = {...attributes, [defense]: next}; item.attribute = null;}
+    item.attributeVersion = 2;
     if (isActuallyEquipped(session, item)) syncEquippedSnapshot(session, item);
-    return {ok: true, attribute: item.attribute};
+    return {ok: true, success: true, attribute: {element: defense, value: next}};
 }
 
 /** Removes an attribute for gold (the stones are lost). */
 export function clearAttribute(session, item) {
-    if (!item || !canAttribute(item)) return {ok: false, reason: 'not_attributable'};
-    if (!item.attribute) return {ok: false, reason: 'no_attribute'};
+    if (!item) return {ok: false, reason: 'not_attributable'};
+    if (!item.attribute && !Object.keys(armorAttributes(item)).length) return {ok: false, reason: 'no_attribute'};
     const gold = clearGold(item);
     if ((Number(session.game.inventory.gold) || 0) < gold) return {ok: false, reason: 'not_enough_gold', gold};
     session.game.inventory.gold -= gold;
     item.attribute = null;
+    item.attributes = {};
+    item.attributeVersion = 2;
     if (isActuallyEquipped(session, item)) syncEquippedSnapshot(session, item);
     return {ok: true, gold};
 }
@@ -86,6 +99,12 @@ export function attributeProfile(session) {
     for(const element of ['fire','water','wind','earth','holy','dark']){const bonus=l2RawStat(session,element+'Res')+hall;if(bonus)result.resist[element]=bonus;}
     if (!stats) return result;
     for (const item of uniqueEquipped(stats)) {
+        const cloak = CLOAK_ATTRIBUTES[item.name];
+        if (cloak) for (const [element, value] of Object.entries(cloak.resist)) result.resist[element] = (result.resist[element] || 0) + value;
+        if (item.mainType !== 'weapon') {
+            for (const [element, value] of Object.entries(armorAttributes(item))) if (elementInfo(element) && value > 0) result.resist[element] = (result.resist[element] || 0) + Number(value);
+            continue;
+        }
         const attribute = item?.attribute;
         if (!attribute || !(attribute.value > 0) || !elementInfo(attribute.element)) continue;
         if (item.mainType === 'weapon') {
@@ -100,53 +119,65 @@ export function attributeProfile(session) {
 /** Damage factor of a weapon attribute against a target element (null for a target without one). */
 export function attackFactor(attack, targetElement = null) {
     if (!attack || !(attack.value > 0)) return 1;
-    let bonus = attack.value * ATTACK_PER_POINT;
-    if (targetElement) {
-        if (targetElement === elementInfo(attack.element)?.opposite) bonus *= WEAK_BONUS;
-        else if (targetElement === attack.element) bonus *= SAME_ELEMENT_BONUS;
-    }
-    return 1 + bonus;
+    return elementalFactor(attack.value, typeof targetElement === 'object' ? Number(targetElement?.[attack.element]) || 0 : 0);
+}
+
+// High Five Formulas.calcAttributeBonus. NPC element alone is not elemental defense.
+export function elementalFactor(attack, defense=0) {
+    if(attack<=defense||!attack)return 1;
+    let a=.25,d=.2894;
+    if(attack>=450){[a,d]=defense>=450?[.06909,.078]:defense>=350?[.0887,.1007]:[.129,.1473];}
+    else if(attack>=300){[a,d]=defense>=300?[.0887,.1007]:defense>=150?[.129,.1473]:[.25,.2894];}
+    else if(attack>=150){[a,d]=defense>=150?[.129,.1473]:defense>=0?[.25,.2894]:[.4,.55];}
+    else if(defense<0){a=.4;d=.55;}
+    const diff=attack-defense,max=diff>=300?100:diff>=150?70:40;
+    return Math.max(1,1+Math.max(-50,Math.min(max,a*(attack+100)**2/144-d*(defense+100)**2/169))/100);
 }
 
 /** Damage factor of the worn armor against a hit of an element. */
-export function resistFactor(resist, element) {
+export function resistFactor(resist, element, attack=0) {
     if (!element) return 1;
-    return 1 - Math.min(RESIST_CAP, Number(resist?.[element]) || 0) * RESIST_PER_POINT;
+    return elementalFactor(attack, Number(resist?.[element]) || 0);
 }
 
 /** Fighter against fighter: the attacker's weapon element against the defender's resistance to it. */
 export function pvpFactor(attackerProfile, defenderProfile) {
     const attack = attackerProfile?.attack;
     if (!attack) return 1;
-    return attackFactor(attack) * resistFactor(defenderProfile?.resist, attack.element);
+    return elementalFactor(attack.value,Number(defenderProfile?.resist?.[attack.element])||0);
 }
 
 /** An item's card: what it carries and the stones the player holds that fit it. */
 export function attributeInfo(session, item) {
-    if (!canAttribute(item)) return null;
+    if (!canAttribute(item) && !item?.attribute && !Object.keys(armorAttributes(item)).length) return null;
     const side = sideOf(item);
-    const current = describeAttribute(item.attribute);
+    const currents = side === 'weapon' ? [describeAttribute(item.attribute)].filter(Boolean) : Object.entries(armorAttributes(item)).map(([element, value]) => describeAttribute({element, value})).filter(Boolean);
+    const current = currents[0] || null;
     const options = [];
     for (const tier of ATTRIBUTE_TIERS) {
         for (const element of ELEMENTS) {
-            if (current && current.element !== element.id) continue;
+            if (!canAttribute(item)) continue;
+            const defense = side === 'weapon' ? element.id : element.opposite;
+            if (side === 'weapon' && current && current.element !== element.id) continue;
+            if (side === 'armor' && (currents.some(c => c.element === element.id) || (currents.length >= 3 && !currents.some(c => c.element === defense)))) continue;
+            const value = currents.find(c => c.element === defense)?.value || 0;
             const stones = getMaterialCount(session, attributeKey(tier.id, element.id));
             if (!stones) continue;
-            options.push({tier: tier.id, tierLabel: tier.label, element: element.id, icon: element.icon, label: element.label, stones, add: tier[side].add, cap: tier[side].cap, full: (current?.value || 0) >= tier[side].cap});
+            options.push({tier: tier.id, tierLabel: tier.label, element: element.id, icon: element.icon, label: side === 'weapon' ? element.label : elementInfo(defense).label + ' · защита', stones, chance: tier.chance, add: side === 'weapon' && !value ? 20 : tier[side].add, cap: tier[side].cap, full: value >= tier[side].cap});
         }
     }
-    return {side, current, options, clearGold: current ? clearGold(item) : 0};
+    return {side, current, currents, options, clearGold: current ? clearGold(item) : 0};
 }
 
 /** The hero screen: weapon element and resistances. */
 export function getAttributesState(session) {
     const profile = attributeProfile(session);
     return {
-        attack: profile.attack ? {...describeAttribute(profile.attack), bonus: Math.round(profile.attack.value * ATTACK_PER_POINT * 1000) / 10} : null,
+        attack: profile.attack ? {...describeAttribute(profile.attack), bonus: Math.round((elementalFactor(profile.attack.value,0)-1)*1000)/10} : null,
         resist: ELEMENTS.map(element => ({
             element: element.id, label: element.label, icon: element.icon,
             value: profile.resist[element.id] || 0,
-            reduction: Math.round((profile.resist[element.id] || 0) * RESIST_PER_POINT * 1000) / 10,
+            reduction: null,
         })),
     };
 }

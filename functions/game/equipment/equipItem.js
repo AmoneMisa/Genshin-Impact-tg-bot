@@ -1,6 +1,7 @@
 import unequipItem from "./unequipItem.js";
 import equipmentTemplate from "../../../template/equipmentTemplate.js";
 import { canClassUse } from "./catalog.js";
+import {cloakSlotOpen} from './itemBonuses.js';
 
 function overlapsSlots(left = [], right = []) {
     const rightSlots = new Set(right);
@@ -15,6 +16,7 @@ export default function equipItem(session, item) {
     if (item.isUsed) {
         return 1; // предмет уже экипирован
     }
+    if(item.cloak&&!cloakSlotOpen(session.game.equipmentStats))return 4;
 
     const equipTemplateGrade = equipmentTemplate.grades.find(
         grade => grade.name === item.grade

@@ -249,7 +249,7 @@ export function getEquipmentState(session) {
   };
 }
 
-const EQUIP_FAILURES = { 2: 'invalid_item', 3: 'wrong_class' };
+const EQUIP_FAILURES = { 2: 'invalid_item', 3: 'wrong_class', 4:'cloak_slot_closed' };
 
 export function performEquipmentAction(session, key, action, options = {}) {
   expireTimedItems(session);
@@ -299,7 +299,7 @@ export function performEquipmentAction(session, key, action, options = {}) {
   if (action === 'attribute') {
     const result = addAttribute(session, item, options.element, options.tier);
     if (!result.ok) return { ok: false, reason: result.reason, cap: result.cap, equipment: getEquipmentState(session) };
-    return { ok: true, action, attribute: result.attribute, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
+    return { ok: true, action, success: result.success, attribute: result.attribute, item: sanitizeItem(session, item, index), equipment: getEquipmentState(session) };
   }
 
   if (action === 'attribute_clear') {

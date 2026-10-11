@@ -33,7 +33,10 @@ export function roomLayout(zone) {
     const key = zone?.id || 'none';
     if (layouts.has(key)) return layouts.get(key);
     let layout;
-    if (zone?.kind !== 'catacomb') {
+    if(zone?.instance?.kind==='rift'){const rooms=(zone.riftRooms||[]).map((r,i)=>({...r,row:Math.floor(i/3),col:i%3,big:r.cap>=10,name:'Комната Разлома '+(i+1),walls:[{x:.35,y:.45,w:.3,h:.08}]}));layout={cols:3,rows:Math.ceil(rooms.length/3),startId:rooms[0].id,map:false,rooms};}
+    else if (zone?.instance && zone.instance.kind !== 'rift') {
+        layout={cols:1,rows:1,startId:roomId(0,0),map:false,rooms:[{id:roomId(0,0),row:0,col:0,big:true,cap:zone.instance.kind==='labyrinth'?8:1,name:zone.title,walls:zone.instance.kind==='labyrinth'?[{x:.35,y:.4,w:.3,h:.08}]:[]}]};
+    } else if (zone?.kind !== 'catacomb') {
         layout = {cols: 1, rows: 1, startId: roomId(0, 0), map: false,
             rooms: [{id: roomId(0, 0), row: 0, col: 0, big: false, cap: FIELD_CAP, name: zone?.title || 'Поле'}]};
     } else {
@@ -49,7 +52,7 @@ export function roomLayout(zone) {
             const big = bigIds.has(roomId(row, col));
             const cap = start ? START_CAP : big ? 11 + Math.floor(random() * 2) : 3 + Math.floor(random() * 3);
             const name = start ? 'Вход в катакомбы' : big ? `${HALL_NAMES[hall++ % HALL_NAMES.length]}` : `${CHAMBER_NAMES[chamber++ % CHAMBER_NAMES.length]}`;
-            return {id: roomId(row, col), row, col, big, cap, name};
+            return {id: roomId(row, col), row, col, big, cap, name, walls: big ? [{x:.35,y:.6,w:.12,h:.12},{x:.65,y:.6,w:.12,h:.12}] : []};
         });
         layout = {cols: GRID_COLS, rows: GRID_ROWS, startId: roomId(0, 0), map: true, rooms};
     }

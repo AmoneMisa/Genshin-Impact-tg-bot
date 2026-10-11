@@ -85,6 +85,11 @@ export default {
     "image": "/art/bosses/l2/25269.webp",
     "source": "https://l2elo.com/images/npc-photos/25269.webp"
   },
+  "Behemoth Leader": {
+    "npcId": 25726,
+    "image": "/art/bosses/l2/25726.jpg",
+    "source": "https://l2vika.ru/screen4/behemoth-leader-1.jpg"
+  },
   "beleth": {
     "npcId": 29118,
     "image": "/art/bosses/l2/29118.png",
@@ -119,6 +124,16 @@ export default {
     "npcId": 25176,
     "image": "/art/bosses/l2/25176.webp",
     "source": "https://l2elo.com/images/npc-photos/25176.webp"
+  },
+  "Blackdagger Wing": {
+    "npcId": 25721,
+    "image": "/art/bosses/l2/25721.jpg",
+    "source": "https://l2vika.ru/screen4/blackdagger-wing-chernoe-lezvie-1.jpg"
+  },
+  "Bleeding Fly": {
+    "npcId": 25720,
+    "image": "/art/bosses/l2/25720.jpg",
+    "source": "https://l2vika.ru/screen4/bleeding-fly-krovotochaschaya-muha-1.jpg"
   },
   "Bloody Empress Decarbia": {
     "npcId": 25266,
@@ -270,10 +285,25 @@ export default {
     "image": "/art/bosses/l2/25248.webp",
     "source": "https://l2elo.com/images/npc-photos/25248.webp"
   },
+  "Dragon Beast": {
+    "npcId": 25727,
+    "image": "/art/bosses/l2/25727.jpg",
+    "source": "https://l2vika.ru/screen4/dragon-beast-1.jpg"
+  },
+  "Drake Lord": {
+    "npcId": 25725,
+    "image": "/art/bosses/l2/25725.jpg",
+    "source": "https://l2vika.ru/screen4/drake-lord-1.jpg"
+  },
   "Dread Avenger Kraven": {
     "npcId": 25418,
     "image": "/art/bosses/l2/25418.webp",
     "source": "https://l2elo.com/images/npc-photos/25418.webp"
+  },
+  "Dust Rider": {
+    "npcId": 25719,
+    "image": "/art/bosses/l2/25719.jpg",
+    "source": "https://l2vika.ru/screen4/dust-rider-naezdnik-pylnoj-buri-1.jpg"
   },
   "Earth Protector Panathen": {
     "npcId": 25192,
@@ -294,6 +324,11 @@ export default {
     "npcId": 25319,
     "image": "/art/bosses/l2/25319.webp",
     "source": "https://l2elo.com/images/npc-photos/25319.webp"
+  },
+  "Emerald Horn": {
+    "npcId": 25718,
+    "image": "/art/bosses/l2/25718.jpg",
+    "source": "https://l2vika.ru/screen4/emerald-horn-izumrudnyj-rog-1.jpg"
   },
   "Enchanted Forest Watcher Ruell": {
     "npcId": 25070,
@@ -410,10 +445,20 @@ export default {
     "image": "/art/bosses/l2/25431.webp",
     "source": "https://l2elo.com/images/npc-photos/25431.webp"
   },
+  "freya": {
+    "npcId": 29179,
+    "image": "/art/bosses/l2/29179.jpg",
+    "source": "https://lineage2dex.com/template/site/dex/storage/images/freya.jpg"
+  },
+  "freyaExtreme": {
+    "npcId": 29180,
+    "image": "/art/bosses/l2/29180.jpg",
+    "source": "https://lineage2dex.com/template/site/dex/storage/images/freya.jpg"
+  },
   "frintezza": {
-    "npcId": 29045,
-    "image": "/art/bosses/l2/29045.webp",
-    "source": "https://l2elo.com/images/npc-photos/29045.webp"
+    "npcId": 29047,
+    "image": "/art/bosses/l2/29047.webp",
+    "source": "https://l2elo.com/images/npc-photos/29047.webp"
   },
   "Furious Thieles": {
     "npcId": 25010,
@@ -700,6 +745,11 @@ export default {
     "image": "/art/bosses/l2/25456.webp",
     "source": "https://l2elo.com/images/npc-photos/25456.webp"
   },
+  "Muscle Bomber": {
+    "npcId": 25724,
+    "image": "/art/bosses/l2/25724.jpg",
+    "source": "https://l2vika.ru/screen4/muscle-bomber-moguchij-vzryvatel-1.jpg"
+  },
   "Nakondas": {
     "npcId": 25415,
     "image": "/art/bosses/l2/25415.webp",
@@ -879,6 +929,11 @@ export default {
     "npcId": 25102,
     "image": "/art/bosses/l2/25102.webp",
     "source": "https://l2elo.com/images/npc-photos/25102.webp"
+  },
+  "Shadow Summoner": {
+    "npcId": 25722,
+    "image": "/art/bosses/l2/25722.jpg",
+    "source": "https://l2vika.ru/screen4/shadow-summoner-prizyvatel-tenej-1.jpg"
   },
   "Shaman King Selu": {
     "npcId": 25155,

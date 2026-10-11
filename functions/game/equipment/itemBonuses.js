@@ -117,12 +117,20 @@ export function setBonusValues(gradeName, armorType, setId = null) {
 }
 
 /** Items counted once: a two-slot piece sits in `equipmentStats` under each slot it fills. */
+export function cloakSlotOpen(equipmentStats){
+    const sets=new Map();
+    for(const item of Object.values(equipmentStats||{}))if(item?.setId&&['S80','S84'].includes(item.grade)){
+        if(!sets.has(item.setId))sets.set(item.setId,new Set());sets.get(item.setId).add(item.category);
+    }
+    return [...sets.values()].some(p=>['helmet','gloves','boots'].every(k=>p.has(k))&&(p.has('fullBody')||(p.has('body')&&p.has('greaves'))));
+}
 export function uniqueEquipped(equipmentStats) {
     const seen = new Set();
     const items = [];
     const now = Date.now();
     for (const slot of Object.values(equipmentStats || {})) {
         if (!slot) continue;
+        if(slot.cloak&&!cloakSlotOpen(equipmentStats))continue;
         // A rented epic item stops working the moment its time is up.
         if (slot.timed && Number(slot.expiresAt) <= now) continue;
         if (Array.isArray(slot.slots)) {

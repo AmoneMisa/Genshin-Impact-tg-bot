@@ -5,6 +5,7 @@ import {
   getSkillCooldownMultiplier,
   getSkillEnchantCost,
   getSkillEnchantLevel,
+  getSkillEnchantChance,
   getSkillPowerMultiplier,
 } from '../functions/game/player/skillEnchant.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
@@ -188,6 +189,7 @@ function skillState(session, skill, playerLevel) {
     learned: isSkillLearned(session, skill),
     learn: isSkillLearned(session, skill) ? null : learnState(session, skill, playerLevel),
     enchantLevel: level,
+    enchantChance:getSkillEnchantChance(skill),
     maxEnchantLevel: SKILL_ENCHANT_MAX_LEVEL,
     power: powerState(skill, getSkillPowerMultiplier(skill)),
     usage: usageState(skill, maxHp, session),

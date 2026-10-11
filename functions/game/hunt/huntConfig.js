@@ -42,5 +42,5 @@ export const CHAMPIONS = Object.freeze({
 export const STONE_CHANCE = Object.freeze({
     normal: Object.freeze({stone: 0.015, crystal: 0, jewel: 0}),
     blue: Object.freeze({stone: 0.3, crystal: 0.04, jewel: 0}),
-    red: Object.freeze({stone: 1, crystal: 0.2, jewel: 0.01}),
+      red: Object.freeze({stone: 1, crystal: 0.2, jewel: 0}),
 });

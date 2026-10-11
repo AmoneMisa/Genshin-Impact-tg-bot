@@ -2,6 +2,7 @@ import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
 import {
   damageMeter, encounterPanel, escapeHtml, formatDuration, formatNumber, hotbar, hotbarChoice, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
+import {updateDeathPopup} from './death-popup.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
 
 const REASONS = {
@@ -141,13 +142,14 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     const tooLow = level < entry.minLevel;
     const tooHigh = entry.maxLevel && level > entry.maxLevel;
     const jewel = entry.jewel;
-    const real = jewel?.lineage?.mDef != null ? `M.Def ${jewel.lineage.mDef}` : '';
+    const real = jewel?.lineage?.mDef != null ? `M.Def ${jewel.lineage.mDef} · MP +${jewel.lineage.maxMp || 0}` : '';
     const fighting = entry.fighting;
     const status = fighting ? `Идёт бой · HP ${Math.round(entry.hpPercent)}%`
       : remain > 0 ? `Вернётся через <b data-epic-timer="${escapeHtml(entry.respawnAt)}">${epicDuration(remain)}</b>`
       : tooLow ? `Нужен LVL ${entry.minLevel}` : tooHigh ? `Слишком высокий уровень (до ${entry.maxLevel})` : 'Можно вызвать';
     const blocked = (remain > 0 && !fighting) || tooLow || tooHigh;
     return `<article class="forge-card epic-card ${blocked ? 'unaffordable' : ''}">
+      ${entry.image ? `<img class="epic-boss-image" src="${escapeHtml(entry.image)}" alt="${escapeHtml(entry.nameCall)}" width="320" height="200" loading="lazy" decoding="async">` : ''}
       <div class="forge-card-head"><span class="equipment-grade grade-s">${entry.raid ? '☠' : '👑'}</span><div><strong>${escapeHtml(entry.nameCall)}</strong><small>${escapeHtml(entry.title || '')}</small></div></div>
       <div class="forge-costs">
         <span class="forge-cost">Ур. ${entry.level}</span>
@@ -161,7 +163,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       ${!entry.instance && entry.partyMin ? `<p class="epic-jewel">Нужна группа от ${entry.partyMin} игроков</p>` : ''}
       <p class="epic-jewel">Дроп: ${entry.drops || 0} предметов${entry.egg ? ' · яйцо клану' : ''} · Камни жизни</p>
       ${jewel ? `<p class="epic-jewel">💍 ${escapeHtml(jewel.name)} · ${escapeHtml(jewel.grade)}${real ? ` · ${escapeHtml(real)}` : ''} · шанс ${Math.round(entry.jewelChance * 100)}%</p>` : ''}
-      ${entry.weapons?.length ? `<p class="epic-jewel">Эпическое оружие · S84 · ур. 84 · шанс ${Math.round(entry.weaponChance * 100)}%<br>${entry.weapons.map(weapon=>escapeHtml(weapon.name)).join(' · ')}</p>` : ''}
+      ${entry.weapons?.length ? `<p class="epic-jewel">РБ оружие · S84 · ур. 84 · шанс ${Number((entry.weaponChance * 100).toFixed(4))}%<br>${entry.weapons.map(weapon=>escapeHtml(weapon.name)).join(' · ')}</p>` : ''}
       <p class="epic-status">${status}</p>
       <button class="equipment-action forge-action" type="button" data-epic-summon="${escapeHtml(entry.name)}" data-epic-fighting="${fighting ? 1 : 0}" ${blocked ? 'disabled' : ''}>${fighting ? 'В бой' : 'Бросить вызов'}</button>
     </article>`;
@@ -475,6 +477,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   }
 
   function renderAll() {
+    if(state.player)updateDeathPopup({dead:state.player.hp<=0,api,onResolved:()=>poll()});
     syncStage();
     if (!state.active) {
       targetHost.innerHTML = '';
@@ -502,7 +505,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       ${playerFrame(player)}
       ${encounterPanel(boss, selectedTarget)}
       ${bossAttacksPanel(boss)}
-      ${player.respawnRemainMs > 0 ? `<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>` : ''}
+      ${player.hp<=0 ? `<div class="boss-dead">Ожидание воскрешения</div>` : ''}
       ${skillBarHtml(player)}
       ${potionBar(player.potions, { disabled: pending || player.respawnRemainMs > 0 })}
       ${partyStrip(boss.damageList)}

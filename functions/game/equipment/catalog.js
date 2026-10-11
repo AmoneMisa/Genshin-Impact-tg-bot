@@ -6,6 +6,8 @@ import equipmentTemplate from '../../../template/equipmentTemplate.js';
 import epicWeapons from '../../../template/epicWeapons.js';
 import customSets from '../../../template/customSets.js';
 import { classFamily } from '../classes/classFamily.js';
+import {describeEpicJewelry} from './epicJewelry.js';
+import {CLOAK_ATTRIBUTES} from '../../../template/l2AttributeRules.js';
 
 export const ARMOR_TYPES = Object.freeze(['heavy', 'light', 'robe']);
 
@@ -147,8 +149,9 @@ function buildEpic(template, epic) {
     const grade = template.grades.find(entry => entry.name === epic.grade);
     const index = gradeIndex(grade.name, template);
     const kind = template.itemType.find(group => group.name === 'jewelry').kind.find(entry => entry.type === epic.kind);
-    const item = entry(template, grade, 'jewelry', kind, epic.name, {lineage: {mDef: epic.mDef}, epic: true, epicBoss: epic.boss});
+    const item = entry(template, grade, 'jewelry', kind, epic.name, {lineage: {...epic.lineage, mDef: epic.mDef}, epic: true, epicBoss: epic.boss});
     item.id = `epic:${epic.id}`;
+    item.description = describeEpicJewelry(epic.lineage);
     item.cost = Math.round(grade.cost * SLOT_SHARE.jewelry * 6);
     item.rarity = 'goddess';
     item.rarityTranslated = template.rarity.find(entry => entry.name === 'goddess').translatedName;
@@ -218,6 +221,12 @@ export function buildCatalog(template = equipmentTemplate) {
         Object.assign(item,{id:`epic-weapon:${epic.id}`,name:epic.name,description:'Эпическое оружие. Добывается в эпических рейдах.',epic:true,epicWeapon:epic.id,raidBoss:epic.boss,collection:'Epic weapons',rarity:'goddess',rarityTranslated:'Эпическое',cost:base.cost*6});
         // Same top-grade power/ability as the existing weapon type; rarity is not an unbounded stat bonus.
         items.push(item);
+    }
+    for(const [name,cloak] of Object.entries(CLOAK_ATTRIBUTES)){
+        const soul=name.startsWith('Soul'),freya=name.includes('Freya'),pDef=freya?(soul?60:30):(soul?40:20);
+        const grade=template.grades.find(g=>g.name==='S84');
+        const item=entry(template,grade,'armor',{type:'cloak',category:'cloak',slots:['cloak'],classOwner:[],characteristics:{}},name,{lineage:{itemId:cloak.id,pDef},elementEnabled:false,cloak:true,epic:true});
+        item.id=`cloak:${cloak.id}`;item.characteristics.defence=defenceFromReal(template,gradeIndex('S84',template),pDef);items.push(item);
     }
     return items;
 }

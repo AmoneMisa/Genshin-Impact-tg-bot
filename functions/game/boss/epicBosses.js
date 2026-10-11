@@ -2,13 +2,16 @@
 // respawn window - a fixed wait plus a random tail, like the real epic raids. The window is stored per
 // chat in chat.epicBosses[name] = {killedAt, respawnAt, kills}. A kill also rolls the boss's epic jewellery.
 import bossTemplates from '../../../template/bossTemplate.js';
+import L2_BOSS_ART from '../../../webapp/l2-boss-art.js';
 import {needsPass, partyNeeded} from '../../../template/epicPasses.js';
 import { findEpicItem, getCatalog, instantiate, canClassUse } from '../equipment/catalog.js';
+import {epicWeaponChance} from './worldBosses.js';
+import bossPositions from '../../../template/worldBossMap.js';
+import {CITIES} from '../../../template/worldMap.js';
 
-export const EPIC_WEAPON_CHANCE=0.1;
 /** Separate weapon roll; eligible fighters must meet S84 level and wield a boss's weapon type. */
 export function rollEpicWeapon(template,fighters,random=Math.random) {
-    if(!template?.epic || random()>=EPIC_WEAPON_CHANCE)return null;
+    if(!template?.epic || random()>=epicWeaponChance(template.name))return null;
     const choices=[];
     for(const fighter of fighters||[]) {
         if(!(fighter.damage>0) || !(fighter.level>=84))continue;
@@ -105,9 +108,12 @@ export function worldBossList(records = {}, fighting = {}, now = Date.now()) {
         const name = template.name;
         const status = epicStatus({epicBosses: {[name]: records[name] || {}}}, name, now);
         const world = template.world || {};
+        const position=bossPositions[world.npcId];
+        const map=position?{...position,region:[...CITIES].sort((a,b)=>Math.hypot(a.x-position.x,a.y-position.y)-Math.hypot(b.x-position.x,b.y-position.y))[0].id}:null;
         const jewel = findEpicItem(name);
         return {
             name,
+            map,
             nameCall: template.nameCall,
             title: template.title,
             element: template.element,
@@ -116,6 +122,10 @@ export function worldBossList(records = {}, fighting = {}, now = Date.now()) {
             minLevel: template.epic.minLevel,
             maxLevel: template.epic.maxLevel || null,
             location: world.location || '',
+            referenceStats: world.reference || null,
+            weaponChance: epicWeaponChance(name),
+            weapons: getCatalog().filter(item => item.epicWeapon && item.raidBoss === name).map(item => ({name:item.name,kind:item.kind,grade:item.grade,minLevel:84})),
+            image: L2_BOSS_ART[name]?.image || null,
             respawnHours: template.epic.respawnHours,
             windowHours: template.epic.windowHours,
             jewelChance: template.epic.jewelChance,
@@ -142,13 +152,16 @@ export function epicList(chat, now = Date.now()) {
             title: template.title,
             element: template.element,
             minLevel: template.epic.minLevel,
+            location: template.world?.location || '',
+            referenceStats: template.world?.reference || null,
+            image: L2_BOSS_ART[template.name]?.image || null,
             respawnHours: template.epic.respawnHours,
             windowHours: template.epic.windowHours,
             jewelChance: template.epic.jewelChance,
             jewel: jewel ? {name: jewel.name, grade: jewel.grade, kind: jewel.kind, lineage: jewel.lineage} : null,
             needsPass: needsPass(template.name),
             partyMin: partyNeeded(template.name),
-            weaponChance:EPIC_WEAPON_CHANCE,
+            weaponChance:epicWeaponChance(template.name),
             weapons:getCatalog().filter(item=>item.epicWeapon && item.raidBoss===template.name).map(item=>({name:item.name,kind:item.kind,grade:item.grade,minLevel:84})),
             ...status,
         };

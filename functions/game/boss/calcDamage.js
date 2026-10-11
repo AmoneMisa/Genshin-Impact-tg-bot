@@ -1,4 +1,5 @@
 import getRandom from '../../getters/getRandom.js';
+import {NPC_ATTRIBUTES} from '../../../template/l2AttributeRules.js';
 import {soulBackCritical} from '../equipment/soulCrystalCombat.js';
 import getRandomWithoutFloor from '../../getters/getRandomWithoutFloor.js';
 import getAttack from '../player/getters/getAttack.js';
@@ -77,10 +78,11 @@ export default function (session, skill, boss, options = {}) {
     if (boss.playerTarget) {
         dmg *= pvpFactor(attributeProfile(session), boss.playerTarget.attributes);
         dmg *= getEquipStatByName(session,'pvpDamageMul',true);
+        dmg *= l2RawStat(session,isMagicClass(session.game.gameClass.stats.name)?'pvpMagicalDmg':'pvpPhysSkillsDmg',true,now);
         dmg *= boss.playerTarget.incoming * (1 - boss.playerTarget.guard);
     }
-    else if (boss.hunt) dmg *= attackFactor(attributeProfile(session).attack, boss.hunt.element || null);
-    else if (defence === undefined) dmg *= attackFactor(attributeProfile(session).attack, normalizeElement(template?.element));
+    else if (boss.hunt) dmg *= attackFactor(attributeProfile(session).attack, boss.hunt.resist || {});
+    else if (defence === undefined) dmg *= attackFactor(attributeProfile(session).attack, NPC_ATTRIBUTES[template?.world?.npcId] || {});
     dmg *= chanceSkillFactor(equippedChanceSkills(session));
     // Soulshots / Spiritshots armed for this skill.
     dmg *= shotBoost(session);

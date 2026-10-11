@@ -19,6 +19,8 @@ import {customDropChance, pickCustomPart, customPartRows} from '../equipment/cus
 import {instantiate} from '../equipment/catalog.js';
 import getRandom from '../../getters/getRandom.js';
 import getEquipStatByName from '../player/getters/getEquipStatByName.js';
+import fields from '../../../template/huntingTemplate.js';
+const hellboundMobs=new Set(fields.find(z=>z.id==='hellbound')?.mobs.map(m=>m.id)||[]);
 
 const HIGH_LEVEL_PENALTY = Object.freeze({'-3': 0.97, '-4': 0.67, '-5': 0.42, '-6': 0.25, '-7': 0.15, '-8': 0.09, '-9': 0.05, '-10': 0.03});
 
@@ -61,7 +63,7 @@ export function huntDropPreview(level, mobDef, champion = null) {
         rows.push({key: drop.key, name: info.name || drop.name, icon: info.icon, kind: drop.kind, min: drop.min, max: drop.max, chance: drop.chance * rateOf(drop) * gap});
     }
     rows.push(...customPartRows(mobDef.level).map(row => ({...row, chance: row.share * customDropChance(mobDef.level) * HUNT.dropRate * gap})));
-    if (mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
+    if (hellboundMobs.has(mobDef.id) && mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
         const chances = STONE_CHANCE[champion || 'normal'];
         for (const stone of ['stone', 'crystal', 'jewel']) if (chances[stone] > 0) {
             const key = attributeKey(stone, mobDef.dropElement), info = materialInfo(key);
@@ -85,7 +87,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     // A party shares the loot of a kill by its loot mode (the killer keeps everything outside a party).
     const chat = typeof session.ownerDocument === 'function' ? session.ownerDocument() : null;
     // Members of the party that stand in the same hunting zone share the kill (the High Five party range).
-    const inRange = member => member.game?.hunt?.zone === mob.zone && Boolean(member.game.hunt.field);
+    const inRange = member => member.game?.hunt?.zone === mob.zone && Boolean(member.game.hunt.field) && member.game.hunt.field.room===session.game.hunt?.field?.room && (member.game.hunt.field.floor||1)===(session.game.hunt?.field?.floor||1) && member.game.world?.instanceId===session.game.world?.instanceId;
     const distributor = lootDistributor(chat, session, random, inRange);
     const nameOf = member => member.userChatData?.user?.first_name || member.userChatData?.user?.username || String(member.userId);
 
@@ -170,7 +172,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     }
 
     // attribute stones of the mob's element (the grade of the hero's gear must be able to carry them)
-    if (mobDef?.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
+    if (hellboundMobs.has(mobDef?.id) && mobDef?.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
         const chances = STONE_CHANCE[mob.champion || 'normal'];
         for (const stone of ['stone', 'crystal', 'jewel']) {
             if (chances[stone] > 0 && random() < chances[stone]) give(attributeKey(stone, mobDef.dropElement), 1);

@@ -19,6 +19,8 @@ export default async function() {
 
                 const game = member.game;
                 if (!game) continue;
+                // Atlas deaths wait for a destination choice or another player's resurrection.
+                if (game.world) continue;
 
                 // Если время респауна ещё не прошло
                 if (Date.now() < game.respawnTime) continue;

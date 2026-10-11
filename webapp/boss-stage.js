@@ -13,6 +13,7 @@
 // Falls back to a plain <img> without WebGL and a still frame with reduced motion.
 
 import { familyOf, portraitFamily } from './class-family.js';
+import L2_BOSS_ART from './l2-boss-art.js';
 
 export const BOSS_ART = Object.freeze({
   kivaha: { element: 1, tint: [0.55, 0.78, 1.0] },        // lightning turtle
@@ -58,6 +59,7 @@ export function skillFxForClass(className) {
 }
 
 export function bossArtUrl(name) {
+  if (L2_BOSS_ART[name]) return L2_BOSS_ART[name].image;
   return BOSS_ART[name] ? `/art/bosses/${BOSS_ART[name].art || name}.webp` : null;
 }
 
@@ -327,16 +329,32 @@ function pulseClass(node, cls, ms) {
 
 function staticFallback(host, name, player) {
   const url = bossArtUrl(name);
-  host.innerHTML = url ? `<img class="boss-stage-still" src="${url}" alt="">` : '';
+  host.innerHTML = url ? `<img class="boss-stage-still${L2_BOSS_ART[name] ? ' l2-boss-still' : ''}" src="${url}" alt="">` : '';
   const hero = portrait(host, player);
+  const still = host.querySelector('.l2-boss-still');
+  const timers = new Set();
+  let destroyed = false;
+  const animate = (frames, options) => {
+    if (!destroyed && still && !reducedMotion()) still.animate(frames, options);
+  };
   return {
     name,
     setHp() {},
-    playSkill(kind) { if (kind === 'heal' || kind === 'shield') pulseClass(hero, kind === 'heal' ? 'healing' : 'shielding', 900); },
-    hit() {},
-    bossAttack() {},
-    defeat() {},
-    destroy() { host.innerHTML = ''; },
+    playSkill(kind, {crit = false} = {}) {
+      if (kind === 'heal' || kind === 'shield') { pulseClass(hero, kind === 'heal' ? 'healing' : 'shielding', 900); return; }
+      if (!still || destroyed) return;
+      pulseClass(hero, 'attacking', 450);
+      const fx = SKILL_FX[kind === 'damage' ? skillFxForClass(player?.className) : kind] || SKILL_FX.punch;
+      const timer = window.setTimeout(() => {
+        timers.delete(timer);
+        animate([{transform: 'translateX(0)', filter: 'brightness(1)'}, {transform: `translateX(${crit ? -10 : -5}px)`, filter: `brightness(${crit ? 1.8 : 1.4})`}, {transform: 'translateX(0)', filter: 'brightness(1)'}], {duration: 350});
+      }, fx.impact * 1000);
+      timers.add(timer);
+    },
+    hit(kind = 'damage', options = {}) { this.playSkill(kind, options); },
+    bossAttack() { animate([{transform: 'scale(1)'}, {transform: 'scale(1.04)'}, {transform: 'scale(1)'}], {duration: 700}); },
+    defeat() { animate([{opacity: 1}, {opacity: 0}], {duration: 1700, fill: 'forwards'}); },
+    destroy() { destroyed = true; for (const timer of timers) window.clearTimeout(timer); still?.getAnimations().forEach(animation => animation.cancel()); host.innerHTML = ''; },
   };
 }
 
@@ -356,7 +374,7 @@ function compile(gl, type, source) {
  */
 export function createBossStage(host, { name, hpPercent = 100, player = null, autoAttack = true } = {}) {
   const art = BOSS_ART[name];
-  if (!art || typeof window === 'undefined' || reducedMotion()) return staticFallback(host, name, player);
+  if (L2_BOSS_ART[name] || !art || typeof window === 'undefined' || reducedMotion()) return staticFallback(host, name, player);
 
   const canvas = document.createElement('canvas');
   canvas.className = 'boss-stage-canvas';

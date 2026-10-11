@@ -34,13 +34,14 @@ export const ELEMENTS = Object.freeze([
  * a fraction of the weapon values because five pieces add up.
  */
 export const ATTRIBUTE_TIERS = Object.freeze([
-    {id: 'stone', label: 'Камень атрибута', weapon: {add: 5, cap: 25}, armor: {add: 2, cap: 10}},
-    {id: 'crystal', label: 'Кристалл атрибута', weapon: {add: 10, cap: 75}, armor: {add: 4, cap: 30}},
-    {id: 'jewel', label: 'Самоцвет атрибута', weapon: {add: 25, cap: 150}, armor: {add: 10, cap: 60}},
+    {id: 'stone', label: 'Камень атрибута', chance: .5, weapon: {add: 5, cap: 150}, armor: {add: 6, cap: 60}},
+    {id: 'crystal', label: 'Кристалл атрибута', chance: .3, weapon: {add: 5, cap: 300}, armor: {add: 6, cap: 120}},
+    // Legacy jewels are accepted as crystals; no post-HF tier is exposed.
+    {id: 'jewel', label: 'Самоцвет (обмен на кристалл)', chance: .3, legacy: true, weapon: {add: 5, cap: 300}, armor: {add: 6, cap: 120}},
 ]);
 
 /** Grades that can carry an attribute. */
-export const ATTRIBUTE_GRADES = Object.freeze(['B', 'A', 'S', 'S80', 'S84']);
+export const ATTRIBUTE_GRADES = Object.freeze(['S', 'S80', 'S84']);
 
 export const attributeKey = (tier, element) => `attr_${tier}_${element}`;
 

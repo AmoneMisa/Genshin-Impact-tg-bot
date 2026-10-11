@@ -3,6 +3,7 @@ import { openLanguageGame } from './language.js';
 import { openBuffsGame } from './buffs.js';
 import { openPassivesGame } from './passives.js';
 import { openHuntGame } from './hunt.js';
+import {openWorldMap} from './world-map.js';
 import { openPartyGame } from './party.js';
 import { openMerchantsGame } from './merchants.js';
 import { openTattoosGame } from './tattoos.js';
@@ -119,7 +120,7 @@ const launchers = {
   trade: openTradeGame,
   exchange: openExchangeGame,
   boss: openBossGame,
-  hunt: openHuntGame,
+  hunt: openWorldMap,
   party: openPartyGame,
   merchants: openMerchantsGame,
   tattoos: openTattoosGame,

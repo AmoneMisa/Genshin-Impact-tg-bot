@@ -147,8 +147,8 @@ test('rewards: a red champion pays x8 experience, drops the stones of its elemen
   const normal = pay(null, level);
   const red = pay('red', level);
   assert.ok(Math.abs(red.rewards.exp / normal.rewards.exp - 8) < 0.01);
-  assert.ok(red.rewards.items.some(item => item.item.startsWith('attr_stone_')), 'a red champion always drops a stone');
-  assert.ok(red.rewards.items.length > normal.rewards.items.length);
+  assert.ok(!red.rewards.items.some(item => item.item.startsWith('attr_jewel_')), 'champions do not generate legacy jewels');
+  assert.ok(red.rewards.items.reduce((sum,i)=>sum+i.amount,0) > normal.rewards.items.reduce((sum,i)=>sum+i.amount,0));
   const tooHigh = pay(null, level + 11);
   assert.equal(tooHigh.rewards.exp, 0);
   assert.equal(tooHigh.rewards.sp, 0);

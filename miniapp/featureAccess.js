@@ -52,6 +52,8 @@ export const MINI_APP_ROUTE_SETTINGS = Object.freeze({
   'POST /api/boss/summon': 'boss',
   'POST /api/boss/skill': 'boss',
   'GET /api/hunt': 'boss',
+  'GET /api/world': 'boss',
+  'POST /api/world/action': 'boss',
   'POST /api/hunt/start': 'boss',
   'POST /api/hunt/skill': 'boss',
   'POST /api/hunt/hotbar': 'boss',

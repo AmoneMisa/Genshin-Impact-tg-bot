@@ -19,9 +19,9 @@ const wear = (session, item) => {
   return item;
 };
 const give = (session, key, amount = 1) => { session.game.inventory.materials[key] = (session.game.inventory.materials[key] || 0) + amount; };
-const sword = (extra = {}) => ({ name: 'Sword', mainType: 'weapon', grade: 'S', slots: ['rightHand'], kind: 'oneHandedSword', classOwner: ['warrior'], uid: 'w1', ...extra });
+const sword = (extra = {}) => ({ name: 'Sword', elementEnabled:true, mainType: 'weapon', grade: 'S', slots: ['rightHand'], kind: 'oneHandedSword', classOwner: ['warrior'], uid: 'w1', ...extra });
 const ring = (extra = {}) => ({ name: 'Ring', mainType: 'jewelry', grade: 'S', slots: ['ring1'], kind: 'ring', uid: 'j1', ...extra });
-const armor = (extra = {}) => ({ name: 'Plate', mainType: 'armor', grade: 'S', slots: ['up'], kind: 'heavy', uid: 'a1', ...extra });
+const armor = (extra = {}) => ({ name: 'Plate', elementEnabled:true, category:'body', mainType: 'armor', grade: 'S', slots: ['up'], kind: 'heavy', uid: 'a1', ...extra });
 
 test('every stone tier and attribute stone is a real material', () => {
   for (const tier of ['normal', 'mid', 'high', 'top']) {
@@ -104,28 +104,28 @@ test('passive, chance and active weapon skills do what they say', () => {
 test('attributes: stones add points up to the tier cap, only one element per item', () => {
   const session = player();
   const weapon = wear(session, sword());
-  give(session, attributeKey('stone', 'fire'), 8);
+  give(session, attributeKey('stone', 'fire'), 30);
   give(session, attributeKey('stone', 'water'));
-  for (let i = 0; i < 5; i += 1) assert.equal(addAttribute(session, weapon, 'fire', 'stone').ok, true);
-  assert.equal(weapon.attribute.value, 25);
+  for (let i = 0; i < 27; i += 1) assert.equal(addAttribute(session, weapon, 'fire', 'stone',{random:()=>0}).ok, true);
+  assert.equal(weapon.attribute.value, 150);
   assert.equal(addAttribute(session, weapon, 'fire', 'stone').reason, 'attribute_tier_max');
   assert.equal(addAttribute(session, weapon, 'water', 'stone').reason, 'wrong_element');
   assert.equal(addAttribute(session, weapon, 'fire', 'crystal').reason, 'no_attribute_stone');
-  assert.equal(session.game.equipmentStats.rightHand.attribute.value, 25);
+  assert.equal(session.game.equipmentStats.rightHand.attribute.value, 150);
   assert.equal(addAttribute(session, armor({ grade: 'D' }), 'fire', 'stone').reason, 'not_attributable');
 
   assert.equal(clearAttribute(session, weapon).ok, true);
   assert.equal(weapon.attribute, null);
 });
 
-test('attributes: weapon element hits harder, armor resists, opposites are weak', () => {
-  near(attackFactor({ element: 'fire', value: 100 }), 1.15);
-  near(attackFactor({ element: 'fire', value: 100 }, 'water'), 1.225);
-  near(attackFactor({ element: 'fire', value: 100 }, 'fire'), 1.075);
+test('attributes: weapon element hits harder, armor uses actual defense points', () => {
+  near(attackFactor({ element: 'fire', value: 100 }), 1.4);
+  near(attackFactor({ element: 'fire', value: 100 }, 'water'), 1.4);
+  near(attackFactor({ element: 'fire', value: 100 }, 'fire'), 1.4);
   assert.equal(attackFactor(null, 'fire'), 1);
-  near(resistFactor({ fire: 50 }, 'fire'), 0.9);
+  near(resistFactor({ fire: 50 }, 'fire'), 1);
   assert.equal(resistFactor({ fire: 50 }, 'water'), 1);
-  near(resistFactor({ fire: 9999 }, 'fire'), 0.7);
+  near(resistFactor({ fire: 9999 }, 'fire',150), 1);
 
   const session = player();
   wear(session, sword({ attribute: { element: 'wind', value: 60 } }));
@@ -134,7 +134,7 @@ test('attributes: weapon element hits harder, armor resists, opposites are weak'
   const profile = attributeProfile(session);
   assert.deepEqual(profile.attack, { element: 'wind', value: 60 });
   assert.equal(profile.resist.fire, 50);
-  near(pvpFactor(profile, { resist: { wind: 100 } }), (1 + 60 * 0.0015) * 0.8);
+  near(pvpFactor(profile, { resist: { wind: 100 } }), 1);
   assert.equal(normalizeElement('lightning'), 'wind');
   assert.equal(normalizeElement('ice'), 'water');
   assert.equal(normalizeElement('earth'), 'earth');
@@ -144,7 +144,7 @@ test('attributes: weapon element hits harder, armor resists, opposites are weak'
 test('bosses drop the attribute stones of their own element', () => {
   const member = { game: { stats: { lvl: 82 }, inventory: {} } };
   const drops = rollAttributeDrops(member, { element: 'fire', tier: 3, place: 1, random: () => 0 });
-  assert.deepEqual(drops.map(drop => drop.item), ['attr_stone_fire', 'attr_crystal_fire', 'attr_jewel_fire']);
+  assert.deepEqual(drops.map(drop => drop.item), ['attr_stone_fire', 'attr_crystal_fire']);
   assert.deepEqual(rollAttributeDrops(member, { element: 'fire', tier: 1, place: 1, random: () => 0 }).map(drop => drop.item), ['attr_stone_fire']);
   assert.deepEqual(rollAttributeDrops(member, { element: null, random: () => 0 }), []);
   assert.deepEqual(rollAttributeDrops({ game: { stats: { lvl: 5 }, inventory: {} } }, { element: 'fire', random: () => 0 }), []);

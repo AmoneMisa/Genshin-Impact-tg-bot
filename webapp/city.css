@@ -49,7 +49,7 @@
   opacity: .8;
 }
 .city-title { position: relative; z-index: 2; display: grid; justify-items: center; align-content: start; min-height: 180px; gap: 4px; padding: 26px 0 0; text-align: center; }
-.city-title strong { font: 700 38px/1 var(--city-serif); letter-spacing: .01em; background: linear-gradient(180deg, #fff3cf, #d8b36a 60%, #8a6a2c); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 #000) drop-shadow(0 0 14px rgba(216, 179, 106, .35)); }
+.city-title strong { font: 700 clamp(25px, 7.5vw, 38px)/1.12 var(--city-serif); max-width: 94%; text-wrap: balance; letter-spacing: .01em; background: linear-gradient(180deg, #fff3cf, #d8b36a 60%, #8a6a2c); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 #000) drop-shadow(0 0 14px rgba(216, 179, 106, .35)); }
 .city-crown { width: 26px; height: 26px; color: #e9c777; stroke-width: 1.6; filter: drop-shadow(0 2px 4px #000); margin-bottom: -6px; }
 .city-game { display: flex; align-items: center; gap: 10px; font: 700 11px/1 var(--city-serif); letter-spacing: .5em; color: #d8b36a; text-shadow: 0 1px 2px #000; }
 .city-game i { width: 38px; height: 1px; background: linear-gradient(90deg, transparent, #d8b36a); }
