@@ -616,7 +616,9 @@ export default {
             {id: 'baium', name: 'Ring of Baium', boss: 'baium', kind: 'ring', grade: 'S', mDef: 48, bonus: {maxHpMul: 1.04, hpRestoreSpeed: 0.1}},
             {id: 'antharas', name: 'Earring of Antharas', boss: 'antharas', kind: 'earring', grade: 'S', mDef: 71, bonus: {maxHpMul: 1.03, defenceMul: 1.02}},
             {id: 'valakas', name: 'Necklace of Valakas', boss: 'valakas', kind: 'necklace', grade: 'S', mDef: 95, bonus: {attackMul: 1.04, maxHpMul: 1.03}},
-            {id: 'frintezza', name: "Frintezza's Necklace", boss: 'frintezza', kind: 'necklace', grade: 'S', mDef: 95, bonus: {attackMul: 1.03, maxMpMul: 1.06, speed: 2}}
+            {id: 'frintezza', name: "Frintezza's Necklace", boss: 'frintezza', kind: 'necklace', grade: 'S', mDef: 95, bonus: {attackMul: 1.03, maxMpMul: 1.06, speed: 2}},
+            {id: 'beleth', name: 'Ring of Beleth', boss: 'beleth', kind: 'ring', grade: 'S', mDef: 48, bonus: {attackMul: 1.03, criticalChance: 2}},
+            {id: 'freya', name: "Freya's Necklace", boss: 'freya', kind: 'necklace', grade: 'S', mDef: 95, bonus: {maxHpMul: 1.05, defenceMul: 1.03}}
         ],
         bodyReference: 9
     }

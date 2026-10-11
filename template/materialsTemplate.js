@@ -93,6 +93,8 @@ export default [
     {key: 'essence_orfen', name: 'Essence of Orfen', icon: '🦅', description: 'Перо ведьмы ветров. Падает с Орфен.'},
     {key: 'essence_zaken', name: 'Essence of Zaken', icon: '🏴‍☠️', description: 'Монета проклятого корабля. Падает с Закена.'},
     {key: 'essence_baium', name: 'Essence of Baium', icon: '💎', description: 'Осколок кристального трона. Падает с Баюма.'},
+    {key: 'essence_beleth', name: 'Essence of Beleth', icon: '💍', description: 'Осколок Кольца подчинения. Падает с Белефа.'},
+    {key: 'essence_freya', name: 'Essence of Freya', icon: '❄️', description: 'Осколок вечного льда. Падает с Фреи.'},
     {key: 'essence_frintezza', name: 'Essence of Frintezza', icon: '🎻', description: 'Струна тёмной скрипки. Падает с Фринтеззы.'},
     {key: 'essence_antharas', name: 'Essence of Antharas', icon: '🐲', description: 'Чешуя земного дракона. Падает с Антараса.'},
     {key: 'essence_valakas', name: 'Essence of Valakas', icon: '🌋', description: 'Лавовый коготь. Падает с Валакаса.'},

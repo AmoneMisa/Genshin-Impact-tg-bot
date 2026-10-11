@@ -187,6 +187,37 @@ const epicBosses = [
     })
 ];
 
+// Beleth and Freya: the two epics of the later raids. Beleth (a shared world boss, a party of four and the pass of its
+// leader) and Freya (an instance of a party, no pass).
+epicBosses.push(
+    epicBoss({
+        name: "beleth", nameCall: "Белефа", title: "Хозяин Кольца подчинения", element: "dark", art: "fjorina",
+        description: "Чародей в чёрном кольце. Он дробится на двойников, и настоящего Белефа выдаёт лишь тот удар, что приходится на кольцо.",
+        respawn: [120, 24], minLevel: 72, jewelChance: 0.45,
+        attack: 40, defence: 34, damage: [560, 760], crit: [58, 2.1], hpMul: 6.0, dangerPct: 5.8, armored: 0.4, ultimateEvery: 4,
+        minions: [unit("beleth_clone", "Двойник Белефа", "👤", {hpPct: 0.07, power: 0.8, sp: [9, 16], description: "Тень, что повторяет удары мага."}), unit("ring_priest", "Жрец кольца", "💍", {hpPct: 0.05, power: 0.9, sp: [8, 14], description: "Питает кольцо тёмной силой."})],
+        phases: [
+            {at: 0.8, icon: "👤", say: "Белеф дробится на двойников!", summon: ["beleth_clone", "beleth_clone"]},
+            {at: 0.5, icon: "💍", say: "Жрецы кольца берут слово!", summon: ["ring_priest", "beleth_clone"]},
+            {at: 0.2, icon: "🌑", say: "Кольцо подчинения вспыхивает чёрным светом!", summon: ["ring_priest", "ring_priest"], enrage: 0.45}
+        ],
+        sp: [64, 100], loot: [1.55, 1.55, 4.7]
+    }),
+    epicBoss({
+        name: "freya", nameCall: "Фрею", title: "Ледяная королева", element: "water", art: "radjahal",
+        description: "Владычица вечной зимы. Её ледяные рыцари запирают бойцов в стужу, а финальный буран накрывает всю группу, если не добить её раньше.",
+        respawn: [72, 12], minLevel: 74, jewelChance: 0.45,
+        attack: 42, defence: 36, damage: [580, 780], crit: [60, 2.15], hpMul: 6.6, dangerPct: 6.0, armored: 0.4, ultimateEvery: 4,
+        minions: [unit("ice_knight", "Ледяной рыцарь", "🛡️", {hpPct: 0.08, power: 0.9, sp: [9, 16], description: "Страж ледяного трона."}), unit("frost_wisp", "Морозный дух", "❄️", {hpPct: 0.05, power: 0.8, sp: [8, 14], description: "Холодный дух метели."})],
+        phases: [
+            {at: 0.8, icon: "🛡️", say: "Фрея созывает ледяных рыцарей!", summon: ["ice_knight", "ice_knight"]},
+            {at: 0.5, icon: "❄️", say: "Метель поднимает морозных духов!", summon: ["frost_wisp", "ice_knight"]},
+            {at: 0.2, icon: "🌨️", say: "Вечная зима смыкается: Фрея в ярости!", summon: ["frost_wisp", "frost_wisp"], enrage: 0.5}
+        ],
+        sp: [68, 105], loot: [1.6, 1.6, 4.9]
+    })
+);
+
 const baseBosses = [{
     name: "kivaha",
     nameCall: "Киваху",

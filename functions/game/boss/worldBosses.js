@@ -23,10 +23,12 @@ export const isWorldScope = chatId => Number(chatId) <= -WORLD_SCOPE_BASE;
 /** The grand bosses that the game already treats as epics (their jewellery, passes and weapons are theirs). */
 export const EPIC_NPC = Object.freeze({
     29001: 'queenAnt', 29006: 'core', 29014: 'orfen', 29022: 'zaken', 29020: 'baium', 29045: 'frintezza', 29068: 'antharas', 29028: 'valakas',
+    29118: 'beleth', 29179: 'freya',
 });
 
 /** Where the real bosses of the epics stand (the lairs of the raids of the original game). */
 const EPIC_LOCATION = Object.freeze({
+    beleth: 'Замок Белефа', freya: 'Ледяной чертог Фреи',
     queenAnt: 'Ant Nest', core: 'Cruma Tower, Core\'s Chamber', orfen: 'Orfen\'s Nest', zaken: 'Zaken\'s Castle',
     baium: 'Tower of Insolence, Baium\'s Lair', frintezza: 'Imperial Tomb, Frintezza\'s Lair', antharas: 'Antharas\' Lair', valakas: 'Valakas\' Lair',
 });
@@ -40,8 +42,8 @@ const EPIC_LOCATION = Object.freeze({
  */
 export const EPIC_RULES = Object.freeze({
     queenAnt: {adaptive: true}, core: {adaptive: true}, orfen: {adaptive: true},
-    zaken: {instance: true}, frintezza: {instance: true},
-    baium: {}, antharas: {}, valakas: {},
+    zaken: {instance: true}, frintezza: {instance: true}, freya: {instance: true},
+    baium: {}, antharas: {}, valakas: {}, beleth: {},
 });
 export const INSTANCE_LOCK_MS = 3 * 24 * 60 * 60 * 1000;
 /** Casts of a bare warrior that one member of the required party has to land: a fight of a full party fits the 15 minutes. */

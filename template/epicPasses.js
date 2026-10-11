@@ -12,7 +12,7 @@
 
 /** Epic bosses that need a party of at least this many members to be called. */
 // A pass boss is not a solo fight: its hit points are sized by this party (worldBosses.js) and it cannot be called alone.
-export const PARTY_EPICS = Object.freeze({zaken: 2, baium: 4, frintezza: 4, antharas: 5, valakas: 6});
+export const PARTY_EPICS = Object.freeze({zaken: 2, freya: 2, baium: 4, frintezza: 4, beleth: 4, antharas: 5, valakas: 6});
 
 /**
  * Steps of the quest of a pass:
@@ -50,6 +50,22 @@ export const PASS_EPICS = Object.freeze({
             ]},
             {type: 'collect', item: 'Печать Имперской гробницы', target: 4, amount: 2, chance: 0.05, zone: 'wall-of-argos', mobs: ['Disciples of Punishment', 'Disciples of Authority'],
              text: 'Добудь предметы: Стена Аргоса — Ученики Наказания и Ученики Власти'},
+        ],
+    },
+    beleth: {
+        label: 'Белеф',
+        leaderOnly: true,
+        minLevel: 78,
+        cost: 90,
+        title: 'Осколок Кольца подчинения',
+        npc: 'Хранитель замка',
+        steps: [
+            {type: 'talk', npc: 'Хранитель замка', lines: [
+                'Белеф заперт в своём замке: врата открывает лишь осколок его же Кольца подчинения.',
+                'Осколки носят на себе стражи, что пали на службе у мага. Одного осколка хватает на один вход.',
+            ]},
+            {type: 'collect', item: 'Осколок Кольца подчинения', target: 6, amount: 2, chance: 0.06, zone: 'giants-cave', mobs: ['Lesser Giant Soldier', 'Lesser Giant Elder', 'Lesser Giant Mage'],
+             text: 'Добудь предметы: Пещера гигантов — младшие гиганты-солдаты, старейшины и маги'},
         ],
     },
     antharas: {
