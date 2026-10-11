@@ -6,6 +6,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import zlib from 'zlib';
 import { withLock as sharedLock } from '../functions/general/chatLock.js';
 import { fileURLToPath } from 'url';
 import { token, myId } from '../config.js';
@@ -186,14 +187,52 @@ function serveFile(res, root, urlPath) {
   if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) return false;
 
   const ext = path.extname(filePath).toLowerCase();
-  res.writeHead(200, {
+  const stat = fs.statSync(filePath);
+  const headers = {
     'content-type': MIME[ext] || 'application/octet-stream',
     'x-content-type-options': 'nosniff',
     'referrer-policy': 'no-referrer',
     'cache-control': ext === '.html' ? 'no-store' : ['.js', '.css'].includes(ext) ? 'no-cache' : /^\/art\/(?:items|chests|world)\/v\d+\//.test(urlPath) ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
-  });
+    etag: `W/"${stat.size.toString(36)}-${Math.floor(stat.mtimeMs).toString(36)}"`,
+  };
+  // A phone that already has the file gets a 304 (no body) instead of the whole file again.
+  if (etagMatches(res.req, headers.etag)) {
+    res.writeHead(304, headers);
+    res.end();
+    return true;
+  }
+  if (COMPRESSIBLE.has(ext) && acceptsGzip(res.req)) {
+    sendGzip(res, headers, `${filePath}|${headers.etag}`, () => fs.readFileSync(filePath));
+    return true;
+  }
+  res.writeHead(200, headers);
   fs.createReadStream(filePath).pipe(res);
   return true;
+}
+
+// Text assets (the Mini App is ~1.9 MB of JS and CSS) are gzipped once per file version. Old phones on a slow
+// network gain the most from this; the compressed copy is kept in memory keyed by the ETag, so it cannot go stale.
+const COMPRESSIBLE = new Set(['.html', '.js', '.css', '.json', '.svg']);
+const gzipCache = new Map();
+
+function acceptsGzip(req) {
+  return /\bgzip\b/.test(req?.headers?.['accept-encoding'] || '');
+}
+
+function etagMatches(req, etag) {
+  const header = req?.headers?.['if-none-match'];
+  return Boolean(header) && header.split(',').some(tag => tag.trim() === etag || tag.trim() === '*');
+}
+
+function sendGzip(res, headers, key, read) {
+  let body = gzipCache.get(key);
+  if (!body) {
+    body = zlib.gzipSync(read(), { level: 9 });
+    if (gzipCache.size > 400) gzipCache.clear();
+    gzipCache.set(key, body);
+  }
+  res.writeHead(200, { ...headers, 'content-encoding': 'gzip', vary: 'accept-encoding', 'content-length': body.length });
+  res.end(body);
 }
 
 // The page links ~40 feature stylesheets; each is a render-blocking request on
@@ -229,22 +268,30 @@ function servePage(res, urlPath) {
   try {
     const page = getPage();
     if (page.cssPath && urlPath === page.cssPath) {
-      res.writeHead(200, {
+      const headers = {
         'content-type': MIME['.css'],
         'cache-control': 'public, max-age=31536000, immutable',
         'x-content-type-options': 'nosniff',
-      });
-      res.end(page.css);
+      };
+      if (acceptsGzip(res.req)) sendGzip(res, headers, `css|${page.cssPath}`, () => page.css);
+      else {
+        res.writeHead(200, headers);
+        res.end(page.css);
+      }
       return true;
     }
     if (urlPath === '/' || urlPath === '/index.html') {
-      res.writeHead(200, {
+      const headers = {
         'content-type': MIME['.html'],
         'cache-control': 'no-store',
         'x-content-type-options': 'nosniff',
         'referrer-policy': 'no-referrer',
-      });
-      res.end(page.html);
+      };
+      if (acceptsGzip(res.req)) sendGzip(res, headers, `html|${crypto.createHash('sha1').update(page.html).digest('hex')}`, () => page.html);
+      else {
+        res.writeHead(200, headers);
+        res.end(page.html);
+      }
       return true;
     }
   } catch (error) {

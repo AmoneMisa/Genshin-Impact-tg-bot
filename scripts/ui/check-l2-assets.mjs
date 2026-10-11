@@ -11,7 +11,8 @@ import {createParty} from '../../functions/game/party/party.js';
 import changePlayerGameClass from '../../functions/game/player/changePlayerGameClass.js';
 import updatePlayerStats from '../../functions/game/player/updatePlayerStats.js';
 import {addMaterial} from '../../functions/game/player/materials.js';
-import {L2_MATERIAL_ART,L2_JEWELRY_ART,L2_ITEM_IDENTITIES,L2_CATEGORY_ART,L2_UI_ART,L2_HF_CLOAKS,L2_HF_ARMOR_SETS} from '../../webapp/art/l2-icon-art.js';
+import {L2_MATERIAL_ART,L2_JEWELRY_ART,L2_ITEM_IDENTITIES,L2_CATEGORY_ART,L2_UI_ART,L2_HF_CLOAKS} from '../../webapp/art/l2-icon-art.js';
+import {L2_HF_ARMOR_SETS} from '../../webapp/art/l2-hf-armor-sets.js';
 import {ITEM_ART_KEYS} from '../../webapp/art/items-art.js';
 const root=path.resolve('webapp');
 for(const key of ITEM_ART_KEYS)for(const size of [32,64,128,256,512]){

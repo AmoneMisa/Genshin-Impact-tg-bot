@@ -86,9 +86,21 @@ function shader(gl, type, source) {
   return item;
 }
 
+// The background drifts slowly, so it does not need a display's full refresh rate. Weak phones (little RAM or
+// few cores, typical of old Android devices) also shade fewer pixels. Both only lower the cost of the same look.
+const lowEndDevice = () => (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+const FRAME_MS = 1000 / 30;
+const LOW_END_FRAME_MS = 1000 / 20;
+const MAX_DPR = 1.5;
+const LOW_END_MAX_DPR = 1;
+
 export function startWebGL(canvas) {
   const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'high-performance' });
   if (!gl) throw new Error('WebGL is not supported by this Telegram client');
+  const lowEnd = lowEndDevice();
+  const frameMs = lowEnd ? LOW_END_FRAME_MS : FRAME_MS;
+  const maxDpr = lowEnd ? LOW_END_MAX_DPR : MAX_DPR;
+  let lastDrawn = -Infinity;
 
   let resolution, time, pointerUniform, transitionUniform, transitionColorUniform;
   // GPU resources are (re)built here so the background can come back after the
@@ -139,7 +151,7 @@ export function startWebGL(canvas) {
   function resize() {
     // Soft gradients + small stars: 1.5x is visually indistinguishable from 2x but
     // shades ~44% fewer full-screen fragments on high-DPI phones.
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     const width = Math.floor(canvas.clientWidth * dpr);
     const height = Math.floor(canvas.clientHeight * dpr);
     if (canvas.width !== width || canvas.height !== height) {
@@ -157,7 +169,9 @@ export function startWebGL(canvas) {
     const ease = 1 - Math.exp(-dt * 4.5);
     smoothPointer.x += (pointer.x - smoothPointer.x) * ease;
     smoothPointer.y += (pointer.y - smoothPointer.y) * ease;
-    if (contextLost) { requestAnimationFrame(frame); return; }
+    // Skip the draw while the app is hidden or inside the frame budget; the pointer easing above still runs.
+    if (contextLost || document.hidden || now - lastDrawn < frameMs) { requestAnimationFrame(frame); return; }
+    lastDrawn = now;
     resize();
     const transitionProgress = Math.min(1, Math.max(0, (now - transitionStarted) / 720));
     const transitionValue = transitionStarted === -Infinity ? 0 : Math.pow(1 - transitionProgress, 1.55);

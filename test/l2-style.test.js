@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {l2StyleProfile} from '../scripts/items/l2-style-profile.mjs';
 import {CATALOG_ITEM_ART} from '../webapp/art/catalog-item-art.js';
-import {L2_HF_ARMOR_SETS,L2_HF_CLOAKS,l2IconUrl} from '../webapp/art/l2-icon-art.js';
+import {L2_HF_CLOAKS,l2IconUrl} from '../webapp/art/l2-icon-art.js';
+import {L2_HF_ARMOR_SETS} from '../webapp/art/l2-hf-armor-sets.js';
 test('painted armour uses green backgrounds and every shield uses red, independently of grade',()=>{
  for(const row of CATALOG_ITEM_ART){
   const profile=l2StyleProfile(row.key,row);

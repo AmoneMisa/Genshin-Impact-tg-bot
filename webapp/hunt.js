@@ -1,7 +1,7 @@
 import {materialIcon} from './material-icons.js';
 import {updateDeathPopup} from './death-popup.js';
 import {displayedPosition} from './map-rendering.js';
-import {l2CategoryIcon,l2IconHtml,L2_HF_ARMOR_SETS} from './art/l2-icon-art.js';
+import {l2CategoryIcon,l2IconHtml} from './art/l2-icon-art.js';
 import {huntZoneUrl,huntMobUrl} from './art/hunt-art.js';
 import {shotIcon,elementIcon,championIcon} from './art/painted-icon-art.js';
 import { bar, escapeHtml, formatDuration, formatNumber, hotbar, hotbarChoice, playerFrame, potionBar, statusIcons } from './boss-hud.js';
@@ -225,13 +225,14 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   const LOOT_GROUPS = [['gold','Адена'],['full','Снаряжение целиком'],['piece','Части и камни для сборки'],['recipe','Рецепты'],['scroll','Свитки заточки'],['lifestone','Камни жизни'],['attribute','Камни атрибутов'],['seal','Камни печати'],['dye','Краски'],['crystal','Кристаллы'],['material','Материалы'],['consumable','Расходники'],['herb','Травы'],['other','Прочее']];
   const OPEN_LOOT = ['gold','full','piece','scroll','lifestone','seal'];
   const lootCache = {}, lootOpen = new Set();
+  let armorSets = [];
   const chanceText = value => value >= 100 ? '×' + new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(value/100) : new Intl.NumberFormat('ru-RU',{maximumFractionDigits:value < 1 ? 3 : 2}).format(value)+'%';
   // the custom set part has no item id of its own: it shows the client icon of the Lineage II set of its grade and type
   function customPartIcon(d) {
     const match = /^custom:([^:]+):([^:]+)$/.exec(String(d.key));
     if (!match) return '';
     const grade = match[1] === 'noGrade' ? 'NONE' : match[1], armor = {heavy:'HEAVY', light:'LIGHT', robe:'MAGIC'}[match[2]];
-    const set = L2_HF_ARMOR_SETS.find(row => row.grade === grade && row.armor === armor);
+    const set = armorSets.find(row => row.grade === grade && row.armor === armor);
     const part = set?.parts.find(row => row.slot === 'chest') || set?.parts[0];
     return (part && l2IconHtml(part.art)) || l2CategoryIcon('full');
   }
@@ -250,8 +251,10 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     if (!loot) return '<p class="hunt-loot-wait">Загружаю таблицу дропа…</p>';
     return loot.mobs.map(mob=>'<details><summary>'+escapeHtml(mob.name)+' · '+mob.level+' ур. · '+mob.drops.length+' предметов</summary>'+dropsHtml(mob.drops)+'</details>').join('');
   }
+  // The armor sets (230 KB) are only needed for the loot tables, so they load with the first one, not at startup.
   async function loadZoneLoot(zoneId) {
     if (lootCache[zoneId]) return;
+    if (!armorSets.length) await import('./art/l2-hf-armor-sets.js').then(m => { armorSets = m.L2_HF_ARMOR_SETS; }, () => {});
     try { lootCache[zoneId] = await api('/api/hunt/loot', { method: 'POST', body: JSON.stringify({ zone: zoneId }) }); } catch (error) { return; }
     render();
   }
