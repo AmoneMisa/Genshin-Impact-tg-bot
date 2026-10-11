@@ -60,6 +60,7 @@ try{for(const width of [320,390]){
  await page.waitForTimeout(300);await page.screenshot({path:path.join(output,`professions-${width}.png`)});
  await page.locator('[data-cq-farm]').first().click();await page.waitForFunction(()=>document.querySelector('[data-cq-feedback]').textContent==='Unavailable');assert.equal(await page.locator('.class-quests-overlay').count(),1);bossFail=false;await page.locator('[data-cq-farm]').first().click();await page.waitForSelector('.boss-overlay.visible');assert.equal(await page.locator('.class-quests-overlay').count(),0);assert.equal(await page.locator('.boss-epic-panel').count(),1);
  await open('shop','openShopGame');assert.equal(await page.locator('[data-store-category=fishing]').count(),1);await page.locator('[data-store-category=fishing]').click();await page.waitForSelector('.store-slot');await page.locator('.store-slot').first().click();
+ assert.equal(await page.locator('.shop-wallet').count(),0);assert.match(await page.locator('.store-req').innerText(),/106\s*748/);
  const overlap=await page.locator('.store-req li').evaluateAll(rows=>rows.some(row=>{const label=row.querySelector('.store-req-name').getBoundingClientRect(),cost=row.querySelector('strong').getBoundingClientRect();return label.bottom>cost.y+1&&label.right>cost.x+1;}));assert.equal(overlap,false);
  await page.waitForTimeout(300);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);await page.screenshot({path:path.join(output,`shop-${width}.png`)});

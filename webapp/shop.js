@@ -142,7 +142,6 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
       <header class="shop-head">
         <button class="overlay-close shop-back" type="button" aria-label="Назад">${icon('chevron-left')}</button>
         <h2>Магазин</h2>
-        <strong class="shop-wallet" data-shop-gold></strong>
       </header>
       <div class="shop-categories" data-shop-categories></div>
       <input type="search" class="shop-search" data-shop-search placeholder="Поиск по названию" maxlength="40">
@@ -161,7 +160,6 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     confirming = null;
     renderItems();
   });
-  const gold = overlay.querySelector('[data-shop-gold]');
 
   const close = () => {
     if (timer) window.clearInterval(timer);
@@ -236,7 +234,6 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
   }
 
   function renderAll() {
-    gold.innerHTML = `${materialIcon('gold')} ${formatNumber(state.gold)}`;
     renderCategories();
     renderItems();
   }

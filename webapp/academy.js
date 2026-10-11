@@ -8,6 +8,7 @@ const REASONS = {
   unknown_bounty: 'Такого поручения нет.',
   already_claimed: 'Награда уже получена.',
   bounty_not_done: 'Поручение ещё не выполнено.',
+  inventory_full: 'В инвентаре не хватает места для награды.',
   unknown_epic: 'Такого босса нет.',
   level_too_low: 'Не хватает уровня.',
   pass_owned: 'Допуск уже получен.',
@@ -33,13 +34,16 @@ function rewardHtml(reward = {}) {
   if (reward.moonDew) parts.push(`💧 ${fmt(reward.moonDew)}`);
   if (reward.ironOre) parts.push(`⛏️ ${fmt(reward.ironOre)}`);
   if (reward.luckCoins) parts.push(`${luckCoinHtml(14)} ${fmt(reward.luckCoins)}`);
+  if (reward.displayExp) parts.push(`${fmt(reward.displayExp)} опыта + бонус энергии`);
+  for(const item of reward.items||[])parts.push(`${escapeHtml(item.name)} ×${fmt(item.count)}`);
   return parts.join(' · ');
 }
 
 function bountyHtml(scope, quest, kinds) {
   const done = quest.progress >= quest.target;
   return `<article class="academy-row ${quest.claimed ? 'claimed' : done ? 'done' : ''}">
-    <div><strong>${escapeHtml(kinds[quest.kind] || quest.kind)} · ${fmt(quest.target)}</strong>
+    <div><strong>${escapeHtml(quest.title || kinds[quest.kind] || quest.kind)}${quest.grade?' · '+escapeHtml(quest.grade==='noGrade'?'NG':quest.grade):''}</strong>
+      <small>${escapeHtml(kinds[quest.kind] || quest.kind)} · ${fmt(quest.target)}${quest.minMobLevel?' · от '+fmt(quest.minMobLevel)+' ур., разница не более 10 уровней':''}</small>
       <small>${fmt(quest.progress)} / ${fmt(quest.target)} · ${rewardHtml(quest.reward)}</small></div>
     <button type="button" class="city-btn" data-academy-claim="${escapeHtml(scope)}:${escapeHtml(quest.id)}" ${done && !quest.claimed ? '' : 'disabled'}>${quest.claimed ? 'Получено' : 'Забрать'}</button>
   </article>`;
@@ -75,10 +79,11 @@ function mainQuestsHtml(view) {
     <button type="button" class="city-btn upgrade" data-academy-main>Открыть задания профессий</button></section>`;
 }
 
-export async function openAcademy({ api, haptic = () => {}, openMainQuests = () => {} } = {}) {
+export async function openAcademy({ api, haptic = () => {}, renderState = () => {}, openMainQuests = () => {} } = {}) {
   await ensureFeatureStyles();
   let state = await api('/api/academy');
   let dialog = null;
+  let pending = false;
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay city-window academy-window';
   overlay.setAttribute('aria-label','Академия');
@@ -103,16 +108,20 @@ export async function openAcademy({ api, haptic = () => {}, openMainQuests = () 
   }
 
   async function act(payload) {
+    if(pending)return;
+    pending=true;
+    overlay.querySelectorAll('[data-academy-claim],[data-academy-pass]').forEach(button=>button.disabled=true);
     try {
       const result = await api('/api/academy/action', { method: 'POST', body: JSON.stringify(payload) });
       state = result.academy || state;
+      if(result.state)renderState(result.state);
       dialog = result.lines ? { npc: result.npc, lines: result.lines, done: Boolean(result.done) } : null;
       haptic('medium');
       render();
     } catch (error) {
       if (error.payload?.academy) state = error.payload.academy;
       render(REASONS[error.payload?.reason] || error.message);
-    }
+    } finally { pending=false; }
   }
 
   overlay.addEventListener('click', event => {

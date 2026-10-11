@@ -215,6 +215,14 @@
 .city-window-title { position: absolute; z-index: 1; left: 18px; right: 18px; bottom: 12px; display: grid; gap: 4px; }
 .city-window-title strong { font: 700 24px/1.1 var(--city-serif); color: #f3dca6; text-shadow: 0 2px 0 #000, 0 0 14px rgba(216, 179, 106, .35); }
 .city-window-title small { font: 700 12px/1 var(--city-serif); color: rgba(243, 220, 166, .75); }
+.academy-window .city-window-title { position: static; padding: 8px 48px 8px 0; }
+.academy-window .academy-row { display: grid; gap: 8px; padding: 12px 0; }
+.academy-window .academy-row + .academy-row { border-top: 1px solid #d8b36a33; }
+.academy-window .academy-row > div { display: grid; gap: 6px; min-width: 0; }
+.academy-window .academy-row strong { font: 700 14px/1.35 system-ui; }
+.academy-window .academy-row small { font: 400 12px/1.5 system-ui; color: #c3baa7; overflow-wrap: anywhere; }
+.academy-window .academy-row .city-btn { justify-self: start; min-height: 44px; padding: 8px 14px; }
+.academy-window .academy-row.claimed { opacity: .65; }
 .city-window-body { display: grid; gap: 12px; padding: 4px 16px 8px; }
 .city-window-body .city-costs { justify-content: flex-start; }
 .city-window-body .city-cost { font-size: 13px; }

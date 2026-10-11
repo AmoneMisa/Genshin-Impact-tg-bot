@@ -1,5 +1,5 @@
 // The Academy building hands out work:
-//   - bounties: three daily and two weekly orders. Their size and reward grow with the Academy's level ("quality");
+//   - bounties: three daily reward tracks and two weekly orders for the hero's grade. Quality scales targets/rewards;
 //   - epic passes: Baium, Frintezza, Antharas and Valakas need a pass (template/epicPasses.js). It is bought for Coins of
 //     Luck or earned with a quest of several steps: dialogs, farming monsters, quest item drops, bosses. The quest does not
 //     depend on the Academy's level. A pass is bound to the character (it is a counter here, not an item);
@@ -11,8 +11,11 @@
 // }
 import {getEpicTemplate} from '../boss/epicBosses.js';
 import {PASS_EPICS, PARTY_EPICS, needsPass} from '../../../template/epicPasses.js';
-import {spForLevelUp} from '../player/setLevel.js';
-import {addMaterial} from '../player/materials.js';
+import setLevel, {spForLevelUp} from '../player/setLevel.js';
+import {addMaterial, getMaterialCount, materialInfo} from '../player/materials.js';
+import {gainExp, EXP_RATE} from '../player/vitality.js';
+import {hasInventoryRoom} from '../builds/palaceCapacity.js';
+import {BOUNTY_CATEGORIES, BOUNTY_TITLES, bountyExtras, bountyGradeForLevel} from './bountyRewards.js';
 import {getClassQuestView} from '../classes/classQuests.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
@@ -23,7 +26,6 @@ export const BOUNTY_KINDS = Object.freeze({
     crafts: {event: 'craft', text: 'Создай предметы в кузне', base: {day: 2, week: 10}},
     enchants: {event: 'enchant', text: 'Успешно заточи предметы', base: {day: 2, week: 10}},
 });
-const KIND_ORDER = Object.keys(BOUNTY_KINDS);
 const DAILY = 3;
 const WEEKLY = 2;
 
@@ -51,7 +53,7 @@ function seeded(text) {
 }
 
 /** Reward of one order for a hero level: grows with the quality of the Academy. */
-export function bountyReward(scope, quality, level) {
+export function bountyReward(scope, quality, level, category='experience', className='noClass') {
     const scopeFactor = scope === 'week' ? 4 : 1;
     const lvl = Math.max(1, number(level, 1));
     const reward = {
@@ -61,18 +63,19 @@ export function bountyReward(scope, quality, level) {
     };
     if (scope === 'week' && quality >= 2) reward.luckCoins = quality - 1;
     if (quality >= 3) reward.ironOre = Math.round(4 * quality * scopeFactor);
-    return reward;
+    return {...reward,...bountyExtras(scope,quality,lvl,category,className)};
 }
 
-function makeQuests(scope, key, quality, level, userId) {
+function makeQuests(scope, key, quality, level, userId, className) {
     const random = seeded(`${userId}:${scope}:${key}`);
-    const kinds = [...KIND_ORDER];
     const quests = [];
     const count = scope === 'week' ? WEEKLY : DAILY;
-    for (let index = 0; index < count && kinds.length; index++) {
-        const kind = kinds.splice(Math.floor(random() * kinds.length), 1)[0];
-        const target = Math.max(1, Math.round(BOUNTY_KINDS[kind].base[scope] * (0.8 + quality * 0.35)));
-        quests.push({id: `${scope}-${index}`, kind, target, progress: 0, claimed: false, reward: bountyReward(scope, quality, level)});
+    const grade=bountyGradeForLevel(level);
+    for (let index = 0; index < count; index++) {
+        const category=scope==='week'?BOUNTY_CATEGORIES[index+1]:BOUNTY_CATEGORIES[index];
+        const target=Math.max(1,Math.round(BOUNTY_KINDS.mobKills.base[scope]*(0.8+quality*0.35)*(1+random()*0.2)));
+        quests.push({id:`${scope}-${index}`,kind:'mobKills',category,grade:grade.name,minMobLevel:grade.lvl.from,
+            target,progress:0,claimed:false,reward:bountyReward(scope,quality,level,category,className)});
     }
     return quests;
 }
@@ -94,8 +97,20 @@ export function refreshBounties(session, now = Date.now()) {
     const level = number(session.game.stats?.lvl, 1);
     const userId = session.userId ?? 0;
     for (const [scope, key] of [['day', dayKey(now)], ['week', weekKey(now)]]) {
-        if (academy.bounties[scope]?.key === key) continue;
-        academy.bounties[scope] = {key, quality, quests: makeQuests(scope, key, quality, level, userId)};
+        const previous=academy.bounties[scope];
+        if (previous?.key===key && previous.version===2) continue;
+        const savedLevel=previous?.key===key
+            ? Math.max(1,Math.min(85,Math.round(previous.quests?.[0]?.reward?.gold/(120*previous.quality*(scope==='week'?4:1)))||level)) : level;
+        const savedQuality=Math.max(1,Math.min(5,Math.floor(number(previous?.key===key?previous.quality:quality,quality))));
+        const quests=makeQuests(scope,key,savedQuality,savedLevel,userId,session.game.gameClass?.stats?.name);
+        if(previous?.key===key)for(const quest of quests) {
+            const old=previous.quests?.find(item=>item.id===quest.id);
+            if(!old)continue;
+            quest.progress=Math.min(quest.target,Math.floor(number(old.progress)/Math.max(1,number(old.target,1))*quest.target));
+            quest.claimed=Boolean(old.claimed);
+            if(quest.claimed)quest.reward=old.reward;
+        }
+        academy.bounties[scope]={key,quality:savedQuality,version:2,quests};
     }
     return academy.bounties;
 }
@@ -117,10 +132,13 @@ export function recordAcademyEvent(session, type, {count = 1, boss = null, mob =
     refreshBounties(session, now);
     let moved = 0;
     const drops = [];
+    const amount=Math.max(0,Math.floor(number(count,0)));
+    if(!amount)return {moved:0,drops};
     for (const period of Object.values(academy.bounties)) {
         for (const quest of period.quests) {
             if (quest.claimed || BOUNTY_KINDS[quest.kind].event !== type || quest.progress >= quest.target) continue;
-            quest.progress = Math.min(quest.target, quest.progress + Math.max(1, number(count, 1)));
+            if(quest.minMobLevel && (number(mob?.level)<quest.minMobLevel || Math.abs(number(mob?.level)-number(session.game.stats?.lvl,1))>10))continue;
+            quest.progress = Math.min(quest.target, quest.progress + amount);
             moved++;
         }
     }
@@ -148,15 +166,19 @@ export function recordAcademyEvent(session, type, {count = 1, boss = null, mob =
     return {moved, drops};
 }
 
-function payReward(session, reward) {
+function payReward(session, reward, now) {
     const inventory = session.game.inventory;
     for (const key of ['gold', 'sp', 'moonDew', 'ironOre', 'luckCoins']) {
         if (reward[key]) inventory[key] = number(inventory[key]) + reward[key];
     }
+    for(const [key,count] of Object.entries(reward.materials||{}))addMaterial(session,key,count);
+    const experience=gainExp(session,reward.exp||0,{now});
+    setLevel(session);
+    return experience.gained;
 }
 
 /** The chance that a claimed bounty also brings a Clan Boss Sigil (the clan boss is called with it). */
-export const TOKEN_CHANCE = Object.freeze({daily: 0.06, weekly: 0.15});
+export const TOKEN_CHANCE = Object.freeze({day:0.06, week:0.15, daily:0.06, weekly:0.15});
 
 export function claimBounty(session, scope, id, now = Date.now(), random = Math.random) {
     const academy = ensureAcademy(session);
@@ -165,11 +187,14 @@ export function claimBounty(session, scope, id, now = Date.now(), random = Math.
     if (!quest) return {ok: false, reason: 'unknown_bounty'};
     if (quest.claimed) return {ok: false, reason: 'already_claimed'};
     if (quest.progress < quest.target) return {ok: false, reason: 'bounty_not_done'};
+    const extra=Object.keys(quest.reward.materials||{}).filter(key=>!getMaterialCount(session,key)).length;
+    if(extra && !hasInventoryRoom(session,extra))return {ok:false,reason:'inventory_full'};
     quest.claimed = true;
-    payReward(session, quest.reward);
-    const token = random() < (TOKEN_CHANCE[scope] || 0);
+    const gainedExp=payReward(session,quest.reward,now);
+    const token = random() < (TOKEN_CHANCE[scope] || 0)
+        && (getMaterialCount(session,'clan_boss_token')>0 || hasInventoryRoom(session,1));
     if (token) addMaterial(session, 'clan_boss_token', 1);
-    return {ok: true, reward: quest.reward, token};
+    return {ok: true, reward:quest.reward,gainedExp,token};
 }
 
 // ---- epic passes ----
@@ -250,6 +275,12 @@ export function consumeEpicPass(session, name) {
 
 // ---- the screen ----
 
+function bountyDto(quest) {
+    return {...quest,title:BOUNTY_TITLES[quest.category]||BOUNTY_KINDS[quest.kind]?.text,
+        reward:{...quest.reward,displayExp:(quest.reward.exp||0)*EXP_RATE,
+            items:Object.entries(quest.reward.materials||{}).map(([key,count])=>({key,count,name:materialInfo(key).name}))}};
+}
+
 export function getAcademyState(session, now = Date.now()) {
     const academy = ensureAcademy(session);
     const bounties = refreshBounties(session, now);
@@ -258,8 +289,8 @@ export function getAcademyState(session, now = Date.now()) {
         level: academyLevel(session),
         quality: bountyQuality(session),
         bounties: {
-            day: {quests: bounties.day.quests, quality: bounties.day.quality, resetsAt: Date.parse(`${bounties.day.key}T00:00:00Z`) + 86400000},
-            week: {quests: bounties.week.quests, quality: bounties.week.quality, resetsAt: Date.parse(`${bounties.week.key}T00:00:00Z`) + 7 * 86400000},
+            day: {quests: bounties.day.quests.map(bountyDto), quality: bounties.day.quality, resetsAt: Date.parse(`${bounties.day.key}T00:00:00Z`) + 86400000},
+            week: {quests: bounties.week.quests.map(bountyDto), quality: bounties.week.quality, resetsAt: Date.parse(`${bounties.week.key}T00:00:00Z`) + 7 * 86400000},
         },
         kinds: Object.fromEntries(Object.entries(BOUNTY_KINDS).map(([key, value]) => [key, value.text])),
         passes: Object.entries(PASS_EPICS).map(([name, config]) => {

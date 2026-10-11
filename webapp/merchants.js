@@ -52,13 +52,11 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
       <header class="shop-head">
         <button class="overlay-close shop-back" type="button" aria-label="Закрыть">←</button>
         <h2>Магазин</h2>
-        <strong class="shop-wallet" data-wallet></strong>
       </header>
       <div class="shop-categories" data-tabs></div>
       <div data-body></div>
       <div class="shop-feedback" data-feedback aria-live="polite"></div>
     </div>`;
-  const wallet = overlay.querySelector('[data-wallet]');
   const tabs = overlay.querySelector('[data-tabs]');
   const body = overlay.querySelector('[data-body]');
   const feedback = overlay.querySelector('[data-feedback]');
@@ -146,7 +144,6 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
 
   function render() {
     if (!state) { body.innerHTML = '<div class="shop-empty">Загрузка…</div>'; return; }
-    wallet.innerHTML = `${materialIcon('gold')} ${number(state.gold)} · ${materialIcon('aa')} ${number(state.aa)}`;
     const active = tab || state.merchant;
     tabs.innerHTML = state.merchants.map(merchant => `<button type="button" data-tab="${escapeHtml(merchant.id)}" class="${merchant.id === active ? 'active' : ''}">${escapeHtml(CATEGORY_NAMES[merchant.id])}</button>`).join('')
       + `<button type="button" data-tab="${CONVERT_TAB}" class="${active === CONVERT_TAB ? 'active' : ''}">Боеприпасы</button>`;

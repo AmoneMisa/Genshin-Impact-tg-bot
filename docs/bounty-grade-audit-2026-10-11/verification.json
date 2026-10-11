@@ -1,0 +1,146 @@
+[
+  {
+    "width": 320,
+    "grade": "NG",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "grade": "D",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "grade": "C",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "grade": "B",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "grade": "A",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "grade": "S",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "grade": "S80",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "grade": "S84",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "NG",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "D",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "C",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "B",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "A",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "S",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "S80",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "grade": "S84",
+    "allRewardsVisible": true,
+    "claimOnce": true,
+    "hudUpdated": true,
+    "overflow": false,
+    "errors": []
+  }
+]

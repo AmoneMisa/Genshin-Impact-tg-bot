@@ -10,6 +10,13 @@ import worldFixes from './uz-world-fixes.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
+  '· от': '· kamida',
+  '{0} опыта + бонус энергии': '{0} tajriba + energiya bonusi',
+  'Боевые расходники': 'Jang sarf buyumlari',
+  'В инвентаре не хватает места для награды.': "Mukofot uchun inventarda joy yetarli emas.",
+  'Опыт и ОП': 'Tajriba va mahorat ochkolari',
+  'Ресурсы для крафта': 'Yaratish uchun resurslar',
+  'ур., разница не более 10 уровней': 'dar., farq 10 darajadan oshmasligi kerak',
   '🪙 {6}{7} · {8}% · Навык {9}': '🪙 {6}{7} · {8}% · Mahorat {9}',
   'Для сохранения игры требуется MongoDB replica set. Обратитесь к администратору.': "O'yinni saqlash uchun MongoDB replica set kerak. Administratorga murojaat qiling.",
   'Каталог': 'Katalog',

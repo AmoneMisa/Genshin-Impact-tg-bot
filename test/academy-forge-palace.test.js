@@ -77,7 +77,7 @@ test('academy orders grow with the building level and are paid once', () => {
     const quest = state.bounties.day.quests[0];
     assert.equal(claimBounty(low, 'day', quest.id, now).reason, 'bounty_not_done');
     const eventOf = {mobKills: 'mob_kill', bossKills: 'boss_kill', crafts: 'craft', enchants: 'enchant'}[quest.kind];
-    recordAcademyEvent(low, eventOf, {count: quest.target, now});
+    recordAcademyEvent(low, eventOf, {count: quest.target, mob:{level:50}, now});
     const gold = low.game.inventory.gold;
     const paid = claimBounty(low, 'day', quest.id, now);
     assert.equal(paid.ok, true);

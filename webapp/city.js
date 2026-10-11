@@ -321,7 +321,7 @@ export async function mountCity(container, { api, haptic = () => {}, onState = (
       const button = event.target.closest('[data-city-academy]');
       if (button.disabled) return;
       button.disabled = true;
-      import('./academy.js').then(({ openAcademy }) => openAcademy({ api, haptic, openMainQuests: () => import('./class-quests.js').then(({ openClassQuests }) => openClassQuests({ api, haptic, renderState: onState, statusElement: document.createElement('span') })) })).catch(error => {
+      import('./academy.js').then(({ openAcademy }) => openAcademy({ api, haptic, renderState:onState, openMainQuests: () => import('./class-quests.js').then(({ openClassQuests }) => openClassQuests({ api, haptic, renderState: onState, statusElement: document.createElement('span') })) })).catch(error => {
         const feedback = button.closest('.city-window')?.querySelector('[data-city-feedback]');
         if (feedback) feedback.textContent = error.message;
         console.warn('[academy]',error);
