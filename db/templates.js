@@ -29,6 +29,21 @@ import materials from '../template/materialsTemplate.js';
 import potions from '../template/potionsInInventoryTemplate.js';
 import pvpSign from '../template/pvpSignTemplate.js';
 import shop from '../template/shopTemplate.js';
+import buffPotions from '../template/buffPotions.js';
+import catacombs from '../template/catacombsTemplate.js';
+import customSets from '../template/customSets.js';
+import epicWeapons from '../template/epicWeapons.js';
+import fishingData from '../template/fishingData.js';
+import hennaData from '../template/hennaData.js';
+import hunting from '../template/huntingTemplate.js';
+import l2Items from '../template/l2Items.js';
+import l2Loot from '../template/l2Loot.js';
+import l2Recipes from '../template/l2Recipes.js';
+import merchantData from '../template/merchantData.js';
+import saPrices from '../template/saPrices.js';
+import worldBossMap from '../template/worldBossMap.js';
+import worldHoldings from '../template/worldHoldings.js';
+import worldZones from '../template/worldZones.js';
 
 export const TEMPLATES = Object.freeze([
     {key: 'arenaWeeklyPrizes', source: arenaWeeklyPrizes, version: 1},
@@ -51,6 +66,21 @@ export const TEMPLATES = Object.freeze([
     {key: 'potions', source: potions, version: 4},
     {key: 'pvpSign', source: pvpSign, version: 1},
     {key: 'shop', source: shop, version: 6},
+    {key: 'buffPotions', source: buffPotions, version: 1},
+    {key: 'catacombs', source: catacombs, version: 1},
+    {key: 'customSets', source: customSets, version: 1},
+    {key: 'epicWeapons', source: epicWeapons, version: 1},
+    {key: 'fishingData', source: fishingData, version: 1},
+    {key: 'hennaData', source: hennaData, version: 1},
+    {key: 'hunting', source: hunting, version: 1},
+    {key: 'l2Items', source: l2Items, version: 1},
+    {key: 'l2Loot', source: l2Loot, version: 1},
+    {key: 'l2Recipes', source: l2Recipes, version: 1},
+    {key: 'merchantData', source: merchantData, version: 1},
+    {key: 'saPrices', source: saPrices, version: 1},
+    {key: 'worldBossMap', source: worldBossMap, version: 1},
+    {key: 'worldHoldings', source: worldHoldings, version: 1},
+    {key: 'worldZones', source: worldZones, version: 1},
 ]);
 
 function canonical(value) {

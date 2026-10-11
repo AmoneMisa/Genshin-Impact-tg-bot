@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "run": "node miniapp-entry.js",
-    "run:legacy": "node index.js",
+    "run:legacy": "node legacy-entry.js",
     "test": "node --test",
     "models:check": "node scripts/models/checkModels.js",
     "art:build": "node scripts/blender/art.js",

@@ -17,12 +17,7 @@ import evenHour from './functions/shedullers/evenHour.js';
 import evenDay from './functions/shedullers/evenDay.js';
 import evenWeek from './functions/shedullers/evenWeek.js';
 
-import {connectMongo} from "./db/db.js";
-
-// Do not accept Telegram updates until Mongo is connected and migration/import
-// has completed. This also makes importing index.js safe for the Mini App entry.
-await connectMongo();
-
+// Mongo is connected by the entry file that imports this module (miniapp-entry.js or legacy-entry.js).
 await bot.setMyCommands([
     {command: "start", description: "Открыть игру"},
     {command: "play", description: "Открыть игру"},
