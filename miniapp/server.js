@@ -1,4 +1,5 @@
 import { needsPass } from '../template/epicPasses.js';
+import {getLoginRewardsState,claimLoginReward,redeemLoginItem} from '../functions/game/login/loginRewards.js';
 import {selectSoulCrystal,chargeSoulCrystal,exchangeSeals} from '../functions/game/equipment/soulCrystals.js';
 import {advanceHunt} from '../functions/game/hunt/huntFight.js';
 import {advanceFieldPvp,fieldPeers,useFieldPvpSkill} from '../functions/game/hunt/fieldPvp.js';
@@ -1671,6 +1672,23 @@ const buildsState = guarded('builds state', async (req, res) => {
   return sendJson(res, 200, builds);
 });
 
+const loginRewardsState = guarded('login rewards state', async (req,res) => {
+  const context=await authorize(req);
+  return sendJson(res,200,getLoginRewardsState(context.session));
+});
+const loginRewardsAction = guarded('login rewards action', async (req,res) => {
+  const context=await authorize(req),body=await readJsonBody(req);
+  if(!['claim','redeem'].includes(body.action))throw httpError(400,'Unknown login rewards action');
+  if(body.action==='redeem'&&(typeof body.key!=='string'||body.key.length>80||typeof (body.choice??'')!=='string'||(body.choice||'').length>100))throw httpError(400,'Invalid coupon choice');
+  const result=await withLock(`${context.chatId}:${context.userId}:inventory`,async()=>{
+    context.session=await getSession(context.chatId,context.userId);
+    const outcome=body.action==='claim'?claimLoginReward(context.session,Date.now(),body.month!=null?{month:body.month,day:body.day}:null):redeemLoginItem(context.session,body.key,body.choice||'');
+    if(outcome.ok||outcome.changed)await saveSession(context.session);
+    return {...outcome,loginRewards:getLoginRewardsState(context.session)};
+  });
+  return sendResult(res,result,context);
+});
+
 const academyState = guarded('academy state', async (req, res) => {
   const context = await authorize(req);
   const state = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
@@ -2246,6 +2264,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/equipment/craft') return equipmentCraft(req, res);
     if (route === 'POST /api/equipment/scroll') return equipmentScroll(req, res);
     if (route === 'POST /api/equipment/recipe') return equipmentRecipe(req, res);
+    if (route === 'GET /api/login-rewards') return loginRewardsState(req,res);
+    if (route === 'POST /api/login-rewards/action') return loginRewardsAction(req,res);
     if (route === 'GET /api/academy') return academyState(req, res);
     if (route === 'POST /api/academy/action') return academyAction(req, res);
     if (route === 'GET /api/builds') return buildsState(req, res);

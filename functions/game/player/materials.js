@@ -1,5 +1,6 @@
 import materialsTemplate from '../../../template/materialsTemplate.js';
 import {l2MaterialInfo} from '../hunt/lootTable.js';
+import {loginItemInfo} from '../../../template/loginRewards.js';
 
 /** Read-only view of the material counters (old inventories have none). */
 function readMaterials(session) {
@@ -39,6 +40,11 @@ export function spendMaterials(session, items = {}) {
 }
 
 export function materialInfo(key) {
+    if (String(key).startsWith('bound_')) {
+        const base=String(key).slice(6);
+        return {...(base.startsWith('bound_')?{name:base,icon:'✦',description:''}:materialInfo(base)),key,bound:true};
+    }
+    const login=loginItemInfo(key);if(login)return login;
     return materialsTemplate.find(item => item.key === key) || (String(key).startsWith('l2_') && l2MaterialInfo(key)) || {key, name: key, icon: '✦', description: ''};
 }
 

@@ -1,4 +1,5 @@
 import {sellableItems} from './auction.js';
+import {materialInfo} from '../functions/game/player/materials.js';
 import {isTimedItem} from '../functions/game/equipment/timedItems.js';
 import {inventorySlotsUsed} from '../functions/game/builds/palaceCapacity.js';
 /** Options of a transfer into an inventory: it holds `capacity` slots (the palace level sets it). */
@@ -23,8 +24,10 @@ export function validateStock(stock,{kind,ref,count}){
  }
  if(kind==='potion'){
   const item=stock?.potions?.items?.find(p=>potionKey(p)===ref);
+  if(item?.bound||item?.noTrade)return {ok:false,reason:'item_unavailable'};
   return item&&validCount(item.count)&&item.count>=count?{ok:true,item}:{ok:false,reason:'not_enough'};
  }
+ if(kind==='material'&&materialInfo(ref).bound)return {ok:false,reason:'item_unavailable'};
  if(kind==='material'&&Object.hasOwn(stock?.materials||{},ref))return validCount(stock.materials[ref])&&stock.materials[ref]>=count?{ok:true}:{ok:false,reason:'not_enough'};
  if(kind==='currency'&&Object.hasOwn(CURRENCIES,ref))return validCount(stock?.[ref])&&stock[ref]>=count?{ok:true}:{ok:false,reason:'not_enough'};
  return {ok:false,reason:'invalid_kind'};

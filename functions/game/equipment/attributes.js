@@ -2,6 +2,7 @@
 // Legacy item.attribute values remain readable without changing their meaning.
 import { ATTRIBUTE_GRADES, ATTRIBUTE_TIERS, ELEMENTS, attributeKey } from '../../../template/augmentData.js';
 import { getMaterialCount, spendMaterials } from '../player/materials.js';
+import {spendUsableMaterial,usableMaterialCount} from '../player/boundMaterials.js';
 import { gradeIndex } from './catalog.js';
 import {l2RawStat} from '../player/l2Effects.js';
 import {hallElementResist} from '../clans/clanHall.js';
@@ -29,7 +30,7 @@ export function normalizeElement(value) {
     return BOSS_ELEMENT[value] || null;
 }
 
-export const canAttribute = item => Boolean(item && ATTRIBUTE_GRADES.includes(item.grade)
+export const canAttribute = item => Boolean(item && !item.shadow && ATTRIBUTE_GRADES.includes(item.grade)
     && (item.mainType === 'weapon' || (item.mainType === 'armor' && ['body','greaves','fullBody','helmet','gloves','boots'].includes(item.category)))
     && (item.elementEnabled === true || ATTRIBUTE_ITEMS[item.name] || item.epicWeapon || item.custom));
 
@@ -66,7 +67,7 @@ export function addAttribute(session, item, element, tier, {random = Math.random
     const limits = tierInfo(tier)[sideOf(item)];
     const value = Number(current?.value) || 0;
     if (value >= limits.cap) return {ok: false, reason: 'attribute_tier_max', cap: limits.cap};
-    if (!spendMaterials(session, {[attributeKey(tier, element)]: 1})) return {ok: false, reason: 'no_attribute_stone', stone: attributeKey(tier, element)};
+    if (!spendUsableMaterial(session, attributeKey(tier, element))) return {ok: false, reason: 'no_attribute_stone', stone: attributeKey(tier, element)};
 
     if (random() >= tierInfo(tier).chance) return {ok: true, success: false, attribute: current, consumed: true};
     const next = Math.min(limits.cap, value + (weapon && value === 0 ? 20 : limits.add));
@@ -161,7 +162,7 @@ export function attributeInfo(session, item) {
             if (side === 'weapon' && current && current.element !== element.id) continue;
             if (side === 'armor' && (currents.some(c => c.element === element.id) || (currents.length >= 3 && !currents.some(c => c.element === defense)))) continue;
             const value = currents.find(c => c.element === defense)?.value || 0;
-            const stones = getMaterialCount(session, attributeKey(tier.id, element.id));
+            const stones = usableMaterialCount(session, attributeKey(tier.id, element.id));
             if (!stones) continue;
             options.push({tier: tier.id, tierLabel: tier.label, element: element.id, icon: element.icon, label: side === 'weapon' ? element.label : elementInfo(defense).label + ' · защита', stones, chance: tier.chance, add: side === 'weapon' && !value ? 20 : tier[side].add, cap: tier[side].cap, full: value >= tier[side].cap});
         }

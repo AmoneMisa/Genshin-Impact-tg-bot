@@ -10,6 +10,7 @@ const GRADES = Object.freeze(['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'])
 
 /** {icon, grade} of an enchant / crafting material key, or null for any other material. */
 export function materialIconInfo(key) {
+  if(String(key).startsWith('bound_'))return materialIconInfo(String(key).slice(6));
   const parts = String(key || '').split('_');
   if(['soul','seal'].includes(parts[0])&&['red','green','blue'].includes(parts[1])&&(parts[0]==='seal'&&parts.length===2||parts.length===3&&/^(?:[0-9]|1[0-7])$/.test(parts[2])))return {icon:'crystal',color:parts[1]};
   if(parts[0]==='lifestone' && GRADES.includes(parts.at(-1)) && (parts.length===2 || parts.length===3 && ['mid','high','top'].includes(parts[1])))return {icon:'lifestone',grade:parts.at(-1),quality:parts.length===3?parts[1]:'normal'};
@@ -28,6 +29,9 @@ export function materialIconInfo(key) {
 
 /** Image markup for a material, or the given emoji when it has no painting. */
 export function materialIcon(key, fallback = '✦') {
+  if(String(key).startsWith('bound_'))return materialIcon(String(key).slice(6),fallback);
+  if(String(key).startsWith('login_'))return icon(String(key).includes('_box_')?'gift':'scroll','mat-icon');
+  if(String(key).startsWith('blessedshot_'))return paintedIconHtml('spiritshot','grade-tint-'+String(key).slice(12).toLowerCase(),fallback);
   const original=l2FishingIcon(key)||l2MaterialIcon(key);
   if(original)return original;
   const info = materialIconInfo(key);

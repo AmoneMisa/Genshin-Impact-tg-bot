@@ -1,0 +1,524 @@
+{
+  "economy": [
+    {
+      "grade": "NG",
+      "level": 1,
+      "blessed": 657,
+      "soulshot": 876,
+      "spiritshot": 985,
+      "gold": 750,
+      "ancientAdena": 1000,
+      "ordinaryMobGold": 2.8875,
+      "goldEquivalentKills": 260
+    },
+    {
+      "grade": "D",
+      "level": 20,
+      "blessed": 379,
+      "soulshot": 505,
+      "spiritshot": 569,
+      "gold": 2500,
+      "ancientAdena": 3000,
+      "ordinaryMobGold": 30.45,
+      "goldEquivalentKills": 82
+    },
+    {
+      "grade": "C",
+      "level": 40,
+      "blessed": 232,
+      "soulshot": 309,
+      "spiritshot": 348,
+      "gold": 8000,
+      "ancientAdena": 8000,
+      "ordinaryMobGold": 121.8875,
+      "goldEquivalentKills": 66
+    },
+    {
+      "grade": "B",
+      "level": 52,
+      "blessed": 146,
+      "soulshot": 195,
+      "spiritshot": 220,
+      "gold": 16000,
+      "ancientAdena": 16000,
+      "ordinaryMobGold": 172.4625,
+      "goldEquivalentKills": 93
+    },
+    {
+      "grade": "A",
+      "level": 61,
+      "blessed": 92,
+      "soulshot": 123,
+      "spiritshot": 139,
+      "gold": 30000,
+      "ancientAdena": 24000,
+      "ordinaryMobGold": 344.1375,
+      "goldEquivalentKills": 87
+    },
+    {
+      "grade": "S",
+      "level": 76,
+      "blessed": 60,
+      "soulshot": 80,
+      "spiritshot": 90,
+      "gold": 50000,
+      "ancientAdena": 40000,
+      "ordinaryMobGold": 782.1625,
+      "goldEquivalentKills": 64
+    },
+    {
+      "grade": "S80",
+      "level": 80,
+      "blessed": 46,
+      "soulshot": 61,
+      "spiritshot": 69,
+      "gold": 75000,
+      "ancientAdena": 60000,
+      "ordinaryMobGold": 3149.9125,
+      "goldEquivalentKills": 24
+    },
+    {
+      "grade": "S84",
+      "level": 84,
+      "blessed": 37,
+      "soulshot": 50,
+      "spiritshot": 56,
+      "gold": 100000,
+      "ancientAdena": 80000,
+      "ordinaryMobGold": 399.4375,
+      "goldEquivalentKills": 250
+    }
+  ],
+  "schedule": [
+    {
+      "day": 1,
+      "reward": {
+        "materials": {
+          "login_shots_S": 1
+        }
+      }
+    },
+    {
+      "day": 2,
+      "reward": {
+        "materials": {
+          "login_fame_S": 1
+        }
+      }
+    },
+    {
+      "day": 3,
+      "reward": {
+        "materials": {
+          "l2_6540": 200
+        }
+      }
+    },
+    {
+      "day": 4,
+      "reward": {
+        "materials": {
+          "login_buff_S": 2
+        }
+      }
+    },
+    {
+      "day": 5,
+      "reward": {
+        "currencies": {
+          "ironOre": 130
+        }
+      }
+    },
+    {
+      "day": 6,
+      "reward": {
+        "materials": {
+          "login_fishing_S": 1
+        }
+      }
+    },
+    {
+      "day": 7,
+      "reward": {
+        "materials": {
+          "login_shadow_weapon_C": 1,
+          "login_shadow_armor_C": 1,
+          "login_shadow_jewelry_C": 1
+        }
+      }
+    },
+    {
+      "day": 8,
+      "reward": {
+        "materials": {
+          "login_shots_S": 1
+        }
+      }
+    },
+    {
+      "day": 9,
+      "reward": {
+        "potions": [
+          {
+            "id": "login-white-heal",
+            "artKey": "l2_1539",
+            "name": "Greater Healing Potion",
+            "type": "hp",
+            "bottleType": "potion",
+            "size": "large",
+            "power": 500,
+            "count": 10
+          }
+        ]
+      }
+    },
+    {
+      "day": 10,
+      "reward": {
+        "materials": {
+          "login_resurrection_S": 1
+        }
+      }
+    },
+    {
+      "day": 11,
+      "reward": {
+        "materials": {
+          "login_rune_exp_S": 1
+        }
+      }
+    },
+    {
+      "day": 12,
+      "reward": {
+        "materials": {
+          "login_fame_S": 1
+        }
+      }
+    },
+    {
+      "day": 13,
+      "reward": {
+        "materials": {
+          "login_shots_S": 1
+        }
+      }
+    },
+    {
+      "day": 14,
+      "reward": {
+        "materials": {
+          "login_shadow_weapon_B": 1,
+          "login_shadow_armor_B": 1,
+          "login_shadow_jewelry_B": 1
+        }
+      }
+    },
+    {
+      "day": 15,
+      "reward": {
+        "materials": {
+          "login_fishing_S": 1
+        }
+      }
+    },
+    {
+      "day": 16,
+      "reward": {
+        "materials": {
+          "login_buff_S": 3
+        }
+      }
+    },
+    {
+      "day": 17,
+      "reward": {
+        "currencies": {
+          "ironOre": 210
+        }
+      }
+    },
+    {
+      "day": 18,
+      "reward": {
+        "materials": {
+          "login_rune_drop_S": 1
+        }
+      }
+    },
+    {
+      "day": 19,
+      "reward": {
+        "materials": {
+          "login_shots_S": 2
+        }
+      }
+    },
+    {
+      "day": 20,
+      "reward": {
+        "materials": {
+          "login_fame_S": 2
+        }
+      }
+    },
+    {
+      "day": 21,
+      "reward": {
+        "materials": {
+          "login_shadow_weapon_A": 1,
+          "login_shadow_armor_A": 1,
+          "login_shadow_jewelry_A": 1
+        }
+      }
+    },
+    {
+      "day": 22,
+      "reward": {
+        "materials": {
+          "login_resurrection_S": 2
+        }
+      }
+    },
+    {
+      "day": 23,
+      "reward": {
+        "materials": {
+          "login_rune_craft_S": 1
+        }
+      }
+    },
+    {
+      "day": 24,
+      "reward": {
+        "materials": {
+          "l2_6540": 350
+        }
+      }
+    },
+    {
+      "day": 25,
+      "reward": {
+        "materials": {
+          "login_fishing_S": 2
+        }
+      }
+    },
+    {
+      "day": 26,
+      "reward": {
+        "materials": {
+          "login_buff_S": 3
+        }
+      }
+    },
+    {
+      "day": 27,
+      "reward": {
+        "materials": {
+          "login_shots_S": 2
+        }
+      }
+    },
+    {
+      "day": 28,
+      "reward": {
+        "currencies": {
+          "ironOre": 290
+        }
+      }
+    },
+    {
+      "day": 29,
+      "reward": {
+        "materials": {
+          "login_fame_S": 2
+        }
+      }
+    },
+    {
+      "day": 30,
+      "reward": {
+        "materials": {
+          "login_shots_S": 2
+        }
+      }
+    }
+  ],
+  "boxS": [
+    {
+      "id": "fame",
+      "weight": 12,
+      "reward": {
+        "materials": {
+          "login_fame_S": 5
+        }
+      },
+      "name": "Талон на славу (S) ×5",
+      "chance": 10.16949152542373
+    },
+    {
+      "id": "boss",
+      "weight": 5,
+      "reward": {
+        "materials": {
+          "clan_boss_token": 1
+        }
+      },
+      "name": "Clan Boss Sigil ×1",
+      "chance": 4.23728813559322
+    },
+    {
+      "id": "col3",
+      "weight": 5,
+      "reward": {
+        "currencies": {
+          "luckCoins": 3
+        }
+      },
+      "name": "COL ×3",
+      "chance": 4.23728813559322
+    },
+    {
+      "id": "col5",
+      "weight": 3,
+      "reward": {
+        "currencies": {
+          "luckCoins": 5
+        }
+      },
+      "name": "COL ×5",
+      "chance": 2.5423728813559325
+    },
+    {
+      "id": "col7",
+      "weight": 2,
+      "reward": {
+        "currencies": {
+          "luckCoins": 7
+        }
+      },
+      "name": "COL ×7",
+      "chance": 1.694915254237288
+    },
+    {
+      "id": "aa",
+      "weight": 14,
+      "reward": {
+        "currencies": {
+          "ancientAdena": 40000
+        }
+      },
+      "name": "AA ×40000",
+      "chance": 11.864406779661017
+    },
+    {
+      "id": "gold",
+      "weight": 16,
+      "reward": {
+        "currencies": {
+          "gold": 50000
+        }
+      },
+      "name": "Адена ×50000",
+      "chance": 13.559322033898304
+    },
+    {
+      "id": "epic3",
+      "weight": 6,
+      "days": 3,
+      "name": "Теневая эпическая бижутерия +8 (3 дня)",
+      "chance": 5.084745762711865
+    },
+    {
+      "id": "epic7",
+      "weight": 3,
+      "days": 7,
+      "name": "Теневая эпическая бижутерия +8 (7 дня)",
+      "chance": 2.5423728813559325
+    },
+    {
+      "id": "mastery",
+      "weight": 6,
+      "reward": {
+        "materials": {
+          "l2_9627": 10
+        }
+      },
+      "name": "Giant's Codex - Mastery ×10",
+      "chance": 5.084745762711865
+    },
+    {
+      "id": "giants",
+      "weight": 8,
+      "reward": {
+        "materials": {
+          "l2_6622": 20
+        }
+      },
+      "name": "Giant's Codex ×20",
+      "chance": 6.779661016949152
+    },
+    {
+      "id": "stones",
+      "weight": 8,
+      "tier": "stone",
+      "count": 10,
+      "name": "10 случайных камней атрибута (привязанные)",
+      "chance": 6.779661016949152
+    },
+    {
+      "id": "crystals",
+      "weight": 5,
+      "tier": "crystal",
+      "count": 6,
+      "name": "6 случайных кристаллов атрибута (привязанные)",
+      "chance": 4.23728813559322
+    },
+    {
+      "id": "blessedArmor",
+      "weight": 10,
+      "reward": {
+        "materials": {
+          "bound_blessed_armor_S": 3
+        }
+      },
+      "name": "Благословенный свиток: броня (S) ×3",
+      "chance": 8.47457627118644
+    },
+    {
+      "id": "blessedWeapon",
+      "weight": 7,
+      "reward": {
+        "materials": {
+          "bound_blessed_weapon_S": 2
+        }
+      },
+      "name": "Благословенный свиток: оружие (S) ×2",
+      "chance": 5.932203389830509
+    },
+    {
+      "id": "destructionArmor",
+      "weight": 5,
+      "reward": {
+        "materials": {
+          "bound_safe_armor_S": 2
+        }
+      },
+      "name": "Нерушимый свиток: броня (S) ×2",
+      "chance": 4.23728813559322
+    },
+    {
+      "id": "destructionWeapon",
+      "weight": 3,
+      "reward": {
+        "materials": {
+          "bound_safe_weapon_S": 1
+        }
+      },
+      "name": "Нерушимый свиток: оружие (S) ×1",
+      "chance": 2.5423728813559325
+    }
+  ]
+}

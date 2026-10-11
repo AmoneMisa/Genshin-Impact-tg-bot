@@ -2,6 +2,7 @@
 // level 1 (nothing) to level 30 (the maximum below), so the whole upgrade chain gives:
 //   craft chance +15%, enchant chance +8%, masterwork chance +5%, double craft +5%, crystals from crystallizing +10%,
 //   and a 15% chance (reached evenly) to spend 40% less materials, the cut growing from 5% to 40%.
+import {activeLoginRune} from '../../../template/loginRewards.js';
 export const FORGE_MAX_LEVEL = 30;
 
 export const FORGE_MAX = Object.freeze({
@@ -29,7 +30,7 @@ export function forgeBonuses(session) {
     const progress = (level - 1) / (FORGE_MAX_LEVEL - 1);
     return {
         level,
-        craft: FORGE_MAX.craft * progress,
+        craft: FORGE_MAX.craft * progress + (activeLoginRune(session,'craft')?0.05:0),
         enchant: FORGE_MAX.enchant * progress,
         masterwork: FORGE_MAX.masterwork * progress,
         doubleCraft: FORGE_MAX.doubleCraft * progress,

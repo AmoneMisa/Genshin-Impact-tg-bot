@@ -16,5 +16,6 @@ export const SHOTS_PER_CAST = Object.freeze({noGrade: 1, D: 2, C: 3, B: 3, A: 4,
 export const SHOT_PACK = 100;
 export const SHOT_PACK_PRICE = Object.freeze({noGrade: 100, D: 300, C: 800, B: 2000, A: 5000, S: 12000, S80: 20000, S84: 30000});
 
-export const shotKey = (kind, grade) => `${kind}_${grade}`;
+// Blessed charges must never share a counter with generic blessed enchant scrolls.
+export const shotKey = (kind, grade) => `${kind === 'blessed' ? 'blessedshot' : kind}_${grade}`;
 export const gradeLabel = grade => (grade === 'noGrade' ? 'NG' : grade);

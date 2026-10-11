@@ -4,6 +4,7 @@ import { bossSpawnRecipients, getBadges, pushAll, pushTo } from '../miniapp/noti
 import { setFriend } from '../miniapp/social.js';
 import { rejectClanApplication, transferClanOwnership } from '../miniapp/clanManagement.js';
 import { badgeHtml, tabBadgeCount, NAV_TABS } from '../webapp/nav.js';
+import {loginPeriod} from '../template/loginRewards.js';
 
 const member = (userId, name) => ({ userId, userChatData: { user: { id: userId, first_name: name } }, game: {} });
 const chat = () => ({ members: [member(1, 'A'), member(2, 'B')] });
@@ -58,12 +59,14 @@ test('red dot html is empty for zero and caps at 9+; tabs sum their features', (
 test('personal badges flag ready bonus, chest, arena and free gacha spins; boss comes from the caller', () => {
   const c = chat();
   const idle = { chestTries: 0, chosenChests: [], chestCounter: 0, game: { bonusChances: 0, arenaChances: 0, gacha: [{ name: 'a', freeSpins: 0 }] } };
+  const period=loginPeriod();idle.game.loginRewards={month:period.month,claimed:[period.day]};
   assert.equal(getBadges(c, 1, null, { session: idle }).total, 0);
 
   const ready = { chestTries: 1, chosenChests: [], chestCounter: 0, game: { bonusChances: 2, arenaChances: 3, gacha: [{ name: 'a', freeSpins: 1 }] } };
   const badges = getBadges(c, 1, null, { session: ready, bossAlive: true });
   assert.deepEqual([badges.bonus, badges.chest, badges.arena, badges.gacha, badges.boss], [1, 1, 1, 1, 1]);
-  assert.equal(badges.total, 5);
+  assert.equal(badges.loginRewards,1);
+  assert.equal(badges.total, 6);
 });
 
 test('boss spawn recipients are recently seen humans except the summoner', () => {

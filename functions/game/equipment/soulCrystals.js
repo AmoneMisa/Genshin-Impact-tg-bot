@@ -10,7 +10,7 @@ const valid=(color,stage)=>Object.hasOwn(SOUL_COLORS,color)&&Number.isInteger(st
 // Original raid weapons use the corresponding top High Five weapon's SA table.
 const EPIC_SA_BASE={oneHandedSword:'Periel Sword',twoHandedSword:'Feather Eye Blade',dagger:'Skull Edge',mace:'Rising Star',blunt:'Devilish Maul',fists:'Octo Claw',bow:'Skull Carnium Bow',crossbow:'Dominion Crossbow'};
 const baseName=item=>item?.epicWeapon?EPIC_SA_BASE[item.kind]:item?.name;
-export function saOptions(item){return item?.mainType==='weapon'&&['C','B','A','S','S80','S84'].includes(item.grade)?SA_WEAPONS[baseName(item)]||[]:[];}
+export function saOptions(item){return !item?.shadow&&item?.mainType==='weapon'&&['C','B','A','S','S80','S84'].includes(item.grade)?SA_WEAPONS[baseName(item)]||[]:[];}
 export function saDefinition(item){return item?.sa?saOptions(item).find(o=>o.id===item.sa.id&&o.color===item.sa.color&&o.stage===item.sa.stage)||null:null;}
 // Real High Five prices (template/saPrices.js): install = Soul Crystal + Gemstones (+ adena up to B grade), removal = Ancient
 // Adena. High Five has no removal service for S grade and above, so those abilities are permanent.
@@ -28,6 +28,7 @@ export function saInfo(session,item){const current=saDefinition(item),options=sa
   return {current:current?{id:current.id,label:current.label,color:current.color,stage:current.stage}:null,legacy:!current&&Boolean(item.ability),gold:p.gold,gemKey,gems:p.gems,gemCount:getMaterialCount(session,gemKey),removeAa,removable:removeAa>0,aa:n(session.game.inventory.ancientAdena),equipped:isActuallyEquipped(session,item),options:options.map(o=>({id:o.id,label:o.label,color:o.color,stage:o.stage,key:soulCrystalKey(o.color,o.stage),count:getMaterialCount(session,soulCrystalKey(o.color,o.stage)),effects:saBonuses(item,o),description:o.description}))};
 }
 export function installWeaponSa(session,item,id){const info=saInfo(session,item),option=info?.options.find(o=>o.id===id);
+    if(item?.shadow)return {ok:false,reason:'timed_item'};
     if(item?.pvp)return {ok:false,reason:'pvp_item_ineligible'};
   if(!option)return {ok:false,reason:'invalid_sa'};
   if(isActuallyEquipped(session,item))return {ok:false,reason:'sa_equipped'};

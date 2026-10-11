@@ -6,6 +6,7 @@ import { clanPerkModifiers } from '../clans/clanPerks.js';
 import { activeSkillModifiers, passiveSkillModifiers } from '../equipment/lifestoneSkills.js';
 import { baseStatDelta } from './baseStats.js';
 import { scrydeModifiers } from './scrydeBuffer.js';
+import {activeLoginRune} from '../../../template/loginRewards.js';
 
 function sources(session, damageType) {
     return [passiveModifiers(session, damageType), clanPerkModifiers(session, damageType), passiveSkillModifiers(session, damageType), activeSkillModifiers(session, Date.now(), damageType), scrydeModifiers(session)];
@@ -15,6 +16,7 @@ function sources(session, damageType) {
 export default function extraStatBonus(session, statName, isMul = false, damageType) {
     let result = isMul ? 1 : 0;
     const deltas = sources(session, damageType).map(modifiers => modifiers[statName]);
+    if(statName==='dropRateMul'&&activeLoginRune(session,'drop'))deltas.push(0.5);
     deltas.push(baseStatDelta(session, statName, damageType));
     for (const delta of deltas) {
         if (typeof delta !== 'number' || delta === 0) continue;

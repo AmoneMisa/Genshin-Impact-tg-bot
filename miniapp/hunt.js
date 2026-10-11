@@ -70,7 +70,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
         soulCrystals:{...soulCrystalState(session),charge:soulChargeInfo(session,hunt.mob)},
         zones: getZones().map(zone => zoneDto(zone, level)),
         zone: hunt.zone,
-        mob: hunt.mob ? {...mobDto(hunt.mob, now), drops: huntDropPreview(level, getMobDef(getZone(hunt.mob.zone), hunt.mob.mobId), hunt.mob.champion)} : null,
+        mob: hunt.mob ? {...mobDto(hunt.mob, now), drops: huntDropPreview(level, getMobDef(getZone(hunt.mob.zone), hunt.mob.mobId), hunt.mob.champion,session)} : null,
         field: hunt.field ? fieldDto(hunt, now, session) : null,
         players: peers.map(peer => fieldPlayerDto(peer,now)),
         pvpLog: (game.worldPvp?.log || []).map(row=>({...row,agoMs:Math.max(0,now-row.at)})),
@@ -171,6 +171,6 @@ export function getZoneLoot(session, zoneId) {
         ok: true,
         zone: zone.id,
         kinds: LOOT_KINDS.map(kind => ({id: kind.id, label: kind.label, icon: kind.icon})),
-        mobs: zone.mobs.map(mob => ({id: mob.id, name: mob.name, level: mob.level, drops: huntDropPreview(level, mob)})),
+        mobs: zone.mobs.map(mob => ({id: mob.id, name: mob.name, level: mob.level, drops: huntDropPreview(level, mob,null,session)})),
     };
 }

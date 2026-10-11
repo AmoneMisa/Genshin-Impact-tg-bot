@@ -35,10 +35,10 @@ export function sellableItems(session) {
     .filter(item => item?.uid && !item.isUsed && !isTimedItem(item) && !item.pvp && !item.bound && !item.noTrade && item.tradeable !== false)
     .map(item => ({ kind: 'equipment', ref: item.uid, ...viewOfEquipment(item), count: 1 }));
   const potions = (inventory?.potions?.items || [])
-    .filter(potion => number(potion.count) > 0)
+    .filter(potion => number(potion.count) > 0 && !potion.bound && !potion.noTrade)
     .map(potion => ({ kind: 'potion', ref: potionKey(potion), ...viewOfPotion(potion), count: number(potion.count) }));
   const materials = Object.entries(getMaterials(session))
-    .filter(([, count]) => number(count) > 0)
+    .filter(([key, count]) => number(count) > 0 && !materialInfo(key).bound)
     .map(([key, count]) => ({ kind: 'material', ref: key, ...viewOfMaterial(key), count: number(count) }));
   return [...equipment, ...potions, ...materials];
 }
@@ -196,12 +196,14 @@ export async function createLot(session, store, { kind, ref, count = 1, price },
     if (!item) return { ok: false, reason: 'item_not_found' };
     if (item.isUsed) return { ok: false, reason: 'item_equipped' };
     if (isTimedItem(item)) return { ok: false, reason: 'timed_item' };
+    if(item.bound||item.noTrade||item.tradeable===false||item.canTrade===false)return {ok:false,reason:'item_unavailable'};
     items.splice(items.indexOf(item), 1);
     payload = { item: structuredClone(item) };
     view = viewOfEquipment(item);
   } else if (kind === 'potion') {
     const stack = (inventory.potions?.items || []).find(potion => potionKey(potion) === ref);
     if (!stack || number(stack.count) < 1) return { ok: false, reason: 'item_not_found' };
+    if(stack.bound||stack.noTrade)return {ok:false,reason:'item_unavailable'};
     if (amount > number(stack.count)) return { ok: false, reason: 'not_enough' };
     stack.count = number(stack.count) - amount;
     const { count: _count, ...definition } = structuredClone(stack);
@@ -209,6 +211,7 @@ export async function createLot(session, store, { kind, ref, count = 1, price },
     view = viewOfPotion(stack);
     lotCount = amount;
   } else {
+    if(materialInfo(ref).bound)return {ok:false,reason:'item_unavailable'};
     if (getMaterialCount(session, ref) < 1) return { ok: false, reason: 'item_not_found' };
     if (amount > getMaterialCount(session, ref)) return { ok: false, reason: 'not_enough' };
     getMaterials(session)[ref] = getMaterialCount(session, ref) - amount;

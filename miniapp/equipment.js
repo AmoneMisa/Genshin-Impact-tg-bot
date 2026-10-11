@@ -40,6 +40,7 @@ import { describeItemStats,describeStat } from '../functions/game/equipment/desc
 import { canClassUse } from '../functions/game/equipment/catalog.js';
 import { isActuallyEquipped } from '../functions/game/equipment/snapshots.js';
 import { getMaterialCount } from '../functions/game/player/materials.js';
+import {usableMaterialCount} from '../functions/game/player/boundMaterials.js';
 import { augmentInfo, augmentItem } from '../functions/game/equipment/augment.js';
 import { addAttribute, attributeInfo, clearAttribute } from '../functions/game/equipment/attributes.js';
 import { activateSkill } from '../functions/game/equipment/lifestoneSkills.js';
@@ -144,6 +145,8 @@ function sanitizeItem(session, item, index) {
     epicBoss: item?.epicBoss || null,
     epicWeapon:item?.epicWeapon || null,
     timed: isTimedItem(item),
+    shadow:Boolean(item.shadow),
+    bound:Boolean(item.bound),
     expiresAt: isTimedItem(item) ? Number(item.expiresAt) : null,
     daysLeft: isTimedItem(item) ? daysLeft(item) : null,
     collection:item?.collection || null,
@@ -163,8 +166,8 @@ function sanitizeItem(session, item, index) {
     scrolls: enchantable ? {
       plain: getMaterialCount(session, scrollKey(item.grade)),
       blessed: getMaterialCount(session, blessedKey(item.grade)),
-      blessedTyped: getMaterialCount(session, blessedTypedKey(item)),
-      safeTyped: getMaterialCount(session, safeTypedKey(item)),
+      blessedTyped: usableMaterialCount(session, blessedTypedKey(item)),
+      safeTyped: usableMaterialCount(session, safeTypedKey(item)),
     } : null,
     crystals: enchantable ? crystalYield(item) : 0,
     augment: augmentInfo(session, item),
@@ -400,7 +403,7 @@ function recipeRow(session, recipe) {
     kind: item.kind,
     slots: [...item.slots],
     lineage: item.lineage || null,
-    successRate: recipe.successRate,
+    successRate: Math.min(1,recipe.successRate+forgeBonuses(session).craft),
     gold: recipe.gold,
     mp: asNumber(recipe.mp),
     real: Boolean(recipe.real),
@@ -420,7 +423,7 @@ function recipeRow(session, recipe) {
         && (getMaterialCount(session,resource.productKey)>0 || hasInventoryRoom(session,1))
         && !Object.keys(missingForRecipe(session, resource)).length
         && getCurrentMp(session, session.game.gameClass) >= asNumber(resource.mp);
-      return {...row, quickCraft: canMake ? {id:resource.id,amount:resource.amount,successRate:resource.successRate} : null};
+      return {...row, quickCraft: canMake ? {id:resource.id,amount:resource.amount,successRate:Math.min(1,resource.successRate+forgeBonuses(session).craft)} : null};
     }),
     missing: missingForRecipe(session, recipe),
     canCraft: learned && level >= recipe.minLevel && craft.level >= recipe.craftLevel && !Object.keys(missingForRecipe(session, recipe)).length,

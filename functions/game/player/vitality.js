@@ -7,6 +7,7 @@
 //
 // Stored as session.game.vitality = {points, at}; the refill is computed when the bar is read.
 import levelsTemplate, { MAX_LEVEL } from '../../../template/levelsTemplate.js';
+import {activeLoginRune} from '../../../template/loginRewards.js';
 
 export { MAX_LEVEL };
 export const EXP_RATE = 5;
@@ -66,7 +67,7 @@ export function gainExp(session, base, {now = Date.now()} = {}) {
     const stats = session.game.stats;
     const bar = readVitality(session, now);
     const {bonus} = stageOf(bar.points);
-    const gained = Math.ceil(amount * EXP_RATE * bonus);
+    const gained = Math.ceil(amount * EXP_RATE * bonus * (activeLoginRune(session,'exp',now)?1.5:1));
     const need = levelNeed(number(stats.lvl, 1));
     if (need) bar.points = Math.max(0, bar.points - gained / need * VITALITY_MAX / BAR_LEVELS);
     stats.currentExp = number(stats.currentExp) + gained;

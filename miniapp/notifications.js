@@ -10,6 +10,7 @@ import { getSocialState } from './social.js';
 import { getChestState } from './chest.js';
 import { getClanProgressionState } from './clanProgression.js';
 import { getClanQuizState } from './clan.js';
+import {loginPeriod} from '../template/loginRewards.js';
 
 const DEDUPE_MS = 30_000;
 const recent = new Map();
@@ -52,13 +53,15 @@ export function bossSpawnRecipients(chat, summonerId, now = Date.now()) {
 
 /** Ready-to-collect things on the player's own session: bonus, chest, arena, gacha. */
 export function personalBadges(session) {
-  if (!session) return { bonus: 0, chest: 0, arena: 0, gacha: 0 };
+  if (!session) return { bonus: 0, chest: 0, arena: 0, gacha: 0, loginRewards:0 };
+  const period=loginPeriod(),calendar=session.game?.loginRewards;
   let chest = 0;
   try { chest = getChestState(session).available ? 1 : 0; } catch { chest = 0; }
   const gacha = session.game?.gachaTempItem ? 1
     : Object.values(session.game?.gacha || {}).some(entry => Number(entry?.freeSpins) > 0) ? 1 : 0;
   return {
     bonus: Number(session.game?.bonusChances) > 0 ? 1 : 0,
+    loginRewards:calendar?.month===period.month&&calendar.claimed?.includes(period.day)?0:1,
     chest,
     arena: Number(session.game?.arenaChances) > 0 ? 1 : 0,
     gacha,

@@ -18,6 +18,7 @@ import { augmentStat } from '../../equipment/augment.js';
 import { activeSets, itemExtras, uniqueEquipped } from '../../equipment/itemBonuses.js';
 import {nativeCombatStat} from '../combatType.js';
 import {isMagicWeapon} from '../../equipment/lifestoneSkills.js';
+import {activeLoginRune} from '../../../../template/loginRewards.js';
 
 function combatCharacteristics(slot, values, statName, damageType) {
     if (!damageType) return values;
@@ -41,7 +42,8 @@ function combatCharacteristics(slot, values, statName, damageType) {
 export default function (session, statName, isMul = false, damageType) {
     if (!session.game || !session.game.equipmentStats) {
         const potion=potionStatBonus(session,statName,isMul,Date.now(),damageType),lineage=l2StatBonus(session,statName,isMul,Date.now(),damageType);
-        const bonus=isMul?potion*lineage:potion+lineage;
+        const extra=isMul?(statName==='dropRateMul'&&activeLoginRune(session,'drop')?1.5:1):0;
+        const bonus=isMul?potion*lineage*extra:potion+lineage+extra;
         return isMul ? bonus : (damageType ? bonus : 1+bonus);
     }
 

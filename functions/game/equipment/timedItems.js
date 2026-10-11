@@ -49,7 +49,7 @@ export function grantTimedItem(session, catalogId, days = TIMED_EPIC_DAYS, now =
     const list = items(session);
     if (!definition || !Array.isArray(list)) return null;
 
-    const own = list.find(item => isTimedItem(item) && item.id === definition.id);
+    const own = list.find(item => isTimedItem(item) && !item.shadow && item.id === definition.id);
     if (own) {
         own.expiresAt = Math.max(Number(own.expiresAt), now) + days * DAY_MS;
         return {item: own, extended: true};

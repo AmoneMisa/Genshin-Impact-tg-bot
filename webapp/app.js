@@ -30,6 +30,7 @@ const openGoldTransfer = (...args) => Promise.all([ensureFeatureStyles(),import(
 const openPoint21 = (...args) => Promise.all([ensureFeatureStyles(),import('./point21.js')]).then(([,module]) => module.openPoint21(...args));
 const openElementsGame = (...args) => Promise.all([ensureFeatureStyles(),import('./elements.js')]).then(([,module]) => module.openElementsGame(...args));
 const openBonusGame = (...args) => Promise.all([ensureFeatureStyles(),import('./bonus.js')]).then(([,module]) => module.openBonusGame(...args));
+const openLoginRewards = (...args) => Promise.all([ensureFeatureStyles(),import('./login-rewards.js')]).then(([,module]) => module.openLoginRewards(...args));
 const openTitlesGame = (...args) => Promise.all([ensureFeatureStyles(),import('./titles.js')]).then(([,module]) => module.openTitlesGame(...args));
 const openHoroscopeGame = (...args) => Promise.all([ensureFeatureStyles(),import('./horoscope.js')]).then(([,module]) => module.openHoroscopeGame(...args));
 const openClanGame = (...args) => Promise.all([ensureFeatureStyles(),import('./clan.js')]).then(([,module]) => module.openClanGame(...args));
@@ -134,6 +135,7 @@ const launchers = {
   friends: openFriendsGame,
   clan: openClanGame,
   bonus: openBonusGame,
+  loginRewards: openLoginRewards,
   titles: openTitlesGame,
   horoscope: openHoroscopeGame,
   sword: openSwordGame,

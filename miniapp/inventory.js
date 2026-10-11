@@ -1,4 +1,4 @@
-import {getMaterialCount, listMaterials, spendMaterials} from '../functions/game/player/materials.js';
+import {getMaterialCount, listMaterials, spendMaterials, materialInfo} from '../functions/game/player/materials.js';
 import {l2SellPrice} from '../functions/game/hunt/lootTable.js';
 import {HUNT} from '../functions/game/hunt/huntConfig.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
@@ -50,6 +50,7 @@ function potionDto(item, index) {
     name: templateName(item) || item?.name || `Potion ${index + 1}`,
     description: item?.description || '',
     id:item?.id || null,
+    artKey:item?.artKey || null,
     seconds:item?.seconds || null,
     grade:item?.grade || null,
     needLvl:Math.max(0, number(item?.needLvl)),
@@ -86,7 +87,7 @@ export function getInventoryState(session) {
       gacha: Array.isArray(inventory?.gacha?.items) ? inventory.gacha.items.length : 0,
       potions: potions.reduce((sum, item) => sum + item.count, 0),
     },
-    materials:listMaterials(session).map(item=>({key:item.key,id:item.id||null,name:item.name,description:item.description||'',icon:item.icon,count:item.count,kind:item.kind||null,sellPrice:l2SellPrice(item.key,HUNT.goldScale)})),
+    materials:listMaterials(session).map(item=>({key:item.key,id:item.id||null,name:item.name,description:item.description||'',icon:item.icon,count:item.count,kind:item.kind||null,bound:Boolean(item.bound),usable:Boolean(item.usable),sellPrice:item.bound?0:l2SellPrice(item.key,HUNT.goldScale)})),
     potions,
     equipment,
     buffs:activePotionBuffs(session).map(e=>({id:e.potionId,name:e.name,until:e.until})),
@@ -193,6 +194,7 @@ export function useInventoryPotion(session, rawKey) {
 /** Sells collectable High Five items (pieces, recipes, full items, herbs ...) to the shop for half their real price. */
 export function sellLoot(session, rawKey, rawCount = null) {
   const key = String(rawKey || '');
+  if(materialInfo(key).bound)return {ok:false,reason:'not_sellable',inventory:getInventoryState(session)};
   const price = l2SellPrice(key, HUNT.goldScale);
   if (!price) return { ok: false, reason: 'not_sellable', inventory: getInventoryState(session) };
   const owned = getMaterialCount(session, key);

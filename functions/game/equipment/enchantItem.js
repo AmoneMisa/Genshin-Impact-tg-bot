@@ -8,6 +8,7 @@ import { isActuallyEquipped, syncEquippedSnapshot } from './snapshots.js';
 import unequipItem from './unequipItem.js';
 import {forgeBonuses} from '../builds/forgeBonuses.js';
 import {recordAcademyEvent} from '../academy/academy.js';
+import {spendUsableMaterial} from '../player/boundMaterials.js';
 
 export const scrollKey = grade => `scroll_${grade}`;
 export const blessedKey = grade => `blessed_${grade}`;
@@ -22,7 +23,7 @@ const config = () => equipmentTemplate.enchant;
 
 /** No-grade gear has no scrolls or crystals (as in Lineage 2). */
 export function isEnchantable(item) {
-    return Boolean(item) && !item.cloak && item.grade !== 'noGrade' && Boolean(gradeInfo(item.grade));
+    return Boolean(item) && !item.shadow && !item.cloak && item.grade !== 'noGrade' && Boolean(gradeInfo(item.grade));
 }
 
 /** Chance that the next scroll works: certain up to the safe level, `chance` above it. */
@@ -72,7 +73,7 @@ export function enchantItem(session, item, { blessed = false, scroll = null } = 
         : scroll === 'blessedTyped' ? blessedTypedKey(item)
             : blessed ? blessedKey(item.grade) : scrollKey(item.grade);
     const resets = blessed || scroll === 'blessedTyped';
-    if (!spendMaterials(session, { [key]: 1 })) return { ok: false, reason: 'no_scroll', scroll: key };
+    if (!spendUsableMaterial(session, key, 1)) return { ok: false, reason: 'no_scroll', scroll: key };
 
     const chance = enchantChance(item, session);
     if (Math.random() < chance) {
@@ -100,6 +101,7 @@ export function enchantItem(session, item, { blessed = false, scroll = null } = 
 
 /** Breaks an item down into crystals on purpose. */
 export function crystallizeItem(session, item) {
+    if(item?.timed)return {ok:false,reason:'timed_item'};
     if (!isEnchantable(item)) return { ok: false, reason: 'not_enchantable' };
     // the forge gives more crystals for a crystallization done on purpose
     const bonus = forgeBonuses(session).crystals;

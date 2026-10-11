@@ -58,6 +58,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'clan', title: 'Кланы', subtitle: 'Гильдия и активности', icon: '🏰', status: 'webgl' },
   { id: 'friends', title: 'Друзья', subtitle: 'Друзья и соклановцы', icon: '🤝', status: 'webgl' },
   { id: 'bonus', title: 'Бонус', subtitle: 'Ежедневная награда', icon: '🎁', status: 'webgl' },
+  { id: 'loginRewards', title: 'Календарь', subtitle: 'Награды за вход', icon: '📅', status: 'webgl' },
   { id: 'titles', title: 'Титулы', subtitle: 'Случайный титул игроку', icon: '🏷️', status: 'webgl' },
   { id: 'horoscope', title: 'Гороскоп', subtitle: 'Шуточное предсказание', icon: '🔮', status: 'webgl' },
   { id: 'sword', title: 'Меч', subtitle: 'Ежедневная удача', icon: '🗡️', status: 'webgl' },

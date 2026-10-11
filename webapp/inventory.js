@@ -6,6 +6,7 @@ import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
 import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
+import {openLoginRewards} from './login-rewards.js';
 import { luckCoinHtml } from './currency-icons.js';
 import {worldIconHtml} from './art/world-art.js';
 import {SPECIAL_ITEM_ART} from './art/special-item-art.js';
@@ -47,7 +48,7 @@ export function potionTone(item) {
 export function flaskHtml(item) {
   const token=item?.type==='buff'?item.id:item?.type==='hp'&&item.bottleType==='elixir'?'hp-elixir':`${item?.type}-${item?.size}`;
   const key='potion-'+token;
-  const original=L2_MATERIAL_ART[item?.id]||L2_MATERIAL_ART[key];
+  const original=L2_MATERIAL_ART[item?.artKey]||L2_MATERIAL_ART[item?.id]||L2_MATERIAL_ART[key];
   if(original)return `<img class="inv-potion-art l2-client-icon" src="${l2IconUrl(original)}" srcset="${l2IconUrl(original)} 1x, ${l2IconUrl(original,256)} 2x" width="64" height="64" alt="" loading="lazy" decoding="async">`;
   if(SPECIAL_ITEM_ART.includes(key))return `<img class="inv-potion-art" src="/art/items/v1/${key}-128.webp" srcset="/art/items/v1/${key}-128.webp 128w, /art/items/v1/${key}-256.webp 256w" sizes="64px" width="64" height="96" alt="" loading="lazy" decoding="async">`;
   return `<span class="inv-flask tone-${potionTone(item)}" aria-hidden="true"><i class="inv-liquid"></i><i class="inv-bubbles"></i></span>`;
@@ -88,12 +89,13 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <button class="inv-round" type="button" data-inventory-refresh aria-label="Обновить">↻</button>
       </header>
       <p class="overlay-copy" hidden>Ресурсы и предметы читаются из той же Mongo-сессии. Снаряжение и гача уже имеют отдельные экраны; здесь можно использовать расходники.</p>
-      <div class="storage-actions"><button type="button" class="clan-play" data-personal-warehouse>Хранилище</button><button type="button" class="clan-play" data-personal-trade>Обмен</button></div><div data-inventory-content></div>
+      <div class="storage-actions"><button type="button" class="clan-play" data-personal-warehouse>Хранилище</button><button type="button" class="clan-play" data-personal-trade>Обмен</button><button type="button" class="clan-play" data-personal-coupons>Купоны</button></div><div data-inventory-content></div>
       <div class="utility-feedback" data-inventory-feedback aria-live="polite"></div>
     </div><div class="inventory-toast" data-inventory-toast role="status" hidden></div>`;
 
   const content = overlay.querySelector('[data-inventory-content]');
   overlay.querySelector('[data-personal-warehouse]').onclick=()=>openWarehouseGame({api,renderState,haptic,onClose:()=>refresh()});
+  overlay.querySelector('[data-personal-coupons]').onclick=()=>openLoginRewards({api,renderState,haptic,initialTab:'coupons',onClose:refresh});
   overlay.querySelector('[data-personal-trade]').onclick=()=>openTradeGame({api,renderState,haptic,onClose:()=>refresh()});
   const feedback = overlay.querySelector('[data-inventory-feedback]');
   const close = () => {
@@ -151,7 +153,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   function detailHtml() {
     if(selectedKind!=='potion'){
       const item=selectedItem();if(!item)return '<p class="inv-hint">Выбери предмет в сумке.</p>';
-      return `<section class="inv-detail">${selectedKind==='material'?materialIcon(item.key):equipmentArt(item)}<div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.description||'')}</small><em>${selectedKind==='equipment'?`${escapeHtml(item.grade)}${item.enchant?' · +'+item.enchant:''}${item.isUsed?' · Надето':''}`:'Количество · '+formatNumber(item.count)}</em></div>${selectedKind==='material'&&item.sellPrice?`<button type="button" class="inv-sell" data-inventory-sell="${escapeHtml(item.key)}">Продать всё · ${formatNumber(item.sellPrice*item.count)} адены</button>`:''}</section>`;
+      return `<section class="inv-detail">${selectedKind==='material'?materialIcon(item.key):equipmentArt(item)}<div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.description||'')}</small><em>${selectedKind==='equipment'?`${escapeHtml(item.grade)}${item.enchant?' · +'+item.enchant:''}${item.isUsed?' · Надето':''}`:'Количество · '+formatNumber(item.count)}</em></div>${selectedKind==='material'&&item.usable?'<button type="button" data-inventory-coupon>Использовать</button>':''}${selectedKind==='material'&&item.sellPrice?`<button type="button" class="inv-sell" data-inventory-sell="${escapeHtml(item.key)}">Продать всё · ${formatNumber(item.sellPrice*item.count)} адены</button>`:''}</section>`;
     }
     const item = state.potions.find(potion => potion.key === selectedKey);
     if (!item) return '<p class="inv-hint">Выбери предмет в сумке.</p>';
@@ -196,7 +198,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <div class="inventory-title"><small>${state.slots ? `${formatNumber(state.slots.used)} / ${formatNumber(state.slots.capacity)}` : ''}</small></div>
       </section>
       ${detailHtml()}
-      <footer class="inventory-footer"><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong title="${formatNumber(state.resources.gold)}">${walletNumber(state.resources.gold)}</strong></span><span class="inventory-col" title="Монеты удачи">${luckCoinHtml(24)}<strong title="${formatNumber(state.resources.luckCoins)}">${walletNumber(state.resources.luckCoins)}</strong></span></div><div class="inventory-tools"><button type="button" data-inventory-discard ${!item||item.isUsed||item.augment?.current?'disabled':''}>Выбросить</button><button type="button" data-inventory-crystallize ${selectedKind!=='equipment'||!item?.enchantable||item.isUsed||item.timed?'disabled':''}>Кристаллизация</button><button type="button" data-inventory-auction ${!row||item.isUsed||item.timed||selectedKind==='equipment'&&!item.uid?'disabled':''}>Выставить на аукцион</button><button type="button" data-inventory-craft>Крафт</button></div></footer>`;
+      <footer class="inventory-footer"><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong title="${formatNumber(state.resources.gold)}">${walletNumber(state.resources.gold)}</strong></span><span class="inventory-col" title="Монеты удачи">${luckCoinHtml(24)}<strong title="${formatNumber(state.resources.luckCoins)}">${walletNumber(state.resources.luckCoins)}</strong></span></div><div class="inventory-tools"><button type="button" data-inventory-discard ${!item||item.isUsed||item.augment?.current?'disabled':''}>Выбросить</button><button type="button" data-inventory-crystallize ${selectedKind!=='equipment'||!item?.enchantable||item.isUsed||item.timed?'disabled':''}>Кристаллизация</button><button type="button" data-inventory-auction ${!row||item.isUsed||item.timed||item.bound||selectedKind==='equipment'&&!item.uid?'disabled':''}>Выставить на аукцион</button><button type="button" data-inventory-craft>Крафт</button></div></footer>`;
     bind();
     // Vitals glide from the pre-potion value to the new one.
     requestAnimationFrame(() => content.querySelectorAll('[data-fill]').forEach(fill => { fill.style.width = `${fill.dataset.fill}%`; }));
@@ -204,6 +206,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   }
 
   function bind() {
+    content.querySelector('[data-inventory-coupon]')?.addEventListener('click',()=>openLoginRewards({api,renderState,haptic,initialTab:'coupons',initialKey:selectedKey,onClose:refresh}));
     content.querySelectorAll('[data-inventory-select]').forEach(button => {
       button.addEventListener('click', () => { selectedKind='potion';selectedKey = button.dataset.inventorySelect; haptic('light'); render(); });
     });
