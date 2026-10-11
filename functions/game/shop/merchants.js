@@ -21,7 +21,7 @@ export const MERCHANTS = Object.freeze([
     {id: 'jewelry', title: 'Торговец бижутерией', subtitle: 'Кольца, серьги и ожерелья без грейда, D и C', currency: 'gold'},
     {id: 'alchemist', title: 'Лавка мастеров', subtitle: 'Самоцветы, рецепты и лак Маммона за адену', currency: 'gold'},
     {id: 'fisher', title: 'Рыбак', subtitle: 'Удочки и рецепты красок Гильдии рыбаков', currency: 'gold'},
-    {id: 'mammon', title: 'Торговец Маммона', subtitle: 'Древняя адена: самоцветы, свитки, ОП', currency: 'aa'},
+    {id: 'mammon', title: 'Торговец Маммона', subtitle: 'Древняя адена: самоцветы, свитки, SP', currency: 'aa'},
 ]);
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
@@ -216,7 +216,7 @@ const GROUP_LABELS = {
     oneHandedSword: 'Мечи', twoHandedSword: 'Двуручные мечи', dagger: 'Кинжалы', mace: 'Посохи и булавы', bow: 'Луки', crossbow: 'Арбалеты',
     blunt: 'Дробящее', fists: 'Кастеты', heavy: 'Тяжёлая броня', light: 'Лёгкая броня', robe: 'Роба', bigShield: 'Большие щиты',
     smallShield: 'Малые щиты', sigill: 'Сигилы', ring: 'Кольца', earring: 'Серьги', necklace: 'Ожерелья',
-    ammo: 'Стрелы и болты', rod: 'Удочки', shot: 'Рыбацкие заряды', recipe: 'Рецепты', dye: 'Краски', scroll: 'Свитки заточки', sp: 'Свитки ОП', material: 'Материалы', other: 'Прочее',
+    ammo: 'Стрелы и болты', rod: 'Удочки', shot: 'Рыбацкие заряды', recipe: 'Рецепты', dye: 'Краски', scroll: 'Свитки заточки', sp: 'Свитки SP', material: 'Материалы', other: 'Прочее',
 };
 
 /**

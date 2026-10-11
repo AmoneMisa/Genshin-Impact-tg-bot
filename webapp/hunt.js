@@ -134,7 +134,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     if (payload.killed && payload.rewards) {
       const r = payload.rewards;
       const items = (r.items || []).map(item => `${item.name} ×${item.amount}`).join(', ');
-      text = `${r.champion ? `${CHAMPION[r.champion].label} · ` : ''}Враг повержен: +${formatNumber(r.exp)} опыта${r.bonus > 1 ? ` (Vitality ×${r.bonus})` : ''}, +${formatNumber(r.sp)} ОП${r.gold ? `, +${formatNumber(r.gold)} адены` : ''}${items ? `, ${items}` : ''}${r.leveledUp ? ' · НОВЫЙ УРОВЕНЬ!' : ''}`;
+      text = `${r.champion ? `${CHAMPION[r.champion].label} · ` : ''}Враг повержен: +${formatNumber(r.exp)} опыта${r.bonus > 1 ? ` (Vitality ×${r.bonus})` : ''}, +${formatNumber(r.sp)} SP${r.gold ? `, +${formatNumber(r.gold)} адены` : ''}${items ? `, ${items}` : ''}${r.leveledUp ? ' · НОВЫЙ УРОВЕНЬ!' : ''}`;
     }
     if(payload.rewards?.soulCrystal){const r=payload.rewards.soulCrystal;text+=' · Кристалл души: '+(r.outcome==='success'?r.from+' → '+r.stage:'ступень не изменилась');}
     if(playerTarget){const loss=[[result.cpLost,'CP'],[result.hpLost,'HP']].filter(([amount])=>amount>0).map(([amount,resource])=>'−'+formatNumber(amount)+' '+resource).join(' · ');if(loss)text=loss;if(payload.killed)text+=payload.pk?' · Убийство мирного игрока: PK и карма':' · Игрок повержен';}
@@ -316,7 +316,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const items = (last.items || []).map(item => `${materialIcon(item.item)} ${escapeHtml(item.name)} ×${item.amount}`).join(', ');
     return `<section class="mmo-frame hunt-last">
       <div class="mmo-section-title"><strong>${last.champion ? `${CHAMPION[last.champion].icon} ` : ''}Последняя добыча: ${escapeHtml(last.name)}</strong><small>убито: ${formatNumber(state.kills)}</small></div>
-      <p>+${formatNumber(last.exp)} опыта · +${formatNumber(last.sp)} ОП${last.gold ? ` · +${formatNumber(last.gold)} ${icon('coin')}` : ''}${items ? `<br>${items}` : ''}</p>
+      <p>+${formatNumber(last.exp)} опыта · +${formatNumber(last.sp)} SP${last.gold ? ` · +${formatNumber(last.gold)} ${icon('coin')}` : ''}${items ? `<br>${items}` : ''}</p>
     </section>`;
   }
 

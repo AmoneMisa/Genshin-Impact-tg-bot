@@ -345,7 +345,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement, in
     }
     if (payload.unitDrops) {
       const items = payload.unitDrops.items.map(item => `${item.icon} ${item.name} ×${item.amount}`).join(', ');
-      text += ` · ${payload.unitDrops.name} повержен: +${payload.unitDrops.sp} ОП${items ? `, ${items}` : ''}`;
+      text += ` · ${payload.unitDrops.name} повержен: +${payload.unitDrops.sp} SP${items ? `, ${items}` : ''}`;
     }
     if (payload.questGains?.length) text += ` · квест: ${payload.questGains.map(gain => `${gain.item ? `${gain.item} ` : ''}${gain.progress}/${gain.target}`).join(', ')}`;
 
@@ -354,7 +354,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement, in
       text = 'Босс повержен! Награды распределены между участниками.';
       if (payload.loot) {
         const drops = (payload.loot.items || []).map(item => `${item.icon} ${item.name} ×${item.amount}`).join(', ');
-        text += ` Тебе: +${formatNumber(payload.loot.gotSp || 0)} ОП${drops ? `, ${drops}` : ''}.`;
+        text += ` Тебе: +${formatNumber(payload.loot.gotSp || 0)} SP${drops ? `, ${drops}` : ''}.`;
         if (payload.loot.epicItem) text += ` 👑 Эпическое украшение: ${payload.loot.epicItem}!`;
         if (payload.loot.epicWeapon) text += ` 👑 Эпическое оружие: ${payload.loot.epicWeapon}!`;
         if (payload.loot.questReady) text += ' Квест профессии выполнен!';

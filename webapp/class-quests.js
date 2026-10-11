@@ -34,7 +34,7 @@ function formatNumber(value) {
 
 function rewardText(reward = {}) {
   const parts = [];
-  if (reward.sp) parts.push(`✦ ${formatNumber(reward.sp)} ОП`);
+  if (reward.sp) parts.push(`✦ ${formatNumber(reward.sp)} SP`);
   if (reward.crystals) parts.push(`${formatNumber(reward.crystals)} кристаллов`);
   if (reward.gold) parts.push(`🪙 ${formatNumber(reward.gold)}`);
   const items = { skill_scroll: 'Свиток мастерства', ancient_seal: 'Древняя печать' };
@@ -166,7 +166,7 @@ export async function openClassQuests({ api, renderState, haptic, statusElement 
         <div><small>Класс · ${state.tier}-й ранг</small><strong>${escapeHtml(state.classTitle)}</strong>
         <em>1-я профессия — с 20 уровня, 2-я — с 40, 3-я — с 76. Задания выполняются в боях с боссами.</em></div>
       </section>
-      <div class="cq-resources"><span>🪙 ${formatNumber(inv.gold)}</span><span>${formatNumber(inv.crystals)} кристаллов</span><span>✦ ${formatNumber(inv.sp)} ОП</span></div>
+      <div class="cq-resources"><span>🪙 ${formatNumber(inv.gold)}</span><span>${formatNumber(inv.crystals)} кристаллов</span><span>✦ ${formatNumber(inv.sp)} SP</span></div>
       <div class="cq-list">${body}</div>`;
     feedback.textContent = feedbackText;
     content.querySelectorAll('[data-cq-farm]').forEach(button => button.addEventListener('click', async () => {

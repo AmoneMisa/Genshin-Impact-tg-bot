@@ -43,7 +43,7 @@ function powerText(power) {
 
 function costText(cost) {
   if (!cost) return 'MAX';
-  const base = `🪙 ${formatNumber(cost.gold)} · 💎 ${formatNumber(cost.crystals)} · ⛏️ ${formatNumber(cost.ironOre)} · ✦ ${formatNumber(cost.sp)} ОП`;
+  const base = `🪙 ${formatNumber(cost.gold)} · 💎 ${formatNumber(cost.crystals)} · ⛏️ ${formatNumber(cost.ironOre)} · ✦ ${formatNumber(cost.sp)} SP`;
   return cost.items?.length ? `${base} · ${cost.items.map(item => `${item.icon} ${item.name} ${formatNumber(item.have)}/${formatNumber(item.need)}`).join(' · ')}` : base;
 }
 
@@ -100,7 +100,7 @@ function skillCard(skill, state) {
       ${skill.l2Level ? `<div class="skill-l2"><span>Skill Lv ${formatNumber(skill.l2Level)}/${formatNumber(skill.l2MaxLevel)}</span>${skill.l2Power ? `<span>Power ${formatNumber(skill.l2Power)}</span>` : ''}</div>` : ''}
       ${skill.tags?.length ? `<div class="skill-tags">${skill.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
       ${transition}
-      ${skill.learn ? `<div class="skill-upgrade-cost"><small>Умение не изучено</small><strong>✦ ${formatNumber(skill.learn.sp)} ОП</strong></div>
+      ${skill.learn ? `<div class="skill-upgrade-cost"><small>Умение не изучено</small><strong>✦ ${formatNumber(skill.learn.sp)} SP</strong></div>
       <button type="button" data-skill-learn="${skill.slot}" ${skill.learn.canLearn ? '' : 'disabled'}>${skill.locked ? `Нужен ${skill.needLevel} уровень` : 'Изучить'}</button>` : `<div class="skill-upgrade-cost"><small>${maxed ? 'Максимальный уровень' : 'Улучшение'}</small><strong>${escapeHtml(costText(skill.upgradeCost))}</strong></div>
       ${skill.enchantChance<1?`<small class="skill-enchant-warning">${Math.round(skill.enchantChance*100)}% · При неудаче заточка сбрасывается. Mastery сохраняет уровень.</small>`:''}
       <button type="button" data-skill-upgrade="${skill.slot}" ${maxed || !skill.canUpgrade ? 'disabled' : ''}>
@@ -218,7 +218,7 @@ export async function openSkillsGame({ api, renderState, haptic, statusElement }
         <div><small>Класс</small><strong>${escapeHtml(state.classTitle)}</strong><em>${state.routesUnlocked ? 'Уровень навыка и путь улучшения: сила, цена, время, шанс, атрибут, защита.' : 'Уровень навыка усиливает эффект и снижает цену и перезарядку. Новые навыки — за профессии.'}</em></div>
       </section>
       <div class="skills-resources">
-        <span>🪙 ${formatNumber(inv.gold)}</span><span>💎 ${formatNumber(inv.crystals)}</span><span>⛏️ ${formatNumber(inv.ironOre)}</span><span class="sp">✦ ${formatNumber(inv.sp)} ОП</span>
+        <span>🪙 ${formatNumber(inv.gold)}</span><span>💎 ${formatNumber(inv.crystals)}</span><span>⛏️ ${formatNumber(inv.ironOre)}</span><span class="sp">✦ ${formatNumber(inv.sp)} SP</span>
       </div>
       ${state.materials?.length ? `<div class="skills-resources materials">${state.materials.map(item => `<span title="${escapeHtml(item.description)}">${materialIcon(item.key, item.icon)} ${escapeHtml(item.name)} ×${formatNumber(item.count)}</span>`).join('')}</div>` : ''}
       <div class="skills-list">

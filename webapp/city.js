@@ -15,7 +15,7 @@ export const RESOURCE_META = Object.freeze({
   moonDew: { label: 'Лунная роса', icon: '💧' },
   ironOre: { label: 'Руда', icon: '⛏️' },
   experience: { label: 'Опыт', icon: '✦' },
-  sp: { label: 'ОП', icon: '✧' },
+  sp: { label: 'SP', icon: '✧' },
 });
 
 export const REASONS = Object.freeze({

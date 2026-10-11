@@ -28,7 +28,7 @@ export default {
   "{8} ур.": "{8}-dar.",
   "← К списку": "← Ro'yxatga",
   "+{1} славы в час · {2}": "+{1} shuhrat soatiga · {2}",
-  "✧ {0} ОП": "✧ {0} MO",
+  "✧ {0} SP": "✧ {0} SP",
   "Аден": "Adena",
   "Адена занята в игре со ставкой. Заверши партию перед передачей.": "Adena stavkali o'yinda band. Topshirishdan oldin partiyani tugat.",
   "Арендатор: {0} · ещё {1}": "Ijarachi: {0} · yana {1}",

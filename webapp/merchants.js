@@ -98,7 +98,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   function storeItem(item) {
     const note = !item.canUse
       ? (item.useReason === 'level_too_low' ? `Нужен ${item.minLevel} уровень` : 'Не подходит твоему классу')
-      : item.kind === 'sp' ? `+${number(item.amount)} ОП` : item.amount > 1 ? `×${number(item.amount)}` : '';
+      : item.kind === 'sp' ? `+${number(item.amount)} SP` : item.amount > 1 ? `×${number(item.amount)}` : '';
     let art=item.key?materialIcon(item.key,escapeHtml(item.icon||'✦')):icon('sparkle');
     if(item.kind==='equipment'){
       const [grade,mainType,kind,slot]=String(item.itemId||item.id.slice(3)).split(':');

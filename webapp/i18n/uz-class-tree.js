@@ -45,7 +45,7 @@ export default {
   "Знак ордена": "Orden belgisi",
   "и оглушение на 3 с": "va 3 s karaxtlik",
   "Иерофант": "Ierofant",
-  "Изучить · {0} ОП{1}{2}": "O'rganish · {0} OP{1}{2}",
+  "Изучить · {0} SP{1}{2}": "O'rganish · {0} SP{1}{2}",
   "Инспектор": "Inspektor",
   "Искатель Удачи": "Omad izlovchisi",
   "Исцели себя и отряд: применяй исцеляющие навыки": "O'zingni va otryadni davola: davolovchi mahoratlarni qo'lla",

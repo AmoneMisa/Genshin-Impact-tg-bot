@@ -7,7 +7,7 @@ const REASONS = {
   unknown_passive: 'Этот навык твой класс не изучает.',
   max_level: 'Навык уже на максимальном уровне.',
   level_too_low: 'Твой уровень слишком низкий.',
-  not_enough_sp: 'Не хватает очков навыков (ОП).',
+  not_enough_sp: 'Не хватает очков навыков (SP).',
   not_enough_gold: 'Не хватает золота.',
   not_enough_items: 'Не хватает нужной книги умения.',
 };
@@ -45,7 +45,7 @@ export async function openPassivesGame({ api, haptic, renderState }) {
           <small>${passive.level} / ${passive.maxLevel}</small></div>
         <p>${escapeHtml(passive.stat)}: ${passive.current ? escapeHtml(passive.current) : '—'}${maxed ? '' : ` → ${escapeHtml(passive.next)}`}</p>
         ${passive.automatic ? `<small>Изучается автоматически${passive.needLvl ? ` · ${passive.needLvl} ур.` : ''}</small>` : ''}
-        ${maxed ? '' : `<button type="button" class="feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} ОП${passive.cost.gold ? ` · ${passive.cost.gold} золота` : ''}${(passive.cost.items || []).map(item => ` · ${escapeHtml(item.name)} ×${item.count}`).join('')}`}</button>`}
+        ${maxed ? '' : `<button type="button" class="feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} SP${passive.cost.gold ? ` · ${passive.cost.gold} золота` : ''}${(passive.cost.items || []).map(item => ` · ${escapeHtml(item.name)} ×${item.count}`).join('')}`}</button>`}
       </article>`;
   }
 
@@ -77,7 +77,7 @@ export async function openPassivesGame({ api, haptic, renderState }) {
       ${characteristicsHtml()}
       <div class="feedback-card">
         <div class="feedback-intro"><span>🛡️</span><div><strong>Постоянные бонусы класса</strong>
-          <p>ОП: ${state.sp} · золото: ${state.gold}. Бонусы действуют всегда; при смене класса навыки другой ветки отключаются, но не теряются.</p></div></div>
+          <p>SP: ${state.sp} · золото: ${state.gold}. Бонусы действуют всегда; при смене класса навыки другой ветки отключаются, но не теряются.</p></div></div>
       </div>
       <div class="mail-list">${state.passives.map(passiveHtml).join('')}</div>
       ${feedback.text ? `<div class="feedback-result ${feedback.kind}">${escapeHtml(feedback.text)}</div>` : ''}`;
