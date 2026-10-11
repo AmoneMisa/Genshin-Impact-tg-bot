@@ -1,10 +1,34 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {getAcademyState,recordAcademyEvent,claimBounty,refreshBounties} from '../functions/game/academy/academy.js';
-import {bountyGradeForLevel} from '../functions/game/academy/bountyRewards.js';
+import {bountyGradeForLevel,bountyHuntReference} from '../functions/game/academy/bountyRewards.js';
 import {levelNeed} from '../functions/game/player/vitality.js';
 import {materialInfo} from '../functions/game/player/materials.js';
 import {crystalKey} from '../functions/game/equipment/enchantItem.js';
+import {EXP_RATE} from '../functions/game/player/vitality.js';
+import {spForLevelUp} from '../functions/game/player/setLevel.js';
+import {SHOT_PACK_PRICE,SHOT_PACK,SHOTS_PER_CAST} from '../template/shotsData.js';
+
+test('bounties supplement eligible hunting income instead of skipping progression',()=>{
+ for(const [level,grade] of bands)for(const quality of [1,5]){
+  const state=getAcademyState(hero(level,quality),now),reference=bountyHuntReference(level),daily=state.bounties.day.quests;
+  const target=Math.max(...daily.map(q=>q.target)),farmGold=reference.gold*target;
+  const gold=daily.reduce((sum,q)=>sum+q.reward.gold,0);
+  assert.ok(gold<=Math.max(3,farmGold*0.4+3),`${level}: excessive daily adena`);
+  const exp=daily.reduce((sum,q)=>sum+q.reward.exp*EXP_RATE,0);
+  assert.ok(exp<=levelNeed(level)*0.165+15,`${level}: excessive level share`);
+  for(const q of daily)assert.ok(q.reward.exp<=reference.exp*q.target*(q.category==='experience'?0.3:0.05)+1);
+  const sp=daily.reduce((sum,q)=>sum+q.reward.sp,0);
+  assert.ok(sp<=spForLevelUp(level)*0.9+3,`${level}: excessive SP`);
+  const shots=daily[2].reward.materials[`spiritshot_${grade}`],perCast=SHOTS_PER_CAST[grade],unit=SHOT_PACK_PRICE[grade]/SHOT_PACK;
+  assert.ok(shots>=perCast*3&&shots<=perCast*20);
+  assert.ok(shots*unit<=Math.max(reference.gold*daily[2].target*0.25,perCast*3*unit)+unit);
+  for(const q of state.bounties.week.quests)assert.equal(q.reward.luckCoins||0,q.category==='resources'&&quality>=4?1:0);
+  const weekly=state.bounties.week.quests;
+  assert.ok(weekly[0].reward.sp>=daily[1].reward.sp);
+  assert.ok(weekly.reduce((sum,q)=>sum+q.reward.sp,0)<=reference.sp*weekly.reduce((sum,q)=>sum+q.target,0)*0.1+2);
+ }
+});
 
 const now=Date.UTC(2026,9,11,12);
 const hero=(level,quality=1,name='humanMystic')=>({userId:7,game:{stats:{lvl:level,currentExp:0},
@@ -52,7 +76,8 @@ test('every grade has reachable daily XP/resources/consumables and stronger week
   const weekly=state.bounties.week.quests.find(q=>q.category==='consumables');
   const key=Object.keys(daily.reward.materials).find(k=>k.startsWith(name==='humanMystic'?'spiritshot_':'soulshot_'));
   assert.ok(key?.endsWith('_'+grade));
-  assert.equal(Object.keys(daily.reward.materials).some(k=>k.startsWith('scroll_')),grade!=='noGrade');
+  assert.equal(Object.keys(daily.reward.materials).some(k=>k.startsWith('scroll_')||k.startsWith('blessed_')),false);
+  assert.equal(Object.keys(weekly.reward.materials).some(k=>k.startsWith('scroll_')||k.startsWith('blessed_')),false);
   assert.ok(weekly.target>daily.target);assert.ok(weekly.reward.gold>daily.reward.gold);
   recordAcademyEvent(s,'mob_kill',{mob:{level},count:100000,now});
   for(const q of state.bounties.day.quests){

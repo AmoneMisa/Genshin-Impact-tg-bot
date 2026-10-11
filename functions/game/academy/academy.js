@@ -11,12 +11,11 @@
 // }
 import {getEpicTemplate} from '../boss/epicBosses.js';
 import {PASS_EPICS, PARTY_EPICS, needsPass} from '../../../template/epicPasses.js';
-import setLevel, {spForLevelUp} from '../player/setLevel.js';
+import setLevel from '../player/setLevel.js';
 import {addMaterial, getMaterialCount, materialInfo} from '../player/materials.js';
 import {gainExp, EXP_RATE} from '../player/vitality.js';
 import {hasInventoryRoom} from '../builds/palaceCapacity.js';
-import {BOUNTY_CATEGORIES, BOUNTY_TITLES, bountyExtras, bountyGradeForLevel, bountyCrystalCount} from './bountyRewards.js';
-import {crystalKey} from '../equipment/enchantItem.js';
+import {BOUNTY_CATEGORIES, BOUNTY_TITLES, bountyExtras, bountyGradeForLevel} from './bountyRewards.js';
 import {getClassQuestView} from '../classes/classQuests.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
@@ -54,17 +53,15 @@ function seeded(text) {
 }
 
 /** Reward of one order for a hero level: grows with the quality of the Academy. */
-export function bountyReward(scope, quality, level, category='experience', className='noClass') {
+export function bountyReward(scope, quality, level, category='experience', className='noClass', target) {
     const scopeFactor = scope === 'week' ? 4 : 1;
     const lvl = Math.max(1, number(level, 1));
     const reward = {
-        gold: Math.round(lvl * 120 * quality * scopeFactor),
-        sp: Math.round(spForLevelUp(lvl) * 0.4 * quality * scopeFactor),
-        moonDew: Math.round(6 * quality * scopeFactor),
+        moonDew: category==='resources'?Math.round(2*(1+0.25*(quality-1))*scopeFactor):0,
     };
-    if (scope === 'week' && quality >= 2) reward.luckCoins = quality - 1;
-    if (quality >= 3) reward.ironOre = Math.round(4 * quality * scopeFactor);
-    return {...reward,...bountyExtras(scope,quality,lvl,category,className)};
+    if (scope === 'week' && category==='resources' && quality >= 4) reward.luckCoins = 1;
+    if (category==='resources' && quality >= 3) reward.ironOre = Math.round(3*(1+0.25*(quality-1))*scopeFactor);
+    return {...reward,...bountyExtras(scope,quality,lvl,category,className,target)};
 }
 
 function makeQuests(scope, key, quality, level, userId, className) {
@@ -76,7 +73,7 @@ function makeQuests(scope, key, quality, level, userId, className) {
         const category=scope==='week'?BOUNTY_CATEGORIES[index+1]:BOUNTY_CATEGORIES[index];
         const target=Math.max(1,Math.round(BOUNTY_KINDS.mobKills.base[scope]*(0.8+quality*0.35)*(1+random()*0.2)));
         quests.push({id:`${scope}-${index}`,kind:'mobKills',category,grade:grade.name,minMobLevel:grade.lvl.from,
-            target,progress:0,claimed:false,reward:bountyReward(scope,quality,level,category,className)});
+            target,progress:0,claimed:false,reward:bountyReward(scope,quality,level,category,className,target)});
     }
     return quests;
 }
@@ -100,13 +97,16 @@ export function refreshBounties(session, now = Date.now()) {
     for (const [scope, key] of [['day', dayKey(now)], ['week', weekKey(now)]]) {
         const previous=academy.bounties[scope];
         if (previous?.key===key && previous.version>=2) {
+            if(previous.version>=4)continue;
+            const first=previous.quests.find(q=>!q.claimed)||previous.quests[0];
+            const originalLevel=number(previous.level,number(first?.reward?.gold)/(120*previous.quality*(scope==='week'?4:1))||level);
+            const savedGrade=bountyGradeForLevel(first?.minMobLevel||originalLevel);
+            const savedLevel=Math.max(savedGrade.lvl.from,Math.min(savedGrade.lvl.to,Math.round(originalLevel)));
             for(const quest of previous.quests) {
-                if(quest.claimed || quest.category!=='resources' || !quest.grade || quest.grade==='noGrade')continue;
-                quest.reward.materials ||= {};
-                const crystal=crystalKey(quest.grade);
-                quest.reward.materials[crystal]=Math.max(number(quest.reward.materials[crystal]),bountyCrystalCount(scope,previous.quality));
+                if(quest.claimed)continue;
+                quest.reward=bountyReward(scope,previous.quality,savedLevel,quest.category,previous.className||session.game.gameClass?.stats?.name,quest.target);
             }
-            previous.version=3;
+            previous.level=savedLevel;previous.className ||= session.game.gameClass?.stats?.name;previous.version=4;
             continue;
         }
         const savedLevel=previous?.key===key
@@ -120,7 +120,7 @@ export function refreshBounties(session, now = Date.now()) {
             quest.claimed=Boolean(old.claimed);
             if(quest.claimed)quest.reward=old.reward;
         }
-        academy.bounties[scope]={key,quality:savedQuality,version:3,quests};
+        academy.bounties[scope]={key,quality:savedQuality,level:savedLevel,className:session.game.gameClass?.stats?.name,version:4,quests};
     }
     return academy.bounties;
 }

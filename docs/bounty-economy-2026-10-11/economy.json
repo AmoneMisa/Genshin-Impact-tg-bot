@@ -1,0 +1,990 @@
+[
+  {
+    "lvl": 1,
+    "grade": "noGrade",
+    "quality": 1,
+    "reference": {
+      "gold": 2.8875,
+      "exp": 772.0588500000001,
+      "sp": 10
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 32,
+    "dailyExp": 160,
+    "dailyExpPercent": 10.667,
+    "dailySp": 9,
+    "dailyCharges": {
+      "spiritshot_noGrade": 20
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 8,
+      "sp": 2,
+      "exp": 4,
+      "materials": {
+        "l2_1864": 1,
+        "l2_1865": 1,
+        "l2_1869": 1
+      },
+      "displayExp": 20,
+      "items": [
+        {
+          "key": "l2_1864",
+          "count": 1,
+          "name": "Stem"
+        },
+        {
+          "key": "l2_1865",
+          "count": 1,
+          "name": "Varnish"
+        },
+        {
+          "key": "l2_1869",
+          "count": 1,
+          "name": "Iron Ore"
+        }
+      ]
+    },
+    "weeklyGold": 105,
+    "weeklySp": 12,
+    "weeklyCharges": {
+      "spiritshot_noGrade": 60
+    }
+  },
+  {
+    "lvl": 1,
+    "grade": "noGrade",
+    "quality": 5,
+    "reference": {
+      "gold": 2.8875,
+      "exp": 772.0588500000001,
+      "sp": 10
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 72,
+    "dailyExp": 240,
+    "dailyExpPercent": 16,
+    "dailySp": 18,
+    "dailyCharges": {
+      "spiritshot_noGrade": 20
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 19,
+      "sp": 4,
+      "exp": 6,
+      "materials": {
+        "l2_1864": 1,
+        "l2_1865": 1,
+        "l2_1869": 1
+      },
+      "displayExp": 30,
+      "items": [
+        {
+          "key": "l2_1864",
+          "count": 1,
+          "name": "Stem"
+        },
+        {
+          "key": "l2_1865",
+          "count": 1,
+          "name": "Varnish"
+        },
+        {
+          "key": "l2_1869",
+          "count": 1,
+          "name": "Iron Ore"
+        }
+      ]
+    },
+    "weeklyGold": 232,
+    "weeklySp": 24,
+    "weeklyCharges": {
+      "spiritshot_noGrade": 60
+    }
+  },
+  {
+    "lvl": 20,
+    "grade": "D",
+    "quality": 1,
+    "reference": {
+      "gold": 30.45,
+      "exp": 82.5741742,
+      "sp": 1
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 337,
+    "dailyExp": 2345,
+    "dailyExpPercent": 10.971,
+    "dailySp": 15,
+    "dailyCharges": {
+      "spiritshot_D": 40
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 88,
+      "sp": 3,
+      "exp": 64,
+      "materials": {
+        "l2_1870": 1,
+        "l2_1871": 1,
+        "l2_1872": 1,
+        "crystal_D": 10
+      },
+      "displayExp": 320,
+      "items": [
+        {
+          "key": "l2_1870",
+          "count": 1,
+          "name": "Coal"
+        },
+        {
+          "key": "l2_1871",
+          "count": 1,
+          "name": "Charcoal"
+        },
+        {
+          "key": "l2_1872",
+          "count": 1,
+          "name": "Animal Bone"
+        },
+        {
+          "key": "crystal_D",
+          "count": 10,
+          "name": "Кристалл D"
+        }
+      ]
+    },
+    "weeklyGold": 1102,
+    "weeklySp": 28,
+    "weeklyCharges": {
+      "spiritshot_D": 120
+    }
+  },
+  {
+    "lvl": 20,
+    "grade": "D",
+    "quality": 5,
+    "reference": {
+      "gold": 30.45,
+      "exp": 82.5741742,
+      "sp": 1
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 755,
+    "dailyExp": 3520,
+    "dailyExpPercent": 16.469,
+    "dailySp": 33,
+    "dailyCharges": {
+      "spiritshot_D": 40
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 198,
+      "sp": 7,
+      "exp": 96,
+      "materials": {
+        "l2_1870": 2,
+        "l2_1871": 2,
+        "l2_1872": 3,
+        "crystal_D": 20
+      },
+      "displayExp": 480,
+      "items": [
+        {
+          "key": "l2_1870",
+          "count": 2,
+          "name": "Coal"
+        },
+        {
+          "key": "l2_1871",
+          "count": 2,
+          "name": "Charcoal"
+        },
+        {
+          "key": "l2_1872",
+          "count": 3,
+          "name": "Animal Bone"
+        },
+        {
+          "key": "crystal_D",
+          "count": 20,
+          "name": "Кристалл D"
+        }
+      ]
+    },
+    "weeklyGold": 2446,
+    "weeklySp": 58,
+    "weeklyCharges": {
+      "spiritshot_D": 120
+    }
+  },
+  {
+    "lvl": 40,
+    "grade": "C",
+    "quality": 1,
+    "reference": {
+      "gold": 121.8875,
+      "exp": 818.9716856000001,
+      "sp": 1
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 1353,
+    "dailyExp": 38480,
+    "dailyExpPercent": 10.998,
+    "dailySp": 15,
+    "dailyCharges": {
+      "spiritshot_C": 60
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 353,
+      "sp": 3,
+      "exp": 1049,
+      "materials": {
+        "l2_1880": 1,
+        "l2_1881": 1,
+        "l2_1882": 1,
+        "crystal_C": 10
+      },
+      "displayExp": 5245,
+      "items": [
+        {
+          "key": "l2_1880",
+          "count": 1,
+          "name": "Steel"
+        },
+        {
+          "key": "l2_1881",
+          "count": 1,
+          "name": "Coarse Bone Powder"
+        },
+        {
+          "key": "l2_1882",
+          "count": 1,
+          "name": "Leather"
+        },
+        {
+          "key": "crystal_C",
+          "count": 10,
+          "name": "Кристалл C"
+        }
+      ]
+    },
+    "weeklyGold": 4412,
+    "weeklySp": 37,
+    "weeklyCharges": {
+      "spiritshot_C": 180
+    }
+  },
+  {
+    "lvl": 40,
+    "grade": "C",
+    "quality": 5,
+    "reference": {
+      "gold": 121.8875,
+      "exp": 818.9716856000001,
+      "sp": 1
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 3023,
+    "dailyExp": 57725,
+    "dailyExpPercent": 16.498,
+    "dailySp": 33,
+    "dailyCharges": {
+      "spiritshot_C": 60
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 792,
+      "sp": 7,
+      "exp": 1574,
+      "materials": {
+        "l2_1880": 1,
+        "l2_1881": 1,
+        "l2_1882": 2,
+        "crystal_C": 20
+      },
+      "displayExp": 7870,
+      "items": [
+        {
+          "key": "l2_1880",
+          "count": 1,
+          "name": "Steel"
+        },
+        {
+          "key": "l2_1881",
+          "count": 1,
+          "name": "Coarse Bone Powder"
+        },
+        {
+          "key": "l2_1882",
+          "count": 2,
+          "name": "Leather"
+        },
+        {
+          "key": "crystal_C",
+          "count": 20,
+          "name": "Кристалл C"
+        }
+      ]
+    },
+    "weeklyGold": 9788,
+    "weeklySp": 80,
+    "weeklyCharges": {
+      "spiritshot_C": 180
+    }
+  },
+  {
+    "lvl": 52,
+    "grade": "B",
+    "quality": 1,
+    "reference": {
+      "gold": 172.4625,
+      "exp": 1657.4404672,
+      "sp": 1
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 1915,
+    "dailyExp": 109385,
+    "dailyExpPercent": 5.843,
+    "dailySp": 15,
+    "dailyCharges": {
+      "spiritshot_B": 60
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 500,
+      "sp": 3,
+      "exp": 2403,
+      "materials": {
+        "l2_1873": 2,
+        "l2_1876": 1,
+        "l2_1877": 1,
+        "crystal_B": 10
+      },
+      "displayExp": 12015,
+      "items": [
+        {
+          "key": "l2_1873",
+          "count": 2,
+          "name": "Silver Nugget"
+        },
+        {
+          "key": "l2_1876",
+          "count": 1,
+          "name": "Mithril Ore"
+        },
+        {
+          "key": "l2_1877",
+          "count": 1,
+          "name": "Adamantite Nugget"
+        },
+        {
+          "key": "crystal_B",
+          "count": 10,
+          "name": "Кристалл B"
+        }
+      ]
+    },
+    "weeklyGold": 6243,
+    "weeklySp": 37,
+    "weeklyCharges": {
+      "spiritshot_B": 180
+    }
+  },
+  {
+    "lvl": 52,
+    "grade": "B",
+    "quality": 5,
+    "reference": {
+      "gold": 172.4625,
+      "exp": 1657.4404672,
+      "sp": 1
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 4277,
+    "dailyExp": 244465,
+    "dailyExpPercent": 13.059,
+    "dailySp": 33,
+    "dailyCharges": {
+      "spiritshot_B": 60
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 1121,
+      "sp": 7,
+      "exp": 5386,
+      "materials": {
+        "l2_1873": 4,
+        "l2_1876": 2,
+        "l2_1877": 1,
+        "crystal_B": 20
+      },
+      "displayExp": 26930,
+      "items": [
+        {
+          "key": "l2_1873",
+          "count": 4,
+          "name": "Silver Nugget"
+        },
+        {
+          "key": "l2_1876",
+          "count": 2,
+          "name": "Mithril Ore"
+        },
+        {
+          "key": "l2_1877",
+          "count": 1,
+          "name": "Adamantite Nugget"
+        },
+        {
+          "key": "crystal_B",
+          "count": 20,
+          "name": "Кристалл B"
+        }
+      ]
+    },
+    "weeklyGold": 13849,
+    "weeklySp": 80,
+    "weeklyCharges": {
+      "spiritshot_B": 180
+    }
+  },
+  {
+    "lvl": 61,
+    "grade": "A",
+    "quality": 1,
+    "reference": {
+      "gold": 344.1375,
+      "exp": 3564.6497741,
+      "sp": 1
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 3820,
+    "dailyExp": 235260,
+    "dailyExpPercent": 3.572,
+    "dailySp": 15,
+    "dailyCharges": {
+      "spiritshot_A": 52
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 998,
+      "sp": 3,
+      "exp": 5168,
+      "materials": {
+        "l2_1888": 1,
+        "l2_1890": 1,
+        "l2_1894": 1,
+        "crystal_A": 10
+      },
+      "displayExp": 25840,
+      "items": [
+        {
+          "key": "l2_1888",
+          "count": 1,
+          "name": "Synthetic Cokes"
+        },
+        {
+          "key": "l2_1890",
+          "count": 1,
+          "name": "Mithril Alloy"
+        },
+        {
+          "key": "l2_1894",
+          "count": 1,
+          "name": "Crafted Leather"
+        },
+        {
+          "key": "crystal_A",
+          "count": 10,
+          "name": "Кристалл A"
+        }
+      ]
+    },
+    "weeklyGold": 12458,
+    "weeklySp": 37,
+    "weeklyCharges": {
+      "spiritshot_A": 240
+    }
+  },
+  {
+    "lvl": 61,
+    "grade": "A",
+    "quality": 5,
+    "reference": {
+      "gold": 344.1375,
+      "exp": 3564.6497741,
+      "sp": 1
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 8535,
+    "dailyExp": 525785,
+    "dailyExpPercent": 7.984,
+    "dailySp": 33,
+    "dailyCharges": {
+      "spiritshot_A": 80
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 2237,
+      "sp": 7,
+      "exp": 11585,
+      "materials": {
+        "l2_1888": 1,
+        "l2_1890": 1,
+        "l2_1894": 1,
+        "crystal_A": 20
+      },
+      "displayExp": 57925,
+      "items": [
+        {
+          "key": "l2_1888",
+          "count": 1,
+          "name": "Synthetic Cokes"
+        },
+        {
+          "key": "l2_1890",
+          "count": 1,
+          "name": "Mithril Alloy"
+        },
+        {
+          "key": "l2_1894",
+          "count": 1,
+          "name": "Crafted Leather"
+        },
+        {
+          "key": "crystal_A",
+          "count": 20,
+          "name": "Кристалл A"
+        }
+      ]
+    },
+    "weeklyGold": 27634,
+    "weeklySp": 80,
+    "weeklyCharges": {
+      "spiritshot_A": 240
+    }
+  },
+  {
+    "lvl": 76,
+    "grade": "S",
+    "quality": 1,
+    "reference": {
+      "gold": 782.1625,
+      "exp": 2770.8923492,
+      "sp": 1
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 8682,
+    "dailyExp": 182870,
+    "dailyExpPercent": 0.341,
+    "dailySp": 15,
+    "dailyCharges": {
+      "spiritshot_S": 50
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 2268,
+      "sp": 3,
+      "exp": 4017,
+      "materials": {
+        "l2_4039": 1,
+        "l2_4040": 1,
+        "l2_4041": 1,
+        "crystal_S": 10
+      },
+      "displayExp": 20085,
+      "items": [
+        {
+          "key": "l2_4039",
+          "count": 1,
+          "name": "Mold Glue"
+        },
+        {
+          "key": "l2_4040",
+          "count": 1,
+          "name": "Mold Lubricant"
+        },
+        {
+          "key": "l2_4041",
+          "count": 1,
+          "name": "Mold Hardener"
+        },
+        {
+          "key": "crystal_S",
+          "count": 10,
+          "name": "Кристалл S"
+        }
+      ]
+    },
+    "weeklyGold": 28314,
+    "weeklySp": 37,
+    "weeklyCharges": {
+      "spiritshot_S": 300
+    }
+  },
+  {
+    "lvl": 76,
+    "grade": "S",
+    "quality": 5,
+    "reference": {
+      "gold": 782.1625,
+      "exp": 2770.8923492,
+      "sp": 1
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 19398,
+    "dailyExp": 408700,
+    "dailyExpPercent": 0.763,
+    "dailySp": 33,
+    "dailyCharges": {
+      "spiritshot_S": 100
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 5084,
+      "sp": 7,
+      "exp": 9005,
+      "materials": {
+        "l2_4039": 2,
+        "l2_4040": 1,
+        "l2_4041": 1,
+        "crystal_S": 20
+      },
+      "displayExp": 45025,
+      "items": [
+        {
+          "key": "l2_4039",
+          "count": 2,
+          "name": "Mold Glue"
+        },
+        {
+          "key": "l2_4040",
+          "count": 1,
+          "name": "Mold Lubricant"
+        },
+        {
+          "key": "l2_4041",
+          "count": 1,
+          "name": "Mold Hardener"
+        },
+        {
+          "key": "crystal_S",
+          "count": 20,
+          "name": "Кристалл S"
+        }
+      ]
+    },
+    "weeklyGold": 62807,
+    "weeklySp": 80,
+    "weeklyCharges": {
+      "spiritshot_S": 300
+    }
+  },
+  {
+    "lvl": 80,
+    "grade": "S80",
+    "quality": 1,
+    "reference": {
+      "gold": 3149.9125,
+      "exp": 20029.7542384,
+      "sp": 1
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 34965,
+    "dailyExp": 1321960,
+    "dailyExpPercent": 1.411,
+    "dailySp": 15,
+    "dailyCharges": {
+      "spiritshot_S80": 120
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 9135,
+      "sp": 3,
+      "exp": 29043,
+      "materials": {
+        "l2_1893": 1,
+        "l2_4039": 4,
+        "l2_4041": 1,
+        "crystal_S80": 10
+      },
+      "displayExp": 145215,
+      "items": [
+        {
+          "key": "l2_1893",
+          "count": 1,
+          "name": "Oriharukon"
+        },
+        {
+          "key": "l2_4039",
+          "count": 4,
+          "name": "Mold Glue"
+        },
+        {
+          "key": "l2_4041",
+          "count": 1,
+          "name": "Mold Hardener"
+        },
+        {
+          "key": "crystal_S80",
+          "count": 10,
+          "name": "Кристалл S80"
+        }
+      ]
+    },
+    "weeklyGold": 114026,
+    "weeklySp": 37,
+    "weeklyCharges": {
+      "spiritshot_S80": 360
+    }
+  },
+  {
+    "lvl": 80,
+    "grade": "S80",
+    "quality": 5,
+    "reference": {
+      "gold": 3149.9125,
+      "exp": 20029.7542384,
+      "sp": 1
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 78117,
+    "dailyExp": 2954380,
+    "dailyExpPercent": 3.152,
+    "dailySp": 33,
+    "dailyCharges": {
+      "spiritshot_S80": 120
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 20474,
+      "sp": 7,
+      "exp": 65096,
+      "materials": {
+        "l2_1893": 2,
+        "l2_4039": 4,
+        "l2_4041": 2,
+        "crystal_S80": 20
+      },
+      "displayExp": 325480,
+      "items": [
+        {
+          "key": "l2_1893",
+          "count": 2,
+          "name": "Oriharukon"
+        },
+        {
+          "key": "l2_4039",
+          "count": 4,
+          "name": "Mold Glue"
+        },
+        {
+          "key": "l2_4041",
+          "count": 2,
+          "name": "Mold Hardener"
+        },
+        {
+          "key": "crystal_S80",
+          "count": 20,
+          "name": "Кристалл S80"
+        }
+      ]
+    },
+    "weeklyGold": 252938,
+    "weeklySp": 80,
+    "weeklyCharges": {
+      "spiritshot_S80": 360
+    }
+  },
+  {
+    "lvl": 84,
+    "grade": "S84",
+    "quality": 1,
+    "reference": {
+      "gold": 399.4375,
+      "exp": 1311.353968,
+      "sp": 1
+    },
+    "dailyTargets": [
+      34,
+      29,
+      31
+    ],
+    "dailyGold": 4433,
+    "dailyExp": 86540,
+    "dailyExpPercent": 0.053,
+    "dailySp": 15,
+    "dailyCharges": {
+      "spiritshot_S84": 18
+    },
+    "resourceReward": {
+      "moonDew": 2,
+      "gold": 1158,
+      "sp": 3,
+      "exp": 1901,
+      "materials": {
+        "l2_1892": 1,
+        "l2_1893": 1,
+        "l2_4041": 1,
+        "crystal_S84": 10
+      },
+      "displayExp": 9505,
+      "items": [
+        {
+          "key": "l2_1892",
+          "count": 1,
+          "name": "Blacksmith's Frame"
+        },
+        {
+          "key": "l2_1893",
+          "count": 1,
+          "name": "Oriharukon"
+        },
+        {
+          "key": "l2_4041",
+          "count": 1,
+          "name": "Mold Hardener"
+        },
+        {
+          "key": "crystal_S84",
+          "count": 10,
+          "name": "Кристалл S84"
+        }
+      ]
+    },
+    "weeklyGold": 14460,
+    "weeklySp": 37,
+    "weeklyCharges": {
+      "spiritshot_S84": 60
+    }
+  },
+  {
+    "lvl": 84,
+    "grade": "S84",
+    "quality": 5,
+    "reference": {
+      "gold": 399.4375,
+      "exp": 1311.353968,
+      "sp": 1
+    },
+    "dailyTargets": [
+      76,
+      65,
+      69
+    ],
+    "dailyGold": 9906,
+    "dailyExp": 193415,
+    "dailyExpPercent": 0.118,
+    "dailySp": 33,
+    "dailyCharges": {
+      "spiritshot_S84": 18
+    },
+    "resourceReward": {
+      "moonDew": 4,
+      "ironOre": 6,
+      "gold": 2596,
+      "sp": 7,
+      "exp": 4261,
+      "materials": {
+        "l2_1892": 1,
+        "l2_1893": 1,
+        "l2_4041": 1,
+        "crystal_S84": 20
+      },
+      "displayExp": 21305,
+      "items": [
+        {
+          "key": "l2_1892",
+          "count": 1,
+          "name": "Blacksmith's Frame"
+        },
+        {
+          "key": "l2_1893",
+          "count": 1,
+          "name": "Oriharukon"
+        },
+        {
+          "key": "l2_4041",
+          "count": 1,
+          "name": "Mold Hardener"
+        },
+        {
+          "key": "crystal_S84",
+          "count": 20,
+          "name": "Кристалл S84"
+        }
+      ]
+    },
+    "weeklyGold": 32075,
+    "weeklySp": 80,
+    "weeklyCharges": {
+      "spiritshot_S84": 132
+    }
+  }
+]
