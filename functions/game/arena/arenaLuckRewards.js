@@ -1,4 +1,4 @@
-// Weekly arena reward in Coins of Luck: the top ten of a chat's ladder, paid by mail when the
+// Weekly arena reward in Coins of Luck: the top ten of the arena ladder, paid by mail when the
 // ladder resets (functions/shedullers/sendArenaWeeklyPrizes.js).
 import ArenaRating from '../../../db/models/ArenaRating.js';
 import { addMail } from '../../../miniapp/promo.js';
@@ -24,7 +24,7 @@ export function mailArenaLuckCoins(chat, ratings, weekKey, now = Date.now()) {
             id: `arena:${weekKey}`,
             kind: 'arena',
             title: 'Награда арены',
-            text: `Ты занял ${place}-е место в рейтинге арены этого чата.`,
+            text: `Ты занял ${place}-е место в рейтинге арены.`,
             rewards: [{kind: 'luckCoins', amount}],
         }, now);
         if (added) awards.push({userId: member.userId, place, amount});
@@ -32,9 +32,11 @@ export function mailArenaLuckCoins(chat, ratings, weekKey, now = Date.now()) {
     return awards;
 }
 
-/** The chat's ladder, best first (ties keep the older entry first). */
-export async function chatLadder(chatId) {
-    return ArenaRating.find({chatId, mode: 'common'}).sort({rating: -1, createdAt: 1}).limit(ARENA_LUCK_PLACES).lean();
+/** The ladder of the arena (it is shared by all chats), best first, a hero once; ties keep the older entry first. */
+export async function chatLadder() {
+    const rows = await ArenaRating.find({mode: 'common'}).sort({rating: -1, createdAt: 1}).limit(ARENA_LUCK_PLACES * 20).lean();
+    const seen = new Set();
+    return rows.filter(row => !seen.has(String(row.userId)) && seen.add(String(row.userId))).slice(0, ARENA_LUCK_PLACES);
 }
 
 /** ISO week-style key of the reset moment, so a rerun of the job never pays twice. */

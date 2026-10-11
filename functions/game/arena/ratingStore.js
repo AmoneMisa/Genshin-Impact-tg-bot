@@ -16,9 +16,8 @@ function validateMode(mode) {
 
 export function ratingScope(mode, chatId) {
     validateMode(mode);
-    return mode === 'common'
-        ? { mode: 'common', chatId: id(chatId) }
-        : { mode: 'expansion' };
+    // the arena is shared by all chats: both ladders are global (the chat id is only a pointer to a chat the hero is in)
+    return { mode };
 }
 
 /**
@@ -32,9 +31,7 @@ export function ratingScope(mode, chatId) {
 export async function getArenaRatingDoc(userId, mode, chatId, { create = true } = {}) {
     validateMode(mode);
     const numericUserId = id(userId);
-    const query = mode === 'common'
-        ? { userId: numericUserId, chatId: id(chatId), mode: 'common' }
-        : { userId: numericUserId, mode: 'expansion' };
+    const query = { userId: numericUserId, mode };
 
     let doc = await ArenaRating.findOne(query).sort({ updatedAt: -1, _id: -1 });
     if (!doc && create) {
@@ -44,7 +41,7 @@ export async function getArenaRatingDoc(userId, mode, chatId, { create = true } 
             mode,
             rating: START_RATING,
         });
-    } else if (doc && mode === 'expansion' && doc.chatId == null && chatId != null) {
+    } else if (doc && doc.chatId == null && chatId != null) {
         doc.chatId = id(chatId);
         await doc.save();
     }

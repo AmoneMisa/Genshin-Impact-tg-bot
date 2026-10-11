@@ -9,7 +9,7 @@ import { addBossEvent } from './bossPhases.js';
 import { spawnMinions } from './bossUnits.js';
 import lodash from 'lodash';
 
-export default async function(chatId, template = null) {
+export default async function(chatId, template = null, {memberCount = null} = {}) {
     let bossTemplate = template || getRandomBoss();
     let boss = await getBossByName(chatId, bossTemplate.name);
 
@@ -21,7 +21,7 @@ export default async function(chatId, template = null) {
 
     const now = Date.now();
     boss.skill = getBossSkill(boss.name);
-    boss.hp = await getBossHp(boss.skill, chatId, bossTemplate);
+    boss.hp = await getBossHp(boss.skill, chatId, bossTemplate, memberCount);
     boss.currentHp = boss.hp;
     boss.listOfDamage = [];
     boss.aliveTime = now + 15 * 60 * 1000;

@@ -13,4 +13,6 @@ const characterSchema = new mongoose.Schema({
     archive: { type: Array, default: [] },
 }, { timestamps: true, minimize: false });
 
+characterSchema.index({ "data.game.party.id": 1 });
+
 export default mongoose.model("Character", characterSchema);

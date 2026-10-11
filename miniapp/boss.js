@@ -339,7 +339,7 @@ async function clearUnfoughtBoss(boss) {
   return true;
 }
 
-export async function summonBossForMiniApp(session, chatId, epicName = null) {
+export async function summonBossForMiniApp(session, chatId, epicName = null, {memberCount = null} = {}) {
   let epicTemplate = null;
   let passHolder = session;
   if (epicName) {
@@ -375,7 +375,7 @@ export async function summonBossForMiniApp(session, chatId, epicName = null) {
     }
   }
 
-  const boss = await summonBoss(chatId, epicTemplate);
+  const boss = await summonBoss(chatId, epicTemplate, {memberCount});
   if (epicName && needsPass(epicName)) {
     consumeEpicPass(passHolder, epicName);
     if (passHolder !== session) passHolder.needsSave = true;

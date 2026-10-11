@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { hydrateChats, persistChat } from "../../functions/general/characterSync.js";
 import { characterStore } from "../../functions/general/characterStore.js";
+import { persistGuests } from "../../functions/general/partyGuests.js";
 
 const chatSchema = new mongoose.Schema({
     chatId: { type: Number, required: true, unique: true },
@@ -66,6 +67,8 @@ chatSchema.pre("save", async function () {
     this.markModified("game");
     // One hero for all chats: write the members that changed to the shared record, take the newer ones from it.
     await persistChat(this, characterStore);
+    // heroes of a cross-chat party that are not members of this chat
+    await persistGuests(this, characterStore);
     this.markModified("members");
 });
 

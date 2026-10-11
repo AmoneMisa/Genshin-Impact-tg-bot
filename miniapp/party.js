@@ -10,8 +10,18 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import { memberName } from './social.js';
+import { attachGuests, chatGuests } from '../functions/general/partyGuests.js';
+import { characterStore, guestUsers } from '../functions/general/characterStore.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
+/** Friends and the invited player may play in other chats: their heroes join the chat document as guests. */
+export async function attachPartyPeers(session, extraUserIds = []) {
+  const chat = chatOf(session);
+  if (!chat) return;
+  const userIds = [...(Array.isArray(session.game?.friends) ? session.game.friends : []), ...extraUserIds].filter(id => id !== undefined && id !== null && id !== '');
+  if (userIds.length) await attachGuests(chat, { userIds }, { store: characterStore, users: guestUsers });
+}
+
 const chatOf = session => (typeof session?.ownerDocument === 'function' ? session.ownerDocument() : null);
 const listed = member => Boolean(member?.game) && !member.isHided && !member.userChatData?.user?.is_bot;
 
@@ -36,6 +46,7 @@ export function getPartyState(session, now = Date.now()) {
   const chat = chatOf(session);
   const base = {max: PARTY_MAX, costStep: PARTY_COST_STEP, lootModes: LOOT_MODES, party: null, invites: [], candidates: []};
   if (!chat) return base;
+  const everyone = [...chat.members, ...chatGuests(chat)];
   const pruned = pruneInvites(chat, session, now);
   const party = partyState(chat, session);
   const state = {
@@ -44,13 +55,13 @@ export function getPartyState(session, now = Date.now()) {
     party: party ? {id: party.id, leaderId: party.leaderId, loot: lootModeOf(session), amLeader: party.leaderId === String(session.userId), members: party.members.map(member => memberDto(member, session, party.leaderId))} : null,
     invites: (session.game.partyInvites || []).map(invite => {
       const from = findMember(chat, invite.fromId);
-      const size = chat.members.filter(member => member.game?.party?.id === invite.partyId).length;
+      const size = everyone.filter(member => member.game?.party?.id === invite.partyId).length;
       return {partyId: invite.partyId, fromId: String(invite.fromId), fromName: from ? memberName(from) : 'Игрок', size, remainMs: Math.max(0, invite.until - now)};
     }),
   };
   if (!party || party.leaderId === String(session.userId)) {
-    const pending = new Set(chat.members.flatMap(member => (member.game?.partyInvites || []).filter(invite => invite.partyId === party?.id && invite.until > now).map(() => String(member.userId))));
-    state.candidates = chat.members
+    const pending = new Set(everyone.flatMap(member => (member.game?.partyInvites || []).filter(invite => invite.partyId === party?.id && invite.until > now).map(() => String(member.userId))));
+    state.candidates = everyone
       .filter(member => listed(member) && String(member.userId) !== String(session.userId) && !member.game.party?.id)
       .map(member => ({userId: String(member.userId), name: memberName(member), level: number(member.game.stats?.lvl, 1), className: member.game.gameClass?.stats?.name || 'noClass', invited: pending.has(String(member.userId))}));
   }

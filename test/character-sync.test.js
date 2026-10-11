@@ -70,3 +70,23 @@ test('only hero fields are shared and the highest level is the hero of a user', 
     assert.deepEqual(Object.keys(shared).sort(), ['game', 'sword']);
     assert.equal(pickHero([{level: 20, updatedAt: 5}, {level: 47, updatedAt: 1}, {level: 47, updatedAt: 9}]).updatedAt, 9);
 });
+
+test('a party holds heroes of other chats as guests and their changes reach their shared record', async () => {
+    const {attachGuests, persistGuests, chatGuests} = await import('../functions/general/partyGuests.js');
+    const {partyTargets, partyState, invitePlayer, createParty} = await import('../functions/game/party/party.js');
+    const store = fakeStore();
+    store.findParty = async ids => [...store.rows.values()].filter(row => ids.includes(row.data.game?.party?.id));
+    store.rows.set(2, {userId: 2, rev: 3, data: {game: {stats: {lvl: 40}, party: {id: 'p1', leaderId: '1'}, gameClass: {stats: {hp: 10}}}}, hash: 'x'});
+    const users = {async names() { return new Map([['2', {user: {first_name: 'Far'}}]]); }};
+    const leader = member(1, {stats: {lvl: 50}, party: {id: 'p1', leaderId: '1'}, gameClass: {stats: {hp: 10}}});
+    const chat = {members: [leader], $locals: {}};
+    await attachGuests(chat, {partyIds: ['p1']}, {store, users});
+    assert.equal(chatGuests(chat).length, 1);
+    assert.equal(chat.members.length, 1, 'a guest is not a member of the chat');
+    assert.equal(partyState(chat, leader).members.length, 2);
+    assert.equal(partyTargets(chat, leader).length, 2);
+    chatGuests(chat)[0].game.gameClass.stats.hp = 7;
+    await persistGuests(chat, store);
+    assert.equal(store.rows.get(2).data.game.gameClass.stats.hp, 7);
+    assert.equal(store.rows.get(2).rev, 4);
+});

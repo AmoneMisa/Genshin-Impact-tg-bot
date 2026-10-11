@@ -1,5 +1,6 @@
 import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
 import Chat from '../db/models/Chat.js';
+import User from '../db/models/User.js';
 import ArenaTempBot from '../db/models/ArenaTempBot.js';
 import getSession from '../functions/getters/getSession.js';
 import generateArenaBot from '../functions/game/arena/generateArenaBot.js';
@@ -108,9 +109,8 @@ async function loadPlayerDefender(mode, currentChatId, userId) {
   const ratingDoc = await getArenaRatingDoc(userId, mode, currentChatId, { create: false });
   if (!ratingDoc) return null;
 
-  const sourceChatId = mode === 'common'
-    ? Number(currentChatId)
-    : await resolveExpansionChat(userId, ratingDoc.chatId);
+  // the hero is shared by all chats: any chat it is a member of will do
+  const sourceChatId = await resolveExpansionChat(userId, mode === 'common' ? currentChatId : ratingDoc.chatId);
   if (sourceChatId == null) return null;
 
   try {
@@ -166,11 +166,11 @@ function memberName(member) {
   return user.first_name || user.username || null;
 }
 
-// Leaderboard names from the current chat's members; one lean lookup.
-async function leaderboardNames(chatId) {
+// Leaderboard names of the heroes in the table (the arena is shared by all chats); one lean lookup of the users.
+async function leaderboardNames(userIds = []) {
   try {
-    const chat = await Chat.findOne({ chatId: Number(chatId) }, { members: 1 }).lean();
-    return new Map((chat?.members || []).map(member => [String(member.userId), memberName(member)]));
+    const users = await User.find({ userId: { $in: userIds.map(Number) } }, { userId: 1, userChatData: 1, name: 1 }).lean();
+    return new Map(users.map(user => [String(user.userId), user.userChatData?.user?.first_name || user.userChatData?.user?.username || user.name || null]));
   } catch {
     return new Map();
   }
@@ -183,7 +183,7 @@ export async function getArenaState(session, chatId, userId, mode = 'common') {
   const defenders = await buildDefenderList(session, chatId, userId, mode, snapshot.rating);
   const chanceKey = chanceField(mode);
   const table = await getArenaRatingTable(mode, chatId);
-  const names = await leaderboardNames(chatId);
+  const names = await leaderboardNames(table.slice(0, 10).map(doc => doc.userId));
 
   return {
     mode,

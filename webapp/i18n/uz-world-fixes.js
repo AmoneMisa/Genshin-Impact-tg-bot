@@ -44,4 +44,9 @@ export default {
   "Усыпальница": "Qabr",
   "Ход": "Yo'lak",
   "Качество поручений": "Topshiriqlar sifati",
+  "Ты занял {0}-е место в рейтинге арены.": "Sen arena reytingida {0}-o'rinni egallading.",
+  "Боссов призывает клан: вступи в клан или создай свой, и вся компания сразится с общим боссом клана.": "Bosslarni klan chaqiradi: klanga qo'shil yoki o'zingnikini yarat, butun jamoa klanning umumiy bossi bilan jang qiladi.",
+  "Призыв создаёт общего босса клана на 15 минут: в бой идут участники клана из любых чатов.": "Chaqiruv klanning umumiy bossini 15 daqiqaga yaratadi: jangga klan a'zolari istalgan chatdan chiqadi.",
+  "Боссов призывает клан: вступи в клан.": "Bosslarni klan chaqiradi: klanga qo'shil.",
+  "⚔️ {0} призвал(а) кланового босса! Заходи в «Бой», пока он жив.": "⚔️ {0} klan bossini chaqirdi! U tirik ekan, «Jang» bo'limiga kir.",
 };

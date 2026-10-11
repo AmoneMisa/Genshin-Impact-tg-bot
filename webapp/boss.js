@@ -6,6 +6,7 @@ import {l2EffectIcon} from './art/l2-effects-art.js';
 
 const REASONS = {
   already_summoned: 'Босс уже призван.',
+  no_clan: 'Боссов призывает клан: вступи в клан.',
   no_boss: 'Активного босса больше нет.',
   dead: 'Персонаж погиб и ещё не воскрес.',
   invalid_skill: 'Навык больше недоступен.',
@@ -455,8 +456,9 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
         <section class="boss-empty-state">
           <div class="boss-empty-icon">👹</div>
           <strong>Активного босса нет</strong>
-          <p>Призыв создаёт общего босса для текущего игрового чата на 15 минут.</p>
-          <button type="button" class="boss-summon" data-summon>Призвать босса</button>
+          ${state.noClan
+            ? '<p>Боссов призывает клан: вступи в клан или создай свой, и вся компания сразится с общим боссом клана.</p>'
+            : '<p>Призыв создаёт общего босса клана на 15 минут: в бой идут участники клана из любых чатов.</p><button type="button" class="boss-summon" data-summon>Призвать босса</button>'}
         </section>`;
       bind();
       return;

@@ -1,6 +1,8 @@
 import getLostFieldsInSession from "./getLostFieldsInSession.js";
 import getChatSession from "./getChatSession.js";
 import getUser from "./getUser.js";
+import { attachGuests } from "../general/partyGuests.js";
+import { characterStore, guestUsers } from "../general/characterStore.js";
 
 /**
  * Гарантированно возвращает участника чата:
@@ -42,6 +44,10 @@ export default async function(chatId, userId) {
         chat.markModified(`members.${memberIndex}`);
         await chat.save();
     }
+
+    // the party of this hero may hold heroes of other chats (and invites may come from them)
+    const partyIds = [member.game?.party?.id, ...(member.game?.partyInvites || []).map(invite => invite.partyId)].filter(Boolean);
+    if (partyIds.length) await attachGuests(chat, { partyIds }, { store: characterStore, users: guestUsers });
 
     return member;
 }

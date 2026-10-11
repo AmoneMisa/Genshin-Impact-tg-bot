@@ -1,4 +1,4 @@
-// Parties of up to nine players of one chat. A party lives on its members: every member has
+// Parties of up to nine players (of any chats: the hero is shared by all of them). A party lives on its members: every member has
 // game.party = {id, leaderId, joinedAt}, an invited player has game.partyInvites = [{partyId, fromId, until}].
 // All operations take the freshly loaded Chat document and must run under the chat lock; they return the
 // sessions they changed so the caller can mark exactly those members as modified.
@@ -30,7 +30,8 @@ export function expShares(members) {
 }
 
 const id = value => String(value);
-const members = chat => (Array.isArray(chat?.members) ? chat.members : []);
+// A party can hold heroes of other chats: they are attached to the chat document as guests (partyGuests.js).
+const members = chat => [...(Array.isArray(chat?.members) ? chat.members : []), ...(chat?.$locals?.guests || [])];
 const find = (chat, userId) => members(chat).find(member => id(member.userId) === id(userId)) || null;
 const isPlayer = member => Boolean(member?.game) && !member.isHided && !member.userChatData?.user?.is_bot;
 const invitesOf = session => (Array.isArray(session.game.partyInvites) ? session.game.partyInvites : (session.game.partyInvites = []));

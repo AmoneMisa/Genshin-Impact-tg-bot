@@ -11,11 +11,14 @@ import { chatLadder, mailArenaLuckCoins, weekKeyOf } from "../game/arena/arenaLu
  * Еженедельный ресет арены:
  * - начисляет токены за ранги
  * - выдаёт PvP-медаль, если её ещё нет
- * - топ-10 рейтинга чата получает Монеты удачи (3-5-7-10-15) почтой
+ * - топ-10 рейтинга арены получает Монеты удачи (3-5-7-10-15) почтой
  * - сбрасывает все рейтинги до 1000
  */
 export default async function() {
     const chatIds = await listChatIds();
+    // one hero for all chats: every hero is paid once, not once per chat it is a member of
+    const paid = new Set();
+    const ladder = await chatLadder();
     for (const chatId of chatIds) {
         await withLock(chatId, async () => {
             const chat = await Chat.findOne({ chatId });
@@ -23,13 +26,15 @@ export default async function() {
             let updated = false;
 
             // Ladder first: the ranks and the reset below change the ratings.
-            const awards = mailArenaLuckCoins(chat, await chatLadder(chat.chatId), weekKeyOf());
+            const awards = mailArenaLuckCoins(chat, ladder, weekKeyOf());
             if (awards.length) updated = true;
 
             for (const member of chat.members) {
                 if (member.userChatData?.user?.is_bot) continue;
                 const game = member.game;
                 if (!game) continue;
+                if (paid.has(String(member.userId))) continue;
+                paid.add(String(member.userId));
 
                 normalizeArenaInventory(game);
 

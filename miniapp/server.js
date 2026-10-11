@@ -104,7 +104,7 @@ import {bidForClanHall} from './clanHallAuction.js';
 import {warehouseFor,transferWarehouse} from './warehouse.js';
 import {tradeFor,performTrade} from './trade.js';
 import {mailboxFor,playerMailPending} from './mail.js';
-import { getPartyState, performPartyAction } from './party.js';
+import { getPartyState, performPartyAction, attachPartyPeers } from './party.js';
 import { buyFromMerchant, convertAmmunition, getMerchantsState } from './merchants.js';
 import { getTattooState, performTattooAction } from './tattoos.js';
 import { performFishingAction } from './fishing.js';
@@ -1089,8 +1089,9 @@ const badges = guarded('badges', async (req, res) => {
   let clan = null;
   try { clan = await getClan(Number(context.userId)); } catch { clan = null; }
   let bossAlive = false;
-  if (String(context.chatId) !== String(context.userId)) {
-    try { bossAlive = Boolean(await getAliveBoss(context.chatId)); } catch { bossAlive = false; }
+  // the boss is the boss of the clan
+  if (clan) {
+    try { bossAlive = Boolean(await getAliveBoss(clanScopeId(clan))); } catch { bossAlive = false; }
   }
   return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive, mail: pendingMailCount(context.session) + playerMailPending(chat, context.userId) }));
 });
@@ -1696,36 +1697,47 @@ const arenaAttack = guarded('arena attack', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+// Bosses belong to clans: the fight runs in the hidden chat of the clan (clanScope.js), whatever chat the Mini App was
+// opened from. Without a clan there is no boss (scope 0 finds none).
+async function bossScope(context) {
+  const clan = await getClan(Number(context.userId));
+  return clan ? { scope: clanScopeId(clan), clan } : { scope: 0, clan: null };
+}
+
 const bossState = guarded('boss state', async (req, res) => {
   const context = await authorize(req);
-  const boss = await withLock(`${context.chatId}:boss`, async () => {
-    context.session = await getSession(context.chatId, context.userId);
-    return getBossState(context.session, context.chatId);
+  const { scope, clan } = await bossScope(context);
+  const boss = await withLock(`${scope}:boss`, async () => {
+    context.session = await getSession(scope || context.chatId, context.userId);
+    return getBossState(context.session, scope);
   });
-  return sendJson(res, 200, boss);
+  return sendJson(res, 200, { ...boss, noClan: !clan, clanName: clan?.name || null });
 });
 
 const bossEpic = guarded('boss epic', async (req, res) => {
   const context = await authorize(req);
-  return sendJson(res, 200, await getEpicState(context.chatId));
+  const { scope } = await bossScope(context);
+  return sendJson(res, 200, await getEpicState(scope));
 });
 
 const bossSummon = guarded('boss summon', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req).catch(() => ({}));
   const epic = typeof body?.epic === 'string' && body.epic ? body.epic : null;
-  const result = await withLock(`${context.chatId}:boss`, async () => {
-    context.session = await getSession(context.chatId, context.userId);
-    const summoned = await summonBossForMiniApp(context.session, context.chatId, epic);
+  const { scope, clan } = await bossScope(context);
+  if (!clan) return sendResult(res, { ok: false, reason: 'no_clan' }, context);
+  const result = await withLock(`${scope}:boss`, async () => {
+    context.session = await getSession(scope, context.userId);
+    const summoned = await summonBossForMiniApp(context.session, scope, epic, { memberCount: clan.members.length });
     if (summoned.ok && epic && needsPass(epic)) await saveSession(context.session);
     return summoned;
   });
   context.session = await getSession(context.chatId, context.userId);
-  if (result.ok && String(context.chatId) !== String(context.userId)) {
-    const chat = await getChatSession(context.chatId);
-    const summoner = memberName(findMember(chat, context.userId));
-    const text = `⚔️ ${summoner} призвал(а) босса! Заходи в «Бой», пока он жив.`;
-    pushAll(bossSpawnRecipients(chat, context.userId).map(userId => ({ userId, text })));
+  if (result.ok) {
+    const summoner = memberName(context.session);
+    const text = `⚔️ ${summoner} призвал(а) кланового босса! Заходи в «Бой», пока он жив.`;
+    // the whole clan hears about it, not a single chat
+    pushAll(clan.members.map(member => String(member.userId)).filter(id => id !== String(context.userId)).slice(0, 50).map(userId => ({ userId, text })));
   }
   return sendResult(res, result, context);
 });
@@ -1737,9 +1749,10 @@ const bossSkill = guarded('boss skill', async (req, res) => {
   if (!Number.isInteger(skillIndex) || skillIndex < 0) {
     throw httpError(400, 'skillIndex must be a non-negative integer');
   }
-  const result = await withLock(`${context.chatId}:boss`, async () => {
-    context.session = await getSession(context.chatId, context.userId);
-    return useBossSkill(context.session, context.chatId, context.userId, skillIndex, typeof body.targetId === 'string' ? body.targetId : null);
+  const { scope } = await bossScope(context);
+  const result = await withLock(`${scope}:boss`, async () => {
+    context.session = await getSession(scope || context.chatId, context.userId);
+    return useBossSkill(context.session, scope, context.userId, skillIndex, typeof body.targetId === 'string' ? body.targetId : null);
   });
   context.session = await getSession(context.chatId, context.userId);
   return sendResult(res, result, context);
@@ -1863,6 +1876,7 @@ const partyState = guarded('party state', async (req, res) => {
   const context = await authorize(req);
   const state = await withLock(`${context.chatId}:party`, async () => {
     context.session = await getSession(context.chatId, context.userId);
+    await attachPartyPeers(context.session);
     const current = getPartyState(context.session);
     if (current.changed) await saveSession(context.session);
     return current;
@@ -1876,6 +1890,7 @@ const partyAction = guarded('party action', async (req, res) => {
   if (!PARTY_ACTIONS.has(body.action)) throw httpError(400, 'unknown party action');
   const result = await withLock(`${context.chatId}:party`, async () => {
     context.session = await getSession(context.chatId, context.userId);
+    await attachPartyPeers(context.session, [body.userId]);
     const done = performPartyAction(context.session, body.action, body);
     if (done.ok) await saveSession(context.session);
     return { ...done, party: getPartyState(context.session) };
