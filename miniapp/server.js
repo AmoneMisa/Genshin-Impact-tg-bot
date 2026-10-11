@@ -431,6 +431,7 @@ function sendResult(res, result, context) {
 }
 
 function sendApiError(res, scope, error) {
+  if (error.code === 20 && /Transaction numbers|replica set/i.test(error.message)) return sendJson(res,503,{ok:false,reason:'database_transactions_required',error:'Для сохранения игры требуется MongoDB replica set. Обратитесь к администратору.'});
   if (error.code === 112 || error.name === 'VersionError') return sendJson(res,409,{ok:false,reason:'character_conflict',error:'Character changed concurrently; refresh and retry the action'});
   if (error.reason === GOLD_LOCK_REASON) return sendJson(res, 409, { ok: false, reason: error.reason, error: error.message });
   if (error.status && error.status < 500) console.warn(`[miniapp] ${scope}: ${error.status} ${error.message}`);
@@ -1830,9 +1831,9 @@ const bossSkill = guarded('boss skill', async (req, res) => {
 const huntLock = context => `${context.chatId}:${context.userId}:inventory`;
 
 // Every hunt answer carries the whole screen; mob swings that fell due are applied (and saved) on the way.
-async function huntAnswer(context, run) {
+async function huntAnswer(context, run, {readOnly=false} = {}) {
   return withLock('clan:world',()=>withLock(huntLock(context), async () => {
-    context.session = await getSession(context.chatId, context.userId);
+    context.session = await getSession(context.chatId, context.userId, {persist:!readOnly});
     await loadWorldInstances(context.session);
     const chat=context.session.ownerDocument();
     bindWorldInstances(chat);
@@ -1840,7 +1841,7 @@ async function huntAnswer(context, run) {
     const pvpChanged=advanceFieldPvp(chat);
     const result = await run(context.session);
     const hunt = await getHuntState(context.session,Date.now(),fieldPeers(chat,context.session));
-    if (result.ok !== false || hunt.changed || result.changed || pvpChanged) {
+    if ((!readOnly && result.ok !== false) || hunt.changed || result.changed || pvpChanged || context.session.game.hunt?.field) {
       // PvP changes other members of the chat (damage, effects, deaths); saveSession only marks the caller dirty.
       if (pvpChanged || result.changed) chat.members.forEach((member, index) => {
         if (member !== context.session && (member.game?.hunt?.field || member.game?.worldPvp)) chat.markModified(`members.${index}`);
@@ -1854,7 +1855,7 @@ async function huntAnswer(context, run) {
 
 const huntState = guarded('hunt state', async (req, res) => {
   const context = await authorize(req);
-  const result = await huntAnswer(context, async () => ({ ok: true }));
+  const result = await huntAnswer(context, async () => ({ ok: true }), {readOnly:true});
   return sendJson(res, 200, result.hunt);
 });
 

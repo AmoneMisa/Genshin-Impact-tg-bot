@@ -14,6 +14,8 @@ import getEquipStatByName from './getters/getEquipStatByName.js';
 import { tattooPoints } from './tattoos.js';
 import { hallPoints } from '../clans/clanHall.js';
 import { BASE_STATS, BASE_STAT_INFO, DEFAULT_BASE_STATS, FAMILY_BASE_STATS } from './baseStatsData.js';
+import {l2Characteristics} from './l2BaseStats.js';
+import classes from '../../../template/classStatsTemplate.js';
 
 export { BASE_STATS, BASE_STAT_INFO };
 
@@ -24,7 +26,7 @@ const MAX_DELTA = 0.5;
 const className = session => session?.game?.gameClass?.stats?.name || 'noClass';
 const familyOf = session => classFamily(className(session));
 
-export const baseStatsOf = session => FAMILY_BASE_STATS[familyOf(session)] || DEFAULT_BASE_STATS;
+export const baseStatsOf = session => l2Characteristics(classes.find(c=>c.name===className(session))?.l2Id) || FAMILY_BASE_STATS[familyOf(session)] || DEFAULT_BASE_STATS;
 
 /** Points the gear and the symbols (tattoos) add to one characteristic. */
 export function gearPoints(session, stat) {

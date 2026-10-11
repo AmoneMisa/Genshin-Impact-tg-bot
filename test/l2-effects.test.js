@@ -58,7 +58,7 @@ test('casting is atomic on rejection and pays mana/cooldown only on a valid cast
  const s=hero();s.game.gameClass.stats.mp=0;
  assert.equal(castL2Buff(s,'l2:1085',null,{now:NOW}).reason,'not_enough_mp');
  assert.equal(s.game.l2CastAt,undefined);assert.equal(s.game.effects.length,0);
- s.game.gameClass.stats.mp=10000;const before=s.game.gameClass.stats.mp;
+ s.game.gameClass.stats.mp=s.game.gameClass.stats.maxMp;const before=s.game.gameClass.stats.mp;
  const result=castL2Buff(s,'l2:1085',null,{now:NOW});assert.equal(result.ok,true);assert.ok(result.spent>0);assert.equal(s.game.gameClass.stats.mp,before-result.spent);
  assert.equal(castL2Buff(s,'l2:1085',null,{now:NOW}).reason,'cooldown');
 });

@@ -198,6 +198,9 @@ function duelPlayer(className, lvl) {
   };
   changePlayerClass(session, className);
   updatePlayerStats(session);
+  // These calibrated legacy scenarios test the generic duel engine; L2 resource tables have their own integration tests.
+  Object.assign(session.game.gameClass.stats,scaleClassStats(classStats.find(c=>c.name===session.game.gameClass.stats.name),lvl));
+  session.game.l2Passives={};
   return session;
 }
 

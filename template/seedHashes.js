@@ -11,7 +11,7 @@ export default {
     clanApplicationConditions: 'ead98d421cba3223befcb8d08a6570f240c00d34',
     classQuests: '425a194ecc0f9b7ad6e6baff0d4403cd129fd4da',
     classSkills: '087ef5292831079b3413c34d2e8ce0654cb0e6ac',
-    classStats: '7622d69ad0f9b522b14810e6e40fe8148a9bfe5c',
+    classStats: 'cd28d670021518e9ae2fdd4209db9a8643e83588',
     elements: '13f9b0fa6d48788b929c6f9122301585512e70b4',
     elementsSynergy: '11691c0fe9efe7de3a4c8eb233722c64ca98d2f3',
     equipment: '359005b6de6ee520968cf52e44eb348842725628',

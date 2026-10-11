@@ -37,13 +37,14 @@ export async function openPassivesGame({ api, haptic, renderState }) {
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
   function passiveHtml(passive) {
-    const maxed = passive.level >= passive.maxLevel;
+    const maxed = passive.level >= passive.maxLevel || passive.automatic;
     const locked = !maxed && state.level < passive.needLvl;
     return `
       <article class="mail-letter buff-card ${passive.level ? 'pending' : 'claimed'}">
         <div class="mail-head"><strong>${l2SkillIcon(passive.name)} ${escapeHtml(passive.name)} ${ROMAN[passive.level] || passive.level}</strong>
           <small>${passive.level} / ${passive.maxLevel}</small></div>
         <p>${escapeHtml(passive.stat)}: ${passive.current ? escapeHtml(passive.current) : '—'}${maxed ? '' : ` → ${escapeHtml(passive.next)}`}</p>
+        ${passive.automatic ? `<small>Изучается автоматически${passive.needLvl ? ` · ${passive.needLvl} ур.` : ''}</small>` : ''}
         ${maxed ? '' : `<button type="button" class="feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} ОП${passive.cost.gold ? ` · ${passive.cost.gold} золота` : ''}${(passive.cost.items || []).map(item => ` · ${escapeHtml(item.name)} ×${item.count}`).join('')}`}</button>`}
       </article>`;
   }

@@ -153,7 +153,8 @@ const launchers = {
   help: openHelpGame,
 };
 
-async function launchFeature(feature, render) {
+async function launchFeature(feature, render, navigation = {}) {
+  if (feature.id === 'admin' && currentState?.context?.isAdmin !== true) return;
   if (feature.available === false) {
     status.textContent = `${feature.title}: доступно только в групповом чате.`;
     haptic('light');
@@ -179,6 +180,7 @@ async function launchFeature(feature, render) {
       statusElement: status,
       context: currentState?.context || null,
       player: currentState?.player || null,
+      initialView: navigation.view,
       ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
     }));
     status.textContent = '';
@@ -192,6 +194,17 @@ async function launchFeature(feature, render) {
 
 function render(state) {
   currentState = state;
+  const quest = state.activeQuest;
+  $('active-quest').hidden = !quest;
+  if (quest) {
+    $('active-quest-details').textContent = `${quest.title} · ${quest.goal}${quest.progress ? ' · '+quest.progress : ''}`;
+    const open = (id, navigation) => {
+      const feature = state.features.find(item => item.id === id);
+      if (feature) launchFeature(feature, render, navigation);
+    };
+    $('active-quest-details').onclick = () => open('classQuests');
+    $('active-quest-go').onclick = () => open(quest.navigation?.feature || 'classQuests', quest.navigation);
+  }
   renderPlayerHud({ state, getElement: $, formatNumber });
   $('gold').textContent = formatNumber(state.player.gold);
   $('crystals').textContent = formatNumber(state.player.crystals);
@@ -201,7 +214,7 @@ function render(state) {
     $(id).title = `${$(id).getAttribute('aria-label')}: ${$(id).textContent}`;
   }
 
-  const cards = featuresForTab(state.features, activeTab).map(feature => {
+  const cards = featuresForTab(state.features.filter(feature => feature.id !== 'admin' || state.context?.isAdmin === true), activeTab).map(feature => {
     const unavailable = feature.available === false;
     const button = document.createElement('button');
     button.type = 'button';

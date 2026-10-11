@@ -106,6 +106,14 @@ export function actMail(chat,userId,body,now=Date.now()){
   return fail('invalid_action');
 }
 export async function mailboxFor(chatId,userId,body=null){
+  if (!body) {
+    const chat = await Chat.findOne({chatId});
+    if (!chat || !member(chat,userId)) return fail('unknown_player');
+    const needsReturn = (chat.game?.playerMail || []).some(letter =>
+      letter.status === 'pending' && letter.expiresAt <= Date.now());
+    // Returning attachments changes inventories; retain the atomic path for it.
+    if (!needsReturn) return {ok:true,mail:mailState(chat,userId)};
+  }
   const session=await mongoose.startSession();
   try{return await session.withTransaction(async()=>{
     const chat=await Chat.findOne({chatId}).session(session);if(!chat||!member(chat,userId))return fail('unknown_player');

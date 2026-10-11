@@ -86,7 +86,7 @@ export function passiveTree(classId) {
             if (!info || info.op !== 'P' || need > MAX_PASSIVE_CHARACTER_LEVEL) continue;
             let entry = skills.get(skillId);
             if (!entry) skills.set(skillId, entry = {id: skillId, name: info.name, info, levels: new Map()});
-            const row = {level, need, sp: Math.max(1, Math.round(sp * SP_SCALE)), items: items || []};
+            const row = {level, need, sp: sp === 0 ? 0 : Math.max(1, Math.round(sp * SP_SCALE)), automatic:sp === 0 && !(items || []).length, items: items || []};
             const known = entry.levels.get(level);
             // the same level in two classes of the chain: the cheaper, earlier one
             if (!known || row.need < known.need || row.sp < known.sp) entry.levels.set(level, row);
@@ -111,6 +111,19 @@ export const PASSIVES = Object.freeze(PASSIVE_SKILL_NAMES.map(name => Object.fre
 export function learnedLevel(session, id) {
     const levels = session?.game?.l2Passives;
     return Math.max(0, Math.floor(number(levels?.[id])));
+}
+
+/** Free class skills in the original learn table are granted at their required level. */
+export function syncAutomaticPassives(session) {
+    const classId=classIdOf(session);
+    if(classId===undefined)return;
+    const level=number(session?.game?.stats?.lvl,1);
+    for(const passive of passiveTree(classId)) {
+        const eligible=passive.levels.filter(row=>row.automatic && row.need<=level).at(-1);
+        if(!eligible || learnedLevel(session,passive.id)>=eligible.level)continue;
+        session.game.l2Passives ||= {};
+        session.game.l2Passives[passive.id]=eligible.level;
+    }
 }
 
 function wornKinds(session) {
@@ -184,11 +197,13 @@ const formatDelta = row => {
     return `${label} ${row.delta >= 0 ? '+' : ''}${Math.round(row.delta * 1000) / 10}%`;
 };
 const describeLevel = (info, level) => {
+    if (Number(info.id) === 239 || info.name?.startsWith('Expertise')) return ['D', 'C', 'B', 'A', 'S', 'S80', 'S84'][Math.max(0, level - 1)] || '—';
     const rows = passiveDeltas(info, level);
     return rows.length ? rows.map(formatDelta).join(', ') : null;
 };
 
 export function getPassivesState(session) {
+    syncAutomaticPassives(session);
     const level = Math.max(1, number(session?.game?.stats?.lvl, 1));
     const sp = Math.max(0, number(session?.game?.inventory?.sp));
     const classId = classIdOf(session);
@@ -205,15 +220,16 @@ export function getPassivesState(session) {
             const missingItems = next ? next.items.filter(([item, count]) => getMaterialCount(session, `l2_${item}`) < count) : [];
             return {
                 id: String(passive.id),
+                automatic:passive.levels.every(row=>row.automatic),
                 name: passive.name,
-                stat: describeLevel(passive.info, Math.max(1, have + 1)) ? STAT_LABEL[passiveDeltas(passive.info, Math.max(1, have + 1))[0]?.stat] || 'Бонус' : 'Нет эффекта в игре',
+                stat: passive.id === 239 ? 'Грейд экипировки' : describeLevel(passive.info, Math.max(1, have + 1)) ? STAT_LABEL[passiveDeltas(passive.info, Math.max(1, have + 1))[0]?.stat] || 'Бонус' : 'Нет эффекта в игре',
                 level: have,
                 maxLevel,
                 current: have ? describeLevel(passive.info, have) : null,
                 next: next ? describeLevel(passive.info, next.level) || '—' : null,
                 needLvl: next ? next.need : null,
                 cost: next ? {sp: next.sp, gold: 0, items: next.items.map(([item, count]) => ({key: `l2_${item}`, name: materialInfo(`l2_${item}`)?.name || String(item), count}))} : null,
-                canLearn: Boolean(next) && level >= next.need && sp >= next.sp && missingItems.length === 0,
+                canLearn: Boolean(next) && !next.automatic && level >= next.need && sp >= next.sp && missingItems.length === 0,
             };
         }),
     };
@@ -221,6 +237,7 @@ export function getPassivesState(session) {
 
 /** Raises one passive by a level. The caller saves the session. */
 export function learnPassive(session, id) {
+    syncAutomaticPassives(session);
     const classId = classIdOf(session);
     const passive = classId === undefined ? null : passiveTree(classId).find(entry => String(entry.id) === String(id));
     if (!passive) return {ok: false, reason: 'unknown_passive'};

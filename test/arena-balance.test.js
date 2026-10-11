@@ -1,9 +1,11 @@
+import scaleClassStats from '../functions/game/player/scaleClassStats.js';
 import test from 'node:test';
 import withSeed from './helpers/seededRandom.js';
 import assert from 'node:assert/strict';
 import pvpSignTemplate from '../template/pvpSignTemplate.js';
 import classStats from '../template/classStatsTemplate.js';
-import generateArenaBot from '../functions/game/arena/generateArenaBot.js';
+import realArenaBot from '../functions/game/arena/generateArenaBot.js';
+function generateArenaBot(rating){const bot=realArenaBot(rating);Object.assign(bot.gameClass.stats,scaleClassStats(classStats.find(c=>c.name===bot.gameClass.stats.name),bot.stats.lvl));return bot;}
 import playerDamagePlayer from '../functions/game/arena/playerDamagePlayer.js';
 import getPvpSign from '../functions/game/arena/getPvpSign.js';
 import { classFamily, isMagicClass } from '../functions/game/classes/classFamily.js';
@@ -17,6 +19,9 @@ function player(className, lvl = 30, extra = {}) {
   };
   changePlayerClass(session, className);
   updatePlayerStats(session);
+  // These calibrated legacy scenarios test the generic duel engine; L2 resource tables have their own integration tests.
+  Object.assign(session.game.gameClass.stats,scaleClassStats(classStats.find(c=>c.name===session.game.gameClass.stats.name),lvl));
+  session.game.l2Passives={};
   return session;
 }
 

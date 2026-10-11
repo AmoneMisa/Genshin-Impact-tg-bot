@@ -8,6 +8,7 @@
 import scaleClassStats from '../functions/game/player/scaleClassStats.js';
 import classPower from '../functions/game/player/classPower.js';
 import {L2_CLASS_META, START_CLASSES, raceOf} from './l2ClassMeta.js';
+import {CLASS_DESCRIPTIONS} from './classDescriptions.js';
 
 export const MAX_EVASION = 140;
 
@@ -262,6 +263,7 @@ export function buildPromotedClasses(bases) {
             block.tier = tier;
             block.promoteLvl = PROMOTE_LEVEL[tier];
         }
+        block.description = CLASS_DESCRIPTIONS[meta.key] || block.description;
         block.l2Id = meta.id;
         block.like = meta.like;
         block.race = raceOf(meta.id);

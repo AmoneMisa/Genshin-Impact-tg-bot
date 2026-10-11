@@ -1,9 +1,29 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {actMail,mailState,expirePlayerMail,MAIL_LIFETIME,MAIL_POSTAGE} from '../miniapp/mail.js';
+import {actMail,mailState,mailboxFor,expirePlayerMail,MAIL_LIFETIME,MAIL_POSTAGE} from '../miniapp/mail.js';
+import mongoose from 'mongoose';
+import Chat from '../db/models/Chat.js';
 const player=id=>({userId:id,game:{inventory:{gold:1000,materials:{iron:10},equipment:{items:[]},potions:{items:[]}}}});
 const chat=()=>({game:{},members:[player(1),player(2),player(3)]});
 const send=(c,extra={})=>actMail(c,1,{action:'send',to:'2',title:'Припасы',text:'Для рейда',type:'regular',items:[{kind:'material',ref:'iron',count:4}],...extra},1000);
+test('reading unexpired mail does not start a transaction or save inventories',async t=>{
+ const c=chat();send(c);c.game.playerMail[0].expiresAt=Date.now()+100000;
+ const stock=structuredClone(c.members.map(m=>m.game.inventory));
+ t.mock.method(Chat,'findOne',async()=>c);
+ t.mock.method(mongoose,'startSession',async()=>{throw new Error('Unexpected transaction');});
+ c.save=async()=>{throw new Error('Unexpected save');};
+ const result=await mailboxFor(1,2);assert.equal(result.ok,true);assert.equal(result.mail.letters[0].status,'pending');
+ assert.deepEqual(c.members.map(m=>m.game.inventory),stock);
+});
+test('reading expired mail returns attachments only inside a transaction',async t=>{
+ const c=chat();send(c);let reads=0,saves=0,inside=false;
+ const session={withTransaction:async fn=>{inside=true;try{return await fn();}finally{inside=false;}},endSession:async()=>{}};
+ t.mock.method(Chat,'findOne',()=>++reads===1?Promise.resolve(c):{session:async value=>{assert.equal(value,session);assert.equal(inside,true);return c;}});
+ t.mock.method(mongoose,'startSession',async()=>session);
+ c.save=async opts=>{assert.equal(inside,true);assert.equal(opts.session,session);saves++;};
+ const result=await mailboxFor(1,2);assert.equal(result.ok,true);assert.equal(result.mail.letters[0].status,'returned');
+ assert.equal(c.members[0].game.inventory.materials.iron,10);assert.equal(saves,1);
+});
 test('mail escrows attachments and delivers exactly once, with participant privacy',()=>{
  const c=chat(),result=send(c);assert.equal(result.ok,true);
  assert.equal(c.members[0].game.inventory.gold,1000-MAIL_POSTAGE);assert.equal(c.members[0].game.inventory.materials.iron,6);

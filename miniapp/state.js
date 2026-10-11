@@ -5,6 +5,7 @@ import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
+import { activeClassQuestSummary } from '../functions/game/classes/classQuests.js';
 
 function number(value, fallback = 0) {
   return Number.isFinite(Number(value)) ? Number(value) : fallback;
@@ -24,23 +25,8 @@ function combatValue(getter, session, fallback = 0) {
   }
 }
 
-export const GROUP_ONLY_FEATURE_IDS = Object.freeze([
-  'forms',
-  'boss',
-  'gacha',
-  'steal',
-  'transfer',
-  'bonus',
-  'titles',
-  'sword',
-  'selfMute',
-  'chatSettings',
-  'friends',
-  'party',
-  'auction',
-]);
+export const GROUP_ONLY_FEATURE_IDS = Object.freeze([]);
 
-const GROUP_ONLY_FEATURE_SET = new Set(GROUP_ONLY_FEATURE_IDS);
 
 const FEATURE_CATALOG = Object.freeze([
   { id: 'profile', title: 'Персонаж', subtitle: 'Класс, пол и характеристики', icon: '🧙', status: 'webgl' },
@@ -49,7 +35,6 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'forms', title: 'Анкеты', subtitle: 'Профили участников группы', icon: '📝', status: 'webgl' },
   { id: 'fishing', title: 'Рыбалка', subtitle: 'Удочка, автоловля, дневной лимит', icon: '🎣', status: 'webgl' },
   { id: 'tattoos', title: 'Символы', subtitle: 'Краски меняют характеристики: до трёх символов', icon: '🎨', status: 'webgl' },
-  { id: 'merchants', title: 'Торговцы', subtitle: 'Оружие, броня, самоцветы и свитки', icon: '⚖️', status: 'webgl' },
   { id: 'party', title: 'Группа', subtitle: 'До 9 игроков · баффы на всех', icon: '👥', status: 'webgl' },
   { id: 'buffs', title: 'Баффы', subtitle: 'Усиления класса на 20 минут', icon: '✨', status: 'webgl' },
   { id: 'passives', title: 'Пассивные навыки', subtitle: 'Постоянные бонусы класса за ОП', icon: '🛡️', status: 'webgl' },
@@ -95,10 +80,9 @@ export function isPrivateMiniAppContext(context) {
 }
 
 export function createMiniAppFeatures(context) {
-  const isPrivate = isPrivateMiniAppContext(context);
-  return FEATURE_CATALOG.filter(feature => !feature.adminOnly || context?.isAdmin).map(feature => {
-    const groupOnly = GROUP_ONLY_FEATURE_SET.has(feature.id);
-    const available = !groupOnly || !isPrivate;
+  return FEATURE_CATALOG.filter(feature => !feature.adminOnly || context?.isAdmin === true).map(feature => {
+    const groupOnly = false;
+    const available = true;
     return {
       ...feature,
       groupOnly,
@@ -130,6 +114,7 @@ export function createMiniAppState(session, context) {
 
   return {
     context: {
+      isAdmin:context.isAdmin === true,
       chatId: context.chatId,
       chatType: context.chatType || null,
       user: {
@@ -167,6 +152,7 @@ export function createMiniAppState(session, context) {
       chestTries: number(session?.chestTries),
       sword: number(session?.sword),
     },
+    activeQuest: activeClassQuestSummary(session),
     features: createMiniAppFeatures(context),
   };
 }

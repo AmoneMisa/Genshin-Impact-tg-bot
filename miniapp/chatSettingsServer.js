@@ -102,7 +102,7 @@ async function authorize(req) {
 }
 
 async function handleUtilityRequest(req, res) {
-  const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  const requestUrl = new URL(req.url, 'http://localhost');
   const route = `${req.method} ${requestUrl.pathname}`;
   const supported = new Set([
     'GET /api/chat-settings',

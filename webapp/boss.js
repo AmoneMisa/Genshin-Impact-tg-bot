@@ -25,8 +25,10 @@ export async function loadBossEntryState(api) {
   return { boss: await api('/api/boss'), summoned: false, state: null };
 }
 
-export async function openBossGame({ api, renderState, haptic, statusElement }) {
+export async function openBossGame({ api, renderState, haptic, statusElement, initialView }) {
   const entry = await loadBossEntryState(api);
+  // Load the destination before mounting, so failed quest navigation keeps its screen.
+  let initialEpic = initialView === 'world' ? await api('/api/boss/epic') : null;
   let state = entry.boss;
   // the world boss being fought (null: the clan boss)
   let world = null;
@@ -174,7 +176,8 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     if (pending) return;
     let epic;
     try {
-      epic = await api('/api/boss/epic');
+      epic = initialEpic || await api('/api/boss/epic');
+      initialEpic = null;
     } catch (error) {
       feedback.textContent = EPIC_REASONS[error.payload?.reason] || error.message;
       return;
@@ -247,6 +250,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
 
   let pollTimer = null;
   const close = () => {
+    window.clearInterval(epicTimer);
     if (timer) window.clearInterval(timer);
     pollTimer?.stop();
     stage?.destroy();
@@ -544,6 +548,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   renderAll();
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
+  if (initialView === 'world') await openEpic();
   timer = window.setInterval(tick, 1000);
   pollTimer = createPoller(poll, {interval:2500,enabled:()=>!pending && overlay.isConnected && !overlay.classList.contains('closing')});
 }

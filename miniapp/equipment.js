@@ -14,7 +14,12 @@ import craftItem, {
   missingForRecipe,
   recipeMaterialRows,
   visibleRecipes,
+  getRecipe,
 } from '../functions/game/equipment/craftItem.js';
+import {recipeForMaterial} from '../functions/game/equipment/realRecipes.js';
+import {professionTier} from '../functions/game/player/tattoos.js';
+import {hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
+import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import { findCatalogItem } from '../functions/game/equipment/catalog.js';
 import {
   blessedKey,
@@ -406,7 +411,17 @@ function recipeRow(session, recipe) {
     learned,
     levelOk: level >= recipe.minLevel,
     craftLevelOk: craft.level >= recipe.craftLevel,
-    materials: recipeMaterialRows(session, recipe),
+    materials: recipeMaterialRows(session, recipe).map(row => {
+      const real = row.have < row.need ? recipeForMaterial(row.key) : null;
+      const resource = real ? getRecipe(`recipe:${real.recipeItem}`) : null;
+      const canMake = resource && isRecipeLearned(session, resource)
+        && level >= resource.minLevel && craft.level >= resource.craftLevel
+        && (!resource.minTier || professionTier(session)>=resource.minTier)
+        && (getMaterialCount(session,resource.productKey)>0 || hasInventoryRoom(session,1))
+        && !Object.keys(missingForRecipe(session, resource)).length
+        && getCurrentMp(session, session.game.gameClass) >= asNumber(resource.mp);
+      return {...row, quickCraft: canMake ? {id:resource.id,amount:resource.amount,successRate:resource.successRate} : null};
+    }),
     missing: missingForRecipe(session, recipe),
     canCraft: learned && level >= recipe.minLevel && craft.level >= recipe.craftLevel && !Object.keys(missingForRecipe(session, recipe)).length,
   };

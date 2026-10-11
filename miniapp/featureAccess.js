@@ -88,39 +88,7 @@ export const MINI_APP_ROUTE_SETTINGS = Object.freeze({
 // In legacy, /whoami was allowed in private while /gacha, /steal_resources
 // and /change_gender shared the same setting key but were supergroup-only.
 // Likewise shop/exchange shared the boss setting but had their own group rule.
-export const MINI_APP_GROUP_ONLY_ROUTES = Object.freeze(new Set([
-  'GET /api/forms',
-  'POST /api/forms/save',
-  'POST /api/profile/gender',
-  'GET /api/gacha',
-  'POST /api/gacha/roll',
-  'POST /api/gacha/resolve',
-  'GET /api/steal',
-  'POST /api/steal/attack',
-  'GET /api/social',
-  'POST /api/social/friend',
-  'GET /api/player',
-  'GET /api/boss',
-  'GET /api/boss/epic',
-  'POST /api/boss/summon',
-  'POST /api/boss/skill',
-  'GET /api/shop',
-  'POST /api/shop/buy',
-  'GET /api/exchange',
-  'POST /api/exchange/buy',
-  'GET /api/gold-transfer',
-  'POST /api/gold-transfer/send',
-  'GET /api/auction',
-  'POST /api/auction/list',
-  'POST /api/auction/buy',
-  'POST /api/auction/cancel',
-  'GET /api/bonus',
-  'POST /api/bonus/claim',
-  'GET /api/titles',
-  'POST /api/titles/assign',
-  'GET /api/sword',
-  'POST /api/sword/roll',
-]));
+export const MINI_APP_GROUP_ONLY_ROUTES = Object.freeze(new Set());
 
 export const ARCADE_GAME_SETTINGS = Object.freeze({
   dice: 'dice',
@@ -142,7 +110,7 @@ export function getMiniAppRouteSettingKey(method, pathname) {
 }
 
 export function isMiniAppGroupOnlyRoute(method, pathname) {
-  return MINI_APP_GROUP_ONLY_ROUTES.has(`${method} ${pathname}`);
+  return false;
 }
 
 export function getArcadeSettingKey(gameId) {
@@ -162,15 +130,6 @@ export function evaluateMiniAppFeatureAccess({
 }) {
   const isPrivate = String(chatId) === String(userId);
 
-  if (groupOnly && isPrivate) {
-    return {
-      ok: false,
-      status: 409,
-      reason: 'group_only',
-      settingKey: settingKey || null,
-      error: 'Эта функция доступна только в групповом чате.',
-    };
-  }
 
   if (!settingKey || isPrivate) {
     return { ok: true, settingKey: settingKey || null };

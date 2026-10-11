@@ -23,7 +23,7 @@ export const FEATURE_ICONS = Object.freeze({
 });
 
 /** The city screen replaces the old buildings card. */
-const HIDDEN_FEATURES = new Set(['builds']);
+const HIDDEN_FEATURES = new Set(['builds', 'merchants']);
 const GROUPED = new Set(NAV_TABS.flatMap(tab => tab.features || []));
 
 export function featuresForTab(features = [], tabId) {

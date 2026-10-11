@@ -27,3 +27,13 @@
 .store-actions button:disabled { opacity: .4; }
 .store-actions .store-confirm:not(:disabled) { border-color: #d8b36a; background: linear-gradient(#6a4f1f, #3a2a10); color: #fbeccb; }
 @media (max-width: 360px) { .store-view { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) {
+  .store-view { grid-template-columns: minmax(0, 1fr); }
+  .store-grid { grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); max-height: 220px; border: 0; padding: 4px; }
+  .store-slot { width: 100%; min-height: 52px; }
+  .store-info { gap: 10px; }
+  .store-box { border: 0; padding: 10px 4px; background: none; }
+  .store-req li { grid-template-columns: 26px minmax(0, 1fr); align-items: start; }
+  .store-req li strong { grid-column: 2; white-space: nowrap; }
+  .store-quantity input { min-height: 44px; }
+}

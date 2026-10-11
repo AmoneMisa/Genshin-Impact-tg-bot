@@ -233,6 +233,8 @@ function stepView(quest, progress, index) {
         done: value >= target,
         manual: step.type === 'pay',
         ...(step.type === 'pay' ? {gold: number(step.gold), crystals: number(step.crystals)} : {}),
+        navigation: step.type === 'pay' ? null : {feature: 'boss', view: 'world'},
+        source: step.type === 'collect' ? 'Квестовый предмет выпадает с рейдовых боссов при участии в победе.' : null,
         ...(step.type === 'collect' ? {item: step.name, icon: step.icon} : {}),
     };
 }
@@ -284,4 +286,14 @@ export function getClassQuestView(session) {
         completed: [...state.completed],
         promotions,
     };
+}
+
+export function activeClassQuestSummary(session) {
+    if (!session?.game?.classQuest?.active) return null;
+    const quest = getClassQuestView(session).promotions.find(item => ['active', 'ready'].includes(item.status));
+    if (!quest) return null;
+    const step = quest.steps.find(item => !item.done);
+    return {title: quest.title, to: quest.to, goal: step?.text || quest.outro,
+        progress: step && !step.manual ? `${step.progress} / ${step.target}` : '',
+        navigation: step?.navigation || {feature: 'classQuests'}};
 }

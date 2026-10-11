@@ -16,6 +16,10 @@ export async function atomicChatSave(chat, options, save, startSession) {
         if (session.inTransaction()) await session.abortTransaction();
         chat.members.forEach((member,index) => { member.syncRev = revisions[index];forgetSync(member); });
         guests.forEach(({guest,rev,baseline}) => {guest.syncRev=rev;guest.__baseline=baseline;});
+        if (error.code === 20 && /Transaction numbers|replica set/i.test(error.message)) {
+            error.status=503;error.reason='database_transactions_required';
+            error.message='Для сохранения игры требуется MongoDB replica set. Обратитесь к администратору.';
+        }
         if (error.code === 112 || error.name === 'VersionError' || error.hasErrorLabel?.('TransientTransactionError')) {
             error.status=409;error.reason='character_conflict';error.message='Character changed concurrently; refresh and retry the action';
         }

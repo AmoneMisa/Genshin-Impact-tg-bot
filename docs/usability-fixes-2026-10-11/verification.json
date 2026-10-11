@@ -1,0 +1,28 @@
+[
+  {
+    "width": 320,
+    "nativeDialogCancel": true,
+    "nativeDialogSubmit": true,
+    "nativeDialogEscape": true,
+    "privateGender": true,
+    "closeTopRight": true,
+    "questFarmFailureRetry": true,
+    "activeQuestNavigation": true,
+    "shopFishing": true,
+    "noPriceOverlap": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "nativeDialogCancel": true,
+    "nativeDialogSubmit": true,
+    "nativeDialogEscape": true,
+    "privateGender": true,
+    "closeTopRight": true,
+    "questFarmFailureRetry": true,
+    "activeQuestNavigation": true,
+    "shopFishing": true,
+    "noPriceOverlap": true,
+    "errors": []
+  }
+]

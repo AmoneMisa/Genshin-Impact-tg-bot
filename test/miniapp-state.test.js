@@ -31,7 +31,7 @@ test('feature catalog marks the exact group-only feature set', () => {
   assert.equal(features.every(feature => feature.unavailableReason === null), true);
 });
 
-test('private bootstrap disables group-only cards but keeps private-capable features active', () => {
+test('private bootstrap opens gameplay features without group restrictions', () => {
   const state = createMiniAppState(session, {
     chatId: 7,
     chatType: 'private',
@@ -39,9 +39,9 @@ test('private bootstrap disables group-only cards but keeps private-capable feat
   });
   const byId = Object.fromEntries(state.features.map(feature => [feature.id, feature]));
 
-  for (const id of GROUP_ONLY_FEATURE_IDS) {
-    assert.equal(byId[id].available, false, id);
-    assert.equal(byId[id].unavailableReason, 'group_only', id);
+  for (const id of ['party','boss','steal','transfer','forms']) {
+    assert.equal(byId[id].available, true, id);
+    assert.equal(byId[id].unavailableReason, null, id);
   }
 
   for (const id of ['shop', 'exchange', 'profile', 'skills', 'inventory', 'equipment', 'builds', 'arena', 'chest', 'point21', 'elements', 'clan', 'horoscope', 'arcade', 'updates', 'feedback', 'help']) {

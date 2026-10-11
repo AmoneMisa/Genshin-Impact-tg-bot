@@ -4,6 +4,8 @@ import lodash from 'lodash';
 import potionsInInventoryTemplate from '../../template/potionsInInventoryTemplate.js';
 import classStatsTemplate from '../../template/classStatsTemplate.js';
 import classSkillsTemplate from '../../template/classSkillsTemplate.js';
+import {syncAutomaticPassives} from '../game/player/passiveSkills.js';
+import {migrateBaseStats} from '../game/player/migrateBaseStats.js';
 import { migrateSessionEquipment } from '../game/equipment/migrateEquipment.js';
 import { migrateSessionClass } from '../game/classes/migrateClasses.js';
 
@@ -152,4 +154,6 @@ export default function (session) {
     // The old class tree becomes the real Lineage 2 one.
     migrateSessionClass(session);
     clampLevel(session);
+    syncAutomaticPassives(session);
+    migrateBaseStats(session);
 }

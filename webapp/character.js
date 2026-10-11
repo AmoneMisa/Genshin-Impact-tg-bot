@@ -101,7 +101,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
     const slots = (entries,side) => '<div class="character-slots '+side+'">'+entries.map(([id,label,glyph])=>{
       const item = equippedItemForSlot(equipment,id);
       return '<button type="button" class="character-slot" data-character-slot="'+id+'" aria-pressed="'+(id===slot)+'" aria-label="'+esc(label+': '+(item?.name || 'Пусто')+(item?.enchant?' +'+item.enchant:'')+(item?.augment?.current?' · ЛС':''))+'"><span class="character-slot-icon'+(item?.enchant>=10?' enchant-high':item?.enchant>=4?' enchanted':'')+(item?.augment?.current?' augmented':'')+'">'
-        +(item?renderLootArt(item):icon(glyph))+(item?'<b class="character-grade">'+esc(item.grade==='noGrade'?'NG':item.grade)+'</b>':'')
+        +(item?renderLootArt(item):/Ear|Ring|necklace/.test(id)?renderLootArt({kind:id.includes('Ear')?'earring':id.includes('Ring')?'ring':'amulet',grade:'noGrade'}):icon(glyph))+(item?'<b class="character-grade">'+esc(item.grade==='noGrade'?'NG':item.grade)+'</b>':'')
         +(item?.enchant?'<b class="character-enchant">+'+esc(String(item.enchant))+'</b>':'')
         +(item?.augment?.current?'<span class="character-ls" aria-hidden="true">'+paintedIconHtml('lifestone')+'</span>':'')
         +'</span><span>'+label+'</span></button>';
@@ -120,7 +120,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
       action('skill-info','Описание и улучшение','data-skill-slot="'+skill.slot+'"'))).join('');
     const passives = (data.passives?.passives || []).map(skill=>listEntry(skill.id,skill.name+' · '+skill.level+'/'+skill.maxLevel,
       skill.stat+': '+(skill.current || 'Не изучено')+(skill.next?' → '+skill.next:''),
-      skill.cost ? '<small>Нужен '+skill.needLvl+' ур. · '+fmt(skill.cost.sp)+' SP'+(skill.cost.gold?' · '+fmt(skill.cost.gold)+' Мора':'')+'</small>'+action('learn','Изучить','data-passive-id="'+esc(skill.id)+'"',!skill.canLearn) : '<small>Максимальный уровень</small>')).join('');
+      skill.automatic ? '<small>Изучается автоматически'+(skill.needLvl?' · '+skill.needLvl+' ур.':'')+'</small>' : skill.cost ? '<small>Нужен '+skill.needLvl+' ур. · '+fmt(skill.cost.sp)+' SP'+(skill.cost.gold?' · '+fmt(skill.cost.gold)+' Мора':'')+'</small>'+action('learn','Изучить','data-passive-id="'+esc(skill.id)+'"',!skill.canLearn) : '<small>Максимальный уровень</small>')).join('');
     const ls = (data.equipment?.items || []).filter(item=>item.isUsed && item.augment?.current).map(item=>{
       const current = item.augment.current, skill = current.skill, activeState = item.augment.active;
       return listEntry(skill?.id || 'lifestone',(skill?skill.title+': '+skill.name:'Бонус ЛС')+' · '+item.name,

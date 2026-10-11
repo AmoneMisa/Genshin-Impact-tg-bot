@@ -25,6 +25,7 @@ const REASONS = {
 const number = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 const gradeText = grade => (grade === 'noGrade' ? 'NG' : String(grade || ''));
 const CONVERT_TAB = 'convert';
+const CATEGORY_NAMES = {weapons:'Оружие',armor:'Броня',jewelry:'Бижутерия',alchemist:'Ресурсы и рецепты',fisher:'Рыбалка',mammon:'Древняя адена'};
 const STAT_NAMES = { STR: 'Сила', DEX: 'Ловкость', CON: 'Выносливость', INT: 'Интеллект', WIT: 'Мудрость', MEN: 'Дух' };
 
 /** The pair of a dye: the gain in green, the loss in red. */
@@ -50,7 +51,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     <div class="overlay-panel glass merchants-panel">
       <header class="shop-head">
         <button class="overlay-close shop-back" type="button" aria-label="Закрыть">←</button>
-        <h2>Торговцы</h2>
+        <h2>Магазин</h2>
         <strong class="shop-wallet" data-wallet></strong>
       </header>
       <div class="shop-categories" data-tabs></div>
@@ -147,7 +148,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     if (!state) { body.innerHTML = '<div class="shop-empty">Загрузка…</div>'; return; }
     wallet.innerHTML = `${materialIcon('gold')} ${number(state.gold)} · ${materialIcon('aa')} ${number(state.aa)}`;
     const active = tab || state.merchant;
-    tabs.innerHTML = state.merchants.map(merchant => `<button type="button" data-tab="${escapeHtml(merchant.id)}" class="${merchant.id === active ? 'active' : ''}">${l2IconHtml(L2_UI_ART['merchant-'+merchant.id])} ${escapeHtml(merchant.title)}</button>`).join('')
+    tabs.innerHTML = state.merchants.map(merchant => `<button type="button" data-tab="${escapeHtml(merchant.id)}" class="${merchant.id === active ? 'active' : ''}">${escapeHtml(CATEGORY_NAMES[merchant.id])}</button>`).join('')
       + `<button type="button" data-tab="${CONVERT_TAB}" class="${active === CONVERT_TAB ? 'active' : ''}">Боеприпасы</button>`;
     const ammo = state.ammo ? `<p class="merchant-note">В руках: ${escapeHtml(state.ammo.name)} — ${number(state.ammo.count)} шт.</p>` : '';
     if (active === CONVERT_TAB) {

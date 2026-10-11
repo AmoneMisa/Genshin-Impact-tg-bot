@@ -1,0 +1,70 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {bundlePageAssets} from '../../miniapp/pageAssets.js';
+import {getPlayerProfileState,changePlayerGenderForMiniApp} from '../../miniapp/playerProfile.js';
+import {getClassQuestView,startClassQuest} from '../../functions/game/classes/classQuests.js';
+import {warehouseDto} from '../../miniapp/warehouse.js';
+import {getCharacterState} from '../../miniapp/character.js';
+import {getMerchantsState} from '../../miniapp/merchants.js';
+import {createMiniAppState} from '../../miniapp/state.js';
+import changeClass from '../../functions/game/player/changePlayerGameClass.js';
+import updateStats from '../../functions/game/player/updatePlayerStats.js';
+const {chromium}=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
+const root=path.resolve('webapp'),output=path.resolve('.tmp/usability-ui');fs.mkdirSync(output,{recursive:true});
+const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),f=>fs.readFileSync(path.join(root,f),'utf8'));
+const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m=>m[0]).join('');
+const browser=await chromium.launch({headless:true,executablePath:process.env.ITEM_ART_BROWSER});const results=[];
+try{for(const width of [320,390]){
+ const hero={userId:7,gender:'male',userChatData:{user:{id:7,first_name:'Tester'}},game:{stats:{lvl:47},gameClass:{stats:{}},equipmentStats:{},effects:[],inventory:{gold:106748,crystals:3020,ironOre:68,sp:2561,materials:{},potions:{items:[]},equipment:{items:[]}}}};
+ changeClass(hero,'humanMystic');updateStats(hero);startClassQuest(hero,'humanWizard');let transfers=0,bossFail=true;
+ const page=await browser.newPage({viewport:{width,height:720},reducedMotion:'reduce'});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{window.Telegram={WebApp:{initData:'test-fixture',ready(){},expand(){},HapticFeedback:{impactOccurred(){}}}};});
+ await page.route('**/*',route=>{
+  const u=new URL(route.request().url()),body=route.request().postDataJSON();
+  if(u.pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body><button id="behind">Open</button>`});
+  if(u.pathname==='/app-fixture.html')return route.fulfill({contentType:'text/html',body:assets.html});
+  if(u.pathname==='/renderer.js')return route.fulfill({contentType:'text/javascript',body:'export function startWebGL(){return null}'});
+  if(u.pathname==='/city.js')return route.fulfill({contentType:'text/javascript',body:'export async function mountCity(){return {refresh:async()=>{},destroy(){}}}'});
+  if(u.pathname==='/api/bootstrap')return route.fulfill({json:createMiniAppState(hero,{chatId:7,user:hero.userChatData.user,isAdmin:false})});
+  if(u.pathname==='/api/badges')return route.fulfill({json:{total:0}});
+  if(u.pathname==='/api/notices')return route.fulfill({json:{notices:[]}});
+  if(u.pathname==='/api/profile')return route.fulfill({json:getPlayerProfileState(hero)});
+  if(u.pathname==='/api/profile/gender')return route.fulfill({json:changePlayerGenderForMiniApp(hero,body.gender)});
+  if(u.pathname==='/api/class-quests')return route.fulfill({json:{...getClassQuestView(hero),inventory:hero.game.inventory}});
+  if(u.pathname==='/api/character')return route.fulfill({json:getCharacterState(hero,{user:hero.userChatData.user})});
+  if(u.pathname==='/api/merchants')return route.fulfill({json:getMerchantsState(hero,body||{})});
+  if(u.pathname==='/api/warehouse')return route.fulfill({json:warehouseDto(hero,null,'character')});
+  if(u.pathname==='/api/warehouse/transfer'){transfers++;return route.fulfill({json:{warehouse:warehouseDto(hero,null,'character')}});}
+  if(u.pathname==='/api/boss')return bossFail?route.fulfill({status:503,json:{error:'Unavailable'}}):route.fulfill({json:{active:false,noClan:true}});
+  if(u.pathname==='/api/boss/epic')return route.fulfill({json:{bosses:[]}});
+  const bundle=assets.bundles.find(b=>b.path===u.pathname);if(bundle)return route.fulfill({contentType:'text/css',body:bundle.css});
+  const file=path.resolve(root,'.'+u.pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.fulfill({status:404});
+  return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
+ });
+ await page.goto('http://usability.local/fixture.html');await page.evaluate(async()=>{
+  (await import('/icons.js')).startEmojiIcons();(await import('/overlay-a11y.js')).installOverlayA11y();await (await import('/feature-styles.js')).ensureFeatureStyles();
+  window.opts={api:(await import('/request-json.js')).requestJson,renderState(){},haptic(){},statusElement:document.createElement('span'),context:{chatId:7,user:{id:7}}};
+ });
+ const open=async(module,fn)=>{await page.evaluate(()=>document.querySelectorAll('.game-overlay').forEach(n=>n.remove()));await page.evaluate(async({module,fn})=>await (await import('/'+module+'.js'))[fn](window.opts),{module,fn});await page.waitForTimeout(60);};
+ await open('warehouse','openWarehouseGame');const ore=page.locator('[data-stock-index]').filter({hasText:'68'}).first();
+ // Select the ore by its reference rather than relying on the order of currencies.
+ await page.locator('[data-stock-index]').evaluateAll(nodes=>nodes.find(n=>n.getAttribute('aria-label')?.includes('Железная руда')||n.title?.includes('Железная руда'))?.click());
+ if(!await page.locator('dialog[open]').count())await ore.click();
+ await page.locator('[data-quantity-cancel]').click();assert.equal(await page.locator('dialog').count(),0);
+ await page.locator('[data-stock-index]').first().click();await page.locator('dialog input').fill('1');await page.locator('dialog button[type=submit]').click();await page.waitForFunction(()=>!document.querySelector('dialog'));
+ assert.equal(transfers,1);await page.locator('[data-stock-index]').first().click();await page.keyboard.press('Escape');assert.equal(await page.locator('dialog').count(),0);
+ await open('profile','openPlayerProfile');await page.locator('[data-profile-gender=female]').click();await page.waitForFunction(()=>document.querySelector('[data-profile-gender=female]').classList.contains('active'));assert.equal(hero.gender,'female');
+ await open('class-quests','openClassQuests');const box=await page.locator('.overlay-panel').boundingBox(),close=await page.locator('.overlay-close').boundingBox();assert.ok(Math.abs(box.x+box.width-close.x-close.width-10)<2);assert.equal(await page.locator('.overlay-close').innerText(),'×');
+ await page.waitForTimeout(300);await page.screenshot({path:path.join(output,`professions-${width}.png`)});
+ await page.locator('[data-cq-farm]').first().click();await page.waitForFunction(()=>document.querySelector('[data-cq-feedback]').textContent==='Unavailable');assert.equal(await page.locator('.class-quests-overlay').count(),1);bossFail=false;await page.locator('[data-cq-farm]').first().click();await page.waitForSelector('.boss-overlay.visible');assert.equal(await page.locator('.class-quests-overlay').count(),0);assert.equal(await page.locator('.boss-epic-panel').count(),1);
+ await open('shop','openShopGame');assert.equal(await page.locator('[data-store-category=fishing]').count(),1);await page.locator('[data-store-category=fishing]').click();await page.waitForSelector('.store-slot');await page.locator('.store-slot').first().click();
+ const overlap=await page.locator('.store-req li').evaluateAll(rows=>rows.some(row=>{const label=row.querySelector('.store-req-name').getBoundingClientRect(),cost=row.querySelector('strong').getBoundingClientRect();return label.bottom>cost.y+1&&label.right>cost.x+1;}));assert.equal(overlap,false);
+ await page.waitForTimeout(300);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);await page.screenshot({path:path.join(output,`shop-${width}.png`)});
+ await page.goto('http://usability.local/app-fixture.html');await page.waitForTimeout(500);assert.deepEqual(errors,[]);await page.waitForSelector('#active-quest:not([hidden])');assert.match(await page.locator('#active-quest-details').innerText(),/Волшебник/);
+ await page.locator('#active-quest-go').click();await page.waitForSelector('.boss-epic-panel');assert.equal(await page.locator('[data-feature=admin]').count(),0);assert.deepEqual(errors,[]);
+ results.push({width,nativeDialogCancel:true,nativeDialogSubmit:true,nativeDialogEscape:true,privateGender:true,closeTopRight:true,questFarmFailureRetry:true,activeQuestNavigation:true,shopFishing:true,noPriceOverlap:true,errors});await page.close();
+}}finally{await browser.close();}
+fs.writeFileSync(path.join(output,'verification.json'),JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));

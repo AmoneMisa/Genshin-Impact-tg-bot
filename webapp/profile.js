@@ -47,9 +47,6 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
   let profile = await api('/api/profile');
   let pending = false;
   let selected = profile.currentClass.name === 'noClass' ? profile.classes[0]?.name : null;
-  const isPrivateContext = context?.chatId != null
-    && context?.user?.id != null
-    && String(context.chatId) === String(context.user.id);
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay profile-overlay';
@@ -107,7 +104,7 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
     const cooldown = profile.classChangeRemainingMs > 0
       ? `Следующая смена через ${formatDuration(profile.classChangeRemainingMs)}`
       : current.name === 'noClass' ? 'Первый класс можно выбрать сразу' : 'Класс можно сменить сейчас';
-    const genderLocked = pending || isPrivateContext;
+    const genderLocked = pending;
 
     content.innerHTML = `
       <section class="profile-hero" style="--art:url('${classArt(current.name, profile.gender)}')">
@@ -123,7 +120,6 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
             <button type="button" data-profile-gender="${gender}" class="${profile.gender === gender ? 'active' : ''}" style="--art:url('${classArt(current.name, gender)}')" ${genderLocked ? 'disabled' : ''} aria-label="${gender === 'male' ? 'Мужской' : 'Женский'}"><i>${gender === 'male' ? '♂' : '♀'}</i></button>`).join('')}
         </div>
       </section>
-      ${isPrivateContext ? '<p class="profile-hint">Смена пола доступна только из группового чата.</p>' : ''}
       <section class="profile-stats">
         ${stat('Физ. атака', current.stats.pAtk ?? current.stats.attack, '⚔️')}
         ${stat('Маг. атака', current.stats.mAtk ?? current.stats.attack, '✨')}
@@ -200,11 +196,6 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
   }
 
   async function changeGender(gender) {
-    if (isPrivateContext) {
-      feedback.textContent = 'Смена пола доступна только из группового чата.';
-      haptic('light');
-      return;
-    }
     if (pending || gender === profile.gender) return;
     pending = true;
     overlay.classList.add('busy');

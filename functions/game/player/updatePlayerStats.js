@@ -1,5 +1,6 @@
 import getClassStatsFromTemplate from './getters/getGameClassStatsFromTemplate.js';
 import changePlayerClass from './changePlayerGameClass.js';
+import {syncAutomaticPassives} from './passiveSkills.js';
 
 export default function (session) {
     let template = getClassStatsFromTemplate(session?.game?.gameClass?.stats?.name);
@@ -23,4 +24,8 @@ export default function (session) {
     session.game.gameClass.stats.additionalDamageMul = template.additionalDamageMul;
     session.game.gameClass.stats.incomingDamageModifier = template.incomingDamageModifier;
     session.game.gameClass.stats.speed = Math.ceil(template.speed + ((session.game.stats.lvl / 12) * 2));
+    syncAutomaticPassives(session);
+    const canonical=getClassStatsFromTemplate(session.game.gameClass.stats.name,session.game.stats.lvl);
+    Object.assign(session.game.gameClass.stats,canonical);
+    session.game.baseStatsVersion=1;
 };

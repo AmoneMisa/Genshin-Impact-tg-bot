@@ -1,5 +1,6 @@
 import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
+import { ensureFeatureStyles } from './feature-styles.js';
 
 const REASONS = {
   unknown_quest: 'Такой профессии нет.',
@@ -34,9 +35,9 @@ function formatNumber(value) {
 function rewardText(reward = {}) {
   const parts = [];
   if (reward.sp) parts.push(`✦ ${formatNumber(reward.sp)} ОП`);
-  if (reward.crystals) parts.push(`💎 ${formatNumber(reward.crystals)}`);
+  if (reward.crystals) parts.push(`${formatNumber(reward.crystals)} кристаллов`);
   if (reward.gold) parts.push(`🪙 ${formatNumber(reward.gold)}`);
-  const items = { skill_scroll: '📜 Свиток мастерства', ancient_seal: '🔱 Древняя печать' };
+  const items = { skill_scroll: 'Свиток мастерства', ancient_seal: 'Древняя печать' };
   for (const [key, amount] of Object.entries(reward.items || {})) parts.push(`${items[key] || key} ×${amount}`);
   return parts.join(' · ');
 }
@@ -52,6 +53,7 @@ export function stepRow(step) {
       <div>
         <strong>${escapeHtml(step.text)}</strong>
         ${step.manual ? '' : `<span class="cq-bar"><i style="width:${percent}%"></i></span>`}
+        ${step.source ? `<small class="cq-source">${escapeHtml(step.source)}</small>` : ''}
       </div>
       <em>${step.manual && step.done ? 'оплачено' : escapeHtml(detail)}</em>
     </li>`;
@@ -88,12 +90,14 @@ export function promotionCard(item, level) {
       <blockquote class="cq-giver"><b>${escapeHtml(item.giver.icon)} ${escapeHtml(item.giver.name)}</b><small>${escapeHtml(item.giver.title)}</small>
         <p>${escapeHtml(item.status === 'ready' ? item.outro : item.intro)}</p></blockquote>`}
       ${active || item.status === 'available' ? `<ul class="cq-steps">${item.steps.map(stepRow).join('')}</ul>` : ''}
-      ${item.status === 'mastered' ? '' : `<div class="cq-reward"><small>Награда</small><strong>${escapeHtml(rewardText(item.reward))}</strong></div>`}
+      ${active && item.steps.some(step => !step.done && step.navigation) ? '<button type="button" class="cq-farm equipment-action" data-cq-farm>К боссам →</button>' : ''}
+      ${item.status === 'mastered' ? '' : `<div class="cq-reward"><small>Награда</small><strong>${escapeHtml(rewardText(item.reward))}</strong>${item.reward?.items?.skill_scroll ? '<p class="cq-source">Свиток мастерства нужен для заточки навыков на уровнях +4–+7.</p>' : ''}${item.reward?.items?.ancient_seal ? '<p class="cq-source">Древняя печать нужна для выбора пути навыка.</p>' : ''}</div>`}
       <div class="cq-actions">${actions}</div>
     </article>`;
 }
 
 export async function openClassQuests({ api, renderState, haptic, statusElement }) {
+  await ensureFeatureStyles();
   let state = await api('/api/class-quests');
   let pending = false;
   let feedbackText = '';
@@ -162,9 +166,22 @@ export async function openClassQuests({ api, renderState, haptic, statusElement 
         <div><small>Класс · ${state.tier}-й ранг</small><strong>${escapeHtml(state.classTitle)}</strong>
         <em>1-я профессия — с 20 уровня, 2-я — с 40, 3-я — с 76. Задания выполняются в боях с боссами.</em></div>
       </section>
-      <div class="cq-resources"><span>🪙 ${formatNumber(inv.gold)}</span><span>💎 ${formatNumber(inv.crystals)}</span><span>✦ ${formatNumber(inv.sp)} ОП</span></div>
+      <div class="cq-resources"><span>🪙 ${formatNumber(inv.gold)}</span><span>${formatNumber(inv.crystals)} кристаллов</span><span>✦ ${formatNumber(inv.sp)} ОП</span></div>
       <div class="cq-list">${body}</div>`;
     feedback.textContent = feedbackText;
+    content.querySelectorAll('[data-cq-farm]').forEach(button => button.addEventListener('click', async () => {
+      if (pending) return;
+      pending = true;
+      button.disabled = true;
+      try {
+        const {openBossGame} = await import('./boss.js');
+        await openBossGame({api, renderState, haptic, statusElement, initialView:'world'});
+        overlay.remove();
+      } catch (error) {
+        feedback.textContent = error.message;
+        button.disabled = false;
+      } finally { pending = false; }
+    }));
     content.querySelectorAll('[data-cq-action]').forEach(button => {
       button.addEventListener('click', () => act(button.dataset.cqAction, button.dataset.cqTo));
     });

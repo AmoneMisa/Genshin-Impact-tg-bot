@@ -42,6 +42,7 @@ function convertTextNode(node, doc) {
   const text = node.nodeValue;
   const actions={'←':'chevron-left','→':'chevron-right','?':'circle-help','×':'x','+':'plus','−':'minus','-':'minus'};
   const button=node.parentElement?.closest('button');
+  if (button?.classList.contains('overlay-close')) return;
   const action=button && actions[button.textContent.trim()];
   if(action && text.trim()===button.textContent.trim()) {
     if(!button.hasAttribute('aria-label'))button.setAttribute('aria-label',button.title || ({'chevron-left':'Назад','chevron-right':'Далее','circle-help':'Справка',x:'Закрыть',plus:'Увеличить',minus:'Уменьшить'}[action]));

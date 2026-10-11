@@ -20,7 +20,6 @@ import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getSpeed from '../functions/game/player/getters/getSpeed.js';
-import getUserName from '../functions/getters/getUserName.js';
 import { getHotbar, setHotbar, activateLifeStone, HOTBAR_MAX } from '../functions/game/player/hotbar.js';
 import { castL2Buff } from './l2Buffs.js';
 import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
@@ -82,7 +81,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
         vitality: getVitalityState(session, now),
         shots: getShotsState(session),
         player: {
-            name: session.userId ? (await getUserName(session.userId, 'name') || 'Игрок') : 'Игрок',
+            name: memberName(session),
             level,
             className: gameClass?.stats?.name || 'noClass',
             gender: session.gender === 'female' ? 'female' : 'male',

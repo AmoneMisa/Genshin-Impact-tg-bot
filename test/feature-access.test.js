@@ -46,9 +46,9 @@ test('Mini App feature gate covers mutations as well as read endpoints', () => {
   assert.equal(getMiniAppRouteSettingKey('POST', '/api/sword/roll'), 'swords');
 });
 
-test('Mini App preserves the legacy supergroup-only route matrix', () => {
+test('Mini App gameplay routes are available in private chats', () => {
   // 23 legacy routes + the Mini App's own friends / player-card / epic boss / auction routes (per chat).
-  assert.equal(MINI_APP_GROUP_ONLY_ROUTES.size, 31);
+  assert.equal(MINI_APP_GROUP_ONLY_ROUTES.size, 0);
 
   for (const [method, pathname] of [
     ['GET', '/api/forms'],
@@ -71,7 +71,7 @@ test('Mini App preserves the legacy supergroup-only route matrix', () => {
     ['GET', '/api/auction'],
     ['POST', '/api/auction/buy'],
   ]) {
-    assert.equal(isMiniAppGroupOnlyRoute(method, pathname), true, `${method} ${pathname}`);
+    assert.equal(isMiniAppGroupOnlyRoute(method, pathname), false, `${method} ${pathname}`);
   }
 
   // These all sit behind legacy setting keys, but their entry commands were
@@ -124,23 +124,8 @@ test('disabled group setting is rejected with a stable feature_disabled payload'
   );
 });
 
-test('private group-only routes are rejected before chat settings are considered', () => {
-  assert.deepEqual(
-    evaluateMiniAppFeatureAccess({
-      chatId: 7,
-      userId: 7,
-      settingKey: 'whoami',
-      groupOnly: true,
-      settings: { whoami: 1 },
-    }),
-    {
-      ok: false,
-      status: 409,
-      reason: 'group_only',
-      settingKey: 'whoami',
-      error: 'Эта функция доступна только в групповом чате.',
-    },
-  );
+test('private gameplay bypasses the removed group-only flag', () => {
+  assert.deepEqual(evaluateMiniAppFeatureAccess({chatId:7,userId:7,settingKey:'whoami',groupOnly:true,settings:{whoami:1}}),{ok:true,settingKey:'whoami'});
 });
 
 test('private-capable routes still bypass group chat settings', () => {

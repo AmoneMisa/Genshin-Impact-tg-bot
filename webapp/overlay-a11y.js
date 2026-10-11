@@ -11,8 +11,15 @@ export function installOverlayA11y() {
   function disable(node) { if (!inert.has(node)) inert.set(node, node.inert); node.inert = true; }
   function update() {
     restoreBackground();
-    const dialogs = [...document.querySelectorAll('.game-overlay,[role="dialog"].game-dialog-panel,.death-panel')].filter(visible);
+    const dialogs = [...document.querySelectorAll('.game-overlay,[role="dialog"].game-dialog-panel,.death-panel,dialog[open]')].filter(visible);
     for (const node of dialogs) {
+      for (const close of node.querySelectorAll('.overlay-close')) {
+        if (!close.hasAttribute('data-close-normalized')) {
+          close.setAttribute('data-close-normalized', '');
+          close.textContent = '×';
+        }
+        close.setAttribute('aria-label', 'Закрыть');
+      }
       node.setAttribute('role', 'dialog');node.setAttribute('aria-modal', 'true');
       if (!node.hasAttribute('tabindex')) node.tabIndex = -1;
       if (!node.getAttribute('aria-label') && !node.getAttribute('aria-labelledby')) {
@@ -23,6 +30,9 @@ export function installOverlayA11y() {
     }
     const next = dialogs.at(-1) || null;
     const previous = top;top = next;
+    // Native modal dialogs already handle focus, Escape and the top layer.
+    // Never make them inert or redirect their focus into the underlying overlay.
+    if (next?.tagName === 'DIALOG') return;
     const modalOpen = dialogs.some(n => !n.classList.contains('city-window'));
     if (document.body.classList.contains('modal-open') !== modalOpen) document.body.classList.toggle('modal-open', modalOpen);
     if (next) {

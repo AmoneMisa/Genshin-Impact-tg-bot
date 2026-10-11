@@ -1,6 +1,7 @@
 import stats from '../../../../template/classStatsTemplate.js';
 import scaleClassStats from '../scaleClassStats.js';
 import {resolveClassName} from '../../classes/legacyClasses.js';
+import {l2BaseStats} from '../l2BaseStats.js';
 
 export default function (className, lvl = 1) {
     if (!className) {
@@ -10,5 +11,7 @@ export default function (className, lvl = 1) {
 
     const wanted = resolveClassName(className.name || className, lvl);
     const template = stats.find(_class => wanted === _class.name);
-    return scaleClassStats(template, lvl);
+    const scaled=scaleClassStats(template, lvl);
+    const base=l2BaseStats(template,lvl);
+    return base ? {...scaled,...base} : scaled;
 }
