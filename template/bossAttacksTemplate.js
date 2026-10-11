@@ -1,3 +1,4 @@
+import bossTemplates from './bossTemplate.js';
 // Active attacks each boss casts on the raid while alive (on top of its
 // passive skill from bossSkillsTemplate). `power` multiplies the boss's normal
 // hit (see bossHit.js); `weight` is how often it is picked.
@@ -164,7 +165,9 @@ const minionFallback = [
 ];
 
 export function getBossAttacks(bossName) {
-    return bossAttacks[bossName] || fallback;
+    if (bossAttacks[bossName]) return bossAttacks[bossName];
+    // a world boss casts the skills of its real data (functions/game/boss/worldBosses.js)
+    return bossTemplates.find(boss => boss.name === bossName)?.attacks || fallback;
 }
 
 export function getMinionAttacks(attackKey) {

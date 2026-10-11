@@ -1,3 +1,4 @@
+import {worldTemplates, epicWorld, LEVEL_GAP} from '../functions/game/boss/worldBosses.js';
 // Raid bosses. Besides the classic `stats` (kept for levelling and the legacy
 // bot) every boss now describes how it *fights*:
 //
@@ -186,7 +187,7 @@ const epicBosses = [
     })
 ];
 
-export default [{
+const baseBosses = [{
     name: "kivaha",
     nameCall: "Киваху",
     title: "Громовая черепаха",
@@ -591,3 +592,20 @@ export default [{
     lootMod: {gold: 1.07, crystals: 1.1, experience: 2.9},
     skill: {}
 }, ...epicBosses];
+
+// The epics and the raid bosses of the real data are the world bosses: each has its real level, location, drop and
+// strength (functions/game/boss/worldBosses.js). A hero more than LEVEL_GAP levels away is turned to stone.
+const withWorld = boss => {
+    if (!boss.epic) return boss;
+    const world = epicWorld(boss.name);
+    if (!world) return boss;
+    return {
+        ...boss,
+        world,
+        epic: {...boss.epic, minLevel: Math.max(1, world.level - LEVEL_GAP), maxLevel: world.level + LEVEL_GAP},
+        combat: {...boss.combat, dangerPct: Math.max(boss.combat?.dangerPct || 0, world.dangerPct)},
+        drops: {...boss.drops, items: [...(boss.drops?.items || []), ...world.drops.items.filter(item => !(boss.drops?.items || []).some(own => own.item === item.item))]},
+    };
+};
+
+export default [...baseBosses.map(withWorld), ...worldTemplates()];

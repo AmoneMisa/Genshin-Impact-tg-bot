@@ -38,11 +38,17 @@ export const EPIC_EGGS = Object.freeze({
     antharas: {key: 'egg_ancient', count: 1}, valakas: {key: 'egg_ancient', count: 1},
 });
 
-export const epicEgg = name => EPIC_EGGS[name] || null;
+export const epicEgg = name => EPIC_EGGS[name] || bossTemplates.find(boss => boss.name === name)?.world?.egg || null;
 
-export const epicTemplates = () => bossTemplates.filter(boss => boss.epic);
+/** The epics of the game (Queen Ant ... Valakas). */
+export const epicTemplates = () => bossTemplates.filter(boss => boss.epic && !boss.world?.raid);
 
-export const getEpicTemplate = name => epicTemplates().find(boss => boss.name === name) || null;
+/** The raid bosses of the real data (worldBosses.js): the same fight and respawn window as an epic. */
+export const raidTemplates = () => bossTemplates.filter(boss => boss.world?.raid);
+
+export const worldBossTemplates = () => [...epicTemplates(), ...raidTemplates()];
+
+export const getEpicTemplate = name => worldBossTemplates().find(boss => boss.name === name) || null;
 
 /** Wait after a kill, in ms: the fixed hours plus a random share of the window. */
 export function respawnDelayMs(template, random = Math.random) {
@@ -86,6 +92,42 @@ export function rollEpicJewel(template, fighters, random = Math.random) {
         if (roll < 0) { winner = fighter; break; }
     }
     return {id: winner.id, item: instantiate(jewel)};
+}
+
+/**
+ * What the Mini App lists of the world: every epic and raid boss with where it stands, its level range, its drop and
+ * whether it is up. `records` is {name: epicBosses record} read from the hidden chats of the bosses, `fighting`
+ * {name: hp share} of the bosses that are being fought now.
+ */
+export function worldBossList(records = {}, fighting = {}, now = Date.now()) {
+    return worldBossTemplates().map(template => {
+        const name = template.name;
+        const status = epicStatus({epicBosses: {[name]: records[name] || {}}}, name, now);
+        const world = template.world || {};
+        const jewel = findEpicItem(name);
+        return {
+            name,
+            nameCall: template.nameCall,
+            title: template.title,
+            element: template.element,
+            raid: Boolean(world.raid),
+            level: world.level || template.epic.minLevel,
+            minLevel: template.epic.minLevel,
+            maxLevel: template.epic.maxLevel || null,
+            location: world.location || '',
+            respawnHours: template.epic.respawnHours,
+            windowHours: template.epic.windowHours,
+            jewelChance: template.epic.jewelChance,
+            jewel: jewel ? {name: jewel.name, grade: jewel.grade, kind: jewel.kind, lineage: jewel.lineage} : null,
+            needsPass: needsPass(name),
+            partyMin: partyNeeded(name),
+            egg: epicEgg(name),
+            drops: (template.drops?.items || []).length,
+            fighting: fighting[name] !== undefined,
+            hpPercent: fighting[name] ?? null,
+            ...status,
+        };
+    });
 }
 
 /** What the Mini App lists: every epic boss, its jewellery and when the chat can fight it. */

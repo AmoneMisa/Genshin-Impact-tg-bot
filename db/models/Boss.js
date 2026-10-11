@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 const bossSchema = new mongoose.Schema({
     chatId: Number,
+    // World bosses (worldBosses.js): the real data of the boss and the defence of the hunting formulas.
+    world: Object,
+    hunt: Object,
     name: String,
     nameCall: { type: String },
     description: String,

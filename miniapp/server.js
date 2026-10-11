@@ -1697,43 +1697,49 @@ const arenaAttack = guarded('arena attack', async (req, res) => {
   return sendResult(res, result, context);
 });
 
-// Bosses belong to clans: the fight runs in the hidden chat of the clan (clanScope.js), whatever chat the Mini App was
-// opened from. Without a clan there is no boss (scope 0 finds none).
-async function bossScope(context) {
+// Two kinds of bosses. World bosses (epics and the raid bosses of the real data) stand in their lairs: each fights in
+// its own hidden chat (worldBosses.js), shared by everybody. The clan boss is called by a clan with a Clan Boss Sigil
+// and fights in the hidden chat of the clan (clanScope.js). Without a clan there is no clan boss (scope 0).
+async function bossScope(context, worldName = null) {
+  if (worldName) {
+    const scope = scopeOfName(String(worldName));
+    if (scope === null) throw httpError(404, 'unknown world boss');
+    return { scope, clan: null, world: String(worldName) };
+  }
   const clan = await getClan(Number(context.userId));
-  return clan ? { scope: clanScopeId(clan), clan } : { scope: 0, clan: null };
+  return clan ? { scope: clanScopeId(clan), clan, world: null } : { scope: 0, clan: null, world: null };
 }
 
-const bossState = guarded('boss state', async (req, res) => {
+const bossState = guarded('boss state', async (req, res, requestUrl) => {
   const context = await authorize(req);
-  const { scope, clan } = await bossScope(context);
+  const { scope, clan, world } = await bossScope(context, requestUrl?.searchParams.get('boss'));
   const boss = await withLock(`${scope}:boss`, async () => {
     context.session = await getSession(scope || context.chatId, context.userId);
     return getBossState(context.session, scope);
   });
-  return sendJson(res, 200, { ...boss, noClan: !clan, clanName: clan?.name || null });
+  const sigils = getMaterialCount(context.session, 'clan_boss_token');
+  return sendJson(res, 200, { ...boss, noClan: !world && !clan, clanName: clan?.name || null, world, sigils });
 });
 
 const bossEpic = guarded('boss epic', async (req, res) => {
-  const context = await authorize(req);
-  const { scope } = await bossScope(context);
-  return sendJson(res, 200, await getEpicState(scope));
+  await authorize(req);
+  return sendJson(res, 200, await getEpicState());
 });
 
 const bossSummon = guarded('boss summon', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req).catch(() => ({}));
   const epic = typeof body?.epic === 'string' && body.epic ? body.epic : null;
-  const { scope, clan } = await bossScope(context);
-  if (!clan) return sendResult(res, { ok: false, reason: 'no_clan' }, context);
+  const { scope, clan, world } = await bossScope(context, epic);
+  if (!world && !clan) return sendResult(res, { ok: false, reason: 'no_clan' }, context);
   const result = await withLock(`${scope}:boss`, async () => {
     context.session = await getSession(scope, context.userId);
-    const summoned = await summonBossForMiniApp(context.session, scope, epic, { memberCount: clan.members.length });
-    if (summoned.ok && epic && needsPass(epic)) await saveSession(context.session);
+    const summoned = await summonBossForMiniApp(context.session, scope, epic, { memberCount: clan?.members.length ?? null });
+    if (summoned.ok) await saveSession(context.session);
     return summoned;
   });
   context.session = await getSession(context.chatId, context.userId);
-  if (result.ok) {
+  if (result.ok && clan) {
     const summoner = memberName(context.session);
     const text = `⚔️ ${summoner} призвал(а) кланового босса! Заходи в «Бой», пока он жив.`;
     // the whole clan hears about it, not a single chat
@@ -1749,10 +1755,12 @@ const bossSkill = guarded('boss skill', async (req, res) => {
   if (!Number.isInteger(skillIndex) || skillIndex < 0) {
     throw httpError(400, 'skillIndex must be a non-negative integer');
   }
-  const { scope } = await bossScope(context);
+  const { scope } = await bossScope(context, typeof body.boss === 'string' && body.boss ? body.boss : null);
   const result = await withLock(`${scope}:boss`, async () => {
     context.session = await getSession(scope || context.chatId, context.userId);
-    return useBossSkill(context.session, scope, context.userId, skillIndex, typeof body.targetId === 'string' ? body.targetId : null);
+    const done = await useBossSkill(context.session, scope, context.userId, skillIndex, typeof body.targetId === 'string' ? body.targetId : null);
+    if (done.changed) await saveSession(context.session);
+    return done;
   });
   context.session = await getSession(context.chatId, context.userId);
   return sendResult(res, result, context);
@@ -2160,7 +2168,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/builds/action') return buildsAction(req, res);
     if (route === 'GET /api/arena') return arenaState(req, res, requestUrl);
     if (route === 'POST /api/arena/attack') return arenaAttack(req, res);
-    if (route === 'GET /api/boss') return bossState(req, res);
+    if (route === 'GET /api/boss') return bossState(req, res, requestUrl);
     if (route === 'GET /api/hunt') return huntState(req, res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
     if (route === 'POST /api/fishing') return fishingAction(req, res);

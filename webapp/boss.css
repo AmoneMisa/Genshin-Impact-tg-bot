@@ -393,3 +393,7 @@ button.mmo-frame:active { transform: scale(.99); }
 .fishing-panel .merchant-filter{display:block;font-size:12px;line-height:1.6}
 .fishing-panel .equipment-action{max-width:100%;white-space:normal;line-height:1.4;padding:8px}
 .fishing-panel .party-note{overflow-wrap:anywhere}
+.epic-filter { display: flex; gap: 8px; align-items: center; margin: 6px 0 10px; }
+.epic-filter input { flex: 1; min-width: 0; padding: 7px 10px; border-radius: 8px; border: 1px solid #645b42; background: #172128; color: #efe9d6; font: 13px system-ui; }
+.boss-summon.ghost { margin-top: 8px; background: transparent; border: 1px solid rgba(216, 179, 106, .45); }
+.boss-summon:disabled { opacity: .5; cursor: not-allowed; }

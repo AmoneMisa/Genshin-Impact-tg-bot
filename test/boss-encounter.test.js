@@ -1,7 +1,9 @@
 import test from 'node:test';
 import withSeed from './helpers/seededRandom.js';
 import assert from 'node:assert/strict';
-import bosses from '../template/bossTemplate.js';
+import allBosses from '../template/bossTemplate.js';
+// the roster of the game's own bosses; the raid bosses of the real data (worldBosses.js) have their own test
+const bosses = allBosses.filter(boss => !boss.world?.raid);
 import bossCastAttack, { minionCasts, RESPAWN_MS } from '../functions/game/boss/bossCastAttack.js';
 import calcBossHit from '../functions/game/boss/bossHit.js';
 import computeBossHp, { HP_PER_MEMBER, MAX_MEMBERS, MIN_MEMBERS } from '../functions/game/boss/bossHp.js';

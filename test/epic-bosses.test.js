@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import bosses from '../template/bossTemplate.js';
+import allBosses from '../template/bossTemplate.js';
+// the roster of the game's own bosses; the raid bosses of the real data (worldBosses.js) have their own test
+const bosses = allBosses.filter(boss => !boss.world?.raid);
 import bossAttacks from '../template/bossAttacksTemplate.js';
 import materials from '../template/materialsTemplate.js';
 import equipmentTemplate from '../template/equipmentTemplate.js';

@@ -4,7 +4,9 @@ import classStats from '../template/classStatsTemplate.js';
 import classSkills from '../template/classSkillsTemplate.js';
 import classQuests from '../template/classQuestsTemplate.js';
 import materials from '../template/materialsTemplate.js';
-import bosses from '../template/bossTemplate.js';
+import allBosses from '../template/bossTemplate.js';
+// the roster of the game's own bosses; the raid bosses of the real data (worldBosses.js) have their own test
+const bosses = allBosses.filter(boss => !boss.world?.raid);
 import l2 from '../template/l2Classes.js';
 import {L2_CLASS_META, START_CLASSES} from '../template/l2ClassMeta.js';
 import { CLASS_FAMILY, familyOf } from '../webapp/class-family.js';

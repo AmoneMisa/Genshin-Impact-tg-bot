@@ -2,7 +2,7 @@ import { l2SkillAt } from '../functions/game/player/skillLevel.js';
 import Chat from '../db/models/Chat.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
 import summonBoss from '../functions/game/boss/summonBoss.js';
-import { epicList, epicStatus, getEpicTemplate } from '../functions/game/boss/epicBosses.js';
+import { worldBossList, worldBossTemplates, epicStatus, getEpicTemplate } from '../functions/game/boss/epicBosses.js';
 import { attackLogDto, bossAttacksDto } from './bossEffects.js';
 import { getInventoryState } from './inventory.js';
 import potionsTemplate from '../template/potionsInInventoryTemplate.js';
@@ -17,6 +17,9 @@ import { recordQuestEvent } from '../functions/game/classes/classQuests.js';
 import { hasEpicPass, consumeEpicPass } from '../functions/game/academy/academy.js';
 import { needsPass, partyNeeded, leaderOnly } from '../template/epicPasses.js';
 import { partyState } from '../functions/game/party/party.js';
+import { LEVEL_GAP, scopeOfName } from '../functions/game/boss/worldBosses.js';
+import Boss from '../db/models/Boss.js';
+import { getMaterialCount, spendMaterials } from '../functions/game/player/materials.js';
 import { bossDebuffList, isBossStunned } from '../functions/game/boss/bossDebuffs.js';
 import { aliveRequiredUnits, aliveUnits, armorShield, bossTemplateFor, findUnit } from '../functions/game/boss/bossUnits.js';
 import { EVENT_LOG_SIZE } from '../functions/game/boss/bossPhases.js';
@@ -322,10 +325,18 @@ export async function getBossState(session, chatId, now = Date.now()) {
   };
 }
 
-/** The epic raid bosses with their respawn timers for this chat. */
-export async function getEpicState(chatId, now = Date.now()) {
-  const chat = await Chat.findOne({ chatId: Number(chatId) });
-  return { bosses: epicList(chat, now) };
+/** The world bosses (epics and raid bosses of the real data) with where they stand, their respawn timers and fights. */
+export async function getEpicState(now = Date.now()) {
+  const templates = worldBossTemplates();
+  const scopes = templates.map(template => scopeOfName(template.name)).filter(id => id !== null);
+  const [chats, alive] = await Promise.all([
+    Chat.find({ chatId: { $in: scopes } }, { chatId: 1, epicBosses: 1 }).lean(),
+    Boss.find({ chatId: { $in: scopes }, currentHp: { $gt: 0 }, aliveTime: { $gt: now } }, { name: 1, hp: 1, currentHp: 1 }).lean(),
+  ]);
+  const records = {};
+  for (const chat of chats) Object.assign(records, chat.epicBosses || {});
+  const fighting = Object.fromEntries(alive.map(boss => [boss.name, percent(number(boss.currentHp), number(boss.hp))]));
+  return { bosses: worldBossList(records, fighting, now) };
 }
 
 // An unfought ordinary boss (nobody has hit it yet) makes way for an epic challenge.
@@ -339,14 +350,24 @@ async function clearUnfoughtBoss(boss) {
   return true;
 }
 
+/** The material that calls the clan boss. */
+export const CLAN_BOSS_TOKEN = 'clan_boss_token';
+
 export async function summonBossForMiniApp(session, chatId, epicName = null, {memberCount = null} = {}) {
   let epicTemplate = null;
   let passHolder = session;
+  // the clan boss (not a world boss) is called with a Clan Boss Sigil
+  if (!epicName && getMaterialCount(session, CLAN_BOSS_TOKEN) < 1) {
+    return { ok: false, reason: 'no_summon_item', boss: await getBossState(session, chatId) };
+  }
   if (epicName) {
     epicTemplate = getEpicTemplate(epicName);
     if (!epicTemplate) return { ok: false, reason: 'unknown_epic', boss: await getBossState(session, chatId) };
     if (number(session?.game?.stats?.lvl, 1) < epicTemplate.epic.minLevel) {
       return { ok: false, reason: 'epic_level_too_low', requiredLevel: epicTemplate.epic.minLevel, boss: await getBossState(session, chatId) };
+    }
+    if (epicTemplate.epic.maxLevel && number(session?.game?.stats?.lvl, 1) > epicTemplate.epic.maxLevel) {
+      return { ok: false, reason: 'epic_level_too_high', maxLevel: epicTemplate.epic.maxLevel, boss: await getBossState(session, chatId) };
     }
     const chat = await Chat.findOne({ chatId: Number(chatId) });
     const partyMin = partyNeeded(epicName);
@@ -376,6 +397,7 @@ export async function summonBossForMiniApp(session, chatId, epicName = null, {me
   }
 
   const boss = await summonBoss(chatId, epicTemplate, {memberCount});
+  if (!epicName) spendMaterials(session, { [CLAN_BOSS_TOKEN]: 1 });
   if (epicName && needsPass(epicName)) {
     consumeEpicPass(passHolder, epicName);
     if (passHolder !== session) passHolder.needsSave = true;
@@ -388,6 +410,9 @@ export async function summonBossForMiniApp(session, chatId, epicName = null, {me
   };
 }
 
+/** How long the raid curse keeps a hero in stone. */
+const PETRIFY_MS = 10 * 60 * 1000;
+
 export async function useBossSkill(session, chatId, userId, rawSkillIndex, targetId = null) {
   const boss = await getAliveBoss(chatId);
   if (!boss || await expireBossIfNeeded(boss, chatId)) {
@@ -397,6 +422,21 @@ export async function useBossSkill(session, chatId, userId, rawSkillIndex, targe
   const currentHp = getCurrentHp(session, session.game.gameClass);
   if (currentHp <= 0) {
     return { ok: false, reason: 'dead', boss: await getBossState(session, chatId) };
+  }
+
+  // The raid curse: a hero far from the level of a world boss is turned to stone and takes no part in the reward.
+  const world = bossTemplateFor(boss)?.world;
+  if (world) {
+    const stoneUntil = number(session.game.petrifiedUntil);
+    if (stoneUntil > Date.now()) return { ok: false, reason: 'petrified', remainMs: stoneUntil - Date.now(), boss: await getBossState(session, chatId) };
+    const gap = Math.abs(number(session.game.stats?.lvl, 1) - world.level);
+    if (gap > LEVEL_GAP) {
+      session.game.petrifiedUntil = Date.now() + PETRIFY_MS;
+      boss.listOfDamage = (boss.listOfDamage || []).filter(row => String(row.id) !== String(userId));
+      boss.markModified?.('listOfDamage');
+      await boss.save();
+      return { ok: false, reason: 'petrified', cursed: true, gap, remainMs: PETRIFY_MS, changed: true, boss: await getBossState(session, chatId) };
+    }
   }
 
   const skillIndex = Number(rawSkillIndex);

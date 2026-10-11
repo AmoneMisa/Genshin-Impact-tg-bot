@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import bossCastAttack, { bossAttackMessage, LIVE_DAMAGE_SCALE, nextAttackDelay, ATTACK_MIN_MS, ATTACK_MAX_MS, RESPAWN_MS } from '../functions/game/boss/bossCastAttack.js';
 import { getBossAttacks } from '../template/bossAttacksTemplate.js';
-import bossesTemplate from '../template/bossTemplate.js';
+import allBosses from '../template/bossTemplate.js';
+// the roster of the game's own bosses; the raid bosses of the real data (worldBosses.js) have their own test
+const bossesTemplate = allBosses.filter(boss => !boss.world?.raid);
 import { attackLogDto, bossAttacksDto } from '../miniapp/bossEffects.js';
 
 function fighter(id, hp = 5_000, extra = {}) {

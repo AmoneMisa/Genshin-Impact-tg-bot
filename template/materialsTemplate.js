@@ -74,6 +74,7 @@ export default [
     ...lifeStones,
     ...attributeStones,
     ...shots,
+    {key: 'clan_boss_token', name: 'Clan Boss Sigil', icon: '🗝️', description: 'Призывает клановый босс для всего клана. Редкая награда за ежедневные поручения Академии, продаётся в магазине клана.'},
     {key: 'skill_scroll', name: 'Skill Scroll', icon: '📜', description: 'Нужен для улучшения навыков с 4-го по 7-й уровень. Падает с любых боссов и их свиты.'},
     {key: 'ancient_seal', name: 'Ancient Seal', icon: '🔱', description: 'Нужна для улучшения навыков с 8-го по 10-й уровень. Падает со стойких боссов (2-й и 3-й ранг) и парных боссов.'},
     {key: 'essence_kivaha', name: 'Essence of Kivaha', icon: '⚡', description: 'Искра грозовой черепахи. Редкая добыча с Киваху.'},

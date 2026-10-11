@@ -30,6 +30,13 @@ export default [
         potion: { type: "mp", bottleType: "potion", power: 300 },
         cost: { gold: 3500 }
     },
+    // The sigil that calls the clan boss (Academy bounties give it rarely): the dear way, for adena.
+    {
+        key: "clanBossToken",
+        label: "Clan Boss Sigil",
+        material: { key: "clan_boss_token", amount: 1 },
+        cost: { gold: 2000000 }
+    },
     // Lineage II style buff potions (20 minutes), see template/buffPotions.js.
     // High Life Stones (Lineage II sells them up to level 80, grade S80): delivered as a material.
     ...Object.entries(LIFESTONE_SHOP.high).map(([grade, cost]) => ({

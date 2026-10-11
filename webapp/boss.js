@@ -6,6 +6,8 @@ import {l2EffectIcon} from './art/l2-effects-art.js';
 
 const REASONS = {
   already_summoned: 'Босс уже призван.',
+  no_summon_item: 'Нужна Печать клана: её редко дают ежедневные поручения Академии, а ещё она продаётся в магазине клана.',
+  petrified: 'Проклятие рейда: ты обращён в камень и не получишь награду. Вернись, когда оно спадёт.',
   no_clan: 'Боссов призывает клан: вступи в клан.',
   no_boss: 'Активного босса больше нет.',
   dead: 'Персонаж погиб и ещё не воскрес.',
@@ -16,38 +18,17 @@ const REASONS = {
   cooldown: 'Навык ещё в откате.',
 };
 
-// Legacy /boss is an entry action, not a passive status read: when no boss is
-// alive it summons one immediately. Preserve that behavior without mutating a
-// GET endpoint. The POST race case is expected when two players open the Mini
-// App at the same time, so reuse the boss returned by already_summoned.
+// The boss screen opens on the clan boss (called with a Clan Boss Sigil; the world bosses are in the list of the crown).
 export async function loadBossEntryState(api) {
-  const current = await api('/api/boss');
-  if (current?.active) {
-    return { boss: current, summoned: false, state: null };
-  }
-
-  try {
-    const payload = await api('/api/boss/summon', { method: 'POST' });
-    return {
-      boss: payload.boss,
-      summoned: true,
-      state: payload.state || null,
-    };
-  } catch (error) {
-    if (error?.payload?.reason === 'already_summoned' && error.payload.boss) {
-      return {
-        boss: error.payload.boss,
-        summoned: false,
-        state: error.payload.state || null,
-      };
-    }
-    throw error;
-  }
+  return { boss: await api('/api/boss'), summoned: false, state: null };
 }
 
 export async function openBossGame({ api, renderState, haptic, statusElement }) {
   const entry = await loadBossEntryState(api);
   let state = entry.boss;
+  // the world boss being fought (null: the clan boss)
+  let world = null;
+  const bossPath = () => (world ? `/api/boss?boss=${encodeURIComponent(world)}` : '/api/boss');
   if (entry.state) renderState(entry.state);
   let pending = false;
   let timer = null;
@@ -137,6 +118,8 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     epic_cooldown: 'Босс ещё не вернулся — подожди окончания таймера.',
     epic_pass_required: 'Нужен допуск к этому боссу: квест Академии или Донат-магазин. Для Фринтеззы он нужен только лидеру группы.',
     epic_party_required: 'Для этого босса нужна группа из нужного числа игроков: Закен — от 2, Фринтезза — от 4.',
+    epic_level_too_high: 'Твой уровень слишком высок для этого босса: разница больше 11 уровней.',
+    petrified: 'Проклятие рейда: ты обращён в камень и не получишь награду. Вернись, когда оно спадёт.',
   };
   let epicTimer = 0;
   const epicDuration = (ms) => {
@@ -149,23 +132,34 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     return Math.max(0, (Number(entry.respawnAt) || 0) - Date.now());
   }
 
+  // Level gap of the raid curse: farther than this and the hero is turned to stone.
+  const CURSE_GAP = 11;
+
   function epicCard(entry, level) {
     const remain = epicRemaining(entry);
     const tooLow = level < entry.minLevel;
+    const tooHigh = entry.maxLevel && level > entry.maxLevel;
     const jewel = entry.jewel;
     const real = jewel?.lineage?.mDef != null ? `M.Def ${jewel.lineage.mDef}` : '';
-    const status = remain > 0 ? `Вернётся через <b data-epic-timer="${escapeHtml(entry.respawnAt)}">${epicDuration(remain)}</b>` : tooLow ? `Нужен LVL ${entry.minLevel}` : 'Можно вызвать';
-    return `<article class="forge-card epic-card ${remain > 0 || tooLow ? 'unaffordable' : ''}">
-      <div class="forge-card-head"><span class="equipment-grade grade-s">👑</span><div><strong>${escapeHtml(entry.nameCall)}</strong><small>${escapeHtml(entry.title || '')}</small></div></div>
+    const fighting = entry.fighting;
+    const status = fighting ? `Идёт бой · HP ${Math.round(entry.hpPercent)}%`
+      : remain > 0 ? `Вернётся через <b data-epic-timer="${escapeHtml(entry.respawnAt)}">${epicDuration(remain)}</b>`
+      : tooLow ? `Нужен LVL ${entry.minLevel}` : tooHigh ? `Слишком высокий уровень (до ${entry.maxLevel})` : 'Можно вызвать';
+    const blocked = (remain > 0 && !fighting) || tooLow || tooHigh;
+    return `<article class="forge-card epic-card ${blocked ? 'unaffordable' : ''}">
+      <div class="forge-card-head"><span class="equipment-grade grade-s">${entry.raid ? '☠' : '👑'}</span><div><strong>${escapeHtml(entry.nameCall)}</strong><small>${escapeHtml(entry.title || '')}</small></div></div>
       <div class="forge-costs">
-        <span class="forge-cost">LVL ${entry.minLevel}+</span>
+        <span class="forge-cost">Ур. ${entry.level}</span>
+        <span class="forge-cost">Допуск: ${entry.minLevel}–${entry.maxLevel || '…'}</span>
         <span class="forge-cost">Возрождение ${entry.respawnHours}–${entry.respawnHours + entry.windowHours} ч</span>
         <span class="forge-cost">Убит ${entry.kills || 0} раз</span>
       </div>
+      ${entry.location ? `<p class="epic-jewel">📍 ${escapeHtml(entry.location)}</p>` : ''}
+      <p class="epic-jewel">Дроп: ${entry.drops || 0} предметов${entry.egg ? ' · яйцо клану' : ''} · Камни жизни</p>
       ${jewel ? `<p class="epic-jewel">💍 ${escapeHtml(jewel.name)} · ${escapeHtml(jewel.grade)}${real ? ` · ${escapeHtml(real)}` : ''} · шанс ${Math.round(entry.jewelChance * 100)}%</p>` : ''}
-      ${entry.weapons?.length ? `<p class="epic-jewel">Эпическое оружие · S84 · ур. 84 · шанс ${Math.round(entry.weaponChance * 100)}%<br>${entry.weapons.map(weapon=>escapeHtml(weapon.name)).join(' · ')}<br>Для подходящего класса участника рейда.</p>` : ''}
+      ${entry.weapons?.length ? `<p class="epic-jewel">Эпическое оружие · S84 · ур. 84 · шанс ${Math.round(entry.weaponChance * 100)}%<br>${entry.weapons.map(weapon=>escapeHtml(weapon.name)).join(' · ')}</p>` : ''}
       <p class="epic-status">${status}</p>
-      <button class="equipment-action forge-action" type="button" data-epic-summon="${escapeHtml(entry.name)}" ${remain > 0 || tooLow ? 'disabled' : ''}>Бросить вызов</button>
+      <button class="equipment-action forge-action" type="button" data-epic-summon="${escapeHtml(entry.name)}" data-epic-fighting="${fighting ? 1 : 0}" ${blocked ? 'disabled' : ''}>${fighting ? 'В бой' : 'Бросить вызов'}</button>
     </article>`;
   }
 
@@ -178,30 +172,56 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       feedback.textContent = EPIC_REASONS[error.payload?.reason] || error.message;
       return;
     }
+    const level = Number(state.player?.level) || 1;
+    let showAll = false;
+    let query = '';
     const panel = document.createElement('section');
     panel.className = 'boss-epic-panel';
-    panel.innerHTML = `<header class="ds-head"><button class="ds-round" type="button" data-epic-close aria-label="Назад">←</button><h2>Эпические боссы</h2><span class="ds-round" aria-hidden="true">👑</span></header>
-      <p class="epic-note">Вызов эпического босса ставит таймер возрождения для всего чата. Нетронутый обычный босс уступит место.</p>
-      <div class="forge-grid">${(epic.bosses || []).map(entry => epicCard(entry, Number(state.player?.level) || 1)).join('')}</div>`;
+    panel.innerHTML = `<header class="ds-head"><button class="ds-round" type="button" data-epic-close aria-label="Назад">←</button><h2>Мировые боссы</h2><span class="ds-round" aria-hidden="true">👑</span></header>
+      <p class="epic-note">Эпики и рейд-боссы живут в своих логовах и общие для всех игроков. Разница в уровне больше ${CURSE_GAP} превращает героя в камень и лишает награды. Клановый босс призывается Печатью клана.</p>
+      <div class="epic-filter"><input type="search" data-epic-search placeholder="Поиск по имени или локации" aria-label="Поиск"><button type="button" class="hunt-toggle" data-epic-all>Показать все</button></div>
+      <div class="forge-grid" data-epic-grid></div>`;
     overlay.querySelector('.overlay-panel').appendChild(panel);
+    const grid = panel.querySelector('[data-epic-grid]');
+    const draw = () => {
+      const needle = query.trim().toLowerCase();
+      const rows = (epic.bosses || [])
+        .filter(entry => showAll || Math.abs(entry.level - level) <= CURSE_GAP || entry.fighting)
+        .filter(entry => !needle || `${entry.name} ${entry.location}`.toLowerCase().includes(needle))
+        .sort((a, b) => Number(b.fighting) - Number(a.fighting) || a.level - b.level || a.name.localeCompare(b.name));
+      grid.innerHTML = rows.length ? rows.map(entry => epicCard(entry, level)).join('') : '<p class="epic-note">Подходящих боссов нет.</p>';
+      grid.querySelectorAll('[data-epic-summon]').forEach(button => button.addEventListener('click', () => challenge(button)));
+      panel.querySelector('[data-epic-all]').textContent = showAll ? 'Только по уровню' : 'Показать все';
+    };
     const close = () => { window.clearInterval(epicTimer); panel.remove(); };
     panel.querySelector('[data-epic-close]').addEventListener('click', close);
+    panel.querySelector('[data-epic-all]').addEventListener('click', () => { showAll = !showAll; draw(); });
+    panel.querySelector('[data-epic-search]').addEventListener('input', event => { query = event.target.value; draw(); });
     epicTimer = window.setInterval(() => {
       panel.querySelectorAll('[data-epic-timer]').forEach(node => {
         const left = Math.max(0, Number(node.dataset.epicTimer) - Date.now());
         node.textContent = epicDuration(left);
       });
     }, 1000);
-    panel.querySelectorAll('[data-epic-summon]').forEach(button => button.addEventListener('click', async () => {
+    async function challenge(button) {
       if (pending || button.disabled) return;
       pending = true;
       overlay.classList.add('busy');
       haptic('heavy');
       try {
-        const payload = await api('/api/boss/summon', { method: 'POST', body: JSON.stringify({ epic: button.dataset.epicSummon }) });
-        state = payload.boss;
-        if (payload.state) renderState(payload.state);
-        feedback.textContent = 'Эпический босс вышел на бой!';
+        const name = button.dataset.epicSummon;
+        if (button.dataset.epicFighting === '1') {
+          // somebody has already called it: join the fight
+          world = name;
+          state = await api(bossPath());
+          feedback.textContent = 'Ты вступаешь в бой.';
+        } else {
+          const payload = await api('/api/boss/summon', { method: 'POST', body: JSON.stringify({ epic: name }) });
+          world = name;
+          state = payload.boss;
+          if (payload.state) renderState(payload.state);
+          feedback.textContent = 'Босс вышел на бой!';
+        }
         close();
         renderAll();
       } catch (error) {
@@ -211,7 +231,8 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
         pending = false;
         overlay.classList.remove('busy');
       }
-    }));
+    }
+    draw();
   }
   overlay.querySelector('[data-epic-open]')?.addEventListener('click', openEpic);
   if (entry.summoned) feedback.textContent = 'Босс призван. Таймер рейда запущен.';
@@ -229,7 +250,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
   async function refresh() {
-    state = await api('/api/boss');
+    state = await api(bossPath());
     renderAll();
   }
 
@@ -238,7 +259,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
   async function poll() {
     if (pending || !overlay.isConnected || !state.active) return;
     try {
-      const next = await api('/api/boss');
+      const next = await api(bossPath());
       const cast = next.active ? next.boss.attackLog?.[0] : null;
       // Countdowns tick locally; only real changes re-render.
       const clockless = value => JSON.stringify(value, (key, v) => (/Ms$/.test(key) ? 0 : v));
@@ -264,7 +285,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     if (pending) return;
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Призываем босса для всего чата…';
+    feedback.textContent = 'Призываем клановый босс…';
     haptic('heavy');
     try {
       const payload = await api('/api/boss/summon', { method: 'POST' });
@@ -348,7 +369,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
     try {
       const payload = await api('/api/boss/skill', {
         method: 'POST',
-        body: JSON.stringify({ skillIndex: Number(index), targetId: selectedTarget }),
+        body: JSON.stringify({ skillIndex: Number(index), targetId: selectedTarget, ...(world ? { boss: world } : {}) }),
       });
       state = payload.boss;
       if (payload.state) renderState(payload.state);
@@ -399,7 +420,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       haptic('light');
       const payload = await api('/api/inventory/use', { method: 'POST', body: JSON.stringify({ key }) });
       if (payload.state) renderState(payload.state);
-      state = await api('/api/boss');
+      state = await api(bossPath());
       floatNumber(`+${formatNumber(payload.restored)} ${payload.resource === 'mp' ? 'MP' : 'HP'}`, 'heal');
       feedback.textContent = `Выпито: ${payload.potion?.name || 'зелье'} (+${formatNumber(payload.restored)} ${payload.resource === 'mp' ? 'MP' : 'HP'}).`;
     } catch (error) {
@@ -432,6 +453,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
       haptic('light');
     });
     content.querySelector('[data-summon]')?.addEventListener('click', summon);
+    content.querySelector('[data-epic-open-inline]')?.addEventListener('click', openEpic);
     content.querySelector('[data-boss-refresh]')?.addEventListener('click', async () => {
       haptic('light');
       await refresh();
@@ -458,7 +480,8 @@ export async function openBossGame({ api, renderState, haptic, statusElement }) 
           <strong>Активного босса нет</strong>
           ${state.noClan
             ? '<p>Боссов призывает клан: вступи в клан или создай свой, и вся компания сразится с общим боссом клана.</p>'
-            : '<p>Призыв создаёт общего босса клана на 15 минут: в бой идут участники клана из любых чатов.</p><button type="button" class="boss-summon" data-summon>Призвать босса</button>'}
+            : `<p>Клановый босс призывается Печатью клана на 15 минут: в бой идут участники клана из любых чатов. Печать редко выпадает за ежедневные поручения и продаётся в магазине клана за адену.</p><p><b>Печатей: ${Number(state.sigils) || 0}</b></p><button type="button" class="boss-summon" data-summon ${Number(state.sigils) > 0 ? '' : 'disabled'}>Призвать клановый босс</button>`}
+          <button type="button" class="boss-summon ghost" data-epic-open-inline>Мировые боссы</button>
         </section>`;
       bind();
       return;

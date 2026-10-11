@@ -9,6 +9,8 @@ import {isSkillLearned} from './skillLearning.js';
 // yet (skillLearning.js); 4 - no arrows / bolts.
 export default function (session, skill) {
     if(l2ActionBlock(session,{magic:isMagicClass(session?.game?.gameClass?.stats?.name),attack:Boolean(skill?.isDealDamage)}))return 5;
+    // turned to stone by a raid boss (worldBosses.js): nothing can be done until it wears off
+    if ((Number(session?.game?.petrifiedUntil) || 0) > Date.now()) return 5;
     if ((Number(skill?.needLvl) || 0) > (Number(session?.game?.stats?.lvl) || 1)) {
         return 3;
     }

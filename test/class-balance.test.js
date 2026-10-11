@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import classStats from '../template/classStatsTemplate.js';
 import classSkills from '../template/classSkillsTemplate.js';
-import bosses from '../template/bossTemplate.js';
+import allBosses from '../template/bossTemplate.js';
+// the roster of the game's own bosses; the raid bosses of the real data (worldBosses.js) have their own test
+const bosses = allBosses.filter(boss => !boss.world?.raid);
 import scaleClassStats from '../functions/game/player/scaleClassStats.js';
 import classPower from '../functions/game/player/classPower.js';
 import damageMitigation from '../functions/game/player/damageMitigation.js';

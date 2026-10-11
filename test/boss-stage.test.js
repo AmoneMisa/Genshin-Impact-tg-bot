@@ -5,7 +5,9 @@ import {
   BOSS_ART, SKILL_FX, bossArtUrl, classArtUrl, hitEnvelope, lungeEnvelope, skillFxForClass,
 } from '../webapp/boss-stage.js';
 import { MENU_ART, menuArtFor } from '../webapp/menu-art.js';
-import bossTemplate from '../template/bossTemplate.js';
+import allBosses from '../template/bossTemplate.js';
+// the roster of the game's own bosses; the raid bosses of the real data (worldBosses.js) have their own test
+const bossTemplate = allBosses.filter(boss => !boss.world?.raid);
 
 test('every boss in the game has stage art and an element', () => {
   for (const boss of bossTemplate) {

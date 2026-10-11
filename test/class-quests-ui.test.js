@@ -5,7 +5,9 @@ import { promotionCard, stepRow } from '../webapp/class-quests.js';
 import { encounterPanel, encounterStatuses, hotbar, statusIcons, targetFrame, bossAttacksPanel } from '../webapp/boss-hud.js';
 import { bossArtUrl, classArtUrl, skillFxForClass } from '../webapp/boss-stage.js';
 import { menuArtFor } from '../webapp/menu-art.js';
-import bosses from '../template/bossTemplate.js';
+import allBosses from '../template/bossTemplate.js';
+// the roster of the game's own bosses; the raid bosses of the real data (worldBosses.js) have their own test
+const bosses = allBosses.filter(boss => !boss.world?.raid);
 import { getClassQuestView, startClassQuest } from '../functions/game/classes/classQuests.js';
 import changePlayerClass from '../functions/game/player/changePlayerGameClass.js';
 import updatePlayerStats from '../functions/game/player/updatePlayerStats.js';

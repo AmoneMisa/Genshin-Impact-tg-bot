@@ -155,7 +155,10 @@ function payReward(session, reward) {
     }
 }
 
-export function claimBounty(session, scope, id, now = Date.now()) {
+/** The chance that a claimed bounty also brings a Clan Boss Sigil (the clan boss is called with it). */
+export const TOKEN_CHANCE = Object.freeze({daily: 0.06, weekly: 0.15});
+
+export function claimBounty(session, scope, id, now = Date.now(), random = Math.random) {
     const academy = ensureAcademy(session);
     refreshBounties(session, now);
     const quest = academy.bounties[scope]?.quests.find(item => item.id === id);
@@ -164,7 +167,9 @@ export function claimBounty(session, scope, id, now = Date.now()) {
     if (quest.progress < quest.target) return {ok: false, reason: 'bounty_not_done'};
     quest.claimed = true;
     payReward(session, quest.reward);
-    return {ok: true, reward: quest.reward};
+    const token = random() < (TOKEN_CHANCE[scope] || 0);
+    if (token) addMaterial(session, 'clan_boss_token', 1);
+    return {ok: true, reward: quest.reward, token};
 }
 
 // ---- epic passes ----

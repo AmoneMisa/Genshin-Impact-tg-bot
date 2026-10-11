@@ -8,6 +8,14 @@ import updateBossLevel from './updateBossLevel.js';
 import { addBossEvent } from './bossPhases.js';
 import { spawnMinions } from './bossUnits.js';
 import lodash from 'lodash';
+import {referenceHit, heroStats} from '../hunt/huntMobs.js';
+import {HUNT} from '../hunt/huntConfig.js';
+
+/** Hit points of a world boss: the casts a bare warrior of its level needs, from the real hit points of the data. */
+function worldHp(world) {
+    const casts = Math.max(150, Math.min(4000, Math.round(Math.sqrt(world.hp / 1000) * 12)));
+    return Math.max(1, Math.round(casts * referenceHit(world.level, 'warrior')));
+}
 
 export default async function(chatId, template = null, {memberCount = null} = {}) {
     let bossTemplate = template || getRandomBoss();
@@ -17,11 +25,14 @@ export default async function(chatId, template = null, {memberCount = null} = {}
         boss = await addBossIntoChatSession(chatId, lodash.omit(lodash.cloneDeep(bossTemplate), ['minions']));
     }
 
-    updateBossLevel(boss);
+    // a world boss keeps the level of its data: summoning it does not level it up
+    const world = bossTemplate.world || null;
+    if (!world) updateBossLevel(boss);
+    else boss.stats = {...(boss.stats || bossTemplate.stats), lvl: 1};
 
     const now = Date.now();
     boss.skill = getBossSkill(boss.name);
-    boss.hp = await getBossHp(boss.skill, chatId, bossTemplate, memberCount);
+    boss.hp = world ? worldHp(world) : await getBossHp(boss.skill, chatId, bossTemplate, memberCount);
     boss.currentHp = boss.hp;
     boss.listOfDamage = [];
     boss.aliveTime = now + 15 * 60 * 1000;
@@ -50,6 +61,17 @@ export default async function(chatId, template = null, {memberCount = null} = {}
 
     spawnMinions(boss, bossTemplate.initial, now, bossTemplate);
     addBossEvent(boss, {icon: "👹", text: `${bossTemplate.title ? `${bossTemplate.title}. ` : ""}${bossTemplate.pair ? "Близнецы вышли на бой!" : "Босс вышел на бой!"}`}, now);
+
+    if (world) {
+        // a monster of the real level: its defence follows the hunting formulas, so the damage of a hero is what it is on the fields
+        boss.world = {npcId: world.npcId, level: world.level, location: world.location};
+        boss.hunt = {
+            defence: heroStats(world.level).attack * HUNT.defencePerAttack / HUNT.damageScale * world.defenceRel,
+            element: bossTemplate.element || null, magic: world.magic,
+        };
+        boss.markModified('world');
+        boss.markModified('hunt');
+    }
 
     boss.markModified("skill");
     boss.markModified("stats");
