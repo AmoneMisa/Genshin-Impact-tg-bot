@@ -164,7 +164,7 @@ test('chests can hold a buff potion', () => {
   }
   assert.ok(found, 'no buff potion in 600 chests');
   assert.equal(found.result.prize.amount, 1);
-  assert.match(found.result.prize.label, /^Зелье /);
+  assert.match(found.result.prize.label, / Potion$/);
   assert.equal(found.member.game.inventory.potions.items.reduce((sum, item) => sum + item.count, 0), 1);
 });
 
