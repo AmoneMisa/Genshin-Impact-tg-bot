@@ -15,7 +15,8 @@ import setLevel, {spForLevelUp} from '../player/setLevel.js';
 import {addMaterial, getMaterialCount, materialInfo} from '../player/materials.js';
 import {gainExp, EXP_RATE} from '../player/vitality.js';
 import {hasInventoryRoom} from '../builds/palaceCapacity.js';
-import {BOUNTY_CATEGORIES, BOUNTY_TITLES, bountyExtras, bountyGradeForLevel} from './bountyRewards.js';
+import {BOUNTY_CATEGORIES, BOUNTY_TITLES, bountyExtras, bountyGradeForLevel, bountyCrystalCount} from './bountyRewards.js';
+import {crystalKey} from '../equipment/enchantItem.js';
 import {getClassQuestView} from '../classes/classQuests.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
@@ -98,7 +99,16 @@ export function refreshBounties(session, now = Date.now()) {
     const userId = session.userId ?? 0;
     for (const [scope, key] of [['day', dayKey(now)], ['week', weekKey(now)]]) {
         const previous=academy.bounties[scope];
-        if (previous?.key===key && previous.version===2) continue;
+        if (previous?.key===key && previous.version>=2) {
+            for(const quest of previous.quests) {
+                if(quest.claimed || quest.category!=='resources' || !quest.grade || quest.grade==='noGrade')continue;
+                quest.reward.materials ||= {};
+                const crystal=crystalKey(quest.grade);
+                quest.reward.materials[crystal]=Math.max(number(quest.reward.materials[crystal]),bountyCrystalCount(scope,previous.quality));
+            }
+            previous.version=3;
+            continue;
+        }
         const savedLevel=previous?.key===key
             ? Math.max(1,Math.min(85,Math.round(previous.quests?.[0]?.reward?.gold/(120*previous.quality*(scope==='week'?4:1)))||level)) : level;
         const savedQuality=Math.max(1,Math.min(5,Math.floor(number(previous?.key===key?previous.quality:quality,quality))));
@@ -110,7 +120,7 @@ export function refreshBounties(session, now = Date.now()) {
             quest.claimed=Boolean(old.claimed);
             if(quest.claimed)quest.reward=old.reward;
         }
-        academy.bounties[scope]={key,quality:savedQuality,version:2,quests};
+        academy.bounties[scope]={key,quality:savedQuality,version:3,quests};
     }
     return academy.bounties;
 }
@@ -275,8 +285,8 @@ export function consumeEpicPass(session, name) {
 
 // ---- the screen ----
 
-function bountyDto(quest) {
-    return {...quest,title:BOUNTY_TITLES[quest.category]||BOUNTY_KINDS[quest.kind]?.text,
+function bountyDto(quest,quality) {
+    return {...quest,quality,title:BOUNTY_TITLES[quest.category]||BOUNTY_KINDS[quest.kind]?.text,
         reward:{...quest.reward,displayExp:(quest.reward.exp||0)*EXP_RATE,
             items:Object.entries(quest.reward.materials||{}).map(([key,count])=>({key,count,name:materialInfo(key).name}))}};
 }
@@ -289,8 +299,8 @@ export function getAcademyState(session, now = Date.now()) {
         level: academyLevel(session),
         quality: bountyQuality(session),
         bounties: {
-            day: {quests: bounties.day.quests.map(bountyDto), quality: bounties.day.quality, resetsAt: Date.parse(`${bounties.day.key}T00:00:00Z`) + 86400000},
-            week: {quests: bounties.week.quests.map(bountyDto), quality: bounties.week.quality, resetsAt: Date.parse(`${bounties.week.key}T00:00:00Z`) + 7 * 86400000},
+            day: {quests: bounties.day.quests.map(quest=>bountyDto(quest,bounties.day.quality)), quality: bounties.day.quality, resetsAt: Date.parse(`${bounties.day.key}T00:00:00Z`) + 86400000},
+            week: {quests: bounties.week.quests.map(quest=>bountyDto(quest,bounties.week.quality)), quality: bounties.week.quality, resetsAt: Date.parse(`${bounties.week.key}T00:00:00Z`) + 7 * 86400000},
         },
         kinds: Object.fromEntries(Object.entries(BOUNTY_KINDS).map(([key, value]) => [key, value.text])),
         passes: Object.entries(PASS_EPICS).map(([name, config]) => {

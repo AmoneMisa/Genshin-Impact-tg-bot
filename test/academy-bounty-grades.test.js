@@ -4,6 +4,7 @@ import {getAcademyState,recordAcademyEvent,claimBounty,refreshBounties} from '..
 import {bountyGradeForLevel} from '../functions/game/academy/bountyRewards.js';
 import {levelNeed} from '../functions/game/player/vitality.js';
 import {materialInfo} from '../functions/game/player/materials.js';
+import {crystalKey} from '../functions/game/equipment/enchantItem.js';
 
 const now=Date.UTC(2026,9,11,12);
 const hero=(level,quality=1,name='humanMystic')=>({userId:7,game:{stats:{lvl:level,currentExp:0},
@@ -11,6 +12,31 @@ const hero=(level,quality=1,name='humanMystic')=>({userId:7,game:{stats:{lvl:lev
  vitality:{points:0,at:now},gameClass:{stats:{name}}}});
 const bands=[[1,'noGrade'],[19,'noGrade'],[20,'D'],[39,'D'],[40,'C'],[51,'C'],[52,'B'],[60,'B'],
  [61,'A'],[75,'A'],[76,'S'],[79,'S'],[80,'S80'],[83,'S80'],[84,'S84'],[85,'S84']];
+
+test('resource bounties pay 10–20 matching crystals daily and four times that weekly',()=>{
+ for(const [level,grade] of bands.filter(([,grade])=>grade!=='noGrade'))for(const quality of [1,2,3,4,5]){
+  const state=getAcademyState(hero(level,quality),now);
+  for(const scope of ['day','week']){
+   const quest=state.bounties[scope].quests.find(q=>q.category==='resources');
+   assert.equal(quest.quality,quality);
+   assert.equal(quest.reward.materials[crystalKey(grade)],[10,13,15,18,20][quality-1]*(scope==='week'?4:1));
+  }
+ }
+});
+
+test('pending old crystal rewards increase without rerolling progress or paying claimed rewards again',()=>{
+ const s=hero(40,5);getAcademyState(s,now);
+ const day=s.game.academy.bounties.day,week=s.game.academy.bounties.week;
+ day.version=week.version=2;
+ const resource=day.quests.find(q=>q.category==='resources');resource.progress=7;resource.reward.materials[crystalKey('C')]=5;
+ const claimed=week.quests.find(q=>q.category==='resources');claimed.claimed=true;claimed.reward.materials[crystalKey('C')]=20;
+ const before=structuredClone(claimed);
+ s.game.builds.academy.currentLvl=1;
+ const state=getAcademyState(s,now);
+ assert.equal(resource.progress,7);assert.equal(resource.reward.materials[crystalKey('C')],20);
+ assert.deepEqual(claimed,before);assert.equal(state.bounties.day.quests[1].quality,5);
+ const snapshot=structuredClone(s.game.academy.bounties);getAcademyState(s,now);assert.deepEqual(s.game.academy.bounties,snapshot);
+});
 
 test('every grade has reachable daily XP/resources/consumables and stronger weekly rewards',()=>{
  for(const [level,grade] of bands)for(const quality of [1,5])for(const name of ['humanMystic','humanFighter']){

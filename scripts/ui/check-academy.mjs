@@ -53,7 +53,8 @@ try {
     failAcademy=false;await button.click();
     await page.waitForFunction(()=>{const n=document.querySelector('.academy-window');return n&&getComputedStyle(n).opacity==='1'&&getComputedStyle(n).pointerEvents==='auto';});
     assert.ok(requests.includes(assets.bundles[1].path));
-    assert.ok(await page.locator('.academy-window').innerText().then(text=>text.includes('Ежедневные поручения')&&text.includes('Еженедельные поручения')));
+    assert.equal(await page.locator('.academy-window [role=tab]').count(),2);
+    assert.equal(await page.locator('[data-bounty-scope=day]').getAttribute('aria-selected'),'true');
     await page.screenshot({path:path.join(output,`academy-${width}.png`)});
     await page.locator('[data-academy-main]').click();
     await page.waitForFunction(()=>document.querySelector('.academy-window .city-feedback')?.textContent==='HTTP 503');

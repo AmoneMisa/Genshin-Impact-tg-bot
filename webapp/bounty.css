@@ -1,0 +1,44 @@
+.bounty-tabs{display:flex;gap:8px;margin-top:16px}
+.bounty-tabs button{flex:1;min-height:44px;border:1px solid #625238;border-radius:8px;background:#17121d;color:#c6bfcc;font:inherit;cursor:pointer}
+.bounty-tabs button[aria-selected=true]{background:#40321c;color:#f1d99e;border-color:#b7964d}
+.bounty-reset{font-size:12px;color:#aaa1b3;margin:10px 0}
+.bounty-list{display:grid;gap:10px}
+.bounty-list-row{display:flex;align-items:center;gap:12px;width:100%;padding:14px 12px;border:0;border-left:3px solid var(--bounty-color);border-radius:8px;background:#1c1722;color:#eee7d6;text-align:left;font:inherit;cursor:pointer}
+.bounty-list-row:hover,.bounty-list-row:focus-visible{background:#282130;outline:1px solid var(--bounty-color);outline-offset:2px}
+.bounty-list-row.claimed{opacity:.65}
+.bounty-list-text{flex:1;min-width:0;display:grid;gap:7px}
+.bounty-list-text>strong{font-size:16px;overflow-wrap:anywhere}
+.bounty-list-text>small{font-size:12px;color:#b4acbc}
+.bounty-list-row.ready .bounty-list-text>small{color:#98dab0}
+.bounty-list-icon{width:38px;flex-shrink:0;display:flex;justify-content:center}
+.bounty-list-icon img,.bounty-list-icon svg{width:36px;height:36px;object-fit:contain}
+.bounty-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;color:var(--bounty-color)}
+.bounty-quality{font-size:12px}
+.bounty-pips{display:inline-flex;gap:3px}
+.bounty-pips i{width:5px;height:5px;border-radius:50%;background:#514855}
+.bounty-pips i.on{background:var(--bounty-color)}
+.bounty-chevron{font-size:26px;color:#a69baf}
+.bounty-progress{display:flex;align-items:center;gap:10px;font-size:12px;color:#c7bfce}
+.bounty-progress-track{height:5px;background:#0f0b13;flex:1;border-radius:4px;overflow:hidden}
+.bounty-progress-track i{display:block;height:100%;background:var(--bounty-color);border-radius:4px}
+.bounty-legend{display:flex;flex-wrap:wrap;gap:6px 12px;color:#aaa1b3;font-size:10px;margin:14px 0 20px}
+.bounty-legend span{display:flex;align-items:center;gap:4px}
+.bounty-legend i{width:5px;height:5px;border-radius:50%}
+.bounty-detail .overlay-panel{padding:20px!important;width:calc(100% - 24px);max-width:480px;border-top:2px solid var(--bounty-color);background:#151019}
+.bounty-detail .overlay-panel>header.bounty-detail-head{display:block;position:static;padding:0 42px 0 0;margin:0;min-height:44px}
+.bounty-detail-head h2{font-size:24px;line-height:1.2;color:#f0dca8;margin:10px 0 0;overflow-wrap:anywhere}
+.bounty-description,.bounty-detail-section p{color:#bcb2c4;font-size:13px;line-height:1.5}
+.bounty-detail-section{border-top:1px solid #3b3040;padding-top:14px;margin-top:18px}
+.bounty-detail-section h3{color:#dfc68f;font-size:17px;margin:0 0 12px}
+.bounty-detail-section>strong{font-size:14px}
+.bounty-rewards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.bounty-rewards li{display:flex;align-items:center;gap:8px;min-width:0}
+.bounty-rewards li>span:last-child{min-width:0;display:grid;gap:3px}
+.bounty-rewards strong{font-size:15px;overflow-wrap:anywhere}
+.bounty-rewards small{color:#b8afc0;font-size:11px;overflow-wrap:anywhere}
+.bounty-reward-icon{width:30px;flex-shrink:0;text-align:center;color:#e8cf97;font-size:11px}
+.bounty-reward-icon img,.bounty-reward-icon svg{width:30px;height:30px;object-fit:contain}
+.bounty-detail-actions{display:grid;gap:8px;margin-top:20px}
+.bounty-detail-actions button{width:100%;min-height:44px;white-space:normal}
+.bounty-feedback{color:#dfc68f;font-size:13px;line-height:1.5;margin:12px 0 0}
+.bounty-feedback:empty{display:none}

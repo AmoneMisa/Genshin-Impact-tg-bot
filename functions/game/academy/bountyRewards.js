@@ -5,7 +5,8 @@ import {scrollKey, crystalKey} from '../equipment/enchantItem.js';
 import {levelNeed, EXP_RATE} from '../player/vitality.js';
 
 export const BOUNTY_CATEGORIES = Object.freeze(['experience', 'resources', 'consumables']);
-export const BOUNTY_TITLES = Object.freeze({experience:'Опыт и ОП', resources:'Ресурсы для крафта', consumables:'Боевые расходники'});
+export const BOUNTY_TITLES = Object.freeze({experience:'Опыт охотника', resources:'Запасы кузницы', consumables:'Боевой запас'});
+export const bountyCrystalCount = (scope,quality) => Math.round(10+2.5*(Math.max(1,Math.min(5,Number(quality)||1))-1))*(scope==='week'?4:1);
 const RESOURCES = {
   noGrade:[1864,1865,1869], D:[1870,1871,1872], C:[1880,1881,1882], B:[1873,1876,1877],
   A:[1888,1890,1894], S:[4039,4040,4041], S80:[1893,4039,4041], S84:[1892,1893,4041],
@@ -23,7 +24,7 @@ export function bountyExtras(scope, quality, level, category, className) {
     const index=equipment.grades.findIndex(row=>row.name===grade);
     const count=Math.max(1,5-index)*quality*multiplier;
     for(const id of RESOURCES[grade])materials[`l2_${id}`]=count;
-    if(grade!=='noGrade')materials[crystalKey(grade)]=quality*multiplier;
+    if(grade!=='noGrade')materials[crystalKey(grade)]=bountyCrystalCount(scope,quality);
   }
   if(category==='consumables') {
     const kind=isMagicClass(className)?(weekly?'blessed':'spiritshot'):'soulshot';

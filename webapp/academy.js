@@ -1,5 +1,6 @@
 import { escapeHtml } from './escape-html.js';
 import { luckCoinHtml } from './currency-icons.js';
+import {bountyListRow,bountyLegend,bountyDetail,qualityStyle} from './bounty-view.js';
 import {ensureFeatureStyles} from './feature-styles.js';
 // The Academy window: daily and weekly orders (quality follows the Academy's level), epic raid passes and
 // the entry to the main profession quests.
@@ -26,28 +27,6 @@ const duration = ms => {
   const d = Math.floor(total / 1440), h = Math.floor((total % 1440) / 60), m = total % 60;
   return d ? `${d}д ${h}ч` : h ? `${h}ч ${m}м` : `${m}м`;
 };
-
-function rewardHtml(reward = {}) {
-  const parts = [];
-  if (reward.gold) parts.push(`🪙 ${fmt(reward.gold)}`);
-  if (reward.sp) parts.push(`✧ ${fmt(reward.sp)} ОП`);
-  if (reward.moonDew) parts.push(`💧 ${fmt(reward.moonDew)}`);
-  if (reward.ironOre) parts.push(`⛏️ ${fmt(reward.ironOre)}`);
-  if (reward.luckCoins) parts.push(`${luckCoinHtml(14)} ${fmt(reward.luckCoins)}`);
-  if (reward.displayExp) parts.push(`${fmt(reward.displayExp)} опыта + бонус энергии`);
-  for(const item of reward.items||[])parts.push(`${escapeHtml(item.name)} ×${fmt(item.count)}`);
-  return parts.join(' · ');
-}
-
-function bountyHtml(scope, quest, kinds) {
-  const done = quest.progress >= quest.target;
-  return `<article class="academy-row ${quest.claimed ? 'claimed' : done ? 'done' : ''}">
-    <div><strong>${escapeHtml(quest.title || kinds[quest.kind] || quest.kind)}${quest.grade?' · '+escapeHtml(quest.grade==='noGrade'?'NG':quest.grade):''}</strong>
-      <small>${escapeHtml(kinds[quest.kind] || quest.kind)} · ${fmt(quest.target)}${quest.minMobLevel?' · от '+fmt(quest.minMobLevel)+' ур., разница не более 10 уровней':''}</small>
-      <small>${fmt(quest.progress)} / ${fmt(quest.target)} · ${rewardHtml(quest.reward)}</small></div>
-    <button type="button" class="city-btn" data-academy-claim="${escapeHtml(scope)}:${escapeHtml(quest.id)}" ${done && !quest.claimed ? '' : 'disabled'}>${quest.claimed ? 'Получено' : 'Забрать'}</button>
-  </article>`;
-}
 
 function passHtml(pass) {
   const head = `<strong>${escapeHtml(pass.nameCall)}</strong>`;
@@ -79,11 +58,41 @@ function mainQuestsHtml(view) {
     <button type="button" class="city-btn upgrade" data-academy-main>Открыть задания профессий</button></section>`;
 }
 
-export async function openAcademy({ api, haptic = () => {}, renderState = () => {}, openMainQuests = () => {} } = {}) {
+export async function openAcademy({ api, haptic = () => {}, renderState = () => {}, openMainQuests = () => {}, openHuntFields } = {}) {
   await ensureFeatureStyles();
   let state = await api('/api/academy');
   let dialog = null;
-  let pending = false;
+  let pending = false, scope = 'day', selected = null, detail = null, openingFarm = false;
+  const closeDetail = () => { detail?.remove(); detail = null; selected = null; };
+  const close = () => { closeDetail(); overlay.remove(); };
+  const selectedQuest = () => state.bounties[selected?.scope]?.quests.find(q => q.id === selected?.id);
+  function renderDetail(message = '') {
+    if(!detail || !selected)return;
+    const quest = selectedQuest();
+    if(!quest){closeDetail();return;}
+    const panel = detail.querySelector('.overlay-panel');
+    panel.setAttribute('style',qualityStyle(quest));
+    panel.innerHTML = bountyDetail(quest,{kind:state.kinds[quest.kind],pending,openingFarm,message});
+  }
+  function openDetail(value) {
+    closeDetail();
+    const [questScope,...id] = value.split(':');
+    selected = {scope:questScope,id:id.join(':')};
+    detail = document.createElement('section');
+    detail.className = 'game-overlay city-window bounty-detail visible';
+    detail.setAttribute('aria-label','Поручение Академии');
+    detail.innerHTML = '<div class="overlay-backdrop" data-bounty-close></div><div class="overlay-panel city-window-panel"></div>';
+    detail.addEventListener('click',event => {
+      if(event.target.closest('[data-bounty-close]')){closeDetail();return;}
+      if(event.target.closest('[data-academy-claim]') && !pending && !openingFarm)act({action:'claim',...selected});
+      if(event.target.closest('[data-bounty-farm]') && !pending && !openingFarm){
+        openingFarm = true;renderDetail();
+        Promise.resolve().then(() => openHuntFields ? openHuntFields() : import('./hunt.js').then(({openHuntGame})=>openHuntGame({api,renderState,haptic,statusElement:document.createElement('span')})))
+          .then(close).catch(error=>renderDetail(error.message)).finally(()=>{openingFarm=false;if(detail)renderDetail(detail.querySelector('.bounty-feedback')?.textContent);});
+      }
+    });
+    renderDetail();document.body.appendChild(detail);
+  }
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay city-window academy-window';
   overlay.setAttribute('aria-label','Академия');
@@ -94,13 +103,13 @@ export async function openAcademy({ api, haptic = () => {}, renderState = () => 
 
   function render(message = '') {
     const now = Date.now();
-    const section = (title, scope) => `<section class="city-block"><h4>${title} <small>обновится через ${duration(state.bounties[scope].resetsAt - now)}</small></h4>
-      ${state.bounties[scope].quests.map(quest => bountyHtml(scope, quest, state.kinds)).join('')}</section>`;
     body.innerHTML = `<div class="city-window-body">
       <div class="city-window-title"><strong>Академия</strong><small>Уровень ${fmt(state.level)} · качество поручений ${state.quality} / 5</small></div>
-      <p class="city-desc">Чем выше уровень Академии, тем крупнее поручения и награды. Задания профессий и допуски к эпическим боссам от неё не зависят.</p>
-      ${section('Ежедневные поручения', 'day')}
-      ${section('Еженедельные поручения', 'week')}
+      <p class="city-desc">Выбери поручение, чтобы посмотреть цель и награды.</p>
+      <div class="bounty-tabs" role="tablist" aria-label="Период поручений">${[['day','Ежедневные'],['week','Еженедельные']].map(([key,label])=>`<button type="button" role="tab" aria-selected="${scope===key}" data-bounty-scope="${key}">${label}</button>`).join('')}</div>
+      <p class="bounty-reset">Обновление через ${duration(state.bounties[scope].resetsAt-now)}</p>
+      <div class="bounty-list">${state.bounties[scope].quests.map(quest=>bountyListRow(scope,quest)).join('')}</div>
+      ${bountyLegend()}
       ${mainQuestsHtml(state.classQuests)}
       ${dialog ? `<section class="city-block academy-dialog"><h4>${escapeHtml(dialog.npc)}</h4>${dialog.lines.map(line => `<p>«${escapeHtml(line)}»</p>`).join('')}${dialog.done ? '<p><b>Допуск получен.</b></p>' : ''}</section>` : ''}
       <section class="city-block"><h4>Допуски к эпическим боссам</h4><p class="city-desc">Закен требует группу от двух игроков, Фринтезза — от четырёх, и допуск нужен только лидеру группы. Орфен, Кора и Королева Муравьёв доступны в одиночку. Допуск привязан к персонажу: его нельзя продать, положить на хранение или передать.</p>${state.passes.map(passHtml).join('')}</section>
@@ -110,22 +119,27 @@ export async function openAcademy({ api, haptic = () => {}, renderState = () => 
   async function act(payload) {
     if(pending)return;
     pending=true;
-    overlay.querySelectorAll('[data-academy-claim],[data-academy-pass]').forEach(button=>button.disabled=true);
+    overlay.querySelectorAll('[data-academy-pass]').forEach(button=>button.disabled=true);
+    renderDetail();
+    let message = '';
     try {
       const result = await api('/api/academy/action', { method: 'POST', body: JSON.stringify(payload) });
       state = result.academy || state;
       if(result.state)renderState(result.state);
       dialog = result.lines ? { npc: result.npc, lines: result.lines, done: Boolean(result.done) } : null;
       haptic('medium');
-      render();
     } catch (error) {
       if (error.payload?.academy) state = error.payload.academy;
-      render(REASONS[error.payload?.reason] || error.message);
-    } finally { pending=false; }
+      message = REASONS[error.payload?.reason] || error.message;
+    } finally { pending=false;if(overlay.isConnected){render(message);renderDetail(message);} }
   }
 
   overlay.addEventListener('click', event => {
-    if (event.target.closest('[data-academy-close]')) { overlay.remove(); return; }
+    if (event.target.closest('[data-academy-close]')) { close(); return; }
+    const tab = event.target.closest('[data-bounty-scope]');
+    if(tab){scope=tab.dataset.bountyScope;render();return;}
+    const row = event.target.closest('[data-bounty-open]');
+    if(row){openDetail(row.dataset.bountyOpen);return;}
     const claim = event.target.closest('[data-academy-claim]');
     if (claim) { const [scope, id] = claim.dataset.academyClaim.split(':'); act({ action: 'claim', scope, id }); return; }
     const pass = event.target.closest('[data-academy-pass]');
@@ -133,7 +147,7 @@ export async function openAcademy({ api, haptic = () => {}, renderState = () => 
     const main = event.target.closest('[data-academy-main]');
     if (main && !main.disabled) {
       main.disabled = true;
-      Promise.resolve().then(openMainQuests).then(() => overlay.remove()).catch(error => render(error.message));
+      Promise.resolve().then(openMainQuests).then(close).catch(error => render(error.message));
     }
   });
   render();
