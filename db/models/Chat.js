@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { hydrateChats, persistChat } from "../../functions/general/characterSync.js";
+import { characterStore } from "../../functions/general/characterStore.js";
 
 const chatSchema = new mongoose.Schema({
     chatId: { type: Number, required: true, unique: true },
@@ -15,6 +17,8 @@ const chatSchema = new mongoose.Schema({
     epicBosses: {type: Object, default: {}},
     members: [{
         userId: {type: Number},
+        // Revision of the shared character this copy was loaded at (characterSync.js).
+        syncRev: Number,
         isHided: Boolean,
         gender: String,
         // Denormalized copy of User.userChatData (raw Telegram payload) so hot paths
@@ -58,9 +62,19 @@ const chatSchema = new mongoose.Schema({
 // game / members contain Mixed (Object) sub-paths. Mongoose does not track deep
 // mutations on Mixed types, so `chat.save()` would silently drop changes made via
 // `member.game.x = y`. Force these paths to be serialized on every save.
-chatSchema.pre("save", function () {
+chatSchema.pre("save", async function () {
     this.markModified("game");
+    // One hero for all chats: write the members that changed to the shared record, take the newer ones from it.
+    await persistChat(this, characterStore);
     this.markModified("members");
 });
+
+// ...and every chat that is loaded shows the shared hero in its member records.
+for (const operation of ["find", "findOne", "findOneAndUpdate"]) {
+    chatSchema.post(operation, async function (result) {
+        if (!result) return;
+        await hydrateChats(Array.isArray(result) ? result : [result], characterStore);
+    });
+}
 
 export default mongoose.model("Chat", chatSchema);

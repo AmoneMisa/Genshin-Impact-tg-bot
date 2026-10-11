@@ -3,6 +3,7 @@ import {tickSoulDots} from '../game/equipment/soulCrystalCombat.js';
 import {bossDebuffAmount} from '../game/boss/bossDebuffs.js';
 import bossSendLoot from '../game/boss/bossSendLoot.js';
 import Boss from '../../db/models/Boss.js';
+import Character from '../../db/models/Character.js';
 import Chat from '../../db/models/Chat.js';
 import bossCastAttack, { bossAttackMessage, minionCasts, nextAttackDelay } from '../game/boss/bossCastAttack.js';
 import { isBossStunned } from '../game/boss/bossDebuffs.js';
@@ -73,6 +74,10 @@ export default async function bossLiveAttacks(now = Date.now()) {
             };
             if (killedIds.has(userId)) set['members.$[m].game.respawnTime'] = member.game.respawnTime;
             await Chat.updateOne({ chatId: boss.chatId }, { $set: set }, { arrayFilters: [{ 'm.userId': member.userId }] });
+            // the hero is shared by all chats: the same fields go to its record, which every chat shows
+            const shared = { 'data.game.gameClass.stats.hp': member.game.gameClass.stats.hp, 'data.game.effects': member.game.effects || [] };
+            if (killedIds.has(userId)) shared['data.game.respawnTime'] = member.game.respawnTime;
+            await Character.updateOne({ userId: Number(member.userId) }, { $set: shared, $inc: { rev: 1 } });
         }
 
         // The chat only hears about defeats; every hit is shown live in the Mini App.
