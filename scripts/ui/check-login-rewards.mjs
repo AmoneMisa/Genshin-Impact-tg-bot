@@ -10,7 +10,7 @@ const root=path.resolve('webapp'),output=path.resolve('.tmp/login-ui');fs.mkdirS
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),file=>fs.readFileSync(path.join(root,file),'utf8'));
 const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m=>m[0]).join('');
 const browser=await chromium.launch({headless:true,executablePath:process.env.ITEM_ART_BROWSER}),results=[];
-const now=Date.parse('2026-10-01T00:00:00Z');
+let now=Date.parse('2026-10-01T00:00:00Z');
 try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[40,'C'],[52,'B'],[61,'A'],[76,'S'],[80,'S80'],[84,'S84']]){
     const hero={game:{stats:{lvl:level},equipmentStats:{},gameClass:{stats:{name:'humanWizard',hp:1000,maxHp:2000,mp:500,maxMp:1000},skills:[]},inventory:{gold:0,materials:{login_box_S:1,login_shadow_weapon_C:1,login_shadow_armor_C:1,login_shadow_jewelry_C:1,login_rune_exp_S:1},equipment:{items:[]},potions:{items:[]}}}};
     let actions=0;const page=await browser.newPage({viewport:{width,height:720},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -34,6 +34,11 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
     const panel=page.locator('.login-panel'),days=page.locator('[data-login-day]');
     const closeSize=await page.locator('.login-head .overlay-close').boundingBox();assert.ok(closeSize.width<=37&&closeSize.height<=37);
     assert.equal(await days.count(),31);assert.equal(await page.locator('[data-login-day="1"]').getAttribute('aria-current'),'date');
+    assert.equal(await page.locator('.login-period').textContent(),'С 1 октября 2026 г. по 31 октября 2026 г.');
+    assert.equal(await page.locator('.login-day-number').allTextContents().then(a=>a.join(',')),Array.from({length:31},(_,i)=>i+1).join(','));
+    assert.equal(await page.locator('.login-day-item img').count(),31);
+    assert.equal(await page.locator('[data-login-day="5"] .login-day-count').textContent(),String(30+[[1,'NG'],[20,'D'],[40,'C'],[52,'B'],[61,'A'],[76,'S'],[80,'S80'],[84,'S84']].findIndex(([l])=>l===level)*20));
+    assert.equal(await page.locator('[data-login-day="7"] .login-day-extra').textContent(),'+2');
     const overflow=async()=>assert.equal(await panel.evaluate(p=>p.scrollWidth>p.clientWidth+1),false);
     await overflow();
     if(grade==='S')await page.screenshot({path:path.join(output,`calendar-${width}.png`)});
@@ -42,6 +47,7 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
     await page.locator('[data-login-back]').click();
     await page.locator('[data-login-claim]').evaluate(b=>{b.click();b.click();});
     await page.waitForSelector('[data-login-coupon]');assert.equal(actions,1);assert.equal(await page.evaluate(()=>window.draws),1);
+    await page.locator('[data-login-tab="calendar"]').click();assert.equal(await page.locator('[data-login-day="1"] .login-day-check').count(),1);assert.equal(await page.locator('[data-login-day="1"] .login-day-item img').count(),1);await page.locator('[data-login-tab="coupons"]').click();
     await page.locator('[data-login-coupon]').filter({hasText:'Купон на заряды'}).click();
     const select=page.locator('[data-login-choice]');assert.equal(await select.locator('option').count(),25);assert.equal(await page.locator('[data-login-redeem]').isDisabled(),true);
     await select.selectOption('blessed:S');assert.equal(await page.locator('[data-login-redeem]').isDisabled(),false);await overflow();
@@ -64,6 +70,18 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
     assert.equal(await page.locator('.inventory-overlay').count(),1);
     if(grade==='S')await page.screenshot({path:path.join(output,`inventory-${width}.png`)});
     await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.inventory-overlay'));assert.deepEqual(errors,[]);
-    results.push({width,grade,overflow:false,claimOnce:true,redeemOnce:true,choices:24,box:true,shadow:true,escape:true,inventoryUse:true,close36px:true,errors});await page.close();
+    if(width===390&&grade==='S'){
+        for(const [date,count,last] of [['2027-02-15',28,'28 февраля 2027 г.'],['2028-02-15',29,'29 февраля 2028 г.'],['2026-11-15',30,'30 ноября 2026 г.']]){
+            now=Date.parse(`${date}T00:00:00Z`);
+            await page.evaluate(async()=>{await(await import('/login-rewards.js')).openLoginRewards({api:(await import('/request-json.js')).requestJson});});
+            assert.equal(await page.locator('[data-login-day]').count(),count);
+            assert.equal(await page.locator('[aria-current="date"] .login-day-number').textContent(),'15');
+            assert.ok((await page.locator('.login-period').textContent()).endsWith(last));
+            await page.locator(`[data-login-day="${count}"]`).click();assert.equal(await page.locator('.login-detail h3').textContent(),last);await overflow();
+            await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.login-overlay'));
+        }
+        now=Date.parse('2026-10-01T00:00:00Z');
+    }
+    results.push({width,grade,overflow:false,claimOnce:true,redeemOnce:true,choices:24,box:true,shadow:true,escape:true,inventoryUse:true,close36px:true,dateRange:true,realMonthDates:true,rewardIcons:true,quantity:true,claimedCheck:true,errors});await page.close();
 }}finally{await browser.close();}
 fs.writeFileSync(path.join(output,'verification.json'),JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));
