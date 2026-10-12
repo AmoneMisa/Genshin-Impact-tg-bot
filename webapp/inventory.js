@@ -1,3 +1,4 @@
+import {itemGridHtml} from './item-grid.js';
 const walletNumber = value => new Intl.NumberFormat('ru-RU',{notation:Number(value)>=1e6?'compact':'standard',maximumFractionDigits:1}).format(value||0);
 import {openWarehouseGame} from './warehouse.js';
 import {openTradeGame} from './trade.js';
@@ -64,7 +65,7 @@ function materialGroup(item){
 function materialBag(items,selected){
  return MATERIAL_GROUPS.map(([kind,label])=>{
   const rows=items.filter(item=>materialGroup(item)===kind);if(!rows.length)return '';
-  return `<details class="inventory-material-group" open><summary>${l2CategoryIcon(kind)} ${label} · ${rows.length}</summary><div class="inv-bag">${rows.map(item=>`<button type="button" class="inv-slot ${selected===item.key?'selected':''}" data-inventory-material="${escapeHtml(item.key)}" title="${escapeHtml(item.name)} ×${item.count}" aria-label="${escapeHtml(item.name)} ×${item.count}">${materialIcon(item.key)}<em>${formatNumber(item.count)}</em></button>`).join('')}</div></details>`;
+  return `<details class="inventory-material-group" open><summary>${l2CategoryIcon(kind)} ${label} · ${rows.length}</summary><div class="inv-bag">${rows.map(item=>`<button type="button" class="item-grid-cell inv-slot ${selected===item.key?'selected':''}" data-inventory-material="${escapeHtml(item.key)}" title="${escapeHtml(item.name)} ×${item.count}" aria-label="${escapeHtml(item.name)} ×${item.count}">${materialIcon(item.key)}<em>${formatNumber(item.count)}</em></button>`).join('')}</div></details>`;
  }).join('');
 }
 
@@ -124,7 +125,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
 
   function slotHtml(item) {
     return `
-      <button type="button" class="inv-slot ${item.count <= 0 ? 'empty' : ''} ${selectedKind==='potion'&&item.key === selectedKey ? 'selected' : ''}" data-inventory-select="${escapeHtml(item.key)}" aria-label="${escapeHtml(item.name)} ×${formatNumber(item.count)}">
+      <button type="button" class="item-grid-cell inv-slot ${item.count <= 0 ? 'empty' : ''} ${selectedKind==='potion'&&item.key === selectedKey ? 'selected' : ''}" data-inventory-select="${escapeHtml(item.key)}" aria-label="${escapeHtml(item.name)} ×${formatNumber(item.count)}">
         ${flaskHtml(item)}
         <em>${formatNumber(item.count)}</em>
       </button>`;
@@ -137,8 +138,8 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   /** The bag of the current filter: one grid of icons, empty cells fill the last row. */
   function bagSlots() {
     const potions = state.potions.map(slotHtml);
-    const equipment = (state.equipment || []).map(item => `<button type="button" class="inv-slot ${item.shadow?'is-shadow-item':''} ${selectedKind === 'equipment' && selectedKey === item.key ? 'selected' : ''}" data-inventory-equipment="${escapeHtml(item.key)}" title="${escapeHtml(item.name)}${item.isUsed ? ' · Надето' : ''}" aria-label="${escapeHtml(item.name)}">${equipmentArt(item)}${item.enchant ? `<i class="inv-plus">+${item.enchant}</i>` : ''}${item.isUsed ? '<i class="inv-worn" aria-hidden="true"></i>' : ''}</button>`);
-    const materialSlot = item => `<button type="button" class="inv-slot ${selectedKind === 'material' && selectedKey === item.key ? 'selected' : ''}" data-inventory-material="${escapeHtml(item.key)}" title="${escapeHtml(item.name)} ×${item.count}" aria-label="${escapeHtml(item.name)} ×${item.count}">${materialIcon(item.key)}<em>${formatNumber(item.count)}</em></button>`;
+    const equipment = (state.equipment || []).filter(item => !item.isUsed).map(item => `<button type="button" class="item-grid-cell inv-slot ${item.shadow?'is-shadow-item':''} ${selectedKind === 'equipment' && selectedKey === item.key ? 'selected' : ''}" data-inventory-equipment="${escapeHtml(item.key)}" title="${escapeHtml(item.name)}${item.isUsed ? ' · Надето' : ''}" aria-label="${escapeHtml(item.name)}">${equipmentArt(item)}${item.enchant ? `<i class="inv-plus">+${item.enchant}</i>` : ''}${item.isUsed ? '<i class="inv-worn" aria-hidden="true"></i>' : ''}</button>`);
+    const materialSlot = item => `<button type="button" class="item-grid-cell inv-slot ${selectedKind === 'material' && selectedKey === item.key ? 'selected' : ''}" data-inventory-material="${escapeHtml(item.key)}" title="${escapeHtml(item.name)} ×${item.count}" aria-label="${escapeHtml(item.name)} ×${item.count}">${materialIcon(item.key)}<em>${formatNumber(item.count)}</em></button>`;
     const materials = state.materials || [];
     const supplies = materials.filter(isSupplyMaterial).map(materialSlot);
     const rest = materials.filter(item => !isSupplyMaterial(item)).map(materialSlot);
@@ -147,7 +148,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         : filter === 'material' ? rest
           : [...equipment, ...potions, ...supplies, ...rest];
     const total = Math.max(30, Math.ceil(cells.length / 6) * 6);
-    return cells.join('') + '<span class="inv-slot blank" aria-hidden="true"></span>'.repeat(total - cells.length);
+    return itemGridHtml(cells, {className: 'inv-bag l2-bag', min: total, label: 'Инвентарь'});
   }
 
   function detailHtml() {
@@ -194,7 +195,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       ${state.buffs?.length?`<p class="inv-hint">${state.buffs.map(buff=>`${escapeHtml(buff.name)} · ${Math.max(0,Math.ceil((buff.until-Date.now())/60000))} мин.`).join(' · ')}</p>`:''}
       <section class="inventory-section">
         <nav class="inv-tabs" role="tablist" aria-label="Фильтр инвентаря">${FILTERS.map(([id, label]) => `<button type="button" role="tab" class="${filter === id ? 'active' : ''}" data-inventory-filter="${id}" aria-selected="${filter === id}">${label}</button>`).join('')}</nav>
-        <div class="inv-bag l2-bag">${bagSlots()}</div>
+        ${bagSlots()}
         <div class="inventory-title"><small>${state.slots ? `${formatNumber(state.slots.used)} / ${formatNumber(state.slots.capacity)}` : ''}</small></div>
       </section>
       ${detailHtml()}

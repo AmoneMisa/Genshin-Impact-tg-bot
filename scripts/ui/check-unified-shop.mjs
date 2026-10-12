@@ -1,3 +1,4 @@
+import {assertItemGrid} from './assert-item-grid.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -31,12 +32,13 @@ try {
   await page.locator('.l2-store-panel').screenshot({path:path.join(out,`categories-${width}.png`)});
   await page.locator('[data-dismiss]').click();
   await page.evaluate(async()=>{await(await import('/shop.js')).openShopGoods({api:window.shopApi,haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),initialCategory:'epic'});});
+  await assertItemGrid(page);
   assert.ok(await page.locator('.store-grid').evaluate(n=>new Set([...n.querySelectorAll('img')].map(i=>i.src)).size)>=8);
   await page.locator('[data-store-slot="col:timed:epic:freyaExtreme"]').click();
   assert.match(await page.locator('.store-info').textContent(),/7 дней · \+8/);
   assert.match(await page.locator('.store-icon img').getAttribute('src'),/queen_of_ice_necklace/);
   assert.ok(await page.locator('.shop-item-stats li').count());
-  assert.equal(await page.locator('.store-slot.selected').evaluate(n=>getComputedStyle(n).borderColor),'rgb(241, 139, 199)');
+  assert.match(await page.locator('.store-slot.selected').evaluate(n=>getComputedStyle(n).boxShadow),/241, 139, 199/);
   await page.locator('.shop-panel').evaluate(n=>Promise.all([...n.querySelectorAll('img')].map(i=>i.decode())));
   assert.equal(await page.locator('.shop-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
   await page.locator('.shop-panel').screenshot({path:path.join(out,`epic-${width}.png`)});

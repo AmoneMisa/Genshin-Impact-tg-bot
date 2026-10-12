@@ -1,3 +1,4 @@
+import {itemGridHtml} from './item-grid.js';
 import { escapeHtml } from './escape-html.js';
 
 // The inside of a shop category, laid out like the Lineage II store window: a grid of item icons on the left,
@@ -13,7 +14,7 @@ const number = value => new Intl.NumberFormat('ru-RU').format(Math.round(Number(
 export function storeViewHtml({ items, selectedId, quantity = 1, emptyText = 'Ничего не найдено.' }) {
   if (!items.length) return `<div class="shop-empty">${escapeHtml(emptyText)}</div>`;
   const selected = items.find(item => item.id === selectedId) || null;
-  const grid = items.map(item => `<button type="button" class="store-slot ${item.id === selectedId ? 'selected' : ''} ${item.canBuy ? '' : 'poor'}" data-store-slot="${escapeHtml(item.id)}" title="${escapeHtml(item.name)}" aria-label="${escapeHtml(item.name)}" aria-pressed="${item.id === selectedId}">${item.iconHtml}${item.badge ? `<em>${escapeHtml(item.badge)}</em>` : ''}</button>`).join('');
+  const grid = items.map(item => `<button type="button" class="item-grid-cell store-slot ${item.id === selectedId ? 'selected' : ''} ${item.canBuy ? '' : 'poor'}" data-store-slot="${escapeHtml(item.id)}" title="${escapeHtml(item.name)}" aria-label="${escapeHtml(item.name)}" aria-pressed="${item.id === selectedId}">${item.iconHtml}${item.badge ? `<em>${escapeHtml(item.badge)}</em>` : ''}</button>`);
   let info = '<div class="store-info"><p class="store-hint">Выбери товар слева.</p></div>';
   if (selected) {
     const count = selected.countable ? Math.max(1, Math.min(Number(quantity) || 1, selected.maxCount || 1000)) : 1;
@@ -31,7 +32,7 @@ export function storeViewHtml({ items, selectedId, quantity = 1, emptyText = 'Н
       ${selected.countable ? `<label class="store-quantity"><span>Количество</span><input type="number" min="1" max="${selected.maxCount || 1000}" step="1" inputmode="numeric" value="${count}" data-store-quantity></label>` : ''}
     </div>`;
   }
-  return `<div class="store-view"><div class="store-grid" role="listbox">${grid}</div>${info}</div>
+  return `<div class="store-view">${itemGridHtml(grid, {className: 'store-grid', label: 'Товары'})}${info}</div>
     <div class="store-actions"><button type="button" class="store-confirm" data-store-confirm ${selected?.canBuy ? '' : 'disabled'}>Подтвердить</button><button type="button" class="store-cancel" data-store-cancel ${selected ? '' : 'disabled'}>Отмена</button></div>`;
 }
 

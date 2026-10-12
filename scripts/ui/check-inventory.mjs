@@ -1,3 +1,4 @@
+import {assertItemGrid} from './assert-item-grid.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -29,12 +30,13 @@ try{for(const width of [320,390,540,1100]){
  });
  await page.goto('http://127.0.0.1:4321/fixture.html');
  await page.evaluate(async()=>{const {startEmojiIcons}=await import('/icons.js');startEmojiIcons();const {openInventoryGame}=await import('/inventory.js');await openInventoryGame({haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),api:async(url,options)=>(await fetch(url,{headers:{'Content-Type':'application/json'},...options})).json()});});
+ await assertItemGrid(page);
  assert.equal(await page.locator('[data-inventory-select]').count(),1);
  assert.equal(await page.locator('[data-inventory-select]').getAttribute('data-inventory-select'),'1');
  assert.equal(await page.locator('.inventory-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
- assert.equal(await page.locator('.inv-slot img').evaluate(n=>n.getBoundingClientRect().width),48);
+ assert.ok(await page.locator('.inv-slot img').evaluate(n=>n.getBoundingClientRect().width<=40));
  await page.locator('.inventory-panel img').evaluateAll(nodes=>Promise.all(nodes.map(n=>{n.loading='eager';return n.decode();})));
- if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/inventory-potions-390.png'});
+ if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/shared-grid/inventory-potions-390.png'});
  await page.locator('[data-inventory-potion]').click();
  await page.locator('[data-inventory-potion]').waitFor({state:'detached'});
  assert.equal(session.game.inventory.potions.items[1].count,0);
@@ -44,9 +46,9 @@ try{for(const width of [320,390,540,1100]){
  assert.equal(await page.locator('[data-inventory-toast]').isVisible(),true);
  assert.equal(await page.locator('[data-inventory-toast]').evaluate(n=>getComputedStyle(n).position),'fixed');
  assert.equal(await page.locator('.inv-vital>i').first().evaluate(n=>n.getBoundingClientRect().height),14);
- if(width===390)await page.screenshot({path:'docs/inventory-toast-390.png'});
+ if(width===390)await page.screenshot({path:'docs/shared-grid/inventory-toast-390.png'});
  await page.locator('[data-inventory-toast]').waitFor({state:'hidden',timeout:5000});
- if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/inventory-empty-390.png'});
+ if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/shared-grid/inventory-empty-390.png'});
  assert.equal(await page.locator('.inventory-resources').count(),0);
  assert.equal(await page.locator('.inventory-adena strong').textContent(),new Intl.NumberFormat('ru-RU').format(32500));
  assert.equal(await page.locator('[data-inventory-discard]').isDisabled(),true);
@@ -63,7 +65,7 @@ try{for(const width of [320,390,540,1100]){
  await page.locator('[data-inventory-auction]').click();await page.locator('[data-sell-price]').waitFor();assert.equal(await page.locator('[data-sell-confirm]').isVisible(),true);
  await page.locator('.auction-panel .overlay-close').click();await page.locator('.auction-panel').waitFor({state:'detached'});
  await page.locator('[data-inventory-equipment]').click();
- if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/inventory-actions-390.png',animations:'disabled'});
+ if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/shared-grid/inventory-actions-390.png',animations:'disabled'});
  await page.locator('[data-inventory-crystallize]').click();await page.locator('.stock-quantity button[type=submit]').click();await page.locator('[data-inventory-equipment]').waitFor({state:'detached'});
  assert.ok(session.game.inventory.materials.crystal_D>0);assert.equal(session.game.inventory.crystals,1635);
  await page.locator('[data-inventory-craft]').click();await page.locator('.equipment-panel').waitFor();assert.equal(await page.locator('[data-equipment-panel=forge]').isVisible(),true);

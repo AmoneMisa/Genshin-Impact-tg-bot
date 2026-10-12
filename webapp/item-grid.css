@@ -1,0 +1,73 @@
+/* One continuous bag surface for inventory, shops, trade and both warehouses. */
+body .item-grid.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 0;
+  align-content: start;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid #343a31;
+  border-right: 0;
+  border-bottom: 0;
+  border-radius: 0;
+  background: #10130f;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #9b7b43 #100d16;
+}
+body .game-overlay .overlay-panel .item-grid > .item-grid-cell,
+body .item-grid > .item-grid-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #343a31;
+  border-bottom: 1px solid #343a31;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: 1;
+  overflow: hidden;
+}
+body .item-grid > .item-grid-cell img,
+body .item-grid > .item-grid-cell .shop-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+}
+body .item-grid > .item-grid-cell > img,
+body .item-grid > .item-grid-cell > .shop-icon {
+  position: absolute;
+  inset: 0;
+}
+body .item-grid > .item-grid-cell.selected,
+body .item-grid > .item-grid-cell:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px #d8b36a;
+  z-index: 1;
+}
+body .item-grid > button.item-grid-cell:hover { background: #d8b36a12; }
+body .item-grid > .item-grid-cell:has(.is-shadow-item),
+body .item-grid > .item-grid-cell.is-shadow-item { box-shadow: inset 0 0 0 2px #f18bc7; }
+body .item-grid > .item-grid-cell.selected:has(.is-shadow-item),
+body .item-grid > .item-grid-cell.selected.is-shadow-item { box-shadow: inset 0 0 0 2px #d8b36a, inset 0 0 0 3px #f18bc7; }
+body .item-grid > .item-grid-cell.selected::after,
+body .item-grid > .item-grid-cell:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid #d8b36a;
+  pointer-events: none;
+}
