@@ -34,7 +34,7 @@ export default {
     enchant: {
         max: 16,
         safe: 3,
-        safeFullBody: 4,
+        safeFullBody: 3,
         chance: 0.66,
         step: 0.035,
         stepAbove: 0.07,

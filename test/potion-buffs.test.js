@@ -35,8 +35,8 @@ test('buff potions consume only their stack, work at full HP and reject dead or 
 });
 test('all seven potion modifiers reach the combat stat getters',()=>{
  const s=player();
- for(const potion of potions)applyPotionBuff(s,potion.id);
- for(const potion of potions)for(const [stat,value] of Object.entries(potion.modifiers)){
+ for(const potion of potions.filter(p=>!p.donateOnly))applyPotionBuff(s,potion.id);
+ for(const potion of potions.filter(p=>!p.donateOnly))for(const [stat,value] of Object.entries(potion.modifiers)){
   const multiply=stat.endsWith('Mul')||stat==='criticalDamage';
   assert.equal(getEquipStatByName(s,stat,multiply),value,stat);
  }

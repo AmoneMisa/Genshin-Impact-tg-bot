@@ -52,6 +52,7 @@ import { getSkillsState, enchantSkillForMiniApp, learnSkillForMiniApp, routeSkil
 import {
   getClassQuestsState,
   startClassQuestForMiniApp,
+  useProfessionMarkForMiniApp,
   payClassQuestForMiniApp,
   abandonClassQuestForMiniApp,
   promoteClassForMiniApp,
@@ -562,7 +563,7 @@ const characterState = guarded('character state', async (req, res) => {
 
 const playerProfileState = guarded('player profile state', async (req, res) => {
   const context = await authorize(req);
-  const profile = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+  const profile = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     return getPlayerProfileState(context.session);
   });
@@ -576,7 +577,7 @@ const playerProfileClass = guarded('player profile class', async (req, res) => {
     throw httpError(400, 'className is required');
   }
 
-  const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+  const result = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const changed = changePlayerClassForMiniApp(context.session, body.className);
     if (changed.ok) await saveSession(context.session);
@@ -593,7 +594,7 @@ const playerProfileGender = guarded('player profile gender', async (req, res) =>
     throw httpError(400, 'gender is required');
   }
 
-  const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+  const result = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const changed = changePlayerGenderForMiniApp(context.session, body.gender);
     if (changed.ok) await saveSession(context.session);
@@ -674,7 +675,7 @@ const playerSkillsRoute = guarded('player skills route', async (req, res) => {
 
 const classQuestsState = guarded('class quests state', async (req, res) => {
   const context = await authorize(req);
-  const quests = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+  const quests = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     return getClassQuestsState(context.session);
   });
@@ -684,18 +685,19 @@ const classQuestsState = guarded('class quests state', async (req, res) => {
 const classQuestsAction = guarded('class quests action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (!['start', 'pay', 'abandon', 'promote'].includes(body.action)) {
-    throw httpError(400, 'action must be start, pay, abandon or promote');
+  if (!['start', 'mark', 'pay', 'abandon', 'promote'].includes(body.action)) {
+    throw httpError(400, 'action must be start, mark, pay, abandon or promote');
   }
-  if (['start', 'promote'].includes(body.action) && (typeof body.to !== 'string' || !body.to)) {
+  if (['start', 'mark', 'promote'].includes(body.action) && (typeof body.to !== 'string' || !body.to)) {
     throw httpError(400, 'to is required');
   }
   if (['pay', 'promote'].includes(body.action)) assertGoldUnlocked(context);
 
-  const result = await withLock(`${context.chatId}:${context.userId}:profile`, async () => {
+  const result = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const actions = {
       start: () => startClassQuestForMiniApp(context.session, body.to),
+      mark: () => useProfessionMarkForMiniApp(context.session, body.to),
       pay: () => payClassQuestForMiniApp(context.session),
       abandon: () => abandonClassQuestForMiniApp(context.session),
       promote: () => promoteClassForMiniApp(context.session, body.to),
@@ -862,7 +864,7 @@ const auctionCancel = guarded('auction cancel', async (req, res) => {
 
 const luckShopState = guarded('luck shop state', async (req, res) => {
   const context = await authorize(req);
-  const luck = await withLock(`${context.chatId}:${context.userId}:luck`, async () => {
+  const luck = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     return getLuckShopState(context.session);
   });
@@ -873,7 +875,7 @@ const luckShopBuy = guarded('luck shop buy', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
   if (typeof body.itemId !== 'string') throw httpError(400, 'itemId is required');
-  const result = await withLock(`${context.chatId}:${context.userId}:luck`, async () => {
+  const result = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const bought = buyLuckItem(context.session, body.itemId);
     if (bought.ok) await saveSession(context.session);
@@ -2075,7 +2077,7 @@ const shotsAuto = guarded('shots auto', async (req, res) => {
 
 const shopState = guarded('shop state', async (req, res) => {
   const context = await authorize(req);
-  const shop = await withLock(`${context.chatId}:${context.userId}:shop`, async () => {
+  const shop = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     return getShopState(context.session);
   });
@@ -2089,7 +2091,7 @@ const shopBuy = guarded('shop buy', async (req, res) => {
   if (typeof body.command !== 'string' || !body.command) {
     throw httpError(400, 'command is required');
   }
-  const result = await withLock(`${context.chatId}:${context.userId}:shop`, async () => {
+  const result = await withLock(context.chatId, async () => {
     context.session = await getSession(context.chatId, context.userId);
     const purchase = await buyShopItem(context.session, body.command);
     if (purchase.ok) await saveSession(context.session);

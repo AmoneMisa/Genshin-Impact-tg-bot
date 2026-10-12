@@ -170,6 +170,6 @@ test('login items expose an inventory Use action and allow deliberate discard',(
 test('white healing reward uses its real L2 icon and restores health; daily badge clears',()=>{
     const s=hero(),date=Date.parse('2026-10-09T00:00:00Z');assert.equal(claimLoginReward(s,date).ok,true);
     const potion=getInventoryState(s).potions[0];assert.equal(potion.artKey,'l2_1539');assert.equal(potion.name,'Greater Healing Potion');
-    assert.equal(useInventoryPotion(s,'0').ok,true);assert.ok(s.game.gameClass.stats.hp>1000);
+    assert.equal(useInventoryPotion(s,'0').ok,true);assert.equal(s.game.gameClass.stats.hp,1000);assert.ok(s.game.hpPotion.amount>0);
     s.game.loginRewards={};assert.equal(personalBadges(s).loginRewards,1);claimLoginReward(s,Date.now());assert.equal(personalBadges(s).loginRewards,0);
 });

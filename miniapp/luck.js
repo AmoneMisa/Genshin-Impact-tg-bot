@@ -1,3 +1,4 @@
+import { describeItemStats } from '../functions/game/equipment/describeStats.js';
 // Coins of Luck: the donation currency, bought with Telegram Stars (miniapp/stars.js). They are
 // never raided. Fighters of epic raid bosses and the top of the weekly arena also earn a few.
 // Spent in the Donate shop (template/luckShop.js) plus rented epic equipment built here.
@@ -10,7 +11,7 @@ import buffPotions from '../template/buffPotions.js';
 import { addMaterial } from '../functions/game/player/materials.js';
 import { addStarShield, starShieldAmount } from '../functions/game/builds/starShield.js';
 import { canClassUse, getCatalog, gradeInfo } from '../functions/game/equipment/catalog.js';
-import { TIMED_EPIC_DAYS, daysLeft, expireTimedItems, grantTimedItem, isTimedItem } from '../functions/game/equipment/timedItems.js';
+import { TIMED_EPIC_DAYS, TIMED_EPIC_ENCHANT, daysLeft, expireTimedItems, grantTimedItem, isTimedItem } from '../functions/game/equipment/timedItems.js';
 
 export const ARENA_CHANCES_CAP = 15;
 export const STEAL_CHANCES_CAP = 10;
@@ -25,9 +26,9 @@ const level = session => Math.max(1, number(session?.game?.stats?.lvl, 1));
 
 /** Epic weapons and jewellery the player's class can wear, as shop offers for TIMED_EPIC_DAYS days. */
 function epicOffers(session, now) {
-  const owned = new Map((session?.game?.inventory?.equipment?.items || []).filter(isTimedItem).map(item => [item.id, item]));
+  const owned = new Map((session?.game?.inventory?.equipment?.items || []).filter(item=>isTimedItem(item)&&item.shadow&&item.enchant===TIMED_EPIC_ENCHANT).map(item => [item.id, item]));
   return getCatalog()
-    .filter(item => item.epic && canClassUse(className(session), item))
+    .filter(item => item.epic && item.mainType === 'jewelry' && canClassUse(className(session), item))
     .sort((a, b) => (a.mainType === 'weapon' ? 0 : 1) - (b.mainType === 'weapon' ? 0 : 1) || a.name.localeCompare(b.name, 'ru'))
     .map(item => {
       const needLvl = gradeInfo(item.grade)?.lvl?.from ?? 1;
@@ -37,8 +38,11 @@ function epicOffers(session, now) {
         group: 'epic',
         title: item.name,
         icon: item.mainType === 'weapon' ? '⚔️' : '💍',
-        subtitle: `${TIMED_EPIC_DAYS} дней · LVL ${needLvl}+${own ? ` · у тебя ещё ${daysLeft(own, now)} дн.` : ''}`,
-        cost: item.mainType === 'weapon' ? TIMED_EPIC_PRICE.weapon : TIMED_EPIC_PRICE.jewelry,
+        subtitle: `${TIMED_EPIC_DAYS} дней · +${TIMED_EPIC_ENCHANT} · LVL ${needLvl}+${own ? ` · у тебя ещё ${daysLeft(own, now)} дн.` : ''}`,
+        cost: TIMED_EPIC_PRICE[item.epicBoss] || TIMED_EPIC_PRICE.jewelry,
+        description: item.description || '',
+        stats: describeItemStats({...item,enchant:TIMED_EPIC_ENCHANT}).map(row=>row.text),
+        enchant: TIMED_EPIC_ENCHANT, shadow: true,
         needLvl,
         epicWeapon: item.epicWeapon || null,
         catalogId: item.id,
@@ -59,10 +63,13 @@ export function getLuckShopState(session, now = Date.now()) {
     group: item.group,
     title: item.title,
     icon: item.icon,
+    artIcon: item.artIcon || null,
     artMaterial: Object.keys(item.grant?.materials || {})[0] || null,
     artPotion: item.grant?.potion ? [...elixirs,...buffPotions].find(p=>p.id===item.grant.potion.id) || null : null,
     artItem: item.id?.startsWith(TIMED_PREFIX) ? getCatalog().find(entry=>entry.id===item.id.slice(TIMED_PREFIX.length)) : null,
     subtitle: item.subtitle || '',
+    description: item.description || '', stats: item.stats || [],
+    enchant: item.enchant || 0, shadow: Boolean(item.shadow),
     cost: item.cost,
     affordable: coins >= item.cost,
     full: isFull(session, item),
@@ -83,13 +90,19 @@ function isFull(session, item) {
   const grant = item.grant || {};
   if (grant.arenaChances) return number(game.arenaChances) >= ARENA_CHANCES_CAP;
   if (grant.stealChances) return number(game.chanceToSteal) >= STEAL_CHANCES_CAP;
-  if (grant.epicPass) return passCount(session, grant.epicPass) >= PASS_HOLD_MAX;
+  if (grant.epicPass) return number(game.academy?.passes?.[grant.epicPass]) >= PASS_HOLD_MAX;
+  if (grant.professionMark) return number(game.classQuest?.marks?.[grant.professionMark]) >= 1;
   return false;
 }
 
 function applyGrant(session, grant, now) {
   const game = session.game;
   const inventory = game.inventory;
+  if (grant.professionMark) {
+    game.classQuest ||= {};
+    game.classQuest.marks ||= {};
+    game.classQuest.marks[grant.professionMark] = 1;
+  }
   if (grant.crystals) {
     inventory.crystals = Math.max(0, number(inventory.crystals)) + grant.crystals;
     addStarShield(game, grant.crystals, now);
@@ -118,6 +131,7 @@ export function buyLuckItem(session, itemId, now = Date.now()) {
   if (!item) return { ok: false, reason: 'unknown_item' };
   const inventory = session?.game?.inventory;
   if (!inventory) return { ok: false, reason: 'inventory_missing' };
+  if (item.needLvl && level(session) < item.needLvl) return {ok:false,reason:'level_too_low',needLvl:item.needLvl};
   if (luckCoinsOf(session) < item.cost) return { ok: false, reason: 'not_enough_coins', missing: item.cost - luckCoinsOf(session) };
   if (isFull(session, item)) return { ok: false, reason: 'already_full' };
 
@@ -125,7 +139,7 @@ export function buyLuckItem(session, itemId, now = Date.now()) {
   if (item.catalogId) {
     // Rented epic equipment: a level below the grade is a heavy penalty, so it is not sold.
     if (level(session) < item.needLvl) return { ok: false, reason: 'level_too_low', needLvl: item.needLvl };
-    const rented = grantTimedItem(session, item.catalogId, TIMED_EPIC_DAYS, now);
+    const rented = grantTimedItem(session, item.catalogId, TIMED_EPIC_DAYS, now, {shadow:true,enchant:TIMED_EPIC_ENCHANT});
     if (!rented) return { ok: false, reason: 'delivery_failed' };
     extended = rented.extended;
   } else if (!applyGrant(session, item.grant, now)) {

@@ -7,7 +7,7 @@ export default [{
     count: 0,
     power: 1000,
     name: "Tiny HP Potion",
-    description: "Восстанавливает хп в количестве 1000 единиц"
+    description: "Восстанавливает 1000 HP тиками в течение 15 секунд."
 }, {
     type: "hp",
     bottleType: "potion",
@@ -15,7 +15,7 @@ export default [{
     count: 0,
     power: 3000,
     name: "Small HP Potion",
-    description: "Восстанавливает хп в количестве 3000 единиц"
+    description: "Восстанавливает 3000 HP тиками в течение 15 секунд."
 }, {
     type: "hp",
     bottleType: "potion",
@@ -23,7 +23,7 @@ export default [{
     count: 0,
     power: 8000,
     name: "Medium HP Potion",
-    description: "Восстанавливает хп в количестве 8000 единиц"
+    description: "Восстанавливает 8000 HP тиками в течение 15 секунд."
 }, {
     type: "hp",
     bottleType: "elixir",
@@ -31,7 +31,7 @@ export default [{
     count: 0,
     power: 45,
     name: "Small HP Elixir",
-    description: "Восстанавливает хп в количестве 45%"
+    description: "Восстанавливает 45% HP тиками в течение 15 секунд."
 }, {
     type: "mp",
     bottleType: "potion",
@@ -39,7 +39,7 @@ export default [{
     count: 0,
     power: 180,
     name: "Tiny MP Potion",
-    description: "Восстанавливает мп в количестве 180 единиц"
+    description: "Мгновенно восстанавливает 180 MP."
 }, {
     type: "mp",
     bottleType: "potion",
@@ -47,5 +47,5 @@ export default [{
     count: 0,
     power: 300,
     name: "Small MP Potion",
-    description: "Восстанавливает мп в количестве 300 единиц"
+    description: "Мгновенно восстанавливает 300 MP."
 }, ...buffPotions, ...elixirs.map(elixir => ({...elixir}))];

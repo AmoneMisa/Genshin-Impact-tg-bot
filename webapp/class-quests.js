@@ -78,6 +78,7 @@ export function promotionCard(item, level) {
   } else if (item.status === 'locked') {
     actions = `<small class="cq-lock">🔒 Нужен ${item.minLevel} уровень (сейчас ${level})</small>`;
   }
+  if (item.hasMark && ['available','active'].includes(item.status)) actions += `<button type="button" data-cq-action="mark" data-cq-to="${escapeHtml(item.to)}">Использовать марку профессии</button>`;
 
   return `
     <article class="cq-card status-${item.status} tier-${item.tier}" data-cq-card="${escapeHtml(item.to)}">
@@ -138,7 +139,7 @@ export async function openClassQuests({ api, renderState, haptic, statusElement 
         statusElement.textContent = `Профессия: ${payload.classTitle}.`;
         haptic('heavy');
       } else {
-        feedbackText = { start: 'Задание взято. Сражайся с боссами!', pay: 'Плата принята.', abandon: 'Задание отменено.' }[action] || '';
+        feedbackText = { start: 'Задание взято. Сражайся с боссами!', mark:'Марка принята. Осталось заплатить наставнику.', pay: 'Плата принята.', abandon: 'Задание отменено.' }[action] || '';
       }
     } catch (error) {
       if (error.payload?.quests) state = error.payload.quests;

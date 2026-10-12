@@ -8,10 +8,12 @@ import { l2IconHtml, L2_CATEGORY_ART, L2_MATERIAL_ART, L2_JEWELRY_ART } from './
 import { openMerchantsGame } from './merchants.js';
 import { openExchangeGame } from './exchange.js';
 import { openBonusGame } from './bonus.js';
-import { openLuckShopGame } from './luck-shop.js';
+import {auctionArt} from './auction.js';
 import { openAuctionGame } from './auction.js';
 import {icon} from './icons.js';
 import {storeViewHtml, bindStoreView} from './store-view.js';
+import {createGamePopup} from './game-popup.js';
+import {enhanceSelects} from './design/select.js';
 
 // Keep the category window underneath the goods: closing a child returns here.
 export async function openShopGame(options) {
@@ -26,7 +28,12 @@ export async function openShopGame(options) {
     ['potions', 'Банки', L2_CATEGORY_ART.consumable, goods('player')],
     ['crystals', 'Кристаллы', L2_CATEGORY_ART.crystal, goods('soul')],
     // High Five item 3276, Mark of Champion (Destroyer profession): icon.etc_jewel_gold_i00.
-    ['quest', 'Квест', 'icon-etc_jewel_gold_i00', null, 'Квестовые товары пока не продаются.'],
+    ['quest', 'Квест', 'icon-etc_jewel_gold_i00', goods('quest')],
+    ['epic', 'Теневые эпики', L2_JEWELRY_ART['blue coral ring'], goods('epic')],
+    ['buffs', 'Комплексные баффы', L2_CATEGORY_ART.consumable, goods('buffs')],
+    ['elixirs', 'Эликсиры', L2_CATEGORY_ART.consumable, goods('elixirs')],
+    ['tries', 'Попытки', L2_CATEGORY_ART.scroll, goods('tries')],
+    ['premium-scrolls', 'Блесс и дестракшен', L2_CATEGORY_ART.scroll, goods('scrolls')],
     ['dyes', 'Краски', L2_CATEGORY_ART.dye, merchant('mammon', 'dye')],
     ['scrolls', 'Свитки', L2_CATEGORY_ART.scroll, merchant('mammon', 'scroll')],
     ['life', 'ЛС', L2_CATEGORY_ART.lifestone, goods('stones')],
@@ -39,16 +46,13 @@ export async function openShopGame(options) {
     ['exchange', 'Пополнение CoL', L2_CATEGORY_ART.gold, () => openExchangeGame(options)],
     ['runes', 'Руны', L2_MATERIAL_ART.l2_8358, null, 'Руны пока не продаются.'],
   ];
-  const overlay = document.createElement('section');
-  overlay.className = 'game-overlay l2-store-overlay';
-  overlay.innerHTML = `<div class="overlay-backdrop"></div>
-    <div class="overlay-panel l2-store-panel">
-      <header class="l2-store-title"><h2>Магазин</h2><button type="button" class="overlay-close" aria-label="Закрыть">${icon('x')}</button></header>
+  const popup = createGamePopup({title:'Магазин',className:'l2-store-overlay',panelClass:'l2-store-panel',body:`
       <div class="l2-store-ornament" aria-hidden="true"><span></span></div>
       <div class="l2-store-grid">${categories.map(([id, label, art, open, reason]) => `<button type="button" class="l2-store-category" data-store-category="${id}" ${!open ? `aria-disabled="true" title="${reason}"` : ''}>${l2IconHtml(art)}<span>${label}</span></button>`).join('')}</div>
       <div class="l2-store-notice" role="status" aria-live="polite"></div>
-      <footer class="l2-store-footer"><button type="button" data-store-all>Все товары</button><button type="button" data-store-premium>Магазин COL</button><button type="button" data-store-auction>Аукцион</button></footer>
-    </div>`;
+      <footer class="l2-store-footer"><button type="button" data-store-all>Все товары</button><button type="button" data-store-auction>Аукцион</button></footer>
+    `});
+  const {overlay} = popup;
   const notice = overlay.querySelector('.l2-store-notice');
   let opening = false;
   async function launch(open, reason) {
@@ -66,13 +70,8 @@ export async function openShopGame(options) {
     button.addEventListener('click', () => launch(entry[3], entry[4]));
   });
   overlay.querySelector('[data-store-all]').addEventListener('click', () => launch(goods('all')));
-  overlay.querySelector('[data-store-premium]').addEventListener('click', () => launch(() => openLuckShopGame(options)));
   overlay.querySelector('[data-store-auction]').addEventListener('click', () => launch(() => openAuctionGame(options)));
-  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
-  overlay.querySelector('.overlay-close').addEventListener('click', close);
-  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('visible'));
+  popup.show();
 }
 
 /** Item art: palace styles show their painting, all other emblems are WebP. */
@@ -88,6 +87,10 @@ export const ITEM_ICONS = Object.freeze({
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 
 export function itemIconHtml(item) {
+  if (item.command.startsWith('col:')) {
+    const art = item.artIcon ? l2IconHtml(item.artIcon) : auctionArt(item.artItem ? {kind:'equipment',artItem:item.artItem} : item.artPotion ? {kind:'potion',artPotion:item.artPotion} : item.artMaterial ? {kind:'material',materialKey:item.artMaterial} : {kind:'material',materialKey:'skill_scroll'});
+    return `<span class="shop-icon ${item.shadow ? 'is-shadow-item' : ''}">${art}</span>`;
+  }
   if (item.command === 'adena-col') return `<span class="shop-icon">${materialIcon('gold')}</span>`;
   const soul=item.command.match(/^soul-(red|green|blue)-(\d+)$/);if(soul)return '<span class="shop-icon">'+materialIcon('soul_'+soul[1]+'_'+soul[2])+'</span>';
   const life=item.command.match(/^lifestoneMid-(C|B|A|S)$/);if(life)return '<span class="shop-icon">'+materialIcon('lifestone_mid_'+life[1])+'</span>';
@@ -110,6 +113,9 @@ const REASONS = {
   cooldown: 'Этот товар уже покупался и пока не обновился.',
   not_enough_gold: 'Недостаточно золота.',
   rejected: 'Покупка отклонена правилами магазина.',
+  already_full: 'Тут уже максимум попыток на сегодня.',
+  level_too_low: 'Твой уровень слишком низкий для этого предмета.',
+  delivery_failed: 'Не удалось выдать товар. Монеты не списаны.',
 };
 
 function formatNumber(value) {
@@ -140,21 +146,14 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
   let search = '';
   const PAGE_SIZE = 12;
 
-  const overlay = document.createElement('section');
-  overlay.className = 'game-overlay shop-overlay';
-  overlay.innerHTML = `
-    <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass shop-panel">
-      <header class="shop-head">
-        <button class="overlay-close shop-back" type="button" aria-label="Назад">${icon('chevron-left')}</button>
-        <h2>Магазин</h2>
-      </header>
-      <div class="shop-categories" data-shop-categories></div>
-      <input type="search" class="shop-search" data-shop-search placeholder="Поиск по названию" maxlength="40">
+  const popup = createGamePopup({title:'Магазин',className:'shop-overlay',panelClass:'glass shop-panel',canClose:()=>!pending,onClose:()=>window.clearInterval(timer),body:`
+      <div class="shop-filters"><div data-shop-categories></div>
+      <input type="search" class="shop-search" data-shop-search placeholder="Поиск по названию" maxlength="40"></div>
       <div class="shop-list" data-shop-list></div>
       <div class="pager" data-shop-pager></div>
       <div class="shop-feedback" data-shop-feedback aria-live="polite"></div>
-    </div>`;
+    `});
+  const {overlay} = popup;
 
   const list = overlay.querySelector('[data-shop-list]');
   const categories = overlay.querySelector('[data-shop-categories]');
@@ -167,13 +166,6 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     renderItems();
   });
 
-  const close = () => {
-    if (timer) window.clearInterval(timer);
-    overlay.classList.add('closing');
-    window.setTimeout(() => overlay.remove(), 180);
-  };
-  overlay.querySelector('.overlay-close').addEventListener('click', close);
-  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
   function itemCard(item) {
     const disabled = item.onCooldown || !item.canAfford;
@@ -195,18 +187,15 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
 
   function renderCategories() {
     const all = [{ id: 'all', title: 'Все' }, ...state.categories];
-    categories.innerHTML = all.map((item) => `
-      <button type="button" data-shop-category="${item.id}" class="${category === item.id ? 'active' : ''}">${escapeHtml(item.title)}</button>
-    `).join('');
-    categories.querySelectorAll('[data-shop-category]').forEach((button) => {
-      button.addEventListener('click', () => {
-        category = button.dataset.shopCategory;
+    categories.innerHTML = `<select data-shop-category aria-label="Вид товара">${all.map(item=>`<option value="${item.id}" ${category === item.id ? 'selected' : ''}>${escapeHtml(item.title)}</option>`).join('')}</select>`;
+    categories.querySelector('[data-shop-category]').addEventListener('change', event => {
+        category = event.target.value;
         page = 1;
         confirming = null;
         haptic('light');
         renderAll();
-      });
     });
+    enhanceSelects(categories);
   }
 
   function renderItems() {
@@ -226,8 +215,9 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
       name: item.name,
       note: item.onCooldown ? `Доступно через: ${remain(item.resetAt)}` : item.categoryLabel,
       description: item.message || '',
+      extraHtml: item.stats?.length ? `<ul class="shop-item-stats">${item.stats.map(text=>`<li>${escapeHtml(text)}</li>`).join('')}</ul>` : '',
       requires: [{ iconHtml: item.currency === 'luckCoins' ? luckCoinHtml(24) : materialIcon('gold'), label: item.currency === 'luckCoins' ? 'CoL' : 'Адена', need: item.cost, have: Number(item.currency === 'luckCoins' ? state.luckCoins : state.gold) || 0 }],
-      canBuy: !item.onCooldown && item.canAfford,
+      canBuy: !pending && item.available,
     }));
     list.innerHTML = storeViewHtml({ items: storeItems, selectedId: selectedCommand });
     purchased = null;
@@ -248,6 +238,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     if (pending || !command) return;
 
     pending = true;
+    renderItems();
     confirming = null;
     overlay.classList.add('busy');
     feedback.textContent = 'Проводим покупку…';
@@ -273,15 +264,15 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     } finally {
       pending = false;
       overlay.classList.remove('busy');
+      renderItems();
     }
   }
 
   renderAll();
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('visible'));
+  popup.show();
   timer = window.setInterval(() => {
     if (state.items.some((item) => item.onCooldown && Number(item.resetAt) <= Date.now())) {
-      state.items = state.items.map((item) => Number(item.resetAt) <= Date.now() ? { ...item, onCooldown: false, available: item.canAfford } : item);
+      state.items = state.items.map((item) => item.onCooldown && Number(item.resetAt) <= Date.now() ? { ...item, onCooldown: false, available: item.canAfford && !item.locked && !item.full } : item);
       renderItems();
     } else {
       list.querySelectorAll('.shop-item.cooldown button').forEach((button) => {

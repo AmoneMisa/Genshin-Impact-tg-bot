@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {settlePotionHealing} from '../functions/game/player/potionHealing.js';
 import useHealPotion from '../functions/game/player/useHealPotion.js';
 
 function fixture(hp = 400, power = 250, count = 2) {
@@ -18,6 +19,8 @@ test('heal potion adds healing to current HP', () => {
   const { session, potion } = fixture(400, 250, 2);
 
   assert.equal(useHealPotion(session, potion), 0);
+  assert.equal(session.game.gameClass.stats.hp, 400);
+  settlePotionHealing(session,session.game.hpPotion.startedAt+15000,1000);
   assert.equal(session.game.gameClass.stats.hp, 650);
   assert.equal(potion.count, 1);
 });
@@ -26,6 +29,7 @@ test('heal potion caps HP at max and consumes one potion', () => {
   const { session, potion } = fixture(900, 250, 2);
 
   assert.equal(useHealPotion(session, potion), 0);
+  settlePotionHealing(session,session.game.hpPotion.startedAt+15000,1000);
   assert.equal(session.game.gameClass.stats.hp, 1000);
   assert.equal(potion.count, 1);
 });

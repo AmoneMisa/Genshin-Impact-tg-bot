@@ -289,7 +289,7 @@ test('a failed plain scroll above the safe level destroys the item and pays crys
   assert.equal(player.game.equipmentStats.rightHand, null);
 });
 
-test('a failed blessed scroll only drops the item back to the safe level', () => {
+test('a failed blessed scroll resets the item to +0', () => {
   const sword = catalogItem('D:weapon:oneHandedSword', { enchant: 9 });
   const player = session([sword], 0);
   player.game.inventory.materials = { blessed_D: 1 };
@@ -297,8 +297,8 @@ test('a failed blessed scroll only drops the item back to the safe level', () =>
   const result = withRandom(0.99, () => performEquipmentAction(player, keyOf(player, sword), 'enchant', { blessed: true }));
 
   assert.equal(result.outcome, 'reset');
-  assert.equal(result.level, 3);
-  assert.equal(sword.enchant, 3);
+  assert.equal(result.level, 0);
+  assert.equal(sword.enchant, 0);
   assert.equal(player.game.inventory.equipment.items.length, 1);
 });
 

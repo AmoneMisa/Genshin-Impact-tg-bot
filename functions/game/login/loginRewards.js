@@ -71,7 +71,7 @@ function rewardRows(reward={}) {
 }
 function itemChoices(info) {
     if(info.kind==='shots')return SHOT_GRADES.flatMap(grade=>SHOT_KINDS.map(kind=>({id:`${kind.id}:${grade}`,grade,kind:kind.id,name:`${kind.label} ${gradeLabel(grade)}`,count:shotCouponAmount(info.grade,grade,kind.id)})));
-    if(info.kind==='buff')return buffPotions.map(p=>({id:p.id,name:p.name,count:1}));
+    if(info.kind==='buff')return buffPotions.filter(p=>!p.donateOnly).map(p=>({id:p.id,name:p.name,count:1}));
     if(info.kind==='shadow_weapon')return standardItems(info.grade).filter(i=>i.mainType==='weapon').map(i=>({id:i.id,name:i.name,count:1}));
     if(info.kind==='shadow_armor')return ['heavy','light','robe'].map(id=>({id,name:({heavy:'Тяжёлая броня',light:'Лёгкая броня',robe:'Мантия'})[id],count:standardItems(info.grade).filter(i=>i.mainType==='armor'&&i.kind===id).length}));
     if(info.kind==='shadow_jewelry')return ['ring','earring','necklace','set'].map(id=>({id,name:({ring:'Два кольца',earring:'Две серьги',necklace:'Ожерелье',set:'Полный комплект бижутерии'})[id],count:id==='set'?5:id==='necklace'?1:2}));

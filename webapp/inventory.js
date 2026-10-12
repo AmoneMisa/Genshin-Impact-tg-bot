@@ -165,7 +165,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <div>
           <strong>${escapeHtml(item.name)}</strong>
           <small>${escapeHtml(item.description)}</small>
-          <em>${item.type==='buff'?'Эффект · 20 минут':`${item.type.toUpperCase()} · сила ${power}`} · осталось ${formatNumber(item.count)}</em>
+          <em>${item.type==='buff'?`Эффект · ${Math.round((item.seconds || 1200)/60)} мин.`:`${item.type.toUpperCase()} · сила ${power}`} · осталось ${formatNumber(item.count)}</em>
         </div>
         <button type="button" data-inventory-potion="${escapeHtml(item.key)}" ${usable ? '' : 'disabled'}>Выпить</button>
       </section>`;
@@ -177,9 +177,9 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
 
   function resultHtml() {
     if (!lastResult) return '';
-    if(lastResult.resource==='buff')return `<section class="inventory-result"><div><strong>${escapeHtml(lastResult.potion?.name||'Эффект активен')}</strong><small>20 минут · повторное использование обновляет время</small></div></section>`;
+    if(lastResult.resource==='buff')return `<section class="inventory-result"><div><strong>${escapeHtml(lastResult.potion?.name||'Эффект активен')}</strong><small>${Math.round((lastResult.potion?.seconds || 1200)/60)} мин. · повторное использование обновляет время</small></div></section>`;
     const resource = lastResult.resource === 'cp' ? 'CP' : lastResult.resource === 'mp' ? 'MP' : 'HP';
-    return `<section class="inventory-result ${lastResult.resource === 'mp' ? 'mp' : 'hp'}"><span>+</span><div><strong>${formatNumber(lastResult.restored)} ${resource}</strong><small>${escapeHtml(lastResult.potion?.name || '')}</small></div></section>`;
+    return `<section class="inventory-result ${lastResult.resource === 'mp' ? 'mp' : 'hp'}"><span>+</span><div><strong>${formatNumber(lastResult.healing || lastResult.restored)} ${resource}${lastResult.durationSeconds ? ` · за ${lastResult.durationSeconds} сек.` : ''}</strong><small>${escapeHtml(lastResult.potion?.name || '')}</small></div></section>`;
   }
 
   function render() {

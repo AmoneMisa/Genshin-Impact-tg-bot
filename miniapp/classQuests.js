@@ -4,6 +4,7 @@ import {
   payQuestStep,
   promoteClass,
   startClassQuest,
+  useProfessionMark,
 } from '../functions/game/classes/classQuests.js';
 import { listMaterials } from '../functions/game/player/materials.js';
 
@@ -28,6 +29,9 @@ function withState(session, result) {
 
 export function startClassQuestForMiniApp(session, to) {
   return withState(session, startClassQuest(session, String(to || '')));
+}
+export function useProfessionMarkForMiniApp(session, to) {
+  return withState(session, useProfessionMark(session, String(to || '')));
 }
 
 export function payClassQuestForMiniApp(session) {

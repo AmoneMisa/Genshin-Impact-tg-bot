@@ -1,6 +1,6 @@
 import {SOUL_MATERIALS} from './soulCrystalData.js';
 import {SHOT_GRADES, SHOT_KINDS, gradeLabel, shotKey} from './shotsData.js';
-import {ATTRIBUTE_TIERS, ELEMENTS, LIFESTONE_GRADES, LIFESTONE_TIERS, attributeKey, lifestoneKey} from './augmentData.js';
+import {ATTRIBUTE_TIERS, ELEMENTS, LIFESTONE_GRADES, LIFESTONE_LEVELS, LIFESTONE_TIERS, attributeKey, lifestoneKey} from './augmentData.js';
 
 // Craft/upgrade materials kept in inventory.materials = {key: count}. Skill
 // enchanting (skillEnchant.js) spends them; bosses and minions drop them
@@ -31,9 +31,9 @@ const TYPED_SCROLLS = ENCHANT_GRADES.flatMap(grade => ['weapon', 'armor'].flatMa
 // and jewellery. The plain stone keeps the old key; better ones carry a skill chance on weapons.
 const lifeStones = LIFESTONE_TIERS.flatMap(tier => LIFESTONE_GRADES.map(grade => ({
     key: lifestoneKey(grade, tier.id),
-    name: `Камень жизни${tier.label ? `: ${tier.label}` : ''} (${grade})`,
+    name: `Камень жизни${tier.label ? `: ${tier.label}` : ''} · ${LIFESTONE_LEVELS[grade]} ур.`,
     icon: '🔮',
-    description: `Аугментация оружия и бижутерии грейда ${grade}: случайный бонус${tier.skill ? `, у оружия с шансом ${Math.round(tier.skill * 100)}% ещё и навык` : ''}. Повторное применение заменяет бонус. Падает с боссов.`,
+    description: 'Аугментация оружия и бижутерии: случайный бонус. Повторное применение заменяет бонус. Падает с боссов.',
 })));
 
 // Attribute stones (functions/game/equipment/attributes.js): an element for a weapon's attack or an

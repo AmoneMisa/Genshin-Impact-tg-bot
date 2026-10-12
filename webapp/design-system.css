@@ -61,6 +61,7 @@
   --blur-card: 18px;
   --blur-panel: 24px;
   --control-height: 42px;
+  --radius-control: 6px;
 
   --motion-fast: 140ms;
   --motion-medium: 220ms;
@@ -976,3 +977,56 @@ a:focus-visible {
 .login-pack-icon.is-shadow-item, .game-overlay .inventory-panel .inv-slot.is-shadow-item, .game-overlay .inv-detail > img.is-shadow-item, .loot-art.loot-art-2d.is-shadow-item, .game-overlay .paper-doll-slot:has(.loot-art.is-shadow-item) { --shadow-item-border:#f18bc7; border:2px solid #f18bc7; box-shadow:inset 0 0 0 1px #812852; box-sizing:border-box; }
 .loot-art-2d.is-shadow-item { border-radius:4px; }
 .inv-detail>img.is-shadow-item { padding:2px; }
+
+/* Controls share one shape. Context selectors override legacy feature rules,
+ * including selected/disabled states, without changing card or portrait shapes. */
+body button,
+body [role="button"],
+body summary,
+body input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body select,
+body textarea,
+body .game-overlay .overlay-panel button,
+body .game-overlay .overlay-panel summary,
+body .game-overlay .overlay-panel input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body .game-overlay .overlay-panel select,
+body .game-overlay .overlay-panel textarea,
+body .game-overlay .overlay-panel .overlay-close,
+body .game-overlay .overlay-panel .ds-round,
+body .game-overlay .overlay-panel .mmo-round,
+body .game-dialog-panel button {
+  border-radius: var(--radius-control);
+}
+
+body input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body select,
+body textarea {
+  box-sizing: border-box;
+  min-height: var(--control-height);
+  padding: 9px 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-input);
+  color: var(--text);
+  font: inherit;
+  color-scheme: dark;
+}
+body input::placeholder, body textarea::placeholder { color: var(--muted); opacity: 1; }
+body select option, body select optgroup { background: #17121e; color: var(--text); }
+body .game-overlay .overlay-panel input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body .game-overlay .overlay-panel select,
+body .game-overlay .overlay-panel textarea {
+  min-height: var(--control-height);
+  padding: 9px 12px;
+  border-color: var(--border-strong);
+  background: var(--surface-input);
+  color: var(--text);
+}
+.ds-select { position: relative; min-width: 0; }
+.ds-select > select { position: absolute; width: 1px; height: 1px; padding: 0; opacity: 0; pointer-events: none; }
+.ds-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: var(--control-height); padding: 9px 12px; border: 1px solid var(--border-strong); background: var(--surface-input); color: var(--text); font: inherit; text-align: left; }
+.ds-select-trigger::after { content: ''; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); flex: 0 0 7px; margin: -4px 2px 0; }
+.ds-select-menu { position: absolute; z-index: 100; top: calc(100% + 4px); left: 0; right: 0; max-height: 240px; overflow: auto; margin: 0; padding: 4px; list-style: none; border: 1px solid var(--border-strong); border-radius: var(--radius-control); background: #17121e; box-shadow: 0 8px 24px #0008; }
+.ds-select-menu[hidden] { display: none; }
+.ds-select-menu [role="option"] { padding: 10px; border-radius: var(--radius-control); cursor: pointer; }
+.ds-select-menu [aria-selected="true"], .ds-select-menu .highlighted { background: #49361c; color: var(--gold-bright); }
+.ds-select-menu [aria-disabled="true"] { opacity: .45; cursor: default; }

@@ -219,7 +219,7 @@ test('enchanting adds power to weapons and defence to everything else, doubling 
   assert.equal(enchantExtras(helmet).power, undefined);
 
   assert.equal(safeEnchantLevel(helmet), 3);
-  assert.equal(safeEnchantLevel(instantiate(findCatalogItem('B:armor:robe:fullBody'))), 4);
+  assert.equal(safeEnchantLevel(instantiate(findCatalogItem('B:armor:robe:fullBody'))), 3);
 });
 
 test('enchant bonus reaches combat: attack and defence grow with the level', () => {
@@ -309,11 +309,11 @@ test('boss drops give scrolls and crystals of the fighter grade, more from harde
   assert.equal(enchantGradeForLevel(99), 'S84');
   const member = { game: { stats: { lvl: 82 }, inventory: {} } };
   const drops = rollEnchantDrops(member, { tier: 1, place: 1, random: () => 0 });
-  assert.deepEqual(drops.map((drop) => drop.item), ['scroll_S80', 'blessed_S80', 'crystal_S80', 'lifestone_S80', 'lifestone_mid_S80', 'lifestone_high_S80', 'lifestone_top_S80']);
-  assert.ok(getMaterialCount(member, 'scroll_S80') >= 1);
+  assert.deepEqual(drops.map((drop) => drop.item), ['scroll_S', 'blessed_S', 'crystal_S80', 'lifestone_S80', 'lifestone_mid_S80', 'lifestone_high_S80', 'lifestone_top_S80']);
+  assert.ok(getMaterialCount(member, 'scroll_S') >= 1);
   const hard = { game: { stats: { lvl: 82 }, inventory: {} } };
   rollEnchantDrops(hard, { tier: 3, place: 1, random: () => 0 });
-  assert.ok(getMaterialCount(hard, 'scroll_S80') >= 3 && getMaterialCount(hard, 'scroll_S80') <= 6);
+  assert.ok(getMaterialCount(hard, 'scroll_S') >= 3 && getMaterialCount(hard, 'scroll_S') <= 6);
   assert.deepEqual(rollEnchantDrops({ game: { stats: { lvl: 5 }, inventory: {} } }, { random: () => 0 }), []);
   assert.deepEqual(rollEnchantDrops(member, { random: () => 0.999 }), []);
 });

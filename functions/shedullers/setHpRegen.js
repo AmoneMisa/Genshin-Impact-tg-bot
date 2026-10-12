@@ -25,6 +25,7 @@ export default async function regenHp() {
                 if (!gameClass?.stats) continue;
 
                 const currentHp = getCurrentHp(member);
+                if (member.needsSave) updated = true;
                 const maxHp = getMaxHp(member);
 
                 // Если HP уже на максимуме

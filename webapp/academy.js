@@ -36,7 +36,7 @@ function passHtml(pass) {
       <button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}" ${pass.canStart ? '' : 'disabled'}>Ещё квест</button></article>`;
   }
   if (!pass.active) {
-    return `<article class="academy-row"><div>${head}<small>Квест: ${escapeHtml(pass.npc)} · с ${fmt(pass.minLevel)} ур. · или ${fmt(pass.price)} ${luckCoinHtml(14)} в Донат-магазине</small></div>
+    return `<article class="academy-row"><div>${head}<small>Квест: ${escapeHtml(pass.npc)} · с ${fmt(pass.minLevel)} ур. · или ${fmt(pass.price)} ${luckCoinHtml(14)} в разделе «Квест» магазина</small></div>
       <button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}" ${pass.canStart ? '' : 'disabled'}>${pass.canStart ? 'Взять квест' : `С ${fmt(pass.minLevel)} ур.`}</button></article>`;
   }
   const step = pass.step;

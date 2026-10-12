@@ -96,24 +96,24 @@ test('empty potions are hidden without shifting the keys used to drink remaining
  assert.deepEqual(getInventoryState(session).potions,[]);
 });
 
-test('HP potion restores additively and decrements only its own stack', () => {
+test('HP potion queues 15-second healing and decrements only its own stack', () => {
   const session = player();
   const result = useInventoryPotion(session, '0');
 
   assert.equal(result.ok, true);
   assert.equal(result.resource, 'hp');
-  assert.equal(result.restored, 1000);
-  assert.equal(session.game.gameClass.stats.hp, 2000);
+  assert.equal(result.healing, 1000);
+  assert.equal(session.game.gameClass.stats.hp, 1000);
   assert.equal(session.game.inventory.potions.items[0].count, 1);
 });
 
-test('HP elixir restores a percentage of max HP', () => {
+test('HP elixir queues a percentage of max HP', () => {
   const session = player();
   const result = useInventoryPotion(session, '1');
 
   assert.equal(result.ok, true);
-  assert.equal(result.restored, 2250);
-  assert.equal(session.game.gameClass.stats.hp, 3250);
+  assert.equal(result.healing, 2250);
+  assert.equal(session.game.gameClass.stats.hp, 1000);
   assert.equal(session.game.inventory.potions.items[1].count, 0);
 });
 

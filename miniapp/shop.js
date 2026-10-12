@@ -1,10 +1,11 @@
 import { ADENA_OFFER } from '../template/adenaOffer.js';
 import shopTemplate from '../template/shopTemplate.js';
 import shopSellItem from '../functions/game/shop/shopSellItem.js';
+import {getLuckShopState, buyLuckItem} from './luck.js';
 
 const CATEGORY_LABELS = {
   currency: 'Адена за CoL',
-  soul: 'Кристаллы души 0–13',
+  soul: 'Кристаллы души 0–17',
   boss: 'Для босса',
   player: 'Для игрока',
   sword: 'Для меча',
@@ -12,6 +13,12 @@ const CATEGORY_LABELS = {
   builds: 'Для построек',
   stones: 'Камни жизни',
   shots: 'Заряды',
+  quest: 'Квест',
+  epic: 'Теневые эпики',
+  scrolls: 'Благословенные и дестракшен свитки',
+  elixirs: 'Эликсиры',
+  buffs: 'Комплексные баффы',
+  tries: 'Попытки',
 };
 
 function number(value, fallback = 0) {
@@ -46,6 +53,13 @@ export function getShopState(session, now = Date.now()) {
     };
   });
 
+  for (const item of getLuckShopState(session, now).items) {
+    const category = {passes:'quest',quest:'quest',lifestones:'stones'}[item.group] || item.group;
+    items.push({...item, id:`col:${item.id}`, command:`col:${item.id}`, name:item.title,
+      category, categoryLabel:CATEGORY_LABELS[category] || category, currency:'luckCoins',
+      canAfford:item.affordable, available:item.affordable && !item.full && !item.locked,
+      onCooldown:false, resetAt:0, message:[item.subtitle,item.description].filter(Boolean).join(' ')});
+  }
   return {
     gold,
     luckCoins: coins,
@@ -55,6 +69,11 @@ export function getShopState(session, now = Date.now()) {
 }
 
 export async function buyShopItem(session, command, now = Date.now()) {
+  if (typeof command === 'string' && command.startsWith('col:')) {
+    const result = buyLuckItem(session, command.slice(4), now);
+    return {...result, action:'buy', item:result.item && {...result.item,name:result.item.title},
+      message:result.ok ? `Куплено: ${result.item.title}.` : '', shop:getShopState(session,now)};
+  }
   if (command === ADENA_OFFER.command) {
     const inventory = session?.game?.inventory;
     if (!inventory) return {ok:false, reason:'inventory_missing', shop:getShopState(session,now)};

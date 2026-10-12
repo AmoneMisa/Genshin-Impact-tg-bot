@@ -4,6 +4,8 @@
 
 /** Grades whose weapons and jewellery can be augmented. */
 export const LIFESTONE_GRADES = Object.freeze(['C', 'B', 'A', 'S', 'S80', 'S84']);
+// Original client levels; internal material keys remain compatible with saved inventories.
+export const LIFESTONE_LEVELS = Object.freeze({C:52,B:61,A:67,S:76,S80:80,S84:84});
 
 /**
  * Life Stone qualities. `power` scales the bonus, `gold` the price, `skill` is the chance that a weapon

@@ -11,6 +11,8 @@ export const L2_HF_ARMOR_ART=Object.freeze(["icon-armor_t74_u_i00","icon-armor_t
 const published=new Set([...Object.values(L2_MATERIAL_ART),...Object.values(L2_JEWELRY_ART),...Object.values(L2_ITEM_IDENTITIES),...Object.values(L2_CATEGORY_ART),...Object.values(L2_UI_ART),...L2_HF_CLOAKS.map(row=>row.art),...L2_HF_ARMOR_ART].filter(Boolean));
 // Original Freya necklace icon, shared by the normal and blessed client items.
 published.add('icon-accessary_queen_of_ice_necklace_i00');
+// High Five quest 7267: Vacualite Floating Stone (Valakas entry).
+published.add('icon-etc_vacualite_glowing_white_i00');
 export function l2IconUrl(key,size=128){return published.has(key)?`/art/l2/${key}-${[128,256,512].includes(size)?size:128}.webp`:null;}
 export function l2MaterialIcon(key){const art=L2_MATERIAL_ART[key];return art?l2IconHtml(art):'';}
 export function l2IconHtml(key){const src=l2IconUrl(key);return src?`<img class="mat-icon l2-client-icon" src="${src}" srcset="${src} 1x, ${l2IconUrl(key,256)} 2x" width="22" height="22" alt="" loading="lazy" decoding="async" draggable="false">`:'';}

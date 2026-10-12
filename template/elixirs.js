@@ -20,5 +20,5 @@ export default GRADES.flatMap(({grade, needLvl, power}) => KINDS.map(({type, id,
   count: 0,
   power,
   name: `${name} (${grade})`,
-  description: `Восстанавливает ${power}% ${text}. Нужен ${needLvl} уровень.`,
+  description: `${type === 'hp' ? 'Восстанавливает' : 'Мгновенно восстанавливает'} ${power}% ${text}${type === 'hp' ? ' тиками в течение 15 секунд' : ''}. Нужен ${needLvl} уровень.`,
 }))).map(Object.freeze);

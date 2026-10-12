@@ -10,6 +10,7 @@ import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getEquipStatByName from '../functions/game/player/getters/getEquipStatByName.js';
 import potionsTemplate from '../template/potionsInInventoryTemplate.js';
 import potionRestore, { potionShare } from '../functions/game/player/potionRestore.js';
+import {queuePotionHealing,HP_POTION_SECONDS} from '../functions/game/player/potionHealing.js';
 import buffPotions from '../template/buffPotions.js';
 import {applyPotionBuff,activePotionBuffs} from '../functions/game/player/potionBuffs.js';
 import {getEquipmentState,performEquipmentAction} from './equipment.js';
@@ -48,7 +49,9 @@ function potionDto(item, index) {
     // Share of the maximum a flat potion restores at the least (0 for elixirs, which are percentages).
     share: Math.round(potionShare(item) * 100),
     name: templateName(item) || item?.name || `Potion ${index + 1}`,
-    description: item?.description || '',
+    description: item?.type === 'hp' ? `Восстанавливает ${item.power}${item.bottleType === 'elixir' ? '%' : ''} HP тиками в течение 15 секунд.`
+      : item?.type === 'mp' ? `Мгновенно восстанавливает ${item.power}${item.bottleType === 'elixir' ? '%' : ''} MP.`
+        : buffPotions.find(p=>p.id === item?.id)?.description || item?.description || '',
     id:item?.id || null,
     artKey:item?.artKey || null,
     seconds:item?.seconds || null,
@@ -141,6 +144,7 @@ export function useInventoryPotion(session, rawKey) {
 
   const multiplier = Math.max(0, number(getEquipStatByName(session, 'healPowerPotionsMul', true), 1));
   let restored = 0;
+  let healing = 0;
   let resource = potion.type;
 
   if (potion.type === 'buff') {
@@ -154,9 +158,8 @@ export function useInventoryPotion(session, rawKey) {
       return { ok: false, reason: 'hp_full', inventory: getInventoryState(session) };
     }
     const base = potionRestore(potion, maxHp);
-    const next = Math.min(maxHp, hp + Math.max(0, base * multiplier));
-    restored = Math.max(0, Math.round(next - hp));
-    session.game.gameClass.stats.hp = next;
+    healing = Math.max(0, base * multiplier);
+    queuePotionHealing(session,healing);
   } else if (potion.type === 'cp') {
     const cp = number(getCurrentCp(session, gameClass));
     const maxCp = Math.max(1, number(getMaxCp(session, gameClass), 1));
@@ -186,6 +189,7 @@ export function useInventoryPotion(session, rawKey) {
     action: 'use_potion',
     resource,
     restored,
+    healing, durationSeconds:healing ? HP_POTION_SECONDS : 0,
     potion: potionDto(potion, index),
     inventory: getInventoryState(session),
   };

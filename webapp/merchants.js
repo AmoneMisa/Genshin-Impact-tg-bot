@@ -5,6 +5,8 @@ import {L2_UI_ART,l2IconHtml} from './art/l2-icon-art.js';
 import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
 import {storeViewHtml, bindStoreView} from './store-view.js';
+import {enhanceSelects} from './design/select.js';
+import {createGamePopup} from './game-popup.js';
 
 // The merchants: equipment, gemstones, dyes, recipe books, ammunition and scrolls sold as in the real Lineage II
 // shops. The server filters and pages the stock, so only one page of a merchant is ever loaded.
@@ -44,25 +46,15 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   let quantity = 1;
   let searchTimer = 0;
 
-  const overlay = document.createElement('section');
-  overlay.className = 'game-overlay merchants-overlay';
-  overlay.innerHTML = `
-    <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass merchants-panel">
-      <header class="shop-head">
-        <button class="overlay-close shop-back" type="button" aria-label="Закрыть">←</button>
-        <h2>Магазин</h2>
-      </header>
+  const popup = createGamePopup({title:'Магазин',className:'merchants-overlay',panelClass:'glass merchants-panel',canClose:()=>!pending,onClose:()=>window.clearTimeout(searchTimer),body:`
       <div class="shop-categories" data-tabs></div>
       <div data-body></div>
       <div class="shop-feedback" data-feedback aria-live="polite"></div>
-    </div>`;
+    `});
+  const {overlay} = popup;
   const tabs = overlay.querySelector('[data-tabs]');
   const body = overlay.querySelector('[data-body]');
   const feedback = overlay.querySelector('[data-feedback]');
-  const close = () => { window.clearTimeout(searchTimer); overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
-  overlay.querySelector('.overlay-close').addEventListener('click', close);
-  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
   async function load(path = '/api/merchants', payload = {}) {
     if (pending) return null;
@@ -145,8 +137,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   function render() {
     if (!state) { body.innerHTML = '<div class="shop-empty">Загрузка…</div>'; return; }
     const active = tab || state.merchant;
-    tabs.innerHTML = state.merchants.map(merchant => `<button type="button" data-tab="${escapeHtml(merchant.id)}" class="${merchant.id === active ? 'active' : ''}">${escapeHtml(CATEGORY_NAMES[merchant.id])}</button>`).join('')
-      + `<button type="button" data-tab="${CONVERT_TAB}" class="${active === CONVERT_TAB ? 'active' : ''}">Боеприпасы</button>`;
+    tabs.replaceChildren();
     const ammo = state.ammo ? `<p class="merchant-note">В руках: ${escapeHtml(state.ammo.name)} — ${number(state.ammo.count)} шт.</p>` : '';
     if (active === CONVERT_TAB) {
       body.innerHTML = ammo + convertHtml();
@@ -160,6 +151,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
           <button type="button" class="equipment-action" data-page="${state.page + 1}" ${state.page >= state.pages ? 'disabled' : ''}>→</button></div>`;
     }
     bind();
+    enhanceSelects(body);
   }
 
   function bind() {
@@ -215,8 +207,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     }
   }
 
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('visible'));
+  popup.show();
   render();
   await load();
 }

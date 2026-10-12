@@ -53,6 +53,8 @@ for(const [colour,element] of Object.entries({red:'fire',green:'wind',blue:'wate
 for(const [element,colour] of Object.entries({fire:'red',water:'blue',wind:'green',earth:'gold',holy:'silver',dark:'white'}))for(const tier of ['stone','crystal','jewel'])set(`attr_${tier}_${element}`,tier==='jewel'?`icon.etc_jewel_${colour}_i00`:`icon.etc_${element==='dark'?'unholy':element}_${tier}_i00`);
 for(const [egg,original] of Object.entries({wyvern:'etc_basilisk_egg_i00',dragon:'etc_dragon_egg_i00',ancient:'etc_dragon_egg_i05'}))set('egg_'+egg,'icon.'+original);
 set('gold','icon.etc_adena_i00');set('aa','icon.etc_ancient_adena_i00');
+// Original raid entry quest items (High Five).
+for(const [key,original] of Object.entries({baium:'etc_piece_of_cloth_red_i00',frintezza:'etc_scroll_gray_i00',antharas:'etc_plate_blue_i00',valakas:'etc_vacualite_glowing_white_i00',beleth:'accessary_dynasty_ring_i00'})) set('pass_'+key,'icon.'+original);
 for(const item of getCatalog().filter(item=>item.mainType==='jewelry')){
  const value=named(item.name);if(value)catalog[item.name.toLowerCase()]=value;
 }

@@ -39,7 +39,6 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'buffs', title: 'Баффы', subtitle: 'Усиления класса на 20 минут', icon: '✨', status: 'webgl' },
   { id: 'passives', title: 'Пассивные навыки', subtitle: 'Постоянные бонусы класса за SP', icon: '🛡️', status: 'webgl' },
   { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
-  { id: 'luckShop', title: 'Донат-магазин', subtitle: 'Эпики, свитки, эликсиры за монеты удачи', icon: '🍀', status: 'webgl' },
   { id: 'auction', title: 'Аукцион', subtitle: 'Купить и продать за золото', icon: '⚖️', status: 'webgl' },
   { id: 'exchange', title: 'Пополнение CoL', subtitle: 'Монеты удачи за Telegram Stars', icon: 'coin', status: 'webgl' },
   { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },

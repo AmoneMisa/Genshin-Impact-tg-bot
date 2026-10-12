@@ -1,7 +1,13 @@
 /* The inside of a shop category (store-view.js): item grid on the left, information, requirements and quantity on the right. */
 .store-view { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; min-width: 0; }
-.store-grid { display: grid; grid-template-columns: repeat(auto-fill, 48px); gap: 5px; align-content: start; padding: 8px; max-height: 360px; overflow: auto; border: 1px solid #6b5326; border-radius: 6px; background: #0c0a0f; scrollbar-width: thin; scrollbar-color: #9b7b43 #100d16; }
-.store-slot { position: relative; width: 48px; height: 48px; padding: 0; display: grid; place-items: center; border: 1px solid #3a3440; border-radius: 4px; background: radial-gradient(circle at 50% 40%, #2a2233, #0e0c12); }
+.store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 5px; align-content: start; padding: 8px; max-height: 360px; overflow: auto; border: 1px solid #6b5326; border-radius: 6px; background: #0c0a0f; scrollbar-width: thin; scrollbar-color: #9b7b43 #100d16; }
+.store-slot { position: relative; width: 100%; height: 48px; padding: 0; display: grid; place-items: center; border: 1px solid #3a3440; border-radius: var(--radius-control,6px); background: radial-gradient(circle at 50% 40%, #2a2233, #0e0c12); }
+.store-slot:has(.is-shadow-item), .store-slot.selected:has(.is-shadow-item), .store-icon .is-shadow-item { border:2px solid #f18bc7; box-sizing:border-box; box-shadow:inset 0 0 0 1px #812852; }
+.shop-item-stats { padding-left:16px; margin:8px 0 0; font:12px/1.6 system-ui; color:var(--text-soft); }
+.shop-filters { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px; margin-bottom:12px; }
+.shop-filters > * { min-width:0; width:100%; }
+.shop-filters .shop-search { margin:0; }
+@media(max-width:359px) { .shop-filters { grid-template-columns:minmax(0,1fr); } }
 .store-slot img, .store-slot .shop-icon { width: 40px; height: 40px; object-fit: contain; }
 .store-slot.poor { opacity: .55; }
 .store-slot.selected { border-color: #d8b36a; box-shadow: 0 0 0 1px #d8b36a, 0 0 10px rgba(216, 179, 106, .45); opacity: 1; }

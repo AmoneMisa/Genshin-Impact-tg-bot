@@ -7,6 +7,7 @@ import unequipItem from './unequipItem.js';
 
 export const DAY_MS = 24 * 60 * 60 * 1000;
 export const TIMED_EPIC_DAYS = 7;
+export const TIMED_EPIC_ENCHANT = 8;
 
 export const isTimedItem = item => Boolean(item?.timed) && Number(item.expiresAt) > 0;
 export const isExpiredItem = (item, now = Date.now()) => isTimedItem(item) && Number(item.expiresAt) <= now;
@@ -44,17 +45,18 @@ export function expireTimedItems(session, now = Date.now()) {
  * Rents a catalog item for `days`: a new copy, or +days on the copy the player already has.
  * Returns {item, extended} or null when the catalog has no such item.
  */
-export function grantTimedItem(session, catalogId, days = TIMED_EPIC_DAYS, now = Date.now()) {
+export function grantTimedItem(session, catalogId, days = TIMED_EPIC_DAYS, now = Date.now(), {shadow=false,enchant=0} = {}) {
     const definition = findCatalogItem(catalogId);
     const list = items(session);
     if (!definition || !Array.isArray(list)) return null;
 
-    const own = list.find(item => isTimedItem(item) && !item.shadow && item.id === definition.id);
+    const own = list.find(item => isTimedItem(item) && Boolean(item.shadow) === shadow && (!shadow || item.enchant === enchant) && item.id === definition.id);
     if (own) {
         own.expiresAt = Math.max(Number(own.expiresAt), now) + days * DAY_MS;
         return {item: own, extended: true};
     }
-    const item = instantiate(definition);
+    const item = instantiate(definition,enchant);
+    if(shadow)Object.assign(item,{shadow:true,bound:true,noTrade:true,tradeable:false});
     item.timed = true;
     item.expiresAt = now + days * DAY_MS;
     list.push(item);

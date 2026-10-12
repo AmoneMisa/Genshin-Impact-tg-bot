@@ -1,4 +1,5 @@
 import {requestJson} from './request-json.js';
+import {observeSelects} from './design/select.js';
 import {ensureFeatureStyles} from './feature-styles.js';
 import { language } from './i18n/init.js';
 const openLanguageGame = (...args) => Promise.all([ensureFeatureStyles(),import('./language.js')]).then(([,module]) => module.openLanguageGame(...args));
@@ -10,7 +11,6 @@ const openPartyGame = (...args) => Promise.all([ensureFeatureStyles(),import('./
 const openMerchantsGame = (...args) => Promise.all([ensureFeatureStyles(),import('./merchants.js')]).then(([,module]) => module.openMerchantsGame(...args));
 const openTattoosGame = (...args) => Promise.all([ensureFeatureStyles(),import('./tattoos.js')]).then(([,module]) => module.openTattoosGame(...args));
 const openFishingGame = (...args) => Promise.all([ensureFeatureStyles(),import('./fishing.js')]).then(([,module]) => module.openFishingGame(...args));
-const openLuckShopGame = (...args) => Promise.all([ensureFeatureStyles(),import('./luck-shop.js')]).then(([,module]) => module.openLuckShopGame(...args));
 const openAuctionGame = (...args) => Promise.all([ensureFeatureStyles(),import('./auction.js')]).then(([,module]) => module.openAuctionGame(...args));
 import { startItemArt } from './item-art-runtime.js';
 import { installOverlayA11y } from './overlay-a11y.js';
@@ -147,7 +147,7 @@ const launchers = {
   language: openLanguageGame,
   buffs: options => openCharacterPage(options, 'effects'),
   passives: options => openCharacterPage(options, 'skills'),
-  luckShop: openLuckShopGame,
+  luckShop: openShopGame,
   auction: openAuctionGame,
   mail: openMailGame,
   promo: openPromoGame,
@@ -375,3 +375,4 @@ window.setInterval(() => { if (!document.hidden) refreshBadges(); }, BADGE_REFRE
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshBadges(); });
 
 installOverlayA11y();
+observeSelects(document.body);

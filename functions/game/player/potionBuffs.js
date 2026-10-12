@@ -28,7 +28,8 @@ export function potionStatBonus(session,stat,isMul=false,now=Date.now(),damageTy
  for(const effect of activePotionBuffs(session,now)) {
   if(damageType==='magic' && ['might','shield'].includes(effect.potionId) && ['attackMul','defenceMul'].includes(stat)) continue;
   // Resolve modifiers from trusted definitions, not a client-supplied item.
-  const value=buffPotions.find(p=>p.id===effect.potionId).modifiers[stat];
+  const definition=buffPotions.find(p=>p.id===effect.potionId);
+  const value=definition.typedModifiers?.[damageType]?.[stat] ?? definition.modifiers[stat];
   if(value===undefined) continue;
   const scaled=scaleModifier(value,isMul,factorOf(effect));
   result=isMul?result*scaled:result+scaled;
@@ -44,6 +45,9 @@ export function potionStatBonus(session,stat,isMul=false,now=Date.now(),damageTy
 export function applyPotionBuff(session,id,now=Date.now(),{factor=1}={}) {
  const definition=buffPotions.find(p=>p.id===id);if(!definition)return null;
  if(!Array.isArray(session.game.effects))session.game.effects=[];
+ const bundle=definition.donateOnly;
+ if(bundle) session.game.effects=session.game.effects.filter(e=>!buffPotions.some(p=>p.id===e?.potionId));
+ else if(session.game.effects.some(e=>Number(e.until)>now && buffPotions.some(p=>p.id===e.potionId && p.donateOnly))) return session.game.effects.find(e=>Number(e.until)>now && buffPotions.some(p=>p.id===e.potionId && p.donateOnly));
  const until=now+definition.seconds*1000;
  const strength=Math.min(MAX_FACTOR,Math.max(0.1,Number(factor)||1));
  const current=session.game.effects.find(e=>e?.potionId===id && Number(e.until)>now);
@@ -53,9 +57,9 @@ export function applyPotionBuff(session,id,now=Date.now(),{factor=1}={}) {
  }
  const native=LEGACY_L2_BUFFS[id];
  const original=resolveEffectSkill(native);
- const nativeCurrent=session.game.effects.find(e=>e.l2SkillId&&Number(e.until)>now&&resolveEffectSkill(e.l2SkillId,e.level)?.fields.abnormalType===original?.fields.abnormalType);
+ const nativeCurrent=original && session.game.effects.find(e=>e.l2SkillId&&Number(e.until)>now&&resolveEffectSkill(e.l2SkillId,e.level)?.fields.abnormalType===original.fields.abnormalType);
  if(nativeCurrent&&resolveEffectSkill(nativeCurrent.l2SkillId,nativeCurrent.level).strength>=original.levels*strength){nativeCurrent.until=Math.max(nativeCurrent.until,until);return nativeCurrent;}
- session.game.effects=session.game.effects.filter(e=>e?.potionId!==id && !(e?.l2SkillId && resolveEffectSkill(e.l2SkillId,e.level)?.fields.abnormalType===resolveEffectSkill(native)?.fields.abnormalType));
+ session.game.effects=session.game.effects.filter(e=>e?.potionId!==id && !(original && e?.l2SkillId && resolveEffectSkill(e.l2SkillId,e.level)?.fields.abnormalType===original.fields.abnormalType));
  const effect={name:definition.name,potionId:id,amount:0,until,factor:strength};
  session.game.effects.push(effect);return effect;
 }
@@ -73,4 +77,4 @@ export function addPotionById(session,id,count=1) {
 /** Adds `count` buff potions to the inventory stack. */
 export const addBuffPotion=(session,id,count=1)=>potionsInInventoryTemplate.some(p=>p.id===id && p.type==='buff')?addPotionById(session,id,count):null;
 
-export const BUFF_POTION_IDS=buffPotions.map(p=>p.id);
+export const BUFF_POTION_IDS=buffPotions.filter(p=>!p.donateOnly).map(p=>p.id);

@@ -70,7 +70,7 @@ test('using a potion in the Mini App heals by the scaled amount and never past t
   const hpIndex = potionsTemplate.findIndex(item => item.type === 'hp' && item.size === 'medium');
   const result = useInventoryPotion(session, hpIndex);
   assert.equal(result.ok, true);
-  assert.equal(result.restored, 55_000);
+  assert.equal(result.healing, 55_000);
   assert.equal(result.potion.share, 22);
   const mpIndex = potionsTemplate.findIndex(item => item.type === 'mp' && item.size === 'small');
   assert.equal(useInventoryPotion(session, mpIndex).restored, 2_000);

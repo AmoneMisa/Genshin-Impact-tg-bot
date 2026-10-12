@@ -8,7 +8,7 @@ export const NAV_TABS = Object.freeze([
   { id: 'battle', label: 'Бой', title: 'Сражения', hint: 'Боссы и PvP', icon: 'swords', features: ['hunt', 'catacombs', 'party', 'boss', 'arena', 'steal'] },
   { id: 'games', label: 'Игры', title: 'Игры и награды', hint: 'Удача и развлечения', icon: 'dices', features: ['loginRewards', 'fishing', 'chest', 'gacha', 'bonus', 'sword', 'arcade', 'point21', 'elements'] },
   { id: 'clan', label: 'Клан', title: 'Клан и друзья', hint: 'Сообщество', icon: 'users', features: ['clan', 'friends', 'forms', 'transfer'] },
-  { id: 'trade', label: 'Магазин', title: 'Магазин и обмен', hint: 'Покупки и валюта', icon: 'shopping-cart', features: ['shop', 'merchants', 'exchange', 'luckShop', 'auction'] },
+  { id: 'trade', label: 'Магазин', title: 'Магазин и обмен', hint: 'Покупки и валюта', icon: 'shopping-cart', features: ['shop', 'merchants', 'exchange', 'auction'] },
   // Opened from the gear in the header, not from the bottom bar.
   { id: 'more', label: 'Настройки', title: 'Настройки', hint: 'Настройки и промокоды', icon: 'settings', hidden: true, features: ['language', 'selfMute', 'chatSettings', 'promo'] },
 ]);

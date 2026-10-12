@@ -141,6 +141,21 @@ export function abandonClassQuest(session) {
     return {ok: true};
 }
 
+/** A bound profession mark replaces combat objectives, leaving the mentor's fee. */
+export function useProfessionMark(session, to) {
+    const quest = questFor(to);
+    const reason = startReason(session, quest);
+    if (reason) return {ok:false,reason};
+    const state = getClassQuestState(session);
+    if (![3,4].includes(quest.tier) || !state.marks?.[quest.tier]) return {ok:false,reason:'no_mark'};
+    if (state.completed.includes(to)) return {ok:false,reason:'already_mastered'};
+    if (state.active && state.active.to !== to) return {ok:false,reason:'other_quest_active'};
+    state.active ||= {to,progress:{},startedAt:Date.now()};
+    quest.steps.forEach((step,index) => { if(step.type !== 'pay') state.active.progress[index] = stepTarget(step); });
+    state.marks[quest.tier] -= 1;
+    return {ok:true};
+}
+
 /** Hands in the (first unpaid) `pay` step of the active quest. */
 export function payQuestStep(session) {
     const found = activeQuest(session);
@@ -265,6 +280,7 @@ export function getClassQuestView(session) {
             title: target.translateName,
             description: target.description,
             tier: target.tier,
+            hasMark: Boolean(state.marks?.[target.tier]) && [3,4].includes(target.tier),
             minLevel: quest.minLevel,
             status,
             giver: quest.giver,

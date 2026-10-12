@@ -27,24 +27,20 @@ test('every shop item is well formed and belongs to a group', () => {
     assert.equal(ids.has(entry.id), false, `duplicate ${entry.id}`);
     ids.add(entry.id);
   }
-  for (const potion of buffPotions) assert.ok(item(`potion-${potion.id}`), potion.id);
+  for (const potion of buffPotions.filter(p=>p.donateOnly)) assert.ok(item(`potion-${potion.id}`), potion.id);
 });
 
-test('crystals are bought with coins and shielded from raids like the old paid crystals', () => {
-  const s = player(100);
-  const result = buyLuckItem(s, 'crystals-500', NOW);
-  assert.equal(result.ok, true);
-  assert.equal(s.game.inventory.luckCoins, 55);
-  assert.equal(s.game.inventory.crystals, 505);
-  assert.equal(starShieldAmount(s.game, NOW), 500);
-  assert.equal(stealableCrystals(505, 0, s.game, NOW), 5, 'only the unshielded rest can be raided');
+test('removed crystals and craft bundles cannot be bought through stale IDs', () => {
+ const s=player(100);
+ for(const id of ['crystals-100','crystals-500','crystals-2000','craft-S'])assert.equal(buyLuckItem(s,id,NOW).reason,'unknown_item');
+ assert.equal(s.game.inventory.luckCoins,100);assert.equal(s.game.inventory.crystals,5);
 });
 
 test('a buff potion lands in the inventory and stacks', () => {
   const s = player(30);
-  assert.equal(buyLuckItem(s, 'potion-might', NOW).ok, true);
-  assert.equal(buyLuckItem(s, 'potion-might', NOW).ok, true);
-  const stack = s.game.inventory.potions.items.find(entry => entry.id === 'might');
+  assert.equal(buyLuckItem(s, 'potion-warrior-buff', NOW).ok, true);
+  assert.equal(buyLuckItem(s, 'potion-warrior-buff', NOW).ok, true);
+  const stack = s.game.inventory.potions.items.find(entry => entry.id === 'warrior-buff');
   assert.equal(stack.count, 2);
   assert.equal(s.game.inventory.luckCoins, 30 - 12);
 });
@@ -70,7 +66,7 @@ test('tries: chests start a fresh round, arena and steal stop at their caps', ()
 
 test('purchases are refused without coins, for unknown items, and never charge on failure', () => {
   const s = player(5);
-  assert.equal(buyLuckItem(s, 'crystals-100', NOW).reason, 'not_enough_coins');
+  assert.equal(buyLuckItem(s, 'potion-warrior-buff', NOW).reason, 'not_enough_coins');
   assert.equal(buyLuckItem(s, 'nope', NOW).reason, 'unknown_item');
   assert.equal(s.game.inventory.luckCoins, 5);
   assert.equal(s.game.inventory.crystals, 5);
@@ -82,8 +78,8 @@ test('the state lists items with affordability and the player state carries the 
   const s = player(10);
   const state = getLuckShopState(s, NOW);
   assert.equal(state.coins, 10);
-  assert.equal(state.items.find(entry => entry.id === 'crystals-100').affordable, true);
-  assert.equal(state.items.find(entry => entry.id === 'crystals-500').affordable, false);
+  assert.equal(state.items.find(entry => entry.id === 'potion-warrior-buff').affordable, true);
+  assert.equal(state.items.find(entry => entry.id === 'chest-try').affordable, false);
   const mini = createMiniAppState({ game: s.game }, { chatId: 1, user: { id: 1 } });
   assert.equal(mini.player.luckCoins, 10);
 });

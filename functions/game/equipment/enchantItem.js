@@ -8,16 +8,19 @@ import { isActuallyEquipped, syncEquippedSnapshot } from './snapshots.js';
 import unequipItem from './unequipItem.js';
 import {forgeBonuses} from '../builds/forgeBonuses.js';
 import {recordAcademyEvent} from '../academy/academy.js';
-import {spendUsableMaterial} from '../player/boundMaterials.js';
+import {spendUsableMaterial,usableMaterialCount} from '../player/boundMaterials.js';
 
-export const scrollKey = grade => `scroll_${grade}`;
-export const blessedKey = grade => `blessed_${grade}`;
+export const scrollGrade = grade => ['S80','S84'].includes(grade) ? 'S' : grade;
+export const scrollKey = grade => `scroll_${scrollGrade(grade)}`;
+export const blessedKey = grade => `blessed_${scrollGrade(grade)}`;
 export const crystalKey = grade => `crystal_${grade}`;
 
 /** Typed scrolls fit weapons or everything else (armor, shields, jewelry), as in Lineage II. */
 export const scrollTarget = item => (item?.mainType === 'weapon' ? 'weapon' : 'armor');
-export const blessedTypedKey = item => `blessed_${scrollTarget(item)}_${item.grade}`;
-export const safeTypedKey = item => `safe_${scrollTarget(item)}_${item.grade}`;
+export const blessedTypedKey = item => `blessed_${scrollTarget(item)}_${scrollGrade(item.grade)}`;
+export const safeTypedKey = item => `safe_${scrollTarget(item)}_${scrollGrade(item.grade)}`;
+const scrollAliases = key => key.endsWith('_S') ? [key,`${key}80`,`${key}84`] : [key];
+export const enchantScrollCount = (session,key) => scrollAliases(key).reduce((sum,alias)=>sum+usableMaterialCount(session,alias),0);
 
 const config = () => equipmentTemplate.enchant;
 
@@ -73,7 +76,7 @@ export function enchantItem(session, item, { blessed = false, scroll = null } = 
         : scroll === 'blessedTyped' ? blessedTypedKey(item)
             : blessed ? blessedKey(item.grade) : scrollKey(item.grade);
     const resets = blessed || scroll === 'blessedTyped';
-    if (!spendUsableMaterial(session, key, 1)) return { ok: false, reason: 'no_scroll', scroll: key };
+    if (!scrollAliases(key).some(alias=>spendUsableMaterial(session,alias,1))) return { ok: false, reason: 'no_scroll', scroll: key };
 
     const chance = enchantChance(item, session);
     if (Math.random() < chance) {
@@ -88,7 +91,7 @@ export function enchantItem(session, item, { blessed = false, scroll = null } = 
     }
 
     if (resets) {
-        item.enchant = Math.min(level, safeEnchantLevel(item));
+        item.enchant = 0;
         syncEquippedSnapshot(session, item);
         return { ok: true, outcome: 'reset', level: item.enchant, previous: level, chance };
     }
