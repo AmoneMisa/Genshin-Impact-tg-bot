@@ -8,8 +8,8 @@
 
 
 
-export const ONLINE_WINDOW_MS = 5 * 60 * 1000;
-export const LAST_SEEN_STAMP_MS = 60 * 1000;
+import {ONLINE_WINDOW_MS,LAST_SEEN_STAMP_MS} from '../functions/game/player/onlinePresence.js';
+export {ONLINE_WINDOW_MS,LAST_SEEN_STAMP_MS};
 const MAX_FRIENDS = 50;
 
 function number(value, fallback = 0) {

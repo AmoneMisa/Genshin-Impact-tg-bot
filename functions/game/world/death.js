@@ -1,5 +1,6 @@
 import holdings from '../../../template/worldHoldings.js';
 import {hallState} from './hall.js';
+import {restoreRevivalVitals} from '../player/revivalVitals.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
 import getMaxMp from '../player/getters/getMaxMp.js';
 import getMaxCp from '../player/getters/getMaxCp.js';
@@ -29,7 +30,8 @@ export function respawnWorld(session,destination,clan,records=[],now=Date.now())
  Object.assign(w,{mode:h?(h.kind==='hall'?'hall':'stronghold'):'city',city:h?.region||w.city,location:null,holding:h?.id||null,instanceId:null,x:.5,y:spawnY,path:[],moveAt:now,pending:null,channel:null,readyHolding:null});
  delete w.death;delete w.died;delete w.walkHome;
  if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;session.game.hunt.playerDebuffs=[];}
- stats.hp=Math.max(1,Math.floor(getMaxHp(session)*.5));stats.mp=Math.max(0,Math.floor(getMaxMp(session)*.5));stats.cp=Math.max(0,Math.floor(getMaxCp(session)*.5));
+ if(destination==='city')restoreRevivalVitals(session,{town:true});
+ else {stats.hp=Math.max(1,Math.floor(getMaxHp(session)*.5));stats.mp=Math.max(0,Math.floor(getMaxMp(session)*.5));stats.cp=Math.max(0,Math.floor(getMaxCp(session)*.5));}
  session.game.respawnTime=0;delete session.game.l2PendingDeath;session.needsSave=true;
  return {ok:true};
 }

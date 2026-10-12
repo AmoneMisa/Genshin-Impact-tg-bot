@@ -1,4 +1,5 @@
 // High Five abnormal effects. Stored records contain IDs/levels/time only; values come from trusted XML.
+import {restoreRevivalVitals} from './revivalVitals.js';
 import {L2_EFFECT_SKILLS,L2_EFFECT_LEARN,L2_CLASSES} from '../../../template/l2EffectSkills.js';
 import {isMagicClass} from '../classes/classFamily.js';
 import classStats from '../../../template/classStatsTemplate.js';
@@ -251,7 +252,7 @@ export function l2CompanionDamage(target,damage,now=Date.now()){
 export function l2PreventDeath(target,now=Date.now()){
  const effect=activeL2Effects(target,now).find(({skill})=>skill.effects.some(e=>e.name==='ResurrectionSpecial'));
  if(!effect||!target.game?.gameClass?.stats)return false;
- const stats=target.game.gameClass.stats;stats.hp=Math.max(1,stats.maxHp);stats.mp=stats.maxMp;stats.cp=stats.maxCp;effect.record.until=now;target.game.respawnTime=0;delete target.game.l2PendingDeath;return true;
+ restoreRevivalVitals(target);effect.record.until=now;target.game.respawnTime=0;delete target.game.l2PendingDeath;return true;
 }
 /** Running uses its own multiplier; it must not speed up physical or magical casts. */
 export function l2MoveMultiplier(target,now=Date.now()){return clamp(l2RawStat(target,'runSpd',true,now),.05,3);}

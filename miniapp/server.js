@@ -1142,6 +1142,10 @@ const passivesLearn = guarded('passives learn', async (req, res) => {
 
 const badges = guarded('badges', async (req, res) => {
   const context = await authorize(req);
+  await withLock(context.chatId, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    if (stampLastSeen(context.session)) await saveSession(context.session);
+  });
   const chat = await getChatSession(context.chatId);
   let clan = null;
   try { clan = await getClan(Number(context.userId)); } catch { clan = null; }

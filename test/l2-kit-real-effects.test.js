@@ -64,7 +64,8 @@ test('Resurrection brings a fallen player back, Mass Resurrection the party; it 
   assert.ok(fallen.game.gameClass.stats.hp > 0);
   assert.ok(bishop.game.gameClass.stats.mp < mp);
   assert.equal(castL2Buff(bishop, 'l2:1016', fallen.userId, { now: NOW + 1 }).reason, 'cooldown');
-  assert.ok(reviveShare(1016, 9) > reviveShare(1016, 1));
+  assert.equal(reviveShare(1016, 9), .6);
+  assert.equal(reviveShare(1016, 1), .6);
   assert.equal(castL2Buff(hero('humanFighter', 70, 9), 'l2:1016', fallen.userId, { now: NOW }).reason, 'not_learned');
 
   // mass: the dead of the party stand up

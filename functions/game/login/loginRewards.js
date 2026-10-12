@@ -1,3 +1,4 @@
+import {restoreRevivalVitals} from '../player/revivalVitals.js';
 import {SHOT_GRADES, SHOT_KINDS, gradeLabel, shotKey} from '../../../template/shotsData.js';
 import {loginKey,loginItemInfo,loginPeriod,LOGIN_DAY_MS,shotCouponAmount,LOGIN_KINDS} from '../../../template/loginRewards.js';
 import {getMaterialCount,addMaterial,spendMaterials,materialInfo} from '../player/materials.js';
@@ -6,8 +7,6 @@ import {inventorySlotsUsed,inventoryCapacity} from '../builds/palaceCapacity.js'
 import buffPotions from '../../../template/buffPotions.js';
 import fishing from '../../../template/fishingData.js';
 import {ELEMENTS,attributeKey} from '../../../template/augmentData.js';
-import getMaxHp from '../player/getters/getMaxHp.js';
-import getMaxMp from '../player/getters/getMaxMp.js';
 import {isFallen} from '../player/revival.js';
 import {expireTimedItems} from '../equipment/timedItems.js';
 
@@ -167,7 +166,7 @@ export function redeemLoginItem(session,key,choice='',{now=Date.now(),random=Mat
         return {ok:true,action:'redeem',until,rewards:[{name:info.name,count:1,icon:info.icon}]};
     }else if(kind==='resurrection'){
         if(!isFallen(session,now))return {ok:false,reason:'not_fallen'};
-        spendMaterials(session,{[key]:1});session.game.gameClass.stats.hp=getMaxHp(session);session.game.gameClass.stats.mp=getMaxMp(session);
+        spendMaterials(session,{[key]:1});restoreRevivalVitals(session);
         session.game.respawnTime=0;delete session.game.l2PendingDeath;
         if(session.game.world){delete session.game.world.died;delete session.game.world.death;}
         if(session.game.hunt?.field){const field=session.game.hunt.field;field.path=[];delete field.pendingRoom;field.seenAt=now;field.moveAt=now;session.game.hunt.lastActionAt=now;for(const mob of field.mobs||[])mob.aggro=false;}

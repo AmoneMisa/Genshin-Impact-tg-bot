@@ -1,7 +1,7 @@
 import { withLock } from '../general/chatLock.js';
 import listChatIds from '../getters/listChatIds.js';
 import Chat from "../../db/models/Chat.js";
-import getMaxHp from "../game/player/getters/getMaxHp.js";
+import {restoreRevivalVitals} from '../game/player/revivalVitals.js';
 
 /**
  * Проверяет всех игроков и респаунит их, если время прошло и HP = 0
@@ -28,9 +28,9 @@ export default async function() {
                 // Если игрок живой (hp != 0)
                 if (game.gameClass?.stats?.hp !== 0) continue;
 
-                // Восстанавливаем половину максимального HP
-                const maxHp = getMaxHp(member, game.gameClass);
-                game.gameClass.stats.hp = Math.floor(maxHp * 0.5);
+                // Возврат после смерти начинается с 1 HP.
+                restoreRevivalVitals(member,{town:true});
+                chat.markModified('members');
 
                 updated = true;
             }

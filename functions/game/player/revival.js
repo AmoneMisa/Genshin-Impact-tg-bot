@@ -2,7 +2,7 @@
 // (Mass Resurrection). The skills come from the real class trees (template/l2Classes.js): the real learn levels, mana and reuse.
 //
 // A player is fallen when the hp is gone or the respawn timer runs (huntFight.js isDead). The real skill returns a share of
-// the lost experience; this game has no experience loss, so the share becomes the health the hero stands up with.
+// the lost experience. HP/MP/CP on revival are fixed, independent of that experience return.
 // Salvation and Soul of the Phoenix are the other half of High Five resurrection (the target comes back by itself when it
 // dies, effect ResurrectionSpecial in l2Effects.js).
 import l2 from '../../../template/l2Classes.js';
@@ -12,7 +12,7 @@ import { resolveClassName } from '../classes/legacyClasses.js';
 import { partyState } from '../party/party.js';
 import getCurrentHp from './getters/getCurrentHp.js';
 import getCurrentMp from './getters/getCurrentMp.js';
-import getMaxHp from './getters/getMaxHp.js';
+import {restoreRevivalVitals} from './revivalVitals.js';
 import {nearbyCorpse} from '../world/death.js';
 import {l2ActionBlock} from './l2Effects.js';
 
@@ -60,8 +60,8 @@ export function revivalSkills(session) {
 }
 
 const at = (list, level) => (Array.isArray(list) ? list[Math.min(list.length, Math.max(1, level)) - 1] : 0);
-/** The share of health the revived hero stands up with: from a quarter at level 1 to two thirds at the top level. */
-export const reviveShare = (id, level) => Math.min(0.9, 0.25 + n(at(l2.skills[String(id)]?.power, level)) / 100 * 0.6);
+/** Fixed health share on revival, independent of skill level. */
+export const reviveShare = () => .6;
 export const reviveCost = (id, level) => Math.max(1, Math.round(n(at(l2.skills[String(id)]?.mp, level))));
 
 export const isFallen = (member, now = Date.now()) => Boolean(member?.game?.gameClass?.stats) && (getCurrentHp(member) <= 0 || n(member.game.respawnTime) > now);
@@ -75,7 +75,7 @@ export function reviveEntries(session, now = Date.now()) {
         return {
             id: `l2:${skill.id}`, name: skill.info.name, kind: 'buff', group: REVIVE_GROUP, level: skill.learned, maxLevel: skill.max,
             firstLevelAt: skill.firstLevelAt, nextLevelAt: skill.nextLevelAt,
-            effect: `${REVIVE_SKILLS[skill.id].mass ? 'Воскрешает павших членов отряда' : 'Воскрешает павшего игрока'}: здоровье ${share}%`,
+            effect: `${REVIVE_SKILLS[skill.id].mass ? 'Воскрешает павших членов отряда' : 'Воскрешает павшего игрока'}: HP ${share}%, MP 30%, CP 0`,
             seconds: 0, toggle: false, cost: reviveCost(skill.id, level), costOthers: reviveCost(skill.id, level),
             cooldownUntil: n(session?.game?.l2CastAt?.[skill.id]), reuseMs: reuse, active: null, revive: true,
         };
@@ -117,8 +117,7 @@ export function castRevival(session, rawId, targetId = null, {now = Date.now()} 
     const share = reviveShare(id, skill.learned);
     const revived = fallen.map(member => {
         const stats = member.game.gameClass.stats;
-        const max = getMaxHp(member, member.game.gameClass);
-        stats.hp = Math.max(1, Math.round(max * share));
+        restoreRevivalVitals(member);
         member.game.respawnTime = 0;
         delete member.game.l2PendingDeath;
         if(member.game.world){delete member.game.world.died;delete member.game.world.death;}
