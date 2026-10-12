@@ -1059,4 +1059,12 @@ export default {
   "Этаж": "Qavat",
   "Этаж ниже": "Pastki qavat",
   "Этаж выше": "Yuqori qavat",
+  "Внесение — {5} аден за позицию, независимо от количества в стопке. Снятие бесплатно.": "Saqlashga topshirish — to‘plamdagi sonidan qat’i nazar, har bir pozitsiya uchun {5} adena. Olish bepul.",
+  "Количество · доступно {5}": "Miqdor · mavjud {5}",
+  "Нажми предмет, чтобы выбрать количество.{8}": "Miqdorni tanlash uchun buyumni bosing.{8}",
+  "Не хватает адены на внесение: 30 аден за позицию.": "Topshirish uchun adena yetarli emas: har bir pozitsiya uchun 30 adena.",
+  "Не хватает адены на плату за внесение.": "Topshirish haqini to‘lash uchun adena yetarli emas.",
+  "Плата за внесение: {0} аден. Количество в стопке не влияет на плату.": "Topshirish haqi: {0} adena. To‘plamdagi miqdor haq miqdoriga ta’sir qilmaydi.",
+  "Снятие из хранилища бесплатно.": "Ombordan olish bepul.",
+  "Товары": "Mahsulotlar",
 };

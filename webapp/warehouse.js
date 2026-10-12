@@ -9,7 +9,10 @@ export async function openWarehouseGame({api,renderState,haptic,scope='character
  const close=()=>{overlay.remove();onClose?.();};overlay.querySelector('.overlay-close').onclick=close;overlay.querySelector('.overlay-backdrop').onclick=close;
  async function transfer(row){
   if(pending)return;
-  const count=await stockQuantity({row,action:direction==='deposit'?'Внести':'Забрать',owner:overlay});
+  const fee=direction==='deposit'?state.depositFee:0;
+  const max=fee&&row.kind==='currency'&&row.ref==='gold'?Math.max(0,row.count-fee):row.count;
+  if(fee&&(state.gold<fee||max<1)){feedback.textContent='Не хватает адены на внесение: 30 аден за позицию.';return;}
+  const count=await stockQuantity({row,action:direction==='deposit'?'Внести':'Забрать',owner:overlay,max,note:fee?`Плата за внесение: ${fee} аден. Количество в стопке не влияет на плату.`:'Снятие из хранилища бесплатно.'});
   if(count===null||!overlay.isConnected)return;
   pending=true;
   try{
@@ -22,7 +25,7 @@ export async function openWarehouseGame({api,renderState,haptic,scope='character
   if(!state){body.innerHTML='<p>Хранилище недоступно.</p>';return;}
   overlay.querySelector('h2').textContent=state.title;
   const source=direction==='deposit'?state.inventory:state.stored,target=direction==='deposit'?state.stored:state.inventory,row=source[selected],allowed=direction==='deposit'?state.canDeposit:state.canWithdraw;
-  body.innerHTML=`<nav class="storage-tabs"><button type="button" data-direction="deposit" aria-pressed="${direction==='deposit'}">Внести</button><button type="button" data-direction="withdraw" aria-pressed="${direction==='withdraw'}">Забрать</button></nav><p class="storage-note">${scope==='clan'?'Все участники могут внести. Глава и два со-лидера могут забрать.':'Личное хранилище персонажа.'} · ${state.slots} / ${state.maxSlots} позиций</p>
+  body.innerHTML=`<nav class="storage-tabs"><button type="button" data-direction="deposit" aria-pressed="${direction==='deposit'}">Внести</button><button type="button" data-direction="withdraw" aria-pressed="${direction==='withdraw'}">Забрать</button></nav><p class="storage-note">${scope==='clan'?'Все участники могут внести. Глава и два со-лидера могут забрать.':'Личное хранилище персонажа.'} · ${state.slots} / ${state.maxSlots} позиций</p><p class="storage-note">Внесение — ${state.depositFee} аден за позицию, независимо от количества в стопке. Снятие бесплатно.</p>
    <section class="stock-section"><h3>${direction==='deposit'?'Инвентарь':'Хранилище'}</h3>${stockGrid(source,{select:allowed,selected})}</section>
    <p class="storage-note">Нажми предмет, чтобы выбрать количество.${scope==='clan'?' Аугментированные вещи внести нельзя.':''}</p>
    ${!allowed?'<p class="storage-note">У тебя нет прав на снятие предметов.</p>':''}

@@ -36,12 +36,14 @@ try {for(const width of [320,390,1100]){
  for(const scope of ['character','clan']){
   await page.evaluate(async scope=>{const {openWarehouseGame}=await import('/warehouse.js');await openWarehouseGame({api:demoApi,scope,haptic:()=>{}});},scope);
   await page.locator('[data-stock-index="0"]').click();
+  assert.match(await page.locator('[data-quantity-note]').textContent(),/30 аден/);
   await page.locator('.stock-quantity input').fill('100');
   await page.locator('.stock-quantity button[type=submit]').click();
   await page.locator('[data-storage-feedback]').filter({hasText:'Предметы переданы.'}).waitFor();
   assert.equal(scope==='clan'?clan.warehouse.gold:chat.members[0].game.warehouse.gold,scope==='clan'?2000100:100);
   await page.locator('[data-direction=withdraw]').click();
   await page.locator('[data-stock-index="0"]').click();
+  assert.match(await page.locator('[data-quantity-note]').textContent(),/бесплатно/);
   await page.locator('.stock-quantity input').fill('50');
   await page.locator('.stock-quantity button[type=submit]').click();
   await page.locator('.stock-quantity').waitFor({state:'detached'});

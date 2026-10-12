@@ -98,3 +98,47 @@ test('cancelled and expired trades never move possessions; busy players cannot o
  assert.equal(act(chat,t,2,'cancel').ok,true);
  assert.equal(act(chat,t,1,'confirm').reason,'trade_closed');
 });
+
+for(const scope of ['character','clan']) {
+ test(scope+' warehouse charges 30 adena per deposited stack and nothing for withdrawal',()=>{
+  const p=player(1),clan={owner:1,members:[{userId:1,role:'owner'}],warehouse:{}};
+  const dto=warehouseDto(p,clan,scope);assert.equal(dto.depositFee,30);assert.equal(dto.gold,100);
+  for(const count of [1,9]) {
+   const result=moveWarehouse(p,clan,{scope,direction:'deposit',...request('material','iron',count)});
+   assert.equal(result.ok,true);assert.equal(result.fee,30);
+  }
+  assert.equal(p.game.inventory.gold,40);
+  assert.equal(moveWarehouse(p,clan,{scope,direction:'withdraw',...request('material','iron',10)}).fee,0);
+  assert.equal(p.game.inventory.gold,40);assert.equal(p.game.inventory.materials.iron,10);
+ });
+ test(scope+' warehouse requires deposit plus fee for adena and never mutates on failure',()=>{
+  const p=player(1),clan={owner:1,members:[{userId:1,role:'owner'}],warehouse:{}};
+  const before=structuredClone([p,clan]);
+  assert.equal(moveWarehouse(p,clan,{scope,direction:'deposit',...request('currency','gold',71)}).reason,'not_enough_adena');
+  assert.deepEqual([p,clan],before);
+  assert.equal(moveWarehouse(p,clan,{scope,direction:'deposit',...request('currency','gold',70)}).ok,true);
+  assert.equal(p.game.inventory.gold,0);
+  const after=structuredClone([p,clan]);
+  assert.equal(moveWarehouse(p,clan,{scope,direction:'deposit',...request('material','iron')}).reason,'not_enough_adena');
+  assert.deepEqual([p,clan],after);
+  assert.equal(moveWarehouse(p,clan,{scope,direction:'withdraw',...request('currency','gold',70)}).ok,true);
+  assert.equal(p.game.inventory.gold,70);
+ });
+}
+test('warehouse does not charge for rejected counts, duplicates, or overflowing destinations',()=>{
+ for(const body of [request('material','iron',0),request('material','iron',11),request('equipment','blade'),request('currency','gold')]) {
+  const p=player(1);p.game.inventory.equipment.items.push(item());
+  p.game.warehouse={gold:Number.MAX_SAFE_INTEGER,equipment:{items:[item()]}};
+  const before=structuredClone(p);
+  assert.equal(moveWarehouse(p,null,{direction:'deposit',...body}).ok,false);
+  assert.deepEqual(p,before);
+ }
+});
+
+test('full warehouse does not charge a deposit fee',()=>{
+ const p=player(1);
+ p.game.warehouse={materials:Object.fromEntries(Array.from({length:warehouseDto(p).maxSlots},(_,i)=>['craft_gem_D_'+i,1]))};
+ const before=structuredClone(p);
+ assert.equal(moveWarehouse(p,null,{direction:'deposit',...request('material','iron')}).reason,'warehouse_full');
+ assert.deepEqual(p,before);
+});
