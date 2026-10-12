@@ -1,3 +1,4 @@
+import { luckCoinHtml } from './currency-icons.js';
 import {materialIcon} from './material-icons.js';
 import {shotIcon} from './art/painted-icon-art.js';
 import { escapeHtml } from './escape-html.js';
@@ -34,7 +35,8 @@ export async function openShopGame(options) {
     ['mammon', 'Древняя адена', L2_CATEGORY_ART.gold, merchant('mammon')],
     ['catalog', 'Каталог', L2_CATEGORY_ART.material, merchant(null)],
     ['bonus', 'Бонус', L2_MATERIAL_ART.l2_1865, () => openBonusGame(options)],
-    ['exchange', 'Обменник', L2_CATEGORY_ART.gold, () => openExchangeGame(options)],
+    ['adena', 'Адена за CoL', L2_CATEGORY_ART.gold, goods('currency')],
+    ['exchange', 'Пополнение CoL', L2_CATEGORY_ART.gold, () => openExchangeGame(options)],
     ['runes', 'Руны', L2_MATERIAL_ART.l2_8358, null, 'Руны пока не продаются.'],
   ];
   const overlay = document.createElement('section');
@@ -86,6 +88,7 @@ export const ITEM_ICONS = Object.freeze({
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 
 export function itemIconHtml(item) {
+  if (item.command === 'adena-col') return `<span class="shop-icon">${materialIcon('gold')}</span>`;
   const soul=item.command.match(/^soul-(red|green|blue)-(\d+)$/);if(soul)return '<span class="shop-icon">'+materialIcon('soul_'+soul[1]+'_'+soul[2])+'</span>';
   const life=item.command.match(/^lifestoneMid-(C|B|A|S)$/);if(life)return '<span class="shop-icon">'+materialIcon('lifestone_mid_'+life[1])+'</span>';
   const shot=item.command.match(/^shot-(soulshot|spiritshot|blessed)-(noGrade|D|C|B|A|S|S80|S84)$/);if(shot)return '<span class="shop-icon">'+shotIcon(shot[1],shot[2])+'</span>';
@@ -100,6 +103,9 @@ export function itemIconHtml(item) {
 }
 
 const REASONS = {
+  not_enough_coins: 'Недостаточно CoL.',
+  balance_limit: 'Достигнут предел баланса адены.',
+  inventory_missing: 'Инвентарь персонажа недоступен.',
   unknown_item: 'Товар больше не существует.',
   cooldown: 'Этот товар уже покупался и пока не обновился.',
   not_enough_gold: 'Недостаточно золота.',
@@ -220,7 +226,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
       name: item.name,
       note: item.onCooldown ? `Доступно через: ${remain(item.resetAt)}` : item.categoryLabel,
       description: item.message || '',
-      requires: [{ iconHtml: materialIcon('gold'), label: 'Адена', need: item.cost, have: Number(state.gold) || 0 }],
+      requires: [{ iconHtml: item.currency === 'luckCoins' ? luckCoinHtml(24) : materialIcon('gold'), label: item.currency === 'luckCoins' ? 'CoL' : 'Адена', need: item.cost, have: Number(item.currency === 'luckCoins' ? state.luckCoins : state.gold) || 0 }],
       canBuy: !item.onCooldown && item.canAfford,
     }));
     list.innerHTML = storeViewHtml({ items: storeItems, selectedId: selectedCommand });

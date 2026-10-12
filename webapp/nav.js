@@ -16,7 +16,7 @@ export const NAV_TABS = Object.freeze([
 /** New features receive the common reviewed emblem until assigned their own art. */
 export const FEATURE_ICONS = Object.freeze({
   loginRewards:'gift',
-  profile: 'user-round', skills: 'zap', forms: 'notebook-pen', inventory: 'backpack', exchange: 'arrow-left-right',
+  profile: 'user-round', skills: 'zap', forms: 'notebook-pen', inventory: 'backpack', exchange: 'coin',
   boss: 'swords', chest: 'package-open', gacha: 'sparkles', equipment: 'shield', builds: 'landmark', arena: 'trophy',
   steal: 'venetian-mask', shop: 'shopping-cart', transfer: 'coin', point21: 'spade', elements: 'orbit', clan: 'castle',
   fishing: 'sparkles', tattoos: 'sparkles', merchants: 'shopping-cart', party: 'users', friends: 'handshake', bonus: 'gift', titles: 'tag', horoscope: 'orbit', sword: 'sword', arcade: 'dices',

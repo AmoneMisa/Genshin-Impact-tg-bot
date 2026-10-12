@@ -19,8 +19,8 @@ test('shop state exposes categories and affordability without mutating player', 
   assert.ok(state.categories.some(category => category.id === 'boss'));
   assert.ok(state.items.length > 0);
 
-  const cheap = state.items.find(item => item.cost <= 2000);
-  const expensive = state.items.find(item => item.cost > 2000);
+  const cheap = state.items.find(item => item.currency === 'gold' && item.cost <= 2000);
+  const expensive = state.items.find(item => item.currency === 'gold' && item.cost > 2000);
   assert.equal(cheap?.canAfford, true);
   assert.equal(expensive?.canAfford, false);
   assert.equal(player.game.inventory.gold, 2000);

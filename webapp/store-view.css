@@ -12,6 +12,7 @@
 .store-box p { margin: 6px 0 0; font: 12px/1.4 system-ui; color: rgba(238, 228, 207, .78); overflow-wrap: anywhere; }
 .store-name { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 8px; align-items: center; }
 .store-name .store-icon img { width: 40px; height: 40px; object-fit: contain; }
+.store-name .shop-icon { width: 40px; height: 40px; }
 .store-name strong { display: block; font: 700 13px/1.25 Georgia, serif; color: #f3dca6; overflow-wrap: anywhere; }
 .store-name small { display: block; font: 11px/1.3 system-ui; color: rgba(238, 228, 207, .65); }
 .store-req { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }

@@ -41,7 +41,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'inventory', title: 'Инвентарь', subtitle: 'Ресурсы и расходники', icon: '🎒', status: 'webgl' },
   { id: 'luckShop', title: 'Донат-магазин', subtitle: 'Эпики, свитки, эликсиры за монеты удачи', icon: '🍀', status: 'webgl' },
   { id: 'auction', title: 'Аукцион', subtitle: 'Купить и продать за золото', icon: '⚖️', status: 'webgl' },
-  { id: 'exchange', title: 'Обменник', subtitle: 'Золото в кристаллы', icon: '💱', status: 'webgl' },
+  { id: 'exchange', title: 'Пополнение CoL', subtitle: 'Монеты удачи за Telegram Stars', icon: 'coin', status: 'webgl' },
   { id: 'boss', title: 'Босс', subtitle: 'Командный бой', icon: '⚔️', status: 'webgl' },
   { id: 'hunt', title: 'Охотничьи поля', subtitle: 'Мобы, синие и красные чемпионы', icon: '🗡️', status: 'webgl' },
   { id:'catacombs',title:'Катакомбы',subtitle:'Шесть подземелий · камни печати → AA',icon:'💠',status:'webgl' },
