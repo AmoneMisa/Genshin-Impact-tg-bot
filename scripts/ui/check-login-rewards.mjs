@@ -46,6 +46,8 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
     assert.equal(await page.locator('[data-login-day="7"] .is-shadow-item').count(),1);
     assert.equal(await page.locator('.login-pack-icon svg').count(),0);
     await page.waitForFunction(()=>[...document.querySelectorAll('.login-pack-icon img')].every(i=>i.complete&&i.naturalWidth>0));
+    const artStyle=await page.locator('[data-login-day="7"] .login-pack-icon').evaluate(p=>({border:getComputedStyle(p).borderTopColor,contents:getComputedStyle(p.querySelector('.login-pack-contents')).width}));
+    assert.equal(artStyle.border,'rgb(241, 139, 199)');assert.equal(artStyle.contents,'20px');
     assert.equal(await page.locator('.login-head').count(),0);
     const overflow=async()=>assert.equal(await panel.evaluate(p=>p.scrollWidth>p.clientWidth+1),false);
     await overflow();
@@ -77,7 +79,10 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
     await page.evaluate(async()=>{await(await import('/inventory.js')).openInventoryGame({api:(await import('/request-json.js')).requestJson,renderState:()=>{},haptic:()=>{},statusElement:document.createElement('p')});});
     await page.waitForSelector('.inventory-overlay.visible');
     assert.equal(await page.locator('.inventory-panel').evaluate(p=>p.scrollWidth>p.clientWidth+1),false);
-    if(grade==='S')assert.equal(await page.locator('[data-inventory-equipment].is-shadow-item').count(),2);
+    if(grade==='S'){
+        assert.equal(await page.locator('[data-inventory-equipment].is-shadow-item').count(),2);
+        assert.equal(await page.locator('[data-inventory-equipment].is-shadow-item').first().evaluate(p=>getComputedStyle(p).borderTopColor),'rgb(241, 139, 199)');
+    }
     await page.locator('[data-inventory-material="login_rune_exp_S"]').click();await page.locator('[data-inventory-coupon]').click();
     await page.waitForSelector('.login-overlay.visible');assert.equal(await page.locator('[data-login-redeem]').count(),1);await overflow();
     await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.login-overlay'));
