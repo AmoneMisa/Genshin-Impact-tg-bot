@@ -5,9 +5,9 @@ import updateStats from '../functions/game/player/updatePlayerStats.js';
 import castSkill from '../functions/game/player/castSkill.js';
 import saveSession from '../functions/getters/saveSession.js';
 import {
-  PARTY_MAX, acceptInvite, createParty, declineInvite, disbandParty, invitePlayer, kickMember, leaveParty, partyMembers, partyState, partyTargets, partyCostFactor,transferPartyLeadership,
+  PARTY_MAX, acceptInvite, createParty, declineInvite, disbandParty, invitePlayer, kickMember, leaveParty, partyMembers, partyState, partyTargets,transferPartyLeadership,
 } from '../functions/game/party/party.js';
-import {castClassBuff, buffManaCost} from '../miniapp/buffs.js';
+import {castClassBuff, buffManaCost, getClassBuffsState} from '../miniapp/buffs.js';
 import {getPartyState, performPartyAction} from '../miniapp/party.js';
 
 const NOW = Date.now();
@@ -107,20 +107,22 @@ test('leaving passes the leadership on and a party of one disbands', () => {
   assert.ok(again.chat.members.every(member => !member.game.party));
 });
 
-test('a class buff reaches the whole party, costs more per member and skips the dead', () => {
-  const world = fullParty(4);
-  world.at(4).game.gameClass.stats.hp = 0;
-  const caster = world.leader;
-  const solo = buffManaCost(caster, 3);
-  const mp = caster.game.gameClass.stats.mp;
-  const cast = castClassBuff(caster, 'might', null, NOW);
-  assert.equal(cast.ok, true);
-  assert.deepEqual(cast.party.sort(), ['1', '2', '3']);
-  assert.equal(cast.spent, Math.ceil(solo * partyCostFactor(3)));
-  assert.equal(caster.game.gameClass.stats.mp, mp - cast.spent);
-  for (const userId of [1, 2, 3]) assert.ok(world.at(userId).game.effects.some(effect => effect.potionId === 'might'), `member ${userId}`);
-  assert.ok(!world.at(4).game.effects.some(effect => effect.potionId === 'might'), 'a dead member is not buffed');
-  assert.equal(world.at(2).needsSave, true);
+test('ordinary buffs affect one selected player and cost the same in parties of any size', () => {
+  for (const count of [2, 4, 9]) {
+    const world = fullParty(count);
+    changeClass(world.leader, 'saint'); updateStats(world.leader);
+    const caster = world.leader;
+    const expected = getClassBuffsState(caster, NOW).buffs.find(b => b.id === 'might').cost;
+    assert.equal(getClassBuffsState(caster, NOW).buffs.find(b => b.id === 'might').costOthers, expected);
+    const mp = caster.game.gameClass.stats.mp;
+    const cast = castClassBuff(caster, 'might', '2', NOW);
+    assert.equal(cast.ok, true); assert.equal(cast.party, null); assert.equal(cast.onSelf, false);
+    assert.equal(cast.spent, expected); assert.equal(caster.game.gameClass.stats.mp, mp - expected);
+    for (let id = 1; id <= count; id++) assert.equal(world.at(id).game.effects.some(e => e.potionId === 'might'), id === 2);
+    assert.equal(world.at(2).needsSave, true);
+    world.at(2).game.gameClass.stats.hp = 0;
+    assert.equal(castClassBuff(caster, 'shield', '2', NOW).reason, 'player_dead');
+  }
 });
 
 test('a player outside a party still buffs only themselves', () => {
@@ -132,12 +134,12 @@ test('a player outside a party still buffs only themselves', () => {
   assert.ok(!world.at(2).game.effects.some(effect => effect.potionId === 'might'));
 });
 
-test('a buff skill of a member is applied to everyone in the party', () => {
+test('an ordinary buff skill does not automatically spread to the party', () => {
   const world = fullParty(3);
   const guard = {name: 'Guard', cooldown: 1, cost: 0, isBuff: true, buffs: [{kind: 'guard', amount: 20, seconds: 30}]};
   const result = castSkill(world.leader, null, guard, {now: NOW});
-  assert.deepEqual(result.party.sort(), ['2', '3']);
-  for (const userId of [1, 2, 3]) assert.ok(world.at(userId).game.effects.some(effect => effect.name === 'guard'), `member ${userId}`);
+  assert.equal(result.party, undefined);
+  for (const userId of [1, 2, 3]) assert.equal(world.at(userId).game.effects.some(effect => effect.name === 'guard'), userId === 1);
   // a member who is not in a party (or a lone caster) shares nothing
   const alone = chatOf(2);
   assert.equal(castSkill(alone.at(1), null, guard, {now: NOW}).party, undefined);
@@ -148,9 +150,11 @@ test('partyTargets falls back to the caster alone and saveSession writes party m
   const world = chatOf(2);
   assert.deepEqual(partyTargets(world.chat, world.at(1)).map(member => member.userId), [1]);
   const party = fullParty(3);
-  castClassBuff(party.leader, 'might', null, NOW);
+  changeClass(party.leader, 'saint'); updateStats(party.leader);
+  castClassBuff(party.leader, 'might', '2', NOW);
   await saveSession(party.leader);
-  assert.ok(party.saved.includes('members.0') && party.saved.includes('members.1') && party.saved.includes('members.2'));
+  assert.ok(party.saved.includes('members.0') && party.saved.includes('members.1'));
+  assert.ok(!party.saved.includes('members.2'));
   assert.equal(party.at(2).needsSave, false);
 });
 

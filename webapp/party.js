@@ -3,8 +3,7 @@ import { icon } from './icons.js';
 import { classArtUrl } from './boss-stage.js';
 import {L2_UI_ART,l2IconHtml} from './art/l2-icon-art.js';
 
-// Parties of up to nine players of the chat. A buff cast by a member (class buffs and buff skills) reaches the
-// whole party; the leader invites, kicks and disbands.
+// Parties of up to nine players. Ordinary buffs require selecting each recipient.
 
 const REASONS = {
   already_in_party: 'Ты уже в группе.',
@@ -55,7 +54,6 @@ export async function openPartyGame({ api, haptic, statusElement }) {
     random: ['Случайно', 'Каждый предмет получает случайный игрок группы.'],
     turn: ['По очереди', 'Предметы раздаются участникам по кругу.'],
   };
-  const costText = count => `×${(1 + state.costStep * Math.max(0, count - 1)).toFixed(2)}`;
 
   function memberHtml(member, amLeader) {
     return `<article class="party-member ${member.me ? 'me' : ''}">
@@ -90,10 +88,10 @@ export async function openPartyGame({ api, haptic, statusElement }) {
     const party = state.party;
     let body;
     if (!party) {
-      body = `${invitesHtml()}<section class="mmo-frame party-empty"><p>Ты не в группе. Создай группу до ${state.max} игроков: бафф, который ты применяешь, получат все её участники (стоимость MP растёт на ${Math.round(state.costStep * 100)}% за каждого).</p>
+      body = `${invitesHtml()}<section class="mmo-frame party-empty"><p>Ты не в группе. Создай группу до ${state.max} игроков: баффы накладываются вручную на выбранного участника. Стоимость MP не зависит от размера группы.</p>
         <button type="button" class="equipment-action forge-action" data-party-action="create">Создать группу</button></section>`;
     } else {
-      body = `${invitesHtml()}<section class="mmo-frame party-roster"><div class="mmo-section-title"><strong>Состав</strong><small>${party.members.length} / ${state.max} · бафф ${costText(party.members.length)} MP</small></div>
+      body = `${invitesHtml()}<section class="mmo-frame party-roster"><div class="mmo-section-title"><strong>Состав</strong><small>${party.members.length} / ${state.max}</small></div>
           <div class="party-members">${party.members.map(member => memberHtml(member, party.amLeader)).join('')}</div></section>
         <section class="mmo-frame party-loot"><div class="mmo-section-title"><strong>Добыча</strong><small>адена делится поровну</small></div>
           ${party.amLeader

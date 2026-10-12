@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import buffPotions from '../template/buffPotions.js';
 import { BUFF_LEVEL_FACTOR, buffLevelAt, canBuffOthers, classBuffsFor } from '../template/classBuffs.js';
 import { applyPotionBuff, addBuffPotion, potionStatBonus, activePotionBuffs } from '../functions/game/player/potionBuffs.js';
-import { castClassBuff, getClassBuffsState, describeBuff, BUFF_CAST_COOLDOWN_MS } from '../miniapp/buffs.js';
+import { castClassBuff, buffManaCost, getClassBuffsState, describeBuff, BUFF_CAST_COOLDOWN_MS } from '../miniapp/buffs.js';
 import { rollBuffPotionDrop, giveBuffPotionDrop, BUFF_POTION_DROP_CHANCE } from '../functions/game/boss/buffPotionDrops.js';
 import { openChest } from '../miniapp/chest.js';
 import clanShop from '../dictionaries/clanShop.js';
@@ -100,9 +100,9 @@ test('casting is refused when it cannot work', () => {
   assert.equal(castClassBuff(player('warrior', 30).member, 'might', '2', NOW).reason, 'self_only');
 });
 
-test('support classes buff other players of the chat, at a higher mana price', () => {
+test('support classes buff other players of the chat, at the same mana price', () => {
   const { member: priest, members } = player('saint', 50);
-  const ally = { userId: 2, userChatData: { user: { first_name: 'Ally' } }, game: { effects: [] } };
+  const ally = { userId: 2, userChatData: { user: { first_name: 'Ally' } }, game: { effects: [], gameClass: structuredClone(priest.game.gameClass) } };
   const bot = { userId: 3, userChatData: { user: { is_bot: true } }, game: {} };
   members.push(ally, bot);
   assert.equal(castClassBuff(priest, 'shield', '9', NOW).reason, 'unknown_player');
@@ -112,7 +112,7 @@ test('support classes buff other players of the chat, at a higher mana price', (
   assert.equal(other.ok, true);
   assert.equal(other.onSelf, false);
   assert.equal(other.targetName, 'Ally');
-  assert.ok(other.spent > self.spent - 1);
+  assert.equal(other.spent, buffManaCost(priest, 3));
   near(potionStatBonus(ally, 'defenceMul', true, NOW), 1 + 0.15 * BUFF_LEVEL_FACTOR[3]);
   assert.equal(potionStatBonus(priest, 'defenceMul', true, NOW), 1);
 });
@@ -164,7 +164,7 @@ test('chests can hold a buff potion', () => {
   }
   assert.ok(found, 'no buff potion in 600 chests');
   assert.equal(found.result.prize.amount, 1);
-  assert.match(found.result.prize.label, / Potion$/);
+  assert.ok(buffPotions.some(potion => potion.name === found.result.prize.label));
   assert.equal(found.member.game.inventory.potions.items.reduce((sum, item) => sum + item.count, 0), 1);
 });
 

@@ -9,12 +9,11 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import { memberName } from './social.js';
-import { partyCostFactor, partyTargets } from '../functions/game/party/party.js';
+import { partyTargets } from '../functions/game/party/party.js';
 import {getL2BuffsState,castL2Buff} from './l2Buffs.js';
 import {l2ActionBlock,tickL2Effects} from '../functions/game/player/l2Effects.js';
 
 export const BUFF_CAST_COOLDOWN_MS = 20_000;
-const OTHERS_COST_MULTIPLIER = 1.5;
 
 const STAT_TEXT = {
   attackMul: { label: 'Атака', unit: '%', mul: true },
@@ -45,15 +44,15 @@ function profile(session) {
   return { className: stats.name || 'noClass', classTitle: stats.translateName || stats.name || 'Без класса', level: Math.max(1, number(session?.game?.stats?.lvl, 1)) };
 }
 
-export function buffManaCost(session, level, forOthers = false) {
+export function buffManaCost(session, level) {
   const maxMp = Math.max(1, number(getMaxMp(session, session.game.gameClass), 1));
   const base = Math.max(10, Math.ceil(maxMp * (0.04 + 0.02 * level)));
-  return forOthers ? Math.ceil(base * OTHERS_COST_MULTIPLIER) : base;
+  return base;
 }
 
 function chatMembers(session) {
   const chat = typeof session?.ownerDocument === 'function' ? session.ownerDocument() : null;
-  return Array.isArray(chat?.members) ? chat.members : [];
+  return [...(Array.isArray(chat?.members) ? chat.members : []), ...(chat?.$locals?.guests || [])];
 }
 
 const isListed = member => member && !member.isHided && !member.userChatData?.user?.is_bot;
@@ -82,8 +81,8 @@ export function getClassBuffsState(session, now = Date.now()) {
       nextLevelAt: unlocks[buffLevel] ?? null,
       firstLevelAt: unlocks[0] ?? null,
       effect: describeBuff(definition, BUFF_LEVEL_FACTOR[shown]),
-      cost: partySize > 1 ? Math.ceil(buffManaCost(session, shown) * partyCostFactor(partySize)) : buffManaCost(session, shown),
-      costOthers: support ? buffManaCost(session, shown, true) : null,
+      cost: buffManaCost(session, shown),
+      costOthers: support ? buffManaCost(session, shown) : null,
       cooldownUntil: Math.max(0, number(cooldowns[definition.id])),
       active: active ? { until: number(active.until), factor: number(active.factor, 1) } : null,
     };
@@ -113,10 +112,7 @@ function partyAudience(session) {
   return chat ? partyTargets(chat, session) : [];
 }
 
-/**
- * Casts a class buff on yourself, on another player of the chat (support classes) or on the party. A player who is in a
- * party always buffs the whole party; the cost grows with the number of members.
- */
+/** Cast one class buff on the caster or one explicitly selected player. */
 export function castClassBuff(session, buffId, targetId = null, now = Date.now()) {
   if(String(buffId).startsWith('l2:')||String(buffId).startsWith('scryde:'))return castL2Buff(session,buffId,targetId,{now});
   const definition = buffPotions.find(potion => potion.id === buffId);
@@ -129,9 +125,7 @@ export function castClassBuff(session, buffId, targetId = null, now = Date.now()
   if (number(getCurrentHp(session, session.game.gameClass)) <= 0) return { ok: false, reason: 'player_dead' };
 
   const wantsSelf = targetId === null || targetId === undefined || String(targetId) === String(session.userId);
-  const party = wantsSelf ? partyAudience(session) : [];
-  const forParty = party.length > 1;
-  const self = wantsSelf && !forParty;
+  const self = wantsSelf;
   let target = session;
   if (!wantsSelf) {
     if (!canBuffOthers(className)) return { ok: false, reason: 'self_only' };
@@ -139,22 +133,22 @@ export function castClassBuff(session, buffId, targetId = null, now = Date.now()
     if (!isListed(target)) return { ok: false, reason: 'unknown_player' };
   }
 
+  if (number(getCurrentHp(target, target.game?.gameClass)) <= 0) return { ok: false, reason: 'player_dead' };
+
   if (!session.game.buffCastAt || typeof session.game.buffCastAt !== 'object') session.game.buffCastAt = {};
   if (number(session.game.buffCastAt[buffId]) > now) {
     return { ok: false, reason: 'cooldown', cooldownUntil: session.game.buffCastAt[buffId] };
   }
 
   if (!target.game) target.game = {};
-  const cost = forParty
-    ? Math.ceil(buffManaCost(session, buffLevel, false) * partyCostFactor(party.length))
-    : buffManaCost(session, buffLevel, !self);
+  const cost = buffManaCost(session, buffLevel);
   const mp = number(getCurrentMp(session, session.game.gameClass));
   if (mp < cost) return { ok: false, reason: 'not_enough_mp', cost, mp };
 
   session.game.gameClass.stats.mp = mp - cost;
   session.game.buffCastAt[buffId] = now + BUFF_CAST_COOLDOWN_MS;
   const factor = BUFF_LEVEL_FACTOR[buffLevel];
-  const audience = forParty ? party : [target];
+  const audience = [target];
   let effect = null;
   for (const member of audience) {
     if (!member.game) member.game = {};
@@ -162,14 +156,13 @@ export function castClassBuff(session, buffId, targetId = null, now = Date.now()
     if (member === session || member === target) effect = effect || applied;
     if (member !== session) member.needsSave = true;
   }
-  effect = effect || applyPotionBuff(session, buffId, now, { factor });
   return {
     ok: true,
     buff: buffId,
     level: buffLevel,
     onSelf: self,
-    party: forParty ? party.map(member => String(member.userId)) : null,
-    targetName: self || forParty ? null : memberName(target),
+    party: null,
+    targetName: self ? null : memberName(target),
     until: effect.until,
     kept: number(effect.factor, 1) > factor,
     spent: cost,

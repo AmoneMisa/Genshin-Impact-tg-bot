@@ -1055,4 +1055,5 @@ export default {
   "Этот NPC недоступен.": "Bu NPC mavjud emas.",
   "Клан-холл №": "Klan zali №",
   "Торговец измерений": "O‘lchamlar savdogari",
+  "Ты не в группе. Создай группу до {1} игроков: баффы накладываются вручную на выбранного участника. Стоимость MP не зависит от размера группы.": "Siz guruhda emassiz. {1} tagacha o‘yinchidan iborat guruh yarating: bafflar tanlangan a’zoga qo‘lda qo‘llanadi. MP sarfi guruh hajmiga bog‘liq emas.",
 };

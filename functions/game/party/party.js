@@ -6,8 +6,8 @@ export const PARTY_MAX = 9;
 /** How a party shares the items of a kill: the killer keeps them, a random member gets each, or members take turns. */
 export const LOOT_MODES = Object.freeze(['finders', 'random', 'turn']);
 export const INVITE_TTL_MS = 5 * 60 * 1000;
-/** Casting a buff on a party costs this much more MP per extra member (nine members: x2.2). */
-export const PARTY_COST_STEP = 0.15;
+/** Compatibility field: casting costs do not depend on party size. */
+export const PARTY_COST_STEP = 0;
 /** High Five party experience bonus by the number of members taking part (L2J Party.BONUS_EXP_SP). */
 export const PARTY_EXP_BONUS = Object.freeze([1, 1, 1.30, 1.39, 1.50, 1.54, 1.58, 1.63, 1.67, 1.71]);
 export const partyExpBonus = count => PARTY_EXP_BONUS[Math.max(1, Math.min(PARTY_MAX, count))];
