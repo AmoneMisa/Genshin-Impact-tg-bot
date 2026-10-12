@@ -17,7 +17,8 @@ node_modules
 .claude
 test
 scripts/blender
-scripts/models
+scripts/models/*
+!scripts/models/checkTransactions.mjs
 Dockerfile
 docker-compose.yml
 .dockerignore
