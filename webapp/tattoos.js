@@ -21,7 +21,7 @@ const STATS = Object.keys(STAT_NAMES);
 const number = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 const signed = value => (value > 0 ? `+${value}` : String(value));
 
-export async function openTattoosGame({ api, renderState, haptic, statusElement }) {
+export async function openTattoosGame({ api, renderState, haptic, statusElement, onClose }) {
   const query = { page: 1, stat: null, owned: false, usable: true };
   let state = null;
   let pending = false;
@@ -42,7 +42,7 @@ export async function openTattoosGame({ api, renderState, haptic, statusElement 
     </div>`;
   const content = overlay.querySelector('[data-content]');
   const feedbackNode = overlay.querySelector('[data-feedback]');
-  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
+  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => {overlay.remove();onClose?.();}, 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 

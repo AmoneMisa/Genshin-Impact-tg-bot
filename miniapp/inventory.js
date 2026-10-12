@@ -14,6 +14,7 @@ import {queuePotionHealing,HP_POTION_SECONDS} from '../functions/game/player/pot
 import buffPotions from '../template/buffPotions.js';
 import {applyPotionBuff,activePotionBuffs} from '../functions/game/player/potionBuffs.js';
 import {getEquipmentState,performEquipmentAction} from './equipment.js';
+import {hennaOfDye} from '../functions/game/player/tattoos.js';
 import {inventoryUsage} from '../functions/game/builds/palaceCapacity.js';
 
 const potionRef = item => item?.id || `${item?.type}:${item?.bottleType}:${item?.power}:${item?.size}`;
@@ -62,7 +63,8 @@ function potionDto(item, index) {
 
 export function getInventoryState(session) {
   const inventory = session?.game?.inventory || {};
-  const equipment = getEquipmentState(session).items;
+  const equipmentState = getEquipmentState(session);
+  const equipment = equipmentState.items;
   const arenaItems = inventory?.arena?.items || [];
   const potions = (inventory?.potions?.items || []).map(potionDto).filter(item=>item.count>0);
   const gameClass = session?.game?.gameClass;
@@ -80,7 +82,9 @@ export function getInventoryState(session) {
       luckCoins: Math.max(0, number(inventory.luckCoins)),
     },
     slots: inventoryUsage(session),
-    player: { cp, maxCp, hp, maxHp, mp, maxMp },
+    player: { cp, maxCp, hp, maxHp, mp, maxMp, className:session?.game?.gameClass?.stats?.name || 'warrior', gender:session?.gender || 'male' },
+    equippedSlots:equipmentState.equippedSlots,
+    tattoos:(Array.isArray(session?.game?.tattoos)?session.game.tattoos:[]).map(entry=>({dye:entry.dye,name:hennaOfDye(entry.dye)?.name || String(entry.dye)})),
     arena: {
       tokens: Math.max(0, number(arenaValue(arenaItems, 'tokens'))),
       pvpSign: arenaValue(arenaItems, 'pvpSign', null),

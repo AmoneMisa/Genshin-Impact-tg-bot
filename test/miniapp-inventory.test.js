@@ -149,3 +149,15 @@ test('inventory rejects invalid, empty, dead and unnecessary potion use without 
   assert.equal(useInventoryPotion(session, '2').reason, 'mp_full');
   assert.equal(session.game.inventory.potions.items[2].count, 1);
 });
+
+test('inventory provides appearance and identifies full-body equipment by uid in both slots',()=>{
+ const session=player();session.gender='female';
+ const robe={uid:'worn-robe',name:'Robe',grade:'D',mainType:'armor',category:'fullBody',kind:'robe',slots:['up','down'],stats:[],cost:1000};
+ session.game.inventory.equipment.items=[robe,{...robe,uid:'spare-robe'}];
+ session.game.equipmentStats={up:{...robe,isFilled:true},down:{...robe,isFilled:true}};
+ const state=getInventoryState(session);
+ assert.equal(state.player.className,'warrior');assert.equal(state.player.gender,'female');
+ assert.equal(state.equippedSlots.up.uid,'worn-robe');assert.equal(state.equippedSlots.down.uid,'worn-robe');
+ assert.equal(state.equipment.find(item=>item.uid==='worn-robe').isUsed,true);
+ assert.equal(state.equipment.find(item=>item.uid==='spare-robe').isUsed,false);
+});

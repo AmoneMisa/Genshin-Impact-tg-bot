@@ -231,6 +231,7 @@ export function getEquipmentState(session) {
   for (const [slot, equipped] of Object.entries(session?.game?.equipmentStats || {})) {
     if (!equipped) continue;
     equippedSlots[slot] = {
+      uid: equipped.uid || null,
       name: equipped.name || 'Снаряжение',
       translatedName: equipped.translatedName || equipped.kind || 'Снаряжение',
       grade: equipped.grade || 'noGrade',

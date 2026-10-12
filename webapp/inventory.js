@@ -1,17 +1,14 @@
+import {inventoryCharacterHtml,inventoryEquipped,inventoryActionIcon,inventoryItemArt,INVENTORY_LEFT,INVENTORY_RIGHT} from './inventory-layout.js';
 import {itemGridHtml} from './item-grid.js';
 const walletNumber = value => new Intl.NumberFormat('ru-RU',{notation:Number(value)>=1e6?'compact':'standard',maximumFractionDigits:1}).format(value||0);
-import {openWarehouseGame} from './warehouse.js';
-import {openTradeGame} from './trade.js';
 import {stockQuantity} from './stock-quantity.js';
 import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
 import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import {openLoginRewards} from './login-rewards.js';
-import { luckCoinHtml } from './currency-icons.js';
-import {worldIconHtml} from './art/world-art.js';
 import {SPECIAL_ITEM_ART} from './art/special-item-art.js';
-import {L2_MATERIAL_ART,l2IconUrl,l2CategoryIcon} from './art/l2-icon-art.js';
+import {L2_MATERIAL_ART,l2IconUrl} from './art/l2-icon-art.js';
 const REASONS = {
   potion_not_found: 'Зелье больше недоступно. Обнови инвентарь.',
   potion_empty: 'Это зелье закончилось.',
@@ -56,19 +53,11 @@ export function flaskHtml(item) {
 }
 
 const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
-const MATERIAL_GROUPS=[['full','Снаряжение целиком'],['piece','Части и камни для сборки'],['recipe','Рецепты'],['scroll','Свитки заточки'],['lifestone','Камни жизни'],['attribute','Камни атрибутов'],['seal','Камни печати'],['dye','Краски'],['crystal','Кристаллы'],['material','Материалы'],['consumable','Расходники'],['herb','Травы'],['other','Прочее']];
 function materialGroup(item){
  if(item.kind)return item.kind;
  const prefix=String(item.key).split('_')[0];
  return {scroll:'scroll',blessed:'scroll',safe:'scroll',lifestone:'lifestone',attr:'attribute',seal:'seal',soul:'crystal',crystal:'crystal',craft:'material',soulshot:'consumable',spiritshot:'consumable'}[prefix]||'other';
 }
-function materialBag(items,selected){
- return MATERIAL_GROUPS.map(([kind,label])=>{
-  const rows=items.filter(item=>materialGroup(item)===kind);if(!rows.length)return '';
-  return `<details class="inventory-material-group" open><summary>${l2CategoryIcon(kind)} ${label} · ${rows.length}</summary><div class="inv-bag">${rows.map(item=>`<button type="button" class="item-grid-cell inv-slot ${selected===item.key?'selected':''}" data-inventory-material="${escapeHtml(item.key)}" title="${escapeHtml(item.name)} ×${item.count}" aria-label="${escapeHtml(item.name)} ×${item.count}">${materialIcon(item.key)}<em>${formatNumber(item.count)}</em></button>`).join('')}</div></details>`;
- }).join('');
-}
-
 export async function openInventoryGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/inventory');
   let pending = false;
@@ -77,30 +66,30 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   let selectedKey = null;
   let selectedKind = 'potion';
   let filter = 'all';
+  let search = '';
+  let itemDialog = null;
   let previousPlayer = null; // vitals before the last potion, to animate the fill
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay inventory-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass inventory-panel">
+    <div class="overlay-panel glass inventory-panel inventory-reference">
       <header class="inv-head">
-        <button class="overlay-close inv-round" type="button" aria-label="Закрыть">←</button>
+        <button class="overlay-close inv-round" type="button" aria-label="Закрыть">×</button>
         <h2>Инвентарь</h2>
-        <button class="inv-round" type="button" data-inventory-refresh aria-label="Обновить">↻</button>
+        <button class="inventory-capacity" type="button" data-inventory-refresh title="Обновить" aria-label="Обновить"><span data-inventory-count></span></button>
       </header>
-      <p class="overlay-copy" hidden>Ресурсы и предметы читаются из той же Mongo-сессии. Снаряжение и гача уже имеют отдельные экраны; здесь можно использовать расходники.</p>
-      <div class="storage-actions"><button type="button" class="clan-play" data-personal-warehouse>Хранилище</button><button type="button" class="clan-play" data-personal-trade>Обмен</button><button type="button" class="clan-play" data-personal-coupons>Купоны</button></div><div data-inventory-content></div>
+      <div data-inventory-content></div>
       <div class="utility-feedback" data-inventory-feedback aria-live="polite"></div>
     </div><div class="inventory-toast" data-inventory-toast role="status" hidden></div>`;
 
   const content = overlay.querySelector('[data-inventory-content]');
-  overlay.querySelector('[data-personal-warehouse]').onclick=()=>openWarehouseGame({api,renderState,haptic,onClose:()=>refresh()});
-  overlay.querySelector('[data-personal-coupons]').onclick=()=>openLoginRewards({api,renderState,haptic,initialTab:'coupons',onClose:refresh});
-  overlay.querySelector('[data-personal-trade]').onclick=()=>openTradeGame({api,renderState,haptic,onClose:()=>refresh()});
   const feedback = overlay.querySelector('[data-inventory-feedback]');
+  feedback.textContent = 'Выберите предмет';
   const close = () => {
     window.clearTimeout(toastTimer);
+    closeItemPopup();
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
   };
@@ -131,23 +120,27 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       </button>`;
   }
 
-  const FILTERS = [['all', 'Все'], ['equip', 'Снаряжение'], ['supply', 'Расходники'], ['material', 'Материалы']];
+  const FILTERS = [['all', 'Все'], ['equip', 'Экипировка'], ['supply', 'Расходники'], ['material', 'Материалы'], ['other','Прочее'], ['quest','Квесты']];
   const SUPPLY_GROUPS = new Set(['consumable', 'scroll', 'herb']);
   const isSupplyMaterial = item => SUPPLY_GROUPS.has(materialGroup(item));
+  const isQuestMaterial = item => item.kind==='quest'||/^(class_mark_|quest_|boss_pass_|bound_class_mark_|bound_boss_pass_)/.test(item.key);
+  const isOtherMaterial = item => !isSupplyMaterial(item)&&!isQuestMaterial(item)&&materialGroup(item)==='other';
 
   /** The bag of the current filter: one grid of icons, empty cells fill the last row. */
+  const matchesSearch = item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase());
   function bagSlots() {
-    const potions = state.potions.map(slotHtml);
-    const equipment = (state.equipment || []).filter(item => !item.isUsed).map(item => `<button type="button" class="item-grid-cell inv-slot ${item.shadow?'is-shadow-item':''} ${selectedKind === 'equipment' && selectedKey === item.key ? 'selected' : ''}" data-inventory-equipment="${escapeHtml(item.key)}" title="${escapeHtml(item.name)}${item.isUsed ? ' · Надето' : ''}" aria-label="${escapeHtml(item.name)}">${equipmentArt(item)}${item.enchant ? `<i class="inv-plus">+${item.enchant}</i>` : ''}${item.isUsed ? '<i class="inv-worn" aria-hidden="true"></i>' : ''}</button>`);
+    const potions = state.potions.filter(item=>matchesSearch(item)).map(slotHtml);
+    const equipment = (state.equipment || []).filter(item => !item.isUsed&&matchesSearch(item)).map(item => `<button type="button" class="item-grid-cell inv-slot ${item.shadow?'is-shadow-item':''} ${selectedKind === 'equipment' && selectedKey === item.key ? 'selected' : ''}" data-inventory-equipment="${escapeHtml(item.key)}" title="${escapeHtml(item.name)}${item.isUsed ? ' · Надето' : ''}" aria-label="${escapeHtml(item.name)}">${equipmentArt(item)}${item.enchant ? `<i class="inv-plus">+${item.enchant}</i>` : ''}${item.isUsed ? '<i class="inv-worn" aria-hidden="true"></i>' : ''}</button>`);
     const materialSlot = item => `<button type="button" class="item-grid-cell inv-slot ${selectedKind === 'material' && selectedKey === item.key ? 'selected' : ''}" data-inventory-material="${escapeHtml(item.key)}" title="${escapeHtml(item.name)} ×${item.count}" aria-label="${escapeHtml(item.name)} ×${item.count}">${materialIcon(item.key)}<em>${formatNumber(item.count)}</em></button>`;
-    const materials = state.materials || [];
+    const materials = (state.materials || []).filter(matchesSearch);
     const supplies = materials.filter(isSupplyMaterial).map(materialSlot);
-    const rest = materials.filter(item => !isSupplyMaterial(item)).map(materialSlot);
+    const rest = materials.filter(item => !isSupplyMaterial(item)&&!isQuestMaterial(item)&&!isOtherMaterial(item)).map(materialSlot);
+    const others=materials.filter(isOtherMaterial).map(materialSlot),quests=materials.filter(isQuestMaterial).map(materialSlot);
     const cells = filter === 'equip' ? equipment
       : filter === 'supply' ? [...potions, ...supplies]
         : filter === 'material' ? rest
-          : [...equipment, ...potions, ...supplies, ...rest];
-    const total = Math.max(30, Math.ceil(cells.length / 6) * 6);
+          : filter === 'other' ? others : filter === 'quest' ? quests : [...equipment, ...potions, ...supplies, ...rest, ...others, ...quests];
+    const total = Math.max(80, cells.length);
     return itemGridHtml(cells, {className: 'inv-bag l2-bag', min: total, label: 'Инвентарь'});
   }
 
@@ -191,59 +184,89 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     }
     const item=selectedItem(), row=selectedRow();
     content.innerHTML = `
-      ${vitalsHtml()}
-      ${state.buffs?.length?`<p class="inv-hint">${state.buffs.map(buff=>`${escapeHtml(buff.name)} · ${Math.max(0,Math.ceil((buff.until-Date.now())/60000))} мин.`).join(' · ')}</p>`:''}
-      <section class="inventory-section">
-        <nav class="inv-tabs" role="tablist" aria-label="Фильтр инвентаря">${FILTERS.map(([id, label]) => `<button type="button" role="tab" class="${filter === id ? 'active' : ''}" data-inventory-filter="${id}" aria-selected="${filter === id}">${label}</button>`).join('')}</nav>
-        ${bagSlots()}
-        <div class="inventory-title"><small>${state.slots ? `${formatNumber(state.slots.used)} / ${formatNumber(state.slots.capacity)}` : ''}</small></div>
-      </section>
-      ${detailHtml()}
-      <footer class="inventory-footer"><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong title="${formatNumber(state.resources.gold)}">${walletNumber(state.resources.gold)}</strong></span><span class="inventory-col" title="Монеты удачи">${luckCoinHtml(24)}<strong title="${formatNumber(state.resources.luckCoins)}">${walletNumber(state.resources.luckCoins)}</strong></span></div><div class="inventory-tools"><button type="button" data-inventory-discard ${!item||item.isUsed||item.augment?.current?'disabled':''}>Выбросить</button><button type="button" data-inventory-crystallize ${selectedKind!=='equipment'||!item?.enchantable||item.isUsed||item.timed?'disabled':''}>Кристаллизация</button><button type="button" data-inventory-auction ${!row||item.isUsed||item.timed||item.bound||selectedKind==='equipment'&&!item.uid?'disabled':''}>Выставить на аукцион</button><button type="button" data-inventory-craft>Крафт</button></div></footer>`;
+      <div class="inventory-layout">${inventoryCharacterHtml(state)}<section class="inventory-section">
+        <nav class="inv-tabs" role="tablist" aria-label="Фильтр инвентаря">${FILTERS.map(([id,label])=>`<button type="button" role="tab" class="${filter===id?'active':''}" data-inventory-filter="${id}" aria-selected="${filter===id}">${label}</button>`).join('')}</nav>
+        <input class="inventory-search" type="search" data-inventory-search placeholder="Поиск предмета" aria-label="Поиск предмета" value="${escapeHtml(search)}">
+        <div data-inventory-bag>${bagSlots()}</div>
+      </section></div>
+      <footer class="inventory-footer"><div class="inventory-tools">
+        <button type="button" data-inventory-crystallize title="Кристаллизация" aria-label="Кристаллизация" ${selectedKind!=='equipment'||!item?.enchantable||item.isUsed||item.timed?'disabled':''}>${inventoryActionIcon('crystallize')}</button>
+        <button type="button" data-inventory-auction title="Аукцион" aria-label="Аукцион" ${!row||item.isUsed||item.timed||item.bound||selectedKind==='equipment'&&!item.uid?'disabled':''}>${inventoryActionIcon('auction')}</button>
+        <button type="button" data-inventory-craft title="Крафт" aria-label="Крафт">${inventoryActionIcon('craft')}</button>
+      </div><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong title="${formatNumber(state.resources.gold)}">${walletNumber(state.resources.gold)}</strong></span></div>
+      <button type="button" class="inventory-discard" data-inventory-discard title="Выбросить" aria-label="Выбросить" ${!item||item.isUsed||item.augment?.current?'disabled':''}>${inventoryActionIcon('discard')}</button></footer>`;
+    overlay.querySelector('[data-inventory-count]').textContent = formatNumber((state.equipment||[]).filter(i=>!i.isUsed).length+state.potions.length+(state.materials||[]).length)+' / '+(state.slots?.capacity||80);
     bind();
     // Vitals glide from the pre-potion value to the new one.
     requestAnimationFrame(() => content.querySelectorAll('[data-fill]').forEach(fill => { fill.style.width = `${fill.dataset.fill}%`; }));
     previousPlayer = null;
   }
 
+  function selectItem(kind,key){
+    if(pending)return;
+    selectedKind=kind;selectedKey=key;haptic('light');render();openItemPopup();
+  }
   function bind() {
-    content.querySelector('[data-inventory-coupon]')?.addEventListener('click',()=>openLoginRewards({api,renderState,haptic,initialTab:'coupons',initialKey:selectedKey,onClose:refresh}));
-    content.querySelectorAll('[data-inventory-select]').forEach(button => {
-      button.addEventListener('click', () => { selectedKind='potion';selectedKey = button.dataset.inventorySelect; haptic('light'); render(); });
+    content.querySelectorAll('[data-inventory-select]').forEach(b=>b.onclick=()=>selectItem('potion',b.dataset.inventorySelect));
+    for(const kind of ['material','equipment'])content.querySelectorAll(`[data-inventory-${kind}]`).forEach(b=>b.onclick=()=>selectItem(kind,b.dataset[kind==='material'?'inventoryMaterial':'inventoryEquipment']));
+    content.querySelectorAll('[data-inventory-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.inventoryFilter;haptic('light');render();});
+    content.querySelector('[data-inventory-search]').oninput=event=>{search=event.target.value;content.querySelector('[data-inventory-bag]').innerHTML=bagSlots();bindBag();};
+    content.querySelectorAll('[data-gear-slot]').forEach(b=>b.onclick=()=>{
+      const item=inventoryEquipped(state,b.dataset.gearSlot);
+      if(item)selectItem('equipment',item.key);else openSlotPicker(b.dataset.gearSlot);
     });
-    for(const kind of ['material','equipment'])content.querySelectorAll(`[data-inventory-${kind}]`).forEach(button=>button.onclick=()=>{selectedKind=kind;selectedKey=button.dataset[kind==='material'?'inventoryMaterial':'inventoryEquipment'];haptic('light');render();});
-    content.querySelectorAll('[data-inventory-filter]').forEach(button => button.onclick = () => { filter = button.dataset.inventoryFilter; haptic('light'); render(); });
+    content.querySelectorAll('[data-inventory-tattoo]').forEach(b=>b.onclick=async()=>{const {openTattoosGame}=await import('./tattoos.js');await openTattoosGame({api,renderState,haptic,statusElement,onClose:refresh});});
     content.querySelector('[data-inventory-discard]').onclick=()=>itemAction('discard');
     content.querySelector('[data-inventory-crystallize]').onclick=()=>itemAction('crystallize');
-    content.querySelector('[data-inventory-auction]').onclick=async()=>{if(pending)return;const {openAuctionGame}=await import('./auction.js');await openAuctionGame({api,renderState,haptic,statusElement,initialItem:selectedRow(),onClose:refresh});};
-    content.querySelector('[data-inventory-craft]').onclick=async()=>{if(pending)return;const {openEquipmentGame}=await import('./equipment.js');await openEquipmentGame({api,renderState,haptic,statusElement,initialView:'forge',onClose:refresh});};
-    content.querySelectorAll('[data-inventory-sell]').forEach(button => {
-      button.addEventListener('click', async () => {
-        if (pending) return;
-        pending = true;
-        try {
-          const payload = await api('/api/inventory/sell', { method: 'POST', body: JSON.stringify({ key: button.dataset.inventorySell }) });
-          state = payload.inventory;
-          feedback.textContent = `Продано за ${formatNumber(payload.gold)} 🪙.`;
-          haptic('light');
-        } catch (error) {
-          if (error.payload?.inventory) state = error.payload.inventory;
-          feedback.textContent = REASONS[error.payload?.reason] || error.message;
-        } finally {
-          pending = false;
-          render();
-        }
-      });
+    content.querySelector('[data-inventory-auction]').onclick=async()=>{if(pending)return;closeItemPopup();const {openAuctionGame}=await import('./auction.js');await openAuctionGame({api,renderState,haptic,statusElement,initialItem:selectedRow(),onClose:refresh});};
+    content.querySelector('[data-inventory-craft]').onclick=async()=>{if(pending)return;closeItemPopup();const {openEquipmentGame}=await import('./equipment.js');await openEquipmentGame({api,renderState,haptic,statusElement,initialView:'forge',onClose:refresh});};
+  }
+  function bindBag(root=content){
+    root.querySelectorAll('[data-inventory-select]').forEach(b=>b.onclick=()=>selectItem('potion',b.dataset.inventorySelect));
+    for(const kind of ['material','equipment'])root.querySelectorAll(`[data-inventory-${kind}]`).forEach(b=>b.onclick=()=>selectItem(kind,b.dataset[kind==='material'?'inventoryMaterial':'inventoryEquipment']));
+  }
+  function closeItemPopup(){itemDialog?.close();itemDialog?.remove();itemDialog=null;}
+  function popup(html,title='Информация'){
+    closeItemPopup();itemDialog=document.createElement('dialog');itemDialog.className='inventory-item-dialog';
+    itemDialog.innerHTML=`<header><h2>${escapeHtml(title)}</h2><button type="button" data-item-close aria-label="Закрыть">×</button></header>${html}`;
+    itemDialog.querySelector('[data-item-close]').onclick=closeItemPopup;
+    itemDialog.addEventListener('cancel',event=>{event.preventDefault();closeItemPopup();});
+    overlay.append(itemDialog);itemDialog.showModal();return itemDialog;
+  }
+  function openSlotPicker(slot){
+    if(pending)return;
+    const names=({head:['head','helmet'],hands:['hands','gloves'],legs:['legs','boots']})[slot]||[slot];
+    const items=state.equipment.filter(item=>!item.isUsed&&item.slots?.some(id=>names.includes(id)));
+    const title=[...INVENTORY_LEFT,...INVENTORY_RIGHT].find(row=>row[0]===slot)?.[1]||slot;
+    const root=popup(items.length?itemGridHtml(items.map(item=>`<button type="button" class="item-grid-cell" data-inventory-equipment="${escapeHtml(item.key)}" title="${escapeHtml(item.name)}" aria-label="${escapeHtml(item.name)}">${inventoryItemArt(item)}</button>`),{min:12}):'<p>В этой категории пока нет предметов.</p>',title);
+    bindBag(root);
+  }
+  function openItemPopup(){
+    const item=selectedItem();if(!item)return;
+    const extra=selectedKind==='equipment'?`<ul class="inventory-item-stats">${(item.stats||[]).map(stat=>`<li>${escapeHtml(stat.text||[stat.name,stat.value].filter(v=>v!=null).join(' · '))}</li>`).join('')}</ul><button type="button" data-inventory-equip ${!item.isUsed&&!item.canUse?'disabled':''}>${item.isUsed?'Снять':'Надеть'}</button>`:'';
+    const root=popup(detailHtml()+extra+(selectedKind==='potion'?vitalsHtml():''));
+    root.querySelector('[data-inventory-potion]')?.addEventListener('click',event=>usePotion(event.currentTarget.dataset.inventoryPotion));
+    root.querySelector('[data-inventory-equip]')?.addEventListener('click',()=>equipItem(item));
+    root.querySelector('[data-inventory-coupon]')?.addEventListener('click',()=>{closeItemPopup();openLoginRewards({api,renderState,haptic,initialTab:'coupons',initialKey:selectedKey,onClose:refresh});});
+    root.querySelector('[data-inventory-sell]')?.addEventListener('click',async event=>{
+      if(pending)return;const key=event.currentTarget.dataset.inventorySell;closeItemPopup();pending=true;
+      try{const payload=await api('/api/inventory/sell',{method:'POST',body:JSON.stringify({key})});state=payload.inventory;if(payload.state)renderState?.(payload.state);feedback.textContent=`Продано за ${formatNumber(payload.gold)} 🪙.`;}
+      catch(error){if(error.payload?.inventory)state=error.payload.inventory;feedback.textContent=REASONS[error.payload?.reason]||error.message;}
+      finally{pending=false;render();}
     });
-    content.querySelectorAll('[data-inventory-potion]').forEach(button => {
-      button.addEventListener('click', () => usePotion(button.dataset.inventoryPotion));
-    });
+  }
+  async function equipItem(item){
+    if(pending)return;closeItemPopup();pending=true;
+    try{const payload=await api('/api/equipment/action',{method:'POST',body:JSON.stringify({key:item.key,action:item.isUsed?'unequip':'equip'})});if(payload.state)renderState?.(payload.state);state=payload.inventory||await api('/api/inventory');feedback.textContent='';haptic('light');}
+    catch(error){feedback.textContent=REASONS[error.payload?.reason]||error.message;}
+    finally{pending=false;render();}
   }
 
   async function itemAction(action){
     if(pending)return;
     const item=selectedItem(),row=selectedRow();if(!item||!row)return;
-    const count=await stockQuantity({row,action:action==='discard'?'Выбросить навсегда':'Кристаллизовать',owner:overlay});
+    closeItemPopup();
+    const count=await stockQuantity({row,action:action==='discard'?'Выбросить навсегда':'Кристаллизовать',owner:overlay,note:action==='discard'?'Выбросить этот предмет?':'Разбить предмет на кристаллы? Предмет будет уничтожен.'});
     if(count===null||pending||!overlay.isConnected)return;
     pending=true;overlay.classList.add('busy');
     try{
@@ -273,11 +296,12 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
 
   async function usePotion(key) {
     if (pending) return;
+    closeItemPopup();
     pending = true;
     overlay.classList.add('busy');
     feedback.textContent = '';
     haptic('medium');
-    const flask = content.querySelector('.inv-detail .inv-flask, .inv-detail .inv-potion-art');
+    const flask = overlay.querySelector('.inv-detail .inv-flask, .inv-detail .inv-potion-art');
     flask?.classList.add('drinking');
     try {
       const [payload] = await Promise.all([
