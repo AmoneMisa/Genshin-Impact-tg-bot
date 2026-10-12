@@ -13,6 +13,24 @@ import {equippedPvpEffects,l2RawStat,l2OnDamageDealt} from '../functions/game/pl
 import changePlayerGameClass from '../functions/game/player/changePlayerGameClass.js';
 import updatePlayerStats from '../functions/game/player/updatePlayerStats.js';
 const NOW=1800000000000;
+test('approaching an NPC walks to the selected target and retains the destination after a city transfer',()=>{
+ const s=hero();s.game.world.city='giran';
+ const local=CITY_NPCS.find(n=>n.city==='giran'&&n.gateway);
+ assert.equal(worldAction(s,{action:'approach_npc',npc:local.id},NOW).ok,true);
+ assert.ok(s.game.world.path.length);
+ advanceWorld(s,NOW+200000);
+ assert.deepEqual({x:s.game.world.x,y:s.game.world.y},cityPoint(CITIES.find(c=>c.id==='giran'),local));
+ const remote=CITY_NPCS.find(n=>n.city==='gludin'&&!n.gateway);
+ const before=s.game.inventory.gold;
+ assert.equal(worldAction(s,{action:'approach_npc',npc:remote.id},NOW+200001).ok,true);
+ advanceWorld(s,NOW+400000);
+ assert.equal(s.game.world.city,'gludin');assert.equal(s.game.inventory.gold,before-20000);
+ assert.ok(s.game.world.path.length);
+ advanceWorld(s,NOW+600000);
+ assert.deepEqual({x:s.game.world.x,y:s.game.world.y},cityPoint(CITIES.find(c=>c.id==='gludin'),remote));
+ s.game.world.mode='location';
+ assert.equal(worldAction(s,{action:'approach_npc',npc:remote.id},NOW+600001).reason,'return_to_city');
+});
 test('converted PvP passives preserve SA without doubling it, and CP proc observes static reuse',()=>{
  const a=hero(1),b=hero(2);a.game.equipmentStats.weapon={isFilled:true,pvp:{skills:[{id:3566,level:1},{id:3650,level:1}]}};
  assert.equal(l2RawStat(a,'critRate'),0);assert.equal(l2RawStat(a,'pvpPhysSkillsDmg',true),1.05);

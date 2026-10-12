@@ -54,6 +54,7 @@ for(const [element,colour] of Object.entries({fire:'red',water:'blue',wind:'gree
 for(const [egg,original] of Object.entries({wyvern:'etc_basilisk_egg_i00',dragon:'etc_dragon_egg_i00',ancient:'etc_dragon_egg_i05'}))set('egg_'+egg,'icon.'+original);
 set('gold','icon.etc_adena_i00');set('aa','icon.etc_ancient_adena_i00');
 // Original raid entry quest items (High Five).
+for(const [key,id] of Object.entries({profession_3:7268,profession_orc:3203,profession_dwarf:3238})) set(key,byId.get(id)?.icon);
 for(const [key,original] of Object.entries({baium:'etc_piece_of_cloth_red_i00',frintezza:'etc_scroll_gray_i00',antharas:'etc_plate_blue_i00',valakas:'etc_vacualite_glowing_white_i00',beleth:'accessary_dynasty_ring_i00'})) set('pass_'+key,'icon.'+original);
 for(const item of getCatalog().filter(item=>item.mainType==='jewelry')){
  const value=named(item.name);if(value)catalog[item.name.toLowerCase()]=value;

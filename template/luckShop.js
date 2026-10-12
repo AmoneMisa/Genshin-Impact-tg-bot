@@ -70,8 +70,8 @@ const passItems = Object.entries(PASS_EPICS).map(([name, config]) => ({
 }));
 
 export default Object.freeze([
-  {id:'profession-mark-2',group:'quest',title:'Марка второй профессии',description:'Заменяет боевые задания второй профессии. Используй в разделе «Профессии», выбрав свой класс. Плата наставнику остаётся. Привязана к персонажу.',artIcon:'icon-etc_jewel_gold_i00',cost:20,needLvl:40,grant:{professionMark:3}},
-  {id:'profession-mark-3',group:'quest',title:'Марка третьей профессии',description:'Заменяет боевые задания третьей профессии. Используй в разделе «Профессии», выбрав свой класс. Плата наставнику остаётся. Привязана к персонажу.',artIcon:'icon-etc_jewel_blue_i00',cost:40,needLvl:76,grant:{professionMark:4}},
+  {id:'profession-mark-2',group:'quest',title:'Марки второй профессии',description:'Комплект для выбранной второй профессии. Заменяет боевые задания; плата наставнику остаётся. Используй в разделе «Профессии». Привязан к персонажу.',artIcon:'icon-etc_letter_red_i00',cost:20,needLvl:40,grant:{professionMark:3}},
+  {id:'profession-mark-3',group:'quest',title:'Амулет третьей профессии',description:'Амулет резонанса для третьей профессии. Заменяет боевые задания; плата наставнику остаётся. Используй в разделе «Профессии». Привязан к персонажу.',artIcon:'icon-etc_resonance_amulet_i00',cost:40,needLvl:76,grant:{professionMark:4}},
   ...passItems,
   ...soulCrystals,
   ...lifeStoneItems,

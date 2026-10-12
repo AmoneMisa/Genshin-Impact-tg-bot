@@ -2,6 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getCharacterState, characterEffects } from '../miniapp/character.js';
 import { renderCharacterTab, characterSkillIcon } from '../webapp/character.js';
+import {secondProfessionMarkArt} from '../template/professionMarkArt.js';
+import luckShop from '../template/luckShop.js';
+test('profession art uses race testimonies for second promotion and the resonance amulet for third',()=>{
+ assert.equal(secondProfessionMarkArt('humanWizard'),'icon-etc_jewel_green_i00');
+ assert.equal(secondProfessionMarkArt('elvenWizard'),'icon-etc_herb_green_i00');
+ assert.equal(secondProfessionMarkArt('darkWizard'),'icon-etc_jewel_blue_i00');
+ assert.equal(secondProfessionMarkArt('orcShaman'),'icon-etc_badge_gold_i00');
+ assert.equal(secondProfessionMarkArt('scavenger'),'icon-etc_coins_gold_i00');
+ assert.equal(luckShop.find(i=>i.id==='profession-mark-3').artIcon,'icon-etc_resonance_amulet_i00');
+});
 
 function session() {
   return {gender:'male', game:{

@@ -35,7 +35,11 @@ export function advanceWorld(session,now=Date.now()) {
     if(w.mode==='city'){
         advancePath(w,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),CITY_SIZE);
         if(!w.path.length&&w.pending){const pending=w.pending;w.pending=null;const location=LOCATIONS.find(l=>l.id===pending.location),npc=CITY_NPCS.find(n=>n.id===pending.npc);
-            if(pending.city&&npc&&npc.city===w.city&&nearNpc(w,npc)&&session.game.inventory.gold>=pending.gold){session.game.inventory.gold-=pending.gold;w.city=pending.city;arriveCity(session,w);}
+            if(pending.city&&npc&&npc.city===w.city&&nearNpc(w,npc)&&session.game.inventory.gold>=pending.gold){
+                session.game.inventory.gold-=pending.gold;w.city=pending.city;arriveCity(session,w);
+                const target=CITY_NPCS.find(n=>n.id===pending.approachNpc&&n.city===w.city);
+                if(target){w.path=findPath(w,cityPoint(cityOf(w),target))||[];w.moveAt=now;}
+            }
             else if(location&&npc&&npc.city===w.city&&npc.gateway&&nearNpc(w,npc)&&Number(session.game.inventory.gold)>=location.teleportGold){
                 const entered=enterHuntField(session,location.id,{now});
                 if(entered.ok){session.game.inventory.gold-=location.teleportGold;w.city=location.region;w.mode='location';w.location=location.id;w.x=.5;w.y=.95;w.lastTeleport={to:location.id,gold:location.teleportGold,at:now};}
@@ -48,6 +52,21 @@ function nearNpc(world,npc){const p=cityPoint(cityOf(world),npc);return Math.hyp
 export function worldAction(session,body,now=Date.now()){
     const w=advanceWorld(session,now);
     if(!alive(session))return {ok:false,reason:'dead'};
+    if(body.action==='approach_npc'){
+        const target=CITY_NPCS.find(n=>n.id===body.npc);
+        if(!target)return {ok:false,reason:'unknown_npc'};
+        if(w.mode!=='city')return {ok:false,reason:'return_to_city'};
+        const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
+        const gate=CITY_NPCS.find(n=>n.city===w.city&&n.gateway);
+        const remote=target.city!==w.city;
+        if(remote&&!gate)return {ok:false,reason:'gatekeeper_required'};
+        if(remote&&session.game.inventory.gold<20000)return {ok:false,reason:'not_enough_gold'};
+        const path=findPath(w,cityPoint(cityOf(w),remote?gate:target));
+        if(!path)return {ok:false,reason:'path_blocked'};
+        w.path=path;w.moveAt=now;w.channel=null;
+        w.pending=remote?{npc:gate.id,city:target.city,gold:20000,approachNpc:target.id}:null;
+        return {ok:true};
+    }
     if(body.action==='move'){
         w.channel=null;w.pending=null;
         if(w.mode==='location')return moveHuntField(session,body.point,now);

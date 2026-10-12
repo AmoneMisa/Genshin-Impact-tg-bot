@@ -178,6 +178,7 @@ function skillState(session, skill, playerLevel) {
     l2Power: real && real.power >= 1 ? Math.round(real.power) : null,
     l2Level: real ? real.level : null,
     l2MaxLevel: real ? real.maxLevel : null,
+    l2Id: skill?.l2Id || null,
     slot: number(skill?.slot),
     name: String(skill?.name || 'Навык'),
     description: String(skill?.description || ''),

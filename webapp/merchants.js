@@ -27,7 +27,6 @@ const REASONS = {
 const number = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 const gradeText = grade => (grade === 'noGrade' ? 'NG' : String(grade || ''));
 const CONVERT_TAB = 'convert';
-const CATEGORY_NAMES = {weapons:'Оружие',armor:'Броня',jewelry:'Бижутерия',alchemist:'Ресурсы и рецепты',fisher:'Рыбалка',mammon:'Древняя адена'};
 const STAT_NAMES = { STR: 'Сила', DEX: 'Ловкость', CON: 'Выносливость', INT: 'Интеллект', WIT: 'Мудрость', MEN: 'Дух' };
 
 /** The pair of a dye: the gain in green, the loss in red. */
@@ -47,12 +46,10 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   let searchTimer = 0;
 
   const popup = createGamePopup({title:'Магазин',className:'merchants-overlay',panelClass:'glass merchants-panel',canClose:()=>!pending,onClose:()=>window.clearTimeout(searchTimer),body:`
-      <div class="shop-categories" data-tabs></div>
       <div data-body></div>
       <div class="shop-feedback" data-feedback aria-live="polite"></div>
     `});
   const {overlay} = popup;
-  const tabs = overlay.querySelector('[data-tabs]');
   const body = overlay.querySelector('[data-body]');
   const feedback = overlay.querySelector('[data-feedback]');
 
@@ -137,7 +134,6 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   function render() {
     if (!state) { body.innerHTML = '<div class="shop-empty">Загрузка…</div>'; return; }
     const active = tab || state.merchant;
-    tabs.replaceChildren();
     const ammo = state.ammo ? `<p class="merchant-note">В руках: ${escapeHtml(state.ammo.name)} — ${number(state.ammo.count)} шт.</p>` : '';
     if (active === CONVERT_TAB) {
       body.innerHTML = ammo + convertHtml();
@@ -155,15 +151,6 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
   }
 
   function bind() {
-    tabs.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => {
-      selectedId = null;
-      haptic('light');
-      if (button.dataset.tab === CONVERT_TAB) { tab = CONVERT_TAB; render(); return; }
-      tab = null;
-      query.merchant = button.dataset.tab;
-      query.page = 1; query.grade = null; query.group = null; query.search = '';
-      load();
-    }));
     body.querySelectorAll('[data-grade]').forEach(button => button.addEventListener('click', () => { query.grade = button.dataset.grade || null; query.page = 1; selectedId = null; load(); }));
     body.querySelector('[data-group]')?.addEventListener('change', event => { query.group = event.target.value || null; query.page = 1; selectedId = null; load(); });
     body.querySelector('[data-usable]')?.addEventListener('change', event => { query.usable = event.target.checked; query.page = 1; load(); });

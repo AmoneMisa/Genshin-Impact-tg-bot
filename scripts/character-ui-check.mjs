@@ -4,7 +4,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import assert from 'node:assert/strict';
 import { getCharacterState } from '../miniapp/character.js';
-import { performEquipmentAction } from '../miniapp/equipment.js';
+import { performEquipmentAction, getEquipmentState } from '../miniapp/equipment.js';
 import { learnPassive } from '../functions/game/player/passiveSkills.js';
 import { castClassBuff } from '../miniapp/buffs.js';
 const require=createRequire(path.resolve(process.argv[2] || 'package.json'));
@@ -43,6 +43,7 @@ const server=http.createServer(async(req,res)=>{
       calls.push({path:pathname,body});
       let result;
       if(pathname==='/api/character')result=getCharacterState(session,context);
+      else if(pathname==='/api/equipment')result=getEquipmentState(session);
       else if(pathname==='/api/equipment/action')result=performEquipmentAction(session,body.key,body.action);
       else if(pathname==='/api/passives/learn')result=learnPassive(session,body.id);
       else if(pathname==='/api/buffs/cast')result=castClassBuff(session,body.buffId);
@@ -64,7 +65,7 @@ try {
   page.on('response',response=>{if(response.status()>=400&&!response.url().includes('/api/'))badAssets.push(response.url());});
   await page.goto('http://127.0.0.1:'+server.address().port);
   await page.locator('.character-overlay.visible').waitFor();
-  assert.equal(await page.locator('.character-panel').evaluate(node=>getComputedStyle(node).borderRadius),'0px','Character window must retain square High Five corners');
+  assert.equal(await page.locator('.character-panel').evaluate(node=>getComputedStyle(node).borderRadius),'14px','Character window uses the shared panel radius');
   await fs.mkdir(path.join(root,'docs','character-ui'),{recursive:true});
   for(const [tab,label] of [['stats','Статы'],['equipment','Эквип'],['skills','Навыки'],['effects','Эффекты']]){
     await page.getByRole('tab',{name:label,exact:true}).click();
@@ -81,6 +82,7 @@ try {
 
     const overflow=await page.locator('.character-panel').evaluate(node=>[node.clientWidth,node.scrollWidth]);
     assert.ok(overflow[1]<=overflow[0]+1,tab+' overflow: '+overflow);
+    assert.equal(await page.locator('.character-title h2').isVisible(),true);
     await page.screenshot({path:path.join(root,'docs','character-ui',tab+'-340.png')});
   }
   await page.getByRole('tab',{name:'Эквип',exact:true}).click();
@@ -99,9 +101,11 @@ try {
   await page.getByText('Слот свободен.',{exact:true}).waitFor();
   assert.ok(calls.some(call=>call.path==='/api/equipment/action'&&call.body.action==='unequip'));
   await page.getByRole('tab',{name:'Навыки',exact:true}).click();
-  await page.locator('[data-character-action="learn"]:enabled').first().click();
-  await page.waitForFunction(()=>document.querySelector('.character-feedback').textContent==='Готово.');
-  assert.ok(calls.some(call=>call.path==='/api/passives/learn'));
+  await page.getByRole('tab',{name:'Пассивные',exact:true}).click();
+  assert.equal(await page.locator('[data-skill-tab="passive"]').getAttribute('aria-selected'),'true');
+  assert.equal(await page.locator('.character-scroll').getByRole('heading',{name:'Пассивные',exact:true}).isVisible(),true);
+  assert.equal(await page.locator('.character-active:visible').count(),0);
+  await page.getByRole('tab',{name:'Активные',exact:true}).click();
   await page.locator('[data-character-action="ls-activate"]:enabled').first().click();
   await page.waitForFunction(()=>document.querySelector('.character-feedback').textContent==='Готово.');
   assert.ok(calls.some(call=>call.body.action==='ls_activate'));
@@ -124,9 +128,15 @@ try {
   await page.getByRole('tab',{name:'Статы',exact:true}).focus();
   await page.keyboard.press('ArrowRight');
   assert.equal(await page.getByRole('tab',{name:'Эквип',exact:true}).getAttribute('aria-selected'),'true');
+  await page.getByRole('button',{name:'Инвентарь',exact:true}).click();await page.locator('.equipment-overlay.visible').waitFor();
+  assert.equal(await page.locator('.equipment-overlay .paper-doll-stage, .equipment-overlay .loadout-section').count(),0);
+  assert.equal(await page.locator('.equipment-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
+  assert.equal(await page.locator('.equipment-panel').getByText('Мора',{exact:true}).count(),0);
+  await page.locator('.equipment-panel .overlay-close').click();await page.locator('.equipment-overlay').waitFor({state:'detached'});
+  await page.waitForFunction(()=>!document.querySelector('.character-panel button:disabled[data-character-action=inventory]'));
   await page.locator('.overlay-close').click();await page.locator('.character-overlay').waitFor({state:'detached'});
   await page.waitForTimeout(1100);
   assert.deepEqual(errors,[]);
   assert.deepEqual(badAssets,[]);
-  console.log('PASS: 4 tabs at 320/340/390/768px, 13 slots, armor attributes, INT source, unequip, passive learning, LS activation, buffs, keyboard tabs, close, no console errors or missing assets.');
+  console.log('PASS: 4 tabs at 320/340/390/768px, 13 slots, armor attributes, INT source, unequip, active/passive tabs and inventory without a duplicate avatar, LS activation, buffs, keyboard tabs, close, no console errors or missing assets.');
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

@@ -6,7 +6,7 @@ import { escapeHtml } from './escape-html.js';
 import { renderLootArt } from './loot-renderer.js';
 
 const PAYMENT_LABELS = {
-  free: 'Бесплатная крутка', shards: 'За осколки', currency: 'За ресурсы', level_locked: 'Нужен уровень', gold_locked: 'Не хватает моры', crystals_locked: 'Не хватает кристаллов', locked: 'Недоступно',
+  free: 'Бесплатная крутка', shards: 'За осколки', currency: 'За ресурсы', level_locked: 'Нужен уровень', gold_locked: 'Не хватает адены', crystals_locked: 'Не хватает кристаллов', locked: 'Недоступно',
 };
 export const GRADE_ORDER = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
 /** Summon colour per grade: grey -> green -> blue -> purple -> gold -> crimson -> prismatic. */

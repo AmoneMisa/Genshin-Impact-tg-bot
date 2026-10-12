@@ -5,8 +5,8 @@ import { escapeHtml } from './escape-html.js';
 import { buildArtUrl } from './art/builds-art.js';
 import {flaskHtml} from './inventory.js';
 import { l2IconHtml, L2_CATEGORY_ART, L2_MATERIAL_ART, L2_JEWELRY_ART } from './art/l2-icon-art.js';
+import {l2FishingIcon} from './art/l2-extra-art.js';
 import { openMerchantsGame } from './merchants.js';
-import { openExchangeGame } from './exchange.js';
 import { openBonusGame } from './bonus.js';
 import {auctionArt} from './auction.js';
 import { openAuctionGame } from './auction.js';
@@ -28,7 +28,7 @@ export async function openShopGame(options) {
     ['potions', 'Банки', L2_CATEGORY_ART.consumable, goods('player')],
     ['crystals', 'Кристаллы', L2_CATEGORY_ART.crystal, goods('soul')],
     // High Five item 3276, Mark of Champion (Destroyer profession): icon.etc_jewel_gold_i00.
-    ['quest', 'Квест', 'icon-etc_jewel_gold_i00', goods('quest')],
+    ['quest', 'Квест', 'icon-etc_letter_red_i00', goods('quest')],
     ['epic', 'Теневые эпики', L2_JEWELRY_ART['blue coral ring'], goods('epic')],
     ['buffs', 'Комплексные баффы', L2_CATEGORY_ART.consumable, goods('buffs')],
     ['elixirs', 'Эликсиры', L2_CATEGORY_ART.consumable, goods('elixirs')],
@@ -38,17 +38,15 @@ export async function openShopGame(options) {
     ['scrolls', 'Свитки', L2_CATEGORY_ART.scroll, merchant('mammon', 'scroll')],
     ['life', 'ЛС', L2_CATEGORY_ART.lifestone, goods('stones')],
     ['resources', 'Ресурсы', L2_CATEGORY_ART.material, merchant('alchemist')],
-    ['fishing', 'Рыбалка', L2_CATEGORY_ART.full, merchant('fisher')],
-    ['mammon', 'Древняя адена', L2_CATEGORY_ART.gold, merchant('mammon')],
-    ['catalog', 'Каталог', L2_CATEGORY_ART.material, merchant(null)],
+    ['fishing', 'Рыбалка', 'l2_6529', merchant('fisher')],
+    ['mammon', 'Древняя адена', L2_MATERIAL_ART.aa, merchant('mammon')],
     ['bonus', 'Бонус', L2_MATERIAL_ART.l2_1865, () => openBonusGame(options)],
     ['adena', 'Адена за CoL', L2_CATEGORY_ART.gold, goods('currency')],
-    ['exchange', 'Пополнение CoL', L2_CATEGORY_ART.gold, () => openExchangeGame(options)],
     ['runes', 'Руны', L2_MATERIAL_ART.l2_8358, null, 'Руны пока не продаются.'],
   ];
   const popup = createGamePopup({title:'Магазин',className:'l2-store-overlay',panelClass:'l2-store-panel',body:`
       <div class="l2-store-ornament" aria-hidden="true"><span></span></div>
-      <div class="l2-store-grid">${categories.map(([id, label, art, open, reason]) => `<button type="button" class="l2-store-category" data-store-category="${id}" ${!open ? `aria-disabled="true" title="${reason}"` : ''}>${l2IconHtml(art)}<span>${label}</span></button>`).join('')}</div>
+      <div class="l2-store-grid">${categories.map(([id, label, art, open, reason]) => `<button type="button" class="l2-store-category" data-store-category="${id}" ${!open ? `aria-disabled="true" title="${reason}"` : ''}>${l2IconHtml(art) || l2FishingIcon(art)}<span>${label}</span></button>`).join('')}</div>
       <div class="l2-store-notice" role="status" aria-live="polite"></div>
       <footer class="l2-store-footer"><button type="button" data-store-all>Все товары</button><button type="button" data-store-auction>Аукцион</button></footer>
     `});

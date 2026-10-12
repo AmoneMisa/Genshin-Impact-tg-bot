@@ -55,8 +55,9 @@ test('paper doll is wired before transfer VFX and remains mobile/reduced-motion 
   assert.ok(stylesheets.indexOf('loot-equipment.css')<stylesheets.indexOf('equipment-paper-doll.css'));
   assert.ok(stylesheets.indexOf('equipment-paper-doll.css')<stylesheets.indexOf('equipment-transfer.css'));
   assert.ok(stylesheets.indexOf('equipment-transfer.css')<stylesheets.indexOf('vfx.css'));
-  assert.ok(equipment.includes("import { renderEquipmentPaperDoll } from './equipment-paper-doll.js'"));
-  assert.ok(equipment.includes('function renderSlots(container,state){renderEquipmentPaperDoll(container,state,{portrait:dollPortrait});}'));
+  assert.ok(!equipment.includes("import { renderEquipmentPaperDoll } from './equipment-paper-doll.js'"));
+  assert.ok(!equipment.includes('renderSlots(loadout,equipment)'));
+  assert.ok(fs.readFileSync(path.join(root,'webapp/character.js'),'utf8').includes('data-character-slot'));
   assert.ok(transfer.includes("querySelectorAll?.('[data-slot]')"));
   assert.ok(css.includes('.paper-doll-stage'));
   assert.ok(css.includes('.paper-doll-figure'));

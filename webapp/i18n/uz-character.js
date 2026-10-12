@@ -26,7 +26,7 @@ export default {
   'Наложить ·':'Qo‘llash ·', 'Наложить на другого игрока':'Boshqa o‘yinchiga qo‘llash',
   'Не изучено':'O‘rganilmagan', 'Не удалось обновить данные:':'Ma’lumotlarni yangilab bo‘lmadi:',
   'Не удалось открыть раздел.':'Bo‘limni ochib bo‘lmadi.', 'Не удалось сохранить.':'Saqlab bo‘lmadi.',
-  'Недостаточно Моры.':'Mora yetishmayapti.', 'Недостаточно MP.':'MP yetishmayapti.',
+  'Недостаточно Адены.':'Adena yetishmayapti.', 'Недостаточно MP.':'MP yetishmayapti.',
   'Недостаточно SP.':'SP yetishmayapti.', 'Недостаточный уровень.':'Daraja yetarli emas.',
   'Нужен':'Kerak', 'Операция пока недоступна.':'Bu amal hozircha mavjud emas.',
   'Описание и улучшение':'Tavsif va yaxshilash', 'Осталось':'Qolgan', 'Осталось дней':'Qolgan kunlar',

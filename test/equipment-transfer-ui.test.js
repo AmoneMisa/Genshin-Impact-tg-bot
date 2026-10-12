@@ -42,7 +42,7 @@ test('equipment UI only plays transfer after successful action state is rendered
   const equipmentJs = fs.readFileSync(path.join(root, 'webapp/equipment.js'), 'utf8');
   const paperDollJs = fs.readFileSync(path.join(root, 'webapp/equipment-paper-doll.js'), 'utf8');
   assert.ok(equipmentJs.includes("import { captureEquipmentTransfer, playEquipmentTransfer } from './equipment-transfer.js'"));
-  assert.ok(equipmentJs.includes("import { renderEquipmentPaperDoll } from './equipment-paper-doll.js'"));
+  assert.ok(!equipmentJs.includes("import { renderEquipmentPaperDoll } from './equipment-paper-doll.js'"));
   assert.ok(paperDollJs.includes('data-slot="${escapeHtml(slot)}"'));
   assert.ok(equipmentJs.includes("captureEquipmentTransfer(action,item,{list,loadout,equipment})"));
   assert.ok(equipmentJs.includes('equipment=payload.equipment'));

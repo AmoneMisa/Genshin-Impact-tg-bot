@@ -19,7 +19,7 @@
 .character-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:0 8px 8px;flex:none}
 .character-tabs button{padding:6px 2px;font-size:12px}
 .character-tabs button[aria-selected=true]{border-color:#52bcf0;background:linear-gradient(#1766a3,#092c55);color:#fff}
-.character-scroll{overflow:auto;overscroll-behavior:contain;padding:0 8px 10px;scrollbar-width:thin;scrollbar-color:#536d80 #0a131d}
+.character-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 8px 10px;scrollbar-width:thin;scrollbar-color:#536d80 #0a131d}
 .character-section{border:1px solid #304d61;margin:0 0 8px;background:#08121d65;border-radius:2px}
 .character-panel .character-section h3{font:600 12px Arial,sans-serif;margin:0;padding:7px 8px;border-bottom:1px solid #294252;background:linear-gradient(#14283890,#0a152100);color:#c1d6e6}
 .character-section-body{padding:6px 8px}
@@ -39,7 +39,11 @@
 .character-elements .character-row{font-size:11px}
 .character-element-label{display:flex;align-items:center;gap:4px}.character-element-label img{width:18px;height:18px;object-fit:contain}
 .character-empty,.character-note{font-size:12px;color:#9eafbe;margin:7px 0;line-height:1.5}
-.character-tools{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}
+.character-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:7px 0}
+.character-skill-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:8px 0;}
+.character-skill-tabs [aria-selected=true]{border-color:var(--gold);background:var(--button-gold);}
+.character-panel [role=tabpanel][hidden]{display:none;}
+.character-tools button{display:flex;flex-wrap:wrap;text-align:center;white-space:normal;}
 .character-tools button{flex:1;font-size:12px}
 .character-tools img{width:18px;height:18px;vertical-align:middle;margin-right:4px}
 .character-doll{height:354px;position:relative;background:radial-gradient(ellipse at 50% 72%,#163e5680,transparent 65%);margin:0 0 7px}
@@ -175,6 +179,8 @@
 .character-panel .character-button-label{display:block;flex:1;width:100%;text-align:center;line-height:1.2}
 .character-panel button:has(.character-button-label>.ui-icon){padding-inline:25px}
 .character-panel .character-button-label>.ui-icon{position:absolute;left:6px;top:50%;transform:translateY(-50%);width:16px;height:16px;margin:0;vertical-align:initial}
+.character-panel button:has(.character-button-label>img){padding-inline:25px}
+.character-panel .character-button-label>img{position:absolute;left:6px;top:50%;transform:translateY(-50%);width:16px;height:16px;margin:0;vertical-align:initial}
 
 /* Reviewed characteristic paintings retain compact mobile stat controls. */
 .polish-icon{display:inline-block;width:24px;height:24px;object-fit:contain;vertical-align:middle;flex-shrink:0}

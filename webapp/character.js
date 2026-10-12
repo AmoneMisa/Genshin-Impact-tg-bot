@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import {characteristicIcon,polishIcon} from './art/polish-icon-art.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
@@ -78,7 +79,7 @@ function listEntry(iconKey,title,copy,buttons='') {
   return '<article class="character-list-row">' + characterSkillIcon(iconKey) + '<div class="character-list-copy"><strong>' + esc(title) + '</strong><p>' + esc(copy) + '</p>' + buttons + '</div></article>';
 }
 
-export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={}) {
+export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null,skillTab='active'}={}) {
   if (tab === 'stats') {
     const player = data.player;
     const attrs = data.attributes || {};
@@ -101,7 +102,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
     const slots = (entries,side) => '<div class="character-slots '+side+'">'+entries.map(([id,label,glyph])=>{
       const item = equippedItemForSlot(equipment,id);
       return '<button type="button" class="character-slot" data-character-slot="'+id+'" aria-pressed="'+(id===slot)+'" aria-label="'+esc(label+': '+(item?.name || 'Пусто')+(item?.enchant?' +'+item.enchant:'')+(item?.augment?.current?' · ЛС':''))+'"><span class="character-slot-icon'+(item?.enchant>=10?' enchant-high':item?.enchant>=4?' enchanted':'')+(item?.augment?.current?' augmented':'')+'">'
-        +(item?renderLootArt(item):/Ear|Ring|necklace/.test(id)?renderLootArt({kind:id.includes('Ear')?'earring':id.includes('Ring')?'ring':'amulet',grade:'noGrade'}):icon(glyph))+(item?'<b class="character-grade">'+esc(item.grade==='noGrade'?'NG':item.grade)+'</b>':'')
+        +renderLootArt(item || {kind:({head:'helmet',leftEar:'earring',rightEar:'earring',up:'armor',hands:'gloves',leftHand:'shield',leftRing:'ring',rightRing:'ring',legs:'boots',necklace:'amulet',cloak:'cloak',down:'greaves',rightHand:'staff'})[id],grade:'noGrade'})+(item?'<b class="character-grade">'+esc(item.grade==='noGrade'?'NG':item.grade)+'</b>':'')
         +(item?.enchant?'<b class="character-enchant">+'+esc(String(item.enchant))+'</b>':'')
         +(item?.augment?.current?'<span class="character-ls" aria-hidden="true">'+paintedIconHtml('lifestone')+'</span>':'')
         +'</span><span>'+label+'</span></button>';
@@ -114,14 +115,14 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
       ;
   }
   if (tab === 'skills') {
-    const active = (data.skills?.skills || []).map(skill=>listEntry(skill.name,
+    const active = (data.skills?.skills || []).map(skill=>listEntry(skill.l2Id || skill.name,
       skill.name+' +'+skill.enchantLevel,
       skill.description+' · '+(skill.locked?'Откроется на '+skill.needLevel+' ур.':'MP '+fmt(skill.usage?.mp)+' · CD '+fmt(skill.usage?.cooldownSeconds)+' сек.'),
       action('skill-info','Описание и улучшение','data-skill-slot="'+skill.slot+'"'))).join('');
     const passives = (data.passives?.passives || []).map(skill=>listEntry(skill.id,skill.name+' · '+skill.level+'/'+skill.maxLevel,
       skill.stat+': '+(skill.current || 'Не изучено')+(skill.next?' → '+skill.next:''),
-      skill.automatic ? '<small>Изучается автоматически'+(skill.needLvl?' · '+skill.needLvl+' ур.':'')+'</small>' : skill.cost ? '<small>Нужен '+skill.needLvl+' ур. · '+fmt(skill.cost.sp)+' SP'+(skill.cost.gold?' · '+fmt(skill.cost.gold)+' Мора':'')+'</small>'+action('learn','Изучить','data-passive-id="'+esc(skill.id)+'"',!skill.canLearn) : '<small>Максимальный уровень</small>')).join('');
-    const ls = (data.equipment?.items || []).filter(item=>item.isUsed && item.augment?.current).map(item=>{
+      skill.automatic ? '<small>Изучается автоматически'+(skill.needLvl?' · '+skill.needLvl+' ур.':'')+'</small>' : skill.cost ? '<small>Нужен '+skill.needLvl+' ур. · '+fmt(skill.cost.sp)+' SP'+(skill.cost.gold?' · '+fmt(skill.cost.gold)+' Адена':'')+'</small>'+action('learn','Изучить','data-passive-id="'+esc(skill.id)+'"',!skill.canLearn) : '<small>Максимальный уровень</small>')).join('');
+    const ls = (data.equipment?.items || []).filter(item=>item.isUsed && item.augment?.current && Boolean(item.augment.active)===(skillTab==='active')).map(item=>{
       const current = item.augment.current, skill = current.skill, activeState = item.augment.active;
       return listEntry(skill?.id || 'lifestone',(skill?skill.title+': '+skill.name:'Бонус ЛС')+' · '+item.name,
         current.text+(skill?' · '+skill.text:''),
@@ -129,11 +130,11 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
           'data-key="'+esc(item.key)+'"',activeState.cooldownMs>0):'');
     }).join('');
     const clan = (data.clanPassives || []).map(skill=>listEntry(skill.id,skill.name+' · ур. '+skill.level,skill.stat+' '+skill.bonus)).join('');
-    return row('Очки навыков',fmt(data.player.sp)+' SP')
+    return '<nav class="character-skill-tabs" role="tablist" aria-label="Тип навыков">'+[['active','Активные'],['passive','Пассивные']].map(([id,title])=>'<button type="button" role="tab" data-skill-tab="'+id+'" aria-selected="'+(skillTab===id)+'">'+title+'</button>').join('')+'</nav>'+row('Очки навыков',fmt(data.player.sp)+' SP')+'<div role="tabpanel" '+(skillTab!=='active'?'hidden':'')+'>'
       +section('Активные','<div class="character-active">'+(active || empty('Для этого класса нет активных умений.'))+'</div>')
-      +section('Пассивные',passives || empty('Пассивных умений пока нет.'))
-      +section('ЛС · Аугментация',ls || empty('На надетых предметах нет аугментации.'))
-      +section('Клановые пассивки',clan || empty('Активных клановых бонусов нет.'));
+      +'</div><div role="tabpanel" '+(skillTab!=='passive'?'hidden':'')+'>'+section('Пассивные',passives || empty('Пассивных умений пока нет.'))
+      +'</div>'+section('ЛС · Аугментация',ls || empty('На надетых предметах нет аугментации.'))
+      +(skillTab==='passive'?section('Клановые пассивки',clan || empty('Активных клановых бонусов нет.')):'');
   }
   const effects = (data.effects || []).filter(effect=>!effect.until || effect.until>Date.now());
   const group = kind => {
@@ -152,7 +153,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null}={})
 }
 
 const ERRORS = {
-  not_enough_sp:'Недостаточно SP.', not_enough_gold:'Недостаточно Моры.', level_too_low:'Недостаточный уровень.',
+  not_enough_sp:'Недостаточно SP.', not_enough_gold:'Недостаточно Адены.', level_too_low:'Недостаточный уровень.',
   max_level:'Достигнут максимальный уровень.', stale_item:'Снаряжение изменилось. Список обновлён.',
   cooldown:'Бафф ещё восстанавливается.', not_enough_mp:'Недостаточно MP.', player_dead:'Сначала воскресните.',
   skill_cooldown:'Навык ЛС ещё восстанавливается.', not_equipped:'Предмет уже снят.', gold_level_locked:'Операция пока недоступна.',
@@ -160,11 +161,11 @@ const ERRORS = {
 
 export async function openCharacterPage(options,initialTab='stats') {
   const {api,renderState,haptic}=options;
-  let data=await api('/api/character'), tab=initialTab, slot='rightHand',effectId=null,pending=false,closed=false;
+  let data=await api('/api/character'), tab=initialTab, skillTab='active', slot='rightHand',effectId=null,pending=false,closed=false;
   const overlay=document.createElement('section');
   overlay.className='game-overlay character-overlay';
   overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Персонаж');
-  overlay.innerHTML='<div class="overlay-backdrop"></div><div class="overlay-panel character-panel"><header class="character-title"><button class="overlay-close" type="button" aria-label="Закрыть">'+icon('chevron-left')+'</button><h2>Персонаж</h2><button type="button" data-character-refresh aria-label="Обновить">'+icon('rotate-cw')+'</button></header><div data-character-identity></div><nav class="character-tabs" role="tablist" aria-label="Разделы персонажа"></nav><div class="character-scroll" role="tabpanel" id="character-content" tabindex="0"></div><p class="character-feedback" role="status" aria-live="polite"></p></div>';
+  overlay.innerHTML='<div class="overlay-backdrop"></div><div class="overlay-panel character-panel">'+dialogHeading('Персонаж').replace('class="game-dialog-heading"','class="game-dialog-heading character-title"').replace('<h2>','<button type="button" data-character-refresh aria-label="Обновить">'+icon('rotate-cw')+'</button><h2>').replace('data-dismiss','class="overlay-close" data-dismiss')+'<div data-character-identity></div><nav class="character-tabs" role="tablist" aria-label="Разделы персонажа"></nav><div class="character-scroll" role="tabpanel" id="character-content" tabindex="0"></div><p class="character-feedback" role="status" aria-live="polite"></p></div>';
   const panel=overlay.querySelector('.character-scroll'), tabs=overlay.querySelector('.character-tabs'),feedback=overlay.querySelector('.character-feedback');
   const previousFocus=document.activeElement;
   function draw() {
@@ -172,7 +173,7 @@ export async function openCharacterPage(options,initialTab='stats') {
     overlay.querySelector('[data-character-identity]').innerHTML='<div class="character-identity"><img class="character-portrait" src="'+esc(menuArtFor('profile',data.player))+'" alt=""><b class="character-level">'+fmt(data.player.level)+'</b><div class="character-name"><strong>'+esc(data.name)+'</strong><small>'+esc(data.player.classTitle)+'</small></div></div>';
     tabs.innerHTML=CHARACTER_TABS.map(([id,label])=>'<button type="button" role="tab" id="character-tab-'+id+'" aria-controls="character-content" aria-selected="'+(id===tab)+'" tabindex="'+(id===tab?0:-1)+'" data-character-tab="'+id+'">'+label+'</button>').join('');
     panel.setAttribute('aria-labelledby','character-tab-'+tab);
-    panel.innerHTML=renderCharacterTab(data,tab,{slot,effectId});panel.scrollTop=scroll;
+    panel.innerHTML=renderCharacterTab(data,tab,{slot,effectId,skillTab});panel.scrollTop=scroll;
     overlay.querySelectorAll('button[data-character-action],button[data-character-slot],button[data-character-tab],button[data-character-refresh]').forEach(button=>{if(pending)button.disabled=true;});
   }
   async function refresh() {
@@ -218,6 +219,7 @@ export async function openCharacterPage(options,initialTab='stats') {
     if(!button || pending || closed)return;
     try {
       if(button.hasAttribute('data-character-refresh')){pending=true;draw();try{await refresh();}finally{pending=false;draw();}return;}
+      if(button.dataset.skillTab){skillTab=button.dataset.skillTab;draw();haptic?.('light');return;}
       if(button.dataset.characterTab){selectTab(button.dataset.characterTab);return;}
       if(button.dataset.characterSlot){slot=button.dataset.characterSlot;draw();return;}
       if(button.dataset.effectId){effectId=button.dataset.effectId;draw();return;}

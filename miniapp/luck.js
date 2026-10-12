@@ -1,4 +1,5 @@
 import { describeItemStats } from '../functions/game/equipment/describeStats.js';
+import {secondProfessionMarkArt} from '../template/professionMarkArt.js';
 // Coins of Luck: the donation currency, bought with Telegram Stars (miniapp/stars.js). They are
 // never raided. Fighters of epic raid bosses and the top of the weekly arena also earn a few.
 // Spent in the Donate shop (template/luckShop.js) plus rented epic equipment built here.
@@ -63,7 +64,7 @@ export function getLuckShopState(session, now = Date.now()) {
     group: item.group,
     title: item.title,
     icon: item.icon,
-    artIcon: item.artIcon || null,
+    artIcon: item.id==='profession-mark-2' ? secondProfessionMarkArt(className(session)) : item.artIcon || null,
     artMaterial: Object.keys(item.grant?.materials || {})[0] || null,
     artPotion: item.grant?.potion ? [...elixirs,...buffPotions].find(p=>p.id===item.grant.potion.id) || null : null,
     artItem: item.id?.startsWith(TIMED_PREFIX) ? getCatalog().find(entry=>entry.id===item.id.slice(TIMED_PREFIX.length)) : null,

@@ -22,6 +22,14 @@ try {
   });
   await page.goto('http://127.0.0.1:4321/fixture.html');
   await page.evaluate(async()=>{(await import('/design/select.js')).observeSelects(document.body);});
+  await page.evaluate(async()=>{await(await import('/shop.js')).openShopGame({api:window.shopApi,haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span')});});
+  assert.equal(await page.locator('[data-store-category="catalog"], [data-store-category="exchange"]').count(),0);
+  assert.match(await page.locator('[data-store-category="mammon"] img').getAttribute('src'),/ancient_adena/);
+  assert.match(await page.locator('[data-store-category="fishing"] img').getAttribute('src'),/weapon_fishing_rod/);
+  await page.locator('.l2-store-panel').evaluate(n=>Promise.all([...n.querySelectorAll('img')].map(i=>i.decode())));
+  assert.equal(await page.locator('.l2-store-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
+  await page.locator('.l2-store-panel').screenshot({path:path.join(out,`categories-${width}.png`)});
+  await page.locator('[data-dismiss]').click();
   await page.evaluate(async()=>{await(await import('/shop.js')).openShopGoods({api:window.shopApi,haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),initialCategory:'epic'});});
   assert.ok(await page.locator('.store-grid').evaluate(n=>new Set([...n.querySelectorAll('img')].map(i=>i.src)).size)>=8);
   await page.locator('[data-store-slot="col:timed:epic:freyaExtreme"]').click();
