@@ -1,3 +1,4 @@
+import { createGamePopup } from './game-popup.js';
 import { escapeHtml } from './escape-html.js';
 import {materialIcon} from './material-icons.js';
 import {flaskHtml} from './inventory.js';
@@ -27,6 +28,15 @@ const KIND_LABELS = { all: 'Всё', equipment: 'Снаряжение', potion: 
 const SORT_LABELS = { new: 'Новые', cheap: 'Дешевле', expensive: 'Дороже' };
 const formatNumber = value => new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 const TYPES = {all:'Все',weapon:'Оружие',armor:'Доспехи',shield:'Щиты',jewelry:'Бижутерия',potion:'Припасы',material:'Ресурсы'};
+/** The API stores a total lot price; registration accepts a price per item. */
+export function auctionSaleQuote(rawCount, rawUnitPrice, rate = .05) {
+  const count=Number(rawCount), unitPrice=Number(rawUnitPrice);
+  if(!Number.isSafeInteger(count)||count<1) return {valid:false,reason:'invalid_count'};
+  const price=count*unitPrice;
+  if(!Number.isSafeInteger(unitPrice)||unitPrice<1||!Number.isSafeInteger(price)||price>1_000_000_000) return {valid:false,reason:'invalid_price'};
+  const fee=Math.floor(price*rate);
+  return {valid:true,price,fee,net:price-fee};
+}
 export function dropdown(name, label, value, choices) {
   return `<details class="auction-dropdown" data-dropdown="${name}"><summary aria-label="${label}">${escapeHtml(choices.find(([id])=>id===value)?.[1]||label)}</summary><div class="auction-dropdown-options">${choices.map(([id,text])=>`<button type="button" data-choice="${escapeHtml(id)}" aria-pressed="${value===id}">${escapeHtml(text)}</button>`).join('')}</div></details>`;
 }
@@ -44,6 +54,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
   let tab = 'lots';
   let selected = null; // the item being put up: {kind, ref, title, count}
   let pending = false;
+  let sellCount = '1', unitPrice = '', sellPage = 1;
   let feedback = { kind: '', text: '' };
   let type = 'all', grade = '', search = '', page = 1, selectedLot = null;
   const PAGE_SIZE = window.matchMedia('(max-width: 600px)').matches ? 6 : 12;
@@ -52,24 +63,13 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
   if(initialItem){
     tab='sell';
     const entry=state.sellable.find(row=>row.kind===initialItem.kind&&row.ref===initialItem.ref);
-    if(entry)selected={kind:entry.kind,ref:entry.ref,title:entry.title,max:entry.count};
+    if(entry)selected={...entry,max:entry.count};
   }
 
-  const overlay = document.createElement('section');
-  overlay.className = 'game-overlay auction-overlay';
-  overlay.innerHTML = `
-    <div class="overlay-backdrop"></div>
-    <div class="overlay-panel auction-panel">
-      <header class="auction-title">
-        <h2>Комиссионная торговля</h2>
-        <button class="overlay-close" type="button" aria-label="Закрыть">${icon('x')}</button>
-      </header>
-      <div data-auction-body></div>
-    </div>`;
-  const body = overlay.querySelector('[data-auction-body]');
-  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => {overlay.remove();onClose?.();}, 180); };
-  overlay.querySelector('.overlay-close').addEventListener('click', close);
-  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  const popup=createGamePopup({title:'Комиссионная торговля',className:'auction-overlay',panelClass:'auction-panel',body:'<div data-auction-body></div>',canClose:()=>!pending,onClose:()=>onClose?.()});
+  const {overlay}=popup;
+  overlay.querySelector('[data-dismiss]').classList.add('overlay-close');
+  const body=overlay.querySelector('[data-auction-body]');
   overlay.addEventListener('click',event=>{
     if(!event.target.closest('.auction-dropdown'))body.querySelectorAll('[data-dropdown]').forEach(menu=>{menu.open=false;});
   });
@@ -103,22 +103,37 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
   }
 
   function sellTab() {
-    if (selected) {
-      return `
-        <div class="feedback-card">
-          <strong>${escapeHtml(selected.title)}</strong>
-          ${selected.max > 1 ? `<label class="feedback-field"><span>Количество (до ${formatNumber(selected.max)})</span><input type="number" min="1" max="${selected.max}" step="1" value="${selected.max}" inputmode="numeric" data-sell-count /></label>` : ''}
-          <label class="feedback-field"><span>Цена за весь лот, адена</span><input type="number" min="1" max="1000000000" step="1" inputmode="numeric" data-sell-price placeholder="Например, 10 000" /></label>
-          <small>Комиссия ${Math.round(state.fee * 100)}% с продажи. Лот висит ${state.hours} ч., потом вещь вернётся.</small>
-          <button type="button" class="feedback-submit" data-sell-confirm>Выставить</button>
-          <button type="button" class="fr-btn ghost" data-sell-back>Назад</button>
-        </div>`;
-    }
-    return `<div class="mail-list">${state.sellable.length ? state.sellable.map((entry, index) => `
-      <article class="mail-letter pending">
-        <div class="mail-head"><span class="auction-art">${auctionArt(entry)}</span><strong>${escapeHtml(entry.title)}${entry.count > 1 ? ` ×${formatNumber(entry.count)}` : ''}${entry.enchant ? ` +${entry.enchant}` : ''}</strong><small>${entry.grade ? escapeHtml(entry.grade) : KIND_LABELS[entry.kind === 'material' ? 'material' : entry.kind]}</small></div>
-        <button type="button" class="feedback-submit" data-sell-pick="${index}">Продать</button>
-      </article>`).join('') : '<p class="mail-empty">Нечего продавать: снимите снаряжение или добудьте материалы.</p>'}</div>`;
+    const active=selected && state.sellable.find(item=>item.kind===selected.kind&&item.ref===selected.ref);
+    if(selected&&!active)selected=null;
+    if(active)selected={...active,max:active.count};
+    const quote=auctionSaleQuote(sellCount,unitPrice,state.fee);
+    const pages=Math.max(1,Math.ceil(state.mine.length/6));sellPage=Math.min(sellPage,pages);
+    return `<div class="auction-registration">
+      <form class="auction-register-form" data-sell-form>
+        <h3>Зарегистрировать предмет на продажу</h3>
+        <section class="auction-register-section"><h4>Разрешённые предметы</h4>
+          <div class="auction-inventory" aria-label="Предметы для продажи">${state.sellable.map((entry,index)=>`<button type="button" class="auction-inventory-slot ${selected?.kind===entry.kind&&selected?.ref===entry.ref?'selected':''}" data-sell-pick="${index}" aria-pressed="${selected?.kind===entry.kind&&selected?.ref===entry.ref}" aria-label="${escapeHtml(entry.title)} · ${formatNumber(entry.count)}" title="${escapeHtml(entry.title)}">${auctionArt(entry)}${entry.count>1?`<small>${formatNumber(entry.count)}</small>`:''}</button>`).join('')||'<p class="auction-empty">Нечего продавать: снимите снаряжение или добудьте материалы.</p>'}</div>
+        </section>
+        <section class="auction-register-section"><h4>Предмет для регистрации</h4>
+          <div class="auction-register-item">${selected?`<span class="auction-art">${auctionArt(selected)}</span><span><strong>${selected.enchant?`+${selected.enchant} `:''}${escapeHtml(selected.title)}</strong><small>${selected.grade?escapeHtml(selected.grade==='noGrade'?'Без ранга':selected.grade):KIND_LABELS[selected.kind]}</small></span>`:'<span>Выбери предмет в сетке.</span>'}</div>
+          <label class="auction-register-field"><span>Общее кол-во</span><input type="number" min="1" max="${selected?.max||1}" step="1" inputmode="numeric" value="${escapeHtml(sellCount)}" data-sell-count ${!selected?'disabled':''}></label>
+          <label class="auction-register-field"><span>Цена за 1 шт.</span><input type="number" min="1" max="1000000000" step="1" inputmode="numeric" value="${escapeHtml(unitPrice)}" data-sell-price ${!selected?'disabled':''}></label>
+          <div class="auction-register-field"><span>Период продажи</span><span class="auction-register-value">${state.hours} ч.</span></div>
+          <div class="auction-register-field"><span>Общая цена</span><strong data-sell-total>${quote.valid?formatNumber(quote.price):'—'}</strong></div>
+        </section>
+        <section class="auction-register-section auction-register-summary">
+          <div class="auction-register-field"><span>Комиссия (${Math.round(state.fee*100)}%)</span><strong data-sell-fee>${quote.valid?formatNumber(quote.fee):'—'}</strong></div>
+          <div class="auction-register-field"><span>К получению</span><strong data-sell-net>${quote.valid?formatNumber(quote.net):'—'}</strong></div>
+          <small>Комиссия удерживается после продажи.</small>
+        </section>
+        <div class="auction-register-buttons"><button type="submit" data-sell-confirm ${!selected||!quote.valid||Number(sellCount)>selected.max||state.mine.length>=state.maxLots||pending?'disabled':''}>Регистрация</button><button type="button" data-sell-back ${!selected?'disabled':''}>Сброс</button></div>
+      </form>
+      <section class="auction-registered"><h3>Предметы торговли</h3><div class="auction-list-title">Список предметов (${state.mine.length}/${state.maxLots})</div>
+        <table class="auction-table auction-registered-table"><thead><tr><th>Предмет</th><th class="auction-grade">Ранг</th><th class="auction-count">Кол-во</th><th>Цена</th><th>До конца</th></tr></thead><tbody>${state.mine.slice((sellPage-1)*6,sellPage*6).map(lot=>`<tr><td><span class="auction-registered-item"><span class="auction-art">${auctionArt(lot)}</span><span>${escapeHtml(lot.title)}</span></span></td><td class="auction-grade">${escapeHtml(lot.grade==='noGrade'?'—':lot.grade||'—')}</td><td class="auction-count">${formatNumber(lot.count)}</td><td class="auction-price">${formatNumber(lot.price)}</td><td>${lot.hoursLeft} ч.</td></tr>`).join('')||'<tr><td colspan="5" class="auction-empty">Активных лотов нет.</td></tr>'}</tbody></table>
+        <div class="auction-pagination"><button type="button" data-sell-page="${sellPage-1}" aria-label="Предыдущая страница" ${sellPage===1?'disabled':''}>${icon('chevron-left')}</button><span>${sellPage} / ${pages}</span><button type="button" data-sell-page="${sellPage+1}" aria-label="Следующая страница" ${sellPage===pages?'disabled':''}>${icon('chevron-right')}</button></div>
+        <div class="auction-actions"><button type="button" data-auction-tab="lots">Отмена</button></div>
+      </section>
+    </div>`;
   }
 
   function mineTab() {
@@ -132,7 +147,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
       ${tab === 'lots' ? lotsTab() : tab === 'sell' ? sellTab() : mineTab()}
       <footer class="auction-wallet">${materialIcon('gold')} Адена: ${formatNumber(state.gold)}<small>Комиссия ${Math.round(state.fee*100)}%</small></footer>
       ${feedback.text ? `<div class="feedback-result ${feedback.kind}">${escapeHtml(feedback.text)}</div>` : ''}`;
-    body.querySelectorAll('[data-auction-tab]').forEach(button => button.addEventListener('click', () => { tab = button.dataset.auctionTab; selected = null; selectedLot=null; page=1; feedback = { kind: '', text: '' }; haptic?.('light'); render(); }));
+    body.querySelectorAll('[data-auction-tab]').forEach(button => button.addEventListener('click', () => { if(pending)return; tab = button.dataset.auctionTab; selected = null; sellCount='1'; unitPrice=''; selectedLot=null; page=1; feedback = { kind: '', text: '' }; haptic?.('light'); render(); }));
     const resetPage = () => { page=1; selectedLot=null; render(); };
     body.querySelector('[data-auction-search-form]')?.addEventListener('submit',event=>{event.preventDefault();search=body.querySelector('[data-auction-search]').value.trim();resetPage();});
     body.querySelector('[data-auction-reset]')?.addEventListener('click',()=>{type='all';grade='';search='';resetPage();});
@@ -168,20 +183,33 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
     body.querySelectorAll('[data-auction-cancel]').forEach(button => button.addEventListener('click', () => act('/api/auction/cancel', { lotId: button.dataset.auctionCancel }, 'Лот снят, вещь вернулась к тебе.')));
     body.querySelectorAll('[data-sell-pick]').forEach(button => button.addEventListener('click', () => {
       const entry = state.sellable[Number(button.dataset.sellPick)];
-      selected = { kind: entry.kind, ref: entry.ref, title: entry.title, max: entry.count };
+      if(pending||!entry)return;
+      selected = {...entry,max:entry.count};sellCount='1';unitPrice='';
       render();
     }));
-    body.querySelector('[data-sell-back]')?.addEventListener('click', () => { selected = null; render(); });
-    body.querySelector('[data-sell-confirm]')?.addEventListener('click', () => {
-      const count = Number(body.querySelector('[data-sell-count]')?.value || 1);
-      const price = Number(body.querySelector('[data-sell-price]').value);
-      act('/api/auction/list', { kind: selected.kind, ref: selected.ref, count, price }, 'Лот выставлен.', () => { selected = null; tab = 'mine'; });
+    body.querySelectorAll('[data-sell-page]').forEach(button=>button.addEventListener('click',()=>{sellPage=Number(button.dataset.sellPage);render();}));
+    body.querySelector('[data-sell-back]')?.addEventListener('click', () => { selected=null;sellCount='1';unitPrice='';render(); });
+    const updateQuote=()=>{
+      sellCount=body.querySelector('[data-sell-count]').value;unitPrice=body.querySelector('[data-sell-price]').value;
+      const quote=auctionSaleQuote(sellCount,unitPrice,state.fee);
+      for(const [name,value] of [['total',quote.price],['fee',quote.fee],['net',quote.net]])body.querySelector('[data-sell-'+name+']').textContent=quote.valid?formatNumber(value):'—';
+      body.querySelector('[data-sell-confirm]').disabled=!selected||!quote.valid||Number(sellCount)>selected.max||state.mine.length>=state.maxLots||pending;
+    };
+    body.querySelector('[data-sell-count]')?.addEventListener('input',updateQuote);
+    body.querySelector('[data-sell-price]')?.addEventListener('input',updateQuote);
+    body.querySelector('[data-sell-form]')?.addEventListener('submit',event=>{
+      event.preventDefault();
+      const quote=auctionSaleQuote(sellCount,unitPrice,state.fee);
+      if(pending||!selected||!quote.valid||Number(sellCount)>selected.max||state.mine.length>=state.maxLots)return;
+      act('/api/auction/list', {kind:selected.kind,ref:selected.ref,count:Number(sellCount),price:quote.price}, 'Лот выставлен.',()=>{selected=null;sellCount='1';unitPrice='';});
     });
+    if(pending)body.querySelectorAll('button,input').forEach(control=>{control.disabled=true;});
   }
 
   async function act(path, payload, okText, after = () => {}) {
     if (pending) return;
     pending = true;
+    render();
     haptic?.('medium');
     try {
       const result = await api(path, { method: 'POST', body: JSON.stringify(payload) });
@@ -199,7 +227,6 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
     }
   }
 
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('visible'));
   render();
+  popup.show();
 }
