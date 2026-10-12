@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import { materialIcon } from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
@@ -54,8 +55,8 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
   overlay.querySelector('[data-fishing-info]').onclick=()=>{
     if(overlay.querySelector('.fishing-info'))return;
-    const dialog=document.createElement('dialog');dialog.className='fishing-info storage-panel';
-    dialog.innerHTML=`<h2>Снаряжение рыбака</h2><p>Удочки и рыболовные соски продаёт Рыбак: Магазин → Все товары → Торговцы → Рыбак.</p><p>Соски называются Fishing Shot (рыболовные соски). Выбирай грейд своей удочки. Они расходуются при забросе и ускоряют ловлю вдвое.</p><p>Во вкладке «Гильдия» изучи рыбалку и первый уровень мастерства за Доказательства улова. Они получаются при обмене материалов из разобранной рыбы.</p><div class="storage-actions"><button type="button" data-fisher-shop>К рыбаку</button><button type="button" data-info-close>Понятно</button></div>`;
+    const dialog=document.createElement('dialog');dialog.className='fishing-info storage-panel game-dialog-panel';
+    dialog.innerHTML=`${dialogHeading('Снаряжение рыбака',{dismissible:false})}<p>Удочки и рыболовные соски продаёт Рыбак: Магазин → Все товары → Торговцы → Рыбак.</p><p>Соски называются Fishing Shot (рыболовные соски). Выбирай грейд своей удочки. Они расходуются при забросе и ускоряют ловлю вдвое.</p><p>Во вкладке «Гильдия» изучи рыбалку и первый уровень мастерства за Доказательства улова. Они получаются при обмене материалов из разобранной рыбы.</p><div class="storage-actions"><button type="button" data-fisher-shop>К рыбаку</button><button type="button" data-info-close>Понятно</button></div>`;
     const dismiss=()=>{dialog.close();dialog.remove();};dialog.querySelector('[data-info-close]').onclick=dismiss;dialog.addEventListener('cancel',e=>{e.preventDefault();dismiss();});
     dialog.querySelector('[data-fisher-shop]').onclick=async()=>{dismiss();const {openMerchantsGame}=await import('./merchants.js');if(!closed)await openMerchantsGame({api,renderState,haptic,statusElement,initialMerchant:'fisher'});};
     overlay.append(dialog);dialog.showModal();

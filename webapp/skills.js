@@ -13,7 +13,7 @@ const REASONS = {
   already_learned: 'Это умение уже изучено.',
   level_too_low: 'Твой уровень ещё слишком низкий для этого умения.',
   not_enough_gold: 'Недостаточно золота.',
-  not_enough_crystals: 'Недостаточно кристаллов.',
+  not_enough_crystals: 'Недостаточно лунной росы.',
   not_enough_iron_ore: 'Недостаточно железной руды.',
   not_enough_sp: 'Недостаточно очков прокачки.',
   not_enough_items: 'Не хватает материалов для улучшения.',
@@ -43,7 +43,7 @@ function powerText(power) {
 
 function costText(cost) {
   if (!cost) return 'MAX';
-  const base = `🪙 ${formatNumber(cost.gold)} · 💎 ${formatNumber(cost.crystals)} · ⛏️ ${formatNumber(cost.ironOre)} · ✦ ${formatNumber(cost.sp)} SP`;
+  const base = `🪙 ${formatNumber(cost.gold)} · 💧 ${formatNumber(cost.moonDew)} · ⛏️ ${formatNumber(cost.ironOre)} · ✦ ${formatNumber(cost.sp)} SP`;
   return cost.items?.length ? `${base} · ${cost.items.map(item => `${item.icon} ${item.name} ${formatNumber(item.have)}/${formatNumber(item.need)}`).join(' · ')}` : base;
 }
 
@@ -218,7 +218,7 @@ export async function openSkillsGame({ api, renderState, haptic, statusElement }
         <div><small>Класс</small><strong>${escapeHtml(state.classTitle)}</strong><em>${state.routesUnlocked ? 'Уровень навыка и путь улучшения: сила, цена, время, шанс, атрибут, защита.' : 'Уровень навыка усиливает эффект и снижает цену и перезарядку. Новые навыки — за профессии.'}</em></div>
       </section>
       <div class="skills-resources">
-        <span>🪙 ${formatNumber(inv.gold)}</span><span>💎 ${formatNumber(inv.crystals)}</span><span>⛏️ ${formatNumber(inv.ironOre)}</span><span class="sp">✦ ${formatNumber(inv.sp)} SP</span>
+        <span>🪙 ${formatNumber(inv.gold)}</span><span>💧 ${formatNumber(inv.moonDew)}</span><span>⛏️ ${formatNumber(inv.ironOre)}</span><span class="sp">✦ ${formatNumber(inv.sp)} SP</span>
       </div>
       ${state.materials?.length ? `<div class="skills-resources materials">${state.materials.map(item => `<span title="${escapeHtml(item.description)}">${materialIcon(item.key, item.icon)} ${escapeHtml(item.name)} ×${formatNumber(item.count)}</span>`).join('')}</div>` : ''}
       <div class="skills-list">

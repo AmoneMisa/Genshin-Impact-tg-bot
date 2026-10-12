@@ -13,7 +13,7 @@ function sessionTemplate() {
     game: {
       inventory: {
         gold: 0,
-        crystals: 0,
+        moonDew: 0,
       },
       stats: {
         currentExp: 0,

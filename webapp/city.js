@@ -11,7 +11,6 @@ import { luckCoinHtml } from './currency-icons.js';
 
 export const RESOURCE_META = Object.freeze({
   gold: { label: 'Золото', icon: '🪙' },
-  crystals: { label: 'Кристаллы', icon: '💎' },
   moonDew: { label: 'Лунная роса', icon: '💧' },
   ironOre: { label: 'Руда', icon: '⛏️' },
   experience: { label: 'Опыт', icon: '✦' },

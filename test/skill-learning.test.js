@@ -8,7 +8,7 @@ import { getSkillsState, learnSkillForMiniApp } from '../miniapp/skills.js';
 import { migrateSessionClass } from '../functions/game/classes/migrateClasses.js';
 
 function hero(className = 'paladin', level = 60, sp = 1000) {
-  const session = { game: { stats: { lvl: level }, inventory: { gold: 1e6, sp, materials: {}, crystals: 0, ironOre: 0 }, gameClass: { stats: { name: 'noClass' } }, effects: [], equipmentStats: {} } };
+  const session = { game: { stats: { lvl: level }, inventory: { gold: 1e6, sp, materials: {}, moonDew: 0, ironOre: 0 }, gameClass: { stats: { name: 'noClass' } }, effects: [], equipmentStats: {} } };
   changePlayerClass(session, className);
   updatePlayerStats(session);
   return session;

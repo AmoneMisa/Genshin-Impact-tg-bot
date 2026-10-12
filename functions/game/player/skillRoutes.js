@@ -19,7 +19,7 @@ export const ROUTE_MAX_LEVEL = 5;
 export const ROUTE_MIN_SKILL_LEVEL = 5;
 // the 3rd profession (tier 4, level 76) of the real class tree
 export const ROUTE_MIN_CLASS_TIER = 4;
-export const ROUTE_RESET_FEE = {gold: 25000, crystals: 25};
+export const ROUTE_RESET_FEE = {gold: 25000, moonDew: 25};
 
 export const ROUTES = Object.freeze({
     power: {label: 'Сила', icon: '💪', description: 'Урон, лечение и щит сильнее на 4% за уровень.', perLevel: 0.04},
@@ -103,9 +103,9 @@ export function resetRoute(session, skill) {
     if (!getRouteLevel(skill)) return {ok: false, reason: 'no_route'};
     const inventory = session.game.inventory;
     if ((inventory.gold || 0) < ROUTE_RESET_FEE.gold) return {ok: false, reason: 'not_enough_gold', cost: ROUTE_RESET_FEE};
-    if ((inventory.crystals || 0) < ROUTE_RESET_FEE.crystals) return {ok: false, reason: 'not_enough_crystals', cost: ROUTE_RESET_FEE};
+    if ((inventory.moonDew || 0) < ROUTE_RESET_FEE.moonDew) return {ok: false, reason: 'not_enough_crystals', cost: ROUTE_RESET_FEE};
     inventory.gold -= ROUTE_RESET_FEE.gold;
-    inventory.crystals -= ROUTE_RESET_FEE.crystals;
+    inventory.moonDew -= ROUTE_RESET_FEE.moonDew;
     delete skill.routeKind;
     skill.routeLevel = 0;
     return {ok: true};

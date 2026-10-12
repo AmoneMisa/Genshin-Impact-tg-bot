@@ -154,11 +154,6 @@
 
 .merchant-note{font:12px/1.5 system-ui;opacity:.8;margin:0 0 6px}
 .merchant-filter{display:flex;gap:8px;align-items:center;font:12px/1.4 system-ui;padding:4px 2px}
-.merchant-filter input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:0 0 18px;width:18px;height:18px;margin:0;position:relative;border:1px solid #806543;border-radius:4px;background:#100d16;cursor:pointer}
-.merchant-filter input[type=checkbox]:checked{border-color:#d8b36a;background:linear-gradient(#67502b,#302315)}
-.merchant-filter input[type=checkbox]:checked::after{content:'';position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fbeccb;border-width:0 2px 2px 0;transform:rotate(45deg)}
-.merchant-filter input[type=checkbox]:focus-visible{outline:2px solid #bca4e8;outline-offset:3px}
-.merchant-filter input[type=checkbox]:disabled{opacity:.45;cursor:default}
 .merchant-item .missing{color:#e07a6a}
 .merchants-panel .shop-categories{overflow-x:auto}
 .pager{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0;font:12px/1.4 system-ui}
@@ -226,7 +221,7 @@
 .hunt-bar-edit>small{display:block;margin-bottom:6px;color:#a9b4b1}
 @media(min-width:680px){.hunt-controls .mmo-hotbar.icons-only{grid-template-columns:repeat(8,minmax(0,1fr))}}
 .fishing-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.fishing-tabs button{padding:9px 3px;border:1px solid #514344;border-radius:6px;background:#17121e;color:#b6a8bf;font:600 11px/1.4 system-ui;min-width:0}.fishing-tabs button[aria-pressed=true]{border-color:#d8b36a;color:#f3dca6;background:#362719}
-.fishing-tab-body{min-width:0}.fishing-tab-body .mmo-frame{margin-bottom:10px}.fishing-info{width:min(380px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box;padding:20px;border:1px solid #9b7b43;border-radius:12px;background:#17111e;color:#eee4cf}.fishing-info:not([open]){display:none}.fishing-info::backdrop{background:#050309b8}.fishing-info p{font:13px/1.7 system-ui;margin:0;overflow-wrap:anywhere}
+.fishing-tab-body{min-width:0}.fishing-tab-body .mmo-frame{margin-bottom:10px}.fishing-info{--dialog-width:380px;--dialog-padding:20px}.fishing-info p{font:13px/1.7 system-ui;margin:0;overflow-wrap:anywhere}
 .fishing-scene{display:grid;gap:0;margin:0 0 16px;border:1px solid #514344;border-radius:9px;background:#10121e;min-width:0}
 .fishing-scene picture{display:block;min-width:0}.fishing-scene .fishing-animation{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:contain;border-radius:8px 8px 0 0}
 .fishing-phase{padding:10px 12px;text-align:center;color:#efe4c6;font:600 12px/1.5 system-ui;min-height:18px;overflow-wrap:anywhere}.fishing-scene[data-phase=success] .fishing-phase{color:#a6dfb6}.fishing-scene[data-phase=failure] .fishing-phase{color:#e4a499}

@@ -33,9 +33,6 @@ body .game-overlay .inventory-panel.inventory-reference .inventory-tattoo { widt
 .inventory-tattoo img { display: block; width: 40px; height: 40px; object-fit: contain; }
 .inventory-tattoo.empty img { opacity: .2; filter: grayscale(1); }
 body .inventory-panel.inventory-reference .inventory-section { display: grid; gap: 5px; min-width: 0; }
-body .inventory-panel.inventory-reference .inv-tabs { display: flex; align-items: end; gap: 2px; padding: 0; background: none; border: 0; border-bottom: 1px solid #b69a5f; overflow-x: auto; scrollbar-width: none; }
-body .game-overlay .inventory-panel.inventory-reference .inv-tabs button { flex: 0 0 auto; min-width: 40px; min-height: 28px; margin: 0 0 -1px; padding: 5px 8px; border-radius: 3px 9px 0 0; background: #27291f; border: 1px solid #61573d; font: 10px/1.2 system-ui; color: #c6bea1; }
-body .game-overlay .inventory-panel.inventory-reference .inv-tabs button.active { background: #45432d; border-color: #b69a5f; border-bottom-color: #45432d; color: #f5dfab; position: relative; z-index: 1; }
 body .game-overlay .inventory-panel.inventory-reference .inventory-layout input.inventory-search[type="search"] { height: 32px; min-height: 32px; padding: 5px 8px; border-radius: 2px; background: #11170f; border-color: #494d3c; font: 14px system-ui; }
 body .inventory-panel.inventory-reference .item-grid.inv-bag { grid-template-columns: repeat(12,minmax(0,1fr)); max-height: 412px; }
 .inventory-reference .inv-plus { font-size: 10px; }
@@ -52,12 +49,7 @@ body .inventory-panel.inventory-reference .inventory-adena strong { font: 12px s
 body .game-overlay .inventory-panel.inventory-reference [data-inventory-feedback] { min-height: 14px; margin: 0; padding: 0; font: 11px/1.3 system-ui; color: #d8bd78; text-align: left; }
 body .inventory-reference [data-gear-slot="up"].combined-armor::after { content: ''; position: absolute; width: 2px; height: 3px; bottom: -3px; left: 21px; background: #b8954e; z-index: 1; }
 body .game-overlay .inventory-panel.inventory-reference .inv-head .overlay-close { border: 0; background: transparent; }
-.inventory-item-dialog { width: min(420px,calc(100vw - 28px)); box-sizing: border-box; max-height: calc(100dvh - 32px); overflow: auto; padding: 14px; border: 1px solid #aa8a4e; border-radius: 6px; background: #171b13; color: #e5dec4; }
-.inventory-item-dialog::backdrop { background: #050804b8; }
-.inventory-item-dialog header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.inventory-item-dialog h2 { margin: 0; font: 18px Georgia,serif; color: #ecd29a; }
-.inventory-item-dialog button { min-height: 36px; padding: 7px 12px; border: 1px solid #887249; background: #303322; color: #e6d4a9; }
-.inventory-item-dialog header button { min-height: 28px; padding: 2px 8px; }
+.inventory-item-dialog { --dialog-width: 420px; --dialog-padding: 14px; }
 .inventory-item-dialog .inv-detail { margin: 0 0 12px; padding: 0; border: 0; background: none; grid-template-columns: 48px minmax(0,1fr); }
 .inventory-item-dialog .inv-detail > button { grid-column: 1/-1; }
 .inventory-item-dialog .inv-detail img { width: 48px; height: 48px; object-fit: contain; }

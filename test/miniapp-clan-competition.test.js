@@ -29,7 +29,7 @@ function clan(id, owner, memberIds = [owner]) {
     level: 1,
     xp: 0,
     members: memberIds.map(userId => ({ userId, role: userId === owner ? 'owner' : 'member', contribution: 0, upgrades: {} })),
-    warehouse: { gold: 0, crystals: 0, ironOre: 0 },
+    warehouse: { gold: 0, moonDew: 0, ironOre: 0 },
     buildings: {},
     pvp: {},
     guildWar: null,
@@ -111,10 +111,10 @@ test('war resolution rewards winner and clears both war states', () => {
   assert.equal(result.ok, true);
   assert.equal(result.outcome, 'win');
   assert.equal(result.reward.gold, 10_000);
-  assert.equal(result.reward.crystals, 20);
+  assert.equal(result.reward.moonDew, 20);
   assert.equal(result.reward.clanXp, 500);
   assert.equal(left.warehouse.gold, 10_000);
-  assert.equal(left.warehouse.crystals, 20);
+  assert.equal(left.warehouse.moonDew, 20);
   assert.equal(left.xp, 1_500);
   assert.equal(right.xp, 100);
   assert.equal(left.guildWar, null);

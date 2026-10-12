@@ -13,7 +13,7 @@ function player(className = 'humanFighter', lvl = 25) {
   const session = {
     game: {
       stats: { lvl },
-      inventory: { gold: 1_000_000, crystals: 1_000, ironOre: 0, sp: 0 },
+      inventory: { gold: 1_000_000, moonDew: 1_000, ironOre: 0, sp: 0 },
       gameClass: { stats: { name: 'noClass' } },
       effects: [],
     },
@@ -95,7 +95,7 @@ test('3rd profession quests ask for strong bosses and ignore weak ones', () => {
   assert.ok(kill(session, { name: 'terrax', tier: 2, element: 'earth' }).gains.length > 0);
 });
 
-test('the hand-in checks gold and crystals and takes them', () => {
+test('the hand-in checks gold and moonDew and takes them', () => {
   const session = player();
   startClassQuest(session, 'humanKnight');
   session.game.inventory.gold = 100;

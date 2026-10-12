@@ -191,7 +191,7 @@ export function worldTemplate(row) {
         initial: [],
         phases: phasesOf(row),
         drops: dropsOf(row),
-        lootMod: {gold: 1 + row.level / 60, crystals: 1 + row.level / 80, experience: 1.5 + row.level / 25},
+        lootMod: {gold: 1 + row.level / 60, moonDew: 1 + row.level / 80, experience: 1.5 + row.level / 25},
         skill: {},
         attacks: attacksOf(row),
     };

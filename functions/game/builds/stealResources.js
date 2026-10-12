@@ -6,8 +6,8 @@ import setLevel from "../player/setLevel.js";
 import {starShieldAmount} from "./starShield.js";
 
 /** Crystals a raid can touch: above the palace guard and above the Stars shield (starShield.js). */
-export function stealableCrystals(crystals, guardedCrystals, game, now = Date.now()) {
-    return Math.max(0, crystals - guardedCrystals - starShieldAmount(game, now));
+export function stealableCrystals(moonDew, guardedCrystals, game, now = Date.now()) {
+    return Math.max(0, moonDew - guardedCrystals - starShieldAmount(game, now));
 }
 
 // A raid is an ambush duel: the same auto-fight as the arena (functions/game/arena), for a minute, and
@@ -51,7 +51,7 @@ export default function stealResources(currentUser, targetUser) {
 
     const defenderGold = targetUser.game.inventory.gold || 0;
     const defenderIronOre = targetUser.game.inventory.ironOre || 0;
-    const defenderCrystals = targetUser.game.inventory.crystals || 0;
+    const defenderCrystals = targetUser.game.inventory.moonDew || 0;
 
     const stealPercentage = raid.crushing ? CRUSHING_WIN_SHARE : NARROW_WIN_SHARE;
     const guardedResources = calculateIncreaseGuardedResources(
@@ -75,12 +75,12 @@ export default function stealResources(currentUser, targetUser) {
     // Добавляем атакующему
     currentUser.game.inventory.gold += goldToSteal;
     currentUser.game.inventory.ironOre += ironOreToSteal;
-    currentUser.game.inventory.crystals += crystalsToSteal;
+    currentUser.game.inventory.moonDew += crystalsToSteal;
 
     // Списываем у защитника из реального инвентаря (с защитой от отрицательных значений)
     targetUser.game.inventory.gold = Math.max(0, defenderGold - goldToSteal);
     targetUser.game.inventory.ironOre = Math.max(0, defenderIronOre - ironOreToSteal);
-    targetUser.game.inventory.crystals = Math.max(0, defenderCrystals - crystalsToSteal);
+    targetUser.game.inventory.moonDew = Math.max(0, defenderCrystals - crystalsToSteal);
 
     // Иммунитет на 2 часа
     targetUser.game.stealImmuneTimer = Date.now() + 2 * 60 * 60 * 1000;

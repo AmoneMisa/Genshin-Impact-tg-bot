@@ -8,7 +8,7 @@ function session(overrides = {}) {
       stats: { lvl: 100 },
       inventory: {
         gold: 1_000_000,
-        crystals: 10_000,
+        moonDew: 10_000,
         gacha: { name: 'Предметы гачи', items: [] },
         equipment: { name: 'Экипировка', items: [] },
       },
@@ -67,7 +67,7 @@ test('pending item blocks all additional rolls until it is resolved', () => {
   const player = session({
     game: {
       gachaTempType: 'newbie',
-      gachaTempItem: { name: 'test sword', grade: 'D', stats: [] },
+      gachaTempItem: { version: 2, name: 'test sword', grade: 'D', stats: [] },
     },
   });
 

@@ -1,3 +1,4 @@
+import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldArtUrl, worldIconHtml } from './art/world-art.js';
 // Chest game: pick one of nine painted chests -> the chosen chest
@@ -9,7 +10,7 @@ import { createChest, openingDelay } from './chest-art.js';
 export const PRIZE_ICONS = Object.freeze({
   experience: '✦',
   gold: '🪙',
-  crystals: '💎',
+  moonDew: '💧',
   nothing: '🌫️',
   sword: '⚔️',
   brokenSword: '🗡️',
@@ -18,14 +19,15 @@ export const PRIZE_ICONS = Object.freeze({
 });
 
 function prizeIcon(type) {
-  const art = { gold: 'gold', crystals: 'crystal', experience: 'scroll', immuneToUpSword: 'armor' }[type];
+  if(type==='moonDew')return materialIcon('moonDew');
+  const art = { gold: 'gold', moonDew: 'crystal', experience: 'scroll', immuneToUpSword: 'armor' }[type];
   return (art && worldIconHtml(`chests/reward-${art}`)) || PRIZE_ICONS[type] || '✦';
 }
 
 /** Shown under the grid; mirrors the server's prize table (miniapp/chest.js). */
 export const POSSIBLE_REWARDS = Object.freeze([
   { type: 'gold', label: 'Золото' },
-  { type: 'crystals', label: 'Кристаллы' },
+  { type: 'moonDew', label: 'Лунная роса' },
   { type: 'experience', label: 'Опыт' },
   { type: 'sword', label: 'Рост меча' },
   { type: 'immuneToUpSword', label: 'Иммунитет меча' },
@@ -34,7 +36,7 @@ export const POSSIBLE_REWARDS = Object.freeze([
 ]);
 
 const PRIZE_TITLES = {
-  experience: 'Опыт', gold: 'Золото', crystals: 'Кристаллы', nothing: 'Пусто',
+  experience: 'Опыт', gold: 'Золото', moonDew: 'Лунная роса', nothing: 'Пусто',
   sword: 'Меч', brokenSword: 'Меч', immuneToUpSword: 'Иммунитет', buffPotion: 'Зелье',
 };
 

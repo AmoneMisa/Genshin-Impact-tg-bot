@@ -12,8 +12,8 @@ export const PAPER_DOLL_SLOTS = [
   ['cloak','Плащ',82,37],
   ['hands','Руки',18,54],
   ['down','Низ',82,54],
-  ['leftHand','Левая рука',18,72],
-  ['rightHand','Правая рука',82,72],
+  ['leftHand','Левая рука',82,72],
+  ['rightHand','Правая рука',18,72],
   ['leftRing','Левое кольцо',34,87],
   ['rightRing','Правое кольцо',66,87],
   ['legs','Ноги',50,96],
@@ -24,8 +24,8 @@ export const PAPER_DOLL_SLOTS = [
  * the middle and the slots line up in two framed columns on either side.
  */
 export const PORTRAIT_SLOT_LAYOUT = {
-  head:[9,7], leftEar:[9,21], up:[9,35], hands:[9,49], leftHand:[9,63], leftRing:[9,77], legs:[9,91],
-  necklace:[91,7], rightEar:[91,21], cloak:[91,35], down:[91,49], rightHand:[91,63], rightRing:[91,77],
+  head:[9,7], leftEar:[9,21], up:[9,35], hands:[9,49], leftHand:[91,63], leftRing:[9,77], legs:[9,91],
+  necklace:[91,7], rightEar:[91,21], cloak:[91,35], down:[91,49], rightHand:[9,63], rightRing:[91,77],
 };
 
 

@@ -14,7 +14,7 @@ function member(userId, overrides = {}) {
       stealImmuneTimer: 0,
       stats: { lvl: 10, currentExp: 0 },
       gameClass: { stats: { name: 'warrior' }, skills: [{ damageModifier: 1 }] },
-      inventory: { gold: 1000, ironOre: 100, crystals: 10 },
+      inventory: { gold: 1000, ironOre: 100, moonDew: 10 },
     },
   };
   return {
@@ -98,7 +98,7 @@ test('successful theft exposes rewards and consumes one attempt', () => {
     targetName: 'Player 2',
     gold: 130,
     ironOre: 13,
-    crystals: 2,
+    moonDew: 2,
     gainedExp: 9500,
     remainHp: 50,
     attempts: 1,

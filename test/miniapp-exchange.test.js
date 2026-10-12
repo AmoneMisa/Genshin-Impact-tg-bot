@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CRYSTAL_PRICE, parseCrystalAmount, getExchangeState, buyCrystalsForMiniApp } from '../miniapp/exchange.js';
 
-function session(gold = 10000, crystals = 2) {
-  return { game: { inventory: { gold, crystals } } };
+function session(gold = 10000, moonDew = 2) {
+  return { game: { inventory: { gold, moonDew } } };
 }
 
 test('crystal amount parser accepts only positive safe integers', () => {
@@ -22,7 +22,7 @@ test('exchange state reports legacy 1500 gold price and max affordable amount', 
   assert.equal(state.price, CRYSTAL_PRICE);
   assert.equal(state.price, 1500);
   assert.equal(state.gold, 7600);
-  assert.equal(state.crystals, 4);
+  assert.equal(state.moonDew, 4);
   assert.equal(state.maxAffordable, 5);
 });
 
@@ -34,7 +34,7 @@ test('exchange buys exact crystal amount and subtracts exact gold cost', () => {
   assert.equal(result.amount, 4);
   assert.equal(result.cost, 6000);
   assert.equal(player.game.inventory.gold, 4000);
-  assert.equal(player.game.inventory.crystals, 6);
+  assert.equal(player.game.inventory.moonDew, 6);
   assert.equal(result.exchange.maxAffordable, 2);
 });
 
@@ -46,7 +46,7 @@ test('exchange rejects insufficient funds without mutation', () => {
   assert.equal(result.reason, 'not_enough_gold');
   assert.equal(result.missingGold, 1);
   assert.equal(player.game.inventory.gold, 1499);
-  assert.equal(player.game.inventory.crystals, 3);
+  assert.equal(player.game.inventory.moonDew, 3);
 });
 
 test('exchange rejects malformed and overflow amounts without mutation', () => {
@@ -57,5 +57,5 @@ test('exchange rejects malformed and overflow amounts without mutation', () => {
     assert.equal(result.reason, 'invalid_amount');
   }
   assert.equal(player.game.inventory.gold, 10000);
-  assert.equal(player.game.inventory.crystals, 2);
+  assert.equal(player.game.inventory.moonDew, 2);
 });

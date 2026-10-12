@@ -3,7 +3,7 @@ import {auctionArt} from './auction.js';
 import {materialIcon} from './material-icons.js';
 import {escapeHtml} from './escape-html.js';
 import {icon} from './icons.js';
-export function stockArt(row){return row.kind==='currency'?(row.ref==='gold'?materialIcon('gold'):icon(row.ref==='crystals'?'gem':'pickaxe')):auctionArt(row);}
+export function stockArt(row){return row.kind==='currency'?(row.ref==='gold'?materialIcon('gold'):(row.ref==='moonDew'?materialIcon('moonDew'):icon('pickaxe'))):auctionArt(row);}
 export function stockGrid(rows,{select=false,selected=-1,min=30}={}){
  return itemGridHtml(rows.map((row,index)=>`<${select?'button':'div'} ${select?'type="button"':''} class="item-grid-cell stock-slot ${selected===index?'selected':''}" ${select?`data-stock-index="${index}"`:''} title="${escapeHtml(row.title)}${row.stats?.length?' — '+escapeHtml(row.stats.join(' · ')):''}" aria-label="${escapeHtml(row.title)} ×${row.count}">${stockArt(row)}<small>${row.count>1?new Intl.NumberFormat('ru-RU').format(row.count):''}</small></${select?'button':'div'}>`), {className: 'stock-grid', min, label: 'Предметы'});
 }

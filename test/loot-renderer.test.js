@@ -255,19 +255,21 @@ test('loot styles are wired before VFX/design system and stay mobile safe', () =
   assert.ok(equipmentCss.includes('@media(prefers-reduced-motion:reduce)'));
 });
 
-test('daily sword, equipment gacha, arsenal and forge share the loot renderer', () => {
+test('sword uses lightweight WebP and craft services use shared native item grids', () => {
   const sword = fs.readFileSync(path.join(root, 'webapp/sword.js'), 'utf8');
   const gacha = fs.readFileSync(path.join(root, 'webapp/gacha.js'), 'utf8');
   const equipment = fs.readFileSync(path.join(root, 'webapp/equipment.js'), 'utf8');
-  assert.ok(sword.includes("import { renderDailySwordArt } from './loot-renderer.js'"));
-  assert.ok(sword.includes('renderDailySwordArt(state.length'));
+  assert.ok(sword.includes('lightAnimationHtml'));
+  assert.ok(sword.includes("lightAnimationHtml('forge'"));
   assert.ok(gacha.includes("import { renderLootArt } from './loot-renderer.js'"));
   assert.ok(gacha.includes('gacha-loot-stage'));
   assert.ok(gacha.includes('renderLootArt(item,{reveal:true})'));
   assert.ok(equipment.includes("import { renderForgeLootArt } from './loot-forge.js'"));
   assert.ok(equipment.includes('equipment-loot-preview'));
-  assert.ok(equipment.includes('forge-mini-loot'));
-  assert.ok(equipment.includes('renderForgeLootArt(item,{reveal:true,...options})'));
-  assert.ok(equipment.includes('forgeImpact:true,previousLevel'));
-  assert.ok(equipment.includes('showForgeReveal(payload.item'));
+  const craft=fs.readFileSync(path.join(root,'webapp/craft.js'),'utf8');
+  const forge=fs.readFileSync(path.join(root,'webapp/forge.js'),'utf8');
+  assert.ok(craft.includes("import {itemGridHtml} from './item-grid.js'"));
+  assert.ok(forge.includes("import {inventoryItemArt} from './inventory-layout.js'"));
+  assert.ok(craft.includes("dialog.className='game-dialog-panel l2-window craft-create-dialog'"));
+  assert.ok(!forge.includes('showForgeReveal'));
 });

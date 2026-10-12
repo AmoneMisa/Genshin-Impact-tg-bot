@@ -28,7 +28,7 @@ import { createMiniAppState } from './state.js';
 import { getCharacterState } from './character.js';
 import { getChestState, openChest } from './chest.js';
 import { getGachaState, rollGacha, resolveGacha } from './gacha.js';
-import { getEquipmentState, performEquipmentAction, craftEquipmentItem, learnEquipmentRecipe, buyEnchantScroll } from './equipment.js';
+import { getEquipmentState, performEquipmentAction, craftEquipmentItem,craftNpcEquipment, learnEquipmentRecipe, forgetEquipmentRecipe, buyEnchantScroll } from './equipment.js';
 import {
   prepareBuilds,
   getBuildsState,
@@ -1057,13 +1057,13 @@ const adminToolsRun = guarded('admin tools run', async (req, res) => {
   const result = await withLock(`${context.chatId}:admin-tools`, async () => {
     if (body.scope === 'player') {
       if (!['string', 'number'].includes(typeof body.userId)) throw httpError(400, 'userId is required');
-      return runPlayerTool(context.chatId, String(body.userId), body.action, body.amount);
+      return runPlayerTool(context.chatId, String(body.userId), body.action, body.amount, body.confirmUserId);
     }
     if (body.scope === 'chat') return runChatTool(context.chatId, body.action);
     if (body.scope === 'global') return runGlobalTool(body.action, body.text);
     throw httpError(400, 'scope must be player, chat or global');
   });
-  console.log(`[admin] ${context.userId} ${body.scope}/${body.action} chat=${context.chatId} -> ${result.ok ? 'ok' : result.reason}`);
+  console.log(`[admin] ${context.userId} ${body.scope}/${body.action} chat=${context.chatId} target=${body.scope==='player'?String(body.userId):'-'} -> ${result.ok ? 'ok' : result.reason}`);
   return sendJson(res, result.ok ? 200 : 409, { ...result, error: result.ok ? undefined : ADMIN_TOOL_ERRORS[result.reason] || result.reason });
 });
 
@@ -1613,23 +1613,23 @@ const equipmentState = guarded('equipment state', async (req, res) => {
 const equipmentAction = guarded('equipment action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  if (['enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove'].includes(body.action)) assertGoldUnlocked(context);
+  if (['enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'unseal'].includes(body.action)) assertGoldUnlocked(context);
   if (typeof body.key !== 'string' || !body.key) {
     throw httpError(400, 'equipment key is required');
   }
-  if (!['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize'].includes(body.action)) {
+  if (!['equip', 'unequip', 'sell', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize', 'unseal'].includes(body.action)) {
     throw httpError(400, 'action must be equip, unequip, sell, enchant, augment, attribute, attribute_clear, ls_activate or crystallize');
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = performEquipmentAction(context.session, body.key, body.action, { saId: typeof body.saId==='string'?body.saId:null, blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null, tier: typeof body.tier === 'string' ? body.tier : null, element: typeof body.element === 'string' ? body.element : null });
+    const updated = performEquipmentAction(context.session, body.key, body.action, { scrollKey: typeof body.scrollKey === 'string' ? body.scrollKey : null, saId: typeof body.saId==='string'?body.saId:null, blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null, tier: typeof body.tier === 'string' ? body.tier : null, element: typeof body.element === 'string' ? body.element : null });
     if (updated.ok) await saveSession(context.session);
     return updated;
   });
   return sendResult(res, result, context);
 });
 
-const equipmentCraft = guarded('equipment craft', async (req, res) => {
+const makeEquipmentCraft = (npc=false)=>guarded(npc?'equipment npc craft':'equipment craft', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
   assertGoldUnlocked(context);
@@ -1638,12 +1638,15 @@ const equipmentCraft = guarded('equipment craft', async (req, res) => {
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = craftEquipmentItem(context.session, body.itemId);
+    const updated = npc?craftNpcEquipment(context.session,body.itemId):craftEquipmentItem(context.session, body.itemId);
     if (updated.ok) await saveSession(context.session);
     return updated;
   });
   return sendResult(res, result, context);
 });
+
+const equipmentCraft=makeEquipmentCraft();
+const equipmentNpcCraft=makeEquipmentCraft(true);
 
 const equipmentRecipe = guarded('equipment recipe', async (req, res) => {
   const context = await authorize(req);
@@ -1654,7 +1657,8 @@ const equipmentRecipe = guarded('equipment recipe', async (req, res) => {
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = learnEquipmentRecipe(context.session, body.itemId);
+    if(body.action&&!['learn','forget'].includes(body.action))throw httpError(400,'invalid_action');
+    const updated = body.action==='forget'?forgetEquipmentRecipe(context.session,body.itemId):learnEquipmentRecipe(context.session, body.itemId);
     if (updated.ok) await saveSession(context.session);
     return updated;
   });
@@ -1898,6 +1902,7 @@ const huntState = guarded('hunt state', async (req, res) => {
 
 const worldRequest = guarded('world map', async (req,res) => {
   const context=await authorize(req),body=req.method==='POST'?await readJsonBody(req):null;
+  if(body?.action==='quick_travel')assertGoldUnlocked(context);
   const result=await withLock('clan:world',()=>withLock(huntLock(context),async()=>{
     context.session=await getSession(context.chatId,context.userId);
     const outcome=await worldRequestState(context.session,body);
@@ -2282,6 +2287,7 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/equipment') return equipmentState(req, res);
     if (route === 'POST /api/equipment/action') return equipmentAction(req, res);
     if (route === 'POST /api/equipment/craft') return equipmentCraft(req, res);
+    if (route === 'POST /api/equipment/npc-craft') return equipmentNpcCraft(req,res);
     if (route === 'POST /api/equipment/scroll') return equipmentScroll(req, res);
     if (route === 'POST /api/equipment/recipe') return equipmentRecipe(req, res);
     if (route === 'GET /api/login-rewards') return loginRewardsState(req,res);

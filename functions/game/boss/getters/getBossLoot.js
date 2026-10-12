@@ -3,7 +3,7 @@ import lodash from 'lodash';
 
 import bossTemplates from '../../../../template/bossTemplate.js';
 
-const DEFAULT_MODIFIERS = {gold: 1.03, crystals: 1.05, experience: 1.3};
+const DEFAULT_MODIFIERS = {gold: 1.03, moonDew: 1.05, experience: 1.3};
 
 function modifiersFor(bossName) {
     return {...DEFAULT_MODIFIERS, ...(bossTemplates.find(item => item.name === bossName)?.lootMod || {})};

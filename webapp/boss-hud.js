@@ -31,10 +31,8 @@ function clampPercent(value) {
   return Math.max(0, Math.min(100, Number(value) || 0));
 }
 
-export function bar(kind, current, max, { label = kind.toUpperCase(), text = null, percent = null } = {}) {
-  const pct = clampPercent(percent ?? (max > 0 ? (current / max) * 100 : 0));
-  return `<div class="mmo-bar ${kind}"><span class="mmo-bar-label">${label}</span><div class="mmo-bar-track"><i style="width:${pct}%"></i><b>${escapeHtml(text ?? `${formatNumber(current)} / ${formatNumber(max)}`)}</b></div></div>`;
-}
+export {bar} from './resource-bar.js';
+import {bar} from './resource-bar.js';
 
 export function statusIcons(list = []) {
   if (!list.length) return '<div class="mmo-statuses empty"></div>';
@@ -192,7 +190,7 @@ export function damageMeter(rows = []) {
 export function rewardsPanel(loot) {
   const rows = [];
   if (loot?.gold) rows.push(['🪙', 'Золото', `${formatNumber(loot.gold.min)} – ${formatNumber(loot.gold.max)}`]);
-  if (loot?.crystals) rows.push(['💎', 'Кристаллы', `${formatNumber(loot.crystals.min)} – ${formatNumber(loot.crystals.max)}`]);
+  if (loot?.moonDew) rows.push(['💎', 'Кристаллы', `${formatNumber(loot.moonDew.min)} – ${formatNumber(loot.moonDew.max)}`]);
   if (loot?.experience) rows.push(['✦', 'Опыт', `${formatNumber(loot.experience.min)} – ${formatNumber(loot.experience.max)}`]);
   if (loot?.equipment) rows.push(['🛡️', 'Снаряжение', `${formatNumber(loot.equipment)} шт. в добыче`]);
   if (loot?.buffPotion) rows.push(['🧪', 'Зелья-баффы', loot.buffPotion.guaranteedTop ? 'топ-3 — всегда' : `шанс ${loot.buffPotion.percent}%`]);

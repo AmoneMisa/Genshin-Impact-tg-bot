@@ -128,3 +128,19 @@
 @keyframes gs-shatter { to { opacity: 0; transform: scale(1.4); filter: blur(6px) brightness(2); } }
 @keyframes gs-store { to { opacity: 0; transform: translateY(60px) scale(.3); } }
 @media (prefers-reduced-motion: reduce) { .gacha-banner-art, .gacha-banner::after, .gacha-summon, .gs-circle i, .gacha-reveal .gacha-loot-stage::before { animation: none !important; } }
+
+/* Results use the common modal surface, with a compact original item icon. */
+dialog.gacha-summon-scene.game-dialog-panel { position:fixed; inset:auto; margin:auto; width:min(420px,calc(100vw - 28px)); height:auto; opacity:1; transform:none; display:block; animation:none; }
+dialog.gacha-summon-scene:not([open]),dialog.gacha-summon-scene[hidden] { display:none; }
+dialog.gacha-summon-scene .gacha-reveal { box-sizing:border-box; width:100%; padding:0; animation:none; }
+dialog.gacha-summon-scene .gacha-reveal-grade { font:700 16px var(--serif); text-shadow:none; }
+dialog.gacha-summon-scene .gacha-loot-stage { width:80px; }
+dialog.gacha-summon-scene .gacha-loot-stage::before { display:none; }
+dialog.gacha-summon-scene .gacha-actions { width:100%; display:flex; gap:8px; }
+dialog.gacha-summon-scene .gacha-actions button { flex:1; }
+
+dialog.gacha-summon-scene .gacha-loot-stage {height:80px;min-height:0;}
+dialog.gacha-summon-scene .loot-art {width:80px;height:80px;min-height:0;}
+
+dialog.gacha-summon-scene .gacha-loot-stage .mat-icon {width:64px;height:64px;object-fit:contain;}
+dialog.gacha-summon-scene .gacha-resolve-actions.single {grid-template-columns:1fr;}

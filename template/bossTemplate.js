@@ -18,7 +18,7 @@ import {worldTemplates, epicWorld, LEVEL_GAP} from '../functions/game/boss/world
 //   phases[]           - at: hp share to trigger below; summon / enrage (+damage) /
 //                        heal (share of max hp) / say
 //   drops              - per fighter: sp [min,max] and material rolls
-//   lootMod            - gold / crystals / experience multipliers of the loot table
+//   lootMod            - gold / moonDew / experience multipliers of the loot table
 //   art                - which painting stands in until the boss has its own
 //
 // Edit the numbers here (or in Mongo, `game_templates.bosses`) to retune a fight.
@@ -74,7 +74,7 @@ const epicBoss = spec => ({
     initial: spec.initial || [],
     phases: spec.phases,
     drops: epicDrops(spec.name, spec.sp),
-    lootMod: {gold: spec.loot[0], crystals: spec.loot[1], experience: spec.loot[2]},
+    lootMod: {gold: spec.loot[0], moonDew: spec.loot[1], experience: spec.loot[2]},
     skill: {}
 });
 
@@ -265,7 +265,7 @@ const baseBosses = [{
         {at: 0.25, icon: "🔥", say: "Панцирь Киваху раскалился докрасна!", enrage: 0.2}
     ],
     drops: dropsFor("kivaha", 1, [8, 15]),
-    lootMod: {gold: 1.03, crystals: 1.04, experience: 1.1},
+    lootMod: {gold: 1.03, moonDew: 1.04, experience: 1.1},
     skill: {}
 }, {
     name: "avrora",
@@ -299,7 +299,7 @@ const baseBosses = [{
         {at: 0.5, icon: "🌊", say: "Порча берёт верх над Авророй!", enrage: 0.2, summon: ["droplet"]}
     ],
     drops: dropsFor("avrora", 1, [8, 15]),
-    lootMod: {gold: 1.035, crystals: 1.07, experience: 1.5},
+    lootMod: {gold: 1.035, moonDew: 1.07, experience: 1.5},
     skill: {}
 }, {
     name: "fjorina",
@@ -334,7 +334,7 @@ const baseBosses = [{
         {at: 0.4, icon: "🔥", say: "Ярость Фйорины! Копьё пылает ярче.", enrage: 0.25}
     ],
     drops: dropsFor("fjorina", 1, [8, 15]),
-    lootMod: {gold: 1.021, crystals: 1.03, experience: 1.67},
+    lootMod: {gold: 1.021, moonDew: 1.03, experience: 1.67},
     skill: {}
 }, {
     name: "radjahal",
@@ -368,7 +368,7 @@ const baseBosses = [{
         {at: 0.5, icon: "❄️", say: "Раджахал бьёт себя в грудь — лёд вокруг трескается!", enrage: 0.2}
     ],
     drops: dropsFor("radjahal", 1, [8, 15]),
-    lootMod: {gold: 1.0155, crystals: 1.1, experience: 1.3},
+    lootMod: {gold: 1.0155, moonDew: 1.1, experience: 1.3},
     skill: {}
 }, {
     name: "carnevorusIsse",
@@ -403,7 +403,7 @@ const baseBosses = [{
         {at: 0.35, icon: "🌸", say: "Цветок раскрывается, залечивая раны.", summon: ["sprout", "sprout"], heal: 0.05}
     ],
     drops: dropsFor("carnevorusIsse", 1, [8, 15]),
-    lootMod: {gold: 1.044, crystals: 1.06, experience: 2},
+    lootMod: {gold: 1.044, moonDew: 1.06, experience: 2},
     skill: {}
 }, {
     name: "zephyrion",
@@ -439,7 +439,7 @@ const baseBosses = [{
         {at: 0.2, icon: "⚡", say: "Око бури раскрылось!", enrage: 0.25}
     ],
     drops: dropsFor("zephyrion", 2, [15, 28]),
-    lootMod: {gold: 1.05, crystals: 1.08, experience: 2.2},
+    lootMod: {gold: 1.05, moonDew: 1.08, experience: 2.2},
     skill: {}
 }, {
     name: "terrax",
@@ -474,7 +474,7 @@ const baseBosses = [{
         {at: 0.2, icon: "💢", say: "Терракс крошится, но бьёт вдвое яростнее!", enrage: 0.3}
     ],
     drops: dropsFor("terrax", 2, [15, 28]),
-    lootMod: {gold: 1.055, crystals: 1.07, experience: 2.1},
+    lootMod: {gold: 1.055, moonDew: 1.07, experience: 2.1},
     skill: {}
 }, {
     name: "veraxis",
@@ -513,7 +513,7 @@ const baseBosses = [{
         {at: 0.2, icon: "☠️", say: "Вераксис отдаёт остатки сил — смерть близка!", summon: ["wraith", "wraith"], enrage: 0.3}
     ],
     drops: dropsFor("veraxis", 3, [25, 45]),
-    lootMod: {gold: 1.07, crystals: 1.1, experience: 2.8},
+    lootMod: {gold: 1.07, moonDew: 1.1, experience: 2.8},
     skill: {}
 }, {
     name: "tiamara",
@@ -554,7 +554,7 @@ const baseBosses = [{
         {at: 0.3, icon: "💢", say: "Гидра в ярости: обрубки голов дёргаются!", enrage: 0.25}
     ],
     drops: dropsFor("tiamara", 3, [25, 45]),
-    lootMod: {gold: 1.065, crystals: 1.1, experience: 2.7},
+    lootMod: {gold: 1.065, moonDew: 1.1, experience: 2.7},
     skill: {}
 }, {
     name: "ignar",
@@ -594,7 +594,7 @@ const baseBosses = [{
         {at: 0.5, icon: "🔥", say: "Близнецы сливают пламя воедино!", summon: ["ember", "ember"], enrage: 0.1}
     ],
     drops: dropsFor("ignar", 2, [16, 30]),
-    lootMod: {gold: 1.05, crystals: 1.08, experience: 2.2},
+    lootMod: {gold: 1.05, moonDew: 1.08, experience: 2.2},
     skill: {}
 }, {
     name: "selene",
@@ -634,7 +634,7 @@ const baseBosses = [{
         {at: 0.4, icon: "🌘", say: "Начинается лунное затмение!", summon: ["moon_wisp", "moon_wisp"], enrage: 0.15}
     ],
     drops: dropsFor("selene", 3, [26, 46]),
-    lootMod: {gold: 1.07, crystals: 1.1, experience: 2.9},
+    lootMod: {gold: 1.07, moonDew: 1.1, experience: 2.9},
     skill: {}
 }, ...epicBosses];
 

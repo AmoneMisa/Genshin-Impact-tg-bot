@@ -1,11 +1,12 @@
+import {dialogHeading} from './dialog-heading.js';
 import {escapeHtml} from './escape-html.js';
 import {stockArt} from './stock-grid.js';
 
 export function stockQuantity({row,action,owner,max=row.count,note=''}){
  if(document.querySelector('.stock-quantity'))return Promise.resolve(null);
  return new Promise(resolve=>{
-  const dialog=document.createElement('dialog');dialog.className='stock-quantity storage-panel';
-  dialog.innerHTML=`<form class="stock-transfer"><h2>${escapeHtml(action)}</h2><div class="quantity-item">${stockArt(row)}<strong>${escapeHtml(row.title)}</strong></div>${note?`<p class="storage-note" data-quantity-note>${escapeHtml(note)}</p>`:''}${row.stats?.length?`<p class="storage-note">${escapeHtml(row.stats.join(' · '))}</p>`:''}<label>Количество · доступно ${max}<input name="count" type="number" inputmode="numeric" min="1" max="${max}" value="1" placeholder="Количество" required autofocus></label><div class="storage-actions"><button type="submit">${escapeHtml(action)}</button><button type="button" data-quantity-cancel>Отмена</button></div></form>`;
+  const dialog=document.createElement('dialog');dialog.className='stock-quantity storage-panel game-dialog-panel';
+  dialog.innerHTML=`<form class="stock-transfer">${dialogHeading(action,{dismissible:false})}<div class="quantity-item">${stockArt(row)}<strong>${escapeHtml(row.title)}</strong></div>${note?`<p class="storage-note" data-quantity-note>${escapeHtml(note)}</p>`:''}${row.stats?.length?`<p class="storage-note">${escapeHtml(row.stats.join(' · '))}</p>`:''}<label>Количество · доступно ${max}<input name="count" type="number" inputmode="numeric" min="1" max="${max}" value="1" placeholder="Количество" required autofocus></label><div class="storage-actions"><button type="submit">${escapeHtml(action)}</button><button type="button" data-quantity-cancel>Отмена</button></div></form>`;
   let done=false;
   const finish=value=>{if(done)return;done=true;observer.disconnect();dialog.close();dialog.remove();resolve(value);};
   const observer=new MutationObserver(()=>{if(!owner.isConnected)finish(null);});

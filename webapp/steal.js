@@ -39,7 +39,7 @@ const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
 export function lootBurst(result) {
   const pieces = [];
   if (Number(result?.gold) > 0) pieces.push('🪙', '🪙', '🪙', '🪙');
-  if (Number(result?.crystals) > 0) pieces.push('💎', '💎');
+  if (Number(result?.moonDew) > 0) pieces.push('💎', '💧');
   if (Number(result?.ironOre) > 0) pieces.push('⛏️');
   return pieces.length ? pieces : ['✦'];
 }
@@ -119,7 +119,7 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
         <div>
           <strong>Ограбление удалось</strong>
           <small>${escapeHtml(result.targetName)} · +${formatNumber(result.gainedExp)} XP</small>
-          <p>🪙 ${formatNumber(result.gold)} · 💎 ${formatNumber(result.crystals)} · ⛏️ ${formatNumber(result.ironOre)}</p>
+          <p>🪙 ${formatNumber(result.gold)} · 💧 ${formatNumber(result.moonDew)} · ⛏️ ${formatNumber(result.ironOre)}</p>
         </div>
       </section>`;
   }

@@ -19,14 +19,14 @@ test('possible rewards row lists every non-empty prize with an icon', () => {
   for (const item of POSSIBLE_REWARDS) {
     assert.ok(html.includes(`aria-label="${item.label}"`), item.type);
     const tile = html.match(new RegExp(`<span class="chest-possible-item ${item.type}"[^>]*>(.*?)</span>`))?.[1];
-    assert.ok(tile && (tile.includes(PRIZE_ICONS[item.type]) || tile.includes('world-painted-icon')), item.type);
+    assert.ok(tile && (tile.includes(PRIZE_ICONS[item.type]) || tile.includes('world-painted-icon') || tile.includes('l2-client-icon')), item.type);
   }
   assert.doesNotMatch(html, /nothing/);
 });
 
 test('summary adds same-type prizes together and counts them', () => {
-  const prizes = [{ type: 'gold', label: 'золота', amount: 12000 }, { type: 'crystals', label: 'кристаллов', amount: 50 }, { type: 'gold', label: 'золота', amount: 8000 }];
-  assert.deepEqual(summaryRows(prizes).map(r => [r.type, r.amount, r.count]), [['gold', 20000, 2], ['crystals', 50, 1]]);
+  const prizes = [{ type: 'gold', label: 'золота', amount: 12000 }, { type: 'moonDew', label: 'кристаллов', amount: 50 }, { type: 'gold', label: 'золота', amount: 8000 }];
+  assert.deepEqual(summaryRows(prizes).map(r => [r.type, r.amount, r.count]), [['gold', 20000, 2], ['moonDew', 50, 1]]);
   const html = summaryHtml(prizes);
   assert.match(html, /Все сундуки открыты/);
   assert.match(html, /×2/);

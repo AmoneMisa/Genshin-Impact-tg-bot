@@ -56,7 +56,7 @@ try { for(const width of [320,390,820,1100]) {
  await page.locator('[data-inventory-equipment]').click();await page.locator('[data-inventory-equip]').click();
  await page.waitForFunction(()=>document.querySelector('[data-gear-slot="rightHand"]').getAttribute('aria-label').includes('Arcana Mace'));
  assert.equal(await page.locator('[data-inventory-equipment]').count(),0);
- await page.locator('[data-gear-slot="belt"]').click();assert.match(await page.locator('.inventory-item-dialog').textContent(),/нет предметов/);await page.locator('[data-item-close]').click();
+ await page.locator('[data-gear-slot="belt"]').click();assert.match(await page.locator('.inventory-item-dialog').textContent(),/нет предметов/);await page.locator('.inventory-item-dialog [data-dismiss]').click();
  await page.locator('[data-inventory-search]').fill(getInventoryState(session).materials.find(item=>item.key==='soulshot_S').name);assert.equal(await page.locator('[data-inventory-material]').count(),1);
  await page.locator('[data-inventory-search]').fill('');
  await page.locator('[data-inventory-filter="equip"]').click();assert.equal(await page.locator('[data-inventory-material]').count(),0);await page.locator('[data-inventory-filter="all"]').click();

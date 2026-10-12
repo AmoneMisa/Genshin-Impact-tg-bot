@@ -8,18 +8,18 @@ import { createMiniAppFeatures } from '../miniapp/state.js';
 import { dismissForToday, noticeKey, readDismissed, visibleNotices } from '../webapp/notices.js';
 
 const NOW = 1_800_000_000_000;
-const session = () => ({ game: { inventory: { gold: 10, crystals: 0, ironOre: 0 }, bonusChances: 1 } });
+const session = () => ({ game: { inventory: { gold: 10, moonDew: 0, ironOre: 0 }, bonusChances: 1 } });
 
 test('promo validation normalizes the code, merges rewards and checks dates and limits', () => {
   const ok = validatePromo({
     code: ' spring-26 ', maxUses: 5,
-    rewards: [{ kind: 'gold', amount: 100 }, { kind: 'gold', amount: 50 }, { kind: 'crystals', amount: 3 }],
+    rewards: [{ kind: 'gold', amount: 100 }, { kind: 'gold', amount: 50 }, { kind: 'moonDew', amount: 3 }],
     expiresAt: NOW + 1000,
   }, NOW);
   assert.equal(ok.ok, true);
   assert.deepEqual(ok.promo, {
     code: 'SPRING-26', startsAt: NOW, expiresAt: NOW + 1000, maxUses: 5,
-    rewards: [{ kind: 'gold', amount: 150 }, { kind: 'crystals', amount: 3 }],
+    rewards: [{ kind: 'gold', amount: 150 }, { kind: 'moonDew', amount: 3 }],
   });
 
   const bad = body => validatePromo({ code: 'ABC', rewards: [{ kind: 'gold', amount: 1 }], ...body }, NOW);
@@ -61,17 +61,17 @@ test('mail rewards are claimed exactly once and expire after 180 days', () => {
   assert.equal(claimMail(s, 'nope', NOW).reason, 'mail_not_found');
   assert.equal(s.game.inventory.gold, 110);
 
-  addMail(s, { id: 'promo:Y', rewards: [{ kind: 'crystals', amount: 5 }] }, NOW);
+  addMail(s, { id: 'promo:Y', rewards: [{ kind: 'moonDew', amount: 5 }] }, NOW);
   assert.equal(getMailbox(s, NOW + MAIL_LIFETIME_MS + 1).letters.length, 0);
 });
 
 test('claim all pays every pending letter once', () => {
   const s = session();
-  addMail(s, { id: 'a', rewards: [{ kind: 'crystals', amount: 5 }] }, NOW);
-  addMail(s, { id: 'b', rewards: [{ kind: 'crystals', amount: 7 }, { kind: 'ironOre', amount: 1 }] }, NOW + 1);
+  addMail(s, { id: 'a', rewards: [{ kind: 'moonDew', amount: 5 }] }, NOW);
+  addMail(s, { id: 'b', rewards: [{ kind: 'moonDew', amount: 7 }, { kind: 'ironOre', amount: 1 }] }, NOW + 1);
   const result = claimAllMail(s, NOW + 2);
   assert.equal(result.claimed, 2);
-  assert.equal(s.game.inventory.crystals, 12);
+  assert.equal(s.game.inventory.moonDew, 12);
   assert.equal(s.game.inventory.ironOre, 1);
   assert.equal(claimAllMail(s, NOW + 3).ok, false);
   assert.equal(getMailbox(s, NOW + 3).pending, 0);

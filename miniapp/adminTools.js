@@ -27,6 +27,8 @@ import resetSwordTimer from '../functions/game/sword/resetSwordTimer.js';
 import { getResettableArcadeGames, resetArcadeGame } from './arcadeReset.js';
 import { memberName } from './social.js';
 import { translateFor } from './language.js';
+import {wipeCharacter} from './characterWipe.js';
+import {migrateCurrencyWallet} from '../functions/game/player/currencyMigration.js';
 
 const MAX_AMOUNT = 1_000_000_000;
 
@@ -40,6 +42,7 @@ export function parseAmount(value) {
 function inventory(member) {
   if (!member.game) member.game = {};
   if (!member.game.inventory) member.game.inventory = {};
+  migrateCurrencyWallet(member.game.inventory);
   return member.game.inventory;
 }
 
@@ -49,9 +52,10 @@ function addTo(target, key, amount) {
 
 /** Tools applied to one chat member. `apply` mutates the member; the caller saves the chat. */
 export const PLAYER_TOOLS = Object.freeze([
+  {id:'wipe_character',label:'Вайп персонажа',destructive:true},
   { id: 'add_gold', label: 'Золото', amountLabel: 'Сколько золота', apply: (m, n) => addTo(inventory(m), 'gold', n), text: n => `золото ${n > 0 ? '+' : ''}${n}` },
   { id: 'add_luck_coins', label: 'Монеты удачи', amountLabel: 'Сколько монет', apply: (m, n) => addTo(inventory(m), 'luckCoins', n), text: n => `монеты удачи ${n > 0 ? '+' : ''}${n}` },
-  { id: 'add_crystals', label: 'Кристаллы', amountLabel: 'Сколько кристаллов', apply: (m, n) => addTo(inventory(m), 'crystals', n), text: n => `кристаллы ${n > 0 ? '+' : ''}${n}` },
+  { id: 'add_crystals', label: 'Лунная роса', amountLabel: 'Сколько лунной росы', apply: (m, n) => addTo(inventory(m), 'moonDew', n), text: n => `лунную росу ${n > 0 ? '+' : ''}${n}` },
   { id: 'add_iron_ore', label: 'Железная руда', amountLabel: 'Сколько руды', apply: (m, n) => addTo(inventory(m), 'ironOre', n), text: n => `руда ${n > 0 ? '+' : ''}${n}` },
   {
     id: 'add_experience', label: 'Опыт', amountLabel: 'Сколько опыта',
@@ -74,9 +78,13 @@ export const PLAYER_TOOLS = Object.freeze([
 
 const PLAYER_TOOL_BY_ID = new Map(PLAYER_TOOLS.map(tool => [tool.id, tool]));
 
-export async function runPlayerTool(chatId, userId, toolId, rawAmount) {
+export async function runPlayerTool(chatId, userId, toolId, rawAmount, confirmation) {
   const tool = PLAYER_TOOL_BY_ID.get(toolId);
   if (!tool) return { ok: false, reason: 'unknown_tool' };
+  if(tool.id==='wipe_character') {
+    if(!/^[1-9]\d*$/.test(String(userId))||!Number.isSafeInteger(Number(userId))||confirmation!==String(userId))return {ok:false,reason:'confirmation_required'};
+    return withLock(String(chatId),()=>wipeCharacter(chatId,userId));
+  }
   let amount = null;
   if (tool.amountLabel) {
     amount = parseAmount(rawAmount);
@@ -253,13 +261,15 @@ export async function getAdminToolsState(chatId) {
     .sort((a, b) => a.name.localeCompare(b.name, 'ru'));
   return {
     players,
-    playerTools: PLAYER_TOOLS.map(({ id, label, amountLabel }) => ({ id, label, amountLabel: amountLabel || null })),
+    playerTools: PLAYER_TOOLS.map(({ id, label, amountLabel, destructive }) => ({ id, label, amountLabel: amountLabel || null, destructive:!!destructive })),
     chatTools: CHAT_TOOLS,
     globalTools: GLOBAL_TOOLS,
   };
 }
 
 export const ADMIN_TOOL_ERRORS = Object.freeze({
+  confirmation_required:'Для вайпа нужно подтвердить ID выбранного персонажа.',
+  wipe_in_table_game:'Сначала заверши игры со ставкой этого персонажа или сбрось соответствующий стол.',
   unknown_tool: 'Неизвестная команда.',
   invalid_amount: 'Нужно целое число, не ноль (до 1 000 000 000).',
   unknown_player: 'Игрок не найден в этом чате.',

@@ -25,7 +25,7 @@ function number(value, fallback = 0) {
 function inventoryState(inventory = {}) {
   return {
     gold: number(inventory.gold),
-    crystals: number(inventory.crystals),
+    moonDew: number(inventory.moonDew),
     ironOre: number(inventory.ironOre),
     sp: number(inventory.sp),
   };
@@ -124,7 +124,7 @@ function pick({ name, icon }) {
 function canAfford(session, inventory, cost) {
   if (!cost) return false;
   return number(inventory?.gold) >= cost.gold
-    && number(inventory?.crystals) >= cost.crystals
+    && number(inventory?.moonDew) >= cost.moonDew
     && number(inventory?.ironOre) >= cost.ironOre
     && number(inventory?.sp) >= cost.sp
     && Object.entries(cost.items || {}).every(([key, need]) => getMaterialCount(session, key) >= need);

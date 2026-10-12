@@ -4,7 +4,7 @@ import { getArcadeState, startArcadeGame, rollArcadeGame } from '../miniapp/arca
 import { getResettableArcadeGames, resetArcadeGame } from '../miniapp/arcadeReset.js';
 
 function session(gold = 10_000) {
-  return { game: { inventory: { gold, crystals: 0, ironOre: 0 } } };
+  return { game: { inventory: { gold, moonDew: 0, ironOre: 0 } } };
 }
 
 test('arcade initializes all six legacy mini-games', () => {

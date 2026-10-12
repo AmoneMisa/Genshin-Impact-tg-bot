@@ -1,3 +1,5 @@
+import {materialIcon} from './material-icons.js';
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 // Gacha, banner style: one painted banner per spiral, a summon sequence
 // (magic circle, light pillar in the grade's colour, burst) and the item
@@ -6,7 +8,7 @@ import { escapeHtml } from './escape-html.js';
 import { renderLootArt } from './loot-renderer.js';
 
 const PAYMENT_LABELS = {
-  free: 'Бесплатная крутка', shards: 'За осколки', currency: 'За ресурсы', level_locked: 'Нужен уровень', gold_locked: 'Не хватает адены', crystals_locked: 'Не хватает кристаллов', locked: 'Недоступно',
+  free: 'Бесплатная крутка', shards: 'За осколки', currency: 'За ресурсы', level_locked: 'Нужен уровень', gold_locked: 'Не хватает адены', dew_locked: 'Не хватает лунной росы', locked: 'Недоступно',
 };
 export const GRADE_ORDER = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
 /** Summon colour per grade: grey -> green -> blue -> purple -> gold -> crimson -> prismatic. */
@@ -15,7 +17,7 @@ export const GRADE_TONES = Object.freeze({
 });
 
 function number(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0); }
-function gradeLabel(grade) { return grade === 'noGrade' ? '—' : grade; }
+function gradeLabel(grade) { return grade === 'noGrade' ? 'NG' : grade; }
 export function gradeTone(grade) { return GRADE_TONES[grade] || 'plain'; }
 
 function costText(spiral) {
@@ -23,7 +25,7 @@ function costText(spiral) {
   if (spiral.paymentMode === 'shards') return `💎 ${spiral.shardsCost} осколков`;
   const parts = [];
   if (spiral.spinCost.gold) parts.push(`🪙 ${number(spiral.spinCost.gold)}`);
-  if (spiral.spinCost.crystals) parts.push(`💎 ${number(spiral.spinCost.crystals)}`);
+  if (spiral.spinCost.moonDew) parts.push(`💧 ${number(spiral.spinCost.moonDew)}`);
   return parts.join(' · ') || 'Бесплатно';
 }
 
@@ -37,7 +39,7 @@ export function bannerHtml(spiral, playerLevel = 1) {
       <div class="gacha-banner-copy">
         <small>Ур. ${spiral.needLvl}+</small>
         <h3>${escapeHtml(spiral.title)}</h3>
-        <div class="gacha-rates">${grades.map(grade => `<span class="tone-${gradeTone(grade.value)}"><b>${gradeLabel(grade.value)}</b>${Math.round(Number(grade.chance) * 1000) / 10}%</span>`).join('')}</div>
+        <div class="gacha-rates">${spiral.rewards?spiral.rewards.map(r=>'<span><b>'+escapeHtml(r.label)+'</b>'+r.chance+'%</span>').join(''):grades.map(grade => `<span class="tone-${gradeTone(grade.value)}"><b>${gradeLabel(grade.value)}</b>${Math.round(Number(grade.chance) * 1000) / 10}%</span>`).join('')}</div>
       </div>
       ${locked ? `<div class="gacha-lock">🔒 Нужен ${spiral.needLvl} уровень · у тебя ${playerLevel}</div>` : ''}
     </section>
@@ -50,18 +52,18 @@ export function bannerHtml(spiral, playerLevel = 1) {
 
 export function itemRevealHtml(item) {
   const grade = item.grade || item.rarity;
-  const stats = (item.stats || []).map(stat => `<span><b>${escapeHtml(stat.name)}</b> ${number(stat.value)}</span>`).join('');
+  const stats = (item.stats || []).map(stat => `<span>${escapeHtml(stat.text || [stat.label || stat.name,number(stat.value)].join(' '))}</span>`).join('');
   return `
     <div class="gacha-reveal tone-${gradeTone(grade)}">
       <div class="gacha-reveal-grade">${escapeHtml(gradeLabel(grade))}</div>
-      <div class="gacha-loot-stage" data-gacha-loot-stage>${renderLootArt(item,{reveal:true})}<div class="loot-stage-ground"></div></div>
-      <small class="gacha-reveal-rarity">${escapeHtml(item.rarityTranslated || item.rarity || 'Предмет')}</small>
-      <h3>${escapeHtml(item.translatedName || item.name || 'Неизвестный предмет')}</h3>
+      <div class="gacha-loot-stage" data-gacha-loot-stage>${item.rewardKind?materialIcon(item.rewardRef):renderLootArt(item,{reveal:true})}<div class="loot-stage-ground"></div></div>
+      <small class="gacha-reveal-rarity">${escapeHtml(item.rewardLabel || item.rarityTranslated || item.rarity || 'Предмет')}</small>
+      <h3>${escapeHtml((item.shadow?'Теневое +7 · ':'')+(item.translatedName || item.name || 'Неизвестный предмет'))}</h3>
       ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
       ${stats ? `<div class="gacha-item-stats">${stats}</div>` : ''}
-      <div class="gacha-resolve-actions">
-        <button class="gacha-action primary" type="button" data-action="save">Оставить</button>
-        <button class="gacha-action" type="button" data-action="break">Распылить</button>
+      <div class="gacha-resolve-actions ${item.rewardKind?'single':''}">
+        <button class="ui-button gacha-action primary" type="button" data-action="save">${item.rewardKind?'Забрать':'Оставить'}</button>
+        ${!item.rewardKind?'<button class="ui-button gacha-action" type="button" data-action="break">Распылить</button>':''}
       </div>
     </div>`;
 }
@@ -70,7 +72,7 @@ const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
 
 export async function openGachaGame({ api, renderState, haptic, statusElement, playerLevel = 1 }) {
   let state = await api('/api/gacha');
-  let pendingRequest = false;
+  let pendingRequest = false;let closed=false;
   let selected = state.spirals.find(spiral => spiral.canRoll)?.id || state.spirals[0]?.id;
 
   const overlay = document.createElement('section');
@@ -86,14 +88,14 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
       <nav class="gacha-tabs" data-gacha-tabs></nav>
       <div data-gacha-body></div>
       <div class="gacha-status" aria-live="polite"></div>
-      <section class="gacha-summon-scene" hidden></section>
+      <dialog class="gacha-summon-scene game-dialog-panel" hidden></dialog>
     </div>`;
 
   const tabs = overlay.querySelector('[data-gacha-tabs]');
   const body = overlay.querySelector('[data-gacha-body]');
   const scene = overlay.querySelector('.gacha-summon-scene');
   const localStatus = overlay.querySelector('.gacha-status');
-  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
+  const close = () => { closed=true;scene.close();overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
@@ -113,35 +115,19 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
     if (state.pending?.item) showReveal(state.pending.item, { instant: true });
   }
 
-  // Summon: circle charges, a pillar in the grade colour lands, burst, reveal.
-  async function playSummon(item) {
-    const tone = gradeTone(item.grade || item.rarity);
-    scene.className = `gacha-summon-scene tone-${tone}`;
-    scene.innerHTML = `
-      <div class="gs-circle" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="gs-pillar" aria-hidden="true"></div>
-      <div class="gs-burst" aria-hidden="true"></div>
-      <div class="gs-sparks" aria-hidden="true">${Array.from({ length: 14 }, (_, i) => `<i style="--a:${i * 26}deg;--d:${(i % 5) * 60}ms"></i>`).join('')}</div>`;
-    scene.hidden = false;
-    requestAnimationFrame(() => scene.classList.add('charging'));
-    await wait(900);
-    scene.classList.add('pillar');
-    haptic(['S', 'S80', 'S84'].includes(item.grade) ? 'heavy' : 'medium');
-    await wait(700);
-    scene.classList.add('burst');
-    await wait(450);
-  }
+  async function playSummon(){if(!document.hidden&&!matchMedia('(prefers-reduced-motion: reduce)').matches)await wait(200);}
 
   function showReveal(item, { instant = false } = {}) {
     scene.hidden = false;
-    scene.className = `gacha-summon-scene tone-${gradeTone(item.grade || item.rarity)} revealed ${instant ? 'instant' : ''}`;
-    scene.innerHTML = itemRevealHtml(item);
+    scene.className = `gacha-summon-scene game-dialog-panel tone-${gradeTone(item.grade || item.rarity)} revealed ${instant ? 'instant' : ''}`;
+    scene.innerHTML = dialogHeading('Результат призыва')+itemRevealHtml(item);
+    scene.querySelector('[data-dismiss]').onclick=close;
+    if(!scene.open)scene.showModal();
     scene.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => resolvePending(button.dataset.action, button)));
   }
 
   function hideScene() {
-    scene.classList.add('leaving');
-    window.setTimeout(() => { scene.hidden = true; scene.innerHTML = ''; scene.className = 'gacha-summon-scene'; }, 250);
+    scene.close();scene.hidden=true;scene.innerHTML='';
   }
 
   async function roll() {
@@ -151,12 +137,15 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
     localStatus.textContent = '';
     try {
       const payload = await api('/api/gacha/roll', { method: 'POST', body: JSON.stringify({ gachaType: selected }) });
+      if(closed)return;
+      if(closed)return;
       state = payload.gacha;
       if (payload.state) renderState(payload.state);
       await playSummon(payload.item);
       showReveal(payload.item);
       body.innerHTML = bannerHtml(current(), playerLevel);
     } catch (error) {
+      if(closed)return;
       scene.hidden = true;
       localStatus.textContent = error.message;
       statusElement.textContent = `Гача: ${error.message}`;
@@ -170,7 +159,7 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
     if (pendingRequest || !state.pending) return;
     pendingRequest = true;
     haptic('medium');
-    scene.querySelectorAll('button').forEach(item => { item.disabled = true; });
+    scene.querySelectorAll('[data-action]').forEach(item => { item.disabled = true; });
     button.classList.add('working');
     try {
       const payload = await api('/api/gacha/resolve', { method: 'POST', body: JSON.stringify({ action }) });
@@ -181,6 +170,7 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
       else scene.classList.add('stored');
       haptic('heavy');
       await wait(500);
+      if(closed)return;
       hideScene();
       pendingRequest = false;
       render();
@@ -194,7 +184,7 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
     }
   }
 
-  render();
   document.body.appendChild(overlay);
+  render();
   requestAnimationFrame(() => overlay.classList.add('visible'));
 }

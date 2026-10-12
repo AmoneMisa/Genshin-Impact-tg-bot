@@ -58,7 +58,7 @@ export function stepText(step) {
         case 'bossKills': return `Победи боссов: ${target}`;
         case 'minionKills': return `Добей существ из свиты: ${target}`;
         case 'collect': return `Добудь: ${step.name} ×${target}`;
-        case 'pay': return `Заплати: ${step.gold || 0} золота${step.crystals ? ` и ${step.crystals} кристаллов` : ''}`;
+        case 'pay': return `Заплати: ${step.gold || 0} золота${step.moonDew ? ` и ${step.moonDew} кристаллов` : ''}`;
         default: return 'Выполни поручение';
     }
 }
@@ -167,10 +167,10 @@ export function payQuestStep(session) {
     const step = quest.steps[index];
     const inventory = session.game.inventory;
     if (number(inventory.gold) < number(step.gold)) return {ok: false, reason: 'not_enough_gold', need: step.gold};
-    if (number(inventory.crystals) < number(step.crystals)) return {ok: false, reason: 'not_enough_crystals', need: step.crystals};
+    if (number(inventory.moonDew) < number(step.moonDew)) return {ok: false, reason: 'not_enough_crystals', need: step.moonDew};
 
     inventory.gold = number(inventory.gold) - number(step.gold);
-    inventory.crystals = number(inventory.crystals) - number(step.crystals);
+    inventory.moonDew = number(inventory.moonDew) - number(step.moonDew);
     progress[index] = 1;
     return {ok: true, index, ready: isQuestComplete(quest, progress)};
 }
@@ -179,7 +179,7 @@ function giveReward(session, reward = {}) {
     const inventory = session.game.inventory;
     inventory.sp = number(inventory.sp) + number(reward.sp);
     inventory.gold = number(inventory.gold) + number(reward.gold);
-    inventory.crystals = number(inventory.crystals) + number(reward.crystals);
+    inventory.moonDew = number(inventory.moonDew) + number(reward.moonDew);
     for (const [key, amount] of Object.entries(reward.items || {})) addMaterial(session, key, amount);
 }
 
@@ -247,7 +247,7 @@ function stepView(quest, progress, index) {
         target,
         done: value >= target,
         manual: step.type === 'pay',
-        ...(step.type === 'pay' ? {gold: number(step.gold), crystals: number(step.crystals)} : {}),
+        ...(step.type === 'pay' ? {gold: number(step.gold), moonDew: number(step.moonDew)} : {}),
         navigation: step.type === 'pay' ? null : {feature: 'boss', view: 'world'},
         source: step.type === 'collect' ? 'Квестовый предмет выпадает с рейдовых боссов при участии в победе.' : null,
         ...(step.type === 'collect' ? {item: step.name, icon: step.icon} : {}),

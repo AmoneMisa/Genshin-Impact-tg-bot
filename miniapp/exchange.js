@@ -16,13 +16,13 @@ export function parseCrystalAmount(value) {
 export function getExchangeState(session) {
   const inventory = session?.game?.inventory || {};
   const gold = Math.max(0, number(inventory.gold));
-  const crystals = Math.max(0, number(inventory.crystals));
+  const moonDew = Math.max(0, number(inventory.moonDew));
   const luckCoins = Math.max(0, number(inventory.luckCoins));
 
   return {
     price: CRYSTAL_PRICE,
     gold,
-    crystals,
+    moonDew,
     luckCoins,
     maxAffordable: Math.floor(gold / CRYSTAL_PRICE),
   };
@@ -51,7 +51,7 @@ export function buyCrystalsForMiniApp(session, rawAmount) {
   }
 
   inventory.gold = gold - cost;
-  inventory.crystals = Math.max(0, number(inventory.crystals)) + amount;
+  inventory.moonDew = Math.max(0, number(inventory.moonDew)) + amount;
 
   return {
     ok: true,

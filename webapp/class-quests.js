@@ -12,7 +12,7 @@ const REASONS = {
   no_quest: 'Нет активного задания.',
   nothing_to_pay: 'Платить больше нечего.',
   not_enough_gold: 'Недостаточно золота.',
-  not_enough_crystals: 'Недостаточно кристаллов.',
+  not_enough_crystals: 'Недостаточно лунной росы.',
   quest_not_started: 'Сначала возьми задание у наставника.',
   quest_not_complete: 'Задание ещё не выполнено.',
 };
@@ -35,7 +35,7 @@ function formatNumber(value) {
 function rewardText(reward = {}) {
   const parts = [];
   if (reward.sp) parts.push(`✦ ${formatNumber(reward.sp)} SP`);
-  if (reward.crystals) parts.push(`${formatNumber(reward.crystals)} кристаллов`);
+  if (reward.moonDew) parts.push(`${formatNumber(reward.moonDew)} лунной росы`);
   if (reward.gold) parts.push(`🪙 ${formatNumber(reward.gold)}`);
   const items = { skill_scroll: 'Свиток мастерства', ancient_seal: 'Древняя печать' };
   for (const [key, amount] of Object.entries(reward.items || {})) parts.push(`${items[key] || key} ×${amount}`);
@@ -45,7 +45,7 @@ function rewardText(reward = {}) {
 export function stepRow(step) {
   const percent = step.target > 0 ? Math.round((step.progress / step.target) * 100) : 0;
   const detail = step.manual
-    ? `${step.gold ? `🪙 ${formatNumber(step.gold)}` : ''}${step.crystals ? ` 💎 ${formatNumber(step.crystals)}` : ''}`
+    ? `${step.gold ? `🪙 ${formatNumber(step.gold)}` : ''}${step.moonDew ? ` 💧 ${formatNumber(step.moonDew)}` : ''}`
     : `${formatNumber(step.progress)} / ${formatNumber(step.target)}`;
   return `
     <li class="cq-step ${step.done ? 'done' : ''}">
@@ -167,7 +167,7 @@ export async function openClassQuests({ api, renderState, haptic, statusElement 
         <div><small>Класс · ${state.tier}-й ранг</small><strong>${escapeHtml(state.classTitle)}</strong>
         <em>1-я профессия — с 20 уровня, 2-я — с 40, 3-я — с 76. Задания выполняются в боях с боссами.</em></div>
       </section>
-      <div class="cq-resources"><span>🪙 ${formatNumber(inv.gold)}</span><span>${formatNumber(inv.crystals)} кристаллов</span><span>✦ ${formatNumber(inv.sp)} SP</span></div>
+      <div class="cq-resources"><span>🪙 ${formatNumber(inv.gold)}</span><span>${formatNumber(inv.moonDew)} лунной росы</span><span>✦ ${formatNumber(inv.sp)} SP</span></div>
       <div class="cq-list">${body}</div>`;
     feedback.textContent = feedbackText;
     content.querySelectorAll('[data-cq-farm]').forEach(button => button.addEventListener('click', async () => {

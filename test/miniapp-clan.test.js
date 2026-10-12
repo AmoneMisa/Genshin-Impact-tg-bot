@@ -19,7 +19,7 @@ function makeClan() {
     xp: 0,
     owner: 1,
     buildings: {},
-    warehouse: { gold: 10_000, crystals: 20, ironOre: 100 },
+    warehouse: { gold: 10_000, moonDew: 20, ironOre: 100 },
     members: [{ userId: 1, role: 'owner', contribution: 0, upgrades: {}, lastShopAt: 0 }],
     quiz: {
       lastResetAt: 1,
@@ -35,7 +35,7 @@ function makePlayer() {
     game: {
       inventory: {
         gold: 10_000,
-        crystals: 20,
+        moonDew: 20,
         ironOre: 10,
         potions: { items: [] },
       },
@@ -74,7 +74,7 @@ test('clan contribution rejects insufficient balance without mutation', () => {
   const player = makePlayer();
   const beforeClan = structuredClone(clan);
   const beforePlayer = structuredClone(player);
-  const result = contributeToClan(clan, player, 1, 'crystals', 21);
+  const result = contributeToClan(clan, player, 1, 'moonDew', 21);
 
   assert.equal(result.ok, false);
   assert.equal(result.reason, 'not_enough_resource');
@@ -148,7 +148,7 @@ test('clan building upgrade is owner-only and charges the shared warehouse exact
   assert.equal(result.ok, true);
   assert.equal(clan.buildings.mainHall.level, 1);
   assert.equal(clan.warehouse.gold, 8_000);
-  assert.equal(clan.warehouse.crystals, 15);
+  assert.equal(clan.warehouse.moonDew, 15);
 });
 
 test('clan boss summon is single-instance per clan', () => {

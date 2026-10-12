@@ -55,7 +55,7 @@ test('equipment state exposes safe action keys, forge level, and resource wallet
   assert.equal(state.items[0].forgeLevel, 0);
   assert.match(state.items[0].key, /^0:[a-f0-9]{16}$/);
   assert.equal(state.items[0].isUsed, false);
-  assert.deepEqual(state.resources, { gold: 4321, crystals: 123, ironOre: 456 });
+  assert.deepEqual(state.resources, { gold: 4321, moonDew: 123, ironOre: 456 });
 });
 
 test('equipping a conflicting item cleanly unequips the displaced one', () => {
@@ -140,7 +140,8 @@ test('craftEquipmentItem learns, spends the quoted materials and adds the item',
   const player = session([], 1_000_000);
   const recipeId = 'noGrade:weapon:oneHandedSword';
   const row = getEquipmentState(player).craft.recipes.find(entry => entry.id === recipeId);
-  assert.equal(row.learned, true, 'no-grade recipes are known from the start');
+  assert.equal(row.learned, false, 'even no-grade recipes must be learned');
+  assert.equal(learnEquipmentRecipe(player,recipeId).ok,true);
   player.game.inventory.ironOre = 100;
   player.game.inventory.materials = Object.fromEntries(row.materials.filter(m => m.key !== 'ironOre').map(m => [m.key, m.need]));
 

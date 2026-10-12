@@ -21,7 +21,7 @@ const clanBuildings = [
         effectPerLevel: 0.05, // +5% clan xp per level
         effectLabel: "+5% опыта клана за уровень",
         maxLevel: 10,
-        cost: (level) => ({ gold: 2000 * (level + 1), crystals: 5 * (level + 1) })
+        cost: (level) => ({ gold: 2000 * (level + 1), moonDew: 5 * (level + 1) })
     },
     {
         key: "barracks",
@@ -39,7 +39,7 @@ const clanBuildings = [
         effectPerLevel: 0.05, // +5% reward gold per level
         effectLabel: "+5% золота из наград за уровень",
         maxLevel: 10,
-        cost: (level) => ({ gold: 3000 * (level + 1), crystals: 8 * (level + 1) })
+        cost: (level) => ({ gold: 3000 * (level + 1), moonDew: 8 * (level + 1) })
     }
 ];
 

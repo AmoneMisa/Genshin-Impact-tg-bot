@@ -61,7 +61,7 @@ export default async function(boss, chatId) {
         member.game.inventory.gold += gotGold;
 
         const gotCrystals = getCrystalsReward(i, loot);
-        member.game.inventory.crystals += gotCrystals;
+        member.game.inventory.moonDew += gotCrystals;
 
         if (i === 1) {
             member.game.inventory.equipment.items.push(
@@ -168,7 +168,7 @@ function getBossDrops(template, member, place) {
     const drops = template?.world?.adaptive && template.drops
         ? adaptiveDrops(template.drops, Math.max(Number(template.world.level) || 1, Number(member.game.stats?.lvl) || 1))
         : template?.drops;
-    // Enchant scrolls and crystals of the fighter's own gear grade drop from every boss.
+    // Enchant scrolls and moonDew of the fighter's own gear grade drop from every boss.
     const enchantItems = [
         ...rollEnchantDrops(member, {tier: template?.tier || 1, place}),
         ...rollCraftDrops(member, {tier: template?.tier || 1, place}),
@@ -214,7 +214,7 @@ function getExperienceReward(place, loot) {
 
 function getCrystalsReward(place, loot) {
     let crystalChance = Math.random();
-    let crystalRewardObj = getValueByChance(crystalChance, loot.crystals);
+    let crystalRewardObj = getValueByChance(crystalChance, loot.moonDew);
     if (lodash.isUndefined(crystalRewardObj) || lodash.isNull(crystalRewardObj)) return 0;
     return getRandom(crystalRewardObj.minAmount, crystalRewardObj.maxAmount);
 }

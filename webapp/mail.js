@@ -8,7 +8,7 @@ import {stockQuantity} from './stock-quantity.js';
 // Mail (rewards and letters) and the promo code field. Promo rewards are not
 // applied on redeem: they arrive as a letter and are claimed from the mail.
 
-const KIND_LABELS = { gold: [materialIcon('gold'), 'адены'], crystals: [icon('gem'), 'кристаллов'], luckCoins: [luckCoinHtml(16), 'монет удачи'], ironOre: [icon('pickaxe'), 'железной руды'], bonusChances: [icon('gift'), 'попыток бонуса'] };
+const KIND_LABELS = { gold: [materialIcon('gold'), 'адены'], moonDew: [materialIcon('moonDew'), 'лунной росы'], luckCoins: [luckCoinHtml(16), 'монет удачи'], ironOre: [icon('pickaxe'), 'железной руды'], bonusChances: [icon('gift'), 'попыток бонуса'] };
 
 export function rewardsHtml(rewards = []) {
   return rewards.map(reward => {

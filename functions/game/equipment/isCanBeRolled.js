@@ -1,16 +1,18 @@
+import {migrateCurrencyWallet} from '../player/currencyMigration.js';
 import gachaTemplate from "../../../template/gachaTemplate.js";
 
 // Коды возврата
 const RESULT = {
     LEVEL_TOO_LOW: 1,
     NOT_ENOUGH_GOLD: 2,
-    NOT_ENOUGH_CRYSTALS: 3,
+    NOT_ENOUGH_DEW: 3,
     CAN_ROLL_FOR_MONEY: 0,
     CAN_ROLL_FOR_PIECES: -1,
     CAN_ROLL_FOR_FREE: -2,
 };
 
 export default function canRollGacha(session, gachaType) {
+    migrateCurrencyWallet(session.game.inventory);
     const gacha = gachaTemplate.find(item => item.name === gachaType);
     if (!gacha) {
         throw new Error(`Неизвестный тип гачи: ${gachaType}`);
@@ -41,8 +43,8 @@ export default function canRollGacha(session, gachaType) {
         return RESULT.NOT_ENOUGH_GOLD;
     }
 
-    if (gacha.spinCost.crystals > session.game.inventory.crystals) {
-        return RESULT.NOT_ENOUGH_CRYSTALS;
+    if ((gacha.spinCost.moonDew || 0) > (session.game.inventory.moonDew || 0)) {
+        return RESULT.NOT_ENOUGH_DEW;
     }
 
     return RESULT.CAN_ROLL_FOR_MONEY;

@@ -1,9 +1,10 @@
+import {migrateCharacterCurrency} from '../functions/game/player/currencyMigration.js';
 import crypto from 'crypto';
 
 export const BONUS_PRIZES = [
-  { name: 'gold', label: 'золота', icon: '🪙', minAmount: 57_500, maxAmount: 428_500, chance: 40 },
-  { name: 'crystals', label: 'кристаллов', icon: '💎', minAmount: 150, maxAmount: 650, chance: 40 },
-  { name: 'ironOre', label: 'железной руды', icon: '⛏️', minAmount: 15, maxAmount: 450, chance: 20 },
+  { name: 'gold', label: 'адены', icon: '🪙', minAmount: 500, maxAmount: 2500, chance: 60 },
+  { name: 'moonDew', label: 'лунной росы', icon: '💧', minAmount: 3, maxAmount: 10, chance: 25 },
+  { name: 'ironOre', label: 'железной руды', icon: '⛏️', minAmount: 3, maxAmount: 12, chance: 15 },
 ];
 
 function number(value, fallback = 0) {
@@ -25,12 +26,13 @@ function selectPrize(roll) {
 }
 
 export function getBonusState(session) {
+  migrateCharacterCurrency(session);
   const inventory = session?.game?.inventory || {};
   return {
     chances: Math.max(0, Math.floor(number(session?.game?.bonusChances))),
     balances: {
       gold: Math.max(0, number(inventory.gold)),
-      crystals: Math.max(0, number(inventory.crystals)),
+      moonDew: Math.max(0, number(inventory.moonDew)),
       ironOre: Math.max(0, number(inventory.ironOre)),
     },
     prizes: BONUS_PRIZES.map(({ name, label, icon, minAmount, maxAmount, chance }) => ({

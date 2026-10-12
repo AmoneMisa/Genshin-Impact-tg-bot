@@ -36,7 +36,7 @@ function findMember(clan, userId) {
 }
 
 function normalizeWarehouse(clan) {
-  if (!clan.warehouse) clan.warehouse = { gold: 0, crystals: 0, ironOre: 0 };
+  if (!clan.warehouse) clan.warehouse = { gold: 0, moonDew: 0, ironOre: 0 };
   return clan.warehouse;
 }
 
@@ -68,7 +68,7 @@ function grantBossRewards(clan, boss) {
   const xpReward = 100 * Math.max(1, number(boss.level, 1));
 
   warehouse.gold = number(warehouse.gold) + goldReward;
-  warehouse.crystals = number(warehouse.crystals) + crystalReward;
+  warehouse.moonDew = number(warehouse.moonDew) + crystalReward;
 
   for (const [userId, damage] of Object.entries(boss.damageByUser || {})) {
     const member = findMember(clan, userId);
@@ -82,7 +82,7 @@ function grantBossRewards(clan, boss) {
   clan.boss = null;
   return {
     gold: goldReward,
-    crystals: crystalReward,
+    moonDew: crystalReward,
     clanXp: xpReward,
     leveledUp: level.leveledUp,
     level: level.level,
@@ -195,7 +195,7 @@ export function attackClanBossForMiniApp(clan, playerSession, userId, options = 
       damage: attack.dmg,
       isCrit: attack.isCrit,
       reward,
-      message: `Босс повержен. Клан получил ${reward.gold} золота, ${reward.crystals} кристаллов и ${reward.clanXp} XP.`,
+      message: `Босс повержен. Клан получил ${reward.gold} золота, ${reward.moonDew} лунной росы и ${reward.clanXp} XP.`,
     };
   }
 

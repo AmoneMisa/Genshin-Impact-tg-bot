@@ -15,7 +15,7 @@ import { getRtaState } from './clanRta.js';
 import {getHallAuctions} from './clanHallAuction.js';
 
 export const MAX_CLAN_MEMBERS = 30;
-const RESOURCES = new Set(['gold', 'crystals', 'ironOre']);
+const RESOURCES = new Set(['gold', 'moonDew', 'ironOre']);
 const XP_PER_CONTRIBUTION = 10;
 const QUIZ_GOLD_REWARD = 100;
 const QUIZ_XP_REWARD = 50;
@@ -120,7 +120,7 @@ async function clanDto(clan, userId) {
     reputation: Math.max(0, number(clan.reputation)),
     warehouse: {
       gold: Math.max(0, number(clan.warehouse?.gold)),
-      crystals: Math.max(0, number(clan.warehouse?.crystals)),
+      moonDew: Math.max(0, number(clan.warehouse?.moonDew)),
       ironOre: Math.max(0, number(clan.warehouse?.ironOre)),
     },
     members: await Promise.all((clan.members || []).map(memberDto)),
@@ -269,7 +269,7 @@ export function contributeToClan(clan, playerSession, userId, resource, rawAmoun
   if (available < amount) return { ok: false, reason: 'not_enough_resource', available };
 
   inventory[resource] = available - amount;
-  if (!clan.warehouse) clan.warehouse = { gold: 0, crystals: 0, ironOre: 0 };
+  if (!clan.warehouse) clan.warehouse = { gold: 0, moonDew: 0, ironOre: 0 };
   clan.warehouse[resource] = Math.max(0, number(clan.warehouse[resource])) + amount;
 
   const member = findMember(clan, userId);

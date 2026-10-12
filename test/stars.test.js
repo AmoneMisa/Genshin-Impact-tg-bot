@@ -223,11 +223,11 @@ test('purchases made before Coins of Luck are still paid and refunded in crystal
   assert.deepEqual(purchaseAmount(row), { currency: 'crystals', base: 550, bonus: 550, total: 1100 });
 
   assert.equal(await reconcileStarPurchases(w.deps), 1);
-  assert.equal(w.session.game.inventory.crystals, 1100);
+  assert.equal(w.session.game.inventory.moonDew, 1100);
   assert.equal(w.session.game.inventory.luckCoins, 0);
   assert.equal(starShieldAmount(w.session.game, NOW), 1100, 'crystals keep the raid shield');
 
   assert.equal((await refundStarPurchase('old-1', w.deps)).ok, true);
-  assert.equal(w.session.game.inventory.crystals, 0);
+  assert.equal(w.session.game.inventory.moonDew, 0);
   assert.equal(starShieldAmount(w.session.game, NOW), 0);
 });

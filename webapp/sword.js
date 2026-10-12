@@ -1,7 +1,8 @@
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 // Daily sword, forge style: the blade on an anvil beside a millimetre ruler;
 // a roll hammers it with sparks, then it grows or shrinks by the server delta.
-import { renderDailySwordArt } from './loot-renderer.js';
+import {lightAnimationHtml,playLightAnimation} from './light-animation.js';
 
 const REASONS = { cooldown: 'Сегодня попытка уже использована.' };
 
@@ -39,27 +40,24 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
   let state = await api('/api/sword');
   let pending = false;
   let timer = null;
+  let closed=false;const lifetime=new AbortController();
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay sword-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel sword-panel">
-      <header class="sword-head">
-        <button class="overlay-close sword-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Кузница меча</h2>
-        <button class="sword-round" type="button" data-sword-refresh aria-label="Обновить">↻</button>
-      </header>
+      ${dialogHeading('Кузница меча').replace('<button type=', '<button class="overlay-close" type=')}<button class="ui-button sword-refresh" type="button" data-sword-refresh aria-label="Обновить">↻</button>
       <div data-sword-content></div>
       <div class="sword-feedback" data-sword-feedback aria-live="polite"></div>
     </div>`;
   const content = overlay.querySelector('[data-sword-content]');
   const feedback = overlay.querySelector('[data-sword-feedback]');
-  const close = () => { if (timer) window.clearInterval(timer); overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
+  const close = () => { closed=true;lifetime.abort();if (timer) window.clearInterval(timer); document.removeEventListener('visibilitychange',visibility); overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
   overlay.querySelector('[data-sword-refresh]').addEventListener('click', async () => { if (pending) return; haptic('light'); await refresh(); });
 
-  async function refresh() { state = await api('/api/sword'); renderAll(); }
+  async function refresh() { const next = await api('/api/sword'); if(!closed){state=next;renderAll();} }
 
   function floatDelta(delta) {
     const forge = content.querySelector('.sword-forge');
@@ -78,18 +76,20 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
     feedback.textContent = '';
     haptic('heavy');
     const forge = content.querySelector('.sword-forge');
-    forge?.classList.add('forging');
+    const animation=playLightAnimation(forge?.querySelector('[data-light-animation]'),{name:'forge-action',duration:1280,signal:lifetime.signal});
     try {
-      const [payload] = await Promise.all([api('/api/sword/roll', { method: 'POST' }), wait(1100)]);
+      const [payload] = await Promise.all([api('/api/sword/roll', { method: 'POST' }), animation]);
+      if(closed)return;
       const delta = Number(payload.delta) || 0;
       state = payload.sword;
       if (payload.state) renderState(payload.state);
       renderAll({ resized: delta > 0 ? 'grow' : delta < 0 ? 'shrink' : '' });
-      floatDelta(delta);
+
       haptic(delta > 0 ? 'heavy' : 'light');
       feedback.textContent = delta > 0 ? `Меч вырос на ${delta} мм.` : delta < 0 ? `Меч уменьшился на ${Math.abs(delta)} мм.` : 'Длина меча не изменилась.';
       statusElement.textContent = `Меч: ${formatNumber(state.length)} мм.`;
     } catch (error) {
+      if(closed)return;
       forge?.classList.remove('forging');
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
       if (error.payload?.sword) { state = error.payload.sword; renderAll(); } else { try { await refresh(); } catch {} }
@@ -103,16 +103,12 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
   function renderAll({ resized = '' } = {}) {
     const canRoll = Boolean(state.canRoll);
     content.innerHTML = `
-      <section class="sword-forge ${resized}">
-        <div class="sword-ruler" aria-hidden="true">${rulerTicks(state.length).map(tick => `<span class="${tick.label ? 'major' : ''}">${tick.label ? tick.mm : ''}</span>`).join('')}</div>
-        <div class="sword-blade">${renderDailySwordArt(state.length, { animated: true })}</div>
-        <div class="sword-anvil" aria-hidden="true"></div>
-        <div class="sword-hammer" aria-hidden="true"></div>
-        <div class="sword-sparks" aria-hidden="true">${Array.from({ length: 12 }, (_, i) => `<i style="--a:${-80 + i * 14}deg;--d:${(i % 4) * 40}ms"></i>`).join('')}</div>
+      <section class="sword-forge light-game-stage ${resized}">
+        ${lightAnimationHtml('forge','Кузница меча')}
         <div class="sword-length"><small>Длина</small><strong>${formatNumber(state.length)} <em>мм</em></strong></div>
       </section>
       <p class="sword-modifier">${modifierText(state)}</p>
-      <button class="sword-roll" type="button" data-sword-roll ${canRoll ? '' : 'disabled'}>
+      <button class="sword-roll ui-button primary" type="button" data-sword-roll ${canRoll ? '' : 'disabled'}>
         <strong>${canRoll ? 'Ковать' : 'Горн остывает'}</strong>
         <small data-sword-countdown>${canRoll ? '−10…+15 мм' : `Новая попытка через ${duration(state.remainMs)}`}</small>
       </button>
@@ -124,7 +120,7 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
   }
 
   function tick() {
-    if (state.canRoll) return;
+    if (closed||document.hidden||state.canRoll) return;
     const remain = Math.max(0, Number(state.resetAt || 0) - Date.now());
     const node = content.querySelector('[data-sword-countdown]');
     if (node) node.textContent = remain > 0 ? `Новая попытка через ${duration(remain)}` : '−10…+15 мм';
@@ -134,5 +130,6 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
   renderAll();
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
-  timer = window.setInterval(tick, 1000);
+  function visibility(){if(timer)clearInterval(timer);timer=null;if(!document.hidden&&!closed){tick();timer=setInterval(tick,1000);}}
+  document.addEventListener('visibilitychange',visibility);visibility();
 }

@@ -135,7 +135,7 @@ export function stealForMiniApp(chat, attackerId, targetId, options = {}) {
     targetName: displayName(target),
     gold: Math.max(0, number(result.goldToSteal)),
     ironOre: Math.max(0, number(result.ironOreToSteal)),
-    crystals: Math.max(0, number(result.crystalsToSteal)),
+    moonDew: Math.max(0, number(result.crystalsToSteal)),
     gainedExp: Math.max(0, number(result.gainedExp)),
     remainHp: number(result.remainHp),
     attempts: attacker.game.chanceToSteal,

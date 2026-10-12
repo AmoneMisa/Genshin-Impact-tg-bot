@@ -114,7 +114,7 @@ function lootDto(boss) {
     const loot = getBossLoot(boss);
     return {
       gold: lootRange(loot.gold),
-      crystals: lootRange(loot.crystals),
+      moonDew: lootRange(loot.moonDew),
       experience: lootRange(loot.experience),
       equipment: Array.isArray(loot.equipment) ? loot.equipment.length : 0,
       buffPotion: buffPotionLoot(boss),

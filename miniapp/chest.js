@@ -8,7 +8,7 @@ import { addBuffPotion } from '../functions/game/player/potionBuffs.js';
 const PRIZES = [
   { chance: 15, value: { name: 'experience', label: 'опыта', minAmount: 4970, maxAmount: 115850 } },
   { chance: 20, value: { name: 'gold', label: 'золота', minAmount: 7500, maxAmount: 128500 } },
-  { chance: 10, value: { name: 'crystals', label: 'кристаллов', minAmount: 50, maxAmount: 950 } },
+  { chance: 10, value: { name: 'moonDew', label: 'лунной росы', minAmount: 50, maxAmount: 950 } },
   { chance: 26, value: { name: 'nothing', label: 'ничего' } },
   { chance: 4, value: { name: 'buffPotion', label: 'зелье-бафф' } },
   { chance: 10, value: { name: 'sword', label: 'мм меча', minAmount: 1, maxAmount: 10 } },
@@ -45,8 +45,8 @@ function applyPrize(session, prize, extras = {}) {
     case 'gold':
       inventory.gold = (Number(inventory.gold) || 0) + amount;
       break;
-    case 'crystals':
-      inventory.crystals = (Number(inventory.crystals) || 0) + amount;
+    case 'moonDew':
+      inventory.moonDew = (Number(inventory.moonDew) || 0) + amount;
       break;
     case 'experience':
       amount = gainExp(session, amount).gained;

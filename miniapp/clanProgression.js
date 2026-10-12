@@ -17,7 +17,7 @@ function findMember(clan, userId) {
 }
 
 function normalizeWarehouse(clan) {
-  if (!clan.warehouse) clan.warehouse = { gold: 0, crystals: 0, ironOre: 0 };
+  if (!clan.warehouse) clan.warehouse = { gold: 0, moonDew: 0, ironOre: 0 };
   return clan.warehouse;
 }
 
@@ -175,7 +175,7 @@ export function startClanInvestigation(clan, userId, key) {
   if (clan.investigations.active) return { ok: false, reason: 'investigation_already_active' };
   if ((clan.investigations.completed || []).includes(key)) return { ok: false, reason: 'investigation_already_completed' };
 
-  clan.investigations.active = { key, progress: { gold: 0, crystals: 0, ironOre: 0 }, startedAt: Date.now() };
+  clan.investigations.active = { key, progress: { gold: 0, moonDew: 0, ironOre: 0 }, startedAt: Date.now() };
   return { ok: true, key, message: `Начато исследование: ${def.label}.` };
 }
 
@@ -187,7 +187,7 @@ export function fundClanInvestigation(clan, userId) {
   if (!def) return { ok: false, reason: 'unknown_investigation' };
 
   const warehouse = normalizeWarehouse(clan);
-  if (!active.progress) active.progress = { gold: 0, crystals: 0, ironOre: 0 };
+  if (!active.progress) active.progress = { gold: 0, moonDew: 0, ironOre: 0 };
 
   const moved = {};
   for (const [resource, need] of Object.entries(def.cost)) {

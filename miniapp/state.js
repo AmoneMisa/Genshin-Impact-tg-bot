@@ -143,7 +143,7 @@ export function createMiniAppState(session, context) {
       attack: number(gameClassStats.damage ?? gameClassStats.attack),
       defense: number(gameClassStats.defense ?? gameClassStats.defence),
       gold: number(inventory.gold),
-      crystals: number(inventory.crystals),
+      moonDew: number(inventory.moonDew),
       luckCoins: number(inventory.luckCoins),
       ironOre: number(inventory.ironOre),
       arenaChances: number(game.arenaChances),

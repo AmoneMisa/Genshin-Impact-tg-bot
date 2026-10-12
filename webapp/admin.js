@@ -1,10 +1,12 @@
 import { escapeHtml } from './escape-html.js';
 import { rewardsHtml } from './mail.js';
+import {confirmDialog} from './confirm-dialog.js';
+import {enhanceSelects} from './design/select.js';
 
 // Admin screen (only offered to the bot owner): promo codes, hello popups and the
 // owner tools that used to be text commands.
 
-const KINDS = [['gold', '🪙 Золото'], ['crystals', '💎 Кристаллы'], ['luckCoins', '🍀 Монеты удачи'], ['ironOre', '⛏️ Железная руда'], ['bonusChances', '🎁 Попытки бонуса']];
+const KINDS = [['gold', '🪙 Золото'], ['moonDew', '💧 Лунная роса'], ['luckCoins', '🍀 Монеты удачи'], ['ironOre', '⛏️ Железная руда'], ['bonusChances', '🎁 Попытки бонуса']];
 
 const toMs = value => (value ? new Date(value).getTime() : null);
 const dateText = ms => (ms ? new Date(ms).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' }) : '—');
@@ -14,6 +16,7 @@ export async function openAdminGame({ api, haptic }) {
   let tab = 'promo';
   let tools = null;
   let selectedPlayer = '';
+  let toolPending=false;
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay admin-overlay';
@@ -116,8 +119,9 @@ export async function openAdminGame({ api, haptic }) {
         <h4>Игрок этого чата</h4>
         <label class="feedback-field"><span>Игрок</span><select data-t-player>${tools.players.map(optionHtml).join('')}</select></label>
         <label class="feedback-field"><span>Количество (для добавления; можно отрицательное)</span><input type="number" step="1" inputmode="numeric" data-t-amount placeholder="100" /></label>
-        <div class="admin-tools">${tools.playerTools.map(tool => `<button type="button" class="fr-btn ghost" data-t-player-tool="${escapeHtml(tool.id)}" data-t-needs-amount="${tool.amountLabel ? '1' : ''}">${escapeHtml(tool.label)}</button>`).join('')}</div>
+        <div class="admin-tools">${tools.playerTools.filter(tool=>!tool.destructive).map(tool => `<button type="button" class="fr-btn ghost" data-t-player-tool="${escapeHtml(tool.id)}" data-t-needs-amount="${tool.amountLabel ? '1' : ''}">${escapeHtml(tool.label)}</button>`).join('')}</div>
       </div>
+      <details class="feedback-card"><summary>Сброс персонажа</summary><p>Вайп удаляет уровень, профессии, навыки, валюты, экипировку, предметы и личное хранилище выбранного игрока во всех чатах. Активные лоты и обмены отменяются. Отменить вайп нельзя.</p><button type="button" class="ui-button" data-t-wipe ${!tools.players.length?'disabled':''}>Вайп выбранного персонажа</button></details>
       <div class="feedback-card">
         <h4>Этот чат</h4>
         <div class="admin-tools">${tools.chatTools.map(tool => `<button type="button" class="fr-btn ghost" data-t-chat-tool="${escapeHtml(tool.id)}">${escapeHtml(tool.label)}</button>`).join('')}</div>
@@ -130,14 +134,20 @@ export async function openAdminGame({ api, haptic }) {
   }
 
   async function runTool(payload, confirmText) {
-    if (confirmText && !window.confirm(confirmText)) return;
+    if(toolPending)return false;
+    if(confirmText&&!await confirmDialog({owner:overlay,title:'Подтверждение',text:confirmText}))return false;
+    if(toolPending||!overlay.isConnected)return false;
+    toolPending=true;
+    body.querySelectorAll('button').forEach(button=>{button.disabled=true;});
     try {
       haptic?.('medium');
       const response = await api('/api/admin/tools', { method: 'POST', body: JSON.stringify(payload) });
       say('success', response.message);
+      return true;
     } catch (error) {
       say('error', error.payload?.error || error.message);
-    }
+      return false;
+    } finally {toolPending=false;if(overlay.isConnected)render();}
   }
 
   async function loadTools() {
@@ -154,6 +164,14 @@ export async function openAdminGame({ api, haptic }) {
   function bindTools() {
     const player = body.querySelector('[data-t-player]');
     player?.addEventListener('change', () => { selectedPlayer = player.value; });
+    body.querySelector('[data-t-wipe]')?.addEventListener('click',async()=>{
+      if(toolPending||!player.value)return;
+      const userId=player.value,target=tools.players.find(p=>p.userId===userId);
+      if(!target)return;
+      const confirmed=await confirmDialog({owner:overlay,title:'Вайп персонажа',text:'Сбросить персонажа '+target.name+' (ID '+userId+') во всех чатах? Игровой прогресс, вещи, валюты и личное хранилище будут удалены без возможности отмены.',confirmLabel:'Вайпнуть персонажа',confirmValue:userId});
+      if(!confirmed||!overlay.isConnected)return;
+      if(await runTool({scope:'player',userId,action:'wipe_character',confirmUserId:userId}))await loadTools();
+    });
     body.querySelectorAll('[data-t-player-tool]').forEach(button => button.addEventListener('click', () => {
       const amount = body.querySelector('[data-t-amount]').value;
       if (button.dataset.tNeedsAmount && amount === '') return say('error', 'Введи количество.');
@@ -172,6 +190,8 @@ export async function openAdminGame({ api, haptic }) {
     overlay.querySelectorAll('[data-admin-tab]').forEach(button => button.classList.toggle('active', button.dataset.adminTab === tab));
     body.innerHTML = tab === 'promo' ? promoHtml() : tab === 'notice' ? noticeHtml() : toolsHtml();
     if (tab === 'tools') bindTools();
+    enhanceSelects(body);
+    if(toolPending)body.querySelectorAll('button').forEach(button=>{button.disabled=true;});
 
     body.querySelector('[data-p-create]')?.addEventListener('click', () => {
       const rewards = [...body.querySelectorAll('[data-p-reward]')]

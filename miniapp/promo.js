@@ -1,3 +1,4 @@
+import {migrateCharacterCurrency} from '../functions/game/player/currencyMigration.js';
 // Promo codes, in-game mail and hello popups.
 //
 // The admin creates a promo code (rewards, start/expiry, usage limit). A player
@@ -16,7 +17,7 @@ const MAX_NOTICES = 50;
 
 export const REWARD_KINDS = Object.freeze({
   gold: { label: 'золота', icon: '🪙' },
-  crystals: { label: 'кристаллов', icon: '💎' },
+  moonDew: { label: 'лунной росы', icon: '💧' },
   luckCoins: { label: 'монет удачи', icon: '🍀' },
   ironOre: { label: 'железной руды', icon: '⛏️' },
   bonusChances: { label: 'попыток бонуса', icon: '🎁' },
@@ -87,10 +88,11 @@ export const PROMO_ERRORS = Object.freeze({
 // ---- Mail (member.game.mailbox) ----
 
 export function rewardsText(rewards = []) {
-  return rewards.map(reward => `${REWARD_KINDS[reward.kind]?.icon || ''} ${new Intl.NumberFormat('ru-RU').format(reward.amount)} ${REWARD_KINDS[reward.kind]?.label || reward.kind}`.trim()).join(', ');
+  return rewards.map(reward => `${REWARD_KINDS[reward.kind === 'crystals' ? 'moonDew' : reward.kind]?.icon || ''} ${new Intl.NumberFormat('ru-RU').format(reward.amount)} ${REWARD_KINDS[reward.kind]?.label || reward.kind}`.trim()).join(', ');
 }
 
 function ensureMailbox(session) {
+  migrateCharacterCurrency(session);
   if (!session.game || typeof session.game !== 'object') session.game = {};
   if (!Array.isArray(session.game.mailbox)) session.game.mailbox = [];
   return session.game.mailbox;
@@ -114,7 +116,7 @@ export function addMail(session, mail, now = Date.now()) {
     kind: mail.kind || 'reward',
     title: mail.title || 'Письмо',
     text: mail.text || '',
-    rewards: mail.rewards || [],
+    rewards: (mail.rewards || []).map(r=>r.kind==='crystals'?{...r,kind:'moonDew'}:r),
     status: mail.rewards?.length ? 'pending' : 'read',
     createdAt: now,
     expiresAt: now + MAIL_LIFETIME_MS,
@@ -143,11 +145,12 @@ export function pendingMailCount(session, now = Date.now()) {
 }
 
 export function applyReward(session, reward) {
+  if(reward.kind==='crystals')reward={...reward,kind:'moonDew'};
   const game = session.game;
   if (!game.inventory) game.inventory = {};
   if (reward.kind === 'bonusChances') {
     game.bonusChances = Math.max(0, number(game.bonusChances)) + reward.amount;
-  } else if (['gold', 'crystals', 'ironOre', 'luckCoins'].includes(reward.kind)) {
+  } else if (['gold', 'moonDew', 'ironOre', 'luckCoins'].includes(reward.kind)) {
     game.inventory[reward.kind] = Math.max(0, number(game.inventory[reward.kind])) + reward.amount;
   }
 }
@@ -183,7 +186,7 @@ export function claimAllMail(session, now = Date.now()) {
 
 const promoDto = promo => ({
   code: promo.code,
-  rewards: promo.rewards.map(({ kind, amount }) => ({ kind, amount })),
+  rewards: promo.rewards.map(({ kind, amount }) => ({ kind:kind==='crystals'?'moonDew':kind, amount })),
   startsAt: promo.startsAt,
   expiresAt: promo.expiresAt ?? null,
   maxUses: promo.maxUses ?? null,

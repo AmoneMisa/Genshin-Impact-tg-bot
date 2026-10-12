@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import {inventoryCharacterHtml,inventoryEquipped,inventoryActionIcon,inventoryItemArt,INVENTORY_LEFT,INVENTORY_RIGHT} from './inventory-layout.js';
 import {itemGridHtml} from './item-grid.js';
 const walletNumber = value => new Intl.NumberFormat('ru-RU',{notation:Number(value)>=1e6?'compact':'standard',maximumFractionDigits:1}).format(value||0);
@@ -185,7 +186,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     const item=selectedItem(), row=selectedRow();
     content.innerHTML = `
       <div class="inventory-layout">${inventoryCharacterHtml(state)}<section class="inventory-section">
-        <nav class="inv-tabs" role="tablist" aria-label="Фильтр инвентаря">${FILTERS.map(([id,label])=>`<button type="button" role="tab" class="${filter===id?'active':''}" data-inventory-filter="${id}" aria-selected="${filter===id}">${label}</button>`).join('')}</nav>
+        <nav class="inv-tabs ui-folder-tabs" role="tablist" aria-label="Фильтр инвентаря">${FILTERS.map(([id,label])=>`<button type="button" role="tab" class="${filter===id?'active':''}" data-inventory-filter="${id}" aria-selected="${filter===id}">${label}</button>`).join('')}</nav>
         <input class="inventory-search" type="search" data-inventory-search placeholder="Поиск предмета" aria-label="Поиск предмета" value="${escapeHtml(search)}">
         <div data-inventory-bag>${bagSlots()}</div>
       </section></div>
@@ -219,7 +220,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     content.querySelector('[data-inventory-discard]').onclick=()=>itemAction('discard');
     content.querySelector('[data-inventory-crystallize]').onclick=()=>itemAction('crystallize');
     content.querySelector('[data-inventory-auction]').onclick=async()=>{if(pending)return;closeItemPopup();const {openAuctionGame}=await import('./auction.js');await openAuctionGame({api,renderState,haptic,statusElement,initialItem:selectedRow(),onClose:refresh});};
-    content.querySelector('[data-inventory-craft]').onclick=async()=>{if(pending)return;closeItemPopup();const {openEquipmentGame}=await import('./equipment.js');await openEquipmentGame({api,renderState,haptic,statusElement,initialView:'forge',onClose:refresh});};
+    content.querySelector('[data-inventory-craft]').onclick=async()=>{if(pending)return;closeItemPopup();const {openCraftGame}=await import('./craft.js');await openCraftGame({api,renderState,haptic,statusElement,onClose:refresh});};
   }
   function bindBag(root=content){
     root.querySelectorAll('[data-inventory-select]').forEach(b=>b.onclick=()=>selectItem('potion',b.dataset.inventorySelect));
@@ -227,9 +228,9 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   }
   function closeItemPopup(){itemDialog?.close();itemDialog?.remove();itemDialog=null;}
   function popup(html,title='Информация'){
-    closeItemPopup();itemDialog=document.createElement('dialog');itemDialog.className='inventory-item-dialog';
-    itemDialog.innerHTML=`<header><h2>${escapeHtml(title)}</h2><button type="button" data-item-close aria-label="Закрыть">×</button></header>${html}`;
-    itemDialog.querySelector('[data-item-close]').onclick=closeItemPopup;
+    closeItemPopup();itemDialog=document.createElement('dialog');itemDialog.className='inventory-item-dialog game-dialog-panel';
+    itemDialog.innerHTML=`${dialogHeading(title)}${html}`;
+    itemDialog.querySelector('[data-dismiss]').onclick=closeItemPopup;
     itemDialog.addEventListener('cancel',event=>{event.preventDefault();closeItemPopup();});
     overlay.append(itemDialog);itemDialog.showModal();return itemDialog;
   }
@@ -244,7 +245,13 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   function openItemPopup(){
     const item=selectedItem();if(!item)return;
     const extra=selectedKind==='equipment'?`<ul class="inventory-item-stats">${(item.stats||[]).map(stat=>`<li>${escapeHtml(stat.text||[stat.name,stat.value].filter(v=>v!=null).join(' · '))}</li>`).join('')}</ul><button type="button" data-inventory-equip ${!item.isUsed&&!item.canUse?'disabled':''}>${item.isUsed?'Снять':'Надеть'}</button>`:'';
-    const root=popup(detailHtml()+extra+(selectedKind==='potion'?vitalsHtml():''));
+    const scroll=selectedKind==='material'&&/^(?:bound_)?(scroll|blessed|safe)_(?:(weapon|armor)_)?(D|C|B|A|S|S80|S84)$/.test(item.key);
+    const root=popup(detailHtml()+extra+(scroll?'<button class="ui-button primary" data-open-enchant>Использовать свиток</button>':'')+(selectedKind==='potion'?vitalsHtml():''));
+    root.querySelector('[data-open-enchant]')?.addEventListener('click',async()=>{if(pending)return;closeItemPopup();const {openEnchantGame}=await import('./enchant.js');await openEnchantGame({api,renderState,haptic,statusElement,scrollKey:item.key,onClose:refresh});});
+    if(selectedKind==='material'&&/^attr_(stone|crystal|jewel)_(fire|water|wind|earth|holy|dark)$/.test(item.key)){
+      const button=document.createElement('button');button.className='ui-button primary';button.textContent='Использовать';root.append(button);
+      button.onclick=async()=>{if(pending)return;closeItemPopup();const {openForgeGame}=await import('./forge.js');await openForgeGame({api,renderState,haptic,statusElement,materialKey:item.key,onClose:refresh});};
+    }
     root.querySelector('[data-inventory-potion]')?.addEventListener('click',event=>usePotion(event.currentTarget.dataset.inventoryPotion));
     root.querySelector('[data-inventory-equip]')?.addEventListener('click',()=>equipItem(item));
     root.querySelector('[data-inventory-coupon]')?.addEventListener('click',()=>{closeItemPopup();openLoginRewards({api,renderState,haptic,initialTab:'coupons',initialKey:selectedKey,onClose:refresh});});

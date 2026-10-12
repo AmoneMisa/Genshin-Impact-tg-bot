@@ -8,12 +8,12 @@ export function starShieldAmount(game, now = Date.now()) {
     return Math.max(0, Number(shield.amount) || 0);
 }
 
-export function addStarShield(game, crystals, now = Date.now()) {
-    game.starShield = {amount: starShieldAmount(game, now) + Math.max(0, Number(crystals) || 0), until: now + STAR_SHIELD_MS};
+export function addStarShield(game, moonDew, now = Date.now()) {
+    game.starShield = {amount: starShieldAmount(game, now) + Math.max(0, Number(moonDew) || 0), until: now + STAR_SHIELD_MS};
     return game.starShield;
 }
 
-export function removeFromStarShield(game, crystals, now = Date.now()) {
-    const left = Math.max(0, starShieldAmount(game, now) - Math.max(0, Number(crystals) || 0));
+export function removeFromStarShield(game, moonDew, now = Date.now()) {
+    const left = Math.max(0, starShieldAmount(game, now) - Math.max(0, Number(moonDew) || 0));
     game.starShield = left > 0 ? {amount: left, until: Number(game.starShield.until)} : null;
 }

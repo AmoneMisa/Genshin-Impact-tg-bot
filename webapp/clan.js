@@ -117,7 +117,7 @@ function formatDuration(ms) {
 
 function formatCost(cost) {
   if (!cost) return 'MAX';
-  const icons = { gold: '🪙', crystals: '💎', ironOre: '⛏️' };
+  const icons = { gold: '🪙', moonDew: '💧', ironOre: '⛏️' };
   return Object.entries(cost).map(([resource, amount]) => `${icons[resource] || resource} ${formatNumber(amount)}`).join(' · ');
 }
 
@@ -263,7 +263,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     return `
       <button type="button" class="clan-card clan-treasury" data-clan-tab="warehouse">
         <h4>Клановое хранилище</h4>
-        <div><span>🪙 ${formatNumber(clan.warehouse.gold)}</span><span>💎 ${formatNumber(clan.warehouse.crystals)}</span><span>⛏️ ${formatNumber(clan.warehouse.ironOre)}</span><b>›</b></div>
+        <div><span>🪙 ${formatNumber(clan.warehouse.gold)}</span><span>💧 ${formatNumber(clan.warehouse.moonDew)}</span><span>⛏️ ${formatNumber(clan.warehouse.ironOre)}</span><b>›</b></div>
       </button>
       <section class="clan-card clan-daily">
         <h4>Ежедневное задание</h4>
@@ -494,7 +494,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
           <article class="clan-activity-card">
             <div><strong>${escapeHtml(active.label)}</strong><small>${escapeHtml(active.description)}</small><small>${escapeHtml(active.effectLabel)}</small></div>
             <div class="clan-activity-list">${Object.entries(active.cost).map(([resource, need]) => `
-              <span class="clan-muted">${resource === 'gold' ? '🪙' : resource === 'crystals' ? '💎' : '⛏️'} ${formatNumber(active.progress[resource] || 0)} / ${formatNumber(need)}</span>`).join('')}</div>
+              <span class="clan-muted">${resource === 'gold' ? '🪙' : resource === 'moonDew' ? '💧' : '⛏️'} ${formatNumber(active.progress[resource] || 0)} / ${formatNumber(need)}</span>`).join('')}</div>
             ${!active.durationDone ? `<small class="clan-muted">Осталось минимум: ${formatDuration(active.remainingMs)}</small>` : ''}
             <div class="clan-activity-list">
               <button type="button" data-clan-investigation-fund>Пополнить из хранилища</button>

@@ -10,7 +10,7 @@ import {queuePotionHealing,settlePotionHealing} from '../functions/game/player/p
 import {enchantItem,enchantScrollCount,safeTypedKey} from '../functions/game/equipment/enchantItem.js';
 import fs from 'node:fs';
 
-const hero=()=>({game:{stats:{lvl:84},gameClass:{stats:{name:'humanWizard',hp:100,maxHp:1000},skills:[]},inventory:{gold:1000000,crystals:1000,luckCoins:1000,equipment:{items:[]},potions:{items:[]}}}});
+const hero=()=>({game:{stats:{lvl:84},gameClass:{stats:{name:'humanWizard',hp:100,maxHp:1000},skills:[]},inventory:{gold:1000000,moonDew:1000,luckCoins:1000,equipment:{items:[]},potions:{items:[]}}}});
 
 test('all CoL offers belong to the common shop; passes and marks are quest goods with original client art',async()=>{
  const s=hero(),shop=getShopState(s),offers=getLuckShopState(s).items;

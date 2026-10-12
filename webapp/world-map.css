@@ -4,10 +4,27 @@
 .atlas-popup{padding:14px;background:var(--surface-panel);max-height:55%;}
 .atlas-popup .game-dialog-heading{margin:0 0 8px;align-items:flex-start;}
 .atlas-popup .game-dialog-heading h2{font:700 19px/1.2 var(--serif);margin:0;}
-.atlas-popup .game-dialog-heading [data-dismiss]{width:30px;height:30px;min-width:30px;min-height:30px;padding:0;margin:0;border:0;background:transparent;font:24px/1 system-ui;}
 .atlas-popup p{margin:8px 0;}
 .atlas-panel>nav{flex-wrap:wrap;}
 .atlas-panel>nav .ds-select{width:110px;flex-shrink:0;}
 .atlas-panel>nav .ds-select-trigger{font-size:12px;}
 .atlas-panel>header [data-close]{order:3;margin-left:auto;width:34px;height:34px;min-height:34px;padding:0;}
 .atlas-stage{min-height:220px;}
+
+.atlas-popup:has([data-quick-go]) {background:#15121a;}
+
+.quick-travel-browser {margin-top:12px;}
+.quick-travel-note,.quick-travel-wallet {font-size:12px;color:#b8ab8c;}
+.quick-travel-tabs { --tab-height: 38px; --tab-font-size: 13px; margin:14px 0 0; }
+.quick-travel-tabs button { flex:1; min-width:0; }
+.quick-travel-levels {display:flex;flex-wrap:wrap;gap:4px;margin:10px 0;}
+.atlas-popup .quick-travel-levels button {min-height:32px;padding:5px 8px;margin:0;font-size:11px;}
+.atlas-popup .quick-travel-levels button.active {border-color:#bc9c53;background:#3d3019;color:#f3dba1;}
+.quick-travel-list {max-height:min(400px,44dvh);overflow:auto;margin:8px 0;background:#100f0c;border:1px solid #4e442f;}
+.atlas-popup .quick-travel-destination {display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:48px;margin:0;padding:10px 12px;border-radius:0;border:0;border-bottom:1px solid #322d23;background:transparent;text-align:left;box-shadow:none;}
+.atlas-popup .quick-travel-destination:last-child {border-bottom:0;}
+.atlas-popup .quick-travel-destination:hover:not(:disabled) {background:#2c2416;}
+.quick-travel-name {min-width:0;font-size:13px;color:#e8d5a6;}
+.quick-travel-name small,.quick-travel-price small {display:block;font-size:10px;color:#a99f88;margin-top:4px;}
+.quick-travel-price {flex-shrink:0;color:#e4bd62;font-size:12px;text-align:right;}
+.quick-travel-empty {padding:12px;}

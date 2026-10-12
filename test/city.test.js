@@ -8,8 +8,8 @@ import { featuresForTab, NAV_TABS } from '../webapp/nav.js';
 const build = (overrides = {}) => ({
   id: 'goldMine', name: 'Золотая шахта', description: 'Добывает золото', currentLevel: 6, maxLevel: 30, nextLevel: 7,
   upgrading: false, remainingMs: 0, upgradeStartedAt: null,
-  upgradeCost: { gold: 72000, crystals: 0, ironOre: 2400 },
-  affordability: [{ resource: 'gold', met: true }, { resource: 'crystals', met: true }, { resource: 'ironOre', met: false }],
+  upgradeCost: { gold: 72000, moonDew: 0, ironOre: 2400 },
+  affordability: [{ resource: 'gold', met: true }, { resource: 'moonDew', met: true }, { resource: 'ironOre', met: false }],
   requirements: { met: true, buildings: [{ title: 'Дворец', current: 8, required: 7, met: true }], character: [{ key: 'lvl', current: 32, required: 14, met: true }] },
   canUpgrade: false, blockedReason: 'resources', canSpeedup: false, speedupCost: 0,
   resourceType: 'gold', resourceCollected: 8420, productionPerHour: 1450, maxWorkHoursWithoutCollection: 12, canCollect: true,
@@ -112,7 +112,7 @@ test('building window shows requirements as "needed / have" and production befor
   const html = buildingWindow(build({
     affordability: [
       { resource: 'gold', required: 12000, current: 1245730, met: true },
-      { resource: 'crystals', required: 0, current: 4820, met: true },
+      { resource: 'moonDew', required: 0, current: 4820, met: true },
       { resource: 'ironOre', required: 8000, current: 1200, met: false },
     ],
     nextProductionPerHour: 1600,

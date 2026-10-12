@@ -1,0 +1,4 @@
+1060 tests passed, 0 failures.
+Browser checks: 320, 390, 820 px; WebP scenes; reduced motion; close during animation; claim reward once; common summon modal; recipe deletion with confirmation and slot counter.
+Inventory hands and reference checked at 320, 390, 820, 1100 px.
+Admin wipe: selected ID, cancel, one confirmed request, no layout overflow.

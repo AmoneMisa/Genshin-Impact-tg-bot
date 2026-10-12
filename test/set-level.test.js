@@ -7,7 +7,7 @@ function session(overrides = {}) {
   return {
     game: {
       stats: { lvl: 1, currentExp: 0, needExp: levelsTemplate[0].needExp },
-      inventory: { gold: 0, crystals: 0, ironOre: 0, sp: 0 },
+      inventory: { gold: 0, moonDew: 0, ironOre: 0, sp: 0 },
       // no gameClass -> updatePlayerStats() is skipped, keeping this a pure stat-math test
       ...overrides.game,
     },

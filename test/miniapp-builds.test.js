@@ -70,8 +70,8 @@ test('starting gold mine upgrade deducts exact configured resources', () => {
 
   assert.equal(result.ok, true);
   assert.equal(player.game.inventory.gold, 680);
-  assert.equal(player.game.inventory.moonDew, 78);
-  assert.equal(player.game.inventory.crystals, 100, 'the premium crystals are not spent on buildings');
+  assert.equal(player.game.inventory.moonDew, 178);
+  assert.equal(player.game.inventory.crystals, undefined, 'the retired balance is merged into dew');
   assert.equal(player.game.inventory.ironOre, 90);
   assert.equal(player.game.builds.goldMine.upgradeStartedAt, now);
 });
@@ -147,7 +147,7 @@ test('the academy produces nothing and the crystal lake makes moon dew, not crys
   const dew = collectBuildResources(player, 'crystalLake', 1_000);
   assert.equal(dew.resourceType, 'moonDew');
   assert.equal(player.game.inventory.moonDew, 10_040);
-  assert.equal(player.game.inventory.crystals, 10_000);
+  assert.equal(player.game.inventory.crystals, undefined);
 });
 
 test('palace type change requires ownership and rename consumes one card', () => {
@@ -195,5 +195,5 @@ test('speeding a build up costs adena on early levels and Coins of Luck from lev
   assert.equal(result.ok, true);
   assert.deepEqual(result.spent, { currency: 'gold', amount: 2 * 1500 * 2 });
   assert.equal(player.game.inventory.gold, 20_000 - 6_000);
-  assert.equal(player.game.inventory.crystals, 500, 'crystals are not used');
+  assert.equal(player.game.inventory.moonDew, 500, 'dew is not used');
 });

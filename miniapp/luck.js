@@ -104,9 +104,9 @@ function applyGrant(session, grant, now) {
     game.classQuest.marks ||= {};
     game.classQuest.marks[grant.professionMark] = 1;
   }
-  if (grant.crystals) {
-    inventory.crystals = Math.max(0, number(inventory.crystals)) + grant.crystals;
-    addStarShield(game, grant.crystals, now);
+  if (grant.moonDew) {
+    inventory.moonDew = Math.max(0, number(inventory.moonDew)) + grant.moonDew;
+    addStarShield(game, grant.moonDew, now);
   }
   if (grant.ironOre) inventory.ironOre = Math.max(0, number(inventory.ironOre)) + grant.ironOre;
   if (grant.epicPass && !grantEpicPass(session, grant.epicPass)) return false;

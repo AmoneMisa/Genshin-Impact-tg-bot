@@ -14,7 +14,7 @@ export const INVENTORY_LEFT = [
   ['cloak','Плащ','branchsys2-br_freya_cloak_i00'],
   ['shirt','Рубашка','shirt'],
   ['belt','Пояс','belt'],
-  ['leftHand','Левая рука','icon-arcana_sigil_i00'],
+  ['rightHand','Правая рука','icon-weapon_arcana_mace_i00'],
 ];
 export const INVENTORY_RIGHT = [
   ['hair','Головной аксессуар','hair'],['hair2','Второй аксессуар','hair'],
@@ -23,7 +23,7 @@ export const INVENTORY_RIGHT = [
   ['necklace','Шея','icon-accessory_necklace_of_valakas_i00'],
   ['leftRing','Левое кольцо','icon-accessory_ring_of_baium_i00'],
   ['rightRing','Правое кольцо','icon-accessory_ring_of_baium_i00'],
-  ['bracelet','Браслет','bracelet'],['rightHand','Правая рука','icon-weapon_arcana_mace_i00'],
+  ['bracelet','Браслет','bracelet'],['leftHand','Левая рука','icon-arcana_sigil_i00'],
 ];
 const aliases={head:['head','helmet'],hands:['hands','gloves'],legs:['legs','boots']};
 export function inventoryEquipped(state,slot) {

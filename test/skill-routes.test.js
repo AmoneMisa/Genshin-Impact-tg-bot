@@ -20,7 +20,7 @@ function session(tier = 4, skillOverrides = {}) {
   return {
     game: {
       stats: { lvl: 80 },
-      inventory: { gold: 1_000_000, crystals: 500, ironOre: 500, sp: 5_000 },
+      inventory: { gold: 1_000_000, moonDew: 500, ironOre: 500, sp: 5_000 },
       gameClass: { stats: { name: 'archmage', tier, translateName: 'Архимаг', maxHp: 1000, hp: 1000 }, skills: [skill] },
       equipmentStats: {},
     },
@@ -93,7 +93,7 @@ test('each route changes exactly what it promises', () => {
   assert.deepEqual(Object.keys(ROUTES), ['power', 'cost', 'time', 'chance', 'attribute', 'protection']);
 });
 
-test('resetting a route costs gold and crystals and frees the skill for another', () => {
+test('resetting a route costs gold and moonDew and frees the skill for another', () => {
   const s = session();
   const skill = s.game.gameClass.skills[0];
   addMaterial(s, 'ancient_seal', 5);

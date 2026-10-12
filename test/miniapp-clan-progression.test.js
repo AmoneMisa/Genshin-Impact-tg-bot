@@ -19,7 +19,7 @@ function makeClan() {
     xp: 0,
     owner: 1,
     buildings: {},
-    warehouse: { gold: 100_000, crystals: 200, ironOre: 500 },
+    warehouse: { gold: 100_000, moonDew: 200, ironOre: 500 },
     members: [
       { userId: 1, role: 'owner', contribution: 0, upgrades: {} },
       { userId: 2, role: 'member', contribution: 0, upgrades: {} },
@@ -53,16 +53,16 @@ test('investigation: start requires membership and blocks a second active projec
 test('investigation: funding pulls only what the warehouse has toward the remaining cost', () => {
   const clan = makeClan();
   const def = clanInvestigations[0];
-  clan.warehouse = { gold: 1000, crystals: 5, ironOre: 0 };
+  clan.warehouse = { gold: 1000, moonDew: 5, ironOre: 0 };
   startClanInvestigation(clan, 1, def.key);
 
   const result = fundClanInvestigation(clan, 1);
   assert.equal(result.ok, true);
   assert.equal(clan.investigations.active.progress.gold, 1000);
-  assert.equal(clan.investigations.active.progress.crystals, 5);
+  assert.equal(clan.investigations.active.progress.moonDew, 5);
   assert.equal(clan.investigations.active.progress.ironOre, 0);
   assert.equal(clan.warehouse.gold, 0);
-  assert.equal(clan.warehouse.crystals, 0);
+  assert.equal(clan.warehouse.moonDew, 0);
 
   const dry = fundClanInvestigation(clan, 1);
   assert.equal(dry.ok, false);
@@ -90,8 +90,8 @@ test('investigation: cancelling refunds progress to the warehouse and requires m
   const clan = makeClan();
   const def = clanInvestigations[0];
   startClanInvestigation(clan, 1, def.key);
-  clan.investigations.active.progress = { gold: 500, crystals: 3, ironOre: 0 };
-  clan.warehouse = { gold: 0, crystals: 0, ironOre: 0 };
+  clan.investigations.active.progress = { gold: 500, moonDew: 3, ironOre: 0 };
+  clan.warehouse = { gold: 0, moonDew: 0, ironOre: 0 };
 
   const denied = cancelClanInvestigation(clan, 1, false);
   assert.equal(denied.ok, false);
@@ -101,7 +101,7 @@ test('investigation: cancelling refunds progress to the warehouse and requires m
   assert.equal(result.ok, true);
   assert.equal(clan.investigations.active, null);
   assert.equal(clan.warehouse.gold, 500);
-  assert.equal(clan.warehouse.crystals, 3);
+  assert.equal(clan.warehouse.moonDew, 3);
 });
 
 test('tasks: claiming requires the task to be marked done and pays out exactly once', () => {

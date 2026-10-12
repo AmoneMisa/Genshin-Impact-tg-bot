@@ -65,6 +65,7 @@ test('what a recipe is made of depends on the kind of item', () => {
 test('a successful craft spends everything, adds the item and trains the skill', () => {
   const session = player();
   const recipe = getRecipe('noGrade:weapon:dagger');
+  assert.equal(learnRecipe(session,recipe.id).ok,true);
   stock(session, recipe);
 
   const result = craftItem(session, recipe.id, { random: () => 0 });
@@ -118,6 +119,7 @@ test('crafting skill levels up with experience, quadratically harder', () => {
   assert.equal(craftNeedExp(1), 60);
   assert.equal(craftNeedExp(3), 540);
   const recipe = getRecipe('noGrade:weapon:dagger');
+  assert.equal(learnRecipe(session,recipe.id).ok,true);
   let levelled = false;
   for (let i = 0; i < 4; i++) {
     stock(session, recipe);

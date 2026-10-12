@@ -10,7 +10,7 @@
 //   collect     {item, name, icon, target, chance, ...filter}
 //                                     a quest item drops with `chance` from every boss
 //                                     kill you took part in
-//   pay         {gold, crystals}      hand the mentor gold / crystals (a button)
+//   pay         {gold, moonDew}      hand the mentor gold / moonDew (a button)
 // Boss filters: boss (name or [names]), minTier, element.
 //
 // A step's `text` is the line shown in the quest log; the Mini App builds a
@@ -20,14 +20,14 @@ const skillUses = (kind, target, text) => ({type: "skillUses", kind, target, tex
 const bossKills = (target, filter = {}, text) => ({type: "bossKills", target, ...filter, text});
 const minionKills = (target, text) => ({type: "minionKills", target, text});
 const collect = (item, name, icon, target, chance, filter = {}, text) => ({type: "collect", item, name, icon, target, chance, ...filter, text});
-const pay = (gold, crystals = 0, text) => ({type: "pay", gold, crystals, text});
+const pay = (gold, moonDew = 0, text) => ({type: "pay", gold, moonDew, text});
 
 import {L2_CLASS_META} from './l2ClassMeta.js';
 
 const REWARD = {
-    2: {sp: 150, crystals: 20, items: {skill_scroll: 3}},
-    3: {sp: 400, crystals: 60, items: {skill_scroll: 5, ancient_seal: 2}},
-    4: {sp: 900, crystals: 120, items: {skill_scroll: 8, ancient_seal: 4}}
+    2: {sp: 150, moonDew: 20, items: {skill_scroll: 3}},
+    3: {sp: 400, moonDew: 60, items: {skill_scroll: 5, ancient_seal: 2}},
+    4: {sp: 900, moonDew: 120, items: {skill_scroll: 8, ancient_seal: 4}}
 };
 const LEVEL = {2: 20, 3: 40, 4: 76};
 const FEE = {2: 20000, 3: 60000, 4: 200000};

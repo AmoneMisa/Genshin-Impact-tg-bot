@@ -1,3 +1,4 @@
+import {migrateCharacterCurrency} from '../game/player/currencyMigration.js';
 import { clampLevel } from '../game/player/setLevel.js';
 import getBuildFromTemplate from '../game/builds/getBuildFromTemplate.js';
 import lodash from 'lodash';
@@ -98,7 +99,6 @@ export default function (session) {
                 ],
             },
             gold: 0,
-            crystals: 0,
             moonDew: 0,
             ironOre: 0,
             sp: 0, // skill points, earned on level-up — spent enchanting skills (see skillEnchant.js)
@@ -148,6 +148,8 @@ export default function (session) {
             }
         }
     }
+
+    migrateCharacterCurrency(session);
 
     // Gear from before the Lineage 2 catalog (random stats, SS / SSS grades) becomes catalog items.
     migrateSessionEquipment(session);

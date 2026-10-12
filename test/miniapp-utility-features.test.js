@@ -8,20 +8,20 @@ function session(chances = 1) {
   return {
     game: {
       bonusChances: chances,
-      inventory: { gold: 100, crystals: 10, ironOre: 5 },
+      inventory: { gold: 100, moonDew: 10, ironOre: 5 },
     },
   };
 }
 
-test('bonus keeps legacy prize chances and mutates only server session', () => {
+test('bonus uses current economy rewards and mutates only server session', () => {
   const player = session(1);
-  const values = [0, 57_500];
+  const values = [0, 2_500];
   const result = claimBonus(player, { randomInt: () => values.shift() });
 
   assert.equal(result.ok, true);
   assert.equal(result.prize.name, 'gold');
-  assert.equal(result.prize.amount, 57_500);
-  assert.equal(player.game.inventory.gold, 57_600);
+  assert.equal(result.prize.amount, 2_500);
+  assert.equal(player.game.inventory.gold, 2_600);
   assert.equal(player.game.bonusChances, 0);
 });
 

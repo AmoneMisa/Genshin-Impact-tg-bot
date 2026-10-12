@@ -22,7 +22,7 @@ export default [
         key: "hpElixir",
         label: "Эликсир ХП (45%)",
         potion: { type: "hp", bottleType: "elixir", power: 45 },
-        cost: { gold: 3000, crystals: 2 }
+        cost: { gold: 3000, moonDew: 2 }
     },
     {
         key: "mpSmall",
@@ -49,6 +49,6 @@ export default [
         key: "buff-" + potion.id,
         label: potion.name,
         potion: { type: "buff", bottleType: potion.bottleType, id: potion.id },
-        cost: { gold: 4500, crystals: 3 }
+        cost: { gold: 4500, moonDew: 3 }
     }))
 ];

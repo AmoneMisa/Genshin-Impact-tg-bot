@@ -13,7 +13,7 @@ import changePlayerClass from '../functions/game/player/changePlayerGameClass.js
 import updatePlayerStats from '../functions/game/player/updatePlayerStats.js';
 
 function view(level = 25) {
-  const session = { game: { stats: { lvl: level }, inventory: { gold: 1e6, crystals: 1e3, sp: 0 }, gameClass: { stats: { name: 'noClass' } }, effects: [] } };
+  const session = { game: { stats: { lvl: level }, inventory: { gold: 1e6, moonDew: 1e3, sp: 0 }, gameClass: { stats: { name: 'noClass' } }, effects: [] } };
   changePlayerClass(session, 'humanFighter');
   updatePlayerStats(session);
   return { session, view: getClassQuestView(session) };
@@ -41,7 +41,7 @@ test('profession cards show the mentor, the checklist and the right buttons per 
 
 test('a step row shows a bar for objectives and the price for the hand-in', () => {
   assert.match(stepRow({ text: 'Победи', progress: 1, target: 4, done: false }), /width:25%/);
-  assert.match(stepRow({ text: 'Оплата', progress: 0, target: 1, manual: true, gold: 20000, crystals: 0, done: false }), /20.000|20\s000/);
+  assert.match(stepRow({ text: 'Оплата', progress: 0, target: 1, manual: true, gold: 20000, moonDew: 0, done: false }), /20.000|20\s000/);
   assert.match(stepRow({ text: 'x', progress: 4, target: 4, done: true }), /cq-step done/);
   assert.match(stepRow({ text: '<b>', progress: 0, target: 1, done: false }), /&lt;b&gt;/, 'escaped');
 });

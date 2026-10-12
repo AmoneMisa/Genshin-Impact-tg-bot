@@ -1,8 +1,10 @@
+import {GACHA_REWARDS,generateGachaReward,grantGachaReward,shadowGachaItem} from '../functions/game/equipment/gachaRewards.js';
+import {hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
+import {getMaterialCount} from '../functions/game/player/materials.js';
+import {migrateSessionEquipment} from '../functions/game/equipment/migrateEquipment.js';
 import gachaTemplate from '../template/gachaTemplate.js';
 import isCanBeRolled from '../functions/game/equipment/isCanBeRolled.js';
 import makeRoll from '../functions/game/equipment/makeRoll.js';
-import generateRandomEquipment from '../functions/game/equipment/generateRandomEquipment.js';
-import addItemToUserInventory from '../functions/game/equipment/addItemToUserInventory.js';
 import breakItemToSpins from '../functions/game/equipment/breakItemToSpins.js';
 import { describeItemStats } from '../functions/game/equipment/describeStats.js';
 import normalizeGachaState, { ensureGachaEntry, getGachaShardEntry } from '../functions/game/equipment/normalizeGachaState.js';
@@ -13,13 +15,14 @@ function paymentMode(code) {
   if (code === 0) return 'currency';
   if (code === 1) return 'level_locked';
   if (code === 2) return 'gold_locked';
-  if (code === 3) return 'crystals_locked';
+  if (code === 3) return 'dew_locked';
   return 'locked';
 }
 
 function sanitizeItem(item) {
   if (!item) return null;
   return {
+    rewardLabel:GACHA_REWARDS.find(r=>r.kind===item.rewardKind)?.label,rewardKind:item.rewardKind,rewardRef:item.rewardRef,amount:item.amount,shadow:item.shadow,enchant:item.enchant,expiresAt:item.expiresAt,
     name: item.name,
     description: item.description,
     grade: item.grade,
@@ -42,6 +45,8 @@ function sanitizeItem(item) {
 
 export function getGachaState(session) {
   normalizeGachaState(session);
+  migrateSessionEquipment(session);
+  if(session.game.gachaTempItem&&!session.game.gachaTempItem.rewardKind&&!session.game.gachaTempItem.shadow)session.game.gachaTempItem=shadowGachaItem(session.game.gachaTempItem);
 
   const spirals = gachaTemplate.map((template) => {
     const state = ensureGachaEntry(session, template.name);
@@ -56,6 +61,7 @@ export function getGachaState(session) {
       shards: Number(shards.value) || 0,
       shardsCost: template.piecesForFleeCall,
       spinCost: { ...template.spinCost },
+      rewards:GACHA_REWARDS.map(r=>({...r})),
       grades: template.gradesForSpin.map((grade) => ({ ...grade })),
       canRoll: code <= 0 && !session.game.gachaTempItem,
       paymentMode: paymentMode(code),
@@ -73,7 +79,7 @@ export function getGachaState(session) {
   };
 }
 
-export function rollGacha(session, gachaType) {
+export function rollGacha(session, gachaType, options={}) {
   const template = gachaTemplate.find((item) => item.name === gachaType);
   if (!template) {
     return { ok: false, reason: 'unknown_gacha', gacha: getGachaState(session) };
@@ -99,10 +105,7 @@ export function rollGacha(session, gachaType) {
 
   const randomGrade = makeRoll(session.game, template, code < 0);
   // The spiral's own grade odds decide the grade; the generator adds no extra upgrade roll.
-  const item = generateRandomEquipment(session.game.stats.lvl, randomGrade, {
-    exact: true,
-    forClass: session.game.gameClass?.stats?.name,
-  });
+  const item = generateGachaReward(session,randomGrade,options);
   session.game.gachaTempItem = item;
   session.game.gachaTempType = gachaType;
 
@@ -122,7 +125,9 @@ export function resolveGacha(session, action) {
   }
 
   if (action === 'save') {
-    addItemToUserInventory(session, item);
+    const needsRoom=!item.rewardKind || (item.rewardKind!=='resource' && getMaterialCount(session,item.rewardRef)===0);
+    if(needsRoom&&!hasInventoryRoom(session,1))return {ok:false,reason:'inventory_full',gacha:getGachaState(session)};
+    if(item.rewardKind)grantGachaReward(session,item);else session.game.inventory.equipment.items.push(shadowGachaItem(item));
     session.game.gachaTempItem = null;
     session.game.gachaTempType = null;
     return {
@@ -133,7 +138,7 @@ export function resolveGacha(session, action) {
     };
   }
 
-  if (action === 'break') {
+  if (action === 'break' && !item.rewardKind) {
     const shards = breakItemToSpins(session.game.inventory, item, gachaType);
     session.game.gachaTempItem = null;
     session.game.gachaTempType = null;

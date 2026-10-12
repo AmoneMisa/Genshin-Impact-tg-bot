@@ -108,7 +108,7 @@ async function credit(purchase, deps, now) {
     if (currency === LUCK_COINS) {
       inventory.luckCoins = (Number(inventory.luckCoins) || 0) + total;
     } else {
-      inventory.crystals = (Number(inventory.crystals) || 0) + total;
+      inventory.moonDew = (Number(inventory.moonDew) || 0) + total;
       addStarShield(session.game, total, now);
     }
     await deps.saveSession(session);
@@ -175,7 +175,7 @@ export async function refundStarPurchase(chargeId, deps) {
     if (currency === LUCK_COINS) {
       inventory.luckCoins = Math.max(0, (Number(inventory.luckCoins) || 0) - total);
     } else {
-      inventory.crystals = Math.max(0, (Number(inventory.crystals) || 0) - total);
+      inventory.moonDew = Math.max(0, (Number(inventory.moonDew) || 0) - total);
       removeFromStarShield(session.game, total);
     }
     await deps.saveSession(session);

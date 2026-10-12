@@ -2,14 +2,16 @@ import {sellableItems} from './auction.js';
 import {materialInfo} from '../functions/game/player/materials.js';
 import {isTimedItem} from '../functions/game/equipment/timedItems.js';
 import {inventorySlotsUsed} from '../functions/game/builds/palaceCapacity.js';
+import {migrateCurrencyWallet} from '../functions/game/player/currencyMigration.js';
 /** Options of a transfer into an inventory: it holds `capacity` slots (the palace level sets it). */
 export const intoInventory=capacity=>({limit:capacity,slots:inventorySlotsUsed});
 export const STORAGE_SLOTS=250;
-export const CURRENCIES={gold:'Адена',crystals:'Кристаллы',ironOre:'Железная руда'};
+export const CURRENCIES={gold:'Адена',moonDew:'Лунная роса',ironOre:'Железная руда'};
 export const potionKey=p=>p?.id||`${p?.type}:${p?.bottleType}:${p?.power}:${p?.size}`;
 const validCount=n=>Number.isSafeInteger(n)&&n>0;
 const allowed=item=>item&&!item.isUsed&&!isTimedItem(item)&&!item.bound&&!item.noTrade&&item.tradeable!==false&&item.canTrade!==false;
 export function stockRows(stock={}){
+ migrateCurrencyWallet(stock);
  const rows=sellableItems({game:{inventory:{...stock,materials:{...stock.materials}}}}).filter(row=>row.kind!=='equipment'||allowed(stock.equipment.items.find(i=>i.uid===row.ref)));
  return [...Object.entries(CURRENCIES).filter(([key])=>validCount(stock[key])).map(([key,title])=>({kind:'currency',ref:key,materialKey:key,title,count:stock[key]})),...rows];
 }

@@ -853,7 +853,7 @@ a:focus-visible {
   background: var(--surface-control);
   color: var(--text-soft);
 }
-.game-dialog-heading [data-dismiss] {
+.game-dialog-heading [data-dismiss],body .game-dialog-panel .game-dialog-heading [data-dismiss] {
   flex-shrink: 0;
   display:grid; place-items:center; box-sizing:border-box;
   width:34px; height:34px; min-width:34px; min-height:34px;
@@ -862,8 +862,8 @@ a:focus-visible {
   color:#eee4cf; font:400 24px/1 system-ui;
 }
 .game-dialog-heading [data-dismiss]::before,.game-dialog-heading [data-dismiss]::after { display:none; }
-.game-dialog-heading [data-dismiss]:hover { background:#ffffff10; }
-.game-dialog-heading [data-dismiss]:focus-visible { outline:2px solid #d8b36a; outline-offset:2px; }
+.game-dialog-heading [data-dismiss]:hover,body .game-dialog-panel .game-dialog-heading [data-dismiss]:hover { background:#ffffff10; }
+.game-dialog-heading [data-dismiss]:focus-visible,body .game-dialog-panel .game-dialog-heading [data-dismiss]:focus-visible { outline:2px solid #d8b36a; outline-offset:2px; }
 .death-overlay {
   position: fixed;
   inset: 0;
@@ -1030,3 +1030,104 @@ body .game-overlay .overlay-panel textarea {
 .ds-select-menu [role="option"] { padding: 10px; border-radius: var(--radius-control); cursor: pointer; }
 .ds-select-menu [aria-selected="true"], .ds-select-menu .highlighted { background: #49361c; color: var(--gold-bright); }
 .ds-select-menu [aria-disabled="true"] { opacity: .45; cursor: default; }
+
+/* Reusable actions. Feature sheets own placement, not control skins. */
+.ui-button,
+.storage-panel button,
+.stock-transfer button,
+.buffs-overlay .party-actions button {
+  min-height: var(--control-height);
+  padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface-control);
+  color: var(--text-soft);
+  font: 600 12px/1.3 system-ui;
+  cursor: pointer;
+}
+.ui-button.primary,
+.storage-tabs button[aria-pressed="true"],
+.stock-transfer button[type="submit"],
+.storage-actions button:first-child,
+.buffs-overlay .party-actions button[aria-pressed="true"] {
+  border-color: var(--gold);
+  background: var(--button-gold);
+  color: var(--gold-bright);
+}
+
+/* One folder-tab skin, with dimensions configured by the containing screen. */
+body .ui-folder-tabs {
+  display: flex; align-items: end; gap: 2px; padding: 0;
+  border: 0; border-bottom: 1px solid #b69a5f; background: none;
+  overflow-x: auto; scrollbar-width: none;
+}
+body .ui-folder-tabs button,
+body .game-overlay .overlay-panel .ui-folder-tabs button {
+  min-height: var(--tab-height, 28px); margin: 0 0 -1px;
+  padding: 5px 8px; border: 1px solid #61573d;
+  border-radius: 3px 9px 0 0; background: #27291f;
+  color: #c6bea1; font: var(--tab-font-size, 10px)/1.2 system-ui;
+  white-space: nowrap;
+}
+body .ui-folder-tabs button:is(.active,[aria-selected="true"]),
+body .game-overlay .overlay-panel .ui-folder-tabs button:is(.active,[aria-selected="true"]) {
+  position: relative; z-index: 1; background: #45432d;
+  border-color: #b69a5f; border-bottom-color: #45432d; color: #f5dfab;
+}
+.inventory-reference .ui-folder-tabs button { flex: 0 0 auto; min-width: 40px; }
+
+/* Native modal windows reuse the same surface and backdrop as game popups. */
+dialog.game-dialog-panel {
+  box-sizing: border-box;
+  width: min(var(--dialog-width, 420px), calc(100vw - 28px));
+  max-height: calc(100dvh - 32px); overflow: auto;
+}
+dialog.game-dialog-panel:not([open]) { display: none; }
+dialog.game-dialog-panel::backdrop { background: rgba(4, 5, 12, .72); }
+.game-confirm-dialog form,.game-confirm-dialog label { display:grid; gap:12px; }
+.game-confirm-dialog p { margin:12px 0; line-height:1.5; }
+.game-confirm-dialog input { min-width:0; width:100%; }
+.light-game-art { display:block; width:min(100%,320px); height:auto; margin:auto; object-fit:contain; }
+.light-game-stage { background:var(--surface-input); border:1px solid var(--border-soft); border-radius:var(--radius-control); }
+dialog.game-dialog-panel button:not([data-dismiss]):not(.item-grid-cell):not(.stock-slot):not(.ui-button) {
+  min-height: var(--control-height); padding: 8px 12px;
+  border-color: var(--border-strong); background: var(--surface-control); color: var(--text-soft);
+}
+dialog.game-dialog-panel .storage-actions button:first-child { background: var(--button-gold); border-color: var(--gold); }
+dialog.game-dialog-panel .game-dialog-heading [data-dismiss] {
+  min-height:34px; width:34px; padding:0; border:0; background:transparent; font:400 24px/1 system-ui;
+}
+.ui-button:disabled,.storage-panel button:disabled,.stock-transfer button:disabled,.buffs-overlay .party-actions button:disabled { opacity:.46; cursor:default; }
+
+/* Checkboxes and radios are shared native controls, including keyboard states. */
+body input:is([type="checkbox"],[type="radio"]) {
+  appearance: none; -webkit-appearance: none; box-sizing: border-box;
+  display: inline-grid; place-items: center; position: relative;
+  flex: 0 0 18px; width: 18px; height: 18px; min-height: 18px;
+  margin: 0; padding: 0; border: 1px solid var(--border-strong);
+  border-radius: 4px; background: var(--surface-input); cursor: pointer;
+}
+body input[type="radio"] { border-radius: 50%; }
+body input:is([type="checkbox"],[type="radio"]):checked {
+  border-color: var(--gold); background: var(--button-gold);
+}
+body input[type="checkbox"]:checked::after {
+  content: ''; width: 5px; height: 9px; margin-top: -2px;
+  border: solid var(--gold-bright); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+body input[type="checkbox"]:indeterminate::after {
+  content: ''; width: 8px; height: 2px; background: var(--gold-bright);
+}
+body input[type="radio"]:checked::after {
+  content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--gold-bright);
+}
+body input:is([type="checkbox"],[type="radio"]):disabled { opacity: .46; cursor: default; }
+
+/* Shared Lineage II inventory/book/service window surface. */
+.game-dialog-panel.l2-window{background:linear-gradient(180deg,#28271e,#151810 90%);border:1px solid #786647;border-radius:var(--radius-control);padding:var(--space-3);display:grid;gap:var(--space-3);color:#e8dfc8}
+.game-dialog-panel.l2-window .game-dialog-heading{border-bottom:1px solid #655638;padding-bottom:var(--space-2);margin:0}
+
+.game-dialog-panel.l2-window > p{margin:0;line-height:1.5}
+.item-preview-icon{display:grid;place-items:center;width:64px;height:64px;flex:none;border:1px solid var(--border-strong);background:var(--surface-input)}
+.item-preview-icon img{width:100%;height:100%;object-fit:contain}
+.ui-result-log{padding:var(--space-2);border:1px solid var(--border-subtle);background:var(--surface-input)}

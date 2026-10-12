@@ -12,7 +12,7 @@ function inventoryView(session) {
   const inventory = session?.game?.inventory || {};
   return {
     gold: Number(inventory.gold) || 0,
-    crystals: Number(inventory.crystals) || 0,
+    moonDew: Number(inventory.moonDew) || 0,
     sp: Number(inventory.sp) || 0,
   };
 }

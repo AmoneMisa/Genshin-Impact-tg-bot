@@ -1,3 +1,5 @@
+import {dialogHeading} from './dialog-heading.js';
+import {lightAnimationHtml,playLightAnimation} from './light-animation.js';
 // Daily bonus as a prize wheel: segments in proportion to each prize's chance,
 // interleaved; the wheel spins to a segment of the prize the server picked.
 
@@ -5,7 +7,7 @@ function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
-const SEGMENT_COLORS = { gold: ['#6a4f1f', '#4a3614'], crystals: ['#243a6a', '#182848'], ironOre: ['#3a3440', '#26222c'] };
+const SEGMENT_COLORS = { gold: ['#6a4f1f', '#4a3614'], moonDew: ['#243a6a', '#182848'], ironOre: ['#3a3440', '#26222c'] };
 
 /** Prize names for `count` wheel segments, weighted by chance and spread out. */
 export function wheelSegments(prizes = [], count = 10) {
@@ -34,28 +36,11 @@ export function landingRotation(segments, name, { from = 0, turns = 5, random = 
   return base + turns * 360 + ((target % 360) + 360) % 360;
 }
 
-function wheelHtml(prizes, segments, rotation) {
-  const size = 360 / segments.length;
-  const icons = Object.fromEntries(prizes.map(prize => [prize.name, prize.icon]));
-  const stops = segments.map((name, i) => {
-    const [a, b] = SEGMENT_COLORS[name] || ['#2a2233', '#1a1520'];
-    return `${i % 2 ? b : a} ${i * size}deg ${(i + 1) * size}deg`;
-  }).join(', ');
-  return `
-    <div class="bonus-wheel-wrap">
-      <div class="bonus-pointer" aria-hidden="true"></div>
-      <div class="bonus-wheel" data-bonus-wheel style="--stops:${stops};transform:rotate(${rotation}deg)">
-        ${segments.map((name, i) => `<span class="bonus-slice" style="--r:${(i + 0.5) * size}deg">${icons[name] || '✦'}</span>`).join('')}
-      </div>
-      <div class="bonus-hub" aria-hidden="true">✦</div>
-    </div>`;
-}
-
 export async function openBonusGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/bonus');
   let lastPrize = null;
   let pending = false;
-  let rotation = 0;
+  let closed=false;const lifetime=new AbortController();
   const segments = wheelSegments(state.prizes);
 
   const overlay = document.createElement('section');
@@ -63,26 +48,22 @@ export async function openBonusGame({ api, renderState, haptic, statusElement })
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel bonus-panel">
-      <header class="bonus-head">
-        <button class="overlay-close bonus-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Ежедневный бонус</h2>
-        <span class="bonus-round" aria-hidden="true">🎁</span>
-      </header>
+      ${dialogHeading('Ежедневный бонус').replace('<button type=', '<button class="overlay-close" type=')}
       <div data-bonus-content></div>
       <div class="bonus-feedback" data-bonus-feedback aria-live="polite"></div>
     </div>`;
 
   const content = overlay.querySelector('[data-bonus-content]');
   const feedback = overlay.querySelector('[data-bonus-feedback]');
-  const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
+  const close = () => { closed=true;lifetime.abort();overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
   function render() {
     content.innerHTML = `
-      ${wheelHtml(state.prizes, segments, rotation)}
+      <div class="bonus-animation light-game-stage">${lightAnimationHtml('wheel','Колесо наград')}</div>
       ${lastPrize ? `<section class="bonus-win"><span>${lastPrize.icon}</span><strong>+${formatNumber(lastPrize.amount)} ${lastPrize.label}</strong></section>` : ''}
-      <button class="bonus-spin" type="button" data-bonus-claim ${state.chances <= 0 || pending ? 'disabled' : ''}>
+      <button class="bonus-spin ui-button primary" type="button" data-bonus-claim ${state.chances <= 0 || pending ? 'disabled' : ''}>
         <strong>${state.chances > 0 ? 'Крутить колесо' : 'Попытки закончились'}</strong>
         <small>${state.chances > 0 ? `Попыток сегодня: ${state.chances}` : 'Новые — после ежедневного сброса'}</small>
       </button>
@@ -95,6 +76,7 @@ export async function openBonusGame({ api, renderState, haptic, statusElement })
           </article>`).join('')}
       </section>`;
     content.querySelector('[data-bonus-claim]')?.addEventListener('click', claim);
+    if(lastPrize)content.querySelector('[data-light-animation]').src='/art/minigames/wheel-'+lastPrize.name+'-result.webp';
   }
 
   async function claim() {
@@ -105,26 +87,22 @@ export async function openBonusGame({ api, renderState, haptic, statusElement })
     content.querySelector('[data-bonus-claim]').disabled = true;
     try {
       const payload = await api('/api/bonus/claim', { method: 'POST' });
-      const wheel = content.querySelector('[data-bonus-wheel]');
-      rotation = landingRotation(segments, payload.prize.name, { from: rotation });
-      wheel.classList.add('spinning');
-      wheel.style.transform = `rotate(${rotation}deg)`;
-      // Ticks while the wheel slows down.
-      const ticks = [120, 260, 420, 600, 820, 1080, 1400, 1800, 2300, 2900];
-      ticks.forEach(ms => window.setTimeout(() => haptic('light'), ms));
-      await new Promise(resolve => window.setTimeout(resolve, 3600));
+      if(closed)return;
+      await playLightAnimation(content.querySelector('[data-light-animation]'),{name:'wheel-'+payload.prize.name,duration:1680,signal:lifetime.signal,resultSrc:'/art/minigames/wheel-'+payload.prize.name+'-result.webp'});
+      if(closed)return;
       state = payload.bonus;
       lastPrize = payload.prize;
       if (payload.state) renderState(payload.state);
       statusElement.textContent = `Бонус: ${lastPrize.icon} +${formatNumber(lastPrize.amount)} ${lastPrize.label}`;
       haptic('heavy');
     } catch (error) {
+      if(closed)return;
       if (error.payload?.bonus) state = error.payload.bonus;
       feedback.textContent = error.payload?.reason === 'no_chances' ? 'Попытки на сегодня закончились.' : error.message;
       haptic('light');
     } finally {
       pending = false;
-      render();
+      if(!closed)render();
     }
   }
 

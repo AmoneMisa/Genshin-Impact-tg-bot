@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {migrateClanCurrency} from '../../functions/game/player/currencyMigration.js';
 
 /**
  * Clan / guild model.
@@ -59,7 +60,7 @@ const clanSchema = new mongoose.Schema({
     // Shared resource storage
     warehouse: {
         type: Object,
-        default: { gold: 0, crystals: 0, ironOre: 0 }
+        default: { gold: 0, moonDew: 0, ironOre: 0 }
     },
 
     // Clan buildings; drives upgrades / reputation calculation
@@ -100,7 +101,7 @@ const clanSchema = new mongoose.Schema({
     investigations: {
         type: Object,
         default: { active: null, completed: [] }
-        // active: { key, progress: { gold, crystals, ironOre }, startedAt }
+        // active: { key, progress: { gold, moonDew, ironOre }, startedAt }
     },
 
     // Daily per-member task checklist, separate from the quiz (see
@@ -142,6 +143,7 @@ clanSchema.index({ "members.userId": 1 });
 
 // Mixed sub-paths are not deep-tracked by Mongoose; force them modified on save.
 clanSchema.pre("save", function () {
+    migrateClanCurrency(this);
     this.markModified("members"); // covers members[].upgrades (Mixed)
     this.markModified("entryConditions");
     this.markModified("warehouse");
@@ -158,6 +160,10 @@ clanSchema.pre("save", function () {
     this.markModified("skills");
     this.markModified("rta");
     this.markModified("hall");
+});
+
+for(const operation of ['find','findOne','findOneAndUpdate'])clanSchema.post(operation,function(result){
+    for(const clan of Array.isArray(result)?result:[result])migrateClanCurrency(clan);
 });
 
 export default mongoose.model("Clan", clanSchema);

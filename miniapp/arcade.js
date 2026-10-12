@@ -107,7 +107,7 @@ function ensureGame(session, gameId) {
   const config = configFor(gameId);
   const sessionKey = sessionKeyFor(gameId, config);
   if (!session.game) session.game = {};
-  if (!session.game.inventory) session.game.inventory = { gold: 0, crystals: 0, ironOre: 0 };
+  if (!session.game.inventory) session.game.inventory = { gold: 0, moonDew: 0, ironOre: 0 };
   if (!session.game[sessionKey] || typeof session.game[sessionKey] !== 'object') {
     session.game[sessionKey] = emptyGame(config);
   }

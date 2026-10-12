@@ -1,3 +1,4 @@
+import {bindFeatureLinks} from './feature-links.js';
 import {requestJson} from './request-json.js';
 import {observeSelects} from './design/select.js';
 import {ensureFeatureStyles} from './feature-styles.js';
@@ -209,10 +210,10 @@ function render(state) {
   }
   renderPlayerHud({ state, getElement: $, formatNumber });
   $('gold').textContent = formatNumber(state.player.gold);
-  $('crystals').textContent = formatNumber(state.player.crystals);
+  $('moonDew').textContent = formatNumber(state.player.moonDew);
   $('luck-coins').textContent = formatNumber(state.player.luckCoins);
   $('ore').textContent = formatNumber(state.player.ironOre);
-  for (const id of ['gold', 'crystals', 'luck-coins', 'ore']) {
+  for (const id of ['gold', 'moonDew', 'luck-coins', 'ore']) {
     $(id).title = `${$(id).getAttribute('aria-label')}: ${$(id).textContent}`;
   }
 
@@ -262,7 +263,7 @@ function renderGearDot() {
 function renderTabs() {
   $('bottom-nav').innerHTML = navHtml(activeTab, badges);
   const isCity = activeTab === 'city';
-  $('crystals')?.closest('.top-res')?.toggleAttribute('hidden', !isCity);
+  $('moonDew')?.closest('.top-res')?.toggleAttribute('hidden', !isCity);
   document.querySelector('.top-hud')?.classList.add('is-city-compact');
   document.querySelectorAll('[data-tab-panel]').forEach(node => {
     node.hidden = (node.dataset.tabPanel === 'city') !== isCity;
@@ -330,9 +331,7 @@ async function boot() {
     const tab = event.target.closest('[data-nav-tab]');
     if (tab) switchTab(tab.dataset.navTab);
   });
-  document.querySelectorAll('[data-open-feature]').forEach(button => {
-    button.addEventListener('click', () => { haptic('light'); openFeatureById(button.dataset.openFeature); });
-  });
+  bindFeatureLinks(document, {openFeature:openFeatureById,haptic});
   // Any player name marked data-player-card (boss party, clan, rankings…) opens their card.
   document.addEventListener('click', async event => {
     const target = event.target.closest?.('[data-player-card]');

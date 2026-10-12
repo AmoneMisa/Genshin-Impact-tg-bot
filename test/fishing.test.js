@@ -179,7 +179,7 @@ test('dyes are crafted from real recipes by the 2nd profession only', () => {
   assert.equal(row.dye, true);
   assert.equal(row.minTier, 3);
   assert.equal(row.successRate, 1);
-  const stock = session => { for (const [key, need] of Object.entries(splitIngredients(recipe).materials)) addMaterial(session, key, need); ensureCraft(session).level = 9; };
+  const stock = session => { for (const [key, need] of Object.entries(splitIngredients(recipe).materials)) addMaterial(session, key, need); ensureCraft(session).level = 9; ensureCraft(session).recipes.push(id); };
 
   const base = hero('warrior', 85);
   stock(base);

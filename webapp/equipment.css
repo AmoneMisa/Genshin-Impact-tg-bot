@@ -1,5 +1,5 @@
 .equipment-panel { max-height: min(92vh, 900px); }
-.equipment-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:16px 0 12px; }
+.equipment-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-2); margin:16px 0 12px; }
 .equipment-summary > div { min-width:0; padding:11px 12px; border:1px solid rgba(255,255,255,.08); border-radius:15px; background:rgba(255,255,255,.035); display:grid; gap:3px; }
 .equipment-summary small { color:var(--muted); font-size: 11px; text-transform:uppercase; letter-spacing:.08em; }
 .equipment-summary strong { font-size:15px; overflow:hidden; text-overflow:ellipsis; }
@@ -8,7 +8,7 @@
 .equipment-tabs button.active { color:#f3efff; background:linear-gradient(135deg,rgba(165,126,240,.17),rgba(85,160,205,.1)); box-shadow:inset 0 0 20px rgba(165,126,240,.045); }
 [data-equipment-panel][hidden] { display:none !important; }
 .loadout-section { margin:0 0 14px; }
-.equipment-section-title { display:flex; align-items:end; justify-content:space-between; gap:12px; margin:0 2px 8px; }
+.equipment-section-title { display:flex; align-items:end; justify-content:space-between; gap:var(--space-3); margin:0 2px 8px; }
 .equipment-section-title strong { font-size:13px; }
 .equipment-section-title small { color:var(--muted); font-size: 11px; text-align:right; line-height:1.35; }
 .loadout-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
@@ -47,7 +47,7 @@
 .equipment-action.sell.confirming { color:#ffd2bf; border-color:rgba(255,151,111,.3); background:rgba(180,81,50,.12); }
 .equipment-action:disabled { cursor:not-allowed; opacity:.44; }
 .forge-view { display:grid; gap:17px; }
-.forge-section { display:grid; gap:8px; }
+.forge-section { display:grid; gap:var(--space-2); }
 .forge-grid { display:grid; gap:9px; }
 .forge-card { position:relative; display:grid; gap:10px; padding:13px; border:1px solid rgba(255,255,255,.08); border-radius:17px; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)); overflow:hidden; }
 .forge-card::after { content:""; position:absolute; width:120px; height:120px; right:-60px; bottom:-70px; border-radius:50%; background:radial-gradient(circle,rgba(224,174,101,.1),transparent 68%); pointer-events:none; }
@@ -115,7 +115,7 @@
 .champion-tint-blue {filter:hue-rotate(155deg) saturate(1.5)}
 .champion-tint-red {filter:hue-rotate(320deg) saturate(1.7)}
 .upgrade-card {padding:0;overflow:hidden;border-radius:10px;background:linear-gradient(150deg,#26272b,#14171a);border-color:#65583c;opacity:1}
-.forge-item-hero {display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px;padding:16px;align-items:center;background:radial-gradient(ellipse at 0 50%,#73633c30,transparent 80%)}
+.forge-item-hero {display:grid;grid-template-columns:82px minmax(0,1fr);gap:var(--space-3);padding:16px;align-items:center;background:radial-gradient(ellipse at 0 50%,#73633c30,transparent 80%)}
 .forge-item-hero .forge-mini-loot {height:96px;width:82px;margin:0;overflow:hidden;display:grid;place-items:center}
 .forge-item-hero .forge-mini-loot .loot-render {width:82px;height:96px;transform:none}
 .forge-item-hero h3 {font:600 16px/1.3 system-ui;margin:6px 0;color:#f1e4bf;overflow-wrap:anywhere}
@@ -147,3 +147,35 @@
 .forge-sa-benefits {display:grid;gap:5px;color:#b4cdb6;font:11px/1.5 system-ui}
 .forge-sa-benefits p {margin:0}
 .equipment-overlay .forge-mechanic-body .forge-action {font:600 12px/1.4 system-ui}
+
+.craft-recipe-book {margin-bottom:12px;}
+.craft-recipe-book summary {padding:8px 0;cursor:pointer;}
+.craft-recipe-book>div {display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;}
+.craft-recipe-book>div>span {min-width:0;overflow-wrap:anywhere;}
+.craft-recipe-book button {flex-shrink:0;}
+
+/* Recipe book and forge services share the inventory grid and window. */
+.craft-book-panel{width:min(420px,calc(100vw - 24px))!important}
+.craft-book-panel [data-craft-book],.craft-book-panel [data-forge-body]{display:grid;gap:var(--space-3);min-width:0}
+.craft-book-info,.craft-book-filters,.craft-pagination,.craft-create-actions{display:flex;align-items:center;gap:var(--space-2);justify-content:space-between}
+.craft-book-filters input{min-width:0;flex:1;width:60%}
+.craft-book-filters select{max-width:130px}
+.craft-recipe-grid,.craft-ingredient-grid{--item-grid-columns:repeat(6,minmax(0,1fr));max-height:48vh;overflow:auto}
+.craft-create-dialog,.enchant-dialog,.forge-service-dialog{width:min(390px,calc(100vw - 24px))}
+.craft-product{display:flex;gap:var(--space-3);align-items:center;min-width:0}
+.craft-product dl{display:grid;grid-template-columns:auto auto;gap:2px 12px;margin:6px 0;font-size:13px}
+.craft-product dd{margin:0;text-align:right}
+.craft-label,.craft-price,.craft-empty,.craft-result{margin:0}
+.craft-material-detail{min-height:20px;font-size:12px}
+.craft-result{min-height:50px;max-height:100px;overflow:auto}
+.craft-create-actions{justify-content:stretch}
+.craft-create-actions button{flex:1;min-width:0;padding-inline:8px}
+.craft-delete{justify-self:start;font-size:12px}
+.craft-book-hint{font-size:12px}
+.forge-service-dialog .forge-mechanic{border:0;margin:0}
+.forge-service-dialog .forge-option{width:100%;text-align:left;display:flex;gap:var(--space-2);align-items:center}
+.forge-service-dialog .forge-option img{width:32px;height:32px;object-fit:contain}
+.forge-service-dialog .forge-option span{flex:1}
+.forge-service-dialog .forge-option small{display:block}
+
+.craft-material-detail:empty{display:none}

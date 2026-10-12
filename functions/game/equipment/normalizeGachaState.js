@@ -1,6 +1,9 @@
 import gachaTemplate from '../../../template/gachaTemplate.js';
+import {migrateCharacterCurrency,migrateCurrencyCost} from '../player/currencyMigration.js';
 
 export default function normalizeGachaState(session) {
+  migrateCharacterCurrency(session);
+  for(const template of gachaTemplate)template.spinCost=migrateCurrencyCost(template.spinCost);
   const game = session.game;
   const legacy = game.gacha;
   let normalized = [];

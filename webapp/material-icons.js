@@ -1,7 +1,7 @@
 import {l2FishingIcon} from './art/l2-extra-art.js';
 import {paintedIconHtml} from './art/painted-icon-art.js';
 import {icon} from './icons.js';
-import {l2MaterialIcon} from './art/l2-icon-art.js';
+import {l2IconUrl,l2MaterialIcon} from './art/l2-icon-art.js';
 import {loginItemArt} from './art/login-item-art.js';
 // Painted icons for enchant and crafting materials (art-source/icons, docs/imagegen-prompts.md 5f).
 // The paintings are neutral gold; each grade gets its colour from a CSS hue turn (see .mat-icon in equipment.css).
@@ -30,6 +30,8 @@ export function materialIconInfo(key) {
 
 /** Image markup for a material, or the given emoji when it has no painting. */
 export function materialIcon(key, fallback = '✦') {
+  if(key==='sp')return '<img class="mat-icon l2-client-icon" src="'+l2IconUrl('icon-etc_spell_books_element_i00')+'" width="24" height="24" alt="" decoding="async">';
+  if(key==='moonDew')return '<img class="mat-icon l2-client-icon" src="'+l2IconUrl('icon-etc_lesser_potion_blue_i00')+'" width="24" height="24" alt="" decoding="async">';
   if(String(key).startsWith('bound_'))return materialIcon(String(key).slice(6),fallback);
   if(String(key).startsWith('login_'))return loginItemArt(key);
   if(String(key).startsWith('blessedshot_'))return paintedIconHtml('spiritshot','grade-tint-'+String(key).slice(12).toLowerCase(),fallback);

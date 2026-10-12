@@ -60,15 +60,15 @@ try{for(const width of [320,390,540,1100]){
  session.game.inventory.materials={crystal_S:7};
  session.game.inventory.equipment={items:[{uid:'inventory-test-sword',name:'Test Sword',grade:'D',mainType:'weapon',category:'sword',kind:'oneHandedSword',slots:['rightHand'],stats:[],cost:10000}]};
  await page.locator('[data-inventory-refresh]').click();await page.locator('[data-inventory-equipment]').waitFor();
- await page.locator('[data-inventory-material="crystal_S"]').click();await page.locator('[data-item-close]').click();
+ await page.locator('[data-inventory-material="crystal_S"]').click();await page.locator('.inventory-item-dialog [data-dismiss]').click();
  assert.equal(await page.locator('[data-inventory-crystallize]').isDisabled(),true);
  await page.locator('[data-inventory-discard]').click();await page.locator('.stock-quantity').waitFor();assert.match(await page.locator('[data-quantity-note]').textContent(),/Выбросить/);await page.locator('[data-quantity-cancel]').click();assert.equal(session.game.inventory.materials.crystal_S,7);await page.locator('[data-inventory-discard]').click();await page.locator('.stock-quantity input').fill('2');await page.locator('.stock-quantity button[type=submit]').click();
  await page.waitForFunction(()=>document.querySelector('.utility-feedback')?.textContent==='Предмет выброшен.');
  assert.equal(session.game.inventory.materials.crystal_S,5);assert.equal(session.game.inventory.crystals,1635);
- await page.locator('[data-inventory-equipment]').click();await page.locator('[data-item-close]').click();assert.equal(await page.locator('[data-inventory-crystallize]').isDisabled(),false);
+ await page.locator('[data-inventory-equipment]').click();await page.locator('.inventory-item-dialog [data-dismiss]').click();assert.equal(await page.locator('[data-inventory-crystallize]').isDisabled(),false);
  await page.locator('[data-inventory-auction]').click();await page.locator('[data-sell-price]').waitFor();assert.equal(await page.locator('[data-sell-confirm]').isVisible(),true);
  await page.locator('.auction-panel .overlay-close').click();await page.locator('.auction-panel').waitFor({state:'detached'});
- await page.locator('[data-inventory-equipment]').click();await page.locator('[data-item-close]').click();
+ await page.locator('[data-inventory-equipment]').click();await page.locator('.inventory-item-dialog [data-dismiss]').click();
  if(width===390)await page.locator('.inventory-panel').screenshot({path:'docs/shared-grid/inventory-actions-390.png',animations:'disabled'});
  await page.locator('[data-inventory-crystallize]').click();assert.match(await page.locator('[data-quantity-note]').textContent(),/будет уничтожен/);await page.locator('[data-quantity-cancel]').click();assert.equal(session.game.inventory.equipment.items.length,1);await page.locator('[data-inventory-crystallize]').click();await page.locator('.stock-quantity button[type=submit]').click();await page.locator('[data-inventory-equipment]').waitFor({state:'detached'});
  assert.ok(session.game.inventory.materials.crystal_D>0);assert.equal(session.game.inventory.crystals,1635);

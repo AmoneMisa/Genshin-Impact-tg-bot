@@ -66,7 +66,7 @@ function destroy(session, item) {
  * `scroll` picks the typed scrolls of the Donate shop: 'blessedTyped' (weapon or armor, like a blessed
  * scroll) and 'safeTyped' (indestructible). Without it `blessed` chooses the generic blessed scroll.
  */
-export function enchantItem(session, item, { blessed = false, scroll = null } = {}) {
+export function enchantItem(session, item, { blessed = false, scroll = null, scrollKey: selectedScroll = null } = {}) {
     if (!isEnchantable(item)) return { ok: false, reason: 'not_enchantable' };
 
     const level = getEnchantLevel(item);
@@ -76,7 +76,9 @@ export function enchantItem(session, item, { blessed = false, scroll = null } = 
         : scroll === 'blessedTyped' ? blessedTypedKey(item)
             : blessed ? blessedKey(item.grade) : scrollKey(item.grade);
     const resets = blessed || scroll === 'blessedTyped';
-    if (!scrollAliases(key).some(alias=>spendUsableMaterial(session,alias,1))) return { ok: false, reason: 'no_scroll', scroll: key };
+    if (selectedScroll !== null && !scrollAliases(key).includes(String(selectedScroll).replace(/^bound_/,''))) return {ok:false,reason:'wrong_scroll'};
+    const consumed = selectedScroll === null ? scrollAliases(key).some(alias=>spendUsableMaterial(session,alias,1)) : selectedScroll.startsWith('bound_') ? spendMaterials(session,{[selectedScroll]:1}) : spendMaterials(session,{[selectedScroll]:1});
+    if (!consumed) return { ok: false, reason: 'no_scroll', scroll: key };
 
     const chance = enchantChance(item, session);
     if (Math.random() < chance) {

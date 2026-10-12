@@ -12,7 +12,7 @@ import getCurrentMp from '../player/getters/getCurrentMp.js';
 import {hennaOfDye, professionTier, professionLevel, TATTOO_MIN_TIER} from '../player/tattoos.js';
 import customSets from '../../../template/customSets.js';
 import skillUsagePayCost from '../player/skillUsagePayCost.js';
-import {forgeBonuses, reduceNeeds, MASTERWORK_BASE} from '../builds/forgeBonuses.js';
+import {forgeLevel,forgeBonuses, reduceNeeds, MASTERWORK_BASE} from '../builds/forgeBonuses.js';
 import {isMasterworkClass} from './itemBonuses.js';
 import {hasInventoryRoom} from '../builds/palaceCapacity.js';
 import {recordAcademyEvent} from '../academy/academy.js';
@@ -135,14 +135,21 @@ export function listRecipes() {
 }
 
 export function isRecipeLearned(session, recipe) {
-    return recipe.learnPrice === 0 || ensureCraft(session).recipes.includes(recipe.id);
+    return ensureCraft(session).recipes.includes(recipe.id);
 }
 
+export function recipeCapacity(session) {return 40+Math.floor((Math.max(1,Math.min(30,forgeLevel(session)))-1)*30/29);}
+export function forgetRecipe(session,itemId) {
+ const craft=ensureCraft(session);const index=craft.recipes.indexOf(itemId);
+ if(index<0)return {ok:false,reason:'recipe_not_learned'};
+ craft.recipes.splice(index,1);return {ok:true};
+}
 export function learnRecipe(session, itemId) {
     const recipe = getRecipe(itemId);
     if (!recipe) return {ok: false, reason: 'unknown_recipe'};
     const craft = ensureCraft(session);
     if (isRecipeLearned(session, recipe)) return {ok: false, reason: 'already_learned'};
+    if(craft.recipes.length>=recipeCapacity(session))return {ok:false,reason:'recipe_book_full',capacity:recipeCapacity(session)};
     if ((Number(session.game.stats?.lvl) || 1) < recipe.minLevel) return {ok: false, reason: 'level_too_low', requiredLevel: recipe.minLevel};
     if (craft.level < recipe.craftLevel) return {ok: false, reason: 'craft_level_too_low', requiredCraftLevel: recipe.craftLevel};
     if (recipe.minTier && professionTier(session) < recipe.minTier) return {ok: false, reason: 'profession_too_low', requiredLevel: professionLevel(recipe.minTier)};

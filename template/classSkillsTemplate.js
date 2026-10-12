@@ -1,5 +1,5 @@
 //1 power == 5% dmg. if power == 5, then damage will be 100% + 25%
-//cost values is in crystals
+//cost values is in moonDew
 //cooldown - attack CD in seconds;
 //
 // Base classes (tier 1) own slots 0-2. Each promoted class keeps its parent's skills

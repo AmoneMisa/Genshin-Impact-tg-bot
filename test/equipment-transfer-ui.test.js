@@ -38,16 +38,11 @@ test('multi-slot transfer target uses the combined visual center', () => {
   assert.equal(combineRects([]), null);
 });
 
-test('equipment UI only plays transfer after successful action state is rendered', () => {
-  const equipmentJs = fs.readFileSync(path.join(root, 'webapp/equipment.js'), 'utf8');
-  const paperDollJs = fs.readFileSync(path.join(root, 'webapp/equipment-paper-doll.js'), 'utf8');
-  assert.ok(equipmentJs.includes("import { captureEquipmentTransfer, playEquipmentTransfer } from './equipment-transfer.js'"));
-  assert.ok(!equipmentJs.includes("import { renderEquipmentPaperDoll } from './equipment-paper-doll.js'"));
-  assert.ok(paperDollJs.includes('data-slot="${escapeHtml(slot)}"'));
-  assert.ok(equipmentJs.includes("captureEquipmentTransfer(action,item,{list,loadout,equipment})"));
-  assert.ok(equipmentJs.includes('equipment=payload.equipment'));
-  assert.ok(equipmentJs.includes('renderAll();if(transfer&&payload.item)requestAnimationFrame(()=>playEquipmentTransfer'));
-  assert.ok(!equipmentJs.includes('playEquipmentTransfer(transfer,{equipment,list,loadout,item:item}'));
+test('equipment entry reuses the approved inventory instead of opening a second character screen', () => {
+ const equipmentJs=fs.readFileSync(path.join(root,'webapp/equipment.js'),'utf8');
+ assert.ok(equipmentJs.includes("import('./inventory.js')).openInventoryGame(options)"));
+ assert.ok(equipmentJs.includes("import('./forge.js')).openForgeGame(options)"));
+ assert.ok(!equipmentJs.includes('data-equipment-panel="inventory"'));
 });
 
 test('transfer layer is viewport anchored, non-interactive and reduced-motion safe', () => {

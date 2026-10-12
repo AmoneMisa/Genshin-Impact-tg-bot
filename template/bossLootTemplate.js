@@ -25,7 +25,7 @@ export default {
         value: { maxAmount: 6400, minAmount: 3000 },
         chance: 0.6
     }],
-    crystals: [{
+    moonDew: [{
         value: { maxAmount: 500, minAmount: 80 },
         chance: 0.01
     }, {

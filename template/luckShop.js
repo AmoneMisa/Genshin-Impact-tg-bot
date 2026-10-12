@@ -4,8 +4,8 @@ import {SOUL_COLORS,SOUL_COL_PRICES,soulCrystalKey} from './soulCrystalData.js';
 // miniapp/luck.js, because what is offered depends on the character's class.
 //
 // grant fields (see miniapp/luck.js):
-//   crystals / bonusChances / arenaChances / stealChances - added to the player (the last
-//     two stop at their daily cap); crystals bought here are shielded from raids for a week
+//   moonDew / bonusChances / arenaChances / stealChances - added to the player (the last
+//     two stop at their daily cap); moonDew bought here are shielded from raids for a week
 //   chestTry  - one more round of chests
 //   potion    - {id, count} a potion or elixir of template/potionsInInventoryTemplate.js
 //   materials - {key: count} materials of template/materialsTemplate.js (scrolls, craft goods)

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {getPassivesState,syncAutomaticPassives} from '../functions/game/player/passiveSkills.js';
 import {getClassQuestView,startClassQuest,activeClassQuestSummary} from '../functions/game/classes/classQuests.js';
 import {createMiniAppFeatures,createMiniAppState} from '../miniapp/state.js';
-const player = level => ({game:{stats:{lvl:level},gameClass:{stats:{name:'humanMystic'}},inventory:{sp:0,gold:0,crystals:0}}});
+const player = level => ({game:{stats:{lvl:level},gameClass:{stats:{name:'humanMystic'}},inventory:{sp:0,gold:0,moonDew:0}}});
 test('Expertise is granted at the level boundary without SP and remains idempotent',()=>{
   const hero=player(19);syncAutomaticPassives(hero);
   assert.equal(hero.game.l2Passives?.[239]||0,0);

@@ -6,7 +6,7 @@ const tool = id => PLAYER_TOOLS.find(item => item.id === id);
 const member = () => ({
   userId: 1,
   game: {
-    inventory: { gold: 10, crystals: 0, ironOre: 5 },
+    inventory: { gold: 10, moonDew: 0, ironOre: 5 },
     bonusChances: 1,
     chanceToSteal: 0,
     stats: { lvl: 1, currentExp: 0, needExp: 100 },
@@ -37,7 +37,7 @@ test('resource tools add, subtract and never go below zero', () => {
   tool('add_iron_ore').apply(m, -50);
   tool('add_bonus_chance').apply(m, 2);
   tool('add_steal_chance').apply(m, 4);
-  assert.deepEqual(m.game.inventory, { gold: 100, crystals: 3, ironOre: 0 });
+  assert.deepEqual(m.game.inventory, { gold: 100, moonDew: 3, ironOre: 0 });
   assert.equal(m.game.bonusChances, 3);
   assert.equal(m.game.chanceToSteal, 4);
 });

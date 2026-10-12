@@ -1,3 +1,4 @@
+import {migrateCurrencyWallet} from '../functions/game/player/currencyMigration.js';
 import { gainExp, readVitality } from '../functions/game/player/vitality.js';
 import { buildStorageCap } from '../functions/game/builds/buildYield.js';
 import { forgeBonuses, FORGE_MAX_LEVEL } from '../functions/game/builds/forgeBonuses.js';
@@ -12,10 +13,7 @@ import calculateIncreaseGuardedResources from '../functions/game/builds/calculat
 import setLevel from '../functions/game/player/setLevel.js';
 
 const DEFAULT_MAX_LEVEL = 30;
-// What the buildings are built from: moon dew, not the crystals of the premium purse.
 const BUILD_RESOURCES = ['gold', 'moonDew', 'ironOre'];
-// A hero that had crystals before the split starts with the same amount of dew, up to this.
-const DEW_STARTER_CAP = 10_000;
 // Speeding a build up: adena per started hour for the early levels, Coins of Luck from this level on.
 const SPEEDUP_ADENA_PER_HOUR_PER_LEVEL = 1500;
 const SPEEDUP_COL_FROM_LEVEL = 11;
@@ -42,10 +40,8 @@ function getGame(session) {
 function getInventory(session) {
   const game = getGame(session);
   if (!game.inventory) game.inventory = {};
-  if (game.inventory.moonDew === undefined || game.inventory.moonDew === null) {
-    game.inventory.moonDew = Math.min(DEW_STARTER_CAP, Math.max(0, asNumber(game.inventory.crystals)));
-  }
-  for (const resource of ['gold', 'crystals', 'ironOre', 'moonDew', 'luckCoins']) {
+  migrateCurrencyWallet(game.inventory);
+  for (const resource of ['gold', 'ironOre', 'moonDew', 'luckCoins']) {
     game.inventory[resource] = asNumber(game.inventory[resource]);
   }
   return game.inventory;
@@ -364,7 +360,6 @@ export function getBuildsState(session, now = Date.now()) {
   return {
     resources: {
       gold: asNumber(inventory.gold),
-      crystals: asNumber(inventory.crystals),
       moonDew: asNumber(inventory.moonDew),
       luckCoins: asNumber(inventory.luckCoins),
       ironOre: asNumber(inventory.ironOre),

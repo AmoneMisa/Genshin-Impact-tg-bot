@@ -134,7 +134,7 @@ async function pvpState(clan, playerSession, userId, now) {
 }
 
 function normalizeWarehouse(clan) {
-  if (!clan.warehouse) clan.warehouse = { gold: 0, crystals: 0, ironOre: 0 };
+  if (!clan.warehouse) clan.warehouse = { gold: 0, moonDew: 0, ironOre: 0 };
   return clan.warehouse;
 }
 
@@ -143,12 +143,12 @@ function applyWarReward(clan, outcome) {
     const warehouse = normalizeWarehouse(clan);
     const gold = Math.floor(WAR_WIN_GOLD_PER_LEVEL * Math.max(1, number(clan.level, 1)) * (1 + getBuildingBonus(clan, 'treasury')));
     warehouse.gold = number(warehouse.gold) + gold;
-    warehouse.crystals = number(warehouse.crystals) + WAR_WIN_CRYSTALS;
+    warehouse.moonDew = number(warehouse.moonDew) + WAR_WIN_CRYSTALS;
     addClanXp(clan, WAR_WIN_XP);
-    return { gold, crystals: WAR_WIN_CRYSTALS, clanXp: WAR_WIN_XP };
+    return { gold, moonDew: WAR_WIN_CRYSTALS, clanXp: WAR_WIN_XP };
   }
   addClanXp(clan, WAR_CONSOLATION_XP);
-  return { gold: 0, crystals: 0, clanXp: WAR_CONSOLATION_XP };
+  return { gold: 0, moonDew: 0, clanXp: WAR_CONSOLATION_XP };
 }
 
 export function createWarPair(clan, target, now = Date.now(), warId = null) {

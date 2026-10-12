@@ -11,7 +11,7 @@ function player(className, lvl = 40, inventory = {}) {
     userId: 1, userChatData: { user: { id: 1 } },
     game: {
       stats: { lvl, currentExp: 1_000_000 },
-      inventory: { gold: 1_000_000, crystals: 5_000, ironOre: 10_000, arena: { items: [{ tokens: 0 }, { pvpSign: null }] }, ...inventory },
+      inventory: { gold: 1_000_000, moonDew: 5_000, ironOre: 10_000, arena: { items: [{ tokens: 0 }, { pvpSign: null }] }, ...inventory },
       builds: { palace: { currentLvl: 1 } },
       gameClass: { stats: { name: 'noClass' } }, effects: [], equipmentStats: {}, stealImmuneTimer: 0,
     },

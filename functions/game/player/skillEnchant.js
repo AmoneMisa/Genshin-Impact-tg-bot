@@ -1,7 +1,7 @@
 import getEquipStatByName from './getters/getEquipStatByName.js';
 import {soulSkillCost} from '../equipment/soulCrystalCombat.js';
 /**
- * Lineage2-style skill enchanting: spend gold + crystals + ironOre + SP (skill
+ * Lineage2-style skill enchanting: spend gold + moonDew + ironOre + SP (skill
  * points, earned on level-up and from bosses — see setLevel.js / bossSendLoot.js)
  * to permanently raise a specific skill's power and lower its mp/hp cost and
  * cooldown. Higher levels also demand specific items (inventory.materials):
@@ -29,8 +29,8 @@ const POWER_PER_LEVEL = 0.05;          // +5% skill power per enchant level
 const COST_REDUCTION_PER_LEVEL = 0.02; // -2% mp/hp cost per enchant level (max -20%)
 const COOLDOWN_REDUCTION_PER_LEVEL = 0.02; // -2% cooldown per enchant level (max -20%)
 
-// gold/crystals/ironOre/sp needed to go from level N to N+1: base * (N+1) * tier factor.
-const ENCHANT_COST_BASE = { gold: 2000, crystals: 5, ironOre: 15, sp: 20 };
+// gold/moonDew/ironOre/sp needed to go from level N to N+1: base * (N+1) * tier factor.
+const ENCHANT_COST_BASE = { gold: 2000, moonDew: 5, ironOre: 15, sp: 20 };
 const TIER_COST_MULTIPLIER = {1: 1, 2: 1.5, 3: 2, 4: 2.5};
 
 export function getSkillEnchantLevel(skill) {
@@ -90,7 +90,7 @@ export function getSkillEnchantCost(skill) {
     const tier = TIER_COST_MULTIPLIER[skill?.tier] || 1;
     const cost = {
         gold: Math.round(ENCHANT_COST_BASE.gold * scale * tier),
-        crystals: ENCHANT_COST_BASE.crystals * scale,
+        moonDew: ENCHANT_COST_BASE.moonDew * scale,
         ironOre: ENCHANT_COST_BASE.ironOre * scale,
         sp: Math.round(ENCHANT_COST_BASE.sp * scale * tier),
     };
@@ -111,7 +111,7 @@ export function enchantSkill(skill, inventory, {safe=false,random=Math.random}={
     if ((inventory.gold || 0) < cost.gold) {
         return { ok: false, reason: "not_enough_gold", cost };
     }
-    if ((inventory.crystals || 0) < cost.crystals) {
+    if ((inventory.moonDew || 0) < cost.moonDew) {
         return { ok: false, reason: "not_enough_crystals", cost };
     }
     if ((inventory.ironOre || 0) < cost.ironOre) {
@@ -129,7 +129,7 @@ export function enchantSkill(skill, inventory, {safe=false,random=Math.random}={
     }
 
     inventory.gold -= cost.gold;
-    inventory.crystals -= cost.crystals;
+    inventory.moonDew -= cost.moonDew;
     inventory.ironOre -= cost.ironOre;
     inventory.sp -= cost.sp;
     spendMaterials(owner, cost.items);

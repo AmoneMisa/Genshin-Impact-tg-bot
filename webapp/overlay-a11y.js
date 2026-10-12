@@ -28,7 +28,10 @@ export function installOverlayA11y() {
         else node.setAttribute('aria-label', 'Окно игры');
       }
     }
-    const next = dialogs.at(-1) || null;
+    // Death actions must stay above overlays appended after the death panel.
+    dialogs.sort((a,b) => Number(Boolean(a.closest('.death-overlay'))) - Number(Boolean(b.closest('.death-overlay'))));
+    const native = dialogs.findLast(node => node.tagName === 'DIALOG');
+    const next = native || dialogs.at(-1) || null;
     const previous = top;top = next;
     // Native modal dialogs already handle focus, Escape and the top layer.
     // Never make them inert or redirect their focus into the underlying overlay.

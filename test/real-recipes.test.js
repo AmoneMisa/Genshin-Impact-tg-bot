@@ -39,7 +39,7 @@ test('recipes behind the ingredients are craftable materials and listed with the
   for (const [key, need] of Object.entries(splitIngredients(alloy).materials)) addMaterial(session, key, need);
   ensureCraft(session).level = 9;
   const mp = session.game.gameClass.stats.mp;
-  if (recipe.learnPrice > 0) assert.equal(learnRecipe(session, id).ok, true);
+  assert.equal(learnRecipe(session, id).ok, true);
   const result = craftItem(session, id, {random: () => 0});
   assert.equal(result.ok, true);
   assert.equal(result.success, true);
@@ -54,7 +54,7 @@ test('a craft without enough MP changes nothing', () => {
   for (const [key, need] of Object.entries(splitIngredients(alloy).materials)) addMaterial(session, key, need);
   ensureCraft(session).level = 9;
   const recipe = getRecipe(id);
-  if (recipe.learnPrice > 0) assert.equal(learnRecipe(session, id).ok, true);
+  assert.equal(learnRecipe(session, id).ok, true);
   session.game.gameClass.stats.mp = Math.max(0, recipe.mp - 1);
   const before = JSON.stringify(session.game.inventory);
   assert.deepEqual([craftItem(session, id).ok, craftItem(session, id).reason], [false, 'not_enough_mp']);

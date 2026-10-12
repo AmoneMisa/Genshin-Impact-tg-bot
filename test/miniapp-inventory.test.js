@@ -19,7 +19,7 @@ function player() {
       },
       inventory: {
         gold: 1234,
-        crystals: 56,
+        moonDew: 56,
         ironOre: 78,
         arena: { name: 'Предметы арены', items: [{ tokens: 9 }, { pvpSign: 'bronze' }] },
         equipment: { name: 'Экипировка', items: [{ name: 'Sword' }] },
@@ -62,7 +62,7 @@ test('grade crystals remain items, separate from building currency, including af
   const result=performEquipmentAction(session,state.equipment[0].key,'crystallize');
   assert.equal(result.ok,true);
   assert.ok(session.game.inventory.materials.crystal_S>7);
-  assert.equal(session.game.inventory.crystals,56);
+  assert.equal(session.game.inventory.moonDew,56);
 });
 
 test('discard validates quantity and ownership, pays nothing, and rejects stale or worn equipment',()=>{
@@ -84,7 +84,7 @@ test('discard validates quantity and ownership, pays nothing, and rejects stale 
   assert.equal(discardInventoryItem(session,{kind:'equipment',ref:key}).ok,true);
   assert.equal(discardInventoryItem(session,{kind:'equipment',ref:key}).ok,false);
   assert.equal(session.game.inventory.gold,1234);
-  assert.equal(session.game.inventory.crystals,56);
+  assert.equal(session.game.inventory.moonDew,56);
 });
 test('empty potions are hidden without shifting the keys used to drink remaining stacks',()=>{
  const session=player();session.game.inventory.potions.items[0].count=0;

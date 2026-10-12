@@ -10,7 +10,7 @@ import {
 const session = {
   game: {
     stats: { lvl: 12, currentExp: 40, needExp: 100 },
-    inventory: { gold: 50, crystals: 3, ironOre: 7 },
+    inventory: { gold: 50, moonDew: 3, ironOre: 7 },
     gameClass: { stats: { name: 'mage', damage: 9, defense: 4, hp: 20 } },
   },
 };

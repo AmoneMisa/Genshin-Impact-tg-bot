@@ -1,3 +1,6 @@
+import {npcCraftRecipes,craftAtNpc} from '../functions/game/equipment/npcCraft.js';
+import {unsealOptions,unsealArmor} from '../functions/game/equipment/unseal.js';
+import {migrateCurrencyWallet} from '../functions/game/player/currencyMigration.js';
 import {saInfo,saBonuses,installWeaponSa,removeWeaponSa,soulCrystalState} from '../functions/game/equipment/soulCrystals.js';
 import { createHash } from 'node:crypto';
 import { daysLeft, expireTimedItems, isTimedItem } from '../functions/game/equipment/timedItems.js';
@@ -10,7 +13,7 @@ import craftItem, {
   craftNeedExp,
   ensureCraft,
   isRecipeLearned,
-  learnRecipe,
+  learnRecipe,recipeCapacity,forgetRecipe,
   missingForRecipe,
   recipeMaterialRows,
   visibleRecipes,
@@ -20,6 +23,7 @@ import {recipeForMaterial} from '../functions/game/equipment/realRecipes.js';
 import {professionTier} from '../functions/game/player/tattoos.js';
 import {hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
+import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import { findCatalogItem } from '../functions/game/equipment/catalog.js';
 import {
   blessedKey,
@@ -46,7 +50,7 @@ import { augmentInfo, augmentItem } from '../functions/game/equipment/augment.js
 import { addAttribute, attributeInfo, clearAttribute } from '../functions/game/equipment/attributes.js';
 import { activateSkill } from '../functions/game/equipment/lifestoneSkills.js';
 
-const ACTIONS = new Set(['equip', 'unequip', 'sell', 'discard', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize']);
+const ACTIONS = new Set(['equip', 'unequip', 'sell', 'discard', 'enchant', 'augment', 'attribute', 'attribute_clear', 'sa_install', 'sa_remove', 'ls_activate', 'crystallize', 'unseal']);
 
 function asNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -55,9 +59,10 @@ function asNumber(value, fallback = 0) {
 
 function getResources(session) {
   const inventory = session?.game?.inventory || {};
+  migrateCurrencyWallet(inventory);
   return {
     gold: Math.max(0, asNumber(inventory.gold)),
-    crystals: Math.max(0, asNumber(inventory.crystals)),
+    moonDew: Math.max(0, asNumber(inventory.moonDew)),
     ironOre: Math.max(0, asNumber(inventory.ironOre)),
   };
 }
@@ -65,7 +70,7 @@ function getResources(session) {
 function missingResources(resources, cost) {
   return {
     gold: Math.max(0, asNumber(cost?.gold) - resources.gold),
-    crystals: Math.max(0, asNumber(cost?.crystals) - resources.crystals),
+    moonDew: Math.max(0, asNumber(cost?.moonDew) - resources.moonDew),
     ironOre: Math.max(0, asNumber(cost?.ironOre) - resources.ironOre),
   };
 }
@@ -255,7 +260,9 @@ export function getEquipmentState(session) {
     sets: getSetsState(session),
     items: sanitized,
     craft: getCraftState(session),
+    npcCraft:npcCraftRecipes(session),
     scrollShop: getScrollShopState(session),
+    unseal: unsealOptions(session).map(({definition,...row})=>({...row,product:definition})),
   };
 }
 
@@ -267,6 +274,7 @@ export function performEquipmentAction(session, key, action, options = {}) {
     return { ok: false, reason: 'invalid_action', equipment: getEquipmentState(session) };
   }
 
+  if(action==='unseal'){const result=unsealArmor(session,key);return {...result,equipment:getEquipmentState(session)};}
   const resolved = resolveItem(session, key);
   if (!resolved) {
     return { ok: false, reason: 'stale_item', equipment: getEquipmentState(session) };
@@ -333,7 +341,7 @@ export function performEquipmentAction(session, key, action, options = {}) {
   if (action === 'enchant') {
     const previous = getEnchantLevel(item);
     const scroll = ['blessedTyped', 'safeTyped'].includes(options.scroll) ? options.scroll : null;
-    const result = enchantItem(session, item, { blessed: Boolean(options.blessed), scroll });
+    const result = enchantItem(session, item, { blessed: Boolean(options.blessed), scroll, scrollKey: options.scrollKey ?? null });
     if (!result.ok) {
       return { ok: false, reason: result.reason, scroll: result.scroll, equipment: getEquipmentState(session) };
     }
@@ -397,6 +405,9 @@ function recipeRow(session, recipe) {
   const level = asNumber(session?.game?.stats?.lvl, 1);
   return {
     id: recipe.id,
+    productKey:recipe.productKey||null,amount:recipe.amount||1,
+    recipeItem:recipe.recipeItem||null,bookKey:recipe.bookKey||null,
+    bookCount:recipe.bookKey?getMaterialCount(session,recipe.bookKey):0,
     name: item.name,
     translatedName: item.translatedName,
     grade: recipe.grade,
@@ -416,6 +427,7 @@ function recipeRow(session, recipe) {
     learned,
     levelOk: level >= recipe.minLevel,
     craftLevelOk: craft.level >= recipe.craftLevel,
+    professionOk: !recipe.minTier || professionTier(session)>=recipe.minTier,
     materials: recipeMaterialRows(session, recipe).map(row => {
       const real = row.have < row.need ? recipeForMaterial(row.key) : null;
       const resource = real ? getRecipe(`recipe:${real.recipeItem}`) : null;
@@ -428,7 +440,11 @@ function recipeRow(session, recipe) {
       return {...row, quickCraft: canMake ? {id:resource.id,amount:resource.amount,successRate:Math.min(1,resource.successRate+forgeBonuses(session).craft)} : null};
     }),
     missing: missingForRecipe(session, recipe),
-    canCraft: learned && level >= recipe.minLevel && craft.level >= recipe.craftLevel && !Object.keys(missingForRecipe(session, recipe)).length,
+    canCraft: learned && level >= recipe.minLevel && craft.level >= recipe.craftLevel
+      && (!recipe.minTier||professionTier(session)>=recipe.minTier)
+      && asNumber(recipe.mp)<=getCurrentMp(session,session.game.gameClass)
+      && (recipe.productKey&&getMaterialCount(session,recipe.productKey)>0||hasInventoryRoom(session,recipe.productKey?1:2))
+      && !Object.keys(missingForRecipe(session, recipe)).length,
   };
 }
 
@@ -438,6 +454,9 @@ export function getCraftState(session) {
     level: craft.level,
     exp: craft.exp,
     needExp: craftNeedExp(craft.level),
+    mp:getCurrentMp(session,session.game.gameClass),maxMp:getMaxMp(session,session.game.gameClass),
+    recipeCapacity:recipeCapacity(session),learnedCount:craft.recipes.length,
+    recipeBook:craft.recipes.map(id=>{const recipe=getRecipe(id);return recipe?recipeRow(session,recipe):{id,name:id,learned:true,unavailable:true};}),
     recipes: visibleRecipes(session).map((recipe) => recipeRow(session, recipe)),
   };
 }
@@ -476,6 +495,7 @@ export function craftEquipmentItem(session, itemId) {
   };
 }
 
+export function forgetEquipmentRecipe(session,itemId){const result=forgetRecipe(session,itemId);return {...result,action:'forget',equipment:getEquipmentState(session)};}
 export function learnEquipmentRecipe(session, itemId) {
   if (!session?.game?.inventory) {
     return { ok: false, reason: 'player_not_found', equipment: getEquipmentState(session) };
@@ -505,3 +525,5 @@ export function buyEnchantScroll(session, grade, options = {}) {
 
   return { ok: true, action: 'scroll', key: result.key, price: result.price, equipment: getEquipmentState(session) };
 }
+
+export function craftNpcEquipment(session,itemId){const result=craftAtNpc(session,itemId);return {...result,equipment:getEquipmentState(session)};}
