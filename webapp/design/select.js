@@ -15,6 +15,7 @@ export function enhanceSelects(root) {
   for (const select of selects) {
     if (select.multiple || select.size > 1) continue;
     select.dataset.dsSelect = '';
+    select.hidden = true;
     const wrapper = document.createElement('div');
     wrapper.className = 'ds-select';
     select.before(wrapper);

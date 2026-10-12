@@ -1,3 +1,4 @@
+import {enhanceSelects} from './design/select.js';
 import {createPoller} from './polling.js';
 import {materialIcon} from './material-icons.js';
 import {updateDeathPopup} from './death-popup.js';
@@ -283,7 +284,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       +field.mobs.map(m=>'<button type="button" class="hunt-actor '+(!playerTarget&&m.instanceId===field.target?'selected ':'')+(m.aggro?'aggro':'')+'" data-target="'+escapeHtml(m.instanceId)+'" style="left:'+m.x*100+'%;top:'+m.y*100+'%" aria-pressed="'+(!playerTarget&&m.instanceId===field.target)+'"><span class="hunt-actor-portrait">'+(huntMobUrl(m)?'<img src="'+huntMobUrl(m)+'" alt="">':icon('ghost'))+'<i>'+m.level+'</i></span><span class="hunt-actor-hp"><i style="width:'+m.hpPercent+'%"></i></span><strong>'+escapeHtml(m.name)+'</strong><small>'+(m.stunned?'Оглушён':m.aggro?'Атакует':m.aggressive?'Агрессивный':m.role||'Мирный')+'</small></button>').join('')
       +'<span class="hunt-hero-marker" style="left:'+field.x*100+'%;top:'+field.y*100+'%"><img src="'+classArtUrl(state.player.className,state.player.gender)+'" alt=""><small>Ты</small></span>'
       +(field.mobs.length?'':'<div class="hunt-field-cleared">'+(field.map?'В комнате пусто':'Поле зачищено')+'<br><small>'+(field.respawning?'Новые монстры появятся через '+Math.max(1,Math.ceil(field.nextSpawnMs/1000))+' с.':'Забери добычу и выбери следующую локацию.')+'</small></div>')
-      +'</div><p>Тап по полу — бежать к точке. Тап по монстру — выбрать цель.</p><button data-world-exit>Пешком к городу</button><button data-world-stairs="-1">Этаж ниже</button><button data-world-stairs="1">Этаж выше</button><span> · Этаж '+field.floor+' / '+field.floors+'</span></section>';
+      +'</div><p>Тап по полу — бежать к точке. Тап по монстру — выбрать цель.</p><div class="hunt-field-actions"><button type="button" class="equipment-action" data-world-exit>Пешком к городу</button><button type="button" class="equipment-action" data-world-stairs="-1" '+(field.floor<=1?'disabled':'')+'>'+'Этаж ниже'+'</button><button type="button" class="equipment-action" data-world-stairs="1" '+(field.floor>=field.floors?'disabled':'')+'>'+'Этаж выше'+'</button></div><small class="hunt-floor">'+'Этаж'+' '+field.floor+' / '+field.floors+'</small></section>';
   }
 
   function peersHtml() {
@@ -309,7 +310,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       </article>`).join('')}</div>`;
   }
 
-  function soulHtml(){const soul=state.soulCrystals;if(!soul)return '';const names={red:'Красный',green:'Зелёный',blue:'Синий'},active=soul.active;return '<section class="mmo-frame hunt-soul"><strong>'+materialIcon(active?'soul_'+active.color+'_'+active.stage:'soul_red_0')+' Кристалл души '+(active?'· '+names[active.color]+' '+active.stage+' ур.':'· не выбран')+'</strong><p>С 40 уровня. Используй на подходящем монстре при HP ≤ 50%, затем победи. 10+ — прокачка на рейдах.</p><div class="select-row"><label for="hunt-soul-select">Кристалл</label><select id="hunt-soul-select" data-soul-select><option value="">Не выбран</option>'+soul.stock.map(o=>'<option value="'+o.color+':'+o.stage+'" '+(active?.color===o.color&&active?.stage===o.stage?'selected':'')+'>'+names[o.color]+' · '+o.stage+' ур. ×'+o.count+'</option>').join('')+'</select></div>'+(state.mob?'<button class="equipment-action forge-action" data-soul-charge '+(soul.charge?.ok?'':'disabled')+'>Поглотить душу</button><small>'+escapeHtml(soul.charge?.ok?'Готов к использованию':REASONS[soul.charge?.reason]||'')+'</small>':'')+'<p>Камни печати → AA · баланс '+formatNumber(soul.aa)+'</p><div>'+Object.entries(soul.seals).map(([c,o])=>materialIcon('seal_'+c)+' '+formatNumber(o.count)+' × '+o.rate+' AA').join(' · ')+'</div><button class="equipment-action forge-action" data-seal-exchange '+(Object.values(soul.seals).some(o=>o.count>0)?'':'disabled')+'>Обменять все камни на AA</button></section>';}
+  function soulHtml(){const soul=state.soulCrystals;if(!soul)return '';const names={red:'Красный',green:'Зелёный',blue:'Синий'},active=soul.active;return '<section class="mmo-frame hunt-soul"><strong>'+materialIcon(active?'soul_'+active.color+'_'+active.stage:'soul_red_0')+' Кристалл души '+(active?'· '+names[active.color]+' '+active.stage+' ур.':'· не выбран')+'</strong><p>С 40 уровня. Используй на подходящем монстре при HP ≤ 50%, затем победи. 10+ — прокачка на рейдах.</p><div class="select-row"><label for="hunt-soul-select">Кристалл</label><select id="hunt-soul-select" data-soul-select><option value="">Не выбран</option>'+soul.stock.map(o=>'<option value="'+o.color+':'+o.stage+'" '+(active?.color===o.color&&active?.stage===o.stage?'selected':'')+'>'+names[o.color]+' · '+o.stage+' ур. ×'+o.count+'</option>').join('')+'</select></div>'+(state.mob?'<button class="equipment-action forge-action" data-soul-charge '+(soul.charge?.ok?'':'disabled')+'>Поглотить душу</button><small>'+escapeHtml(soul.charge?.ok?'Готов к использованию':REASONS[soul.charge?.reason]||'')+'</small>':'')+'<p>Камни печати → AA · баланс '+formatNumber(soul.aa)+'</p><div class="hunt-seal-rates">'+Object.entries(soul.seals).map(([c,o])=>materialIcon('seal_'+c)+' '+formatNumber(o.count)+' × '+o.rate+' AA').join(' · ')+'</div><button class="equipment-action forge-action" data-seal-exchange '+(Object.values(soul.seals).some(o=>o.count>0)?'':'disabled')+'>Обменять все камни на AA</button></section>';}
   function lastHtml() {
     const last = state.last;
     if (!last) return '';
@@ -334,7 +335,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
           <small class="mmo-skill-cost">${formatNumber(row.costMp||0)}</small>
           <span class="mmo-skill-cooldown">${row.cooldownMs > 0 && row.type === 'ls' ? formatDuration(row.cooldownMs) : ''}</span>
         </button>`).join('');
-      return `${tabs}<div class="mmo-hotbar icons-only">${rows || '<p class="party-note">Нет особых умений: нужен камень жизни на оружии, призывы или переключаемые умения класса.</p>'}</div>`;
+      return `${tabs}<div class="mmo-hotbar icons-only">${rows || '<p class="party-note hunt-bar-empty">Нет особых умений: нужен камень жизни на оружии, призывы или переключаемые умения класса.</p>'}</div>`;
     }
     if (editBar) {
       const all = player.skills.map(skill => hotbarChoice(skill, {className: player.className, on: barDraft.includes(skill.index), position: barDraft.indexOf(skill.index) + 1})).join('');
@@ -384,6 +385,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     }
     floatNewLog();
     content.innerHTML = body.join('');
+    enhanceSelects(content);
     if (!feedback) feedbackNode.textContent = '';
     bind();
   }

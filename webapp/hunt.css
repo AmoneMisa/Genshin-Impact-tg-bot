@@ -266,3 +266,12 @@
 .hunt-player-marker img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hunt-player-marker small{display:block;white-space:nowrap;color:#fff}
 .hunt-hero-marker{transition:none;pointer-events:none}
+
+/* Combat rows are full-width; text is not a hotbar cell. */
+.hunt-controls{gap:12px;background:var(--surface-panel);border-color:var(--border-soft);padding:14px}
+.hunt-bar-empty{grid-column:1/-1;margin:0;line-height:1.5;min-width:0}
+.hunt-controls .boss-potions:not(:has(.boss-potion:not(.empty))){display:none}
+.hunt-bar-actions{margin:0}.hunt-bar-actions .hunt-toggle{margin:0;width:100%;font:600 13px/1.4 var(--serif);border-color:var(--border-soft);background:var(--surface-control)}
+.hunt-field-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.hunt-field-actions button{flex:1 1 120px;padding:10px;min-height:44px}.hunt-floor{display:block;margin-top:8px;color:var(--muted)}
+.hunt-last{padding:16px;gap:12px}.hunt-last .mmo-section-title{margin:0;gap:12px;align-items:flex-start;flex-wrap:wrap}.hunt-last .mmo-section-title strong{font:700 16px/1.4 var(--serif);flex:1 1 180px;min-width:0}.hunt-last .mmo-section-title small{white-space:nowrap;line-height:1.4}.hunt-last p{margin:0;line-height:1.5}
+.hunt-soul{gap:12px;padding:16px}.hunt-soul strong{line-height:1.4}.hunt-soul .select-row{flex-wrap:wrap}.hunt-soul .ds-select{flex:1 1 180px;min-width:0}.hunt-seal-rates{line-height:1.6}.hunt-soul p{line-height:1.5}

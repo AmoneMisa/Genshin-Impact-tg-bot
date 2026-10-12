@@ -66,6 +66,13 @@ try {for(const width of [320,390,1100]){
  assert.ok(await page.evaluate(()=>posts.some(p=>p.body.id==='l2:1406')));
  await page.locator('[data-special="l2:312"]').click();
  assert.ok(await page.evaluate(()=>posts.some(p=>p.url==='/api/hunt/special'&&p.body.id==='l2:312')));
+ await page.evaluate(()=>{window.previousSpecial=window.hunt.player.special;window.hunt.player.special=[];});
+ await page.locator('[data-bar-tab=skills]').click();
+ await page.locator('[data-bar-tab=special]').click();
+ const empty=await page.locator('.hunt-bar-empty').boundingBox(),bar=await page.locator('.hunt-controls .mmo-hotbar').boundingBox();
+ assert.ok(empty.width>=bar.width-2,'empty text spans the full hotbar');
+ if(width===390)await page.locator('.hunt-controls').screenshot({path:'docs/hunt-special-empty-390.png'});
+ await page.evaluate(()=>{window.hunt.player.special=window.previousSpecial;});
  await page.locator('.hunt-overlay').evaluate(n=>n.remove());
  await page.evaluate(async()=>{const {openBossGame}=await import('/boss.js');await openBossGame(window.options);});
  assert.equal(await page.locator('.boss-panel [data-skill]').count(),16);

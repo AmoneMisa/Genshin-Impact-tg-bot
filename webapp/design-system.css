@@ -874,8 +874,8 @@ a:focus-visible {
   background: rgba(4, 5, 12, .85);
 }
 .death-panel { --dialog-padding: 20px; width: min(100%, 360px); }
-.death-panel p { font-size: 14px; line-height: 1.45; }
-.death-panel [data-death-options] { display: grid; gap: 8px; }
+.death-panel p { font-size: 14px; line-height: 1.5; margin: 0 0 16px; }
+.death-panel [data-death-options] { display: grid; gap: 10px; }
 .death-panel button { min-height: 44px; padding: 10px; }
 .death-panel [data-death-error]:empty { display: none; }
 
