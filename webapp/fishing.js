@@ -28,6 +28,8 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
   let timer = 0;
   let nextReadyAt = 0, nextPollAt = 0;
   let tab = 'cast', phase = 'idle', lastCatch = [], closed = false;
+  const sceneStill=()=>`/art/fishing/${phase==='success'||phase==='failure'?phase+'-still':'poster'}.webp`;
+  const sceneSource=()=>document.hidden||navigator.connection?.saveData?sceneStill():`/art/fishing/${phase}.webp`;
   const lifetime = new AbortController();
   const pause = ms => new Promise(resolve => { if(lifetime.signal.aborted)return resolve(false); const stop=()=>{clearTimeout(id);resolve(false);}; const id=setTimeout(()=>{lifetime.signal.removeEventListener('abort',stop);resolve(true);},window.matchMedia('(prefers-reduced-motion: reduce)').matches?60:ms); lifetime.signal.addEventListener('abort',stop,{once:true}); });
 
@@ -46,6 +48,7 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
     </div>`;
   const content = overlay.querySelector('[data-content]');
   const feedbackNode = overlay.querySelector('[data-feedback]');
+  document.addEventListener('visibilitychange',()=>{const image=content.querySelector('.fishing-animation');if(image)image.src=sceneSource();},{signal:lifetime.signal});
   const close = () => { closed = true; lifetime.abort(); window.clearInterval(timer); overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
@@ -134,7 +137,7 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
     if (!state) { content.innerHTML = '<p class="shop-empty">Загрузка…</p>'; return; }
     const ready = state.rod && state.skill.learned && state.fishLevel>0 && state.nextCastMs <= 0 && !pending;
     const phases={idle:state.rod?'Готов к забросу':'Нужна удочка',casting:'Забрасываем удочку…',waiting:'Ждём поклёвку…',pulling:'Вытягиваем рыбу…',success:'Успешный улов!',failure:'Рыба сорвалась'};
-    const scene=`<figure class="fishing-scene" data-phase="${phase}"><picture><source media="(prefers-reduced-motion: reduce)" srcset="/art/fishing/poster.webp"><img class="fishing-animation" src="/art/fishing/${phase}.webp" width="384" height="256" alt="" decoding="async"></picture><figcaption class="fishing-phase" role="status">${phases[phase]}</figcaption></figure>`;
+    const scene=`<figure class="fishing-scene" data-phase="${phase}"><picture><source media="(prefers-reduced-motion: reduce)" srcset="${sceneStill()}"><img class="fishing-animation" src="${sceneSource()}" width="256" height="160" alt="" decoding="async"></picture><figcaption class="fishing-phase" role="status">${phases[phase]}</figcaption></figure>`;
     const castHtml = `
       <section class="mmo-frame">
         ${scene}

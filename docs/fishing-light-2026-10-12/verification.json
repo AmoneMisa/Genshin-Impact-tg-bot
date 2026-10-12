@@ -1,0 +1,74 @@
+[
+  {
+    "width": 320,
+    "reduced": false,
+    "mode": "success",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "reduced": false,
+    "mode": "failure",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "reduced": true,
+    "mode": "success",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "reduced": true,
+    "mode": "failure",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "reduced": false,
+    "mode": "success",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "reduced": false,
+    "mode": "failure",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "reduced": true,
+    "mode": "success",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "reduced": true,
+    "mode": "failure",
+    "casts": 1,
+    "overflow": false,
+    "hiddenStopsAnimation": true,
+    "errors": []
+  }
+]
