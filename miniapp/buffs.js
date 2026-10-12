@@ -73,7 +73,7 @@ export function getClassBuffsState(session, now = Date.now()) {
     const active = effects.find(effect => effect?.potionId === definition.id && number(effect.until) > now);
     return {
       id: definition.id,
-      name: definition.name.replace(/^Зелье\s+/, ''),
+      name: definition.name.replace(/^Зелье\s+/, '').replace(/\s+Potion$/i, ''),
       artKey: definition.artKey,
       learnable: unlocks.length > 0,
       level: buffLevel,

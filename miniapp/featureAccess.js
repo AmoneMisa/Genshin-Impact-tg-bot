@@ -78,6 +78,7 @@ export const MINI_APP_ROUTE_SETTINGS = Object.freeze({
   'GET /api/horoscope': 'horoscope',
   'POST /api/horoscope/settings': 'horoscope',
   'POST /api/horoscope/generate': 'horoscope',
+  'POST /api/horoscope/share': 'horoscope',
   'GET /api/chest': 'chests',
   'POST /api/chest/open': 'chests',
   'GET /api/sword': 'swords',

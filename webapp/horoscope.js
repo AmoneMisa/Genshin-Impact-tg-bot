@@ -9,7 +9,8 @@ const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
 
 export async function openHoroscopeGame({ api, renderState, haptic, statusElement }) {
   let state = await api('/api/horoscope');
-  let text = '';
+  let text = state.text || '';
+  let shared = Boolean(state.shared);
   let pending = false;
 
   const overlay = document.createElement('section');
@@ -19,10 +20,9 @@ export async function openHoroscopeGame({ api, renderState, haptic, statusElemen
     <div class="overlay-panel glass utility-panel horo-panel">
       <header class="horo-head">
         <button class="overlay-close horo-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Гороскоп</h2>
+        <h2>Шуточный гороскоп</h2>
         <span class="horo-round" aria-hidden="true">🔮</span>
       </header>
-      <p class="overlay-copy" hidden>Настройки сохраняются в Mongo. Текст генерируется на сервере через FreeLLMAPI; при недоступности модели используется локальный fallback.</p>
       <div data-horo-content></div>
       <div class="utility-feedback" data-horo-feedback aria-live="polite"></div>
     </div>`;
@@ -38,25 +38,26 @@ export async function openHoroscopeGame({ api, renderState, haptic, statusElemen
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
   function render() {
-    const current = state.signs.find(sign => sign.code === state.sign.code) || state.sign;
+
     content.innerHTML = `
-      <section class="horo-wheel ${pending ? 'divining' : ''}">
-        ${state.signs.map((sign, i) => `<button type="button" class="horo-sign ${sign.code === state.sign.code ? 'active' : ''}" data-horo-sign="${sign.code}" style="--a:${signAngle(i, state.signs.length)}deg" title="${escapeHtml(sign.name)}" aria-label="${escapeHtml(sign.name)}"><span>${sign.icon}</span></button>`).join('')}
-        <div class="horo-ball" aria-hidden="true"><i></i><span>${current?.icon || '✦'}</span></div>
-        <strong class="horo-current">${escapeHtml(current?.name || '')}</strong>
+      <p class="horo-intro">Выбери знак — получи шуточное предсказание на день.</p>
+      <section class="horo-signs horo-cards" aria-label="Знаки зодиака">
+        ${state.signs.map(sign => `<button type="button" class="horo-card ${sign.code === state.sign.code ? 'active' : ''}" data-horo-sign="${sign.code}" aria-pressed="${sign.code === state.sign.code}" ${pending ? 'disabled' : ''}><span class="horo-symbol no-emoji-icons" aria-hidden="true">${escapeHtml(sign.icon)}</span><strong>${escapeHtml(sign.name)}</strong></button>`).join('')}
       </section>
       <section class="horo-styles-wrap">
-        <small>Характер предсказания</small>
+        <small>Настроение</small>
         <div class="horo-styles">
-          ${state.styles.map(style => `<button type="button" class="horo-style ${style.key === state.style.key ? 'active' : ''}" data-horo-style="${style.key}">${escapeHtml(style.label)}</button>`).join('')}
+          ${state.styles.map(style => `<button type="button" class="horo-style ${style.key === state.style.key ? 'active' : ''}" ${pending ? 'disabled' : ''} data-horo-style="${style.key}">${escapeHtml(style.label)}</button>`).join('')}
         </div>
       </section>
-      <div class="horo-result ${text ? 'filled' : ''}" data-horo-text>${text ? '' : 'Выбери знак и нажми «Узнать судьбу».'}</div>
-      <button class="utility-action horo-go" type="button" data-horo-generate ${pending ? 'disabled' : ''}>${pending ? 'Звёзды шепчут…' : 'Узнать судьбу'}</button>`;
+      <div class="horo-result no-emoji-icons ${text ? 'filled' : ''}" data-horo-text>${text ? '' : 'Здесь появится твоё шуточное предсказание.'}</div>
+      <button class="utility-action horo-go" type="button" data-horo-generate ${pending ? 'disabled' : ''}>${pending ? 'Звёзды шепчут…' : text ? 'Ещё предсказание' : 'Получить предсказание'}</button>
+      ${text ? `<button class="utility-action horo-share" type="button" data-horo-share ${pending || shared ? 'disabled' : ''}>${shared ? 'Отправлено в чат' : 'Поделиться в чате'}</button>` : ''}`;
 
     content.querySelectorAll('[data-horo-sign]').forEach(button => button.addEventListener('click', () => save({ sign: button.dataset.horoSign })));
     content.querySelectorAll('[data-horo-style]').forEach(button => button.addEventListener('click', () => save({ style: button.dataset.horoStyle })));
     content.querySelector('[data-horo-generate]')?.addEventListener('click', generate);
+    content.querySelector('[data-horo-share]')?.addEventListener('click', share);
     if (text) writeText(text);
   }
 
@@ -89,6 +90,7 @@ export async function openHoroscopeGame({ api, renderState, haptic, statusElemen
       });
       state = payload.horoscope;
       text = '';
+      shared = false;
       feedback.textContent = 'Настройки сохранены.';
       if (payload.state) renderState(payload.state);
       haptic('light');
@@ -110,9 +112,10 @@ export async function openHoroscopeGame({ api, renderState, haptic, statusElemen
       const payload = await api('/api/horoscope/generate', { method: 'POST' });
       state = payload.horoscope;
       text = payload.text;
+      shared = false;
       writing += 1;
       feedback.textContent = 'Готово.';
-      statusElement.textContent = 'Гороскоп сгенерирован на сервере.';
+      statusElement.textContent = 'Шуточное предсказание готово.';
       haptic('medium');
     } catch (error) {
       feedback.textContent = error.message;
@@ -120,6 +123,20 @@ export async function openHoroscopeGame({ api, renderState, haptic, statusElemen
       pending = false;
       render();
     }
+  }
+
+  async function share() {
+    if (pending || shared || !text) return;
+    pending = true;
+    render();
+    try {
+      const payload = await api('/api/horoscope/share', {method: 'POST'});
+      shared = Boolean(payload.horoscope?.shared);
+      feedback.textContent = 'Предсказание отправлено в чат.';
+      haptic('light');
+    } catch (error) {
+      feedback.textContent = ({no_prediction: 'Сначала получи предсказание.', already_shared: 'Это предсказание уже отправлено.'})[error.payload?.reason] || error.message;
+    } finally { pending = false; render(); }
   }
 
   render();

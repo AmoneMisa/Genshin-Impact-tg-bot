@@ -12,6 +12,7 @@ import {promisify} from 'node:util';
 import {bundlePageAssets} from './pageAssets.js';
 import {requestUrl as parseRequestUrl,requestBoundary} from './requestBoundary.js';
 const gzip = promisify(zlib.gzip);
+import { lockScope } from './lockScope.js';
 import { withLock as sharedLock } from '../functions/general/chatLock.js';
 import { fileURLToPath } from 'url';
 import { token, myId } from '../config.js';
@@ -87,6 +88,7 @@ import {
   getHoroscopeState,
   updateHoroscopeSettings,
   generateHoroscopeForMiniApp,
+  shareHoroscopeForMiniApp,
 } from './horoscope.js';
 import {
   getClanDashboard,
@@ -342,10 +344,6 @@ async function readJsonBody(req, maxBytes = 8192) {
 // Every game feature mutates the same Chat document (gold, items, ...), so
 // per-feature locks let two requests read the same balance and overwrite each
 // other's save. Serialise all work for a chat behind one lock instead.
-function lockScope(key) {
-  return key.startsWith('clan:') ? key : key.split(':')[0];
-}
-
 function withLock(rawKey, action) {
   return sharedLock(lockScope(rawKey), action);
 }
@@ -1357,9 +1355,24 @@ const horoscopeGenerate = guarded('horoscope generate', async (req, res) => {
   const context = await authorize(req);
   const result = await withLock(`${context.chatId}:${context.userId}:horoscope`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    return generateHoroscopeForMiniApp(context.session);
+    const generated = await generateHoroscopeForMiniApp(context.session);
+    await saveSession(context.session);
+    return generated;
   });
   return sendJson(res, 200, result);
+});
+
+const horoscopeShare = guarded('horoscope share', async (req, res) => {
+  const context = await authorize(req);
+  const result = await withLock(context.chatId, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const shared = await shareHoroscopeForMiniApp(context.session, {
+      send: text => sendMessage(context.chatId, text),
+    });
+    if (shared.ok) await saveSession(context.session);
+    return shared;
+  });
+  return sendJson(res, result.ok ? 200 : 400, result);
 });
 
 const clanState = guarded('clan state', async (req, res) => {
@@ -2252,6 +2265,7 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/horoscope') return horoscopeState(req, res);
     if (route === 'POST /api/horoscope/settings') return horoscopeSettings(req, res);
     if (route === 'POST /api/horoscope/generate') return horoscopeGenerate(req, res);
+    if (route === 'POST /api/horoscope/share') return horoscopeShare(req, res);
     if (route === 'GET /api/clan') return clanState(req, res);
     if (route === 'POST /api/clan/action') return clanAction(req, res);
     if (route === 'POST /api/clan/quiz') return clanQuiz(req, res);

@@ -39,6 +39,7 @@ export function stripEmoji(text) {
 }
 
 function convertTextNode(node, doc) {
+  if (node.parentElement?.closest('.no-emoji-icons,[contenteditable="true"]')) return;
   const text = node.nodeValue;
   const actions={'←':'chevron-left','→':'chevron-right','?':'circle-help','×':'x','+':'plus','−':'minus','-':'minus'};
   const button=node.parentElement?.closest('button');

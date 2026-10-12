@@ -1,3 +1,4 @@
+import { memberName } from './social.js';
 import {
   generateShortHoroText,
   getSignByCode,
@@ -39,6 +40,8 @@ export function getHoroscopeState(session) {
     style,
     signs: HOROSCOPE_SIGNS,
     styles: HOROSCOPE_STYLES,
+    text: settings.prediction?.text || '',
+    shared: Boolean(settings.prediction?.sharedAt),
   };
 }
 
@@ -49,6 +52,7 @@ export function updateHoroscopeSettings(session, patch = {}) {
     if (typeof patch.sign !== 'string' || !SIGN_CODES.has(patch.sign)) {
       return { ok: false, reason: 'invalid_sign', horoscope: getHoroscopeState(session) };
     }
+    if (settings.sign !== patch.sign) delete settings.prediction;
     settings.sign = patch.sign;
   }
 
@@ -56,6 +60,7 @@ export function updateHoroscopeSettings(session, patch = {}) {
     if (typeof patch.style !== 'string' || !STYLE_KEYS.has(patch.style)) {
       return { ok: false, reason: 'invalid_style', horoscope: getHoroscopeState(session) };
     }
+    if (settings.style !== patch.style) delete settings.prediction;
     settings.style = patch.style;
   }
 
@@ -67,12 +72,23 @@ export function resetHoroscopeSettings(session) {
   return { ok: true, horoscope: getHoroscopeState(session) };
 }
 
-export async function generateHoroscopeForMiniApp(session) {
-  ensureSettings(session);
-  const text = await generateShortHoroText(session);
+export async function generateHoroscopeForMiniApp(session, { generate = generateShortHoroText, now = Date.now() } = {}) {
+  const settings = ensureSettings(session);
+  const text = await generate(session);
+  settings.prediction = {text, generatedAt: now, sharedAt: null};
   return {
     ok: true,
     text,
     horoscope: getHoroscopeState(session),
   };
+}
+
+/** Only the server-generated result can be shared, once per prediction. */
+export async function shareHoroscopeForMiniApp(session, { send, now = Date.now() }) {
+  const prediction = ensureSettings(session).prediction;
+  if (!prediction?.text) return {ok: false, reason: 'no_prediction'};
+  if (prediction.sharedAt) return {ok: false, reason: 'already_shared'};
+  await send(memberName(session) + ' · шуточный гороскоп\n' + prediction.text);
+  prediction.sharedAt = now;
+  return {ok: true, horoscope: getHoroscopeState(session)};
 }

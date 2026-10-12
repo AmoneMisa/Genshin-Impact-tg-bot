@@ -90,3 +90,16 @@
 @keyframes horo-spin { to { rotate: 360deg; } }
 @keyframes horo-pulse { 0%, 100% { box-shadow: 0 0 30px rgba(140, 110, 230, .5), inset 0 -10px 20px rgba(0, 0, 0, .5); } 50% { box-shadow: 0 0 50px rgba(200, 160, 255, .9), inset 0 -10px 20px rgba(0, 0, 0, .5); } }
 @media (prefers-reduced-motion: reduce) { .horo-wheel::before, .horo-ball, .horo-ball i { animation: none !important; } }
+
+/* Actual zodiac symbols are exempt from emoji art replacement. */
+body .game-overlay .horo-panel {max-width:540px;padding:18px;}
+.horo-panel .horo-intro {color:var(--text-muted);margin:0 0 14px;line-height:1.45;}
+.horo-panel .horo-cards {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 16px;}
+body .game-overlay .horo-panel .horo-card {display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 3px;min-width:0;border:1px solid var(--gold-dim);border-radius:6px;background:#151319;color:var(--text);}
+body .game-overlay .horo-panel .horo-card.active {background:#3b301b;border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);}
+.horo-card .horo-symbol {font-family:'Segoe UI Symbol',sans-serif;font-size:28px;line-height:1.1;color:var(--gold);}
+.horo-card strong {font-size:11px;font-weight:500;}
+.horo-panel .horo-styles-wrap {margin-bottom:14px;}
+.horo-panel .horo-result {min-height:84px;padding:16px;margin:12px 0;line-height:1.5;font-size:16px;font-style:normal;}
+body .game-overlay .horo-panel .horo-go,body .game-overlay .horo-panel .horo-share {margin-top:8px;width:100%;}
+@media(max-width:360px){.horo-panel .horo-cards{grid-template-columns:repeat(3,minmax(0,1fr));}}
