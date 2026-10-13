@@ -991,7 +991,7 @@
   },
   {
     "key": "catalog-a-armor-heavy-body",
-    "label": "Dark Crystal Breastplate",
+    "label": "Seraphim Vanguard · Breastplate",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1001,7 +1001,7 @@
   },
   {
     "key": "catalog-a-armor-heavy-boots",
-    "label": "Dark Crystal Boots",
+    "label": "Seraphim Vanguard · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1011,7 +1011,7 @@
   },
   {
     "key": "catalog-a-armor-heavy-gloves",
-    "label": "Dark Crystal Gauntlets",
+    "label": "Seraphim Vanguard · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1021,7 +1021,7 @@
   },
   {
     "key": "catalog-a-armor-heavy-greaves",
-    "label": "Dark Crystal Gaiters",
+    "label": "Seraphim Vanguard · Gaiters",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1031,7 +1031,7 @@
   },
   {
     "key": "catalog-a-armor-heavy-helmet",
-    "label": "Dark Crystal Helmet",
+    "label": "Seraphim Vanguard · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1041,7 +1041,7 @@
   },
   {
     "key": "catalog-a-armor-light-boots",
-    "label": "Tallum Leather Boots",
+    "label": "Hawk Hide · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1051,7 +1051,7 @@
   },
   {
     "key": "catalog-a-armor-light-fullbody",
-    "label": "Tallum Leather Armor",
+    "label": "Hawk Hide · Leather Armor",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1061,7 +1061,7 @@
   },
   {
     "key": "catalog-a-armor-light-gloves",
-    "label": "Tallum Leather Gloves",
+    "label": "Hawk Hide · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1071,7 +1071,7 @@
   },
   {
     "key": "catalog-a-armor-light-helmet",
-    "label": "Tallum Leather Helmet",
+    "label": "Hawk Hide · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1081,7 +1081,7 @@
   },
   {
     "key": "catalog-a-armor-robe-boots",
-    "label": "Majestic Magic Boots",
+    "label": "Astral Robe · Slippers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1091,7 +1091,7 @@
   },
   {
     "key": "catalog-a-armor-robe-fullbody",
-    "label": "Majestic Magic Robe",
+    "label": "Astral Robe · Robe",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1101,7 +1101,7 @@
   },
   {
     "key": "catalog-a-armor-robe-gloves",
-    "label": "Majestic Magic Gloves",
+    "label": "Astral Robe · Bracers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1111,7 +1111,7 @@
   },
   {
     "key": "catalog-a-armor-robe-helmet",
-    "label": "Majestic Magic Circlet",
+    "label": "Astral Robe · Circlet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1121,7 +1121,7 @@
   },
   {
     "key": "catalog-a-jewelry-earring",
-    "label": "Majestic Earring",
+    "label": "Astral Covenant Earring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1131,7 +1131,7 @@
   },
   {
     "key": "catalog-a-jewelry-necklace",
-    "label": "Majestic Necklace",
+    "label": "Astral Covenant necklace",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1141,7 +1141,7 @@
   },
   {
     "key": "catalog-a-jewelry-ring",
-    "label": "Majestic Ring",
+    "label": "Astral Covenant Ring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1151,7 +1151,7 @@
   },
   {
     "key": "catalog-a-shield-bigshield",
-    "label": "Shield of Nightmare",
+    "label": "Astral Covenant Tower Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1161,7 +1161,7 @@
   },
   {
     "key": "catalog-a-shield-sigill",
-    "label": "Majestic Sigil",
+    "label": "Astral Covenant Sigil",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1171,7 +1171,7 @@
   },
   {
     "key": "catalog-a-shield-smallshield",
-    "label": "Shield of Nightmare II",
+    "label": "Astral Covenant Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1181,7 +1181,7 @@
   },
   {
     "key": "catalog-a-weapon-blunt",
-    "label": "Doom Crusher",
+    "label": "Astral Covenant blunt",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1191,7 +1191,7 @@
   },
   {
     "key": "catalog-a-weapon-bow",
-    "label": "Soul Bow",
+    "label": "Astral Covenant Bow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1201,7 +1201,7 @@
   },
   {
     "key": "catalog-a-weapon-crossbow",
-    "label": "Reaper",
+    "label": "Astral Covenant Crossbow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1211,7 +1211,7 @@
   },
   {
     "key": "catalog-a-weapon-dagger",
-    "label": "Naga Storm",
+    "label": "Astral Covenant Dagger",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1221,7 +1221,7 @@
   },
   {
     "key": "catalog-a-weapon-fists",
-    "label": "Dragon Grinder",
+    "label": "Astral Covenant Claws",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1231,7 +1231,7 @@
   },
   {
     "key": "catalog-a-weapon-mace",
-    "label": "Cabrio's Hand",
+    "label": "Astral Covenant Scepter",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1241,7 +1241,7 @@
   },
   {
     "key": "catalog-a-weapon-onehandedsword",
-    "label": "Sirra's Blade",
+    "label": "Astral Covenant Sword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1251,7 +1251,7 @@
   },
   {
     "key": "catalog-a-weapon-twohandedsword",
-    "label": "Sword of Ipos",
+    "label": "Astral Covenant Greatsword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1261,7 +1261,7 @@
   },
   {
     "key": "catalog-b-armor-heavy-body",
-    "label": "Avadon Breastplate",
+    "label": "Twilight Frontier · Breastplate",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1271,7 +1271,7 @@
   },
   {
     "key": "catalog-b-armor-heavy-boots",
-    "label": "Avadon Boots",
+    "label": "Twilight Frontier · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1281,7 +1281,7 @@
   },
   {
     "key": "catalog-b-armor-heavy-gloves",
-    "label": "Avadon Gauntlets",
+    "label": "Twilight Frontier · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1291,7 +1291,7 @@
   },
   {
     "key": "catalog-b-armor-heavy-greaves",
-    "label": "Avadon Gaiters",
+    "label": "Twilight Frontier · Gaiters",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1301,7 +1301,7 @@
   },
   {
     "key": "catalog-b-armor-heavy-helmet",
-    "label": "Avadon Helmet",
+    "label": "Twilight Frontier · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1311,7 +1311,7 @@
   },
   {
     "key": "catalog-b-armor-light-boots",
-    "label": "Avadon Leather Boots",
+    "label": "Night Mantle · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1321,7 +1321,7 @@
   },
   {
     "key": "catalog-b-armor-light-fullbody",
-    "label": "Avadon Leather Armor",
+    "label": "Night Mantle · Leather Armor",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1331,7 +1331,7 @@
   },
   {
     "key": "catalog-b-armor-light-gloves",
-    "label": "Avadon Leather Gloves",
+    "label": "Night Mantle · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1341,7 +1341,7 @@
   },
   {
     "key": "catalog-b-armor-light-helmet",
-    "label": "Avadon Leather Helmet",
+    "label": "Night Mantle · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1351,7 +1351,7 @@
   },
   {
     "key": "catalog-b-armor-robe-boots",
-    "label": "Avadon Magic Boots",
+    "label": "Ruby Robe · Slippers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1361,7 +1361,7 @@
   },
   {
     "key": "catalog-b-armor-robe-fullbody",
-    "label": "Avadon Magic Robe",
+    "label": "Ruby Robe · Robe",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1371,7 +1371,7 @@
   },
   {
     "key": "catalog-b-armor-robe-gloves",
-    "label": "Avadon Magic Gloves",
+    "label": "Ruby Robe · Bracers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1381,7 +1381,7 @@
   },
   {
     "key": "catalog-b-armor-robe-helmet",
-    "label": "Avadon Magic Circlet",
+    "label": "Ruby Robe · Circlet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1391,7 +1391,7 @@
   },
   {
     "key": "catalog-b-jewelry-earring",
-    "label": "Sage's Earring",
+    "label": "Opal Horizon Earring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1401,7 +1401,7 @@
   },
   {
     "key": "catalog-b-jewelry-necklace",
-    "label": "Sage's Necklace",
+    "label": "Opal Horizon necklace",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1411,7 +1411,7 @@
   },
   {
     "key": "catalog-b-jewelry-ring",
-    "label": "Sage's Ring",
+    "label": "Opal Horizon Ring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1421,7 +1421,7 @@
   },
   {
     "key": "catalog-b-shield-bigshield",
-    "label": "Dark Dragon Shield",
+    "label": "Opal Horizon Tower Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1431,7 +1431,7 @@
   },
   {
     "key": "catalog-b-shield-sigill",
-    "label": "Sage Sigil",
+    "label": "Opal Horizon Sigil",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1441,7 +1441,7 @@
   },
   {
     "key": "catalog-b-shield-smallshield",
-    "label": "Masterpiece Shield",
+    "label": "Opal Horizon Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1451,7 +1451,7 @@
   },
   {
     "key": "catalog-b-weapon-blunt",
-    "label": "Ice Storm Hammer",
+    "label": "Opal Horizon blunt",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1461,7 +1461,7 @@
   },
   {
     "key": "catalog-b-weapon-bow",
-    "label": "Bow of Peril",
+    "label": "Opal Horizon Bow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1471,7 +1471,7 @@
   },
   {
     "key": "catalog-b-weapon-crossbow",
-    "label": "Hell Hound",
+    "label": "Opal Horizon Crossbow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1481,7 +1481,7 @@
   },
   {
     "key": "catalog-b-weapon-dagger",
-    "label": "Demon Dagger",
+    "label": "Opal Horizon Dagger",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1491,7 +1491,7 @@
   },
   {
     "key": "catalog-b-weapon-fists",
-    "label": "Arthro Nail",
+    "label": "Opal Horizon Claws",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1501,7 +1501,7 @@
   },
   {
     "key": "catalog-b-weapon-mace",
-    "label": "Staff of Evil Spirits",
+    "label": "Opal Horizon Scepter",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1511,7 +1511,7 @@
   },
   {
     "key": "catalog-b-weapon-onehandedsword",
-    "label": "Sword of Damascus",
+    "label": "Opal Horizon Sword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1521,7 +1521,7 @@
   },
   {
     "key": "catalog-b-weapon-twohandedsword",
-    "label": "Guardian Sword",
+    "label": "Opal Horizon Greatsword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1531,7 +1531,7 @@
   },
   {
     "key": "catalog-c-armor-light-boots",
-    "label": "Drake Leather Boots",
+    "label": "Lunar Scale · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1541,7 +1541,7 @@
   },
   {
     "key": "catalog-c-armor-light-fullbody",
-    "label": "Drake Leather Armor",
+    "label": "Lunar Scale · Leather Armor",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1551,7 +1551,7 @@
   },
   {
     "key": "catalog-c-armor-light-gloves",
-    "label": "Drake Leather Gloves",
+    "label": "Lunar Scale · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1561,7 +1561,7 @@
   },
   {
     "key": "catalog-c-armor-light-helmet",
-    "label": "Drake Leather Helmet",
+    "label": "Lunar Scale · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1571,7 +1571,7 @@
   },
   {
     "key": "catalog-c-shield-smallshield",
-    "label": "Tower Shield",
+    "label": "Moonsteel Covenant Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1581,7 +1581,7 @@
   },
   {
     "key": "catalog-d-armor-heavy-body",
-    "label": "Brigandine Breastplate",
+    "label": "Sapphire Guard · Breastplate",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1591,7 +1591,7 @@
   },
   {
     "key": "catalog-d-armor-heavy-boots",
-    "label": "Brigandine Boots",
+    "label": "Sapphire Guard · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1601,7 +1601,7 @@
   },
   {
     "key": "catalog-d-armor-heavy-gloves",
-    "label": "Brigandine Gauntlets",
+    "label": "Sapphire Guard · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1611,7 +1611,7 @@
   },
   {
     "key": "catalog-d-armor-heavy-greaves",
-    "label": "Brigandine Gaiters",
+    "label": "Sapphire Guard · Gaiters",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1621,7 +1621,7 @@
   },
   {
     "key": "catalog-d-armor-heavy-helmet",
-    "label": "Brigandine Helmet",
+    "label": "Sapphire Guard · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1631,7 +1631,7 @@
   },
   {
     "key": "catalog-d-armor-light-boots",
-    "label": "Manticore Skin Boots",
+    "label": "Shadow Hide · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1641,7 +1641,7 @@
   },
   {
     "key": "catalog-d-armor-light-fullbody",
-    "label": "Manticore Skin Armor",
+    "label": "Shadow Hide · Leather Armor",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1651,7 +1651,7 @@
   },
   {
     "key": "catalog-d-armor-light-gloves",
-    "label": "Manticore Skin Gloves",
+    "label": "Shadow Hide · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1661,7 +1661,7 @@
   },
   {
     "key": "catalog-d-armor-light-helmet",
-    "label": "Manticore Skin Helmet",
+    "label": "Shadow Hide · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1671,7 +1671,7 @@
   },
   {
     "key": "catalog-d-armor-robe-boots",
-    "label": "Elven Mithril Boots",
+    "label": "Pearl Cloth · Slippers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1681,7 +1681,7 @@
   },
   {
     "key": "catalog-d-armor-robe-fullbody",
-    "label": "Elven Mithril Robe",
+    "label": "Pearl Cloth · Robe",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1691,7 +1691,7 @@
   },
   {
     "key": "catalog-d-armor-robe-gloves",
-    "label": "Elven Mithril Gloves",
+    "label": "Pearl Cloth · Bracers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1701,7 +1701,7 @@
   },
   {
     "key": "catalog-d-armor-robe-helmet",
-    "label": "Elven Mithril Circlet",
+    "label": "Pearl Cloth · Circlet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1711,7 +1711,7 @@
   },
   {
     "key": "catalog-d-jewelry-earring",
-    "label": "Omen Beast's Eye Earring",
+    "label": "Emberwatch Earring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1721,7 +1721,7 @@
   },
   {
     "key": "catalog-d-jewelry-necklace",
-    "label": "Elven Necklace",
+    "label": "Emberwatch necklace",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1731,7 +1731,7 @@
   },
   {
     "key": "catalog-d-jewelry-ring",
-    "label": "Mithril Ring",
+    "label": "Emberwatch Ring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1741,7 +1741,7 @@
   },
   {
     "key": "catalog-d-shield-bigshield",
-    "label": "Square Shield",
+    "label": "Emberwatch Tower Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1751,7 +1751,7 @@
   },
   {
     "key": "catalog-d-shield-sigill",
-    "label": "Mithril Sigil",
+    "label": "Emberwatch Sigil",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1761,7 +1761,7 @@
   },
   {
     "key": "catalog-d-shield-smallshield",
-    "label": "Plate Shield",
+    "label": "Emberwatch Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -1771,7 +1771,7 @@
   },
   {
     "key": "catalog-d-weapon-blunt",
-    "label": "Titan Hammer",
+    "label": "Emberwatch blunt",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1781,7 +1781,7 @@
   },
   {
     "key": "catalog-d-weapon-bow",
-    "label": "Strengthened Long Bow",
+    "label": "Emberwatch Bow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1791,7 +1791,7 @@
   },
   {
     "key": "catalog-d-weapon-crossbow",
-    "label": "Cranequin",
+    "label": "Emberwatch Crossbow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1801,7 +1801,7 @@
   },
   {
     "key": "catalog-d-weapon-dagger",
-    "label": "Mithril Dagger",
+    "label": "Emberwatch Dagger",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1811,7 +1811,7 @@
   },
   {
     "key": "catalog-d-weapon-fists",
-    "label": "Bich'Hwa",
+    "label": "Emberwatch Claws",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -1821,7 +1821,7 @@
   },
   {
     "key": "catalog-d-weapon-mace",
-    "label": "Ghost Staff",
+    "label": "Emberwatch Scepter",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1831,7 +1831,7 @@
   },
   {
     "key": "catalog-d-weapon-onehandedsword",
-    "label": "Elven Long Sword",
+    "label": "Emberwatch Sword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1841,7 +1841,7 @@
   },
   {
     "key": "catalog-d-weapon-twohandedsword",
-    "label": "Claymore",
+    "label": "Emberwatch Greatsword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -1851,7 +1851,7 @@
   },
   {
     "key": "catalog-nograde-armor-heavy-body",
-    "label": "Bronze Breastplate",
+    "label": "Forged Guardian · Breastplate",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1861,7 +1861,7 @@
   },
   {
     "key": "catalog-nograde-armor-heavy-boots",
-    "label": "Bronze Boots",
+    "label": "Forged Guardian · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1871,7 +1871,7 @@
   },
   {
     "key": "catalog-nograde-armor-heavy-gloves",
-    "label": "Bronze Gauntlets",
+    "label": "Forged Guardian · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1881,7 +1881,7 @@
   },
   {
     "key": "catalog-nograde-armor-heavy-greaves",
-    "label": "Bronze Gaiters",
+    "label": "Forged Guardian · Gaiters",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1891,7 +1891,7 @@
   },
   {
     "key": "catalog-nograde-armor-heavy-helmet",
-    "label": "Bronze Helmet",
+    "label": "Forged Guardian · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1901,7 +1901,7 @@
   },
   {
     "key": "catalog-nograde-armor-light-boots",
-    "label": "Wooden Boots",
+    "label": "Hunter Hide · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1911,7 +1911,7 @@
   },
   {
     "key": "catalog-nograde-armor-light-fullbody",
-    "label": "Wooden Armor",
+    "label": "Hunter Hide · Leather Armor",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1921,7 +1921,7 @@
   },
   {
     "key": "catalog-nograde-armor-light-gloves",
-    "label": "Wooden Gloves",
+    "label": "Hunter Hide · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1931,7 +1931,7 @@
   },
   {
     "key": "catalog-nograde-armor-light-helmet",
-    "label": "Wooden Helmet",
+    "label": "Hunter Hide · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1941,7 +1941,7 @@
   },
   {
     "key": "catalog-nograde-armor-robe-boots",
-    "label": "Devotion Boots",
+    "label": "Apprentice Cloth · Slippers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1951,7 +1951,7 @@
   },
   {
     "key": "catalog-nograde-armor-robe-fullbody",
-    "label": "Devotion Robe",
+    "label": "Apprentice Cloth · Robe",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1961,7 +1961,7 @@
   },
   {
     "key": "catalog-nograde-armor-robe-gloves",
-    "label": "Devotion Gloves",
+    "label": "Apprentice Cloth · Bracers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1971,7 +1971,7 @@
   },
   {
     "key": "catalog-nograde-armor-robe-helmet",
-    "label": "Devotion Circlet",
+    "label": "Apprentice Cloth · Circlet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -1981,7 +1981,7 @@
   },
   {
     "key": "catalog-nograde-jewelry-earring",
-    "label": "Coral Earring",
+    "label": "Ashen Oath Earring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -1991,7 +1991,7 @@
   },
   {
     "key": "catalog-nograde-jewelry-necklace",
-    "label": "Magic Necklace",
+    "label": "Ashen Oath necklace",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -2001,7 +2001,7 @@
   },
   {
     "key": "catalog-nograde-jewelry-ring",
-    "label": "Blue Coral Ring",
+    "label": "Ashen Oath Ring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -2011,7 +2011,7 @@
   },
   {
     "key": "catalog-nograde-shield-bigshield",
-    "label": "Bone Shield",
+    "label": "Ashen Oath Tower Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -2021,7 +2021,7 @@
   },
   {
     "key": "catalog-nograde-shield-sigill",
-    "label": "Apprentice Sigil",
+    "label": "Ashen Oath Sigil",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -2031,7 +2031,7 @@
   },
   {
     "key": "catalog-nograde-shield-smallshield",
-    "label": "Buckler",
+    "label": "Ashen Oath Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -2041,7 +2041,7 @@
   },
   {
     "key": "catalog-nograde-weapon-blunt",
-    "label": "Club",
+    "label": "Ashen Oath blunt",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2051,7 +2051,7 @@
   },
   {
     "key": "catalog-nograde-weapon-bow",
-    "label": "Composite Bow",
+    "label": "Ashen Oath Bow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2061,7 +2061,7 @@
   },
   {
     "key": "catalog-nograde-weapon-crossbow",
-    "label": "Wooden Crossbow",
+    "label": "Ashen Oath Crossbow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2071,7 +2071,7 @@
   },
   {
     "key": "catalog-nograde-weapon-dagger",
-    "label": "Sword Breaker",
+    "label": "Ashen Oath Dagger",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2081,7 +2081,7 @@
   },
   {
     "key": "catalog-nograde-weapon-fists",
-    "label": "Viper Fang",
+    "label": "Ashen Oath Claws",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2091,7 +2091,7 @@
   },
   {
     "key": "catalog-nograde-weapon-mace",
-    "label": "Willow Staff",
+    "label": "Ashen Oath Scepter",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2101,7 +2101,7 @@
   },
   {
     "key": "catalog-nograde-weapon-onehandedsword",
-    "label": "Long Sword",
+    "label": "Ashen Oath Sword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2111,7 +2111,7 @@
   },
   {
     "key": "catalog-nograde-weapon-twohandedsword",
-    "label": "Zweihander",
+    "label": "Ashen Oath Greatsword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2121,7 +2121,7 @@
   },
   {
     "key": "catalog-s-armor-light-gloves",
-    "label": "Draconic Leather Gloves",
+    "label": "Shadow Veil · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2131,7 +2131,7 @@
   },
   {
     "key": "catalog-s-shield-smallshield",
-    "label": "Imperial Guard Shield",
+    "label": "Crimson Ascension Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -2141,7 +2141,7 @@
   },
   {
     "key": "catalog-s80-armor-heavy-body",
-    "label": "Dynasty Breastplate",
+    "label": "Raven Frontier · Breastplate",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2151,7 +2151,7 @@
   },
   {
     "key": "catalog-s80-armor-heavy-boots",
-    "label": "Dynasty Boots",
+    "label": "Raven Frontier · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2161,7 +2161,7 @@
   },
   {
     "key": "catalog-s80-armor-heavy-gloves",
-    "label": "Dynasty Gauntlets",
+    "label": "Raven Frontier · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2171,7 +2171,7 @@
   },
   {
     "key": "catalog-s80-armor-heavy-greaves",
-    "label": "Dynasty Gaiters",
+    "label": "Raven Frontier · Gaiters",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2181,7 +2181,7 @@
   },
   {
     "key": "catalog-s80-armor-heavy-helmet",
-    "label": "Dynasty Helmet",
+    "label": "Raven Frontier · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2191,7 +2191,7 @@
   },
   {
     "key": "catalog-s80-armor-light-boots",
-    "label": "Dynasty Leather Boots",
+    "label": "Woven Midnight · Boots",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2201,7 +2201,7 @@
   },
   {
     "key": "catalog-s80-armor-light-fullbody",
-    "label": "Dynasty Leather Armor",
+    "label": "Woven Midnight · Leather Armor",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2211,7 +2211,7 @@
   },
   {
     "key": "catalog-s80-armor-light-gloves",
-    "label": "Dynasty Leather Gloves",
+    "label": "Woven Midnight · Gloves",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2221,7 +2221,7 @@
   },
   {
     "key": "catalog-s80-armor-light-helmet",
-    "label": "Dynasty Leather Helmet",
+    "label": "Woven Midnight · Helmet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2231,7 +2231,7 @@
   },
   {
     "key": "catalog-s80-armor-robe-boots",
-    "label": "Dynasty Magic Boots",
+    "label": "Royal Robe · Slippers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2241,7 +2241,7 @@
   },
   {
     "key": "catalog-s80-armor-robe-fullbody",
-    "label": "Dynasty Magic Robe",
+    "label": "Royal Robe · Robe",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2251,7 +2251,7 @@
   },
   {
     "key": "catalog-s80-armor-robe-gloves",
-    "label": "Dynasty Magic Gloves",
+    "label": "Royal Robe · Bracers",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2261,7 +2261,7 @@
   },
   {
     "key": "catalog-s80-armor-robe-helmet",
-    "label": "Dynasty Magic Circlet",
+    "label": "Royal Robe · Circlet",
     "group": "Броня и экипировка",
     "background": "armor",
     "vertical": false,
@@ -2271,7 +2271,7 @@
   },
   {
     "key": "catalog-s80-jewelry-earring",
-    "label": "Dynasty Earring",
+    "label": "Nightsky Sovereign Earring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -2281,7 +2281,7 @@
   },
   {
     "key": "catalog-s80-jewelry-necklace",
-    "label": "Dynasty Necklace",
+    "label": "Nightsky Sovereign necklace",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -2291,7 +2291,7 @@
   },
   {
     "key": "catalog-s80-jewelry-ring",
-    "label": "Dynasty Ring",
+    "label": "Nightsky Sovereign Ring",
     "group": "Бижутерия",
     "background": "jewelry",
     "vertical": false,
@@ -2301,7 +2301,7 @@
   },
   {
     "key": "catalog-s80-shield-bigshield",
-    "label": "Dynasty Shield",
+    "label": "Nightsky Sovereign Tower Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -2311,7 +2311,7 @@
   },
   {
     "key": "catalog-s80-shield-sigill",
-    "label": "Dynasty Sigil",
+    "label": "Nightsky Sovereign Sigil",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -2321,7 +2321,7 @@
   },
   {
     "key": "catalog-s80-shield-smallshield",
-    "label": "Dynasty Guard Shield",
+    "label": "Nightsky Sovereign Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,
@@ -2331,7 +2331,7 @@
   },
   {
     "key": "catalog-s80-weapon-blunt",
-    "label": "Dynasty Crusher",
+    "label": "Nightsky Sovereign blunt",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2341,7 +2341,7 @@
   },
   {
     "key": "catalog-s80-weapon-bow",
-    "label": "Dynasty Bow",
+    "label": "Nightsky Sovereign Bow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2351,7 +2351,7 @@
   },
   {
     "key": "catalog-s80-weapon-crossbow",
-    "label": "Dynasty Crossbow",
+    "label": "Nightsky Sovereign Crossbow",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2361,7 +2361,7 @@
   },
   {
     "key": "catalog-s80-weapon-dagger",
-    "label": "Dynasty Knife",
+    "label": "Nightsky Sovereign Dagger",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2371,7 +2371,7 @@
   },
   {
     "key": "catalog-s80-weapon-fists",
-    "label": "Dynasty Bagh-Nakh",
+    "label": "Nightsky Sovereign Claws",
     "group": "Оружие",
     "background": "weapon",
     "vertical": false,
@@ -2381,7 +2381,7 @@
   },
   {
     "key": "catalog-s80-weapon-mace",
-    "label": "Dynasty Mace",
+    "label": "Nightsky Sovereign Scepter",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2391,7 +2391,7 @@
   },
   {
     "key": "catalog-s80-weapon-onehandedsword",
-    "label": "Dynasty Sword",
+    "label": "Nightsky Sovereign Sword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2401,7 +2401,7 @@
   },
   {
     "key": "catalog-s80-weapon-twohandedsword",
-    "label": "Dynasty Blade",
+    "label": "Nightsky Sovereign Greatsword",
     "group": "Оружие",
     "background": "weapon",
     "vertical": true,
@@ -2411,7 +2411,7 @@
   },
   {
     "key": "catalog-s84-shield-smallshield",
-    "label": "Vesper Guard Shield",
+    "label": "Prismatic Dominion Shield",
     "group": "Щиты",
     "background": "weapon",
     "vertical": false,

@@ -1,12 +1,13 @@
 """Publish full-detail inventory icons; every size derives from the 512px master."""
-import json,zipfile
+import json,zipfile,sys
 from pathlib import Path
 from PIL import Image
 render=Path('.tmp/l2-style')
 dest=Path('webapp/art/items/l2-style');dest.mkdir(parents=True,exist_ok=True)
 rows=json.loads((render/'manifest.json').read_text(encoding='utf-8'))
 for row in rows:
-    with Image.open(render/(row['key']+'.png')) as image:
+    if '--metadata-only' not in sys.argv:
+      with Image.open(render/(row['key']+'.png')) as image:
         assert image.size==(512,512),row['key']
         for size in [32,64,128,256,512]:
             target=dest/f"{row['key']}-{size}.webp"

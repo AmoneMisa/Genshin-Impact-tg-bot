@@ -1,1147 +1,1503 @@
-// Only reviewed, converted paintings are published here.
+// Reviewed custom paintings. referenceId/referenceName describe the original brief, never a runtime L2 identity.
 export const CATALOG_ITEM_ART = Object.freeze([
   {
-    "id": "A:armor:heavy:body",
-    "name": "Dark Crystal Breastplate",
+    "id": "custom:A:heavy:body",
+    "name": "Seraphim Vanguard · Breastplate",
     "grade": "A",
     "kind": "heavy",
     "category": "body",
-    "key": "catalog-a-armor-heavy-body"
+    "key": "catalog-a-armor-heavy-body",
+    "referenceName": "Dark Crystal Breastplate",
+    "customItemId": "custom:A:heavy:body",
+    "referenceId": "A:armor:heavy:body"
   },
   {
-    "id": "A:armor:heavy:boots",
-    "name": "Dark Crystal Boots",
+    "id": "custom:A:heavy:boots",
+    "name": "Seraphim Vanguard · Boots",
     "grade": "A",
     "kind": "heavy",
     "category": "boots",
-    "key": "catalog-a-armor-heavy-boots"
+    "key": "catalog-a-armor-heavy-boots",
+    "referenceName": "Dark Crystal Boots",
+    "customItemId": "custom:A:heavy:boots",
+    "referenceId": "A:armor:heavy:boots"
   },
   {
-    "id": "A:armor:heavy:gloves",
-    "name": "Dark Crystal Gauntlets",
+    "id": "custom:A:heavy:gloves",
+    "name": "Seraphim Vanguard · Gloves",
     "grade": "A",
     "kind": "heavy",
     "category": "gloves",
-    "key": "catalog-a-armor-heavy-gloves"
+    "key": "catalog-a-armor-heavy-gloves",
+    "referenceName": "Dark Crystal Gauntlets",
+    "customItemId": "custom:A:heavy:gloves",
+    "referenceId": "A:armor:heavy:gloves"
   },
   {
-    "id": "A:armor:heavy:greaves",
-    "name": "Dark Crystal Gaiters",
+    "id": "custom:A:heavy:greaves",
+    "name": "Seraphim Vanguard · Gaiters",
     "grade": "A",
     "kind": "heavy",
     "category": "greaves",
-    "key": "catalog-a-armor-heavy-greaves"
+    "key": "catalog-a-armor-heavy-greaves",
+    "referenceName": "Dark Crystal Gaiters",
+    "customItemId": "custom:A:heavy:greaves",
+    "referenceId": "A:armor:heavy:greaves"
   },
   {
-    "id": "A:armor:heavy:helmet",
-    "name": "Dark Crystal Helmet",
+    "id": "custom:A:heavy:helmet",
+    "name": "Seraphim Vanguard · Helmet",
     "grade": "A",
     "kind": "heavy",
     "category": "helmet",
-    "key": "catalog-a-armor-heavy-helmet"
+    "key": "catalog-a-armor-heavy-helmet",
+    "referenceName": "Dark Crystal Helmet",
+    "customItemId": "custom:A:heavy:helmet",
+    "referenceId": "A:armor:heavy:helmet"
   },
   {
-    "id": "A:armor:light:boots",
-    "name": "Tallum Leather Boots",
+    "id": "custom:A:light:boots",
+    "name": "Hawk Hide · Boots",
     "grade": "A",
     "kind": "light",
     "category": "boots",
-    "key": "catalog-a-armor-light-boots"
+    "key": "catalog-a-armor-light-boots",
+    "referenceName": "Tallum Leather Boots",
+    "customItemId": "custom:A:light:boots",
+    "referenceId": "A:armor:light:boots"
   },
   {
-    "id": "A:armor:light:fullBody",
-    "name": "Tallum Leather Armor",
+    "id": "custom:A:light:fullBody",
+    "name": "Hawk Hide · Leather Armor",
     "grade": "A",
     "kind": "light",
     "category": "fullBody",
-    "key": "catalog-a-armor-light-fullbody"
+    "key": "catalog-a-armor-light-fullbody",
+    "referenceName": "Tallum Leather Armor",
+    "customItemId": "custom:A:light:fullBody",
+    "referenceId": "A:armor:light:fullBody"
   },
   {
-    "id": "A:armor:light:gloves",
-    "name": "Tallum Leather Gloves",
+    "id": "custom:A:light:gloves",
+    "name": "Hawk Hide · Gloves",
     "grade": "A",
     "kind": "light",
     "category": "gloves",
-    "key": "catalog-a-armor-light-gloves"
+    "key": "catalog-a-armor-light-gloves",
+    "referenceName": "Tallum Leather Gloves",
+    "customItemId": "custom:A:light:gloves",
+    "referenceId": "A:armor:light:gloves"
   },
   {
-    "id": "A:armor:light:helmet",
-    "name": "Tallum Leather Helmet",
+    "id": "custom:A:light:helmet",
+    "name": "Hawk Hide · Helmet",
     "grade": "A",
     "kind": "light",
     "category": "helmet",
-    "key": "catalog-a-armor-light-helmet"
+    "key": "catalog-a-armor-light-helmet",
+    "referenceName": "Tallum Leather Helmet",
+    "customItemId": "custom:A:light:helmet",
+    "referenceId": "A:armor:light:helmet"
   },
   {
-    "id": "A:armor:robe:boots",
-    "name": "Majestic Magic Boots",
+    "id": "custom:A:robe:boots",
+    "name": "Astral Robe · Slippers",
     "grade": "A",
     "kind": "robe",
     "category": "boots",
-    "key": "catalog-a-armor-robe-boots"
+    "key": "catalog-a-armor-robe-boots",
+    "referenceName": "Majestic Magic Boots",
+    "customItemId": "custom:A:robe:boots",
+    "referenceId": "A:armor:robe:boots"
   },
   {
-    "id": "A:armor:robe:fullBody",
-    "name": "Majestic Magic Robe",
+    "id": "custom:A:robe:fullBody",
+    "name": "Astral Robe · Robe",
     "grade": "A",
     "kind": "robe",
     "category": "fullBody",
-    "key": "catalog-a-armor-robe-fullbody"
+    "key": "catalog-a-armor-robe-fullbody",
+    "referenceName": "Majestic Magic Robe",
+    "customItemId": "custom:A:robe:fullBody",
+    "referenceId": "A:armor:robe:fullBody"
   },
   {
-    "id": "A:armor:robe:gloves",
-    "name": "Majestic Magic Gloves",
+    "id": "custom:A:robe:gloves",
+    "name": "Astral Robe · Bracers",
     "grade": "A",
     "kind": "robe",
     "category": "gloves",
-    "key": "catalog-a-armor-robe-gloves"
+    "key": "catalog-a-armor-robe-gloves",
+    "referenceName": "Majestic Magic Gloves",
+    "customItemId": "custom:A:robe:gloves",
+    "referenceId": "A:armor:robe:gloves"
   },
   {
-    "id": "A:armor:robe:helmet",
-    "name": "Majestic Magic Circlet",
+    "id": "custom:A:robe:helmet",
+    "name": "Astral Robe · Circlet",
     "grade": "A",
     "kind": "robe",
     "category": "helmet",
-    "key": "catalog-a-armor-robe-helmet"
+    "key": "catalog-a-armor-robe-helmet",
+    "referenceName": "Majestic Magic Circlet",
+    "customItemId": "custom:A:robe:helmet",
+    "referenceId": "A:armor:robe:helmet"
   },
   {
-    "id": "A:jewelry:earring",
-    "name": "Majestic Earring",
+    "id": "custom-art:A:jewelry:earring",
+    "name": "Astral Covenant Earring",
     "grade": "A",
     "kind": "earring",
     "category": "earring",
-    "key": "catalog-a-jewelry-earring"
+    "key": "catalog-a-jewelry-earring",
+    "referenceName": "Majestic Earring",
+    "referenceId": "A:jewelry:earring"
   },
   {
-    "id": "A:jewelry:necklace",
-    "name": "Majestic Necklace",
+    "id": "custom-art:A:jewelry:necklace",
+    "name": "Astral Covenant necklace",
     "grade": "A",
     "kind": "necklace",
     "category": "necklace",
-    "key": "catalog-a-jewelry-necklace"
+    "key": "catalog-a-jewelry-necklace",
+    "referenceName": "Majestic Necklace",
+    "referenceId": "A:jewelry:necklace"
   },
   {
-    "id": "A:jewelry:ring",
-    "name": "Majestic Ring",
+    "id": "custom-art:A:jewelry:ring",
+    "name": "Astral Covenant Ring",
     "grade": "A",
     "kind": "ring",
     "category": "ring",
-    "key": "catalog-a-jewelry-ring"
+    "key": "catalog-a-jewelry-ring",
+    "referenceName": "Majestic Ring",
+    "referenceId": "A:jewelry:ring"
   },
   {
-    "id": "A:shield:bigShield",
-    "name": "Shield of Nightmare",
+    "id": "custom-art:A:shield:bigShield",
+    "name": "Astral Covenant Tower Shield",
     "grade": "A",
     "kind": "bigShield",
     "category": "bigShield",
-    "key": "catalog-a-shield-bigshield"
+    "key": "catalog-a-shield-bigshield",
+    "referenceName": "Shield of Nightmare",
+    "referenceId": "A:shield:bigShield"
   },
   {
-    "id": "A:shield:sigill",
-    "name": "Majestic Sigil",
+    "id": "custom-art:A:shield:sigill",
+    "name": "Astral Covenant Sigil",
     "grade": "A",
     "kind": "sigill",
     "category": "sigill",
-    "key": "catalog-a-shield-sigill"
+    "key": "catalog-a-shield-sigill",
+    "referenceName": "Majestic Sigil",
+    "referenceId": "A:shield:sigill"
   },
   {
-    "id": "A:shield:smallShield",
-    "name": "Shield of Nightmare II",
+    "id": "custom-art:A:shield:smallShield",
+    "name": "Astral Covenant Shield",
     "grade": "A",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-a-shield-smallshield"
+    "key": "catalog-a-shield-smallshield",
+    "referenceName": "Shield of Nightmare II",
+    "referenceId": "A:shield:smallShield"
   },
   {
-    "id": "A:weapon:blunt",
-    "name": "Doom Crusher",
+    "id": "custom-art:A:weapon:blunt",
+    "name": "Astral Covenant blunt",
     "grade": "A",
     "kind": "blunt",
     "category": "blunt",
-    "key": "catalog-a-weapon-blunt"
+    "key": "catalog-a-weapon-blunt",
+    "referenceName": "Doom Crusher",
+    "referenceId": "A:weapon:blunt"
   },
   {
-    "id": "A:weapon:bow",
-    "name": "Soul Bow",
+    "id": "custom-art:A:weapon:bow",
+    "name": "Astral Covenant Bow",
     "grade": "A",
     "kind": "bow",
     "category": "bow",
-    "key": "catalog-a-weapon-bow"
+    "key": "catalog-a-weapon-bow",
+    "referenceName": "Soul Bow",
+    "referenceId": "A:weapon:bow"
   },
   {
-    "id": "A:weapon:crossbow",
-    "name": "Reaper",
+    "id": "custom-art:A:weapon:crossbow",
+    "name": "Astral Covenant Crossbow",
     "grade": "A",
     "kind": "crossbow",
     "category": "bow",
-    "key": "catalog-a-weapon-crossbow"
+    "key": "catalog-a-weapon-crossbow",
+    "referenceName": "Reaper",
+    "referenceId": "A:weapon:crossbow"
   },
   {
-    "id": "A:weapon:dagger",
-    "name": "Naga Storm",
+    "id": "custom-art:A:weapon:dagger",
+    "name": "Astral Covenant Dagger",
     "grade": "A",
     "kind": "dagger",
     "category": "dagger",
-    "key": "catalog-a-weapon-dagger"
+    "key": "catalog-a-weapon-dagger",
+    "referenceName": "Naga Storm",
+    "referenceId": "A:weapon:dagger"
   },
   {
-    "id": "A:weapon:fists",
-    "name": "Dragon Grinder",
+    "id": "custom-art:A:weapon:fists",
+    "name": "Astral Covenant Claws",
     "grade": "A",
     "kind": "fists",
     "category": "fists",
-    "key": "catalog-a-weapon-fists"
+    "key": "catalog-a-weapon-fists",
+    "referenceName": "Dragon Grinder",
+    "referenceId": "A:weapon:fists"
   },
   {
-    "id": "A:weapon:mace",
-    "name": "Cabrio's Hand",
+    "id": "custom-art:A:weapon:mace",
+    "name": "Astral Covenant Scepter",
     "grade": "A",
     "kind": "mace",
     "category": "mace",
-    "key": "catalog-a-weapon-mace"
+    "key": "catalog-a-weapon-mace",
+    "referenceName": "Cabrio's Hand",
+    "referenceId": "A:weapon:mace"
   },
   {
-    "id": "A:weapon:oneHandedSword",
-    "name": "Sirra's Blade",
+    "id": "custom-art:A:weapon:oneHandedSword",
+    "name": "Astral Covenant Sword",
     "grade": "A",
     "kind": "oneHandedSword",
     "category": "sword",
-    "key": "catalog-a-weapon-onehandedsword"
+    "key": "catalog-a-weapon-onehandedsword",
+    "referenceName": "Sirra's Blade",
+    "referenceId": "A:weapon:oneHandedSword"
   },
   {
-    "id": "A:weapon:twoHandedSword",
-    "name": "Sword of Ipos",
+    "id": "custom-art:A:weapon:twoHandedSword",
+    "name": "Astral Covenant Greatsword",
     "grade": "A",
     "kind": "twoHandedSword",
     "category": "sword",
-    "key": "catalog-a-weapon-twohandedsword"
+    "key": "catalog-a-weapon-twohandedsword",
+    "referenceName": "Sword of Ipos",
+    "referenceId": "A:weapon:twoHandedSword"
   },
   {
-    "id": "B:armor:heavy:body",
-    "name": "Avadon Breastplate",
+    "id": "custom:B:heavy:body",
+    "name": "Twilight Frontier · Breastplate",
     "grade": "B",
     "kind": "heavy",
     "category": "body",
-    "key": "catalog-b-armor-heavy-body"
+    "key": "catalog-b-armor-heavy-body",
+    "referenceName": "Avadon Breastplate",
+    "customItemId": "custom:B:heavy:body",
+    "referenceId": "B:armor:heavy:body"
   },
   {
-    "id": "B:armor:heavy:boots",
-    "name": "Avadon Boots",
+    "id": "custom:B:heavy:boots",
+    "name": "Twilight Frontier · Boots",
     "grade": "B",
     "kind": "heavy",
     "category": "boots",
-    "key": "catalog-b-armor-heavy-boots"
+    "key": "catalog-b-armor-heavy-boots",
+    "referenceName": "Avadon Boots",
+    "customItemId": "custom:B:heavy:boots",
+    "referenceId": "B:armor:heavy:boots"
   },
   {
-    "id": "B:armor:heavy:gloves",
-    "name": "Avadon Gauntlets",
+    "id": "custom:B:heavy:gloves",
+    "name": "Twilight Frontier · Gloves",
     "grade": "B",
     "kind": "heavy",
     "category": "gloves",
-    "key": "catalog-b-armor-heavy-gloves"
+    "key": "catalog-b-armor-heavy-gloves",
+    "referenceName": "Avadon Gauntlets",
+    "customItemId": "custom:B:heavy:gloves",
+    "referenceId": "B:armor:heavy:gloves"
   },
   {
-    "id": "B:armor:heavy:greaves",
-    "name": "Avadon Gaiters",
+    "id": "custom:B:heavy:greaves",
+    "name": "Twilight Frontier · Gaiters",
     "grade": "B",
     "kind": "heavy",
     "category": "greaves",
-    "key": "catalog-b-armor-heavy-greaves"
+    "key": "catalog-b-armor-heavy-greaves",
+    "referenceName": "Avadon Gaiters",
+    "customItemId": "custom:B:heavy:greaves",
+    "referenceId": "B:armor:heavy:greaves"
   },
   {
-    "id": "B:armor:heavy:helmet",
-    "name": "Avadon Helmet",
+    "id": "custom:B:heavy:helmet",
+    "name": "Twilight Frontier · Helmet",
     "grade": "B",
     "kind": "heavy",
     "category": "helmet",
-    "key": "catalog-b-armor-heavy-helmet"
+    "key": "catalog-b-armor-heavy-helmet",
+    "referenceName": "Avadon Helmet",
+    "customItemId": "custom:B:heavy:helmet",
+    "referenceId": "B:armor:heavy:helmet"
   },
   {
-    "id": "B:armor:light:boots",
-    "name": "Avadon Leather Boots",
+    "id": "custom:B:light:boots",
+    "name": "Night Mantle · Boots",
     "grade": "B",
     "kind": "light",
     "category": "boots",
-    "key": "catalog-b-armor-light-boots"
+    "key": "catalog-b-armor-light-boots",
+    "referenceName": "Avadon Leather Boots",
+    "customItemId": "custom:B:light:boots",
+    "referenceId": "B:armor:light:boots"
   },
   {
-    "id": "B:armor:light:fullBody",
-    "name": "Avadon Leather Armor",
+    "id": "custom:B:light:fullBody",
+    "name": "Night Mantle · Leather Armor",
     "grade": "B",
     "kind": "light",
     "category": "fullBody",
-    "key": "catalog-b-armor-light-fullbody"
+    "key": "catalog-b-armor-light-fullbody",
+    "referenceName": "Avadon Leather Armor",
+    "customItemId": "custom:B:light:fullBody",
+    "referenceId": "B:armor:light:fullBody"
   },
   {
-    "id": "B:armor:light:gloves",
-    "name": "Avadon Leather Gloves",
+    "id": "custom:B:light:gloves",
+    "name": "Night Mantle · Gloves",
     "grade": "B",
     "kind": "light",
     "category": "gloves",
-    "key": "catalog-b-armor-light-gloves"
+    "key": "catalog-b-armor-light-gloves",
+    "referenceName": "Avadon Leather Gloves",
+    "customItemId": "custom:B:light:gloves",
+    "referenceId": "B:armor:light:gloves"
   },
   {
-    "id": "B:armor:light:helmet",
-    "name": "Avadon Leather Helmet",
+    "id": "custom:B:light:helmet",
+    "name": "Night Mantle · Helmet",
     "grade": "B",
     "kind": "light",
     "category": "helmet",
-    "key": "catalog-b-armor-light-helmet"
+    "key": "catalog-b-armor-light-helmet",
+    "referenceName": "Avadon Leather Helmet",
+    "customItemId": "custom:B:light:helmet",
+    "referenceId": "B:armor:light:helmet"
   },
   {
-    "id": "B:armor:robe:boots",
-    "name": "Avadon Magic Boots",
+    "id": "custom:B:robe:boots",
+    "name": "Ruby Robe · Slippers",
     "grade": "B",
     "kind": "robe",
     "category": "boots",
-    "key": "catalog-b-armor-robe-boots"
+    "key": "catalog-b-armor-robe-boots",
+    "referenceName": "Avadon Magic Boots",
+    "customItemId": "custom:B:robe:boots",
+    "referenceId": "B:armor:robe:boots"
   },
   {
-    "id": "B:armor:robe:fullBody",
-    "name": "Avadon Magic Robe",
+    "id": "custom:B:robe:fullBody",
+    "name": "Ruby Robe · Robe",
     "grade": "B",
     "kind": "robe",
     "category": "fullBody",
-    "key": "catalog-b-armor-robe-fullbody"
+    "key": "catalog-b-armor-robe-fullbody",
+    "referenceName": "Avadon Magic Robe",
+    "customItemId": "custom:B:robe:fullBody",
+    "referenceId": "B:armor:robe:fullBody"
   },
   {
-    "id": "B:armor:robe:gloves",
-    "name": "Avadon Magic Gloves",
+    "id": "custom:B:robe:gloves",
+    "name": "Ruby Robe · Bracers",
     "grade": "B",
     "kind": "robe",
     "category": "gloves",
-    "key": "catalog-b-armor-robe-gloves"
+    "key": "catalog-b-armor-robe-gloves",
+    "referenceName": "Avadon Magic Gloves",
+    "customItemId": "custom:B:robe:gloves",
+    "referenceId": "B:armor:robe:gloves"
   },
   {
-    "id": "B:armor:robe:helmet",
-    "name": "Avadon Magic Circlet",
+    "id": "custom:B:robe:helmet",
+    "name": "Ruby Robe · Circlet",
     "grade": "B",
     "kind": "robe",
     "category": "helmet",
-    "key": "catalog-b-armor-robe-helmet"
+    "key": "catalog-b-armor-robe-helmet",
+    "referenceName": "Avadon Magic Circlet",
+    "customItemId": "custom:B:robe:helmet",
+    "referenceId": "B:armor:robe:helmet"
   },
   {
-    "id": "B:jewelry:earring",
-    "name": "Sage's Earring",
+    "id": "custom-art:B:jewelry:earring",
+    "name": "Opal Horizon Earring",
     "grade": "B",
     "kind": "earring",
     "category": "earring",
-    "key": "catalog-b-jewelry-earring"
+    "key": "catalog-b-jewelry-earring",
+    "referenceName": "Sage's Earring",
+    "referenceId": "B:jewelry:earring"
   },
   {
-    "id": "B:jewelry:necklace",
-    "name": "Sage's Necklace",
+    "id": "custom-art:B:jewelry:necklace",
+    "name": "Opal Horizon necklace",
     "grade": "B",
     "kind": "necklace",
     "category": "necklace",
-    "key": "catalog-b-jewelry-necklace"
+    "key": "catalog-b-jewelry-necklace",
+    "referenceName": "Sage's Necklace",
+    "referenceId": "B:jewelry:necklace"
   },
   {
-    "id": "B:jewelry:ring",
-    "name": "Sage's Ring",
+    "id": "custom-art:B:jewelry:ring",
+    "name": "Opal Horizon Ring",
     "grade": "B",
     "kind": "ring",
     "category": "ring",
-    "key": "catalog-b-jewelry-ring"
+    "key": "catalog-b-jewelry-ring",
+    "referenceName": "Sage's Ring",
+    "referenceId": "B:jewelry:ring"
   },
   {
-    "id": "B:shield:bigShield",
-    "name": "Dark Dragon Shield",
+    "id": "custom-art:B:shield:bigShield",
+    "name": "Opal Horizon Tower Shield",
     "grade": "B",
     "kind": "bigShield",
     "category": "bigShield",
-    "key": "catalog-b-shield-bigshield"
+    "key": "catalog-b-shield-bigshield",
+    "referenceName": "Dark Dragon Shield",
+    "referenceId": "B:shield:bigShield"
   },
   {
-    "id": "B:shield:sigill",
-    "name": "Sage Sigil",
+    "id": "custom-art:B:shield:sigill",
+    "name": "Opal Horizon Sigil",
     "grade": "B",
     "kind": "sigill",
     "category": "sigill",
-    "key": "catalog-b-shield-sigill"
+    "key": "catalog-b-shield-sigill",
+    "referenceName": "Sage Sigil",
+    "referenceId": "B:shield:sigill"
   },
   {
-    "id": "B:shield:smallShield",
-    "name": "Masterpiece Shield",
+    "id": "custom-art:B:shield:smallShield",
+    "name": "Opal Horizon Shield",
     "grade": "B",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-b-shield-smallshield"
+    "key": "catalog-b-shield-smallshield",
+    "referenceName": "Masterpiece Shield",
+    "referenceId": "B:shield:smallShield"
   },
   {
-    "id": "B:weapon:blunt",
-    "name": "Ice Storm Hammer",
+    "id": "custom-art:B:weapon:blunt",
+    "name": "Opal Horizon blunt",
     "grade": "B",
     "kind": "blunt",
     "category": "blunt",
-    "key": "catalog-b-weapon-blunt"
+    "key": "catalog-b-weapon-blunt",
+    "referenceName": "Ice Storm Hammer",
+    "referenceId": "B:weapon:blunt"
   },
   {
-    "id": "B:weapon:bow",
-    "name": "Bow of Peril",
+    "id": "custom-art:B:weapon:bow",
+    "name": "Opal Horizon Bow",
     "grade": "B",
     "kind": "bow",
     "category": "bow",
-    "key": "catalog-b-weapon-bow"
+    "key": "catalog-b-weapon-bow",
+    "referenceName": "Bow of Peril",
+    "referenceId": "B:weapon:bow"
   },
   {
-    "id": "B:weapon:crossbow",
-    "name": "Hell Hound",
+    "id": "custom-art:B:weapon:crossbow",
+    "name": "Opal Horizon Crossbow",
     "grade": "B",
     "kind": "crossbow",
     "category": "bow",
-    "key": "catalog-b-weapon-crossbow"
+    "key": "catalog-b-weapon-crossbow",
+    "referenceName": "Hell Hound",
+    "referenceId": "B:weapon:crossbow"
   },
   {
-    "id": "B:weapon:dagger",
-    "name": "Demon Dagger",
+    "id": "custom-art:B:weapon:dagger",
+    "name": "Opal Horizon Dagger",
     "grade": "B",
     "kind": "dagger",
     "category": "dagger",
-    "key": "catalog-b-weapon-dagger"
+    "key": "catalog-b-weapon-dagger",
+    "referenceName": "Demon Dagger",
+    "referenceId": "B:weapon:dagger"
   },
   {
-    "id": "B:weapon:fists",
-    "name": "Arthro Nail",
+    "id": "custom-art:B:weapon:fists",
+    "name": "Opal Horizon Claws",
     "grade": "B",
     "kind": "fists",
     "category": "fists",
-    "key": "catalog-b-weapon-fists"
+    "key": "catalog-b-weapon-fists",
+    "referenceName": "Arthro Nail",
+    "referenceId": "B:weapon:fists"
   },
   {
-    "id": "B:weapon:mace",
-    "name": "Staff of Evil Spirits",
+    "id": "custom-art:B:weapon:mace",
+    "name": "Opal Horizon Scepter",
     "grade": "B",
     "kind": "mace",
     "category": "mace",
-    "key": "catalog-b-weapon-mace"
+    "key": "catalog-b-weapon-mace",
+    "referenceName": "Staff of Evil Spirits",
+    "referenceId": "B:weapon:mace"
   },
   {
-    "id": "B:weapon:oneHandedSword",
-    "name": "Sword of Damascus",
+    "id": "custom-art:B:weapon:oneHandedSword",
+    "name": "Opal Horizon Sword",
     "grade": "B",
     "kind": "oneHandedSword",
     "category": "sword",
-    "key": "catalog-b-weapon-onehandedsword"
+    "key": "catalog-b-weapon-onehandedsword",
+    "referenceName": "Sword of Damascus",
+    "referenceId": "B:weapon:oneHandedSword"
   },
   {
-    "id": "B:weapon:twoHandedSword",
-    "name": "Guardian Sword",
+    "id": "custom-art:B:weapon:twoHandedSword",
+    "name": "Opal Horizon Greatsword",
     "grade": "B",
     "kind": "twoHandedSword",
     "category": "sword",
-    "key": "catalog-b-weapon-twohandedsword"
+    "key": "catalog-b-weapon-twohandedsword",
+    "referenceName": "Guardian Sword",
+    "referenceId": "B:weapon:twoHandedSword"
   },
   {
-    "id": "C:armor:light:boots",
-    "name": "Drake Leather Boots",
+    "id": "custom:C:light:boots",
+    "name": "Lunar Scale · Boots",
     "grade": "C",
     "kind": "light",
     "category": "boots",
-    "key": "catalog-c-armor-light-boots"
+    "key": "catalog-c-armor-light-boots",
+    "referenceName": "Drake Leather Boots",
+    "customItemId": "custom:C:light:boots",
+    "referenceId": "C:armor:light:boots"
   },
   {
-    "id": "C:armor:light:fullBody",
-    "name": "Drake Leather Armor",
+    "id": "custom:C:light:fullBody",
+    "name": "Lunar Scale · Leather Armor",
     "grade": "C",
     "kind": "light",
     "category": "fullBody",
-    "key": "catalog-c-armor-light-fullbody"
+    "key": "catalog-c-armor-light-fullbody",
+    "referenceName": "Drake Leather Armor",
+    "customItemId": "custom:C:light:fullBody",
+    "referenceId": "C:armor:light:fullBody"
   },
   {
-    "id": "C:armor:light:gloves",
-    "name": "Drake Leather Gloves",
+    "id": "custom:C:light:gloves",
+    "name": "Lunar Scale · Gloves",
     "grade": "C",
     "kind": "light",
     "category": "gloves",
-    "key": "catalog-c-armor-light-gloves"
+    "key": "catalog-c-armor-light-gloves",
+    "referenceName": "Drake Leather Gloves",
+    "customItemId": "custom:C:light:gloves",
+    "referenceId": "C:armor:light:gloves"
   },
   {
-    "id": "C:armor:light:helmet",
-    "name": "Drake Leather Helmet",
+    "id": "custom:C:light:helmet",
+    "name": "Lunar Scale · Helmet",
     "grade": "C",
     "kind": "light",
     "category": "helmet",
-    "key": "catalog-c-armor-light-helmet"
+    "key": "catalog-c-armor-light-helmet",
+    "referenceName": "Drake Leather Helmet",
+    "customItemId": "custom:C:light:helmet",
+    "referenceId": "C:armor:light:helmet"
   },
   {
-    "id": "C:shield:smallShield",
-    "name": "Tower Shield",
+    "id": "custom-art:C:shield:smallShield",
+    "name": "Moonsteel Covenant Shield",
     "grade": "C",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-c-shield-smallshield"
+    "key": "catalog-c-shield-smallshield",
+    "referenceName": "Tower Shield",
+    "referenceId": "C:shield:smallShield"
   },
   {
-    "id": "D:armor:heavy:body",
-    "name": "Brigandine Breastplate",
+    "id": "custom:D:heavy:body",
+    "name": "Sapphire Guard · Breastplate",
     "grade": "D",
     "kind": "heavy",
     "category": "body",
-    "key": "catalog-d-armor-heavy-body"
+    "key": "catalog-d-armor-heavy-body",
+    "referenceName": "Brigandine Breastplate",
+    "customItemId": "custom:D:heavy:body",
+    "referenceId": "D:armor:heavy:body"
   },
   {
-    "id": "D:armor:heavy:boots",
-    "name": "Brigandine Boots",
+    "id": "custom:D:heavy:boots",
+    "name": "Sapphire Guard · Boots",
     "grade": "D",
     "kind": "heavy",
     "category": "boots",
-    "key": "catalog-d-armor-heavy-boots"
+    "key": "catalog-d-armor-heavy-boots",
+    "referenceName": "Brigandine Boots",
+    "customItemId": "custom:D:heavy:boots",
+    "referenceId": "D:armor:heavy:boots"
   },
   {
-    "id": "D:armor:heavy:gloves",
-    "name": "Brigandine Gauntlets",
+    "id": "custom:D:heavy:gloves",
+    "name": "Sapphire Guard · Gloves",
     "grade": "D",
     "kind": "heavy",
     "category": "gloves",
-    "key": "catalog-d-armor-heavy-gloves"
+    "key": "catalog-d-armor-heavy-gloves",
+    "referenceName": "Brigandine Gauntlets",
+    "customItemId": "custom:D:heavy:gloves",
+    "referenceId": "D:armor:heavy:gloves"
   },
   {
-    "id": "D:armor:heavy:greaves",
-    "name": "Brigandine Gaiters",
+    "id": "custom:D:heavy:greaves",
+    "name": "Sapphire Guard · Gaiters",
     "grade": "D",
     "kind": "heavy",
     "category": "greaves",
-    "key": "catalog-d-armor-heavy-greaves"
+    "key": "catalog-d-armor-heavy-greaves",
+    "referenceName": "Brigandine Gaiters",
+    "customItemId": "custom:D:heavy:greaves",
+    "referenceId": "D:armor:heavy:greaves"
   },
   {
-    "id": "D:armor:heavy:helmet",
-    "name": "Brigandine Helmet",
+    "id": "custom:D:heavy:helmet",
+    "name": "Sapphire Guard · Helmet",
     "grade": "D",
     "kind": "heavy",
     "category": "helmet",
-    "key": "catalog-d-armor-heavy-helmet"
+    "key": "catalog-d-armor-heavy-helmet",
+    "referenceName": "Brigandine Helmet",
+    "customItemId": "custom:D:heavy:helmet",
+    "referenceId": "D:armor:heavy:helmet"
   },
   {
-    "id": "D:armor:light:boots",
-    "name": "Manticore Skin Boots",
+    "id": "custom:D:light:boots",
+    "name": "Shadow Hide · Boots",
     "grade": "D",
     "kind": "light",
     "category": "boots",
-    "key": "catalog-d-armor-light-boots"
+    "key": "catalog-d-armor-light-boots",
+    "referenceName": "Manticore Skin Boots",
+    "customItemId": "custom:D:light:boots",
+    "referenceId": "D:armor:light:boots"
   },
   {
-    "id": "D:armor:light:fullBody",
-    "name": "Manticore Skin Armor",
+    "id": "custom:D:light:fullBody",
+    "name": "Shadow Hide · Leather Armor",
     "grade": "D",
     "kind": "light",
     "category": "fullBody",
-    "key": "catalog-d-armor-light-fullbody"
+    "key": "catalog-d-armor-light-fullbody",
+    "referenceName": "Manticore Skin Armor",
+    "customItemId": "custom:D:light:fullBody",
+    "referenceId": "D:armor:light:fullBody"
   },
   {
-    "id": "D:armor:light:gloves",
-    "name": "Manticore Skin Gloves",
+    "id": "custom:D:light:gloves",
+    "name": "Shadow Hide · Gloves",
     "grade": "D",
     "kind": "light",
     "category": "gloves",
-    "key": "catalog-d-armor-light-gloves"
+    "key": "catalog-d-armor-light-gloves",
+    "referenceName": "Manticore Skin Gloves",
+    "customItemId": "custom:D:light:gloves",
+    "referenceId": "D:armor:light:gloves"
   },
   {
-    "id": "D:armor:light:helmet",
-    "name": "Manticore Skin Helmet",
+    "id": "custom:D:light:helmet",
+    "name": "Shadow Hide · Helmet",
     "grade": "D",
     "kind": "light",
     "category": "helmet",
-    "key": "catalog-d-armor-light-helmet"
+    "key": "catalog-d-armor-light-helmet",
+    "referenceName": "Manticore Skin Helmet",
+    "customItemId": "custom:D:light:helmet",
+    "referenceId": "D:armor:light:helmet"
   },
   {
-    "id": "D:armor:robe:boots",
-    "name": "Elven Mithril Boots",
+    "id": "custom:D:robe:boots",
+    "name": "Pearl Cloth · Slippers",
     "grade": "D",
     "kind": "robe",
     "category": "boots",
-    "key": "catalog-d-armor-robe-boots"
+    "key": "catalog-d-armor-robe-boots",
+    "referenceName": "Elven Mithril Boots",
+    "customItemId": "custom:D:robe:boots",
+    "referenceId": "D:armor:robe:boots"
   },
   {
-    "id": "D:armor:robe:fullBody",
-    "name": "Elven Mithril Robe",
+    "id": "custom:D:robe:fullBody",
+    "name": "Pearl Cloth · Robe",
     "grade": "D",
     "kind": "robe",
     "category": "fullBody",
-    "key": "catalog-d-armor-robe-fullbody"
+    "key": "catalog-d-armor-robe-fullbody",
+    "referenceName": "Elven Mithril Robe",
+    "customItemId": "custom:D:robe:fullBody",
+    "referenceId": "D:armor:robe:fullBody"
   },
   {
-    "id": "D:armor:robe:gloves",
-    "name": "Elven Mithril Gloves",
+    "id": "custom:D:robe:gloves",
+    "name": "Pearl Cloth · Bracers",
     "grade": "D",
     "kind": "robe",
     "category": "gloves",
-    "key": "catalog-d-armor-robe-gloves"
+    "key": "catalog-d-armor-robe-gloves",
+    "referenceName": "Elven Mithril Gloves",
+    "customItemId": "custom:D:robe:gloves",
+    "referenceId": "D:armor:robe:gloves"
   },
   {
-    "id": "D:armor:robe:helmet",
-    "name": "Elven Mithril Circlet",
+    "id": "custom:D:robe:helmet",
+    "name": "Pearl Cloth · Circlet",
     "grade": "D",
     "kind": "robe",
     "category": "helmet",
-    "key": "catalog-d-armor-robe-helmet"
+    "key": "catalog-d-armor-robe-helmet",
+    "referenceName": "Elven Mithril Circlet",
+    "customItemId": "custom:D:robe:helmet",
+    "referenceId": "D:armor:robe:helmet"
   },
   {
-    "id": "D:jewelry:earring",
-    "name": "Omen Beast's Eye Earring",
+    "id": "custom-art:D:jewelry:earring",
+    "name": "Emberwatch Earring",
     "grade": "D",
     "kind": "earring",
     "category": "earring",
-    "key": "catalog-d-jewelry-earring"
+    "key": "catalog-d-jewelry-earring",
+    "referenceName": "Omen Beast's Eye Earring",
+    "referenceId": "D:jewelry:earring"
   },
   {
-    "id": "D:jewelry:necklace",
-    "name": "Elven Necklace",
+    "id": "custom-art:D:jewelry:necklace",
+    "name": "Emberwatch necklace",
     "grade": "D",
     "kind": "necklace",
     "category": "necklace",
-    "key": "catalog-d-jewelry-necklace"
+    "key": "catalog-d-jewelry-necklace",
+    "referenceName": "Elven Necklace",
+    "referenceId": "D:jewelry:necklace"
   },
   {
-    "id": "D:jewelry:ring",
-    "name": "Mithril Ring",
+    "id": "custom-art:D:jewelry:ring",
+    "name": "Emberwatch Ring",
     "grade": "D",
     "kind": "ring",
     "category": "ring",
-    "key": "catalog-d-jewelry-ring"
+    "key": "catalog-d-jewelry-ring",
+    "referenceName": "Mithril Ring",
+    "referenceId": "D:jewelry:ring"
   },
   {
-    "id": "D:shield:bigShield",
-    "name": "Square Shield",
+    "id": "custom-art:D:shield:bigShield",
+    "name": "Emberwatch Tower Shield",
     "grade": "D",
     "kind": "bigShield",
     "category": "bigShield",
-    "key": "catalog-d-shield-bigshield"
+    "key": "catalog-d-shield-bigshield",
+    "referenceName": "Square Shield",
+    "referenceId": "D:shield:bigShield"
   },
   {
-    "id": "D:shield:sigill",
-    "name": "Mithril Sigil",
+    "id": "custom-art:D:shield:sigill",
+    "name": "Emberwatch Sigil",
     "grade": "D",
     "kind": "sigill",
     "category": "sigill",
-    "key": "catalog-d-shield-sigill"
+    "key": "catalog-d-shield-sigill",
+    "referenceName": "Mithril Sigil",
+    "referenceId": "D:shield:sigill"
   },
   {
-    "id": "D:shield:smallShield",
-    "name": "Plate Shield",
+    "id": "custom-art:D:shield:smallShield",
+    "name": "Emberwatch Shield",
     "grade": "D",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-d-shield-smallshield"
+    "key": "catalog-d-shield-smallshield",
+    "referenceName": "Plate Shield",
+    "referenceId": "D:shield:smallShield"
   },
   {
-    "id": "D:weapon:blunt",
-    "name": "Titan Hammer",
+    "id": "custom-art:D:weapon:blunt",
+    "name": "Emberwatch blunt",
     "grade": "D",
     "kind": "blunt",
     "category": "blunt",
-    "key": "catalog-d-weapon-blunt"
+    "key": "catalog-d-weapon-blunt",
+    "referenceName": "Titan Hammer",
+    "referenceId": "D:weapon:blunt"
   },
   {
-    "id": "D:weapon:bow",
-    "name": "Strengthened Long Bow",
+    "id": "custom-art:D:weapon:bow",
+    "name": "Emberwatch Bow",
     "grade": "D",
     "kind": "bow",
     "category": "bow",
-    "key": "catalog-d-weapon-bow"
+    "key": "catalog-d-weapon-bow",
+    "referenceName": "Strengthened Long Bow",
+    "referenceId": "D:weapon:bow"
   },
   {
-    "id": "D:weapon:crossbow",
-    "name": "Cranequin",
+    "id": "custom-art:D:weapon:crossbow",
+    "name": "Emberwatch Crossbow",
     "grade": "D",
     "kind": "crossbow",
     "category": "bow",
-    "key": "catalog-d-weapon-crossbow"
+    "key": "catalog-d-weapon-crossbow",
+    "referenceName": "Cranequin",
+    "referenceId": "D:weapon:crossbow"
   },
   {
-    "id": "D:weapon:dagger",
-    "name": "Mithril Dagger",
+    "id": "custom-art:D:weapon:dagger",
+    "name": "Emberwatch Dagger",
     "grade": "D",
     "kind": "dagger",
     "category": "dagger",
-    "key": "catalog-d-weapon-dagger"
+    "key": "catalog-d-weapon-dagger",
+    "referenceName": "Mithril Dagger",
+    "referenceId": "D:weapon:dagger"
   },
   {
-    "id": "D:weapon:fists",
-    "name": "Bich'Hwa",
+    "id": "custom-art:D:weapon:fists",
+    "name": "Emberwatch Claws",
     "grade": "D",
     "kind": "fists",
     "category": "fists",
-    "key": "catalog-d-weapon-fists"
+    "key": "catalog-d-weapon-fists",
+    "referenceName": "Bich'Hwa",
+    "referenceId": "D:weapon:fists"
   },
   {
-    "id": "D:weapon:mace",
-    "name": "Ghost Staff",
+    "id": "custom-art:D:weapon:mace",
+    "name": "Emberwatch Scepter",
     "grade": "D",
     "kind": "mace",
     "category": "mace",
-    "key": "catalog-d-weapon-mace"
+    "key": "catalog-d-weapon-mace",
+    "referenceName": "Ghost Staff",
+    "referenceId": "D:weapon:mace"
   },
   {
-    "id": "D:weapon:oneHandedSword",
-    "name": "Elven Long Sword",
+    "id": "custom-art:D:weapon:oneHandedSword",
+    "name": "Emberwatch Sword",
     "grade": "D",
     "kind": "oneHandedSword",
     "category": "sword",
-    "key": "catalog-d-weapon-onehandedsword"
+    "key": "catalog-d-weapon-onehandedsword",
+    "referenceName": "Elven Long Sword",
+    "referenceId": "D:weapon:oneHandedSword"
   },
   {
-    "id": "D:weapon:twoHandedSword",
-    "name": "Claymore",
+    "id": "custom-art:D:weapon:twoHandedSword",
+    "name": "Emberwatch Greatsword",
     "grade": "D",
     "kind": "twoHandedSword",
     "category": "sword",
-    "key": "catalog-d-weapon-twohandedsword"
+    "key": "catalog-d-weapon-twohandedsword",
+    "referenceName": "Claymore",
+    "referenceId": "D:weapon:twoHandedSword"
   },
   {
-    "id": "noGrade:armor:heavy:body",
-    "name": "Bronze Breastplate",
+    "id": "custom:noGrade:heavy:body",
+    "name": "Forged Guardian · Breastplate",
     "grade": "noGrade",
     "kind": "heavy",
     "category": "body",
-    "key": "catalog-nograde-armor-heavy-body"
+    "key": "catalog-nograde-armor-heavy-body",
+    "referenceName": "Bronze Breastplate",
+    "customItemId": "custom:noGrade:heavy:body",
+    "referenceId": "noGrade:armor:heavy:body"
   },
   {
-    "id": "noGrade:armor:heavy:boots",
-    "name": "Bronze Boots",
+    "id": "custom:noGrade:heavy:boots",
+    "name": "Forged Guardian · Boots",
     "grade": "noGrade",
     "kind": "heavy",
     "category": "boots",
-    "key": "catalog-nograde-armor-heavy-boots"
+    "key": "catalog-nograde-armor-heavy-boots",
+    "referenceName": "Bronze Boots",
+    "customItemId": "custom:noGrade:heavy:boots",
+    "referenceId": "noGrade:armor:heavy:boots"
   },
   {
-    "id": "noGrade:armor:heavy:gloves",
-    "name": "Bronze Gauntlets",
+    "id": "custom:noGrade:heavy:gloves",
+    "name": "Forged Guardian · Gloves",
     "grade": "noGrade",
     "kind": "heavy",
     "category": "gloves",
-    "key": "catalog-nograde-armor-heavy-gloves"
+    "key": "catalog-nograde-armor-heavy-gloves",
+    "referenceName": "Bronze Gauntlets",
+    "customItemId": "custom:noGrade:heavy:gloves",
+    "referenceId": "noGrade:armor:heavy:gloves"
   },
   {
-    "id": "noGrade:armor:heavy:greaves",
-    "name": "Bronze Gaiters",
+    "id": "custom:noGrade:heavy:greaves",
+    "name": "Forged Guardian · Gaiters",
     "grade": "noGrade",
     "kind": "heavy",
     "category": "greaves",
-    "key": "catalog-nograde-armor-heavy-greaves"
+    "key": "catalog-nograde-armor-heavy-greaves",
+    "referenceName": "Bronze Gaiters",
+    "customItemId": "custom:noGrade:heavy:greaves",
+    "referenceId": "noGrade:armor:heavy:greaves"
   },
   {
-    "id": "noGrade:armor:heavy:helmet",
-    "name": "Bronze Helmet",
+    "id": "custom:noGrade:heavy:helmet",
+    "name": "Forged Guardian · Helmet",
     "grade": "noGrade",
     "kind": "heavy",
     "category": "helmet",
-    "key": "catalog-nograde-armor-heavy-helmet"
+    "key": "catalog-nograde-armor-heavy-helmet",
+    "referenceName": "Bronze Helmet",
+    "customItemId": "custom:noGrade:heavy:helmet",
+    "referenceId": "noGrade:armor:heavy:helmet"
   },
   {
-    "id": "noGrade:armor:light:boots",
-    "name": "Wooden Boots",
+    "id": "custom:noGrade:light:boots",
+    "name": "Hunter Hide · Boots",
     "grade": "noGrade",
     "kind": "light",
     "category": "boots",
-    "key": "catalog-nograde-armor-light-boots"
+    "key": "catalog-nograde-armor-light-boots",
+    "referenceName": "Wooden Boots",
+    "customItemId": "custom:noGrade:light:boots",
+    "referenceId": "noGrade:armor:light:boots"
   },
   {
-    "id": "noGrade:armor:light:fullBody",
-    "name": "Wooden Armor",
+    "id": "custom:noGrade:light:fullBody",
+    "name": "Hunter Hide · Leather Armor",
     "grade": "noGrade",
     "kind": "light",
     "category": "fullBody",
-    "key": "catalog-nograde-armor-light-fullbody"
+    "key": "catalog-nograde-armor-light-fullbody",
+    "referenceName": "Wooden Armor",
+    "customItemId": "custom:noGrade:light:fullBody",
+    "referenceId": "noGrade:armor:light:fullBody"
   },
   {
-    "id": "noGrade:armor:light:gloves",
-    "name": "Wooden Gloves",
+    "id": "custom:noGrade:light:gloves",
+    "name": "Hunter Hide · Gloves",
     "grade": "noGrade",
     "kind": "light",
     "category": "gloves",
-    "key": "catalog-nograde-armor-light-gloves"
+    "key": "catalog-nograde-armor-light-gloves",
+    "referenceName": "Wooden Gloves",
+    "customItemId": "custom:noGrade:light:gloves",
+    "referenceId": "noGrade:armor:light:gloves"
   },
   {
-    "id": "noGrade:armor:light:helmet",
-    "name": "Wooden Helmet",
+    "id": "custom:noGrade:light:helmet",
+    "name": "Hunter Hide · Helmet",
     "grade": "noGrade",
     "kind": "light",
     "category": "helmet",
-    "key": "catalog-nograde-armor-light-helmet"
+    "key": "catalog-nograde-armor-light-helmet",
+    "referenceName": "Wooden Helmet",
+    "customItemId": "custom:noGrade:light:helmet",
+    "referenceId": "noGrade:armor:light:helmet"
   },
   {
-    "id": "noGrade:armor:robe:boots",
-    "name": "Devotion Boots",
+    "id": "custom:noGrade:robe:boots",
+    "name": "Apprentice Cloth · Slippers",
     "grade": "noGrade",
     "kind": "robe",
     "category": "boots",
-    "key": "catalog-nograde-armor-robe-boots"
+    "key": "catalog-nograde-armor-robe-boots",
+    "referenceName": "Devotion Boots",
+    "customItemId": "custom:noGrade:robe:boots",
+    "referenceId": "noGrade:armor:robe:boots"
   },
   {
-    "id": "noGrade:armor:robe:fullBody",
-    "name": "Devotion Robe",
+    "id": "custom:noGrade:robe:fullBody",
+    "name": "Apprentice Cloth · Robe",
     "grade": "noGrade",
     "kind": "robe",
     "category": "fullBody",
-    "key": "catalog-nograde-armor-robe-fullbody"
+    "key": "catalog-nograde-armor-robe-fullbody",
+    "referenceName": "Devotion Robe",
+    "customItemId": "custom:noGrade:robe:fullBody",
+    "referenceId": "noGrade:armor:robe:fullBody"
   },
   {
-    "id": "noGrade:armor:robe:gloves",
-    "name": "Devotion Gloves",
+    "id": "custom:noGrade:robe:gloves",
+    "name": "Apprentice Cloth · Bracers",
     "grade": "noGrade",
     "kind": "robe",
     "category": "gloves",
-    "key": "catalog-nograde-armor-robe-gloves"
+    "key": "catalog-nograde-armor-robe-gloves",
+    "referenceName": "Devotion Gloves",
+    "customItemId": "custom:noGrade:robe:gloves",
+    "referenceId": "noGrade:armor:robe:gloves"
   },
   {
-    "id": "noGrade:armor:robe:helmet",
-    "name": "Devotion Circlet",
+    "id": "custom:noGrade:robe:helmet",
+    "name": "Apprentice Cloth · Circlet",
     "grade": "noGrade",
     "kind": "robe",
     "category": "helmet",
-    "key": "catalog-nograde-armor-robe-helmet"
+    "key": "catalog-nograde-armor-robe-helmet",
+    "referenceName": "Devotion Circlet",
+    "customItemId": "custom:noGrade:robe:helmet",
+    "referenceId": "noGrade:armor:robe:helmet"
   },
   {
-    "id": "noGrade:jewelry:earring",
-    "name": "Coral Earring",
+    "id": "custom-art:noGrade:jewelry:earring",
+    "name": "Ashen Oath Earring",
     "grade": "noGrade",
     "kind": "earring",
     "category": "earring",
-    "key": "catalog-nograde-jewelry-earring"
+    "key": "catalog-nograde-jewelry-earring",
+    "referenceName": "Coral Earring",
+    "referenceId": "noGrade:jewelry:earring"
   },
   {
-    "id": "noGrade:jewelry:necklace",
-    "name": "Magic Necklace",
+    "id": "custom-art:noGrade:jewelry:necklace",
+    "name": "Ashen Oath necklace",
     "grade": "noGrade",
     "kind": "necklace",
     "category": "necklace",
-    "key": "catalog-nograde-jewelry-necklace"
+    "key": "catalog-nograde-jewelry-necklace",
+    "referenceName": "Magic Necklace",
+    "referenceId": "noGrade:jewelry:necklace"
   },
   {
-    "id": "noGrade:jewelry:ring",
-    "name": "Blue Coral Ring",
+    "id": "custom-art:noGrade:jewelry:ring",
+    "name": "Ashen Oath Ring",
     "grade": "noGrade",
     "kind": "ring",
     "category": "ring",
-    "key": "catalog-nograde-jewelry-ring"
+    "key": "catalog-nograde-jewelry-ring",
+    "referenceName": "Blue Coral Ring",
+    "referenceId": "noGrade:jewelry:ring"
   },
   {
-    "id": "noGrade:shield:bigShield",
-    "name": "Bone Shield",
+    "id": "custom-art:noGrade:shield:bigShield",
+    "name": "Ashen Oath Tower Shield",
     "grade": "noGrade",
     "kind": "bigShield",
     "category": "bigShield",
-    "key": "catalog-nograde-shield-bigshield"
+    "key": "catalog-nograde-shield-bigshield",
+    "referenceName": "Bone Shield",
+    "referenceId": "noGrade:shield:bigShield"
   },
   {
-    "id": "noGrade:shield:sigill",
-    "name": "Apprentice Sigil",
+    "id": "custom-art:noGrade:shield:sigill",
+    "name": "Ashen Oath Sigil",
     "grade": "noGrade",
     "kind": "sigill",
     "category": "sigill",
-    "key": "catalog-nograde-shield-sigill"
+    "key": "catalog-nograde-shield-sigill",
+    "referenceName": "Apprentice Sigil",
+    "referenceId": "noGrade:shield:sigill"
   },
   {
-    "id": "noGrade:shield:smallShield",
-    "name": "Buckler",
+    "id": "custom-art:noGrade:shield:smallShield",
+    "name": "Ashen Oath Shield",
     "grade": "noGrade",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-nograde-shield-smallshield"
+    "key": "catalog-nograde-shield-smallshield",
+    "referenceName": "Buckler",
+    "referenceId": "noGrade:shield:smallShield"
   },
   {
-    "id": "noGrade:weapon:blunt",
-    "name": "Club",
+    "id": "custom-art:noGrade:weapon:blunt",
+    "name": "Ashen Oath blunt",
     "grade": "noGrade",
     "kind": "blunt",
     "category": "blunt",
-    "key": "catalog-nograde-weapon-blunt"
+    "key": "catalog-nograde-weapon-blunt",
+    "referenceName": "Club",
+    "referenceId": "noGrade:weapon:blunt"
   },
   {
-    "id": "noGrade:weapon:bow",
-    "name": "Composite Bow",
+    "id": "custom-art:noGrade:weapon:bow",
+    "name": "Ashen Oath Bow",
     "grade": "noGrade",
     "kind": "bow",
     "category": "bow",
-    "key": "catalog-nograde-weapon-bow"
+    "key": "catalog-nograde-weapon-bow",
+    "referenceName": "Composite Bow",
+    "referenceId": "noGrade:weapon:bow"
   },
   {
-    "id": "noGrade:weapon:crossbow",
-    "name": "Wooden Crossbow",
+    "id": "custom-art:noGrade:weapon:crossbow",
+    "name": "Ashen Oath Crossbow",
     "grade": "noGrade",
     "kind": "crossbow",
     "category": "bow",
-    "key": "catalog-nograde-weapon-crossbow"
+    "key": "catalog-nograde-weapon-crossbow",
+    "referenceName": "Wooden Crossbow",
+    "referenceId": "noGrade:weapon:crossbow"
   },
   {
-    "id": "noGrade:weapon:dagger",
-    "name": "Sword Breaker",
+    "id": "custom-art:noGrade:weapon:dagger",
+    "name": "Ashen Oath Dagger",
     "grade": "noGrade",
     "kind": "dagger",
     "category": "dagger",
-    "key": "catalog-nograde-weapon-dagger"
+    "key": "catalog-nograde-weapon-dagger",
+    "referenceName": "Sword Breaker",
+    "referenceId": "noGrade:weapon:dagger"
   },
   {
-    "id": "noGrade:weapon:fists",
-    "name": "Viper Fang",
+    "id": "custom-art:noGrade:weapon:fists",
+    "name": "Ashen Oath Claws",
     "grade": "noGrade",
     "kind": "fists",
     "category": "fists",
-    "key": "catalog-nograde-weapon-fists"
+    "key": "catalog-nograde-weapon-fists",
+    "referenceName": "Viper Fang",
+    "referenceId": "noGrade:weapon:fists"
   },
   {
-    "id": "noGrade:weapon:mace",
-    "name": "Willow Staff",
+    "id": "custom-art:noGrade:weapon:mace",
+    "name": "Ashen Oath Scepter",
     "grade": "noGrade",
     "kind": "mace",
     "category": "mace",
-    "key": "catalog-nograde-weapon-mace"
+    "key": "catalog-nograde-weapon-mace",
+    "referenceName": "Willow Staff",
+    "referenceId": "noGrade:weapon:mace"
   },
   {
-    "id": "noGrade:weapon:oneHandedSword",
-    "name": "Long Sword",
+    "id": "custom-art:noGrade:weapon:oneHandedSword",
+    "name": "Ashen Oath Sword",
     "grade": "noGrade",
     "kind": "oneHandedSword",
     "category": "sword",
-    "key": "catalog-nograde-weapon-onehandedsword"
+    "key": "catalog-nograde-weapon-onehandedsword",
+    "referenceName": "Long Sword",
+    "referenceId": "noGrade:weapon:oneHandedSword"
   },
   {
-    "id": "noGrade:weapon:twoHandedSword",
-    "name": "Zweihander",
+    "id": "custom-art:noGrade:weapon:twoHandedSword",
+    "name": "Ashen Oath Greatsword",
     "grade": "noGrade",
     "kind": "twoHandedSword",
     "category": "sword",
-    "key": "catalog-nograde-weapon-twohandedsword"
+    "key": "catalog-nograde-weapon-twohandedsword",
+    "referenceName": "Zweihander",
+    "referenceId": "noGrade:weapon:twoHandedSword"
   },
   {
-    "id": "S:armor:light:gloves",
-    "name": "Draconic Leather Gloves",
+    "id": "custom:S:light:gloves",
+    "name": "Shadow Veil · Gloves",
     "grade": "S",
     "kind": "light",
     "category": "gloves",
-    "key": "catalog-s-armor-light-gloves"
+    "key": "catalog-s-armor-light-gloves",
+    "referenceName": "Draconic Leather Gloves",
+    "customItemId": "custom:S:light:gloves",
+    "referenceId": "S:armor:light:gloves"
   },
   {
-    "id": "S:shield:smallShield",
-    "name": "Imperial Guard Shield",
+    "id": "custom-art:S:shield:smallShield",
+    "name": "Crimson Ascension Shield",
     "grade": "S",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-s-shield-smallshield"
+    "key": "catalog-s-shield-smallshield",
+    "referenceName": "Imperial Guard Shield",
+    "referenceId": "S:shield:smallShield"
   },
   {
-    "id": "S80:armor:heavy:body",
-    "name": "Dynasty Breastplate",
+    "id": "custom:S80:heavy:body",
+    "name": "Raven Frontier · Breastplate",
     "grade": "S80",
     "kind": "heavy",
     "category": "body",
-    "key": "catalog-s80-armor-heavy-body"
+    "key": "catalog-s80-armor-heavy-body",
+    "referenceName": "Dynasty Breastplate",
+    "customItemId": "custom:S80:heavy:body",
+    "referenceId": "S80:armor:heavy:body"
   },
   {
-    "id": "S80:armor:heavy:boots",
-    "name": "Dynasty Boots",
+    "id": "custom:S80:heavy:boots",
+    "name": "Raven Frontier · Boots",
     "grade": "S80",
     "kind": "heavy",
     "category": "boots",
-    "key": "catalog-s80-armor-heavy-boots"
+    "key": "catalog-s80-armor-heavy-boots",
+    "referenceName": "Dynasty Boots",
+    "customItemId": "custom:S80:heavy:boots",
+    "referenceId": "S80:armor:heavy:boots"
   },
   {
-    "id": "S80:armor:heavy:gloves",
-    "name": "Dynasty Gauntlets",
+    "id": "custom:S80:heavy:gloves",
+    "name": "Raven Frontier · Gloves",
     "grade": "S80",
     "kind": "heavy",
     "category": "gloves",
-    "key": "catalog-s80-armor-heavy-gloves"
+    "key": "catalog-s80-armor-heavy-gloves",
+    "referenceName": "Dynasty Gauntlets",
+    "customItemId": "custom:S80:heavy:gloves",
+    "referenceId": "S80:armor:heavy:gloves"
   },
   {
-    "id": "S80:armor:heavy:greaves",
-    "name": "Dynasty Gaiters",
+    "id": "custom:S80:heavy:greaves",
+    "name": "Raven Frontier · Gaiters",
     "grade": "S80",
     "kind": "heavy",
     "category": "greaves",
-    "key": "catalog-s80-armor-heavy-greaves"
+    "key": "catalog-s80-armor-heavy-greaves",
+    "referenceName": "Dynasty Gaiters",
+    "customItemId": "custom:S80:heavy:greaves",
+    "referenceId": "S80:armor:heavy:greaves"
   },
   {
-    "id": "S80:armor:heavy:helmet",
-    "name": "Dynasty Helmet",
+    "id": "custom:S80:heavy:helmet",
+    "name": "Raven Frontier · Helmet",
     "grade": "S80",
     "kind": "heavy",
     "category": "helmet",
-    "key": "catalog-s80-armor-heavy-helmet"
+    "key": "catalog-s80-armor-heavy-helmet",
+    "referenceName": "Dynasty Helmet",
+    "customItemId": "custom:S80:heavy:helmet",
+    "referenceId": "S80:armor:heavy:helmet"
   },
   {
-    "id": "S80:armor:light:boots",
-    "name": "Dynasty Leather Boots",
+    "id": "custom:S80:light:boots",
+    "name": "Woven Midnight · Boots",
     "grade": "S80",
     "kind": "light",
     "category": "boots",
-    "key": "catalog-s80-armor-light-boots"
+    "key": "catalog-s80-armor-light-boots",
+    "referenceName": "Dynasty Leather Boots",
+    "customItemId": "custom:S80:light:boots",
+    "referenceId": "S80:armor:light:boots"
   },
   {
-    "id": "S80:armor:light:fullBody",
-    "name": "Dynasty Leather Armor",
+    "id": "custom:S80:light:fullBody",
+    "name": "Woven Midnight · Leather Armor",
     "grade": "S80",
     "kind": "light",
     "category": "fullBody",
-    "key": "catalog-s80-armor-light-fullbody"
+    "key": "catalog-s80-armor-light-fullbody",
+    "referenceName": "Dynasty Leather Armor",
+    "customItemId": "custom:S80:light:fullBody",
+    "referenceId": "S80:armor:light:fullBody"
   },
   {
-    "id": "S80:armor:light:gloves",
-    "name": "Dynasty Leather Gloves",
+    "id": "custom:S80:light:gloves",
+    "name": "Woven Midnight · Gloves",
     "grade": "S80",
     "kind": "light",
     "category": "gloves",
-    "key": "catalog-s80-armor-light-gloves"
+    "key": "catalog-s80-armor-light-gloves",
+    "referenceName": "Dynasty Leather Gloves",
+    "customItemId": "custom:S80:light:gloves",
+    "referenceId": "S80:armor:light:gloves"
   },
   {
-    "id": "S80:armor:light:helmet",
-    "name": "Dynasty Leather Helmet",
+    "id": "custom:S80:light:helmet",
+    "name": "Woven Midnight · Helmet",
     "grade": "S80",
     "kind": "light",
     "category": "helmet",
-    "key": "catalog-s80-armor-light-helmet"
+    "key": "catalog-s80-armor-light-helmet",
+    "referenceName": "Dynasty Leather Helmet",
+    "customItemId": "custom:S80:light:helmet",
+    "referenceId": "S80:armor:light:helmet"
   },
   {
-    "id": "S80:armor:robe:boots",
-    "name": "Dynasty Magic Boots",
+    "id": "custom:S80:robe:boots",
+    "name": "Royal Robe · Slippers",
     "grade": "S80",
     "kind": "robe",
     "category": "boots",
-    "key": "catalog-s80-armor-robe-boots"
+    "key": "catalog-s80-armor-robe-boots",
+    "referenceName": "Dynasty Magic Boots",
+    "customItemId": "custom:S80:robe:boots",
+    "referenceId": "S80:armor:robe:boots"
   },
   {
-    "id": "S80:armor:robe:fullBody",
-    "name": "Dynasty Magic Robe",
+    "id": "custom:S80:robe:fullBody",
+    "name": "Royal Robe · Robe",
     "grade": "S80",
     "kind": "robe",
     "category": "fullBody",
-    "key": "catalog-s80-armor-robe-fullbody"
+    "key": "catalog-s80-armor-robe-fullbody",
+    "referenceName": "Dynasty Magic Robe",
+    "customItemId": "custom:S80:robe:fullBody",
+    "referenceId": "S80:armor:robe:fullBody"
   },
   {
-    "id": "S80:armor:robe:gloves",
-    "name": "Dynasty Magic Gloves",
+    "id": "custom:S80:robe:gloves",
+    "name": "Royal Robe · Bracers",
     "grade": "S80",
     "kind": "robe",
     "category": "gloves",
-    "key": "catalog-s80-armor-robe-gloves"
+    "key": "catalog-s80-armor-robe-gloves",
+    "referenceName": "Dynasty Magic Gloves",
+    "customItemId": "custom:S80:robe:gloves",
+    "referenceId": "S80:armor:robe:gloves"
   },
   {
-    "id": "S80:armor:robe:helmet",
-    "name": "Dynasty Magic Circlet",
+    "id": "custom:S80:robe:helmet",
+    "name": "Royal Robe · Circlet",
     "grade": "S80",
     "kind": "robe",
     "category": "helmet",
-    "key": "catalog-s80-armor-robe-helmet"
+    "key": "catalog-s80-armor-robe-helmet",
+    "referenceName": "Dynasty Magic Circlet",
+    "customItemId": "custom:S80:robe:helmet",
+    "referenceId": "S80:armor:robe:helmet"
   },
   {
-    "id": "S80:jewelry:earring",
-    "name": "Dynasty Earring",
+    "id": "custom-art:S80:jewelry:earring",
+    "name": "Nightsky Sovereign Earring",
     "grade": "S80",
     "kind": "earring",
     "category": "earring",
-    "key": "catalog-s80-jewelry-earring"
+    "key": "catalog-s80-jewelry-earring",
+    "referenceName": "Dynasty Earring",
+    "referenceId": "S80:jewelry:earring"
   },
   {
-    "id": "S80:jewelry:necklace",
-    "name": "Dynasty Necklace",
+    "id": "custom-art:S80:jewelry:necklace",
+    "name": "Nightsky Sovereign necklace",
     "grade": "S80",
     "kind": "necklace",
     "category": "necklace",
-    "key": "catalog-s80-jewelry-necklace"
+    "key": "catalog-s80-jewelry-necklace",
+    "referenceName": "Dynasty Necklace",
+    "referenceId": "S80:jewelry:necklace"
   },
   {
-    "id": "S80:jewelry:ring",
-    "name": "Dynasty Ring",
+    "id": "custom-art:S80:jewelry:ring",
+    "name": "Nightsky Sovereign Ring",
     "grade": "S80",
     "kind": "ring",
     "category": "ring",
-    "key": "catalog-s80-jewelry-ring"
+    "key": "catalog-s80-jewelry-ring",
+    "referenceName": "Dynasty Ring",
+    "referenceId": "S80:jewelry:ring"
   },
   {
-    "id": "S80:shield:bigShield",
-    "name": "Dynasty Shield",
+    "id": "custom-art:S80:shield:bigShield",
+    "name": "Nightsky Sovereign Tower Shield",
     "grade": "S80",
     "kind": "bigShield",
     "category": "bigShield",
-    "key": "catalog-s80-shield-bigshield"
+    "key": "catalog-s80-shield-bigshield",
+    "referenceName": "Dynasty Shield",
+    "referenceId": "S80:shield:bigShield"
   },
   {
-    "id": "S80:shield:sigill",
-    "name": "Dynasty Sigil",
+    "id": "custom-art:S80:shield:sigill",
+    "name": "Nightsky Sovereign Sigil",
     "grade": "S80",
     "kind": "sigill",
     "category": "sigill",
-    "key": "catalog-s80-shield-sigill"
+    "key": "catalog-s80-shield-sigill",
+    "referenceName": "Dynasty Sigil",
+    "referenceId": "S80:shield:sigill"
   },
   {
-    "id": "S80:shield:smallShield",
-    "name": "Dynasty Guard Shield",
+    "id": "custom-art:S80:shield:smallShield",
+    "name": "Nightsky Sovereign Shield",
     "grade": "S80",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-s80-shield-smallshield"
+    "key": "catalog-s80-shield-smallshield",
+    "referenceName": "Dynasty Guard Shield",
+    "referenceId": "S80:shield:smallShield"
   },
   {
-    "id": "S80:weapon:blunt",
-    "name": "Dynasty Crusher",
+    "id": "custom-art:S80:weapon:blunt",
+    "name": "Nightsky Sovereign blunt",
     "grade": "S80",
     "kind": "blunt",
     "category": "blunt",
-    "key": "catalog-s80-weapon-blunt"
+    "key": "catalog-s80-weapon-blunt",
+    "referenceName": "Dynasty Crusher",
+    "referenceId": "S80:weapon:blunt"
   },
   {
-    "id": "S80:weapon:bow",
-    "name": "Dynasty Bow",
+    "id": "custom-art:S80:weapon:bow",
+    "name": "Nightsky Sovereign Bow",
     "grade": "S80",
     "kind": "bow",
     "category": "bow",
-    "key": "catalog-s80-weapon-bow"
+    "key": "catalog-s80-weapon-bow",
+    "referenceName": "Dynasty Bow",
+    "referenceId": "S80:weapon:bow"
   },
   {
-    "id": "S80:weapon:crossbow",
-    "name": "Dynasty Crossbow",
+    "id": "custom-art:S80:weapon:crossbow",
+    "name": "Nightsky Sovereign Crossbow",
     "grade": "S80",
     "kind": "crossbow",
     "category": "bow",
-    "key": "catalog-s80-weapon-crossbow"
+    "key": "catalog-s80-weapon-crossbow",
+    "referenceName": "Dynasty Crossbow",
+    "referenceId": "S80:weapon:crossbow"
   },
   {
-    "id": "S80:weapon:dagger",
-    "name": "Dynasty Knife",
+    "id": "custom-art:S80:weapon:dagger",
+    "name": "Nightsky Sovereign Dagger",
     "grade": "S80",
     "kind": "dagger",
     "category": "dagger",
-    "key": "catalog-s80-weapon-dagger"
+    "key": "catalog-s80-weapon-dagger",
+    "referenceName": "Dynasty Knife",
+    "referenceId": "S80:weapon:dagger"
   },
   {
-    "id": "S80:weapon:fists",
-    "name": "Dynasty Bagh-Nakh",
+    "id": "custom-art:S80:weapon:fists",
+    "name": "Nightsky Sovereign Claws",
     "grade": "S80",
     "kind": "fists",
     "category": "fists",
-    "key": "catalog-s80-weapon-fists"
+    "key": "catalog-s80-weapon-fists",
+    "referenceName": "Dynasty Bagh-Nakh",
+    "referenceId": "S80:weapon:fists"
   },
   {
-    "id": "S80:weapon:mace",
-    "name": "Dynasty Mace",
+    "id": "custom-art:S80:weapon:mace",
+    "name": "Nightsky Sovereign Scepter",
     "grade": "S80",
     "kind": "mace",
     "category": "mace",
-    "key": "catalog-s80-weapon-mace"
+    "key": "catalog-s80-weapon-mace",
+    "referenceName": "Dynasty Mace",
+    "referenceId": "S80:weapon:mace"
   },
   {
-    "id": "S80:weapon:oneHandedSword",
-    "name": "Dynasty Sword",
+    "id": "custom-art:S80:weapon:oneHandedSword",
+    "name": "Nightsky Sovereign Sword",
     "grade": "S80",
     "kind": "oneHandedSword",
     "category": "sword",
-    "key": "catalog-s80-weapon-onehandedsword"
+    "key": "catalog-s80-weapon-onehandedsword",
+    "referenceName": "Dynasty Sword",
+    "referenceId": "S80:weapon:oneHandedSword"
   },
   {
-    "id": "S80:weapon:twoHandedSword",
-    "name": "Dynasty Blade",
+    "id": "custom-art:S80:weapon:twoHandedSword",
+    "name": "Nightsky Sovereign Greatsword",
     "grade": "S80",
     "kind": "twoHandedSword",
     "category": "sword",
-    "key": "catalog-s80-weapon-twohandedsword"
+    "key": "catalog-s80-weapon-twohandedsword",
+    "referenceName": "Dynasty Blade",
+    "referenceId": "S80:weapon:twoHandedSword"
   },
   {
-    "id": "S84:shield:smallShield",
-    "name": "Vesper Guard Shield",
+    "id": "custom-art:S84:shield:smallShield",
+    "name": "Prismatic Dominion Shield",
     "grade": "S84",
     "kind": "smallShield",
     "category": "smallShield",
-    "key": "catalog-s84-shield-smallshield"
+    "key": "catalog-s84-shield-smallshield",
+    "referenceName": "Vesper Guard Shield",
+    "referenceId": "S84:shield:smallShield"
   }
 ].map(entry=>Object.freeze(entry)));

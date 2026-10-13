@@ -22,8 +22,8 @@ try{for(const width of [320,390,820]){
  await page.goto('http://design.local/fixture');
  await page.evaluate(async samples=>{
   await(await import('/feature-styles.js')).ensureFeatureStyles();
-  const {itemArtSources}=await import('/art/items-art.js'),{itemGridHtml}=await import('/item-grid.js');
-  const picture=(key,reveal)=>{const s=itemArtSources(key,reveal);return `<img class="loot-item-image" src="${s.src}" srcset="${s.srcset}" sizes="${reveal?'(max-width:390px) 96px, 200px':'32px'}" alt="">`;};
+  const {itemArtSources,itemArtKey}=await import('/art/items-art.js'),{CATALOG_ITEM_ART}=await import('/art/catalog-item-art.js'),{normalizeLootKind}=await import('/loot-renderer.js'),{itemGridHtml}=await import('/item-grid.js');
+  const picture=(key,reveal)=>{const definition=CATALOG_ITEM_ART.find(r=>r.key===key);if(definition&&itemArtKey(normalizeLootKind(definition),definition)!==key)throw Error('Custom identity mismatch: '+key);const s=itemArtSources(key,reveal);return `<img class="loot-item-image" src="${s.src}" srcset="${s.srcset}" sizes="${reveal?'(max-width:390px) 96px, 200px':'32px'}" alt="">`;};
   document.querySelector('main').innerHTML=itemGridHtml(samples.map(key=>`<button class="item-grid-cell loot-art-2d" data-key="${key}">${picture(key,false)}</button>`),{min:27,label:'Кастомные предметы'})+'<div class="large">'+samples.map(key=>`<div class="loot-art-2d">${picture(key,true)}</div>`).join('')+'</div>';
   await Promise.all([...document.images].map(i=>i.decode()));
  },samples);

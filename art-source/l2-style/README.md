@@ -21,3 +21,11 @@ Armor and jewelry used this prompt, with `{kind}` respectively `armor`/`jewelry`
 ## Rebuild
 
 Run `scripts/items/build-l2-style.mjs` with `PLAYWRIGHT_PACKAGE` and `DESIGN_BROWSER` configured, then `scripts/items/convert-l2-style.py`. Inspect `docs/l2-painted-icons-preview.html` and run the item art checks before publishing.
+
+## Custom names and original identities
+
+Custom paintings have unique display names. The old L2 name from the generation brief survives only as `referenceName`, with its source catalog id as `referenceId`. Original equipment resolves to original client icons. Existing custom armor resolves to its own named painting, including the recipe and inventory views. Existing custom epic weapons retain their distinct names and paintings.
+
+Artwork-only weapon, shield and jewelry variants have `custom-art:` ids: a named asset does not itself add a new item to the gameplay catalog or invent a recipe. Their names are ready for separate custom definitions when such items are introduced. Original items, item IDs, saved equipment, stats and crafting recipes are preserved.
+
+For label-only changes, build with `--preview-only`, then publish with `convert-l2-style.py --metadata-only` to update the manifest and downloadable archive without re-encoding icons.

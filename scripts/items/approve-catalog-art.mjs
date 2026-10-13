@@ -12,7 +12,10 @@ for(const key of requested){
     const b=fs.readFileSync(`webapp/art/items/v1/${key}-${width}.webp`);
     if(b.toString('ascii',0,4)!=='RIFF'||b.toString('ascii',8,12)!=='WEBP'||b.length>ART_BUDGET[width])throw Error('Invalid/over-budget WebP '+key);
   }
-  const {id,name,grade,kind,category}=job;approved.set(key,{id,name,grade,kind,category,key});
+  const {id,name,grade,kind,category}=job;
+  const existing=approved.get(key);
+  if(!existing)throw Error('Assign a unique custom name and identity before approving '+key);
+  approved.set(key,{...existing,referenceId:id,referenceName:existing.referenceName||name,grade,kind,category,key});
 }
 const entries=[...approved.values()].sort((a,b)=>a.id.localeCompare(b.id));
 fs.writeFileSync('webapp/art/catalog-item-art.js','// Only reviewed, converted paintings are published here.\nexport const CATALOG_ITEM_ART = Object.freeze('+JSON.stringify(entries,null,2)+'.map(entry=>Object.freeze(entry)));\n');

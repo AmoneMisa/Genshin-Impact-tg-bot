@@ -83,19 +83,24 @@ export const ITEM_ART_KEYS = Object.freeze([...BASE_ITEM_ART_KEYS,...ITEM_ART_VA
 const keys = new Set(ITEM_ART_KEYS);
 const catalogIdentity = item => [item.name,item.grade,item.kind,item.category].map(value=>String(value||'').trim().toLowerCase()).join('|');
 const catalogArt = new Map(CATALOG_ITEM_ART.map(entry=>[catalogIdentity(entry),entry.key]));
+const customArmorArt = new Map(CATALOG_ITEM_ART.filter(entry=>entry.customItemId).map(entry=>[entry.customItemId,entry]));
 const ROBE_ART = Object.freeze({ armor: 'mantle', gloves: 'bracers', greaves: 'leg-wraps', boots: 'anklets' });
 export function itemArtKey(kind, item = {}) {
   const originalEpic=item.epic && item.mainType==='jewelry' ? String(item.lineage?.icon || '').toLowerCase().replaceAll('.','-') : null;
   if(originalEpic && l2IconUrl(originalEpic))return originalEpic;
   if(['freya','freyaExtreme'].includes(item.epicBoss))return 'icon-accessary_queen_of_ice_necklace_i00';
   if(item.epicWeapon && keys.has('epic-weapon-'+item.epicWeapon))return 'epic-weapon-'+item.epicWeapon;
-  const namedArt = catalogArt.get(catalogIdentity(item));
-  if (namedArt) return namedArt;
   if (item.epicBoss && keys.has(`epic-${item.epicBoss}`)) return `epic-${item.epicBoss}`;
   const original=L2_JEWELRY_IDENTITIES[catalogIdentity(item)];
   if(original && (item.mainType==='jewelry'||['ring','earring','amulet'].includes(kind)))return original;
   const equipmentOriginal=L2_ITEM_IDENTITIES[catalogIdentity(item)];
   if(equipmentOriginal)return equipmentOriginal;
+  // Original client equipment and custom paintings must never share a display identity.
+  const customId=item.customItemId||item.id||item.set?.id&&`${item.set.id}:${item.category}`;
+  const customArmor=customArmorArt.get(customId);
+  if(customArmor&&catalogIdentity(item)===catalogIdentity(customArmor))return customArmor.key;
+  const namedArt = catalogArt.get(catalogIdentity(item));
+  if (namedArt) return namedArt;
   const type = String(item.kind || '').toLowerCase();
   const grade = String(item.grade || '').trim().toUpperCase();
   if (kind === 'sword' && type === 'twohandedsword') kind = 'greatsword';

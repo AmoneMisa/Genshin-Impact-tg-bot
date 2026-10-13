@@ -6,17 +6,22 @@ import {itemArtKey,ITEM_ART_KEYS} from '../webapp/art/items-art.js';
 import {normalizeLootKind} from '../webapp/loot-renderer.js';
 import {L2_ITEM_IDENTITIES,L2_MATERIAL_ART,l2IconUrl} from '../webapp/art/l2-icon-art.js';
 
-test('preserved named paintings reach inventory instances with the common L2 treatment',()=>{
+test('custom paintings have unique names and never replace original L2 equipment',()=>{
   const catalog=getCatalog();
+  const originals=new Set(catalog.filter(item=>!item.custom&&!item.epicWeapon).map(item=>item.name.toLowerCase()));
+  assert.equal(new Set(CATALOG_ITEM_ART.map(art=>art.name.toLowerCase())).size,CATALOG_ITEM_ART.length);
   for(const art of CATALOG_ITEM_ART){
-    const definition=catalog.find(item=>item.id===art.id);
+    const definition=catalog.find(item=>item.id===art.referenceId);
     assert.ok(definition,art.id);
+    assert.equal(definition.name,art.referenceName);
+    assert.ok(!originals.has(art.name.toLowerCase()),art.name);
     const item=instantiate(definition,10);
-    const expected=art.key;
-    assert.ok(expected,item.name);
-    assert.equal(itemArtKey(normalizeLootKind(item),item),expected);
-    const {name,grade,kind,category}=item;
-    assert.equal(itemArtKey(normalizeLootKind(item),{name,grade,kind,category}),expected);
+    assert.ok(l2IconUrl(itemArtKey(normalizeLootKind(item),item)),item.name);
+    const custom=art.customItemId?instantiate(catalog.find(item=>item.id===art.customItemId),10):{...art};
+    assert.equal(custom.name,art.name);
+    assert.equal(itemArtKey(normalizeLootKind(custom),custom),art.key);
+    const {name,grade,kind,category}=custom;
+    assert.equal(itemArtKey(normalizeLootKind(custom),{name,grade,kind,category}),art.key);
     assert.ok(ITEM_ART_KEYS.includes(art.key));
   }
 });
