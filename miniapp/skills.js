@@ -2,7 +2,7 @@ import {getPassivesState} from '../functions/game/player/passiveSkills.js';
 import {skillDisplayGroup} from '../functions/game/player/skillDisplayGroup.js';
 import {resolveEffectSkill} from '../functions/game/player/l2Effects.js';
 import {describeL2Effect} from './l2Buffs.js';
-import {classSkillRows,skillEnchantBook,enchantL2Skill,syncKitEnchants} from '../functions/game/player/l2SkillEnchant.js';
+import {classSkillRows,skillEnchantBook,enchantL2Skill,syncKitEnchants,enchantRecord} from '../functions/game/player/l2SkillEnchant.js';
 import {
   SKILL_ENCHANT_MAX_LEVEL,
   enchantSkill,
@@ -220,7 +220,7 @@ export function getSkillsState(session) {
   const passives=getPassivesState(session).passives;
   return {
     passives,
-    book:classSkillRows(session).map(s=>({id:s.id,name:s.id===239?'Владение экипировкой':s.name,level:s.level,kind:s.op==='P'?'passive':s.op==='T'?'toggle':s.effects?.includes('Summon')?'summon':Number(s.magic)>0?'magic':'physical',group:skillDisplayGroup(s),description:s.id===239?(passives.find(p=>Number(p.id)===s.id)?.current||passives.find(p=>Number(p.id)===s.id)?.next):s.description||(s.op==='P'?passives.find(p=>Number(p.id)===s.id)?.current||passives.find(p=>Number(p.id)===s.id)?.next:resolveEffectSkill(s.id,s.level)?describeL2Effect(resolveEffectSkill(s.id,s.level)):null)||s.name,mp:s.mp?.[s.level-1]||0,reuseMs:s.reuse?.[s.level-1]||0,slot:s.slot})),
+    book:classSkillRows(session).map(s=>({id:s.id,name:s.id===239?'Владение экипировкой':s.name,level:s.level,kind:s.op==='P'?'passive':s.op==='T'?'toggle':s.effects?.includes('Summon')?'summon':Number(s.magic)>0?'magic':'physical',group:skillDisplayGroup(s,enchantRecord(session,s.id)),description:s.id===239?(passives.find(p=>Number(p.id)===s.id)?.current||passives.find(p=>Number(p.id)===s.id)?.next):s.description||(s.op==='P'?passives.find(p=>Number(p.id)===s.id)?.current||passives.find(p=>Number(p.id)===s.id)?.next:resolveEffectSkill(s.id,s.level)?describeL2Effect(resolveEffectSkill(s.id,s.level)):null)||s.name,mp:s.mp?.[s.level-1]||0,reuseMs:s.reuse?.[s.level-1]||0,slot:s.slot})),
     enchantBook:skillEnchantBook(session),
     className: String(gameClass.stats?.name || 'noClass'),
     classTitle: String(gameClass.stats?.translateName || gameClass.stats?.name || 'Бродяжка'),

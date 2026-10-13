@@ -4,7 +4,7 @@ import {l2SkillIcon} from './art/l2-extra-art.js';
 import {materialIcon} from './material-icons.js';
 import {itemGridHtml} from './item-grid.js';
 const fmt=n=>new Intl.NumberFormat('ru-RU').format(n||0);
-const groups={physical:'Физические навыки',magic:'Магические навыки',reinforce:'Усиливающие навыки',weaken:'Ослабляющие навыки',item:'Предметные навыки',toggle:'Переключаемые навыки',transform:'Трансформации',equipment:'Навыки экипировки',ability:'Особые способности',race:'Расовые навыки',occupation:'Профессиональные навыки'};
+const groups={physical:'Физические навыки',magic:'Магические навыки',reinforce:'Усиливающие навыки',weaken:'Ослабляющие навыки',item:'Предметные навыки',toggle:'Переключаемые навыки',transform:'Трансформации',equipment:'Навыки экипировки',ability:'Особые способности',race:'Расовые навыки',occupation:'Профессиональные навыки',clan:'Клановые навыки',clanPassive:'Клановые и героические навыки',itemPassive:'Предметные способности',otherActive:'Другие активные навыки',otherPassive:'Другие пассивные навыки'};
 const modes={normal:'Обычная',mastery:'Mastery',change:'Смена пути',untrain:'Отмена заточки'};
 const actions={normal:'Заточить',mastery:'Безопасная заточка',change:'Сменить путь',untrain:'Снять уровень заточки'};
 const reasons={enchant_class_required:'Нужны 76 уровень и третья профессия.',skill_not_maxed:'Сначала изучите последний уровень навыка.',not_enchantable:'Этот навык нельзя заточить.',not_enough_resources:'Недостаточно Адены, SP или книги.',player_dead:'Сначала воскресните.',other_route_chosen:'Для другого пути используйте смену пути.',same_route:'Выберите другой путь.',no_route:'Навык ещё не заточен.',max_level:'Максимальная заточка.'};
@@ -12,7 +12,7 @@ const art=s=>l2SkillIcon(s.id)||l2SkillIcon(s.name);
 const tip=s=>[s.name+' · ур. '+s.level,s.description,s.mp?'MP '+fmt(s.mp):'',s.reuseMs?'Перезарядка '+s.reuseMs/1000+' сек.':''].filter(Boolean).join('\n');
 export function skillBookHtml(state,tab='active'){
  const book=state.book||[];
- return (tab==='passive'?['equipment','ability','race','occupation']:tab==='learn'?Object.keys(groups):Object.keys(groups).slice(0,7)).map(kind=>{
+ return (tab==='passive'?['equipment','ability','race','occupation','clanPassive','itemPassive','otherPassive']:tab==='learn'?Object.keys(groups):['physical','magic','reinforce','weaken','clan','item','toggle','transform','otherActive']).map(kind=>{
   const rows=book.filter(s=>(tab==='learn'?(!s.level||state.passives?.some(p=>Number(p.id)===s.id&&p.cost&&!p.automatic)):tab==='passive'?s.kind==='passive':s.kind!=='passive')&&(s.group||({passive:'occupation',summon:'magic'}[s.kind]||s.kind))===kind);if(!rows.length)return '';
   return '<details class="ui-disclosure skill-book-group" open data-skill-group="'+kind+'"><summary>'+groups[kind]+'</summary>'+itemGridHtml(rows.map(s=>`<button type="button" class="item-grid-cell ${!s.level?'unlearned':''}" data-skill-id="${s.id}" title="${esc(tip(s))}" aria-label="${esc(s.name)}">${art(s)}${s.level?'<em>'+s.level+'</em>':''}</button>`),{min:7,label:groups[kind]})+'</details>';
  }).join('')||'<p class="ui-empty">В этом разделе пока нет навыков.</p>';

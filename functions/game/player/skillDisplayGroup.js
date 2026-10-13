@@ -1,16 +1,11 @@
-/** Group using exported High Five operation/effect data. Not a replacement for client skillgrp. */
-export function skillDisplayGroup(skill) {
- const effects=skill.effects||[];
- if(skill.op==='P'){
-  if(skill.id===239||/\b(?:Weapon|Armor|Shield) Mastery\b/.test(skill.name||''))return 'equipment';
-  if(effects.includes('Lucky')||effects.includes('HpByLevel'))return 'race';
-  if(effects.some(e=>e.startsWith('TriggerSkill'))||/\bBoost\b|\bSkill Mastery\b/.test(skill.name||''))return 'ability';
-  return 'occupation';
- }
- if(skill.op==='T')return 'toggle';
- if(effects.includes('Transformation'))return 'transform';
- if(effects.some(e=>/RecipeBook|ConvertItem/.test(e)))return 'item';
- if(skill.debuff||effects.some(e=>['Debuff','DamOverTime','ManaDamOverTime','Stun','Root','Sleep','Paralyze','Fear','Mute','PhysicalMute','Petrification'].includes(e)))return 'weaken';
- if(effects.some(e=>['Buff','ImmobileBuff','ImmobilePetBuff'].includes(e)))return 'reinforce';
- return Number(skill.magic)>0?'magic':'physical';
+import CLIENT from '../../../template/l2SkillGroups.js';
+
+// High Five skillgrp.icon_type, not server operation/effect/name heuristics.
+const groups={0:'physical',1:'magic',2:'reinforce',3:'weaken',4:'clan',5:'item',6:'toggle',7:'transform',11:'equipment',12:'ability',13:'race',14:'occupation',15:'clanPassive',16:'itemPassive'};
+export function skillClientIconType(skill,enchant={}){
+ const level=Number(enchant.level)>0?Number(enchant.route)*100+Number(enchant.level):Number(skill.level||skill.availableLevel||1);
+ return CLIENT.skills[skill.id]?.find(([from,to])=>level>=from&&level<=to)?.[2]??null;
+}
+export function skillDisplayGroup(skill,enchant={}){
+ return groups[skillClientIconType(skill,enchant)]||(skill.op==='P'?'otherPassive':'otherActive');
 }

@@ -29,9 +29,20 @@ try{for(const width of [320,390,820]){
  await page.evaluate(async()=>{await(await import('/feature-styles.js')).ensureFeatureStyles();(await import('/overlay-a11y.js')).installOverlayA11y();(await import('/design/select.js')).observeSelects(document.body);await(await import('/skill-book.js')).openSkillBook({api:async(url,options)=>{const r=await fetch(url,options);return r.json();}});});
  const skill=page.locator('[data-skill-id="1230"]');assert.ok((await skill.getAttribute('title')).length>10);await skill.click();await page.locator('.skill-detail').waitFor();await page.screenshot({path:path.join(out,'tooltip-'+width+'.png')});await page.keyboard.press('Escape');
  await page.locator('[data-book-tab="passive"]').click();assert.ok(await page.locator('[data-skill-id]').count()>0);
+ assert.equal(await page.locator('[data-skill-group="ability"] [data-skill-id="146"]').count(),1);
+ assert.equal(await page.locator('[data-skill-group="equipment"] [data-skill-id="239"]').count(),1);
+ await page.screenshot({path:path.join(out,'client-passive-'+width+'.png')});
  await page.locator('[data-book-tab="enchant"]').click();await page.locator('[data-enchant-id="1230"]').click();await page.locator('[data-enchant]').waitFor();await page.waitForFunction(()=>getComputedStyle(document.querySelector('.skill-detail-overlay')).opacity==='1');
  assert.equal(await page.locator('[data-enchant]').isEnabled(),true);await page.screenshot({path:path.join(out,'enchant-'+width+'.png')});
  assert.equal(await page.locator('.skill-detail').evaluate(p=>p.scrollWidth<=p.clientWidth+1),true);
  await page.locator('[data-enchant]').click();await page.waitForFunction(()=>!document.querySelector('.skill-detail-overlay'));assert.equal(hero.game.skillEnchants[1230].level,1);assert.equal(hero.game.inventory.materials.l2_6622,2);assert.ok(hero.game.inventory.sp<1e9);
- await page.locator('[data-enchant-id="1230"]').click();await page.keyboard.press('Escape');await page.keyboard.press('Escape');assert.deepEqual(errors,[]);await page.close();console.log('PASS skill book '+width+': tooltip, tabs, enchant, cost, original icon');
+ await page.locator('[data-enchant-id="1230"]').click();await page.keyboard.press('Escape');
+ // Refresh the book with a verified third enchant route: its client category is weakening.
+ hero.game.skillEnchants[1230]={route:3,level:1};
+ await page.keyboard.press('Escape');
+ await page.evaluate(async()=>{await(await import('/skill-book.js')).openSkillBook({api:async url=>(await fetch(url)).json()});});
+ assert.equal(await page.locator('[data-skill-group="weaken"] [data-skill-id="1230"]').count(),1);
+ assert.equal(await page.locator('[data-skill-group="magic"] [data-skill-id="1230"]').count(),0);
+ assert.equal(await page.locator('.skills-panel').evaluate(p=>p.scrollWidth<=p.clientWidth+1),true);
+ await page.keyboard.press('Escape');assert.deepEqual(errors,[]);await page.close();console.log('PASS skill book '+width+': client categories, enchant route categories, tooltip, tabs, cost, original icon');
 }}finally{await browser.close();}

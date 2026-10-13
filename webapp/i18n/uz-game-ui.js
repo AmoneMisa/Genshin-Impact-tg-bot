@@ -1,4 +1,9 @@
 export default {
+ 'Клановые навыки':'Klan ko‘nikmalari',
+ 'Клановые и героические навыки':'Klan va qahramon ko‘nikmalari',
+ 'Предметные способности':'Buyum qobiliyatlari',
+ 'Другие активные навыки':'Boshqa faol ko‘nikmalar',
+ 'Другие пассивные навыки':'Boshqa passiv ko‘nikmalar',
  'Заточить':'Kuchaytirish',
  'Безопасная заточка':'Xavfsiz kuchaytirish',
  'Сменить путь':'Yo‘nalishni o‘zgartirish',
