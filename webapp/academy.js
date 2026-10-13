@@ -88,7 +88,7 @@ export async function openAcademy({ api, haptic = () => {}, renderState = () => 
       if(event.target.closest('[data-academy-claim]') && !pending && !openingFarm)act({action:'claim',...selected});
       if(event.target.closest('[data-bounty-farm]') && !pending && !openingFarm){
         openingFarm = true;renderDetail();
-        Promise.resolve().then(() => openHuntFields ? openHuntFields() : import('./hunt.js').then(({openHuntGame})=>openHuntGame({api,renderState,haptic,statusElement:document.createElement('span')})))
+        Promise.resolve().then(() => import('./world-map.js').then(({openWorldMap})=>openWorldMap({api,renderState,haptic,initialLayer:'quests'})))
           .then(close).catch(error=>renderDetail(error.message)).finally(()=>{openingFarm=false;if(detail)renderDetail(detail.querySelector('.bounty-feedback')?.textContent);});
       }
     });

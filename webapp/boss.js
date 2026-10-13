@@ -20,18 +20,32 @@ const REASONS = {
   cooldown: 'Навык ещё в откате.',
 };
 
+export const EPIC_ENTRY_REASONS = {
+    boss_location_unknown: 'Для этого босса пока не определена точка появления.',
+    ...REASONS,
+    unknown_epic: 'Такого эпического босса нет.',
+    epic_level_too_low: 'Твой уровень слишком низок для этого босса.',
+    epic_cooldown: 'Босс ещё не вернулся — подожди окончания таймера.',
+    epic_pass_required: 'Нужен допуск к этому боссу: квест Академии или раздел «Квест» магазина. Для Фринтеззы он нужен только лидеру группы.',
+    epic_party_required: 'Для этого босса нужна группа из нужного числа игроков: Закен — от 2, Фринтезза — от 4.',
+    instance_locked: 'Инстанс уже пройден: следующий вход и награда доступны через трое суток.',
+    epic_level_too_high: 'Твой уровень слишком высок для этого босса: разница больше 11 уровней.',
+    petrified: 'Проклятие рейда: ты обращён в камень и не получишь награду. Вернись, когда оно спадёт.',
+  };
+
 // The boss screen opens on the clan boss (called with a Clan Boss Sigil; the world bosses are in the list of the crown).
-export async function loadBossEntryState(api) {
+export async function loadBossEntryState(api,{destination=null}={}) {
+  if(destination)return api('/api/boss/summon',{method:'POST',body:JSON.stringify({epic:destination,teleport:true})});
   return { boss: await api('/api/boss'), summoned: false, state: null };
 }
 
-export async function openBossGame({ api, renderState, haptic, statusElement, initialView }) {
-  const entry = await loadBossEntryState(api);
+export async function openBossGame({ api, renderState, haptic, statusElement, initialView, initialBoss }) {
+  const entry = await loadBossEntryState(api,{destination:initialBoss});
   // Load the destination before mounting, so failed quest navigation keeps its screen.
   let initialEpic = initialView === 'world' ? await api('/api/boss/epic') : null;
   let state = entry.boss;
   // the world boss being fought (null: the clan boss)
-  let world = null;
+  let world = initialBoss || null;
   const bossPath = () => (world ? `/api/boss?boss=${encodeURIComponent(world)}` : '/api/boss');
   if (entry.state) renderState(entry.state);
   let pending = false;
@@ -115,17 +129,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement, in
   }
   const feedback = overlay.querySelector('[data-boss-feedback]');
   // ---- Epic raid bosses (Lineage 2): long respawn windows, unique jewellery ----
-  const EPIC_REASONS = {
-    ...REASONS,
-    unknown_epic: 'Такого эпического босса нет.',
-    epic_level_too_low: 'Твой уровень слишком низок для этого босса.',
-    epic_cooldown: 'Босс ещё не вернулся — подожди окончания таймера.',
-    epic_pass_required: 'Нужен допуск к этому боссу: квест Академии или раздел «Квест» магазина. Для Фринтеззы он нужен только лидеру группы.',
-    epic_party_required: 'Для этого босса нужна группа из нужного числа игроков: Закен — от 2, Фринтезза — от 4.',
-    instance_locked: 'Инстанс уже пройден: следующий вход и награда доступны через трое суток.',
-    epic_level_too_high: 'Твой уровень слишком высок для этого босса: разница больше 11 уровней.',
-    petrified: 'Проклятие рейда: ты обращён в камень и не получишь награду. Вернись, когда оно спадёт.',
-  };
+  const EPIC_REASONS=EPIC_ENTRY_REASONS;
   let epicTimer = 0;
   const epicDuration = (ms) => {
     const minutes = Math.max(0, Math.ceil(ms / 60000));

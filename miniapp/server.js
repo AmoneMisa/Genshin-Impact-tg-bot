@@ -42,7 +42,7 @@ import {
 import { getArenaState, attackArena } from './arena.js';
 import { getAcademyState, claimBounty, startPassQuest, talkPassQuest, advancePassQuest } from '../functions/game/academy/academy.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
-import { getBossState, getEpicState, summonBossForMiniApp, useBossSkill } from './boss.js';
+import { getBossState, getEpicState, summonBossForMiniApp, enterBossFromAtlas, useBossSkill } from './boss.js';
 import { getShopState, buyShopItem } from './shop.js';
 import { getMiniAppSwordDashboard, rollMiniAppSword } from './sword.js';
 import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from './arcade.js';
@@ -1837,7 +1837,7 @@ const bossSummon = guarded('boss summon', async (req, res) => {
   if (!world && !clan) return sendResult(res, { ok: false, reason: 'no_clan' }, context);
   const result = await withLock(`${scope}:boss`, async () => {
     context.session = await getSession(scope, context.userId);
-    const summoned = await summonBossForMiniApp(context.session, scope, epic, { memberCount: clan?.members.length ?? null });
+    const summoned = body.teleport&&world ? await enterBossFromAtlas(context.session,scope,epic) : await summonBossForMiniApp(context.session, scope, epic, { memberCount: clan?.members.length ?? null });
     if (summoned.ok) await saveSession(context.session);
     return summoned;
   });

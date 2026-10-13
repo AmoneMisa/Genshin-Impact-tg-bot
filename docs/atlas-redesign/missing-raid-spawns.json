@@ -1,0 +1,437 @@
+[
+  {
+    "name": "Tiberias",
+    "level": 22,
+    "raid": true
+  },
+  {
+    "name": "Lead Tracker Sharuk",
+    "level": 23,
+    "raid": true
+  },
+  {
+    "name": "Anakazel",
+    "level": 28,
+    "raid": true
+  },
+  {
+    "name": "Lost Warden",
+    "level": 29,
+    "raid": true
+  },
+  {
+    "name": "Lost Captain",
+    "level": 29,
+    "raid": true
+  },
+  {
+    "name": "Guillotine Warden",
+    "level": 35,
+    "raid": true
+  },
+  {
+    "name": "Fire Lord Shadar",
+    "level": 35,
+    "raid": true
+  },
+  {
+    "name": "Water Spirit Lian",
+    "level": 40,
+    "raid": true
+  },
+  {
+    "name": "Gwindorr",
+    "level": 40,
+    "raid": true
+  },
+  {
+    "name": "Necrosentinel Royal Guard",
+    "level": 47,
+    "raid": true
+  },
+  {
+    "name": "Cursed Clara",
+    "level": 50,
+    "raid": true
+  },
+  {
+    "name": "Carnamakos",
+    "level": 50,
+    "raid": true
+  },
+  {
+    "name": "Dark Shaman Varangka",
+    "level": 53,
+    "raid": true
+  },
+  {
+    "name": "Black Lily",
+    "level": 55,
+    "raid": true
+  },
+  {
+    "name": "Captain of the Ice Queen's Royal Guard",
+    "level": 59,
+    "raid": true
+  },
+  {
+    "name": "Giant Marpanak",
+    "level": 60,
+    "raid": true
+  },
+  {
+    "name": "Ancient Drake",
+    "level": 60,
+    "raid": true
+  },
+  {
+    "name": "Lord Ishka",
+    "level": 60,
+    "raid": true
+  },
+  {
+    "name": "Ice Fairy Sirra",
+    "level": 60,
+    "raid": true
+  },
+  {
+    "name": "Gorgolos",
+    "level": 64,
+    "raid": true
+  },
+  {
+    "name": "Hekaton Prime",
+    "level": 65,
+    "raid": true
+  },
+  {
+    "name": "Last Titan Utenus",
+    "level": 66,
+    "raid": true
+  },
+  {
+    "name": "Bloody Priest Rudelto",
+    "level": 69,
+    "raid": true
+  },
+  {
+    "name": "Eilhalder von Hellmann",
+    "level": 71,
+    "raid": true
+  },
+  {
+    "name": "Hager the Outlaw",
+    "level": 72,
+    "raid": true
+  },
+  {
+    "name": "All-Seeing Rango",
+    "level": 73,
+    "raid": true
+  },
+  {
+    "name": "Jakard",
+    "level": 73,
+    "raid": true
+  },
+  {
+    "name": "Antharas Priest Cloe",
+    "level": 74,
+    "raid": true
+  },
+  {
+    "name": "Icicle Emperor Bumbalump",
+    "level": 74,
+    "raid": true
+  },
+  {
+    "name": "Helsing",
+    "level": 74,
+    "raid": true
+  },
+  {
+    "name": "Rhianna the Traitor",
+    "level": 75,
+    "raid": true
+  },
+  {
+    "name": "Tesla the Deceiver",
+    "level": 75,
+    "raid": true
+  },
+  {
+    "name": "Gillien",
+    "level": 75,
+    "raid": true
+  },
+  {
+    "name": "Soul Hunter Chakundel",
+    "level": 76,
+    "raid": true
+  },
+  {
+    "name": "Medici",
+    "level": 76,
+    "raid": true
+  },
+  {
+    "name": "Gigantic Golem",
+    "level": 76,
+    "raid": true
+  },
+  {
+    "name": "Durango the Crusher",
+    "level": 77,
+    "raid": true
+  },
+  {
+    "name": "Immortal Muus",
+    "level": 77,
+    "raid": true
+  },
+  {
+    "name": "Kanadis Guide",
+    "level": 77,
+    "raid": true
+  },
+  {
+    "name": "Daimon the White-Eyed",
+    "level": 78,
+    "raid": true
+  },
+  {
+    "name": "Brutus the Obstinate",
+    "level": 78,
+    "raid": true
+  },
+  {
+    "name": "Brand the Exile",
+    "level": 78,
+    "raid": true
+  },
+  {
+    "name": "Ranger Karankawa",
+    "level": 79,
+    "raid": true
+  },
+  {
+    "name": "Sargon the Mad",
+    "level": 79,
+    "raid": true
+  },
+  {
+    "name": "Commander Koenig",
+    "level": 79,
+    "raid": true
+  },
+  {
+    "name": "Lilith",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Anakim",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Soul of Fire Nastron",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Soul of Water Ashutar",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Queen Shyeed",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Gerg the Hunter",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Valdstone",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Rok",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Enira",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Dius",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Sailren",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Anais",
+    "level": 80,
+    "raid": true
+  },
+  {
+    "name": "Darnel",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Hannibal",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Beautiful Atrielle",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Awakened Ancient Sentry",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Awakened Ancient Severer",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Awakened Ancient Soul Extractor",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Awakened Ancient Soul Devourer",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Awakened Ancient Fighter",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Awakened Ancient Executor",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Awakened Ancient Prophet",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Kanadis Herald",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Yehan Klodekus",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Yehan Klanikus",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Aenkinel",
+    "level": 81,
+    "raid": true
+  },
+  {
+    "name": "Kechi",
+    "level": 82,
+    "raid": true
+  },
+  {
+    "name": "Nagen the Tomboy",
+    "level": 82,
+    "raid": true
+  },
+  {
+    "name": "Jax the Destroyer",
+    "level": 82,
+    "raid": true
+  },
+  {
+    "name": "Epidos",
+    "level": 82,
+    "raid": true
+  },
+  {
+    "name": "Cannibalistic Stakato Chief",
+    "level": 82,
+    "raid": true
+  },
+  {
+    "name": "Tears",
+    "level": 83,
+    "raid": true
+  },
+  {
+    "name": "Demon Prince",
+    "level": 83,
+    "raid": true
+  },
+  {
+    "name": "Ranku",
+    "level": 83,
+    "raid": true
+  },
+  {
+    "name": "Darnels",
+    "level": 84,
+    "raid": true
+  },
+  {
+    "name": "Emerald Horn",
+    "level": 84,
+    "raid": true
+  },
+  {
+    "name": "Dust Rider",
+    "level": 84,
+    "raid": true
+  },
+  {
+    "name": "Bleeding Fly",
+    "level": 84,
+    "raid": true
+  },
+  {
+    "name": "Shadow Summoner",
+    "level": 84,
+    "raid": true
+  },
+  {
+    "name": "Spike Slasher",
+    "level": 84,
+    "raid": true
+  },
+  {
+    "name": "Muscle Bomber",
+    "level": 84,
+    "raid": true
+  },
+  {
+    "name": "Glakias",
+    "level": 85,
+    "raid": true
+  }
+]

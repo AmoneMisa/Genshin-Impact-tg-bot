@@ -40,6 +40,7 @@ const CHAMPION = { blue: { icon: championIcon('blue'), label: 'Синий чем
 
 export async function openHuntGame({ api, renderState, haptic, statusElement,initialZoneKind='field',onOpenAtlas }) {
   let state = await api('/api/hunt');
+  if(!state.field){const {openWorldMap}=await import('./world-map.js');return openWorldMap({api,renderState,haptic,statusElement,initialLayer:initialZoneKind==='catacomb'?'dungeons':'hunt'});}
   let zoneKind=initialZoneKind==='catacomb'?'catacomb':'field';
   let skillTab = 'skills'; let editBar = false; let barDraft = [];
   let pending = false;
@@ -299,30 +300,9 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       +(peer.pvp.status==='neutral'?'<p>Убийство мирного игрока даёт PK и карму. Если он ответит атакой, бой станет PvP.</p>':'<p>Игрок доступен для атаки без принудительного режима.</p>')+'</section>';
   }
 
-  function zonesHtml() {
-    const zones = state.zones.filter(z=>(z.kind||'field')===zoneKind);
-    return `<div class="equipment-filters"><button data-zone-kind="field" class="equipment-filter ${zoneKind==='field'?'active':''}">Поля</button><button data-zone-kind="catacomb" class="equipment-filter ${zoneKind==='catacomb'?'active':''}">Катакомбы · 6 локаций</button></div><div class="hunt-zones">${zones.map(zone => `
-      <article class="hunt-zone ${zone.recommended ? 'recommended' : ''} ${zone.reachable ? '' : 'far'}">
-        ${huntZoneUrl(zone)?`<img class="hunt-zone-art" src="${huntZoneUrl(zone)}" srcset="${huntZoneUrl(zone)} 1x, ${huntZoneUrl(zone,960)} 2x" width="480" height="160" alt="" loading="lazy" decoding="async">`:''}
-        <div class="hunt-zone-head"><strong>${escapeHtml(zone.title)}</strong><small>ур. ${zone.min}–${zone.max}${zone.recommended ? ' · для тебя' : ''}</small></div>
-        <details class="hunt-zone-loot" data-loot-zone="${escapeHtml(zone.id)}" ${lootOpen.has(zone.id)?'open':''}><summary>Монстры и дроп · ${zone.mobs.length}</summary>${lootOpen.has(zone.id)?zoneLootHtml(zone):''}</details>
-        <button type="button" class="equipment-action forge-action" data-zone="${escapeHtml(zone.id)}" ${zone.reachable ? '' : 'disabled'}>${zone.reachable ? 'Войти на поле боя' : 'Опыт не даётся'}</button>
-      </article>`).join('')}</div>`;
-  }
-
   function soulHtml(){const soul=state.soulCrystals;if(!soul)return '';const names={red:'Красный',green:'Зелёный',blue:'Синий'},active=soul.active;
     return '<section class="mmo-frame hunt-soul"><strong>'+materialIcon(active?'soul_'+active.color+'_'+active.stage:'soul_red_0')+' Кристалл души '+(active?'· '+names[active.color]+' '+active.stage+' ур.':'')+'</strong><p>'+(soul.quest?.active?(soul.multiple?'Для прокачки оставьте в сумке только один кристалл души.':active?'Души поглощаются автоматически после победы над подходящими монстрами. Шансы и предел стадии зависят от монстра.':'Возьмите один кристалл души для прокачки.'):'Получите квест «Улучшение оружия» в Академии с 40 уровня.')+'</p></section>';
   }
-  function lastHtml() {
-    const last = state.last;
-    if (!last) return '';
-    const items = (last.items || []).map(item => `${materialIcon(item.item)} ${escapeHtml(item.name)} ×${item.amount}`).join(', ');
-    return `<section class="mmo-frame hunt-last">
-      <div class="mmo-section-title"><strong>${last.champion ? `${CHAMPION[last.champion].icon} ` : ''}Последняя добыча: ${escapeHtml(last.name)}</strong><small>убито: ${formatNumber(state.kills)}</small></div>
-      <p>+${formatNumber(last.exp)} опыта · +${formatNumber(last.sp)} SP${last.gold ? ` · +${formatNumber(last.gold)} ${icon('coin')}` : ''}${items ? `<br>${items}` : ''}</p>
-    </section>`;
-  }
-
   // The skill bar: the skills the player put on it (up to 16), and a second tab with Life Stone and toggle skills.
   function skillBarHtml(player) {
     const max = player.hotbarMax || 16;
@@ -371,19 +351,11 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       body.push('<button type="button" class="hunt-flee" data-flee>Свиток возвращения</button>');
       body.push('</section>');
       if(!peer){
-        body.push(lastHtml());
+
         body.push('<details class="hunt-extra"><summary>Кристалл души</summary>'+soulHtml()+'</details>');
       }
     } else {
-      body.push(soulHtml());
-      body.push(playerFrame(player));
-      body.push(vitalityHtml());
-      body.push(potionBar(player.potions, { disabled: pending || dead }));
-      body.push(shotsHtml());
-      if (dead&&!state.world?.mode) body.push(`<div class="boss-dead">Персонаж восстанавливается · ${formatDuration(player.respawnRemainMs)}</div>`);
-      body.push(lastHtml());
-      body.push(`<div class="mmo-section-title"><strong>Зоны</strong><small>🔵 синий: ×3 опыта · 🔴 красный: ×8 опыта и добычи</small></div>`);
-      body.push(zonesHtml());
+      close();import('./world-map.js').then(({openWorldMap})=>openWorldMap({api,renderState,haptic,statusElement}));return;
     }
     floatNewLog();
     content.innerHTML = body.join('');

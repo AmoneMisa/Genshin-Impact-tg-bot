@@ -40,6 +40,30 @@ import { armShots, clearShots, getShotsState } from '../functions/game/shots/sho
 import { hasAmmo, spendAmmo } from '../functions/game/shots/ammo.js';
 import {getHotbar,HOTBAR_MAX} from '../functions/game/player/hotbar.js';
 import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
+import {quickTravelBlock,siegePoint,ensureWorld,CITIES} from '../functions/game/world/world.js';
+import bossPositions from '../template/worldBossMap.js';
+
+/** Direct map entry uses the same encounter, party/pass/lock rules as the existing boss entry. */
+export async function enterBossFromAtlas(session,chatId,name,now=Date.now()){
+ const blocked=quickTravelBlock(session,now);if(blocked)return {ok:false,reason:blocked};
+ const template=getEpicTemplate(name),point=template&&bossPositions[template.world?.npcId];
+ if(!template)return {ok:false,reason:'unknown_epic'};
+ if(!point)return {ok:false,reason:'boss_location_unknown'};
+ if(siegePoint(point))return {ok:false,reason:'quick_travel_siege'};
+ const level=number(session.game.stats?.lvl,1);
+ if(level<template.epic.minLevel)return {ok:false,reason:'epic_level_too_low'};
+ if(template.epic.maxLevel&&level>template.epic.maxLevel)return {ok:false,reason:'epic_level_too_high'};
+ const alive=await getAliveBoss(chatId);
+ const joining=alive?.name===name&&!(await expireBossIfNeeded(alive,chatId));
+ if(joining&&partyNeeded(name)){const group=partyState(await Chat.findOne({chatId:Number(chatId)}),session);if(!group||group.members.length<partyNeeded(name))return {ok:false,reason:'epic_party_required',partyMin:partyNeeded(name)};}
+ const result=joining?{ok:true,action:'join',boss:await getBossState(session,chatId)}:await summonBossForMiniApp(session,chatId,name);
+ if(!result.ok)return result;
+ const city=[...CITIES].sort((a,b)=>Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(b.x-point.x,b.y-point.y))[0];
+ Object.assign(ensureWorld(session,now),{mode:'boss',boss:name,city:city.id,location:null,path:[],pending:null,channel:null,holding:null,instanceId:null,readyHolding:null,bossPosition:{x:point.x,y:point.y},bossRoom:point.room||{x:point.x,y:point.y,z:point.z},x:.5,y:.5});
+ if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
+ session.needsSave=true;
+ return result;
+}
 
 export { bossStatusesDto, playerEffectsDto };
 

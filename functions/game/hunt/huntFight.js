@@ -276,7 +276,7 @@ export function startHunt(session, zoneId, {now = Date.now(), random = Math.rand
 }
 
 /** A persistent small battlefield. Moves/selection/attacks all run under the inventory lock. */
-export function enterHuntField(session, zoneId, {now = Date.now(), random = Math.random} = {}) {
+export function enterHuntField(session, zoneId, {now = Date.now(), random = Math.random, targetMobId = null} = {}) {
     const zone = getZone(zoneId);
     if (!zone) return {ok: false, reason: 'unknown_zone'};
     const hunt = ensureHunt(session);
@@ -287,6 +287,12 @@ export function enterHuntField(session, zoneId, {now = Date.now(), random = Math
     const layout = roomLayout(zone);
     const room = roomById(zone, layout.startId);
     const mobs = populateRoom(session, zone, room, {now, random});
+    if(targetMobId){
+        const definition=getMobDef(zone,targetMobId);
+        if(!definition)return {ok:false,reason:'unknown_zone'};
+        const slot=mobs[0];
+        mobs[0]={...buildMob(zone,definition,{now,random,className:session.game.gameClass.stats.name}),instanceId:slot.instanceId,ai:slot.ai,aggressive:slot.aggressive,aggro:false,x:slot.x,y:slot.y,buffs:[]};
+    }
     hunt.zone = zone.id;
     hunt.field = {mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[], room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
     hunt.mob = mobs[0] || null;

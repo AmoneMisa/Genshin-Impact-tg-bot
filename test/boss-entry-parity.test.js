@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadBossEntryState } from '../webapp/boss.js';
 
+test('explicit atlas destination enters the named room through the validated teleport endpoint',async()=>{
+ const calls=[],result={ok:true,boss:{active:true}};
+ assert.equal(await loadBossEntryState(async(path,options)=>{calls.push({path,options});return result;},{destination:'baium'}),result);
+ assert.equal(calls.length,1);assert.equal(calls[0].path,'/api/boss/summon');assert.deepEqual(JSON.parse(calls[0].options.body),{epic:'baium',teleport:true});
+});
+
 test('boss entry keeps an already active shared boss without summoning', async () => {
   const activeBoss = { active: true, boss: { id: 'boss-1' } };
   const calls = [];

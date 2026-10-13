@@ -1,5 +1,5 @@
 export const QUICK_TRAVEL_SECTIONS = [
-  {id:'cities',label:'Города'}, {id:'hunting',label:'Охота'}, {id:'catacombs',label:'Катакомбы'},
+  {id:'cities',label:'Города'}, {id:'hunting',label:'Охота'}, {id:'catacombs',label:'Катакомбы и некрополи'}, {id:'raids',label:'Рейд-боссы'}, {id:'epics',label:'Эпические боссы'}, {id:'quests',label:'Квестовые монстры'},
 ];
 export const QUICK_TRAVEL_LEVELS = [
   {id:'all',label:'Все уровни'},
@@ -9,6 +9,8 @@ export const QUICK_TRAVEL_LEVELS = [
 ];
 /** Use server quotes only; list all regions independently of the atlas viewport. */
 export function quickTravelDestinations(state, section='cities', level='all') {
+  if(section==='raids'||section==='epics')return (state.bosses||[]).filter(b=>Boolean(b.raid)===(section==='raids')).map(b=>({...b,id:b.name,name:b.nameCall||b.name,kind:'boss',gold:0,region:b.map?.region,levelMin:b.level,levelMax:b.level,missingSpawn:!b.map,unavailable:!b.map||(!b.available&&!b.fighting)})).sort((a,b)=>a.levelMin-b.levelMin);
+  if(section==='quests')return (state.questTargets||[]).flatMap(q=>{const quote=state.quickTravel?.locations?.find(l=>l.id===q.location);return quote?[{...q,gold:quote.gold,kind:'quest'}]:[];});
   if(section==='cities')return (state.quickTravel?.cities||[]).flatMap(quote=>{
     const city=state.cities.find(c=>c.id===quote.id);
     return city && (city.id!==state.player.city||state.player.mode!=='city') ? [{...city,...quote,kind:'city'}] : [];
@@ -17,7 +19,7 @@ export function quickTravelDestinations(state, section='cities', level='all') {
   return (state.quickTravel?.locations||[]).flatMap(quote=>{
     const place=state.locations.find(l=>l.id===quote.id);
     if(!place||place.instance)return [];
-    const catacomb=place.id.startsWith('catacomb-');
+    const catacomb=place.id.startsWith('catacomb-')||place.id.startsWith('necropolis-');
     if((section==='catacombs')!==catacomb)return [];
     if(section==='hunting'&&band.min&&(place.levelMin<band.min||place.levelMin>band.max))return [];
     return [{...place,...quote,kind:'location'}];

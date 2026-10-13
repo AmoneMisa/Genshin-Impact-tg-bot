@@ -8,6 +8,7 @@ import {getZone} from '../hunt/huntMobs.js';
 import holdings from '../../../template/worldHoldings.js';
 import {partyMembers} from '../party/party.js';
 import {markWorldDeath} from './death.js';
+import {questTargets} from './questTargets.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
 export const CITY_SIZE=14000;
@@ -51,7 +52,7 @@ export function advanceWorld(session,now=Date.now()) {
 function nearNpc(world,npc){const p=cityPoint(cityOf(world),npc);return Math.hypot(world.x-p.x,world.y-p.y)*CITY_SIZE<=180;}
 export const QUICK_TRAVEL_MULTIPLIER=3;
 export const quickTravelPrice=target=>Math.max(1,Math.ceil(Number(target.teleportGold||20000)*QUICK_TRAVEL_MULTIPLIER));
-function siegePoint(point){return holdings.some(h=>['castle','fort'].includes(h.kind)&&pointInPolygon(point,h.polygon));}
+export function siegePoint(point){return holdings.some(h=>['castle','fort'].includes(h.kind)&&pointInPolygon(point,h.polygon));}
 export function quickTravelBlock(session,now=Date.now()){
     const w=ensureWorld(session,now),hunt=session.game.hunt;
     if(!alive(session)||session.game.respawnTime>now)return 'dead';
@@ -63,6 +64,9 @@ export function quickTravelBlock(session,now=Date.now()){
     return l2ActionBlock(session,{move:true},now)||null;
 }
 export function quickTravel(session,body,now=Date.now()){
+    const quest=body.quest&&questTargets(session,LOCATIONS).find(q=>q.id===body.quest);
+    if(body.quest&&!quest)return {ok:false,reason:'unknown_zone'};
+    if(quest)body={...body,location:quest.location};
     if(body.holding)return {ok:false,reason:'quick_travel_siege'};
     if(body.city&&body.location)return {ok:false,reason:'unknown_zone'};
     const blocked=quickTravelBlock(session,now);if(blocked)return {ok:false,reason:blocked};
@@ -78,7 +82,7 @@ export function quickTravel(session,body,now=Date.now()){
     if(location){
         const previous=session.game.hunt;
         session.game.hunt=null;
-        const entered=enterHuntField(session,location.id,{now});
+        const entered=enterHuntField(session,location.id,{now,targetMobId:quest?.mobId});
         if(!entered.ok){session.game.hunt=previous;return entered;}
         Object.assign(w,{city:location.region,mode:'location',location:location.id,x:.5,y:.95});
     }else {w.city=city.id;arriveCity(session,w);}
@@ -216,6 +220,6 @@ export function bindWorldInstances(chat,now=Date.now()) {
 }
 export function worldState(session,now=Date.now()){
     const w=advanceWorld(session,now);if(w.mode==='road'&&w.walkHome?.until<=now){const holding=w.walkHome.holding;arriveCity(session,w);w.readyHolding=holding||null;delete w.walkHome;}
-    const {mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding}=w;
-    return {now,quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.map(c=>({id:c.id,gold:quickTravelPrice(c)})),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)).map(l=>({id:l.id,gold:quickTravelPrice(l)}))},death:w.death?{...w.death}:null,player:{userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,runSpeed:getSpeed(session)*l2MoveMultiplier(session,now),hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
+    const {mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,boss,bossPosition,bossRoom}=w;
+    return {now,questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.map(c=>({id:c.id,gold:quickTravelPrice(c)})),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)).map(l=>({id:l.id,gold:quickTravelPrice(l)}))},death:w.death?{...w.death}:null,player:{userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,runSpeed:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
 }
