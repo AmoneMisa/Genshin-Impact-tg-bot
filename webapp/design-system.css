@@ -488,6 +488,16 @@ textarea:focus-visible {
   border-radius: var(--radius-md);
 }
 
+/* Shared framed content row: text, art and trailing values keep an inset. */
+.ui-content-row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center; gap: var(--space-2); box-sizing: border-box;
+  padding: var(--space-3);
+}
+.ui-content-row > :nth-child(2) { min-width: 0; overflow-wrap: anywhere; }
+.ui-content-row > :last-child { white-space: nowrap; }
+.ui-quest-dot { display:inline-block; width:8px; height:8px; flex:0 0 8px; border-radius:50%; background:#ed4b48; margin-inline-end:var(--space-2); vertical-align:middle; }
+
 .horo-result {
   border-radius: var(--radius-lg);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
@@ -1067,6 +1077,7 @@ body .ui-folder-tabs {
 }
 body .ui-folder-tabs button,
 body .game-overlay .overlay-panel .ui-folder-tabs button {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
   min-height: var(--tab-height, 28px); margin: 0 0 -1px;
   padding: 5px 8px; border: 1px solid #61573d;
   border-radius: 3px 9px 0 0; background: #27291f;
@@ -1183,7 +1194,11 @@ body .game-overlay .overlay-panel .game-dialog-heading :is([data-dismiss],[data-
 body .ui-button.item-trash{display:grid;place-items:center;flex:0 0 40px;width:40px;min-width:40px;height:40px;padding:6px}
 .item-trash svg{width:26px;height:26px}
 body .ui-button.item-trash.is-drop-target{outline:2px solid var(--gold);outline-offset:2px;background:var(--surface-control);opacity:1}
-.item-grid-cell.is-dragging{opacity:.45!important}
+.item-grid-cell.is-dragging{opacity:.45}
 .item-drag-preview{position:fixed;left:0;top:0;z-index:16000;width:48px;height:48px;pointer-events:none;overflow:hidden;border:1px solid var(--gold);background:var(--surface-control)}
 .item-drag-preview img,.item-drag-preview svg{width:100%;height:100%;object-fit:contain}
 .item-drag-preview :is(em,i){display:none}
+
+.ui-control-row{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-2)}
+.ui-control-row>label{display:grid;gap:var(--space-2);flex:1;min-width:110px}
+.ui-content-row > span img { display:block; max-width:100%; width:28px; height:28px; object-fit:contain; }

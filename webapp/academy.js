@@ -1,3 +1,4 @@
+import {enhanceSelects} from './design/select.js';
 import { escapeHtml } from './escape-html.js';
 import { luckCoinHtml } from './currency-icons.js';
 import {bountyListRow,bountyLegend,bountyDetail,qualityStyle} from './bounty-view.js';
@@ -29,7 +30,7 @@ const duration = ms => {
 };
 
 function passHtml(pass) {
-  const head = `<strong>${escapeHtml(pass.nameCall)}</strong>`;
+  const head = `<strong>${pass.canStart?'<span class="ui-quest-dot" aria-label="Доступен квест"></span>':''}${escapeHtml(pass.nameCall)}</strong>`;
   const have = pass.owned ? `${escapeHtml(pass.title)} ×${fmt(pass.owned)} · привязан к персонажу` : '';
   if (!pass.active && pass.owned) {
     return `<article class="academy-row done"><div>${head}<small>${have}</small></div>
@@ -52,8 +53,8 @@ function passHtml(pass) {
 
 function mainQuestsHtml(view) {
   const promotions = view?.promotions || view?.available || [];
-  const next = Array.isArray(promotions) ? promotions.length : 0;
-  return `<section class="city-block"><h4>Основные задания</h4>
+  const next = Array.isArray(promotions) ? promotions.filter(q=>q.status==='available').length : 0;
+  return `<section class="city-block"><h4>${next?'<span class="ui-quest-dot" aria-label="Доступен квест"></span>':''}Основные задания</h4>
     <p class="city-desc">Задания на 1-ю, 2-ю и 3-ю профессию выдаёт Академия. Награда за них не зависит от её уровня.${next ? ` Доступно повышений: ${next}.` : ''}</p>
     <button type="button" class="city-btn upgrade" data-academy-main>Открыть задания профессий</button></section>`;
 }
@@ -111,9 +112,16 @@ export async function openAcademy({ api, haptic = () => {}, renderState = () => 
       <div class="bounty-list">${state.bounties[scope].quests.map(quest=>bountyListRow(scope,quest)).join('')}</div>
       ${bountyLegend()}
       ${mainQuestsHtml(state.classQuests)}
+      ${soulQuestHtml()}
       ${dialog ? `<section class="city-block academy-dialog"><h4>${escapeHtml(dialog.npc)}</h4>${dialog.lines.map(line => `<p>«${escapeHtml(line)}»</p>`).join('')}${dialog.done ? '<p><b>Допуск получен.</b></p>' : ''}</section>` : ''}
       <section class="city-block"><h4>Допуски к эпическим боссам</h4><p class="city-desc">Закен требует группу от двух игроков, Фринтезза — от четырёх, и допуск нужен только лидеру группы. Орфен, Кора и Королева Муравьёв доступны в одиночку. Допуск привязан к персонажу: его нельзя продать, положить на хранение или передать.</p>${state.passes.map(passHtml).join('')}</section>
       <p class="city-feedback" aria-live="polite">${escapeHtml(message)}</p></div>`;
+    enhanceSelects(body);
+  }
+
+  function soulQuestHtml(){
+    const quest=state.soulQuest;if(!quest)return '';
+    return `<section class="city-block"><h4>${quest.canStart?'<span class="ui-quest-dot" aria-label="Доступен квест"></span>':''}Улучшение оружия</h4><p>${quest.active?'Квест активен. Кристалл души растёт автоматически на подходящих монстрах и рейдах. В сумке должен быть только один кристалл.':'Получите кристалл души и прокачивайте его для установки SA в оружие. Доступно с 40 уровня.'}</p>${!quest.active?`<div class="ui-control-row"><label for="academy-soul-color">Кристалл<select id="academy-soul-color" data-academy-soul-color><option value="red">Красный</option><option value="green">Зелёный</option><option value="blue">Синий</option></select></label><button type="button" class="ui-button primary" data-academy-soul ${!quest.canStart||pending?'disabled':''}>Взять квест</button></div>`:''}</section>`;
   }
 
   async function act(payload) {
@@ -126,6 +134,7 @@ export async function openAcademy({ api, haptic = () => {}, renderState = () => 
       const result = await api('/api/academy/action', { method: 'POST', body: JSON.stringify(payload) });
       state = result.academy || state;
       if(result.state)renderState(result.state);
+      if(result.calendarTicket)message='Получен тикет пропущенного дня. Используйте его в календаре в течение 10 дней.';
       dialog = result.lines ? { npc: result.npc, lines: result.lines, done: Boolean(result.done) } : null;
       haptic('medium');
     } catch (error) {
@@ -135,6 +144,7 @@ export async function openAcademy({ api, haptic = () => {}, renderState = () => 
   }
 
   overlay.addEventListener('click', event => {
+    if(event.target.closest('[data-academy-soul]')){act({action:'soul_start',color:body.querySelector('[data-academy-soul-color]').value});return;}
     if (event.target.closest('[data-academy-close]')) { close(); return; }
     const tab = event.target.closest('[data-bounty-scope]');
     if(tab){scope=tab.dataset.bountyScope;render();return;}

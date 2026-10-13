@@ -1,4 +1,5 @@
 import {dialogHeading} from './dialog-heading.js';
+import {materialIcon} from './material-icons.js';
 import {lightAnimationHtml,playLightAnimation} from './light-animation.js';
 // Daily bonus as a prize wheel: segments in proportion to each prize's chance,
 // interleaved; the wheel spins to a segment of the prize the server picked.
@@ -62,15 +63,15 @@ export async function openBonusGame({ api, renderState, haptic, statusElement })
   function render() {
     content.innerHTML = `
       <div class="bonus-animation light-game-stage">${lightAnimationHtml('wheel','Колесо наград')}</div>
-      ${lastPrize ? `<section class="bonus-win"><span>${lastPrize.icon}</span><strong>+${formatNumber(lastPrize.amount)} ${lastPrize.label}</strong></section>` : ''}
+      ${lastPrize ? `<section class="bonus-win"><span>${materialIcon(lastPrize.name)}</span><strong>+${formatNumber(lastPrize.amount)} ${lastPrize.label}</strong></section>` : ''}
       <button class="bonus-spin ui-button primary" type="button" data-bonus-claim ${state.chances <= 0 || pending ? 'disabled' : ''}>
         <strong>${state.chances > 0 ? 'Крутить колесо' : 'Попытки закончились'}</strong>
         <small>${state.chances > 0 ? `Попыток сегодня: ${state.chances}` : 'Новые — после ежедневного сброса'}</small>
       </button>
       <section class="bonus-prizes">
         ${state.prizes.map(prize => `
-          <article class="bonus-prize">
-            <span>${prize.icon}</span>
+          <article class="bonus-prize ui-content-row">
+            <span>${materialIcon(prize.name)}</span>
             <div><strong>${prize.label}</strong><small>${formatNumber(prize.minAmount)}–${formatNumber(prize.maxAmount)}</small></div>
             <b>${prize.chance}%</b>
           </article>`).join('')}

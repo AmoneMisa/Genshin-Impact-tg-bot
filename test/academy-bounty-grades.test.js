@@ -125,3 +125,14 @@ test('legacy periods retain completed rewards and relative progress without rero
  const snapshot=structuredClone(state);s.game.stats.lvl=52;s.game.builds.academy.currentLvl=30;
  assert.deepEqual(refreshBounties(s,now).day,snapshot);assert.equal(claimBounty(s,'day','day-0',now).reason,'already_claimed');
 });
+
+test('only completed weekly bounties roll a 5% ten-day calendar ticket once',()=>{
+ for(const [scope,roll,expected] of [['day',0,false],['week',.049,true],['week',.05,false]]){
+  const s=hero(47);getAcademyState(s,now);const quest=s.game.academy.bounties[scope].quests[0];
+  assert.equal(claimBounty(s,scope,quest.id,now,()=>roll).reason,'bounty_not_done');quest.progress=quest.target;
+  const result=claimBounty(s,scope,quest.id,now,()=>roll);assert.equal(!!result.calendarTicket,expected);
+  if(expected)assert.equal(result.calendarTicket.expiresAt,now+10*86400000);
+  assert.equal(claimBounty(s,scope,quest.id,now,()=>0).reason,'already_claimed');
+  assert.equal(s.game.loginRewards?.tickets?.length||0,expected?1:0);
+ }
+});

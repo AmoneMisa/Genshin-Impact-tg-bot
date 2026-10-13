@@ -1,6 +1,7 @@
+import {startSoulCrystalQuest} from '../functions/game/equipment/soulCrystalQuest.js';
 import { needsPass } from '../template/epicPasses.js';
 import {getLoginRewardsState,claimLoginReward,redeemLoginItem} from '../functions/game/login/loginRewards.js';
-import {selectSoulCrystal,chargeSoulCrystal,exchangeSeals} from '../functions/game/equipment/soulCrystals.js';
+import {soulCrystalState,selectSoulCrystal,chargeSoulCrystal,exchangeSeals} from '../functions/game/equipment/soulCrystals.js';
 import {advanceHunt} from '../functions/game/hunt/huntFight.js';
 import {advanceFieldPvp,fieldPeers,useFieldPvpSkill} from '../functions/game/hunt/fieldPvp.js';
 import http from 'http';
@@ -1701,11 +1702,11 @@ const loginRewardsState = guarded('login rewards state', async (req,res) => {
 });
 const loginRewardsAction = guarded('login rewards action', async (req,res) => {
   const context=await authorize(req),body=await readJsonBody(req);
-  if(!['claim','redeem'].includes(body.action))throw httpError(400,'Unknown login rewards action');
+  if(!['claim','fill','redeem'].includes(body.action))throw httpError(400,'Unknown login rewards action');
   if(body.action==='redeem'&&(typeof body.key!=='string'||body.key.length>80||typeof (body.choice??'')!=='string'||(body.choice||'').length>100))throw httpError(400,'Invalid coupon choice');
   const result=await withLock(`${context.chatId}:${context.userId}:inventory`,async()=>{
     context.session=await getSession(context.chatId,context.userId);
-    const outcome=body.action==='claim'?claimLoginReward(context.session,Date.now(),body.month!=null?{month:body.month,day:body.day}:null):redeemLoginItem(context.session,body.key,body.choice||'');
+    const outcome=body.action==='claim'||body.action==='fill'?claimLoginReward(context.session,Date.now(),body.month!=null?{month:body.month,day:body.day}:null,{ticket:body.action==='fill'}):redeemLoginItem(context.session,body.key,body.choice||'');
     if(outcome.ok||outcome.changed)await saveSession(context.session);
     return {...outcome,loginRewards:getLoginRewardsState(context.session)};
   });
@@ -1726,11 +1727,11 @@ const academyState = guarded('academy state', async (req, res) => {
 const academyAction = guarded('academy action', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  const actions = new Set(['claim', 'pass_start', 'pass_talk', 'pass_next']);
+  const actions = new Set(['claim', 'pass_start', 'pass_talk', 'pass_next','soul_start']);
   if (!actions.has(body.action)) throw httpError(400, 'Unknown academy action');
   const result = await withLock(`${context.chatId}:${context.userId}:builds`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const outcome = body.action === 'claim' ? claimBounty(context.session, String(body.scope || ''), String(body.id || ''))
+    const outcome = body.action === 'soul_start'?startSoulCrystalQuest(context.session,body.color):body.action === 'claim' ? claimBounty(context.session, String(body.scope || ''), String(body.id || ''))
       : body.action === 'pass_start' ? startPassQuest(context.session, String(body.name || ''))
         : body.action === 'pass_talk' ? talkPassQuest(context.session, String(body.name || ''))
           : advancePassQuest(context.session, String(body.name || ''));
@@ -2084,6 +2085,21 @@ const sealExchange=guarded('seal exchange',async(req,res)=>{
   return sendResult(res,result,context);
 });
 
+const shopSealState=guarded('shop seal state',async(req,res)=>{
+  const context=await authorize(req);const {aa,seals}=soulCrystalState(context.session);
+  return sendJson(res,200,{aa,seals});
+});
+const shopSealExchange=guarded('shop seal exchange',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);assertGoldUnlocked(context);
+  const result=await withLock(context.chatId,async()=>{
+    context.session=await getSession(context.chatId,context.userId);
+    const outcome=exchangeSeals(context.session,body.counts);
+    if(outcome.ok)await saveSession(context.session);
+    const {aa,seals}=soulCrystalState(context.session);return {...outcome,exchange:{aa,seals}};
+  });
+  return sendResult(res,result,context);
+});
+
 const huntFlee = guarded('hunt flee', async (req, res) => {
   const context = await authorize(req);
   const result = await huntAnswer(context, session => worldAction(session,{action:'escape'}));
@@ -2320,6 +2336,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/hunt/flee') return huntFlee(req, res);
     if (route === 'POST /api/soul/select') return soulSelect(req, res);
     if (route === 'POST /api/hunt/soul') return soulCharge(req, res);
+    if (route === 'GET /api/shop/exchange') return shopSealState(req,res);
+    if (route === 'POST /api/shop/exchange') return shopSealExchange(req,res);
     if (route === 'POST /api/catacombs/exchange') return sealExchange(req, res);
     if (route === 'POST /api/shots/auto') return shotsAuto(req, res);
     if (route === 'GET /api/boss/epic') return bossEpic(req, res);

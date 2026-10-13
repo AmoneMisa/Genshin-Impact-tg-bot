@@ -14,6 +14,7 @@ import {icon} from './icons.js';
 import {storeViewHtml, bindStoreView} from './store-view.js';
 import {createGamePopup} from './game-popup.js';
 import {enhanceSelects} from './design/select.js';
+import {openSealExchange} from './seal-exchange.js';
 
 // Keep the category window underneath the goods: closing a child returns here.
 export async function openShopGame(options) {
@@ -40,6 +41,7 @@ export async function openShopGame(options) {
     ['resources', 'Ресурсы', L2_CATEGORY_ART.material, merchant('alchemist')],
     ['fishing', 'Рыбалка', 'l2_6529', merchant('fisher')],
     ['mammon', 'Древняя адена', L2_MATERIAL_ART.aa, merchant('mammon')],
+    ['exchange', 'Обменник', L2_MATERIAL_ART.aa, () => openSealExchange(options)],
     ['bonus', 'Бонус', L2_MATERIAL_ART.l2_1865, () => openBonusGame(options)],
     ['adena', 'Адена за CoL', L2_CATEGORY_ART.gold, goods('currency')],
     ['runes', 'Руны', L2_MATERIAL_ART.l2_8358, null, 'Руны пока не продаются.'],

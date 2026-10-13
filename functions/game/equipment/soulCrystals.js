@@ -5,6 +5,7 @@ import SA_PRICES from '../../../template/saPrices.js';
 import {getMaterialCount,spendMaterials,addMaterial} from '../player/materials.js';
 import {isActuallyEquipped} from './snapshots.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
+import {soulCrystalQuestState,soulCrystalCount} from './soulCrystalQuest.js';
 const n=v=>Math.max(0,Number(v)||0);
 const valid=(color,stage)=>Object.hasOwn(SOUL_COLORS,color)&&Number.isInteger(stage)&&stage>=0&&stage<=SOUL_MAX_STAGE;
 // Original raid weapons use the corresponding top High Five weapon's SA table.
@@ -77,19 +78,28 @@ export function saStat(session,item,name,isMul,damageType){const option=saDefini
   if(option.hpBelow<100){const stats=session.game.gameClass?.stats||{};if(n(stats.hp)>getMaxHp(session)*option.hpBelow/100)return null;}
   return value;
 }
-export function soulCrystalState(session){const active=session?.game?.soulCrystal||null,inventory=session?.game?.inventory||{};
+export function soulCrystalState(session){const inventory=session?.game?.inventory||{};
   const stock=Object.keys(SOUL_COLORS).flatMap(color=>Array.from({length:18},(_,stage)=>({color,stage,key:soulCrystalKey(color,stage),count:getMaterialCount(session,soulCrystalKey(color,stage))}))).filter(r=>r.count>0);
-  return {active:active&&valid(active.color,active.stage)&&getMaterialCount(session,soulCrystalKey(active.color,active.stage))?{color:active.color,stage:active.stage}:null,stock,questLevel:40,aa:n(inventory.ancientAdena),seals:Object.fromEntries(Object.entries(SEAL_RATES).map(([color,rate])=>[color,{count:getMaterialCount(session,`seal_${color}`),rate}]))};
+  const single=stock.length===1&&stock[0].count===1?{color:stock[0].color,stage:stock[0].stage}:null;
+  return {active:single,stock,quest:soulCrystalQuestState(session),multiple:soulCrystalCount(session)>1,questLevel:40,aa:n(inventory.ancientAdena),seals:Object.fromEntries(Object.entries(SEAL_RATES).map(([color,rate])=>[color,{count:getMaterialCount(session,`seal_${color}`),rate}]))};
 }
 export function selectSoulCrystal(session,color,stage){if(color===null){session.game.soulCrystal=null;return {ok:true};}if(n(session.game.stats?.lvl)<40)return {ok:false,reason:'soul_level'};if(!valid(color,stage)||getMaterialCount(session,soulCrystalKey(color,stage))<1)return {ok:false,reason:'no_soul_crystal'};session.game.soulCrystal={color,stage};return {ok:true};}
 function eligibleRule(npcId,stage,manual){return ABSORPTION[String(npcId)]?.rules.find(r=>r.manual===manual&&(r.maxStage!==null?stage<=r.maxStage:r.stages.includes(stage)));}
 export function soulChargeInfo(session,mob){const active=soulCrystalState(session).active;if(!active)return {ok:false,reason:'no_active_crystal'};if(n(session.game.stats?.lvl)<40)return {ok:false,reason:'soul_level'};if(!mob||mob.currentHp<=0)return {ok:false,reason:'no_mob'};if(active.stage>=17)return {ok:false,reason:'soul_max_stage'};if(!eligibleRule(mob.mobId,active.stage,true))return {ok:false,reason:'soul_wrong_mob'};if(mob.currentHp>mob.hp*.5)return {ok:false,reason:'soul_hp'};if(mob.soulCharge)return {ok:false,reason:'soul_already_charged'};return {ok:true};}
 export function chargeSoulCrystal(session,mob){const info=soulChargeInfo(session,mob);if(!info.ok)return info;mob.soulCharge={...soulCrystalState(session).active};return {ok:true};}
-function grow(session,active,rule,random){if(active.stage>=17)return null;if(random()*100>=rule.chance)return {outcome:'unchanged',...active};const key=soulCrystalKey(active.color,active.stage);if(!spendMaterials(session,{[key]:1}))return null;addMaterial(session,soulCrystalKey(active.color,active.stage+1));session.game.soulCrystal={color:active.color,stage:active.stage+1};return {outcome:'success',color:active.color,from:active.stage,stage:active.stage+1};}
-export function absorbHuntSoul(session,mob,random=Math.random){if(!mob||mob.currentHp>0||mob.soulAbsorbed)return null;const active=soulCrystalState(session).active;if(!active||n(session.game.stats?.lvl)<40)return null;const manual=eligibleRule(mob.mobId,active.stage,true),auto=eligibleRule(mob.mobId,active.stage,false);if(manual&&(mob.soulCharge?.color!==active.color||mob.soulCharge?.stage!==active.stage))return null;const rule=manual||auto;if(!rule)return null;mob.soulAbsorbed=true;return grow(session,active,rule,random);}
+function grow(session,active,rule,random){if(active.stage>=17)return null;if(Math.floor(random()*100)>rule.chance)return {outcome:'unchanged',...active};const key=soulCrystalKey(active.color,active.stage);if(!spendMaterials(session,{[key]:1}))return null;addMaterial(session,soulCrystalKey(active.color,active.stage+1));session.game.soulCrystal={color:active.color,stage:active.stage+1};return {outcome:'success',color:active.color,from:active.stage,stage:active.stage+1};}
+export function absorbHuntSoul(session,mob,random=Math.random){if(!mob||mob.currentHp>0||mob.soulAbsorbed)return null;const active=soulCrystalState(session).active;if(!active||n(session.game.stats?.lvl)<40||!soulCrystalQuestState(session).active)return null;const manual=eligibleRule(mob.mobId,active.stage,true),auto=eligibleRule(mob.mobId,active.stage,false);// Manual activation is intentionally automatic at the kill (HP has crossed 50%).
+const rule=manual||auto;if(!rule)return null;mob.soulAbsorbed=true;return grow(session,active,rule,random);}
 const EPIC_NPCS={zaken:29022,baium:29020,frintezza:29047,antharas:29019,valakas:29028,beleth:29118,freya:29179,freyaExtreme:29180};
-export function absorbRaidSouls(sessions,bossName,random=Math.random){const results=[];const candidates=sessions.map(session=>{const active=soulCrystalState(session).active;return {session,active,rule:active?eligibleRule(EPIC_NPCS[bossName],active.stage,false):null};}).filter(c=>c.rule&&c.active.stage<17);
-  const one=candidates.filter(c=>c.rule.scope!=='FULL_PARTY');const chosen=one.length?one[Math.min(one.length-1,Math.floor(random()*one.length))]:null;
-  for(const c of candidates)if(c.rule.scope==='FULL_PARTY'||c===chosen){const result=grow(c.session,c.active,c.rule,random);if(result)results.push({userId:c.session.userId,...result});}return results;
+export function absorbRaidSouls(sessions,bossName,random=Math.random){const results=[];const candidates=sessions.map(session=>{const active=soulCrystalState(session).active;return {session,active,rule:active&&soulCrystalQuestState(session).active?eligibleRule(EPIC_NPCS[bossName],active.stage,false):null};}).filter(c=>c.rule&&c.active.stage<17);
+  if(!candidates.length)return results;
+  const policy=candidates.reduce((a,b)=>a.active.stage>b.active.stage?a:b).rule.scope;
+  let recipients=[];
+  if(policy==='FULL_PARTY')recipients=sessions;
+  else if(policy==='PARTY_RANDOM'){
+    const remaining=[...sessions];while(remaining.length&&Math.floor(random()*100)<33)recipients.push(remaining.splice(Math.min(remaining.length-1,Math.floor(random()*remaining.length)),1)[0]);
+  }else if(policy==='LAST_HIT')recipients=sessions.slice(0,1);
+  else recipients=[sessions[Math.min(sessions.length-1,Math.floor(random()*sessions.length))]];
+  for(const session of recipients){const c=candidates.find(c=>c.session===session);if(!c)continue;const result=grow(c.session,c.active,c.rule,random);if(result)results.push({userId:session.userId,...result});}return results;
 }
 export function exchangeSeals(session,counts){if(!counts||typeof counts!=='object'||Array.isArray(counts))return {ok:false,reason:'invalid_seals'};let aa=0;for(const [color,count] of Object.entries(counts)){if(!Object.hasOwn(SEAL_RATES,color)||!Number.isSafeInteger(count)||count<0||getMaterialCount(session,`seal_${color}`)<count)return {ok:false,reason:'invalid_seals'};aa+=count*SEAL_RATES[color];}const total=n(session.game.inventory.ancientAdena)+aa;if(!aa||!Number.isSafeInteger(total))return {ok:false,reason:'invalid_seals'};spendMaterials(session,Object.fromEntries(Object.entries(counts).map(([c,v])=>[`seal_${c}`,v])));session.game.inventory.ancientAdena=total;return {ok:true,aa};}

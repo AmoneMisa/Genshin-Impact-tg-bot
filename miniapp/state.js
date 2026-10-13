@@ -7,6 +7,7 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import { activeClassQuestSummary } from '../functions/game/classes/classQuests.js';
+import {activeSoulCrystalQuestSummary} from '../functions/game/equipment/soulCrystalQuest.js';
 
 function number(value, fallback = 0) {
   return Number.isFinite(Number(value)) ? Number(value) : fallback;
@@ -155,7 +156,8 @@ export function createMiniAppState(session, context) {
       chestTries: number(session?.chestTries),
       sword: number(session?.sword),
     },
-    activeQuest: activeClassQuestSummary(session),
+    activeQuest: activeClassQuestSummary(session)||activeSoulCrystalQuestSummary(session),
+    activeQuests: [activeClassQuestSummary(session),activeSoulCrystalQuestSummary(session)].filter(Boolean),
     features: createMiniAppFeatures(context),
   };
 }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {claimLoginReward,getLoginRewardsState,redeemLoginItem,dailyLoginReward,monthBoxPool,loginGrade} from '../functions/game/login/loginRewards.js';
+import {claimLoginReward,getLoginRewardsState,redeemLoginItem,dailyLoginReward,monthBoxPool,loginGrade,grantLoginTicket} from '../functions/game/login/loginRewards.js';
 import {loginPeriod,loginKey,shotCouponAmount,LOGIN_DAY_MS} from '../template/loginRewards.js';
 import {SHOT_GRADES,shotKey} from '../template/shotsData.js';
 import {getMaterialCount,materialInfo} from '../functions/game/player/materials.js';
@@ -42,7 +42,7 @@ test('an open calendar from yesterday cannot claim another date silently',()=>{
 test('one claim a day, no catching up, month reset preserves coupons and runes',()=>{
     const s=hero();assert.equal(claimLoginReward(s,now).ok,true);assert.equal(claimLoginReward(s,now).reason,'already_claimed');
     assert.equal(getMaterialCount(s,'login_shots_S'),1);assert.equal(claimLoginReward(s,now+2*LOGIN_DAY_MS).ok,true);
-    const view=getLoginRewardsState(s,now+2*LOGIN_DAY_MS);assert.equal(view.days[1].status,'missed');
+    const view=getLoginRewardsState(s,now+2*LOGIN_DAY_MS);assert.equal(view.days[1].status,'claimed');assert.equal(view.missedDays,1);
     s.game.loginRewards.runes={exp:now+100*LOGIN_DAY_MS};
     claimLoginReward(s,Date.parse('2026-11-01T00:00:00Z'));assert.deepEqual(s.game.loginRewards.claimed,[1]);
     assert.equal(s.game.loginRewards.runes.exp,now+100*LOGIN_DAY_MS);assert.equal(getMaterialCount(s,'login_shots_S'),2);
@@ -168,8 +168,45 @@ test('login items expose an inventory Use action and allow deliberate discard',(
     assert.equal(discardInventoryItem(s,{kind:'material',ref:key}).ok,true);assert.equal(getMaterialCount(s,key),0);
 });
 test('white healing reward uses its real L2 icon and restores health; daily badge clears',()=>{
-    const s=hero(),date=Date.parse('2026-10-09T00:00:00Z');assert.equal(claimLoginReward(s,date).ok,true);
+    const s=hero(),date=Date.parse('2026-10-09T00:00:00Z');for(let i=0;i<9;i++)assert.equal(claimLoginReward(s,now+i*LOGIN_DAY_MS).ok,true);
     const potion=getInventoryState(s).potions[0];assert.equal(potion.artKey,'l2_1539');assert.equal(potion.name,'Greater Healing Potion');
     assert.equal(useInventoryPotion(s,'0').ok,true);assert.equal(s.game.gameClass.stats.hp,1000);assert.ok(s.game.hpPotion.amount>0);
     s.game.loginRewards={};assert.equal(personalBadges(s).loginRewards,1);claimLoginReward(s,Date.now());assert.equal(personalBadges(s).loginRewards,0);
+});
+
+
+test('a first visit on the last date grants reward one, not the monthly box',()=>{
+ const s=hero(47),date=now+30*LOGIN_DAY_MS;assert.equal(claimLoginReward(s,date).rewardDay,1);
+ assert.equal(getMaterialCount(s,'login_box_C'),0);assert.equal(getMaterialCount(s,'login_shots_C'),1);
+ assert.equal(claimLoginReward(s,date).reason,'already_claimed');
+});
+test('tickets fill the next missing reward after the daily claim, expire after ten days, and survive month reset',()=>{
+ const s=hero(),date=now+3*LOGIN_DAY_MS;grantLoginTicket(s,now);grantLoginTicket(s,now);
+ assert.equal(claimLoginReward(s,date,null,{ticket:true}).reason,'no_missed_days');
+ assert.equal(claimLoginReward(s,date).rewardDay,1);assert.equal(claimLoginReward(s,date,null,{ticket:true}).rewardDay,2);
+ assert.equal(getLoginRewardsState(s,date).tickets.length,1);assert.equal(claimLoginReward(s,date,null,{ticket:true}).rewardDay,3);
+ assert.equal(claimLoginReward(s,date,null,{ticket:true}).reason,'ticket_missing');
+ grantLoginTicket(s,now);assert.equal(getLoginRewardsState(s,now+10*LOGIN_DAY_MS).tickets.length,0);
+ grantLoginTicket(s,now+30*LOGIN_DAY_MS);assert.equal(claimLoginReward(s,now+31*LOGIN_DAY_MS).rewardDay,1);
+ assert.equal(getLoginRewardsState(s,now+31*LOGIN_DAY_MS).tickets.length,1);
+});
+test('full inventory does not consume a makeup ticket',()=>{
+ const s=hero(),date=now+2*LOGIN_DAY_MS;claimLoginReward(s,date);grantLoginTicket(s,date);
+ s.game.inventory.equipment.items=Array.from({length:79},()=>({}));
+ assert.equal(claimLoginReward(s,date,null,{ticket:true}).reason,'inventory_full');assert.equal(getLoginRewardsState(s,date).tickets.length,1);
+});
+test('legacy paid dates migrate without repeated payouts or skipped rewards',()=>{
+ const s=hero();s.game.loginRewards={month:'2026-10',claimed:[13,9],received:{9:{grade:'C',reward:{currencies:{gold:1}}}}};
+ assert.equal(getLoginRewardsState(s,now+12*LOGIN_DAY_MS).canClaim,false);
+ assert.equal(claimLoginReward(s,now+13*LOGIN_DAY_MS).rewardDay,3);assert.deepEqual(s.game.loginRewards.claimed,[1,2,3]);
+ assert.equal(getLoginRewardsState(s,now+13*LOGIN_DAY_MS).days[0].rewards[0].count,1);
+});
+test('all shadow milestones respect available grade, including level 47',()=>{
+ for(const level of [1,20,39,40,47,51,52,60,61,85])for(const day of [7,14,21]){
+  const grade=loginGrade(hero(level)),reward=dailyLoginReward(day,31,grade);
+  for(const key of Object.keys(reward.materials)){
+   const info=materialInfo(key);if(info.kind?.startsWith('shadow_'))assert.ok(SHOT_GRADES.indexOf(info.grade)<=SHOT_GRADES.indexOf(grade));
+   if(level===47)assert.ok(!key.endsWith('_B')&&!key.endsWith('_A'));
+  }
+ }
 });

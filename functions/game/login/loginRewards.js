@@ -18,6 +18,7 @@ export function loginGrade(session) {
 const index=g=>SHOT_GRADES.indexOf(g);
 const mat=(kind,grade,count=1)=>({materials:{[loginKey(kind,grade)]:count}});
 const shadow=(grade)=>({materials:Object.fromEntries(['weapon','armor','jewelry'].map(part=>[loginKey(`shadow_${part}`,grade),1]))});
+const shadowForGrade=(grade,target)=>index(grade)<index('C')?mat('shots',grade):shadow(SHOT_GRADES[Math.min(index(grade),index(target))]);
 export const LOGIN_GOLD = Object.freeze([750,2500,8000,16000,30000,50000,75000,100000]);
 export const LOGIN_AA = Object.freeze([1000,3000,8000,16000,24000,40000,60000,80000]);
 const FAME=[5,10,20,30,40,50,60,70], PROOFS=[10,25,50,100,200,400,600,800];
@@ -27,11 +28,11 @@ export function dailyLoginReward(day,days,grade) {
     const g=index(grade), fishGrade=SHOT_GRADES[Math.min(g,5)];
     const rewards=[
         mat('shots',grade),mat('fame',grade),{materials:{[`l2_${fishing.shots[fishGrade]}`]:100+g*20}},
-        mat('buff',grade,2),{currencies:{ironOre:30+g*20}},mat('fishing',grade),shadow('C'),
+        mat('buff',grade,2),{currencies:{ironOre:30+g*20}},mat('fishing',grade),shadowForGrade(grade,'C'),
         mat('shots',grade),{potions:[{id:'login-white-heal',artKey:'l2_1539',name:'Greater Healing Potion',type:'hp',bottleType:'potion',size:'large',power:500,count:5+g}]},
-        mat('resurrection',grade),mat('rune_exp',grade),mat('fame',grade),mat('shots',grade),shadow('B'),
+        mat('resurrection',grade),mat('rune_exp',grade),mat('fame',grade),mat('shots',grade),shadowForGrade(grade,'B'),
         mat('fishing',grade),mat('buff',grade,3),{currencies:{ironOre:60+g*30}},mat('rune_drop',grade),
-        mat('shots',grade,2),mat('fame',grade,2),shadow('A'),mat('resurrection',grade,2),mat('rune_craft',grade),
+        mat('shots',grade,2),mat('fame',grade,2),shadowForGrade(grade,'A'),mat('resurrection',grade,2),mat('rune_craft',grade),
         {materials:{[`l2_${fishing.shots[fishGrade]}`]:200+g*30}},mat('fishing',grade,2),mat('buff',grade,3),
         mat('shots',grade,2),{currencies:{ironOre:90+g*40}},mat('fame',grade,2),mat('shots',grade,2),
     ];
@@ -76,14 +77,37 @@ function itemChoices(info) {
     if(info.kind==='shadow_jewelry')return ['ring','earring','necklace','set'].map(id=>({id,name:({ring:'Два кольца',earring:'Две серьги',necklace:'Ожерелье',set:'Полный комплект бижутерии'})[id],count:id==='set'?5:id==='necklace'?1:2}));
     return [];
 }
+// Legacy records contain calendar dates. Preserve their number of paid rewards,
+// but convert those dates to a consecutive sequence without paying them again.
+function progress(session,period) {
+    const stored=session?.game?.loginRewards;
+    if(stored?.month!==period.month)return {claimed:[],received:{},lastClaimDay:0};
+    const previous=[...new Set((stored.claimed||[]).filter(day=>Number.isInteger(day)&&day>=1&&day<=period.days))].sort((a,b)=>a-b);
+    if(stored.version===2)return {claimed:previous,received:stored.received||{},lastClaimDay:amount(stored.lastClaimDay)};
+    return {claimed:previous.map((_,i)=>i+1),received:Object.fromEntries(previous.map((day,i)=>[i+1,stored.received?.[day]])),lastClaimDay:previous.at(-1)||0};
+}
+export const LOGIN_TICKET_LIFETIME=10*LOGIN_DAY_MS;
+export function canClaimLoginReward(session,now=Date.now()) {
+    const period=loginPeriod(now),current=progress(session,period);
+    return current.lastClaimDay!==period.day&&current.claimed.length<period.days;
+}
+const liveTickets=(session,now)=>(session?.game?.loginRewards?.tickets||[]).filter(t=>Number.isFinite(t.expiresAt)&&t.expiresAt>now).sort((a,b)=>a.expiresAt-b.expiresAt);
+export function grantLoginTicket(session,now=Date.now()) {
+    session.game.loginRewards||={};
+    const ticket={grantedAt:now,expiresAt:now+LOGIN_TICKET_LIFETIME};
+    session.game.loginRewards.tickets=[...liveTickets(session,now),ticket];
+    return ticket;
+}
 export function getLoginRewardsState(session,now=Date.now()) {
     const period=loginPeriod(now), grade=loginGrade(session), stored=session?.game?.loginRewards;
-    const claimed=stored?.month===period.month&&Array.isArray(stored.claimed)?stored.claimed:[];
+    const {claimed,received,lastClaimDay}=progress(session,period),nextDay=claimed.length+1;
+    const canClaim=lastClaimDay!==period.day&&nextDay<=period.days;
+    const missedDays=Math.max(0,period.day-claimed.length-(canClaim?1:0)),tickets=liveTickets(session,now);
     const pool=monthBoxPool(grade),weight=pool.reduce((sum,r)=>sum+r.weight,0);
-    return {...period,serverNow:now,grade:gradeLabel(grade),canClaim:!claimed.includes(period.day),
-        days:Array.from({length:period.days},(_,i)=>({day:i+1,status:claimed.includes(i+1)?'claimed':i+1===period.day?'today':i+1<period.day?'missed':'future',
-            rewards:rewardRows((stored?.month===period.month&&stored.received?.[i+1]?.reward)||dailyLoginReward(i+1,period.days,grade)),
-            boxPool:i+1===period.days?boxPoolRows((stored?.month===period.month&&stored.received?.[i+1]?.grade)||grade):null})),
+    return {...period,serverNow:now,grade:gradeLabel(grade),canClaim,nextDay,missedDays,tickets,canFill:!canClaim&&missedDays>0&&tickets.length>0,
+        days:Array.from({length:period.days},(_,i)=>({day:i+1,status:claimed.includes(i+1)?'claimed':i+1===nextDay&&canClaim?'today':i+1<=claimed.length+missedDays?'missed':'future',
+            rewards:rewardRows(received[i+1]?.reward||dailyLoginReward(i+1,period.days,grade)),
+            boxPool:i+1===period.days?boxPoolRows(received[i+1]?.grade||grade):null})),
         coupons:Object.keys(session?.game?.inventory?.materials||{}).map(loginItemInfo).filter(info=>info&&getMaterialCount(session,info.key)>0)
             .map(info=>({...info,count:getMaterialCount(session,info.key),choices:itemChoices(info),needLevel:info.kind.startsWith('shadow_')?gradeInfo(info.grade).lvl.from:1,
                 pendingReward:stored?.boxRolls?.[info.key]?rewardRows(stored.boxRolls[info.key]):null,
@@ -113,18 +137,20 @@ function grant(session,reward,consumeKey=null,now=Date.now()) {
     for(const potion of reward.potions||[]){inv.potions||={items:[]};inv.potions.items||=[];const own=inv.potions.items.find(p=>p.id===potion.id);if(own)own.count=amount(own.count)+potion.count;else inv.potions.items.push(structuredClone(potion));}
     return {ok:true,rewards:rewardRows(reward),changed};
 }
-export function claimLoginReward(session,now=Date.now(),expectedPeriod=null) {
+export function claimLoginReward(session,now=Date.now(),expectedPeriod=null,{ticket=false}={}) {
     const period=loginPeriod(now), stored=session?.game?.loginRewards;
     if(expectedPeriod&&(expectedPeriod.month!==period.month||expectedPeriod.day!==period.day))return {ok:false,reason:'day_changed'};
-    if(stored?.month===period.month&&stored.claimed?.includes(period.day))return {ok:false,reason:'already_claimed'};
-    const grade=loginGrade(session),reward=dailyLoginReward(period.day,period.days,grade);
+    const current=progress(session,period),day=current.claimed.length+1;
+    const view=getLoginRewardsState(session,now);
+    if(ticket&&!view.canFill)return {ok:false,reason:!view.tickets.length?'ticket_missing':'no_missed_days'};
+    if(!ticket&&!view.canClaim)return {ok:false,reason:'already_claimed'};
+    const grade=loginGrade(session),reward=dailyLoginReward(day,period.days,grade);
     const result=grant(session,reward,null,now);
     if(!result.ok)return result;
     session.game.loginRewards||={};
-    if(stored?.month!==period.month){session.game.loginRewards.month=period.month;session.game.loginRewards.claimed=[];session.game.loginRewards.received={};}
-    session.game.loginRewards.claimed.push(period.day);
-    session.game.loginRewards.received||={};session.game.loginRewards.received[period.day]={grade,reward:structuredClone(reward)};
-    return {...result,action:'claim'};
+    Object.assign(session.game.loginRewards,{version:2,month:period.month,claimed:[...current.claimed,day],received:{...current.received,[day]:{grade,reward:structuredClone(reward)}},lastClaimDay:ticket?current.lastClaimDay:period.day});
+    if(ticket)session.game.loginRewards.tickets=liveTickets(session,now).slice(1);
+    return {...result,action:ticket?'fill':'claim',rewardDay:day};
 }
 const shadowItem=(definition,days,enchant,now)=>({...instantiate(definition),shadow:true,bound:true,noTrade:true,tradeable:false,timed:true,enchant,expiresAt:now+days*LOGIN_DAY_MS});
 function rollBox(grade,now,random) {

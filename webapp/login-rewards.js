@@ -4,7 +4,7 @@ import {materialIcon} from './material-icons.js';
 import {loginItemArt} from './art/login-item-art.js';
 import {createGamePopup} from './game-popup.js';
 
-const REASONS={day_changed:'Наступил новый день. Календарь обновлён.',already_claimed:'Сегодня награда уже получена.',inventory_full:'Освободите место в инвентаре.',coupon_missing:'Купон больше недоступен.',invalid_choice:'Выберите награду из списка.',level_too_low:'Сохраните купон до нужного уровня.',not_fallen:'Персонаж уже жив.'};
+const REASONS={ticket_missing:'Нет действующего тикета.',no_missed_days:'Сначала получите ежедневную награду. Тикет закрывает только пропущенные дни.',day_changed:'Наступил новый день. Календарь обновлён.',already_claimed:'Сегодня награда уже получена.',inventory_full:'Освободите место в инвентаре.',coupon_missing:'Купон больше недоступен.',invalid_choice:'Выберите награду из списка.',level_too_low:'Сохраните купон до нужного уровня.',not_fallen:'Персонаж уже жив.'};
 const number=value=>new Intl.NumberFormat('ru-RU').format(value||0);
 function rewardIcon(row) {
     const key=row.key||'';
@@ -35,16 +35,17 @@ export async function openLoginRewards({api,renderState,haptic=()=>{},onClose,in
                 ${coupon.kind==='box'?boxHtml():''}</section>`;
         }
         const day=state.days.find(d=>d.day===selectedDay);
-        if(day)return `<section class="login-detail"><button type="button" class="login-back" data-login-back>← Календарь</button><h3>${esc(calendarDate(state,day.day))}</h3>${rowsHtml(day.rewards)}${day.rewards.some(r=>r.key?.includes('_box_'))?boxHtml():''}<button type="button" class="login-primary" data-login-claim ${day.status!=='today'||!state.canClaim?'disabled':''}>${day.status==='claimed'?'Получено':day.status==='missed'?'День пропущен':day.status==='future'?'Пока недоступно':'Получить награду'}</button></section>`;
+        if(day)return `<section class="login-detail"><button type="button" class="login-back" data-login-back>← Календарь</button><h3>Награда ${day.day}</h3>${rowsHtml(day.rewards)}${day.rewards.some(r=>r.key?.includes('_box_'))?boxHtml():''}<button type="button" class="login-primary" data-login-claim ${day.status!=='today'||!state.canClaim?'disabled':''}>${day.status==='claimed'?'Получено':day.status==='missed'?'День пропущен':day.status==='future'?'Пока недоступно':'Получить награду'}</button></section>`;
         return '';
     }
     function boxHtml(){const pool=state.coupons.find(c=>c.key===selectedKey)?.boxPool||state.days.find(d=>d.day===selectedDay)?.boxPool||state.boxPool;return `<details class="login-box-pool"><summary>Возможные подарки</summary><p>Один случайный подарок. Вероятности зависят от грейда коробки.</p><ul>${pool.map(row=>`<li><span>${esc(row.name)}</span><small>${row.chance}%</small></li>`).join('')}</ul></details>`;}
     function render() {
         const page=detail();
         const month=new Date(state.startsAt).toLocaleDateString('ru-RU',{month:'long',year:'numeric',timeZone:'UTC'});
-        content.innerHTML=`<div class="login-meta"><strong>${esc(month)}</strong><span>${esc(state.grade)}</span></div><p class="login-period">С ${esc(calendarDate(state,1))} по ${esc(calendarDate(state,state.days.length))}</p><p class="login-hint">Обновление в 03:00 МСК · пропущенные дни не переносятся.</p><nav class="login-tabs" aria-label="Награды за вход"><button type="button" data-login-tab="calendar" aria-pressed="${tab==='calendar'}">Календарь</button><button type="button" data-login-tab="coupons" aria-pressed="${tab==='coupons'}">Купоны · ${state.coupons.reduce((sum,c)=>sum+c.count,0)}</button></nav>
+        content.innerHTML=`<div class="login-meta"><strong>${esc(month)}</strong><span>${esc(state.grade)}</span></div><p class="login-period">С ${esc(calendarDate(state,1))} по ${esc(calendarDate(state,state.days.length))}</p><p class="login-hint">Награды идут по порядку, с первого дня. Одна бесплатно в день · обновление в 03:00 МСК.</p><nav class="login-tabs ui-folder-tabs" aria-label="Награды за вход"><button type="button" data-login-tab="calendar" aria-pressed="${tab==='calendar'}">Календарь</button><button type="button" data-login-tab="coupons" aria-pressed="${tab==='coupons'}">Купоны · ${state.coupons.reduce((sum,c)=>sum+c.count,0)}</button></nav>
             ${page|| (tab==='calendar'?`<div class="login-weekdays" aria-hidden="true">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d=>`<span>${d}</span>`).join('')}</div><div class="login-grid" aria-label="Дни месяца">${Array.from({length:state.firstWeekday},()=>'<span></span>').join('')}${state.days.map(day=>dayHtml(day,state)).join('')}</div><button type="button" class="login-primary" data-login-claim ${!state.canClaim?'disabled':''}>${state.canClaim?'Получить сегодняшнюю награду':'Сегодня получено'}</button>`:
                 `<div class="login-coupons">${state.coupons.length?state.coupons.map(c=>`<button type="button" data-login-coupon="${esc(c.key)}"><span class="login-item-icon">${rewardIcon(c)}</span><span><strong>${esc(c.name)}</strong><small>Привязан к персонажу · без срока хранения</small></span><b>×${number(c.count)}</b></button>`).join(''):'<p>Купоны появятся после получения наград.</p>'}</div>`)}
+            ${state.tickets?.length?`<section class="login-ticket ui-content-row"><span>${'<img src="/art/l2-extra/icon-etc_ticket_i00-128.webp" alt="">'}</span><div><strong>Тикет пропущенного дня · ${state.tickets.length}</strong><small>Ближайший истекает ${new Date(state.tickets[0].expiresAt).toLocaleDateString('ru-RU',{timeZone:'Europe/Moscow'})} · пропущено ${state.missedDays}</small></div><button type="button" class="ui-button" data-login-fill ${!state.canFill?'disabled':''}>Заполнить</button></section>`:''}
             ${state.runes.length?`<aside class="login-runes"><strong>Активные руны</strong>${state.runes.map(r=>`<p>${esc(r.name)}<small>До ${new Date(r.until).toLocaleString('ru-RU',{timeZone:'Europe/Moscow'})} МСК</small></p>`).join('')}</aside>`:''}`;
         content.querySelectorAll('[data-login-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.loginTab;selectedKey=null;selectedDay=null;render();});
         content.querySelectorAll('[data-login-day]').forEach(b=>b.onclick=()=>{selectedDay=Number(b.dataset.loginDay);selectedKey=null;render();});
@@ -56,12 +57,13 @@ export async function openLoginRewards({api,renderState,haptic=()=>{},onClose,in
             content.querySelector('[data-login-choice-hint]').textContent=choice?`${choice.name} ×${number(choice.count)}`:'';
         });
         content.querySelector('[data-login-claim]')?.addEventListener('click',()=>act({action:'claim'}));
+        content.querySelector('[data-login-fill]')?.addEventListener('click',()=>act({action:'fill'}));
         content.querySelector('[data-login-redeem]')?.addEventListener('click',()=>act({action:'redeem',key:selectedKey,choice:content.querySelector('[data-login-choice]')?.value||''}));
         if(pending)content.querySelectorAll('button,select').forEach(e=>e.disabled=true);
     }
     async function act(body) {
         if(pending)return;pending=true;content.querySelectorAll('button,select').forEach(e=>e.disabled=true);feedback.textContent='';
-        try{const result=await api('/api/login-rewards/action',{method:'POST',body:JSON.stringify(body.action==='claim'?{...body,month:state.month,day:state.day}:body)});state=result.loginRewards;selectedKey=null;selectedDay=null;
+        try{const result=await api('/api/login-rewards/action',{method:'POST',body:JSON.stringify(['claim','fill'].includes(body.action)?{...body,month:state.month,day:state.day}:body)});state=result.loginRewards;selectedKey=null;selectedDay=null;
             if(body.action==='claim')tab='coupons';feedback.textContent=result.rewards.map(r=>`${r.name} ×${number(r.count)}`).join(' · ');if(result.state)renderState?.(result.state);haptic('light');
         }catch(error){if(error.payload?.loginRewards)state=error.payload.loginRewards;feedback.textContent=REASONS[error.payload?.reason]||error.message;}
         finally{pending=false;if(overlay.isConnected)render();}

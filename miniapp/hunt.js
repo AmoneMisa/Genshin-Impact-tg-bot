@@ -1,4 +1,4 @@
-import {soulCrystalState,soulChargeInfo} from '../functions/game/equipment/soulCrystals.js';
+import {soulCrystalState} from '../functions/game/equipment/soulCrystals.js';
 // Hunting fields: zones by level, a real-time fight with one mob at a time (skills, potions, shots) and
 // the Blue / Red champions. The fight itself is functions/game/hunt/; this module is the Mini App face.
 import { CHAMPIONS, HUNT } from '../functions/game/hunt/huntConfig.js';
@@ -67,7 +67,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
         changed: swings.length > 0,
         now,world:{mode:game.world?.mode,channel:game.world?.channel,walkHome:game.world?.walkHome,death:game.world?.death||null},
         resurrections:reviveEntries(session,now).filter(s=>s.level>0),
-        soulCrystals:{...soulCrystalState(session),charge:soulChargeInfo(session,hunt.mob)},
+        soulCrystals:soulCrystalState(session),
         zones: getZones().map(zone => zoneDto(zone, level)),
         zone: hunt.zone,
         mob: hunt.mob ? {...mobDto(hunt.mob, now), drops: huntDropPreview(level, getMobDef(getZone(hunt.mob.zone), hunt.mob.mobId), hunt.mob.champion,session)} : null,

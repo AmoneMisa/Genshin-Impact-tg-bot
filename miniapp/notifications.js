@@ -1,3 +1,5 @@
+import {availableAcademyQuestCount} from '../functions/game/academy/academy.js';
+import {getClassQuestView} from '../functions/game/classes/classQuests.js';
 import {dailyGacha} from '../functions/game/equipment/gachaDaily.js';
 // Mini App notifications: Telegram pushes for social events and the counters
 // behind the red dots (friends, clan) on the main screen.
@@ -11,7 +13,7 @@ import { getSocialState } from './social.js';
 import { getChestState } from './chest.js';
 import { getClanProgressionState } from './clanProgression.js';
 import { getClanQuizState } from './clan.js';
-import {loginPeriod} from '../template/loginRewards.js';
+import {canClaimLoginReward} from '../functions/game/login/loginRewards.js';
 
 const DEDUPE_MS = 30_000;
 const recent = new Map();
@@ -55,13 +57,12 @@ export function bossSpawnRecipients(chat, summonerId, now = Date.now()) {
 /** Ready-to-collect things on the player's own session: bonus, chest, arena, gacha. */
 export function personalBadges(session) {
   if (!session) return { bonus: 0, chest: 0, arena: 0, gacha: 0, loginRewards:0 };
-  const period=loginPeriod(),calendar=session.game?.loginRewards;
   let chest = 0;
   try { chest = getChestState(session).available ? 1 : 0; } catch { chest = 0; }
   const gacha = session.game?.gachaTempItem || (session.game && dailyGacha(session).remaining > 0) ? 1 : 0;
   return {
     bonus: Number(session.game?.bonusChances) > 0 ? 1 : 0,
-    loginRewards:calendar?.month===period.month&&calendar.claimed?.includes(period.day)?0:1,
+    loginRewards:canClaimLoginReward(session)?1:0,
     chest,
     arena: Number(session.game?.arenaChances) > 0 ? 1 : 0,
     gacha,
@@ -90,6 +91,9 @@ export function getBadges(chat, userId, clan = null, { session = null, bossAlive
   }
 
   const personal = personalBadges(session);
+  const classQuests=session?getClassQuestView(session).promotions.filter(q=>q.status==='available').length:0;
+  const academy=availableAcademyQuestCount(session);
+  personal.classQuests=classQuests;personal.city=academy;
   const boss = bossAlive ? 1 : 0;
   const total = friends + clanCount + boss + mail + Object.values(personal).reduce((sum, value) => sum + value, 0);
   return { friends, clan: clanCount, boss, mail, ...personal, total };

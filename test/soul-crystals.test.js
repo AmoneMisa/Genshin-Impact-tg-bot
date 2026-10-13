@@ -16,7 +16,7 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getStat from '../functions/game/player/getters/getEquipStatByName.js';
 import {applySoulHit,tickSoulDots,applySoulSpell,soulShotCost} from '../functions/game/equipment/soulCrystalCombat.js';
 import {advanceHunt} from '../functions/game/hunt/huntFight.js';
-const hero=(level=80)=>{const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:level,currentExp:0},inventory:{gold:5e7,crystals:0,ironOre:0,luckCoins:1000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};changePlayerGameClass(s,'mage');updatePlayerStats(s);return s;};
+const hero=(level=80)=>{const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:level,currentExp:0},inventory:{gold:5e7,crystals:0,ironOre:0,luckCoins:1000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},soulCrystalQuest:{startedAt:1},respawnTime:0}};changePlayerGameClass(s,'mage');updatePlayerStats(s);return s;};
 const weapon=(id='S:weapon:mace')=>instantiate(findCatalogItem(id),7);
 const fund=(s,item,id='acumen')=>{const o=saOptions(item).find(o=>o.id===id),info=saInfo(s,item);assert.ok(o,id);addMaterial(s,soulCrystalKey(o.color,o.stage),1);addMaterial(s,info.gemKey,info.gems);return o;};
 test('shops cover all three colors: 0–13 adena, 14–17 COL, with monotonic prices',()=>{
@@ -40,7 +40,7 @@ test('Acumen and Mana Up affect the real combat getters once for a two-slot weap
  s.game.equipmentStats={};const second=weapon();fund(s,second,'mana-up');s.game.equipmentStats[second.slots[0]]=second;const before=getMaxMp(s);s.game.equipmentStats={};installWeaponSa(s,second,'mana-up');s.game.equipmentStats[second.slots[0]]=second;assert.ok(Math.abs(getMaxMp(s)-Math.round(before*1.3))<=1);
 });
 test('normal absorption requires a selected crystal, correct monster, half HP and victory',()=>{
- const s=hero(40);addMaterial(s,'soul_red_0',2);assert.equal(selectSoulCrystal(s,'red',0).ok,true);const mob={mobId:'20584',hp:100,currentHp:51};assert.equal(chargeSoulCrystal(s,mob).reason,'soul_hp');mob.currentHp=50;assert.equal(chargeSoulCrystal(s,mob).ok,true);assert.equal(chargeSoulCrystal(s,mob).reason,'soul_already_charged');mob.currentHp=0;const r=absorbHuntSoul(s,mob,()=>0);assert.equal(r.stage,1);assert.equal(getMaterialCount(s,'soul_red_0'),1);assert.equal(getMaterialCount(s,'soul_red_1'),1);assert.equal(soulCrystalState(s).active.stage,1);
+ const s=hero(40);addMaterial(s,'soul_red_0',1);assert.equal(selectSoulCrystal(s,'red',0).ok,true);const mob={mobId:'20584',hp:100,currentHp:51};assert.equal(chargeSoulCrystal(s,mob).reason,'soul_hp');mob.currentHp=50;assert.equal(chargeSoulCrystal(s,mob).ok,true);assert.equal(chargeSoulCrystal(s,mob).reason,'soul_already_charged');mob.currentHp=0;const r=absorbHuntSoul(s,mob,()=>0);assert.equal(r.stage,1);assert.equal(getMaterialCount(s,'soul_red_0'),0);assert.equal(getMaterialCount(s,'soul_red_1'),1);assert.equal(soulCrystalState(s).active.stage,1);
 });
 test('failed absorption and an incompatible monster do not spend crystals',()=>{
  const s=hero();addMaterial(s,'soul_blue_0');selectSoulCrystal(s,'blue',0);const mob={mobId:'20584',hp:100,currentHp:30};chargeSoulCrystal(s,mob);mob.currentHp=0;assert.equal(absorbHuntSoul(s,mob,()=>.99).outcome,'unchanged');assert.equal(getMaterialCount(s,'soul_blue_0'),1);assert.equal(chargeSoulCrystal(s,{mobId:'21100',hp:100,currentHp:10}).reason,'soul_wrong_mob');

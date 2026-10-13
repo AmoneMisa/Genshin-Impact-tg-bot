@@ -11,7 +11,7 @@ const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8
 const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m=>m[0]).join('');
 const browser=await chromium.launch({headless:true,executablePath:process.env.ITEM_ART_BROWSER}),results=[];
 let now=Date.parse('2026-10-01T00:00:00Z');
-try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[40,'C'],[52,'B'],[61,'A'],[76,'S'],[80,'S80'],[84,'S84']]){
+try{for(const width of [320,390,820])for(const [level,grade] of [[1,'NG'],[20,'D'],[40,'C'],[52,'B'],[61,'A'],[76,'S'],[80,'S80'],[84,'S84']]){
     const hero={game:{stats:{lvl:level},equipmentStats:{},gameClass:{stats:{name:'humanWizard',hp:1000,maxHp:2000,mp:500,maxMp:1000},skills:[]},inventory:{gold:0,materials:{login_box_S:1,login_shadow_weapon_C:1,login_shadow_armor_C:1,login_shadow_jewelry_C:1,login_rune_exp_S:1},equipment:{items:[]},potions:{items:[]}}}};
     let actions=0;const page=await browser.newPage({viewport:{width,height:720},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.route('**/*',async route=>{
@@ -42,13 +42,15 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
     assert.equal(await page.locator('.login-day-number').allTextContents().then(a=>a.join(',')),Array.from({length:31},(_,i)=>i+1).join(','));
     assert.equal(await page.locator('.login-day-item').count(),31);assert.ok(await page.locator('.login-day-item img').count()>=31);
     assert.equal(await page.locator('[data-login-day="5"] .login-day-count').textContent(),String(30+[[1,'NG'],[20,'D'],[40,'C'],[52,'B'],[61,'A'],[76,'S'],[80,'S80'],[84,'S84']].findIndex(([l])=>l===level)*20));
-    assert.equal(await page.locator('[data-login-day="7"] .login-day-extra').textContent(),'+2');
-    assert.equal(await page.locator('[data-login-day="7"] .is-shadow-item').count(),1);
+    if(level>=40)assert.equal(await page.locator('[data-login-day="7"] .login-day-extra').textContent(),'+2');
+    assert.equal(await page.locator('[data-login-day="7"] .is-shadow-item').count(),level>=40?1:0);
     assert.equal(await page.locator('.login-pack-icon svg').count(),0);
     await page.waitForFunction(()=>[...document.querySelectorAll('.login-pack-icon img')].every(i=>i.complete&&i.naturalWidth>0));
     const artStyle=await page.locator('[data-login-day="7"] .login-pack-icon').evaluate(p=>({border:getComputedStyle(p).borderTopColor,contents:getComputedStyle(p.querySelector('.login-pack-contents')).width}));
-    assert.equal(artStyle.border,'rgb(241, 139, 199)');assert.equal(artStyle.contents,'20px');
+    if(level>=40){assert.equal(artStyle.border,'rgb(241, 139, 199)');assert.equal(artStyle.contents,'20px');}
     assert.equal(await page.locator('.login-head').count(),0);
+    const tabs=await page.locator('[data-login-tab]').evaluateAll(buttons=>buttons.map(b=>({height:b.getBoundingClientRect().height,top:b.getBoundingClientRect().top,align:getComputedStyle(b).alignItems,justify:getComputedStyle(b).justifyContent,padding:getComputedStyle(b).paddingLeft})));
+    assert.equal(tabs[0].height,tabs[1].height);assert.equal(tabs[0].top,tabs[1].top);for(const tab of tabs){assert.equal(tab.align,'center');assert.equal(tab.justify,'center');assert.ok(parseFloat(tab.padding)>0);}
     const overflow=async()=>assert.equal(await panel.evaluate(p=>p.scrollWidth>p.clientWidth+1),false);
     await overflow();
     if(grade==='S')await page.screenshot({path:path.join(output,`calendar-${width}.png`)});
@@ -96,7 +98,7 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
             assert.equal(await page.locator('[data-login-day]').count(),count);
             assert.equal(await page.locator('[aria-current="date"] .login-day-number').textContent(),'15');
             assert.ok((await page.locator('.login-period').textContent()).endsWith(last));
-            await page.locator(`[data-login-day="${count}"]`).click();assert.equal(await page.locator('.login-detail h3').textContent(),last);await overflow();
+            await page.locator(`[data-login-day="${count}"]`).click();assert.equal(await page.locator('.login-detail h3').textContent(),`Награда ${count}`);await overflow();
             await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.login-overlay'));
         }
         now=Date.parse('2026-10-01T00:00:00Z');

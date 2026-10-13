@@ -208,7 +208,7 @@ function render(state) {
       const feature = state.features.find(item => item.id === id);
       if (feature) launchFeature(feature, render, navigation);
     };
-    $('active-quest-details').onclick = () => open('classQuests');
+    $('active-quest-details').onclick = () => quest.kind==='soul'?ensureFeatureStyles().then(()=>import('./academy.js')).then(({openAcademy})=>openAcademy({api,haptic,renderState:render,openMainQuests:()=>openClassQuests({api,haptic,renderState:render,statusElement:document.createElement('span')})})):open('classQuests');
     $('active-quest-go').onclick = () => open(quest.navigation?.feature || 'classQuests', quest.navigation);
   }
   renderPlayerHud({ state, getElement: $, formatNumber });

@@ -108,13 +108,14 @@ function collectChip(build) {
 
 /** One building lot: a soft-edged painting "island" with an ornate plate over it. */
 export function buildingCard(build, { banner = false } = {}) {
+  const name=(build.availableQuests?'<span class="ui-quest-dot" aria-label="Доступен квест"></span>':'')+escapeHtml(build.name);
   return `
   <article class="city-card ${banner ? 'banner' : ''} ${build.upgrading ? 'upgrading' : ''}" data-city-card="${escapeHtml(build.id)}" tabindex="0" role="button" aria-label="${escapeHtml(build.name)}">
     ${lotArtHtml(build, banner)}
     ${collectChip(build)}
     <div class="city-plate">
       <div class="city-ribbon">
-        <strong>${escapeHtml(build.name)}</strong>
+        <strong>${name}</strong>
         ${build.canUpgrade ? '<span class="city-up" aria-label="Можно улучшить">▲</span>' : ''}
       </div>
       <small class="city-level">Ур. ${formatNumber(build.currentLevel)}</small>

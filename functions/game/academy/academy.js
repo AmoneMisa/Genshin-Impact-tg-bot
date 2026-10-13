@@ -17,6 +17,8 @@ import {gainExp, EXP_RATE} from '../player/vitality.js';
 import {hasInventoryRoom} from '../builds/palaceCapacity.js';
 import {BOUNTY_CATEGORIES, BOUNTY_TITLES, bountyExtras, bountyGradeForLevel} from './bountyRewards.js';
 import {getClassQuestView} from '../classes/classQuests.js';
+import {grantLoginTicket} from '../login/loginRewards.js';
+import {soulCrystalQuestState} from '../equipment/soulCrystalQuest.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 
@@ -204,7 +206,8 @@ export function claimBounty(session, scope, id, now = Date.now(), random = Math.
     const token = random() < (TOKEN_CHANCE[scope] || 0)
         && (getMaterialCount(session,'clan_boss_token')>0 || hasInventoryRoom(session,1));
     if (token) addMaterial(session, 'clan_boss_token', 1);
-    return {ok: true, reward:quest.reward,gainedExp,token};
+    const calendarTicket=(scope==='week'||scope==='weekly')&&random()<0.05?grantLoginTicket(session,now):null;
+    return {ok: true, reward:quest.reward,gainedExp,token,calendarTicket};
 }
 
 // ---- epic passes ----
@@ -330,6 +333,15 @@ export function getAcademyState(session, now = Date.now()) {
             };
         }),
         classQuests: getClassQuestView(session),
+        soulQuest: soulCrystalQuestState(session),
         gold: number(session.game.inventory?.gold),
     };
+}
+
+export function availableAcademyQuestCount(session){
+    if(!session)return 0;
+    const level=number(session.game?.stats?.lvl,1),academy=session.game?.academy||{};
+    return getClassQuestView(session).promotions.filter(q=>q.status==='available').length
+        +(soulCrystalQuestState(session).canStart?1:0)
+        +Object.keys(PASS_EPICS).filter(name=>level>=number(getEpicTemplate(name)?.epic.minLevel)&&!academy.passQuests?.[name]&&!number(academy.passes?.[name])).length;
 }

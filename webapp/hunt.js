@@ -310,7 +310,9 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       </article>`).join('')}</div>`;
   }
 
-  function soulHtml(){const soul=state.soulCrystals;if(!soul)return '';const names={red:'Красный',green:'Зелёный',blue:'Синий'},active=soul.active;return '<section class="mmo-frame hunt-soul"><strong>'+materialIcon(active?'soul_'+active.color+'_'+active.stage:'soul_red_0')+' Кристалл души '+(active?'· '+names[active.color]+' '+active.stage+' ур.':'· не выбран')+'</strong><p>С 40 уровня. Используй на подходящем монстре при HP ≤ 50%, затем победи. 10+ — прокачка на рейдах.</p><div class="select-row"><label for="hunt-soul-select">Кристалл</label><select id="hunt-soul-select" data-soul-select><option value="">Не выбран</option>'+soul.stock.map(o=>'<option value="'+o.color+':'+o.stage+'" '+(active?.color===o.color&&active?.stage===o.stage?'selected':'')+'>'+names[o.color]+' · '+o.stage+' ур. ×'+o.count+'</option>').join('')+'</select></div>'+(state.mob?'<button class="equipment-action forge-action" data-soul-charge '+(soul.charge?.ok?'':'disabled')+'>Поглотить душу</button><small>'+escapeHtml(soul.charge?.ok?'Готов к использованию':REASONS[soul.charge?.reason]||'')+'</small>':'')+'<p>Камни печати → AA · баланс '+formatNumber(soul.aa)+'</p><div class="hunt-seal-rates">'+Object.entries(soul.seals).map(([c,o])=>materialIcon('seal_'+c)+' '+formatNumber(o.count)+' × '+o.rate+' AA').join(' · ')+'</div><button class="equipment-action forge-action" data-seal-exchange '+(Object.values(soul.seals).some(o=>o.count>0)?'':'disabled')+'>Обменять все камни на AA</button></section>';}
+  function soulHtml(){const soul=state.soulCrystals;if(!soul)return '';const names={red:'Красный',green:'Зелёный',blue:'Синий'},active=soul.active;
+    return '<section class="mmo-frame hunt-soul"><strong>'+materialIcon(active?'soul_'+active.color+'_'+active.stage:'soul_red_0')+' Кристалл души '+(active?'· '+names[active.color]+' '+active.stage+' ур.':'')+'</strong><p>'+(soul.quest?.active?(soul.multiple?'Для прокачки оставьте в сумке только один кристалл души.':active?'Души поглощаются автоматически после победы над подходящими монстрами. Шансы и предел стадии зависят от монстра.':'Возьмите один кристалл души для прокачки.'):'Получите квест «Улучшение оружия» в Академии с 40 уровня.')+'</p></section>';
+  }
   function lastHtml() {
     const last = state.last;
     if (!last) return '';
@@ -370,7 +372,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       body.push('</section>');
       if(!peer){
         body.push(lastHtml());
-        body.push('<details class="hunt-extra"><summary>Кристалл души и камни печати</summary>'+soulHtml()+'</details>');
+        body.push('<details class="hunt-extra"><summary>Кристалл души</summary>'+soulHtml()+'</details>');
       }
     } else {
       body.push(soulHtml());
@@ -407,8 +409,6 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelectorAll('[data-world-stairs]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/world/action',{action:'floor',floor:(state.field?.floor||1)+Number(b.dataset.worldStairs)});render();}));
     content.querySelectorAll('[data-zone-kind]').forEach(b=>b.addEventListener('click',()=>{zoneKind=b.dataset.zoneKind;render();}));
     content.querySelector('[data-soul-select]')?.addEventListener('change',async e=>{const [color,stage]=e.target.value.split(':');await run('/api/soul/select',{color:color||null,stage:Number(stage)});render();});
-    content.querySelector('[data-soul-charge]')?.addEventListener('click',async()=>{const p=await run('/api/hunt/soul');if(p)say('Кристалл использован. Победи монстра для попытки прокачки.');render();});
-    content.querySelector('[data-seal-exchange]')?.addEventListener('click',async()=>{const counts=Object.fromEntries(Object.entries(state.soulCrystals.seals).map(([c,o])=>[c,o.count]));const p=await run('/api/catacombs/exchange',{counts});if(p)say('Получено '+formatNumber(p.aa)+' AA.');render();});
     content.querySelectorAll('[data-skill]').forEach(button => button.addEventListener('click', e => skill(button.dataset.skill,e.ctrlKey)));
     content.querySelectorAll('[data-bar-tab]').forEach(button => button.addEventListener('click', () => { skillTab = button.dataset.barTab; editBar = false; render(); }));
     content.querySelector('[data-bar-edit]')?.addEventListener('click', () => { editBar = true; barDraft = [...(state.player.hotbar || [])]; render(); });

@@ -4,7 +4,7 @@ import { buildStorageCap } from '../functions/game/builds/buildYield.js';
 import { forgeBonuses, FORGE_MAX_LEVEL } from '../functions/game/builds/forgeBonuses.js';
 import { PALACE_MAX_LEVEL, inventoryCapacity, warehouseCapacity, inventoryUsage } from '../functions/game/builds/palaceCapacity.js';
 import buildsTemplate from '../template/buildsTemplate.js';
-import { bountyQuality } from '../functions/game/academy/academy.js';
+import { bountyQuality,availableAcademyQuestCount } from '../functions/game/academy/academy.js';
 import getBuildFromTemplate from '../functions/game/builds/getBuildFromTemplate.js';
 import calculateUpgradeCosts from '../functions/game/builds/calculateUpgradeCosts.js';
 import calculateIncreaseUpgradeTime from '../functions/game/builds/calculateUpgradeTime.js';
@@ -321,6 +321,7 @@ function buildState(session, buildName, now = Date.now()) {
 
   return {
     id: buildName,
+    availableQuests:buildName==='academy'?availableAcademyQuestCount(session):0,
     name: build.customName || template.name || buildName,
     defaultName: template.name || buildName,
     customName: build.customName || null,
