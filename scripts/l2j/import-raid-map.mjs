@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import positions from '../../template/worldBossMap.js';
 import bosses from '../../template/worldBosses.js';
-import {worldBossList} from '../../functions/game/boss/epicBosses.js';
+import {worldBossTemplates} from '../../functions/game/boss/epicBosses.js';
 const root='.tmp/world-source/',read=n=>fs.readFileSync(root+n,'utf8');
 for(const m of read('raidboss_spawnlist.sql').matchAll(/^\((\d+),(-?\d+),(-?\d+),(-?\d+),/gm))positions[m[1]]={x:+m[2],y:+m[3],z:+m[4],source:'raidboss_spawnlist.sql'};
 function loc(file,name){const s=read(file+'.java'),m=s.match(new RegExp(name+' = new Location\\((-?\\d+), (-?\\d+), (-?\\d+)'));if(!m)throw Error('Missing '+name);return {x:+m[1],y:+m[2],z:+m[3],source:file+'.java#'+name};}
@@ -18,5 +18,5 @@ const roomRows=[...(rooms||'').matchAll(/\{\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)/g)].
 if(!roomRows.length)throw Error('Missing Zaken rooms');positions[29022]={...roomRows[0],rooms:roomRows,source:'CavernOfThePirateCaptain.java#ROOM_DATA'};
 fs.writeFileSync('template/worldBossMap.js','// Original H5 raid SQL and epic script coordinates; instance rooms are retained separately.\nexport default '+JSON.stringify(positions)+';\n');
 const missing=bosses.filter(b=>!positions[b.id]).map(b=>({id:b.id,name:b.name,level:b.level}));
-fs.mkdirSync('docs/atlas-redesign',{recursive:true});fs.writeFileSync('docs/atlas-redesign/missing-raid-spawns.json',JSON.stringify(worldBossList().filter(b=>!b.map).map(b=>({name:b.name,level:b.level,raid:b.raid})),null,2)+'\n');
+fs.mkdirSync('docs/atlas-redesign',{recursive:true});fs.writeFileSync('docs/atlas-redesign/missing-raid-spawns.json',JSON.stringify(worldBossTemplates().filter(b=>!positions[b.world.npcId]).map(b=>({id:b.world.npcId,name:b.name,level:b.world.level,raid:!!b.world.raid})),null,2)+'\n');
 console.log(JSON.stringify({fixedBossPoints:bosses.length-missing.length,withoutStaticSpawn:missing.length}));

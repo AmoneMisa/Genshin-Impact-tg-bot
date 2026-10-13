@@ -1,437 +1,250 @@
 [
   {
-    "name": "Tiberias",
-    "level": 22,
-    "raid": true
-  },
-  {
-    "name": "Lead Tracker Sharuk",
-    "level": 23,
-    "raid": true
-  },
-  {
-    "name": "Anakazel",
-    "level": 28,
-    "raid": true
-  },
-  {
-    "name": "Lost Warden",
-    "level": 29,
-    "raid": true
-  },
-  {
-    "name": "Lost Captain",
-    "level": 29,
-    "raid": true
-  },
-  {
-    "name": "Guillotine Warden",
-    "level": 35,
-    "raid": true
-  },
-  {
-    "name": "Fire Lord Shadar",
-    "level": 35,
-    "raid": true
-  },
-  {
+    "id": 25487,
     "name": "Water Spirit Lian",
     "level": 40,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25487,0,0,0,0,0,0,0,0), -- Water Spirit Lian (40) (Not spawned anymore in H5)"
   },
   {
+    "id": 25490,
     "name": "Gwindorr",
     "level": 40,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25490,0,0,0,0,0,0,0,0), -- Gwindorr (40) (Not spawned anymore in H5)"
   },
   {
+    "id": 25412,
     "name": "Necrosentinel Royal Guard",
     "level": 47,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25412,0,0,0,0,0,0,0,0), -- Necrosentinel Royal Guard (47) (Not spawned anymore in H5)"
   },
   {
+    "id": 25217,
     "name": "Cursed Clara",
     "level": 50,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25217,89904,105712,-3292,0,86400,43200,369009,1660), -- Cursed Clara (50) (Not spawned anymore in H5)"
   },
   {
-    "name": "Carnamakos",
-    "level": 50,
-    "raid": true
-  },
-  {
+    "id": 25509,
     "name": "Dark Shaman Varangka",
     "level": 53,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25509,0,0,0,0,0,0,0,0), -- Dark Shaman Varangka (53) (Not spawned anymore in H5)"
   },
   {
+    "id": 25176,
     "name": "Black Lily",
     "level": 55,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25176,92544,115232,-3200,0,86400,43200,451391,1975), -- Black Lily (55) (Not spawned anymore in H5)"
   },
   {
-    "name": "Captain of the Ice Queen's Royal Guard",
-    "level": 59,
-    "raid": true
-  },
-  {
+    "id": 25162,
     "name": "Giant Marpanak",
     "level": 60,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25162,0,0,0,0,0,0,0,0), -- Giant Marpanak (60) (Not spawned anymore in H5)"
   },
   {
+    "id": 25234,
     "name": "Ancient Drake",
     "level": 60,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25234,120080,111248,-3047,0,86400,43200,1052436,2301), -- Ancient Weird Drake (60) (Not spawned anymore in H5)"
   },
   {
+    "id": 25407,
     "name": "Lord Ishka",
     "level": 60,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25407,115072,112272,-3018,0,86400,43200,526218,2301), -- Lord Ishka (60) (Not spawned anymore in H5)"
   },
   {
+    "id": 29056,
     "name": "Ice Fairy Sirra",
     "level": 60,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (29056,0,0,0,0,0,0,0,0), -- Ice Fairy Sirra (60) (Not spawned anymore in H5)"
   },
   {
+    "id": 25467,
     "name": "Gorgolos",
     "level": 64,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25467,0,0,0,0,0,0,0,0), -- Gorgolos (64) (Not spawned anymore in H5)"
   },
   {
+    "id": 25140,
     "name": "Hekaton Prime",
     "level": 65,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25140,0,0,0,0,0,0,0,0), -- Hekaton Prime (65) (Not spawned anymore in H5)"
   },
   {
+    "id": 25470,
     "name": "Last Titan Utenus",
     "level": 66,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25470,0,0,0,0,0,0,0,0), -- Last Titan Utenus (66) (Not spawned anymore in H5)"
   },
   {
+    "id": 25073,
     "name": "Bloody Priest Rudelto",
     "level": 69,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25073,143265,110044,-3944,0,86400,43200,875948,2917), -- Bloody Priest Rudelto (69) (Not spawned anymore in H5)"
   },
   {
-    "name": "Eilhalder von Hellmann",
-    "level": 71,
-    "raid": true
-  },
-  {
-    "name": "Hager the Outlaw",
-    "level": 72,
-    "raid": true
-  },
-  {
-    "name": "All-Seeing Rango",
-    "level": 73,
-    "raid": true
-  },
-  {
-    "name": "Jakard",
-    "level": 73,
-    "raid": true
-  },
-  {
+    "id": 25109,
     "name": "Antharas Priest Cloe",
     "level": 74,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25109,152660,110387,-5520,0,86400,43200,935092,3274), -- Antharas Priest Cloe (74) (Not spawned anymore in H5)"
   },
   {
-    "name": "Icicle Emperor Bumbalump",
-    "level": 74,
-    "raid": true
-  },
-  {
-    "name": "Helsing",
-    "level": 74,
-    "raid": true
-  },
-  {
-    "name": "Rhianna the Traitor",
-    "level": 75,
-    "raid": true
-  },
-  {
-    "name": "Tesla the Deceiver",
-    "level": 75,
-    "raid": true
-  },
-  {
-    "name": "Gillien",
-    "level": 75,
-    "raid": true
-  },
-  {
-    "name": "Soul Hunter Chakundel",
-    "level": 76,
-    "raid": true
-  },
-  {
-    "name": "Medici",
-    "level": 76,
-    "raid": true
-  },
-  {
+    "id": 25703,
     "name": "Gigantic Golem",
     "level": 76,
-    "raid": true
+    "raid": true,
+    "reason": "no-confirmed-spawn",
+    "source": "-- (25703,0,0,0,0,0,0,0,0), -- Gigantic Golem (79) (Spawned by Dr Chaos AI)"
   },
   {
-    "name": "Durango the Crusher",
-    "level": 77,
-    "raid": true
-  },
-  {
-    "name": "Immortal Muus",
-    "level": 77,
-    "raid": true
-  },
-  {
-    "name": "Kanadis Guide",
-    "level": 77,
-    "raid": true
-  },
-  {
-    "name": "Daimon the White-Eyed",
-    "level": 78,
-    "raid": true
-  },
-  {
-    "name": "Brutus the Obstinate",
-    "level": 78,
-    "raid": true
-  },
-  {
-    "name": "Brand the Exile",
-    "level": 78,
-    "raid": true
-  },
-  {
-    "name": "Ranger Karankawa",
-    "level": 79,
-    "raid": true
-  },
-  {
-    "name": "Sargon the Mad",
-    "level": 79,
-    "raid": true
-  },
-  {
-    "name": "Commander Koenig",
-    "level": 79,
-    "raid": true
-  },
-  {
-    "name": "Lilith",
-    "level": 80,
-    "raid": true
-  },
-  {
-    "name": "Anakim",
-    "level": 80,
-    "raid": true
-  },
-  {
-    "name": "Soul of Fire Nastron",
-    "level": 80,
-    "raid": true
-  },
-  {
-    "name": "Soul of Water Ashutar",
-    "level": 80,
-    "raid": true
-  },
-  {
+    "id": 25514,
     "name": "Queen Shyeed",
     "level": 80,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (25514,0,0,0,0,0,0,0,0), -- Queen Shyeed (80) (Not spawned anymore in H5)"
   },
   {
-    "name": "Gerg the Hunter",
-    "level": 80,
-    "raid": true
-  },
-  {
+    "id": 25623,
     "name": "Valdstone",
     "level": 80,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25623,-192361,254528,15,0,86400,43200,99999,99999), -- Valdstone (80) (stats to be done)"
   },
   {
+    "id": 25624,
     "name": "Rok",
     "level": 80,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25624,-174600,219711,44,0,86400,43200,99999,99999), -- Rok (80) (stats to be done)"
   },
   {
+    "id": 25625,
     "name": "Enira",
     "level": 80,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25625,-181989,208968,44,0,86400,43200,99999,99999), -- Enira (80) (stats to be done)"
   },
   {
+    "id": 25626,
     "name": "Dius",
     "level": 80,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25626,-252898,235845,53,0,86400,43200,99999,99999), -- Dius (80) (stats to be done)"
   },
   {
-    "name": "Sailren",
-    "level": 80,
-    "raid": true
-  },
-  {
+    "id": 29096,
     "name": "Anais",
     "level": 80,
-    "raid": true
+    "raid": true,
+    "reason": "removed-in-high-five",
+    "source": "-- (29096,0,0,0,0,0,0,0,0), -- Anais (80) (Not spawned anymore in H5)"
   },
   {
-    "name": "Darnel",
-    "level": 81,
-    "raid": true
-  },
-  {
+    "id": 25536,
     "name": "Hannibal",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25536,0,0,0,0,86400,43200,1027906,9999), -- Hannibal (83) (stats to be done)"
   },
   {
-    "name": "Beautiful Atrielle",
-    "level": 81,
-    "raid": true
-  },
-  {
+    "id": 25643,
     "name": "Awakened Ancient Sentry",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25643,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Sentry (81) (stats to be done)"
   },
   {
+    "id": 25644,
     "name": "Awakened Ancient Severer",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25644,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Severer (81) (stats to be done)"
   },
   {
+    "id": 25645,
     "name": "Awakened Ancient Soul Extractor",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25645,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Soul Extractor (81) (stats to be done)"
   },
   {
+    "id": 25646,
     "name": "Awakened Ancient Soul Devourer",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25646,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Soul Devourer (81) (stats to be done)"
   },
   {
+    "id": 25647,
     "name": "Awakened Ancient Fighter",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25647,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Fighter (81) (stats to be done)"
   },
   {
+    "id": 25649,
     "name": "Awakened Ancient Executor",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25649,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Executor (81) (stats to be done)"
   },
   {
+    "id": 25651,
     "name": "Awakened Ancient Prophet",
     "level": 81,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25651,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Prophet  (81) (stats to be done)"
   },
   {
-    "name": "Kanadis Herald",
-    "level": 81,
-    "raid": true
-  },
-  {
-    "name": "Yehan Klodekus",
-    "level": 81,
-    "raid": true
-  },
-  {
-    "name": "Yehan Klanikus",
-    "level": 81,
-    "raid": true
-  },
-  {
-    "name": "Aenkinel",
-    "level": 81,
-    "raid": true
-  },
-  {
-    "name": "Kechi",
-    "level": 82,
-    "raid": true
-  },
-  {
-    "name": "Nagen the Tomboy",
-    "level": 82,
-    "raid": true
-  },
-  {
-    "name": "Jax the Destroyer",
-    "level": 82,
-    "raid": true
-  },
-  {
-    "name": "Epidos",
-    "level": 82,
-    "raid": true
-  },
-  {
-    "name": "Cannibalistic Stakato Chief",
-    "level": 82,
-    "raid": true
-  },
-  {
-    "name": "Tears",
-    "level": 83,
-    "raid": true
-  },
-  {
-    "name": "Demon Prince",
-    "level": 83,
-    "raid": true
-  },
-  {
-    "name": "Ranku",
-    "level": 83,
-    "raid": true
-  },
-  {
+    "id": 25713,
     "name": "Darnels",
     "level": 84,
-    "raid": true
-  },
-  {
-    "name": "Emerald Horn",
-    "level": 84,
-    "raid": true
-  },
-  {
-    "name": "Dust Rider",
-    "level": 84,
-    "raid": true
-  },
-  {
-    "name": "Bleeding Fly",
-    "level": 84,
-    "raid": true
-  },
-  {
-    "name": "Shadow Summoner",
-    "level": 84,
-    "raid": true
-  },
-  {
-    "name": "Spike Slasher",
-    "level": 84,
-    "raid": true
-  },
-  {
-    "name": "Muscle Bomber",
-    "level": 84,
-    "raid": true
-  },
-  {
-    "name": "Glakias",
-    "level": 85,
-    "raid": true
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25713,0,0,0,0,0,0,0,0), -- Darnels (84) (stats to be done)"
   }
 ]
