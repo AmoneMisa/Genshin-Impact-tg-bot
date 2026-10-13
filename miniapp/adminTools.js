@@ -269,7 +269,7 @@ export async function getAdminToolsState(chatId) {
 
 export const ADMIN_TOOL_ERRORS = Object.freeze({
   confirmation_required:'Для вайпа нужно подтвердить ID выбранного персонажа.',
-  wipe_in_table_game:'Сначала заверши игры со ставкой этого персонажа или сбрось соответствующий стол.',
+  wipe_in_table_game:'Не удалось отменить игру персонажа. Обнови админку и повтори вайп.',
   unknown_tool: 'Неизвестная команда.',
   invalid_amount: 'Нужно целое число, не ноль (до 1 000 000 000).',
   unknown_player: 'Игрок не найден в этом чате.',

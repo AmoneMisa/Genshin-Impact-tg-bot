@@ -45,7 +45,7 @@ export function materialInfo(key) {
         return {...(base.startsWith('bound_')?{name:base,icon:'✦',description:''}:materialInfo(base)),key,bound:true};
     }
     const login=loginItemInfo(key);if(login)return login;
-    return materialsTemplate.find(item => item.key === key) || (String(key).startsWith('l2_') && l2MaterialInfo(key)) || {key, name: key, icon: '✦', description: ''};
+    return materialsTemplate.find(item => item.key === key) || (String(key).startsWith('l2_') && l2MaterialInfo(key)) || {key, name:'Неизвестный предмет', icon:'✦',description:'Описание этого предмета пока отсутствует в каталоге.',metadataMissing:true};
 }
 
 /** Display rows for everything the player owns, template order first. */

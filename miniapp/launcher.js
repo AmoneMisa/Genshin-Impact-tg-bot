@@ -9,7 +9,7 @@ import { translateFor } from './language.js';
 export function shouldRedirectCommand(text, { adminPatterns = [], botUsername = '' } = {}) {
   const match = /^\/(\w+)(?:@(\w+))?/.exec(String(text ?? ''));
   if (!match) return false;
-  if (match[1].toLowerCase() === 'play') return false;
+  if (['play','admin','unstack','reset_point_game','reset_elements_game'].includes(match[1].toLowerCase())) return false;
   if (match[2] && match[2].toLowerCase() !== String(botUsername).toLowerCase()) return false;
   return !adminPatterns.some(pattern => pattern.test(text));
 }
@@ -18,11 +18,11 @@ function startParam(chatId) {
   return `chat_${chatId}`;
 }
 
-export default async function sendMiniAppLauncher(msg) {
+export default async function sendMiniAppLauncher(msg, {admin=false}={}) {
   const say = text => translateFor(msg.from?.id ?? msg.chat.id, text, msg.from?.language_code);
   const appUrl = process.env.MINI_APP_URL;
   const shortName = process.env.MINI_APP_SHORT_NAME;
-  const param = startParam(msg.chat.id);
+  const param = (admin?'admin_':'')+startParam(msg.chat.id);
 
   let button = null;
 
@@ -35,7 +35,7 @@ export default async function sendMiniAppLauncher(msg) {
   } else if (msg.chat.type === 'private' && appUrl) {
     button = {
       text: await say('🎮 Открыть игру'),
-      web_app: { url: appUrl },
+      web_app: { url: admin?new URL('/admin',appUrl).href:appUrl },
     };
   }
 

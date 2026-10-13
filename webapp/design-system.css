@@ -1139,6 +1139,15 @@ body input[type="radio"]:checked::after {
 }
 body input:is([type="checkbox"],[type="radio"]):disabled { opacity: .46; cursor: default; }
 
+/* Shared item eligibility and signed stat indicators. */
+.item-grid-cell:disabled { filter:grayscale(1); opacity:.4; cursor:default; }
+.character-stat-delta { display:inline-block; margin-inline-start:var(--space-2,8px); font-size:.8em; }
+.character-stat-delta.positive { color:var(--success,#84b787); }
+.character-stat-delta.negative { color:var(--danger,#cf8580); }
+.character-symbols { display:flex; flex-wrap:wrap; gap:var(--space-2,8px); }
+.character-symbols>span { display:inline-flex; align-items:center; gap:var(--space-2,8px); padding:var(--space-2,8px); }
+.l2-slot-background { object-fit:contain; aspect-ratio:1; }
+
 /* Shared Lineage II inventory/book/service window surface. */
 .game-dialog-panel.l2-window{background:linear-gradient(180deg,#28271e,#151810 90%);border:1px solid #786647;border-radius:var(--radius-control);padding:var(--space-3);display:grid;gap:var(--space-3);color:#e8dfc8}
 .game-dialog-panel.l2-window .game-dialog-heading{border-bottom:1px solid #655638;padding-bottom:var(--space-2);margin:0}

@@ -62,7 +62,7 @@ export const TEMPLATES = Object.freeze([
     {key: 'equipment', source: equipment, version: 7},
     {key: 'gacha', source: gacha, version: 4},
     {key: 'levels', source: levels, version: 2},
-    {key: 'materials', source: materials, version: 17},
+    {key: 'materials', source: materials, version: 18},
     {key: 'potions', source: potions, version: 6},
     {key: 'pvpSign', source: pvpSign, version: 1},
     {key: 'shop', source: shop, version: 8},

@@ -14,6 +14,7 @@ import {bundlePageAssets} from './pageAssets.js';
 import {requestUrl as parseRequestUrl,requestBoundary} from './requestBoundary.js';
 const gzip = promisify(zlib.gzip);
 import { lockScope } from './lockScope.js';
+import {isOwner} from './adminAccess.js';
 import { withLock as sharedLock } from '../functions/general/chatLock.js';
 import { fileURLToPath } from 'url';
 import { token, myId } from '../config.js';
@@ -284,7 +285,7 @@ function servePage(res, urlPath) {
       }
       return true;
     }
-    if (urlPath === '/' || urlPath === '/index.html') {
+    if (urlPath === '/' || urlPath === '/index.html' || urlPath === '/admin') {
       const headers = {
         'content-type': MIME['.html'],
         'cache-control': 'no-store',
@@ -402,7 +403,7 @@ function stateFor(context) {
 }
 
 function isAdminUser(userId) {
-  return myId !== undefined && myId !== null && String(userId) === String(myId);
+  return isOwner(userId);
 }
 
 function requireAdmin(context) {

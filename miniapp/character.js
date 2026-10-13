@@ -4,6 +4,7 @@ import { getEquipmentState } from './equipment.js';
 import { getSkillsState } from './skills.js';
 import { getClassBuffsState, describeBuff } from './buffs.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
+import {getTattooState} from '../functions/game/player/tattoos.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState } from '../functions/game/player/passiveSkills.js';
 import { CLAN_SKILLS } from '../functions/game/clans/clanPerks.js';
@@ -73,6 +74,7 @@ export function getCharacterState(session, context = {}, now = Date.now()) {
     profile:getPlayerProfileState(session, now), player:state.player,
     name:context.user?.first_name || context.user?.firstName || context.user?.username || 'Путешественник',
     characteristics:getBaseStatsState(session),
+    tattoos:getTattooState(session).worn,
     combat:getters.map(([id,label,getter,rawValue]) => ({id,label,value:combatValue(session,getter,rawValue)})),
     attributes:getAttributesState(session), equipment, skills:getSkillsState(session),
     passives:getPassivesState(session), buffs:getClassBuffsState(session, now),

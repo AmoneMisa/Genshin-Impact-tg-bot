@@ -9,7 +9,17 @@ import {leaveParty} from '../functions/game/party/party.js';
 import {attachGuests} from '../functions/general/partyGuests.js';
 import {storeForSession,guestUsers} from '../functions/general/characterStore.js';
 import {memberName} from './social.js';
-import {tableLockFor} from '../functions/game/general/goldLock.js';
+
+/** Unsettled table bets have not been debited. Cancel tables containing the wiped player. */
+export function cancelWipeTables(chat,userId){
+ let changed=false;
+ for(const key of ['points','elements','pointsMiniApp','elementsMiniApp']){
+  const game=chat.game?.[key];
+  if(!game?.players||!Object.hasOwn(game.players,String(userId))||game.phase==='finished')continue;
+  delete chat.game[key];changed=true;
+ }
+ return changed;
+}
 
 // Reset gameplay only. Telegram identity, profile, preferences and clan membership remain.
 export function resetCharacter(member) {
@@ -28,7 +38,9 @@ export async function wipeCharacter(chatId,userId) {
   if(!member)return {ok:false,reason:'unknown_player'};
   const name=memberName(member),id=Number(member.userId);
   const chats=await Chat.find({'members.userId':id}).session(session);
-  if(chats.some(row=>tableLockFor(row,id)))return {ok:false,reason:'wipe_in_table_game'};
+  // Use the originally loaded document for its chat, retaining its sync baseline.
+  const affected=chats.map(row=>String(row.chatId)===String(chat.chatId)?chat:row);
+  const changedTables=affected.filter(row=>cancelWipeTables(row,id));
   if(member.game?.party?.id){
    await attachGuests(chat,{partyIds:[member.game.party.id]},{store:storeForSession(session),users:guestUsers});
    leaveParty(chat,member);
@@ -36,6 +48,7 @@ export async function wipeCharacter(chatId,userId) {
   resetCharacter(member);
   // Shared-character revision checks and the party peers commit in this same transaction.
   await chat.save({session});
+  for(const row of changedTables)if(row!==chat)await row.save({session});
   // Escrow is discarded, not returned to the newly reset character.
   await AuctionLot.updateMany({sellerId:id,status:'active'},{$set:{status:'cancelled',returned:true},$unset:{payload:1}},{session});
   await ArenaRating.deleteMany({userId:id},{session});

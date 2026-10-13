@@ -17,7 +17,7 @@ export default {
     equipment: 'f315f94988a20aa3b1eae9e5f9e6eb80171f726b',
     gacha: 'c7e354caf522dc92a974e5e916a5514d715f34ff',
     levels: '13ff4ec3b0927f7ad6de23b1c94e22d1722a3610',
-    materials: 'a8548b73b696497d50de9b207a7bde09575408fa',
+    materials: 'd3303b7dae375c289841062ca910ad69e9ef621d',
     potions: 'd303112d688837db86feaac823030fdc27bb79af',
     pvpSign: '3d59ea38a7317f5aa8410df1fa1002c5903033d6',
     shop: '04d6fb59e99bafd86f1e8c2b4fc0103b5ede2676',
@@ -33,7 +33,7 @@ export default {
     l2Recipes: '273a5c6a82defb3fadbef96dc578041ed5ee1ab6',
     merchantData: 'cb057a49e2be8925cbba1059579220292572e43d',
     saPrices: 'f236bdcdfd657ce76ea4b44a97de7e6b87414675',
-    worldBossMap: 'b6e9878e490650d72ba3da8070e293da0e44d8c5',
+    worldBossMap: '48d365a53b9654b265af1e05ef79249e35778ae2',
     worldHoldings: '3ea9e038a0a165d1956fd1a238f9ef769763b04e',
     worldZones: 'c8d8d913d242f60a3cd4d6ceb89838ad7f9f46d9',
 };

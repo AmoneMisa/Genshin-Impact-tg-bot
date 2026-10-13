@@ -51,22 +51,32 @@ export function describeAttribute(attribute) {
     return {element: info.id, label: info.label, icon: info.icon, value: attribute.value};
 }
 
+/** Shared preview and mutation guard. Never spends stones. */
+export function attributeEligibility(item, element, tier) {
+    if (!canAttribute(item)) return {ok:false,reason:'not_attributable'};
+    if (item.timed) return {ok:false,reason:'timed_item'};
+    if (!elementInfo(element) || !tierInfo(tier)) return {ok:false,reason:'unknown_stone'};
+    const weapon=item.mainType==='weapon', defense=weapon?element:elementInfo(element).opposite;
+    const attributes=armorAttributes(item);
+    const value=Number(weapon?item.attribute?.value:attributes[defense])||0;
+    if (weapon && value>0 && item.attribute.element!==element) return {ok:false,reason:'wrong_element'};
+    if (!weapon && attributes[element]>0) return {ok:false,reason:'opposite_element'};
+    if (!weapon && !(attributes[defense]>0) && Object.values(attributes).filter(v=>v>0).length>=3) return {ok:false,reason:'attribute_slots_full'};
+    const cap=tierInfo(tier)[sideOf(item)].cap;
+    return value>=cap?{ok:false,reason:'attribute_tier_max',cap}:{ok:true,cap};
+}
+
 /** Adds the points of one stone. Returns {ok, attribute} or {ok: false, reason}. */
 export function addAttribute(session, item, element, tier, {random = Math.random} = {}) {
-    if (!item || !canAttribute(item)) return {ok: false, reason: 'not_attributable'};
-    if (item.timed) return {ok: false, reason: 'timed_item'};
-    if (!elementInfo(element) || !tierInfo(tier)) return {ok: false, reason: 'unknown_stone'};
+    const eligibility=attributeEligibility(item,element,tier);
+    if (!eligibility.ok) return eligibility;
     const weapon = item.mainType === 'weapon';
     const defense = weapon ? element : elementInfo(element).opposite;
     const attributes = {...armorAttributes(item)};
     const current = weapon ? item.attribute : {element: defense, value: attributes[defense] || 0};
-    if (weapon && current?.value > 0 && current.element !== element) return {ok: false, reason: 'wrong_element'};
-    if (!weapon && attributes[element] > 0) return {ok: false, reason: 'opposite_element'};
-    if (!weapon && !attributes[defense] && Object.keys(attributes).filter(k => attributes[k] > 0).length >= 3) return {ok: false, reason: 'attribute_slots_full'};
 
     const limits = tierInfo(tier)[sideOf(item)];
     const value = Number(current?.value) || 0;
-    if (value >= limits.cap) return {ok: false, reason: 'attribute_tier_max', cap: limits.cap};
     if (!spendUsableMaterial(session, attributeKey(tier, element))) return {ok: false, reason: 'no_attribute_stone', stone: attributeKey(tier, element)};
 
     if (random() >= tierInfo(tier).chance) return {ok: true, success: false, attribute: current, consumed: true};
@@ -167,7 +177,8 @@ export function attributeInfo(session, item) {
             options.push({tier: tier.id, tierLabel: tier.label, element: element.id, icon: element.icon, label: side === 'weapon' ? element.label : elementInfo(defense).label + ' · защита', stones, chance: tier.chance, add: side === 'weapon' && !value ? 20 : tier[side].add, cap: tier[side].cap, full: value >= tier[side].cap});
         }
     }
-    return {side, current, currents, options, clearGold: current ? clearGold(item) : 0};
+    const eligibility=ATTRIBUTE_TIERS.flatMap(tier=>ELEMENTS.map(element=>({tier:tier.id,element:element.id,...attributeEligibility(item,element.id,tier.id)})));
+    return {side, current, currents, options, eligibility, clearGold: current ? clearGold(item) : 0};
 }
 
 /** The hero screen: weapon element and resistances. */

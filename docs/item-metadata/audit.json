@@ -1,0 +1,68 @@
+{
+  "catalogItems": 2963,
+  "withOriginalIcon": 2953,
+  "missingOriginalIcons": [
+    {
+      "id": 8600,
+      "name": "Herb of Life",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 8601,
+      "name": "Greater Herb of Life",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 8602,
+      "name": "Superior Herb of Life",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 8603,
+      "name": "Herb of Mana",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 8604,
+      "name": "Greater Herb of Mana",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 8605,
+      "name": "Superior Herb of Mana",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 8606,
+      "name": "Herb of Power",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 8607,
+      "name": "Herb of Magic",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 10657,
+      "name": "Herb of Doubt",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    },
+    {
+      "id": 13028,
+      "name": "Vitality Replenishing Herb",
+      "type": null,
+      "reason": "Original XML has no icon reference"
+    }
+  ],
+  "missingPublishedFiles": [],
+  "descriptionPolicy": "Descriptions derived from High Five item type and purpose; original descriptions retained where available. Not a verbatim client description dump."
+}

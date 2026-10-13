@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {resetCharacter,wipeCharacter} from '../miniapp/characterWipe.js';
+import {resetCharacter,wipeCharacter,cancelWipeTables} from '../miniapp/characterWipe.js';
 import mongoose from 'mongoose';
 import Chat from '../db/models/Chat.js';
 import AuctionLot from '../db/models/AuctionLot.js';
@@ -62,7 +62,7 @@ test('wipe, escrow cleanup and ratings use one transaction scoped to the selecte
  assert.equal(operations.at(-1)[0],'end');
 });
 
-test('unknown players and live wagers prevent all wipe mutations',async t=>{
+test('unknown players prevent all wipe mutations',async t=>{
  const member=hero(),chat={members:[member],game:{}};
  let saves=0,ended=0;
  chat.save=async()=>{saves++;};
@@ -70,7 +70,12 @@ test('unknown players and live wagers prevent all wipe mutations',async t=>{
  t.mock.method(Chat,'findOne',()=>({session:async()=>chat}));
  t.mock.method(Chat,'find',()=>({session:async()=>[chat]}));
  assert.equal((await wipeCharacter(-1,'2')).reason,'unknown_player');
- chat.game.points={players:{'1':{}},gameSessionLastUpdateAt:Date.now()};
- assert.equal((await wipeCharacter(-1,'1')).reason,'wipe_in_table_game');
- assert.equal(member.game.stats.lvl,80);assert.equal(saves,0);assert.equal(ended,2);
+ assert.equal(member.game.stats.lvl,80);assert.equal(saves,0);assert.equal(ended,1);
+});
+
+test('confirmed wipe cancels only unsettled tables containing its player',()=>{
+ const chat={game:{points:{players:{1:{},2:{}}},elementsMiniApp:{phase:'playing',players:{3:{}}},pointsMiniApp:{phase:'finished',players:{1:{}}}}};
+ assert.equal(cancelWipeTables(chat,1),true);
+ assert.equal(chat.game.points,undefined);assert.ok(chat.game.elementsMiniApp);assert.ok(chat.game.pointsMiniApp);
+ assert.equal(cancelWipeTables(chat,99),false);
 });

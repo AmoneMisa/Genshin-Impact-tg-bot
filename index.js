@@ -5,6 +5,9 @@ import deleteMessage from './functions/tgBotFunctions/deleteMessage.js';
 import onTextsAdmin from './onTextsAdmin/index.js';
 import sendMiniAppLauncher, { shouldRedirectCommand } from './miniapp/launcher.js';
 import bot from './bot.js';
+import {registerAdminCommands} from './miniapp/adminCommands.js';
+import {isOwner} from './miniapp/adminAccess.js';
+import {myId} from './config.js';
 import getSession from './functions/getters/getSession.js';
 import saveSession from './functions/getters/saveSession.js';
 import debugMessage from './functions/tgBotFunctions/debugMessage.js';
@@ -24,6 +27,8 @@ await bot.setMyCommands([
 ], {
     scope: {type: "default"}
 });
+await bot.setMyCommands([{command:'start',description:'Открыть игру'},{command:'play',description:'Открыть игру'},{command:'admin',description:'Администрирование бота'}],{scope:{type:'chat',chat_id:myId}}).catch(error=>console.warn('Owner commands:',error.message));
+await bot.setMyCommands([{command:'play',description:'Открыть игру'},{command:'unstack',description:'Сбросить зависшую игру: 21 или elements'}],{scope:{type:'all_chat_administrators'}});
 
 // The game lives in the Mini App. Player text commands are gone: any other
 // /command just answers with the launcher. Owner tools in onTextsAdmin and
@@ -39,8 +44,9 @@ bot.onText(/^\/\w+/, async function (msg) {
 });
 
 for (let [key, value] of onTextsAdmin) {
-    bot.onText(key, value);
+    bot.onText(key, msg => isOwner(msg.from?.id)?value(msg):undefined);
 }
+registerAdminCommands();
 
 bot.on("new_chat_members", async (msg) => {
     for (let newChatMember of msg.new_chat_members) {

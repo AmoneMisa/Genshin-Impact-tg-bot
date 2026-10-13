@@ -1,0 +1,29 @@
+[
+  {
+    "package": "L2UI_CT1.utx",
+    "texture": "Inventory_DF_EquipSlot",
+    "width": 256,
+    "height": 512,
+    "file": "Inventory_DF_EquipSlot.webp",
+    "sourceSHA256": "a54f5c63376cfc382d5576cf0ae865c5452da755a051eefdda486215aa46e82e",
+    "pixelSHA256": "45bb3f05ffa02bf70de6031046f92ca479758c332986b76d5b5641bf00b4e016"
+  },
+  {
+    "package": "L2UI_CT1.utx",
+    "texture": "Inventory_DF_EquipBg",
+    "width": 256,
+    "height": 512,
+    "file": "Inventory_DF_EquipBg.webp",
+    "sourceSHA256": "a54f5c63376cfc382d5576cf0ae865c5452da755a051eefdda486215aa46e82e",
+    "pixelSHA256": "70cd505d363cb79faa4891b33c5dcc373c095fedfcacbf57b5f6298c5d3c4a5b"
+  },
+  {
+    "package": "L2UI_CT1.utx",
+    "texture": "Inventory_DF_EquipMask",
+    "width": 512,
+    "height": 512,
+    "file": "Inventory_DF_EquipMask.webp",
+    "sourceSHA256": "a54f5c63376cfc382d5576cf0ae865c5452da755a051eefdda486215aa46e82e",
+    "pixelSHA256": "37877fdd2bfe6acbab3cc35fd7ea19c23d18a5482136158d6612df82c060bfdb"
+  }
+]

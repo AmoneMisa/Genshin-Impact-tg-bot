@@ -32,7 +32,7 @@ export function materialIconInfo(key) {
 /** Image markup for a material, or the given emoji when it has no painting. */
 export function materialIcon(key, fallback = '✦') {
   const shots={noGrade:1835,D:1463,C:1464,B:1465,A:1466,S:1467,S80:1467,S84:1467};
-  const originalKey=key==='luckCoins'?'l2_4037':key==='ironOre'?'l2_1869':String(key).startsWith('soulshot_')?'l2_'+shots[String(key).slice(9)]:key;
+  const originalKey=key==='scroll_escape'?'l2_736':key==='scroll_resurrection'?'l2_737':key==='luckCoins'?'l2_4037':key==='ironOre'?'l2_1869':String(key).startsWith('soulshot_')?'l2_'+shots[String(key).slice(9)]:key;
   if(ITEM_ICONS[originalKey])return originalIcon(ITEM_ICONS[originalKey]);
   if(key==='sp')return '<img class="mat-icon l2-client-icon" src="'+l2IconUrl('icon-etc_spell_books_element_i00')+'" width="24" height="24" alt="" decoding="async">';
   if(key==='moonDew')return '<img class="mat-icon l2-client-icon" src="'+l2IconUrl('icon-etc_lesser_potion_blue_i00')+'" width="24" height="24" alt="" decoding="async">';

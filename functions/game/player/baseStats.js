@@ -97,6 +97,7 @@ export function getBaseStatsState(session) {
             text: BASE_STAT_INFO[stat].text,
             base,
             bonus,
+            tattooBonus: tattooPoints(session, stat),
             total: statTotal(session, stat),
             effect: bonus && active ? (stat === 'DEX' ? `точность +${Math.round(baseStatDelta(session, 'accuracy') * 10) / 10}` : percent(share)) : null,
             active,

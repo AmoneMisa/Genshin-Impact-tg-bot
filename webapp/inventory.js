@@ -251,7 +251,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     const scroll=selectedKind==='material'&&/^(?:bound_)?(scroll|blessed|safe)_(?:(weapon|armor)_)?(D|C|B|A|S|S80|S84)$/.test(item.key);
     const root=popup(detailHtml()+extra+(scroll?'<button class="ui-button primary" data-open-enchant>Использовать свиток</button>':'')+(selectedKind==='potion'?vitalsHtml():''));
     root.querySelector('[data-open-enchant]')?.addEventListener('click',async()=>{if(pending)return;closeItemPopup();const {openEnchantGame}=await import('./enchant.js');await openEnchantGame({api,renderState,haptic,statusElement,scrollKey:item.key,onClose:refresh});});
-    if(selectedKind==='material'&&/^attr_(stone|crystal|jewel)_(fire|water|wind|earth|holy|dark)$/.test(item.key)){
+    if(selectedKind==='material'&&/^(?:bound_)?attr_(stone|crystal|jewel)_(fire|water|wind|earth|holy|dark)$/.test(item.key)){
       const button=document.createElement('button');button.className='ui-button primary';button.textContent='Использовать';root.append(button);
       button.onclick=async()=>{if(pending)return;closeItemPopup();const {openForgeGame}=await import('./forge.js');await openForgeGame({api,renderState,haptic,statusElement,materialKey:item.key,onClose:refresh});};
     }

@@ -1,0 +1,145 @@
+[
+  {
+    "name": "head",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      9,
+      32,
+      32
+    ],
+    "pixelSHA256": "2bc7444e4e77b1051d135b2d9beea7ace87a17698406eb7fb84bf392f5db46e1"
+  },
+  {
+    "name": "up",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      49,
+      32,
+      32
+    ],
+    "pixelSHA256": "8d7aca6870475340f67fb85a7fcc7f858248382e1328ec7a3e5f9cd7d1a0df0f"
+  },
+  {
+    "name": "down",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      89,
+      32,
+      32
+    ],
+    "pixelSHA256": "87cc384dc7754271e29b6c0b4f3d33253ae847b693e47e3037546f2e02f01a95"
+  },
+  {
+    "name": "hands",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      129,
+      32,
+      32
+    ],
+    "pixelSHA256": "a7924e17246ec60bad615aa13d84f4dfafdcee11793a4952919a0aa06ea8b4fb"
+  },
+  {
+    "name": "legs",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      169,
+      32,
+      32
+    ],
+    "pixelSHA256": "e5cdab78020aa0c13a851078e06a0984fc8fdf1720e6ef5712663b009c282182"
+  },
+  {
+    "name": "cloak",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      209,
+      32,
+      32
+    ],
+    "pixelSHA256": "68f8e6521e1fc90d18abab9c99e091be97452a503877a8d976d2d6a0d5d74242"
+  },
+  {
+    "name": "shirt",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      249,
+      32,
+      32
+    ],
+    "pixelSHA256": "b43ca7260a5ebad4dad372fcfb67e631b3f4e4022b0128bad1866324a2fd0303"
+  },
+  {
+    "name": "belt",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      289,
+      32,
+      32
+    ],
+    "pixelSHA256": "5479a905af11921ce853799b9e619f6b7711b83a82eb20e4f76a357d73100db6"
+  },
+  {
+    "name": "weapon",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      9,
+      329,
+      32,
+      32
+    ],
+    "pixelSHA256": "c9b61ddf856dfb7b98601d11e81ed8911c48b248eefdd413cb6f23cf5c4527c8"
+  },
+  {
+    "name": "earring",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      163,
+      89,
+      32,
+      32
+    ],
+    "pixelSHA256": "1adf0c3c03b0190387683f51faf3c98f936abb3e19f16ce248e6d0fe6bc3e4cb"
+  },
+  {
+    "name": "necklace",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      163,
+      169,
+      32,
+      32
+    ],
+    "pixelSHA256": "475944c601b26733de11421425f68a6564c2bb86302e5e6330f0de2435327971"
+  },
+  {
+    "name": "ring",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      163,
+      209,
+      32,
+      32
+    ],
+    "pixelSHA256": "1a96a2554c04927811b24476f9d9e45c64f4f25c273f0d9fd99c7152279940a1"
+  },
+  {
+    "name": "offhand",
+    "texture": "Inventory_DF_EquipSlot",
+    "region": [
+      163,
+      329,
+      32,
+      32
+    ],
+    "pixelSHA256": "5779971691e5a2d973b435f5ac67fff820e809d6232b113a3a6dc33fcf497ae8"
+  }
+]

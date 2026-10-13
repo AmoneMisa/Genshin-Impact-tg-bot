@@ -73,7 +73,7 @@ export function validateTelegramInitData(initData, botToken, maxAgeSeconds = MAX
 
 export function resolveGameChatId(initData) {
   const startParam = initData.startParam || '';
-  const match = /^chat_(-?\d+)$/.exec(startParam);
+  const match = /^(?:admin_)?chat_(-?\d+)$/.exec(startParam);
   if (match) return Number(match[1]);
   if (initData.chat?.id) return Number(initData.chat.id);
   if (initData.user?.id) return Number(initData.user.id);

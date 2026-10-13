@@ -70,6 +70,8 @@ const craftMaterials = Object.entries(CRAFT_FAMILIES).flatMap(([family, info]) =
 })));
 
 export default [
+    {key:'scroll_escape',id:736,name:'Свиток телепорта',icon:'📜',kind:'consumable',description:'Возвращает персонажа в ближайший город после чтения свитка. Расходуется при завершении телепорта.'},
+    {key:'scroll_resurrection',id:737,name:'Свиток воскрешения',icon:'📜',kind:'consumable',description:'Свиток воскрешения Lineage II. Применение к другому персонажу в текущем интерфейсе пока недоступно.'},
     ...SOUL_MATERIALS,
     ...lifeStones,
     ...attributeStones,

@@ -13,6 +13,9 @@ needed_skills=set(classes['skills'])|{'5076','6209','6213'}
 skills={};items={};missing=[]
 def publish(icon):
     source=icons/(icon.lower()+'.png')
+    # BranchSys2's Icon group is flattened in the supplied client PNG export.
+    flattened=icons/(icon.lower().replace('.icon.','.')+'.png')
+    if not source.exists() and flattened.exists():source=flattened
     if not source.exists():missing.append(icon);return None
     key=icon.lower().replace('.','-')
     with Image.open(source) as im:
@@ -29,6 +32,8 @@ for path in skills_dir.rglob('*.xml'):
         key=publish(icon)
         if key:skills[skill.get('id')]=key
 needed=set([736,737,1865,1867,1869,4037,6622,9625,9626,9627,*range(8594,8600),1463,1464,1465,1466,1467,1835])
+extra=Path(sys.argv[4] if len(sys.argv)>4 else 'docs/item-metadata/icon-import-ids.json')
+if extra.exists():needed.update(map(int,json.loads(extra.read_text(encoding='utf8'))))
 with zipfile.ZipFile(items_zip) as z:
     for name in z.namelist():
         if not name.endswith('.xml'):continue

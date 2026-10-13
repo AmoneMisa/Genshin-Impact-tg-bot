@@ -32,7 +32,10 @@ const TIER_BY_NAME = {Stone: 'stone', Crystal: 'crystal', Jewel: 'jewel'};
 export function itemRow(id) {
     const recovery=recoveryInfo(id);if(recovery)return recovery;
     const row = ITEMS[id];
-    if (row) return {id: Number(id), name: row[0], type: row[1], grade: row[2], price: row[3], etc: row[4]};
+    if (row) {
+        const scroll=/^This Forgotten Scroll .* to learn ([^.]+)\./.exec(row[0]);
+        return {id:Number(id),name:scroll?'Forgotten Scroll - '+scroll[1]:row[0],description:scroll?row[0]:null,type:row[1],grade:row[2],price:row[3],etc:row[4]};
+    }
     // the fish and what they turn into are described by the fishing data
     const fishing = FISHING.items[id];
     return fishing ? {id: Number(id), name: fishing[0], type: 'EtcItem', grade: 'NONE', price: fishing[1], etc: fishing[2] || null} : null;
@@ -94,7 +97,9 @@ export function l2MaterialInfo(key) {
     const item = itemRow(id);
     if (!item) return null;
     const kind = lootInfo(id).kind, meta = LOOT_KINDS.find(entry => entry.id === kind);
-    return {key, name: item.name, icon: meta?.icon || '📦', description: `${meta?.label || 'Предмет'} High Five. Цена в магазине ${item.price} адены.`, price: item.price, kind};
+    const description={recipe:'Рецепт изготовления предмета. Изучи его в книге рецептов для личного крафта.',piece:'Часть снаряжения для изготовления предмета по рецепту.',material:'Материал для изготовления предметов по рецептам.',dye:'Краска для нанесения символа у Мастера символов. Допустимые классы и изменения характеристик указаны в названии.',herb:'Трава с мгновенным эффектом при подборе.',fish:'Улов рыбалки. Используется для получения рыболовных материалов.',crystal:'Кристалл соответствующего грейда — материал для изготовления предметов.',consumable:'Расходуемый предмет. Назначение указано в названии.',full:item.type==='Weapon'?'Оружие.':'Снаряжение.'}[kind]||meta?.label||'Предмет';
+    const grade=item.grade&&item.grade!=='NONE'?` Грейд ${item.grade}.`:'';
+    return {key,id,name:item.name,icon:meta?.icon||'📦',description:item.description||description+grade,price:item.price,kind};
 }
 
 /** Gold a collectable real item sells for: half of the real shop price on the game's gold scale. */

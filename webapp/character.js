@@ -1,5 +1,7 @@
 import {skillBookHtml} from './skill-book.js';
 import {dialogHeading} from './dialog-heading.js';
+import {materialIcon} from './material-icons.js';
+import {l2SlotBackground} from './l2-slot-background.js';
 import {characteristicIcon,polishIcon} from './art/polish-icon-art.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
@@ -86,13 +88,14 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null,skil
     const attrs = data.attributes || {};
     const xp = player.level >= player.maxLevel ? 100 : Math.min(100, Math.max(0,(player.currentExp || 0)/Math.max(1,player.needExp)*100));
     const base = '<div class="character-base">' + (data.characteristics || []).map(stat =>
-      '<button type="button" data-base-stat="' + esc(stat.id) + '" title="' + esc(stat.text) + '"><span class="character-stat-label">' + characteristicIcon(stat.id) + esc(stat.id) + '</span><b>' + fmt(stat.total) + '</b></button>').join('') + '</div><div data-base-detail></div>';
+      '<button type="button" data-base-stat="' + esc(stat.id) + '" title="' + esc(stat.text) + '"><span class="character-stat-label">' + characteristicIcon(stat.id) + esc(stat.id) + '</span><b>' + fmt(stat.total) + (stat.bonus?'<small class="character-stat-delta '+(stat.bonus>0?'positive':'negative')+'" aria-label="'+esc('Изменение '+stat.id)+'">'+(stat.bonus>0?'+':'')+fmt(stat.bonus)+'</small>':'')+'</b></button>').join('') + '</div><div data-base-detail></div>';
     return section('Состояние',meter('CP',player.cp,player.maxCp)+meter('HP',player.hp,player.maxHp)+meter('MP',player.mp,player.maxMp)
       +row('SP',fmt(player.sp))+row('Опыт',player.level >= player.maxLevel ? 'MAX' : fmt(player.currentExp)+' / '+fmt(player.needExp))
       +'<div class="character-xp"><i style="width:'+xp+'%"></i></div>'
       + (player.vitality ? row(polishIcon('vitality')+'Vitality','×'+fmt(player.vitality.rate*player.vitality.bonus)+' · '+fmt(player.vitality.points)) : ''))
       +(player.penalties?.length?section('Штрафы','<div class="character-penalties">'+player.penalties.map(p=>'<span title="'+esc(p.name)+'">'+l2SkillIcon(p.id)+esc(p.name)+' · '+p.level+'</span>').join('')+'</div>'):'')
       +section('Базовые характеристики',base)
+      +((data.tattoos||[]).length?section('Символы','<div class="character-symbols">'+data.tattoos.map(t=>'<span title="'+esc(t.name)+'" aria-label="'+esc(t.name)+'">'+materialIcon('l2_'+t.dye)+Object.entries(t.stats).map(([id,v])=>esc(id)+' '+(v>0?'+':'')+fmt(v)).join(' · ')+'</span>').join('')+'</div>'):'')
       +section('Боевые характеристики','<div class="character-combat">'+(data.combat || []).map(stat=>row(esc(stat.label),fmt(stat.value))).join('')+'</div>')
       +section('Атрибут атаки',attrs.attack ? row('<span class="character-element-label">'+elementIcon(attrs.attack.element)+esc(attrs.attack.label)+'</span>',fmt(attrs.attack.value)) : empty('Оружие без атрибута.'))
       +section('Защита от стихий · сумма экипировки',elementTable(attrs.resist))
@@ -104,7 +107,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null,skil
     const slots = (entries,side) => '<div class="character-slots '+side+'">'+entries.map(([id,label,glyph])=>{
       const item = equippedItemForSlot(equipment,id);
       return '<button type="button" class="character-slot" data-character-slot="'+id+'" aria-pressed="'+(id===slot)+'" aria-label="'+esc(label+': '+(item?.name || 'Пусто')+(item?.enchant?' +'+item.enchant:'')+(item?.augment?.current?' · ЛС':''))+'"><span class="character-slot-icon'+(item?.enchant>=10?' enchant-high':item?.enchant>=4?' enchanted':'')+(item?.augment?.current?' augmented':'')+'">'
-        +renderLootArt(item || {kind:({head:'helmet',leftEar:'earring',rightEar:'earring',up:'armor',hands:'gloves',leftHand:'shield',leftRing:'ring',rightRing:'ring',legs:'boots',necklace:'amulet',cloak:'cloak',down:'greaves',rightHand:'staff'})[id],grade:'noGrade'})+(item?'<b class="character-grade">'+esc(item.grade==='noGrade'?'NG':item.grade)+'</b>':'')
+        +(item?renderLootArt(item):l2SlotBackground(id))+(item?'<b class="character-grade">'+esc(item.grade==='noGrade'?'NG':item.grade)+'</b>':'')
         +(item?.enchant?'<b class="character-enchant">+'+esc(String(item.enchant))+'</b>':'')
         +(item?.augment?.current?'<span class="character-ls" aria-hidden="true">'+paintedIconHtml('lifestone')+'</span>':'')
         +'</span><span>'+label+'</span></button>';
@@ -210,7 +213,7 @@ export async function openCharacterPage(options,initialTab='stats') {
       if(button.dataset.effectId){effectId=button.dataset.effectId;draw();return;}
       if(button.dataset.baseStat) {
         const stat=data.characteristics.find(stat=>stat.id===button.dataset.baseStat);
-        panel.querySelector('[data-base-detail]').innerHTML='<div class="character-detail"><h4>'+esc(stat.id+' · '+stat.name)+'</h4>'+esc(stat.text)+row('База',fmt(stat.base))+row('Бонус экипировки',fmt(stat.bonus))+(stat.effect?empty(stat.effect):'')+'</div>';
+        panel.querySelector('[data-base-detail]').innerHTML='<div class="character-detail"><h4>'+esc(stat.id+' · '+stat.name)+'</h4>'+esc(stat.text)+row('База',fmt(stat.base))+row('Символы',fmt(stat.tattooBonus||0))+row('Остальные бонусы',fmt(stat.bonus-(stat.tattooBonus||0)))+(stat.effect?empty(stat.effect):'')+'</div>';
         return;
       }
       const name=button.dataset.characterAction;

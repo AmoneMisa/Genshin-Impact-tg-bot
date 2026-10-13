@@ -220,7 +220,7 @@ function render(state) {
     $(id).title = `${$(id).getAttribute('aria-label')}: ${$(id).textContent}`;
   }
 
-  const cards = featuresForTab(state.features.filter(feature => feature.id !== 'admin' || state.context?.isAdmin === true), activeTab).map(feature => {
+  const cards = featuresForTab(state.features.filter(feature => feature.id !== 'admin'), activeTab).map(feature => {
     const unavailable = feature.available === false;
     const button = document.createElement('button');
     button.type = 'button';
@@ -364,6 +364,11 @@ async function boot() {
 
   try {
     await loadState();
+    const adminEntry=location.pathname==='/admin'||/^admin_chat_/.test(tg?.initDataUnsafe?.start_param||'');
+    if(adminEntry){
+      if(currentState?.context?.isAdmin===true)await launchFeature({id:'admin',title:'Админка',status:'webgl'},render);
+      else status.textContent='Доступ к админке есть только у владельца бота.';
+    }
     showHelloNotices({ api, haptic }).catch(error => console.warn('[notices]', error));
   } catch (error) {
     console.error(error);

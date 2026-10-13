@@ -24,7 +24,7 @@ test('enchant and crafting materials map onto paintings, unknown items use a pai
 test('every enchant / crafting material has a painted icon in both sizes', () => {
   for (const material of materials) {
     const info = materialIconInfo(material.key);
-    if (!/^(scroll|blessed|safe|crystal|craft)_/.test(material.key)) continue;
+    if (!/^(scroll|blessed|safe|crystal|craft)_/.test(material.key)||['scroll_escape','scroll_resurrection'].includes(material.key)) continue;
     assert.ok(info, material.key);
     for (const size of [128, 256]) assert.ok(fs.existsSync(`webapp/art/icons/${info.icon}-${size}.webp`), `${info.icon}-${size}`);
   }
