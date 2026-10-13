@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {assertGameRules} from './assert-game-rules.mjs';
 import {createRequire} from 'node:module';
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';
 import {getBonusState,claimBonus} from '../../miniapp/bonus.js';
@@ -53,13 +54,14 @@ try {
    await page.evaluate(async({module,fn})=>{await(await import('/'+module+'.js'))[fn](window.opts);},{module,fn});
    await page.locator(panel).waitFor({state:'visible'});await page.waitForTimeout(220);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,module+' overflow');
+   if(module!=='gacha')await assertGameRules(page,panel);
    await page.locator(panel).screenshot({path:`docs/minigames-refresh/${module}-${width}.png`});
    if(module==='sword'){await page.locator('[data-sword-roll]').click();await page.waitForFunction(()=>document.querySelector('.sword-length')?.textContent.includes('17'));assert.ok((await page.locator('[data-light-animation]').getAttribute('src')).endsWith('forge-idle.webp'));}
    if(module==='bonus'){
     const rows=await page.locator('.bonus-prize').evaluateAll(rows=>rows.map(row=>{const rect=row.getBoundingClientRect(),first=row.firstElementChild.getBoundingClientRect(),last=row.lastElementChild.getBoundingClientRect(),css=getComputedStyle(row);return {left:first.left-rect.left,right:rect.right-last.right,top:parseFloat(css.paddingTop),bottom:parseFloat(css.paddingBottom)};}));
     for(const row of rows)for(const inset of Object.values(row))assert.ok(inset>=8,'reward contents touch frame');
     await page.locator('[data-bonus-claim]').click();await page.waitForFunction(()=>document.querySelector('.bonus-win'));assert.ok((await page.locator('[data-light-animation]').getAttribute('src')).endsWith('wheel-moonDew-result.webp'));}
-   if(module==='gacha'){assert.equal(await page.locator('dialog:modal').count(),1);assert.ok((await page.locator(panel).innerText()).includes('×1'));assert.ok(!(await page.locator(panel).innerText()).includes('incomingDamageModifier'));await page.locator('[data-action="save"]').click();await page.locator('dialog:modal').waitFor({state:'hidden'});}
+   if(module==='gacha'){assert.equal(await page.locator('dialog:modal').count(),1);assert.ok((await page.locator(panel).innerText()).includes('×1'));assert.ok(!(await page.locator(panel).innerText()).includes('incomingDamageModifier'));await page.locator('[data-action="save"]').click();await page.locator('dialog:modal').waitFor({state:'hidden'});await assertGameRules(page,'.gacha-panel');}
    await page.locator('.game-overlay .overlay-close').last().click();await page.locator('.game-overlay').waitFor({state:'detached'});
   }
   assert.equal(await page.evaluate(()=>window.fixture.calls),3);

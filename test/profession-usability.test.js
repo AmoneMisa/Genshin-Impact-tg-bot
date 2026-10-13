@@ -10,7 +10,7 @@ test('Expertise is granted at the level boundary without SP and remains idempote
   hero.game.stats.lvl=20;
   const expertise=getPassivesState(hero).passives.find(p=>p.id==='239');
   assert.equal(expertise.level,1);assert.equal(expertise.automatic,true);
-  assert.equal(expertise.current,'D');assert.equal(expertise.canLearn,false);
+  assert.match(expertise.current,/до D-грейда включительно без штрафа/);assert.equal(expertise.canLearn,false);
   hero.game.stats.lvl=40;syncAutomaticPassives(hero);syncAutomaticPassives(hero);
   assert.equal(hero.game.l2Passives[239],2);assert.equal(hero.game.inventory.sp,0);
 });

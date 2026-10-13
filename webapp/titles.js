@@ -36,8 +36,7 @@ export async function openTitlesGame({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass utility-panel titles-panel">
-      ${dialogHeading("Титулы").replace('data-dismiss','class="overlay-close" data-dismiss')}
-      <p class="tt-rules">Одно слово достанется случайному участнику чата — судьба решает на сервере.</p>
+      ${dialogHeading('Титулы',{rules:'Одно слово достанется случайному участнику чата — судьба решает на сервере.'}).replace('data-dismiss','class="overlay-close" data-dismiss')}
       <section class="tt-stage" data-title-stage hidden aria-live="polite"></section>
       <div data-titles-content></div>
       <div class="utility-feedback" data-titles-feedback aria-live="polite"></div>

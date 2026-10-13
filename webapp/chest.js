@@ -1,4 +1,5 @@
 import {materialIcon} from './material-icons.js';
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 import { worldArtUrl, worldIconHtml } from './art/world-art.js';
 // Chest game: pick one of nine painted chests -> the chosen chest
@@ -109,12 +110,7 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel chest-panel">
-      <header class="chest-head">
-        <button class="chest-back" type="button" data-chest-close aria-label="Назад">←</button>
-        <h2>Открытие сундуков</h2>
-        <button class="chest-help" type="button" data-chest-help aria-label="Правила">?</button>
-      </header>
-      <p class="chest-rules" hidden>Выбери три сундука из девяти. Награда определяется на сервере в момент открытия; одна попытка в день.</p>
+      ${dialogHeading('Открытие сундуков',{rules:'Выбери три сундука из девяти. Награда определяется на сервере в момент открытия; одна попытка в день.'}).replace('data-dismiss','data-chest-close data-dismiss')}
       <div class="chest-grid" role="group" aria-label="Сундуки"></div>
       <div class="chest-counter"></div>
       ${possibleRewardsHtml()}
@@ -149,10 +145,6 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
   overlay.addEventListener('click', (event) => {
     if (event.target.closest('[data-chest-close]')) close();
-    if (event.target.closest('[data-chest-help]')) {
-      const rules = overlay.querySelector('.chest-rules');
-      rules.hidden = !rules.hidden;
-    }
   });
 
   function showSummary() {

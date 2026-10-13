@@ -84,11 +84,7 @@ export async function openGachaGame({ api, renderState, haptic, statusElement, p
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel gacha-panel">
-      <header class="gacha-head">
-        <button class="overlay-close gacha-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Призыв</h2>
-        <span class="gacha-round" aria-hidden="true">✦</span>
-      </header>
+      ${dialogHeading('Призыв',{rules:'Всего доступны три бесплатные крутки в день. У каждой спирали свои грейды, шансы и стоимость. Награды: ресурсы, расходники, куски и рецепты; редкое снаряжение — только временное теневое +7.'}).replace('data-dismiss','class="overlay-close" data-dismiss')}
       <nav class="gacha-tabs" data-gacha-tabs></nav>
       <div data-gacha-body></div>
       <div class="gacha-status" aria-live="polite"></div>

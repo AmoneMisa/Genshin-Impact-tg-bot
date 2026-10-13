@@ -19,7 +19,7 @@ export async function openHoroscopeGame({ api, renderState, haptic, statusElemen
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass utility-panel horo-panel">
-      ${dialogHeading("Шуточный гороскоп").replace('data-dismiss','class="overlay-close" data-dismiss')}
+      ${dialogHeading('Шуточный гороскоп',{rules:'Выбери знак и стиль предсказания. Полученным шуточным гороскопом можно поделиться в чате.'}).replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-horo-content></div>
       <div class="utility-feedback" data-horo-feedback aria-live="polite"></div>
     </div>`;

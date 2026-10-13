@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
     name: String,
     age: Number,
     gender: String,
+    occupation: String,
+    favoriteGames: String,
+    wantedGames: String,
+    personalProjects: String,
     // Raw Telegram getChatMember payload ({ user: {...}, status }). Stored as Mixed
     // so fields like user.is_bot survive instead of being stripped by strict mode.
     userChatData: { type: Object, default: {} }

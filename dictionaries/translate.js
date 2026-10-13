@@ -1,7 +1,11 @@
 export default {
     "nickName": "Ник",
     "name": "Имя",
-    "age": "Возвраст",
+    "age": "Возраст",
+    "occupation": "Работа или занятие",
+    "favoriteGames": "Любимые игры",
+    "wantedGames": "Во что хочется сыграть",
+    "personalProjects": "Личные проекты",
     "gender": "Пол",
     "mostHatedCharacter": "Самый ненавистный персонаж",
     "gameId": "Игровой айди",

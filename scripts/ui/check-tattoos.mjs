@@ -26,6 +26,7 @@ try{for(const width of [320,390,540,1100])for(const className of ['warrior','pho
  await page.goto('http://127.0.0.1:4321/fixture.html');
  await page.evaluate(async()=>{
   const {startEmojiIcons}=await import('/icons.js');startEmojiIcons();
+  (await import('/overlay-a11y.js')).installOverlayA11y();
   const {openTattoosGame}=await import('/tattoos.js');
   await openTattoosGame({haptic:()=>{},renderState:()=>{},api:async(url,options)=>(await fetch(url,{headers:{'Content-Type':'application/json'},...options})).json()});
  });
@@ -36,6 +37,8 @@ try{for(const width of [320,390,540,1100])for(const className of ['warrior','pho
  assert.ok(queries.at(-1).owned);
  await page.locator('[data-owned]').uncheck();await page.locator('[data-usable]').uncheck();
  await page.waitForFunction(()=>document.querySelectorAll('.tattoo-dye').length>0);
+ const icons=await page.locator('.tattoo-dye .shop-icon').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return Math.abs(r.width-r.height);}));
+ assert.ok(icons.every(delta=>delta<1),'dye icon frames must be square');
  await checkOverflow();
  await page.locator('[data-stat=CON]').click();await page.waitForFunction(()=>document.querySelector('[data-stat=CON]').classList.contains('active'));
  assert.equal(queries.at(-1).stat,'CON');await checkOverflow();

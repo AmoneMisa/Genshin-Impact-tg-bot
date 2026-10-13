@@ -69,7 +69,7 @@
   <canvas id="webgl" aria-hidden="true"></canvas>
   <div class="noise" aria-hidden="true"></div>
   <main id="app" class="app-shell">
-    <header class="top-hud is-city-compact" aria-label="Состояние персонажа">
+    <header class="top-hud is-city-compact" data-hud-mode="city" aria-label="Состояние персонажа">
       <div class="th-frame">
         <div class="th-id">
           <div class="hero-portrait-shell top-portrait" data-open-feature="profile" role="button" tabindex="0" aria-label="Персонаж"><span id="class-sigil" class="hero-sigil">◇</span></div>
@@ -81,7 +81,7 @@
             <button id="fullscreen" type="button" class="top-icon" aria-label="Полный экран"><img class="ui-icon ui-icon-maximize" src="/art/ui/v1/maximize-128.webp" srcset="/art/ui/v1/maximize-128.webp 1x, /art/ui/v1/maximize-256.webp 2x" width="22" height="22" alt="" aria-hidden="true"></button>
           </div>
         </div>
-        <div class="th-bars">
+        <div class="th-bars" hidden>
           <div class="top-bar cp"><span>CP</span><div class="top-bar-track"><i id="cp-fill"></i><b id="cp-text">0 / 1</b></div></div>
           <div class="top-bar hp"><span>HP</span><div class="top-bar-track"><i id="hp-fill"></i><b id="hp-text">0 / 1</b></div></div>
           <div class="top-bar mp"><span>MP</span><div class="top-bar-track"><i id="mp-fill"></i><b id="mp-text">0 / 1</b></div></div>
@@ -92,7 +92,7 @@
           <div class="top-res"><img class="luck-coin-icon" src="/art/world/v1/currency/coin-of-luck-128.webp" width="30" height="30" alt="" aria-hidden="true"><strong id="luck-coins" aria-label="Монеты удачи">0</strong><button type="button" class="resource-plus" data-open-feature="shop" aria-label="Пополнить: Монеты удачи">+</button></div>
           <div class="top-res"><img class="ui-icon ui-icon-pickaxe" src="/art/ui/v1/ore-128.webp" srcset="/art/ui/v1/ore-128.webp 1x, /art/ui/v1/ore-256.webp 2x" width="30" height="30" alt="" aria-hidden="true"><strong id="ore" aria-label="Руда">0</strong><i></i></div>
         </div>
-        <div class="th-foot">
+        <div class="th-foot" hidden>
           <div class="th-charges" id="vit-cells" aria-label="Заряды Vitality"><i></i><i></i><i></i></div>
           <div class="th-thin">
             <div class="top-bar exp"><span>EXP</span><div class="top-bar-track"><i id="xp-fill"></i><b id="xp-text"></b></div></div>

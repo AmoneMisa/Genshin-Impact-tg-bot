@@ -200,7 +200,10 @@ const formatDelta = row => {
     return `${label} ${row.delta >= 0 ? '+' : ''}${Math.round(row.delta * 1000) / 10}%`;
 };
 const describeLevel = (info, level) => {
-    if (Number(info.id) === 239 || info.name?.startsWith('Expertise')) return ['D', 'C', 'B', 'A', 'S', 'S80', 'S84'][Math.max(0, level - 1)] || '—';
+    if (Number(info.id) === 239 || info.name?.startsWith('Expertise')) {
+      const grade=['D','C','B','A','S','S80','S84'][Math.max(0,level-1)];
+      return grade?`Позволяет носить оружие, броню и бижутерию до ${grade}-грейда включительно без штрафа за грейд.`:'Грейд экипировки не определён.';
+    }
     const rows = passiveDeltas(info, level);
     return rows.length ? rows.map(formatDelta).join(', ') : null;
 };

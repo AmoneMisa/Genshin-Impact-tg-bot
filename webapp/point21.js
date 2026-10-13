@@ -5,6 +5,7 @@
 // reset from here (anyone when it stalls, chat admins any time).
 
 import { worldArtUrl } from './art/world-art.js';
+import {dialogHeading} from './dialog-heading.js';
 import { icon } from './icons.js';
 import {
   betControls, bindBetControls, clampBet as clampTableBet, emptySeat, escapeHtml, formatNumber,
@@ -65,12 +66,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass point21-panel">
-      <header class="point-head">
-        <button class="overlay-close point-round" type="button" aria-label="Закрыть">←</button>
-        <h2>21 очко</h2>
-        <button class="point-round" type="button" data-point-help aria-label="Правила">?</button>
-      </header>
-      <p class="point-rules">Набери больше очков, чем дилер, но не больше 21. Ровно 21 — ×3 к ставке.</p>
+      ${dialogHeading('21 очко',{rules:'Набери больше очков, чем дилер, но не больше 21. Ровно 21 — ×3 к ставке.'}).replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-point-content></div>
       <div class="point-feedback" data-point-feedback aria-live="polite"></div>
     </div>`;
@@ -86,7 +82,6 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-  overlay.querySelector('[data-point-help]').addEventListener('click', () => overlay.querySelector('.point-rules').classList.toggle('open'));
 
   // Cards already on screen per player, so only newly dealt ones animate.
   const seen = new Map();

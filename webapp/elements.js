@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 // Elements as a shared table: registration (join, then bets) with seats and a
 // countdown ring, play with every opponent as a compact seat tile and your
 // own seat pinned at the bottom, results as seats with payouts.
@@ -65,12 +66,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass elements-panel">
-      <header class="elements-head">
-        <button class="overlay-close elements-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Стихии</h2>
-        <span class="elements-round" aria-hidden="true">✦</span>
-      </header>
-      <p class="elements-rules">Собери стихии за три раунда: повторы и реакции дают очки.</p>
+      ${dialogHeading('Стихии',{rules:'Собери стихии за три раунда: повторы и реакции дают очки.'}).replace('data-dismiss','class="overlay-close" data-dismiss')}
       <section class="elements-altar" hidden aria-hidden="true"></section>
       <div data-elements-content></div>
       <div class="elements-feedback" data-elements-feedback aria-live="polite"></div>

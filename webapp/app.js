@@ -19,7 +19,7 @@ import { installOverlayA11y } from './overlay-a11y.js';
 import { startWebGL } from './renderer.js';
 import { menuArtFor } from './menu-art.js';
 import { startGameVfx } from './vfx.js';
-import { renderPlayerHud } from './hud.js';
+import { renderPlayerHud, setHudSection } from './hud.js';
 const openChestGame = (...args) => Promise.all([ensureFeatureStyles(),import('./chest.js')]).then(([,module]) => module.openChestGame(...args));
 const openGachaGame = (...args) => Promise.all([ensureFeatureStyles(),import('./gacha.js')]).then(([,module]) => module.openGachaGame(...args));
 const openEquipmentGame = (...args) => Promise.all([ensureFeatureStyles(),import('./equipment.js')]).then(([,module]) => module.openEquipmentGame(...args));
@@ -266,7 +266,7 @@ function renderGearDot() {
 function renderTabs() {
   $('bottom-nav').innerHTML = navHtml(activeTab, badges);
   const isCity = activeTab === 'city';
-  $('moonDew')?.closest('.top-res')?.toggleAttribute('hidden', !isCity);
+  setHudSection(document.querySelector('.top-hud'),activeTab);
   document.querySelector('.top-hud')?.classList.add('is-city-compact');
   document.querySelectorAll('[data-tab-panel]').forEach(node => {
     node.hidden = (node.dataset.tabPanel === 'city') !== isCity;

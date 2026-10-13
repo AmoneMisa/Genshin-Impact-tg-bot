@@ -1,8 +1,12 @@
+import {closeIconHtml} from './dialog-heading.js';
+import {installGameRules} from './game-rules.js';
+
 let installed = false, nextId = 0;
 
 export function installOverlayA11y() {
   if (installed) return;
   installed = true;
+  const updateRules=installGameRules();
   let top = null;
   const origins = new WeakMap(), inert = new Map();
   const visible = node => node.isConnected && !node.hidden && !node.closest('.closing,[hidden]') && node.getClientRects().length;
@@ -10,13 +14,14 @@ export function installOverlayA11y() {
   function restoreBackground() { for (const [node, value] of inert) node.inert = value; inert.clear(); }
   function disable(node) { if (!inert.has(node)) inert.set(node, node.inert); node.inert = true; }
   function update() {
+    updateRules?.();
     restoreBackground();
     const dialogs = [...document.querySelectorAll('.game-overlay,[role="dialog"].game-dialog-panel,.death-panel,dialog[open]')].filter(visible);
     for (const node of dialogs) {
       for (const close of node.querySelectorAll('.overlay-close')) {
         if (!close.hasAttribute('data-close-normalized')) {
           close.setAttribute('data-close-normalized', '');
-          close.textContent = '×';
+          close.innerHTML = closeIconHtml;
         }
         close.setAttribute('aria-label', 'Закрыть');
       }

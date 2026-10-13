@@ -20,6 +20,3 @@
 .sword-ranking-empty { padding:12px 0; color:var(--muted); font-size:13px; }
 .sword-feedback { margin-top:12px; color:var(--muted); font-size:13px; }
 .sword-delta { display:none; }
-
-.sword-refresh {position:absolute;top:18px;left:14px;width:30px;min-height:30px;padding:0;}
-.sword-panel>.game-dialog-heading {padding-left:38px;}

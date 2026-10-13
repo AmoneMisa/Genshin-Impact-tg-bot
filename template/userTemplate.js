@@ -3,15 +3,8 @@ export default {
   name: null,
   age: null,
   gender: null,
-  mostHatedCharacter: null,
-  gameId: null,
-  rank: null,
-  bestCharacter: null,
-  favoriteCharacter: null,
-  inGameExp: null,
-  lvlOfWorld: null,
-  favoriteElement: null,
-  favoriteLocation: null,
-  mostWishesCharacter: null,
-  achievementsCount: null
+  occupation: null,
+  favoriteGames: null,
+  wantedGames: null,
+  personalProjects: null
 };

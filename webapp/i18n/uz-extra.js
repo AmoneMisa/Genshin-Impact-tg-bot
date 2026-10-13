@@ -7,9 +7,11 @@ import l2Effects from './uz-l2-effects.js';
 import buildDew from './uz-build-dew.js';
 import ciFixes from './uz-ci-fixes.js';
 import worldFixes from './uz-world-fixes.js';
+import gameUi from './uz-game-ui.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
+  ...gameUi,
   '· от': '· kamida',
   '{0} опыта + бонус энергии': '{0} tajriba + energiya bonusi',
   'Боевые расходники': 'Jang sarf buyumlari',

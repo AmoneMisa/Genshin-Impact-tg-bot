@@ -1178,16 +1178,29 @@ body input:is([type="checkbox"],[type="radio"]):disabled { opacity: .46; cursor:
 .character-penalties>span{display:flex;align-items:center;gap:var(--space-2);font-size:12px}
 
 .skill-detail [data-enchant-detail]{display:grid;gap:var(--space-3);min-width:0}
+.game-overlay .overlay-panel>.game-dialog-heading{padding-right:0}
+.game-overlay .overlay-panel.skill-detail{padding:var(--space-4);gap:var(--space-3)}
+.skill-detail .ui-field{display:grid;gap:var(--space-2);min-width:0}
+.game-overlay .shop-icon{height:auto;aspect-ratio:1;align-self:start}
+.game-overlay .shop-icon img{aspect-ratio:1;object-fit:contain;max-width:100%;max-height:100%}
 
 /* Shared heading actions stay aligned with the title, including native dialogs. */
 body .game-dialog-heading{align-items:center;gap:var(--space-2)}
-body .game-dialog-panel .game-dialog-heading :is([data-dismiss],[data-back]),
-body .game-overlay .overlay-panel .game-dialog-heading :is([data-dismiss],[data-back]){
+body .top-hud [hidden]{display:none}
+.top-hud[data-hud-mode="currency"] .top-resources,
+.top-hud[data-hud-mode="combat"] .top-resources{grid-template-columns:repeat(2,minmax(0,1fr))}
+.top-hud[data-hud-mode="identity"] .th-id{padding-bottom:0;border-bottom:0}
+body .game-dialog-panel .game-dialog-heading :is([data-dismiss],[data-back],[data-game-rules]),
+body .game-overlay .overlay-panel .game-dialog-heading :is([data-dismiss],[data-back],[data-game-rules]){
  position:static;inset:auto;flex:0 0 34px;display:grid;place-items:center;
  width:34px;height:34px;min-width:34px;min-height:34px;padding:6px;margin:0;box-sizing:border-box;
  border:0;border-radius:var(--radius-xs);background:transparent;box-shadow:none;color:var(--text-soft);
 }
-.game-dialog-heading [data-back] svg{width:22px;height:22px}
+.game-dialog-heading :is([data-back],[data-dismiss],[data-game-rules]) svg,
+.overlay-close svg{display:block;width:22px;height:22px;flex-shrink:0}
+.game-dialog-heading [data-game-rules]:hover{background:var(--surface-control)}
+.game-dialog-heading [data-game-rules]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.game-rules-tooltip{position:fixed;z-index:16010;box-sizing:border-box;width:max-content;max-width:min(360px,calc(100vw - 24px));max-height:min(280px,calc(100vh - 24px));overflow:auto;padding:var(--space-3);border:1px solid var(--border-soft);border-radius:var(--radius-xs);background:var(--surface-panel);color:var(--text-soft);font:14px/1.5 system-ui;box-shadow:0 4px 16px #0008;white-space:normal;overflow-wrap:anywhere;text-align:left}
 .game-dialog-heading [data-back]:hover{background:var(--surface-control)}
 .game-dialog-heading [data-back]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .craft-book-footer{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}

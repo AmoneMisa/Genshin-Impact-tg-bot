@@ -1,1 +1,1 @@
-export default ["nickName", "gameId", "rank", "bestCharacter", "favoriteCharacter", "inGameExp", "lvlOfWorld", "favoriteElement", "favoriteLocation", "mostWishesCharacter", "age", "gender", "mostHatedCharacter", "achievementsCount"];
+export default ['nickName','name','age','gender','occupation','favoriteGames','wantedGames','personalProjects'];

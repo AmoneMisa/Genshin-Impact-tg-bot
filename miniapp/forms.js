@@ -5,6 +5,12 @@ import userTemplate from '../template/userTemplate.js';
 const MAX_FIELD_LENGTH = 256;
 const EDITABLE_FIELDS = new Set(commands);
 const DISPLAY_FIELDS = Object.keys(userTemplate);
+const FIELD_OPTIONS = {
+  occupation:{placeholder:'Например: разработчик, учусь на дизайнера'},
+  favoriteGames:{multiline:true,maxLength:512,placeholder:'Любимые игры и жанры'},
+  wantedGames:{multiline:true,maxLength:512,placeholder:'Что хочешь попробовать, один или с компанией'},
+  personalProjects:{multiline:true,maxLength:1500,placeholder:'Название — https://example.com — краткое описание\nКаждый проект с новой строки'},
+};
 
 function telegramUser(member) {
   return member?.userChatData?.user || {};
@@ -23,6 +29,8 @@ function fieldDto(key, value) {
     label: translation[key] || key,
     value: value == null ? '' : String(value),
     editable: EDITABLE_FIELDS.has(key),
+    maxLength: getFormFieldLimit(key),
+    ...FIELD_OPTIONS[key],
   };
 }
 
@@ -69,8 +77,8 @@ export function savePersonalForm(chat, userId, rawFields) {
     if (value !== null && typeof value !== 'string') {
       return { ok: false, reason: 'invalid_value', field: key, forms: getFormsState(chat, userId) };
     }
-    if (typeof value === 'string' && value.trim().length > MAX_FIELD_LENGTH) {
-      return { ok: false, reason: 'value_too_long', field: key, maxLength: MAX_FIELD_LENGTH, forms: getFormsState(chat, userId) };
+    if (typeof value === 'string' && value.trim().length > getFormFieldLimit(key)) {
+      return { ok: false, reason: 'value_too_long', field: key, maxLength: getFormFieldLimit(key), forms: getFormsState(chat, userId) };
     }
   }
 
@@ -87,6 +95,6 @@ export function savePersonalForm(chat, userId, rawFields) {
   };
 }
 
-export function getFormFieldLimit() {
-  return MAX_FIELD_LENGTH;
+export function getFormFieldLimit(key) {
+  return FIELD_OPTIONS[key]?.maxLength || MAX_FIELD_LENGTH;
 }

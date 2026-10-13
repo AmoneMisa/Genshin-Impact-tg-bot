@@ -1,4 +1,5 @@
 import {arcadeTabIconHtml} from './art/arcade-art.js';
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 import { playThrow, stageHtml } from './arcade-stage.js';
 
@@ -28,7 +29,7 @@ function clampBet(value, gold) {
   return Math.max(0, Math.min(Math.floor(Number(gold) || 0), Math.floor(Number(value) || 0)));
 }
 
-/** One-line rules under the title, like the prototype. */
+/** Rules of the currently selected game, shown in the shared tooltip. */
 export function rulesText(game) {
   if (game.mode === 'slots') return `Три одинаковых символа — выплата ×${game.payoutMultiplier}. Ставка списывается при запуске.`;
   const throws = `${game.maxRolls} ${game.maxRolls === 1 ? 'бросок' : 'броска'}`;
@@ -60,11 +61,7 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel arcade-panel">
-      <header class="arcade-head">
-        <button class="overlay-close arcade-round" type="button" aria-label="Закрыть">←</button>
-        <h2 data-arcade-title>Мини-игры</h2>
-        <button class="arcade-round" type="button" data-arcade-refresh aria-label="Обновить">↻</button>
-      </header>
+      ${dialogHeading('Мини-игры',{rules:''}).replace('<h2','<h2 data-arcade-title').replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-arcade-content></div>
       <div class="arcade-feedback" data-arcade-feedback aria-live="polite"></div>
     </div>`;
@@ -79,7 +76,6 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-  overlay.querySelector('[data-arcade-refresh]').addEventListener('click', refresh);
 
   function currentGame() {
     return state.games.find(game => game.id === selected) || state.games[0];
@@ -239,9 +235,10 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
   function renderAll() {
     const game = currentGame();
     title.textContent = game.title;
+    overlay.querySelector('[data-game-rules]').dataset.gameRules=rulesText(game);
+    overlay.querySelector('.game-rules-tooltip')?.remove();
     content.innerHTML = `
       <div class="arcade-tabs">${gameTabs()}</div>
-      <p class="arcade-rules">${escapeHtml(rulesText(game))}</p>
       <div class="arcade-arena">
         ${stageHtml(game.id, { ...game, lastValue: lastValues[game.id] })}
         <div class="arcade-stats">${statPanels(game)}</div>

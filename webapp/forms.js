@@ -9,6 +9,15 @@ const REASONS = {
 };
 
 
+export function projectTextHtml(value) {
+  return String(value||'').split(/(https?:\/\/[^\s<>]+)/gi).map(part=>{
+    if(!/^https?:\/\//i.test(part))return escapeHtml(part);
+    try {const url=new URL(part);if(!['http:','https:'].includes(url.protocol)||url.username||url.password)return escapeHtml(part);
+      return `<a href="${escapeHtml(url.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(part)}</a>`;
+    }catch{return escapeHtml(part);}
+  }).join('');
+}
+
 function profileFields(profile) {
   if (!profile.fields?.length) {
     return '<div class="forms-empty">Анкета пока не заполнена.</div>';
@@ -16,7 +25,7 @@ function profileFields(profile) {
   return profile.fields.map(field => `
     <div class="forms-profile-field">
       <small>${escapeHtml(field.label)}</small>
-      <strong>${escapeHtml(field.value)}</strong>
+      <strong>${field.key==='personalProjects'?projectTextHtml(field.value):escapeHtml(field.value)}</strong>
     </div>`).join('');
 }
 
@@ -54,13 +63,13 @@ export async function openFormsGame({ api, renderState, haptic, statusElement })
     content.innerHTML = `
       <section class="forms-intro">
         <span>📝</span>
-        <div><strong>Твоя анкета Genshin</strong><small>Расскажи о себе участникам чата. Пустое поле стирает сохранённое значение.</small></div>
+        <div><strong>Расскажи о себе</strong><small>Все поля необязательные. Расскажи, чем занимаешься, во что играешь и что создаёшь. Анкету увидят участники этого чата.</small></div>
       </section>
       <div class="forms-grid">
         ${state.fields.map(field => `
-          <label class="forms-field">
+          <label class="forms-field ${field.multiline?'forms-field-wide':''}">
             <span>${escapeHtml(field.label)}</span>
-            <input type="text" maxlength="256" data-form-field="${escapeHtml(field.key)}" value="${escapeHtml(field.value)}" autocomplete="off" />
+            ${field.multiline?`<textarea rows="${field.key==='personalProjects'?4:2}" maxlength="${field.maxLength}" data-form-field="${escapeHtml(field.key)}" placeholder="${escapeHtml(field.placeholder||'')}">${escapeHtml(field.value)}</textarea>`:`<input type="text" maxlength="${field.maxLength||256}" data-form-field="${escapeHtml(field.key)}" value="${escapeHtml(field.value)}" placeholder="${escapeHtml(field.placeholder||'')}" autocomplete="off" />`}
           </label>`).join('')}
       </div>
       <button type="button" class="ui-button primary forms-save" data-forms-save>

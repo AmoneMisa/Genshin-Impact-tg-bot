@@ -49,7 +49,7 @@ export async function openBonusGame({ api, renderState, haptic, statusElement })
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel bonus-panel">
-      ${dialogHeading('Ежедневный бонус').replace('<button type=', '<button class="overlay-close" type=')}
+      ${dialogHeading('Ежедневный бонус',{rules:'Крути колесо за доступную попытку. Возможные награды и их шансы показаны в списке; награду определяет сервер.'}).replace('data-dismiss', 'class="overlay-close" data-dismiss')}
       <div data-bonus-content></div>
       <div class="bonus-feedback" data-bonus-feedback aria-live="polite"></div>
     </div>`;

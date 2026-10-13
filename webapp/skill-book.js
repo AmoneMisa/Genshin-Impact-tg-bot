@@ -4,16 +4,17 @@ import {l2SkillIcon} from './art/l2-extra-art.js';
 import {materialIcon} from './material-icons.js';
 import {itemGridHtml} from './item-grid.js';
 const fmt=n=>new Intl.NumberFormat('ru-RU').format(n||0);
-const groups={physical:'Физические',magic:'Магические',toggle:'Переключаемые',summon:'Призывы',passive:'Пассивные'};
+const groups={physical:'Физические навыки',magic:'Магические навыки',reinforce:'Усиливающие навыки',weaken:'Ослабляющие навыки',item:'Предметные навыки',toggle:'Переключаемые навыки',transform:'Трансформации',equipment:'Навыки экипировки',ability:'Особые способности',race:'Расовые навыки',occupation:'Профессиональные навыки'};
 const modes={normal:'Обычная',mastery:'Mastery',change:'Смена пути',untrain:'Отмена заточки'};
+const actions={normal:'Заточить',mastery:'Безопасная заточка',change:'Сменить путь',untrain:'Снять уровень заточки'};
 const reasons={enchant_class_required:'Нужны 76 уровень и третья профессия.',skill_not_maxed:'Сначала изучите последний уровень навыка.',not_enchantable:'Этот навык нельзя заточить.',not_enough_resources:'Недостаточно Адены, SP или книги.',player_dead:'Сначала воскресните.',other_route_chosen:'Для другого пути используйте смену пути.',same_route:'Выберите другой путь.',no_route:'Навык ещё не заточен.',max_level:'Максимальная заточка.'};
 const art=s=>l2SkillIcon(s.id)||l2SkillIcon(s.name);
 const tip=s=>[s.name+' · ур. '+s.level,s.description,s.mp?'MP '+fmt(s.mp):'',s.reuseMs?'Перезарядка '+s.reuseMs/1000+' сек.':''].filter(Boolean).join('\n');
 export function skillBookHtml(state,tab='active'){
  const book=state.book||[];
- return (tab==='passive'?['passive']:['physical','magic','toggle','summon']).map(kind=>{
-  const rows=book.filter(s=>s.kind===kind);if(!rows.length)return '';
-  return '<section class="skill-book-group"><h3>'+groups[kind]+'</h3>'+itemGridHtml(rows.map(s=>`<button type="button" class="item-grid-cell ${!s.level?'unlearned':''}" data-skill-id="${s.id}" title="${esc(tip(s))}" aria-label="${esc(s.name)}">${art(s)}${s.level?'<em>'+s.level+'</em>':''}</button>`),{min:12,label:groups[kind]})+'</section>';
+ return (tab==='passive'?['equipment','ability','race','occupation']:tab==='learn'?Object.keys(groups):Object.keys(groups).slice(0,7)).map(kind=>{
+  const rows=book.filter(s=>(tab==='learn'?(!s.level||state.passives?.some(p=>Number(p.id)===s.id&&p.cost&&!p.automatic)):tab==='passive'?s.kind==='passive':s.kind!=='passive')&&(s.group||({passive:'occupation',summon:'magic'}[s.kind]||s.kind))===kind);if(!rows.length)return '';
+  return '<details class="ui-disclosure skill-book-group" open data-skill-group="'+kind+'"><summary>'+groups[kind]+'</summary>'+itemGridHtml(rows.map(s=>`<button type="button" class="item-grid-cell ${!s.level?'unlearned':''}" data-skill-id="${s.id}" title="${esc(tip(s))}" aria-label="${esc(s.name)}">${art(s)}${s.level?'<em>'+s.level+'</em>':''}</button>`),{min:7,label:groups[kind]})+'</details>';
  }).join('')||'<p class="ui-empty">В этом разделе пока нет навыков.</p>';
 }
 export async function openSkillBook({api,renderState,haptic=()=>{},initialSkill=null}){
@@ -39,7 +40,8 @@ export async function openSkillBook({api,renderState,haptic=()=>{},initialSkill=
   const s=state.book.find(s=>s.id===id);if(!s)return;
   const root=makePopup(s.name,'<div class="skill-detail-icon">'+art(s)+'</div><p>'+esc(s.description)+'</p><p>Уровень '+s.level+(s.mp?' · '+fmt(s.mp)+' MP':'')+(s.reuseMs?' · '+s.reuseMs/1000+' сек.':'')+'</p>');
   const kit=state.skills?.find(k=>k.l2Id===s.id),passive=state.passives?.find(p=>Number(p.id)===s.id);
-  if(kit?.learn||passive?.cost){const cost=kit?.learn||passive.cost,enabled=kit?.learn?kit.learn.canLearn:passive.canLearn;root.querySelector('.skill-detail').insertAdjacentHTML('beforeend','<button class="ui-button primary" data-learn '+(enabled?'':'disabled')+'>Изучить · '+fmt(cost.sp)+' SP</button>');root.querySelector('[data-learn]').onclick=()=>mutate(kit?.learn?'/api/skills/learn':'/api/passives/learn',kit?.learn?{slot:kit.slot}:{id:passive.id});}
+  if(passive?.automatic)root.querySelector('.skill-detail').insertAdjacentHTML('beforeend','<p>Навык изучается автоматически при достижении нужного уровня.</p>');
+  else if(kit?.learn||passive?.cost){const cost=kit?.learn||passive.cost,enabled=kit?.learn?kit.learn.canLearn:passive.canLearn;root.querySelector('.skill-detail').insertAdjacentHTML('beforeend','<button class="ui-button primary" data-learn '+(enabled?'':'disabled')+'>Изучить · '+fmt(cost.sp)+' SP</button>');root.querySelector('[data-learn]').onclick=()=>mutate(kit?.learn?'/api/skills/learn':'/api/passives/learn',kit?.learn?{slot:kit.slot}:{id:passive.id});}
  }
  function showEnchant(id){
   const skill=state.enchantBook.find(s=>s.id===id);let route=skill.route||skill.routes[0].id,mode='normal';
@@ -49,11 +51,12 @@ export async function openSkillBook({api,renderState,haptic=()=>{},initialSkill=
    const warning={normal:'При неудаче заточка сбрасывается до +0.',mastery:'При неудаче уровень сохраняется. Расходы Адены и SP ×5.',change:'При смене пути теряется от 0 до 3 уровней заточки.',untrain:'Снимает один уровень и возвращает 80% SP этого уровня.'}[mode];
    const select=(key,list)=>'<label class="ui-field">'+(key==='route'?'Путь':'Способ')+'<select data-'+key+'>'+list+'</select></label>';
    detail.innerHTML='<div class="skill-detail-icon">'+art(skill)+'</div><p>Заточка +'+skill.level+' / '+selected.max+'</p>'+select('route',skill.routes.map(r=>'<option value="'+r.id+'" '+(r.id===Number(route)?'selected':'')+'>'+esc(r.name)+'</option>').join(''))+select('mode',Object.entries(modes).map(([id,name])=>'<option value="'+id+'" '+(id===mode?'selected':'')+'>'+name+'</option>').join(''))+'<p>'+warning+'</p>'+(offer.ok?'<p>Шанс '+Math.round(offer.chance*100)+'%</p><p>'+fmt(cost.gold)+' Адена · '+fmt(cost.sp)+' SP</p><div class="skill-book-cost">'+Object.entries(cost.items).map(([key,n])=>materialIcon(key)+' ×'+n).join(' ')+'</div><p>'+['power','mpConsume','reuseDelay','abnormalTime','elementPower'].filter(k=>offer.after?.[k]!==offer.before?.[k]).map(k=>({power:'Сила',mpConsume:'MP',reuseDelay:'Перезарядка',abnormalTime:'Время',elementPower:'Атрибут'}[k])+': '+offer.before?.[k]+' → '+offer.after?.[k]).join(' · ')+'</p>':'<p>'+esc(reasons[offer.reason]||offer.reason)+'</p>')+'<button class="ui-button primary" data-enchant '+(!offer.ok||!offer.affordable?'disabled':'')+'>'+modes[mode]+'</button>';
+   detail.querySelector('[data-enchant]').textContent=actions[mode];
    detail.querySelector('[data-route]').onchange=e=>{route=Number(e.target.value);paint();};detail.querySelector('[data-mode]').onchange=e=>{mode=e.target.value;paint();};detail.querySelector('[data-enchant]').onclick=()=>mutate('/api/skills/enchant',{id:skill.id,route,mode});
   }paint();
  }
  function draw(){
-  overlay.querySelector('[data-book-tabs]').innerHTML=[['active','Активные'],['passive','Пассивные'],['enchant','Заточка']].map(([id,name])=>'<button type="button" data-book-tab="'+id+'" aria-selected="'+(tab===id)+'">'+name+'</button>').join('');
+  overlay.querySelector('[data-book-tabs]').innerHTML=[['active','Активные'],['passive','Пассивные'],['learn','Изучение'],['enchant','Заточка']].map(([id,name])=>'<button type="button" data-book-tab="'+id+'" aria-selected="'+(tab===id)+'">'+name+'</button>').join('');
   overlay.querySelectorAll('[data-book-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.bookTab;draw();});
   if(tab==='enchant'){
    content.innerHTML='<p>Адена '+fmt(state.inventory.gold)+' · SP '+fmt(state.inventory.sp)+'</p>'+itemGridHtml((state.enchantBook||[]).map(s=>'<button class="item-grid-cell" data-enchant-id="'+s.id+'" aria-label="'+esc(s.name)+'" title="'+esc(s.name)+'">'+art(s)+(s.level?'<em>+'+s.level+'</em>':'')+'</button>'),{min:24,label:'Заточка навыков'});

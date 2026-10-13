@@ -36,4 +36,8 @@
 .forms-profile-field strong { overflow-wrap:anywhere; color:#d6d3dd; font-size:8px; font-weight:600; line-height:1.35; }
 .forms-empty { padding:18px 10px; color:var(--muted); font-size:8px; text-align:center; }
 .forms-overlay.busy button, .forms-overlay.busy input { pointer-events:none; opacity:.58; }
+.forms-overlay.busy textarea {pointer-events:none;opacity:.58}
+.forms-field-wide {grid-column:1 / -1}
+.forms-field textarea {width:100%;min-width:0;resize:vertical}
+.forms-profile-field strong {white-space:pre-wrap}
 @media (max-width:390px) { .forms-grid, .forms-profile-fields { grid-template-columns:1fr; }.forms-grid { max-height:470px; } }

@@ -11,6 +11,20 @@ export const CLASS_SIGILS = Object.freeze({
   noClass: '◇',
 });
 
+/** Keep one HUD; only the rows relevant to the current section are visible. */
+export function setHudSection(hud,section) {
+  if(!hud)return;
+  const mode=section==='city'?'city':section==='battle'?'combat':['games','clan','trade'].includes(section)?'currency':'identity';
+  hud.dataset.hudMode=mode;
+  for(const selector of ['.th-bars','.th-foot']){const row=hud.querySelector(selector);if(row)row.hidden=mode!=='combat';}
+  const resources=hud.querySelector('.top-resources');
+  if(resources)resources.hidden=mode==='identity';
+  for(const id of ['gold','luck-coins','moonDew','ore']){
+    const row=hud.querySelector(`#${id}`)?.closest('.top-res');
+    if(row)row.hidden=mode==='identity'||(mode!=='city'&&!['gold','luck-coins'].includes(id));
+  }
+}
+
 function percent(current, max) {
   const safeMax = Math.max(1, Number(max) || 1);
   return Math.min(100, Math.max(0, (Number(current) || 0) / safeMax * 100));

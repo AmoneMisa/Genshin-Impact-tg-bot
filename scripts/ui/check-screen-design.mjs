@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {assertGameRules} from './assert-game-rules.mjs';
+import {getPoint21State} from '../../miniapp/point21.js';
+import {getElementsState} from '../../miniapp/elements.js';
 import {createRequire} from 'node:module';
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';
 import defaults from '../../functions/getters/getLostFieldsInSession.js';
@@ -11,7 +14,7 @@ import {getSkillsState} from '../../miniapp/skills.js';
 import {getPassivesState} from '../../functions/game/player/passiveSkills.js';
 import {getClassBuffsState} from '../../miniapp/buffs.js';
 import {getPartyState} from '../../miniapp/party.js';
-import {getFormsState} from '../../miniapp/forms.js';
+import {getFormsState,savePersonalForm} from '../../miniapp/forms.js';
 import {getUpdatesState} from '../../miniapp/updates.js';
 import {getHoroscopeState} from '../../miniapp/horoscope.js';
 import {getArcadeState} from '../../miniapp/arcade.js';
@@ -32,8 +35,10 @@ const fixtures={
  '/api/tattoos':{tattoos:getTattooState(hero)},'/api/chat-settings':buildChatSettingsState(context),
  '/api/self-mute':buildSelfMuteState({...context,settings:{}}),
  '/api/titles':{cooldown:{remainingMs:0,canAssign:true},recent:[],eligibleCount:1},
+ '/api/point21':getPoint21State(chat,7),'/api/elements':getElementsState(chat,7),
 };
 const screens=[['character','openCharacterPage'],['profile','openPlayerProfile'],['skills','openSkillsGame'],['passives','openPassivesGame'],['buffs','openBuffsGame'],['party','openPartyGame'],['forms','openFormsGame'],['updates','openUpdatesGame'],['horoscope','openHoroscopeGame'],['arcade','openArcadeGame'],['mail','openMailGame'],['tattoos','openTattoosGame'],['chat-settings','openChatSettings'],['self-mute','openSelfMute'],['titles','openTitlesGame'],['feedback','openFeedbackGame'],['help','openHelpGame'],['language','openLanguageGame']];
+screens.push(['point21','openPoint21'],['elements','openElementsGame']);
 const root=path.resolve('webapp'),out=path.resolve('.tmp/screen-design');fs.mkdirSync(out,{recursive:true});
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),f=>fs.readFileSync(path.join(root,f.slice(1)),'utf8'));
 const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m=>m[0]).join('');
@@ -45,6 +50,10 @@ try {for(const width of [320,390,820])for(const [module,fn] of screens){
  page.on('pageerror',e=>errors.push(e.message));
  await page.route('**/*',route=>{
   const u=new URL(route.request().url());
+  if(u.pathname==='/api/forms/save'){
+   const result=savePersonalForm(chat,7,route.request().postDataJSON().fields);fixtures['/api/forms']=result.forms;
+   return route.fulfill({json:result});
+  }
   if(u.pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body><button id="origin">Открыть</button></body>`});
   if(Object.hasOwn(fixtures,u.pathname))return route.fulfill({json:fixtures[u.pathname]});
   if(u.pathname.startsWith('/api/'))return route.fulfill({status:404,json:{error:u.pathname}});
@@ -63,22 +72,32 @@ try {for(const width of [320,390,820])for(const [module,fn] of screens){
   },{module,fn});
   await page.locator('.game-overlay.visible').waitFor();
   if(module==='tattoos')await page.locator('.tattoo-totals').waitFor();
+  if(module==='forms'){
+   await page.locator('[data-form-field="occupation"]').fill('Разработчик');
+   await page.locator('[data-form-field="personalProjects"]').fill('Игра — https://example.com — создаю игру\nБлог — https://example.org — пишу о книгах');
+   await page.locator('[data-forms-save]').click();await page.waitForFunction(()=>document.querySelector('[data-forms-feedback]').textContent==='Анкета сохранена.');
+   await page.locator('[data-forms-tab="group"]').click();
+   assert.equal(await page.locator('.forms-profile-field a').count(),2);
+   assert.equal(await page.locator('.forms-profile-field a').first().getAttribute('rel'),'noopener noreferrer');
+   assert.equal(await page.locator('[data-form-field="gameId"]').count(),0);
+  }
   if(module==='skills'){
    const detail=page.locator('.ui-disclosure').first();
    if(await detail.count()){
-    assert.equal(await detail.getAttribute('open'),null);
-    await detail.locator('summary').click();
     assert.notEqual(await detail.getAttribute('open'),null);
+    await detail.locator('summary').click();
+    assert.equal(await detail.getAttribute('open'),null);
     await detail.locator('summary').click();
    }
   }
   await page.waitForTimeout(100);
+  if(await page.locator('[data-game-rules]').count())await assertGameRules(page,'.overlay-panel');
   const checks=await page.locator('.overlay-panel').first().evaluate(panel=>{
    const rect=panel.getBoundingClientRect();
-   return {overflow:panel.scrollWidth>panel.clientWidth+1||document.documentElement.scrollWidth>innerWidth,close:panel.querySelector('.overlay-close')?.textContent,heading:panel.querySelector('h2')?.textContent,top:rect.top};
+   return {overflow:panel.scrollWidth>panel.clientWidth+1||document.documentElement.scrollWidth>innerWidth,close:Boolean(panel.querySelector('.overlay-close svg')),heading:panel.querySelector('h2')?.textContent,top:rect.top};
   });
   if(width===390)await page.screenshot({path:path.join(out,module+'.png')});
-  assert.equal(checks.overflow,false,'horizontal overflow');assert.equal(checks.close,'×','shared close');assert.deepEqual(errors,[]);
+  assert.equal(checks.overflow,false,'horizontal overflow');assert.equal(checks.close,true,'shared close');assert.deepEqual(errors,[]);
   if(module==='party'){
    const spacing=await page.locator('.party-empty').evaluate(el=>{const p=el.querySelector('p').getBoundingClientRect(),b=el.querySelector('button').getBoundingClientRect();return b.top-p.bottom;});
    assert.ok(spacing>=12,'text/action spacing');

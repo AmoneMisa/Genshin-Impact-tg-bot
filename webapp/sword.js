@@ -46,7 +46,7 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel sword-panel">
-      ${dialogHeading('Кузница меча').replace('<button type=', '<button class="overlay-close" type=')}<button class="ui-button sword-refresh" type="button" data-sword-refresh aria-label="Обновить">↻</button>
+      ${dialogHeading('Кузница меча',{rules:'Раз в день можно ковать меч: длина меняется от −10 до +15 мм. Результаты участников видны в списке мечей группы.'}).replace('data-dismiss', 'class="overlay-close" data-dismiss')}
       <div data-sword-content></div>
       <div class="sword-feedback" data-sword-feedback aria-live="polite"></div>
     </div>`;
@@ -55,7 +55,6 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
   const close = () => { closed=true;lifetime.abort();if (timer) window.clearInterval(timer); document.removeEventListener('visibilitychange',visibility); overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-  overlay.querySelector('[data-sword-refresh]').addEventListener('click', async () => { if (pending) return; haptic('light'); await refresh(); });
 
   async function refresh() { const next = await api('/api/sword'); if(!closed){state=next;renderAll();} }
 
@@ -102,12 +101,12 @@ export async function openSwordGame({ api, renderState, haptic, statusElement })
 
   function renderAll({ resized = '' } = {}) {
     const canRoll = Boolean(state.canRoll);
+    overlay.querySelector('[data-game-rules]').dataset.gameRules='Раз в день можно ковать меч. '+modifierText(state)+' Результаты участников видны в списке мечей группы.';
     content.innerHTML = `
       <section class="sword-forge light-game-stage ${resized}">
         ${lightAnimationHtml('forge','Кузница меча')}
         <div class="sword-length"><small>Длина</small><strong>${formatNumber(state.length)} <em>мм</em></strong></div>
       </section>
-      <p class="sword-modifier">${modifierText(state)}</p>
       <button class="sword-roll ui-button primary" type="button" data-sword-roll ${canRoll ? '' : 'disabled'}>
         <strong>${canRoll ? 'Ковать' : 'Горн остывает'}</strong>
         <small data-sword-countdown>${canRoll ? '−10…+15 мм' : `Новая попытка через ${duration(state.remainMs)}`}</small>
