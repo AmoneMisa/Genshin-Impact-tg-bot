@@ -11,7 +11,7 @@ try{for(const width of [320,390,820]){
  if(url.pathname==='/api/world/action'){const b=route.request().postDataJSON();calls.push(b);const result=b.action==='respawn'?respawnWorld(hero,b.destination,null):worldAction(hero,b);return route.fulfill({json:{...result,world:state()}});}
  if(url.pathname==='/api/world')return route.fulfill({json:{world:state()}});
  if(url.pathname==='/api/boss/epic')return route.fulfill({json:{bosses:[]}});
- if(url.pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:'<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">'+styles+'<link rel="stylesheet" href="/world-map.css"><body></body>'});
+ if(url.pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:'<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">'+styles+'<link rel="stylesheet" href="/world-map.css"><link rel="stylesheet" href="/design-system.css"><body></body>'});
  const file=path.resolve(root,'.'+url.pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.fulfill({status:404});
  return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp','.png':'image/png'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
  });
@@ -24,14 +24,14 @@ try{for(const width of [320,390,820]){
  });
  await page.locator('[data-respawn="city"]').click();await page.waitForSelector('.death-overlay',{state:'detached'});assert.equal(hero.game.gameClass.stats.hp,1);assert.equal(hero.game.world.mode,'city');
  await page.evaluate(async()=>{const {bindFeatureLinks}=await import('/feature-links.js');bindFeatureLinks(document,{openFeature:async()=>{const {openWorldMap}=await import('/world-map.js');await openWorldMap({api:window.fixtureApi,haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span')});}});document.body.insertAdjacentHTML('beforeend','<button data-open-feature="hunt">Атлас</button>');});
- await page.locator('[data-open-feature="hunt"]').click();await page.waitForSelector('.atlas-panel');await page.locator('[data-quick-menu]').click();await page.waitForSelector('[data-quick-go]');
+ await page.locator('[data-open-feature="hunt"]').click();await page.waitForSelector('.atlas-panel');await page.locator('[data-movement]').click();await page.waitForSelector('[data-quick-go]');
  await page.locator('.atlas-popup').screenshot({path:'docs/quick-travel/menu-'+width+'.png'});
- await page.locator('[data-quick-tab="hunting"]').click();assert.ok(await page.locator('[data-quick-level]').count()>1);assert.ok(await page.locator('[data-quick-go]').count()>10);
- await page.locator('[data-quick-level="76"]').click();await page.locator('.atlas-popup').screenshot({path:'docs/quick-travel/hunting-'+width+'.png'});
- await page.locator('[data-quick-tab="catacombs"]').click();assert.ok(await page.locator('[data-quick-go]').count()>0);assert.match(await page.locator('.quick-travel-list').innerText(),/Катакомбы/);
+ await page.getByRole('combobox',{name:'Разделы телепорта'}).click();await page.getByRole('option',{name:'Охота',exact:true}).click();assert.equal(await page.getByRole('combobox',{name:'Уровни локаций'}).count(),1);assert.ok(await page.locator('[data-quick-go]').count()>10);
+ await page.getByRole('combobox',{name:'Уровни локаций'}).click();await page.getByRole('option',{name:'76+',exact:true}).click();await page.locator('.atlas-popup').screenshot({path:'docs/quick-travel/hunting-'+width+'.png'});
+ await page.getByRole('combobox',{name:'Разделы телепорта'}).click();await page.getByRole('option',{name:'Катакомбы',exact:true}).click();assert.ok(await page.locator('[data-quick-go]').count()>0);assert.match(await page.locator('.quick-travel-list').innerText(),/Катакомбы/);
  await page.locator('.atlas-popup').screenshot({path:'docs/quick-travel/catacombs-'+width+'.png'});
- await page.locator('[data-quick-tab="cities"]').click();
- const before=hero.game.inventory.gold;await page.locator('[data-quick-go]').first().click();await page.waitForFunction(()=>document.querySelector('.atlas-popup').hidden);assert.ok(calls.some(b=>b.action==='quick_travel'));assert.equal(hero.game.inventory.gold,before-60000);assert.deepEqual(hero.game.world.path,[]);
- await page.locator('[data-close]').click();await page.waitForSelector('.atlas-overlay',{state:'detached'});assert.deepEqual(errors,[]);assert.equal(await page.locator('body [inert]').count(),0);
+ await page.getByRole('combobox',{name:'Разделы телепорта'}).click();await page.getByRole('option',{name:'Города',exact:true}).click();
+ const before=hero.game.inventory.gold;assert.equal(await page.locator('[data-quick-confirm]').isDisabled(),true);await page.locator('[data-quick-go]').first().click();assert.equal(hero.game.inventory.gold,before);await page.locator('[data-quick-confirm]').click();await page.waitForFunction(()=>document.querySelector('.atlas-popup').hidden);assert.ok(calls.some(b=>b.action==='quick_travel'));assert.equal(hero.game.inventory.gold,before-60000);assert.deepEqual(hero.game.world.path,[]);
+ await page.locator('[data-movement]').click();await page.locator('[data-movement-tab="scroll"]').click();assert.equal(await page.locator('[data-escape]').isDisabled(),true);await page.locator('.atlas-popup [data-dismiss]').click();assert.equal(await page.locator('[data-shops],[data-fight],.atlas-hint').count(),0);assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);await page.locator('[data-close]').click();await page.waitForSelector('.atlas-overlay',{state:'detached'});assert.deepEqual(errors,[]);assert.equal(await page.locator('body [inert]').count(),0);
  console.log('PASS clickable death return, dynamic Atlas link and instant paid teleport '+width+'px');await page.close();
 }}finally{await browser.close();}
