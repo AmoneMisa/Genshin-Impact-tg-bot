@@ -1033,6 +1033,7 @@ body .game-overlay .overlay-panel textarea {
 
 /* Reusable actions. Feature sheets own placement, not control skins. */
 .ui-button,
+body .game-overlay .overlay-panel .ui-button,
 .storage-panel button,
 .stock-transfer button,
 .buffs-overlay .party-actions button {
@@ -1046,6 +1047,7 @@ body .game-overlay .overlay-panel textarea {
   cursor: pointer;
 }
 .ui-button.primary,
+body .game-overlay .overlay-panel .ui-button.primary,
 .storage-tabs button[aria-pressed="true"],
 .stock-transfer button[type="submit"],
 .storage-actions button:first-child,
@@ -1069,8 +1071,8 @@ body .game-overlay .overlay-panel .ui-folder-tabs button {
   color: #c6bea1; font: var(--tab-font-size, 10px)/1.2 system-ui;
   white-space: nowrap;
 }
-body .ui-folder-tabs button:is(.active,[aria-selected="true"]),
-body .game-overlay .overlay-panel .ui-folder-tabs button:is(.active,[aria-selected="true"]) {
+body .ui-folder-tabs button:is(.active,[aria-selected="true"],[aria-pressed="true"]),
+body .game-overlay .overlay-panel .ui-folder-tabs button:is(.active,[aria-selected="true"],[aria-pressed="true"]) {
   position: relative; z-index: 1; background: #45432d;
   border-color: #b69a5f; border-bottom-color: #45432d; color: #f5dfab;
 }
@@ -1131,3 +1133,35 @@ body input:is([type="checkbox"],[type="radio"]):disabled { opacity: .46; cursor:
 .item-preview-icon{display:grid;place-items:center;width:64px;height:64px;flex:none;border:1px solid var(--border-strong);background:var(--surface-input)}
 .item-preview-icon img{width:100%;height:100%;object-fit:contain}
 .ui-result-log{padding:var(--space-2);border:1px solid var(--border-subtle);background:var(--surface-input)}
+
+/* Shared progressive disclosure keeps long descriptions and actions on demand. */
+.ui-disclosure{min-width:0;border-top:1px solid var(--border-soft)}
+.ui-disclosure>summary{min-height:var(--control-height);display:flex;align-items:center;gap:var(--space-2);cursor:pointer;color:var(--text-soft);font:600 12px/1.4 system-ui}
+.ui-disclosure>summary::after{content:'+';margin-left:auto;color:var(--gold-bright)}
+.ui-disclosure[open]>summary::after{content:'−'}
+.ui-disclosure[open]{display:grid;gap:var(--space-2)}
+.ui-disclosure>p{margin:0;line-height:1.5}
+.ui-disclosure>summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.game-overlay .overlay-panel :is(.forms-tabs,.mail-tabs,.party-actions).ui-folder-tabs{--tab-height:var(--control-height);--tab-font-size:12px;justify-content:flex-start;flex-wrap:nowrap;gap:2px}
+.game-overlay .overlay-panel .ui-folder-tabs button{flex:0 0 auto}
+.game-overlay .party-empty{display:flex;flex-direction:column;align-items:stretch;gap:var(--space-3)}
+.game-overlay .party-empty p{margin:0}
+.game-overlay .updates-card{gap:var(--space-3);padding:var(--space-3);grid-template-columns:auto minmax(0,1fr) auto}
+.game-overlay .updates-card .updates-toggle{grid-column:auto;align-self:center;width:52px}
+.game-overlay .overlay-panel .game-dialog-heading h2{white-space:normal;overflow-wrap:anywhere;line-height:1.2}
+/* Skill books use the same compact L2 cells as inventories; descriptions live in a popup. */
+.skills-panel [data-book-content]{display:grid;gap:var(--space-3);min-width:0}
+.skill-book-group{display:grid;gap:var(--space-2);min-width:0}
+.skill-book-group h3{margin:0;font:600 14px/1.4 system-ui;color:var(--text-soft)}
+.skill-book-group .item-grid{--item-cell-size:42px}
+.skill-book-group .item-grid-cell.unlearned{opacity:.45}
+.skill-book-group .item-grid-cell em{position:absolute;right:2px;bottom:0;font:600 10px/1.2 system-ui;color:#eee}
+.game-overlay .skill-detail{display:grid;gap:var(--space-3);max-width:430px;min-width:0}
+.skill-detail p{margin:0;line-height:1.5;overflow-wrap:anywhere}
+.skill-detail-icon{display:flex;align-items:center;justify-content:center}
+.skill-detail-icon img{width:48px;height:48px;border:1px solid var(--gold);border-radius:0}
+.skill-book-cost{display:flex;gap:var(--space-2);align-items:center;flex-wrap:wrap}
+.character-penalties{display:grid;gap:var(--space-2)}
+.character-penalties>span{display:flex;align-items:center;gap:var(--space-2);font-size:12px}
+
+.skill-detail [data-enchant-detail]{display:grid;gap:var(--space-3);min-width:0}

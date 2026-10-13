@@ -1,6 +1,5 @@
 import getPlayerGameClass from './getPlayerGameClass.js';
 import getEquipStatByName from './getEquipStatByName.js';
-import isHasPenalty from '../../equipment/isHasPenalty.js';
 import {combatType} from '../combatType.js';
 
 export default function (session, gameClass, damageType) {
@@ -16,10 +15,6 @@ export default function (session, gameClass, damageType) {
         (base * getEquipStatByName(session, "power", true, type))
         * getEquipStatByName(session, "attackMul", true, type)
         + getEquipStatByName(session, "attack", false, type));
-
-    if (isHasPenalty(session)) {
-        totalValue *= 0.45;
-    }
 
     return totalValue;
 };

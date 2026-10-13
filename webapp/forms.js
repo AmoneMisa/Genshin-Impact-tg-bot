@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 const REASONS = {
   invalid_fields: 'Не удалось прочитать поля анкеты.',
@@ -30,12 +31,8 @@ export async function openFormsGame({ api, renderState, haptic, statusElement })
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass forms-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Анкеты</h2>
-        <span class="ds-round" aria-hidden="true">📝</span>
-      </header>
-      <div class="forms-tabs">
+      ${dialogHeading("Анкеты").replace('data-dismiss','class="overlay-close" data-dismiss')}
+      <div class="forms-tabs ui-folder-tabs">
         <button type="button" data-forms-tab="mine">Моя анкета</button>
         <button type="button" data-forms-tab="group">Участники</button>
       </div>
@@ -66,7 +63,7 @@ export async function openFormsGame({ api, renderState, haptic, statusElement })
             <input type="text" maxlength="256" data-form-field="${escapeHtml(field.key)}" value="${escapeHtml(field.value)}" autocomplete="off" />
           </label>`).join('')}
       </div>
-      <button type="button" class="forms-save" data-forms-save>
+      <button type="button" class="ui-button primary forms-save" data-forms-save>
         <span>✓</span><div><strong>Сохранить анкету</strong><small>Анкету увидят участники этого чата</small></div>
       </button>`;
 

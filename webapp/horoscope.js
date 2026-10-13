@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 
 /** Position of sign `index` of `count` on the zodiac ring (degrees, 0 = top). */
@@ -18,11 +19,7 @@ export async function openHoroscopeGame({ api, renderState, haptic, statusElemen
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass utility-panel horo-panel">
-      <header class="horo-head">
-        <button class="overlay-close horo-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Шуточный гороскоп</h2>
-        <span class="horo-round" aria-hidden="true">🔮</span>
-      </header>
+      ${dialogHeading("Шуточный гороскоп").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-horo-content></div>
       <div class="utility-feedback" data-horo-feedback aria-live="polite"></div>
     </div>`;

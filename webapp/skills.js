@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import { escapeHtml } from './escape-html.js';
 import { materialIcon } from './material-icons.js';
@@ -80,7 +81,7 @@ function routeBlock(skill, state) {
   </div>`;
 }
 
-function skillCard(skill, state) {
+function skillCard(skill, state, enchanted) {
   const maxed = !skill.upgradeCost;
   const transition = skill.next
     ? `<div class="skill-transition"><span>${escapeHtml(powerText(skill.power))}</span><b>→</b><span>${escapeHtml(powerText(skill.next.power))}</span></div>
@@ -96,144 +97,21 @@ function skillCard(skill, state) {
         <span class="skill-level">+${skill.enchantLevel}</span>
       </div>
       <div class="skill-pips" aria-label="Улучшение ${skill.enchantLevel} из ${skill.maxEnchantLevel}">${enchantPips(skill.enchantLevel, skill.maxEnchantLevel)}</div>
+      <details class="ui-disclosure" ${skill.slot === enchanted ? 'open' : ''}>
+      <summary>Описание и улучшение</summary>
       <p>${escapeHtml(skill.description)}</p>
       ${skill.l2Level ? `<div class="skill-l2"><span>Skill Lv ${formatNumber(skill.l2Level)}/${formatNumber(skill.l2MaxLevel)}</span>${skill.l2Power ? `<span>Power ${formatNumber(skill.l2Power)}</span>` : ''}</div>` : ''}
       ${skill.tags?.length ? `<div class="skill-tags">${skill.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
       ${transition}
       ${skill.learn ? `<div class="skill-upgrade-cost"><small>Умение не изучено</small><strong>✦ ${formatNumber(skill.learn.sp)} SP</strong></div>
-      <button type="button" data-skill-learn="${skill.slot}" ${skill.learn.canLearn ? '' : 'disabled'}>${skill.locked ? `Нужен ${skill.needLevel} уровень` : 'Изучить'}</button>` : `<div class="skill-upgrade-cost"><small>${maxed ? 'Максимальный уровень' : 'Улучшение'}</small><strong>${escapeHtml(costText(skill.upgradeCost))}</strong></div>
+      <button class="ui-button primary" type="button" data-skill-learn="${skill.slot}" ${skill.learn.canLearn ? '' : 'disabled'}>${skill.locked ? `Нужен ${skill.needLevel} уровень` : 'Изучить'}</button>` : `<div class="skill-upgrade-cost"><small>${maxed ? 'Максимальный уровень' : 'Улучшение'}</small><strong>${escapeHtml(costText(skill.upgradeCost))}</strong></div>
       ${skill.enchantChance<1?`<small class="skill-enchant-warning">${Math.round(skill.enchantChance*100)}% · При неудаче заточка сбрасывается. Mastery сохраняет уровень.</small>`:''}
-      <button type="button" data-skill-upgrade="${skill.slot}" ${maxed || !skill.canUpgrade ? 'disabled' : ''}>
+      <button class="ui-button primary" type="button" data-skill-upgrade="${skill.slot}" ${maxed || !skill.canUpgrade ? 'disabled' : ''}>
         ${maxed ? 'MAX' : skill.canUpgrade ? `Улучшить до +${skill.enchantLevel + 1}` : missingItems ? 'Не хватает материалов' : 'Не хватает ресурсов'}
       </button>
       ${routeBlock(skill, state)}`}
+      </details>
     </article>`;
 }
 
-export async function openSkillsGame({ api, renderState, haptic, statusElement }) {
-  let state = await api('/api/skills');
-  let pending = false;
-  let feedbackText = '';
-  let enchanted = null; // slot that just gained a level: plays the enchant burst once
-
-  const overlay = document.createElement('section');
-  overlay.className = 'game-overlay skills-overlay';
-  overlay.innerHTML = `
-    <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass skills-panel">
-      <header class="skills-head">
-        <button class="overlay-close skills-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Навыки</h2>
-        <span class="skills-round" aria-hidden="true">📖</span>
-      </header>
-      <div data-skills-content></div>
-      <div class="skills-feedback" data-skills-feedback aria-live="polite"></div>
-    </div>`;
-
-  const content = overlay.querySelector('[data-skills-content]');
-  const feedback = overlay.querySelector('[data-skills-feedback]');
-  const close = () => {
-    overlay.classList.add('closing');
-    window.setTimeout(() => overlay.remove(), 180);
-  };
-  overlay.querySelector('.overlay-close').addEventListener('click', close);
-  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-
-  function bind() {
-    content.querySelectorAll('[data-skill-route]').forEach(button => button.addEventListener('click', async () => {
-      if (pending) return;
-      pending = true;
-      feedback.textContent = 'Улучшаем путь…';
-      haptic('medium');
-      try {
-        const payload = await api('/api/skills/route', {
-          method: 'POST',
-          body: JSON.stringify({ slot: Number(button.dataset.skillRoute), route: button.dataset.routeKind }),
-        });
-        state = payload.skills;
-        if (payload.state) renderState(payload.state);
-        feedbackText = payload.route ? `${payload.skillName}: путь улучшен до ${payload.level}.` : `${payload.skillName}: путь сброшен.`;
-        enchanted = Number(button.dataset.skillRoute);
-        haptic('heavy');
-      } catch (error) {
-        if (error.payload?.skills) state = error.payload.skills;
-        feedbackText = REASONS[error.payload?.reason] || error.message;
-        haptic('light');
-      } finally {
-        pending = false;
-        render();
-      }
-    }));
-    content.querySelectorAll('[data-skill-learn]').forEach(button => button.addEventListener('click', async () => {
-      if (pending) return;
-      pending = true;
-      haptic('medium');
-      try {
-        const payload = await api('/api/skills/learn', { method: 'POST', body: JSON.stringify({ slot: Number(button.dataset.skillLearn) }) });
-        state = payload.skills;
-        if (payload.state) renderState(payload.state);
-        feedbackText = `Умение «${payload.name}» изучено.`;
-        haptic('heavy');
-      } catch (error) {
-        if (error.payload?.skills) state = error.payload.skills;
-        feedbackText = REASONS[error.payload?.reason] || error.message;
-        haptic('light');
-      } finally {
-        pending = false;
-        render();
-      }
-    }));
-    content.querySelectorAll('[data-skill-upgrade]').forEach(button => button.addEventListener('click', async () => {
-      if (pending) return;
-      pending = true;
-      feedback.textContent = 'Улучшаем навык…';
-      haptic('medium');
-      try {
-        const payload = await api('/api/skills/enchant', {
-          method: 'POST',
-          body: JSON.stringify({ slot: Number(button.dataset.skillUpgrade) }),
-        });
-        state = payload.skills;
-        if (payload.state) renderState(payload.state);
-        feedbackText = payload.success===false?`${payload.skillName}: заточка не удалась, уровень +${payload.level}.`:`${payload.skillName} улучшен до +${payload.level}.`;
-        enchanted = Number(button.dataset.skillUpgrade);
-        haptic('heavy');
-      } catch (error) {
-        if (error.payload?.skills) state = error.payload.skills;
-        feedbackText = REASONS[error.payload?.reason] || error.message;
-        statusElement.textContent = `Навыки: ${feedbackText}`;
-        haptic('light');
-      } finally {
-        pending = false;
-        render();
-      }
-    }));
-  }
-
-  function render() {
-    const inv = state.inventory || {};
-    content.innerHTML = `
-      <section class="skills-summary">
-        <span class="skills-portrait" style="--art:url('${menuArtFor('profile', { className: state.className })}')" aria-hidden="true"></span>
-        <div><small>Класс</small><strong>${escapeHtml(state.classTitle)}</strong><em>${state.routesUnlocked ? 'Уровень навыка и путь улучшения: сила, цена, время, шанс, атрибут, защита.' : 'Уровень навыка усиливает эффект и снижает цену и перезарядку. Новые навыки — за профессии.'}</em></div>
-      </section>
-      <div class="skills-resources">
-        <span>🪙 ${formatNumber(inv.gold)}</span><span>💧 ${formatNumber(inv.moonDew)}</span><span>⛏️ ${formatNumber(inv.ironOre)}</span><span class="sp">✦ ${formatNumber(inv.sp)} SP</span>
-      </div>
-      ${state.materials?.length ? `<div class="skills-resources materials">${state.materials.map(item => `<span title="${escapeHtml(item.description)}">${materialIcon(item.key, item.icon)} ${escapeHtml(item.name)} ×${formatNumber(item.count)}</span>`).join('')}</div>` : ''}
-      <div class="skills-list">
-        ${state.skills?.length ? state.skills.map(skill => skillCard(skill, state)).join('') : '<div class="skills-empty">Для этого класса навыки пока недоступны.</div>'}
-      </div>`;
-    feedback.textContent = feedbackText;
-    if (enchanted !== null) {
-      content.querySelector(`[data-skill-card="${enchanted}"]`)?.classList.add('enchanted');
-      enchanted = null;
-    }
-    bind();
-  }
-
-  render();
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('visible'));
-  statusElement.textContent = `Навыки: ${state.classTitle}`;
-}
+export {openSkillBook as openSkillsGame} from './skill-book.js';

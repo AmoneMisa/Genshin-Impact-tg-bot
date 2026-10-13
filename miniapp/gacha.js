@@ -1,6 +1,9 @@
 import {GACHA_REWARDS,generateGachaReward,grantGachaReward,shadowGachaItem} from '../functions/game/equipment/gachaRewards.js';
 import {hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
 import {getMaterialCount} from '../functions/game/player/materials.js';
+import {spendMaterials} from '../functions/game/player/materials.js';
+import {materialInfo} from '../functions/game/player/materials.js';
+import {dailyGacha,DAILY_GACHA_SPINS} from '../functions/game/equipment/gachaDaily.js';
 import {migrateSessionEquipment} from '../functions/game/equipment/migrateEquipment.js';
 import gachaTemplate from '../template/gachaTemplate.js';
 import isCanBeRolled from '../functions/game/equipment/isCanBeRolled.js';
@@ -16,13 +19,16 @@ function paymentMode(code) {
   if (code === 1) return 'level_locked';
   if (code === 2) return 'gold_locked';
   if (code === 3) return 'dew_locked';
+  if (code === 4) return 'resources_locked';
   return 'locked';
 }
 
 function sanitizeItem(item) {
   if (!item) return null;
+  const ref=({scroll_escape:'l2_736',scroll_resurrection:'l2_737',ironOre:'l2_1869'})[item.rewardRef]||item.rewardRef;
+  const displayName=({l2_736:'Свиток возвращения',l2_737:'Свиток воскрешения',l2_1869:'Железная руда',l2_1867:'Замша',l2_1865:'Варниш',sp:'SP',moonDew:'Лунная роса'})[ref]||materialInfo(ref).name;
   return {
-    rewardLabel:GACHA_REWARDS.find(r=>r.kind===item.rewardKind)?.label,rewardKind:item.rewardKind,rewardRef:item.rewardRef,amount:item.amount,shadow:item.shadow,enchant:item.enchant,expiresAt:item.expiresAt,
+    rewardLabel:GACHA_REWARDS.find(r=>r.kind===item.rewardKind)?.label,rewardKind:item.rewardKind,rewardRef:ref,amount:item.amount,shadow:item.shadow,enchant:item.enchant,expiresAt:item.expiresAt,
     name: item.name,
     description: item.description,
     grade: item.grade,
@@ -31,7 +37,7 @@ function sanitizeItem(item) {
     mainType: item.mainType,
     category: item.category,
     kind: item.kind,
-    translatedName: item.translatedName,
+    translatedName: item.rewardKind?displayName:item.translatedName,
     classOwner: item.classOwner,
     cost: Number(item.cost) || 0,
     quality: null,
@@ -57,11 +63,12 @@ export function getGachaState(session) {
       id: template.name,
       title: template.translatedName,
       needLvl: template.needLvl,
-      freeSpins: Number(state.freeSpins) || 0,
+      freeSpins: dailyGacha(session).remaining,
       shards: Number(shards.value) || 0,
       shardsCost: template.piecesForFleeCall,
       spinCost: { ...template.spinCost },
-      rewards:GACHA_REWARDS.map(r=>({...r})),
+      materialCost: {...template.materialCost},
+      rewards:(template.rewards||GACHA_REWARDS).map(r=>({...r})),
       grades: template.gradesForSpin.map((grade) => ({ ...grade })),
       canRoll: code <= 0 && !session.game.gachaTempItem,
       paymentMode: paymentMode(code),
@@ -69,6 +76,7 @@ export function getGachaState(session) {
   });
 
   return {
+    dailyLimit:DAILY_GACHA_SPINS,freeSpins:dailyGacha(session).remaining,
     spirals,
     pending: session.game.gachaTempItem
       ? {
@@ -98,14 +106,15 @@ export function rollGacha(session, gachaType, options={}) {
   }
 
   if (code === -2) {
-    state.freeSpins = Math.max(0, state.freeSpins - 1);
+    dailyGacha(session).remaining--;
   } else if (code === -1) {
     shardState.value = Math.max(0, shardState.value - template.piecesForFleeCall);
   }
 
+  if(code===0)spendMaterials(session,template.materialCost||{});
   const randomGrade = makeRoll(session.game, template, code < 0);
   // The spiral's own grade odds decide the grade; the generator adds no extra upgrade roll.
-  const item = generateGachaReward(session,randomGrade,options);
+  const item = generateGachaReward(session,randomGrade,{...options,rewards:template.rewards});
   session.game.gachaTempItem = item;
   session.game.gachaTempType = gachaType;
 
@@ -125,7 +134,7 @@ export function resolveGacha(session, action) {
   }
 
   if (action === 'save') {
-    const needsRoom=!item.rewardKind || (item.rewardKind!=='resource' && getMaterialCount(session,item.rewardRef)===0);
+    const needsRoom=!item.rewardKind || ((item.rewardKind!=='resource'||item.rewardRef.startsWith('l2_')) && getMaterialCount(session,item.rewardRef)===0);
     if(needsRoom&&!hasInventoryRoom(session,1))return {ok:false,reason:'inventory_full',gacha:getGachaState(session)};
     if(item.rewardKind)grantGachaReward(session,item);else session.game.inventory.equipment.items.push(shadowGachaItem(item));
     session.game.gachaTempItem = null;

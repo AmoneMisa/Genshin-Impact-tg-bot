@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 function renderPanel(container, state) {
   const enabled = Boolean(state?.enabled);
   container.innerHTML = `
@@ -23,11 +24,7 @@ export async function openUpdatesGame({ api, renderState, haptic, statusElement 
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass updates-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Что нового</h2>
-        <span class="ds-round" aria-hidden="true">🔔</span>
-      </header>
+      ${dialogHeading("Что нового").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-updates-content class="updates-content"><div class="updates-loading">Загружаем настройки…</div></div>
     </div>`;
 

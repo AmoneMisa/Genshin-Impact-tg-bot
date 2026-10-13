@@ -1,3 +1,4 @@
+import {recordDeath} from '../player/deathPenalties.js';
 import holdings from '../../../template/worldHoldings.js';
 import {hallState} from './hall.js';
 import {restoreRevivalVitals} from '../player/revivalVitals.js';
@@ -7,6 +8,7 @@ import getMaxCp from '../player/getters/getMaxCp.js';
 
 export function markWorldDeath(session,now=Date.now()){
  const w=session.game.world;if(!w||session.game.gameClass?.stats?.hp>0)return;
+ recordDeath(session,{now,siege:w.mode==='siege'});
  w.died=true;w.death||={at:now};w.path=[];w.pending=null;w.channel=null;
  const f=session.game.hunt?.field;
  if(f){f.path=[];delete f.pendingRoom;for(const m of f.mobs||[])m.aggro=false;}
@@ -32,6 +34,7 @@ export function respawnWorld(session,destination,clan,records=[],now=Date.now())
  if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;session.game.hunt.playerDebuffs=[];}
  if(destination==='city')restoreRevivalVitals(session,{town:true});
  else {stats.hp=Math.max(1,Math.floor(getMaxHp(session)*.5));stats.mp=Math.max(0,Math.floor(getMaxMp(session)*.5));stats.cp=Math.max(0,Math.floor(getMaxCp(session)*.5));}
+ if(session.game.deathLedger)session.game.deathLedger.active=false;
  session.game.respawnTime=0;delete session.game.l2PendingDeath;session.needsSave=true;
  return {ok:true};
 }

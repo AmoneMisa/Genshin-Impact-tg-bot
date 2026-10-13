@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 import { luckCoinHtml } from './currency-icons.js';
 import {icon} from './icons.js';
@@ -27,11 +28,7 @@ function shell({ title, icon, body }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass feedback-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>${title}</h2>
-        <span class="ds-round" aria-hidden="true">${icon}</span>
-      </header>
+      ${dialogHeading(title).replace('data-dismiss','class="overlay-close" data-dismiss')}
       ${body}
     </div>`;
   const close = () => {
@@ -130,7 +127,7 @@ export async function openMailGame({api,haptic,statusElement,renderState}){
   }
   function listHtml(){
     const rows=tab==='inbox'?mail.letters:(mail.sent||[]),pages=Math.max(1,Math.ceil(rows.length/8));page=Math.min(page,pages-1);
-    return `<nav class="mail-tabs" aria-label="Письма"><button type="button" data-mail-tab="inbox" aria-pressed="${tab==='inbox'}">Входящие <small>${mail.letters.length}</small></button><button type="button" data-mail-tab="sent" aria-pressed="${tab==='sent'}">Отправленные <small>${(mail.sent||[]).length}</small></button></nav>
+    return `<nav class="mail-tabs ui-folder-tabs" aria-label="Письма"><button type="button" data-mail-tab="inbox" aria-pressed="${tab==='inbox'}">Входящие <small>${mail.letters.length}</small></button><button type="button" data-mail-tab="sent" aria-pressed="${tab==='sent'}">Отправленные <small>${(mail.sent||[]).length}</small></button></nav>
     <section class="mail-table" aria-label="Список писем"><div class="mail-table-head"><span>Тип</span><span>${tab==='inbox'?'Отправитель':'Получатель'}</span><span>Тема</span><span>Срок</span></div>${rows.slice(page*8,page*8+8).map(l=>`<button type="button" class="mail-table-row ${l.status}" data-mail-open="${escapeHtml(l.id)}"><span title="${l.type==='payment'?'Наложенный платёж':'Обычное письмо'}">${(l.type==='payment'?materialIcon('gold'):icon('mail'))}</span><span>${escapeHtml(tab==='inbox'?l.fromName:l.toName)}</span><strong>${escapeHtml(l.title)}</strong><small>${l.status==='pending'?`${daysLeft(l.expiresAt)} дн.`:escapeHtml(MAIL_STATUS[l.status]||'')}</small></button>`).join('')||'<p class="mail-empty">Писем пока нет.</p>'}</section>
     <div class="mail-pagination"><button type="button" data-mail-page="-1" ${page===0?'disabled':''} aria-label="Предыдущая страница">←</button><span>${page+1} / ${pages}</span><button type="button" data-mail-page="1" ${page>=pages-1?'disabled':''} aria-label="Следующая страница">→</button></div>
     <div class="mail-actions"><button type="button" data-mail-compose="payment">Наложенный платёж</button><button type="button" class="mail-primary" data-mail-compose="regular">${icon('mail')} Написать письмо</button></div><details class="mail-promo-details"><summary>Промокод</summary>${promoFormHtml()}</details>`;
@@ -141,7 +138,7 @@ export async function openMailGame({api,haptic,statusElement,renderState}){
   }
   function composeHtml(){
     const chosen=new Set(compose.items.map(r=>r.kind+':'+r.ref)),available=(mail.inventory||[]).filter(r=>!chosen.has(r.kind+':'+r.ref));
-    return `<button type="button" class="mail-back" data-mail-back>← К списку</button><form class="mail-compose"><label>Получатель<input data-mail-recipient maxlength="100" autocomplete="off" placeholder="Имя игрока из чата" value="${escapeHtml(compose.name)}" required></label><div class="mail-recipients" data-mail-recipients></div><div class="mail-tabs"><button type="button" data-mail-type="regular" aria-pressed="${compose.type==='regular'}">Обычное письмо</button><button type="button" data-mail-type="payment" aria-pressed="${compose.type==='payment'}">Наложенный платёж</button></div><label>Тема<input data-mail-field="title" maxlength="80" placeholder="Тема письма" value="${escapeHtml(compose.title)}" required></label><label>Сообщение<textarea data-mail-field="text" maxlength="2000" rows="4" placeholder="Напиши сообщение получателю">${escapeHtml(compose.text)}</textarea></label>${compose.type==='payment'?`<label>Сумма к оплате · адена<input data-mail-field="price" type="number" inputmode="numeric" min="1" max="9007199254740991" placeholder="Например, 50000" value="${escapeHtml(compose.price)}" required></label>`:''}<section class="mail-attachments"><h3>Вложения <small>${compose.items.length} / ${mail.maxSlots||12}</small></h3><div data-mail-attached>${stockGrid(compose.items,{select:true,min:6})}</div><p class="mail-note">Нажми на вложение, чтобы убрать его.</p></section><section class="mail-attachments"><h3>Предметы в сумке</h3><div data-mail-stock>${stockGrid(available,{select:true,min:6})}</div><p class="mail-note">Выбери предмет и укажи количество.</p></section><div class="mail-payment"><span>Почтовый сбор</span><strong>${materialIcon('gold')} ${fmt(mail.postage)} адены</strong></div><button type="submit" class="mail-primary">Отправить письмо</button></form>`;
+    return `<button type="button" class="mail-back" data-mail-back>← К списку</button><form class="mail-compose"><label>Получатель<input data-mail-recipient maxlength="100" autocomplete="off" placeholder="Имя игрока из чата" value="${escapeHtml(compose.name)}" required></label><div class="mail-recipients" data-mail-recipients></div><div class="mail-tabs ui-folder-tabs"><button type="button" data-mail-type="regular" aria-pressed="${compose.type==='regular'}">Обычное письмо</button><button type="button" data-mail-type="payment" aria-pressed="${compose.type==='payment'}">Наложенный платёж</button></div><label>Тема<input data-mail-field="title" maxlength="80" placeholder="Тема письма" value="${escapeHtml(compose.title)}" required></label><label>Сообщение<textarea data-mail-field="text" maxlength="2000" rows="4" placeholder="Напиши сообщение получателю">${escapeHtml(compose.text)}</textarea></label>${compose.type==='payment'?`<label>Сумма к оплате · адена<input data-mail-field="price" type="number" inputmode="numeric" min="1" max="9007199254740991" placeholder="Например, 50000" value="${escapeHtml(compose.price)}" required></label>`:''}<section class="mail-attachments"><h3>Вложения <small>${compose.items.length} / ${mail.maxSlots||12}</small></h3><div data-mail-attached>${stockGrid(compose.items,{select:true,min:6})}</div><p class="mail-note">Нажми на вложение, чтобы убрать его.</p></section><section class="mail-attachments"><h3>Предметы в сумке</h3><div data-mail-stock>${stockGrid(available,{select:true,min:6})}</div><p class="mail-note">Выбери предмет и укажи количество.</p></section><div class="mail-payment"><span>Почтовый сбор</span><strong>${materialIcon('gold')} ${fmt(mail.postage)} адены</strong></div><button type="submit" class="mail-primary">Отправить письмо</button></form>`;
   }
   function bindCompose(){
     const input=content.querySelector('[data-mail-recipient]'),suggestions=content.querySelector('[data-mail-recipients]');

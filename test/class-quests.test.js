@@ -125,7 +125,7 @@ test('promotion needs a finished quest, then swaps class, keeps enchants and pay
   assert.equal(session.game.gameClass.skills[1].enchantLevel, 4, 'inherited skill keeps its level');
   assert.equal(session.game.gameClass.skills[3].enchantLevel, undefined);
   assert.notEqual(session.game.gameClass.stats.maxHp, hpBefore);
-  assert.equal(session.game.inventory.sp, sp + 150);
+  assert.equal(session.game.inventory.sp, sp + 3000000);
   assert.equal(getMaterialCount(session, 'skill_scroll'), 3);
   assert.equal(session.game.classQuest.active, null);
   assert.deepEqual(session.game.classQuest.completed, ['humanKnight']);

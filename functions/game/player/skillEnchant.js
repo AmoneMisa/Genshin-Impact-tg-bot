@@ -1,3 +1,4 @@
+import {legacySp} from './spEconomy.js';
 import getEquipStatByName from './getters/getEquipStatByName.js';
 import {soulSkillCost} from '../equipment/soulCrystalCombat.js';
 /**
@@ -22,6 +23,7 @@ import {soulSkillCost} from '../equipment/soulCrystalCombat.js';
  */
 import {getMaterialCount, spendMaterials} from './materials.js';
 import {getRouteBonus} from './skillRoutes.js';
+import {enchantFactors,enchantOffer} from './l2SkillEnchant.js';
 
 export const SKILL_ENCHANT_MAX_LEVEL = 10;
 
@@ -30,11 +32,11 @@ const COST_REDUCTION_PER_LEVEL = 0.02; // -2% mp/hp cost per enchant level (max 
 const COOLDOWN_REDUCTION_PER_LEVEL = 0.02; // -2% cooldown per enchant level (max -20%)
 
 // gold/moonDew/ironOre/sp needed to go from level N to N+1: base * (N+1) * tier factor.
-const ENCHANT_COST_BASE = { gold: 2000, moonDew: 5, ironOre: 15, sp: 20 };
+const ENCHANT_COST_BASE = { gold: 2000, moonDew: 5, ironOre: 15, sp: legacySp(20) };
 const TIER_COST_MULTIPLIER = {1: 1, 2: 1.5, 3: 2, 4: 2.5};
 
 export function getSkillEnchantLevel(skill) {
-    return Math.max(0, Math.min(SKILL_ENCHANT_MAX_LEVEL, skill?.enchantLevel || 0));
+    return Math.max(0, Math.min(skill?.l2Id?30:SKILL_ENCHANT_MAX_LEVEL, skill?.enchantLevel || 0));
 }
 
 export function getPowerMultiplierAtLevel(level) {
@@ -42,14 +44,17 @@ export function getPowerMultiplierAtLevel(level) {
 }
 
 export function getSkillPowerMultiplier(skill) {
+    if(skill?.l2Id)return enchantFactors(skill).power;
     return getPowerMultiplierAtLevel(getSkillEnchantLevel(skill)) * (1 + getRouteBonus(skill).power);
 }
 
 export function getSkillCostMultiplier(skill) {
+    if(skill?.l2Id)return enchantFactors(skill).cost;
     return (1 - getSkillEnchantLevel(skill) * COST_REDUCTION_PER_LEVEL) * (1 - getRouteBonus(skill).cost);
 }
 
 export function getSkillCooldownMultiplier(skill) {
+    if(skill?.l2Id)return enchantFactors(skill).cooldown;
     return (1 - getSkillEnchantLevel(skill) * COOLDOWN_REDUCTION_PER_LEVEL) * (1 - getRouteBonus(skill).cooldown);
 }
 
@@ -81,7 +86,8 @@ export function getEnchantItems(skill, level) {
 // Resources required to enchant `skill` from its current level to the next
 // one, or null when already at SKILL_ENCHANT_MAX_LEVEL. `items` is present only
 // when the step needs materials.
-export function getSkillEnchantCost(skill) {
+export function getSkillEnchantCost(skill, session=null) {
+    if(skill?.l2Id)return session?enchantOffer(session,skill.l2Id).cost||null:null;
     const level = getSkillEnchantLevel(skill);
     if (level >= SKILL_ENCHANT_MAX_LEVEL) {
         return null;
@@ -101,8 +107,9 @@ export function getSkillEnchantCost(skill) {
 
 // Attempts to enchant a skill by one level, deducting resources from the
 // player's inventory. Mutates `skill`/`inventory` in place; caller saves.
-export const getSkillEnchantChance=skill=>skill?.l2Id?Math.max(.25,.95-getSkillEnchantLevel(skill)*.07):1;
+export const getSkillEnchantChance=(skill,session)=>skill?.l2Id?(session?enchantOffer(session,skill.l2Id).chance||0:0):1;
 export function enchantSkill(skill, inventory, {safe=false,random=Math.random}={}) {
+    if(skill?.l2Id)return {ok:false,reason:'use_enchant_tab'};
     const cost = getSkillEnchantCost(skill);
     if (!cost) {
         return { ok: false, reason: "max_level" };

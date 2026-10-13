@@ -1,3 +1,4 @@
+import {dailyGacha} from '../functions/game/equipment/gachaDaily.js';
 // Mini App notifications: Telegram pushes for social events and the counters
 // behind the red dots (friends, clan) on the main screen.
 //
@@ -57,8 +58,7 @@ export function personalBadges(session) {
   const period=loginPeriod(),calendar=session.game?.loginRewards;
   let chest = 0;
   try { chest = getChestState(session).available ? 1 : 0; } catch { chest = 0; }
-  const gacha = session.game?.gachaTempItem ? 1
-    : Object.values(session.game?.gacha || {}).some(entry => Number(entry?.freeSpins) > 0) ? 1 : 0;
+  const gacha = session.game?.gachaTempItem || (session.game && dailyGacha(session).remaining > 0) ? 1 : 0;
   return {
     bonus: Number(session.game?.bonusChances) > 0 ? 1 : 0,
     loginRewards:calendar?.month===period.month&&calendar.claimed?.includes(period.day)?0:1,

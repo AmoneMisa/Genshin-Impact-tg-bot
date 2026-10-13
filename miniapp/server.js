@@ -615,14 +615,14 @@ const playerSkillsEnchant = guarded('player skills enchant', async (req, res) =>
   const context = await authorize(req);
   const body = await readJsonBody(req);
   assertGoldUnlocked(context);
-  const slot = Number(body.slot);
+  const slot = body.id != null ? 0 : Number(body.slot);
   if (!Number.isInteger(slot) || slot < 0) {
     throw httpError(400, 'slot must be a non-negative integer');
   }
 
   const result = await withLock(`${context.chatId}:${context.userId}:skills`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const enchanted = enchantSkillForMiniApp(context.session, slot);
+    const enchanted = enchantSkillForMiniApp(context.session, slot, {id:body.id,mode:body.mode,route:body.route});
     if (enchanted.ok) await saveSession(context.session);
     return enchanted;
   });

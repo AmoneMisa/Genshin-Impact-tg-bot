@@ -25,9 +25,9 @@ const pay = (gold, moonDew = 0, text) => ({type: "pay", gold, moonDew, text});
 import {L2_CLASS_META} from './l2ClassMeta.js';
 
 const REWARD = {
-    2: {sp: 150, moonDew: 20, items: {skill_scroll: 3}},
-    3: {sp: 400, moonDew: 60, items: {skill_scroll: 5, ancient_seal: 2}},
-    4: {sp: 900, moonDew: 120, items: {skill_scroll: 8, ancient_seal: 4}}
+    2: {sp: 3000000, moonDew: 20, items: {skill_scroll: 3}},
+    3: {sp: 8000000, moonDew: 60, items: {skill_scroll: 5, ancient_seal: 2}},
+    4: {sp: 18000000, moonDew: 120, items: {skill_scroll: 8, ancient_seal: 4}}
 };
 const LEVEL = {2: 20, 3: 40, 4: 76};
 const FEE = {2: 20000, 3: 60000, 4: 200000};

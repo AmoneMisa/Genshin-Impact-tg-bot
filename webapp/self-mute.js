@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 function timeLabel(unixSeconds) {
   if (!unixSeconds) return '';
   return new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
@@ -52,7 +53,7 @@ function renderContent(container, state) {
         <h3>Уйти в себя на 2 минуты</h3>
         <p>Бот временно запретит тебе отправлять сообщения, медиа, опросы и другие сообщения в этой группе.</p>
       </div>
-      <button type="button" class="self-mute-action" data-self-mute>Замутить себя на 2 минуты</button>
+      <button type="button" class="ui-button primary self-mute-action" data-self-mute>Замутить себя на 2 минуты</button>
     </div>`;
 }
 
@@ -62,11 +63,7 @@ export async function openSelfMute({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass self-mute-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Само-мут</h2>
-        <span class="ds-round" aria-hidden="true">🤫</span>
-      </header>
+      ${dialogHeading("Само-мут").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-self-mute-content class="self-mute-content">
         <div class="self-mute-loading">Проверяем статус…</div>
       </div>

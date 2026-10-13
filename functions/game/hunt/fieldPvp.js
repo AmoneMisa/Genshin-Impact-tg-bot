@@ -1,3 +1,4 @@
+import {recordDeath} from '../player/deathPenalties.js';
 import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2OnDamageDealt,l2PreventDeath,l2TransferDamage,l2RawStat} from '../player/l2Effects.js';
 // Live per-skill PvP in hunting locations. All participants must come from one freshly loaded Chat.
 import {advanceHunt} from './huntFight.js';
@@ -83,7 +84,7 @@ export function finishL2PvpDeath(chat,attacker,defender,now){
         }
         const state = ensureFieldPvp(defender);
         state.flagUntil=0;state.effects={};state.deathAt=now;
-        defender.game.respawnTime=now+HUNT.respawnMs;
+        defender.game.respawnTime=now+HUNT.respawnMs;recordDeath(defender,{now,kind:"pvp"});
         if(defender.game.world&&defender.game.hunt.field){const f=defender.game.hunt.field;f.path=[];delete f.pendingRoom;for(const mob of f.mobs||[])mob.aggro=false;}
         else {defender.game.hunt.field=null;defender.game.hunt.mob=null;}
         fieldPvpLog(defender,`${attacker?name(attacker):'Игрок'} убил тебя${pk?' · PK':''}.`,now);

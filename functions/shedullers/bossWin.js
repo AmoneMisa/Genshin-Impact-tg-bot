@@ -1,3 +1,4 @@
+import {recordDeath} from '../game/player/deathPenalties.js';
 import { withLock } from "../general/chatLock.js";
 import Boss from "../../db/models/Boss.js";
 import Chat from "../../db/models/Chat.js";
@@ -21,7 +22,7 @@ export default async function() {
                 const member = chat.members.find(m => String(m.userId) === String(player.id));
                 if (member?.game?.gameClass?.stats) {
                     member.game.gameClass.stats.hp = 0;
-                    member.game.respawnTime = Date.now() + 60 * 1000;
+                    member.game.respawnTime = Date.now() + 60 * 1000;recordDeath(member,{kind:'raid'});
                 }
             }
             await chat.save();

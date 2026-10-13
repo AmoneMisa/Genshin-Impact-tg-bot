@@ -1,3 +1,4 @@
+import DATA from '../../../template/l2SkillEnchantData.js';
 // Level and power of a real Lineage II skill (High Five) for a hero of a given level. A skill of the real tree has
 // several levels, each opening at its own character level (template/l2Classes.js `learn`), and every level has its
 // own power. The kit skills that carry `l2Id` use this: the hero casts the highest level they have learned.
@@ -62,7 +63,7 @@ export function skillLevelPenalty(skill, mobLevel, heroLevel) {
     const at = l2SkillAt(skill.l2Id, heroLevel);
     if (!at) return {factor: 1, missChance: 0};
     // a skill the hero enchanted counts as taught later: the route and the enchant tiers keep it useful
-    const taught = at.magicLvl + Math.max(0, Number(skill.enchantLevel) || 0);
+    const taught = skill.enchantLevel>0 ? Number(DATA.skills[skill.l2Id]?.routes[skill.l2EnchantRoute]?.steps[skill.enchantLevel-1]?.fields.magicLevel)||at.magicLvl : at.magicLvl;
     const over = mobLevel - taught - LEVEL_TOLERANCE;
     if (over <= 0) return {factor: 1, missChance: 0};
     return {factor: Math.max(0, 1 - over * 0.12), missChance: Math.min(0.9, over * 0.1)};

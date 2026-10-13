@@ -58,9 +58,11 @@ test('numeric SP belongs to character stats and every equipment slot is a select
 test('unknown player text is escaped and unavailable passive learning stays disabled',()=>{
   const data=getCharacterState(session());
   data.passives.passives=[{id:'<attack>',name:'<img src=x>',stat:'Защита',level:0,maxLevel:5,current:null,next:'+2%',cost:{sp:999,gold:10},needLvl:90,canLearn:false}];
-  const html=renderCharacterTab(data,'skills');
+  data.skills.book=[{id:1,name:'<img src=x>',description:'<script>bad()</script>',level:0,kind:'passive'}];
+  const html=renderCharacterTab(data,'skills',{skillTab:'passive'});
   assert.match(html,/&lt;img src=x&gt;/);
-  assert.match(html,/data-passive-id="&lt;attack&gt;" disabled/);
+  assert.match(html,/item-grid-cell unlearned/);
+  assert.match(html,/&lt;script&gt;/);
   assert.doesNotMatch(html,/<img src=x>/);
 });
 test('skill and element artwork uses local reviewed assets',()=>{

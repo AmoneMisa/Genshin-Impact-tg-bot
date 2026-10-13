@@ -1,3 +1,4 @@
+import {recoveryInfo} from '../../../template/l2RecoveryScrolls.js';
 // The real High Five drop tables (template/l2Loot.js) mapped onto the game's items. Enchant scrolls, crystals, Life
 // Stones, attribute stones and seal stones become the game's own materials; every other real item - full weapons and
 // armor, pieces, recipes, dyes, crafting goods - is a collectable material `l2_<item id>` named like the real item.
@@ -29,6 +30,7 @@ const ELEMENT_BY_NAME = Object.fromEntries(ELEMENTS.map(element => [element.id, 
 const TIER_BY_NAME = {Stone: 'stone', Crystal: 'crystal', Jewel: 'jewel'};
 
 export function itemRow(id) {
+    const recovery=recoveryInfo(id);if(recovery)return recovery;
     const row = ITEMS[id];
     if (row) return {id: Number(id), name: row[0], type: row[1], grade: row[2], price: row[3], etc: row[4]};
     // the fish and what they turn into are described by the fishing data

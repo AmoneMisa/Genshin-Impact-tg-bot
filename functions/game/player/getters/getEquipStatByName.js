@@ -1,6 +1,9 @@
 import {saStat} from '../../equipment/soulCrystals.js';
 import {soulBuffStat} from '../../equipment/soulCrystalCombat.js';
-import {l2StatBonus} from '../l2Effects.js';
+import {l2StatBonus as effectStatBonus} from '../l2Effects.js';
+import {penaltyStat} from '../deathPenalties.js';
+import {combatType} from '../combatType.js';
+function l2StatBonus(session,stat,mul,now,type){const a=effectStatBonus(session,stat,mul,now,type),b=penaltyStat(session,stat,mul,combatType(session.game?.gameClass,type));return mul?a*b:a+b;}
 // "power"/"defencePower" are stored (and displayed, see getItemString.js) as
 // weapon-power POINTS (e.g. 45, meaning +45%), unlike every other multiplicative
 // stat (attackMul, criticalDamage, incomingDamageModifier, ...) which is stored

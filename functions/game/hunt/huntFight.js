@@ -1,3 +1,4 @@
+import {recordDeath} from '../player/deathPenalties.js';
 import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Effects.js';
 // A real-time fight with one mob of a hunting zone. The mob lives in session.game.hunt.mob and swings
 // every few seconds; the swings that fell due since the last request are applied when the player
@@ -93,7 +94,7 @@ function applyHit(session, dmg, now) {
     stats.hp = Math.max(0, stats.hp - lost);
     l2OnDamageReceived(session,null,lost,now);
     const killed = stats.hp === 0 && !l2PreventDeath(session,now);
-    if (killed) session.game.respawnTime = now + HUNT.respawnMs;
+    if (killed) {session.game.respawnTime = now + HUNT.respawnMs;recordDeath(session,{now});}
     return {absorbed, lost, killed};
 }
 

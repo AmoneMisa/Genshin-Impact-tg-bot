@@ -81,7 +81,7 @@ try{for(const width of [320,390])for(const [level,grade] of [[1,'NG'],[20,'D'],[
     assert.equal(await page.locator('.inventory-panel').evaluate(p=>p.scrollWidth>p.clientWidth+1),false);
     if(grade==='S'){
         assert.equal(await page.locator('[data-inventory-equipment].is-shadow-item').count(),2);
-        assert.equal(await page.locator('[data-inventory-equipment].is-shadow-item').first().evaluate(p=>getComputedStyle(p).borderTopColor),'rgb(241, 139, 199)');
+        assert.equal(await page.locator('[data-inventory-equipment].is-shadow-item').first().evaluate(p=>getComputedStyle(p).boxShadow.includes('rgb(241, 139, 199)')),true);
     }
     await page.locator('[data-inventory-material="login_rune_exp_S"]').click();await page.locator('[data-inventory-coupon]').click();
     await page.waitForSelector('.login-overlay.visible');assert.equal(await page.locator('[data-login-redeem]').count(),1);await overflow();

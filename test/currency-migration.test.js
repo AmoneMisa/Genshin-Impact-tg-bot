@@ -25,8 +25,9 @@ test('wheel routes all probability boundaries and credits only the chosen bounde
   assert.equal(claimBonus(s).ok,false);
  }
 });
-test('a paid summon cannot bypass missing dew and reports the unified currency',()=>{
+test('paid S summons use S crystals and cannot bypass a missing material',()=>{
  const s={game:{stats:{lvl:100},inventory:{gold:1e7,gacha:{items:[]},equipment:{items:[]}},gacha:[{name:'royal',freeSpins:0}]}};
- const state=getGachaState(s);assert.equal(state.spirals.find(p=>p.id==='royal').paymentMode,'dew_locked');
+ s.game.gachaDaily={day:new Date().toISOString().slice(0,10),remaining:0};
+ const state=getGachaState(s);assert.equal(state.spirals.find(p=>p.id==='royal').paymentMode,'resources_locked');
  assert.equal(rollGacha(s,'royal').ok,false);assert.equal(s.game.inventory.gold,1e7);
 });

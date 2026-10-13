@@ -20,7 +20,7 @@ function session(tier = 4, skillOverrides = {}) {
   return {
     game: {
       stats: { lvl: 80 },
-      inventory: { gold: 1_000_000, moonDew: 500, ironOre: 500, sp: 5_000 },
+      inventory: { gold: 1_000_000, moonDew: 500, ironOre: 500, sp: 100_000_000 },
       gameClass: { stats: { name: 'archmage', tier, translateName: 'Архимаг', maxHp: 1000, hp: 1000 }, skills: [skill] },
       equipmentStats: {},
     },
@@ -48,7 +48,7 @@ test('before the 3rd class a skill only has its level; routes need skill level 5
 test('a route costs gold, SP and Ancient Seals, plus the boss essence from level 3', () => {
   const s = session();
   const skill = s.game.gameClass.skills[0];
-  assert.deepEqual(getRouteCost({ ...skill, routeKind: 'power' }), { gold: 15000, sp: 80, items: { ancient_seal: 1 } });
+  assert.deepEqual(getRouteCost({ ...skill, routeKind: 'power' }), { gold: 15000, sp: 1_600_000, items: { ancient_seal: 1 } });
   const third = getRouteCost({ ...skill, routeKind: 'power', routeLevel: 2 });
   assert.deepEqual(third.items, { ancient_seal: 3, [skill.enchantItem.key]: 1 });
 
@@ -59,7 +59,7 @@ test('a route costs gold, SP and Ancient Seals, plus the boss essence from level
   const result = upgradeRoute(s, skill, 'power');
   assert.deepEqual([result.ok, result.route, result.level], [true, 'power', 1]);
   assert.equal(s.game.inventory.gold, goldBefore - 15000);
-  assert.equal(s.game.inventory.sp, 5_000 - 80);
+  assert.equal(s.game.inventory.sp, 100_000_000 - 1_600_000);
   assert.equal(getMaterialCount(s, 'ancient_seal'), 19);
 });
 

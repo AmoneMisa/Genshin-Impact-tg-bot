@@ -1,7 +1,7 @@
 import { withLock } from '../general/chatLock.js';
 import listChatIds from '../getters/listChatIds.js';
 import Chat from "../../db/models/Chat.js";
-import gachaTemplate from "../../template/gachaTemplate.js";
+import {dailyGacha} from '../game/equipment/gachaDaily.js';
 
 /**
  * Сбрасывает бесплатные спины в гача-системе для всех игроков.
@@ -27,23 +27,7 @@ export default async function resetGachaSpins() {
                 const game = member.game;
                 if (!game) continue;
 
-                // Восстанавливаем корректную форму (массив) на случай старых данных.
-                if (!Array.isArray(game.gacha)) {
-                    game.gacha = [];
-                }
-
-                for (const template of gachaTemplate) {
-                    const entry = game.gacha.find(item => item.name === template.name);
-                    if (entry) {
-                        entry.freeSpins = template.freeSpins;
-                    } else {
-                        game.gacha.push({
-                            name: template.name,
-                            freeSpins: template.freeSpins
-                        });
-                    }
-                }
-
+                dailyGacha(member);
                 updated = true;
             }
 

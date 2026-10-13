@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import { materialIcon } from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { icon } from './icons.js';
@@ -32,11 +33,7 @@ export async function openTattoosGame({ api, renderState, haptic, statusElement,
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass tattoos-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Мастер символов</h2>
-        <span class="ds-round" aria-hidden="true">${icon('sparkles')}</span>
-      </header>
+      ${dialogHeading("Мастер символов").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-content></div>
       <div class="boss-feedback" data-feedback aria-live="polite"></div>
     </div>`;

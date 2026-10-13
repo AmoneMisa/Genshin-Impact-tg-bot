@@ -1,6 +1,7 @@
+import {enchantRecord,enchantedEffects} from './l2SkillEnchant.js';
 // Passive skills (Lineage II): the passive skills of the real class trees (template/l2Classes.js), learned level by
 // level with skill points. A class learns the passives of its own tree and of every parent class; each level has the
-// real character level it opens at and the real SP price (scaled to the SP this game pays, SP_SCALE), some of them
+// real character level it opens at and the real SP price (without scaling), some of them
 // need the real spellbook item (a material `l2_<item id>`).
 //
 // The stats of a passive are the real stat nodes of the skill converted to game stats (STAT_MAP): a flat P.Atk of a
@@ -15,8 +16,8 @@ import {resolveClassName} from '../classes/legacyClasses.js';
 import {CLASS_PASSIVES} from '../../../template/scrydeSpells.js';
 import {matchesCombatStat} from './combatType.js';
 
-/** Real SP -> game SP: the whole tree of a 3rd profession costs a few thousand SP, about what a hero earns. */
-export const SP_SCALE = 1 / 20000;
+/** Native High Five SP prices are used without scaling. */
+export const SP_SCALE = 1;
 export const MAX_PASSIVE_CHARACTER_LEVEL = 85;
 /** No single passive moves a stat by more than this share. */
 const DELTA_CAP = 0.3;
@@ -96,7 +97,7 @@ export function passiveTree(classId) {
     const keys = chainOf(classId).map(id => L2_CLASS_META[id].key);
     for (const extra of CLASS_PASSIVES) {
         if (!extra.classes.some(key => keys.includes(key))) continue;
-        skills.set(extra.id, {id: extra.id, name: extra.name, info: {stats: extra.stats}, levels: new Map([[1, {level: 1, need: extra.needLevel, sp: extra.sp, items: []}]])});
+        skills.set(extra.id, {id: extra.id, name: extra.name, info: {stats: extra.stats}, levels: new Map([[1, {level: 1, need: extra.needLevel, sp: extra.sp * 20000, items: []}]])});
     }
     const result = [...skills.values()].map(entry => ({...entry, levels: [...entry.levels.values()].sort((a, b) => a.level - b.level)})).filter(entry => entry.levels.length);
     result.sort((a, b) => a.name.localeCompare(b.name));
@@ -183,7 +184,9 @@ export function passiveModifiers(session, damageType) {
     for (const passive of passiveTree(classId)) {
         const level = learnedLevel(session, passive.id);
         if (!level) continue;
-        for (const row of passiveDeltas(passive.info, level, damageType)) {
+        const enchant=enchantRecord(session,passive.id),effects=enchantedEffects(passive.id,enchant.route,enchant.level);
+        const info=effects.length?{...passive.info,stats:effects.flatMap(e=>(e.children||[]).filter(n=>n.stat).map(n=>({...n,value:Array(level).fill(Number(n.value)),when:passive.info.stats?.find(s=>s.stat===n.stat)?.when})))}:passive.info;
+        for (const row of passiveDeltas(info, level, damageType)) {
             if (!conditionHolds(row.when, worn, session)) continue;
             result[row.stat] = (result[row.stat] || 0) + row.delta;
         }

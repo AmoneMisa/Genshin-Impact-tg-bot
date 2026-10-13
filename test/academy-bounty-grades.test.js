@@ -6,7 +6,7 @@ import {levelNeed} from '../functions/game/player/vitality.js';
 import {materialInfo} from '../functions/game/player/materials.js';
 import {crystalKey} from '../functions/game/equipment/enchantItem.js';
 import {EXP_RATE} from '../functions/game/player/vitality.js';
-import {spForLevelUp} from '../functions/game/player/setLevel.js';
+import {customSpBudget} from '../functions/game/player/spEconomy.js';
 import {SHOT_PACK_PRICE,SHOT_PACK,SHOTS_PER_CAST} from '../template/shotsData.js';
 
 test('bounties supplement eligible hunting income instead of skipping progression',()=>{
@@ -19,7 +19,7 @@ test('bounties supplement eligible hunting income instead of skipping progressio
   assert.ok(exp<=levelNeed(level)*0.165+15,`${level}: excessive level share`);
   for(const q of daily)assert.ok(q.reward.exp<=reference.exp*q.target*(q.category==='experience'?0.3:0.05)+1);
   const sp=daily.reduce((sum,q)=>sum+q.reward.sp,0);
-  assert.ok(sp<=spForLevelUp(level)*0.9+3,`${level}: excessive SP`);
+  assert.ok(sp<=customSpBudget(level)*0.9+3,`${level}: excessive SP`);
   const shots=daily[2].reward.materials[`spiritshot_${grade}`],perCast=SHOTS_PER_CAST[grade],unit=SHOT_PACK_PRICE[grade]/SHOT_PACK;
   assert.ok(shots>=perCast*3&&shots<=perCast*20);
   assert.ok(shots*unit<=Math.max(reference.gold*daily[2].target*0.25,perCast*3*unit)+unit);

@@ -1,6 +1,6 @@
 // Learning of the battle skills of a profession (Lineage II): a skill of the real class tree is bought once with
 // skill points before it can be used. The base kit of a family and any skill without a real id are known from the start.
-// The price is the cheapest real SP price of the skill's first level in the trees (scaled, see passiveSkills.js SP_SCALE);
+// The price is the cheapest real SP price of the skill's first level in the trees (in original High Five units);
 // a few skills also ask for their spellbook (a material `l2_<item id>`).
 // Learned skills live in session.game.learnedSkills = {l2Id: true}.
 import l2 from '../../../template/l2Classes.js';
@@ -26,7 +26,7 @@ function priceTable() {
 export function skillLearnCost(skill) {
     if (!skill?.l2Id) return null;
     const row = priceTable().get(Number(skill.l2Id));
-    return {sp: Math.max(1, Math.round((row?.sp || 0) * SP_SCALE)), items: row?.items || []};
+    return {sp: Math.max(0, Math.round((row?.sp || 0) * SP_SCALE)), items: row?.items || []};
 }
 
 export function isSkillLearned(session, skill) {

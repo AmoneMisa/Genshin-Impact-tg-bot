@@ -1,3 +1,4 @@
+import {legacySp} from '../player/spEconomy.js';
 // A boss encounter is more than the boss: `boss.minions` holds the add units
 // that fight beside it (see `minions` / `initial` / `phases` in bossTemplate.js).
 //
@@ -100,7 +101,7 @@ export function damageUnit(boss, unit, dmg, template = bossTemplateFor(boss)) {
 export function unitRewards(unit, template, random = Math.random) {
     const def = (template?.minions || []).find(item => item.key === unit.key);
     const [spMin, spMax] = def?.sp || [0, 0];
-    const sp = spMax > 0 ? spMin + Math.floor(random() * (spMax - spMin + 1)) : 0;
+    const sp = spMax > 0 ? legacySp(spMin + Math.floor(random() * (spMax - spMin + 1))) : 0;
     const items = [];
     for (const drop of [...MINION_DEFAULT_DROPS, ...(def?.drops || [])]) {
         if (random() < drop.chance) {

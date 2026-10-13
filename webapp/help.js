@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import {escapeHtml} from './escape-html.js';
 const GUIDES = [
   { id: 'hub', icon: '✨', title: 'Город', text: 'Открой игру командой /play или /start. Здания в городе открывают игры, инвентарь, постройки и анкеты.' },
@@ -11,7 +12,7 @@ const GUIDES = [
 ];
 export async function openHelpGame({haptic,statusElement}) {
   const overlay=document.createElement('section');overlay.className='game-overlay help-overlay';
-  overlay.innerHTML='<div class="overlay-backdrop"></div><div class="overlay-panel glass help-panel"><header class="ds-head"><button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button><h2>Справка</h2></header><div data-help-content></div></div>';
+  overlay.innerHTML=`<div class="overlay-backdrop"></div><div class="overlay-panel glass help-panel">${dialogHeading("Справка").replace('data-dismiss','class="overlay-close" data-dismiss')}<div data-help-content></div></div>`;
   const close=()=>{haptic?.('light');overlay.remove();};
   overlay.querySelector('.overlay-close').onclick=close;overlay.querySelector('.overlay-backdrop').onclick=close;
   const content=overlay.querySelector('[data-help-content]');

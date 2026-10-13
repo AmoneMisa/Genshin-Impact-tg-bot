@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import { escapeHtml } from './escape-html.js';
 
@@ -24,11 +25,7 @@ export async function openPassivesGame({ api, haptic, renderState }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass feedback-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Пассивные навыки</h2>
-        <span class="ds-round" aria-hidden="true">🛡️</span>
-      </header>
+      ${dialogHeading("Пассивные навыки").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-passives-body></div>
     </div>`;
   const body = overlay.querySelector('[data-passives-body]');
@@ -45,7 +42,7 @@ export async function openPassivesGame({ api, haptic, renderState }) {
           <small>${passive.level} / ${passive.maxLevel}</small></div>
         <p>${escapeHtml(passive.stat)}: ${passive.current ? escapeHtml(passive.current) : '—'}${maxed ? '' : ` → ${escapeHtml(passive.next)}`}</p>
         ${passive.automatic ? `<small>Изучается автоматически${passive.needLvl ? ` · ${passive.needLvl} ур.` : ''}</small>` : ''}
-        ${maxed ? '' : `<button type="button" class="feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} SP${passive.cost.gold ? ` · ${passive.cost.gold} золота` : ''}${(passive.cost.items || []).map(item => ` · ${escapeHtml(item.name)} ×${item.count}`).join('')}`}</button>`}
+        ${maxed ? '' : `<button type="button" class="ui-button primary feedback-submit" data-passive="${escapeHtml(passive.id)}" ${passive.canLearn ? '' : 'disabled'}>${locked ? `Нужен ${passive.needLvl} уровень` : `Изучить · ${passive.cost.sp} SP${passive.cost.gold ? ` · ${passive.cost.gold} золота` : ''}${(passive.cost.items || []).map(item => ` · ${escapeHtml(item.name)} ×${item.count}`).join('')}`}</button>`}
       </article>`;
   }
 

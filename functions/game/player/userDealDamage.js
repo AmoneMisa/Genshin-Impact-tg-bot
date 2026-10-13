@@ -1,3 +1,4 @@
+import {recordDeath} from './deathPenalties.js';
 import bossReflectDamage from '../boss/bossReflectDamage.js';
 import {applySoulHit,tickSoulDots} from '../equipment/soulCrystalCombat.js';
 import calcDamage from '../boss/calcDamage.js';
@@ -127,6 +128,7 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
         session.game.gameClass.stats.hp = playerStats.hp;
 
         if (playerStats.hp === 0&&!l2PreventDeath(session,now)) {
+            recordDeath(session,{now,kind:boss.playerTarget?'pvp':'raid'});
             session.game.respawnTime = new Date().getTime() + 60 * 1000; // Минута на респаун персонажа
         }
     }

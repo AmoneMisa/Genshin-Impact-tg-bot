@@ -17,7 +17,7 @@ test('supply reward is claimed once, never becomes wearable gear, and cannot be 
  const s=hero();const roll=rollGacha(s,'newbie',{random:()=>0});assert.equal(roll.ok,true);
  assert.equal(resolveGacha(s,'break').ok,false);assert.ok(s.game.gachaTempItem);
  const ref=s.game.gachaTempItem.rewardRef,amount=s.game.gachaTempItem.amount;
- assert.equal(resolveGacha(s,'save').ok,true);assert.equal(s.game.inventory[ref],amount);
+ assert.equal(resolveGacha(s,'save').ok,true);assert.equal(s.game.inventory.materials[ref],amount);
  assert.equal(s.game.inventory.equipment.items.length,0);assert.equal(resolveGacha(s,'save').ok,false);
 });
 test('an old unclaimed permanent item is converted to bound timed +7',()=>{

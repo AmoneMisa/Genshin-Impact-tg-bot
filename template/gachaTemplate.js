@@ -1,54 +1,13 @@
-export default [{
-    name: "newbie",
-    needLvl: 5,
-    translatedName: "Спираль новичка",
-    freeSpins: 3,
-    piecesForFleeCall: 5,
-    gradesForSpin: [{value: "noGrade", chance: 0.7}, {value: "D", chance: 0.285}, {value: "C", chance: 0.015}],
-    spinCost: {
-        gold: 600
-    }
-}, {
-    name: "common",
-    needLvl: 20,
-    translatedName: "Обычная спираль",
-    freeSpins: 2,
-    piecesForFleeCall: 15,
-    gradesForSpin: [{value: "D", chance: 0.644}, {value: "C", chance: 0.336}, {value: "B", chance: 0.02}],
-    spinCost: {
-        gold: 2200
-    }
-}, {
-    name: "rare",
-    needLvl: 52,
-    translatedName: "Спираль редкостей",
-    freeSpins: 1,
-    piecesForFleeCall: 45,
-    gradesForSpin: [{value: "B", chance: 0.72}, {value: "A", chance: 0.245}, {value: "S", chance: 0.035}],
-    spinCost: {
-        moonDew: 3,
-        gold: 12000
-    }
-}, {
-    name: "royal",
-    needLvl: 61,
-    translatedName: "Королевская спираль",
-    freeSpins: 1,
-    piecesForFleeCall: 85,
-    gradesForSpin: [{value: "A", chance: 0.75}, {value: "S", chance: 0.22}, {value: "S80", chance: 0.03}],
-    spinCost: {
-        moonDew: 12,
-        gold: 50000,
-    }
-}, {
-    name: "goddess",
-    needLvl: 76,
-    translatedName: "Божественная спираль",
-    freeSpins: 1,
-    piecesForFleeCall: 120,
-    gradesForSpin: [{value: "S", chance: 0.65}, {value: "S80", chance: 0.28}, {value: "S84", chance: 0.07}],
-    spinCost: {
-        moonDew: 30,
-        gold: 250000,
-    }
-}]
+// Custom spirals use fixed reward pools, with an account-wide limit of three free rolls.
+const spirals=[
+ {name:'newbie',translatedName:'Спираль новичка',piecesForFleeCall:5},
+ {name:'common',translatedName:'Обычная спираль',piecesForFleeCall:15},
+ {name:'rare',translatedName:'Редкая спираль',piecesForFleeCall:45},
+ {name:'royal',translatedName:'Королевская спираль',piecesForFleeCall:85},
+ {name:'goddess',translatedName:'Божественная спираль',piecesForFleeCall:120},
+];
+const odds=[[42,36,15,6,1],[35,33,23,8,1],[25,25,32,17,1],[18,22,38,21,1],[12,18,42,27,1]];
+const kinds=[["resource","Ресурсы"],["consumable","Расходники"],["piece","Куски"],["recipe","Рецепты"],["shadow","Теневое +7"]];
+const grades=[[["noGrade",.7],["D",.285],["C",.015]],[["D",.4],["C",.6]],[["B",.8],["A",.2]],[["S",1]],[["S80",.85],["S84",.15]]];
+const fees=[{gold:600},{gold:2200},{gold:12000,ancientAdena:1500},{gold:50000},{gold:250000,luckCoins:5}];
+export default spirals.map((s,i)=>({...s,needLvl:[5,20,52,76,80][i],freeSpins:0,gradesForSpin:grades[i].map(([value,chance])=>({value,chance})),spinCost:fees[i],materialCost:i===3?{crystal_S:10}:{},rewards:kinds.map(([kind,label],j)=>({kind,label,chance:odds[i][j]}))}));

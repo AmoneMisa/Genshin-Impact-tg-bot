@@ -1,3 +1,4 @@
+import {updateDeathPopup} from './death-popup.js';
 import {bindFeatureLinks} from './feature-links.js';
 import {requestJson} from './request-json.js';
 import {observeSelects} from './design/select.js';
@@ -197,6 +198,8 @@ async function launchFeature(feature, render, navigation = {}) {
 
 function render(state) {
   currentState = state;
+  if(state.player.dead||state.player.hp<=0){ensureFeatureStyles().then(()=>{if(currentState===state)updateDeathPopup({dead:true,api,onResolved:next=>{if(next.state)render(next.state);else api('/api/bootstrap').then(render);}});});}
+  else updateDeathPopup({dead:false});
   const quest = state.activeQuest;
   $('active-quest').hidden = !quest;
   if (quest) {

@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import { bar, escapeHtml, formatNumber } from './boss-hud.js';
 import { icon } from './icons.js';
 import { classArtUrl } from './boss-stage.js';
@@ -30,11 +31,7 @@ export async function openPartyGame({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass party-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Группа</h2>
-        <span class="ds-round" aria-hidden="true"><img class="mat-icon" src="/art/icons/party-emblem-128.webp" srcset="/art/icons/party-emblem-128.webp 1x, /art/icons/party-emblem-256.webp 2x" width="24" height="24" alt=""></span>
-      </header>
+      ${dialogHeading("Группа").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-party-content></div>
       <div class="boss-feedback" data-party-feedback aria-live="polite"></div>
     </div>`;
@@ -89,7 +86,7 @@ export async function openPartyGame({ api, haptic, statusElement }) {
     let body;
     if (!party) {
       body = `${invitesHtml()}<section class="mmo-frame party-empty"><p>Ты не в группе. Создай группу до ${state.max} игроков: баффы накладываются вручную на выбранного участника. Стоимость MP не зависит от размера группы.</p>
-        <button type="button" class="equipment-action forge-action" data-party-action="create">Создать группу</button></section>`;
+        <button type="button" class="ui-button primary equipment-action forge-action" data-party-action="create">Создать группу</button></section>`;
     } else {
       body = `${invitesHtml()}<section class="mmo-frame party-roster"><div class="mmo-section-title"><strong>Состав</strong><small>${party.members.length} / ${state.max}</small></div>
           <div class="party-members">${party.members.map(member => memberHtml(member, party.amLeader)).join('')}</div></section>
@@ -100,8 +97,8 @@ export async function openPartyGame({ api, haptic, statusElement }) {
           <p class="party-note">${LOOT_LABELS[party.loot][1]}</p></section>
         ${party.amLeader ? candidatesHtml(party) : ''}
         <div class="party-actions">
-          <button type="button" class="equipment-action" data-party-action="leave">Покинуть группу</button>
-          ${party.amLeader ? '<button type="button" class="equipment-action" data-party-action="disband">Распустить</button>' : ''}
+          <button type="button" class="ui-button primary equipment-action" data-party-action="leave">Покинуть группу</button>
+          ${party.amLeader ? '<button type="button" class="ui-button primary equipment-action" data-party-action="disband">Распустить</button>' : ''}
         </div>`;
     }
     content.innerHTML = body;

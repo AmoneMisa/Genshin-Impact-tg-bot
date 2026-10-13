@@ -7,7 +7,7 @@ import { isSkillLearned, learnSkill, skillLearnCost, grandfatherSkills } from '.
 import { getSkillsState, learnSkillForMiniApp } from '../miniapp/skills.js';
 import { migrateSessionClass } from '../functions/game/classes/migrateClasses.js';
 
-function hero(className = 'paladin', level = 60, sp = 1000) {
+function hero(className = 'paladin', level = 60, sp = 20000000) {
   const session = { game: { stats: { lvl: level }, inventory: { gold: 1e6, sp, materials: {}, moonDew: 0, ironOre: 0 }, gameClass: { stats: { name: 'noClass' } }, effects: [], equipmentStats: {} } };
   changePlayerClass(session, className);
   updatePlayerStats(session);
@@ -30,7 +30,7 @@ test('the base kit needs no learning, a profession skill is learned for skill po
 
   const result = learnSkill(session, skill.slot);
   assert.equal(result.ok, true);
-  assert.equal(session.game.inventory.sp, 1000 - cost.sp);
+  assert.equal(session.game.inventory.sp, 20000000 - cost.sp);
   assert.equal(isSkillLearned(session, skill), true);
   assert.notEqual(isPlayerCanUseSkill(session, skill), 3);
   assert.equal(learnSkill(session, skill.slot).reason, 'already_learned');

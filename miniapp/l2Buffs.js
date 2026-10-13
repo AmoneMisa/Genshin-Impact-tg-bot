@@ -19,6 +19,7 @@ const n=(v,d=0)=>Number.isFinite(Number(v))?Number(v):d;
 const mpCost=(session,skill,now)=>Math.ceil(skill.mp*l2RawStat(session,n(skill.fields.isMagic)===1?'magicalMpConsumeRate':'physicalMpConsumeRate',true,now));
 const p=e=>Object.fromEntries((e.children||[]).filter(c=>c.value!==undefined).map(c=>[c.tag,c.value]));
 const statLabels={pAtk:'Ф. атака',mAtk:'М. атака',pDef:'Ф. защита',mDef:'М. защита',pAtkSpd:'Скорость атаки',mAtkSpd:'Скорость магии',maxHp:'Макс. HP',maxMp:'Макс. MP',maxCp:'Макс. CP',critRate:'Шанс крита',critDmg:'Сила крита',mCritRate:'Магический крит',mCritPower:'Сила маг. крита',accCombat:'Точность',rEvas:'Уклонение',runSpd:'Скорость',regHp:'Регенерация HP',regMp:'Регенерация MP',healEffect:'Исцеление',absorbDam:'Вампиризм',reflectDam:'Отражение',debuffVuln:'Уязвимость к дебаффам',magicalMpConsumeRate:'Расход MP магии',physicalMpConsumeRate:'Расход MP навыков'};
+Object.assign(statLabels,{reduceExpLostByPvp:'Потеря опыта в PvP',reduceExpLostByMob:'Потеря опыта от монстров',reduceExpLostByRaid:'Потеря опыта на рейдах'});
 export function describeL2Effect(skill){
  if(isL2PetSkill(skill))return `Питомец помогает атакам: +${Math.round(Math.min(.6,.2+.02*(skill.level-1))*100)}% урона. Призыв за ману.`;
  const parts=[];
@@ -27,7 +28,7 @@ export function describeL2Effect(skill){
    const value=n(node.value),amount=node.tag==='mul'?(value-1)*100:node.tag==='sub'?-value:value;
    parts.push(`${statLabels[node.stat]||node.stat} ${amount>=0?'+':''}${Math.round(amount*100)/100}${node.tag==='mul'?'%':''}`);
   }
-  if(!['Buff','Debuff','Passive'].includes(effect.name))parts.push(({Stun:'Оглушение',Sleep:'Сон',Root:'Удержание',Fear:'Страх',Mute:'Запрет магии',PhysicalMute:'Запрет физических навыков',Paralyze:'Паралич',Disarm:'Разоружение',Invincible:'Неуязвимость',DamOverTime:'Периодический урон',ManaDamOverTime:'Периодическое сжигание MP',HealOverTime:'Периодическое лечение',DispelByCategory:'Снятие эффектов',DispelBySlot:'Снятие группы эффектов',Hide:'Скрытность',SilentMove:'Тихое передвижение',ImmobilePetBuff:'Защита питомца',ServitorShare:'Общая сила',Betray:'Предательство',Distrust:'Смятение'})[effect.name]||effect.name);
+  if(!['Buff','Debuff','Passive'].includes(effect.name))parts.push(({Transformation:'Превращение',Stun:'Оглушение',Sleep:'Сон',Root:'Удержание',Fear:'Страх',Mute:'Запрет магии',PhysicalMute:'Запрет физических навыков',Paralyze:'Паралич',Disarm:'Разоружение',Invincible:'Неуязвимость',DamOverTime:'Периодический урон',ManaDamOverTime:'Периодическое сжигание MP',HealOverTime:'Периодическое лечение',DispelByCategory:'Снятие эффектов',DispelBySlot:'Снятие группы эффектов',Hide:'Скрытность',SilentMove:'Тихое передвижение',ImmobilePetBuff:'Защита питомца',ServitorShare:'Общая сила',Betray:'Предательство',Distrust:'Смятение'})[effect.name]||effect.name);
   if(effect.name==='ServitorShare')for(const node of effect.children||[])if(statLabels[node.tag])parts.push(`${statLabels[node.tag]} +${Math.round((n(node.value,1)-1)*100)}%`);
  }
  return parts.join(' · ')||skill.name;

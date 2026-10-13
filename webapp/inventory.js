@@ -252,6 +252,10 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       const button=document.createElement('button');button.className='ui-button primary';button.textContent='Использовать';root.append(button);
       button.onclick=async()=>{if(pending)return;closeItemPopup();const {openForgeGame}=await import('./forge.js');await openForgeGame({api,renderState,haptic,statusElement,materialKey:item.key,onClose:refresh});};
     }
+    if(selectedKind==='material'&&/^l2_859[4-9]$/.test(item.key)){
+      const button=document.createElement('button');button.className='ui-button primary';button.textContent='Использовать';root.append(button);
+      button.onclick=async()=>{if(pending)return;pending=true;button.disabled=true;try{const payload=await api('/api/inventory/use',{method:'POST',body:JSON.stringify({key:item.key})});state=payload.inventory;if(payload.state)renderState?.(payload.state);closeItemPopup();feedback.textContent='Штраф за смерть: '+payload.level;}catch(e){feedback.textContent=e.message;closeItemPopup();}finally{pending=false;render();}};
+    }
     root.querySelector('[data-inventory-potion]')?.addEventListener('click',event=>usePotion(event.currentTarget.dataset.inventoryPotion));
     root.querySelector('[data-inventory-equip]')?.addEventListener('click',()=>equipItem(item));
     root.querySelector('[data-inventory-coupon]')?.addEventListener('click',()=>{closeItemPopup();openLoginRewards({api,renderState,haptic,initialTab:'coupons',initialKey:selectedKey,onClose:refresh});});

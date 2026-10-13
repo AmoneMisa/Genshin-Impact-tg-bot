@@ -1,3 +1,4 @@
+import {legacySp} from '../player/spEconomy.js';
 import getRandom from "../../getters/getRandom.js";
 import {activeLoginRune} from '../../../template/loginRewards.js';
 import {EPIC_GLORY_COINS, giveGloryCoins} from "../clans/clanHall.js";
@@ -180,7 +181,7 @@ function getBossDrops(template, member, place) {
     if (!drops) return {sp: 0, items: enchantItems};
 
     const [spMin, spMax] = drops.sp || [0, 0];
-    const sp = spMax > 0 ? getRandom(spMin, spMax) : 0;
+    const sp = spMax > 0 ? legacySp(getRandom(spMin, spMax)) : 0;
     member.game.inventory.sp = (member.game.inventory.sp || 0) + sp;
 
     const luck = (place <= 3 ? 1.5 : 1) * (activeLoginRune(member,'drop')?1.5:1);

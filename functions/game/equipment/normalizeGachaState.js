@@ -9,12 +9,7 @@ export default function normalizeGachaState(session) {
   let normalized = [];
 
   if (Array.isArray(legacy)) {
-    normalized = legacy
-      .filter((item) => item && typeof item === 'object' && item.name)
-      .map((item) => ({
-        name: item.name,
-        freeSpins: Number(item.freeSpins) || 0,
-      }));
+    normalized = legacy.filter((item) => item && typeof item === 'object' && item.name);
   } else if (legacy && typeof legacy === 'object') {
     normalized = gachaTemplate
       .filter((template) => Object.prototype.hasOwnProperty.call(legacy, template.name))

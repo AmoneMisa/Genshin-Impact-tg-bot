@@ -7,7 +7,7 @@ import { escapeHtml } from './escape-html.js';
 
 import { renderLootArt } from './loot-renderer.js';
 
-const PAYMENT_LABELS = {
+const PAYMENT_LABELS = {resources_locked:'Не хватает ресурсов',
   free: 'Бесплатная крутка', shards: 'За осколки', currency: 'За ресурсы', level_locked: 'Нужен уровень', gold_locked: 'Не хватает адены', dew_locked: 'Не хватает лунной росы', locked: 'Недоступно',
 };
 export const GRADE_ORDER = ['noGrade', 'D', 'C', 'B', 'A', 'S', 'S80', 'S84'];
@@ -26,6 +26,9 @@ function costText(spiral) {
   const parts = [];
   if (spiral.spinCost.gold) parts.push(`🪙 ${number(spiral.spinCost.gold)}`);
   if (spiral.spinCost.moonDew) parts.push(`💧 ${number(spiral.spinCost.moonDew)}`);
+  if(spiral.spinCost.ancientAdena)parts.push(`${materialIcon('aa')} ${number(spiral.spinCost.ancientAdena)} AA`);
+  if(spiral.spinCost.luckCoins)parts.push(`${materialIcon('luckCoins')} ${number(spiral.spinCost.luckCoins)} CoL`);
+  for(const [key,count] of Object.entries(spiral.materialCost||{}))parts.push(`${materialIcon(key)} ×${number(count)}`);
   return parts.join(' · ') || 'Бесплатно';
 }
 
@@ -39,7 +42,8 @@ export function bannerHtml(spiral, playerLevel = 1) {
       <div class="gacha-banner-copy">
         <small>Ур. ${spiral.needLvl}+</small>
         <h3>${escapeHtml(spiral.title)}</h3>
-        <div class="gacha-rates">${spiral.rewards?spiral.rewards.map(r=>'<span><b>'+escapeHtml(r.label)+'</b>'+r.chance+'%</span>').join(''):grades.map(grade => `<span class="tone-${gradeTone(grade.value)}"><b>${gradeLabel(grade.value)}</b>${Math.round(Number(grade.chance) * 1000) / 10}%</span>`).join('')}</div>
+        <div class="gacha-rates">${grades.map(grade=>`<span><b>${gradeLabel(grade.value)}</b>${Math.round(grade.chance*1000)/10}%</span>`).join('')}</div>
+        <div class="gacha-rates">${(spiral.rewards||[]).map(r=>'<span><b>'+escapeHtml(r.label)+'</b>'+r.chance+'%</span>').join('')}</div>
       </div>
       ${locked ? `<div class="gacha-lock">🔒 Нужен ${spiral.needLvl} уровень · у тебя ${playerLevel}</div>` : ''}
     </section>

@@ -1,3 +1,4 @@
+import {refundDeathExp} from './deathPenalties.js';
 // Resurrection (Lineage II): a Cleric, Bishop or Oracle brings a fallen player back (Resurrection), a Bishop a whole party
 // (Mass Resurrection). The skills come from the real class trees (template/l2Classes.js): the real learn levels, mana and reuse.
 //
@@ -117,6 +118,7 @@ export function castRevival(session, rawId, targetId = null, {now = Date.now()} 
     const share = reviveShare(id, skill.learned);
     const revived = fallen.map(member => {
         const stats = member.game.gameClass.stats;
+        refundDeathExp(member,(Number(at(skill.info.power,skill.learned))||0)/100);
         restoreRevivalVitals(member);
         member.game.respawnTime = 0;
         delete member.game.l2PendingDeath;

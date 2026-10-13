@@ -1,3 +1,5 @@
+import {recordDeath} from './deathPenalties.js';
+import {enchantRecord,enchantFields,enchantedEffects} from './l2SkillEnchant.js';
 // High Five abnormal effects. Stored records contain IDs/levels/time only; values come from trusted XML.
 import {restoreRevivalVitals} from './revivalVitals.js';
 import {L2_EFFECT_SKILLS,L2_EFFECT_LEARN,L2_CLASSES} from '../../../template/l2EffectSkills.js';
@@ -16,11 +18,13 @@ export function effectValue(skill,value,level=1){
  return value;
 }
 const resolveNode=(skill,node,level)=>({...node,...(node.value!==undefined?{value:effectValue(skill,node.value,level)}:{}),...(node.children?{children:node.children.map(c=>resolveNode(skill,c,level))}:{})});
-export function resolveEffectSkill(id,level=1){
+export function resolveEffectSkill(id,level=1,enchant=null){
  const key=Number(String(id).replace(/^l2:/,''));const source=L2_EFFECT_SKILLS[key]||PVP_TRIGGERS[key];if(!source)return null;
  const actual=clamp(Math.floor(n(level,1)),1,source.levels);
  const fields=Object.fromEntries(Object.entries(source.fields).map(([key,value])=>[key,effectValue(source,value,actual)]));
- const effects=source.effects.map(e=>resolveNode(source,e,actual));
+ if(enchant?.level)Object.assign(fields,enchantFields(key,enchant.route,enchant.level));
+ const changed=enchant?.level?enchantedEffects(key,enchant.route,enchant.level):[];
+ const effects=changed.length?changed:source.effects.map(e=>resolveNode(source,e,actual));
  const hostile=fields.isDebuff==='true'||(!['SELF','PARTY','PET','SUMMON'].includes(fields.targetType)&&(n(fields.effectPoint)<0||effects.some(e=>/^(Physical|Magical|Energy).*Damage|^FatalBlow$|^HpDrain$|^CpDamPercent$|^GetAgro$|^TargetMe/.test(e.name))));
  const summon=effects.find(e=>e.name==='Summon');
  const lifetime=summon?.children?.find(e=>e.tag==='lifeTime')?.value;
@@ -44,14 +48,14 @@ export function classEffectSkills(session,{includeLocked=true}={}){
   const eligible=rows.filter(r=>r.needLevel<=playerLevel);
   const learned=eligible.sort((a,b)=>b.level-a.level)[0];
   const next=rows.filter(r=>r.needLevel>playerLevel).sort((a,b)=>a.needLevel-b.needLevel)[0];
-  const skill=resolveEffectSkill(id,learned?.level||rows[0].level);
+  const skill=resolveEffectSkill(id,learned?.level||rows[0].level,enchantRecord(session,id));
   return {...skill,learnedLevel:learned?.level||0,needLevel:rows[0].needLevel,nextLevel:next?.needLevel||null,maxLearnedLevel:Math.max(...rows.map(r=>r.level))};
  }).filter(s=>includeLocked||s.learnedLevel>0).sort((a,b)=>a.kind.localeCompare(b.kind)||a.name.localeCompare(b.name));
 }
 const records=target=>{const list=target?.game?target.game.effects:target?.l2Effects;return Array.isArray(list)?list:[];};
 const assign=(target,list)=>{if(target.game)target.game.effects=list;else target.l2Effects=list;};
 export function activeL2Effects(target,now=Date.now()){
- return records(target).filter(e=>e?.l2SkillId&&n(e.until)>now).map(e=>({record:e,skill:resolveEffectSkill(e.l2SkillId,e.level)})).filter(e=>e.skill);
+ return records(target).filter(e=>e?.l2SkillId&&n(e.until)>now).map(e=>({record:e,skill:resolveEffectSkill(e.l2SkillId,e.level,e.enchant)})).filter(e=>e.skill);
 }
 /** Permanent jewelry effects never consume buff slots or get dispelled. Same passive does not stack. */
 export function equippedEpicEffects(target) {
@@ -149,7 +153,8 @@ export function removeL2Effects(target,{kind=null,slot=null,max=Infinity,rate=10
  return removed;
 }
 export function applyL2Effect(caster,target,id,level=1,{now=Date.now(),random=Math.random,guaranteed=false}={}){
- const skill=resolveEffectSkill(id,level);if(!skill||!target)return {ok:false,reason:'unknown_effect'};
+ const enchant=caster?.game?enchantRecord(caster,id):null;
+ const skill=resolveEffectSkill(id,level,enchant);if(!skill||!target)return {ok:false,reason:'unknown_effect'};
  if(skill.kind==='debuff'&&!guaranteed){
   if(l2HasControl(target,'Invincible',now)||l2RawStat(target,'debuffImmunity',false,now)>0)return {ok:true,applied:false,resisted:true};
   const trait=skill.fields.trait||skill.fields.abnormalType;
@@ -181,7 +186,7 @@ export function applyL2Effect(caster,target,id,level=1,{now=Date.now(),random=Ma
  });
  const same=list.filter(e=>e.l2SkillId?category(resolveEffectSkill(e.l2SkillId,e.level))===cat:cat==='buff'&&e.potionId);
  if(same.length>=L2_EFFECT_LIMITS[cat]){const oldest=same.sort((a,b)=>n(a.startedAt)-n(b.startedAt))[0];list.splice(list.indexOf(oldest),1);}
- const record={name:skill.name,l2SkillId:skill.id,level:skill.level,startedAt:now,until:now+clamp(skill.seconds,1,86400)*1000,lastTickAt:now,sourceId:String(caster?.userId||''),isDebuff:skill.kind==='debuff',kind:skill.kind};
+ const record={enchant:enchant?{...enchant}:null,name:skill.name,l2SkillId:skill.id,level:skill.level,startedAt:now,until:now+clamp(skill.seconds,1,86400)*1000,lastTickAt:now,sourceId:String(caster?.userId||''),isDebuff:skill.kind==='debuff',kind:skill.kind};
  list.push(record);assign(target,list);
  if(skill.effects.some(e=>['Stun','Sleep','Paralyze','Petrification','TargetCancel'].includes(e.name)))target.charging=null;
  return {ok:true,applied:true,until:record.until,removed};
@@ -194,7 +199,7 @@ export function tickL2Effects(target,now=Date.now(),limits={}){
  for(const record of records(target)){
   if(hp<=0)break;
   if(!record.l2SkillId)continue;
-  const skill=resolveEffectSkill(record.l2SkillId,record.level);if(!skill)continue;
+  const skill=resolveEffectSkill(record.l2SkillId,record.level,record.enchant);if(!skill)continue;
   const until=Math.min(now,n(record.until));const ticks=Math.max(0,Math.floor((until-n(record.lastTickAt,record.startedAt))/3000));
   if(!ticks)continue;record.lastTickAt=n(record.lastTickAt,record.startedAt)+ticks*3000;
   for(const e of skill.effects){const p=params(e),amount=Math.max(0,n(p.power)*ticks);
@@ -207,7 +212,7 @@ export function tickL2Effects(target,now=Date.now(),limits={}){
   }
   if(skill.operate==='T'&&mp<=0)record.until=until;
  }
- if(player&&stats){stats.hp=hp;stats.mp=mp;stats.cp=cp;if(hp<=0&&!l2PreventDeath(target,now)){target.game.respawnTime=now+60000;if(killerId)target.game.l2PendingDeath={sourceId:killerId,at:now};}if(changed)target.needsSave=true;}
+ if(player&&stats){stats.hp=hp;stats.mp=mp;stats.cp=cp;if(hp<=0&&!l2PreventDeath(target,now)){target.game.respawnTime=now+60000;recordDeath(target,{now,kind:killerId?'pvp':'mob'});if(killerId)target.game.l2PendingDeath={sourceId:killerId,at:now};}if(changed)target.needsSave=true;}
  else{target.currentHp=hp;target.mp=mp;}
  assign(target,records(target).filter(e=>!e.l2SkillId||n(e.until)>now));
  return {damage,changed,killerId};

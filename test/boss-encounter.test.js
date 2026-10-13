@@ -177,7 +177,7 @@ test('players can aim at a minion: its hp drops, the boss does not, and the kill
   assert.equal(boss.currentHp, 100_000);
   assert.equal(spark.currentHp, 0);
   assert.equal(result.unitKilled.name, 'Грозовая искра');
-  assert.ok(result.unitKilled.sp >= 2 && result.unitKilled.sp <= 4);
+  assert.ok(result.unitKilled.sp >= 40000 && result.unitKilled.sp <= 80000);
   assert.equal(boss.listOfDamage[0].damage, spark.hp);
 });
 

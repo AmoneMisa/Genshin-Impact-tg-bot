@@ -6,6 +6,7 @@ export function restoreRevivalVitals(session, {town = false} = {}) {
   stats.hp = town ? 1 : Math.max(1, Math.round(getMaxHp(session) * .6));
   stats.mp = Math.max(0, Math.round(getMaxMp(session) * .3));
   stats.cp = 0;
+  if(session.game.deathLedger)session.game.deathLedger.active=false;
   session.game.respawnTime = 0;
   delete session.game.l2PendingDeath;
   delete session.game.hpPotion;

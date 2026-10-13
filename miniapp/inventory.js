@@ -1,3 +1,4 @@
+import {useRecoveryScroll} from '../functions/game/player/deathPenalties.js';
 import {getMaterialCount, listMaterials, spendMaterials, materialInfo} from '../functions/game/player/materials.js';
 import {l2SellPrice} from '../functions/game/hunt/lootTable.js';
 import {HUNT} from '../functions/game/hunt/huntConfig.js';
@@ -125,6 +126,7 @@ export function discardInventoryItem(session, {kind,ref,count=1} = {}) {
 }
 
 export function useInventoryPotion(session, rawKey) {
+  if(/^l2_859[4-9]$/.test(String(rawKey))){const result=useRecoveryScroll(session,String(rawKey));return {...result,inventory:getInventoryState(session)};}
   const index = Number(rawKey);
   const items = session?.game?.inventory?.potions?.items;
   if (!Number.isInteger(index) || index < 0 || !Array.isArray(items) || !items[index]) {

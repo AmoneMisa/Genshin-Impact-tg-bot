@@ -15,7 +15,9 @@ import { lootRows, LOOT_KINDS } from './lootTable.js';
 import { lootDistributor, expShares } from '../party/party.js';
 import { enchantGradeForLevel } from '../equipment/enchantDrops.js';
 import { gainExp, levelNeed } from '../player/vitality.js';
-import setLevel, { spForLevelUp } from '../player/setLevel.js';
+import setLevel from '../player/setLevel.js';
+import npcSp from '../../../template/l2NpcSp.js';
+import {EXP_RATE, readVitality, stageOf} from '../player/vitality.js';
 import {customDropChance, pickCustomPart, customPartRows} from '../equipment/customDrops.js';
 import {instantiate} from '../equipment/catalog.js';
 import getRandom from '../../getters/getRandom.js';
@@ -100,11 +102,12 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     if (expFactor > 0 && mobDef) {
         const multiplier = expFactor * (tier ? tier.exp : 1);
         const base = mobDef.expShare * levelNeed(mob.level) * multiplier * party.bonus;
-        const baseSp = mobDef.expShare * spForLevelUp(mob.level) * multiplier * party.bonus;
+        const baseSp = (npcSp[mobDef.id] || 0) * EXP_RATE * multiplier * party.bonus;
         for (const {member, share} of party.shares) {
             const before = Math.max(1, Number(member.game.stats?.lvl) || 1);
+            const vitalityBonus = stageOf(readVitality(member, now).points).bonus;
             const gained = gainExp(member, base * share, {now});
-            const sp = Math.max(1, Math.round(baseSp * share));
+            const sp = Math.max(0, Math.round(baseSp * share * vitalityBonus));
             member.game.inventory.sp = (Number(member.game.inventory.sp) || 0) + sp;
             setLevel(member);
             const leveledUp = (Number(member.game.stats.lvl) || before) > before;

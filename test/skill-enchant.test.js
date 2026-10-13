@@ -27,7 +27,7 @@ function skill(overrides = {}) {
 }
 
 function inventory(overrides = {}) {
-  return { gold: 1_000_000, moonDew: 10_000, ironOre: 10_000, sp: 10_000, ...overrides };
+  return { gold: 1_000_000, moonDew: 10_000, ironOre: 10_000, sp: 200_000_000, ...overrides };
 }
 
 test('enchant level is clamped between 0 and the max', () => {
@@ -59,11 +59,11 @@ test('effective cost respects costHp vs cost independently', () => {
 
 test('enchant cost scales with (currentLevel+1) and is null at max level', () => {
   const fresh = getSkillEnchantCost(skill({ enchantLevel: 0 }));
-  assert.deepEqual(fresh, { gold: 2000, moonDew: 5, ironOre: 15, sp: 20 });
+  assert.deepEqual(fresh, { gold: 2000, moonDew: 5, ironOre: 15, sp: 400_000 });
 
   // Level 4 is the first step that also asks for a Skill Scroll.
   const later = getSkillEnchantCost(skill({ enchantLevel: 3 }));
-  assert.deepEqual(later, { gold: 8000, moonDew: 20, ironOre: 60, sp: 80, items: { skill_scroll: 1 } });
+  assert.deepEqual(later, { gold: 8000, moonDew: 20, ironOre: 60, sp: 1_600_000, items: { skill_scroll: 1 } });
 
   assert.equal(getSkillEnchantCost(skill({ enchantLevel: SKILL_ENCHANT_MAX_LEVEL })), null);
 });
@@ -79,7 +79,7 @@ test('enchantSkill deducts every resource and bumps the level by exactly one', (
   assert.equal(inv.gold, 1_000_000 - 2000);
   assert.equal(inv.moonDew, 10_000 - 5);
   assert.equal(inv.ironOre, 10_000 - 15);
-  assert.equal(inv.sp, 10_000 - 20);
+  assert.equal(inv.sp, 200_000_000 - 400_000);
 });
 
 test('enchantSkill rejects insufficient resources without mutating anything, reason-by-reason', () => {

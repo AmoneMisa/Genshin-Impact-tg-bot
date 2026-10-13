@@ -1,3 +1,7 @@
+import {getPassivesState} from '../functions/game/player/passiveSkills.js';
+import {resolveEffectSkill} from '../functions/game/player/l2Effects.js';
+import {describeL2Effect} from './l2Buffs.js';
+import {classSkillRows,skillEnchantBook,enchantL2Skill,syncKitEnchants} from '../functions/game/player/l2SkillEnchant.js';
 import {
   SKILL_ENCHANT_MAX_LEVEL,
   enchantSkill,
@@ -124,8 +128,8 @@ function pick({ name, icon }) {
 function canAfford(session, inventory, cost) {
   if (!cost) return false;
   return number(inventory?.gold) >= cost.gold
-    && number(inventory?.moonDew) >= cost.moonDew
-    && number(inventory?.ironOre) >= cost.ironOre
+    && number(inventory?.moonDew) >= (cost.moonDew||0)
+    && number(inventory?.ironOre) >= (cost.ironOre||0)
     && number(inventory?.sp) >= cost.sp
     && Object.entries(cost.items || {}).every(([key, need]) => getMaterialCount(session, key) >= need);
 }
@@ -166,7 +170,7 @@ function skillState(session, skill, playerLevel) {
   const inventory = session?.game?.inventory || {};
   const maxHp = number(getMaxHp(session, session.game.gameClass));
   const level = getSkillEnchantLevel(skill);
-  const upgradeCost = getSkillEnchantCost(skill);
+  const upgradeCost = getSkillEnchantCost(skill,session);
   const nextSkill = upgradeCost ? { ...skill, enchantLevel: level + 1 } : null;
   const costView = upgradeCost
     ? { ...upgradeCost, ...(upgradeCost.items ? { items: itemRows(session, upgradeCost.items) } : {}) }
@@ -190,8 +194,8 @@ function skillState(session, skill, playerLevel) {
     learned: isSkillLearned(session, skill),
     learn: isSkillLearned(session, skill) ? null : learnState(session, skill, playerLevel),
     enchantLevel: level,
-    enchantChance:getSkillEnchantChance(skill),
-    maxEnchantLevel: SKILL_ENCHANT_MAX_LEVEL,
+    enchantChance:skill.l2Id?skillEnchantBook(session).find(s=>s.id===skill.l2Id)?.offer.chance||0:getSkillEnchantChance(skill),
+    maxEnchantLevel:skill.l2Id?30:SKILL_ENCHANT_MAX_LEVEL,
     power: powerState(skill, getSkillPowerMultiplier(skill)),
     usage: usageState(skill, maxHp, session),
     next: nextSkill ? {
@@ -205,13 +209,18 @@ function skillState(session, skill, playerLevel) {
 }
 
 export function getSkillsState(session) {
+  syncKitEnchants(session);
   const game = session?.game || {};
   const gameClass = game.gameClass || {};
   const inventory = game.inventory || {};
   const skills = Array.isArray(gameClass.skills) ? gameClass.skills : [];
   const playerLevel = Math.max(1, number(game.stats?.lvl, 1));
 
+  const passives=getPassivesState(session).passives;
   return {
+    passives,
+    book:classSkillRows(session).map(s=>({id:s.id,name:s.name,level:s.level,kind:s.op==='P'?'passive':s.op==='T'?'toggle':s.effects?.includes('Summon')?'summon':s.magic?'magic':'physical',description:s.description||(s.op==='P'?passives.find(p=>Number(p.id)===s.id)?.current||passives.find(p=>Number(p.id)===s.id)?.next:resolveEffectSkill(s.id,s.level)?describeL2Effect(resolveEffectSkill(s.id,s.level)):null)||s.name,mp:s.mp?.[s.level-1]||0,reuseMs:s.reuse?.[s.level-1]||0,slot:s.slot})),
+    enchantBook:skillEnchantBook(session),
     className: String(gameClass.stats?.name || 'noClass'),
     classTitle: String(gameClass.stats?.translateName || gameClass.stats?.name || 'Бродяжка'),
     classTier: Math.max(1, number(gameClass.stats?.tier, 1)),
@@ -233,40 +242,19 @@ export function learnSkillForMiniApp(session, rawSlot) {
   return { ...result, slot, skills: getSkillsState(session) };
 }
 
-export function enchantSkillForMiniApp(session, rawSlot) {
-  const slot = Number(rawSlot);
-  if (!Number.isInteger(slot) || slot < 0) {
-    return { ok: false, reason: 'invalid_skill', skills: getSkillsState(session) };
-  }
-
-  const skills = session?.game?.gameClass?.skills;
-  const inventory = session?.game?.inventory;
-  if (!Array.isArray(skills) || !inventory) {
-    return { ok: false, reason: 'no_skills', skills: getSkillsState(session) };
-  }
-
-  const skill = skills.find(item => Number(item?.slot) === slot);
-  if (!skill) {
-    return { ok: false, reason: 'invalid_skill', skills: getSkillsState(session) };
-  }
-
-  const { cost, ...result } = enchantSkill(skill, inventory);
-  return {
-    ...result,
-    slot,
-    skillName: String(skill.name || 'Навык'),
-    skills: getSkillsState(session),
-  };
+export function enchantSkillForMiniApp(session, rawSlot, options={}) {
+ const kit=session.game.gameClass?.skills?.find(s=>s.slot===Number(rawSlot));
+ if(options.id==null&&!kit)return {ok:false,reason:'invalid_skill',skills:getSkillsState(session)};
+ if(options.id==null&&!kit.l2Id){const result=enchantSkill(kit,session.game.inventory,options);return {...result,slot:Number(rawSlot),skillName:kit.name,skills:getSkillsState(session)};}
+ const id=options.id??kit?.l2Id;
+ const result=enchantL2Skill(session,id,options);
+ return {...result,slot:Number(rawSlot),skillName:classSkillRows(session).find(s=>s.id===Number(id))?.name,skills:getSkillsState(session)};
 }
 
 /** Picks / levels a 3rd-class enchant route (`kind`), or drops it (`kind` = 'reset'). */
 export function routeSkillForMiniApp(session, rawSlot, kind) {
-  const slot = Number(rawSlot);
-  const skill = Array.isArray(session?.game?.gameClass?.skills)
-    ? session.game.gameClass.skills.find(item => Number(item?.slot) === slot)
-    : null;
-  if (!skill) return { ok: false, reason: 'invalid_skill', skills: getSkillsState(session) };
-
-  const { cost, ...result } = kind === 'reset' ? resetRoute(session, skill) : upgradeRoute(session, skill, String(kind));
-  return { ...result, slot, skillName: String(skill.name || 'Навык'), skills: getSkillsState(session) };
+ const skill=session.game.gameClass?.skills?.find(s=>s.slot===Number(rawSlot));
+ if(!skill)return {ok:false,reason:'invalid_skill',skills:getSkillsState(session)};
+ if(!skill.l2Id){const result=kind==='reset'?resetRoute(session,skill):upgradeRoute(session,skill,kind);return {...result,slot:Number(rawSlot),skillName:skill.name,skills:getSkillsState(session)};}
+ return {ok:false,reason:'use_enchant_tab',skills:getSkillsState(session)};
 }

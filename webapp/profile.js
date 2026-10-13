@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
 
@@ -53,11 +54,7 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass profile-panel">
-      <header class="profile-head">
-        <button class="overlay-close profile-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Персонаж</h2>
-        <span class="profile-round" aria-hidden="true">⚜</span>
-      </header>
+      ${dialogHeading("Персонаж").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-profile-content></div>
       <div class="utility-feedback" data-profile-feedback aria-live="polite"></div>
     </div>`;

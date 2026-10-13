@@ -1,3 +1,4 @@
+import {skillBookHtml} from './skill-book.js';
 import {dialogHeading} from './dialog-heading.js';
 import {characteristicIcon,polishIcon} from './art/polish-icon-art.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
@@ -90,6 +91,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null,skil
       +row('SP',fmt(player.sp))+row('Опыт',player.level >= player.maxLevel ? 'MAX' : fmt(player.currentExp)+' / '+fmt(player.needExp))
       +'<div class="character-xp"><i style="width:'+xp+'%"></i></div>'
       + (player.vitality ? row(polishIcon('vitality')+'Vitality','×'+fmt(player.vitality.rate*player.vitality.bonus)+' · '+fmt(player.vitality.points)) : ''))
+      +(player.penalties?.length?section('Штрафы','<div class="character-penalties">'+player.penalties.map(p=>'<span title="'+esc(p.name)+'">'+l2SkillIcon(p.id)+esc(p.name)+' · '+p.level+'</span>').join('')+'</div>'):'')
       +section('Базовые характеристики',base)
       +section('Боевые характеристики','<div class="character-combat">'+(data.combat || []).map(stat=>row(esc(stat.label),fmt(stat.value))).join('')+'</div>')
       +section('Атрибут атаки',attrs.attack ? row('<span class="character-element-label">'+elementIcon(attrs.attack.element)+esc(attrs.attack.label)+'</span>',fmt(attrs.attack.value)) : empty('Оружие без атрибута.'))
@@ -115,27 +117,9 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null,skil
       ;
   }
   if (tab === 'skills') {
-    const active = (data.skills?.skills || []).map(skill=>listEntry(skill.l2Id || skill.name,
-      skill.name+' +'+skill.enchantLevel,
-      skill.description+' · '+(skill.locked?'Откроется на '+skill.needLevel+' ур.':'MP '+fmt(skill.usage?.mp)+' · CD '+fmt(skill.usage?.cooldownSeconds)+' сек.'),
-      action('skill-info','Описание и улучшение','data-skill-slot="'+skill.slot+'"'))).join('');
-    const passives = (data.passives?.passives || []).map(skill=>listEntry(skill.id,skill.name+' · '+skill.level+'/'+skill.maxLevel,
-      skill.stat+': '+(skill.current || 'Не изучено')+(skill.next?' → '+skill.next:''),
-      skill.automatic ? '<small>Изучается автоматически'+(skill.needLvl?' · '+skill.needLvl+' ур.':'')+'</small>' : skill.cost ? '<small>Нужен '+skill.needLvl+' ур. · '+fmt(skill.cost.sp)+' SP'+(skill.cost.gold?' · '+fmt(skill.cost.gold)+' Адена':'')+'</small>'+action('learn','Изучить','data-passive-id="'+esc(skill.id)+'"',!skill.canLearn) : '<small>Максимальный уровень</small>')).join('');
-    const ls = (data.equipment?.items || []).filter(item=>item.isUsed && item.augment?.current && Boolean(item.augment.active)===(skillTab==='active')).map(item=>{
-      const current = item.augment.current, skill = current.skill, activeState = item.augment.active;
-      return listEntry(skill?.id || 'lifestone',(skill?skill.title+': '+skill.name:'Бонус ЛС')+' · '+item.name,
-        current.text+(skill?' · '+skill.text:''),
-        activeState? action('ls-activate',activeState.cooldownMs>0 ? 'CD '+Math.ceil(activeState.cooldownMs/60000)+' мин.' : 'Активировать',
-          'data-key="'+esc(item.key)+'"',activeState.cooldownMs>0):'');
-    }).join('');
-    const clan = (data.clanPassives || []).map(skill=>listEntry(skill.id,skill.name+' · ур. '+skill.level,skill.stat+' '+skill.bonus)).join('');
-    return '<nav class="character-skill-tabs" role="tablist" aria-label="Тип навыков">'+[['active','Активные'],['passive','Пассивные']].map(([id,title])=>'<button type="button" role="tab" data-skill-tab="'+id+'" aria-selected="'+(skillTab===id)+'">'+title+'</button>').join('')+'</nav>'+row('Очки навыков',fmt(data.player.sp)+' SP')+'<div role="tabpanel" '+(skillTab!=='active'?'hidden':'')+'>'
-      +section('Активные','<div class="character-active">'+(active || empty('Для этого класса нет активных умений.'))+'</div>')
-      +'</div><div role="tabpanel" '+(skillTab!=='passive'?'hidden':'')+'>'+section('Пассивные',passives || empty('Пассивных умений пока нет.'))
-      +'</div>'+section('ЛС · Аугментация',ls || empty('На надетых предметах нет аугментации.'))
-      +(skillTab==='passive'?section('Клановые пассивки',clan || empty('Активных клановых бонусов нет.')):'');
+    return '<nav class="ui-folder-tabs character-skill-tabs" role="tablist" aria-label="Тип навыков">'+[['active','Активные'],['passive','Пассивные']].map(([id,title])=>'<button type="button" role="tab" data-skill-tab="'+id+'" aria-selected="'+(skillTab===id)+'">'+title+'</button>').join('')+'</nav>'+skillBookHtml(data.skills||{},skillTab)+'<button class="ui-button" data-character-action="skill-info">Книга и заточка навыков</button>';
   }
+
   const effects = (data.effects || []).filter(effect=>!effect.until || effect.until>Date.now());
   const group = kind => {
     const entries=effects.filter(effect=>effect.kind===kind);
@@ -219,6 +203,7 @@ export async function openCharacterPage(options,initialTab='stats') {
     if(!button || pending || closed)return;
     try {
       if(button.hasAttribute('data-character-refresh')){pending=true;draw();try{await refresh();}finally{pending=false;draw();}return;}
+      if(button.dataset.skillId)return await child(openSkillsGame,{initialSkill:button.dataset.skillId});
       if(button.dataset.skillTab){skillTab=button.dataset.skillTab;draw();haptic?.('light');return;}
       if(button.dataset.characterTab){selectTab(button.dataset.characterTab);return;}
       if(button.dataset.characterSlot){slot=button.dataset.characterSlot;draw();return;}

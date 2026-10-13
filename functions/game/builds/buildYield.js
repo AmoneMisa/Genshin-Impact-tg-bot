@@ -2,7 +2,7 @@
 // of experience or skill points is a part of a level step, not a pile of levels. Stored amounts are clamped to the cap
 // when the hourly tick adds to them and when the player collects.
 import {levelNeed, EXP_RATE} from '../player/vitality.js';
-import {spForLevelUp} from '../player/setLevel.js';
+import {customSpBudget} from '../player/spEconomy.js';
 
 /** Share of one level step (experience) and of one level's skill points that a building can store. */
 export const BUILD_EXP_SHARE = 0.12;
@@ -18,7 +18,7 @@ export function buildExpCap(session) {
 
 /** The most skill points an academy keeps. */
 export function buildSpCap(session) {
-    return Math.max(1, Math.round(spForLevelUp(level(session)) * BUILD_SP_SHARE));
+    return Math.max(1, Math.round(customSpBudget(level(session)) * BUILD_SP_SHARE));
 }
 
 /** The storage cap of a production kind for this hero, or Infinity for gold, ore and the rest. */

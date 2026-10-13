@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 const MAX_LENGTH = 3000;
 
 export async function openFeedbackGame({ api, haptic, statusElement }) {
@@ -6,11 +7,7 @@ export async function openFeedbackGame({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass feedback-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Обратная связь</h2>
-        <span class="ds-round" aria-hidden="true">💬</span>
-      </header>
+      ${dialogHeading("Обратная связь").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div class="feedback-card">
         <div class="feedback-intro">
           <span>💬</span>
@@ -21,7 +18,7 @@ export async function openFeedbackGame({ api, haptic, statusElement }) {
           <textarea rows="8" maxlength="${MAX_LENGTH}" placeholder="Опиши, что случилось или что хочется изменить…" data-feedback-message></textarea>
         </label>
         <div class="feedback-meta"><span data-feedback-count>0 / ${MAX_LENGTH}</span><span>Ответ придёт в Telegram.</span></div>
-        <button type="button" class="feedback-submit" data-feedback-submit>Отправить</button>
+        <button type="button" class="ui-button primary feedback-submit" data-feedback-submit>Отправить</button>
         <div class="feedback-result" data-feedback-result hidden></div>
       </div>
     </div>`;

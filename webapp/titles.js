@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 const REASONS = {
   invalid_title: 'Титул должен быть одним словом из русских или латинских букв, до 32 символов.',
@@ -35,11 +36,7 @@ export async function openTitlesGame({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass utility-panel titles-panel">
-      <header class="tt-head">
-        <button class="overlay-close tt-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Титулы</h2>
-        <span class="tt-round" aria-hidden="true">🏷️</span>
-      </header>
+      ${dialogHeading("Титулы").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <p class="tt-rules">Одно слово достанется случайному участнику чата — судьба решает на сервере.</p>
       <section class="tt-stage" data-title-stage hidden aria-live="polite"></section>
       <div data-titles-content></div>
@@ -66,7 +63,7 @@ export async function openTitlesGame({ api, haptic, statusElement }) {
         <p>${state.eligibleCount} доступных участников · перезарядка: <b data-title-cooldown>${remain(state.cooldown?.until)}</b></p>
         <div class="title-form">
           <input type="text" maxlength="32" autocomplete="off" placeholder="Например: Архонт" data-title-input ${locked || pending ? 'disabled' : ''} />
-          <button type="button" data-title-assign ${locked || pending ? 'disabled' : ''}>Назначить</button>
+          <button class="ui-button primary" type="button" data-title-assign ${locked || pending ? 'disabled' : ''}>Назначить</button>
         </div>
       </section>
       <section class="utility-card">

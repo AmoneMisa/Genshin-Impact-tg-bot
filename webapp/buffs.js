@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
 import { escapeHtml } from './escape-html.js';
@@ -41,11 +42,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass feedback-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Баффы и дебаффы</h2>
-        <span class="ds-round" aria-hidden="true">${l2EffectIcon('l2:1068')}</span>
-      </header>
+      ${dialogHeading("Баффы и дебаффы").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-buffs-body></div>
     </div>`;
   const body = overlay.querySelector('[data-buffs-body]');
@@ -68,7 +65,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
         <p>${escapeHtml(buff.effect)}</p>
         ${buff.seconds!=null?`<small>${buff.toggle?'Переключаемый эффект':`Длительность: ${buff.seconds} сек.`} · ${escapeHtml(buff.group||'')}</small>`:''}
         ${next}
-        ${locked ? '' : `<button type="button" class="feedback-submit" data-buff-cast="${escapeHtml(buff.id)}" ${cooling ? 'disabled' : ''}>${cooling ? 'Восстанавливается…' : `${actionLabel} · ${cost} МП`}</button>`}
+        ${locked ? '' : `<button type="button" class="ui-button primary feedback-submit" data-buff-cast="${escapeHtml(buff.id)}" ${cooling ? 'disabled' : ''}>${cooling ? 'Восстанавливается…' : `${actionLabel} · ${cost} МП`}</button>`}
       </article>`;
   }
 
@@ -83,7 +80,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
       <div class="feedback-card">
         <div class="feedback-intro"><span>${l2EffectIcon('l2:1068')}</span><div><strong>${escapeHtml(state.classTitle)} · ${state.level} ур.</strong>
           <p>Уровни умений растут вместе с персонажем. Мана: ${state.mp} / ${state.maxMp}. Лимиты: 24 баффа, 12 песен и танцев, 16 дебаффов.</p></div></div>
-        <div class="party-actions"><button type="button" data-effect-kind="buff" aria-pressed="${kind==='buff'}">Баффы</button><button type="button" data-effect-kind="debuff" aria-pressed="${kind==='debuff'}">Дебаффы</button><button type="button" data-effect-kind="pet" aria-pressed="${kind==='pet'}">Питомцы</button></div>
+        <div class="party-actions ui-folder-tabs"><button type="button" data-effect-kind="buff" aria-pressed="${kind==='buff'}">Баффы</button><button type="button" data-effect-kind="debuff" aria-pressed="${kind==='debuff'}">Дебаффы</button><button type="button" data-effect-kind="pet" aria-pressed="${kind==='pet'}">Питомцы</button></div>
         <label class="feedback-field"><span>Поиск по названию или эффекту</span><input data-effect-search value="${escapeHtml(search)}" placeholder="Acumen, танец, защита…"></label>
         ${kind!=='pet'&&(state.support||kind==='debuff') ? `<label class="feedback-field"><span>Цель</span>
           <select data-buff-target><option value="">${kind==='debuff'?'Выбранный монстр'+(state.selectedMob?' · '+escapeHtml(state.selectedMob.name):''):'На себя'}</option>${(state.effectTargets||state.players).map(player => `<option value="${escapeHtml(player.userId)}" ${player.userId === target ? 'selected' : ''}>${escapeHtml(player.name)}</option>`).join('')}</select></label>` : ''}

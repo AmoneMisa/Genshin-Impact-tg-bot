@@ -58,7 +58,7 @@ test('red dot html is empty for zero and caps at 9+; tabs sum their features', (
 
 test('personal badges flag ready bonus, chest, arena and free gacha spins; boss comes from the caller', () => {
   const c = chat();
-  const idle = { chestTries: 0, chosenChests: [], chestCounter: 0, game: { bonusChances: 0, arenaChances: 0, gacha: [{ name: 'a', freeSpins: 0 }] } };
+  const idle = { chestTries: 0, chosenChests: [], chestCounter: 0, game: { bonusChances: 0, arenaChances: 0, gachaDaily: {day:new Date().toISOString().slice(0,10),remaining:0}, gacha: [{ name: 'a', freeSpins: 0 }] } };
   const period=loginPeriod();idle.game.loginRewards={month:period.month,claimed:[period.day]};
   assert.equal(getBadges(c, 1, null, { session: idle }).total, 0);
 

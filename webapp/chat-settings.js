@@ -1,3 +1,4 @@
+import {dialogHeading} from './dialog-heading.js';
 function renderContent(container, state) {
   if (!state?.isGroup) {
     container.innerHTML = `
@@ -40,11 +41,7 @@ export async function openChatSettings({ api, haptic, statusElement }) {
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel glass chat-settings-panel">
-      <header class="ds-head">
-        <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Настройки чата</h2>
-        <span class="ds-round" aria-hidden="true">⚙</span>
-      </header>
+      ${dialogHeading("Настройки чата").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-chat-settings-content class="chat-settings-content">
         <div class="chat-settings-loading">Загружаем настройки…</div>
       </div>

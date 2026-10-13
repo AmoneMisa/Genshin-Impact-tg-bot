@@ -16,29 +16,29 @@ const pick=(list,random)=>list[Math.min(list.length-1,Math.floor(random()*list.l
 export function shadowGachaItem(item,now=Date.now()) {
  return {...item,shadow:true,bound:true,noTrade:true,tradeable:false,timed:true,enchant:7,expiresAt:now+3*DAY_MS};
 }
-export function generateGachaReward(session,grade,{random=Math.random,now=Date.now()}={}) {
+export function generateGachaReward(session,grade,{random=Math.random,now=Date.now(),rewards=GACHA_REWARDS}={}) {
  const tier=tiers[grade]||1;let cursor=0;const roll=random()*100;
- const kind=GACHA_REWARDS.find(p=>(cursor+=p.chance)>roll)?.kind||'shadow';
+ const kind=rewards.find(p=>(cursor+=p.chance)>roll)?.kind||'shadow';
  if(kind==='shadow')return shadowGachaItem(generateRandomEquipment(session.game.stats.lvl,grade,{exact:true,forClass:session.game.gameClass?.stats?.name}),now);
  let ref,amount,label;
  if(kind==='resource'){
-  ref=pick(['sp','moonDew','ironOre'],random);
-  amount=ref==='sp'?tier*20:ref==='moonDew'?tier:2*tier;
-  label={sp:'Очки навыков',moonDew:'Лунная роса',ironOre:'Железная руда'}[ref];
+  ref=pick(['l2_1869','l2_1867','l2_1865'],random);
+  amount=2*tier;
  }else if(kind==='consumable'){
-  ref=pick(['scroll_escape',grade==='noGrade'?'scroll_resurrection':'soulshot_'+grade],random);
+  ref=pick(['l2_736',grade==='noGrade'?'l2_737':'soulshot_'+grade],random);
   amount=ref.startsWith('soulshot_')?20*tier:1;
  }else{
   const rows=allRecipes().filter(r=>{
-   const product=itemRow(r.product);return product&&['Weapon','Armor'].includes(product.type)&& (product.grade==='NONE'?'noGrade':product.grade)===grade&&r.ingredients.some(([id])=>id>=2000&&id!==r.recipeItem);
+   const product=itemRow(r.product);return product&&['Weapon','Armor'].includes(product.type)&& (product.grade==='NONE'?'noGrade':product.grade)===grade&&r.ingredients.some(([id])=>lootInfo(id).kind==='piece');
   });
-  const row=pick(rows.length?rows:allRecipes().filter(r=>r.level<=Math.min(9,tier+1)),random);
-  ref=kind==='recipe'?lootInfo(row.recipeItem).key:lootInfo(row.ingredients.find(([id])=>id>=2000&&id!==row.recipeItem)?.[0]||1864).key;
+  const row=pick(rows,random);
+  if(!row)return {version:2,rewardKind:'resource',rewardRef:'l2_1869',amount:2*tier,grade,name:'l2_1869',translatedName:'Железная руда',stats:[]};
+  ref=kind==='recipe'?lootInfo(row.recipeItem).key:lootInfo(row.ingredients.find(([id])=>lootInfo(id).kind==='piece')?.[0]||1864).key;
   amount=kind==='recipe'?1:Math.max(1,Math.floor(tier/2));
  }
  return {version:2,rewardKind:kind,rewardRef:ref,amount,grade,translatedName:label||materialInfo(ref).name,name:ref,description:'×'+amount,stats:[]};
 }
 export function grantGachaReward(session,item) {
- if(item.rewardKind==='resource')session.game.inventory[item.rewardRef]=(Number(session.game.inventory[item.rewardRef])||0)+item.amount;
+ if(item.rewardKind==='resource'&&!item.rewardRef.startsWith('l2_'))session.game.inventory[item.rewardRef]=(Number(session.game.inventory[item.rewardRef])||0)+item.amount;
  else addMaterial(session,item.rewardRef,item.amount);
 }

@@ -1,3 +1,4 @@
+import {RECOVERY_SCROLLS,recoveryInfo} from '../../../template/l2RecoveryScrolls.js';
 // The merchants of the game, stocked from the real High Five shops (template/merchantData.js):
 //   weapons / armor / jewelry - the town equipment merchants: the catalog items of no grade, D and C for adena;
 //   alchemist                 - gemstones D/C/B, recipe books and Mammon's Varnish Enhancer for adena;
@@ -114,6 +115,7 @@ function build() {
         if (!usable) continue;
         (row.adena && !row.aa ? stock.alchemist : stock.mammon).push(entry);
     }
+    for(const s of RECOVERY_SCROLLS)stock.alchemist.push({id:'recovery:'+s.id,kind:'material',group:'consumable',key:'l2_'+s.id,amount:1,name:recoveryInfo(s.id).name,realId:s.id,cost:{gold:gold(s.price)}});
     // The game's plain enchant scroll serves weapons and armor alike while High Five prices them apart: the shop
     // sells it at the dearer (weapon) price so that nobody buys weapon enchants at the armor price.
     const best = new Map();

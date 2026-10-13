@@ -6,7 +6,7 @@ function makeSession(overrides = {}) {
   return {
     game: {
       stats: { lvl: 20 },
-      inventory: { gold: 10000, moonDew: 100, ironOre: 100, sp: 100 },
+      inventory: { gold: 10000, moonDew: 100, ironOre: 100, sp: 2000000 },
       gameClass: {
         stats: { name: 'mage', translateName: 'Маг' },
         skills: [{
@@ -34,14 +34,14 @@ function makeSession(overrides = {}) {
 test('skills state exposes server-calculated current and next values', () => {
   const state = getSkillsState(makeSession());
   assert.equal(state.classTitle, 'Маг');
-  assert.equal(state.inventory.sp, 100);
+  assert.equal(state.inventory.sp, 2000000);
   assert.equal(state.skills.length, 1);
   assert.equal(state.skills[0].power.value, 500);
   assert.equal(state.skills[0].next.power.value, 525);
   assert.equal(state.skills[0].usage.mp, 43);
   assert.equal(state.skills[0].next.usage.mp, 42);
   assert.equal(state.skills[0].next.usage.cooldownSeconds, 17.6);
-  assert.deepEqual(state.skills[0].upgradeCost, { gold: 2000, moonDew: 5, ironOre: 15, sp: 20 });
+  assert.deepEqual(state.skills[0].upgradeCost, { gold: 2000, moonDew: 5, ironOre: 15, sp: 400000 });
   assert.equal(state.skills[0].canUpgrade, true);
 });
 
@@ -55,7 +55,7 @@ test('Mini App enchant deducts resources and raises only the selected skill', ()
   assert.equal(session.game.inventory.gold, 8000);
   assert.equal(session.game.inventory.moonDew, 95);
   assert.equal(session.game.inventory.ironOre, 85);
-  assert.equal(session.game.inventory.sp, 80);
+  assert.equal(session.game.inventory.sp, 1600000);
   assert.equal(result.skills.skills[0].power.value, 525);
 });
 

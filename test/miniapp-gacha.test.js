@@ -36,6 +36,7 @@ test('gacha state uses inventory shards as the source of truth', () => {
   const player = session({
     game: {
       gacha: [{ name: 'newbie', freeSpins: 0 }],
+      gachaDaily:{day:new Date().toISOString().slice(0,10),remaining:0},
       inventory: {
         gacha: {
           name: 'Предметы гачи',

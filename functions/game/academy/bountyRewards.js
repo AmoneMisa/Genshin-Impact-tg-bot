@@ -1,3 +1,4 @@
+import npcSp from '../../../template/l2NpcSp.js';
 import equipment from '../../../template/equipmentTemplate.js';
 import {shotKey, SHOT_PACK_PRICE, SHOT_PACK, SHOTS_PER_CAST} from '../../../template/shotsData.js';
 import {isMagicClass} from '../classes/classFamily.js';
@@ -5,7 +6,7 @@ import {crystalKey} from '../equipment/enchantItem.js';
 import {levelNeed, EXP_RATE} from '../player/vitality.js';
 import fields from '../../../template/huntingTemplate.js';
 import {HUNT} from '../hunt/huntConfig.js';
-import {spForLevelUp} from '../player/setLevel.js';
+import {customSpBudget} from '../player/spEconomy.js';
 import {itemRow} from '../hunt/lootTable.js';
 
 export const BOUNTY_CATEGORIES = Object.freeze(['experience', 'resources', 'consumables']);
@@ -29,7 +30,7 @@ export function bountyHuntReference(level) {
   return {
     gold:median(mobs.map(m=>m.gold?(m.gold.min+m.gold.max)/2*m.gold.chance/100*HUNT.goldScale:0)),
     exp:median(mobs.map(m=>m.expShare*levelNeed(m.level))),
-    sp:median(mobs.map(m=>Math.max(1,Math.round(m.expShare*spForLevelUp(m.level))))),
+    sp:median(mobs.map(m=>(npcSp[m.id] || 0)*EXP_RATE)),
   };
 }
 export const bountyDefaultTarget=(scope,quality)=>Math.round((scope==='week'?150:25)*(0.8+quality*0.35));
@@ -56,5 +57,5 @@ export function bountyExtras(scope, quality, level, category, className, target=
     materials[shotKey(kind,grade)]=casts*perCast;
   }
   return {gold:Math.max(1,Math.round(farmGold*(category==='experience'?0.15:0.1))),
-    sp:Math.max(1,Math.round(Math.min(reference.sp*target*(category==='experience'?0.25:0.1),spForLevelUp(level)*(category==='experience'?0.25:0.1)*(1+0.25*(quality-1))*(weekly?3:1)))),exp,materials};
+    sp:Math.max(1,Math.round(Math.min(reference.sp*target*(category==='experience'?0.25:0.1),customSpBudget(level)*(category==='experience'?0.25:0.1)*(1+0.25*(quality-1))*(weekly?3:1)))),exp,materials};
 }

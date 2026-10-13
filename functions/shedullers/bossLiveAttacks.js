@@ -72,11 +72,11 @@ export default async function bossLiveAttacks(now = Date.now()) {
                 'members.$[m].game.gameClass.stats.hp': member.game.gameClass.stats.hp,
                 'members.$[m].game.effects': member.game.effects || [],
             };
-            if (killedIds.has(userId)) set['members.$[m].game.respawnTime'] = member.game.respawnTime;
+            if (killedIds.has(userId)) for(const field of ['respawnTime','stats','deathPenalty','deathLedger'])if(member.game[field]!==undefined)set['members.$[m].game.'+field]=member.game[field];
             await Chat.updateOne({ chatId: boss.chatId }, { $set: set }, { arrayFilters: [{ 'm.userId': member.userId }] });
             // the hero is shared by all chats: the same fields go to its record, which every chat shows
             const shared = { 'data.game.gameClass.stats.hp': member.game.gameClass.stats.hp, 'data.game.effects': member.game.effects || [] };
-            if (killedIds.has(userId)) shared['data.game.respawnTime'] = member.game.respawnTime;
+            if (killedIds.has(userId)) for(const field of ['respawnTime','stats','deathPenalty','deathLedger'])if(member.game[field]!==undefined)shared['data.game.'+field]=member.game[field];
             await Character.updateOne({ userId: Number(member.userId) }, { $set: shared, $inc: { rev: 1 } });
         }
 

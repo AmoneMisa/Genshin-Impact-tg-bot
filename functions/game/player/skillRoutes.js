@@ -1,3 +1,4 @@
+import {legacySp} from './spEconomy.js';
 // Lineage-style enchant routes. Until the 3rd profession a skill only has a
 // level (skillEnchant.js: power, cost and cooldown together, plus new skills from
 // promotions). A 3rd-class player may additionally pick ONE route per skill and
@@ -37,6 +38,7 @@ export function canUseRoutes(session) {
 }
 
 export function getRouteLevel(skill) {
+    if(skill?.l2Id)return 0;
     return skill?.routeKind in ROUTES ? Math.max(0, Math.min(ROUTE_MAX_LEVEL, Number(skill.routeLevel) || 0)) : 0;
 }
 
@@ -64,7 +66,7 @@ export function getRouteCost(skill) {
     const next = level + 1;
     const items = {ancient_seal: next};
     if (next >= 3 && skill?.enchantItem?.key) items[skill.enchantItem.key] = next - 2;
-    return {gold: 15000 * next, sp: 80 * next, items};
+    return {gold: 15000 * next, sp: legacySp(80 * next), items};
 }
 
 function why(session, skill) {

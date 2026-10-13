@@ -1,3 +1,4 @@
+import {recordDeath} from '../player/deathPenalties.js';
 import {l2HasControl} from '../player/l2Effects.js';
 import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Effects.js';
 import calcBossHit from './bossHit.js';
@@ -79,7 +80,7 @@ function applyHit(member, dmg, now) {
     player.gameClass.stats.hp = Math.max(0, player.gameClass.stats.hp - lost);
     l2OnDamageReceived(member,null,lost,now);
     const killed = player.gameClass.stats.hp === 0 && !l2PreventDeath(member,now);
-    if (killed) player.respawnTime = now + RESPAWN_MS;
+    if (killed) {player.respawnTime = now + RESPAWN_MS;recordDeath(member,{now,kind:"raid"});}
     return { absorbed, lost, killed };
 }
 

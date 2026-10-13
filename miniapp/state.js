@@ -1,3 +1,4 @@
+import {penaltyRows} from '../functions/game/player/deathPenalties.js';
 import { MAX_LEVEL, getVitalityState } from '../functions/game/player/vitality.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
@@ -133,6 +134,8 @@ export function createMiniAppState(session, context) {
       className: gameClassStats.name || 'noClass',
       gender: session?.gender === 'female' ? 'female' : 'male',
       classTitle: gameClassStats.translateName || gameClassStats.name || 'Без класса',
+      dead:hp<=0,
+      penalties:penaltyRows(session),
       hp,
       maxHp,
       mp,

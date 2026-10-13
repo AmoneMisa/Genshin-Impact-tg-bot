@@ -7,7 +7,7 @@ import {
 import { CLAN_SKILLS, getClanSkillsState, learnClanSkill, syncClanPerks, clanPerkModifiers, clanSkillLevel } from '../functions/game/clans/clanPerks.js';
 
 const player = (className = 'duelist', overrides = {}) => ({
-  game: { gameClass: { stats: { name: className, family: 'berserk' } }, stats: { lvl: 85 }, inventory: { sp: 100_000, gold: 1_000_000, materials: {} }, equipmentStats: {}, ...overrides },
+  game: { gameClass: { stats: { name: className, family: 'berserk' } }, stats: { lvl: 85 }, inventory: { sp: 2_000_000_000, gold: 1_000_000, materials: {} }, equipmentStats: {}, ...overrides },
 });
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
 const idOf = (session, name) => getPassivesState(session).passives.find(passive => passive.name === name).id;
@@ -23,15 +23,15 @@ test('a class learns the real passives of its own tree and of its parents', () =
   assert.ok(PASSIVE_SKILL_NAMES.length > 100);
 });
 
-test('learning a passive costs the real SP price (scaled), respects the level gate and the order of levels', () => {
+test('learning a passive costs the original High Five SP price, respects the level gate and the order of levels', () => {
   const session = player('duelist');
   const id = idOf(session, 'Sword/Blunt Weapon Mastery');
   const row = passiveTree(88).find(entry => String(entry.id) === id).levels[0];
   const result = learnPassive(session, id);
   assert.equal(result.ok, true);
   assert.equal(result.level, 1);
-  assert.equal(session.game.inventory.sp, 100_000 - row.sp);
-  assert.ok(row.sp >= 1 && SP_SCALE < 1);
+  assert.equal(session.game.inventory.sp, 2_000_000_000 - row.sp);
+  assert.ok(row.sp >= 1 && SP_SCALE === 1);
   assert.equal(learnPassive(session, 'nonsense').reason, 'unknown_passive');
   assert.equal(learnPassive(session, id).level, 2, 'one level at a time');
 

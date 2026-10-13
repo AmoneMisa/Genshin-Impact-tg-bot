@@ -59,8 +59,12 @@ body .item-grid > .item-grid-cell:focus-visible {
   z-index: 1;
 }
 body .item-grid > button.item-grid-cell:hover { background: #d8b36a12; }
+body .game-overlay .overlay-panel .item-grid > .item-grid-cell:has(.is-shadow-item),
+body .game-overlay .overlay-panel .item-grid > .item-grid-cell.is-shadow-item,
 body .item-grid > .item-grid-cell:has(.is-shadow-item),
 body .item-grid > .item-grid-cell.is-shadow-item { box-shadow: inset 0 0 0 2px #f18bc7; }
+body .game-overlay .overlay-panel .item-grid > .item-grid-cell.selected:has(.is-shadow-item),
+body .game-overlay .overlay-panel .item-grid > .item-grid-cell.selected.is-shadow-item,
 body .item-grid > .item-grid-cell.selected:has(.is-shadow-item),
 body .item-grid > .item-grid-cell.selected.is-shadow-item { box-shadow: inset 0 0 0 2px #d8b36a, inset 0 0 0 3px #f18bc7; }
 body .item-grid > .item-grid-cell.selected::after,
