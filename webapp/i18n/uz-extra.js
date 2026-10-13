@@ -1237,4 +1237,5 @@ export default {
   "Штраф за смерть:": "O‘lim jarimasi:",
   "Штрафы": "Jarimalar",
   "Этот навык нельзя заточить.": "Bu ko‘nikmani kuchaytirib bo‘lmaydi.",
+  "Рецепт удалён.": "Retsept o‘chirildi.",
 };

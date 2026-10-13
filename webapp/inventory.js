@@ -1,3 +1,4 @@
+import {bindItemTrash,itemTrashButton} from './item-trash.js';
 import {dialogHeading} from './dialog-heading.js';
 import {inventoryCharacterHtml,inventoryEquipped,inventoryActionIcon,inventoryItemArt,INVENTORY_LEFT,INVENTORY_RIGHT} from './inventory-layout.js';
 import {itemGridHtml} from './item-grid.js';
@@ -88,7 +89,9 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   const content = overlay.querySelector('[data-inventory-content]');
   const feedback = overlay.querySelector('[data-inventory-feedback]');
   feedback.textContent = 'Выберите предмет';
+  let disposeTrash=()=>{};
   const close = () => {
+    disposeTrash();
     window.clearTimeout(toastTimer);
     closeItemPopup();
     overlay.classList.add('closing');
@@ -195,7 +198,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
         <button type="button" data-inventory-auction title="Аукцион" aria-label="Аукцион" ${!row||item.isUsed||item.timed||item.bound||selectedKind==='equipment'&&!item.uid?'disabled':''}>${inventoryActionIcon('auction')}</button>
         <button type="button" data-inventory-craft title="Крафт" aria-label="Крафт">${inventoryActionIcon('craft')}</button>
       </div><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong title="${formatNumber(state.resources.gold)}">${walletNumber(state.resources.gold)}</strong></span></div>
-      <button type="button" class="inventory-discard" data-inventory-discard title="Выбросить" aria-label="Выбросить" ${!item||item.isUsed||item.augment?.current?'disabled':''}>${inventoryActionIcon('discard')}</button></footer>`;
+      ${itemTrashButton({label:'Выбросить',attribute:'data-inventory-discard',className:'inventory-discard',disabled:!item||item.isUsed||Boolean(item.augment?.current)})}</footer>`;
     overlay.querySelector('[data-inventory-count]').textContent = formatNumber((state.equipment||[]).filter(i=>!i.isUsed).length+state.potions.length+(state.materials||[]).length)+' / '+(state.slots?.capacity||80);
     bind();
     // Vitals glide from the pre-potion value to the new one.
@@ -345,6 +348,13 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   }
 
   render();
+  disposeTrash=bindItemTrash({root:overlay,selector:'[data-inventory-bag] [data-inventory-equipment],[data-inventory-bag] [data-inventory-material],[data-inventory-bag] [data-inventory-select]',getItem:b=>{
+    const kind=b.hasAttribute('data-inventory-equipment')?'equipment':b.hasAttribute('data-inventory-material')?'material':'potion';
+    return {kind,key:b.dataset.inventoryEquipment||b.dataset.inventoryMaterial||b.dataset.inventorySelect};
+  },canDrop:ref=>{
+    if(pending)return false;const item=(ref.kind==='equipment'?state.equipment:ref.kind==='material'?state.materials:state.potions)?.find(i=>i.key===ref.key);
+    return Boolean(item&&!item.isUsed&&!item.augment?.current&&(ref.kind==='equipment'||item.count>0));
+  },onDrop:ref=>{selectedKind=ref.kind;selectedKey=ref.key;render();itemAction('discard');}});
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
 }

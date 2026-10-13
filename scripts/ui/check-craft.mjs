@@ -54,7 +54,7 @@ try {
  await page.locator('dialog.craft-create-dialog').screenshot({path:'docs/craft-reference/create-'+width+'.png'});
  await page.locator('[data-ingredient]').first().click();assert.ok(await page.locator('.craft-material-detail').innerText());
  await check();await page.locator('[data-create]').click();await page.waitForFunction(()=>document.querySelector('.craft-result')?.textContent.length>0);
- await page.locator('[data-craft-close]').click();
+ await page.locator('.craft-create-dialog [data-dismiss]').click();
  await page.locator('[data-recipe-search]').fill('Dagger');assert.ok(await page.locator('[data-craft-select]').count());
  await page.locator('.craft-overlay .overlay-close').click();
  await page.evaluate(async()=>{await(await import('/enchant.js')).openEnchantGame({...window.opts,scrollKey:'scroll_D'});});
@@ -92,7 +92,7 @@ try {
  await page.locator('.craft-create-dialog').screenshot({path:'docs/craft-reference/npc-create-'+width+'.png'});
  await page.locator('[data-create]').click();await page.waitForFunction(()=>document.querySelector('.craft-result')?.textContent.includes('Steel'));
  assert.equal(book.game.inventory.gold,goldBeforeNpc-2000);assert.equal(book.game.inventory.materials.l2_2137,1);assert.deepEqual(book.game.craft.recipes,personalRecipes);
- await page.locator('[data-craft-close]').click();await page.locator('.craft-overlay .overlay-close').click();await page.locator('.equipment-overlay .overlay-close').click();await check();
+ await page.locator('.craft-create-dialog [data-dismiss]').click();await page.locator('.craft-overlay .overlay-close').click();await page.locator('.equipment-overlay .overlay-close').click();await check();
  await page.close();console.log(width+' craft/enchant/unseal/LS passed');
  }
 }finally{await browser.close();}
