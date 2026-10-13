@@ -6,7 +6,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "sword-32.webp",
-    "source": "../v1/sword-512.webp"
+    "source": "../v1/sword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greatsword",
@@ -15,7 +16,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "greatsword-32.webp",
-    "source": "../v1/greatsword-512.webp"
+    "source": "../v1/greatsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "dagger",
@@ -24,7 +26,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "dagger-32.webp",
-    "source": "../v1/dagger-512.webp"
+    "source": "../v1/dagger-512.webp",
+    "masterSize": 512
   },
   {
     "key": "staff",
@@ -33,7 +36,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "staff-32.webp",
-    "source": "../v1/staff-512.webp"
+    "source": "../v1/staff-512.webp",
+    "masterSize": 512
   },
   {
     "key": "bow",
@@ -42,7 +46,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "bow-32.webp",
-    "source": "../v1/bow-512.webp"
+    "source": "../v1/bow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "crossbow",
@@ -51,7 +56,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "crossbow-32.webp",
-    "source": "../v1/crossbow-512.webp"
+    "source": "../v1/crossbow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "hammer",
@@ -60,7 +66,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "hammer-32.webp",
-    "source": "../v1/hammer-512.webp"
+    "source": "../v1/hammer-512.webp",
+    "masterSize": 512
   },
   {
     "key": "shield",
@@ -69,7 +76,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "shield-32.webp",
-    "source": "../v1/shield-512.webp"
+    "source": "../v1/shield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "sigil",
@@ -78,7 +86,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "sigil-32.webp",
-    "source": "../v1/sigil-512.webp"
+    "source": "../v1/sigil-512.webp",
+    "masterSize": 512
   },
   {
     "key": "helmet",
@@ -87,7 +96,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "helmet-32.webp",
-    "source": "../v1/helmet-512.webp"
+    "source": "../v1/helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "armor",
@@ -96,7 +106,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "armor-32.webp",
-    "source": "../v1/armor-512.webp"
+    "source": "../v1/armor-512.webp",
+    "masterSize": 512
   },
   {
     "key": "mantle",
@@ -105,7 +116,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "mantle-32.webp",
-    "source": "../v1/mantle-512.webp"
+    "source": "../v1/mantle-512.webp",
+    "masterSize": 512
   },
   {
     "key": "gloves",
@@ -114,7 +126,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "gloves-32.webp",
-    "source": "../v1/gloves-512.webp"
+    "source": "../v1/gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "bracers",
@@ -123,7 +136,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "bracers-32.webp",
-    "source": "../v1/bracers-512.webp"
+    "source": "../v1/bracers-512.webp",
+    "masterSize": 512
   },
   {
     "key": "gauntlets",
@@ -132,7 +146,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "gauntlets-32.webp",
-    "source": "../v1/gauntlets-512.webp"
+    "source": "../v1/gauntlets-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greaves",
@@ -141,7 +156,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "greaves-32.webp",
-    "source": "../v1/greaves-512.webp"
+    "source": "../v1/greaves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "leg-wraps",
@@ -150,7 +166,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "leg-wraps-32.webp",
-    "source": "../v1/leg-wraps-512.webp"
+    "source": "../v1/leg-wraps-512.webp",
+    "masterSize": 512
   },
   {
     "key": "boots",
@@ -159,7 +176,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "boots-32.webp",
-    "source": "../v1/boots-512.webp"
+    "source": "../v1/boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "anklets",
@@ -168,7 +186,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "anklets-32.webp",
-    "source": "../v1/anklets-512.webp"
+    "source": "../v1/anklets-512.webp",
+    "masterSize": 512
   },
   {
     "key": "cloak",
@@ -177,7 +196,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "cloak-32.webp",
-    "source": "../v1/cloak-512.webp"
+    "source": "../v1/cloak-512.webp",
+    "masterSize": 512
   },
   {
     "key": "ring",
@@ -186,7 +206,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "ring-32.webp",
-    "source": "../v1/ring-512.webp"
+    "source": "../v1/ring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "earring",
@@ -195,7 +216,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "earring-32.webp",
-    "source": "../v1/earring-512.webp"
+    "source": "../v1/earring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "amulet",
@@ -204,7 +226,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "amulet-32.webp",
-    "source": "../v1/amulet-512.webp"
+    "source": "../v1/amulet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "tiara",
@@ -213,7 +236,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "tiara-32.webp",
-    "source": "../v1/tiara-512.webp"
+    "source": "../v1/tiara-512.webp",
+    "masterSize": 512
   },
   {
     "key": "relic",
@@ -222,7 +246,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "relic-32.webp",
-    "source": "../v1/relic-512.webp"
+    "source": "../v1/relic-512.webp",
+    "masterSize": 512
   },
   {
     "key": "fists-low",
@@ -231,7 +256,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "fists-low-32.webp",
-    "source": "../v1/fists-low-512.webp"
+    "source": "../v1/fists-low-512.webp",
+    "masterSize": 512
   },
   {
     "key": "fists-mid",
@@ -240,7 +266,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "fists-mid-32.webp",
-    "source": "../v1/fists-mid-512.webp"
+    "source": "../v1/fists-mid-512.webp",
+    "masterSize": 512
   },
   {
     "key": "fists-high",
@@ -249,7 +276,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "fists-high-32.webp",
-    "source": "../v1/fists-high-512.webp"
+    "source": "../v1/fists-high-512.webp",
+    "masterSize": 512
   },
   {
     "key": "staff-sun",
@@ -258,7 +286,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "staff-sun-32.webp",
-    "source": "../v1/staff-sun-512.webp"
+    "source": "../v1/staff-sun-512.webp",
+    "masterSize": 512
   },
   {
     "key": "sword-prismatic",
@@ -267,7 +296,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "sword-prismatic-32.webp",
-    "source": "../v1/sword-prismatic-512.webp"
+    "source": "../v1/sword-prismatic-512.webp",
+    "masterSize": 512
   },
   {
     "key": "ring-filigree",
@@ -276,7 +306,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "ring-filigree-32.webp",
-    "source": "../v1/ring-filigree-512.webp"
+    "source": "../v1/ring-filigree-512.webp",
+    "masterSize": 512
   },
   {
     "key": "ring-winged",
@@ -285,7 +316,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "ring-winged-32.webp",
-    "source": "../v1/ring-winged-512.webp"
+    "source": "../v1/ring-winged-512.webp",
+    "masterSize": 512
   },
   {
     "key": "bow-rose",
@@ -294,7 +326,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "bow-rose-32.webp",
-    "source": "../v1/bow-rose-512.webp"
+    "source": "../v1/bow-rose-512.webp",
+    "masterSize": 512
   },
   {
     "key": "mantle-royal",
@@ -303,7 +336,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "mantle-royal-32.webp",
-    "source": "../v1/mantle-royal-512.webp"
+    "source": "../v1/mantle-royal-512.webp",
+    "masterSize": 512
   },
   {
     "key": "armor-prismatic",
@@ -312,7 +346,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "armor-prismatic-32.webp",
-    "source": "../v1/armor-prismatic-512.webp"
+    "source": "../v1/armor-prismatic-512.webp",
+    "masterSize": 512
   },
   {
     "key": "gauntlets-raven",
@@ -321,7 +356,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "gauntlets-raven-32.webp",
-    "source": "../v1/gauntlets-raven-512.webp"
+    "source": "../v1/gauntlets-raven-512.webp",
+    "masterSize": 512
   },
   {
     "key": "boots-raven",
@@ -330,7 +366,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "boots-raven-32.webp",
-    "source": "../v1/boots-raven-512.webp"
+    "source": "../v1/boots-raven-512.webp",
+    "masterSize": 512
   },
   {
     "key": "tiara-night",
@@ -339,7 +376,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "tiara-night-32.webp",
-    "source": "../v1/tiara-night-512.webp"
+    "source": "../v1/tiara-night-512.webp",
+    "masterSize": 512
   },
   {
     "key": "earring-sun",
@@ -348,7 +386,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "earring-sun-32.webp",
-    "source": "../v1/earring-sun-512.webp"
+    "source": "../v1/earring-sun-512.webp",
+    "masterSize": 512
   },
   {
     "key": "amulet-butterfly",
@@ -357,7 +396,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "amulet-butterfly-32.webp",
-    "source": "../v1/amulet-butterfly-512.webp"
+    "source": "../v1/amulet-butterfly-512.webp",
+    "masterSize": 512
   },
   {
     "key": "helmet-obsidian",
@@ -366,7 +406,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "helmet-obsidian-32.webp",
-    "source": "../v1/helmet-obsidian-512.webp"
+    "source": "../v1/helmet-obsidian-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greaves-obsidian",
@@ -375,7 +416,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "greaves-obsidian-32.webp",
-    "source": "../v1/greaves-obsidian-512.webp"
+    "source": "../v1/greaves-obsidian-512.webp",
+    "masterSize": 512
   },
   {
     "key": "shield-dragon",
@@ -384,7 +426,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "shield-dragon-32.webp",
-    "source": "../v1/shield-dragon-512.webp"
+    "source": "../v1/shield-dragon-512.webp",
+    "masterSize": 512
   },
   {
     "key": "hammer-dragon",
@@ -393,7 +436,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "hammer-dragon-32.webp",
-    "source": "../v1/hammer-dragon-512.webp"
+    "source": "../v1/hammer-dragon-512.webp",
+    "masterSize": 512
   },
   {
     "key": "cloak-starfield",
@@ -402,7 +446,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "cloak-starfield-32.webp",
-    "source": "../v1/cloak-starfield-512.webp"
+    "source": "../v1/cloak-starfield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "sigil-nebula",
@@ -411,7 +456,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "sigil-nebula-32.webp",
-    "source": "../v1/sigil-nebula-512.webp"
+    "source": "../v1/sigil-nebula-512.webp",
+    "masterSize": 512
   },
   {
     "key": "dagger-shadow",
@@ -420,7 +466,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "dagger-shadow-32.webp",
-    "source": "../v1/dagger-shadow-512.webp"
+    "source": "../v1/dagger-shadow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "crossbow-shadow",
@@ -429,7 +476,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "crossbow-shadow-32.webp",
-    "source": "../v1/crossbow-shadow-512.webp"
+    "source": "../v1/crossbow-shadow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greatsword-solar",
@@ -438,7 +486,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "greatsword-solar-32.webp",
-    "source": "../v1/greatsword-solar-512.webp"
+    "source": "../v1/greatsword-solar-512.webp",
+    "masterSize": 512
   },
   {
     "key": "bracers-crystal",
@@ -447,7 +496,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "bracers-crystal-32.webp",
-    "source": "../v1/bracers-crystal-512.webp"
+    "source": "../v1/bracers-crystal-512.webp",
+    "masterSize": 512
   },
   {
     "key": "anklets-crystal",
@@ -456,7 +506,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "anklets-crystal-32.webp",
-    "source": "../v1/anklets-crystal-512.webp"
+    "source": "../v1/anklets-crystal-512.webp",
+    "masterSize": 512
   },
   {
     "key": "leg-wraps-tidal",
@@ -465,7 +516,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "leg-wraps-tidal-32.webp",
-    "source": "../v1/leg-wraps-tidal-512.webp"
+    "source": "../v1/leg-wraps-tidal-512.webp",
+    "masterSize": 512
   },
   {
     "key": "gloves-alchemist",
@@ -474,7 +526,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "gloves-alchemist-32.webp",
-    "source": "../v1/gloves-alchemist-512.webp"
+    "source": "../v1/gloves-alchemist-512.webp",
+    "masterSize": 512
   },
   {
     "key": "relic-eclipse",
@@ -483,7 +536,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "relic-eclipse-32.webp",
-    "source": "../v1/relic-eclipse-512.webp"
+    "source": "../v1/relic-eclipse-512.webp",
+    "masterSize": 512
   },
   {
     "key": "sword-opal",
@@ -492,7 +546,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "sword-opal-32.webp",
-    "source": "../v1/sword-opal-512.webp"
+    "source": "../v1/sword-opal-512.webp",
+    "masterSize": 512
   },
   {
     "key": "armor-opal",
@@ -501,7 +556,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "armor-opal-32.webp",
-    "source": "../v1/armor-opal-512.webp"
+    "source": "../v1/armor-opal-512.webp",
+    "masterSize": 512
   },
   {
     "key": "bow-verdant",
@@ -510,7 +566,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "bow-verdant-32.webp",
-    "source": "../v1/bow-verdant-512.webp"
+    "source": "../v1/bow-verdant-512.webp",
+    "masterSize": 512
   },
   {
     "key": "mantle-astral",
@@ -519,7 +576,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "mantle-astral-32.webp",
-    "source": "../v1/mantle-astral-512.webp"
+    "source": "../v1/mantle-astral-512.webp",
+    "masterSize": 512
   },
   {
     "key": "staff-jade",
@@ -528,7 +586,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "staff-jade-32.webp",
-    "source": "../v1/staff-jade-512.webp"
+    "source": "../v1/staff-jade-512.webp",
+    "masterSize": 512
   },
   {
     "key": "shield-seraph",
@@ -537,7 +596,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "shield-seraph-32.webp",
-    "source": "../v1/shield-seraph-512.webp"
+    "source": "../v1/shield-seraph-512.webp",
+    "masterSize": 512
   },
   {
     "key": "helmet-seraph",
@@ -546,7 +606,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "helmet-seraph-32.webp",
-    "source": "../v1/helmet-seraph-512.webp"
+    "source": "../v1/helmet-seraph-512.webp",
+    "masterSize": 512
   },
   {
     "key": "amulet-ruby",
@@ -555,7 +616,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "amulet-ruby-32.webp",
-    "source": "../v1/amulet-ruby-512.webp"
+    "source": "../v1/amulet-ruby-512.webp",
+    "masterSize": 512
   },
   {
     "key": "earring-ruby",
@@ -564,7 +626,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "earring-ruby-32.webp",
-    "source": "../v1/earring-ruby-512.webp"
+    "source": "../v1/earring-ruby-512.webp",
+    "masterSize": 512
   },
   {
     "key": "tiara-crescent",
@@ -573,7 +636,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "tiara-crescent-32.webp",
-    "source": "../v1/tiara-crescent-512.webp"
+    "source": "../v1/tiara-crescent-512.webp",
+    "masterSize": 512
   },
   {
     "key": "gauntlets-dusk",
@@ -582,7 +646,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "gauntlets-dusk-32.webp",
-    "source": "../v1/gauntlets-dusk-512.webp"
+    "source": "../v1/gauntlets-dusk-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greaves-dusk",
@@ -591,7 +656,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "greaves-dusk-32.webp",
-    "source": "../v1/greaves-dusk-512.webp"
+    "source": "../v1/greaves-dusk-512.webp",
+    "masterSize": 512
   },
   {
     "key": "boots-dusk",
@@ -600,7 +666,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "boots-dusk-32.webp",
-    "source": "../v1/boots-dusk-512.webp"
+    "source": "../v1/boots-dusk-512.webp",
+    "masterSize": 512
   },
   {
     "key": "cloak-dusk",
@@ -609,7 +676,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "cloak-dusk-32.webp",
-    "source": "../v1/cloak-dusk-512.webp"
+    "source": "../v1/cloak-dusk-512.webp",
+    "masterSize": 512
   },
   {
     "key": "dagger-tide",
@@ -618,7 +686,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "dagger-tide-32.webp",
-    "source": "../v1/dagger-tide-512.webp"
+    "source": "../v1/dagger-tide-512.webp",
+    "masterSize": 512
   },
   {
     "key": "hammer-opal",
@@ -627,7 +696,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "hammer-opal-32.webp",
-    "source": "../v1/hammer-opal-512.webp"
+    "source": "../v1/hammer-opal-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greatsword-dawn",
@@ -636,7 +706,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "greatsword-dawn-32.webp",
-    "source": "../v1/greatsword-dawn-512.webp"
+    "source": "../v1/greatsword-dawn-512.webp",
+    "masterSize": 512
   },
   {
     "key": "sigil-dawn",
@@ -645,7 +716,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "sigil-dawn-32.webp",
-    "source": "../v1/sigil-dawn-512.webp"
+    "source": "../v1/sigil-dawn-512.webp",
+    "masterSize": 512
   },
   {
     "key": "crossbow-spectral",
@@ -654,7 +726,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "crossbow-spectral-32.webp",
-    "source": "../v1/crossbow-spectral-512.webp"
+    "source": "../v1/crossbow-spectral-512.webp",
+    "masterSize": 512
   },
   {
     "key": "relic-spectral",
@@ -663,7 +736,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "relic-spectral-32.webp",
-    "source": "../v1/relic-spectral-512.webp"
+    "source": "../v1/relic-spectral-512.webp",
+    "masterSize": 512
   },
   {
     "key": "bracers-ruby",
@@ -672,7 +746,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "bracers-ruby-32.webp",
-    "source": "../v1/bracers-ruby-512.webp"
+    "source": "../v1/bracers-ruby-512.webp",
+    "masterSize": 512
   },
   {
     "key": "anklets-ruby",
@@ -681,7 +756,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "anklets-ruby-32.webp",
-    "source": "../v1/anklets-ruby-512.webp"
+    "source": "../v1/anklets-ruby-512.webp",
+    "masterSize": 512
   },
   {
     "key": "gloves-sapphire",
@@ -690,7 +766,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "gloves-sapphire-32.webp",
-    "source": "../v1/gloves-sapphire-512.webp"
+    "source": "../v1/gloves-sapphire-512.webp",
+    "masterSize": 512
   },
   {
     "key": "leg-wraps-pearl",
@@ -699,7 +776,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "leg-wraps-pearl-32.webp",
-    "source": "../v1/leg-wraps-pearl-512.webp"
+    "source": "../v1/leg-wraps-pearl-512.webp",
+    "masterSize": 512
   },
   {
     "key": "helmet-shadowleather",
@@ -708,7 +786,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "helmet-shadowleather-32.webp",
-    "source": "../v1/helmet-shadowleather-512.webp"
+    "source": "../v1/helmet-shadowleather-512.webp",
+    "masterSize": 512
   },
   {
     "key": "armor-shadowleather",
@@ -717,7 +796,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "armor-shadowleather-32.webp",
-    "source": "../v1/armor-shadowleather-512.webp"
+    "source": "../v1/armor-shadowleather-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greaves-shadowleather",
@@ -726,7 +806,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "greaves-shadowleather-32.webp",
-    "source": "../v1/greaves-shadowleather-512.webp"
+    "source": "../v1/greaves-shadowleather-512.webp",
+    "masterSize": 512
   },
   {
     "key": "boots-shadowleather",
@@ -735,7 +816,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "boots-shadowleather-32.webp",
-    "source": "../v1/boots-shadowleather-512.webp"
+    "source": "../v1/boots-shadowleather-512.webp",
+    "masterSize": 512
   },
   {
     "key": "helmet-sapphireguard",
@@ -744,7 +826,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "helmet-sapphireguard-32.webp",
-    "source": "../v1/helmet-sapphireguard-512.webp"
+    "source": "../v1/helmet-sapphireguard-512.webp",
+    "masterSize": 512
   },
   {
     "key": "armor-sapphireguard",
@@ -753,7 +836,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "armor-sapphireguard-32.webp",
-    "source": "../v1/armor-sapphireguard-512.webp"
+    "source": "../v1/armor-sapphireguard-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greaves-sapphireguard",
@@ -762,7 +846,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "greaves-sapphireguard-32.webp",
-    "source": "../v1/greaves-sapphireguard-512.webp"
+    "source": "../v1/greaves-sapphireguard-512.webp",
+    "masterSize": 512
   },
   {
     "key": "boots-sapphireguard",
@@ -771,7 +856,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "boots-sapphireguard-32.webp",
-    "source": "../v1/boots-sapphireguard-512.webp"
+    "source": "../v1/boots-sapphireguard-512.webp",
+    "masterSize": 512
   },
   {
     "key": "helmet-nightweave",
@@ -780,7 +866,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "helmet-nightweave-32.webp",
-    "source": "../v1/helmet-nightweave-512.webp"
+    "source": "../v1/helmet-nightweave-512.webp",
+    "masterSize": 512
   },
   {
     "key": "armor-nightweave",
@@ -789,7 +876,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "armor-nightweave-32.webp",
-    "source": "../v1/armor-nightweave-512.webp"
+    "source": "../v1/armor-nightweave-512.webp",
+    "masterSize": 512
   },
   {
     "key": "gloves-nightweave",
@@ -798,7 +886,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "gloves-nightweave-32.webp",
-    "source": "../v1/gloves-nightweave-512.webp"
+    "source": "../v1/gloves-nightweave-512.webp",
+    "masterSize": 512
   },
   {
     "key": "greaves-nightweave",
@@ -807,7 +896,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "greaves-nightweave-32.webp",
-    "source": "../v1/greaves-nightweave-512.webp"
+    "source": "../v1/greaves-nightweave-512.webp",
+    "masterSize": 512
   },
   {
     "key": "boots-nightweave",
@@ -816,7 +906,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "boots-nightweave-32.webp",
-    "source": "../v1/boots-nightweave-512.webp"
+    "source": "../v1/boots-nightweave-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-queenAnt",
@@ -825,7 +916,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-queenAnt-32.webp",
-    "source": "../v1/epic-queenAnt-512.webp"
+    "source": "../v1/epic-queenAnt-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-core",
@@ -834,7 +926,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-core-32.webp",
-    "source": "../v1/epic-core-512.webp"
+    "source": "../v1/epic-core-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-orfen",
@@ -843,7 +936,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-orfen-32.webp",
-    "source": "../v1/epic-orfen-512.webp"
+    "source": "../v1/epic-orfen-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-zaken",
@@ -852,7 +946,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-zaken-32.webp",
-    "source": "../v1/epic-zaken-512.webp"
+    "source": "../v1/epic-zaken-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-baium",
@@ -861,7 +956,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-baium-32.webp",
-    "source": "../v1/epic-baium-512.webp"
+    "source": "../v1/epic-baium-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-antharas",
@@ -870,7 +966,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-antharas-32.webp",
-    "source": "../v1/epic-antharas-512.webp"
+    "source": "../v1/epic-antharas-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-valakas",
@@ -879,7 +976,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-valakas-32.webp",
-    "source": "../v1/epic-valakas-512.webp"
+    "source": "../v1/epic-valakas-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-frintezza",
@@ -888,7 +986,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "epic-frintezza-32.webp",
-    "source": "../v1/epic-frintezza-512.webp"
+    "source": "../v1/epic-frintezza-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-heavy-body",
@@ -897,7 +996,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-heavy-body-32.webp",
-    "source": "../v1/catalog-a-armor-heavy-body-512.webp"
+    "source": "../v1/catalog-a-armor-heavy-body-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-heavy-boots",
@@ -906,7 +1006,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-heavy-boots-32.webp",
-    "source": "../v1/catalog-a-armor-heavy-boots-512.webp"
+    "source": "../v1/catalog-a-armor-heavy-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-heavy-gloves",
@@ -915,7 +1016,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-heavy-gloves-32.webp",
-    "source": "../v1/catalog-a-armor-heavy-gloves-512.webp"
+    "source": "../v1/catalog-a-armor-heavy-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-heavy-greaves",
@@ -924,7 +1026,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-heavy-greaves-32.webp",
-    "source": "../v1/catalog-a-armor-heavy-greaves-512.webp"
+    "source": "../v1/catalog-a-armor-heavy-greaves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-heavy-helmet",
@@ -933,7 +1036,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-heavy-helmet-32.webp",
-    "source": "../v1/catalog-a-armor-heavy-helmet-512.webp"
+    "source": "../v1/catalog-a-armor-heavy-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-light-boots",
@@ -942,7 +1046,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-light-boots-32.webp",
-    "source": "../v1/catalog-a-armor-light-boots-512.webp"
+    "source": "../v1/catalog-a-armor-light-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-light-fullbody",
@@ -951,7 +1056,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-light-fullbody-32.webp",
-    "source": "../v1/catalog-a-armor-light-fullbody-512.webp"
+    "source": "../v1/catalog-a-armor-light-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-light-gloves",
@@ -960,7 +1066,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-light-gloves-32.webp",
-    "source": "../v1/catalog-a-armor-light-gloves-512.webp"
+    "source": "../v1/catalog-a-armor-light-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-light-helmet",
@@ -969,7 +1076,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-light-helmet-32.webp",
-    "source": "../v1/catalog-a-armor-light-helmet-512.webp"
+    "source": "../v1/catalog-a-armor-light-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-robe-boots",
@@ -978,7 +1086,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-robe-boots-32.webp",
-    "source": "../v1/catalog-a-armor-robe-boots-512.webp"
+    "source": "../v1/catalog-a-armor-robe-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-robe-fullbody",
@@ -987,7 +1096,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-robe-fullbody-32.webp",
-    "source": "../v1/catalog-a-armor-robe-fullbody-512.webp"
+    "source": "../v1/catalog-a-armor-robe-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-robe-gloves",
@@ -996,7 +1106,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-robe-gloves-32.webp",
-    "source": "../v1/catalog-a-armor-robe-gloves-512.webp"
+    "source": "../v1/catalog-a-armor-robe-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-armor-robe-helmet",
@@ -1005,7 +1116,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-a-armor-robe-helmet-32.webp",
-    "source": "../v1/catalog-a-armor-robe-helmet-512.webp"
+    "source": "../v1/catalog-a-armor-robe-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-jewelry-earring",
@@ -1014,7 +1126,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-a-jewelry-earring-32.webp",
-    "source": "../v1/catalog-a-jewelry-earring-512.webp"
+    "source": "../v1/catalog-a-jewelry-earring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-jewelry-necklace",
@@ -1023,7 +1136,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-a-jewelry-necklace-32.webp",
-    "source": "../v1/catalog-a-jewelry-necklace-512.webp"
+    "source": "../v1/catalog-a-jewelry-necklace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-jewelry-ring",
@@ -1032,7 +1146,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-a-jewelry-ring-32.webp",
-    "source": "../v1/catalog-a-jewelry-ring-512.webp"
+    "source": "../v1/catalog-a-jewelry-ring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-shield-bigshield",
@@ -1041,7 +1156,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-a-shield-bigshield-32.webp",
-    "source": "../v1/catalog-a-shield-bigshield-512.webp"
+    "source": "../v1/catalog-a-shield-bigshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-shield-sigill",
@@ -1050,7 +1166,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-a-shield-sigill-32.webp",
-    "source": "../v1/catalog-a-shield-sigill-512.webp"
+    "source": "../v1/catalog-a-shield-sigill-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-shield-smallshield",
@@ -1059,7 +1176,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-a-shield-smallshield-32.webp",
-    "source": "../v1/catalog-a-shield-smallshield-512.webp"
+    "source": "../v1/catalog-a-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-blunt",
@@ -1068,7 +1186,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-a-weapon-blunt-32.webp",
-    "source": "../v1/catalog-a-weapon-blunt-512.webp"
+    "source": "../v1/catalog-a-weapon-blunt-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-bow",
@@ -1077,7 +1196,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-a-weapon-bow-32.webp",
-    "source": "../v1/catalog-a-weapon-bow-512.webp"
+    "source": "../v1/catalog-a-weapon-bow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-crossbow",
@@ -1086,7 +1206,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-a-weapon-crossbow-32.webp",
-    "source": "../v1/catalog-a-weapon-crossbow-512.webp"
+    "source": "../v1/catalog-a-weapon-crossbow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-dagger",
@@ -1095,7 +1216,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-a-weapon-dagger-32.webp",
-    "source": "../v1/catalog-a-weapon-dagger-512.webp"
+    "source": "../v1/catalog-a-weapon-dagger-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-fists",
@@ -1104,7 +1226,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-a-weapon-fists-32.webp",
-    "source": "../v1/catalog-a-weapon-fists-512.webp"
+    "source": "../v1/catalog-a-weapon-fists-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-mace",
@@ -1113,7 +1236,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-a-weapon-mace-32.webp",
-    "source": "../v1/catalog-a-weapon-mace-512.webp"
+    "source": "../v1/catalog-a-weapon-mace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-onehandedsword",
@@ -1122,7 +1246,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-a-weapon-onehandedsword-32.webp",
-    "source": "../v1/catalog-a-weapon-onehandedsword-512.webp"
+    "source": "../v1/catalog-a-weapon-onehandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-a-weapon-twohandedsword",
@@ -1131,7 +1256,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-a-weapon-twohandedsword-32.webp",
-    "source": "../v1/catalog-a-weapon-twohandedsword-512.webp"
+    "source": "../v1/catalog-a-weapon-twohandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-heavy-body",
@@ -1140,7 +1266,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-heavy-body-32.webp",
-    "source": "../v1/catalog-b-armor-heavy-body-512.webp"
+    "source": "../v1/catalog-b-armor-heavy-body-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-heavy-boots",
@@ -1149,7 +1276,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-heavy-boots-32.webp",
-    "source": "../v1/catalog-b-armor-heavy-boots-512.webp"
+    "source": "../v1/catalog-b-armor-heavy-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-heavy-gloves",
@@ -1158,7 +1286,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-heavy-gloves-32.webp",
-    "source": "../v1/catalog-b-armor-heavy-gloves-512.webp"
+    "source": "../v1/catalog-b-armor-heavy-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-heavy-greaves",
@@ -1167,7 +1296,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-heavy-greaves-32.webp",
-    "source": "../v1/catalog-b-armor-heavy-greaves-512.webp"
+    "source": "../v1/catalog-b-armor-heavy-greaves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-heavy-helmet",
@@ -1176,7 +1306,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-heavy-helmet-32.webp",
-    "source": "../v1/catalog-b-armor-heavy-helmet-512.webp"
+    "source": "../v1/catalog-b-armor-heavy-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-light-boots",
@@ -1185,7 +1316,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-light-boots-32.webp",
-    "source": "../v1/catalog-b-armor-light-boots-512.webp"
+    "source": "../v1/catalog-b-armor-light-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-light-fullbody",
@@ -1194,7 +1326,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-light-fullbody-32.webp",
-    "source": "../v1/catalog-b-armor-light-fullbody-512.webp"
+    "source": "../v1/catalog-b-armor-light-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-light-gloves",
@@ -1203,7 +1336,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-light-gloves-32.webp",
-    "source": "../v1/catalog-b-armor-light-gloves-512.webp"
+    "source": "../v1/catalog-b-armor-light-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-light-helmet",
@@ -1212,7 +1346,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-light-helmet-32.webp",
-    "source": "../v1/catalog-b-armor-light-helmet-512.webp"
+    "source": "../v1/catalog-b-armor-light-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-robe-boots",
@@ -1221,7 +1356,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-robe-boots-32.webp",
-    "source": "../v1/catalog-b-armor-robe-boots-512.webp"
+    "source": "../v1/catalog-b-armor-robe-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-robe-fullbody",
@@ -1230,7 +1366,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-robe-fullbody-32.webp",
-    "source": "../v1/catalog-b-armor-robe-fullbody-512.webp"
+    "source": "../v1/catalog-b-armor-robe-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-robe-gloves",
@@ -1239,7 +1376,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-robe-gloves-32.webp",
-    "source": "../v1/catalog-b-armor-robe-gloves-512.webp"
+    "source": "../v1/catalog-b-armor-robe-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-armor-robe-helmet",
@@ -1248,7 +1386,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-b-armor-robe-helmet-32.webp",
-    "source": "../v1/catalog-b-armor-robe-helmet-512.webp"
+    "source": "../v1/catalog-b-armor-robe-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-jewelry-earring",
@@ -1257,7 +1396,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-b-jewelry-earring-32.webp",
-    "source": "../v1/catalog-b-jewelry-earring-512.webp"
+    "source": "../v1/catalog-b-jewelry-earring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-jewelry-necklace",
@@ -1266,7 +1406,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-b-jewelry-necklace-32.webp",
-    "source": "../v1/catalog-b-jewelry-necklace-512.webp"
+    "source": "../v1/catalog-b-jewelry-necklace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-jewelry-ring",
@@ -1275,7 +1416,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-b-jewelry-ring-32.webp",
-    "source": "../v1/catalog-b-jewelry-ring-512.webp"
+    "source": "../v1/catalog-b-jewelry-ring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-shield-bigshield",
@@ -1284,7 +1426,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-b-shield-bigshield-32.webp",
-    "source": "../v1/catalog-b-shield-bigshield-512.webp"
+    "source": "../v1/catalog-b-shield-bigshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-shield-sigill",
@@ -1293,7 +1436,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-b-shield-sigill-32.webp",
-    "source": "../v1/catalog-b-shield-sigill-512.webp"
+    "source": "../v1/catalog-b-shield-sigill-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-shield-smallshield",
@@ -1302,7 +1446,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-b-shield-smallshield-32.webp",
-    "source": "../v1/catalog-b-shield-smallshield-512.webp"
+    "source": "../v1/catalog-b-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-blunt",
@@ -1311,7 +1456,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-b-weapon-blunt-32.webp",
-    "source": "../v1/catalog-b-weapon-blunt-512.webp"
+    "source": "../v1/catalog-b-weapon-blunt-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-bow",
@@ -1320,7 +1466,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-b-weapon-bow-32.webp",
-    "source": "../v1/catalog-b-weapon-bow-512.webp"
+    "source": "../v1/catalog-b-weapon-bow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-crossbow",
@@ -1329,7 +1476,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-b-weapon-crossbow-32.webp",
-    "source": "../v1/catalog-b-weapon-crossbow-512.webp"
+    "source": "../v1/catalog-b-weapon-crossbow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-dagger",
@@ -1338,7 +1486,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-b-weapon-dagger-32.webp",
-    "source": "../v1/catalog-b-weapon-dagger-512.webp"
+    "source": "../v1/catalog-b-weapon-dagger-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-fists",
@@ -1347,7 +1496,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-b-weapon-fists-32.webp",
-    "source": "../v1/catalog-b-weapon-fists-512.webp"
+    "source": "../v1/catalog-b-weapon-fists-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-mace",
@@ -1356,7 +1506,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-b-weapon-mace-32.webp",
-    "source": "../v1/catalog-b-weapon-mace-512.webp"
+    "source": "../v1/catalog-b-weapon-mace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-onehandedsword",
@@ -1365,7 +1516,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-b-weapon-onehandedsword-32.webp",
-    "source": "../v1/catalog-b-weapon-onehandedsword-512.webp"
+    "source": "../v1/catalog-b-weapon-onehandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-b-weapon-twohandedsword",
@@ -1374,7 +1526,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-b-weapon-twohandedsword-32.webp",
-    "source": "../v1/catalog-b-weapon-twohandedsword-512.webp"
+    "source": "../v1/catalog-b-weapon-twohandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-c-armor-light-boots",
@@ -1383,7 +1536,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-c-armor-light-boots-32.webp",
-    "source": "../v1/catalog-c-armor-light-boots-512.webp"
+    "source": "../v1/catalog-c-armor-light-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-c-armor-light-fullbody",
@@ -1392,7 +1546,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-c-armor-light-fullbody-32.webp",
-    "source": "../v1/catalog-c-armor-light-fullbody-512.webp"
+    "source": "../v1/catalog-c-armor-light-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-c-armor-light-gloves",
@@ -1401,7 +1556,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-c-armor-light-gloves-32.webp",
-    "source": "../v1/catalog-c-armor-light-gloves-512.webp"
+    "source": "../v1/catalog-c-armor-light-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-c-armor-light-helmet",
@@ -1410,7 +1566,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-c-armor-light-helmet-32.webp",
-    "source": "../v1/catalog-c-armor-light-helmet-512.webp"
+    "source": "../v1/catalog-c-armor-light-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-c-shield-smallshield",
@@ -1419,7 +1576,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-c-shield-smallshield-32.webp",
-    "source": "../v1/catalog-c-shield-smallshield-512.webp"
+    "source": "../v1/catalog-c-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-heavy-body",
@@ -1428,7 +1586,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-heavy-body-32.webp",
-    "source": "../v1/catalog-d-armor-heavy-body-512.webp"
+    "source": "../v1/catalog-d-armor-heavy-body-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-heavy-boots",
@@ -1437,7 +1596,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-heavy-boots-32.webp",
-    "source": "../v1/catalog-d-armor-heavy-boots-512.webp"
+    "source": "../v1/catalog-d-armor-heavy-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-heavy-gloves",
@@ -1446,7 +1606,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-heavy-gloves-32.webp",
-    "source": "../v1/catalog-d-armor-heavy-gloves-512.webp"
+    "source": "../v1/catalog-d-armor-heavy-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-heavy-greaves",
@@ -1455,7 +1616,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-heavy-greaves-32.webp",
-    "source": "../v1/catalog-d-armor-heavy-greaves-512.webp"
+    "source": "../v1/catalog-d-armor-heavy-greaves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-heavy-helmet",
@@ -1464,7 +1626,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-heavy-helmet-32.webp",
-    "source": "../v1/catalog-d-armor-heavy-helmet-512.webp"
+    "source": "../v1/catalog-d-armor-heavy-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-light-boots",
@@ -1473,7 +1636,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-light-boots-32.webp",
-    "source": "../v1/catalog-d-armor-light-boots-512.webp"
+    "source": "../v1/catalog-d-armor-light-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-light-fullbody",
@@ -1482,7 +1646,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-light-fullbody-32.webp",
-    "source": "../v1/catalog-d-armor-light-fullbody-512.webp"
+    "source": "../v1/catalog-d-armor-light-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-light-gloves",
@@ -1491,7 +1656,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-light-gloves-32.webp",
-    "source": "../v1/catalog-d-armor-light-gloves-512.webp"
+    "source": "../v1/catalog-d-armor-light-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-light-helmet",
@@ -1500,7 +1666,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-light-helmet-32.webp",
-    "source": "../v1/catalog-d-armor-light-helmet-512.webp"
+    "source": "../v1/catalog-d-armor-light-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-robe-boots",
@@ -1509,7 +1676,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-robe-boots-32.webp",
-    "source": "../v1/catalog-d-armor-robe-boots-512.webp"
+    "source": "../v1/catalog-d-armor-robe-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-robe-fullbody",
@@ -1518,7 +1686,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-robe-fullbody-32.webp",
-    "source": "../v1/catalog-d-armor-robe-fullbody-512.webp"
+    "source": "../v1/catalog-d-armor-robe-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-robe-gloves",
@@ -1527,7 +1696,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-robe-gloves-32.webp",
-    "source": "../v1/catalog-d-armor-robe-gloves-512.webp"
+    "source": "../v1/catalog-d-armor-robe-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-armor-robe-helmet",
@@ -1536,7 +1706,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-d-armor-robe-helmet-32.webp",
-    "source": "../v1/catalog-d-armor-robe-helmet-512.webp"
+    "source": "../v1/catalog-d-armor-robe-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-jewelry-earring",
@@ -1545,7 +1716,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-d-jewelry-earring-32.webp",
-    "source": "../v1/catalog-d-jewelry-earring-512.webp"
+    "source": "../v1/catalog-d-jewelry-earring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-jewelry-necklace",
@@ -1554,7 +1726,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-d-jewelry-necklace-32.webp",
-    "source": "../v1/catalog-d-jewelry-necklace-512.webp"
+    "source": "../v1/catalog-d-jewelry-necklace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-jewelry-ring",
@@ -1563,7 +1736,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-d-jewelry-ring-32.webp",
-    "source": "../v1/catalog-d-jewelry-ring-512.webp"
+    "source": "../v1/catalog-d-jewelry-ring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-shield-bigshield",
@@ -1572,7 +1746,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-d-shield-bigshield-32.webp",
-    "source": "../v1/catalog-d-shield-bigshield-512.webp"
+    "source": "../v1/catalog-d-shield-bigshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-shield-sigill",
@@ -1581,7 +1756,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-d-shield-sigill-32.webp",
-    "source": "../v1/catalog-d-shield-sigill-512.webp"
+    "source": "../v1/catalog-d-shield-sigill-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-shield-smallshield",
@@ -1590,7 +1766,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-d-shield-smallshield-32.webp",
-    "source": "../v1/catalog-d-shield-smallshield-512.webp"
+    "source": "../v1/catalog-d-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-blunt",
@@ -1599,7 +1776,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-d-weapon-blunt-32.webp",
-    "source": "../v1/catalog-d-weapon-blunt-512.webp"
+    "source": "../v1/catalog-d-weapon-blunt-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-bow",
@@ -1608,7 +1786,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-d-weapon-bow-32.webp",
-    "source": "../v1/catalog-d-weapon-bow-512.webp"
+    "source": "../v1/catalog-d-weapon-bow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-crossbow",
@@ -1617,7 +1796,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-d-weapon-crossbow-32.webp",
-    "source": "../v1/catalog-d-weapon-crossbow-512.webp"
+    "source": "../v1/catalog-d-weapon-crossbow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-dagger",
@@ -1626,7 +1806,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-d-weapon-dagger-32.webp",
-    "source": "../v1/catalog-d-weapon-dagger-512.webp"
+    "source": "../v1/catalog-d-weapon-dagger-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-fists",
@@ -1635,7 +1816,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-d-weapon-fists-32.webp",
-    "source": "../v1/catalog-d-weapon-fists-512.webp"
+    "source": "../v1/catalog-d-weapon-fists-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-mace",
@@ -1644,7 +1826,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-d-weapon-mace-32.webp",
-    "source": "../v1/catalog-d-weapon-mace-512.webp"
+    "source": "../v1/catalog-d-weapon-mace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-onehandedsword",
@@ -1653,7 +1836,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-d-weapon-onehandedsword-32.webp",
-    "source": "../v1/catalog-d-weapon-onehandedsword-512.webp"
+    "source": "../v1/catalog-d-weapon-onehandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-d-weapon-twohandedsword",
@@ -1662,7 +1846,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-d-weapon-twohandedsword-32.webp",
-    "source": "../v1/catalog-d-weapon-twohandedsword-512.webp"
+    "source": "../v1/catalog-d-weapon-twohandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-heavy-body",
@@ -1671,7 +1856,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-heavy-body-32.webp",
-    "source": "../v1/catalog-nograde-armor-heavy-body-512.webp"
+    "source": "../v1/catalog-nograde-armor-heavy-body-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-heavy-boots",
@@ -1680,7 +1866,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-heavy-boots-32.webp",
-    "source": "../v1/catalog-nograde-armor-heavy-boots-512.webp"
+    "source": "../v1/catalog-nograde-armor-heavy-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-heavy-gloves",
@@ -1689,7 +1876,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-heavy-gloves-32.webp",
-    "source": "../v1/catalog-nograde-armor-heavy-gloves-512.webp"
+    "source": "../v1/catalog-nograde-armor-heavy-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-heavy-greaves",
@@ -1698,7 +1886,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-heavy-greaves-32.webp",
-    "source": "../v1/catalog-nograde-armor-heavy-greaves-512.webp"
+    "source": "../v1/catalog-nograde-armor-heavy-greaves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-heavy-helmet",
@@ -1707,7 +1896,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-heavy-helmet-32.webp",
-    "source": "../v1/catalog-nograde-armor-heavy-helmet-512.webp"
+    "source": "../v1/catalog-nograde-armor-heavy-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-light-boots",
@@ -1716,7 +1906,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-light-boots-32.webp",
-    "source": "../v1/catalog-nograde-armor-light-boots-512.webp"
+    "source": "../v1/catalog-nograde-armor-light-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-light-fullbody",
@@ -1725,7 +1916,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-light-fullbody-32.webp",
-    "source": "../v1/catalog-nograde-armor-light-fullbody-512.webp"
+    "source": "../v1/catalog-nograde-armor-light-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-light-gloves",
@@ -1734,7 +1926,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-light-gloves-32.webp",
-    "source": "../v1/catalog-nograde-armor-light-gloves-512.webp"
+    "source": "../v1/catalog-nograde-armor-light-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-light-helmet",
@@ -1743,7 +1936,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-light-helmet-32.webp",
-    "source": "../v1/catalog-nograde-armor-light-helmet-512.webp"
+    "source": "../v1/catalog-nograde-armor-light-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-robe-boots",
@@ -1752,7 +1946,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-robe-boots-32.webp",
-    "source": "../v1/catalog-nograde-armor-robe-boots-512.webp"
+    "source": "../v1/catalog-nograde-armor-robe-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-robe-fullbody",
@@ -1761,7 +1956,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-robe-fullbody-32.webp",
-    "source": "../v1/catalog-nograde-armor-robe-fullbody-512.webp"
+    "source": "../v1/catalog-nograde-armor-robe-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-robe-gloves",
@@ -1770,7 +1966,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-robe-gloves-32.webp",
-    "source": "../v1/catalog-nograde-armor-robe-gloves-512.webp"
+    "source": "../v1/catalog-nograde-armor-robe-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-armor-robe-helmet",
@@ -1779,7 +1976,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-nograde-armor-robe-helmet-32.webp",
-    "source": "../v1/catalog-nograde-armor-robe-helmet-512.webp"
+    "source": "../v1/catalog-nograde-armor-robe-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-jewelry-earring",
@@ -1788,7 +1986,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-nograde-jewelry-earring-32.webp",
-    "source": "../v1/catalog-nograde-jewelry-earring-512.webp"
+    "source": "../v1/catalog-nograde-jewelry-earring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-jewelry-necklace",
@@ -1797,7 +1996,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-nograde-jewelry-necklace-32.webp",
-    "source": "../v1/catalog-nograde-jewelry-necklace-512.webp"
+    "source": "../v1/catalog-nograde-jewelry-necklace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-jewelry-ring",
@@ -1806,7 +2006,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-nograde-jewelry-ring-32.webp",
-    "source": "../v1/catalog-nograde-jewelry-ring-512.webp"
+    "source": "../v1/catalog-nograde-jewelry-ring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-shield-bigshield",
@@ -1815,7 +2016,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-nograde-shield-bigshield-32.webp",
-    "source": "../v1/catalog-nograde-shield-bigshield-512.webp"
+    "source": "../v1/catalog-nograde-shield-bigshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-shield-sigill",
@@ -1824,7 +2026,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-nograde-shield-sigill-32.webp",
-    "source": "../v1/catalog-nograde-shield-sigill-512.webp"
+    "source": "../v1/catalog-nograde-shield-sigill-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-shield-smallshield",
@@ -1833,7 +2036,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-nograde-shield-smallshield-32.webp",
-    "source": "../v1/catalog-nograde-shield-smallshield-512.webp"
+    "source": "../v1/catalog-nograde-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-blunt",
@@ -1842,7 +2046,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-nograde-weapon-blunt-32.webp",
-    "source": "../v1/catalog-nograde-weapon-blunt-512.webp"
+    "source": "../v1/catalog-nograde-weapon-blunt-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-bow",
@@ -1851,7 +2056,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-nograde-weapon-bow-32.webp",
-    "source": "../v1/catalog-nograde-weapon-bow-512.webp"
+    "source": "../v1/catalog-nograde-weapon-bow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-crossbow",
@@ -1860,7 +2066,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-nograde-weapon-crossbow-32.webp",
-    "source": "../v1/catalog-nograde-weapon-crossbow-512.webp"
+    "source": "../v1/catalog-nograde-weapon-crossbow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-dagger",
@@ -1869,7 +2076,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-nograde-weapon-dagger-32.webp",
-    "source": "../v1/catalog-nograde-weapon-dagger-512.webp"
+    "source": "../v1/catalog-nograde-weapon-dagger-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-fists",
@@ -1878,7 +2086,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-nograde-weapon-fists-32.webp",
-    "source": "../v1/catalog-nograde-weapon-fists-512.webp"
+    "source": "../v1/catalog-nograde-weapon-fists-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-mace",
@@ -1887,7 +2096,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-nograde-weapon-mace-32.webp",
-    "source": "../v1/catalog-nograde-weapon-mace-512.webp"
+    "source": "../v1/catalog-nograde-weapon-mace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-onehandedsword",
@@ -1896,7 +2106,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-nograde-weapon-onehandedsword-32.webp",
-    "source": "../v1/catalog-nograde-weapon-onehandedsword-512.webp"
+    "source": "../v1/catalog-nograde-weapon-onehandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-nograde-weapon-twohandedsword",
@@ -1905,7 +2116,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-nograde-weapon-twohandedsword-32.webp",
-    "source": "../v1/catalog-nograde-weapon-twohandedsword-512.webp"
+    "source": "../v1/catalog-nograde-weapon-twohandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s-armor-light-gloves",
@@ -1914,7 +2126,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s-armor-light-gloves-32.webp",
-    "source": "../v1/catalog-s-armor-light-gloves-512.webp"
+    "source": "../v1/catalog-s-armor-light-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s-shield-smallshield",
@@ -1923,7 +2136,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s-shield-smallshield-32.webp",
-    "source": "../v1/catalog-s-shield-smallshield-512.webp"
+    "source": "../v1/catalog-s-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-heavy-body",
@@ -1932,7 +2146,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-heavy-body-32.webp",
-    "source": "../v1/catalog-s80-armor-heavy-body-512.webp"
+    "source": "../v1/catalog-s80-armor-heavy-body-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-heavy-boots",
@@ -1941,7 +2156,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-heavy-boots-32.webp",
-    "source": "../v1/catalog-s80-armor-heavy-boots-512.webp"
+    "source": "../v1/catalog-s80-armor-heavy-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-heavy-gloves",
@@ -1950,7 +2166,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-heavy-gloves-32.webp",
-    "source": "../v1/catalog-s80-armor-heavy-gloves-512.webp"
+    "source": "../v1/catalog-s80-armor-heavy-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-heavy-greaves",
@@ -1959,7 +2176,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-heavy-greaves-32.webp",
-    "source": "../v1/catalog-s80-armor-heavy-greaves-512.webp"
+    "source": "../v1/catalog-s80-armor-heavy-greaves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-heavy-helmet",
@@ -1968,7 +2186,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-heavy-helmet-32.webp",
-    "source": "../v1/catalog-s80-armor-heavy-helmet-512.webp"
+    "source": "../v1/catalog-s80-armor-heavy-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-light-boots",
@@ -1977,7 +2196,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-light-boots-32.webp",
-    "source": "../v1/catalog-s80-armor-light-boots-512.webp"
+    "source": "../v1/catalog-s80-armor-light-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-light-fullbody",
@@ -1986,7 +2206,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-light-fullbody-32.webp",
-    "source": "../v1/catalog-s80-armor-light-fullbody-512.webp"
+    "source": "../v1/catalog-s80-armor-light-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-light-gloves",
@@ -1995,7 +2216,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-light-gloves-32.webp",
-    "source": "../v1/catalog-s80-armor-light-gloves-512.webp"
+    "source": "../v1/catalog-s80-armor-light-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-light-helmet",
@@ -2004,7 +2226,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-light-helmet-32.webp",
-    "source": "../v1/catalog-s80-armor-light-helmet-512.webp"
+    "source": "../v1/catalog-s80-armor-light-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-robe-boots",
@@ -2013,7 +2236,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-robe-boots-32.webp",
-    "source": "../v1/catalog-s80-armor-robe-boots-512.webp"
+    "source": "../v1/catalog-s80-armor-robe-boots-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-robe-fullbody",
@@ -2022,7 +2246,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-robe-fullbody-32.webp",
-    "source": "../v1/catalog-s80-armor-robe-fullbody-512.webp"
+    "source": "../v1/catalog-s80-armor-robe-fullbody-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-robe-gloves",
@@ -2031,7 +2256,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-robe-gloves-32.webp",
-    "source": "../v1/catalog-s80-armor-robe-gloves-512.webp"
+    "source": "../v1/catalog-s80-armor-robe-gloves-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-armor-robe-helmet",
@@ -2040,7 +2266,8 @@
     "background": "armor",
     "vertical": false,
     "icon": "catalog-s80-armor-robe-helmet-32.webp",
-    "source": "../v1/catalog-s80-armor-robe-helmet-512.webp"
+    "source": "../v1/catalog-s80-armor-robe-helmet-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-jewelry-earring",
@@ -2049,7 +2276,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-s80-jewelry-earring-32.webp",
-    "source": "../v1/catalog-s80-jewelry-earring-512.webp"
+    "source": "../v1/catalog-s80-jewelry-earring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-jewelry-necklace",
@@ -2058,7 +2286,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-s80-jewelry-necklace-32.webp",
-    "source": "../v1/catalog-s80-jewelry-necklace-512.webp"
+    "source": "../v1/catalog-s80-jewelry-necklace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-jewelry-ring",
@@ -2067,7 +2296,8 @@
     "background": "jewelry",
     "vertical": false,
     "icon": "catalog-s80-jewelry-ring-32.webp",
-    "source": "../v1/catalog-s80-jewelry-ring-512.webp"
+    "source": "../v1/catalog-s80-jewelry-ring-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-shield-bigshield",
@@ -2076,7 +2306,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s80-shield-bigshield-32.webp",
-    "source": "../v1/catalog-s80-shield-bigshield-512.webp"
+    "source": "../v1/catalog-s80-shield-bigshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-shield-sigill",
@@ -2085,7 +2316,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s80-shield-sigill-32.webp",
-    "source": "../v1/catalog-s80-shield-sigill-512.webp"
+    "source": "../v1/catalog-s80-shield-sigill-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-shield-smallshield",
@@ -2094,7 +2326,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s80-shield-smallshield-32.webp",
-    "source": "../v1/catalog-s80-shield-smallshield-512.webp"
+    "source": "../v1/catalog-s80-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-blunt",
@@ -2103,7 +2336,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s80-weapon-blunt-32.webp",
-    "source": "../v1/catalog-s80-weapon-blunt-512.webp"
+    "source": "../v1/catalog-s80-weapon-blunt-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-bow",
@@ -2112,7 +2346,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s80-weapon-bow-32.webp",
-    "source": "../v1/catalog-s80-weapon-bow-512.webp"
+    "source": "../v1/catalog-s80-weapon-bow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-crossbow",
@@ -2121,7 +2356,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s80-weapon-crossbow-32.webp",
-    "source": "../v1/catalog-s80-weapon-crossbow-512.webp"
+    "source": "../v1/catalog-s80-weapon-crossbow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-dagger",
@@ -2130,7 +2366,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-s80-weapon-dagger-32.webp",
-    "source": "../v1/catalog-s80-weapon-dagger-512.webp"
+    "source": "../v1/catalog-s80-weapon-dagger-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-fists",
@@ -2139,7 +2376,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s80-weapon-fists-32.webp",
-    "source": "../v1/catalog-s80-weapon-fists-512.webp"
+    "source": "../v1/catalog-s80-weapon-fists-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-mace",
@@ -2148,7 +2386,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-s80-weapon-mace-32.webp",
-    "source": "../v1/catalog-s80-weapon-mace-512.webp"
+    "source": "../v1/catalog-s80-weapon-mace-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-onehandedsword",
@@ -2157,7 +2396,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-s80-weapon-onehandedsword-32.webp",
-    "source": "../v1/catalog-s80-weapon-onehandedsword-512.webp"
+    "source": "../v1/catalog-s80-weapon-onehandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s80-weapon-twohandedsword",
@@ -2166,7 +2406,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "catalog-s80-weapon-twohandedsword-32.webp",
-    "source": "../v1/catalog-s80-weapon-twohandedsword-512.webp"
+    "source": "../v1/catalog-s80-weapon-twohandedsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "catalog-s84-shield-smallshield",
@@ -2175,7 +2416,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "catalog-s84-shield-smallshield-32.webp",
-    "source": "../v1/catalog-s84-shield-smallshield-512.webp"
+    "source": "../v1/catalog-s84-shield-smallshield-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-shadow-scythe",
@@ -2184,7 +2426,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-shadow-scythe-32.webp",
-    "source": "../v1/epic-weapon-shadow-scythe-512.webp"
+    "source": "../v1/epic-weapon-shadow-scythe-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-solar-scythe",
@@ -2193,7 +2436,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-solar-scythe-32.webp",
-    "source": "../v1/epic-weapon-solar-scythe-512.webp"
+    "source": "../v1/epic-weapon-solar-scythe-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-prism-sword",
@@ -2202,7 +2446,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-prism-sword-32.webp",
-    "source": "../v1/epic-weapon-prism-sword-512.webp"
+    "source": "../v1/epic-weapon-prism-sword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-lifeblade",
@@ -2211,7 +2456,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-lifeblade-32.webp",
-    "source": "../v1/epic-weapon-lifeblade-512.webp"
+    "source": "../v1/epic-weapon-lifeblade-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-rainbow-scythe",
@@ -2220,7 +2466,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-rainbow-scythe-32.webp",
-    "source": "../v1/epic-weapon-rainbow-scythe-512.webp"
+    "source": "../v1/epic-weapon-rainbow-scythe-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-astral-sword",
@@ -2229,7 +2476,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-astral-sword-32.webp",
-    "source": "../v1/epic-weapon-astral-sword-512.webp"
+    "source": "../v1/epic-weapon-astral-sword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-eclipse-greatsword",
@@ -2238,7 +2486,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-eclipse-greatsword-32.webp",
-    "source": "../v1/epic-weapon-eclipse-greatsword-512.webp"
+    "source": "../v1/epic-weapon-eclipse-greatsword-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-solar-bow",
@@ -2247,7 +2496,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "epic-weapon-solar-bow-32.webp",
-    "source": "../v1/epic-weapon-solar-bow-512.webp"
+    "source": "../v1/epic-weapon-solar-bow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-tide-trident",
@@ -2256,7 +2506,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-tide-trident-32.webp",
-    "source": "../v1/epic-weapon-tide-trident-512.webp"
+    "source": "../v1/epic-weapon-tide-trident-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-wind-staff",
@@ -2265,7 +2516,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-wind-staff-32.webp",
-    "source": "../v1/epic-weapon-wind-staff-512.webp"
+    "source": "../v1/epic-weapon-wind-staff-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-nature-axe",
@@ -2274,7 +2526,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "epic-weapon-nature-axe-32.webp",
-    "source": "../v1/epic-weapon-nature-axe-512.webp"
+    "source": "../v1/epic-weapon-nature-axe-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-song-staff",
@@ -2283,7 +2536,8 @@
     "background": "weapon",
     "vertical": true,
     "icon": "epic-weapon-song-staff-32.webp",
-    "source": "../v1/epic-weapon-song-staff-512.webp"
+    "source": "../v1/epic-weapon-song-staff-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-crystal-crossbow",
@@ -2292,7 +2546,8 @@
     "background": "weapon",
     "vertical": false,
     "icon": "epic-weapon-crystal-crossbow-32.webp",
-    "source": "../v1/epic-weapon-crystal-crossbow-512.webp"
+    "source": "../v1/epic-weapon-crystal-crossbow-512.webp",
+    "masterSize": 512
   },
   {
     "key": "epic-weapon-dragon-claws",
@@ -2301,6 +2556,7 @@
     "background": "weapon",
     "vertical": false,
     "icon": "epic-weapon-dragon-claws-32.webp",
-    "source": "../v1/epic-weapon-dragon-claws-512.webp"
+    "source": "../v1/epic-weapon-dragon-claws-512.webp",
+    "masterSize": 512
   }
 ]

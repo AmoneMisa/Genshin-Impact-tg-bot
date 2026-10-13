@@ -1,6 +1,6 @@
 /* Static thumbnails; only visible reveals animate. No animated filters or 3D transforms. */
 .loot-art.loot-art-2d{perspective:none;transform-style:flat}
-.loot-art-2d .loot-item-image[src*="/items/l2-style/"]{image-rendering:pixelated;animation:none!important;transform:none!important}
+.loot-art-2d .loot-item-image[src*="/items/l2-style/"]{image-rendering:auto;animation:none!important;transform:none!important}
 .loot-art-2d:has(>.loot-item-image[src*="/items/l2-style/"]) :is(.loot-aura,.loot-spark){display:none!important}
 .loot-art-2d[data-art-key^="icon-"] .loot-item-image{image-rendering:pixelated;animation:none;transform:none}
 .loot-art-2d[data-art-key^="icon-"] :is(.loot-aura,.loot-spark){display:none}
