@@ -3,7 +3,7 @@
 //   fighters use Soulshots; mage and priest lines use Blessed Spiritshots when they have them, else Spiritshots.
 // The boost is handed to the damage code through a one-skill slot: armShots() before castSkill,
 // clearShots() after it; calcDamage reads shotBoost().
-import { SHOTS_PER_CAST, SHOT_KINDS, shotKey } from '../../../template/shotsData.js';
+import { SHOTS_PER_CAST, SHOT_KINDS, shotKey, chargeGrade } from '../../../template/shotsData.js';
 import {soulShotCost} from '../equipment/soulCrystalCombat.js';
 import { isMagicClass } from '../classes/classFamily.js';
 import {skillCombatType} from '../player/combatType.js';
@@ -27,7 +27,7 @@ export const shotKindsFor = session => (isMagicClass(className(session)) ? ['ble
 /** For the screen: the grade, per-cast cost, and how many charges of each fitting kind are owned. */
 export function getShotsState(session) {
     const grade = weaponGrade(session);
-    const perCast = grade ? SHOTS_PER_CAST[grade] || 1 : 0;
+    const perCast = grade ? SHOTS_PER_CAST[chargeGrade(grade)] || 1 : 0;
     return {
         enabled: Boolean(session?.game?.autoShots),
         grade,
@@ -53,7 +53,7 @@ export function armShots(session, skill) {
     if (!skill?.isDealDamage || !session?.game?.autoShots) return null;
     const grade = weaponGrade(session);
     if (!grade) return null;
-    const need = soulShotCost(session,SHOTS_PER_CAST[grade] || 1);
+    const need = soulShotCost(session,SHOTS_PER_CAST[chargeGrade(grade)] || 1);
     const kinds = skillCombatType(skill, session.game.gameClass) === 'magic' ? ['blessed', 'spiritshot'] : ['soulshot'];
     for (const id of kinds) {
         const key = shotKey(id, grade);

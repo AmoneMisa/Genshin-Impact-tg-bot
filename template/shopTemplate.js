@@ -1,7 +1,7 @@
 import {SOUL_COLORS,SOUL_GOLD_PRICES,soulCrystalKey} from './soulCrystalData.js';
 import buffPotions from './buffPotions.js';
 import {LIFESTONE_SHOP, LIFESTONE_LEVELS, lifestoneKey} from './augmentData.js';
-import {SHOT_GRADES, SHOT_KINDS, SHOT_PACK, SHOT_PACK_PRICE, gradeLabel, shotKey} from './shotsData.js';
+import {SHOT_CHARGE_GRADES as SHOT_GRADES, SHOT_KINDS, SHOT_PACK, SHOT_PACK_PRICE, gradeLabel, shotKey} from './shotsData.js';
 
 // Mid Life Stones (Lineage II sells them up to level 78, grade S); one of each a day.
 const midLifeStones = Object.entries(LIFESTONE_SHOP.mid).map(([grade, cost]) => ({

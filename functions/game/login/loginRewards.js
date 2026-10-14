@@ -1,5 +1,5 @@
 import {restoreRevivalVitals} from '../player/revivalVitals.js';
-import {SHOT_GRADES, SHOT_KINDS, gradeLabel, shotKey} from '../../../template/shotsData.js';
+import {SHOT_GRADES, SHOT_CHARGE_GRADES, SHOT_KINDS, gradeLabel, shotKey} from '../../../template/shotsData.js';
 import {loginKey,loginItemInfo,loginPeriod,LOGIN_DAY_MS,shotCouponAmount,LOGIN_KINDS} from '../../../template/loginRewards.js';
 import {getMaterialCount,addMaterial,spendMaterials,materialInfo} from '../player/materials.js';
 import {getCatalog,instantiate,gradeInfo} from '../equipment/catalog.js';
@@ -70,7 +70,7 @@ function rewardRows(reward={}) {
         ...(reward.epic&&!reward.equipment?.length?[{key:reward.epic.id,count:1,name:`${getCatalog().find(i=>i.id===reward.epic.id)?.name} +8 · ${reward.epic.days} дн.`,icon:'💍'}]:[])];
 }
 function itemChoices(info) {
-    if(info.kind==='shots')return SHOT_GRADES.flatMap(grade=>SHOT_KINDS.map(kind=>({id:`${kind.id}:${grade}`,grade,kind:kind.id,name:`${kind.label} ${gradeLabel(grade)}`,count:shotCouponAmount(info.grade,grade,kind.id)})));
+    if(info.kind==='shots')return SHOT_CHARGE_GRADES.flatMap(grade=>SHOT_KINDS.map(kind=>({id:`${kind.id}:${grade}`,grade,kind:kind.id,name:`${kind.label} ${gradeLabel(grade)}`,count:shotCouponAmount(info.grade,grade,kind.id)})));
     if(info.kind==='buff')return buffPotions.filter(p=>!p.donateOnly).map(p=>({id:p.id,name:p.name,count:1}));
     if(info.kind==='shadow_weapon')return standardItems(info.grade).filter(i=>i.mainType==='weapon').map(i=>({id:i.id,name:i.name,count:1}));
     if(info.kind==='shadow_armor')return ['heavy','light','robe'].map(id=>({id,name:({heavy:'Тяжёлая броня',light:'Лёгкая броня',robe:'Мантия'})[id],count:standardItems(info.grade).filter(i=>i.mainType==='armor'&&i.kind===id).length}));

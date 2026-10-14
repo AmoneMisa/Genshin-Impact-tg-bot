@@ -1,6 +1,6 @@
 import npcSp from '../../../template/l2NpcSp.js';
 import equipment from '../../../template/equipmentTemplate.js';
-import {shotKey, SHOT_PACK_PRICE, SHOT_PACK, SHOTS_PER_CAST} from '../../../template/shotsData.js';
+import {shotKey, chargeGrade, SHOT_PACK_PRICE, SHOT_PACK, SHOTS_PER_CAST} from '../../../template/shotsData.js';
 import {isMagicClass} from '../classes/classFamily.js';
 import {crystalKey} from '../equipment/enchantItem.js';
 import {levelNeed, EXP_RATE} from '../player/vitality.js';
@@ -51,8 +51,8 @@ export function bountyExtras(scope, quality, level, category, className, target=
     if(grade!=='noGrade')materials[crystalKey(grade)]=bountyCrystalCount(scope,quality);
   }
   if(category==='consumables') {
-    const kind=isMagicClass(className)?'spiritshot':'soulshot',perCast=SHOTS_PER_CAST[grade];
-    const cost=SHOT_PACK_PRICE[grade]/SHOT_PACK;
+    const kind=isMagicClass(className)?'spiritshot':'soulshot',perCast=SHOTS_PER_CAST[chargeGrade(grade)];
+    const cost=SHOT_PACK_PRICE[chargeGrade(grade)]/SHOT_PACK;
     const casts=Math.max(weekly?9:3,Math.min(weekly?60:20,Math.floor(farmGold*0.25/cost/perCast)));
     materials[shotKey(kind,grade)]=casts*perCast;
   }

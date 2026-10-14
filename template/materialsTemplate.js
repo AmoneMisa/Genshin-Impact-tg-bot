@@ -1,5 +1,5 @@
 import {SOUL_MATERIALS} from './soulCrystalData.js';
-import {SHOT_GRADES, SHOT_KINDS, gradeLabel, shotKey} from './shotsData.js';
+import {SHOT_GRADES, SHOT_CHARGE_GRADES, SHOT_KINDS, gradeLabel, shotKey} from './shotsData.js';
 import {ATTRIBUTE_TIERS, ELEMENTS, LIFESTONE_GRADES, LIFESTONE_LEVELS, LIFESTONE_TIERS, attributeKey, lifestoneKey} from './augmentData.js';
 
 // Craft/upgrade materials kept in inventory.materials = {key: count}. Skill
@@ -46,7 +46,7 @@ const attributeStones = ATTRIBUTE_TIERS.flatMap(tier => ELEMENTS.map(element => 
 })));
 
 // Soulshots, Spiritshots and Blessed Spiritshots, one per weapon grade (functions/game/shots/shots.js).
-const shots = SHOT_KINDS.flatMap(kind => SHOT_GRADES.map(grade => ({
+const shots = SHOT_KINDS.flatMap(kind => SHOT_CHARGE_GRADES.map(grade => ({
     key: shotKey(kind.id, grade),
     name: `${kind.label} (${gradeLabel(grade)})`,
     icon: kind.icon,

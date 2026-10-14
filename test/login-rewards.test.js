@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {claimLoginReward,getLoginRewardsState,redeemLoginItem,dailyLoginReward,monthBoxPool,loginGrade,grantLoginTicket} from '../functions/game/login/loginRewards.js';
 import {loginPeriod,loginKey,shotCouponAmount,LOGIN_DAY_MS} from '../template/loginRewards.js';
-import {SHOT_GRADES,shotKey} from '../template/shotsData.js';
+import {SHOT_GRADES,SHOT_CHARGE_GRADES,chargeGrade,shotKey} from '../template/shotsData.js';
 import {getMaterialCount,materialInfo} from '../functions/game/player/materials.js';
 import {enchantItem,crystallizeItem,blessedTypedKey} from '../functions/game/equipment/enchantItem.js';
 import {expireTimedItems,grantTimedItem} from '../functions/game/equipment/timedItems.js';
@@ -60,10 +60,11 @@ for(const [level,grade] of [[1,'noGrade'],[20,'D'],[40,'C'],[52,'B'],[61,'A'],[7
     const s=hero(level);assert.equal(loginGrade(s),grade);claimLoginReward(s,now);
     const key=loginKey('shots',grade);s.game.stats.lvl=85;
     assert.equal(getLoginRewardsState(s,now).days[0].rewards[0].key,key,'received reward keeps its original grade');
-    const choices=getLoginRewardsState(s,now).coupons.find(c=>c.key===key).choices;assert.equal(choices.length,24);
-    for(const kind of ['soulshot','spiritshot','blessed'])for(const target of SHOT_GRADES)assert.ok(shotCouponAmount(grade,target,kind)>0);
-    assert.equal(redeemLoginItem(s,key,`blessed:${grade}`,{now}).ok,true);
-    assert.equal(getMaterialCount(s,shotKey('blessed',grade)),shotCouponAmount(grade,grade,'blessed'));
+    const choices=getLoginRewardsState(s,now).coupons.find(c=>c.key===key).choices;assert.equal(choices.length,18);
+    for(const kind of ['soulshot','spiritshot','blessed'])for(const target of SHOT_CHARGE_GRADES)assert.ok(shotCouponAmount(grade,target,kind)>0);
+    const target=chargeGrade(grade);
+    assert.equal(redeemLoginItem(s,key,`blessed:${target}`,{now}).ok,true);
+    assert.equal(getMaterialCount(s,shotKey('blessed',target)),shotCouponAmount(grade,target,'blessed'));
     assert.equal(getMaterialCount(s,`blessed_${grade}`),0);
 });
 test('S shot anchors and invalid choices preserve the voucher',()=>{

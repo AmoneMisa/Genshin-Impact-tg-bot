@@ -1,10 +1,10 @@
-import {SHOT_GRADES, SHOT_PACK_PRICE, gradeLabel} from './shotsData.js';
+import {SHOT_GRADES, SHOT_CHARGE_GRADES, SHOT_PACK_PRICE, chargeGrade, gradeLabel} from './shotsData.js';
 
 export const LOGIN_DAY_MS = 86400000;
 export const SHOT_COUPON_BASE = Object.freeze({blessed:60, soulshot:80, spiritshot:90});
 export function shotCouponAmount(sourceGrade, targetGrade, kind) {
-    if (!SHOT_GRADES.includes(sourceGrade) || !SHOT_GRADES.includes(targetGrade) || !Object.hasOwn(SHOT_COUPON_BASE, kind)) return 0;
-    return Math.max(1, Math.floor(SHOT_COUPON_BASE[kind] * SHOT_PACK_PRICE.S / SHOT_PACK_PRICE[targetGrade] * Math.sqrt(SHOT_PACK_PRICE[sourceGrade] / SHOT_PACK_PRICE.S)));
+    if (!SHOT_GRADES.includes(sourceGrade) || !SHOT_CHARGE_GRADES.includes(targetGrade) || !Object.hasOwn(SHOT_COUPON_BASE, kind)) return 0;
+    return Math.max(1, Math.floor(SHOT_COUPON_BASE[kind] * SHOT_PACK_PRICE.S / SHOT_PACK_PRICE[targetGrade] * Math.sqrt(SHOT_PACK_PRICE[chargeGrade(sourceGrade)] / SHOT_PACK_PRICE.S)));
 }
 export const LOGIN_KINDS = Object.freeze({
     shots:'Купон на заряды', fame:'Талон на славу', fishing:'Талон рыбака', buff:'Купон на бафф',

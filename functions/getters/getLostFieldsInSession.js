@@ -1,4 +1,5 @@
 import {migrateSpEconomy} from '../game/player/spEconomy.js';
+import {migrateShotGrades} from '../game/shots/migrateShotGrades.js';
 import {migrateCharacterCurrency} from '../game/player/currencyMigration.js';
 import { clampLevel } from '../game/player/setLevel.js';
 import getBuildFromTemplate from '../game/builds/getBuildFromTemplate.js';
@@ -152,6 +153,7 @@ export default function (session) {
 
     migrateCharacterCurrency(session);
     migrateSpEconomy(session);
+    migrateShotGrades(session);
 
     // Gear from before the Lineage 2 catalog (random stats, SS / SSS grades) becomes catalog items.
     migrateSessionEquipment(session);

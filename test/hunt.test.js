@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import zones from '../template/huntingTemplate.js';
 import materials from '../template/materialsTemplate.js';
 import shopTemplate from '../template/shopTemplate.js';
-import { SHOT_GRADES, SHOT_KINDS, shotKey } from '../template/shotsData.js';
+import { SHOT_GRADES, SHOT_CHARGE_GRADES, SHOT_KINDS, shotKey } from '../template/shotsData.js';
 import { CHAMPIONS, HUNT } from '../functions/game/hunt/huntConfig.js';
 import { buildMob, getZone, referenceHit, rollChampion } from '../functions/game/hunt/huntMobs.js';
 import { dropGapFactor, expGapFactor, grantKillRewards } from '../functions/game/hunt/huntRewards.js';
@@ -184,7 +184,7 @@ test('shots: soulshots for fighters, blessed spiritshots for mages, burnt per da
 
 test('shots are sold by the pack in the gold shop, any number a day', () => {
   const packs = shopTemplate.filter(item => item.category === 'shots');
-  assert.equal(packs.length, SHOT_KINDS.length * SHOT_GRADES.length);
+  assert.equal(packs.length, SHOT_KINDS.length * SHOT_CHARGE_GRADES.length);
   for (const pack of packs) {
     assert.equal(pack.repeatable, true);
     assert.equal(pack.material.amount, 100);

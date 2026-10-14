@@ -11,8 +11,8 @@ for(const z of F){const mobs=z.mobs;if(!mobs.length)continue;
   if(m.gold)g+=m.gold.chance/100*(m.gold.min+m.gold.max)/2*HUNT.goldScale;
   for(const r of L.lootRows(m.id)){const p=L.l2SellPrice(r.key,HUNT.goldScale);if(!p)continue;
    d+=(r.chance/100)*(r.kind==='seal'?1:HUNT.dropRate)*(r.min+r.max)/2*p;}}
- lv/=n;g/=n;d/=n;const gr=grade(lv);const shot=sd.SHOT_PACK_PRICE[gr]/sd.SHOT_PACK;
- rows.push({id:z.id,lv:Math.round(lv),gr,gold:Math.round(g),drops:Math.round(d),perShot:shot,shotsCast:sd.SHOTS_PER_CAST[gr]});}
+ lv/=n;g/=n;d/=n;const gr=grade(lv);const cg=sd.chargeGrade(gr),shot=sd.SHOT_PACK_PRICE[cg]/sd.SHOT_PACK;
+ rows.push({id:z.id,lv:Math.round(lv),gr,gold:Math.round(g),drops:Math.round(d),perShot:shot,shotsCast:sd.SHOTS_PER_CAST[cg]});}
 rows.sort((a,b)=>a.lv-b.lv);
 console.log('zone|lvl|grade|adena/kill|drop sell/kill|total|shot cost per cast|casts for break-even');
 for(const r of rows){const t=r.gold+r.drops;const cc=r.perShot*r.shotsCast;console.log([r.id,r.lv,r.gr,r.gold,r.drops,t,cc.toFixed(1),(t/cc).toFixed(1)].join('|'));}

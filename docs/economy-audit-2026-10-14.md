@@ -47,7 +47,7 @@ Greedy upgrades, prerequisites and build times ignored (they only add delay). Al
 ### P3 — Shots: original High Five prices
 - Per shot: D 3, C 5, B 12, A 20, S 25; S80 and S84 weapons use S shots (custom 200/300 removed).
 - Blessed spiritshot keeps the ×3 multiplier. Effect: cost per cast A 80, S 125; break-even casts per kill A ≥ 6 (valley of saints), S ≥ 9 (Ketra), S80 ≥ 38 — all reachable with gear.
-- Existing stock of S80/S84 shots converts 1:1 to S shots.
+- Stored S80/S84 charges (inventory, warehouse, mail) are merged 1:1 into S on load (`migrateShotGrades`).
 
 ### P4 — CoL value
 - Keep the one-way 1 CoL → 15 000 adena; do not raise it. Value of CoL should come from time-limited gear and convenience, not adena.
@@ -78,7 +78,7 @@ A smelter (dew → ore) is **not** recommended: ore is the pacing resource and c
 | Gold mine upgrade time growth | 1.15 (L30 8 h) | 1.22 (L30 36 h) |
 | Lake yield/h | `50·1.05·L²` (L30 47 250) | `50·L` (L30 1 500) |
 | Lake and iron deposit upgrade time growth | 1.15 (L30 18 h / 8 h) | 1.19 (L30 43 h / 19 h) |
-| Shot price per pack of 100 | D 300, C 800, B 2 000, A 5 000, S 12 000, S80 20 000, S84 30 000 | D 350, C 550, B 1 250, A 2 000, S 2 500, S80/S84 2 500 |
+| Shot price per pack of 100 | D 300, C 800, B 2 000, A 5 000, S 12 000, S80 20 000, S84 30 000 | D 350, C 550, B 1 250, A 2 000, S 2 500; S80/S84 grades removed (S80/S84 weapons burn S charges) |
 
 Passive-only simulation after the change: all producers L30 by day 43 as before, forge L30 on day 215 (was 167; now gold-bound, not ore-bound).
 Longer timers also raise the CoL price of speed-ups (`ceil(level/2)` CoL per remaining hour from the CoL threshold): CoL pricing was

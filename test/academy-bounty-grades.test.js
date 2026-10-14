@@ -7,7 +7,7 @@ import {materialInfo} from '../functions/game/player/materials.js';
 import {crystalKey} from '../functions/game/equipment/enchantItem.js';
 import {EXP_RATE} from '../functions/game/player/vitality.js';
 import {customSpBudget} from '../functions/game/player/spEconomy.js';
-import {SHOT_PACK_PRICE,SHOT_PACK,SHOTS_PER_CAST} from '../template/shotsData.js';
+import {SHOT_PACK_PRICE,SHOT_PACK,SHOTS_PER_CAST,chargeGrade} from '../template/shotsData.js';
 
 test('bounties supplement eligible hunting income instead of skipping progression',()=>{
  for(const [level,grade] of bands)for(const quality of [1,5]){
@@ -20,7 +20,7 @@ test('bounties supplement eligible hunting income instead of skipping progressio
   for(const q of daily)assert.ok(q.reward.exp<=reference.exp*q.target*(q.category==='experience'?0.3:0.05)+1);
   const sp=daily.reduce((sum,q)=>sum+q.reward.sp,0);
   assert.ok(sp<=customSpBudget(level)*0.9+3,`${level}: excessive SP`);
-  const shots=daily[2].reward.materials[`spiritshot_${grade}`],perCast=SHOTS_PER_CAST[grade],unit=SHOT_PACK_PRICE[grade]/SHOT_PACK;
+  const shots=daily[2].reward.materials[`spiritshot_${chargeGrade(grade)}`],perCast=SHOTS_PER_CAST[chargeGrade(grade)],unit=SHOT_PACK_PRICE[chargeGrade(grade)]/SHOT_PACK;
   assert.ok(shots>=perCast*3&&shots<=perCast*20);
   assert.ok(shots*unit<=Math.max(reference.gold*daily[2].target*0.25,perCast*3*unit)+unit);
   for(const q of state.bounties.week.quests)assert.equal(q.reward.luckCoins||0,q.category==='resources'&&quality>=4?1:0);
@@ -75,7 +75,7 @@ test('every grade has reachable daily XP/resources/consumables and stronger week
   const daily=state.bounties.day.quests.find(q=>q.category==='consumables');
   const weekly=state.bounties.week.quests.find(q=>q.category==='consumables');
   const key=Object.keys(daily.reward.materials).find(k=>k.startsWith(name==='humanMystic'?'spiritshot_':'soulshot_'));
-  assert.ok(key?.endsWith('_'+grade));
+  assert.ok(key?.endsWith('_'+chargeGrade(grade)));
   assert.equal(Object.keys(daily.reward.materials).some(k=>k.startsWith('scroll_')||k.startsWith('blessed_')),false);
   assert.equal(Object.keys(weekly.reward.materials).some(k=>k.startsWith('scroll_')||k.startsWith('blessed_')),false);
   assert.ok(weekly.target>daily.target);assert.ok(weekly.reward.gold>daily.reward.gold);
