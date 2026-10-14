@@ -86,11 +86,11 @@ function build() {
         const info = infoOf(rod.item);
         stock.fisher.push({id: `rod:${rod.item}`, kind: 'material', group: 'rod', key: info.key, amount: 1, name: rod.name, minLevel: rod.level, realId: rod.item, cost: {gold: gold(rod.price)}});
     }
-    // fishing shots in packs of a hundred, at the real price of one
+    // fishing shots in packs of a hundred, at the real price of one (never below the 1 adena a unit sells for)
     for (const [grade, id] of Object.entries(FISHING.shots)) {
         const row = FISHING.items[id];
         if (!row) continue;
-        stock.fisher.push({id: `fs:${id}`, kind: 'material', group: 'shot', key: infoOf(id).key, amount: 100, name: `${row[0]} ×100`, grade, realId: id, cost: {gold: gold(row[1] * 100)}});
+        stock.fisher.push({id: `fs:${id}`, kind: 'material', group: 'shot', key: infoOf(id).key, amount: 100, name: `${row[0]} ×100`, grade, realId: id, cost: {gold: Math.max(100, gold(row[1] * 100))}});
     }
     for (const [id, price] of FISHING.recipes) {
         const info = infoOf(id);
@@ -101,7 +101,7 @@ function build() {
         for (const [grade, id] of Object.entries(AMMO_IDS[kind])) {
             const price = DATA.ammo?.[id];
             if (!price) continue;
-            stock.weapons.push({id: `am:${id}`, kind: 'material', group: 'ammo', key: `l2_${id}`, amount: 100, name: `${realName(id)} ×100`, grade, realId: id, cost: {gold: gold(price * 100)}});
+            stock.weapons.push({id: `am:${id}`, kind: 'material', group: 'ammo', key: `l2_${id}`, amount: 100, name: `${realName(id)} ×100`, grade, realId: id, cost: {gold: Math.max(100, gold(price * 100))}});
         }
     }
     for (const [id, price] of DATA.grocer) {

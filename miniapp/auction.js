@@ -248,15 +248,18 @@ export async function buyLot(session, store, lotId, now = Date.now()) {
   if (!hasInventoryRoom(session)) return { ok: false, reason: 'inventory_full' };
   if (Math.max(0, number(inventory.gold)) < lot.price) return { ok: false, reason: 'not_enough_gold', missing: lot.price - number(inventory.gold) };
 
+  // The payout needs the seller's wallet; without it the buyer's gold would vanish.
+  const seller = chat.members.find(member => String(member.userId) === String(lot.sellerId));
+  if (!seller?.game?.inventory) return { ok: false, reason: 'seller_unavailable' };
+
   // Whoever flips the status first wins; a second buyer gets 'lot_gone'.
   const claimed = await store.claim(lot.id, 'active', 'sold', { buyerId: Number(session.userId), soldAt: now });
   if (!claimed) return { ok: false, reason: 'lot_gone' };
 
-  const seller = chat.members.find(member => String(member.userId) === String(lot.sellerId));
   const fee = feeFor(lot.price);
   inventory.gold = number(inventory.gold) - lot.price;
   deliver(session, lot);
-  if (seller?.game?.inventory) seller.game.inventory.gold = Math.max(0, number(seller.game.inventory.gold)) + lot.price - fee;
+  seller.game.inventory.gold = Math.max(0, number(seller.game.inventory.gold)) + lot.price - fee;
 
   return {
     ok: true,

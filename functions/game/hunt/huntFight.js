@@ -382,9 +382,14 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
 
     const shots = armShots(session, skill);
     armAttackRune(session, now);
-    const result = castSkill(session, asBoss(mob), skill, {now, l2Target: mob, random});
-    clearShots(session);
-    clearAttackRune(session);
+    let result;
+    try {
+        result = castSkill(session, asBoss(mob), skill, {now, l2Target: mob, random});
+    } finally {
+        // never leave the one-cast boosts armed for the next fight if the cast throws
+        clearShots(session);
+        clearAttackRune(session);
+    }
     if (shots) result.shots = shots;
     setSkillCooldown(skill, session);
     hunt.lastActionAt = now;

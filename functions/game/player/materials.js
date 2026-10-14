@@ -18,15 +18,19 @@ export function getMaterials(session) {
     return inventory.materials;
 }
 
+// Shots stop at S: stock saved or listed under the retired S80 / S84 keys is plain S stock.
+const RETIRED_SHOT_KEY = /^(soulshot|spiritshot|blessedshot)_S(?:80|84)$/;
+export const canonicalMaterialKey = key => (typeof key === 'string' ? key.replace(RETIRED_SHOT_KEY, '$1_S') : key);
+
 export function getMaterialCount(session, key) {
-    return Math.max(0, Math.floor(Number(readMaterials(session)[key]) || 0));
+    return Math.max(0, Math.floor(Number(readMaterials(session)[canonicalMaterialKey(key)]) || 0));
 }
 
 export function addMaterial(session, key, amount = 1) {
     const count = Math.floor(Number(amount) || 0);
     if (!key || count <= 0) return 0;
-    const materials = getMaterials(session);
-    materials[key] = getMaterialCount(session, key) + count;
+    const materials = getMaterials(session), target = canonicalMaterialKey(key);
+    materials[target] = getMaterialCount(session, target) + count;
     return count;
 }
 
@@ -35,11 +39,15 @@ export function spendMaterials(session, items = {}) {
     const entries = Object.entries(items).filter(([, amount]) => amount > 0);
     if (entries.some(([key, amount]) => getMaterialCount(session, key) < amount)) return false;
     const materials = getMaterials(session);
-    for (const [key, amount] of entries) materials[key] = getMaterialCount(session, key) - amount;
+    for (const [key, amount] of entries) {
+        const target = canonicalMaterialKey(key);
+        materials[target] = getMaterialCount(session, target) - amount;
+    }
     return true;
 }
 
 export function materialInfo(key) {
+    key = canonicalMaterialKey(key);
     if (String(key).startsWith('bound_')) {
         const base=String(key).slice(6);
         return {...(base.startsWith('bound_')?{name:base,icon:'✦',description:''}:materialInfo(base)),key,bound:true};
