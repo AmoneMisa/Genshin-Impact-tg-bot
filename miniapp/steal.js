@@ -53,6 +53,7 @@ function targetDto(member, now, chat = null) {
     username: user.username || '',
     level: Math.max(1, number(member?.game?.stats?.lvl, 1)),
     className: member?.game?.gameClass?.stats?.name || 'noClass',
+    gender: member?.gender === 'female' ? 'female' : 'male',
     shieldRemainingMs: shieldRemaining(member, now),
     // Seated at a 21 / elements table: their gold is on the table, not robbable.
     inTable: tableLockFor(chat, member.userId, now),

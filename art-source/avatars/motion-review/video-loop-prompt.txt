@@ -1,0 +1,28 @@
+Locked-off camera, one continuous full-body idle character animation.
+The character remains standing in the same place and at the same scale. She
+breathes gently through her chest and shoulders, blinks once naturally, and
+makes a very small relaxed adjustment of her arms at the shoulder and elbow
+joints. Her hands keep their shape. Her feet remain planted and her stance
+stays balanced. Long hair strands sway gently with delayed follow-through.
+Only the loose fabric ends flutter softly; the fitted bodice, waist, seams,
+embroidery and gold ornaments keep their structure. The movements ease in
+and out smoothly and return naturally to the starting pose over six seconds.
+The final pose and motion direction match the start for a seamless idle loop.
+Preserve the exact face, anatomy, costume, painting style, framing and lighting
+from the input image. Minimal subject motion only. Silent video.
+
+Post-generation review and delivery (not provider-specific parameters):
+Check anatomy and structural consistency before compression. Crop/contain
+without cutting off hands, hair or feet. Deliver at 240x360, 24 fps. Aim for
+500 KiB or less without visible stepping or flicker; measure actual size.
+Preserve transparency where the workflow supports it. Use alpha WebM or
+animated WebP after checking the produced media; do not promise alpha from
+an ordinary image-to-video model. Keep the existing static fallback.
+
+Motion reference: https://i.redd.it/j15xpaxfsvif1.gif
+The GIF could not be played here because Reddit requests human verification.
+The attached still is a visual reference, not a request to reproduce its
+seated pose, forest/lake setting, red dress or pixel-art rendering.
+
+Official prompting guidance consulted:
+https://help.runwayml.com/hc/en-us/articles/48324313115155-Image-to-Video-Prompting-Guide

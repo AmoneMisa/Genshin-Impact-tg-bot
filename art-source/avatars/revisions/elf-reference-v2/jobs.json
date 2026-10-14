@@ -1,0 +1,80 @@
+[
+  {
+    "key": "elf-male",
+    "refs": [
+      "elf-face.jpg",
+      "elf-male-upper.jpg",
+      "elf-male-lower.jpg"
+    ],
+    "anatomy": "adult male light elf; pale ivory skin, delicate youthful clean-shaven face, almond eyes, fine straight nose, small thin natural lips, shoulder-length straight light platinum blond hair with center part tucked behind BOTH long slender pointed ears; slim narrow ribcage/shoulders, lean arms, long slim legs, graceful slender hands. Keep a calm composed expression. No broad human warrior chest, rugged jaw, beard, exaggerated anime eyes or gigantic ears.",
+    "costume": "emerald botanical gold formal coat and matching boots",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-face.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-male-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-male-lower.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-elf-male-body.png"
+    ],
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-3 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult male light elf; pale ivory skin, delicate youthful clean-shaven face, almond eyes, fine straight nose, small thin natural lips, shoulder-length straight light platinum blond hair with center part tucked behind BOTH long slender pointed ears; slim narrow ribcage/shoulders, lean arms, long slim legs, graceful slender hands. Keep a calm composed expression. No broad human warrior chest, rugged jaw, beard, exaggerated anime eyes or gigantic ears. Keep the existing emerald botanical gold formal coat and matching boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-a77295ed-9966-4e1a-8684-2ec69c167659.png",
+    "portraitPrompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT elf-male adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, pale ivory skin and straight platinum blond hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "portraitGeneratedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-fb52b71f-9814-4adb-82a4-257fb0edcb1d.png"
+  },
+  {
+    "key": "elf-female",
+    "refs": [
+      "elf-female-face.jpg",
+      "elf-female-upper.jpg",
+      "elf-mystic.jpg"
+    ],
+    "anatomy": "adult female light elf; porcelain ivory skin, delicate oval face, small natural mouth, fine nose, almond-shaped softly focused eyes, straight pale blond hair with side part tucked behind BOTH long pointed ears; fine narrow shoulders, slender ribcage, long slender legs, light graceful posture. Natural understated facial features like the classic client model. No voluptuous human silhouette, heavy makeup, doll eyes, giant ears or gigantic fluffy hairstyle.",
+    "costume": "pale cyan silk botanical gold embroidered dress and boots",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-female-face.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-female-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-mystic.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-elf-female-body.png"
+    ],
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-3 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult female light elf; porcelain ivory skin, delicate oval face, small natural mouth, fine nose, almond-shaped softly focused eyes, straight pale blond hair with side part tucked behind BOTH long pointed ears; fine narrow shoulders, slender ribcage, long slender legs, light graceful posture. Natural understated facial features like the classic client model. No voluptuous human silhouette, heavy makeup, doll eyes, giant ears or gigantic fluffy hairstyle. Keep the existing pale cyan silk botanical gold embroidered dress and boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-140bfbc1-c678-449e-9c30-74074688df3b.png",
+    "portraitPrompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT elf-female adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, pale ivory skin and straight platinum blond hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "portraitGeneratedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-7d95a451-06f7-40b2-9046-7e8fd6d4e73a.png"
+  },
+  {
+    "key": "darkElf-male",
+    "refs": [
+      "darkelf-fighter.jpg",
+      "darkelf-male-upper.jpg",
+      "darkelf-model.jpg"
+    ],
+    "anatomy": "adult male dark elf; distinct cool BLUE-GRAY skin (not pink/lavender), sleek silver white straight hair, narrow stern adult face, angular cheekbones, almond eyes, thin lips, fine pointed chin, long pointed ears swept backward. Taller lean athletic torso with sinewy arms and very long legs; masculine V silhouette but not bodybuilder human bulk. Slight characteristic forward poised stance, controlled expression. No soft youthful boy face, purple anime complexion, spiky anime fringe or huge ears.",
+    "costume": "black amethyst gold formal tailored suit with violet organic coat tails and boots",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-fighter.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-male-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-model.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-darkElf-male-body.png"
+    ],
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-3 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult male dark elf; distinct cool BLUE-GRAY skin (not pink/lavender), sleek silver white straight hair, narrow stern adult face, angular cheekbones, almond eyes, thin lips, fine pointed chin, long pointed ears swept backward. Taller lean athletic torso with sinewy arms and very long legs; masculine V silhouette but not bodybuilder human bulk. Slight characteristic forward poised stance, controlled expression. No soft youthful boy face, purple anime complexion, spiky anime fringe or huge ears. Keep the existing black amethyst gold formal tailored suit with violet organic coat tails and boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-4848ed3f-270a-4da1-b7be-e91e640a7a96.png",
+    "portraitPrompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT darkElf-male adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, cool blue-gray skin and sleek straight silver hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "portraitGeneratedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-5bd0b436-2c89-453f-992d-98db073a9725.png"
+  },
+  {
+    "key": "darkElf-female",
+    "refs": [
+      "darkelf-female-upper.jpg",
+      "darkelf-mystic.jpg"
+    ],
+    "anatomy": "adult female dark elf; distinctive cool BLUE-GRAY skin, sleek straight silver white hair, long narrow mature face, almond eyes, defined cheekbones and fine nose, thin natural lips, long pointed ears swept backward. Tall lean graceful body, narrow shoulders, long legs, subtle slightly forward classic-client poised stance. Keep mature natural proportions and expression, not a doll or pale-purple human anime girl. No heavy makeup, gigantic hair or huge ears.",
+    "costume": "midnight navy violet star embroidered gown with layered cloth skirt and boots",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-female-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-mystic.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-darkElf-female-body.png"
+    ],
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-2 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult female dark elf; distinctive cool BLUE-GRAY skin, sleek straight silver white hair, long narrow mature face, almond eyes, defined cheekbones and fine nose, thin natural lips, long pointed ears swept backward. Tall lean graceful body, narrow shoulders, long legs, subtle slightly forward classic-client poised stance. Keep mature natural proportions and expression, not a doll or pale-purple human anime girl. No heavy makeup, gigantic hair or huge ears. Keep the existing midnight navy violet star embroidered gown with layered cloth skirt and boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-b3566e81-a682-4447-a075-11bacaefdde8.png",
+    "portraitPrompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT darkElf-female adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, cool blue-gray skin and sleek straight silver hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "portraitGeneratedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-a15be9d3-b83e-4247-8c70-cc03dab7d06c.png"
+  }
+]

@@ -1,3 +1,4 @@
+import {installAvatarCostumeMotion} from './avatar-costume-view.js';
 import {bindItemTrash,itemTrashButton} from './item-trash.js';
 import {dialogHeading} from './dialog-heading.js';
 import {inventoryCharacterHtml,inventoryEquipped,inventoryActionIcon,inventoryItemArt,INVENTORY_LEFT,INVENTORY_RIGHT} from './inventory-layout.js';
@@ -356,5 +357,6 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     return Boolean(item&&!item.isUsed&&!item.augment?.current&&(ref.kind==='equipment'||item.count>0));
   },onDrop:ref=>{selectedKind=ref.kind;selectedKey=ref.key;render();itemAction('discard');}});
   document.body.appendChild(overlay);
+  installAvatarCostumeMotion();
   requestAnimationFrame(() => overlay.classList.add('visible'));
 }

@@ -1,0 +1,276 @@
+[
+  {
+    "key": "elf-male",
+    "name": "Серебряный лист",
+    "race": "elf",
+    "gender": "male",
+    "source": "art-source/avatars/races/elf-male.png",
+    "reference": "art-source/avatars/warrior-male.png",
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-3 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult male light elf; pale ivory skin, delicate youthful clean-shaven face, almond eyes, fine straight nose, small thin natural lips, shoulder-length straight light platinum blond hair with center part tucked behind BOTH long slender pointed ears; slim narrow ribcage/shoulders, lean arms, long slim legs, graceful slender hands. Keep a calm composed expression. No broad human warrior chest, rugged jaw, beard, exaggerated anime eyes or gigantic ears. Keep the existing emerald botanical gold formal coat and matching boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-a77295ed-9966-4e1a-8684-2ec69c167659.png",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "elf-male",
+        "name": "Серебряный лист",
+        "race": "elf",
+        "gender": "male",
+        "source": "art-source/avatars/races/elf-male.png",
+        "reference": "art-source/avatars/warrior-male.png",
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult male elf, slender tall build, pale skin, unmistakably long pointed ears, green eyes, long ash-blond hair, emerald silk ceremonial coat with silver leaf ornament and emerald gemstones.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-d7a461be-141b-4c48-8359-bac6252431c9.png",
+        "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+      }
+    ],
+    "revision": "v2",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-face.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-male-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-male-lower.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-elf-male-body.png"
+    ]
+  },
+  {
+    "key": "elf-female",
+    "name": "Роса серебряной рощи",
+    "race": "elf",
+    "gender": "female",
+    "source": "art-source/avatars/races/elf-female.png",
+    "reference": "art-source/avatars/priest-female.png",
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-3 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult female light elf; porcelain ivory skin, delicate oval face, small natural mouth, fine nose, almond-shaped softly focused eyes, straight pale blond hair with side part tucked behind BOTH long pointed ears; fine narrow shoulders, slender ribcage, long slender legs, light graceful posture. Natural understated facial features like the classic client model. No voluptuous human silhouette, heavy makeup, doll eyes, giant ears or gigantic fluffy hairstyle. Keep the existing pale cyan silk botanical gold embroidered dress and boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-140bfbc1-c678-449e-9c30-74074688df3b.png",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "elf-female",
+        "name": "Роса серебряной рощи",
+        "race": "elf",
+        "gender": "female",
+        "source": "art-source/avatars/races/elf-female.png",
+        "reference": "art-source/avatars/priest-female.png",
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult female elf, slender graceful build, pale skin, unmistakably long pointed ears, silver-blond hair, pale cyan flowing silk dress, antique gold botanical embroidery, elegant boots.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-6fd105f3-ddcf-468a-bcc0-01c9d324ee4c.png",
+        "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+      }
+    ],
+    "revision": "v2",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-female-face.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-female-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/elf-mystic.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-elf-female-body.png"
+    ]
+  },
+  {
+    "key": "darkElf-male",
+    "name": "Аметист ночной рощи",
+    "race": "darkElf",
+    "gender": "male",
+    "source": "art-source/avatars/races/darkElf-male.png",
+    "reference": "art-source/avatars/mage-male.png",
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-3 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult male dark elf; distinct cool BLUE-GRAY skin (not pink/lavender), sleek silver white straight hair, narrow stern adult face, angular cheekbones, almond eyes, thin lips, fine pointed chin, long pointed ears swept backward. Taller lean athletic torso with sinewy arms and very long legs; masculine V silhouette but not bodybuilder human bulk. Slight characteristic forward poised stance, controlled expression. No soft youthful boy face, purple anime complexion, spiky anime fringe or huge ears. Keep the existing black amethyst gold formal tailored suit with violet organic coat tails and boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-4848ed3f-270a-4da1-b7be-e91e640a7a96.png",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "darkElf-male",
+        "name": "Аметист ночной рощи",
+        "race": "darkElf",
+        "gender": "male",
+        "source": "art-source/avatars/races/darkElf-male.png",
+        "reference": "art-source/avatars/mage-male.png",
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult male dark elf, cool charcoal lavender skin, long pointed ears fully visible, white hair, violet eyes, fitted black amethyst formal suit and organic violet lined coat tails, gold clasps.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-c3e9df6b-cc6e-41ce-b678-7366c5a3da64.png",
+        "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+      }
+    ],
+    "revision": "v2",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-fighter.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-male-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-model.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-darkElf-male-body.png"
+    ]
+  },
+  {
+    "key": "darkElf-female",
+    "name": "Ночное созвездие",
+    "race": "darkElf",
+    "gender": "female",
+    "source": "art-source/avatars/races/darkElf-female.png",
+    "reference": "art-source/avatars/mage-female.png",
+    "prompt": "Use case: precise-object-edit. One full-body decorative race avatar, 1024x1536 true transparent background. Images 1-2 are archival Lineage II official client artwork ANATOMY references, use head, ears, skin, build and posture only; they are cropped website slices, NOT desired cropping. Final image is the EDIT TARGET for custom clothing theme only. Replace its wearer anatomy and face substantially with classic Lineage II / High Five racial appearance: adult female dark elf; distinctive cool BLUE-GRAY skin, sleek straight silver white hair, long narrow mature face, almond eyes, defined cheekbones and fine nose, thin natural lips, long pointed ears swept backward. Tall lean graceful body, narrow shoulders, long legs, subtle slightly forward classic-client poised stance. Keep mature natural proportions and expression, not a doll or pale-purple human anime girl. No heavy makeup, gigantic hair or huge ears. Keep the existing midnight navy violet star embroidered gown with layered cloth skirt and boots, color identity and embroidery motifs; refit cloth to the revised slim build, reduce bulky shoulders, do not copy official reference armor or weapons. Hand-painted elegant Korean fantasy illustration with natural classic-client face proportions, consistent with current game art. Full body neutral front-three-quarter standing, empty hands. Entire head, ears, hands, hem and both feet inside 8% safe padding. Clean alpha, no backdrop or floor, no fog, no aura outside silhouette, no text/watermark/logo/spiders/extra limbs. This is custom cosmetic art, not a named original L2 armor item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-b3566e81-a682-4447-a075-11bacaefdde8.png",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "darkElf-female",
+        "name": "Ночное созвездие",
+        "race": "darkElf",
+        "gender": "female",
+        "source": "art-source/avatars/races/darkElf-female.png",
+        "reference": "art-source/avatars/mage-female.png",
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult female dark elf, cool charcoal lavender skin, long pointed ears fully visible, white hair, violet eyes, midnight blue and violet star embroidered gown with tasteful covered bodice and layered skirt, boots.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-f78faf19-09b0-4994-a23a-ca30e92b48a2.png",
+        "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+      }
+    ],
+    "revision": "v2",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-female-upper.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/references/darkelf-mystic.jpg",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/elf-reference-v2/prior-darkElf-female-body.png"
+    ]
+  },
+  {
+    "key": "orc-male",
+    "name": "Страж нефритового пламени",
+    "race": "orc",
+    "gender": "male",
+    "source": "art-source/avatars/races/orc-male.png",
+    "reference": "art-source/avatars/warrior-male.png",
+    "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult male orc, broad powerful muscular build, green olive skin, strong square jaw with small lower tusks, black braided hair, deep emerald and silver ceremonial armored coat, fitted gauntlets and heavy boots.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-74463669-0c77-427e-afe1-9859811e3c3d.png",
+    "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+  },
+  {
+    "key": "orc-female",
+    "name": "Багряное сердце клана",
+    "race": "orc",
+    "gender": "female",
+    "source": "art-source/avatars/races/orc-female.png",
+    "reference": "art-source/avatars/rogue-female.png",
+    "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult female orc, strong muscular athletic build, green olive skin, strong facial features, small lower tusks, black braided hair, crimson and antique gold ceremonial dress adapted for powerful stature, boots.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-2fccb7b8-ff01-48a0-bb12-4d76f1643723.png",
+    "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+  },
+  {
+    "key": "dwarf-male",
+    "name": "Золотой мастер гор",
+    "race": "dwarf",
+    "gender": "male",
+    "source": "art-source/avatars/races/dwarf-male.png",
+    "reference": "art-source/avatars/priest-male.png",
+    "prompt": "Use case: style-transfer and racial anatomy correction. Create ONE full-body MALE dwarf decorative avatar. Images 1-3 are authoritative Lineage II dwarf MODEL ANATOMY references, specifically the MALE figures: a mature elderly bald-topped dwarf with gray-white hair at sides, thick bushy white eyebrows, broad weathered face, large nose and thick rounded white beard. Match their head/body ratio, short neck, very broad barrel chest, thick short arms and large hands, broad waist, short sturdy legs and broad flat boots. Around FOUR head lengths tall total excluding beard. Image 4 is ONLY the ivory-and-antique-gold decorative costume palette and embroidery reference; its tall elegant long-haired anatomy must be replaced. This is the strong stocky male dwarf silhouette shown in the references, visibly different from the petite female. Wear an ornate ivory formal coat ending at mid thigh so the short sturdy legs are visible, golden botanical/geometric embroidery, heavy gold clasps, dark ivory trousers and broad ivory-gold flat boots. Keep outfit as decorative clothing, not a copy of an original L2 armor set. No long sweeping robes hiding the proportions, no long elf-like flowing hair. Hand-painted anime royal fantasy consistent with image 4. Neutral standing pose, empty hands, front three-quarter view. Portrait 1024x1536 TRUE transparent alpha, entire head, beard, hands, coat and both feet visible with 8 percent padding. No weapons, floor, backdrop, haze, text, watermark, spiders or extra limbs. Model proportions follow images 1-3, never tall human proportions.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-c3119a08-1dcb-41c4-ac4c-9ce51c06120c.png",
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders.",
+    "history": [
+      {
+        "key": "dwarf-male",
+        "name": "Золотой мастер гор",
+        "race": "dwarf",
+        "gender": "male",
+        "source": "art-source/avatars/races/dwarf-male.png",
+        "reference": "art-source/avatars/priest-male.png",
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult male dwarf, clearly short stocky proportions with large hands and short legs, broad face, thick silver beard and mustache, long ivory and gold tailored artisan coat, belt, sturdy boots. Not a tall human.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-c6161d39-73d2-4bf1-856e-a101920138b7.png",
+        "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+      }
+    ],
+    "revision": "v3",
+    "references": [
+      "art-source/avatars/revisions/dwarf-reference-v3/references/classic-group.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/armored-pair.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/full-body-pair.png"
+    ]
+  },
+  {
+    "key": "dwarf-female",
+    "name": "Искра горного янтаря",
+    "race": "dwarf",
+    "gender": "female",
+    "source": "art-source/avatars/races/dwarf-female.png",
+    "reference": "art-source/avatars/revisions/dwarf-female-v1/full-body.png",
+    "prompt": "Use case: style-transfer and racial anatomy correction. Create ONE full-body FEMALE dwarf decorative avatar. Images 1-3 are authoritative Lineage II dwarf MODEL ANATOMY references, specifically the FEMALE figures: match their large head relative to the compact body, short neck, narrow shoulders, small torso, slender short arms and legs, short stature and small flat boots. Image 4 is ONLY the RED-GOLD decorative clothing palette and embroidery reference, NOT anatomy; its human-like body proportions must be replaced. Female is clearly different from the stocky bearded males in images 1-3. This is an adult fantasy dwarf, nonsexual, clothed modestly: short compact silhouette around 4.5 head lengths tall, friendly round face, large amber eyes, small nose, natural small lips, auburn twin ponytails and neat bangs inspired by references. Slim petite build, no hourglass curves, no chest emphasis, no muscular bulk. Wear a fully closed high-neck crimson dress with antique gold flame-leaf embroidery, fitted flat bodice, knee-length skirt with a few light ruffles, long sleeves, small flat red-gold boots. Do not copy the reference armor sets, weapons, game logo or background. Hand-painted anime royal fantasy style consistent with image 4; silhouette and head/body ratio MUST follow images 1-3. Neutral standing pose, empty hands, front three-quarter view. Portrait 1024x1536 TRUE transparent alpha, no haze or floor. Full head, ponytails, hands and feet inside 8 percent breathing room. No text, watermarks, spiders, extra limbs. Do not produce a tall human or a miniaturized curvy adult human.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-bf883333-020f-4d9a-abc3-9a4e096065be.png",
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders.",
+    "history": [
+      {
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult female dwarf, clearly short compact stocky adult proportions, rounded mature face, auburn braided hair, crimson amber tailored short ceremonial dress with layered hem and sturdy boots. Adult, not child; not a tall human.",
+        "reference": "art-source/avatars/rogue-female.png",
+        "source": "art-source/avatars/revisions/dwarf-female-v1/full-body.png"
+      },
+      {
+        "key": "dwarf-female",
+        "name": "Искра горного янтаря",
+        "race": "dwarf",
+        "gender": "female",
+        "source": "art-source/avatars/races/dwarf-female.png",
+        "reference": "art-source/avatars/revisions/dwarf-female-v1/full-body.png",
+        "prompt": "Use case: precise-object-edit. The input is the current FULL-BODY adult female dwarf avatar to correct, not a body-shape reference. Keep ONLY the auburn braided hairstyle, amber eyes, adult facial identity, red/antique gold fire-leaf motif and painted fantasy anime quality. Replace her body anatomy and refit the dress substantially. Desired silhouette: a petite adult female dwarf in classic Lineage II proportions, about FIVE head lengths tall total, narrow shoulders, delicate small frame, small natural chest, slim straight hips, slender arms, slim calves, small hands and feet. The head is proportionally larger than a tall human's but the face remains unmistakably adult. This is a light compact dwarf woman, NOT a broad stocky dwarf, NOT a voluptuous human compressed in height. Give her a modest opaque high-neck red dress with a small gold collar, flat fitted bodice without cup-shaped bust panels, narrow waist, a simple knee-length red skirt with a few gold flame-embroidered flowing side panels, neat red-gold knee boots. No exposed chest, no thigh cutouts, no exaggerated hourglass curves. Reduce silhouette mass and costume bulk dramatically; keep original palette and ornament identity. Full body standing, empty hands, both feet fully visible, 8 percent breathing room. Portrait 1024x1536 TRUE transparent alpha. No backdrop, haze, glow outside the subject, text, watermark, weapon, spider, extra limbs or child.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-a53b54bf-cc68-44f8-8e38-ecd947cd042e.png",
+        "review": "Accepted full-body and matching portrait: petite adult silhouette, narrow shoulders and lighter frame, closed bodice and shorter skirt; preserved auburn braids, amber eyes and red-gold embroidery. No text or spiders; alpha checked.",
+        "revision": "v2"
+      }
+    ],
+    "revision": "v3",
+    "references": [
+      "art-source/avatars/revisions/dwarf-reference-v3/references/classic-group.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/armored-pair.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/full-body-pair.png"
+    ]
+  },
+  {
+    "key": "kamael-male",
+    "name": "Крыло сумеречного посланника",
+    "race": "kamael",
+    "gender": "male",
+    "source": "art-source/avatars/races/kamael-male.png",
+    "reference": "art-source/avatars/rogue-male.png",
+    "prompt": "Use case: precise-object-edit. One full-body ADULT male Kamael decorative avatar, 1024x1536 TRUE transparent alpha. Images 1-3 are user-provided Lineage II Kamael race anatomy references: prioritize the male character in these pairs for facial proportions, pointed ears, hair, slim athletic anatomy and natural feathered wing. Image 4 is the EDIT TARGET, retain its custom clothing palette and embroidery identity ONLY. Substantially replace its wearer anatomy. Pale cool skin, naturally small almond-shaped eyes with a stern composed gaze, narrower angular face and cheekbones, fine nose, natural thin lips, visibly pointed ears protruding from short white hair with a subtle blush-pink tint. Masculine defined jaw, compact swept side-part haircut, lean athletic torso, long slim legs, no broad human chest. Retain black navy violet gold tailored suit and organic embroidered coat tails. ONE AND ONLY ONE natural IVORY-WHITE feathered wing growing anatomically from the LEFT shoulder blade (viewer-right in frontal pose), long layered feathers with a faint pink tint matching references. Replace existing decorated black wing: no metal on feathers, chains, gemstones or gilding; do not add a second wing. No weapon or original armor copied. Neutral standing front three-quarter pose, empty hands. Hand-painted Korean royal fantasy art compatible with target, natural classic-client facial proportions, not oversized anime eyes or generic angel. Entire head, ears, hands, both feet and whole wing INSIDE 8 percent safe canvas margin. No background, floor, haze or glow outside subject, text, watermark, spiders or extra limbs. Custom cosmetic identity unchanged; refit clothes to corrected anatomy.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-8a51ab14-c8a7-4cc0-8326-a253ade09452.png",
+    "review": "Reviewed: sharper adult Kamael face, pointed ears, lean anatomy, one natural ivory feather wing; female high ponytail. Alpha, full body silhouette and identity accepted.",
+    "history": [
+      {
+        "key": "kamael-male",
+        "name": "Крыло сумеречного посланника",
+        "race": "kamael",
+        "gender": "male",
+        "source": "art-source/avatars/races/kamael-male.png",
+        "reference": "art-source/avatars/rogue-male.png",
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult male kamael, athletic pale build, white swept hair, one and only one dark feathered wing growing from LEFT shoulder blade, anatomically rooted, fully visible inside canvas, no wing on other side; black navy gold formal suit with violet coat tails, tall boots.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-3fc6df93-5ce6-4ac7-af56-75a31a810257.png",
+        "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+      }
+    ],
+    "revision": "v2",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/references/client-pair.png",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/references/combat-pair.png",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/references/illustrated-pair.png",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/prior-kamael-male-body.png"
+    ]
+  },
+  {
+    "key": "kamael-female",
+    "name": "Крыло багряной зари",
+    "race": "kamael",
+    "gender": "female",
+    "source": "art-source/avatars/races/kamael-female.png",
+    "reference": "art-source/avatars/rogue-female.png",
+    "prompt": "Use case: precise-object-edit. One full-body ADULT female Kamael decorative avatar, 1024x1536 TRUE transparent alpha. Images 1-3 are user-provided Lineage II Kamael race anatomy references: prioritize the female character in these pairs for facial proportions, pointed ears, hair, slim athletic anatomy and natural feathered wing. Image 4 is the EDIT TARGET, retain its custom clothing palette and embroidery identity ONLY. Substantially replace its wearer anatomy. Pale cool skin, naturally small almond-shaped eyes with a stern composed gaze, narrower angular face and cheekbones, fine nose, natural thin lips, visibly pointed ears protruding from short white hair with a subtle blush-pink tint. Mature delicate yet sharp face, compact short side-part bob, narrow shoulders, lean athletic slender torso and long legs. Retain crimson amber gold ceremonial dress, lighter more fitted cloth and boots; reduce enormous skirt/hair volume to make racial build visible. ONE AND ONLY ONE natural IVORY-WHITE feathered wing growing anatomically from the LEFT shoulder blade (viewer-right in frontal pose), long layered feathers with a faint pink tint matching references. Replace existing decorated white wing: no metal on feathers, chains, gemstones or gilding; do not add a second wing. No weapon or original armor copied. Neutral standing front three-quarter pose, empty hands. Hand-painted Korean royal fantasy art compatible with target, natural classic-client facial proportions, not oversized anime eyes or generic angel. Entire head, ears, hands, both feet and whole wing INSIDE 8 percent safe canvas margin. No background, floor, haze or glow outside subject, text, watermark, spiders or extra limbs. Custom cosmetic identity unchanged; refit clothes to corrected anatomy.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-381b1e6a-12d7-43e3-b161-f883f24e326c.png",
+    "review": "Reviewed: sharper adult Kamael face, pointed ears, lean anatomy, one natural ivory feather wing; female high ponytail. Alpha, full body silhouette and identity accepted.",
+    "history": [
+      {
+        "key": "kamael-female",
+        "name": "Крыло багряной зари",
+        "race": "kamael",
+        "gender": "female",
+        "source": "art-source/avatars/races/kamael-female.png",
+        "reference": "art-source/avatars/rogue-female.png",
+        "prompt": "Original adult full-body decorative racial character cutout, hand-painted royal fantasy anime RPG, portrait 1024x1536 TRUE transparent background. Clothing reference inspiration only: preserve the general outfit palette and elegance, redesign wearer with the specified racial anatomy. Neutral front three-quarter standing pose, empty hands, no weapons. Entire head, ears, hair, hands, costume hem, both feet, and wing if present inside canvas with 8 percent padding. Organic cloth folds, distinct silhouette readable at 48/96px. No background floor text symbols watermark spiders extra limbs or cropped edges. Subject-only restrained glow. An adult female kamael, athletic pale build, white swept hair, one and only one white feathered wing growing from LEFT shoulder blade, anatomically rooted, fully visible inside canvas, no wing on other side; crimson amber gold ceremonial dress and boots.",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-4cdd1fa3-8b6a-4096-9294-16a0c9e5d192.png",
+        "review": "Accepted: correct racial anatomy, complete silhouette, alpha checked on navy/ivory, no text or spiders."
+      }
+    ],
+    "revision": "v2",
+    "references": [
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/references/client-pair.png",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/references/combat-pair.png",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/references/illustrated-pair.png",
+      "C:/Users/kubai/IdeaProjects/Genshin-Impact-tg-bot/art-source/avatars/revisions/kamael-reference-v2/prior-kamael-female-body.png"
+    ],
+    "hairEditPrompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET revised adult female Kamael full-body painting. Images 2 and 3 are HAIRSTYLE REFERENCES ONLY: use the female Kamael hair, not male hair or clothing. Change ONLY the hairstyle: replace the short bob by a HIGH PONYTAIL gathered at the crown, white with subtle pale pink tint, sleek swept-back sides, a substantial visible ponytail falling behind head to upper back, and the distinctive diagonal side-swept fringe over part of the forehead shown in refs. Small simple hair tie, not a bun, not loose curls, not low ponytail. Keep face, pointed ears, eyes, lean adult body, red-gold dress, pose, boots and SAME SINGLE ivory-white feathered wing rooted at anatomical LEFT shoulder EXACTLY unchanged. Entire ponytail and all original silhouette inside canvas with safe padding. 1024x1536 true transparent alpha. No background or haze, text, watermark, spiders or additional wing."
+  }
+]

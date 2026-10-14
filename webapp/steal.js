@@ -130,7 +130,7 @@ export async function openStealGame({ api, renderState, haptic, statusElement })
     const disabled = pending || state.attempts <= 0 || !state.combatReady || shielded || seated;
     return `
       <article class="steal-target ${shielded || seated ? 'shielded' : ''}">
-        <span class="steal-avatar" style="--art:url('${menuArtFor('profile', { className: target.className })}')">${escapeHtml(initials(target.name))}</span>
+        <span class="steal-avatar" style="--art:url('${menuArtFor('profile', target)}')">${escapeHtml(initials(target.name))}</span>
         <div class="steal-target-copy">
           <strong>${escapeHtml(target.name)}</strong>
           <small>LVL ${target.level} · ${escapeHtml(target.className === 'noClass' ? 'без класса' : target.className)}</small>

@@ -1,0 +1,4 @@
+Input: art-source/avatars/races/dwarf-female.png only. Race-specific closed tailoring of Veil of Constellations.
+
+Exact prompt:
+Use case: precise-object-edit. Edit this petite dwarf character's clothing colors and ornamentation ONLY. Preserve exactly this reference's CLOSED high-neck modest dress, long sleeves, covered shoulders and chest, opaque knee-length skirt WITHOUT slit, flat boots, short compact limbs, red twin ponytails, face and pose. Adapt to custom Veil of Constellations: midnight navy and violet opaque fabrics with gold constellation embroidery, tiny gold star pendants and blue crystal beads, pale blue gauzy OVERLAYS over opaque sleeves/skirt. No bare chest, off-shoulder bodice, cutouts, visible midriff, thigh slit, heels or long human legs. Full-body transparent alpha 1024x1536, full silhouette and feet inside breathing room; no background, text, weapons, watermark, external glow or spiders.

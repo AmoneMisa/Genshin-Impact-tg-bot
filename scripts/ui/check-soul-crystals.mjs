@@ -3,6 +3,8 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {fieldPeers,useFieldPvpSkill,advanceFieldPvp} from '../../functions/game/hunt/fieldPvp.js';
+import {fieldPeers,useFieldPvpSkill,advanceFieldPvp} from '../../functions/game/hunt/fieldPvp.js';
+import {fieldPeers,useFieldPvpSkill,advanceFieldPvp} from '../../functions/game/hunt/fieldPvp.js';
 import {getEquipmentState,performEquipmentAction} from '../../miniapp/equipment.js';
 import {getHuntState, startHuntForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp, useHuntSkillForMiniApp} from '../../miniapp/hunt.js';
 import {selectSoulCrystal,exchangeSeals,saInfo,saOptions} from '../../functions/game/equipment/soulCrystals.js';
@@ -23,6 +25,10 @@ try{
   page.setDefaultTimeout(10000);
   const peer=hero();peer.userId=2;peer.userChatData.user={id:2,first_name:'Тёмный странник'};const chat={members:[session,peer]};
   const huntState=async()=>{advanceFieldPvp(chat);return getHuntState(session,Date.now(),fieldPeers(chat,session));};
+  const peer=hero();peer.userId=2;peer.userChatData.user={id:2,first_name:'Тёмный странник'};const chat={members:[session,peer]};
+  const huntState=async()=>{advanceFieldPvp(chat);return getHuntState(session,Date.now(),fieldPeers(chat,session));};
+  const peer=hero();peer.userId=2;peer.userChatData.user={id:2,first_name:'Тёмный странник'};const chat={members:[session,peer]};
+  const huntState=async()=>{advanceFieldPvp(chat);return getHuntState(session,Date.now(),fieldPeers(chat,session));};
   page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)bad.push(r.url());});
   await page.route('**/*',async route=>{
    const url=new URL(route.request().url()),p=url.pathname;
@@ -33,7 +39,7 @@ try{
     else if(p==='/api/hunt/start')result={...startHuntForMiniApp(session,body.zone),hunt:await huntState()};
     else if(p==='/api/hunt/move')result={...moveHuntForMiniApp(session,body.direction),hunt:await huntState()};
     else if(p==='/api/hunt/target')result={...targetHuntForMiniApp(session,body.targetId),hunt:await huntState()};
-    else if(p==='/api/hunt/skill')result={...(body.targetUserId!=null?useFieldPvpSkill(chat,session,body.targetUserId,body.skillIndex,{force:body.force===true,random:()=>.5}):useHuntSkillForMiniApp(session,body.skillIndex)),hunt:await huntState()};
+    else if(p==='/api/hunt/skill')result={...(body.targetUserId!=null?useFieldPvpSkill(chat,session,body.targetUserId,body.skillIndex,{force:body.force===true,random:()=>.5}):(body.targetUserId!=null?useFieldPvpSkill(chat,session,body.targetUserId,body.skillIndex,{force:body.force===true,random:()=>.5}):(body.targetUserId!=null?useFieldPvpSkill(chat,session,body.targetUserId,body.skillIndex,{force:body.force===true,random:()=>.5}):useHuntSkillForMiniApp(session,body.skillIndex)))),hunt:await huntState()};
     else if(p==='/api/soul/select')result={...selectSoulCrystal(session,body.color,body.stage),hunt:await huntState()};
     else if(p==='/api/catacombs/exchange')result={...exchangeSeals(session,body.counts),hunt:await huntState()};
     else return route.fulfill({status:404,body:'Unknown API'});
@@ -94,6 +100,30 @@ try{
    await page.locator('.hunt-panel').evaluate(panel=>panel.scrollTop=0);await page.locator('.hunt-panel').screenshot({path:'docs/hunt-pvp-390.png'});
    await page.locator('.hunt-panel').evaluate(panel=>panel.scrollTop=panel.querySelector('.hunt-pvp-target').offsetTop-panel.offsetTop);await page.locator('.hunt-panel').screenshot({path:'docs/hunt-pvp-combat-390.png'});
   }
+  assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
+  startHuntForMiniApp(peer,'catacomb-forbidden-path');peer.game.hunt.field.x=session.game.hunt.field.x;peer.game.hunt.field.y=session.game.hunt.field.y;
+  await page.waitForSelector('[data-pvp-target="2"]');await page.locator('[data-pvp-target="2"]').click();
+  assert.equal(await page.locator('.hunt-pvp-target .mmo-bar').evaluateAll(nodes=>nodes.map(n=>n.classList[1]).join(',')),'cp,hp,mp');
+  await page.locator('[data-skill="0"]').click();await page.waitForFunction(()=>document.querySelector('[data-hunt-feedback]').textContent.includes('принудительную атаку'));
+  await page.locator('[data-force-attack]').check();await page.locator('[data-skill="0"]').click();
+  await page.waitForFunction(()=>document.querySelector('.hunt-player [data-pvp="flagged"]'));
+  assert.equal(peer.game.worldPvp?.flagUntil || 0,0,'victim stays white');
+  assert.equal(await page.locator('svg').count(),0);
+  await page.locator('.hunt-panel img').evaluateAll(nodes=>Promise.all(nodes.map(n=>n.decode())));
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'PvP overflow '+width);
+  if(width===390)await page.locator('.hunt-panel').screenshot({path:'docs/hunt-pvp-390.png'});
+  assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
+  startHuntForMiniApp(peer,'catacomb-forbidden-path');peer.game.hunt.field.x=session.game.hunt.field.x;peer.game.hunt.field.y=session.game.hunt.field.y;
+  await page.waitForSelector('[data-pvp-target="2"]');await page.locator('[data-pvp-target="2"]').click();
+  assert.equal(await page.locator('.hunt-pvp-target .mmo-bar').evaluateAll(nodes=>nodes.map(n=>n.classList[1]).join(',')),'cp,hp,mp');
+  await page.locator('[data-skill="0"]').click();await page.waitForFunction(()=>document.querySelector('[data-hunt-feedback]').textContent.includes('принудительную атаку'));
+  await page.locator('[data-force-attack]').check();await page.locator('[data-skill="0"]').click();
+  await page.waitForFunction(()=>document.querySelector('.hunt-player [data-pvp="flagged"]'));
+  assert.equal(peer.game.worldPvp?.flagUntil || 0,0,'victim stays white');
+  assert.equal(await page.locator('svg').count(),0);
+  await page.locator('.hunt-panel img').evaluateAll(nodes=>Promise.all(nodes.map(n=>n.decode())));
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'PvP overflow '+width);
+  if(width===390)await page.locator('.hunt-panel').screenshot({path:'docs/hunt-pvp-390.png'});
   assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
   await page.close();console.log(`${width}px: SA installation, crystal selection, six catacombs, AA exchange, assets OK`);
  }

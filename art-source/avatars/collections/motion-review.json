@@ -1,0 +1,59 @@
+{
+  "lowPowerStatic": true,
+  "checks": [
+    {
+      "width": 320,
+      "activeLimit": 2,
+      "hiddenPaused": true,
+      "reducedMotion": true,
+      "controlsAccessible": true,
+      "cleanup": true
+    },
+    {
+      "width": 390,
+      "activeLimit": 2,
+      "hiddenPaused": true,
+      "reducedMotion": true,
+      "controlsAccessible": true,
+      "cleanup": true
+    },
+    {
+      "width": 1100,
+      "activeLimit": 2,
+      "hiddenPaused": true,
+      "reducedMotion": true,
+      "controlsAccessible": true,
+      "cleanup": true
+    },
+    {
+      "width": 320,
+      "character": true,
+      "popupPaused": true,
+      "tabPaused": true,
+      "closePaused": true
+    },
+    {
+      "width": 1100,
+      "character": true,
+      "popupPaused": true,
+      "tabPaused": true,
+      "closePaused": true
+    },
+    {
+      "width": 320,
+      "inventory": true,
+      "touch": true,
+      "disabled": true,
+      "focus": true,
+      "closePaused": true
+    },
+    {
+      "width": 1100,
+      "inventory": true,
+      "touch": true,
+      "disabled": true,
+      "focus": true,
+      "closePaused": true
+    }
+  ]
+}

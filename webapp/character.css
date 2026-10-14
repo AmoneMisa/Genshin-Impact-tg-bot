@@ -75,3 +75,5 @@
 .character-feedback{margin:0;line-height:1.4;font-size:12px}.character-feedback:empty{display:none}
 .polish-icon{display:inline-block;width:24px;height:24px;object-fit:contain;flex-shrink:0}
 @media(prefers-reduced-motion:reduce){.character-panel *{animation:none!important;transition:none!important}}
+/* Preserve the existing avatar's racial proportions. */
+.character-doll[data-avatar-race="dwarf"] .character-body-art{top:auto;bottom:0;height:72%}

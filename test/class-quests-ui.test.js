@@ -95,10 +95,10 @@ test('every new boss has art (borrowed until painted), every class a portrait fa
     assert.ok(fs.existsSync(`webapp${bossArtUrl(boss.name)}`), boss.name);
   }
   assert.equal(bossArtUrl('zephyrion'), '/art/bosses/avrora.webp');
-  assert.equal(classArtUrl('titan', 'male'), '/art/classes/warrior-male.webp');
-  assert.equal(classArtUrl('assassin', 'female'), '/art/classes/archer-female.webp');
+  assert.equal(classArtUrl('titan', 'male'), '/art/avatars/portraits/v1/orc-male-256.webp');
+  assert.equal(classArtUrl('assassin', 'female'), '/art/avatars/portraits/v2/darkElf-female-256.webp');
   assert.equal(classArtUrl('saint', 'male'), '/art/classes/priest-male.webp');
-  assert.equal(menuArtFor('profile', { className: 'archmage', gender: 'female' }), '/art/classes/mage-female.webp');
+  assert.equal(menuArtFor('profile', { className: 'archmage', gender: 'female' }), '/art/avatars/portraits/v1/human-female-256.webp');
   assert.equal(skillFxForClass('hawkeye'), 'arrow');
   assert.equal(skillFxForClass('shadowBlade'), 'slash');
 });

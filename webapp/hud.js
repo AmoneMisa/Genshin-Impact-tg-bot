@@ -49,10 +49,10 @@ export function renderPlayerHud({ state, getElement, formatNumber }) {
   setText('level', player.level || 1);
   setText('class-name', player.classTitle || (player.className === 'noClass' ? 'Без класса' : player.className || 'Без класса'));
   setText('class-sigil', CLASS_SIGILS[familyOf(player.className)] || CLASS_SIGILS.noClass);
-  // Painted class portrait in the crest; the sigil stays as the fallback glyph.
+  // Compact race/gender portrait; no full-body download for the crest.
   const shell = getElement('class-sigil')?.parentElement;
   if (shell?.style) {
-    shell.style.setProperty('--portrait', `url("${menuArtFor('profile', player)}")`);
+    shell.style.setProperty('--portrait', `url("${menuArtFor('profile', player, 128)}")`);
     shell.classList.add('has-portrait');
   }
   setText('chat-badge', context.chatType || (String(context.chatId) === String(user.id) ? 'private' : 'group'));

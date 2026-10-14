@@ -1,0 +1,265 @@
+[
+  {
+    "key": "human-male",
+    "race": "human",
+    "gender": "male",
+    "name": "Кавалер сумерек",
+    "source": "art-source/avatars/portraits/human-male.png",
+    "reference": "art-source/avatars/rogue-male.png",
+    "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult male human character as head and shoulders portrait. Preserve his exact face, golden eyes, black hairstyle, skin tone, navy violet gold coat collar and shoulder embroidery, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair inside canvas with small top margin; shoulders fill lower corners. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+    "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+  },
+  {
+    "key": "human-female",
+    "race": "human",
+    "gender": "female",
+    "name": "Багряный рассвет",
+    "source": "art-source/avatars/portraits/human-female.png",
+    "reference": "art-source/avatars/rogue-female.png",
+    "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+    "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+  },
+  {
+    "key": "elf-male",
+    "race": "elf",
+    "gender": "male",
+    "name": "Серебряный лист",
+    "source": "art-source/avatars/portraits/elf-male.png",
+    "reference": "art-source/avatars/races/elf-male.png",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT elf-male adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, pale ivory skin and straight platinum blond hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "elf-male",
+        "race": "elf",
+        "gender": "male",
+        "name": "Серебряный лист",
+        "source": "art-source/avatars/portraits/elf-male.png",
+        "reference": "art-source/avatars/races/elf-male.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+      }
+    ],
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-fb52b71f-9814-4adb-82a4-257fb0edcb1d.png",
+    "revision": "v2",
+    "references": [
+      "art-source/avatars/races/elf-male.png"
+    ]
+  },
+  {
+    "key": "elf-female",
+    "race": "elf",
+    "gender": "female",
+    "name": "Роса серебряной рощи",
+    "source": "art-source/avatars/portraits/elf-female.png",
+    "reference": "art-source/avatars/races/elf-female.png",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT elf-female adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, pale ivory skin and straight platinum blond hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "elf-female",
+        "race": "elf",
+        "gender": "female",
+        "name": "Роса серебряной рощи",
+        "source": "art-source/avatars/portraits/elf-female.png",
+        "reference": "art-source/avatars/races/elf-female.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+      }
+    ],
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-7d95a451-06f7-40b2-9046-7e8fd6d4e73a.png",
+    "revision": "v2",
+    "references": [
+      "art-source/avatars/races/elf-female.png"
+    ]
+  },
+  {
+    "key": "darkElf-male",
+    "race": "darkElf",
+    "gender": "male",
+    "name": "Аметист ночной рощи",
+    "source": "art-source/avatars/portraits/darkElf-male.png",
+    "reference": "art-source/avatars/races/darkElf-male.png",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT darkElf-male adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, cool blue-gray skin and sleek straight silver hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "darkElf-male",
+        "race": "darkElf",
+        "gender": "male",
+        "name": "Аметист ночной рощи",
+        "source": "art-source/avatars/portraits/darkElf-male.png",
+        "reference": "art-source/avatars/races/darkElf-male.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+      }
+    ],
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-5bd0b436-2c89-453f-992d-98db073a9725.png",
+    "revision": "v2",
+    "references": [
+      "art-source/avatars/races/darkElf-male.png"
+    ]
+  },
+  {
+    "key": "darkElf-female",
+    "race": "darkElf",
+    "gender": "female",
+    "name": "Ночное созвездие",
+    "source": "art-source/avatars/portraits/darkElf-female.png",
+    "reference": "art-source/avatars/races/darkElf-female.png",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders portrait of the EXACT darkElf-female adult character in the input revised full-body painting. Preserve the face, natural almond eyes, fine nose and lips, cool blue-gray skin and sleek straight silver hair, BOTH long pointed ears and clothing collar/shoulder details exactly. Natural classic Lineage II racial face proportions; no doll eyes, no makeup, no redesign. Center face, eyes around 38 percent canvas height, whole hair and BOTH ear tips INSIDE a generous 8 percent safe margin. Shoulders fill lower corners. Transparent alpha, no backdrop/aura/haze, text, border, watermark, weapons, spiders or extra limbs. Change framing only.",
+    "review": "Reviewed: complete body silhouette / matching portrait, classic racial face/skin/build cues, no text or spiders. Custom costume themes preserved; anatomy guided by archived official artwork.",
+    "history": [
+      {
+        "key": "darkElf-female",
+        "race": "darkElf",
+        "gender": "female",
+        "name": "Ночное созвездие",
+        "source": "art-source/avatars/portraits/darkElf-female.png",
+        "reference": "art-source/avatars/races/darkElf-female.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+      }
+    ],
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-a15be9d3-b83e-4247-8c70-cc03dab7d06c.png",
+    "revision": "v2",
+    "references": [
+      "art-source/avatars/races/darkElf-female.png"
+    ]
+  },
+  {
+    "key": "orc-male",
+    "race": "orc",
+    "gender": "male",
+    "name": "Страж нефритового пламени",
+    "source": "art-source/avatars/portraits/orc-male.png",
+    "reference": "art-source/avatars/races/orc-male.png",
+    "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+    "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+  },
+  {
+    "key": "orc-female",
+    "race": "orc",
+    "gender": "female",
+    "name": "Багряное сердце клана",
+    "source": "art-source/avatars/portraits/orc-female.png",
+    "reference": "art-source/avatars/races/orc-female.png",
+    "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+    "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+  },
+  {
+    "key": "dwarf-male",
+    "race": "dwarf",
+    "gender": "male",
+    "name": "Золотой мастер гор",
+    "source": "art-source/avatars/portraits/dwarf-male.png",
+    "reference": "art-source/avatars/races/dwarf-male.png",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders avatar portrait of the EXACT male dwarf in the input full-body painting. Preserve the bald top and short white side hair, wide weathered face, broad nose, bushy white eyebrows, thick rounded white beard, short neck and broad shoulders. Keep the ivory-and-gold embroidered coat collar and shoulder details. Do not add flowing hair or make the face slender/elf-like. Faithfully reframe the same identity and hand-painted quality. Center face, eyes at around 38 percent canvas height; whole bald head and beard inside with a small top margin, shoulders fill lower corners. True transparent background, clean alpha, no haze, floor, text, border, weapon, spider or extra limbs. Change only framing.",
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders.",
+    "history": [
+      {
+        "key": "dwarf-male",
+        "race": "dwarf",
+        "gender": "male",
+        "name": "Золотой мастер гор",
+        "source": "art-source/avatars/portraits/dwarf-male.png",
+        "reference": "art-source/avatars/races/dwarf-male.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+      }
+    ],
+    "revision": "v3",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-ef9fd30c-43a9-4a73-83a0-670b6c5d2179.png",
+    "references": [
+      "art-source/avatars/races/dwarf-male.png"
+    ]
+  },
+  {
+    "key": "dwarf-female",
+    "race": "dwarf",
+    "gender": "female",
+    "name": "Искра горного янтаря",
+    "source": "art-source/avatars/portraits/dwarf-female.png",
+    "reference": "art-source/avatars/races/dwarf-female.png",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders avatar portrait of the EXACT female dwarf in the input full-body painting. Preserve the round face, large amber eyes, small natural nose and lips, auburn twin ponytails with bangs, narrow petite shoulders, closed high collar and red-gold flame embroidered dress. Do not make her face long or human-supermodel shaped, do not enlarge her body or add makeup. Faithfully reframe the same image identity and hand-painted quality. Center face, eyes at around 38 percent canvas height; BOTH ponytails and head fully inside with a small margin, shoulders fill lower corners. True transparent background with clean alpha; no haze, floor, text, border, weapon, spider or extra limbs. Change only framing.",
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders.",
+    "history": [
+      {
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "reference": "art-source/avatars/races/dwarf-female.png",
+        "source": "art-source/avatars/revisions/dwarf-female-v1/portrait.png"
+      },
+      {
+        "key": "dwarf-female",
+        "race": "dwarf",
+        "gender": "female",
+        "name": "Искра горного янтаря",
+        "source": "art-source/avatars/portraits/dwarf-female.png",
+        "reference": "art-source/avatars/races/dwarf-female.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input is the revised full-body adult petite female dwarf; reframe her EXACT same face, auburn braided updo, amber eyes, delicate narrow shoulders and closed high-neck red-gold fire-leaf dress as a head and shoulders portrait. Preserve adult maturity and the slender proportions; do not broaden the face or shoulders, do not add curves or a low neckline. Face centered, eyes around 38 percent from top; hair entirely inside canvas with small top margin. Shoulders fill bottom corners. Original painted anime finish. TRUE transparent alpha, no background haze or glow beyond the subject, no text, frame, weapons, spiders. Change only framing.",
+        "review": "Accepted full-body and matching portrait: petite adult silhouette, narrow shoulders and lighter frame, closed bodice and shorter skirt; preserved auburn braids, amber eyes and red-gold embroidery. No text or spiders; alpha checked.",
+        "revision": "v2",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-afc0da9c-e699-4e7a-bd21-c0f43fe69567.png"
+      }
+    ],
+    "revision": "v3",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-8efb61b7-01bc-49de-8933-ff1f04e0d571.png",
+    "references": [
+      "art-source/avatars/races/dwarf-female.png"
+    ]
+  },
+  {
+    "key": "kamael-male",
+    "race": "kamael",
+    "gender": "male",
+    "name": "Крыло сумеречного посланника",
+    "source": "art-source/avatars/portraits/kamael-male.png",
+    "reference": "art-source/avatars/races/kamael-male.png",
+    "prompt": "Use case: identity-preserve. Square 1024x1024 head-and-shoulders portrait of the EXACT adult kamael-male in the input revised full-body painting. Preserve the exact angular face, pale cool skin, natural small almond eyes, stern composed expression, visibly pointed ears and compact swept short white hair with subtle pink tint, custom black navy violet gold suit collar and shoulder details. Keep only a small visible root/section of the SAME single ivory-white feather wing behind anatomical LEFT shoulder. Do not add a second wing or ornaments to feathers. Reframe only; no redesign. Whole hair, BOTH ears and face inside 8% canvas margin, eyes around 38% height, shoulders at bottom. TRUE transparent alpha. No backdrop, haze, exterior glow, text, borders, watermark, weapon, spiders or extra limbs.",
+    "review": "Reviewed: sharper adult Kamael face, pointed ears, lean anatomy, one natural ivory feather wing; female high ponytail. Alpha, full body silhouette and identity accepted.",
+    "history": [
+      {
+        "key": "kamael-male",
+        "race": "kamael",
+        "gender": "male",
+        "name": "Крыло сумеречного посланника",
+        "source": "art-source/avatars/portraits/kamael-male.png",
+        "reference": "art-source/avatars/races/kamael-male.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+      }
+    ],
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-b3c95e71-5181-4d7a-b84f-3916ba38ca41.png",
+    "revision": "v2",
+    "references": [
+      "art-source/avatars/races/kamael-male.png"
+    ]
+  },
+  {
+    "key": "kamael-female",
+    "race": "kamael",
+    "gender": "female",
+    "name": "Крыло багряной зари",
+    "source": "art-source/avatars/portraits/kamael-female.png",
+    "reference": "art-source/avatars/races/kamael-female.png",
+    "prompt": "Use case: identity-preserve. Square 1024x1024 head-and-shoulders portrait of the EXACT adult kamael-female in the input revised full-body painting. Preserve the exact angular face, pale cool skin, natural small almond eyes, stern composed expression, visibly pointed ears and compact HIGH ponytail gathered at the crown, white with faint pink tint and diagonal side-swept fringe white hair with subtle pink tint, custom crimson amber gold dress collar and shoulder details. Keep only a small visible root/section of the SAME single ivory-white feather wing behind anatomical LEFT shoulder. Do not add a second wing or ornaments to feathers. Reframe only; no redesign. Whole hair, BOTH ears and face inside 8% canvas margin, eyes around 38% height, shoulders at bottom. TRUE transparent alpha. No backdrop, haze, exterior glow, text, borders, watermark, weapon, spiders or extra limbs.",
+    "review": "Reviewed: sharper adult Kamael face, pointed ears, lean anatomy, one natural ivory feather wing; female high ponytail. Alpha, full body silhouette and identity accepted.",
+    "history": [
+      {
+        "key": "kamael-female",
+        "race": "kamael",
+        "gender": "female",
+        "name": "Крыло багряной зари",
+        "source": "art-source/avatars/portraits/kamael-female.png",
+        "reference": "art-source/avatars/races/kamael-female.png",
+        "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input image is the edit target and identity reference. Reframe this exact adult character as head and shoulders portrait. Preserve the exact face, eyes, hairstyle, racial ears, beard if present, skin tone, costume collar and shoulder details, original hand painted anime style. Face centered, eyes around 38 percent from top, full hair and ears inside canvas with small top margin; shoulders fill lower corners. For Kamael retain only the visible root of the existing single anatomical left wing; never add another wing. Transparent background, clean alpha, no glow outside subject, no text, no border, no weapons, no spiders. Change only framing; do not redesign character or costume.",
+        "review": "Accepted after navy/ivory contact-sheet review at 192px and 48px: matching face, hair, racial features and costume; transparent alpha; no embedded text or spiders."
+      }
+    ],
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-c24c8926-2ad1-49c6-92b6-f6111d6b988a.png",
+    "revision": "v2",
+    "references": [
+      "art-source/avatars/races/kamael-female.png"
+    ]
+  }
+]

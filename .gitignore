@@ -2,6 +2,8 @@
 /node_modules/
 config.js
 *.json
+!art-source/avatars/**/*.json
+!docs/epic-source-audit.json
 !package-lock.json
 !package.json
 !webapp/models/manifest.json

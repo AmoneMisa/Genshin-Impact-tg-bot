@@ -1,0 +1,4 @@
+The initial two azure dwarf attempts were rejected for an unsuitable open bodice. Accepted third edit uses the racial dwarf painting only and preserves its closed dress.
+
+Exact accepted prompt:
+Use case: precise-object-edit. Edit this petite dwarf character's CLOTHING COLORS AND ORNAMENTS ONLY. Preserve exactly this reference's closed high-neck dress, long sleeves, covered shoulders and chest, short compact legs, twin red ponytails, face, pose and flat boots. Replace red fabrics with azure, white and midnight navy; replace flame embroidery with delicate antique-gold leaves and small cyan crystal pendants to match custom costume Azure Benediction. Keep the original MODEST FULLY CLOSED dress pattern, no bare chest, no off-shoulder bodice, no thigh slit, no heels, no longer legs. Opaque knee-length skirt. Full-body 1024x1536 transparent alpha, all silhouette contained with breathing room, no background/glow, no text/watermarks/weapons/spiders.

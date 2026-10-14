@@ -31,13 +31,14 @@ function chat(...members) {
 
 test('steal state initializes two attempts and hides unavailable targets', () => {
   const attacker = member(1, { game: { chanceToSteal: undefined } });
-  const visible = member(2);
+  const visible = member(2, { gender: 'female' });
   const bot = member(3, { userChatData: { user: { first_name: 'Bot', is_bot: true } } });
   const left = member(4, { userChatData: { status: 'left' } });
   const state = getStealState(chat(attacker, visible, bot, left), 1, 1000);
 
   assert.equal(state.attempts, 2);
   assert.deepEqual(state.targets.map(target => target.id), ['2']);
+  assert.equal(state.targets[0].gender, 'female', 'target portrait uses saved gender');
   assert.equal(attacker.game.chanceToSteal, 2);
 });
 

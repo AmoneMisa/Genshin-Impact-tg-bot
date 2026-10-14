@@ -24,7 +24,7 @@ const screens = [
 const $ = id => document.getElementById(id);
 const fmt = value => new Intl.NumberFormat('ru-RU').format(value);
 const esc = value => String(value).replace(/[&<>"']/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-const ui = name => `../art/ui/v1/${({'flask-conical':'potion-mp',castle:'palace','user-round':'spirit',dices:'dice-icon','shopping-cart':'shopping-basket'})[name]||name}-128.webp`;
+const ui = name => `../art/ui/v1/${({'flask-conical':'potion-mp','flask-conical':'potion-mp','flask-conical':'potion-mp',castle:'palace','user-round':'spirit',dices:'dice-icon','shopping-cart':'shopping-basket'})[name]||name}-128.webp`;
 const art = name => `../art/items/v1/catalog-s80-${name}-128.webp`;
 const img = (url,cls='') => `<img src="${url}" class="${cls}" alt="" decoding="async">`;
 const row = (label,value,cls='') => `<div class="stat-row"><span>${label}</span><b class="${cls}">${value}</b></div>`;

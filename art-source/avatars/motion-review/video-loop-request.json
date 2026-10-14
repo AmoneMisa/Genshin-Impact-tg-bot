@@ -1,0 +1,33 @@
+{
+  "status": "waiting-for-runway-installation-and-connection",
+  "character": "elf-female",
+  "sourceImage": "webapp/art/avatars/races/v2/elf-female-512.webp",
+  "sourcePainting": "art-source/avatars/races/elf-female.png",
+  "motionReferenceUrl": "https://i.redd.it/j15xpaxfsvif1.gif",
+  "referenceAccess": "GIF inaccessible: Reddit requests a human verification; attached still inspected",
+  "referenceScope": "Natural idle character animation, not the seated pose, scenery, clothes or pixel-art style",
+  "deliveryTarget": {
+    "width": 240,
+    "height": 360,
+    "fps": 24,
+    "loopSeconds": 6,
+    "targetBytes": 512000,
+    "sound": false,
+    "background": "transparent if supported by the connected workflow; validate before game integration",
+    "preferredFormats": ["alpha WebM", "animated WebP"],
+    "stillFallback": "webapp/art/avatars/races/v2/elf-female-256.webp"
+  },
+  "promptFile": "art-source/avatars/motion-review/video-loop-prompt.txt",
+  "acceptance": [
+    "Character face, anatomy, hairstyle, outfit, embroidery and gold ornaments stay consistent",
+    "Hands and limbs move at joints without changing proportions",
+    "Waist and fitted bodice retain their shape",
+    "Visible subtle breathing and one natural blink",
+    "Hair and loose fabric move with gentle delayed follow-through",
+    "Feet stay planted; no steps, dancing or large gestures",
+    "Camera, framing, scale and lighting remain fixed",
+    "Loop boundary has no visible jump or dissolve",
+    "No duplicate fingers, texture shimmer, melted jewelry or rubber-like stretching",
+    "Measure final asset size and phone decoding cost before shipping"
+  ]
+}

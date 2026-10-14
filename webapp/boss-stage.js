@@ -12,7 +12,8 @@
 //
 // Falls back to a plain <img> without WebGL and a still frame with reduced motion.
 
-import { familyOf, portraitFamily } from './class-family.js';
+import { familyOf } from './class-family.js';
+import { menuArtFor } from './menu-art.js';
 import L2_BOSS_ART from './l2-boss-art.js';
 
 export const BOSS_ART = Object.freeze({
@@ -63,10 +64,8 @@ export function bossArtUrl(name) {
   return BOSS_ART[name] ? `/art/bosses/${BOSS_ART[name].art || name}.webp` : null;
 }
 
-export function classArtUrl(className, gender) {
-  const family = portraitFamily(className);
-  const cls = CLASS_SKILL[family] ? family : 'noClass';
-  return `/art/classes/${cls}-${gender === 'female' ? 'female' : 'male'}.webp`;
+export function classArtUrl(className, gender, race) {
+  return menuArtFor('profile', {className, gender, race});
 }
 
 /** Decaying envelope used for reactions: 1 at t = 0, ~0 after `duration`, 0 before 0. */
@@ -313,7 +312,7 @@ function portrait(host, player) {
   if (!player) return null;
   const node = document.createElement('div');
   node.className = 'boss-stage-player';
-  node.innerHTML = `<img src="${classArtUrl(player.className, player.gender)}" alt=""><span class="boss-stage-aura"></span>`;
+  node.innerHTML = `<img src="${classArtUrl(player.className, player.gender, player.race)}" alt=""><span class="boss-stage-aura"></span>`;
   host.appendChild(node);
   return node;
 }

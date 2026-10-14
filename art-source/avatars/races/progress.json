@@ -1,0 +1,223 @@
+{
+  "updated": "2026-10-13",
+  "status": "complete",
+  "generated": [
+    "elf-male",
+    "elf-female",
+    "darkElf-male",
+    "darkElf-female",
+    "orc-male",
+    "orc-female",
+    "dwarf-male",
+    "dwarf-female",
+    "kamael-male",
+    "kamael-female"
+  ],
+  "reused": [
+    "human-male",
+    "human-female"
+  ],
+  "files": [
+    {
+      "key": "orc-male",
+      "width": 256,
+      "bytes": 28786
+    },
+    {
+      "key": "orc-male",
+      "width": 512,
+      "bytes": 85378
+    },
+    {
+      "key": "orc-male",
+      "width": 1024,
+      "bytes": 273492
+    },
+    {
+      "key": "orc-female",
+      "width": 256,
+      "bytes": 29394
+    },
+    {
+      "key": "orc-female",
+      "width": 512,
+      "bytes": 90278
+    },
+    {
+      "key": "orc-female",
+      "width": 1024,
+      "bytes": 299626
+    },
+    {
+      "key": "dwarf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v3/dwarf-female-256.webp",
+      "bytes": 30310
+    },
+    {
+      "key": "dwarf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v3/dwarf-female-512.webp",
+      "bytes": 92958
+    },
+    {
+      "key": "dwarf-female",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v3/dwarf-female-1024.webp",
+      "bytes": 294506
+    },
+    {
+      "key": "dwarf-male",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v3/dwarf-male-256.webp",
+      "bytes": 27344
+    },
+    {
+      "key": "dwarf-male",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v3/dwarf-male-512.webp",
+      "bytes": 81300
+    },
+    {
+      "key": "dwarf-male",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v3/dwarf-male-1024.webp",
+      "bytes": 258022
+    },
+    {
+      "key": "elf-male",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v2/elf-male-256.webp",
+      "bytes": 25110
+    },
+    {
+      "key": "elf-male",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v2/elf-male-512.webp",
+      "bytes": 71354
+    },
+    {
+      "key": "elf-male",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v2/elf-male-1024.webp",
+      "bytes": 220332
+    },
+    {
+      "key": "elf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v2/elf-female-256.webp",
+      "bytes": 30238
+    },
+    {
+      "key": "elf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v2/elf-female-512.webp",
+      "bytes": 89602
+    },
+    {
+      "key": "elf-female",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v2/elf-female-1024.webp",
+      "bytes": 287540
+    },
+    {
+      "key": "darkElf-male",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v2/darkElf-male-256.webp",
+      "bytes": 26914
+    },
+    {
+      "key": "darkElf-male",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v2/darkElf-male-512.webp",
+      "bytes": 79238
+    },
+    {
+      "key": "darkElf-male",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v2/darkElf-male-1024.webp",
+      "bytes": 243602
+    },
+    {
+      "key": "darkElf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v2/darkElf-female-256.webp",
+      "bytes": 32794
+    },
+    {
+      "key": "darkElf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v2/darkElf-female-512.webp",
+      "bytes": 104022
+    },
+    {
+      "key": "darkElf-female",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v2/darkElf-female-1024.webp",
+      "bytes": 353260
+    },
+    {
+      "key": "kamael-male",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v2/kamael-male-256.webp",
+      "bytes": 31642
+    },
+    {
+      "key": "kamael-male",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v2/kamael-male-512.webp",
+      "bytes": 92098
+    },
+    {
+      "key": "kamael-male",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v2/kamael-male-1024.webp",
+      "bytes": 291990
+    },
+    {
+      "key": "kamael-female",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v2/kamael-female-256.webp",
+      "bytes": 33014
+    },
+    {
+      "key": "kamael-female",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v2/kamael-female-512.webp",
+      "bytes": 95126
+    },
+    {
+      "key": "kamael-female",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v2/kamael-female-1024.webp",
+      "bytes": 282448
+    }
+  ],
+  "tests": 20,
+  "browserScenarios": 36,
+  "published": false,
+  "latestRevision": {
+    "keys": [
+      "kamael-male",
+      "kamael-female"
+    ],
+    "version": "v2",
+    "date": "2026-10-13",
+    "validation": {
+      "testsPassed": 20,
+      "browserScenarios": 12,
+      "widths": [
+        320,
+        390,
+        1100
+      ],
+      "reducedMotion": true,
+      "decodedUrls": true,
+      "genderSwitch": true,
+      "focus": true,
+      "openClose": true,
+      "horizontalOverflow": false,
+      "publishedToRemote": false
+    }
+  }
+}

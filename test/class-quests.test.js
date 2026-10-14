@@ -181,4 +181,7 @@ test('the screen state lists the current class\'s professions with progress and 
   assert.equal(result.ok, true);
   assert.equal(result.quest, undefined, 'the raw template stays on the server');
   assert.equal(getClassQuestsState(player('noClass')).needsBaseClass, true);
+  const female = player();
+  female.gender = 'female';
+  assert.equal(getClassQuestsState(female).gender, 'female', 'profession portrait uses saved gender');
 });

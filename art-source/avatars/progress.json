@@ -1,0 +1,149 @@
+{
+  "updated": "2026-10-13",
+  "status": "batch-2-complete",
+  "accepted": [
+    "mage-female",
+    "priest-female",
+    "rogue-male",
+    "mage-male",
+    "berserk-male",
+    "rogue-female",
+    "warrior-male",
+    "priest-male"
+  ],
+  "files": [
+    {
+      "key": "mage-female",
+      "width": 256,
+      "bytes": 38192
+    },
+    {
+      "key": "mage-female",
+      "width": 512,
+      "bytes": 122390
+    },
+    {
+      "key": "mage-female",
+      "width": 1024,
+      "bytes": 370872
+    },
+    {
+      "key": "priest-female",
+      "width": 256,
+      "bytes": 35698
+    },
+    {
+      "key": "priest-female",
+      "width": 512,
+      "bytes": 107262
+    },
+    {
+      "key": "priest-female",
+      "width": 1024,
+      "bytes": 348466
+    },
+    {
+      "key": "rogue-male",
+      "width": 256,
+      "bytes": 27042
+    },
+    {
+      "key": "rogue-male",
+      "width": 512,
+      "bytes": 80402
+    },
+    {
+      "key": "rogue-male",
+      "width": 1024,
+      "bytes": 257564
+    },
+    {
+      "key": "mage-male",
+      "width": 256,
+      "bytes": 28072
+    },
+    {
+      "key": "mage-male",
+      "width": 512,
+      "bytes": 84002
+    },
+    {
+      "key": "mage-male",
+      "width": 1024,
+      "bytes": 268326
+    },
+    {
+      "key": "berserk-male",
+      "width": 256,
+      "bytes": 34832
+    },
+    {
+      "key": "berserk-male",
+      "width": 512,
+      "bytes": 100244
+    },
+    {
+      "key": "berserk-male",
+      "width": 1024,
+      "bytes": 306698
+    },
+    {
+      "key": "rogue-female",
+      "width": 256,
+      "bytes": 28084
+    },
+    {
+      "key": "rogue-female",
+      "width": 512,
+      "bytes": 86010
+    },
+    {
+      "key": "rogue-female",
+      "width": 1024,
+      "bytes": 294488
+    },
+    {
+      "key": "warrior-male",
+      "width": 256,
+      "bytes": 27152
+    },
+    {
+      "key": "warrior-male",
+      "width": 512,
+      "bytes": 80934
+    },
+    {
+      "key": "warrior-male",
+      "width": 1024,
+      "bytes": 261978
+    },
+    {
+      "key": "priest-male",
+      "width": 256,
+      "bytes": 24742
+    },
+    {
+      "key": "priest-male",
+      "width": 512,
+      "bytes": 70516
+    },
+    {
+      "key": "priest-male",
+      "width": 1024,
+      "bytes": 218956
+    }
+  ],
+  "validation": {
+    "unitTests": 17,
+    "widths": [
+      320,
+      390,
+      1100
+    ],
+    "reducedMotion": true,
+    "dialogOpenClose": true
+  },
+  "published": false,
+  "scope": "Race/gender outfits; see races/progress.json. Previous class-only default mapping superseded.",
+  "activeRaceMappings": 12
+}

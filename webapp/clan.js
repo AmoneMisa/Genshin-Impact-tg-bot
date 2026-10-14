@@ -1,3 +1,4 @@
+import {polishIcon} from './art/polish-icon-art.js';
 import {hallAuctionView} from './clan-hall-auction-view.js';
 import {openWarehouseGame} from './warehouse.js';
 import {clanHallView} from './clan-hall-view.js';
@@ -330,7 +331,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     if (!rta) return '';
     return `
       <section class="clan-card">
-        <h4>Командные бои (RTA) · рейтинг ${formatNumber(rta.rating)}</h4>
+        <h4>${polishIcon('clan-rta')} Командные бои (RTA) · рейтинг ${formatNumber(rta.rating)}</h4>
         <small>Победы ${rta.wins} · поражения ${rta.losses} · ничьи ${rta.draws}. Отряд до ${rta.squadSize} бойцов сражается копиями героев: от ${rta.minSquad} бойцов отряд готов к бою.</small>
         <div class="clan-warehouse">${rta.squad.length ? rta.squad.map(member => `<article><strong>${escapeHtml(member.name)}</strong><small>⚔ ${formatNumber(member.power)}</small>${rta.canManage ? `<button type="button" class="clan-play ghost" data-clan-rta-leave="${member.userId}">Убрать</button>` : ''}</article>`).join('') : '<small>В отряде пока никого.</small>'}</div>
         <button type="button" class="clan-play" data-clan-rta-join>${rta.inSquad ? 'Обновить бойца' : 'Вступить в отряд'}</button>

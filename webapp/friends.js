@@ -36,7 +36,7 @@ function friendLabel(card) {
 function formatNumber(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0); }
 
 export function portraitFor(person) {
-  return menuArtFor('profile', { className: person?.className, gender: person?.gender });
+  return menuArtFor('profile', { className: person?.className, gender: person?.gender, race: person?.race });
 }
 
 /** Telegram link to message a player, when they have a public username. */

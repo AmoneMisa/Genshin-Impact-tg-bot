@@ -1,0 +1,270 @@
+{
+  "date": "2026-10-13",
+  "status": "complete",
+  "generation": "built-in imagegen, one identity-preserve edit per asset",
+  "portraits": 12,
+  "files": [
+    {
+      "key": "human-male",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v1/human-male-128.webp",
+      "bytes": 8274
+    },
+    {
+      "key": "human-male",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v1/human-male-256.webp",
+      "bytes": 24802
+    },
+    {
+      "key": "human-male",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v1/human-male-512.webp",
+      "bytes": 76520
+    },
+    {
+      "key": "human-female",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v1/human-female-128.webp",
+      "bytes": 10046
+    },
+    {
+      "key": "human-female",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v1/human-female-256.webp",
+      "bytes": 30950
+    },
+    {
+      "key": "human-female",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v1/human-female-512.webp",
+      "bytes": 80902
+    },
+    {
+      "key": "orc-male",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v1/orc-male-128.webp",
+      "bytes": 8828
+    },
+    {
+      "key": "orc-male",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v1/orc-male-256.webp",
+      "bytes": 27228
+    },
+    {
+      "key": "orc-male",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v1/orc-male-512.webp",
+      "bytes": 71904
+    },
+    {
+      "key": "orc-female",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v1/orc-female-128.webp",
+      "bytes": 9368
+    },
+    {
+      "key": "orc-female",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v1/orc-female-256.webp",
+      "bytes": 28580
+    },
+    {
+      "key": "orc-female",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v1/orc-female-512.webp",
+      "bytes": 77856
+    },
+    {
+      "key": "dwarf-female",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v3/dwarf-female-128.webp",
+      "bytes": 11768
+    },
+    {
+      "key": "dwarf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v3/dwarf-female-256.webp",
+      "bytes": 36298
+    },
+    {
+      "key": "dwarf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v3/dwarf-female-512.webp",
+      "bytes": 78956
+    },
+    {
+      "key": "dwarf-male",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v3/dwarf-male-128.webp",
+      "bytes": 8004
+    },
+    {
+      "key": "dwarf-male",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v3/dwarf-male-256.webp",
+      "bytes": 24520
+    },
+    {
+      "key": "dwarf-male",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v3/dwarf-male-512.webp",
+      "bytes": 74740
+    },
+    {
+      "key": "elf-male",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v2/elf-male-128.webp",
+      "bytes": 8386
+    },
+    {
+      "key": "elf-male",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v2/elf-male-256.webp",
+      "bytes": 25214
+    },
+    {
+      "key": "elf-male",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v2/elf-male-512.webp",
+      "bytes": 75196
+    },
+    {
+      "key": "elf-female",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v2/elf-female-128.webp",
+      "bytes": 7918
+    },
+    {
+      "key": "elf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v2/elf-female-256.webp",
+      "bytes": 23460
+    },
+    {
+      "key": "elf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v2/elf-female-512.webp",
+      "bytes": 71762
+    },
+    {
+      "key": "darkElf-male",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v2/darkElf-male-128.webp",
+      "bytes": 8240
+    },
+    {
+      "key": "darkElf-male",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v2/darkElf-male-256.webp",
+      "bytes": 24470
+    },
+    {
+      "key": "darkElf-male",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v2/darkElf-male-512.webp",
+      "bytes": 74482
+    },
+    {
+      "key": "darkElf-female",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v2/darkElf-female-128.webp",
+      "bytes": 7244
+    },
+    {
+      "key": "darkElf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v2/darkElf-female-256.webp",
+      "bytes": 21518
+    },
+    {
+      "key": "darkElf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v2/darkElf-female-512.webp",
+      "bytes": 66758
+    },
+    {
+      "key": "kamael-male",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v2/kamael-male-128.webp",
+      "bytes": 9234
+    },
+    {
+      "key": "kamael-male",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v2/kamael-male-256.webp",
+      "bytes": 27522
+    },
+    {
+      "key": "kamael-male",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v2/kamael-male-512.webp",
+      "bytes": 73242
+    },
+    {
+      "key": "kamael-female",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v2/kamael-female-128.webp",
+      "bytes": 8426
+    },
+    {
+      "key": "kamael-female",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v2/kamael-female-256.webp",
+      "bytes": 24940
+    },
+    {
+      "key": "kamael-female",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v2/kamael-female-512.webp",
+      "bytes": 74812
+    }
+  ],
+  "tests": {
+    "passed": 52,
+    "failed": 0
+  },
+  "browser": {
+    "scenarios": 36,
+    "widths": [
+      320,
+      390,
+      1100
+    ],
+    "reducedMotion": true,
+    "decodedUrls": true,
+    "genderSwitch": true,
+    "cooldownDisabled": true,
+    "focus": true,
+    "openClose": true,
+    "horizontalOverflow": false
+  },
+  "desktopReferencesConsumed": 0,
+  "noSpiders": true,
+  "publishedToRemote": false,
+  "latestRevision": {
+    "keys": [
+      "kamael-male",
+      "kamael-female"
+    ],
+    "version": "v2",
+    "date": "2026-10-13",
+    "validation": {
+      "testsPassed": 20,
+      "browserScenarios": 12,
+      "widths": [
+        320,
+        390,
+        1100
+      ],
+      "reducedMotion": true,
+      "decodedUrls": true,
+      "genderSwitch": true,
+      "focus": true,
+      "openClose": true,
+      "horizontalOverflow": false,
+      "publishedToRemote": false
+    }
+  }
+}

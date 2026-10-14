@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-13",
+  "key": "dwarf-female",
+  "reason": "User correction: female dwarf should have a petite, light-framed silhouette inspired by classic Lineage II; previous figure was too broad.",
+  "tool": "built-in imagegen",
+  "fullBody": {
+    "prompt": "Use case: precise-object-edit. The input is the current FULL-BODY adult female dwarf avatar to correct, not a body-shape reference. Keep ONLY the auburn braided hairstyle, amber eyes, adult facial identity, red/antique gold fire-leaf motif and painted fantasy anime quality. Replace her body anatomy and refit the dress substantially. Desired silhouette: a petite adult female dwarf in classic Lineage II proportions, about FIVE head lengths tall total, narrow shoulders, delicate small frame, small natural chest, slim straight hips, slender arms, slim calves, small hands and feet. The head is proportionally larger than a tall human's but the face remains unmistakably adult. This is a light compact dwarf woman, NOT a broad stocky dwarf, NOT a voluptuous human compressed in height. Give her a modest opaque high-neck red dress with a small gold collar, flat fitted bodice without cup-shaped bust panels, narrow waist, a simple knee-length red skirt with a few gold flame-embroidered flowing side panels, neat red-gold knee boots. No exposed chest, no thigh cutouts, no exaggerated hourglass curves. Reduce silhouette mass and costume bulk dramatically; keep original palette and ornament identity. Full body standing, empty hands, both feet fully visible, 8 percent breathing room. Portrait 1024x1536 TRUE transparent alpha. No backdrop, haze, glow outside the subject, text, watermark, weapon, spider, extra limbs or child.",
+    "editTarget": "art-source/avatars/revisions/dwarf-female-v1/full-body.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-a53b54bf-cc68-44f8-8e38-ecd947cd042e.png",
+    "source": "art-source/avatars/races/dwarf-female.png"
+  },
+  "portrait": {
+    "prompt": "Use case: identity-preserve. Asset type: compact RPG avatar portrait, square 1024x1024. Input is the revised full-body adult petite female dwarf; reframe her EXACT same face, auburn braided updo, amber eyes, delicate narrow shoulders and closed high-neck red-gold fire-leaf dress as a head and shoulders portrait. Preserve adult maturity and the slender proportions; do not broaden the face or shoulders, do not add curves or a low neckline. Face centered, eyes around 38 percent from top; hair entirely inside canvas with small top margin. Shoulders fill bottom corners. Original painted anime finish. TRUE transparent alpha, no background haze or glow beyond the subject, no text, frame, weapons, spiders. Change only framing.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-afc0da9c-e699-4e7a-bd21-c0f43fe69567.png",
+    "editTarget": "art-source/avatars/races/dwarf-female.png",
+    "source": "art-source/avatars/portraits/dwarf-female.png"
+  },
+  "review": "Accepted full-body and matching portrait: petite adult silhouette, narrow shoulders and lighter frame, closed bodice and shorter skirt; preserved auburn braids, amber eyes and red-gold embroidery. No text or spiders; alpha checked.",
+  "files": [
+    {
+      "key": "dwarf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/races/v2/dwarf-female-256.webp",
+      "bytes": 23712
+    },
+    {
+      "key": "dwarf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/races/v2/dwarf-female-512.webp",
+      "bytes": 72062
+    },
+    {
+      "key": "dwarf-female",
+      "width": 1024,
+      "path": "webapp/art/avatars/races/v2/dwarf-female-1024.webp",
+      "bytes": 228754
+    },
+    {
+      "key": "dwarf-female",
+      "width": 128,
+      "path": "webapp/art/avatars/portraits/v2/dwarf-female-128.webp",
+      "bytes": 9988
+    },
+    {
+      "key": "dwarf-female",
+      "width": 256,
+      "path": "webapp/art/avatars/portraits/v2/dwarf-female-256.webp",
+      "bytes": 30590
+    },
+    {
+      "key": "dwarf-female",
+      "width": 512,
+      "path": "webapp/art/avatars/portraits/v2/dwarf-female-512.webp",
+      "bytes": 78758
+    }
+  ],
+  "validation": {
+    "testsPassed": 20,
+    "browserScenarios": 6,
+    "widths": [
+      320,
+      390,
+      1100
+    ],
+    "alpha": true,
+    "slotsAccessible": true,
+    "reducedMotion": true,
+    "genderSwitch": true,
+    "noHorizontalOverflow": true,
+    "noFailedRequests": true
+  }
+}

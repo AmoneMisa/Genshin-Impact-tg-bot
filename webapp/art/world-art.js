@@ -1,7 +1,10 @@
+import { avatarArtUrl } from './avatar-art.js';
 import { REVIEWED_WORLD_ART } from './world-art-manifest.js';
 import { portraitFamily } from '../class-family.js';
 
 export function fullBodyHeroUrl(player = {}) {
+  const avatar = avatarArtUrl(player);
+  if (avatar) return avatar;
   const family = portraitFamily(player.className);
   const cls = ['noClass', 'warrior', 'archer', 'mage', 'priest'].includes(family) ? family : 'noClass';
   return worldArtUrl(`heroes/${cls}-${player.gender === 'female' ? 'female' : 'male'}`, 512);

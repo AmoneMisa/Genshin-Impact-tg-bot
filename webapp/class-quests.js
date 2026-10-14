@@ -163,7 +163,7 @@ export async function openClassQuests({ api, renderState, haptic, statusElement 
 
     content.innerHTML = `
       <section class="cq-summary">
-        <span class="cq-portrait" style="--art:url('${menuArtFor('profile', { className: state.className })}')" aria-hidden="true"></span>
+        <span class="cq-portrait" style="--art:url('${menuArtFor('profile', state)}')" aria-hidden="true"></span>
         <div><small>Класс · ${state.tier}-й ранг</small><strong>${escapeHtml(state.classTitle)}</strong>
         <em>1-я профессия — с 20 уровня, 2-я — с 40, 3-я — с 76. Задания выполняются в боях с боссами.</em></div>
       </section>

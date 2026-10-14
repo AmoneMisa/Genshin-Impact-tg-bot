@@ -1,0 +1,54 @@
+[
+  {
+    "key": "dwarf-female",
+    "kind": "body",
+    "source": "art-source/avatars/races/dwarf-female.png",
+    "revision": "v3",
+    "prompt": "Use case: style-transfer and racial anatomy correction. Create ONE full-body FEMALE dwarf decorative avatar. Images 1-3 are authoritative Lineage II dwarf MODEL ANATOMY references, specifically the FEMALE figures: match their large head relative to the compact body, short neck, narrow shoulders, small torso, slender short arms and legs, short stature and small flat boots. Image 4 is ONLY the RED-GOLD decorative clothing palette and embroidery reference, NOT anatomy; its human-like body proportions must be replaced. Female is clearly different from the stocky bearded males in images 1-3. This is an adult fantasy dwarf, nonsexual, clothed modestly: short compact silhouette around 4.5 head lengths tall, friendly round face, large amber eyes, small nose, natural small lips, auburn twin ponytails and neat bangs inspired by references. Slim petite build, no hourglass curves, no chest emphasis, no muscular bulk. Wear a fully closed high-neck crimson dress with antique gold flame-leaf embroidery, fitted flat bodice, knee-length skirt with a few light ruffles, long sleeves, small flat red-gold boots. Do not copy the reference armor sets, weapons, game logo or background. Hand-painted anime royal fantasy style consistent with image 4; silhouette and head/body ratio MUST follow images 1-3. Neutral standing pose, empty hands, front three-quarter view. Portrait 1024x1536 TRUE transparent alpha, no haze or floor. Full head, ponytails, hands and feet inside 8 percent breathing room. No text, watermarks, spiders, extra limbs. Do not produce a tall human or a miniaturized curvy adult human.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-bf883333-020f-4d9a-abc3-9a4e096065be.png",
+    "references": [
+      "art-source/avatars/revisions/dwarf-reference-v3/references/classic-group.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/armored-pair.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/full-body-pair.png"
+    ],
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders."
+  },
+  {
+    "key": "dwarf-female",
+    "kind": "portrait",
+    "source": "art-source/avatars/portraits/dwarf-female.png",
+    "revision": "v3",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders avatar portrait of the EXACT female dwarf in the input full-body painting. Preserve the round face, large amber eyes, small natural nose and lips, auburn twin ponytails with bangs, narrow petite shoulders, closed high collar and red-gold flame embroidered dress. Do not make her face long or human-supermodel shaped, do not enlarge her body or add makeup. Faithfully reframe the same image identity and hand-painted quality. Center face, eyes at around 38 percent canvas height; BOTH ponytails and head fully inside with a small margin, shoulders fill lower corners. True transparent background with clean alpha; no haze, floor, text, border, weapon, spider or extra limbs. Change only framing.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-8efb61b7-01bc-49de-8933-ff1f04e0d571.png",
+    "references": [
+      "art-source/avatars/races/dwarf-female.png"
+    ],
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders."
+  },
+  {
+    "key": "dwarf-male",
+    "kind": "body",
+    "source": "art-source/avatars/races/dwarf-male.png",
+    "revision": "v3",
+    "prompt": "Use case: style-transfer and racial anatomy correction. Create ONE full-body MALE dwarf decorative avatar. Images 1-3 are authoritative Lineage II dwarf MODEL ANATOMY references, specifically the MALE figures: a mature elderly bald-topped dwarf with gray-white hair at sides, thick bushy white eyebrows, broad weathered face, large nose and thick rounded white beard. Match their head/body ratio, short neck, very broad barrel chest, thick short arms and large hands, broad waist, short sturdy legs and broad flat boots. Around FOUR head lengths tall total excluding beard. Image 4 is ONLY the ivory-and-antique-gold decorative costume palette and embroidery reference; its tall elegant long-haired anatomy must be replaced. This is the strong stocky male dwarf silhouette shown in the references, visibly different from the petite female. Wear an ornate ivory formal coat ending at mid thigh so the short sturdy legs are visible, golden botanical/geometric embroidery, heavy gold clasps, dark ivory trousers and broad ivory-gold flat boots. Keep outfit as decorative clothing, not a copy of an original L2 armor set. No long sweeping robes hiding the proportions, no long elf-like flowing hair. Hand-painted anime royal fantasy consistent with image 4. Neutral standing pose, empty hands, front three-quarter view. Portrait 1024x1536 TRUE transparent alpha, entire head, beard, hands, coat and both feet visible with 8 percent padding. No weapons, floor, backdrop, haze, text, watermark, spiders or extra limbs. Model proportions follow images 1-3, never tall human proportions.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-c3119a08-1dcb-41c4-ac4c-9ce51c06120c.png",
+    "references": [
+      "art-source/avatars/revisions/dwarf-reference-v3/references/classic-group.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/armored-pair.png",
+      "art-source/avatars/revisions/dwarf-reference-v3/references/full-body-pair.png"
+    ],
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders."
+  },
+  {
+    "key": "dwarf-male",
+    "kind": "portrait",
+    "source": "art-source/avatars/portraits/dwarf-male.png",
+    "revision": "v3",
+    "prompt": "Use case: identity-preserve. Create a square 1024x1024 head-and-shoulders avatar portrait of the EXACT male dwarf in the input full-body painting. Preserve the bald top and short white side hair, wide weathered face, broad nose, bushy white eyebrows, thick rounded white beard, short neck and broad shoulders. Keep the ivory-and-gold embroidered coat collar and shoulder details. Do not add flowing hair or make the face slender/elf-like. Faithfully reframe the same identity and hand-painted quality. Center face, eyes at around 38 percent canvas height; whole bald head and beard inside with a small top margin, shoulders fill lower corners. True transparent background, clean alpha, no haze, floor, text, border, weapon, spider or extra limbs. Change only framing.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a076e2-2b43-7481-8a34-bac674ae4e4e\\exec-ef9fd30c-43a9-4a73-83a0-670b6c5d2179.png",
+    "references": [
+      "art-source/avatars/races/dwarf-male.png"
+    ],
+    "review": "Accepted: matching racial proportions/identity and costume; transparent alpha, no text or spiders."
+  }
+]

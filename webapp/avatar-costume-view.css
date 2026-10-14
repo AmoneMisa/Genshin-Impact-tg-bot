@@ -1,0 +1,17 @@
+/* Painted costumes animate only while their shared visibility controller permits it. */
+.avatar-costume-view{position:relative;display:block;width:100%;aspect-ratio:2/3;isolation:isolate;pointer-events:none}
+.avatar-costume-view .avatar-costume-art{display:block;width:100%;height:100%;object-fit:contain}
+[data-avatar-motion]{--costume-glow:153,112,218;isolation:isolate}
+[data-avatar-tint="gold"]{--costume-glow:224,177,83}
+[data-avatar-tint="ice"]{--costume-glow:112,194,234}
+[data-avatar-tint="rose"]{--costume-glow:219,95,133}
+[data-avatar-motion]::before{content:"";position:absolute;inset:12% 19% 7%;background:radial-gradient(ellipse,rgba(var(--costume-glow),.22),rgba(var(--costume-glow),.07) 42%,transparent 70%);opacity:.22;pointer-events:none;z-index:-1}
+[data-avatar-art]{transform-origin:50% 90%;pointer-events:none}
+[data-avatar-motion-active] [data-avatar-art]{animation:costume-sway 7s ease-in-out infinite}
+[data-avatar-motion-active]::before{animation:costume-glimmer 5.6s ease-in-out infinite}
+@keyframes costume-sway{0%,100%{transform:translateY(0) rotate(-.35deg)}50%{transform:translateY(-2px) rotate(.35deg)}}
+@keyframes costume-glimmer{0%,100%{opacity:.22}50%{opacity:.65}}
+@media(prefers-reduced-motion:reduce){[data-avatar-motion] [data-avatar-art],[data-avatar-motion]::before{animation:none!important;transform:none}}
+.avatar-costume-canvas{position:absolute;pointer-events:none}
+[data-avatar-art][data-avatar-rig-active]{opacity:0;animation:none!important}
+[data-avatar-art][data-avatar-rig-failed]{animation:none!important;transform:none}

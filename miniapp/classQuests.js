@@ -19,7 +19,7 @@ function inventoryView(session) {
 
 /** The profession screen: current class, available promotions and the active quest. */
 export function getClassQuestsState(session) {
-  return { ...getClassQuestView(session), inventory: inventoryView(session), materials: listMaterials(session) };
+  return { ...getClassQuestView(session), gender: session?.gender === 'female' ? 'female' : 'male', inventory: inventoryView(session), materials: listMaterials(session) };
 }
 
 function withState(session, result) {

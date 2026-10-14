@@ -1,0 +1,552 @@
+[
+  {
+    "costumeId": "ivory-vows",
+    "name": "Обет белого золота",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/Свадебка.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/Свадебка.png",
+    "design": "LEFT wedding suit: ivory high-collar embroidered long coat, gold vine filigree, white waistcoat and patterned trousers, delicate gold shoulder chains, ivory-gold boots; optional single white rose lapel pin. NO bridal dress.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "gilded-veil",
+    "name": "Вуаль золотого обета",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/Свадебка.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/Свадебка.png",
+    "design": "RIGHT bridal outfit: opaque ivory bodice with gold leaf embroidery, off-shoulder draped sleeves, short layered white skirt, long translucent ivory overskirt, gold-trimmed ivory boots; pearl hairpins, small white rose bouquet. Closed high-neck opaque knee-length dwarf tailoring.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "rose-etiquette",
+    "name": "Розовый этикет",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-7f4d75bb-937a-477a-a30e-5614db22cedd.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-7f4d75bb-937a-477a-a30e-5614db22cedd.png",
+    "design": "LEFT white-pink floral formal suit: ivory and blush long coat, gold trim, embroidered pink and blue flowers, rose waist sash, high white shirt, ivory trousers, black formal boots; optional pink rose held low.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "nocturne-protocol",
+    "name": "Ночной протокол",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-7f4d75bb-937a-477a-a30e-5614db22cedd.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-7f4d75bb-937a-477a-a30e-5614db22cedd.png",
+    "design": "RIGHT black formal suit: long black tailored coat, antique gold floral embroidery, high collar, rose gemstone brooch, braided gold belt with chain tassels, fitted black trousers and black boots; optional elegant monocle.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "coalwood-warden",
+    "name": "Страж угольного леса",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-290e2d05-da76-434a-a0c1-6e3f202b4f29.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-290e2d05-da76-434a-a0c1-6e3f202b4f29.png",
+    "design": "Black-charcoal plate and leather armor, ember-red breast ornament, red-edged tattered coat panels, antler-shaped helmet crown, armored gloves and boots. Preserve armor silhouette. Optional matching dark sword held low, no flames outside silhouette.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "emerald-griffin",
+    "name": "Изумрудный грифон",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-29d1817d-4174-4978-b082-261c779037b0.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-29d1817d-4174-4978-b082-261c779037b0.png",
+    "design": "Emerald and antique gold ceremonial plate armor, bird-shaped shoulder plates, green jeweled chest, golden feather motifs, long dark-green coat panels and armored boots. Transform back wing shapes into cape panels; no added anatomical wings.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "triune-crown",
+    "name": "Триединый венец",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-3bce0f05-e258-4469-b57a-f54c6d17ce45.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-3bce0f05-e258-4469-b57a-f54c6d17ce45.png",
+    "design": "CENTRAL gold-purple-white queen's costume only: gold filigree armored bodice, violet fitted fabric, white/violet flowing split mantle panels, gold pointed crown, high gold-trimmed boots. Single wearer, exactly TWO arms, ONE head. The other faces/heads/arms are NOT part of outfit. Wing shapes become mantle panels. Optional small gold-purple scepter. Dwarf closed high-neck short opaque gown.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "astral-crown-knight",
+    "name": "Рыцарь астральной короны",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-3e341eb0-fb24-4869-82ca-4f54b769176b.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-3e341eb0-fb24-4869-82ca-4f54b769176b.png",
+    "design": "White-silver and antique gold cosmic plate cuirass, large cyan heart-shaped chest jewel, elegant curved filigree shoulder plates and full matching greaves; long white navy-trim coat panels. Keep ornate cosmic armor construction; finish lower armor as custom extension where source crop ends. Open helmet crown permits racial face.",
+    "partialReference": true,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "golden-phoenix",
+    "name": "Золотой феникс",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-5993f2e4-8ebf-4466-b334-38bbfb0c63de.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-5993f2e4-8ebf-4466-b334-38bbfb0c63de.png",
+    "design": "Bright polished gold full plate armor with sculpted pointed feather shoulder plates, raised gold breast centerpiece, heavy gold gauntlets and greaves, layered gold fauld; ornate gold helmet. Keep visible racial face through open faceplate. Optional gold ceremonial spear. The source shows the upper body only. Lower armor and boots are an original matching extension; do not claim unseen details are reproduced. Preserve deep-blue enamel insets and small multicolored gemstones among the dominant gold plates.",
+    "partialReference": true,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "crimson-herald",
+    "name": "Багряный герольд",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-69714f45-65b0-4ace-b82b-82faf606d32f.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-69714f45-65b0-4ace-b82b-82faf606d32f.png",
+    "design": "Deep red-black full plate armor, red angular helmet crest, broad red pauldrons, long heavy crimson-black cape with scalloped edge, red black greaves; optional matching narrow ceremonial sword. Open visor shows facial features.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "prismatic-archon",
+    "name": "Радужный архонт",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-770dab9d-370a-4ac4-9fac-2708d5f5703c.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-770dab9d-370a-4ac4-9fac-2708d5f5703c.png",
+    "design": "Blue-black crystalline armored gown with long prismatic translucent coat panels and multicolored stained-glass motifs, horn-like headpiece, cyan waist ornament, blue armored boots. Faceted rainbow wing patterns become cape surfaces; not extra anatomical wings. Opaque fitted covered bodice; dwarf closed short gown.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "scarlet-comet",
+    "name": "Алый кометарий",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-81120e27-6265-4fdf-a35a-2c6d66dfbbdf.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-81120e27-6265-4fdf-a35a-2c6d66dfbbdf.png",
+    "design": "Navy-black articulated full plate armor with sharp crimson breast star, red-edged shoulder blades, crimson horned helmet crest, dark-blue legs and red gauntlets, long dark-red coat tails; optional crimson sword lowered.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "prism-dragon",
+    "name": "Дракон цветного стекла",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-867b61c1-6d11-4a11-8835-f8e7a58180b7.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-867b61c1-6d11-4a11-8835-f8e7a58180b7.png",
+    "design": "Faceted blue-violet and rainbow mosaic full armor, pointed crystalline shoulder and forearm guards, prism helmet crest, iridescent feather-like skirt panels and matching boots. Reference wings become folded decorative cape panels; natural Kamael wing unchanged. Fully covered body; short closed dwarf armor.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "bloodfrost-rose",
+    "name": "Роза кровавого инея",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-90d745d7-2663-4d25-8f4d-5dc3285624ba.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-90d745d7-2663-4d25-8f4d-5dc3285624ba.png",
+    "design": "Ivory-white and blood-red thorn-inspired armor with white flowing hair inspiration, red thorn crown, red filigree shoulder and forearm plates, layered crimson/ivory short mantle skirt panels and red-white boots. No body injury or blood; thorn motifs are polished ornaments. Dwarf fully covered short dress.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "moon-velvet",
+    "name": "Лунный бархат",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-94c5955a-cb2d-49f2-a32a-59a820ef2272.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-94c5955a-cb2d-49f2-a32a-59a820ef2272.png",
+    "design": "Main CENTER complete gown in the design sheet: deep navy-blue and violet galaxy ball gown, SILVER filigree edging and crescent moons/stars, fitted opaque bodice, feather-like shoulder trim, layered bell-shaped tiered skirt and long translucent violet sleeve drapes. Ornate tall SILVER Gothic crown with tiny jewel drops and silver jeweled choker. Keep the embroidery silver, not gold. Short closed high-neck opaque dwarf adaptation. Both boots peek naturally below the shortened front hem; keep all rear drapes inside canvas.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "fuchsia-tempest",
+    "name": "Пурпурная гроза",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-a4e395bb-e85b-413c-9616-4c3a4df7a1eb.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-a4e395bb-e85b-413c-9616-4c3a4df7a1eb.png",
+    "design": "Black plum-magenta gown from mannequin design: magenta lightning-vein embroidery on opaque fitted bodice, ruffled magenta shoulders, layered flowing magenta-black overskirt, black-purple boots. Costume highlights confined to fabric; no detached lightning. Optional black small fan; dwarf closed knee-length gown.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "sandglass-dawn",
+    "name": "Песочные часы зари",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-b0e689e8-1fd3-4f74-bd69-0e05158b5e02.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-b0e689e8-1fd3-4f74-bd69-0e05158b5e02.png",
+    "design": "Reference design: pale steel-blue and ivory ceremonial PLATE ARMOR with dense ANTIQUE GOLD scrollwork, ROUND GOLD SUN MEDALLION centered on breastplate, sculpted pointed pauldrons, segmented arm and thigh plates, long dark blue-gray tabard with gold edging, ivory scarf and cape. No hood; wearer face open. One slim ceremonial staff with small gold sun disk echoes the source golden sun-pommeled prop, fully inside canvas; no floating halo or scenery. Lower boots partly obscured in source; complete matching boots are a custom extension.",
+    "partialReference": true,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "starlit-reverie",
+    "name": "Звёздная грёза",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-be428654-55e2-4ed9-8674-0c0685b7e9fa.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-be428654-55e2-4ed9-8674-0c0685b7e9fa.png",
+    "design": "LEFT short blue celestial dress only: navy star-thread opaque bodice, silver-blue geometric edging, flared galaxy-pattern knee-length skirt, long translucent silver-blue cape, silver-blue forearm ornament and navy boots. DIFFERENT from right-hand Cartographer robe. Optional slim crescent wand and small scholar hat. Dwarf closed high-neck opaque short dress.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "snow-seraph",
+    "name": "Снежный серафим",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-d0445e53-6600-47d2-9be6-e02282f9e234.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-d0445e53-6600-47d2-9be6-e02282f9e234.png",
+    "design": "Silver-white icy armor, blue ice-flake shoulder spikes, gold fine trim, white long cape and skirt-like fauld, pale blue chest stone and white-silver greaves. Wing-like shapes become white cape layers; exactly one natural Kamael wing. Optional silver spear.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "violet-astronomer",
+    "name": "Фиолетовая звёздочётка",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-d4d23514-675d-4edc-af50-1f0c47c1e676.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-d4d23514-675d-4edc-af50-1f0c47c1e676.png",
+    "design": "Main female gown on the mannequin: saturated royal VIOLET galaxy cloth, antique GOLD fine filigree, high collar and fully covered long sleeves with fitted ornate cuffs, purple shoulder drapes with gold beaded chains, opaque fitted bodice, layered high-low ruffled overskirt, dark fitted leggings and tall violet boots with gold scrollwork. Preserve the purple and gold color balance. No mannequin, no floating sparkles or text. Optional small silver spectacles and a pocket telescope held low. Dwarf plain closed high-neck short opaque gown without bust cups.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "eclipse-mantle",
+    "name": "Мантия затмения",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-d7b6e47c-182f-4089-ae4a-174bdbd56563.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-d7b6e47c-182f-4089-ae4a-174bdbd56563.png",
+    "design": "Black and crimson long ceremonial armored robe, magenta oval chest stone, black red pointed collar/headpiece, red split skirt panels and black boots. Butterfly membrane motifs used in mantle panels; no extra anatomical wings. Face open for racial features. Optional small dark ceremonial staff.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "amethyst-sovereign",
+    "name": "Император аметиста",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-e69d8b6b-e08c-46b5-8148-e20d4a046d4b.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-e69d8b6b-e08c-46b5-8148-e20d4a046d4b.png",
+    "design": "Black obsidian and antique gold heavy armor, angular purple crystal breast jewel, sharp gold-edged shoulder plates and forearm guards, purple crystal fauld panels and black-gold boots; horn-like gold helmet crown, open faceplate. No rings/fire/glow surrounding body. Optional purple ceremonial sword.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "midnight-gold-envoy",
+    "name": "Посланник чёрного золота",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-fcda287c-02d0-4b8f-bbb2-84c10beb2c65.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-fcda287c-02d0-4b8f-bbb2-84c10beb2c65.png",
+    "design": "Black long-tailed formal coat with antique gold leaf embroidery on shoulders, high collar and wrapped double-breasted lapel, gold waist chains, blue-lined tails, fitted black trousers and gold-embroidered boots. Distinct leaf motif, NOT Violet Courtier sun/moon ornament. Optional black top hat with narrow gold band.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "violet-nightblade",
+    "name": "Клинок фиолетовой ночи",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: CENTRAL tall masked dark-purple armored woman. Fitted opaque violet-black full-body armor, pointed small shoulder plates, split dark violet cloak strips and purple boots. Replace face mask with small optional half mask held in hand; expose racial face. No orbit ribbons. Dwarf covered full armor.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "plum-dragon-queen",
+    "name": "Сливовая драконица",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: UPPER row second-from-right magenta-haired armored queen. Black-violet plated bodice, magenta cloak and blade-shaped side skirt panels, angular violet shoulder/forearm armor and boots; optional tiny violet crown. Ignore surrounding dragons and extra bodies; wing motifs become coat panels. Dwarf closed covered outfit.",
+    "partialReference": false,
+    "status": "reviewed"
+  },
+  {
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Пепельная драконья мантия",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: SECOND column LOWER large grey-white haired woman. Grey-black scaled fitted ceremonial armor and layered grey feathered mantle skirt, silver-grey collar and bracers, grey boots. Treat dark wings as mantle panels; optional silver brooch. Dwarf closed opaque short gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "crimson-peacock",
+    "name": "Алое оперение",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: LOWER LEFT red-white peacock queen. Opaque red and gold leaf bodice, red-white feather-shaped layered skirt with green eye motifs, gold red crown, matching boots. Feather fans become cape panels, no external wings. Dwarf closed high-neck layered dress. Optional small hand fan with peacock eye motif.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "violet-dusk-prince",
+    "name": "Принц фиолетового заката",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: UPPER FAR RIGHT purple-gold male fighter. Purple and gold sculpted shoulder armor, layered violet-gold coat tails, fitted dark-purple armored trousers and pointed boots. Close exposed chest with matching violet fabric panel. Optional elegant small violet-gold scepter; no surrounding magic ribbons.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "sapphire-diadem",
+    "name": "Сапфировый венец",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: LOWER CENTRAL blue-and-gold queen with spear. Opaque sapphire blue armored gown, antique gold filigree chest and shoulders, layered blue-white cape/skirt panels, blue-gold tall boots and slim gold crown; optional slim blue-gold spear. Back shapes become mantle panels; dwarf closed short gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "void-pulse",
+    "name": "Пульс пустоты",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: LOWER second-from-right purple cosmic woman. Fully opaque black-violet sleek armored gown with violet curved seamwork and purple chest jewel, slim violet forearm guards, dark violet skirt panels and boots. Replace energy/body glow with embroidered fabric highlights, no bare body or external orbit halo. Dwarf fully closed gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "abyss-diadem",
+    "name": "Диадема бездны",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: LOWER FAR RIGHT dark horned woman. Opaque dark-indigo/violet armored dress, fine purple branch-like chest seamwork, horn-shaped removable headpiece, dark violet skirt panels and boots. No runic halo or external smoke, wing shapes become short cape. Dwarf closed covered gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "ivory-violet-reliquary",
+    "name": "Ларец слоновой кости",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: UPPER SECOND column white-haired cropped woman in white-purple garment. White and dark-purple opaque layered gown, gold waist scrollwork, violet shoulder bracer, white ruffled skirt with dark-purple drapes. Head/feet not visible in crop: complete as clearly custom adaptation with racial face and matching boots, never claim source-exact. Dwarf closed short dress.",
+    "partialReference": true,
+    "status": "pending"
+  },
+  {
+    "costumeId": "onyx-dragon-court",
+    "name": "Ониксовый драконий двор",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-961be5c5-966c-4e26-90a6-3770b109af83.png",
+    "design": "COLLAGE: FAR LEFT UPPER dark-purple/gold armored winged man. Black-purple full plate cuirass with rich gold flame-shaped trim, violet shoulder plates and black-gold armored boots. Horn-shaped helmet crown, dark-purple cape panels replacing bat wings; no flames or extra anatomical wings. Open faceplate exposes racial features.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "twilight-mirrors",
+    "name": "Зеркала сумерек",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: UPPER FAR LEFT purple-gold sorceress. Opaque plum-violet long dress with antique gold disk clasps at shoulders and waist, layered violet-pink coat panels, gold forearm guards and purple-gold boots, ornate violet headpiece. Optional one hand-held small gold circular mirror, no floating orbit mirrors. Dwarf closed knee-length dress.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "violet-eclipse-guard",
+    "name": "Страж фиолетового затмения",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: LOWER FAR LEFT white-haired horned armored woman. Dark grey-black fitted armor with violet plated breast centerpiece, sharp shoulder pieces, layered black-purple fauld/cape and dark boots; small black horn-shaped diadem. Fully opaque clothing. Dwarf short closed armor.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "spectrum-silk",
+    "name": "Шёлк спектра",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: SECOND column UPPER rainbow flowing gown woman. Fully covered black long gown with iridescent rainbow silk drapes, gold fine seam edging, blue-pink-violet fabric highlights, long matching boots. No crown of fire or external ribbons; optional tiny iridescent hair comb. Dwarf closed short rainbow dress.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "scarlet-ivory-paladin",
+    "name": "Паладин алой лилии",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: SECOND column LOWER red-haired white-gold knight. Ivory full plate cuirass with gold filigree, red cape panels and gold-edged white skirt armor, white-gold boots, slim red-gold crown, optional small white-gold ceremonial sword. Back wings become cape layers; dwarf closed full plate.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "solar-lily-paladin",
+    "name": "Паладин солнечной лилии",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: THIRD column UPPER white-haired gold-white queen. Opaque gold-white armored long gown, gold breast plate, white layered skirt, gold crown and gold-white boots. Golden wings become mantle panels; optional slim gold sword held low. Dwarf closed short gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "violet-oracle",
+    "name": "Фиолетовый оракул",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: THIRD column LOWER violet-gold long gown woman. Opaque violet long-sleeved fitted bodice with gold scroll embroidery, flowing lavender skirt, tiny gold waist chains and violet boots; slim gold hair comb. No surrounding magic circles. Optional small closed violet book. Dwarf closed short dress.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "raven-violet-mage",
+    "name": "Маг чёрного пера",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: FOURTH column UPPER black-purple staff wearer. Covered black-violet high-collar armored dress, layered raven-feather-like black cape and pointed dark skirt panels, silver trim and violet boots; optional slim dark staff with small purple gem. Unseen cropped head completed with racial face, source extension explicit. Dwarf closed covered outfit.",
+    "partialReference": true,
+    "status": "pending"
+  },
+  {
+    "costumeId": "scarlet-claw-guard",
+    "name": "Страж алого когтя",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: FOURTH column LOWER blond woman in red armor. Crimson articulated full-body plate, dark-red high collar, silver fine edging, red segmented gloves and red armored boots; red short cape. No giant dragon claws or surrounding flame. Dwarf closed compact red armor.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "blue-void-knight",
+    "name": "Рыцарь синей пустоты",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: FIFTH column UPPER isolated blue-purple knight. Dark navy/violet full plate with small cyan breast jewel, angular purple pauldrons, violet horn-shaped helmet crest, short torn violet cape and matching greaves. Open visor shows racial face, no ring halo or outside energy.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "violet-gold-sentinel",
+    "name": "Часовой фиолетового золота",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: FIFTH column LOWER black-gold armored man. Polished black plate, sharply shaped antique gold shoulder edges, large violet shoulder stones and violet breast jewel, black-gold armored fauld and greaves, purple inner cape. Open faceplate; no external smoke/fire.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "green-ember-echo",
+    "name": "Эхо зелёного пламени",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: UPPER FAR RIGHT cropped green-black robe. Black high-collar layered robe with emerald vein embroidery, tattered emerald-lined skirt panels and black boots, optional slim black staff with small green gem. Head not visible: custom extension with open racial face, do not claim source-exact. No literal fire or smoke. Short refit dwarf robe.",
+    "partialReference": true,
+    "status": "pending"
+  },
+  {
+    "costumeId": "silver-raven-reaper",
+    "name": "Серебряный ворон",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: MIDDLE FAR RIGHT black-white silver scythe wearer. Opaque silver-black armored gown with lace-like silver filigree, black-white layered feather-pattern skirt and cloak, matching boots. Wings become cape panels; optional slim decorative crescent staff, not oversized scythe. Dwarf closed short gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "ember-crown-queen",
+    "name": "Корона угольной зари",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-bc0acfe2-013a-493e-9291-1d1d23bf23f6.png",
+    "design": "COLLAGE: LOWER FAR RIGHT cropped black-red crowned woman. Black full armor/gown with red filigree breast ornament, pointed black pauldrons and red-lined layered cape, small black-red crown. Only upper garment is visible: matching covered skirt and boots are custom extensions, not source-exact. Dwarf closed covered outfit.",
+    "partialReference": true,
+    "status": "pending"
+  },
+  {
+    "costumeId": "scarlet-dragon-heart",
+    "name": "Сердце алого дракона",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "design": "COLLAGE: LOWER FAR LEFT black-red male knight. Black articulated armor with red plated edges, bright amber-red breast star, black-red gauntlets and boots, red dark layered cape. Dragon wing shapes become coat panels, face open, optional red ceremonial sword held low.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "ivory-crimson-wing",
+    "name": "Крыло алого фарфора",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "design": "COLLAGE: LOWER SECOND column white-gold red-winged woman. Fully covered white gold sculpted armor, red white fauld panels, gold shoulder plates, white-gold boots, black horn-shaped removable diadem. Red wing patterns become cape; dwarf short fully covered armor.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "blackgold-star-sibyl",
+    "name": "Сивилла чёрного золота",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "design": "COLLAGE: LOWER THIRD column black-haired gold-horned woman with staff. Fully covered black-gold long armored gown, intricate gold filigree platework, layered black-gold skirt and boots, gold horn-shaped removable crown, optional slim gold star staff. No orbit particles or anatomical bat wings; dwarf closed short gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "lavender-moon-keeper",
+    "name": "Хранительница лавандовой луны",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "design": "COLLAGE: LOWER FOURTH column silver-pink moon woman. Opaque silvery lavender fitted gown, lilac layered drapes, pearl chains, silver-lavender boots and small crescent hair comb. Moon shapes become fabric cape panels, no giant background crescent. Optional thin closed lilac fan. Dwarf short closed gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "ivory-crimson-crown",
+    "name": "Венец алой кости",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "design": "COLLAGE: LOWER second-from-right white-haired red knight. Ivory and blood-red sculpted plate armor, red-white spiked shoulder pieces, red layered fauld/cape, matching ivory-red boots, branching small helmet crown. No background thorn halo, face open; optional small red sword.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "ashen-feather-king",
+    "name": "Король пепельного пера",
+    "gender": "male",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "design": "COLLAGE: LOWER FAR RIGHT black-haired grey feather knight. Black-grey-silver full armor with pointed feather-shaped pauldrons, silver-edged breastplate, grey segmented forearm guards and boots, black-white feather-textured cape panels. No added anatomical wings, optional silver cane.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "scarlet-feather-queen",
+    "name": "Королева алого пера",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-f2440399-aab5-47f5-a278-bde34ab6dd71.png",
+    "design": "COLLAGE: UPPER FAR RIGHT white-haired red-black queen. Fully covered black red plate bodice, red black feather-shaped layered gown skirt, black-red boots and small crimson diamond diadem. Red pointed back halo shapes become cape trim; no separate halo. Dwarf closed high-neck short dress.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "ivory-seraph-court",
+    "name": "Двор белого серафима",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-3bce0f05-e258-4469-b57a-f54c6d17ce45.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-3bce0f05-e258-4469-b57a-f54c6d17ce45.png",
+    "design": "LEFT white-purple seraph costume in three-figure reference: opaque purple-gold bodice, flowing ivory white-violet layered skirt and gold-trimmed boots, purple-gold diadem. Wing texture becomes feather-like mantle panels. One head TWO arms only, no background figures. Dwarf closed short gown.",
+    "partialReference": false,
+    "status": "pending"
+  },
+  {
+    "costumeId": "gilded-violet-court",
+    "name": "Двор золотого заката",
+    "gender": "female",
+    "originalReference": "C:/Users/kubai/Desktop/images/codex-clipboard-3bce0f05-e258-4469-b57a-f54c6d17ce45.png",
+    "clothingReference": "art-source/avatars/collections/remaining-references/codex-clipboard-3bce0f05-e258-4469-b57a-f54c6d17ce45.png",
+    "design": "RIGHT gold-violet costume in three-figure reference: antique gold sculpted breastplate, purple fitted gown and gold violet layered coat panels, dark-violet gold-trim boots and small gold diadem; optional slim gold staff. Wing shape becomes purple cape. One head TWO arms only; dwarf closed short gown.",
+    "partialReference": false,
+    "status": "pending"
+  }
+]

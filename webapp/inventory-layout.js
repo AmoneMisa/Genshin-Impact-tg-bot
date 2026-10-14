@@ -1,5 +1,6 @@
 import {escapeHtml as esc} from './escape-html.js';
 import {fullBodyHeroUrl} from './art/world-art.js';
+import {avatarCostumeAttributes, avatarCostumeImage} from './avatar-costume-view.js';
 import {l2IconUrl} from './art/l2-icon-art.js';
 import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
@@ -56,5 +57,5 @@ export function inventoryCharacterHtml(state) {
     const title=`${label}: ${covered?'Занят цельной бронёй':item?.name||'Слот свободен'}`;
     return `<button type="button" class="inventory-gear-cell ${!item||covered?'empty':''} ${combined&&['up','down'].includes(id)?'combined-armor':''} ${item?.shadow?'shadow':''}" data-gear-slot="${id}" title="${esc(title)}" aria-label="${esc(title)}">${item&&!covered?inventoryItemArt(item):l2SlotBackground(id)}${item?.enchant&&!covered?`<i>+${item.enchant}</i>`:''}</button>`;
   }).join('')}</div>`;
-  return `<section class="inventory-character" aria-label="Персонаж и надетая экипировка">${column(INVENTORY_LEFT,'left')}<div class="inventory-figure"><img class="inventory-body" src="${fullBodyHeroUrl(state.player)}" alt="Персонаж в полный рост"><div class="inventory-tattoos">${[0,1,2].map((index)=>{const tattoo=state.tattoos?.[index];const label=tattoo?.name||'Слот свободен';return `<button type="button" class="inventory-tattoo ${tattoo?'':'empty'}" data-inventory-tattoo="${index}" title="${esc(label)}" aria-label="${esc(label)}">${tattoo?materialIcon('l2_'+tattoo.dye):`<img src="/art/inventory/tattoo-${['str','int','dex'][index]}.png" alt="">`}</button>`;}).join('')}</div></div>${column(INVENTORY_RIGHT,'right')}</section>`;
+  return `<section class="inventory-character" aria-label="Персонаж и надетая экипировка">${column(INVENTORY_LEFT,'left')}<div class="inventory-figure" ${avatarCostumeAttributes(state.player?.race)}>${avatarCostumeImage({src:fullBodyHeroUrl(state.player),imageClass:'inventory-body',name:'Персонаж в полный рост'})}<div class="inventory-tattoos">${[0,1,2].map((index)=>{const tattoo=state.tattoos?.[index];const label=tattoo?.name||'Слот свободен';return `<button type="button" class="inventory-tattoo ${tattoo?'':'empty'}" data-inventory-tattoo="${index}" title="${esc(label)}" aria-label="${esc(label)}">${tattoo?materialIcon('l2_'+tattoo.dye):`<img src="/art/inventory/tattoo-${['str','int','dex'][index]}.png" alt="">`}</button>`;}).join('')}</div></div>${column(INVENTORY_RIGHT,'right')}</section>`;
 }

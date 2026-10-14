@@ -104,7 +104,7 @@ export function potionBar(potions = [], { disabled = false } = {}) {
 export function playerFrame(player) {
   return `
   <section class="mmo-frame player-frame" data-pvp="${['pk','flagged'].includes(player.pvp?.status)?player.pvp.status:'neutral'}">
-    <span class="mmo-portrait player" style="--portrait:url('${classArtUrl(player.className, player.gender)}')"><em>${formatNumber(player.level)}</em></span>
+    <span class="mmo-portrait player" style="--portrait:url('${classArtUrl(player.className, player.gender, player.race)}')"><em>${formatNumber(player.level)}</em></span>
     <span class="mmo-frame-body">
       <span class="mmo-frame-title"><strong>${escapeHtml(player.name || 'Ты')}</strong><small>Ур. ${formatNumber(player.level)}</small></span>
       ${player.maxCp ? bar('cp', player.cp, player.maxCp) : ''}
@@ -125,7 +125,7 @@ export function partyStrip(rows = []) {
     <div class="mmo-party-row">${rows.map(row => `
       <div class="mmo-party-member ${row.isYou ? 'you' : ''}" ${row.isYou ? '' : `data-player-card="${escapeHtml(row.userId)}"`} title="${escapeHtml(row.name)} · ${formatNumber(row.damage)}">
         <span class="mmo-ring" style="--hp:${row.hpPercent == null ? 100 : clampPercent(row.hpPercent)};--class:${classColor(row.className)}">
-          <span class="mmo-portrait mini" style="--portrait:url('${classArtUrl(row.className, row.gender)}')"></span>
+          <span class="mmo-portrait mini" style="--portrait:url('${classArtUrl(row.className, row.gender, row.race)}')"></span>
         </span>
         <small>${escapeHtml(row.isYou ? 'Ты' : row.name)}</small>
         <em>${row.share}%</em>

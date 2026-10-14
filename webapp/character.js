@@ -13,6 +13,8 @@ import { icon,controlIcon } from './icons.js';
 import { paintedIconHtml, elementIcon } from './art/painted-icon-art.js';
 import { menuArtFor } from './menu-art.js';
 import { fullBodyHeroUrl } from './art/world-art.js';
+import { avatarOutfit } from './art/avatar-art.js';
+import {avatarCostumeAttributes, avatarCostumeImage, installAvatarCostumeMotion} from './avatar-costume-view.js';
 import { renderLootArt } from './loot-renderer.js';
 import { equippedItemForSlot } from './equipment-paper-doll.js';
 import { openPlayerProfile } from './profile.js';
@@ -109,6 +111,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null,skil
   if (tab === 'equipment') {
     const equipment = data.equipment || {};
     const source = fullBodyHeroUrl(data.player) || menuArtFor('profile',data.player);
+    const outfit = avatarOutfit(data.player);
     const slots = (entries,side) => '<div class="character-slots '+side+'">'+entries.map(([id,label])=>{
       const item = equippedItemForSlot(equipment,id);
       return '<button type="button" class="ui-button character-slot" title="'+esc(label+(item?' · '+item.name:''))+'" data-character-slot="'+id+'" aria-pressed="'+(id===slot)+'" aria-label="'+esc(label+': '+(item?.name || 'Пусто')+(item?.enchant?' +'+item.enchant:'')+(item?.augment?.current?' · ЛС':''))+'"><span class="character-slot-icon'+(item?.enchant>=10?' enchant-high':item?.enchant>=4?' enchanted':'')+(item?.augment?.current?' augmented':'')+'">'
@@ -118,7 +121,7 @@ export function renderCharacterTab(data,tab,{slot='rightHand',effectId=null,skil
         +'</span></button>';
     }).join('')+'</div>';
     const sets = (equipment.sets || []).map(set=>empty((set.complete?'Полный комплект: ':'Комплект: ')+(set.name || set.id)+' · '+set.pieces)+(set.bonus || []).map(stat=>row(esc(stat?.name || 'Бонус'),stat?.text || fmt(stat?.value))).join('')).join('');
-    return '<div class="character-doll"><img class="character-body-art" decoding="async" src="'+esc(source)+'" alt="'+esc('Облик класса')+'">'+slots(LEFT,'left')+slots(RIGHT,'right')+'</div>'+slots(WEAPONS,'weapons')
+    return '<div class="character-doll" '+avatarCostumeAttributes(outfit?.id)+(outfit?' data-avatar-race="'+esc(outfit.race)+'"':'')+'>'+avatarCostumeImage({src:source,imageClass:'character-body-art',name:outfit ? 'Декоративный наряд: '+outfit.name : 'Облик класса'})+slots(LEFT,'left')+slots(RIGHT,'right')+'</div>'+slots(WEAPONS,'weapons')
       +((data.tattoos||[]).length?'<div class="character-symbols" aria-label="Нанесённые символы">'+data.tattoos.map((t,index)=>'<button type="button" class="ui-button ui-icon-button" data-tattoo-detail="'+index+'" title="'+esc(t.symbol?.name||'Символ')+'" aria-label="'+esc(t.symbol?.name||'Символ')+'">'+(t.symbol?'<img src="/art/henna/'+esc(t.symbol.icon)+'.webp" alt="" width="32" height="32" decoding="async">':'')+'</button>').join('')+'</div>':'')
       +(sets?'<details class="ui-disclosure"><summary>Комплекты</summary>'+sets+'</details>':'')
       +'<div class="character-tools">'+iconAction('inventory','Инвентарь','backpack')+iconAction('forge','Кузница','anvil')+iconAction('warehouse','Хранилище','package-open')+iconAction('trade','Обмен','arrow-left-right')+'</div>'
@@ -289,5 +292,5 @@ export async function openCharacterPage(options,initialTab='stats') {
   }
   function syncTimer(){clearInterval(timer);timer=null;if(!closed&&!document.hidden&&!pending&&tab==='effects'&&(data.effects||[]).some(e=>e.until))timer=setInterval(tick,1000);}
   document.addEventListener('visibilitychange',onVisible);
-  document.body.appendChild(overlay);draw();requestAnimationFrame(()=>{overlay.classList.add('visible');overlay.querySelector('.overlay-close').focus();});
+  document.body.appendChild(overlay);installAvatarCostumeMotion();draw();requestAnimationFrame(()=>{overlay.classList.add('visible');overlay.querySelector('.overlay-close').focus();});
 }

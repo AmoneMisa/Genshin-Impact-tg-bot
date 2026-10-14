@@ -54,7 +54,7 @@ export function pickOpponent(defenders = [], rating = 1000, exclude = null, rand
 }
 
 function portrait(person) {
-  return menuArtFor('profile', { className: person?.classId || person?.className, gender: person?.gender });
+  return menuArtFor('profile', { className: person?.className || person?.classId, gender: person?.gender, race: person?.race });
 }
 
 export async function openArenaGame({ api, renderState, haptic, statusElement, player = null }) {
