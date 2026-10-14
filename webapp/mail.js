@@ -13,6 +13,9 @@ const KIND_LABELS = { gold: [materialIcon('gold'), 'адены'], moonDew: [mate
 
 export function rewardsHtml(rewards = []) {
   return rewards.map(reward => {
+    if (['material', 'potion', 'equipment'].includes(reward.kind)) {
+      return `<span class="mail-reward">${icon('gift')} ${escapeHtml(reward.name || 'Предмет')}${reward.amount > 1 ? ` <small>×${new Intl.NumberFormat('ru-RU').format(reward.amount)}</small>` : ''}</span>`;
+    }
     const [art, label] = KIND_LABELS[reward.kind] || [icon('gift'), reward.kind];
     return `<span class="mail-reward">${art} ${new Intl.NumberFormat('ru-RU').format(reward.amount)} <small>${escapeHtml(label)}</small></span>`;
   }).join('');
@@ -93,7 +96,7 @@ export async function openPromoGame({ api, haptic, statusElement }) {
   overlay.querySelector('[data-promo-code]').focus();
 }
 
-const MAIL_ERRORS={...TRANSFER_REASONS,mail_text:'Укажи тему до 80 символов и текст до 2000 символов.',mail_items:'В письме максимум 12 вложений.',mail_price:'Укажи целую сумму оплаты и добавь вложение.',mail_postage:'Для отправки нужно 100 адены.',mail_payment:'Не хватает адены для оплаты письма.',mail_full:'Слишком много неполученных писем.',mail_claim_first:'Сначала забери награду.',mail_not_found:'Письмо не найдено.',already_claimed:'Вложения уже получены или возвращены.'};
+const MAIL_ERRORS={...TRANSFER_REASONS,inventory_full:'В сумке нет места для вложения. Освободите слот и заберите письмо снова.',mail_text:'Укажи тему до 80 символов и текст до 2000 символов.',mail_items:'В письме максимум 12 вложений.',mail_price:'Укажи целую сумму оплаты и добавь вложение.',mail_postage:'Для отправки нужно 100 адены.',mail_payment:'Не хватает адены для оплаты письма.',mail_full:'Слишком много неполученных писем.',mail_claim_first:'Сначала забери награду.',mail_not_found:'Письмо не найдено.',already_claimed:'Вложения уже получены или возвращены.'};
 const MAIL_STATUS={pending:'Ожидает получения',claimed:'Получено',read:'Прочитано',returned:'Возвращено'};
 const fmt=n=>new Intl.NumberFormat('ru-RU').format(n||0);
 export async function openMailGame({api,haptic,statusElement,renderState}){

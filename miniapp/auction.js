@@ -1,13 +1,17 @@
-// Auction house shared by all players of every chat: players put equipment, potions or materials up for gold,
-// others buy them.
+// Auction house shared by all players: players put equipment, potions or materials up for gold, others buy them.
 //
-// Lots live in their own collection (db/models/AuctionLot.js) and the item is held in escrow
-// there, so a lot cannot be spent twice. A lot remembers the chat of the character that listed it (`chatId`).
-// A buyer is served under his own chat lock. When the seller is in the same chat the gold is paid at once; when the
-// seller lives in another chat the lot keeps the payout (`payout`, `paidOut: false`) and the seller's chat takes it
-// the next time the auction is opened there (settleSales), so a chat document is only ever changed under its own
-// lock. Returning an expired or cancelled lot, and collecting a payout, happen in the chat of the listing.
-// The seller pays a 5% fee (gold sink). Lots that nobody buys for AUCTION_HOURS go back to the seller.
+// There is one character per player for the whole game (functions/general/characterSync.js), so the auction is not
+// split by chat. Lots live in their own collection (db/models/AuctionLot.js) and the item is held in escrow there,
+// so a lot cannot be spent twice. `chatId` is only the chat the lot was listed from: it is the chat whose lock is
+// taken when the seller has to be reached while he is not playing.
+//
+// Like Lineage II, the money of a sale and an unsold item come back by mail (the system mailbox, miniapp/promo.js):
+//   - a sale: the buyer is served under his own lock and the seller gets a letter with the adena (price minus the
+//     5% fee). If the seller is not a member of the buyer's chat document the lot keeps the payout (`paidOut: false`);
+//     deliverSale() mails it under the seller's chat lock right after, and the hourly sweep / the seller's next visit
+//     repeat it if that failed. A payout is claimed atomically, so a letter is never sent twice;
+//   - a lot nobody bought for AUCTION_HOURS: the item comes back in a letter (the hourly sweep, or the seller's visit).
+// Cancelling a lot by hand returns the item at once.
 
 import { addMaterial, getMaterials, getMaterialCount, materialInfo } from '../functions/game/player/materials.js';
 import { describeItemStats } from '../functions/game/equipment/describeStats.js';
@@ -15,6 +19,7 @@ import { isTimedItem } from '../functions/game/equipment/timedItems.js';
 import { masterworkName } from '../functions/game/equipment/itemBonuses.js';
 import { memberName } from './social.js';
 import { hasInventoryRoom } from '../functions/game/builds/palaceCapacity.js';
+import { addMail } from './promo.js';
 
 export const AUCTION_HOURS = 48;
 export const AUCTION_FEE = 0.05;
@@ -101,12 +106,15 @@ export async function mongoAuctionStore() {
     async findById(id) { return validId(id) ? plain(await AuctionLot.findById(id).lean()) : null; },
     async listActive() { return (await AuctionLot.find({ status: 'active' }).sort({ createdAt: -1 }).limit(500).lean()).map(plain); },
     async listBySeller(chatId, sellerId) { return (await AuctionLot.find({ chatId, sellerId, status: 'active' }).sort({ createdAt: -1 }).lean()).map(plain); },
-    async countActiveBySeller(chatId, sellerId) { return AuctionLot.countDocuments({ chatId, sellerId, status: 'active' }); },
-    async listUnpaid(chatId) { return (await AuctionLot.find({ chatId, status: 'sold', paidOut: false }).lean()).map(plain); },
+    async countActiveBySeller(sellerId) { return AuctionLot.countDocuments({ sellerId, status: 'active' }); },
+    async listUnpaid(sellerId) { return (await AuctionLot.find({ sellerId, status: 'sold', paidOut: false }).lean()).map(plain); },
+    async listAllUnpaid(limit = 200) { return (await AuctionLot.find({ status: 'sold', paidOut: false }).limit(limit).lean()).map(plain); },
     async claimPayout(id) {
       return validId(id) ? plain(await AuctionLot.findOneAndUpdate({ _id: id, status: 'sold', paidOut: false }, { $set: { paidOut: true } }, { new: true }).lean()) : null;
     },
-    async listExpired(chatId, now) { return (await AuctionLot.find({ chatId, status: 'active', expiresAt: { $lte: now } }).lean()).map(plain); },
+    async unclaimPayout(id) { if (validId(id)) await AuctionLot.updateOne({ _id: id, status: 'sold' }, { $set: { paidOut: false } }); },
+    async listExpired(sellerId, now) { return (await AuctionLot.find({ sellerId, status: 'active', expiresAt: { $lte: now } }).lean()).map(plain); },
+    async listAllExpired(now, limit = 200) { return (await AuctionLot.find({ status: 'active', expiresAt: { $lte: now } }).limit(limit).lean()).map(plain); },
     /** Atomic status change; returns the lot when this call made the change, otherwise null. */
     async claim(id, from, to, extra = {}) {
       return validId(id) ? plain(await AuctionLot.findOneAndUpdate({ _id: id, status: from }, { $set: { status: to, ...extra } }, { new: true }).lean()) : null;
@@ -117,7 +125,7 @@ export async function mongoAuctionStore() {
 
 // ---- lots ----
 
-function lotDto(lot, viewerId, now, viewerChatId = lot.chatId) {
+function lotDto(lot, viewerId, now) {
   // Old listings also have the item in escrow; no migration is needed for art.
   const art = lot.kind === 'equipment' ? viewOfEquipment(lot.payload?.item || {})
     : lot.kind === 'potion' ? viewOfPotion(lot.payload?.potion || {})
@@ -138,39 +146,103 @@ function lotDto(lot, viewerId, now, viewerChatId = lot.chatId) {
     count: lot.count,
     price: lot.price,
     sellerName: lot.sellerName,
-    // my listing of this chat; the same player's listing of another chat can only be handled from there
-    mine: String(lot.sellerId) === String(viewerId) && lot.chatId === viewerChatId,
-    otherChat: lot.chatId !== viewerChatId,
+    mine: String(lot.sellerId) === String(viewerId),
     hoursLeft: Math.max(1, Math.ceil((lot.expiresAt - now) / HOUR_MS)),
     createdAt: new Date(lot.createdAt || 0).getTime(),
   };
 }
 
-/** Pays the sellers of this chat for lots that were bought from another chat (call under the chat lock; the caller saves). */
-export async function settleSales(chat, store) {
-  let total = 0;
-  for (const lot of await store.listUnpaid(chat.chatId)) {
-    const seller = chat.members.find(member => String(member.userId) === String(lot.sellerId));
-    if (!seller?.game?.inventory) continue;
-    const claimed = await store.claimPayout(lot.id);
-    if (!claimed) continue;
-    const payout = Math.max(0, number(lot.payout, lot.price - feeFor(lot.price)));
-    seller.game.inventory.gold = Math.max(0, number(seller.game.inventory.gold)) + payout;
-    total += payout;
-  }
-  return total;
+// ---- letters of the auction ----
+
+const lotTitle = lot => `${lot.view?.title || 'Лот'}${number(lot.count) > 1 ? ` ×${lot.count}` : ''}`;
+const payoutOf = lot => Math.max(0, number(lot.payout, number(lot.price) - feeFor(number(lot.price))));
+
+/** The letter that pays a sale. */
+export const soldLetter = lot => ({
+  id: `auction-sold:${lot.id}`,
+  kind: 'auction',
+  title: 'Аукцион: лот продан',
+  text: `${lotTitle(lot)} продан за ${number(lot.price)}. Комиссия аукциона: ${feeFor(number(lot.price))}.`,
+  rewards: [{ kind: 'gold', amount: payoutOf(lot) }],
+});
+
+/** The attachment of an unsold lot: the item itself. */
+function lotReward(lot) {
+  if (lot.kind === 'equipment') return { kind: 'equipment', item: structuredClone(lot.payload.item), amount: 1, name: lot.view?.title || 'Снаряжение' };
+  if (lot.kind === 'potion') return { kind: 'potion', potion: structuredClone(lot.payload.potion), amount: number(lot.count, 1), name: lot.view?.title || 'Зелье' };
+  return { kind: 'material', key: lot.payload.key, amount: number(lot.count, 1), name: lot.view?.title || materialInfo(lot.payload.key).name };
 }
 
-/** Gives back the lots whose time is up (call under the chat lock; the caller saves the chat). */
-export async function returnExpiredLots(chat, store, now = Date.now()) {
-  let returned = 0;
-  for (const lot of await store.listExpired(chat.chatId, now)) {
-    const claimed = await store.claim(lot.id, 'active', 'expired', { returned: true });
-    if (!claimed) continue;
-    const seller = chat.members.find(member => String(member.userId) === String(lot.sellerId));
-    if (seller && deliver(seller, lot)) returned++;
+/** The letter that returns a lot nobody bought. */
+export const returnLetter = lot => ({
+  id: `auction-return:${lot.id}`,
+  kind: 'auction',
+  title: 'Аукцион: лот не продан',
+  text: `Срок лота «${lotTitle(lot)}» вышел, предмет возвращён.`,
+  rewards: [lotReward(lot)],
+});
+
+/**
+ * Mails the payouts of this player's sales that are still waiting (call under the lock of the player's chat; the caller
+ * saves the session). Returns the ids it claimed: when the save fails, pass them to undoMailed().
+ */
+export async function settleSales(session, store, now = Date.now()) {
+  const done = [];
+  for (const lot of await store.listUnpaid(session.userId)) {
+    if (!await store.claimPayout(lot.id)) continue;
+    addMail(session, soldLetter(lot), now);
+    done.push(lot.id);
   }
-  return returned;
+  return done;
+}
+
+/** Mails the items of this player's lots whose time is up. Returns the ids; see settleSales. */
+export async function returnExpiredLots(session, store, now = Date.now()) {
+  const done = [];
+  for (const lot of await store.listExpired(session.userId, now)) {
+    if (!await store.claim(lot.id, 'active', 'expired', { returned: true })) continue;
+    addMail(session, returnLetter(lot), now);
+    done.push({ id: lot.id, expired: true });
+  }
+  return done;
+}
+
+/** Puts back what settleSales/returnExpiredLots claimed when the session could not be saved. */
+export async function undoMailed(store, sold = [], expired = []) {
+  for (const id of sold) await store.unclaimPayout(id).catch(() => {});
+  for (const entry of expired) await store.restore(entry.id, 'active').catch(() => {});
+}
+
+/**
+ * Reaches a seller who is not playing: loads his character through the chat of the listing, under that chat's lock,
+ * mails what is waiting and saves. io: {withLock(key, fn), getSession(chatId, userId), saveSession(session)}.
+ */
+export async function deliverToSeller(store, io, { chatId, sellerId }, now = Date.now()) {
+  return io.withLock(String(chatId), async () => {
+    const session = await io.getSession(chatId, sellerId);
+    const sold = await settleSales(session, store, now);
+    const expired = await returnExpiredLots(session, store, now);
+    if (!sold.length && !expired.length) return 0;
+    try {
+      await io.saveSession(session);
+    } catch (error) {
+      await undoMailed(store, sold, expired);
+      throw error;
+    }
+    return sold.length + expired.length;
+  });
+}
+
+/** The hourly sweep: sales that were not paid and lots that ran out, for every player. */
+export async function sweepAuction(store, io, now = Date.now()) {
+  const targets = new Map();
+  for (const lot of await store.listAllUnpaid()) targets.set(`${lot.chatId}:${lot.sellerId}`, { chatId: lot.chatId, sellerId: lot.sellerId });
+  for (const lot of await store.listAllExpired(now)) targets.set(`${lot.chatId}:${lot.sellerId}`, { chatId: lot.chatId, sellerId: lot.sellerId });
+  let delivered = 0;
+  for (const target of targets.values()) {
+    try { delivered += await deliverToSeller(store, io, target, now); } catch (error) { console.error('[auction] sweep:', error.message); }
+  }
+  return delivered;
 }
 
 const SORTS = {
@@ -180,12 +252,11 @@ const SORTS = {
 };
 
 export async function getAuctionState(session, store, { kind = 'all', sort = 'new', now = Date.now() } = {}) {
-  const chatId = session.ownerDocument().chatId;
   const viewerId = session.userId;
   const active = (await store.listActive()).filter(lot => lot.expiresAt > now);
   const lots = active
     .filter(lot => kind === 'all' || lot.kind === kind)
-    .map(lot => lotDto(lot, viewerId, now, chatId))
+    .map(lot => lotDto(lot, viewerId, now))
     .sort(SORTS[sort] || SORTS.new);
   return {
     gold: Math.max(0, number(inventoryOf(session)?.gold)),
@@ -194,7 +265,7 @@ export async function getAuctionState(session, store, { kind = 'all', sort = 'ne
     maxLots: MAX_ACTIVE_LOTS,
     kinds: KINDS,
     lots,
-    mine: active.filter(lot => String(lot.sellerId) === String(viewerId) && lot.chatId === chatId).map(lot => lotDto(lot, viewerId, now, chatId)),
+    mine: active.filter(lot => String(lot.sellerId) === String(viewerId)).map(lot => lotDto(lot, viewerId, now)),
     sellable: sellableItems(session),
   };
 }
@@ -210,7 +281,7 @@ export async function createLot(session, store, { kind, ref, count = 1, price },
   const inventory = inventoryOf(session);
   if (!inventory) return { ok: false, reason: 'inventory_missing' };
   const chatId = session.ownerDocument().chatId;
-  if (await store.countActiveBySeller(chatId, session.userId) >= MAX_ACTIVE_LOTS) return { ok: false, reason: 'too_many_lots' };
+  if (await store.countActiveBySeller(session.userId) >= MAX_ACTIVE_LOTS) return { ok: false, reason: 'too_many_lots' };
 
   let payload;
   let view;
@@ -273,11 +344,11 @@ export async function buyLot(session, store, lotId, now = Date.now()) {
   if (!hasInventoryRoom(session)) return { ok: false, reason: 'inventory_full' };
   if (Math.max(0, number(inventory.gold)) < lot.price) return { ok: false, reason: 'not_enough_gold', missing: lot.price - number(inventory.gold) };
 
-  // The seller of this chat is paid at once; a seller of another chat (or one that is not in this document)
-  // is paid by the seller's own chat on its next visit, so the gold never vanishes.
+  // The seller is mailed the adena at once when he is a member of this chat document (one save for both);
+  // otherwise the lot keeps the payout and deliverToSeller() mails it under the seller's own chat lock.
   const fee = feeFor(lot.price);
-  const seller = lot.chatId === chat.chatId ? chat.members.find(member => String(member.userId) === String(lot.sellerId)) : null;
-  const immediate = Boolean(seller?.game?.inventory);
+  const seller = chat.members.find(member => String(member.userId) === String(lot.sellerId));
+  const immediate = Boolean(seller?.game);
 
   // Whoever flips the status first wins; a second buyer gets 'lot_gone'.
   const claimed = await store.claim(lot.id, 'active', 'sold', {
@@ -287,13 +358,14 @@ export async function buyLot(session, store, lotId, now = Date.now()) {
 
   inventory.gold = number(inventory.gold) - lot.price;
   deliver(session, lot);
-  if (immediate) seller.game.inventory.gold = Math.max(0, number(seller.game.inventory.gold)) + lot.price - fee;
+  if (immediate) addMail(seller, soldLetter({ ...lot, payout: lot.price - fee }), now);
 
   return {
     ok: true,
     lot: lotDto(lot, session.userId, now),
     paid: lot.price,
     fee,
+    deferred: immediate ? null : { chatId: lot.chatId, sellerId: lot.sellerId },
     undo: () => store.restore(lot.id, 'active'),
   };
 }
@@ -303,8 +375,6 @@ export async function cancelLot(session, store, lotId) {
   const lot = await store.findById(lotId);
   if (!lot || lot.status !== 'active') return { ok: false, reason: 'lot_gone' };
   if (String(lot.sellerId) !== String(session.userId)) return { ok: false, reason: 'not_yours' };
-  // the item is returned to the character that listed it
-  if (lot.chatId !== session.ownerDocument().chatId) return { ok: false, reason: 'other_chat' };
   const claimed = await store.claim(lot.id, 'active', 'cancelled', { returned: true });
   if (!claimed) return { ok: false, reason: 'lot_gone' };
   deliver(session, lot);

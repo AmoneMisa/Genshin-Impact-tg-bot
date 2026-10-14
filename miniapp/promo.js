@@ -8,6 +8,8 @@ import {migrateCharacterCurrency} from '../functions/game/player/currencyMigrati
 
 import PromoCode from '../db/models/PromoCode.js';
 import HelloNotice from '../db/models/HelloNotice.js';
+import { addMaterial } from '../functions/game/player/materials.js';
+import { hasInventoryRoom } from '../functions/game/builds/palaceCapacity.js';
 
 export const MAIL_LIFETIME_MS = 180 * 24 * 3600_000;
 const MAX_MAIL = 100;
@@ -87,8 +89,12 @@ export const PROMO_ERRORS = Object.freeze({
 
 // ---- Mail (member.game.mailbox) ----
 
+/** Reward rows that carry an item (auction returns): `name` is what the letter shows. */
+export const ITEM_REWARD_KINDS = Object.freeze(['material', 'potion', 'equipment']);
+const itemRewardText = reward => `${reward.name || reward.key || 'Предмет'}${reward.amount > 1 ? ` ×${new Intl.NumberFormat('ru-RU').format(reward.amount)}` : ''}`;
+
 export function rewardsText(rewards = []) {
-  return rewards.map(reward => `${REWARD_KINDS[reward.kind === 'crystals' ? 'moonDew' : reward.kind]?.icon || ''} ${new Intl.NumberFormat('ru-RU').format(reward.amount)} ${REWARD_KINDS[reward.kind]?.label || reward.kind}`.trim()).join(', ');
+  return rewards.map(reward => ITEM_REWARD_KINDS.includes(reward.kind) ? itemRewardText(reward) : `${REWARD_KINDS[reward.kind === 'crystals' ? 'moonDew' : reward.kind]?.icon || ''} ${new Intl.NumberFormat('ru-RU').format(reward.amount)} ${REWARD_KINDS[reward.kind]?.label || reward.kind}`.trim()).join(', ');
 }
 
 function ensureMailbox(session) {
@@ -152,14 +158,32 @@ export function applyReward(session, reward) {
     game.bonusChances = Math.max(0, number(game.bonusChances)) + reward.amount;
   } else if (['gold', 'moonDew', 'ironOre', 'luckCoins'].includes(reward.kind)) {
     game.inventory[reward.kind] = Math.max(0, number(game.inventory[reward.kind])) + reward.amount;
+  } else if (reward.kind === 'material' && reward.key) {
+    addMaterial(session, reward.key, reward.amount);
+  } else if (reward.kind === 'potion' && reward.potion) {
+    if (!game.inventory.potions) game.inventory.potions = { items: [] };
+    if (!Array.isArray(game.inventory.potions.items)) game.inventory.potions.items = [];
+    const key = potion => potion?.id || `${potion?.type}:${potion?.bottleType}:${potion?.power}:${potion?.size}`;
+    const stack = game.inventory.potions.items.find(potion => key(potion) === key(reward.potion));
+    if (stack) stack.count = number(stack.count) + reward.amount;
+    else game.inventory.potions.items.push({ ...structuredClone(reward.potion), count: reward.amount });
+  } else if (reward.kind === 'equipment' && reward.item) {
+    if (!game.inventory.equipment) game.inventory.equipment = { items: [] };
+    if (!Array.isArray(game.inventory.equipment.items)) game.inventory.equipment.items = [];
+    game.inventory.equipment.items.push({ ...structuredClone(reward.item), isUsed: false });
   }
 }
+
+/** Bag slots a letter's attachments need (only equipment takes one). */
+const slotsNeeded = rewards => (rewards || []).filter(reward => reward.kind === 'equipment').length;
 
 export function claimMail(session, id, now = Date.now()) {
   pruneMail(session, now);
   const mail = ensureMailbox(session).find(item => item.id === id);
   if (!mail) return { ok: false, reason: 'mail_not_found' };
   if (mail.status !== 'pending') return { ok: false, reason: 'already_claimed' };
+  const slots = slotsNeeded(mail.rewards);
+  if (slots && !hasInventoryRoom(session, slots)) return { ok: false, reason: 'inventory_full' };
   for (const reward of mail.rewards || []) applyReward(session, reward);
   mail.status = 'claimed';
   mail.claimedAt = now;
@@ -171,15 +195,23 @@ export function claimAllMail(session, now = Date.now()) {
   const pending = ensureMailbox(session).filter(mail => mail.status === 'pending');
   if (!pending.length) return { ok: false, reason: 'already_claimed' };
   const totals = new Map();
+  const items = [];
+  let claimed = 0;
   for (const mail of pending) {
+    // a letter with equipment waits for a free bag slot; the others are still taken
+    const slots = slotsNeeded(mail.rewards);
+    if (slots && !hasInventoryRoom(session, slots)) continue;
     for (const reward of mail.rewards || []) {
       applyReward(session, reward);
-      totals.set(reward.kind, (totals.get(reward.kind) || 0) + reward.amount);
+      if (ITEM_REWARD_KINDS.includes(reward.kind)) items.push(reward);
+      else totals.set(reward.kind, (totals.get(reward.kind) || 0) + reward.amount);
     }
     mail.status = 'claimed';
     mail.claimedAt = now;
+    claimed++;
   }
-  return { ok: true, claimed: pending.length, message: `Получено: ${rewardsText([...totals].map(([kind, amount]) => ({ kind, amount })))}.` };
+  if (!claimed) return { ok: false, reason: 'inventory_full' };
+  return { ok: true, claimed, message: `Получено: ${rewardsText([...[...totals].map(([kind, amount]) => ({ kind, amount })), ...items])}.` };
 }
 
 // ---- Promo codes (Mongo) ----

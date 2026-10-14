@@ -1318,4 +1318,9 @@ export default {
   "шанс выпадения предметов": "buyumlar tushish ehtimoli",
   "Шансы": "Ehtimollar",
   "Этот лот выставлен в другом чате: снять его можно только там.": "Bu lot boshqa chatda qo‘yilgan: uni faqat o‘sha yerda olib tashlash mumkin.",
+  "В сумке нет места для вложения. Освободите слот и заберите письмо снова.": "Sumkada biriktirma uchun joy yo‘q. Joy bo‘shatib, xatni qayta oling.",
+  "{0} продан за {1}. Комиссия аукциона: {2}.": "{0} {1} ga sotildi. Auksion komissiyasi: {2}.",
+  "Аукцион: лот не продан": "Auksion: lot sotilmadi",
+  "Аукцион: лот продан": "Auksion: lot sotildi",
+  "Срок лота «{0}» вышел, предмет возвращён.": "«{0}» lotining muddati tugadi, buyum qaytarildi.",
 };

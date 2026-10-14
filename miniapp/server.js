@@ -131,7 +131,7 @@ import {loadWorldInstances,saveWorldInstances} from './worldInstances.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
-import { buyLot, cancelLot, createLot, getAuctionState, mongoAuctionStore, returnExpiredLots, settleSales } from './auction.js';
+import { buyLot, cancelLot, createLot, deliverToSeller, getAuctionState, mongoAuctionStore, returnExpiredLots, settleSales, undoMailed } from './auction.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
@@ -841,11 +841,17 @@ const auctionState = guarded('auction state', async (req, res, requestUrl) => {
   const state = await withLock(auctionLock(context), async () => {
     context.session = await getSession(context.chatId, context.userId);
     const store = await auctionStore();
-    // Lots nobody bought go back to their sellers, and sales made from other chats are paid, before anything is shown.
-    const chat = context.session.ownerDocument();
-    const returned = await returnExpiredLots(chat, store);
-    const paid = await settleSales(chat, store);
-    if (returned || paid) await saveSession(context.session);
+    // The player's lots that ran out and sales that are still unpaid reach his mail before anything is shown.
+    const sold = await settleSales(context.session, store);
+    const expired = await returnExpiredLots(context.session, store);
+    if (sold.length || expired.length) {
+      try {
+        await saveSession(context.session);
+      } catch (error) {
+        await undoMailed(store, sold, expired);
+        throw error;
+      }
+    }
     return getAuctionState(context.session, store, {
       kind: requestUrl.searchParams.get('kind') || 'all',
       sort: requestUrl.searchParams.get('sort') || 'new',
@@ -895,6 +901,13 @@ const auctionBuy = guarded('auction buy', async (req, res) => {
     }
     return { ...bought, auction: await getAuctionState(context.session, store) };
   });
+  // A seller outside this chat document is mailed under his own chat lock, after the buyer's lock is released.
+  if (result.deferred) {
+    const store = await auctionStore();
+    deliverToSeller(store, { withLock, getSession, saveSession }, result.deferred)
+      .catch(error => console.warn('[auction] seller mail will be retried:', error.message));
+  }
+  delete result.deferred;
   return sendResult(res, result, context);
 });
 

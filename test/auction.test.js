@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  AUCTION_HOURS, MAX_ACTIVE_LOTS, buyLot, cancelLot, createLot, feeFor, getAuctionState, returnExpiredLots, sellableItems, settleSales,
+  AUCTION_HOURS, MAX_ACTIVE_LOTS, buyLot, cancelLot, createLot, feeFor, getAuctionState, returnExpiredLots, sellableItems, settleSales, deliverToSeller, sweepAuction,
 } from '../miniapp/auction.js';
 import { getCatalog, instantiate } from '../functions/game/equipment/catalog.js';
 import { getMaterialCount } from '../functions/game/player/materials.js';
 import { grantTimedItem } from '../functions/game/equipment/timedItems.js';
+import { claimMail, getMailbox } from '../miniapp/promo.js';
 
 const NOW = Date.UTC(2026, 9, 12, 12);
 const HOUR = 3_600_000;
@@ -19,11 +20,14 @@ function memoryStore() {
     async create(fields) { const _id = `lot${++seq}`; lots.set(_id, { _id, createdAt: NOW + seq, ...fields }); return copy(lots.get(_id)); },
     async findById(id) { return copy(lots.get(id)); },
     async listActive() { return [...lots.values()].filter(lot => lot.status === 'active').map(copy); },
-    async listUnpaid(chatId) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.status === 'sold' && lot.paidOut === false).map(copy); },
+    async listUnpaid(sellerId) { return [...lots.values()].filter(lot => lot.sellerId === sellerId && lot.status === 'sold' && lot.paidOut === false).map(copy); },
     async claimPayout(id) { const lot = lots.get(id); if (!lot || lot.status !== 'sold' || lot.paidOut !== false) return null; lot.paidOut = true; return copy(lot); },
     async listBySeller(chatId, sellerId) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.sellerId === sellerId && lot.status === 'active').map(copy); },
-    async countActiveBySeller(chatId, sellerId) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.sellerId === sellerId && lot.status === 'active').length; },
-    async listExpired(chatId, now) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.status === 'active' && lot.expiresAt <= now).map(copy); },
+    async countActiveBySeller(sellerId) { return [...lots.values()].filter(lot => lot.sellerId === sellerId && lot.status === 'active').length; },
+    async listExpired(sellerId, now) { return [...lots.values()].filter(lot => lot.sellerId === sellerId && lot.status === 'active' && lot.expiresAt <= now).map(copy); },
+    async listAllExpired(now) { return [...lots.values()].filter(lot => lot.status === 'active' && lot.expiresAt <= now).map(copy); },
+    async listAllUnpaid() { return [...lots.values()].filter(lot => lot.status === 'sold' && lot.paidOut === false).map(copy); },
+    async unclaimPayout(id) { const lot = lots.get(id); if (lot && lot.status === 'sold') lot.paidOut = false; },
     async claim(id, from, to, extra = {}) {
       const lot = lots.get(id);
       if (!lot || lot.status !== from) return null;
@@ -121,6 +125,10 @@ test('a purchase moves gold (minus the 5% fee) and the item, once', async () => 
   assert.equal(bought.fee, feeFor(4000));
   assert.equal(feeFor(4000), 200);
   assert.equal(buyer.game.inventory.gold, 6000);
+  assert.equal(seller.game.inventory.gold, 0, 'the adena comes by mail');
+  const letter = getMailbox(seller, NOW).letters.find(entry => entry.kind === 'auction');
+  assert.deepEqual(letter.rewards, [{ kind: 'gold', amount: 3800 }]);
+  assert.equal(claimMail(seller, letter.id, NOW).ok, true);
   assert.equal(seller.game.inventory.gold, 3800);
   assert.equal(buyer.game.inventory.equipment.items.length, 1);
   assert.equal(buyer.game.inventory.equipment.items[0].uid, sword.uid);
@@ -175,10 +183,14 @@ test('the seller can take a lot back; expired lots return to their sellers', asy
 
   seller.game.inventory.materials.crystal_A = 5;
   await createLot(seller, store, { kind: 'material', ref: 'crystal_A', count: 5, price: 50 }, NOW);
-  assert.equal(await returnExpiredLots(chat, store, NOW + HOUR), 0, 'not yet');
-  assert.equal(await returnExpiredLots(chat, store, NOW + AUCTION_HOURS * HOUR + 1), 1);
+  assert.equal((await returnExpiredLots(seller, store, NOW + HOUR)).length, 0, 'not yet');
+  assert.equal((await returnExpiredLots(seller, store, NOW + AUCTION_HOURS * HOUR + 1)).length, 1);
+  assert.equal(getMaterialCount(seller, 'crystal_A'), 0, 'the item waits in the mail');
+  const returned = getMailbox(seller, NOW + AUCTION_HOURS * HOUR + 1).letters.find(entry => entry.kind === 'auction');
+  assert.equal(returned.rewards[0].kind, 'material');
+  assert.equal(claimMail(seller, returned.id, NOW + AUCTION_HOURS * HOUR + 1).ok, true);
   assert.equal(getMaterialCount(seller, 'crystal_A'), 5);
-  assert.equal(await returnExpiredLots(chat, store, NOW + AUCTION_HOURS * HOUR + 1), 0, 'only once');
+  assert.equal((await returnExpiredLots(seller, store, NOW + AUCTION_HOURS * HOUR + 1)).length, 0, 'only once');
 });
 
 test('the state lists lots of the chat by category and sort, marks the viewer\'s own', async () => {
@@ -205,7 +217,7 @@ test('the state lists lots of the chat by category and sort, marks the viewer\'s
   assert.equal((await getAuctionState(a, store, { now: NOW + AUCTION_HOURS * HOUR + 5 })).lots.length, 0, 'expired lots are hidden');
 });
 
-test('the auction is shared by chats: a buyer of another chat is served and the seller is paid on the next visit', async () => {
+test('one auction for everybody: a seller outside the buyer chat is mailed by his own chat, once', async () => {
   const store = memoryStore();
   const sellerChat = chatWith(0);
   const [seller] = sellerChat.members;
@@ -221,30 +233,68 @@ test('the auction is shared by chats: a buyer of another chat is served and the 
 
   const seen = await getAuctionState(buyer, store, { now: NOW });
   assert.equal(seen.lots.length, 1);
-  assert.equal(seen.lots[0].otherChat, true);
   assert.equal(seen.mine.length, 0);
 
   const bought = await buyLot(buyer, store, listed.lot.id, NOW);
   assert.equal(bought.ok, true);
+  assert.deepEqual(bought.deferred, { chatId: -100, sellerId: 1 });
   assert.equal(buyer.game.inventory.gold, 9_000);
   assert.equal(getMaterialCount(buyer, 'scroll_A'), 2);
-  assert.equal(seller.game.inventory.gold, 0, 'the seller chat is not touched by another chat');
 
-  assert.equal(await settleSales(sellerChat, store), 950);
-  assert.equal(seller.game.inventory.gold, 950);
-  assert.equal(await settleSales(sellerChat, store), 0, 'a payout is collected only once');
+  let saves = 0;
+  const io = { withLock: (key, action) => action(), getSession: async () => seller, saveSession: async () => { saves++; } };
+  assert.equal(await deliverToSeller(store, io, bought.deferred, NOW), 1);
+  assert.equal(saves, 1);
+  const letter = getMailbox(seller, NOW).letters.find(entry => entry.kind === 'auction');
+  assert.deepEqual(letter.rewards, [{ kind: 'gold', amount: 950 }]);
+  assert.equal(await deliverToSeller(store, io, bought.deferred, NOW), 0, 'a payout is mailed only once');
   assert.equal((await buyLot(buyer, store, listed.lot.id, NOW)).reason, 'lot_gone');
 });
 
-test('a listing can only be cancelled from the chat of the character that made it', async () => {
+test('a failed save of the seller returns the payout to the queue', async () => {
   const store = memoryStore();
-  const home = chatWith(0);
-  const [seller] = home.members;
+  const [seller] = chatWith(0).members;
+  const buyerChat = { chatId: -200, members: [] };
+  const buyer = { userId: 9, ownerDocument: () => buyerChat, game: { inventory: { gold: 500, equipment: { items: [] }, potions: { items: [] }, materials: {} } } };
+  buyerChat.members.push(buyer);
   seller.game.inventory.materials.scroll_A = 1;
-  const listed = await createLot(seller, store, { kind: 'material', ref: 'scroll_A', price: 500 }, NOW);
-  const elsewhere = { chatId: -300, members: [] };
-  const alt = { userId: seller.userId, ownerDocument: () => elsewhere, game: { inventory: { gold: 0, materials: {}, equipment: { items: [] }, potions: { items: [] } } } };
-  elsewhere.members.push(alt);
-  assert.equal((await cancelLot(alt, store, listed.lot.id)).reason, 'other_chat');
-  assert.equal((await cancelLot(seller, store, listed.lot.id)).ok, true);
+  const { lot } = await createLot(seller, store, { kind: 'material', ref: 'scroll_A', price: 400 }, NOW);
+  await buyLot(buyer, store, lot.id, NOW);
+  const broken = { withLock: (key, action) => action(), getSession: async () => seller, saveSession: async () => { throw new Error('db down'); } };
+  await assert.rejects(deliverToSeller(store, broken, { chatId: -100, sellerId: 1 }, NOW), /db down/);
+  assert.equal(store.lots.get(lot.id).paidOut, false);
+  const fine = { withLock: (key, action) => action(), getSession: async () => seller, saveSession: async () => {} };
+  assert.equal(await sweepAuction(store, fine, NOW), 1);
+  assert.equal(store.lots.get(lot.id).paidOut, true);
+});
+
+test('the sweep mails an unsold lot back to a seller who is not playing', async () => {
+  const store = memoryStore();
+  const [seller] = chatWith(0).members;
+  seller.game.inventory.equipment.items.push(weapon());
+  const sword = seller.game.inventory.equipment.items[0];
+  await createLot(seller, store, { kind: 'equipment', ref: sword.uid, price: 700 }, NOW);
+  assert.equal(seller.game.inventory.equipment.items.length, 0);
+  const io = { withLock: (key, action) => action(), getSession: async () => seller, saveSession: async () => {} };
+  assert.equal(await sweepAuction(store, io, NOW + HOUR), 0, 'not yet');
+  assert.equal(await sweepAuction(store, io, NOW + AUCTION_HOURS * HOUR + 1), 1);
+  const letter = getMailbox(seller, NOW + AUCTION_HOURS * HOUR + 1).letters.find(entry => entry.kind === 'auction');
+  assert.equal(letter.rewards[0].kind, 'equipment');
+  assert.equal(claimMail(seller, letter.id, NOW + AUCTION_HOURS * HOUR + 1).ok, true);
+  assert.equal(seller.game.inventory.equipment.items[0].uid, sword.uid);
+});
+
+test('an unsold weapon waits in the mail when the bag is full', async () => {
+  const store = memoryStore();
+  const [seller] = chatWith(0).members;
+  seller.game.inventory.equipment.items.push(weapon());
+  const sword = seller.game.inventory.equipment.items[0];
+  await createLot(seller, store, { kind: 'equipment', ref: sword.uid, price: 700 }, NOW);
+  await returnExpiredLots(seller, store, NOW + AUCTION_HOURS * HOUR + 1);
+  const letter = getMailbox(seller, NOW + AUCTION_HOURS * HOUR + 1).letters.find(entry => entry.kind === 'auction');
+  for (let i = 0; i < 400; i++) seller.game.inventory.equipment.items.push(weapon());
+  const refused = claimMail(seller, letter.id, NOW + AUCTION_HOURS * HOUR + 1);
+  assert.equal(refused.ok, false);
+  assert.equal(refused.reason, 'inventory_full');
+  assert.equal(getMailbox(seller, NOW + AUCTION_HOURS * HOUR + 1).letters.find(entry => entry.id === letter.id).status, 'pending');
 });
