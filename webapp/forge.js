@@ -5,6 +5,7 @@ import {inventoryItemArt} from './inventory-layout.js';
 import {materialIcon} from './material-icons.js';
 import {augmentBlock,saBlock} from './equipment.js';
 import {confirmDialog} from './confirm-dialog.js';
+import {openAttributeEnchant} from './attribute-enchant.js';
 
 export function attributeItemAvailability(item,materialKey){
  const [,tier,element]=/^(?:bound_)?attr_(stone|crystal|jewel)_(fire|water|wind|earth|holy|dark)$/.exec(materialKey||'')||[];
@@ -19,6 +20,7 @@ const ATTRIBUTE_REASONS={not_attributable:'Этот предмет не подд
 export async function openForgeGame({api,renderState=()=>{},haptic=()=>{},statusElement,onClose,materialKey=null}){
  materialKey=materialKey?.replace(/^bound_/,'')||null;
  let equipment=await api('/api/equipment'),mode=materialKey?'attribute':'ls',pending=false,closed=false,dialog=null,selected=null,result='';
+ if(materialKey)return openAttributeEnchant({api,renderState,haptic,onClose,materialKey,equipment,availability:attributeItemAvailability});
  const overlay=document.createElement('section');overlay.className='game-overlay equipment-overlay';
  overlay.innerHTML=`<div class="overlay-backdrop"></div><div class="overlay-panel game-dialog-panel l2-window craft-book-panel">${dialogHeading('Кузница').replace('data-dismiss','class="overlay-close" data-dismiss')}<div data-forge-body></div></div>`;
  const body=overlay.querySelector('[data-forge-body]');

@@ -1,5 +1,7 @@
 import {penaltyRows} from '../functions/game/player/deathPenalties.js';
-import { MAX_LEVEL, getVitalityState } from '../functions/game/player/vitality.js';
+import {playerRace} from '../functions/game/player/playerRace.js';
+import {playerLevelCap} from '../functions/game/player/classProgression.js';
+import { getVitalityState } from '../functions/game/player/vitality.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getMaxHp from '../functions/game/player/getters/getMaxHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
@@ -130,9 +132,10 @@ export function createMiniAppState(session, context) {
       level: number(stats.lvl, 1),
       currentExp: number(stats.currentExp),
       needExp: Math.max(1, number(stats.needExp, 1)),
-      maxLevel: MAX_LEVEL,
+      maxLevel: playerLevelCap(session),
       vitality: getVitalityState(session),
       className: gameClassStats.name || 'noClass',
+      race: playerRace(session),
       gender: session?.gender === 'female' ? 'female' : 'male',
       classTitle: gameClassStats.translateName || gameClassStats.name || 'Без класса',
       dead:hp<=0,

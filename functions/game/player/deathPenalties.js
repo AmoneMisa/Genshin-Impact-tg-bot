@@ -1,9 +1,10 @@
 import classTemplate from './getters/getGameClassStatsFromTemplate.js';
 import {l2RawStat} from './l2Effects.js';
 import DATA from '../../../template/l2PenaltyData.js';
-import levels,{MAX_LEVEL} from '../../../template/levelsTemplate.js';
+import levels from '../../../template/levelsTemplate.js';
 import {uniqueEquipped} from '../equipment/itemBonuses.js';
 import {getMaterialCount,spendMaterials} from './materials.js';
+import {playerLevelCap,playerLevelFloor} from './classProgression.js';
 const need=level=>levels.find(l=>l.lvl===level)?.needExp||levels.at(-1).needExp;
 const grades={noGrade:0,NONE:0,D:1,C:2,B:3,A:4,S:5,S80:6,S84:7};
 export {RECOVERY_SCROLLS,recoveryInfo} from '../../../template/l2RecoveryScrolls.js';
@@ -46,9 +47,9 @@ export function recordDeath(session,{now=Date.now(),random=Math.random,kind='mob
  expMultiplier*=l2RawStat(session,'reduceExpLostBy'+type,true,now);penaltyMultiplier*=l2RawStat(session,'reduceDeathPenaltyBy'+type,true,now);
  let loss=lucky||siege?0:Math.round(need(before)*DATA.expLost[before]/100*expMultiplier);
  let remaining=Math.max(0,stats.currentExp||0)-loss;
- while(remaining<0&&stats.lvl>1){stats.lvl--;remaining+=need(stats.lvl);}
+ while(remaining<0&&stats.lvl>playerLevelFloor(session)){stats.lvl--;remaining+=need(stats.lvl);}
  if(stats.lvl!==before&&game.gameClass?.stats?.name){const mp=game.gameClass.stats.mp,cp=game.gameClass.stats.cp;rescaleDeathStats(session,before);game.gameClass.stats.hp=0;game.gameClass.stats.mp=Math.min(mp||0,game.gameClass.stats.maxMp);game.gameClass.stats.cp=Math.min(cp||0,game.gameClass.stats.maxCp);}
- const actual=loss-Math.max(0,-remaining);stats.currentExp=Math.max(0,remaining);stats.needExp=stats.lvl>=MAX_LEVEL?0:need(stats.lvl)-stats.currentExp;
+ const actual=loss-Math.max(0,-remaining);stats.currentExp=Math.max(0,remaining);stats.needExp=stats.lvl>=playerLevelCap(session)?0:need(stats.lvl)-stats.currentExp;
  if(!lucky&&!siege&&(kind!=='pvp'||game.karma>0)&&random()<.2*penaltyMultiplier)game.deathPenalty=Math.min(15,(game.deathPenalty||0)+1);
  game.deathLedger={active:true,at:now,lostExp:Math.max(0,actual),levelBefore:before,refunded:0};session.needsSave=true;return game.deathLedger;
 }
@@ -57,8 +58,9 @@ export function refundDeathExp(session,share=0){
  const amount=Math.floor(ledger.lostExp*Math.min(1,Math.max(0,share)));ledger.refunded=amount;
  const before=session.game.stats.lvl;
  session.game.stats.currentExp=(session.game.stats.currentExp||0)+amount;
- while(session.game.stats.lvl<MAX_LEVEL&&session.game.stats.currentExp>=need(session.game.stats.lvl)){session.game.stats.currentExp-=need(session.game.stats.lvl);session.game.stats.lvl++;}
- session.game.stats.needExp=session.game.stats.lvl>=MAX_LEVEL?0:need(session.game.stats.lvl)-session.game.stats.currentExp;
+ while(session.game.stats.lvl<playerLevelCap(session)&&session.game.stats.currentExp>=need(session.game.stats.lvl)){session.game.stats.currentExp-=need(session.game.stats.lvl);session.game.stats.lvl++;}
+ session.game.stats.needExp=session.game.stats.lvl>=playerLevelCap(session)?0:need(session.game.stats.lvl)-session.game.stats.currentExp;
+ if(session.game.stats.lvl>=playerLevelCap(session))session.game.stats.currentExp=0;
  if(session.game.stats.lvl!==before)rescaleDeathStats(session,before);
  return amount;
 }

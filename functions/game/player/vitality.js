@@ -8,6 +8,7 @@
 // Stored as session.game.vitality = {points, at}; the refill is computed when the bar is read.
 import levelsTemplate, { MAX_LEVEL } from '../../../template/levelsTemplate.js';
 import {activeLoginRune} from '../../../template/loginRewards.js';
+import {playerLevelCap} from './classProgression.js';
 
 export { MAX_LEVEL };
 export const EXP_RATE = 5;
@@ -55,7 +56,7 @@ export function getVitalityState(session, now = Date.now()) {
 
 export const levelNeed = level => levelsTemplate.find(entry => entry.lvl === level)?.needExp || 0;
 
-export const isMaxLevel = session => number(session?.game?.stats?.lvl, 1) >= MAX_LEVEL;
+export const isMaxLevel = session => number(session?.game?.stats?.lvl, 1) >= playerLevelCap(session);
 
 /**
  * Credits experience: `base` is the reward before the rate. Returns {gained, bonus} - the experience

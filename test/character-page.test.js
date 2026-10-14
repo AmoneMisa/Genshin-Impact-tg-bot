@@ -35,6 +35,16 @@ test('character snapshot exposes six base stats, six defenses and real clan bonu
   assert.deepEqual(dto.combat.slice(0,4).map(stat=>stat.id),['pAtk','mAtk','pDef','mDef']);
   assert.equal(dto.equipment.items.length,0);
 });
+
+test('Status displays integer L2 critical rating capped at 500 without changing stored percent',()=>{
+ for(const [percent,rating] of [[0,0],[5,50],[10,100],[13.89,138],[50,500],[75,500]]){
+  const s=session();s.game.gameClass.stats.criticalChance=percent;
+  const dto=getCharacterState(s),stat=dto.combat.find(s=>s.id==='criticalChance');
+  assert.equal(stat.value,rating);assert.equal(stat.max,500);assert.equal(stat.unit,'rating');
+  assert.equal(s.game.gameClass.stats.criticalChance,percent);
+  const html=renderCharacterTab(dto,'stats');assert.match(html,new RegExp('Шанс крита</span><strong>'+rating+'</strong>'));
+ }
+});
 test('effects discard expired, exhausted and zero shields, preserving timed and charge semantics',()=>{
   const s=session(),now=10000;
   s.game.effects=[{name:'guard',amount:.2,until:20000},{name:'addDamageToBoss',amount:75,count:3},
@@ -50,9 +60,9 @@ test('numeric SP belongs to character stats and every equipment slot is a select
   const stats=renderCharacterTab(data,'stats');
   assert.match(stats,/2[\s\u00a0]147[\s\u00a0]483[\s\u00a0]647/);
   const equipment=renderCharacterTab(data,'equipment');
-  assert.equal((equipment.match(/data-character-slot=/g)||[]).length,13);
+  assert.equal((equipment.match(/data-character-slot=/g)||[]).length,16);
   assert.match(equipment,/data-character-slot="cloak"/);
-  assert.match(equipment,/Слот свободен/);
+  assert.doesNotMatch(equipment,/Слот свободен/);
   assert.doesNotMatch(equipment,/2[\s\u00a0]147/);
 });
 test('unknown player text is escaped and unavailable passive learning stays disabled',()=>{

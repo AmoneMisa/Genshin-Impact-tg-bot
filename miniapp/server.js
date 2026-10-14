@@ -50,7 +50,7 @@ import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from
 import { resetArcadeGame } from './arcadeReset.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
-import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp } from './playerProfile.js';
+import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp, changePlayerRaceForMiniApp,changePlayerSubclassForMiniApp } from './playerProfile.js';
 import { getSkillsState, enchantSkillForMiniApp, learnSkillForMiniApp, routeSkillForMiniApp } from './skills.js';
 import {
   getClassQuestsState,
@@ -555,8 +555,9 @@ const formsSave = guarded('forms save', async (req, res) => {
 
 const characterState = guarded('character state', async (req, res) => {
   const context = await authorize(req);
+  const clan=await getClan(context.userId);
   const result = await withLock(`${context.chatId}:${context.userId}:character`, async () => {
-    return getCharacterState(context.session, { chatId: context.chatId, chatType: context.validated.chatType, user: context.validated.user });
+    return getCharacterState(context.session, { chatId: context.chatId, chatType: context.validated.chatType, user: context.validated.user,clanName:clan?.name });
   });
   return sendJson(res, 200, result);
 });
@@ -602,6 +603,30 @@ const playerProfileGender = guarded('player profile gender', async (req, res) =>
   });
 
   return sendResult(res, result, context);
+});
+
+const playerProfileRace = guarded('player profile race', async (req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  if(typeof body.race!=='string')throw httpError(400,'race is required');
+  const result=await withLock(context.chatId,async()=>{
+    context.session=await getSession(context.chatId,context.userId);
+    const changed=changePlayerRaceForMiniApp(context.session,body.race);
+    if(changed.ok)await saveSession(context.session);
+    return changed;
+  });
+  return sendResult(res,result,context);
+});
+
+const playerProfileSubclass = guarded('player profile subclass', async (req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  if(!['add','switch'].includes(body.action) || (body.action==='add'&&typeof body.className!=='string') || (body.action==='switch'&&!Number.isInteger(body.index)))throw httpError(400,'invalid subclass action');
+  const result=await withLock(context.chatId,async()=>{
+    context.session=await getSession(context.chatId,context.userId);
+    const changed=changePlayerSubclassForMiniApp(context.session,body);
+    if(changed.ok)await saveSession(context.session);
+    return changed;
+  });
+  return sendResult(res,result,context);
 });
 
 const playerSkillsState = guarded('player skills state', async (req, res) => {
@@ -2235,6 +2260,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/profile') return playerProfileState(req, res);
     if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
+    if (route === 'POST /api/profile/race') return playerProfileRace(req, res);
+    if (route === 'POST /api/profile/subclass') return playerProfileSubclass(req, res);
     if (route === 'GET /api/skills') return playerSkillsState(req, res);
     if (route === 'POST /api/skills/enchant') return playerSkillsEnchant(req, res);
     if (route === 'POST /api/skills/learn') return playerSkillsLearn(req, res);

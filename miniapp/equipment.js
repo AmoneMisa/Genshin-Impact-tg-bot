@@ -250,6 +250,7 @@ export function getEquipmentState(session) {
   return {
     ...resources,
     resources,
+    attributeStones:Object.fromEntries(['stone','crystal','jewel'].flatMap(tier=>['fire','water','wind','earth','holy','dark'].map(element=>{const key='attr_'+tier+'_'+element;return [key,usableMaterialCount(session,key)];}))),
     soulCrystals:soulCrystalState(session),
     count: sanitized.length,
     equippedCount: sanitized.filter((item) => item.isUsed).length,

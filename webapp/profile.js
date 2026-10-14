@@ -1,60 +1,97 @@
 import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
+import {confirmDialog} from './confirm-dialog.js';
+import {classEmblemHtml} from './class-emblem.js';
+import {installOverlayA11y} from './overlay-a11y.js';
+import {enhanceSelects} from './design/select.js';
 
 const REASONS = {
   unknown_class: 'Такого класса нет.',
   same_class: 'Этот класс уже выбран.',
-  class_cooldown: 'Класс можно менять только раз в неделю.',
+  not_enough_luck_coins:'Недостаточно CoL.',
+  same_gender:'Этот пол уже выбран.',
   unknown_gender: 'Недопустимое значение пола.',
-};
-
-const CLASS_ICONS = {
-  warrior: '🛡️',
-  mage: '🪄',
-  priest: '✨',
-  archer: '🏹',
-  rogue: '🗡️',
-  berserk: '🪓',
-  noClass: '🧭',
+  profession_locked:'Можно выбрать профессию только на уже полученной ступени.',
+  level_too_low:'Недостаточный уровень.',
+  unknown_race:'Такой расы нет.',
+  same_race:'Эта раса уже выбрана.',
+  subclass_level_required:'Для нового саб-класса нужен 75 уровень основного и активного классов.',
+  previous_subclass_level_required:'Сначала прокачайте все взятые саб-классы до 75 уровня.',
+  main_profession_required:'Сначала получите вторую профессию основного класса.',
+  subclass_limit:'Все три слота саб-классов заняты.',
+  player_dead:'Сначала воскресните.',
+  in_combat:'В бою переключить профессию нельзя.',
+  not_peaceful:'Вернитесь в город для смены саб-класса.',
+  summon_active:'Сначала отзовите призванное существо.',
+  invalid_subclass:'Эта профессия недоступна для саб-класса.',
+  forbidden_subclass:'Эту профессию нельзя взять саб-классом.',
+  similar_main_class:'Нельзя выбрать профессию из группы основного класса.',
+  duplicate_subclass:'Эта ветка уже занята другим саб-классом.',
+  opposing_elf_race:'Эльфы и тёмные эльфы не могут брать саб-классы друг друга.',
+  kamael_subclass_only:'Саб-классы камаэлей доступны только камаэлям.',
+  kamael_gender_variant:'Этот вариант профессии недоступен для саб-класса.',
+  inspector_locked:'Инспектор доступен после двух саб-классов 75 уровня.',
+  subclass_conflict:'Эта профессия несовместима с уже взятыми саб-классами.',
+  invalid_main_class:'Эта профессия доступна только как саб-класс.',
+  unknown_profession_slot:'Такого слота профессии нет.',
+  same_profession_slot:'Эта профессия уже активна.',
 };
 
 function formatNumber(value) {
   return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
 }
 
-function formatDuration(ms) {
-  const totalMinutes = Math.max(0, Math.ceil((Number(ms) || 0) / 60000));
-  const days = Math.floor(totalMinutes / 1440);
-  const hours = Math.floor((totalMinutes % 1440) / 60);
-  const minutes = totalMinutes % 60;
-  if (days) return `${days} д. ${hours} ч.`;
-  if (hours) return `${hours} ч. ${minutes} мин.`;
-  return `${minutes} мин.`;
+function stat(label, value) {
+  return `<div class="ui-stat-row"><span>${escapeHtml(label)}</span><strong>${formatNumber(value)}</strong></div>`;
 }
 
-
-function stat(label, value, icon) {
-  return `<article><span>${icon}</span><div><small>${label}</small><strong>${formatNumber(value)}</strong></div></article>`;
+function statsHtml(stats) {
+  return `<div class="profile-stats ui-stat-table">
+    ${stat('Физ. атака', stats.pAtk ?? stats.attack)}${stat('Маг. атака', stats.mAtk ?? stats.attack)}
+    ${stat('Физ. защита', stats.pDef ?? stats.defence)}${stat('Маг. защита', stats.mDef ?? stats.defence)}
+    ${stat('HP', stats.maxHp)}${stat('MP', stats.maxMp)}
+    ${stat('CP', stats.maxCp)}${stat('Скорость', stats.speed)}
+    ${stat('Точность', stats.accuracy)}${stat('Уклонение', stats.evasion)}
+    ${stat('Шанс крита', stats.criticalChance)}
+  </div>`;
 }
 
-export function classArt(className, gender) {
-  return menuArtFor('profile', { className, gender });
+function professionHtml(node, currentName, selectedProfession, pending) {
+  if (!node) return '';
+  const tag = node.selectable ? 'button' : 'div';
+  const action = node.selectable ? `type="button" data-profile-profession="${escapeHtml(node.name)}" aria-pressed="${node.name===selectedProfession}" ${pending?'disabled':''}` : '';
+  return `<li data-profession="${escapeHtml(node.name)}">
+    <${tag} class="ui-inline-content ui-tree-row ${node.selectable ? 'ui-button ui-choice-row compact' : ''} ${node.name===selectedProfession?'active':''}" ${action} ${node.name === currentName ? 'aria-current="true"' : ''}>
+      ${classEmblemHtml({className:node.name,classTitle:node.title})}
+      <span>${escapeHtml(node.title)}${node.name === currentName ? '<small>Текущая профессия</small>' : ''}</span>
+      <small>Ур. ${node.level}</small>
+    </${tag}>
+    ${node.children.length ? `<ul>${node.children.map(child=>professionHtml(child,currentName,selectedProfession,pending)).join('')}</ul>` : ''}
+  </li>`;
 }
 
-const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+export function classArt(className, gender, width = 256) {
+  return menuArtFor('profile', { className, gender }, width);
+}
 
-export async function openPlayerProfile({ api, renderState, haptic, statusElement, context }) {
+export async function openPlayerProfile({ api, renderState=()=>{}, haptic=()=>{}, statusElement, context }) {
   let profile = await api('/api/profile');
   let pending = false;
-  let selected = profile.currentClass.name === 'noClass' ? profile.classes[0]?.name : null;
+  let closed = false;
+  let selected = profile.currentClass.baseClass || profile.classes[0]?.name;
+  let selectedRace = profile.classes.find(item=>item.name===selected)?.race || profile.classes[0]?.race;
+  let appearanceRace = profile.currentClass.race || profile.races[0]?.name;
+  let selectedProfession = profile.currentClass.name;
+  let chooserOpen = false;
+  installOverlayA11y();
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay profile-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass profile-panel">
-      ${dialogHeading("Персонаж").replace('data-dismiss','class="overlay-close" data-dismiss')}
+    <div class="overlay-panel game-dialog-panel l2-status-window profile-panel">
+      ${dialogHeading("Класс и облик").replace('data-dismiss','class="overlay-close" data-dismiss')}
       <div data-profile-content></div>
       <div class="utility-feedback" data-profile-feedback aria-live="polite"></div>
     </div>`;
@@ -62,6 +99,7 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
   const content = overlay.querySelector('[data-profile-content]');
   const feedback = overlay.querySelector('[data-profile-feedback]');
   const close = () => {
+    if(closed)return;closed=true;
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
   };
@@ -69,88 +107,124 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
 
   function classCard(item) {
-    const active = item.name === profile.currentClass.name;
     const chosen = item.name === selected;
-    return `
-      <button type="button" class="profile-class-card ${active ? 'active' : ''} ${chosen ? 'selected' : ''}" data-profile-select="${escapeHtml(item.name)}" style="--art:url('${classArt(item.name, profile.gender)}')" ${active ? 'aria-current="true"' : ''}>
-        <span class="profile-class-art" aria-hidden="true"></span>
-        <span class="profile-class-badge">${CLASS_ICONS[item.name] || '⚔️'}</span>
-        <strong>${escapeHtml(item.title)}</strong>
-        <small>${active ? 'Текущий' : chosen ? 'Выбран' : `${item.raceTitle ? `${escapeHtml(item.raceTitle)} · ` : ''}⚔ ${formatNumber(item.stats.attack)} · 🛡 ${formatNumber(item.stats.defence)}`}</small>
-      </button>`;
+    return `<button type="button" class="ui-button ui-choice-row compact ${chosen ? 'active' : ''}" data-profile-select="${escapeHtml(item.name)}" aria-pressed="${chosen}" ${pending ? 'disabled' : ''}>
+      <span class="ui-inline-content">${classEmblemHtml({className:item.name,classTitle:item.title})}<span>${escapeHtml(item.title)}</span></span>
+    </button>`;
   }
 
   function chosenHtml() {
     const item = profile.classes.find(entry => entry.name === selected);
-    if (!item || item.name === profile.currentClass.name) return '';
-    const blocked = pending || profile.classChangeRemainingMs > 0;
-    return `
-      <section class="profile-chosen">
-        <p>${escapeHtml(item.description)}</p>
-        <div class="profile-class-stats">
-          <span>Физ. атака ${formatNumber(item.stats.pAtk ?? item.stats.attack)}</span><span>Маг. атака ${formatNumber(item.stats.mAtk ?? item.stats.attack)}</span>
-          <span>Физ. защита ${formatNumber(item.stats.pDef ?? item.stats.defence)}</span><span>Маг. защита ${formatNumber(item.stats.mDef ?? item.stats.defence)}</span>
-          <span>❤ ${formatNumber(item.stats.maxHp)}</span><span>⚡ ${formatNumber(item.stats.speed)}</span>
-        </div>
-        <button type="button" class="profile-confirm" data-profile-class="${escapeHtml(item.name)}" ${blocked ? 'disabled' : ''}>Стать: ${escapeHtml(item.title)}</button>
-      </section>`;
+    if (!item) return '';
+    const target = profile.eligibleClasses.find(entry=>entry.name===selectedProfession);
+    const blocked = pending || !profile.canChangeClass;
+    return `<section class="profile-chosen">
+      <h3>${escapeHtml(item.title)}</h3>
+      ${target ? `<p>${escapeHtml(target.title)} · ${escapeHtml(target.raceTitle)}</p><p>${escapeHtml(target.description)}</p>
+      <details class="ui-disclosure"><summary>Базовые параметры · ур. ${profile.level}</summary>${statsHtml(target.stats)}<p>Без экипировки, татуировок и эффектов.</p></details>` : ''}
+      <h3>Ветки профессий</h3>
+      <p>Профессии открываются через квесты на 20, 40 и 76 уровнях.</p>
+      <p>При смене расы выбирается профессия на уже полученной ступени. Повторять её квесты не нужно.</p>
+      <ul class="ui-profession-tree">${professionHtml(item.professions,profile.currentClass.name,selectedProfession,pending)}</ul>
+      ${target && target.name !== profile.currentClass.name ? `<button type="button" class="ui-button primary profile-confirm" data-profile-class="${escapeHtml(target.name)}" ${blocked ? 'disabled' : ''}>Стать: ${escapeHtml(target.title)} · ${formatNumber(profile.classChangeCost)} CoL</button>` : ''}
+    </section>`;
   }
 
   function render() {
     const current = profile.currentClass;
-    const cooldown = profile.classChangeRemainingMs > 0
-      ? `Следующая смена через ${formatDuration(profile.classChangeRemainingMs)}`
-      : current.name === 'noClass' ? 'Первый класс можно выбрать сразу' : 'Класс можно сменить сейчас';
-    const genderLocked = pending;
-
+    const raceChoices = [...new Map(profile.classes.map(item=>[item.race,item.raceTitle])).entries()];
+    const root = profile.classes.find(item=>item.name===selected);
+    const branchNames = new Set();
+    function visit(node){if(!node)return;branchNames.add(node.name);node.children.forEach(visit);}
+    visit(root?.professions);
+    if(!branchNames.has(selectedProfession) || !profile.eligibleClasses.some(item=>item.name===selectedProfession)) {
+      selectedProfession = profile.eligibleClasses.find(item=>branchNames.has(item.name))?.name;
+    }
+    const servicePrice = current.name === 'noClass'?'Первый класс можно выбрать сразу':`Раса и профессия · ${formatNumber(profile.classChangeCost)} CoL`;
+    const genderLocked = pending || !profile.canChangeGender;
     content.innerHTML = `
-      <section class="profile-hero" style="--art:url('${classArt(current.name, profile.gender)}')">
-        <div class="profile-hero-art" aria-hidden="true"></div>
-        <div class="profile-hero-flash" aria-hidden="true"></div>
+      <section class="profile-hero">
         <div class="profile-hero-copy">
-          <small>Ур. ${profile.level}</small>
-          <h3>${escapeHtml(current.title)}</h3>
-          <span>${cooldown}</span>
+          <div class="ui-inline-content">${classEmblemHtml({className:current.name,classTitle:current.title})}<strong>${escapeHtml(current.title)} · ур. ${profile.level}</strong></div>
+          ${current.raceTitle ? `<span>Раса: ${escapeHtml(current.raceTitle)}</span>` : ''}
+          <span>${servicePrice}</span>
+          <span>Пол · ${formatNumber(profile.genderChangeCost)} CoL · Баланс: ${formatNumber(profile.luckCoins)} CoL</span>
         </div>
         <div class="profile-genders" role="group" aria-label="Пол персонажа">
-          ${['male', 'female'].map(gender => `
-            <button type="button" data-profile-gender="${gender}" class="${profile.gender === gender ? 'active' : ''}" style="--art:url('${classArt(current.name, gender)}')" ${genderLocked ? 'disabled' : ''} aria-label="${gender === 'male' ? 'Мужской' : 'Женский'}"><i>${gender === 'male' ? '♂' : '♀'}</i></button>`).join('')}
+          ${['male', 'female'].map(gender=>`<button type="button" data-profile-gender="${gender}" class="ui-button ${profile.gender===gender ? 'primary' : ''}" ${genderLocked || profile.gender===gender ? 'disabled' : ''} aria-pressed="${profile.gender===gender}">${gender==='male'?'Мужской':'Женский'}</button>`).join('')}
         </div>
+        <details class="ui-disclosure"><summary>Сменить только расу · ${formatNumber(profile.raceChangeCost)} CoL</summary>
+          <p>Профессия, её характеристики и прогресс сохраняются.</p>
+          <label class="profile-select-label">Новая раса<select data-profile-race-only ${pending?'disabled':''}>${profile.races.map(race=>`<option value="${escapeHtml(race.name)}" ${race.name===appearanceRace?'selected':''}>${escapeHtml(race.title)}</option>`).join('')}</select></label>
+          <button type="button" class="ui-button primary" data-profile-race-change ${pending||!profile.canChangeRace||appearanceRace===current.race?'disabled':''}>Сменить расу · ${formatNumber(profile.raceChangeCost)} CoL</button>
+        </details>
       </section>
-      <section class="profile-stats">
-        ${stat('Физ. атака', current.stats.pAtk ?? current.stats.attack, '⚔️')}
-        ${stat('Маг. атака', current.stats.mAtk ?? current.stats.attack, '✨')}
-        ${stat('Физ. защита', current.stats.pDef ?? current.stats.defence, '🛡️')}
-        ${stat('Маг. защита', current.stats.mDef ?? current.stats.defence, '🔮')}
-        ${stat('HP', current.stats.maxHp, '❤')}
-        ${stat('MP', current.stats.maxMp, '🔹')}
-        ${stat('CP', current.stats.maxCp, '🔸')}
-        ${stat('Скорость', current.stats.speed, '⚡')}
-      </section>
+      <section class="profile-current-stats"><h3>Текущие характеристики</h3>${statsHtml(current.stats)}</section>
+      ${subclassesHtml()}
       <section class="profile-classes">
-        <div class="profile-section-title"><strong>Боевые классы</strong></div>
-        <div class="profile-class-list">${profile.classes.map(classCard).join('')}</div>
+        <details class="ui-disclosure" data-profile-chooser ${chooserOpen?'open':''}><summary>Раса и профессия · ${escapeHtml(root?.raceTitle||'Выбор')}</summary>
+          <div class="profile-race-list" role="group" aria-label="Раса персонажа">${raceChoices.map(([race,title])=>`<button type="button" class="ui-button ${race===selectedRace?'primary':''}" data-profile-race="${escapeHtml(race)}" aria-pressed="${race===selectedRace}" ${pending?'disabled':''}>${escapeHtml(title)}</button>`).join('')}</div>
+          <div class="profile-class-list">${profile.classes.filter(item=>item.race===selectedRace).map(classCard).join('')}</div>
+        </details>
         ${chosenHtml()}
       </section>`;
     bind();
+    enhanceSelects(content);
   }
 
-  // Transformation: the hero flashes white, then settles on the new portrait.
-  async function transform() {
-    const hero = content.querySelector('.profile-hero');
-    if (!hero || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    hero.classList.add('transforming');
-    await wait(450);
+  function subclassesHtml() {
+    const state=profile.subclasses;
+    if(!state)return '';
+    return `<section class="profile-subclasses"><h3>Профессии · ${state.slots.length-1} / ${state.maxSubclasses} саб-класса</h3>
+      <div class="profile-slot-list">${state.slots.map(slot=>`<button type="button" class="ui-button ui-choice-row compact ${slot.active?'active':''}" data-profile-slot="${slot.index}" ${pending||slot.active||state.switchReason?'disabled':''} aria-pressed="${slot.active}">
+        <span class="ui-inline-content">${classEmblemHtml({className:slot.className,classTitle:slot.classTitle})}<span>${escapeHtml(slot.classTitle)}<small>${slot.index===0?'Основной класс':'Саб-класс'} · ур. ${slot.level}</small></span></span>
+      </button>`).join('')}</div>
+      ${state.switchReason?`<p>${escapeHtml(REASONS[state.switchReason]||state.switchReason)}</p>`:''}
+      ${state.addReason?`<p>${escapeHtml(REASONS[state.addReason]||state.addReason)}</p>`:state.choices.length?`<details class="ui-disclosure"><summary>Добавить саб-класс</summary>
+        <p>Новая профессия начинает с 40 уровня. Опыт, SP, навыки и татуировки у каждого класса отдельные. Переключение бесплатное.</p>
+        <label class="profile-select-label">Новая профессия<select data-profile-subclass-select ${pending?'disabled':''}>${profile.races.map(race=>`<optgroup label="${escapeHtml(race.title)}">${state.choices.filter(choice=>choice.race===race.name).map(choice=>`<option value="${escapeHtml(choice.name)}">${escapeHtml(choice.title)}</option>`).join('')}</optgroup>`).join('')}</select></label>
+        <button type="button" class="ui-button primary" data-profile-subclass-add ${pending?'disabled':''}>Взять саб-класс</button>
+      </details>`:'<p>Доступных саб-классов нет.</p>'}
+    </section>`;
   }
 
   function bind() {
+    content.querySelector('[data-profile-race-only]')?.addEventListener('change',event=>{
+      appearanceRace=event.target.value;
+      const button=content.querySelector('[data-profile-race-change]');button.disabled=pending||!profile.canChangeRace||appearanceRace===profile.currentClass.race;
+    });
+    content.querySelector('[data-profile-race-change]')?.addEventListener('click',()=>{
+      const title=profile.races.find(race=>race.name===appearanceRace)?.title;
+      mutateProfile('/api/profile/race',{race:appearanceRace},{title:'Сменить расу',text:`${title}. Стоимость: ${formatNumber(profile.raceChangeCost)} CoL. Профессия и характеристики сохраняются.`});
+    });
+    content.querySelectorAll('[data-profile-slot]').forEach(button=>button.addEventListener('click',()=>mutateProfile('/api/profile/subclass',{action:'switch',index:Number(button.dataset.profileSlot)})));
+    content.querySelector('[data-profile-subclass-add]')?.addEventListener('click',()=>{
+      const className=content.querySelector('[data-profile-subclass-select]').value;
+      const title=profile.subclasses.choices.find(choice=>choice.name===className)?.title;
+      mutateProfile('/api/profile/subclass',{action:'add',className},{title:'Взять саб-класс',text:`${title} · ур. 40. Отдельные опыт, SP и навыки.`});
+    });
+    content.querySelector('[data-profile-chooser]').addEventListener('toggle',event=>{if(event.currentTarget.isConnected)chooserOpen=event.currentTarget.open;});
+    content.querySelectorAll('[data-profile-race]').forEach(button=>button.addEventListener('click',()=>{
+      if(pending)return;
+      selectedRace=button.dataset.profileRace;
+      selected=profile.classes.find(item=>item.race===selectedRace)?.name;
+      chooserOpen=true;feedback.textContent='';haptic('light');render();
+      content.querySelector(`[data-profile-race="${selectedRace}"]`)?.focus({preventScroll:true});
+    }));
+    content.querySelectorAll('[data-profile-profession]').forEach(button=>button.addEventListener('click',()=>{
+      if(pending)return;
+      selectedProfession=button.dataset.profileProfession;feedback.textContent='';haptic('light');render();
+      content.querySelector(`[data-profile-profession="${selectedProfession}"]`)?.focus({preventScroll:true});
+    }));
     content.querySelectorAll('[data-profile-select]').forEach(button => {
       button.addEventListener('click', () => {
-        if (button.dataset.profileSelect === profile.currentClass.name) return;
+        if (pending) return;
         selected = button.dataset.profileSelect;
+        chooserOpen = false;
         feedback.textContent = '';
         haptic('light');
         render();
+        content.querySelector(`[data-profile-profession="${selectedProfession}"]`)?.focus({preventScroll:true});
       });
     });
     content.querySelectorAll('[data-profile-class]').forEach(button => {
@@ -161,34 +235,57 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
     });
   }
 
+  async function mutateProfile(url,body,confirmation) {
+    if(pending||closed)return;
+    pending=true;render();
+    try {
+      if(confirmation && !await confirmDialog({owner:overlay,...confirmation,confirmLabel:'Подтвердить'}))return;
+      if(closed)return;
+      const payload=await api(url,{method:'POST',body:JSON.stringify(body)});
+      profile=payload.profile;
+      selected=profile.currentClass.baseClass||profile.classes[0]?.name;
+      selectedRace=profile.classes.find(item=>item.name===selected)?.race||profile.classes[0]?.race;
+      selectedProfession=profile.currentClass.name;appearanceRace=profile.currentClass.race||profile.races[0]?.name;
+      chooserOpen=false;
+      if(payload.state)renderState(payload.state);
+      feedback.textContent=url.endsWith('/race')?'Раса изменена. Профессия сохранена.':'Профессия активирована.';
+      haptic('light');
+    }catch(error){if(error.payload?.profile)profile=error.payload.profile;feedback.textContent=REASONS[error.payload?.reason]||error.message;}
+    finally{pending=false;if(!closed)render();}
+  }
+
   async function changeClass(className) {
     if (pending) return;
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Меняем класс…';
-    haptic('heavy');
+    render();
     try {
+      const target=profile.eligibleClasses.find(item=>item.name===className);
+      if(!target)return;
+      if(!await confirmDialog({owner:overlay,title:'Сменить расу и профессию',text:`${target.raceTitle} · ${target.title}. Стоимость: ${formatNumber(profile.classChangeCost)} CoL.`,confirmLabel:'Сменить'})||closed)return;
+      feedback.textContent = 'Меняем класс…';haptic('heavy');
       const payload = await api('/api/profile/class', {
         method: 'POST',
         body: JSON.stringify({ className }),
       });
-      await transform();
       profile = payload.profile;
-      selected = null;
+      selected = profile.currentClass.baseClass || profile.classes[0]?.name;
+      selectedRace=profile.classes.find(item=>item.name===selected)?.race || profile.classes[0]?.race;
+      appearanceRace=profile.currentClass.race || profile.races[0]?.name;
+      selectedProfession=profile.currentClass.name;
       if (payload.state) renderState(payload.state);
-      feedback.textContent = `Класс изменён: ${payload.classTitle}.`;
-      window.setTimeout(() => content.querySelector('.profile-hero')?.classList.add('arrived'), 20);
-      statusElement.textContent = `Персонаж: выбран класс ${payload.classTitle}.`;
+      feedback.textContent = `Раса и профессия изменены: ${payload.raceTitle} · ${payload.classTitle}.`;
+      if(statusElement)statusElement.textContent = `Персонаж: выбран класс ${payload.classTitle}.`;
       haptic('medium');
     } catch (error) {
       const base = REASONS[error.payload?.reason] || error.message;
-      const remain = error.payload?.cooldownRemainingMs ? ` Осталось ${formatDuration(error.payload.cooldownRemainingMs)}.` : '';
-      feedback.textContent = `${base}${remain}`;
+      if(error.payload?.profile)profile=error.payload.profile;
+      feedback.textContent = base;
       haptic('light');
     } finally {
       pending = false;
       overlay.classList.remove('busy');
-      render();
+      if(!closed)render();
     }
   }
 
@@ -196,25 +293,26 @@ export async function openPlayerProfile({ api, renderState, haptic, statusElemen
     if (pending || gender === profile.gender) return;
     pending = true;
     overlay.classList.add('busy');
-    feedback.textContent = 'Сохраняем…';
+    render();
     try {
+      if(!await confirmDialog({owner:overlay,title:'Сменить пол',text:`Стоимость: ${formatNumber(profile.genderChangeCost)} CoL.`,confirmLabel:'Сменить пол'})||closed)return;
+      feedback.textContent = 'Сохраняем…';
       const payload = await api('/api/profile/gender', {
         method: 'POST',
         body: JSON.stringify({ gender }),
       });
-      await transform();
       profile = payload.profile;
       if (payload.state) renderState(payload.state);
       feedback.textContent = 'Пол персонажа сохранён.';
-      window.setTimeout(() => content.querySelector('.profile-hero')?.classList.add('arrived'), 20);
-      statusElement.textContent = 'Профиль персонажа обновлён.';
+      if(statusElement)statusElement.textContent = 'Профиль персонажа обновлён.';
       haptic('light');
     } catch (error) {
+      if(error.payload?.profile)profile=error.payload.profile;
       feedback.textContent = REASONS[error.payload?.reason] || error.message;
     } finally {
       pending = false;
       overlay.classList.remove('busy');
-      render();
+      if(!closed)render();
     }
   }
 

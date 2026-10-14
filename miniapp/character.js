@@ -5,18 +5,13 @@ import { getSkillsState } from './skills.js';
 import { getClassBuffsState, describeBuff } from './buffs.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
 import {getTattooState} from '../functions/game/player/tattoos.js';
+import hennaSymbols from '../template/hennaSymbols.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState } from '../functions/game/player/passiveSkills.js';
 import { CLAN_SKILLS } from '../functions/game/clans/clanPerks.js';
 import { describeSkill } from '../functions/game/equipment/lifestoneSkills.js';
 import buffPotions from '../template/buffPotions.js';
-import getAttack from '../functions/game/player/getters/getAttack.js';
-import getDefence from '../functions/game/player/getters/getDefence.js';
-import getSpeed from '../functions/game/player/getters/getSpeed.js';
-import getAccuracy from '../functions/game/player/getters/getAccuracy.js';
-import getEvasion from '../functions/game/player/getters/getEvasion.js';
-import getCriticalChance from '../functions/game/player/getters/getCriticalChance.js';
-import getCriticalDamage from '../functions/game/player/getters/getCriticalDamage.js';
+import {getPlayerCombatStats} from './playerCombatStats.js';
 
 const num = value => Number.isFinite(Number(value)) ? Number(value) : 0;
 const LABELS = { shield:'Щит', addDamageToBoss:'Урон по боссу', addCritChanceToBoss:'Шанс крита', addCritDamageToBoss:'Сила крита', guard:'Защитная стойка', taunt:'Провокация', evade:'Уклонение', haste:'Ускорение' };
@@ -48,34 +43,19 @@ export function characterEffects(session, now = Date.now()) {
   return effects;
 }
 
-function combatValue(session, getter, raw) {
-  // Legacy documents without equipmentStats use raw class values, as in bootstrap.
-  if (!session?.game?.equipmentStats) return num(raw);
-  const value = getter(session, session.game.gameClass);
-  return Number.isFinite(Number(value)) ? Number(value) : num(raw);
-}
-
 /** One authenticated snapshot for all four character tabs. No clan roster or private data. */
 export function getCharacterState(session, context = {}, now = Date.now()) {
   // Expired equipment is removed before calculating stats and effects.
   const equipment = getEquipmentState(session);
   const state = createMiniAppState(session, context);
-  const raw = session?.game?.gameClass?.stats || {};
-  const getters = [
-    ['pAtk','Физ. атака',s=>getAttack(s,s.game.gameClass,'physical'),raw.pAtk ?? raw.attack],
-    ['mAtk','Маг. атака',s=>getAttack(s,s.game.gameClass,'magic'),raw.mAtk ?? raw.attack],
-    ['pDef','Физ. защита',s=>getDefence(s,s.game.gameClass,'physical'),raw.pDef ?? raw.defence],
-    ['mDef','Маг. защита',s=>getDefence(s,s.game.gameClass,'magic'),raw.mDef ?? raw.defence],
-    ['speed','Скорость',getSpeed,raw.speed], ['accuracy','Точность',getAccuracy,raw.accuracy],
-    ['evasion','Уклонение',getEvasion,raw.evasion], ['criticalChance','Шанс крита',getCriticalChance,raw.criticalChance],
-    ['criticalDamage','Крит. урон',getCriticalDamage,raw.criticalDamage],
-  ];
   return {
     profile:getPlayerProfileState(session, now), player:state.player,
     name:context.user?.first_name || context.user?.firstName || context.user?.username || 'Путешественник',
+    clanName:context.clanName||null,
+    social:{karma:num(session.game.worldPvp?.karma),pvp:num(session.game.worldPvp?.pvpKills),pk:num(session.game.worldPvp?.pkKills)},
     characteristics:getBaseStatsState(session),
-    tattoos:getTattooState(session).worn,
-    combat:getters.map(([id,label,getter,rawValue]) => ({id,label,value:combatValue(session,getter,rawValue)})),
+    tattoos:getTattooState(session).worn.map(t=>({...t,symbol:hennaSymbols[t.dye]||null})),
+    combat:getPlayerCombatStats(session),
     attributes:getAttributesState(session), equipment, skills:getSkillsState(session),
     passives:getPassivesState(session), buffs:getClassBuffsState(session, now),
     effects:characterEffects(session, now),

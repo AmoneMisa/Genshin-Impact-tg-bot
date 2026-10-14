@@ -9,6 +9,12 @@ const PICTO = String.raw`(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})(?:
 const EMOJI_RX = new RegExp(`(?:\\p{Regional_Indicator}{2}|${PICTO}|${KEYS.join('|')})\\uFE0F?`, 'gu');
 const templates = new Map();
 
+/** Shared control glyphs; gameplay items continue to use their original client artwork. */
+export function controlIcon(name){
+ const paths={check:'M4 12l5 5L20 5','arrow-up':'M12 20V4M5 11l7-7 7 7','arrow-left-right':'M4 7h16m-5-5 5 5-5 5M20 17H4m5-5-5 5 5 5',anvil:'M3 7h18l-5 5h-3v5h4v3H7v-3h4v-5H7L3 7Z'};
+ return paths[name]?`<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name]}" fill="${name==='anvil'?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:icon(name);
+}
+
 /** Responsive artwork. Unknown names render nothing; no untrusted asset paths. */
 export function icon(name, cls = '') {
   const src=uiIconUrl(name);

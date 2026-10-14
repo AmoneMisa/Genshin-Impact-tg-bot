@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+import {L2_MATERIAL_ART,l2IconUrl} from '../../webapp/art/l2-icon-art.js';
+const icons=[['Focus','webapp/art/l2-extra/icon-skill1077-128.webp'],['Guidance','webapp/art/l2-extra/icon-skill1240-128.webp'],...['earth','fire','water','wind','holy','dark'].map(e=>['ATT '+e,'webapp'+l2IconUrl(L2_MATERIAL_ART['attr_stone_'+e])]),...[[146,'Anti Magic — passive'],[370,'Clan Body'],[371,'Clan Spirituality'],[372,'Clan Soul']].map(([id,name])=>[name,`webapp/art/l2-extra/icon-skill${String(id).padStart(4,'0')}-128.webp`])];
+for(const [label,path] of icons)if(!fs.existsSync(path))throw Error('Missing original asset: '+label+' '+path);
+const html='<!doctype html><meta charset="utf-8"><title>Оригинальные иконки L2</title><style>body{background:#151711;color:#eee;font:18px Arial;padding:24px}main{display:flex;gap:24px;flex-wrap:wrap}figure{margin:0;text-align:center;width:130px}img{width:96px;height:96px;object-fit:contain}figcaption{margin-top:12px}</style><h1>Оригинальные иконки из набора проекта</h1><main>'+icons.map(([name,file])=>`<figure><img src="${pathToFileURL(process.cwd()+'/'+file)}"><figcaption>${name}</figcaption></figure>`).join('')+'</main>';
+fs.writeFileSync('docs/character-redesign/original-icons.html',html);
+const require=createRequire(process.env.PLAYWRIGHT_PACKAGE),{chromium}=require('playwright');
+const browser=await chromium.launch({executablePath:process.env.DESIGN_BROWSER,headless:true});
+const page=await browser.newPage({viewport:{width:1300,height:480}});await page.goto(pathToFileURL(process.cwd()+'/docs/character-redesign/original-icons.html').href);
+await page.evaluate(()=>Promise.all([...document.images].map(i=>i.decode())));await page.screenshot({path:'docs/character-redesign/original-icons.png'});await browser.close();
