@@ -37,6 +37,9 @@ export default {
             level: 5, time: 0.25,
         }], // часы
         maxLvl: 30,
+        // 2026-10-14 audit: gold costs grow faster (L30 about 206k) and the timer climbs by 22% a level (L30 about 36 h).
+        upgradeCostGrowth: {gold: 1.26},
+        upgradeTimeGrowth: 1.22,
         productionPerHour: 1000,
         available: true,
         maxWorkHoursWithoutCollection: 36,
@@ -53,6 +56,7 @@ export default {
         name: "Озеро лунной росы",
         description: "Тихое озеро, из которого по каплям собирается лунная роса — материал для улучшения Ваших построек. Это не кристаллы: кристаллы в постройках не используются. Работает непрерывно до 72 часов. Доступно для постройки от 2 уровня дворца",
         productionPerHour: 50,
+        upgradeTimeGrowth: 1.19,
         maxWorkHoursWithoutCollection: 72,
         upgradeRequirements: [
             {level: 2, buildRequirements: [{name: "palace", level: 3}], characterRequirements: [{lvl: 7}]},
@@ -590,6 +594,7 @@ export default {
         startLvl: 1,
         description: "Ваши месторождения железной руды. Она необходима для улучшения оружия, брони и построек. Работает непрерывно до 36 часов.",
         productionPerHour: 5,
+        upgradeTimeGrowth: 1.19,
         upgradeTime: [{
             level: 2, time: 0.25,
         }, {

@@ -14,7 +14,9 @@ export const SHOTS_PER_CAST = Object.freeze({noGrade: 1, D: 2, C: 3, B: 3, A: 4,
 
 /** Gold for a pack of SHOT_PACK charges of a grade (plain shots; a blessed one costs `price` times more). */
 export const SHOT_PACK = 100;
-export const SHOT_PACK_PRICE = Object.freeze({noGrade: 100, D: 300, C: 800, B: 2000, A: 5000, S: 12000, S80: 20000, S84: 30000});
+// High Five shop prices on the game's 0.25 gold scale (D 14, C 22, B 50, A 80, S 100 per shot). S80 and S84 weapons
+// fire plain S-grade charges in High Five, so they cost the same as S.
+export const SHOT_PACK_PRICE = Object.freeze({noGrade: 100, D: 350, C: 550, B: 1250, A: 2000, S: 2500, S80: 2500, S84: 2500});
 
 // Blessed charges must never share a counter with generic blessed enchant scrolls.
 export const shotKey = (kind, grade) => `${kind === 'blessed' ? 'blessedshot' : kind}_${grade}`;

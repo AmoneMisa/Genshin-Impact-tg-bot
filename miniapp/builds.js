@@ -97,7 +97,7 @@ function getUpgradeCost(buildName, currentLevel) {
   const template = buildsTemplate[buildName];
   const nextLevel = asNumber(currentLevel, 1) + 1;
   if (!Array.isArray(template?.upgradeCosts) || !template.upgradeCosts.length) return null;
-  const cost = calculateUpgradeCosts(template.upgradeCosts, nextLevel);
+  const cost = calculateUpgradeCosts(template.upgradeCosts, nextLevel, template.upgradeCostGrowth);
   if (!cost) return null;
   return {
     gold: Math.max(0, asNumber(cost.gold)),

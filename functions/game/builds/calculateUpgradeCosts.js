@@ -1,18 +1,22 @@
 // Расчет стоимости улучшения до заданного уровня
-export default function (upgradeCostsArray, level) {
+const DEFAULT_GROWTH = 1.17;
+
+// `growth` is a number for every resource, or {gold, ironOre, moonDew} to tune a resource on its own
+// (template field upgradeCostGrowth). Anything not given grows by DEFAULT_GROWTH.
+export default function (upgradeCostsArray, level, growth = DEFAULT_GROWTH) {
     const upgradeCosts = [...upgradeCostsArray]; // Создаем копию массива стоимостей улучшений
+    const factor = resource => (typeof growth === 'number' ? growth : growth?.[resource]) ?? DEFAULT_GROWTH;
 
     while (upgradeCosts.length < level) {
         const previousLevel = upgradeCosts.length + 1;
         const previousCost = upgradeCosts[previousLevel - 2]; // Получаем стоимость предыдущего уровня
-        const costIncreaseFactor = 1.17; // Фактор увеличения стоимости (примерное значение, можно настроить по необходимости)
 
         // Рассчитываем стоимость для текущего уровня
         const currentCost = {
             level: previousLevel,
-            gold: Math.round(previousCost.gold * costIncreaseFactor),
-            ironOre: Math.round(previousCost.ironOre * costIncreaseFactor),
-            moonDew: Math.round((previousCost.moonDew ?? previousCost.crystals ?? 0) * costIncreaseFactor)
+            gold: Math.round(previousCost.gold * factor('gold')),
+            ironOre: Math.round(previousCost.ironOre * factor('ironOre')),
+            moonDew: Math.round((previousCost.moonDew ?? previousCost.crystals ?? 0) * factor('moonDew'))
         };
 
         upgradeCosts.push(currentCost); // Добавляем стоимость для текущего уровня в массив

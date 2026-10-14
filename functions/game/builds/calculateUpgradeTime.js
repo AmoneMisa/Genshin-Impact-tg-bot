@@ -7,7 +7,7 @@ export default function (buildName, lvl) {
         throw new Error("Не найден шаблон здания");
     }
 
-    const baseModifier = 1.15; // Модификатор для увеличения времени постройки
+    const baseModifier = buildTemplate.upgradeTimeGrowth ?? 1.15; // Модификатор для увеличения времени постройки
 
     const lastUpgrade = buildTemplate.upgradeTime[buildTemplate.upgradeTime.length - 1];
     let diffLvl = lvl - lastUpgrade.level;
