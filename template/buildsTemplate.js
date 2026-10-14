@@ -204,6 +204,30 @@ export default {
         resourcesType: "moonDew",
         available: true
     },
+    alchemyLab: {
+        name: "Алхимическая лаборатория",
+        description: "Варит руны из лунной росы: опыт, SP, добыча, адена, поручения, дороги, урон и защита. Руны разных видов действуют вместе, из одинаковых работает сильнейшая. Попытки ограничены в день, цена каждой следующей растёт. Варка открывается с 8 уровня дворца.",
+        startLvl: 1,
+        maxLvl: 10,
+        available: true,
+        upgradeTimeGrowth: 1.19,
+        upgradeTime: [{
+            level: 2, time: 0.5,
+        }, {
+            level: 3, time: 0.75,
+        }, {
+            level: 4, time: 1,
+        }, {
+            level: 5, time: 1.5,
+        }], // часы
+        upgradeCostGrowth: {gold: 1.3, ironOre: 1.2, moonDew: 1.25},
+        upgradeCosts: [{
+            level: 2,
+            gold: 8000,
+            moonDew: 300,
+            ironOre: 40
+        }],
+    },
     shop: {
         name: "Магазин",
         startLvl: 0,

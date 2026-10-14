@@ -162,7 +162,7 @@ export function cityHtml(state) {
   const mapLarge = worldArtUrl('city/map-portrait',768);
   const buildings = state?.buildings || [];
   const palace = buildings.find(build => build.id === 'palace');
-  const mapOrder = ['forge', 'crystalLake', 'goldMine', 'traineeArea', 'ironDeposit', 'academy'];
+  const mapOrder = ['forge', 'crystalLake', 'goldMine', 'traineeArea', 'ironDeposit', 'academy', 'alchemyLab'];
   const position = id => mapOrder.includes(id) ? mapOrder.indexOf(id) : mapOrder.length;
   const others = buildings.filter(build => build.id !== 'palace')
     .sort((a, b) => position(a.id) - position(b.id));
@@ -225,6 +225,7 @@ export function buildingWindow(build) {
       ${!build.upgrading && build.blockedReason && build.currentLevel < build.maxLevel ? `<p class="city-note">${escapeHtml(REASONS[build.blockedReason] || '')}</p>` : ''}
     </section>
     ${build.id === 'academy' ? '<button type="button" class="city-btn upgrade" data-city-academy>Задания Академии</button>' : ''}
+    ${build.id === 'alchemyLab' ? '<button type="button" class="city-btn upgrade" data-city-lab>Варить руны</button>' : ''}
     ${perksHtml(build.perks)}
     ${types}
     ${treasury}
@@ -326,6 +327,18 @@ export async function mountCity(container, { api, haptic = () => {}, onState = (
         if (feedback) feedback.textContent = error.message;
         console.warn('[academy]',error);
       }).finally(() => {button.disabled = false;});
+      return;
+    }
+    if (event.target.closest('[data-city-lab]')) {
+      event.stopPropagation();
+      const button = event.target.closest('[data-city-lab]');
+      if (button.disabled) return;
+      button.disabled = true;
+      import('./alchemy-lab.js').then(({ openAlchemyLab }) => openAlchemyLab({ api, haptic, renderState: onState })).catch(error => {
+        const feedback = button.closest('.city-window')?.querySelector('[data-city-feedback]');
+        if (feedback) feedback.textContent = error.message;
+        console.warn('[alchemy-lab]', error);
+      }).finally(() => { button.disabled = false; });
       return;
     }
     const actionButton = event.target.closest('[data-city-action]');

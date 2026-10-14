@@ -1,6 +1,6 @@
 import { BUFF_POTION_IDS, addBuffPotion } from '../player/potionBuffs.js';
 import buffPotions from '../../../template/buffPotions.js';
-import {activeLoginRune} from '../../../template/loginRewards.js';
+import {runeRate} from '../runes/labRunes.js';
 
 // Lineage II style buff potions as boss loot. Every fighter has a small chance,
 // the top three a better one; harder bosses drop them more often and epic raid
@@ -24,7 +24,7 @@ function pick(random) {
 
 /** Rolls and delivers the drop; returns the loot line shown to the player. */
 export function giveBuffPotionDrop(member, context, random = Math.random) {
-    const id = rollBuffPotionDrop({...context,dropMultiplier:activeLoginRune(member,'drop')?1.5:1}, random);
+    const id = rollBuffPotionDrop({...context,dropMultiplier:1+runeRate(member,'drop')}, random);
     if (!id || !addBuffPotion(member, id)) return null;
     const definition = buffPotions.find(potion => potion.id === id);
     return {item: `potion-${id}`, name: definition.name, icon: '🧪', amount: 1};

@@ -2,7 +2,7 @@
 // recipes are learned for gold, and every craft - win or lose - trains the crafting skill that
 // higher-grade recipes need. A failed craft loses the materials (the gold fee is kept by the smith).
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
-import {activeLoginRune} from '../../../template/loginRewards.js';
+import {runeRate} from '../runes/labRunes.js';
 import { getCatalog, findCatalogItem, gradeIndex, instantiate, slotShareKey, canClassUse } from './catalog.js';
 import { addMaterial, getMaterialCount, materialInfo, spendMaterials } from '../player/materials.js';
 import { realRecipeByName, realRecipeByItem, splitIngredients, intermediateRecipes, allRecipes } from './realRecipes.js';
@@ -294,7 +294,7 @@ export function recipeMaterialRows(session, recipe) {
 export function rollCraftDrops(member, {tier = 1, place = 10, random = Math.random} = {}) {
     const level = Number(member?.game?.stats?.lvl) || 1;
     const grade = equipmentTemplate.grades.find(entry => entry.lvl.from <= level && level <= entry.lvl.to) || equipmentTemplate.grades.at(-1);
-    const luck = (place <= 3 ? 1.5 : 1) * (activeLoginRune(member,'drop')?1.5:1);
+    const luck = (place <= 3 ? 1.5 : 1) * (1+runeRate(member,'drop'));
     const drops = [];
     for (const family of ['binder', 'leather', 'fiber', 'gem']) {
         if (random() >= Math.min(1, 0.45 * luck)) continue;

@@ -1,4 +1,5 @@
 import {CITIES, REGIONS, LOCATIONS, CITY_NPCS} from '../../../template/worldMap.js';
+import {teleportPrice} from '../runes/labRunes.js';
 import {pointInPolygon, findPath, advancePath} from './navigation.js';
 import getSpeed from '../player/getters/getSpeed.js';
 import {l2MoveMultiplier,l2ActionBlock} from '../player/l2Effects.js';
@@ -41,9 +42,9 @@ export function advanceWorld(session,now=Date.now()) {
                 const target=CITY_NPCS.find(n=>n.id===pending.approachNpc&&n.city===w.city);
                 if(target){w.path=findPath(w,cityPoint(cityOf(w),target))||[];w.moveAt=now;}
             }
-            else if(location&&npc&&npc.city===w.city&&npc.gateway&&nearNpc(w,npc)&&Number(session.game.inventory.gold)>=location.teleportGold){
+            else if(location&&npc&&npc.city===w.city&&npc.gateway&&nearNpc(w,npc)&&Number(session.game.inventory.gold)>=teleportPrice(session,location.teleportGold,now)){
                 const entered=enterHuntField(session,location.id,{now});
-                if(entered.ok){session.game.inventory.gold-=location.teleportGold;w.city=location.region;w.mode='location';w.location=location.id;w.x=.5;w.y=.95;w.lastTeleport={to:location.id,gold:location.teleportGold,at:now};}
+                if(entered.ok){const fare=teleportPrice(session,location.teleportGold,now);session.game.inventory.gold-=fare;w.city=location.region;w.mode='location';w.location=location.id;w.x=.5;w.y=.95;w.lastTeleport={to:location.id,gold:fare,at:now};}
             }
         }
     }
@@ -77,7 +78,7 @@ export function quickTravel(session,body,now=Date.now()){
     if(location?.instance)return {ok:false,reason:'instance_npc_required'};
     const w=ensureWorld(session,now);
     if(city&&w.mode==='city'&&w.city===city.id)return {ok:false,reason:'already_in_city'};
-    const gold=quickTravelPrice(target);
+    const gold=teleportPrice(session,quickTravelPrice(target),now);
     if(!(Number(session.game.inventory.gold)>=gold))return {ok:false,reason:'not_enough_gold'};
     if(location){
         const previous=session.game.hunt;
@@ -102,11 +103,11 @@ export function worldAction(session,body,now=Date.now()){
         const gate=CITY_NPCS.find(n=>n.city===w.city&&n.gateway);
         const remote=target.city!==w.city;
         if(remote&&!gate)return {ok:false,reason:'gatekeeper_required'};
-        if(remote&&session.game.inventory.gold<20000)return {ok:false,reason:'not_enough_gold'};
+        if(remote&&session.game.inventory.gold<teleportPrice(session,20000,now))return {ok:false,reason:'not_enough_gold'};
         const path=findPath(w,cityPoint(cityOf(w),remote?gate:target));
         if(!path)return {ok:false,reason:'path_blocked'};
         w.path=path;w.moveAt=now;w.channel=null;
-        w.pending=remote?{npc:gate.id,city:target.city,gold:20000,approachNpc:target.id}:null;
+        w.pending=remote?{npc:gate.id,city:target.city,gold:teleportPrice(session,20000,now),approachNpc:target.id}:null;
         return {ok:true};
     }
     if(body.action==='move'){
@@ -122,15 +123,15 @@ export function worldAction(session,body,now=Date.now()){
         const location=LOCATIONS.find(l=>l.id===body.location),npc=CITY_NPCS.find(n=>n.city===w.city&&n.gateway);
         if(!location||!npc)return {ok:false,reason:'unknown_zone'};
         if(location.instance)return {ok:false,reason:'instance_npc_required'};
-        if(Number(session.game.inventory.gold)<location.teleportGold)return {ok:false,reason:'not_enough_gold'};
+        if(Number(session.game.inventory.gold)<teleportPrice(session,location.teleportGold,now))return {ok:false,reason:'not_enough_gold'};
         const path=findPath(w,cityPoint(cityOf(w),npc));if(!path)return {ok:false,reason:'path_blocked'};
         w.path=path;w.moveAt=now;w.pending={npc:npc.id,location:location.id};w.channel=null;return {ok:true};
     }
     if(body.action==='travel_city'){
         const city=CITIES.find(c=>c.id===body.city),npc=CITY_NPCS.find(n=>n.city===w.city&&n.gateway);
         if(w.mode!=='city'||!city||!npc||city.id===w.city)return {ok:false,reason:'gatekeeper_required'};
-        if(!(session.game.inventory.gold>=20000))return {ok:false,reason:'not_enough_gold'};
-        w.path=findPath(w,cityPoint(cityOf(w),npc))||[];w.moveAt=now;w.pending={npc:npc.id,city:city.id,gold:20000};return {ok:true};
+        if(!(session.game.inventory.gold>=teleportPrice(session,20000,now)))return {ok:false,reason:'not_enough_gold'};
+        w.path=findPath(w,cityPoint(cityOf(w),npc))||[];w.moveAt=now;w.pending={npc:npc.id,city:city.id,gold:teleportPrice(session,20000,now)};return {ok:true};
     }
     if(body.action==='escape'){
         if(w.mode==='city')return {ok:false,reason:'already_in_city'};
@@ -221,5 +222,5 @@ export function bindWorldInstances(chat,now=Date.now()) {
 export function worldState(session,now=Date.now()){
     const w=advanceWorld(session,now);if(w.mode==='road'&&w.walkHome?.until<=now){const holding=w.walkHome.holding;arriveCity(session,w);w.readyHolding=holding||null;delete w.walkHome;}
     const {mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,boss,bossPosition,bossRoom}=w;
-    return {now,questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.map(c=>({id:c.id,gold:quickTravelPrice(c)})),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)).map(l=>({id:l.id,gold:quickTravelPrice(l)}))},death:w.death?{...w.death}:null,player:{userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,runSpeed:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
+    return {now,questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.map(c=>({id:c.id,gold:teleportPrice(session,quickTravelPrice(c),now)})),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,runSpeed:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
 }

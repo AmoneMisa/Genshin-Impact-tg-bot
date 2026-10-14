@@ -9,6 +9,7 @@
 //   bounties: {day: {key, quality, quests: [...]}, week: {...}},
 //   passQuests: {bossName: {progress, startedAt}}, passes: {bossName: count}
 // }
+import {runeRate} from '../runes/labRunes.js';
 import {getEpicTemplate} from '../boss/epicBosses.js';
 import {PASS_EPICS, PARTY_EPICS, needsPass} from '../../../template/epicPasses.js';
 import setLevel from '../player/setLevel.js';
@@ -162,7 +163,7 @@ export function recordAcademyEvent(session, type, {count = 1, boss = null, mob =
         if (step.type === 'mobKills' && type === 'mob_kill' && number(mob?.level) >= number(step.minLevel)) {
             quest.progress = Math.min(target, number(quest.progress) + 1);
             moved++;
-        } else if (step.type === 'collect' && type === 'mob_kill' && inHuntOfStep(step, mob) && random() < number(step.chance)) {
+        } else if (step.type === 'collect' && type === 'mob_kill' && inHuntOfStep(step, mob) && random() < number(step.chance) * (1 + runeRate(session, 'quest', now))) {
             // the quest item is the pass itself: it is in the hero's hands the moment it drops
             const amount = Math.max(1, Math.min(number(step.amount, 1), target - number(quest.progress)));
             quest.progress = Math.min(target, number(quest.progress) + amount);

@@ -1,7 +1,7 @@
 // Bosses drop the Lineage 2 enchanting materials of the grade a fighter currently plays in:
 // scrolls (the main source besides the shop), the rare blessed scroll and a few crystals.
 import equipmentTemplate from '../../../template/equipmentTemplate.js';
-import {activeLoginRune} from '../../../template/loginRewards.js';
+import {runeRate} from '../runes/labRunes.js';
 import getRandom from '../../getters/getRandom.js';
 import { addMaterial, materialInfo } from '../player/materials.js';
 import { AUGMENT_GRADES, AUGMENT_TIERS, lifestoneKey } from './augment.js';
@@ -40,7 +40,7 @@ export function rollEnchantDrops(member, {tier = 1, place = 10, random = Math.ra
     const grade = enchantGradeForLevel(member?.game?.stats?.lvl || 1);
     if (!grade) return [];
 
-    const luck = (place <= 3 ? 1.5 : 1) * (activeLoginRune(member,'drop')?1.5:1);
+    const luck = (place <= 3 ? 1.5 : 1) * (1+runeRate(member,'drop'));
     const drops = [];
     const table = [
         [scrollKey(grade), ENCHANT_DROPS.scroll],
@@ -64,7 +64,7 @@ export function rollEnchantDrops(member, {tier = 1, place = 10, random = Math.ra
  */
 export function rollAttributeDrops(member, {element = null, tier = 1, place = 10, epic = false, random = Math.random} = {}) {
     if (!element || !ATTRIBUTE_GRADES.includes(enchantGradeForLevel(member?.game?.stats?.lvl || 1))) return [];
-    const luck = (place <= 3 ? 1.5 : 1) * (activeLoginRune(member,'drop')?1.5:1);
+    const luck = (place <= 3 ? 1.5 : 1) * (1+runeRate(member,'drop'));
     const rank = epic ? 3 : tier;
     const drops = [];
     for (const stone of ATTRIBUTE_TIERS.filter(t=>!t.legacy)) {

@@ -6,7 +6,7 @@ export default {
     bossLoot: '3c675fec3741ebd091f871b483b924c185a7af40',
     bossSkills: '3190e1ac14fb9c8c62450401897902a7c98e65e6',
     bosses: 'f9b5be2ea2e7f60025e53758bee30c1836265b70',
-    builds: 'd7435da901cf2e625c78317d088ec1a4e1116d7e',
+    builds: '663badeb867b229bebe30ea2529f97b4ff667da3',
     chanceToHit: '94e7e762fa16259c9a0e4b09da4dd53252f239cb',
     clanApplicationConditions: 'ead98d421cba3223befcb8d08a6570f240c00d34',
     classQuests: 'ea1de1e00a3028472b70d1be7c15a5f23852d0c6',

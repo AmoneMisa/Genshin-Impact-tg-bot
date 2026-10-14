@@ -50,6 +50,7 @@ import { getArcadeState, startArcadeGame, rollArcadeGame, getArcadeConfig } from
 import { resetArcadeGame } from './arcadeReset.js';
 import { getGoldTransferState, transferGoldForMiniApp } from './goldTransfer.js';
 import { getStealState, prepareStealMember, stealForMiniApp } from './steal.js';
+import { getLabState, brewLabRune } from '../functions/game/runes/labRunes.js';
 import { getPlayerProfileState, changePlayerClassForMiniApp, changePlayerGenderForMiniApp, changePlayerRaceForMiniApp,changePlayerSubclassForMiniApp } from './playerProfile.js';
 import { getSkillsState, enchantSkillForMiniApp, learnSkillForMiniApp, routeSkillForMiniApp } from './skills.js';
 import {
@@ -569,6 +570,26 @@ const playerProfileState = guarded('player profile state', async (req, res) => {
     return getPlayerProfileState(context.session);
   });
   return sendJson(res, 200, profile);
+});
+
+const alchemyState = guarded('alchemy lab state', async (req, res) => {
+  const context = await authorize(req);
+  const lab = await withLock(context.chatId, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    return getLabState(context.session);
+  });
+  return sendJson(res, 200, lab);
+});
+
+const alchemyBrew = guarded('alchemy lab brew', async (req, res) => {
+  const context = await authorize(req);
+  const result = await withLock(context.chatId, async () => {
+    context.session = await getSession(context.chatId, context.userId);
+    const brewed = brewLabRune(context.session);
+    if (brewed.ok) await saveSession(context.session);
+    return brewed;
+  });
+  return sendResult(res, result, context);
 });
 
 const playerProfileClass = guarded('player profile class', async (req, res) => {
@@ -2258,6 +2279,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/forms/save') return formsSave(req, res);
     if (route === 'GET /api/character') return characterState(req, res);
     if (route === 'GET /api/profile') return playerProfileState(req, res);
+    if (route === 'GET /api/alchemy') return alchemyState(req, res);
+    if (route === 'POST /api/alchemy/brew') return alchemyBrew(req, res);
     if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
     if (route === 'POST /api/profile/race') return playerProfileRace(req, res);

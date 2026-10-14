@@ -1,4 +1,5 @@
 import {recordDeath} from '../player/deathPenalties.js';
+import {armAttackRune, clearAttackRune, defenseRuneFactor} from '../runes/labRunes.js';
 import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Effects.js';
 // A real-time fight with one mob of a hunting zone. The mob lives in session.game.hunt.mob and swings
 // every few seconds; the swings that fell due since the last request are applied when the player
@@ -78,7 +79,7 @@ export function mobHit(session, mob, now, random = Math.random) {
     const resist = resistFactor(attributeProfile(session).resist, mob.hunt.element, mob.hunt.attributeAttack || 0);
     const spread = 0.9 + random() * 0.2;
     const crit = random() < 0.05 ? 1.5 : 1;
-    return Math.max(1, Math.round(base * mitigation * incoming * weaken * resist * spread * crit * (1 + mobBuff(mob, 'power', now))*l2RawStat(mob,mob.hunt?.magic?'mAtk':'pAtk',true,now)));
+    return Math.max(1, Math.round(base * mitigation * incoming * weaken * resist * spread * crit * (1 + mobBuff(mob, 'power', now)) * defenseRuneFactor(session, now)*l2RawStat(mob,mob.hunt?.magic?'mAtk':'pAtk',true,now)));
 }
 
 /** Shield first, then HP; a hero at 0 HP starts the respawn timer. */
@@ -380,8 +381,10 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
     spendAmmo(session, skill);
 
     const shots = armShots(session, skill);
+    armAttackRune(session, now);
     const result = castSkill(session, asBoss(mob), skill, {now, l2Target: mob, random});
     clearShots(session);
+    clearAttackRune(session);
     if (shots) result.shots = shots;
     setSkillCooldown(skill, session);
     hunt.lastActionAt = now;

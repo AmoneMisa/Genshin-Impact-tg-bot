@@ -85,3 +85,30 @@ Longer timers also raise the CoL price of speed-ups (`ceil(level/2)` CoL per rem
 deliberately left unchanged, because CoL is a donate currency whose value the players set.
 
 Not done: Alchemy Lab (needs a building, UI and art), Trade House, Warehouse annex, dew-priced speed-ups.
+
+## 6. Alchemy Lab and lab runes (implemented)
+
+Building `alchemyLab` (10 levels, brewing opens at palace level 8). One attempt brews a random rune from the dew:
+
+| | |
+|---|---|
+| Result | 30% fizzle, otherwise one of 8 kinds equally likely (8.75% each) |
+| Strength | small 50% (2 h), medium 35% (6 h), great 15% (12 h) |
+| Cost of the n-th attempt of the UTC day | `300 · 2^(n−1)` dew + `2 000 · n` adena |
+| Attempts a day | `min(5, 1 + floor(level / 2))` |
+| No pity | each attempt rolls independently |
+
+| Kind | Small / medium / great |
+|---|---|
+| EXP, SP, item drop chance, adena drop, quest-item drop chance | +15% / +25% / +35% |
+| Teleport price | −15% / −25% / −35% |
+| Damage to monsters | +5% / +7% / +10% |
+| Damage from monsters | −3% / −4% / −5% |
+
+Runes of different kinds work together; several runes of one kind may exist, only the strongest applies. The calendar
+runes stay at +50% (exp, drop) and compete with the lab rune of the same kind by "strongest wins". Code:
+`functions/game/runes/labRunes.js`, screen `webapp/alchemy-lab.js`, API `GET /api/alchemy` and `POST /api/alchemy/brew`.
+
+Applied in: `vitality.js` (EXP), `huntRewards.js` (SP, adena, drops), `academy.js` (epic-pass quest items), `world.js` (teleport price),
+`huntFight.js` and `calcDamage.js` (damage). Not covered: adena from bosses and non-hunt sources; art for the lab building is missing
+(the card uses the fallback picture).

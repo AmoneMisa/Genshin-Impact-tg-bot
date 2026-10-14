@@ -1,0 +1,13 @@
+/* Alchemy Lab layout; controls, rows and windows come from the shared design system. */
+.alchemy-overlay{padding:var(--space-2)}
+.game-overlay>.alchemy-panel{width:min(100%,440px);max-width:440px;max-height:calc(100dvh - 16px);display:flex;flex-direction:column;gap:var(--space-3);overflow:hidden}
+.alchemy-panel *{box-sizing:border-box;min-width:0}
+.alchemy-panel [data-lab-content]{display:grid;gap:var(--space-3);overflow:auto;overscroll-behavior:contain}
+.alchemy-panel h3,.alchemy-panel p{margin:0}
+.alchemy-summary{display:grid;gap:var(--space-1)}
+.alchemy-runes,.alchemy-odds{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-2)}
+.alchemy-runes li,.alchemy-odds li{display:flex;justify-content:space-between;align-items:center;gap:var(--space-2);padding:var(--space-2);border:1px solid var(--border-strong)}
+.alchemy-runes li.covered{opacity:.7}
+.alchemy-runes span,.alchemy-odds span{display:grid;gap:var(--space-1)}
+.alchemy-runes small,.alchemy-odds small{display:block}
+.alchemy-feedback:empty{display:none}

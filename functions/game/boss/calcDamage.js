@@ -19,6 +19,7 @@ import { attackFactor, attributeProfile, normalizeElement, pvpFactor } from '../
 import {fieldPvpEffect} from '../hunt/fieldPvpState.js';
 import { chanceSkillFactor, equippedChanceSkills } from '../equipment/lifestoneSkills.js';
 import { shotBoost } from '../shots/shots.js';
+import { attackRuneBoost } from '../runes/labRunes.js';
 import { huntDebuff } from '../hunt/huntAi.js';
 import {l2HasControl,l2RawStat,l2TraitDamage} from '../player/l2Effects.js';
 import {isMagicClass} from '../classes/classFamily.js';
@@ -90,6 +91,8 @@ export default function (session, skill, boss, options = {}) {
     dmg *= chanceSkillFactor(equippedChanceSkills(session), Math.random, damageType);
     // Soulshots / Spiritshots armed for this skill.
     dmg *= shotBoost(session);
+    // the lab's rune of fury raises what the hero deals to monsters (armed only for a hunt cast)
+    dmg *= attackRuneBoost(session);
 
     if (getRandom(1, 100) <= criticalChance) {
         isHasCritical = true;

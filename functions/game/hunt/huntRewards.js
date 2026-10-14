@@ -9,7 +9,7 @@ import {hasInventoryRoom} from '../builds/palaceCapacity.js';
 import {recordAcademyEvent} from '../academy/academy.js';
 import { CHAMPIONS, HUNT, STONE_CHANCE } from './huntConfig.js';
 import { addMaterial, materialInfo } from '../player/materials.js';
-import {activeLoginRune} from '../../../template/loginRewards.js';
+import {runeRate} from '../runes/labRunes.js';
 import { attributeKey, ATTRIBUTE_GRADES } from '../equipment/attributes.js';
 import { lootRows, LOOT_KINDS } from './lootTable.js';
 import { lootDistributor, expShares } from '../party/party.js';
@@ -59,8 +59,9 @@ export function huntDropPreview(level, mobDef, champion = null, session = null) 
     if (!mobDef) return [];
     const tier = CHAMPIONS[champion];
     const rows = [];
-    if (mobDef.gold) rows.push({key: 'gold', name: 'Адена', icon: '🪙', kind: 'gold', min: Math.max(1, Math.round(mobDef.gold.min * HUNT.goldScale)), max: Math.max(1, Math.round(mobDef.gold.max * HUNT.goldScale)), chance: Math.min(100, mobDef.gold.chance * dropGapFactor(level, mobDef.level, HUNT.adenaGap))});
-    const rune=activeLoginRune(session,'drop')?1.5:1;
+    const adenaMul = 1 + runeRate(session, 'adena');
+    if (mobDef.gold) rows.push({key: 'gold', name: 'Адена', icon: '🪙', kind: 'gold', min: Math.max(1, Math.round(mobDef.gold.min * HUNT.goldScale * adenaMul)), max: Math.max(1, Math.round(mobDef.gold.max * HUNT.goldScale * adenaMul)), chance: Math.min(100, mobDef.gold.chance * dropGapFactor(level, mobDef.level, HUNT.adenaGap))});
+    const rune=1+runeRate(session,'drop');
     const gap = dropGapFactor(level, mobDef.level, HUNT.itemGap) * (tier?.drops || 1);
     for (const drop of lootRows(mobDef.id)) {
         const info = materialInfo(drop.key);
@@ -107,7 +108,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
             const before = Math.max(1, Number(member.game.stats?.lvl) || 1);
             const vitalityBonus = stageOf(readVitality(member, now).points).bonus;
             const gained = gainExp(member, base * share, {now});
-            const sp = Math.max(0, Math.round(baseSp * share * vitalityBonus));
+            const sp = Math.max(0, Math.round(baseSp * share * vitalityBonus * (1 + runeRate(member, 'sp', now))));
             member.game.inventory.sp = (Number(member.game.inventory.sp) || 0) + sp;
             setLevel(member);
             const leveledUp = (Number(member.game.stats.lvl) || before) > before;
@@ -126,7 +127,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     // gold
     const adenaGap = dropGapFactor(level, mob.level, HUNT.adenaGap);
     if (mobDef?.gold && random() < Math.min(1, mobDef.gold.chance / 100 * adenaGap)) {
-        const total = Math.max(1, Math.round(getRandom(mobDef.gold.min, mobDef.gold.max) * HUNT.goldScale * greedOf(session)));
+        const total = Math.max(1, Math.round(getRandom(mobDef.gold.min, mobDef.gold.max) * HUNT.goldScale * greedOf(session) * (1 + runeRate(session, 'adena', now))));
         // adena is split equally between the members of a party; the killer gets the remainder
         const members = distributor.members, each = Math.floor(total / members.length);
         for (const member of members) {
@@ -156,12 +157,12 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
         else result.items.push({item: key, name: info.name, icon: info.icon, amount});
     };
     for (const drop of lootRows(mobDef?.id ?? mob.mobId)) {
-        const rolls = dropRolls(drop.chance * rateOf(drop) * (drop.kind === 'seal' ? (activeLoginRune(session,'drop',now)?1.5:1) : greedOf(session)) * itemGap * (tier ? tier.drops : 1), random);
+        const rolls = dropRolls(drop.chance * rateOf(drop) * (drop.kind === 'seal' ? (1+runeRate(session,'drop',now)) : greedOf(session)) * itemGap * (tier ? tier.drops : 1), random);
         if (rolls > 0) give(drop.key, getRandom(drop.min, drop.max) * rolls);
     }
 
     // a part of the custom armor line: finished equipment, rarer than the real finished items
-    if (mobDef && dropRolls(customDropChance(mob.level) * HUNT.dropRate * itemGap * (tier ? tier.drops : 1) * (activeLoginRune(session,'drop',now)?1.5:1), random) > 0) {
+    if (mobDef && dropRolls(customDropChance(mob.level) * HUNT.dropRate * itemGap * (tier ? tier.drops : 1) * (1+runeRate(session,'drop',now)), random) > 0) {
         const receiver = distributor.pick();
         const part = pickCustomPart(mob.level, receiver.game?.gameClass?.stats?.name, random);
         // a full bag leaves the item on the ground
@@ -180,7 +181,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     if (hellboundMobs.has(mobDef?.id) && mobDef?.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
         const chances = STONE_CHANCE[mob.champion || 'normal'];
         for (const stone of ['stone', 'crystal', 'jewel']) {
-            if (chances[stone] > 0 && random() < Math.min(1,chances[stone]*(activeLoginRune(session,'drop',now)?1.5:1))) give(attributeKey(stone, mobDef.dropElement), 1);
+            if (chances[stone] > 0 && random() < Math.min(1,chances[stone]*(1+runeRate(session,'drop',now)))) give(attributeKey(stone, mobDef.dropElement), 1);
         }
     }
     distributor.touched.forEach(member => { if (member !== session) member.needsSave = true; });
