@@ -5,7 +5,7 @@ import getClassStatsFromTemplate from '../functions/game/player/getters/getGameC
 import changePlayerClass from '../functions/game/player/changePlayerGameClass.js';
 import updatePlayerStats from '../functions/game/player/updatePlayerStats.js';
 import {playerRace} from '../functions/game/player/playerRace.js';
-import {getSubclassState,addSubclass,switchProfession,professionReplacementReason} from '../functions/game/player/subclasses.js';
+import {getSubclassState,addSubclass,switchProfession,removeSubclass,professionReplacementReason} from '../functions/game/player/subclasses.js';
 
 export const CLASS_CHANGE_COL = 20;
 export const GENDER_CHANGE_COL = 7;
@@ -180,6 +180,7 @@ export function changePlayerRaceForMiniApp(session, race, now = Date.now()) {
 
 export function changePlayerSubclassForMiniApp(session, body, now = Date.now()) {
   const result=body.action==='add' ? addSubclass(session,body.className,now)
-    : body.action==='switch' ? switchProfession(session,body.index,now) : {ok:false,reason:'unknown_subclass_action'};
+    : body.action==='switch' ? switchProfession(session,body.index,now)
+    : body.action==='remove' ? removeSubclass(session,body.index,now) : {ok:false,reason:'unknown_subclass_action'};
   return result.ok ? {...result,profile:getPlayerProfileState(session,now)} : result;
 }

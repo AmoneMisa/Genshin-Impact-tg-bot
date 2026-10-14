@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import changeClass from '../functions/game/player/changePlayerGameClass.js';
 import updateStats from '../functions/game/player/updatePlayerStats.js';
-import {getSubclassState,addSubclass,switchProfession,subclassChoiceReason,professionReplacementReason} from '../functions/game/player/subclasses.js';
+import {getSubclassState,addSubclass,switchProfession,removeSubclass,subclassChoiceReason,professionReplacementReason} from '../functions/game/player/subclasses.js';
 import {changePlayerRaceForMiniApp,getPlayerProfileState,changePlayerClassForMiniApp} from '../miniapp/playerProfile.js';
 import {createMiniAppState} from '../miniapp/state.js';
 import setLevel from '../functions/game/player/setLevel.js';
@@ -95,4 +95,17 @@ test('subclass leveling and death refunds obey the 40..80 range while main retai
   recordDeath(s,{random:()=>1});assert.equal(s.game.stats.lvl,40);
   s.game.deathLedger={active:true,lostExp:1e30,refunded:0};s.game.stats.lvl=79;refundDeathExp(s,1);assert.equal(s.game.stats.lvl,80);assert.equal(s.game.stats.currentExp,0);
   s.game.deathLedger=null;s.game.gameClass.stats.hp=1;switchProfession(s,0);assert.equal(createMiniAppState(s,{}).player.maxLevel,85);
+});
+
+test('removing a subclass frees its slot, returns to main when active and keeps the others',()=>{
+  const s=hero();addSubclass(s,'bishop');
+  assert.equal(s.game.stats.lvl,40);
+  assert.equal(removeSubclass(s,0).ok,false);
+  assert.equal(removeSubclass(s,5).ok,false);
+  const r=removeSubclass(s,1);
+  assert.equal(r.ok,true);assert.equal(s.game.professions.slots.length,1);
+  assert.equal(s.game.professions.activeIndex,0);
+  assert.equal(s.game.gameClass.stats.name,'phoenixKnight');assert.equal(s.game.stats.lvl,80);
+  assert.equal(s.game.inventory.sp,987);
+  assert.equal(getSubclassState(s).addReason,null);
 });

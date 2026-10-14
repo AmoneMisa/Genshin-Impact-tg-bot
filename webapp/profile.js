@@ -84,6 +84,7 @@ export async function openPlayerProfile({ api, renderState=()=>{}, haptic=()=>{}
   let appearanceRace = profile.currentClass.race || profile.races[0]?.name;
   let selectedProfession = profile.currentClass.name;
   let chooserOpen = false;
+  let tab = 'class';
   installOverlayA11y();
 
   const overlay = document.createElement('section');
@@ -142,7 +143,9 @@ export async function openPlayerProfile({ api, renderState=()=>{}, haptic=()=>{}
     }
     const servicePrice = current.name === 'noClass'?'Первый класс можно выбрать сразу':`Раса и профессия · ${formatNumber(profile.classChangeCost)} CoL`;
     const genderLocked = pending || !profile.canChangeGender;
-    content.innerHTML = `
+    const tabs=`<nav class="ui-folder-tabs ui-window-tabs" role="tablist" aria-label="Раздел">${[['class','Класс и облик'],['subclasses','Саб-классы']].map(([id,label])=>`<button type="button" class="ui-button ${tab===id?'active':''}" role="tab" aria-selected="${tab===id}" data-profile-tab="${id}">${label}</button>`).join('')}</nav>`;
+    if(tab==='subclasses'&&profile.subclasses){content.innerHTML=tabs+subclassesHtml();bind();return;}
+    content.innerHTML = tabs+`
       <section class="profile-hero">
         <div class="profile-hero-copy">
           <div class="ui-inline-content">${classEmblemHtml({className:current.name,classTitle:current.title})}<strong>${escapeHtml(current.title)} · ур. ${profile.level}</strong></div>
@@ -159,8 +162,6 @@ export async function openPlayerProfile({ api, renderState=()=>{}, haptic=()=>{}
           <button type="button" class="ui-button primary" data-profile-race-change ${pending||!profile.canChangeRace||appearanceRace===current.race?'disabled':''}>Сменить расу · ${formatNumber(profile.raceChangeCost)} CoL</button>
         </details>
       </section>
-      <section class="profile-current-stats"><h3>Текущие характеристики</h3>${statsHtml(current.stats)}</section>
-      ${subclassesHtml()}
       <section class="profile-classes">
         <details class="ui-disclosure" data-profile-chooser ${chooserOpen?'open':''}><summary>Раса и профессия · ${escapeHtml(root?.raceTitle||'Выбор')}</summary>
           <div class="profile-race-list" role="group" aria-label="Раса персонажа">${raceChoices.map(([race,title])=>`<button type="button" class="ui-button ${race===selectedRace?'primary':''}" data-profile-race="${escapeHtml(race)}" aria-pressed="${race===selectedRace}" ${pending?'disabled':''}>${escapeHtml(title)}</button>`).join('')}</div>
@@ -175,12 +176,17 @@ export async function openPlayerProfile({ api, renderState=()=>{}, haptic=()=>{}
   function subclassesHtml() {
     const state=profile.subclasses;
     if(!state)return '';
-    return `<section class="profile-subclasses"><h3>Профессии · ${state.slots.length-1} / ${state.maxSubclasses} саб-класса</h3>
-      <div class="profile-slot-list">${state.slots.map(slot=>`<button type="button" class="ui-button ui-choice-row compact ${slot.active?'active':''}" data-profile-slot="${slot.index}" ${pending||slot.active||state.switchReason?'disabled':''} aria-pressed="${slot.active}">
-        <span class="ui-inline-content">${classEmblemHtml({className:slot.className,classTitle:slot.classTitle})}<span>${escapeHtml(slot.classTitle)}<small>${slot.index===0?'Основной класс':'Саб-класс'} · ур. ${slot.level}</small></span></span>
-      </button>`).join('')}</div>
+    const full=state.addReason==='subclass_limit';
+    return `<section class="profile-subclasses"><h3>Саб-классы · ${state.slots.length-1} / ${state.maxSubclasses}</h3>
+      <div class="profile-slot-list">${state.slots.map(slot=>`<div class="profile-slot-row">
+        <button type="button" class="ui-button ui-choice-row compact ${slot.active?'active':''}" data-profile-slot="${slot.index}" ${pending||slot.active||state.switchReason?'disabled':''} aria-pressed="${slot.active}">
+          <span class="ui-inline-content">${classEmblemHtml({className:slot.className,classTitle:slot.classTitle})}<span>${escapeHtml(slot.classTitle)}<small>${slot.index===0?'Основной класс':'Саб-класс'} · ур. ${slot.level}</small></span></span>
+        </button>
+        ${slot.index>0?`<button type="button" class="ui-button" data-profile-subclass-remove="${slot.index}" aria-label="Удалить саб-класс ${escapeHtml(slot.classTitle)}" ${pending||state.switchReason?'disabled':''}>Удалить</button>`:''}
+      </div>`).join('')}</div>
+      ${full?'<p>Все слоты заняты. Удалите один саб-класс, чтобы взять новый.</p>':''}
       ${state.switchReason?`<p>${escapeHtml(REASONS[state.switchReason]||state.switchReason)}</p>`:''}
-      ${state.addReason?`<p>${escapeHtml(REASONS[state.addReason]||state.addReason)}</p>`:state.choices.length?`<details class="ui-disclosure"><summary>Добавить саб-класс</summary>
+      ${full?'':state.addReason?`<p>${escapeHtml(REASONS[state.addReason]||state.addReason)}</p>`:state.choices.length?`<details class="ui-disclosure"><summary>Добавить саб-класс</summary>
         <p>Новая профессия начинает с 40 уровня. Опыт, SP, навыки и татуировки у каждого класса отдельные. Переключение бесплатное.</p>
         <label class="profile-select-label">Новая профессия<select data-profile-subclass-select ${pending?'disabled':''}>${profile.races.map(race=>`<optgroup label="${escapeHtml(race.title)}">${state.choices.filter(choice=>choice.race===race.name).map(choice=>`<option value="${escapeHtml(choice.name)}">${escapeHtml(choice.title)}</option>`).join('')}</optgroup>`).join('')}</select></label>
         <button type="button" class="ui-button primary" data-profile-subclass-add ${pending?'disabled':''}>Взять саб-класс</button>
@@ -197,13 +203,22 @@ export async function openPlayerProfile({ api, renderState=()=>{}, haptic=()=>{}
       const title=profile.races.find(race=>race.name===appearanceRace)?.title;
       mutateProfile('/api/profile/race',{race:appearanceRace},{title:'Сменить расу',text:`${title}. Стоимость: ${formatNumber(profile.raceChangeCost)} CoL. Профессия и характеристики сохраняются.`});
     });
+    content.querySelectorAll('[data-profile-tab]').forEach(button=>button.addEventListener('click',()=>{
+      if(pending||tab===button.dataset.profileTab)return;
+      tab=button.dataset.profileTab;feedback.textContent='';render();
+    }));
+    content.querySelectorAll('[data-profile-subclass-remove]').forEach(button=>button.addEventListener('click',()=>{
+      const index=Number(button.dataset.profileSubclassRemove);
+      const slot=profile.subclasses.slots.find(item=>item.index===index);
+      mutateProfile('/api/profile/subclass',{action:'remove',index},{title:'Удалить саб-класс',text:`${slot?.classTitle||'Саб-класс'} · ур. ${slot?.level||''}. Опыт, SP, навыки и татуировки этого класса будут потеряны.`});
+    }));
     content.querySelectorAll('[data-profile-slot]').forEach(button=>button.addEventListener('click',()=>mutateProfile('/api/profile/subclass',{action:'switch',index:Number(button.dataset.profileSlot)})));
     content.querySelector('[data-profile-subclass-add]')?.addEventListener('click',()=>{
       const className=content.querySelector('[data-profile-subclass-select]').value;
       const title=profile.subclasses.choices.find(choice=>choice.name===className)?.title;
       mutateProfile('/api/profile/subclass',{action:'add',className},{title:'Взять саб-класс',text:`${title} · ур. 40. Отдельные опыт, SP и навыки.`});
     });
-    content.querySelector('[data-profile-chooser]').addEventListener('toggle',event=>{if(event.currentTarget.isConnected)chooserOpen=event.currentTarget.open;});
+    content.querySelector('[data-profile-chooser]')?.addEventListener('toggle',event=>{if(event.currentTarget.isConnected)chooserOpen=event.currentTarget.open;});
     content.querySelectorAll('[data-profile-race]').forEach(button=>button.addEventListener('click',()=>{
       if(pending)return;
       selectedRace=button.dataset.profileRace;
@@ -248,7 +263,7 @@ export async function openPlayerProfile({ api, renderState=()=>{}, haptic=()=>{}
       selectedProfession=profile.currentClass.name;appearanceRace=profile.currentClass.race||profile.races[0]?.name;
       chooserOpen=false;
       if(payload.state)renderState(payload.state);
-      feedback.textContent=url.endsWith('/race')?'Раса изменена. Профессия сохранена.':'Профессия активирована.';
+      feedback.textContent=url.endsWith('/race')?'Раса изменена. Профессия сохранена.':body.action==='remove'?'Саб-класс удалён.':'Профессия активирована.';
       haptic('light');
     }catch(error){if(error.payload?.profile)profile=error.payload.profile;feedback.textContent=REASONS[error.payload?.reason]||error.message;}
     finally{pending=false;if(!closed)render();}

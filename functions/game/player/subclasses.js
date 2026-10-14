@@ -128,3 +128,14 @@ export function addSubclass(session,className,now=Date.now()) {
   game.professions.slots.push(capture(scratch));
   return activate(session,index);
 }
+
+export function removeSubclass(session,index,now=Date.now()) {
+  const state=session?.game?.professions;
+  if(!Number.isInteger(index)||index<1||!state?.slots?.[index])return {ok:false,reason:'unknown_profession_slot'};
+  const reason=professionPeaceReason(session,now);if(reason)return {ok:false,reason};
+  // Leave the removed class first so the main class (and its saved fields) becomes live again.
+  if(index===activeProfessionIndex(session))activate(session,0);
+  state.slots.splice(index,1);
+  if(state.activeIndex>index)state.activeIndex-=1;
+  return {ok:true,index,removed:true,className:session.game.gameClass.stats.name};
+}

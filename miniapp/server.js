@@ -619,7 +619,7 @@ const playerProfileRace = guarded('player profile race', async (req,res)=>{
 
 const playerProfileSubclass = guarded('player profile subclass', async (req,res)=>{
   const context=await authorize(req),body=await readJsonBody(req);
-  if(!['add','switch'].includes(body.action) || (body.action==='add'&&typeof body.className!=='string') || (body.action==='switch'&&!Number.isInteger(body.index)))throw httpError(400,'invalid subclass action');
+  if(!['add','switch','remove'].includes(body.action) || (body.action==='add'&&typeof body.className!=='string') || (['switch','remove'].includes(body.action)&&!Number.isInteger(body.index)))throw httpError(400,'invalid subclass action');
   const result=await withLock(context.chatId,async()=>{
     context.session=await getSession(context.chatId,context.userId);
     const changed=changePlayerSubclassForMiniApp(context.session,body);
