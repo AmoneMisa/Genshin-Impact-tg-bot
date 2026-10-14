@@ -1317,4 +1317,5 @@ export default {
   "шанс выпадения квестовых предметов": "topshiriq buyumlari tushish ehtimoli",
   "шанс выпадения предметов": "buyumlar tushish ehtimoli",
   "Шансы": "Ehtimollar",
+  "Этот лот выставлен в другом чате: снять его можно только там.": "Bu lot boshqa chatda qo‘yilgan: uni faqat o‘sha yerda olib tashlash mumkin.",
 };

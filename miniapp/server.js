@@ -131,7 +131,7 @@ import {loadWorldInstances,saveWorldInstances} from './worldInstances.js';
 import { getAttributesState } from '../functions/game/equipment/attributes.js';
 import { getPassivesState, learnPassive } from '../functions/game/player/passiveSkills.js';
 import { buyLuckItem, getLuckShopState } from './luck.js';
-import { buyLot, cancelLot, createLot, getAuctionState, mongoAuctionStore, returnExpiredLots } from './auction.js';
+import { buyLot, cancelLot, createLot, getAuctionState, mongoAuctionStore, returnExpiredLots, settleSales } from './auction.js';
 import { bossSpawnRecipients, getBadges, pushAll, pushTo } from './notifications.js';
 import { prepareClanActivity } from './clanActivities.js';
 import { GOLD_LOCK_REASON, goldLockForMember } from '../functions/game/general/goldLock.js';
@@ -841,8 +841,11 @@ const auctionState = guarded('auction state', async (req, res, requestUrl) => {
   const state = await withLock(auctionLock(context), async () => {
     context.session = await getSession(context.chatId, context.userId);
     const store = await auctionStore();
-    // Lots nobody bought go back to their sellers before anything is shown.
-    if (await returnExpiredLots(context.session.ownerDocument(), store)) await saveSession(context.session);
+    // Lots nobody bought go back to their sellers, and sales made from other chats are paid, before anything is shown.
+    const chat = context.session.ownerDocument();
+    const returned = await returnExpiredLots(chat, store);
+    const paid = await settleSales(chat, store);
+    if (returned || paid) await saveSession(context.session);
     return getAuctionState(context.session, store, {
       kind: requestUrl.searchParams.get('kind') || 'all',
       sort: requestUrl.searchParams.get('sort') || 'new',

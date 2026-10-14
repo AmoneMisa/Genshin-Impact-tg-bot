@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  AUCTION_HOURS, MAX_ACTIVE_LOTS, buyLot, cancelLot, createLot, feeFor, getAuctionState, returnExpiredLots, sellableItems,
+  AUCTION_HOURS, MAX_ACTIVE_LOTS, buyLot, cancelLot, createLot, feeFor, getAuctionState, returnExpiredLots, sellableItems, settleSales,
 } from '../miniapp/auction.js';
 import { getCatalog, instantiate } from '../functions/game/equipment/catalog.js';
 import { getMaterialCount } from '../functions/game/player/materials.js';
@@ -18,7 +18,9 @@ function memoryStore() {
     lots,
     async create(fields) { const _id = `lot${++seq}`; lots.set(_id, { _id, createdAt: NOW + seq, ...fields }); return copy(lots.get(_id)); },
     async findById(id) { return copy(lots.get(id)); },
-    async listActive(chatId) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.status === 'active').map(copy); },
+    async listActive() { return [...lots.values()].filter(lot => lot.status === 'active').map(copy); },
+    async listUnpaid(chatId) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.status === 'sold' && lot.paidOut === false).map(copy); },
+    async claimPayout(id) { const lot = lots.get(id); if (!lot || lot.status !== 'sold' || lot.paidOut !== false) return null; lot.paidOut = true; return copy(lot); },
     async listBySeller(chatId, sellerId) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.sellerId === sellerId && lot.status === 'active').map(copy); },
     async countActiveBySeller(chatId, sellerId) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.sellerId === sellerId && lot.status === 'active').length; },
     async listExpired(chatId, now) { return [...lots.values()].filter(lot => lot.chatId === chatId && lot.status === 'active' && lot.expiresAt <= now).map(copy); },
@@ -28,7 +30,7 @@ function memoryStore() {
       Object.assign(lot, { status: to, ...extra });
       return copy(lot);
     },
-    async restore(id, status) { Object.assign(lots.get(id), { status }); delete lots.get(id).buyerId; },
+    async restore(id, status) { Object.assign(lots.get(id), { status }); for (const key of ['buyerId', 'payout', 'paidOut', 'buyerChatId']) delete lots.get(id)[key]; },
   };
 }
 
@@ -130,7 +132,7 @@ test('a purchase moves gold (minus the 5% fee) and the item, once', async () => 
   assert.equal(rival.game.inventory.equipment.items.length, 0);
 });
 
-test('buying is refused for poor buyers, the seller, other chats and expired lots', async () => {
+test('buying is refused for poor buyers, the seller and expired lots', async () => {
   const store = memoryStore();
   const chat = chatWith(0, 100);
   const [seller, buyer] = chat.members;
@@ -142,9 +144,6 @@ test('buying is refused for poor buyers, the seller, other chats and expired lot
   assert.equal((await buyLot(buyer, store, 'missing', NOW)).reason, 'lot_gone');
   buyer.game.inventory.gold = 1000;
   assert.equal((await buyLot(buyer, store, lot.id, NOW + AUCTION_HOURS * HOUR + 1)).reason, 'lot_gone', 'expired');
-  const otherChat = chatWith(0, 1000);
-  otherChat.chatId = -200;
-  assert.equal((await buyLot(otherChat.members[1], store, lot.id, NOW)).reason, 'lot_gone', 'another chat has its own auction');
   assert.equal(buyer.game.inventory.gold, 1000);
   assert.equal(getMaterialCount(buyer, 'scroll_A'), 0);
 });
@@ -204,4 +203,48 @@ test('the state lists lots of the chat by category and sort, marks the viewer\'s
   assert.deepEqual(potionsOnly.lots.map(lot => lot.kind), ['potion']);
   assert.equal(potionsOnly.lots[0].mine, false);
   assert.equal((await getAuctionState(a, store, { now: NOW + AUCTION_HOURS * HOUR + 5 })).lots.length, 0, 'expired lots are hidden');
+});
+
+test('the auction is shared by chats: a buyer of another chat is served and the seller is paid on the next visit', async () => {
+  const store = memoryStore();
+  const sellerChat = chatWith(0);
+  const [seller] = sellerChat.members;
+  const buyerChat = { chatId: -200, members: [] };
+  const buyer = {
+    userId: 9, userChatData: { user: { first_name: 'Far' } }, ownerDocument: () => buyerChat,
+    game: { inventory: { gold: 10_000, equipment: { items: [] }, potions: { items: [] }, materials: {} } },
+  };
+  buyerChat.members.push(buyer);
+  seller.game.inventory.materials.scroll_A = 2;
+  const listed = await createLot(seller, store, { kind: 'material', ref: 'scroll_A', count: 2, price: 1000 }, NOW);
+  assert.equal(listed.ok, true);
+
+  const seen = await getAuctionState(buyer, store, { now: NOW });
+  assert.equal(seen.lots.length, 1);
+  assert.equal(seen.lots[0].otherChat, true);
+  assert.equal(seen.mine.length, 0);
+
+  const bought = await buyLot(buyer, store, listed.lot.id, NOW);
+  assert.equal(bought.ok, true);
+  assert.equal(buyer.game.inventory.gold, 9_000);
+  assert.equal(getMaterialCount(buyer, 'scroll_A'), 2);
+  assert.equal(seller.game.inventory.gold, 0, 'the seller chat is not touched by another chat');
+
+  assert.equal(await settleSales(sellerChat, store), 950);
+  assert.equal(seller.game.inventory.gold, 950);
+  assert.equal(await settleSales(sellerChat, store), 0, 'a payout is collected only once');
+  assert.equal((await buyLot(buyer, store, listed.lot.id, NOW)).reason, 'lot_gone');
+});
+
+test('a listing can only be cancelled from the chat of the character that made it', async () => {
+  const store = memoryStore();
+  const home = chatWith(0);
+  const [seller] = home.members;
+  seller.game.inventory.materials.scroll_A = 1;
+  const listed = await createLot(seller, store, { kind: 'material', ref: 'scroll_A', price: 500 }, NOW);
+  const elsewhere = { chatId: -300, members: [] };
+  const alt = { userId: seller.userId, ownerDocument: () => elsewhere, game: { inventory: { gold: 0, materials: {}, equipment: { items: [] }, potions: { items: [] } } } };
+  elsewhere.members.push(alt);
+  assert.equal((await cancelLot(alt, store, listed.lot.id)).reason, 'other_chat');
+  assert.equal((await cancelLot(seller, store, listed.lot.id)).ok, true);
 });
