@@ -1,0 +1,451 @@
+{
+  "rendered": 63,
+  "costumes": 61,
+  "defaults": 2,
+  "animatedWings": 63,
+  "allFramesChanged": true,
+  "errors": [],
+  "records": [
+    {
+      "src": "/art/avatars/collections/v1/crimson-dawn-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 5.099999997764826
+    },
+    {
+      "src": "/art/avatars/collections/v1/amethyst-envoy-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 4.800000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/azure-benediction-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.300000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/dawn-emissary-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3
+    },
+    {
+      "src": "/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.2999999970197678
+    },
+    {
+      "src": "/art/avatars/collections/v1/malachite-warden-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.199999999254942
+    },
+    {
+      "src": "/art/avatars/collections/v1/veil-of-constellations-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.2000000029802322
+    },
+    {
+      "src": "/art/avatars/collections/v1/violet-courtier-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/starfrost-court-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.8999999985098839
+    },
+    {
+      "src": "/art/avatars/collections/v1/opal-tide-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.300000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/dusk-velvet-ball-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/celestial-cartographer-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 4.300000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/ivory-vows-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.199999999254942
+    },
+    {
+      "src": "/art/avatars/collections/v1/gilded-veil-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.9000000022351742
+    },
+    {
+      "src": "/art/avatars/collections/v1/rose-etiquette-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.100000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/nocturne-protocol-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/coalwood-warden-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.8999999985098839
+    },
+    {
+      "src": "/art/avatars/collections/v1/emerald-griffin-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.100000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/triune-crown-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/astral-crown-knight-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/golden-phoenix-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.8999999985098839
+    },
+    {
+      "src": "/art/avatars/collections/v1/crimson-herald-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 4.100000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/prismatic-archon-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/scarlet-comet-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3
+    },
+    {
+      "src": "/art/avatars/collections/v1/prism-dragon-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.900000002235174
+    },
+    {
+      "src": "/art/avatars/collections/v1/bloodfrost-rose-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.899999998509884
+    },
+    {
+      "src": "/art/avatars/collections/v1/moon-velvet-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.7999999970197678
+    },
+    {
+      "src": "/art/avatars/collections/v1/fuchsia-tempest-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/sandglass-dawn-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.8999999985098839
+    },
+    {
+      "src": "/art/avatars/collections/v1/starlit-reverie-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 5.699999999254942
+    },
+    {
+      "src": "/art/avatars/collections/v1/snow-seraph-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3
+    },
+    {
+      "src": "/art/avatars/collections/v1/violet-astronomer-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.399999998509884
+    },
+    {
+      "src": "/art/avatars/collections/v1/eclipse-mantle-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.800000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/amethyst-sovereign-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.599999997764826
+    },
+    {
+      "src": "/art/avatars/collections/v1/midnight-gold-envoy-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3.600000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/violet-nightblade-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.100000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/plum-dragon-queen-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3.400000002235174
+    },
+    {
+      "src": "/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 10.699999999254942
+    },
+    {
+      "src": "/art/avatars/collections/v1/crimson-peacock-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3.099999997764826
+    },
+    {
+      "src": "/art/avatars/collections/v1/violet-dusk-prince-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3
+    },
+    {
+      "src": "/art/avatars/collections/v1/sapphire-diadem-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.100000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/void-pulse-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.399999998509884
+    },
+    {
+      "src": "/art/avatars/collections/v1/saltwind-corsair-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.800000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/quiet-rooftop-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3.599999997764826
+    },
+    {
+      "src": "/art/avatars/collections/v1/cobblestone-sunday-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.5
+    },
+    {
+      "src": "/art/avatars/collections/v1/seabreeze-holiday-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.199999999254942
+    },
+    {
+      "src": "/art/avatars/collections/v1/cozy-reef-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 5.899999998509884
+    },
+    {
+      "src": "/art/avatars/collections/v1/hearthside-purr-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.100000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/moonlit-mischief-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.099999997764826
+    },
+    {
+      "src": "/art/avatars/collections/v1/meadow-flutter-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.2999999970197678
+    },
+    {
+      "src": "/art/avatars/collections/v1/coral-bay-breeze-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.800000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/high-tide-rider-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.8999999985098839
+    },
+    {
+      "src": "/art/avatars/collections/v1/chrome-district-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.7999999970197678
+    },
+    {
+      "src": "/art/avatars/collections/v1/obsidian-gloss-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/neon-afterglow-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3.100000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/brass-meridian-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.600000001490116
+    },
+    {
+      "src": "/art/avatars/collections/v1/off-duty-avenue-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 1.800000000745058
+    },
+    {
+      "src": "/art/avatars/collections/v1/midnight-formal-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2
+    },
+    {
+      "src": "/art/avatars/collections/v1/last-bell-reaper-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 5.700000002980232
+    },
+    {
+      "src": "/art/avatars/collections/v1/hollow-lantern-rider-kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.2000000029802322
+    },
+    {
+      "src": "/art/avatars/collections/v1/moonveil-phantom-kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.300000000745058
+    },
+    {
+      "src": "/art/avatars/races/v2/kamael-male",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 3.199999999254942
+    },
+    {
+      "src": "/art/avatars/races/v2/kamael-female",
+      "moving": true,
+      "width": 160,
+      "wing": true,
+      "ms": 2.100000001490116
+    }
+  ]
+}

@@ -26,7 +26,10 @@ function sessionTemplate() {
 
 test('reports chest availability', () => {
   const session = sessionTemplate();
-  assert.deepEqual(getChestState(session), {
+  const {player,costumes,...state}=getChestState(session);
+  assert.equal(costumes.length,5);
+  assert.equal(player.gender,'male');
+  assert.deepEqual(state, {
     available: true,
     tries: 1,
     opened: [],

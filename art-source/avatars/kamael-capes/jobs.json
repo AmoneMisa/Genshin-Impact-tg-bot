@@ -1,0 +1,1123 @@
+[
+  {
+    "key": "crimson-dawn-kamael-female",
+    "name": "Багряный рассвет",
+    "costumeId": "crimson-dawn",
+    "gender": "female",
+    "inputSource": "art-source/avatars/races/kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/crimson-dawn-kamael-female.png",
+    "references": [
+      "art-source/avatars/races/kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [
+      "kamael-female"
+    ],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-40ee5bab-edfd-442f-82fe-203c99045377.png"
+  },
+  {
+    "key": "amethyst-envoy-kamael-male",
+    "name": "Аметистовый посланник",
+    "costumeId": "amethyst-envoy",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/amethyst-envoy-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/amethyst-envoy-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/amethyst-envoy-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-94087f59-a21a-4835-adde-e5dae16f84eb.png"
+  },
+  {
+    "key": "azure-benediction-kamael-female",
+    "name": "Лазурное благословение",
+    "costumeId": "azure-benediction",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/azure-benediction-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/azure-benediction-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/azure-benediction-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-05fa565b-a5ff-47d2-b852-e32d19cf9955.png"
+  },
+  {
+    "key": "dawn-emissary-kamael-male",
+    "name": "Посланник зари",
+    "costumeId": "dawn-emissary",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/dawn-emissary-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/dawn-emissary-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/dawn-emissary-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-29c3f510-73db-437a-8ab3-6f4d5d4c972a.png"
+  },
+  {
+    "key": "gilded-dragon-mantle-kamael-male",
+    "name": "Мантия золотого дракона",
+    "costumeId": "gilded-dragon-mantle",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/gilded-dragon-mantle-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/gilded-dragon-mantle-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/gilded-dragon-mantle-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-12eaec91-843a-4c6a-8ded-903c626d393a.png"
+  },
+  {
+    "key": "malachite-warden-kamael-male",
+    "name": "Хранитель малахита",
+    "costumeId": "malachite-warden",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/malachite-warden-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/malachite-warden-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/malachite-warden-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-6c0589e1-0121-489a-96f2-dc5f41bc711e.png"
+  },
+  {
+    "key": "veil-of-constellations-kamael-female",
+    "name": "Вуаль созвездий",
+    "costumeId": "veil-of-constellations",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/veil-of-constellations-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/veil-of-constellations-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/veil-of-constellations-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-eac909dd-2039-4d05-83a9-78f866793a0d.png"
+  },
+  {
+    "key": "violet-courtier-kamael-male",
+    "name": "Кавалер сумерек",
+    "costumeId": "violet-courtier",
+    "gender": "male",
+    "inputSource": "art-source/avatars/races/kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/violet-courtier-kamael-male.png",
+    "references": [
+      "art-source/avatars/races/kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [
+      "kamael-male"
+    ],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d2c998ee-9737-47c9-a3dd-2788eb04e358.png"
+  },
+  {
+    "key": "starfrost-court-kamael-male",
+    "name": "Иней звёздного двора",
+    "costumeId": "starfrost-court",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/starfrost-court-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/starfrost-court-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/starfrost-court-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-35db27ea-4dff-43e5-90c6-ab9b97f3eac2.png"
+  },
+  {
+    "key": "opal-tide-kamael-female",
+    "name": "Опаловый прилив",
+    "costumeId": "opal-tide",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/opal-tide-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/opal-tide-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/opal-tide-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-a60653e7-2cad-4bd8-8042-7a9a128b753f.png"
+  },
+  {
+    "key": "dusk-velvet-ball-kamael-male",
+    "name": "Вельвет сумеречного бала",
+    "costumeId": "dusk-velvet-ball",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/dusk-velvet-ball-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/dusk-velvet-ball-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/dusk-velvet-ball-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-fac6943d-aa76-4dcd-b873-b48d691c7e0d.png"
+  },
+  {
+    "key": "celestial-cartographer-kamael-female",
+    "name": "Звёздный картограф",
+    "costumeId": "celestial-cartographer",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/celestial-cartographer-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/celestial-cartographer-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/celestial-cartographer-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-f4aa384c-b6ae-4d88-a29a-0b06e41c757c.png"
+  },
+  {
+    "key": "ivory-vows-kamael-male",
+    "name": "Обет белого золота",
+    "costumeId": "ivory-vows",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/ivory-vows-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/ivory-vows-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/ivory-vows-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-a059a81c-f8e5-4a1b-8b60-b29504c32239.png"
+  },
+  {
+    "key": "gilded-veil-kamael-female",
+    "name": "Вуаль золотого обета",
+    "costumeId": "gilded-veil",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/gilded-veil-kamael-female-v2.png",
+    "source": "art-source/avatars/kamael-capes/gilded-veil-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/gilded-veil-kamael-female-v2.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-3f601b37-6d87-4dbc-be22-5a2daefc5881.png"
+  },
+  {
+    "key": "rose-etiquette-kamael-male",
+    "name": "Розовый этикет",
+    "costumeId": "rose-etiquette",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/rose-etiquette-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/rose-etiquette-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/rose-etiquette-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-413dd771-aac1-47dd-ba8f-f0b08ce47019.png"
+  },
+  {
+    "key": "nocturne-protocol-kamael-male",
+    "name": "Ночной протокол",
+    "costumeId": "nocturne-protocol",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/nocturne-protocol-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/nocturne-protocol-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/nocturne-protocol-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-331d21eb-e95b-4d74-98d2-14b377b2450c.png"
+  },
+  {
+    "key": "coalwood-warden-kamael-male",
+    "name": "Страж угольного леса",
+    "costumeId": "coalwood-warden",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/coalwood-warden-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/coalwood-warden-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/coalwood-warden-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-ff8515bf-3c5e-4023-a0e5-d136f74b17c8.png"
+  },
+  {
+    "key": "emerald-griffin-kamael-male",
+    "name": "Изумрудный грифон",
+    "costumeId": "emerald-griffin",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/emerald-griffin-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/emerald-griffin-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/emerald-griffin-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-95d751e7-6849-49ed-9f3c-1fd3fbeea988.png"
+  },
+  {
+    "key": "triune-crown-kamael-female",
+    "name": "Триединый венец",
+    "costumeId": "triune-crown",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/triune-crown-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/triune-crown-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/triune-crown-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e311c592-4279-4978-92fd-d90554a95ef5.png"
+  },
+  {
+    "key": "astral-crown-knight-kamael-male",
+    "name": "Рыцарь астральной короны",
+    "costumeId": "astral-crown-knight",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/astral-crown-knight-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/astral-crown-knight-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/astral-crown-knight-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-da9cd364-3c6e-4c6e-9738-f04b3b2f2cc5.png"
+  },
+  {
+    "key": "golden-phoenix-kamael-male",
+    "name": "Золотой феникс",
+    "costumeId": "golden-phoenix",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/golden-phoenix-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/golden-phoenix-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/golden-phoenix-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-35c4256d-8613-4f62-9c44-3ca6405d26c4.png"
+  },
+  {
+    "key": "crimson-herald-kamael-male",
+    "name": "Багряный герольд",
+    "costumeId": "crimson-herald",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/crimson-herald-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/crimson-herald-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/crimson-herald-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-915e9c8c-0442-429b-917e-1df7fd1f60a2.png"
+  },
+  {
+    "key": "prismatic-archon-kamael-female",
+    "name": "Радужный архонт",
+    "costumeId": "prismatic-archon",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/prismatic-archon-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/prismatic-archon-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/prismatic-archon-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-1a366c91-a5da-4979-a913-a8acd45bb1d5.png"
+  },
+  {
+    "key": "scarlet-comet-kamael-male",
+    "name": "Алый кометарий",
+    "costumeId": "scarlet-comet",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/scarlet-comet-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/scarlet-comet-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/scarlet-comet-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-9830c55d-ba8b-44ea-bd58-e7329ea04147.png"
+  },
+  {
+    "key": "prism-dragon-kamael-female",
+    "name": "Дракон цветного стекла",
+    "costumeId": "prism-dragon",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/prism-dragon-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/prism-dragon-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/prism-dragon-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-012b0413-2065-4b25-a6c4-5095bda4c699.png"
+  },
+  {
+    "key": "bloodfrost-rose-kamael-female",
+    "name": "Роза кровавого инея",
+    "costumeId": "bloodfrost-rose",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/bloodfrost-rose-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/bloodfrost-rose-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/bloodfrost-rose-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-9fbee624-449a-4573-9eec-8280ecb458ae.png"
+  },
+  {
+    "key": "moon-velvet-kamael-female",
+    "name": "Лунный бархат",
+    "costumeId": "moon-velvet",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/moon-velvet-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/moon-velvet-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/moon-velvet-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-025c1c57-0f02-435d-85e4-e990808f5457.png"
+  },
+  {
+    "key": "fuchsia-tempest-kamael-female",
+    "name": "Пурпурная гроза",
+    "costumeId": "fuchsia-tempest",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/fuchsia-tempest-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/fuchsia-tempest-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/fuchsia-tempest-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-07053864-a33e-46a5-a9de-82c6c228d62a.png"
+  },
+  {
+    "key": "sandglass-dawn-kamael-male",
+    "name": "Песочные часы зари",
+    "costumeId": "sandglass-dawn",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/sandglass-dawn-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/sandglass-dawn-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/sandglass-dawn-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-5120f0d2-4fb9-4fc6-930f-a17e2f19b09b.png"
+  },
+  {
+    "key": "starlit-reverie-kamael-female",
+    "name": "Звёздная грёза",
+    "costumeId": "starlit-reverie",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/starlit-reverie-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/starlit-reverie-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/starlit-reverie-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-76fae8c2-865b-4042-902e-29a0350486a9.png"
+  },
+  {
+    "key": "snow-seraph-kamael-male",
+    "name": "Снежный серафим",
+    "costumeId": "snow-seraph",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/snow-seraph-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/snow-seraph-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/snow-seraph-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-aaa16585-4985-468c-bb89-2d4b71239ecb.png"
+  },
+  {
+    "key": "violet-astronomer-kamael-female",
+    "name": "Фиолетовая звёздочётка",
+    "costumeId": "violet-astronomer",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/violet-astronomer-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/violet-astronomer-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/violet-astronomer-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-75f2c5f9-2dfb-4492-aaca-51b27d313faf.png"
+  },
+  {
+    "key": "eclipse-mantle-kamael-male",
+    "name": "Мантия затмения",
+    "costumeId": "eclipse-mantle",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/eclipse-mantle-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/eclipse-mantle-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/eclipse-mantle-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e432e8f2-2cf4-45c6-8b08-8dcbf44068b7.png"
+  },
+  {
+    "key": "amethyst-sovereign-kamael-male",
+    "name": "Император аметиста",
+    "costumeId": "amethyst-sovereign",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/amethyst-sovereign-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/amethyst-sovereign-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/amethyst-sovereign-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-0dc4528c-dae0-49a1-8bbe-0873bed360e2.png"
+  },
+  {
+    "key": "midnight-gold-envoy-kamael-male",
+    "name": "Посланник чёрного золота",
+    "costumeId": "midnight-gold-envoy",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/midnight-gold-envoy-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/midnight-gold-envoy-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/midnight-gold-envoy-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e6de1304-f825-4ad4-a6e6-fd147b0d69dd.png"
+  },
+  {
+    "key": "violet-nightblade-kamael-female",
+    "name": "Клинок фиолетовой ночи",
+    "costumeId": "violet-nightblade",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/violet-nightblade-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/violet-nightblade-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/violet-nightblade-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-658468ea-0f14-4ffd-9a82-98e3a56934db.png"
+  },
+  {
+    "key": "plum-dragon-queen-kamael-female",
+    "name": "Сливовая драконица",
+    "costumeId": "plum-dragon-queen",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/plum-dragon-queen-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/plum-dragon-queen-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/plum-dragon-queen-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-2e98b7dd-bfb2-4ee1-9dc7-ab10c856cbc4.png"
+  },
+  {
+    "key": "ashen-dragon-mantle-kamael-female",
+    "name": "Ashen Dragon Mantle",
+    "costumeId": "ashen-dragon-mantle",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/ashen-dragon-mantle-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/ashen-dragon-mantle-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/ashen-dragon-mantle-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-34b1b8ec-f600-4620-8fa2-c54b93bb59ac.png"
+  },
+  {
+    "key": "crimson-peacock-kamael-female",
+    "name": "Crimson Peacock",
+    "costumeId": "crimson-peacock",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/crimson-peacock-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/crimson-peacock-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/crimson-peacock-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-6b6cf7e3-ffc9-44c4-8b06-9fb7399a9a6f.png"
+  },
+  {
+    "key": "violet-dusk-prince-kamael-male",
+    "name": "Violet Dusk Prince",
+    "costumeId": "violet-dusk-prince",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/violet-dusk-prince-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/violet-dusk-prince-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/violet-dusk-prince-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-ec9e44a1-8adb-4ba3-99ca-fb6faa42ff00.png"
+  },
+  {
+    "key": "sapphire-diadem-kamael-female",
+    "name": "Sapphire Diadem",
+    "costumeId": "sapphire-diadem",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/sapphire-diadem-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/sapphire-diadem-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/sapphire-diadem-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d7278fce-eb0d-4a9f-abcf-10f31a71a162.png"
+  },
+  {
+    "key": "void-pulse-kamael-female",
+    "name": "Void Pulse",
+    "costumeId": "void-pulse",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/void-pulse-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/void-pulse-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/void-pulse-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Match the rigid wing ornament to the existing garment metal, gold or silver, and match the narrow silk banner to the existing costume colors and embroidery. One small matching brooch is acceptable. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-72ead7af-a5ef-4149-bba6-1289fe3595aa.png"
+  },
+  {
+    "key": "saltwind-corsair-kamael-male",
+    "name": "Saltwind Corsair",
+    "costumeId": "saltwind-corsair",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/saltwind-corsair-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/saltwind-corsair-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/saltwind-corsair-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Use a small plain brass/silver wing-shaped fitting and matte cloth in the costume palette; keep it restrained and practical, without a large gemstone or new luxury armor. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-0b051869-18cf-4df4-b2fb-8fe277afbc96.png"
+  },
+  {
+    "key": "quiet-rooftop-kamael-male",
+    "name": "Quiet Rooftop",
+    "costumeId": "quiet-rooftop",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/quiet-rooftop-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/quiet-rooftop-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/quiet-rooftop-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Use a small plain brass/silver wing-shaped fitting and matte cloth in the costume palette; keep it restrained and practical, without a large gemstone or new luxury armor. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-6f5fafbc-22d4-4f56-b314-9ce87bf24d4e.png"
+  },
+  {
+    "key": "cobblestone-sunday-kamael-female",
+    "name": "Cobblestone Sunday",
+    "costumeId": "cobblestone-sunday",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/cobblestone-sunday-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Use a small plain brass/silver wing-shaped fitting and matte cloth in the costume palette; keep it restrained and practical, without a large gemstone or new luxury armor. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-031a8a97-f55d-4bc2-92c4-0609afb26efc.png"
+  },
+  {
+    "key": "seabreeze-holiday-kamael-female",
+    "name": "Seabreeze Holiday",
+    "costumeId": "seabreeze-holiday",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/seabreeze-holiday-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/seabreeze-holiday-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/seabreeze-holiday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Use a small plain brass/silver wing-shaped fitting and matte cloth in the costume palette; keep it restrained and practical, without a large gemstone or new luxury armor. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-4dcba607-5a77-4183-aebb-314e921c05e9.png"
+  },
+  {
+    "key": "cozy-reef-kamael-male",
+    "name": "Cozy Reef",
+    "costumeId": "cozy-reef",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/cozy-reef-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/cozy-reef-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/cozy-reef-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Use a small plain brass/silver wing-shaped fitting and matte cloth in the costume palette; keep it restrained and practical, without a large gemstone or new luxury armor. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-93cd8a92-440a-4c4e-b031-bbfef73d242b.png"
+  },
+  {
+    "key": "hearthside-purr-kamael-female",
+    "name": "Hearthside Purr",
+    "costumeId": "hearthside-purr",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/hearthside-purr-kamael-female.png",
+    "source": "art-source/avatars/kamael-capes/hearthside-purr-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/hearthside-purr-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Use a small plain brass/silver wing-shaped fitting and matte cloth in the costume palette; keep it restrained and practical, without a large gemstone or new luxury armor. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-be2dda7a-55b6-4a7c-8fae-e745d752850d.png"
+  },
+  {
+    "key": "moonlit-mischief-kamael-male",
+    "name": "Moonlit Mischief",
+    "costumeId": "moonlit-mischief",
+    "gender": "male",
+    "inputSource": "art-source/avatars/collections/moonlit-mischief-kamael-male.png",
+    "source": "art-source/avatars/kamael-capes/moonlit-mischief-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/moonlit-mischief-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Use case: precise-object-edit. EDIT ONLY one additional back cape accessory on the EXACT Kamael in Image 1. Images 2 and 3 are the USER STRUCTURE REFERENCE: a SMALL RIGID wing-shaped shoulder ornament with a long NARROW VERTICAL rectangular CLOTH BANNER hanging BELOW it toward the knee. Add this compact one-sided Kamael wing-cape on VIEWER LEFT, opposite the natural white wing. The rigid wing ornament stays near the upper back/shoulder, never above the head. The narrow banner hangs with gravity, vertical folds and a fabric hem; about one forearm wide, close to the body, visibly behind the arm. It is not a second anatomical wing, not a spread butterfly fan, not an enormous full-width cloak. Use a small plain brass/silver wing-shaped fitting and matte cloth in the costume palette; keep it restrained and practical, without a large gemstone or new luxury armor. Keep the SAME SINGLE natural WHITE FEATHER WING on viewer RIGHT EXACTLY UNCHANGED. Preserve the EXACT identity, face, eyes, pointed ears, hairstyle, gender, body proportions, stance, hand gestures, all fingers, footwear, clothes, existing skirt and coat tails, hats, spectacles and EVERY held object in Image 1. Do not simplify or redesign the outfit. Do not move, mirror, recenter, rescale or re-pose the wearer: keep all anatomical features at the SAME positions on the SAME 1024x1536 canvas, because the original pose is animated. The only changed pixels should belong to the new wing ornament and hanging cloth behind the wearer. Keep the original refined painted style and matching illumination. Entire hair, both feet, original natural wing, props and new cape fit inside transparent margins. TRUE TRANSPARENT ALPHA; no background, ground, gradient, external glow, text, watermarks or spiders. Do not copy screenshot characters, armor, logos, UI or scenery. This is an original custom cosmetic accessory adapted to the user cape construction.",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-de754ee9-2599-4a7c-bd17-dea386f4ad3c.png"
+  },
+  {
+    "key": "meadow-flutter-kamael-female",
+    "name": "Meadow Flutter",
+    "costumeId": "meadow-flutter",
+    "gender": "female",
+    "inputSource": "art-source/avatars/collections/meadow-flutter-kamael-female-v2.png",
+    "source": "art-source/avatars/collections/meadow-flutter-kamael-female-v2.png",
+    "references": [
+      "art-source/avatars/collections/meadow-flutter-kamael-female-v2.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "prompt": "Edit ONLY the additional cape on viewer LEFT of the Kamael woman in Image 1. Images 2 and 3 are the user's precise STRUCTURE references for a Kamael wing-cape: a SMALL RIGID golden wing-shaped shoulder ornament with a long NARROW VERTICAL RECTANGULAR CLOTH BANNER hanging beneath it down toward the knee, gravity and vertical folds. Completely REMOVE the gigantic spread butterfly-shaped cloth on viewer LEFT. Replace it with this compact Kamael banner-cape construction, visible just behind her left-on-screen shoulder and arm, width about one forearm, with golden angular wing ornament above and folded dark lavender silk banner below. The narrow banner carries a small original amber butterfly embroidery and fine gold hem, matching her festival costume. It must hang vertically close to the body, NEVER stretch outward like a butterfly wing. Keep ONLY ONE natural white feather wing on viewer RIGHT, exactly as painted. Preserve the SAME face, head, high white-pink ponytail, humanlike angular Kamael facial features, pose, hands, dress, legs, boots, and art style of Image 1. Keep all head-to-feet silhouette and natural white wing visible with transparent margin, 1024x1536 portrait. No backdrop, ground, gradients or text; TRUE transparent alpha. Do not copy screenshot scenery, logos, armor or characters. Use only the wing-cape construction from the user's game references, adapting it into a uniquely named custom Meadow Flutter decorative costume.\n",
+    "status": "reviewed",
+    "defaultAliases": [],
+    "review": "Full body, face, original pose, white wing, rigid fitting and narrow hanging banner visually reviewed; individual cloth and eye coordinates recorded."
+  },
+  {
+    "key": "coral-bay-breeze-kamael-female",
+    "name": "Coral Bay Breeze",
+    "costumeId": "coral-bay-breeze",
+    "gender": "female",
+    "source": "art-source/avatars/collections/coral-bay-breeze-kamael-female.png",
+    "prompt": "Use case: stylized-concept. Asset: full-body original RPG cosmetic Coral Bay Breeze. Image 1 is the adult human BEACH CLOTHING and art-style reference; refit that same design to the specified race. Image 2 guides only mature racial identity, skin and ears, not its original outfit or props. Primary request: An ordinary opaque coral-red two-piece BIKINI: simple halter bikini top and standard full-coverage bikini bottoms, bare midriff, no skirt, no shorts, no shirt or cover-up. Wide-brim straw sunhat with a teal ribbon, flat beach sandals. Carry one compact teal-and-ivory inflatable swim ring upright BESIDE the viewer-left hip, held by the left hand; the ring does not encircle or conceal the torso. Relaxed neutral standing beach pose, right arm naturally free. Wearer: one clearly ADULT female. A clearly mature adult L2 Kamael, pale skin, pointed ears, angular adult face; male short silver-pink hair, female high white-pink ponytail. Exactly ONE natural white feather wing on viewer RIGHT. Add a compact WING-CAPE on viewer LEFT: a small rigid plain brass wing ornament at the back shoulder with a narrow VERTICAL cloth banner hanging below to the upper thigh, matching the beach outfit. It stays behind the wearer, separate from ring/board and the natural wing. It is NOT a spread fan or second anatomical wing. Use the supplied wing-cape screenshots only for accessory structure; no armor or screenshot scenery. Non-sexual swimwear catalogue presentation, neutral natural expression and posture, no suggestive pose or emphasis on intimate areas. Keep both eyes visible beneath the hat. Exactly two arms, two legs, one head, natural hands and normal fingers. Refined hand-painted Korean fantasy style matching this game, soft daylight, restrained fabric and practical accessories. No extra anatomical wings on non-Kamael races. NO additional cape on non-Kamael races. Full body, hat, hair, all props, wings and BOTH feet completely inside a 1024x1536 portrait with 8% transparent margins on every side. TRUE TRANSPARENT ALPHA background, no floor, scenery, gradient, haze or external glow. No text, logos, watermarks, UI, weapons, spiders or extra people. This is a uniquely named custom outfit, not an original L2 item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-16d199b8-40e3-4642-9434-c1e1003a71cd.png",
+    "inputSource": "art-source/avatars/collections/coral-bay-breeze-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/coral-bay-breeze-human-female.png",
+      "art-source/avatars/collections/seabreeze-holiday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Full costume painting visually reviewed: white wing viewer right, compact metal ornament and narrow hanging banner viewer left."
+  },
+  {
+    "key": "high-tide-rider-kamael-male",
+    "name": "High Tide Rider",
+    "costumeId": "high-tide-rider",
+    "gender": "male",
+    "source": "art-source/avatars/collections/high-tide-rider-kamael-male-v3.png",
+    "prompt": "Use case: precise-object-edit. Image 1 is the EXACT adult male surfer to edit; keep his face, hair, hat, pose, hands, swimming briefs, sandals, surfboard on VIEWER LEFT and natural white feather wing on VIEWER RIGHT UNCHANGED. Change ONLY the location of the small gold wing-shaped cape ornament and its narrow blue hanging fabric banner. REMOVE that gold ornament and banner from the viewer-RIGHT shoulder entirely. REATTACH the same small gold ornament at the VIEWER-LEFT shoulder (the shoulder next to the surfboard), and let its narrow blue cloth banner hang downward behind the left-visible arm and board. Image 2 is ONLY a placement reference: its compact gold wing ornament and vertical cloth banner are on viewer LEFT, opposite the natural white feather wing on viewer RIGHT; reproduce this left-versus-right arrangement on the MALE in Image 1 without changing his body or outfit. There must be NOTHING gold and no blue banner attached to the viewer-right white-wing shoulder. Exactly one natural WHITE feather wing, viewer RIGHT, unchanged. No white feather wing on viewer LEFT. Do not mirror the figure or move the board. Do not copy the female body or bikini from Image 2. One mature adult male, full body 1024x1536, true transparent alpha, no background, text or watermarks.\n",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-a36f937b-2edb-42d2-a6a4-f04c360da517.png",
+    "inputSource": "art-source/avatars/collections/high-tide-rider-kamael-male-v3.png",
+    "references": [
+      "art-source/avatars/collections/high-tide-rider-kamael-male-v2.png",
+      "art-source/avatars/collections/coral-bay-breeze-kamael-female.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Full costume painting visually reviewed: white wing viewer right, compact metal ornament and narrow hanging banner viewer left."
+  },
+  {
+    "key": "chrome-district-kamael-female",
+    "name": "Chrome District",
+    "costumeId": "chrome-district",
+    "gender": "female",
+    "source": "art-source/avatars/collections/chrome-district-kamael-female.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Chrome District. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: Practical CYBERPUNK street outfit: charcoal cropped technical jacket with a high collar and subtle cyan circuit piping, opaque graphite crew-neck shirt underneath, dark fitted utility trousers with pockets, gunmetal knee details, low sturdy tech boots. Small violet hair streak in a short asymmetrical bob. One compact wrist terminal; no firearms, no robot limbs, no goggles over the eyes. Fully clothed, grown-up urban adventurer. Relaxed front three-quarter standing pose, arms naturally down and slightly away from hips, both hands empty. One ADULT female wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. Both actual eyes visible and readable, natural mature face, no opaque visor or sunglasses over the eyes. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d1022f39-8c73-4a9d-a63f-682eca7deb1f.png",
+    "inputSource": "art-source/avatars/collections/chrome-district-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/chrome-district-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "obsidian-gloss-kamael-female",
+    "name": "Obsidian Gloss",
+    "costumeId": "obsidian-gloss",
+    "gender": "female",
+    "source": "art-source/avatars/collections/obsidian-gloss-kamael-female.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Obsidian Gloss. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: A NON-SEXUAL fully covered black LATEX fashion outfit: tailored opaque glossy high-neck long-sleeved jacket, straight slim glossy black trousers, low ankle boots, tasteful silver zip and charcoal seam panels. A thin plum belt and a small matching scarf edge. Natural realistic clothing gloss, no exposed torso or thighs, no lingerie, corset, harness, fetish gear, cutouts, exaggerated anatomy or suggestive pose. Neat short dark hair. Neutral catalogue standing pose with two arms down, hands a little apart from the body. One ADULT female wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. Both actual eyes visible and readable, natural mature face, no opaque visor or sunglasses over the eyes. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-9f44cec5-7352-46e6-aad4-a90fe7331947.png",
+    "inputSource": "art-source/avatars/collections/obsidian-gloss-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/obsidian-gloss-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "neon-afterglow-kamael-female",
+    "name": "Neon Afterglow",
+    "costumeId": "neon-afterglow",
+    "gender": "female",
+    "source": "art-source/avatars/collections/neon-afterglow-kamael-female.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Neon Afterglow. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: A distinct NEON dance-street costume: dark navy oversized bomber jacket with vivid magenta and electric-turquoise luminous fabric strips, opaque black high-neck top, a layered knee-length pleated skirt over opaque dark leggings, chunky flat sneakers. A loose narrow luminous ribbon from each sleeve, no floating particles or light beams. Silver hair in a high ponytail. Small glowing accents confined to clothing. Neutral energetic standing pose, one knee relaxed but both soles supported, arms down and apart, no item in hands. One ADULT female wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. Both actual eyes visible and readable, natural mature face, no opaque visor or sunglasses over the eyes. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-94e7e13c-3e25-4191-b0b9-5cf1e089840b.png",
+    "inputSource": "art-source/avatars/collections/neon-afterglow-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/neon-afterglow-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "brass-meridian-kamael-male",
+    "name": "Brass Meridian",
+    "costumeId": "brass-meridian",
+    "gender": "male",
+    "source": "art-source/avatars/collections/brass-meridian-kamael-male.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Brass Meridian. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: A practical STEAMPUNK explorer: dark brown knee-length frock coat with brass gears and restrained piping, cream collared shirt, copper waistcoat, leather belts and a small pocket-watch chain, charcoal trousers and sturdy brown boots. A compact brown top hat with brass goggles resting ABOVE the forehead, both eyes visible. One small closed leather notebook held at viewer RIGHT hip, other arm relaxed. No mechanical limbs, no weapon, no giant backpack. Restrained vintage brass-and-leather craftsmanship. One ADULT male wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. Both actual eyes visible and readable, natural mature face, no opaque visor or sunglasses over the eyes. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-50226546-eacc-4124-b224-145d1fb4718d.png",
+    "inputSource": "art-source/avatars/collections/brass-meridian-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/brass-meridian-human-male.png",
+      "art-source/avatars/collections/saltwind-corsair-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "off-duty-avenue-kamael-male",
+    "name": "Off-Duty Avenue",
+    "costumeId": "off-duty-avenue",
+    "gender": "male",
+    "source": "art-source/avatars/collections/off-duty-avenue-kamael-male.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Off-Duty Avenue. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: Plain contemporary CITY clothing: medium blue straight-leg JEANS with realistic seams, an ordinary clean ivory short-sleeved crew-neck T-SHIRT with NO print or logo, simple black belt, casual white low sneakers with navy accents. No coat, armor, cape on non-Kamael, magical ornaments, weapons or big props. Short tidy chestnut hair. Relaxed adult everyday standing pose with both hands visible down beside the hips, fingers relaxed, not inside pockets. The simple T-shirt and jeans must remain unmistakable. One ADULT male wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. Both actual eyes visible and readable, natural mature face, no opaque visor or sunglasses over the eyes. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e5e3ff0c-bae3-49d2-b79f-17986db57ac5.png",
+    "inputSource": "art-source/avatars/collections/off-duty-avenue-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/off-duty-avenue-human-male.png",
+      "art-source/avatars/collections/saltwind-corsair-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "midnight-formal-kamael-male",
+    "name": "Midnight Formal",
+    "costumeId": "midnight-formal",
+    "gender": "male",
+    "source": "art-source/avatars/collections/midnight-formal-kamael-male.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Midnight Formal. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: A CLASSIC BLACK formal tailored suit: matte black two-button blazer and matching straight trousers, crisp white collared shirt, narrow black tie, polished plain black Oxford shoes, one tiny silver tie bar. No ornate fantasy armor, no gold embroidery, no hat, weapon or cane. Tidy swept-back dark hair. Calm adult standing catalogue pose, jacket open just enough to read the shirt and tie, both arms relaxed down with visible hands. Refined restrained elegance. One ADULT male wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. Both actual eyes visible and readable, natural mature face, no opaque visor or sunglasses over the eyes. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-a8e61ebe-f59e-4c92-bc41-6859a88780f7.png",
+    "inputSource": "art-source/avatars/collections/midnight-formal-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/midnight-formal-human-male.png",
+      "art-source/avatars/collections/saltwind-corsair-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "last-bell-reaper-kamael-male",
+    "name": "Last Bell Reaper",
+    "costumeId": "last-bell-reaper",
+    "gender": "male",
+    "source": "art-source/avatars/collections/last-bell-reaper-kamael-male.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Last Bell Reaper. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: A theatrical DEATH / GRIM REAPER costume: layered charcoal-black hooded robe with silver-gray tattered hems, dark belt, opaque bone-white decorative SKULL MASK with dark empty eye sockets, face entirely concealed, dark gloves and closed black boots. No real skull, wounds, blood or visible flesh. Hold a slender black scythe upright at VIEWER LEFT beside the body; its modest curved silver blade stays fully inside the portrait, never crosses the face. Viewer-right hand relaxed. This is a fully clothed Halloween masquerade costume, not an undead corpse. Separate soft robe strips readable for subtle motion. One ADULT male wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. The requested mask/sheet/headlessness overrides any visible face or hair in identity guides. Preserve racial body proportions. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-1ddf7503-cc06-4eca-8bb0-5ae44474e29e.png",
+    "inputSource": "art-source/avatars/collections/last-bell-reaper-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/last-bell-reaper-human-male.png",
+      "art-source/avatars/collections/saltwind-corsair-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "hollow-lantern-rider-kamael-male",
+    "name": "Hollow Lantern Rider",
+    "costumeId": "hollow-lantern-rider",
+    "gender": "male",
+    "source": "art-source/avatars/collections/hollow-lantern-rider-kamael-male.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Hollow Lantern Rider. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: A HEADLESS HORSEMAN Halloween COSTUME WITH A PUMPKIN HEAD, standing on foot, NO horse: elegant black riding coat, deep burgundy lining and short riding cape, silver antique buckles, dark breeches, tall black riding boots and gloves. One carved orange JACK-O-LANTERN PUMPKIN sits on the shoulders above the collar AS THE HEAD, with warm amber light inside its carved eyes and grin. No human head, face, hair or neck stump, no blood. The pumpkin is attached as the costume head, not floating and not carried in a hand. Both gloved hands are empty and naturally down beside the body. No second pumpkin or hand-held lantern. Both boots supported and the entire pumpkin head inside the transparent portrait margins. One ADULT male wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. The requested skull mask or carved pumpkin head overrides any human face or hair in identity guides. Preserve racial body proportions. Exactly ONE carved pumpkin for the HEAD on the shoulders, no human head, no hand-held pumpkin. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-190f6a75-04fa-4f3d-a7f5-258d09ee88d4.png",
+    "inputSource": "art-source/avatars/collections/hollow-lantern-rider-kamael-male.png",
+    "references": [
+      "art-source/avatars/collections/hollow-lantern-rider-human-male-v2.png",
+      "art-source/avatars/collections/saltwind-corsair-kamael-male.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  },
+  {
+    "key": "moonveil-phantom-kamael-female",
+    "name": "Moonveil Phantom",
+    "costumeId": "moonveil-phantom",
+    "gender": "female",
+    "source": "art-source/avatars/collections/moonveil-phantom-kamael-female.png",
+    "prompt": "Use case: stylized-concept. Asset: original full-body RPG cosmetic Moonveil Phantom. Image 1 is the exact newly designed CLOTHING and POSE reference; refit the same garment and stance to this race. Image 2 guides ONLY adult racial identity and anatomy, never its clothes, props or pose. Primary request: A spectral GHOST / WRAITH costume with visibly TORN GLOWING CLOTHING, not a bedsheet ghost: a layered pearl-gray and icy ivory high-neck long robe, ragged open hood, long torn bell sleeves and many narrow shredded cloth tails with cyan-white luminous edges. Clearly mature pale spectral female face visible beneath the ragged hood, both actual eyes visible, long wispy silver-white hair. A fully covered bodice and opaque pale underlayers keep the adult body covered beneath the torn outer fabric; no lingerie, exposed thighs or cleavage. Cold blue-white luminescence follows the actual fabric and torn seams, no large fog cloud or scene. Sleeve-covered arms slightly apart, relaxed pale gloved hands, both silver-gray closed boots visible and supported beneath the shredded hem. A haunting elegant spirit rather than a cartoon sheet with eye holes; no gore, skull mask or pumpkin. One ADULT female wearer. Clearly mature adult Kamael: pale skin, long pointed ears, lean adult frame, angular mature face. Male silver-pink hair; female high white-pink ponytail. Exactly ONE natural white feather wing at VIEWER RIGHT. Add a compact WING-CAPE at VIEWER LEFT: small rigid wing-shaped metal shoulder ornament above a narrow VERTICAL hanging cloth banner reaching the upper thigh. The banner matches this outfit and sits behind the arm; it is not a second spread feather wing. Keep natural white wing and narrow cloth banner separate, on opposite sides. The two construction screenshots guide only this accessory structure, not their armor or scenery. Both actual eyes visible and readable, natural mature face, no opaque visor or sunglasses over the eyes. One head, exactly two arms, exactly two legs, natural hands. Refined Korean fantasy hand-painted game-art finish matching references, softly lit fabric and clear compact silhouette, neutral non-sexual costume catalogue presentation. Full body and every hat, prop, wing and BOTH feet inside 1024x1536 portrait with at least 8 percent TRANSPARENT padding on ALL sides. TRUE transparent alpha, no floor, scenery, gradient, background haze, cast shadow or external glow. Light effects confined to clothing. No text, logos, letters, watermarks, UI, spiders or other characters. No anatomical wings on non-Kamael races. This is a uniquely named custom cosmetic, not an original Lineage II equipment item.",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-b800666b-9a71-4e9b-8c94-b154a537083c.png",
+    "inputSource": "art-source/avatars/collections/moonveil-phantom-kamael-female.png",
+    "references": [
+      "art-source/avatars/collections/moonveil-phantom-human-female-v2.png",
+      "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ],
+    "status": "reviewed",
+    "defaultAliases": [],
+    "generationMode": "full-costume-with-cape",
+    "review": "Integrated rigid wing ornament and narrow cloth banner visually accepted in full-costume painting."
+  }
+]

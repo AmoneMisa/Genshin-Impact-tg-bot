@@ -1,0 +1,5 @@
+# Rebuildable publication staging; accepted PNG sources and live WebP are retained.
+webp/
+stage-reviewed.json
+todo-review-*
+compare-pose.jpg

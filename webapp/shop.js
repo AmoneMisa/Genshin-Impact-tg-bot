@@ -15,12 +15,15 @@ import {storeViewHtml, bindStoreView} from './store-view.js';
 import {createGamePopup} from './game-popup.js';
 import {enhanceSelects} from './design/select.js';
 import {openSealExchange} from './seal-exchange.js';
+import {costumeIconHtml,costumePreviewHtml} from './costume-preview.js';
+import {installAvatarCostumeMotion} from './avatar-costume-view.js';
 
 // Keep the category window underneath the goods: closing a child returns here.
 export async function openShopGame(options) {
   const merchant = (id, group) => () => openMerchantsGame({ ...options, initialMerchant: id, initialGroup: group });
   const goods = category => () => openShopGoods({ ...options, initialCategory: category });
   const categories = [
+    ['costumes','Костюмы','icon-armor_elven_tunic_i00',goods('costumes')],
     ['armor', 'Броня', 'icon-armor_elven_tunic_i00', merchant('armor')],
     ['weapons', 'Оружие', L2_CATEGORY_ART.full, merchant('weapons')],
     ['jewelry', 'Бижа', L2_JEWELRY_ART['blue coral ring'], merchant('jewelry')],
@@ -48,7 +51,7 @@ export async function openShopGame(options) {
   ];
   const popup = createGamePopup({title:'Магазин',className:'l2-store-overlay',panelClass:'l2-store-panel',body:`
       <div class="l2-store-ornament" aria-hidden="true"><span></span></div>
-      <div class="l2-store-grid">${categories.map(([id, label, art, open, reason]) => `<button type="button" class="l2-store-category" data-store-category="${id}" ${!open ? `aria-disabled="true" title="${reason}"` : ''}>${l2IconHtml(art) || l2FishingIcon(art)}<span>${label}</span></button>`).join('')}</div>
+      <div class="l2-store-grid">${categories.map(([id, label, art, open, reason]) => `<button type="button" class="l2-store-category" data-store-category="${id}" ${!open ? `aria-disabled="true" title="${reason}"` : ''}>${id==='costumes'?costumeIconHtml('midnight-formal'):l2IconHtml(art) || l2FishingIcon(art)}<span>${label}</span></button>`).join('')}</div>
       <div class="l2-store-notice" role="status" aria-live="polite"></div>
       <footer class="l2-store-footer"><button type="button" data-store-all>Все товары</button><button type="button" data-store-auction>Аукцион</button></footer>
     `});
@@ -87,6 +90,7 @@ export const ITEM_ICONS = Object.freeze({
 const ITEM_ART = { palaceElven: ['palace', 'elven'], palaceRoyal: ['palace', 'royal'] };
 
 export function itemIconHtml(item) {
+  if(item.costumeId)return `<span class="shop-icon">${costumeIconHtml(item.costumeId)}</span>`;
   if (item.command.startsWith('col:')) {
     const art = item.artIcon ? l2IconHtml(item.artIcon) : auctionArt(item.artItem ? {kind:'equipment',artItem:item.artItem} : item.artPotion ? {kind:'potion',artPotion:item.artPotion} : item.artMaterial ? {kind:'material',materialKey:item.artMaterial} : {kind:'material',materialKey:'skill_scroll'});
     return `<span class="shop-icon ${item.shadow ? 'is-shadow-item' : ''}">${art}</span>`;
@@ -106,6 +110,8 @@ export function itemIconHtml(item) {
 }
 
 const REASONS = {
+  costume_gender:'Этот костюм предназначен для другого пола персонажа.',
+  inventory_full:'Освободи место в инвентаре. Монеты не списаны.',
   not_enough_coins: 'Недостаточно CoL.',
   balance_limit: 'Достигнут предел баланса адены.',
   inventory_missing: 'Инвентарь персонажа недоступен.',
@@ -135,6 +141,7 @@ function remain(until) {
 }
 
 export async function openShopGoods({ api, renderState, haptic, statusElement, initialCategory = 'all' }) {
+  installAvatarCostumeMotion();
   let state = await api('/api/shop');
   let category = initialCategory;
   let pending = false;
@@ -215,7 +222,7 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
       name: item.name,
       note: item.onCooldown ? `Доступно через: ${remain(item.resetAt)}` : item.categoryLabel,
       description: item.message || '',
-      extraHtml: item.stats?.length ? `<ul class="shop-item-stats">${item.stats.map(text=>`<li>${escapeHtml(text)}</li>`).join('')}</ul>` : '',
+      extraHtml: item.costumeId ? costumePreviewHtml(item.costumeId,state.player) : item.stats?.length ? `<ul class="shop-item-stats">${item.stats.map(text=>`<li>${escapeHtml(text)}</li>`).join('')}</ul>` : '',
       requires: [{ iconHtml: item.currency === 'luckCoins' ? luckCoinHtml(24) : materialIcon('gold'), label: item.currency === 'luckCoins' ? 'CoL' : 'Адена', need: item.cost, have: Number(item.currency === 'luckCoins' ? state.luckCoins : state.gold) || 0 }],
       canBuy: !pending && item.available,
     }));

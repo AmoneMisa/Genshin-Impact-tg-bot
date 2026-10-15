@@ -1,0 +1,933 @@
+[
+  {
+    "costumeId": "crimson-dawn",
+    "name": "Багряный рассвет",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/crimson-dawn-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/crimson-dawn.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume crimson-dawn. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-373a56f5-f093-4628-aa67-b0330ee17bff.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "amethyst-envoy",
+    "name": "Аметистовый посланник",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/amethyst-envoy-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/amethyst-envoy.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume amethyst-envoy. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-fe30ac52-f6c9-48e5-a084-29f5a36c04ce.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "azure-benediction",
+    "name": "Лазурное благословение",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/azure-benediction-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/azure-benediction-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume azure-benediction. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-db21f47a-b93a-4cd9-a67e-5c781fdd0221.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/azure-benediction.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-b45c3475-c923-463c-bb8a-c42f27b4d01e.png"
+      }
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY the supplied square SHOP ICON. Remove the entire pale human chest and rounded shoulder stubs above the blue neckline, behind the gold shoulder ornaments. The neckline and ornaments must terminate against the existing dark violet background, not on skin. The final icon must contain only the EMPTY COSTUME, with absolutely no person or mannequin parts. Preserve every other garment pixel, silhouette, embroidery, gems, fabric colours, opaque dark background, icon lighting and square composition as closely as possible. Do not add objects or text.",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "dawn-emissary",
+    "name": "Посланник зари",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/dawn-emissary-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/dawn-emissary.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume dawn-emissary. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-9742780f-25be-4564-a439-6bbea7d736ee.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "gilded-dragon-mantle",
+    "name": "Мантия золотого дракона",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/gilded-dragon-mantle.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume gilded-dragon-mantle. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d1d4b2ac-9a94-4b06-836f-df77130d75c3.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "malachite-warden",
+    "name": "Хранитель малахита",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/malachite-warden-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/malachite-warden.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume malachite-warden. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d081b19c-0501-442a-8ad2-2a68473f5c36.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "veil-of-constellations",
+    "name": "Вуаль созвездий",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/veil-of-constellations-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/veil-of-constellations.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume veil-of-constellations. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-8e9f2628-5363-45e7-98b0-651eb267c6e4.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "violet-courtier",
+    "name": "Кавалер сумерек",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/violet-courtier-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/violet-courtier.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume violet-courtier. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-002b33af-a730-4438-a13e-6927d0074c99.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "starfrost-court",
+    "name": "Иней звёздного двора",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/starfrost-court-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/starfrost-court.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume starfrost-court. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-85950e7e-514f-43a4-99f6-5060bafb9545.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "opal-tide",
+    "name": "Опаловый прилив",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/opal-tide-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/opal-tide-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume opal-tide. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-f6090b27-fb48-4c88-9708-a4549beff491.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/opal-tide.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-6015a67b-0548-4edf-87e8-d29394b84749.png"
+      }
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY the supplied square SHOP ICON. Remove BOTH rounded pale-pink human shoulder caps behind the pink shoulder ruffles, and any fake chest/shoulder mannequin above the bodice. The neckline and gold neck chain must float against the existing dark violet backdrop. The final icon must contain only the EMPTY COSTUME, with absolutely no person or mannequin parts. Preserve every other garment pixel, silhouette, embroidery, gems, fabric colours, opaque dark background, icon lighting and square composition as closely as possible. Do not add objects or text.",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "dusk-velvet-ball",
+    "name": "Вельвет сумеречного бала",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/dusk-velvet-ball-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/dusk-velvet-ball.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume dusk-velvet-ball. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-69a86c8e-faa2-4d5c-993a-52da3f74c73d.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "celestial-cartographer",
+    "name": "Звёздный картограф",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/celestial-cartographer-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/celestial-cartographer-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume celestial-cartographer. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-b21e3603-5414-4ad7-93e6-9bb9c0f68e14.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/celestial-cartographer.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e4ab0d59-f6fa-4502-9521-38b5b0e68d32.png"
+      }
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY the supplied square SHOP ICON. Remove the pale human upper-arm remnants visible in the triangular shoulder openings below the blue cape, particularly the large pale patch on the left. Replace them with the existing brown background. The final icon must contain only the EMPTY COSTUME, with absolutely no person or mannequin parts. Preserve every other garment pixel, silhouette, embroidery, gems, fabric colours, opaque dark background, icon lighting and square composition as closely as possible. Do not add objects or text.",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "ivory-vows",
+    "name": "Обет белого золота",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/ivory-vows-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/ivory-vows.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume ivory-vows. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-20191f27-1491-4c46-99d1-67955c9af5e5.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "gilded-veil",
+    "name": "Вуаль золотого обета",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/gilded-veil-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/gilded-veil-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume gilded-veil. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-4ee3abac-9f12-49d2-a10a-a6d9d633cbe1.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/gilded-veil.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d28f496b-7fc7-4710-b462-83d1775c9114.png"
+      }
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY the supplied square SHOP ICON. Remove the shiny dark brown mannequin chest and BOTH glossy dark shoulder domes above the white corset. There must be no torso above the clothing edge; show the same existing dark violet background through all neck and shoulder openings. Keep the fine gold neck chain floating. The final icon must contain only the EMPTY COSTUME, with absolutely no person or mannequin parts. Preserve every other garment pixel, silhouette, embroidery, gems, fabric colours, opaque dark background, icon lighting and square composition as closely as possible. Do not add objects or text.",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "rose-etiquette",
+    "name": "Розовый этикет",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/rose-etiquette-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/rose-etiquette.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume rose-etiquette. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-0fa85c38-4d7c-4bbd-9c9e-290e173f20fe.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "nocturne-protocol",
+    "name": "Ночной протокол",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/nocturne-protocol-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/nocturne-protocol.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume nocturne-protocol. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-8d4e2380-204a-4afe-978a-6506fcb29ed5.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "coalwood-warden",
+    "name": "Страж угольного леса",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/coalwood-warden-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/coalwood-warden.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume coalwood-warden. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-b5f69534-ba7d-4181-9975-49031eb1f680.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "emerald-griffin",
+    "name": "Изумрудный грифон",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/emerald-griffin-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/emerald-griffin.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume emerald-griffin. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-c4710c83-e7ff-4051-8e54-68cc1d481bfd.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "triune-crown",
+    "name": "Триединый венец",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/triune-crown-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/triune-crown.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume triune-crown. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-06b0c621-a0b1-487b-ac56-ba1e458411d0.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "astral-crown-knight",
+    "name": "Рыцарь астральной короны",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/astral-crown-knight-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/astral-crown-knight.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume astral-crown-knight. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-753b1fe0-71f7-42b1-a541-4f40cc15794d.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "golden-phoenix",
+    "name": "Золотой феникс",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/golden-phoenix-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/golden-phoenix.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume golden-phoenix. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d7a51665-ce22-476f-85f6-f081533643c3.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "crimson-herald",
+    "name": "Багряный герольд",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/crimson-herald-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/crimson-herald.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume crimson-herald. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-8bc8ccde-6758-4208-bcf7-9f6ec71c6256.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "prismatic-archon",
+    "name": "Радужный архонт",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/prismatic-archon-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/prismatic-archon-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume prismatic-archon. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-17916f92-1fe3-4297-a9b8-d62ec69a4090.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/prismatic-archon.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-6827f6fa-4dd1-4947-b7ca-54b98aa01f8c.png"
+      }
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY the supplied square SHOP ICON. Remove the solid peach human upper-arm stubs inside BOTH open shoulder/sleeve areas. Keep the multicoloured translucent sleeve fabrics, but replace the human arms behind them with the existing brown background. The final icon must contain only the EMPTY COSTUME, with absolutely no person or mannequin parts. Preserve every other garment pixel, silhouette, embroidery, gems, fabric colours, opaque dark background, icon lighting and square composition as closely as possible. Do not add objects or text.",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "scarlet-comet",
+    "name": "Алый кометарий",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/scarlet-comet-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/scarlet-comet.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume scarlet-comet. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-421d6faf-f6b6-49d3-a18d-d69f50d003ea.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "prism-dragon",
+    "name": "Дракон цветного стекла",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/prism-dragon-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/prism-dragon.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume prism-dragon. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e6ee2ab1-418d-433a-a807-324b10eb4459.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "bloodfrost-rose",
+    "name": "Роза кровавого инея",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/bloodfrost-rose-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/bloodfrost-rose.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume bloodfrost-rose. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d8db8883-6733-4a79-9f0d-a7fb35244249.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "moon-velvet",
+    "name": "Лунный бархат",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/moon-velvet-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/moon-velvet.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume moon-velvet. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-24f6ebf8-84d8-470d-aac9-39b9fa6a2261.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "fuchsia-tempest",
+    "name": "Пурпурная гроза",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/fuchsia-tempest-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/fuchsia-tempest.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume fuchsia-tempest. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-ad736404-a6dc-4230-9d2a-f0f4664095d0.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "sandglass-dawn",
+    "name": "Песочные часы зари",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/sandglass-dawn-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/sandglass-dawn.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume sandglass-dawn. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-c3167923-136c-491c-9cb1-afd94417a272.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "starlit-reverie",
+    "name": "Звёздная грёза",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/starlit-reverie-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/starlit-reverie.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume starlit-reverie. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-4cf8d127-6923-4b77-94a4-44fd8ec99173.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "snow-seraph",
+    "name": "Снежный серафим",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/snow-seraph-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/snow-seraph.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume snow-seraph. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-0bcecdb1-9f64-4684-85ed-e6ab2e92e9a6.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "violet-astronomer",
+    "name": "Фиолетовая звёздочётка",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/violet-astronomer-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/violet-astronomer.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume violet-astronomer. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-4193fea1-b5c7-4d4e-833c-c94ecaa280bd.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "eclipse-mantle",
+    "name": "Мантия затмения",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/eclipse-mantle-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/eclipse-mantle.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume eclipse-mantle. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-07718818-ebe6-428e-870b-a2026353e608.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "amethyst-sovereign",
+    "name": "Император аметиста",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/amethyst-sovereign-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/amethyst-sovereign.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume amethyst-sovereign. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-f2431f20-c2c2-4709-b244-4a749039c80e.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "midnight-gold-envoy",
+    "name": "Посланник чёрного золота",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/midnight-gold-envoy-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/midnight-gold-envoy.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume midnight-gold-envoy. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-a09a7d6c-e1eb-43c2-9127-6db42bc2a2c0.png",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "violet-nightblade",
+    "name": "Клинок фиолетовой ночи",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/violet-nightblade-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/violet-nightblade-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume violet-nightblade. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-2526ac27-4cdb-4903-8893-8c84b8e663d0.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/violet-nightblade.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-f97e1e67-83db-433b-bcfc-71027c090d3f.png"
+      }
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY the supplied square SHOP ICON. Remove the pale human upper-arm patch beneath the LEFT shoulder armor and any other human skin/torso remnants above the purple breastplate. Show matching existing brown background through these gaps. The final icon must contain only the EMPTY COSTUME, with absolutely no person or mannequin parts. Preserve every other garment pixel, silhouette, embroidery, gems, fabric colours, opaque dark background, icon lighting and square composition as closely as possible. Do not add objects or text.",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "plum-dragon-queen",
+    "name": "Сливовая драконица",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/plum-dragon-queen-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/plum-dragon-queen-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume plum-dragon-queen. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-ea62f724-bb89-4b3e-88b0-01e55d3ff454.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/plum-dragon-queen.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-515aad48-030b-4ae7-aa1e-1b14b97ab537.png"
+      }
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY the supplied square SHOP ICON. Remove BOTH large pale human upper arms between the shoulder armor and empty forearm bracers, and remove the pale skin-like chest edges above the bodice. The spaces must show the existing brown background. Keep the detached empty bracers, shoulder armor and flowing cape. The final icon must contain only the EMPTY COSTUME, with absolutely no person or mannequin parts. Preserve every other garment pixel, silhouette, embroidery, gems, fabric colours, opaque dark background, icon lighting and square composition as closely as possible. Do not add objects or text.",
+    "review": "Individually inspected against its costume reference: distinct garment colours and silhouette, opaque dark brown/violet background, no face, text, weapon or unwanted human limbs."
+  },
+  {
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Ashen Dragon Mantle",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/ashen-dragon-mantle-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume ashen-dragon-mantle. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d49eb3c8-22e5-4532-95fd-77ba454226cf.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/ashen-dragon-mantle.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-8e2d7342-c692-4d2c-81f0-a898611a8586.png"
+      }
+    ],
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/ashen-dragon-mantle-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY this empty clothing shop icon. Remove the large pale skin/mannequin triangle inside the open neckline beneath the silver collar necklace, plus any flesh-coloured mannequin shoulder caps beside the collar. These gaps must show the SAME dark violet background behind the garment. Keep the silver collar jewelry floating attached to its clothing supports; keep all gray and silver fabric, scale bodice, shoulder armor, skirt panels, gems, lighting, silhouette and opaque square background unchanged. Do not replace skin with a white shirt, mannequin or chest panel. Only actual garment fabric and metal should remain; NO flesh, body, neck, wearer, text or new objects.",
+    "editReferences": [
+      "art-source/avatars/shop-icons/ashen-dragon-mantle.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "crimson-peacock",
+    "name": "Crimson Peacock",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/crimson-peacock-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/crimson-peacock.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume crimson-peacock. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-bbda2ca7-fe7a-43da-882c-b5284e7c3b2f.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/crimson-peacock-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "violet-dusk-prince",
+    "name": "Violet Dusk Prince",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/violet-dusk-prince-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/violet-dusk-prince.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume violet-dusk-prince. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-14117324-ba51-43fa-b5e2-305c3c3871ce.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/violet-dusk-prince-human-male-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "sapphire-diadem",
+    "name": "Sapphire Diadem",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/sapphire-diadem-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/sapphire-diadem-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume sapphire-diadem. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-b9ad423a-a285-4910-b4af-5c0f15500a23.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/sapphire-diadem.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-a97fb510-b567-4f7c-9398-2636f53ccda0.png"
+      }
+    ],
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/sapphire-diadem-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY this empty blue-and-white clothing shop icon. Remove BOTH small beige human/mannequin shoulder caps inside the open golden shoulder fittings. Fill those holes with the SAME dark violet background visible behind the costume, not skin, white cloth or a mannequin. Preserve the exact empty blue bodice, golden fittings, floating collar chain, white flowing panels, silhouette, lighting, opaque square background and all other details. No body, person, neck, skin, mannequin, text or new objects.",
+    "editReferences": [
+      "art-source/avatars/shop-icons/sapphire-diadem.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "void-pulse",
+    "name": "Void Pulse",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/void-pulse-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/void-pulse-v2.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume void-pulse. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-2591be82-c16b-4007-a676-f21e4421b88d.png",
+    "earlierVersions": [
+      {
+        "source": "art-source/avatars/shop-icons/void-pulse.png",
+        "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-feba3279-0752-42eb-b2d1-960850777edc.png"
+      }
+    ],
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/void-pulse-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "editPrompt": "Use case: precise-object-edit. Edit ONLY this empty violet-and-black clothing shop icon. Remove BOTH pale beige mannequin/human shoulder caps protruding inside the top shoulder armor. Those gaps must show the SAME dark brown background visible behind the costume. Keep all violet garment fabric, black-silver armor, empty sleeves and cuffs, gems, floating collar, flowing lower panels, silhouette and opaque square background unchanged. No skin, neck, body, mannequin, person, white filler, text or new objects.",
+    "editReferences": [
+      "art-source/avatars/shop-icons/void-pulse.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "saltwind-corsair",
+    "name": "Saltwind Corsair",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/saltwind-corsair-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/saltwind-corsair.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume saltwind-corsair. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-5ac66665-836a-4463-a79c-a0960c091e38.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/saltwind-corsair-human-male-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "quiet-rooftop",
+    "name": "Quiet Rooftop",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/quiet-rooftop-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/quiet-rooftop.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume quiet-rooftop. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. Keep the assassin hood: it is part of the empty coat. Its entire opening is dark background, no face, eyes, mask-wearer or head. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-2028dd55-7435-49f1-a0d3-3f155aeb6768.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/quiet-rooftop-human-male-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "cobblestone-sunday",
+    "name": "Cobblestone Sunday",
+    "gender": "female",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/cobblestone-sunday-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/cobblestone-sunday.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume cobblestone-sunday. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d142caab-de09-438d-9e85-6f4944613048.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/cobblestone-sunday-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "seabreeze-holiday",
+    "name": "Seabreeze Holiday",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/seabreeze-holiday-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/seabreeze-holiday.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume seabreeze-holiday. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-c1a35e10-24c9-496e-9cef-bbda2f4e5b23.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/seabreeze-holiday-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "cozy-reef",
+    "name": "Cozy Reef",
+    "gender": "male",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/cozy-reef-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/cozy-reef.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume cozy-reef. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. Preserve the animal-themed fabric hood (shark/cat/raccoon), ears or fins and attached cloth tail from the garment reference. These are EMPTY costume parts, not a living animal or a wearer. Hood opening and cuffs show dark background only. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e69bd61c-a39e-4f86-a2c6-abffc04f27e1.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/cozy-reef-human-male-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "hearthside-purr",
+    "name": "Hearthside Purr",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/hearthside-purr-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/hearthside-purr.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume hearthside-purr. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. Preserve the animal-themed fabric hood (shark/cat/raccoon), ears or fins and attached cloth tail from the garment reference. These are EMPTY costume parts, not a living animal or a wearer. Hood opening and cuffs show dark background only. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-bebe804b-696e-4598-9120-298c830901f0.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/hearthside-purr-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "moonlit-mischief",
+    "name": "Moonlit Mischief",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/moonlit-mischief-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/moonlit-mischief.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume moonlit-mischief. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. Preserve the animal-themed fabric hood (shark/cat/raccoon), ears or fins and attached cloth tail from the garment reference. These are EMPTY costume parts, not a living animal or a wearer. Hood opening and cuffs show dark background only. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-dcbba7a3-5c47-4c75-86ba-ddfc791baa12.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/moonlit-mischief-human-male-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "meadow-flutter",
+    "name": "Meadow Flutter",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/meadow-flutter-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/meadow-flutter.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume meadow-flutter. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. Keep the butterfly-pattern CLOTH cape panels attached to the empty dress. No anatomical feather wings and no person. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-6b152d2b-f1e2-433d-8bd4-137d410a4f2c.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/meadow-flutter-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "coral-bay-breeze",
+    "name": "Coral Bay Breeze",
+    "gender": "female",
+    "background": "violet",
+    "reference": "webapp/art/avatars/collections/v1/coral-bay-breeze-human-female-512.webp",
+    "source": "art-source/avatars/shop-icons/coral-bay-breeze.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume coral-bay-breeze. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark muted eggplant violet (#21132f) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. The subject is ONLY the opaque coral two-piece bikini with its small fabric bows, displayed as two clearly EMPTY clothing pieces in a compact flat-lay. No body-shaped flesh, breasts, mannequin or person. Preserve the separate top and bottoms, dark background visible between them. Do not invent a dress or armor. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-b93d12ec-02c3-4535-97c5-3c122617c9ac.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/coral-bay-breeze-human-female-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "high-tide-rider",
+    "name": "High Tide Rider",
+    "gender": "male",
+    "background": "brown",
+    "reference": "webapp/art/avatars/collections/v1/high-tide-rider-human-male-512.webp",
+    "source": "art-source/avatars/shop-icons/high-tide-rider.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop inventory icon for the CUSTOM costume high-tide-rider. Image 1 is the exact GARMENT reference, not a character identity reference. Image 2, when supplied, is STYLE reference ONLY for the same coherent icon collection; NEVER copy its red gown or colours. Repaint the SAME garment as an EMPTY clothing item arranged on an invisible mannequin. Preserve its exact colours, materials, distinctive collar/shoulder shapes, embroidered motifs, gems, bodice or jacket, belt and cape/ruffled skirt design. Show the torso and its distinctive flowing lower cloth/panels together, shortened vertically into an attractive compact square silhouette; the clothing fills 86% of the square. No person, head, face, skin, hair, hands, legs, visible mannequin, pedestal, weapon, staff, shield, hat, fan, bouquet or separate accessories. Polished hand-painted high fantasy item icon, refined fine edges, soft gold/ivory rim lighting, readable material folds, coherent simplified details readable at 64 pixels, slight three-quarter presentation. Fully opaque very dark chocolate brown (#251812) background with a faint central vignette, clean square corners. No border, ornate frame, text, letters, numbers, UI, logo or watermark. No scenery, particles or smoky effects. The subject is a unique custom cosmetic, not an original Lineage II equipment item. The subject is ONLY the navy swimming briefs with their narrow teal waistband, displayed as an EMPTY neatly arranged garment. No torso, legs, skin, mannequin or person. No long shorts or trousers. A compact simple item icon, dark background visible around it. IMPORTANT: no mannequin surfaces or skin-coloured filler anywhere. Neckline, chest cutouts, sleeve openings and hood openings must be completely empty and reveal the same dark background; only real garment material may appear. No neck stump, shoulders, chest skin, fingers or feet. Empty boots or sewn animal slipper feet are allowed only if integral to the reference outfit.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-64a97be0-0fde-4689-9ae7-814933f3c314.png",
+    "generationTool": "built-in imagegen",
+    "generationReferences": [
+      "webapp/art/avatars/collections/v1/high-tide-rider-human-male-512.webp",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "review": "Individually inspected against garment reference: correct custom costume palette and silhouette, opaque brown/violet background, no wearer, skin or mannequin fragments, no text or frame. Three revised ceremonial icons rechecked after removing shoulder/neckline filler."
+  },
+  {
+    "costumeId": "chrome-district",
+    "name": "Chrome District",
+    "gender": "female",
+    "background": "violet",
+    "reference": "art-source/avatars/collections/chrome-district-human-female.png",
+    "generationReferences": [
+      "art-source/avatars/collections/chrome-district-human-female.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/chrome-district.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Chrome District. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark violet background (#21132f) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. ",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-8efe91f3-eb32-415d-ab9e-17df72dcca33.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "obsidian-gloss",
+    "name": "Obsidian Gloss",
+    "gender": "female",
+    "background": "brown",
+    "reference": "art-source/avatars/collections/obsidian-gloss-human-female.png",
+    "generationReferences": [
+      "art-source/avatars/collections/obsidian-gloss-human-female.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/obsidian-gloss.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Obsidian Gloss. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark brown background (#251812) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. Only the closed glossy black high-neck jacket, matching trousers, low ankle boots and plum scarf from the reference. Non-sexual ordinary fashion presentation, no lingerie, harnesses, cutouts, skin or body contours filled with a mannequin.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-3e618c19-ac78-481c-9701-fa8bfd6aedf2.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "neon-afterglow",
+    "name": "Neon Afterglow",
+    "gender": "female",
+    "background": "brown",
+    "reference": "art-source/avatars/collections/neon-afterglow-human-female.png",
+    "generationReferences": [
+      "art-source/avatars/collections/neon-afterglow-human-female.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/neon-afterglow.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Neon Afterglow. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark brown background (#251812) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. ",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-9a36c691-1f23-4b0f-8b5a-30f631a8f45c.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "brass-meridian",
+    "name": "Brass Meridian",
+    "gender": "male",
+    "background": "violet",
+    "reference": "art-source/avatars/collections/brass-meridian-human-male.png",
+    "generationReferences": [
+      "art-source/avatars/collections/brass-meridian-human-male.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/brass-meridian.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Brass Meridian. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark violet background (#21132f) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. ",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-eccd4711-8eff-4cff-bd76-d79f0a14a6fc.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "off-duty-avenue",
+    "name": "Off-Duty Avenue",
+    "gender": "male",
+    "background": "violet",
+    "reference": "art-source/avatars/collections/off-duty-avenue-human-male.png",
+    "generationReferences": [
+      "art-source/avatars/collections/off-duty-avenue-human-male.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/off-duty-avenue.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Off-Duty Avenue. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark violet background (#21132f) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. Show exactly the plain ivory T-shirt with blue jeans and a black belt: no coat or armor and no person inside. Keep their ordinary modern shape, separate empty neck and cuffs, white sneakers optional below.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-3c2a62b7-c0d6-4f4f-aea4-23cbbafaa06d.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "midnight-formal",
+    "name": "Midnight Formal",
+    "gender": "male",
+    "background": "brown",
+    "reference": "art-source/avatars/collections/midnight-formal-human-male.png",
+    "generationReferences": [
+      "art-source/avatars/collections/midnight-formal-human-male.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/midnight-formal.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Midnight Formal. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark brown background (#251812) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. ",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-4e259ba9-07bd-494c-86aa-1975988380ed.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "last-bell-reaper",
+    "name": "Last Bell Reaper",
+    "gender": "male",
+    "background": "brown",
+    "reference": "art-source/avatars/collections/last-bell-reaper-human-male.png",
+    "generationReferences": [
+      "art-source/avatars/collections/last-bell-reaper-human-male.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/last-bell-reaper.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Last Bell Reaper. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark brown background (#251812) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. Keep the dark hood and tattered silver-gray robe hems. The bone-white theatrical SKULL MASK may remain inside the hood as an EMPTY mask item, no person or real skull; no scythe in this icon.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-affdd6a8-8455-4624-b83e-f7d408569e59.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "hollow-lantern-rider",
+    "name": "Hollow Lantern Rider",
+    "gender": "male",
+    "background": "brown",
+    "reference": "art-source/avatars/collections/hollow-lantern-rider-human-male-v2.png",
+    "generationReferences": [
+      "art-source/avatars/collections/hollow-lantern-rider-human-male-v2.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/hollow-lantern-rider.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Hollow Lantern Rider. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark brown background (#251812) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. Keep the empty black riding coat, burgundy-lined cape and riding boots. A small carved orange jack-o-lantern COSTUME HEADPIECE sits immediately above the collar as an empty wearable pumpkin mask, matching the actual pumpkin head in the costume reference. No human head, skin, neck stump, separate hand-held lantern or wearer.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-be5c784d-f58f-414d-a724-1071e6d43f0d.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  },
+  {
+    "costumeId": "moonveil-phantom",
+    "name": "Moonveil Phantom",
+    "gender": "female",
+    "background": "violet",
+    "reference": "art-source/avatars/collections/moonveil-phantom-human-female-v2.png",
+    "generationReferences": [
+      "art-source/avatars/collections/moonveil-phantom-human-female-v2.png",
+      "art-source/avatars/shop-icons/crimson-dawn.png"
+    ],
+    "generationTool": "built-in imagegen",
+    "source": "art-source/avatars/shop-icons/moonveil-phantom.png",
+    "prompt": "Use case: stylized-concept. Create ONE square 1:1 fantasy RPG shop item icon for the original custom costume Moonveil Phantom. Image 1 is the EXACT GARMENT reference, not a portrait or character reference. Image 2 is ONLY the established icon PAINTING STYLE reference; do NOT copy its red dress, ornament or color palette. Repaint the actual clothing from image 1 as an entirely EMPTY garment set floating without a wearer. Preserve the actual colors, materials, practical construction, hood/collar, coat or skirt panels and distinctive costume details. Compact centered square composition, the garment occupies about 85 percent of the square, refined hand-painted RPG icon finish, simplified readable detail at 64 pixels, clean silhouette and soft ivory rim lighting. Fully opaque very dark violet background (#21132f) with faint central vignette and square corners. No person, face, human skin, hair, fingers, limbs or visible mannequin anywhere. Neckline, hood and cuffs must be EMPTY DARK HOLES showing the background, never pale skin-shaped filler or a mannequin. Only real garment surfaces, seams, metal fittings and fabric. No weapons or unrelated objects, no text, logo, lettering, frame, border, scenery, smoke or particles. This is custom cosmetic art, not an original Lineage II item icon. Keep the ragged OPEN hood, layered pearl-gray and icy ivory robe, long shredded sleeve and skirt strips, and luminous cyan-white torn fabric edges. Empty dark hood with NO face, hair, person or mannequin. Absolutely no cartoon bedsheet ghost or two eye holes in a sheet.",
+    "status": "reviewed",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-080149f2-b952-4a04-9214-bda78da4bd36.png",
+    "review": "Individually inspected against the selected garment reference: correct palette and construction, opaque dark brown/violet background, empty neck/hood/cuffs, no skin, mannequin, text or frame. Pumpkin headpiece and ragged luminous ghost follow the user correction."
+  }
+]

@@ -2,8 +2,12 @@ import { ADENA_OFFER } from '../template/adenaOffer.js';
 import shopTemplate from '../template/shopTemplate.js';
 import shopSellItem from '../functions/game/shop/shopSellItem.js';
 import {getLuckShopState, buyLuckItem} from './luck.js';
+import {COSTUME_CATALOG} from '../template/costumeCatalog.js';
+import {buyCostume,costumePlayer} from './costumes.js';
+import {hasInventoryRoom} from '../functions/game/builds/palaceCapacity.js';
 
 const CATEGORY_LABELS = {
+  costumes: 'Костюмы',
   currency: 'Адена за CoL',
   soul: 'Кристаллы души 0–17',
   boss: 'Для босса',
@@ -60,7 +64,14 @@ export function getShopState(session, now = Date.now()) {
       canAfford:item.affordable, available:item.affordable && !item.full && !item.locked,
       onCooldown:false, resetAt:0, message:[item.subtitle,item.description].filter(Boolean).join(' ')});
   }
+  const player=costumePlayer(session,now);
+  for(const c of COSTUME_CATALOG.filter(c=>c.gender===player.gender))items.push({
+    id:'costume:'+c.id,command:'costume:'+c.id,costumeId:c.id,costumeGender:c.gender,name:c.name,
+    category:'costumes',categoryLabel:'Костюмы',currency:'luckCoins',cost:c.cost,
+    canAfford:coins>=c.cost,available:coins>=c.cost&&hasInventoryRoom(session),onCooldown:false,resetAt:0,
+    message:'Постоянный предмет. Надевается в слот «Костюм». Можно продать на аукционе или отправить почтой. Без бонусов к характеристикам.'});
   return {
+    player,
     gold,
     luckCoins: coins,
     categories: Object.entries(CATEGORY_LABELS).map(([id, title]) => ({ id, title })),
@@ -69,6 +80,10 @@ export function getShopState(session, now = Date.now()) {
 }
 
 export async function buyShopItem(session, command, now = Date.now()) {
+  if(typeof command==='string'&&command.startsWith('costume:')){
+    const result=buyCostume(session,command.slice(8),now);
+    return {...result,action:'buy',shop:getShopState(session,now)};
+  }
   if (typeof command === 'string' && command.startsWith('col:')) {
     const result = buyLuckItem(session, command.slice(4), now);
     return {...result, action:'buy', item:result.item && {...result.item,name:result.item.title},

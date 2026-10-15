@@ -1,0 +1,4002 @@
+{
+  "chrome-district-human-female": {
+    "coordinates": [
+      42,
+      65,
+      21,
+      32,
+      47,
+      72,
+      49,
+      36,
+      45,
+      87,
+      64,
+      91,
+      42,
+      36,
+      64,
+      35
+    ],
+    "eyePixels": [
+      [
+        228,
+        104
+      ],
+      [
+        249,
+        97
+      ]
+    ],
+    "props": [
+      [
+        68,
+        39,
+        74,
+        44
+      ]
+    ],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.39,
+        0.16,
+        0.025,
+        0.045,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.64,
+        0.35,
+        0.022,
+        0.035,
+        1.2
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "chrome-district-elf-female": {
+    "coordinates": [
+      41,
+      65,
+      21,
+      31,
+      48,
+      72,
+      51,
+      36,
+      45,
+      87,
+      64,
+      91,
+      40,
+      36,
+      64,
+      35
+    ],
+    "eyePixels": [
+      [
+        238,
+        105
+      ],
+      [
+        257,
+        100
+      ]
+    ],
+    "props": [
+      [
+        68,
+        40,
+        75,
+        46
+      ]
+    ],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.4,
+        0.17,
+        0.025,
+        0.05,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.64,
+        0.35,
+        0.022,
+        0.035,
+        1.2
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "chrome-district-darkElf-female": {
+    "coordinates": [
+      40,
+      64,
+      21,
+      31,
+      48,
+      72,
+      50,
+      36,
+      45,
+      87,
+      63,
+      91,
+      40,
+      36,
+      64,
+      35
+    ],
+    "eyePixels": [
+      [
+        226,
+        101
+      ],
+      [
+        246,
+        93
+      ]
+    ],
+    "props": [
+      [
+        68,
+        40,
+        75,
+        46
+      ]
+    ],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.39,
+        0.16,
+        0.028,
+        0.05,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.64,
+        0.35,
+        0.022,
+        0.035,
+        1.2
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "chrome-district-orc-female": {
+    "coordinates": [
+      40,
+      65,
+      21,
+      31,
+      48,
+      75,
+      51,
+      36,
+      45,
+      87,
+      66,
+      91,
+      40,
+      36,
+      65,
+      35
+    ],
+    "eyePixels": [
+      [
+        227,
+        98
+      ],
+      [
+        246,
+        91
+      ]
+    ],
+    "props": [
+      [
+        69,
+        40,
+        76,
+        46
+      ]
+    ],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.63,
+        0.25,
+        0.028,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.65,
+        0.35,
+        0.022,
+        0.035,
+        1.2
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "chrome-district-dwarf-female": {
+    "coordinates": [
+      38,
+      65,
+      28,
+      28,
+      53,
+      76,
+      57,
+      44,
+      48,
+      86,
+      66,
+      87,
+      40,
+      43,
+      67,
+      43
+    ],
+    "eyePixels": [
+      [
+        229,
+        143
+      ],
+      [
+        257,
+        131
+      ]
+    ],
+    "props": [
+      [
+        67,
+        46,
+        76,
+        52
+      ]
+    ],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.64,
+        0.35,
+        0.032,
+        0.075,
+        1.3
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.67,
+        0.43,
+        0.022,
+        0.035,
+        1.2
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "eyeRadiusY": 0.0065
+  },
+  "chrome-district-kamael-female": {
+    "coordinates": [
+      37,
+      59,
+      22,
+      30,
+      49,
+      70,
+      51,
+      37,
+      43,
+      88,
+      61,
+      91,
+      24,
+      42,
+      64,
+      35
+    ],
+    "eyePixels": [
+      [
+        219,
+        116
+      ],
+      [
+        238,
+        107
+      ]
+    ],
+    "props": [
+      [
+        64,
+        41,
+        72,
+        46
+      ]
+    ],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.59,
+        0.24,
+        0.025,
+        0.065,
+        1.3
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.63,
+        0.35,
+        0.02,
+        0.035,
+        1.1
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "wing": {
+      "pivot": [
+        0.6,
+        0.22
+      ],
+      "outline": [
+        [
+          0.65,
+          0.13
+        ],
+        [
+          0.81,
+          0.16
+        ],
+        [
+          0.99,
+          0.42
+        ],
+        [
+          0.97,
+          0.64
+        ],
+        [
+          0.85,
+          0.55
+        ],
+        [
+          0.68,
+          0.28
+        ],
+        [
+          0.6,
+          0.22
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.9,
+          0.41
+        ],
+        [
+          0.92,
+          0.45
+        ]
+      ],
+      "foregroundAreas": [
+        [
+          0.64,
+          0.41,
+          0.72,
+          0.46,
+          0.008
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.23,
+        0.12,
+        0.43,
+        0.24
+      ],
+      "clothRegions": [
+        [
+          0.25,
+          0.4,
+          0.025,
+          0.06,
+          1.3
+        ],
+        [
+          0.24,
+          0.5,
+          0.025,
+          0.06,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.25,
+          0.4
+        ],
+        [
+          0.24,
+          0.5
+        ]
+      ],
+      "clothStart": 0.28
+    }
+  },
+  "obsidian-gloss-human-female": {
+    "coordinates": [
+      39,
+      61,
+      21,
+      32,
+      48,
+      73,
+      50,
+      36,
+      49,
+      87,
+      69,
+      86,
+      64,
+      27,
+      64,
+      27
+    ],
+    "eyePixels": [
+      [
+        227,
+        107
+      ],
+      [
+        249,
+        100
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.39,
+        0.16,
+        0.027,
+        0.045,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.65,
+        0.28,
+        0.035,
+        0.045,
+        1.2
+      ]
+    ],
+    "clothStart": 0.18,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "obsidian-gloss-elf-female": {
+    "coordinates": [
+      39,
+      61,
+      21,
+      32,
+      48,
+      73,
+      50,
+      36,
+      49,
+      87,
+      70,
+      86,
+      64,
+      27,
+      64,
+      27
+    ],
+    "eyePixels": [
+      [
+        227,
+        102
+      ],
+      [
+        247,
+        96
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.62,
+        0.24,
+        0.026,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.66,
+        0.28,
+        0.035,
+        0.045,
+        1.2
+      ]
+    ],
+    "clothStart": 0.18,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "obsidian-gloss-darkElf-female": {
+    "coordinates": [
+      39,
+      62,
+      22,
+      32,
+      48,
+      73,
+      50,
+      37,
+      49,
+      88,
+      70,
+      87,
+      64,
+      27,
+      64,
+      27
+    ],
+    "eyePixels": [
+      [
+        230,
+        112
+      ],
+      [
+        250,
+        101
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.39,
+        0.18,
+        0.026,
+        0.045,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.67,
+        0.29,
+        0.035,
+        0.045,
+        1.2
+      ]
+    ],
+    "clothStart": 0.18,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "obsidian-gloss-orc-female": {
+    "coordinates": [
+      39,
+      63,
+      21,
+      32,
+      48,
+      74,
+      50,
+      37,
+      49,
+      88,
+      71,
+      87,
+      64,
+      27,
+      64,
+      27
+    ],
+    "eyePixels": [
+      [
+        230,
+        98
+      ],
+      [
+        250,
+        91
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.62,
+        0.24,
+        0.028,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.67,
+        0.29,
+        0.035,
+        0.045,
+        1.2
+      ]
+    ],
+    "clothStart": 0.18,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "obsidian-gloss-dwarf-female": {
+    "coordinates": [
+      37,
+      64,
+      27,
+      29,
+      53,
+      75,
+      55,
+      44,
+      47,
+      85,
+      70,
+      84,
+      69,
+      34,
+      69,
+      34
+    ],
+    "eyePixels": [
+      [
+        227,
+        135
+      ],
+      [
+        257,
+        126
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.66,
+        0.34,
+        0.032,
+        0.075,
+        1.3
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.7,
+        0.35,
+        0.032,
+        0.04,
+        1.2
+      ]
+    ],
+    "clothStart": 0.22,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "eyeRadiusY": 0.0065
+  },
+  "obsidian-gloss-kamael-female": {
+    "coordinates": [
+      37,
+      55,
+      22,
+      30,
+      49,
+      67,
+      50,
+      36,
+      44,
+      88,
+      63,
+      87,
+      25,
+      40,
+      60,
+      27
+    ],
+    "eyePixels": [
+      [
+        213,
+        116
+      ],
+      [
+        232,
+        109
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.59,
+        0.23,
+        0.024,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.59,
+        0.27,
+        0.025,
+        0.04,
+        1.1
+      ]
+    ],
+    "clothStart": 0.18,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "wing": {
+      "pivot": [
+        0.59,
+        0.22
+      ],
+      "outline": [
+        [
+          0.64,
+          0.13
+        ],
+        [
+          0.83,
+          0.17
+        ],
+        [
+          0.99,
+          0.44
+        ],
+        [
+          0.97,
+          0.74
+        ],
+        [
+          0.84,
+          0.64
+        ],
+        [
+          0.67,
+          0.3
+        ],
+        [
+          0.59,
+          0.22
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.87,
+          0.43
+        ],
+        [
+          0.9,
+          0.49
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.23,
+        0.13,
+        0.43,
+        0.25
+      ],
+      "clothRegions": [
+        [
+          0.25,
+          0.38,
+          0.022,
+          0.055,
+          1.3
+        ],
+        [
+          0.255,
+          0.46,
+          0.022,
+          0.055,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.25,
+          0.38
+        ],
+        [
+          0.255,
+          0.46
+        ]
+      ],
+      "clothStart": 0.27
+    }
+  },
+  "neon-afterglow-human-female": {
+    "coordinates": [
+      41,
+      64,
+      22,
+      29,
+      45,
+      76,
+      48,
+      33,
+      43,
+      84,
+      65,
+      89,
+      29,
+      55,
+      81,
+      55
+    ],
+    "eyePixels": [
+      [
+        225,
+        112
+      ],
+      [
+        245,
+        107
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.67,
+        0.27,
+        0.035,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.22,
+        0.55,
+        0.02,
+        0.055,
+        1.2
+      ],
+      [
+        0.83,
+        0.57,
+        0.02,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "neon-afterglow-elf-female": {
+    "coordinates": [
+      41,
+      64,
+      22,
+      29,
+      45,
+      76,
+      49,
+      33,
+      43,
+      84,
+      65,
+      89,
+      25,
+      54,
+      84,
+      55
+    ],
+    "eyePixels": [
+      [
+        225,
+        112
+      ],
+      [
+        244,
+        106
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.68,
+        0.27,
+        0.035,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.21,
+        0.54,
+        0.025,
+        0.055,
+        1.3
+      ],
+      [
+        0.84,
+        0.56,
+        0.02,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "neon-afterglow-darkElf-female": {
+    "coordinates": [
+      41,
+      64,
+      22,
+      29,
+      47,
+      77,
+      50,
+      34,
+      44,
+      86,
+      68,
+      91,
+      23,
+      57,
+      85,
+      58
+    ],
+    "eyePixels": [
+      [
+        228,
+        112
+      ],
+      [
+        248,
+        104
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.69,
+        0.28,
+        0.038,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.2,
+        0.57,
+        0.02,
+        0.05,
+        1.3
+      ],
+      [
+        0.86,
+        0.59,
+        0.02,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "neon-afterglow-orc-female": {
+    "coordinates": [
+      40,
+      65,
+      22,
+      29,
+      47,
+      79,
+      49,
+      34,
+      44,
+      85,
+      69,
+      91,
+      21,
+      55,
+      87,
+      55
+    ],
+    "eyePixels": [
+      [
+        226,
+        111
+      ],
+      [
+        245,
+        105
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.68,
+        0.28,
+        0.035,
+        0.07,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.2,
+        0.55,
+        0.02,
+        0.055,
+        1.3
+      ],
+      [
+        0.88,
+        0.56,
+        0.02,
+        0.055,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "neon-afterglow-dwarf-female": {
+    "coordinates": [
+      40,
+      67,
+      30,
+      29,
+      53,
+      79,
+      56,
+      40,
+      44,
+      85,
+      63,
+      90,
+      19,
+      63,
+      85,
+      65
+    ],
+    "eyePixels": [
+      [
+        230,
+        137
+      ],
+      [
+        258,
+        126
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.66,
+        0.35,
+        0.03,
+        0.07,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.18,
+        0.63,
+        0.022,
+        0.055,
+        1.3
+      ],
+      [
+        0.86,
+        0.64,
+        0.02,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "eyeRadiusY": 0.0065
+  },
+  "neon-afterglow-kamael-female": {
+    "coordinates": [
+      39,
+      59,
+      22,
+      32,
+      46,
+      73,
+      48,
+      34,
+      43,
+      85,
+      63,
+      90,
+      23,
+      53,
+      81,
+      54
+    ],
+    "eyePixels": [
+      [
+        218,
+        117
+      ],
+      [
+        237,
+        112
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.62,
+        0.26,
+        0.035,
+        0.07,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.22,
+        0.53,
+        0.02,
+        0.055,
+        1.3
+      ],
+      [
+        0.81,
+        0.55,
+        0.02,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "wing": {
+      "pivot": [
+        0.6,
+        0.22
+      ],
+      "outline": [
+        [
+          0.64,
+          0.12
+        ],
+        [
+          0.8,
+          0.18
+        ],
+        [
+          0.94,
+          0.39
+        ],
+        [
+          0.95,
+          0.64
+        ],
+        [
+          0.84,
+          0.55
+        ],
+        [
+          0.65,
+          0.29
+        ],
+        [
+          0.6,
+          0.22
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.86,
+          0.41
+        ],
+        [
+          0.89,
+          0.46
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.23,
+        0.14,
+        0.4,
+        0.26
+      ],
+      "clothRegions": [
+        [
+          0.25,
+          0.36,
+          0.02,
+          0.055,
+          1.3
+        ],
+        [
+          0.25,
+          0.43,
+          0.02,
+          0.04,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.25,
+          0.36
+        ],
+        [
+          0.25,
+          0.43
+        ]
+      ],
+      "clothStart": 0.27
+    }
+  },
+  "brass-meridian-human-male": {
+    "coordinates": [
+      36,
+      59,
+      20,
+      36,
+      43,
+      70,
+      48,
+      37,
+      33,
+      90,
+      63,
+      88,
+      25,
+      63,
+      77,
+      64
+    ],
+    "eyePixels": [
+      [
+        255,
+        94
+      ],
+      [
+        274,
+        101
+      ]
+    ],
+    "props": [
+      [
+        31,
+        36,
+        41,
+        47
+      ],
+      [
+        42,
+        6,
+        60,
+        14
+      ]
+    ],
+    "hair": "n",
+    "held": "L",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.25,
+        0.63,
+        0.035,
+        0.06,
+        1.3
+      ],
+      [
+        0.77,
+        0.64,
+        0.035,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "brass-meridian-elf-male": {
+    "coordinates": [
+      36,
+      59,
+      20,
+      37,
+      43,
+      70,
+      48,
+      37,
+      33,
+      90,
+      64,
+      88,
+      25,
+      63,
+      77,
+      64
+    ],
+    "eyePixels": [
+      [
+        258,
+        98
+      ],
+      [
+        275,
+        104
+      ]
+    ],
+    "props": [
+      [
+        31,
+        36,
+        42,
+        47
+      ],
+      [
+        42,
+        6,
+        60,
+        14
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.29,
+        0.31,
+        0.03,
+        0.065,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.25,
+        0.63,
+        0.035,
+        0.06,
+        1.3
+      ],
+      [
+        0.77,
+        0.64,
+        0.035,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "brass-meridian-darkElf-male": {
+    "coordinates": [
+      36,
+      59,
+      20,
+      37,
+      43,
+      72,
+      49,
+      37,
+      33,
+      90,
+      64,
+      88,
+      25,
+      63,
+      77,
+      64
+    ],
+    "eyePixels": [
+      [
+        268,
+        99
+      ],
+      [
+        282,
+        105
+      ]
+    ],
+    "props": [
+      [
+        31,
+        36,
+        42,
+        47
+      ],
+      [
+        42,
+        6,
+        60,
+        14
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.31,
+        0.3,
+        0.03,
+        0.06,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.25,
+        0.63,
+        0.035,
+        0.06,
+        1.3
+      ],
+      [
+        0.77,
+        0.64,
+        0.035,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "brass-meridian-orc-male": {
+    "coordinates": [
+      34,
+      63,
+      20,
+      38,
+      43,
+      74,
+      49,
+      37,
+      33,
+      90,
+      66,
+      88,
+      25,
+      63,
+      81,
+      64
+    ],
+    "eyePixels": [
+      [
+        267,
+        98
+      ],
+      [
+        286,
+        102
+      ]
+    ],
+    "props": [
+      [
+        32,
+        36,
+        43,
+        48
+      ],
+      [
+        42,
+        6,
+        63,
+        14
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.35,
+        0.22,
+        0.025,
+        0.045,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.25,
+        0.63,
+        0.035,
+        0.06,
+        1.3
+      ],
+      [
+        0.81,
+        0.64,
+        0.035,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "brass-meridian-dwarf-male": {
+    "coordinates": [
+      31,
+      70,
+      28,
+      35,
+      54,
+      82,
+      59,
+      50,
+      36,
+      88,
+      71,
+      87,
+      24,
+      74,
+      84,
+      75
+    ],
+    "eyePixels": [
+      [
+        272,
+        152
+      ],
+      [
+        298,
+        155
+      ]
+    ],
+    "props": [
+      [
+        32,
+        46,
+        46,
+        59
+      ],
+      [
+        40,
+        10,
+        65,
+        20
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.54,
+        0.33,
+        0.05,
+        0.045,
+        0.8
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.24,
+        0.74,
+        0.035,
+        0.05,
+        1.3
+      ],
+      [
+        0.84,
+        0.75,
+        0.025,
+        0.04,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "brass-meridian-kamael-male": {
+    "coordinates": [
+      35,
+      60,
+      20,
+      40,
+      43,
+      71,
+      49,
+      37,
+      33,
+      90,
+      65,
+      89,
+      24,
+      62,
+      76,
+      64
+    ],
+    "eyePixels": [
+      [
+        271,
+        101
+      ],
+      [
+        286,
+        109
+      ]
+    ],
+    "props": [
+      [
+        34,
+        36,
+        45,
+        47
+      ],
+      [
+        44,
+        6,
+        62,
+        14
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.35,
+        0.18,
+        0.025,
+        0.04,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.24,
+        0.62,
+        0.03,
+        0.06,
+        1.3
+      ],
+      [
+        0.76,
+        0.64,
+        0.03,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "wing": {
+      "pivot": [
+        0.63,
+        0.23
+      ],
+      "outline": [
+        [
+          0.68,
+          0.14
+        ],
+        [
+          0.83,
+          0.2
+        ],
+        [
+          0.94,
+          0.48
+        ],
+        [
+          0.92,
+          0.76
+        ],
+        [
+          0.8,
+          0.62
+        ],
+        [
+          0.65,
+          0.3
+        ],
+        [
+          0.63,
+          0.23
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.88,
+          0.46
+        ],
+        [
+          0.88,
+          0.51
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.17,
+        0.14,
+        0.39,
+        0.27
+      ],
+      "clothRegions": [
+        [
+          0.19,
+          0.47,
+          0.024,
+          0.065,
+          1.3
+        ],
+        [
+          0.2,
+          0.55,
+          0.024,
+          0.05,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.19,
+          0.47
+        ],
+        [
+          0.2,
+          0.55
+        ]
+      ],
+      "clothStart": 0.29
+    }
+  },
+  "off-duty-avenue-human-male": {
+    "coordinates": [
+      35,
+      58,
+      20,
+      34,
+      46,
+      65,
+      48,
+      37,
+      33,
+      89,
+      61,
+      86,
+      42,
+      35,
+      60,
+      35
+    ],
+    "eyePixels": [
+      [
+        256,
+        92
+      ],
+      [
+        274,
+        97
+      ]
+    ],
+    "props": [],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.42,
+        0.35,
+        0.025,
+        0.02,
+        0.7
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "off-duty-avenue-elf-male": {
+    "coordinates": [
+      35,
+      58,
+      20,
+      35,
+      47,
+      68,
+      49,
+      37,
+      34,
+      90,
+      62,
+      87,
+      42,
+      35,
+      60,
+      35
+    ],
+    "eyePixels": [
+      [
+        261,
+        94
+      ],
+      [
+        281,
+        100
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.3,
+        0.32,
+        0.026,
+        0.08,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.42,
+        0.35,
+        0.025,
+        0.02,
+        0.7
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "off-duty-avenue-darkElf-male": {
+    "coordinates": [
+      35,
+      58,
+      20,
+      35,
+      47,
+      68,
+      49,
+      37,
+      34,
+      90,
+      62,
+      87,
+      42,
+      35,
+      60,
+      35
+    ],
+    "eyePixels": [
+      [
+        266,
+        97
+      ],
+      [
+        282,
+        102
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.37,
+        0.18,
+        0.025,
+        0.04,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.42,
+        0.35,
+        0.025,
+        0.02,
+        0.7
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "off-duty-avenue-orc-male": {
+    "coordinates": [
+      33,
+      61,
+      20,
+      32,
+      47,
+      73,
+      48,
+      37,
+      33,
+      91,
+      64,
+      89,
+      40,
+      35,
+      63,
+      35
+    ],
+    "eyePixels": [
+      [
+        271,
+        82
+      ],
+      [
+        289,
+        88
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.36,
+        0.29,
+        0.025,
+        0.04,
+        1
+      ],
+      [
+        0.61,
+        0.3,
+        0.024,
+        0.04,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.42,
+        0.35,
+        0.025,
+        0.02,
+        0.7
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "off-duty-avenue-dwarf-male": {
+    "coordinates": [
+      30,
+      67,
+      31,
+      29,
+      56,
+      78,
+      59,
+      48,
+      35,
+      88,
+      71,
+      87,
+      39,
+      47,
+      65,
+      47
+    ],
+    "eyePixels": [
+      [
+        272,
+        148
+      ],
+      [
+        299,
+        150
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.56,
+        0.34,
+        0.05,
+        0.045,
+        0.8
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.42,
+        0.46,
+        0.025,
+        0.02,
+        0.7
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "off-duty-avenue-kamael-male": {
+    "coordinates": [
+      33,
+      58,
+      20,
+      35,
+      46,
+      66,
+      48,
+      37,
+      34,
+      89,
+      62,
+      86,
+      41,
+      35,
+      60,
+      35
+    ],
+    "eyePixels": [
+      [
+        262,
+        102
+      ],
+      [
+        281,
+        106
+      ]
+    ],
+    "props": [],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.42,
+        0.35,
+        0.025,
+        0.02,
+        0.7
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "wing": {
+      "pivot": [
+        0.61,
+        0.23
+      ],
+      "outline": [
+        [
+          0.66,
+          0.14
+        ],
+        [
+          0.81,
+          0.19
+        ],
+        [
+          0.94,
+          0.48
+        ],
+        [
+          0.94,
+          0.76
+        ],
+        [
+          0.8,
+          0.62
+        ],
+        [
+          0.64,
+          0.3
+        ],
+        [
+          0.61,
+          0.23
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.87,
+          0.45
+        ],
+        [
+          0.9,
+          0.5
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.23,
+        0.12,
+        0.41,
+        0.26
+      ],
+      "clothRegions": [
+        [
+          0.25,
+          0.4,
+          0.024,
+          0.055,
+          1.3
+        ],
+        [
+          0.28,
+          0.47,
+          0.02,
+          0.04,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.25,
+          0.4
+        ],
+        [
+          0.28,
+          0.47
+        ]
+      ],
+      "clothStart": 0.29
+    }
+  },
+  "midnight-formal-human-male": {
+    "coordinates": [
+      35,
+      58,
+      20,
+      34,
+      46,
+      69,
+      47,
+      36,
+      31,
+      89,
+      62,
+      86,
+      35,
+      39,
+      61,
+      39
+    ],
+    "eyePixels": [
+      [
+        257,
+        87
+      ],
+      [
+        276,
+        94
+      ]
+    ],
+    "props": [],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.36,
+        0.39,
+        0.025,
+        0.025,
+        0.8
+      ],
+      [
+        0.61,
+        0.39,
+        0.02,
+        0.025,
+        0.8
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "midnight-formal-elf-male": {
+    "coordinates": [
+      35,
+      60,
+      20,
+      36,
+      46,
+      72,
+      48,
+      36,
+      33,
+      89,
+      65,
+      86,
+      35,
+      39,
+      64,
+      39
+    ],
+    "eyePixels": [
+      [
+        265,
+        94
+      ],
+      [
+        288,
+        100
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.3,
+        0.24,
+        0.025,
+        0.065,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.36,
+        0.39,
+        0.025,
+        0.025,
+        0.8
+      ],
+      [
+        0.64,
+        0.39,
+        0.02,
+        0.025,
+        0.8
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "midnight-formal-darkElf-male": {
+    "coordinates": [
+      35,
+      60,
+      19,
+      35,
+      46,
+      72,
+      48,
+      36,
+      33,
+      89,
+      65,
+      86,
+      35,
+      39,
+      64,
+      39
+    ],
+    "eyePixels": [
+      [
+        267,
+        85
+      ],
+      [
+        285,
+        91
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.36,
+        0.17,
+        0.022,
+        0.04,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.36,
+        0.39,
+        0.025,
+        0.025,
+        0.8
+      ],
+      [
+        0.64,
+        0.39,
+        0.02,
+        0.025,
+        0.8
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "midnight-formal-orc-male": {
+    "coordinates": [
+      34,
+      63,
+      20,
+      32,
+      47,
+      74,
+      51,
+      37,
+      32,
+      90,
+      66,
+      87,
+      35,
+      40,
+      64,
+      40
+    ],
+    "eyePixels": [
+      [
+        269,
+        85
+      ],
+      [
+        285,
+        91
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.34,
+        0.25,
+        0.025,
+        0.055,
+        1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.35,
+        0.4,
+        0.025,
+        0.025,
+        0.8
+      ],
+      [
+        0.65,
+        0.4,
+        0.02,
+        0.025,
+        0.8
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "midnight-formal-dwarf-male": {
+    "coordinates": [
+      31,
+      70,
+      31,
+      30,
+      59,
+      80,
+      61,
+      50,
+      35,
+      86,
+      71,
+      84,
+      32,
+      55,
+      70,
+      55
+    ],
+    "eyePixels": [
+      [
+        275,
+        163
+      ],
+      [
+        302,
+        165
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.55,
+        0.36,
+        0.05,
+        0.05,
+        0.8
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.32,
+        0.55,
+        0.02,
+        0.025,
+        0.8
+      ],
+      [
+        0.7,
+        0.55,
+        0.02,
+        0.025,
+        0.8
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "midnight-formal-kamael-male": {
+    "coordinates": [
+      34,
+      61,
+      20,
+      35,
+      46,
+      71,
+      48,
+      36,
+      32,
+      90,
+      65,
+      87,
+      35,
+      40,
+      65,
+      40
+    ],
+    "eyePixels": [
+      [
+        262,
+        97
+      ],
+      [
+        280,
+        103
+      ]
+    ],
+    "props": [],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.35,
+        0.4,
+        0.02,
+        0.025,
+        0.8
+      ],
+      [
+        0.65,
+        0.4,
+        0.02,
+        0.025,
+        0.8
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "wing": {
+      "pivot": [
+        0.62,
+        0.22
+      ],
+      "outline": [
+        [
+          0.66,
+          0.14
+        ],
+        [
+          0.83,
+          0.2
+        ],
+        [
+          0.94,
+          0.48
+        ],
+        [
+          0.95,
+          0.75
+        ],
+        [
+          0.8,
+          0.62
+        ],
+        [
+          0.64,
+          0.3
+        ],
+        [
+          0.62,
+          0.22
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.87,
+          0.44
+        ],
+        [
+          0.9,
+          0.5
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.2,
+        0.1,
+        0.42,
+        0.26
+      ],
+      "clothRegions": [
+        [
+          0.24,
+          0.41,
+          0.02,
+          0.055,
+          1.3
+        ],
+        [
+          0.24,
+          0.48,
+          0.02,
+          0.04,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.24,
+          0.41
+        ],
+        [
+          0.24,
+          0.48
+        ]
+      ],
+      "clothStart": 0.28
+    }
+  },
+  "last-bell-reaper-human-male": {
+    "coordinates": [
+      40,
+      63,
+      21,
+      33,
+      31,
+      74,
+      49,
+      38,
+      39,
+      90,
+      64,
+      88,
+      19,
+      64,
+      85,
+      67
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        32,
+        15,
+        36,
+        92
+      ],
+      [
+        8,
+        5,
+        40,
+        23
+      ],
+      [
+        49,
+        10,
+        61,
+        18
+      ]
+    ],
+    "hair": "n",
+    "held": "L",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.19,
+        0.64,
+        0.028,
+        0.1,
+        1.3
+      ],
+      [
+        0.85,
+        0.67,
+        0.025,
+        0.1,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Opaque skull mask"
+  },
+  "last-bell-reaper-elf-male": {
+    "coordinates": [
+      40,
+      63,
+      21,
+      33,
+      31,
+      74,
+      49,
+      38,
+      39,
+      90,
+      64,
+      88,
+      19,
+      64,
+      85,
+      67
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        32,
+        15,
+        36,
+        92
+      ],
+      [
+        8,
+        5,
+        40,
+        23
+      ],
+      [
+        49,
+        10,
+        61,
+        18
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.4,
+        0.33,
+        0.024,
+        0.08,
+        1.1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.19,
+        0.64,
+        0.028,
+        0.1,
+        1.3
+      ],
+      [
+        0.85,
+        0.67,
+        0.025,
+        0.1,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Opaque skull mask"
+  },
+  "last-bell-reaper-darkElf-male": {
+    "coordinates": [
+      40,
+      63,
+      21,
+      33,
+      31,
+      74,
+      49,
+      38,
+      39,
+      90,
+      64,
+      88,
+      19,
+      64,
+      85,
+      67
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        32,
+        15,
+        36,
+        92
+      ],
+      [
+        8,
+        5,
+        40,
+        23
+      ],
+      [
+        49,
+        10,
+        61,
+        18
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.4,
+        0.32,
+        0.022,
+        0.07,
+        1.1
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.19,
+        0.64,
+        0.028,
+        0.1,
+        1.3
+      ],
+      [
+        0.85,
+        0.67,
+        0.025,
+        0.1,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Opaque skull mask"
+  },
+  "last-bell-reaper-orc-male": {
+    "coordinates": [
+      40,
+      65,
+      21,
+      33,
+      31,
+      76,
+      50,
+      38,
+      39,
+      90,
+      66,
+      88,
+      19,
+      64,
+      87,
+      67
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        32,
+        15,
+        36,
+        92
+      ],
+      [
+        8,
+        5,
+        40,
+        23
+      ],
+      [
+        49,
+        10,
+        61,
+        18
+      ]
+    ],
+    "hair": "n",
+    "held": "L",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.19,
+        0.64,
+        0.028,
+        0.1,
+        1.3
+      ],
+      [
+        0.87,
+        0.67,
+        0.025,
+        0.1,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Opaque skull mask"
+  },
+  "last-bell-reaper-dwarf-male": {
+    "coordinates": [
+      38,
+      70,
+      34,
+      33,
+      39,
+      80,
+      61,
+      51,
+      39,
+      89,
+      68,
+      88,
+      19,
+      68,
+      87,
+      73
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        32,
+        18,
+        36,
+        91
+      ],
+      [
+        8,
+        5,
+        40,
+        23
+      ],
+      [
+        54,
+        22,
+        64,
+        30
+      ]
+    ],
+    "hair": "l",
+    "held": "L",
+    "hairRegions": [
+      [
+        0.59,
+        0.3,
+        0.035,
+        0.035,
+        0.8
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.19,
+        0.68,
+        0.028,
+        0.08,
+        1.3
+      ],
+      [
+        0.87,
+        0.73,
+        0.025,
+        0.08,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Opaque skull mask"
+  },
+  "last-bell-reaper-kamael-male": {
+    "coordinates": [
+      41,
+      62,
+      21,
+      35,
+      31,
+      73,
+      49,
+      38,
+      40,
+      90,
+      64,
+      88,
+      18,
+      66,
+      84,
+      70
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        32,
+        15,
+        36,
+        92
+      ],
+      [
+        8,
+        5,
+        40,
+        23
+      ],
+      [
+        49,
+        10,
+        61,
+        18
+      ]
+    ],
+    "hair": "n",
+    "held": "L",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.18,
+        0.66,
+        0.024,
+        0.085,
+        1.3
+      ],
+      [
+        0.84,
+        0.7,
+        0.025,
+        0.08,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Opaque skull mask",
+    "wing": {
+      "pivot": [
+        0.63,
+        0.22
+      ],
+      "outline": [
+        [
+          0.67,
+          0.11
+        ],
+        [
+          0.83,
+          0.18
+        ],
+        [
+          0.94,
+          0.44
+        ],
+        [
+          0.94,
+          0.75
+        ],
+        [
+          0.8,
+          0.6
+        ],
+        [
+          0.65,
+          0.28
+        ],
+        [
+          0.63,
+          0.22
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.86,
+          0.4
+        ],
+        [
+          0.89,
+          0.46
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.18,
+        0.15,
+        0.41,
+        0.27
+      ],
+      "clothRegions": [
+        [
+          0.22,
+          0.4,
+          0.02,
+          0.05,
+          1.3
+        ],
+        [
+          0.24,
+          0.48,
+          0.02,
+          0.05,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.22,
+          0.4
+        ],
+        [
+          0.24,
+          0.48
+        ]
+      ],
+      "clothStart": 0.29
+    }
+  },
+  "hollow-lantern-rider-human-male": {
+    "coordinates": [
+      38,
+      64,
+      22,
+      29,
+      45,
+      74,
+      48,
+      38,
+      35,
+      89,
+      67,
+      88,
+      22,
+      66,
+      79,
+      68
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        40,
+        6,
+        62,
+        20
+      ]
+    ],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.22,
+        0.66,
+        0.03,
+        0.08,
+        1.3
+      ],
+      [
+        0.79,
+        0.68,
+        0.03,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Carved pumpkin headpiece"
+  },
+  "hollow-lantern-rider-elf-male": {
+    "coordinates": [
+      38,
+      64,
+      22,
+      29,
+      45,
+      74,
+      48,
+      38,
+      35,
+      90,
+      67,
+      89,
+      22,
+      66,
+      79,
+      68
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        40,
+        6,
+        62,
+        20
+      ]
+    ],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.22,
+        0.66,
+        0.03,
+        0.08,
+        1.3
+      ],
+      [
+        0.79,
+        0.68,
+        0.03,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Carved pumpkin headpiece"
+  },
+  "hollow-lantern-rider-darkElf-male": {
+    "coordinates": [
+      38,
+      64,
+      22,
+      29,
+      45,
+      74,
+      48,
+      38,
+      35,
+      90,
+      67,
+      89,
+      22,
+      66,
+      79,
+      68
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        40,
+        6,
+        62,
+        20
+      ]
+    ],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.22,
+        0.66,
+        0.03,
+        0.08,
+        1.3
+      ],
+      [
+        0.79,
+        0.68,
+        0.03,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Carved pumpkin headpiece"
+  },
+  "hollow-lantern-rider-orc-male": {
+    "coordinates": [
+      38,
+      64,
+      22,
+      29,
+      45,
+      76,
+      49,
+      38,
+      35,
+      90,
+      68,
+      89,
+      22,
+      66,
+      81,
+      68
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        40,
+        6,
+        62,
+        20
+      ]
+    ],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.22,
+        0.66,
+        0.03,
+        0.08,
+        1.3
+      ],
+      [
+        0.81,
+        0.68,
+        0.03,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Carved pumpkin headpiece"
+  },
+  "hollow-lantern-rider-dwarf-male": {
+    "coordinates": [
+      35,
+      69,
+      33,
+      25,
+      57,
+      83,
+      58,
+      50,
+      36,
+      90,
+      71,
+      89,
+      20,
+      74,
+      84,
+      76
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        36,
+        9,
+        67,
+        29
+      ]
+    ],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.2,
+        0.74,
+        0.025,
+        0.06,
+        1.3
+      ],
+      [
+        0.84,
+        0.76,
+        0.025,
+        0.06,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Carved pumpkin headpiece"
+  },
+  "hollow-lantern-rider-kamael-male": {
+    "coordinates": [
+      38,
+      61,
+      22,
+      30,
+      45,
+      72,
+      49,
+      38,
+      35,
+      90,
+      67,
+      89,
+      22,
+      66,
+      80,
+      68
+    ],
+    "eyePixels": [],
+    "props": [
+      [
+        39,
+        6,
+        61,
+        20
+      ]
+    ],
+    "hair": "n",
+    "held": "-",
+    "hairRegions": [],
+    "clothRegions": [
+      [
+        0.22,
+        0.66,
+        0.028,
+        0.08,
+        1.3
+      ],
+      [
+        0.8,
+        0.68,
+        0.028,
+        0.07,
+        1.3
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "noVisibleEyes": "Carved pumpkin headpiece",
+    "wing": {
+      "pivot": [
+        0.62,
+        0.22
+      ],
+      "outline": [
+        [
+          0.66,
+          0.12
+        ],
+        [
+          0.81,
+          0.19
+        ],
+        [
+          0.94,
+          0.45
+        ],
+        [
+          0.94,
+          0.75
+        ],
+        [
+          0.81,
+          0.61
+        ],
+        [
+          0.64,
+          0.29
+        ],
+        [
+          0.62,
+          0.22
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.86,
+          0.42
+        ],
+        [
+          0.89,
+          0.48
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.22,
+        0.13,
+        0.4,
+        0.26
+      ],
+      "clothRegions": [
+        [
+          0.26,
+          0.37,
+          0.02,
+          0.05,
+          1.3
+        ],
+        [
+          0.26,
+          0.44,
+          0.02,
+          0.04,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.26,
+          0.37
+        ],
+        [
+          0.26,
+          0.44
+        ]
+      ],
+      "clothStart": 0.28
+    }
+  },
+  "moonveil-phantom-human-female": {
+    "coordinates": [
+      42,
+      64,
+      23,
+      22,
+      43,
+      81,
+      44,
+      33,
+      42,
+      90,
+      62,
+      88,
+      15,
+      68,
+      85,
+      69
+    ],
+    "eyePixels": [
+      [
+        264,
+        104
+      ],
+      [
+        284,
+        99
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.7,
+        0.3,
+        0.03,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.15,
+        0.68,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.85,
+        0.69,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.54,
+        0.75,
+        0.025,
+        0.08,
+        1.1
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "moonveil-phantom-elf-female": {
+    "coordinates": [
+      42,
+      64,
+      23,
+      22,
+      43,
+      81,
+      44,
+      33,
+      42,
+      90,
+      62,
+      88,
+      15,
+      68,
+      85,
+      69
+    ],
+    "eyePixels": [
+      [
+        260,
+        106
+      ],
+      [
+        280,
+        99
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.7,
+        0.3,
+        0.03,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.15,
+        0.68,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.85,
+        0.69,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.54,
+        0.75,
+        0.025,
+        0.08,
+        1.1
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "moonveil-phantom-darkElf-female": {
+    "coordinates": [
+      42,
+      64,
+      23,
+      22,
+      43,
+      81,
+      44,
+      33,
+      42,
+      90,
+      62,
+      88,
+      15,
+      68,
+      85,
+      69
+    ],
+    "eyePixels": [
+      [
+        235,
+        108
+      ],
+      [
+        254,
+        100
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.7,
+        0.3,
+        0.03,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.15,
+        0.68,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.85,
+        0.69,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.54,
+        0.75,
+        0.025,
+        0.08,
+        1.1
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "moonveil-phantom-orc-female": {
+    "coordinates": [
+      42,
+      65,
+      23,
+      23,
+      43,
+      83,
+      45,
+      33,
+      42,
+      90,
+      64,
+      89,
+      15,
+      68,
+      87,
+      69
+    ],
+    "eyePixels": [
+      [
+        265,
+        97
+      ],
+      [
+        285,
+        94
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.71,
+        0.31,
+        0.03,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.15,
+        0.68,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.87,
+        0.69,
+        0.03,
+        0.11,
+        1.4
+      ],
+      [
+        0.54,
+        0.75,
+        0.025,
+        0.08,
+        1.1
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets."
+  },
+  "moonveil-phantom-dwarf-female": {
+    "coordinates": [
+      42,
+      67,
+      30,
+      24,
+      47,
+      85,
+      48,
+      40,
+      43,
+      89,
+      63,
+      88,
+      15,
+      68,
+      87,
+      71
+    ],
+    "eyePixels": [
+      [
+        256,
+        149
+      ],
+      [
+        278,
+        143
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.68,
+        0.38,
+        0.03,
+        0.08,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.15,
+        0.68,
+        0.03,
+        0.1,
+        1.4
+      ],
+      [
+        0.87,
+        0.71,
+        0.03,
+        0.1,
+        1.4
+      ],
+      [
+        0.54,
+        0.76,
+        0.025,
+        0.07,
+        1.1
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "eyeRadiusY": 0.0065
+  },
+  "moonveil-phantom-kamael-female": {
+    "coordinates": [
+      39,
+      62,
+      23,
+      23,
+      43,
+      82,
+      45,
+      33,
+      44,
+      87,
+      65,
+      89,
+      17,
+      68,
+      87,
+      70
+    ],
+    "eyePixels": [
+      [
+        236,
+        119
+      ],
+      [
+        253,
+        113
+      ]
+    ],
+    "props": [],
+    "hair": "l",
+    "held": "-",
+    "hairRegions": [
+      [
+        0.68,
+        0.3,
+        0.03,
+        0.075,
+        1.2
+      ]
+    ],
+    "clothRegions": [
+      [
+        0.17,
+        0.68,
+        0.025,
+        0.1,
+        1.4
+      ],
+      [
+        0.87,
+        0.7,
+        0.025,
+        0.1,
+        1.4
+      ],
+      [
+        0.54,
+        0.75,
+        0.025,
+        0.08,
+        1.1
+      ]
+    ],
+    "clothStart": 0.27,
+    "review": "Individually traced shoulders, hands, waist, feet, accessory bounds, loose cloth and visible eyes from canonical 512x768 source review sheets.",
+    "wing": {
+      "pivot": [
+        0.62,
+        0.22
+      ],
+      "outline": [
+        [
+          0.66,
+          0.12
+        ],
+        [
+          0.81,
+          0.18
+        ],
+        [
+          0.94,
+          0.42
+        ],
+        [
+          0.95,
+          0.62
+        ],
+        [
+          0.85,
+          0.55
+        ],
+        [
+          0.65,
+          0.29
+        ],
+        [
+          0.62,
+          0.22
+        ]
+      ],
+      "amplitude": 0.022,
+      "period": 7.8,
+      "phase": 0,
+      "reviewPoints": [
+        [
+          0.86,
+          0.4
+        ],
+        [
+          0.89,
+          0.45
+        ]
+      ]
+    },
+    "capeReview": {
+      "ornament": [
+        0.22,
+        0.14,
+        0.4,
+        0.29
+      ],
+      "clothRegions": [
+        [
+          0.24,
+          0.41,
+          0.02,
+          0.05,
+          1.3
+        ],
+        [
+          0.25,
+          0.48,
+          0.02,
+          0.04,
+          1.3
+        ]
+      ],
+      "reviewPoints": [
+        [
+          0.24,
+          0.41
+        ],
+        [
+          0.25,
+          0.48
+        ]
+      ],
+      "clothStart": 0.3
+    }
+  }
+}

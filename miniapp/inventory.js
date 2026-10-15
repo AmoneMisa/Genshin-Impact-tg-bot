@@ -1,4 +1,5 @@
 import {useRecoveryScroll} from '../functions/game/player/deathPenalties.js';
+import {costumePlayer} from './costumes.js';
 import {getMaterialCount, listMaterials, spendMaterials, materialInfo} from '../functions/game/player/materials.js';
 import {l2SellPrice} from '../functions/game/hunt/lootTable.js';
 import {HUNT} from '../functions/game/hunt/huntConfig.js';
@@ -83,7 +84,7 @@ export function getInventoryState(session) {
       luckCoins: Math.max(0, number(inventory.luckCoins)),
     },
     slots: inventoryUsage(session),
-    player: { cp, maxCp, hp, maxHp, mp, maxMp, className:session?.game?.gameClass?.stats?.name || 'warrior', gender:session?.gender || 'male' },
+    player: { cp, maxCp, hp, maxHp, mp, maxMp, className:session?.game?.gameClass?.stats?.name || 'warrior', ...costumePlayer(session) },
     equippedSlots:equipmentState.equippedSlots,
     tattoos:(Array.isArray(session?.game?.tattoos)?session.game.tattoos:[]).map(entry=>({dye:entry.dye,name:hennaOfDye(entry.dye)?.name || String(entry.dye)})),
     arena: {

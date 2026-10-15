@@ -1,4 +1,5 @@
 import {installAvatarCostumeMotion} from './avatar-costume-view.js';
+import {costumePreviewHtml} from './costume-preview.js';
 import {bindItemTrash,itemTrashButton} from './item-trash.js';
 import {dialogHeading} from './dialog-heading.js';
 import {inventoryCharacterHtml,inventoryEquipped,inventoryActionIcon,inventoryItemArt,INVENTORY_LEFT,INVENTORY_RIGHT} from './inventory-layout.js';
@@ -13,6 +14,8 @@ import {openLoginRewards} from './login-rewards.js';
 import {SPECIAL_ITEM_ART} from './art/special-item-art.js';
 import {L2_MATERIAL_ART,l2IconUrl} from './art/l2-icon-art.js';
 const REASONS = {
+  costume_gender:'Этот костюм предназначен для другого пола персонажа.',
+  costume_expired:'Срок действия костюма закончился.',
   potion_not_found: 'Зелье больше недоступно. Обнови инвентарь.',
   potion_empty: 'Это зелье закончилось.',
   player_dead: 'Нельзя использовать зелье, пока персонаж мёртв.',
@@ -66,6 +69,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   let pending = false;
   let lastResult = null;
   let toastTimer = 0;
+  let costumeTimer=0,closed=false;
   let selectedKey = null;
   let selectedKind = 'potion';
   let filter = 'all';
@@ -92,6 +96,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   feedback.textContent = 'Выберите предмет';
   let disposeTrash=()=>{};
   const close = () => {
+    closed=true;clearTimeout(costumeTimer);document.removeEventListener('visibilitychange',syncCostumeExpiry);
     disposeTrash();
     window.clearTimeout(toastTimer);
     closeItemPopup();
@@ -171,7 +176,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   }
 
   function selectedItem(){return (selectedKind==='equipment'?state.equipment||[]:selectedKind==='material'?state.materials||[]:state.potions).find(item=>item.key===selectedKey);}
-  function equipmentArt(item){const art=itemArtSources(itemArtKey(normalizeLootKind(item),item));return `<img class="${item.shadow?'is-shadow-item':''}" src="${art.src}" srcset="${art.srcset}" width="48" height="48" sizes="48px" alt="" loading="lazy" decoding="async">`;}
+  function equipmentArt(item){if(item.costumeId)return inventoryItemArt(item);const art=itemArtSources(itemArtKey(normalizeLootKind(item),item));return `<img class="${item.shadow?'is-shadow-item':''}" src="${art.src}" srcset="${art.srcset}" width="48" height="48" sizes="48px" alt="" loading="lazy" decoding="async">`;}
   function selectedRow(){const item=selectedItem();if(!item)return null;return {kind:selectedKind,ref:selectedKind==='potion'?item.ref:selectedKind==='equipment'?item.uid:item.key,title:item.name,count:selectedKind==='equipment'?1:item.count,artPotion:item,artItem:item,materialKey:item.key};}
 
   function resultHtml() {
@@ -182,6 +187,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
   }
 
   function render() {
+    syncCostumeExpiry();
     state.potions=state.potions.filter(potion=>potion.count>0);
     if (!selectedKey || !selectedItem()) {
       selectedKind='potion';
@@ -196,7 +202,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
       </section></div>
       <footer class="inventory-footer"><div class="inventory-tools">
         <button type="button" data-inventory-crystallize title="Кристаллизация" aria-label="Кристаллизация" ${selectedKind!=='equipment'||!item?.enchantable||item.isUsed||item.timed?'disabled':''}>${inventoryActionIcon('crystallize')}</button>
-        <button type="button" data-inventory-auction title="Аукцион" aria-label="Аукцион" ${!row||item.isUsed||item.timed||item.bound||selectedKind==='equipment'&&!item.uid?'disabled':''}>${inventoryActionIcon('auction')}</button>
+        <button type="button" data-inventory-auction title="Аукцион" aria-label="Аукцион" ${!row||item.isUsed||item.timed||item.shadow||item.bound||selectedKind==='equipment'&&!item.uid?'disabled':''}>${inventoryActionIcon('auction')}</button>
         <button type="button" data-inventory-craft title="Крафт" aria-label="Крафт">${inventoryActionIcon('craft')}</button>
       </div><div class="inventory-wallet"><span class="inventory-adena">${materialIcon('l2_57')}<strong title="${formatNumber(state.resources.gold)}">${walletNumber(state.resources.gold)}</strong></span></div>
       ${itemTrashButton({label:'Выбросить',attribute:'data-inventory-discard',className:'inventory-discard',disabled:!item||item.isUsed||Boolean(item.augment?.current)})}</footer>`;
@@ -250,7 +256,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     const item=selectedItem();if(!item)return;
     const extra=selectedKind==='equipment'?`<ul class="inventory-item-stats">${(item.stats||[]).map(stat=>`<li>${escapeHtml(stat.text||[stat.name,stat.value].filter(v=>v!=null).join(' · '))}</li>`).join('')}</ul><button type="button" data-inventory-equip ${!item.isUsed&&!item.canUse?'disabled':''}>${item.isUsed?'Снять':'Надеть'}</button>`:'';
     const scroll=selectedKind==='material'&&/^(?:bound_)?(scroll|blessed|safe)_(?:(weapon|armor)_)?(D|C|B|A|S|S80|S84)$/.test(item.key);
-    const root=popup(detailHtml()+extra+(scroll?'<button class="ui-button primary" data-open-enchant>Использовать свиток</button>':'')+(selectedKind==='potion'?vitalsHtml():''));
+    const root=popup(detailHtml()+(item.costumeId?costumePreviewHtml(item.costumeId,state.player)+`<p>${item.costumeGender==='female'?'Для женского персонажа':'Для мужского персонажа'} · ${item.expiresAt?'До '+escapeHtml(new Date(item.expiresAt).toLocaleString('ru-RU'))+' · Привязан к персонажу':'Постоянный'}</p>`:'')+extra+(scroll?'<button class="ui-button primary" data-open-enchant>Использовать свиток</button>':'')+(selectedKind==='potion'?vitalsHtml():''));
     root.querySelector('[data-open-enchant]')?.addEventListener('click',async()=>{if(pending)return;closeItemPopup();const {openEnchantGame}=await import('./enchant.js');await openEnchantGame({api,renderState,haptic,statusElement,scrollKey:item.key,onClose:refresh});});
     if(selectedKind==='material'&&/^(?:bound_)?attr_(stone|crystal|jewel)_(fire|water|wind|earth|holy|dark)$/.test(item.key)){
       const button=document.createElement('button');button.className='ui-button primary';button.textContent='Использовать';root.append(button);
@@ -309,6 +315,17 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     }
   }
 
+  function syncCostumeExpiry(){
+    clearTimeout(costumeTimer);
+    if(closed||document.hidden||!state.player?.costume?.expiresAt)return;
+    const delay=Math.max(0,state.player.costume.expiresAt-Date.now());
+    costumeTimer=setTimeout(()=>{
+      if(closed||document.hidden)return;
+      if(pending){costumeTimer=setTimeout(syncCostumeExpiry,1000);return;}
+      state.player.costume=null;closeItemPopup();render();refresh();
+    },delay+50);
+  }
+
   async function usePotion(key) {
     if (pending) return;
     closeItemPopup();
@@ -357,6 +374,7 @@ export async function openInventoryGame({ api, renderState, haptic, statusElemen
     return Boolean(item&&!item.isUsed&&!item.augment?.current&&(ref.kind==='equipment'||item.count>0));
   },onDrop:ref=>{selectedKind=ref.kind;selectedKey=ref.key;render();itemAction('discard');}});
   document.body.appendChild(overlay);
+  document.addEventListener('visibilitychange',syncCostumeExpiry);
   installAvatarCostumeMotion();
   requestAnimationFrame(() => overlay.classList.add('visible'));
 }

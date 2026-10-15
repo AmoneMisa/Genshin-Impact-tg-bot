@@ -5,6 +5,7 @@ import {icon} from './icons.js';
 import {materialIcon} from './material-icons.js';
 import {stockGrid,TRANSFER_REASONS} from './stock-grid.js';
 import {stockQuantity} from './stock-quantity.js';
+const COSTUME_EXPIRED_MESSAGE='Срок действия костюма истёк. Оплата за него не списана.';
 
 // Mail (rewards and letters) and the promo code field. Promo rewards are not
 // applied on redeem: they arrive as a letter and are claimed from the mail.
@@ -108,7 +109,7 @@ export async function openMailGame({api,haptic,statusElement,renderState}){
   async function action(body){
     if(busy)return;busy=true;content.querySelectorAll('button').forEach(b=>b.disabled=true);
     try{haptic?.('light');const payload=await api('/api/mail/action',{method:'POST',body:JSON.stringify(body)});mail=payload.mail;if(payload.state)renderState?.(payload.state);notice(payload.message||'Готово.');if(body.action==='send'||body.action==='delete'){compose=null;letter=null;}else if(letter)letter=mail.letters.find(l=>l.id===letter.id)||letter;}
-    catch(e){if(e.payload?.mail)mail=e.payload.mail;notice(MAIL_ERRORS[e.payload?.reason]||e.message,true);}
+    catch(e){if(e.payload?.mail)mail=e.payload.mail;notice(e.payload?.reason==='costume_expired'?COSTUME_EXPIRED_MESSAGE:MAIL_ERRORS[e.payload?.reason]||e.message,true);}
     finally{busy=false;render();}
   }
   function composeNew(type='regular',to=null){result.hidden=true;compose={type,to:to?.userId||'',name:to?.name||'',title:letter?`Re: ${letter.title}`.slice(0,80):'',text:'',price:'',items:[]};letter=null;render();}

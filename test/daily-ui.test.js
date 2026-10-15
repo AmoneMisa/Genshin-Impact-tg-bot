@@ -1,9 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { landingRotation, wheelSegments } from '../webapp/bonus.js';
+import { landingRotation, wheelSegments,prizeWheelSectors,prizeWheelHtml } from '../webapp/bonus.js';
+import {BONUS_PRIZES} from '../miniapp/bonus.js';
 import { rulerTicks } from '../webapp/sword.js';
 
 const PRIZES = [{ name: 'gold', chance: 40 }, { name: 'crystals', chance: 40 }, { name: 'ironOre', chance: 20 }];
+
+test('daily wheel draws exact reward percentages with its own costume sector',()=>{
+ const sectors=prizeWheelSectors(BONUS_PRIZES);
+ assert.equal(sectors.length,7);assert.equal(sectors.at(-1).end,360);
+ for(const prize of BONUS_PRIZES){const arc=sectors.filter(s=>s.name===prize.name).reduce((sum,s)=>sum+s.end-s.start,0);assert.ok(Math.abs(arc/360*100-prize.chance)<1e-9);}
+ assert.match(prizeWheelHtml(BONUS_PRIZES,'midnight-formal'),/midnight-formal-64.webp/);
+});
 
 test('wheel segments follow prize chances and never repeat side by side', () => {
   const segments = wheelSegments(PRIZES);

@@ -5,11 +5,25 @@ root=Path(__file__).resolve().parents[2]; folder=root/'art-source/avatars/motion
 items=json.loads((folder/'pose-items.json').read_text(encoding='utf-8'))
 eyes=json.loads((folder/'calibrated-eyes.json').read_text(encoding='utf-8'))
 annotations={}
+annotation_keys=json.loads((folder/'pose-annotation-keys.json').read_text(encoding='utf-8'))
+current_indices={key:i for i,(key,file) in enumerate(items)}
 for line in (folder/'pose-annotations.txt').read_text(encoding='utf-8').splitlines():
     if not line.strip() or line.startswith('#'):continue
     values=line.split();index=int(values[0]);assert index not in annotations
     assert len(values)==19,(index,len(values))
-    annotations[index]=([int(v)/100 for v in values[1:17]],values[17],values[18])
+    current=current_indices[annotation_keys[index]]
+    annotations[current]=([int(v)/100 for v in values[1:17]],values[17],values[18])
+additional=json.loads((folder/'additional-pose-reviews.json').read_text(encoding='utf-8'))
+for key,review in additional.items():
+    assert len(review['coordinates'])==16,key
+    annotations[current_indices[key]]=([v/100 for v in review['coordinates']],review['hair'],review['held'])
+cape_motion=root/'art-source/avatars/kamael-capes/motion.json'
+if cape_motion.exists():
+    for key,review in json.loads(cape_motion.read_text(encoding='utf-8')).items():
+        if 'coordinates' not in review:continue
+        for target in [key]+(['kamael-male'] if key=='violet-courtier-kamael-male' else ['kamael-female'] if key=='crimson-dawn-kamael-female' else []):
+            index=current_indices[target];_,hair,held=annotations[index]
+            annotations[index]=([v/100 for v in review['coordinates']],hair,held)
 assert set(annotations)==set(range(len(items))),'Every published painting needs its own annotation'
 # Accessory bounds traced from numbered sheets. Coordinates in portrait percentages.
 props={67:[[15,4,31,75]],69:[[32,27,47,40]],70:[[45,44,62,56]],71:[[43,36,75,46]],
@@ -34,6 +48,8 @@ protect([174,175],[21,9,43,87]);protect([176],[15,26,38,85]);protect([178],[65,1
 protect(range(180,186),[17,4,35,87]);protect([180,181,183,184],[61,34,91,77])
 protect([192,194,195],[65,10,92,92]);protect([193,196,197],[11,9,33,92])
 protect(range(198,204),[10,39,50,93])
+for key,review in additional.items():
+    if review.get('props'):props[current_indices[key]]=review['props']
 result={}
 for index,(key,file) in enumerate(items):
     coords,hair_style,held=annotations[index]
@@ -74,17 +90,56 @@ for index,(key,file) in enumerate(items):
     else:hair=[[cx-.10,cy+.12,.034,.075,.9 if hair_style=='r' else 1.4],
                [cx+.11,cy+.14,.038,.085,.9 if hair_style=='r' else 1.4]]
     cloth=[[cl,cly,.065,.07 if dwarf else .10,1.3],[cr,cry,.065,.07 if dwarf else .10,1.3]]
+    review=additional.get(key,{})
+    cloth=review.get('clothRegions',cloth)
+    hair=review.get('hairRegions',hair)
     if 24<=index<30 or 144<=index<150:cloth=[] # Metal feather panels: no elastic warp.
     result[path]={'face': [cx,cy], 'arms':arms,'hair':hair,'cloth':cloth,'fixedAreas':fixed,
-                  'fixedPaths':legs,'clothStart':waist+.07,'breathStrength':.7,
+                  'fixedPaths':legs,'clothStart':review.get('clothStart',waist+.07),'breathStrength':.7,
                   'poseReview':{'key':key,'sheet':index//6,'index':index,'heldSides':held,
                     'shoulders':[[sl,sy],[sr,sy]],'hands':[[lx,ly],[rx,ry]],
                     'feet':[[fl,fly],[fr,fry]],'accessoryAreas':accessory_areas}}
+    if 'eyeRadiusY' in review:result[path]['eyeRadiusY']=review['eyeRadiusY']
+    if review.get('noVisibleEyes'):result[path]['noVisibleEyes']=review['noVisibleEyes']
 # Preserve the already demonstrated elf/dwarf articulated settings while adding
 # pose review and support-foot/leg protection from the same individual drawings.
 previous=json.loads((folder/'pose-motion.json').read_text(encoding='utf-8'))
 for path in ['/art/avatars/races/v3/dwarf-female','/art/avatars/races/v2/elf-female']:
     if path in previous:
         result[path].update({k:v for k,v in previous[path].items() if k not in ['poseReview','fixedPaths']})
+cape_folder=root/'art-source/avatars/kamael-capes'
+if (cape_folder/'motion.json').exists():
+    cape_reviews=json.loads((cape_folder/'motion.json').read_text(encoding='utf-8'))
+    cape_jobs=json.loads((cape_folder/'jobs.json').read_text(encoding='utf-8'))
+    for job in cape_jobs:
+        if job['status']!='reviewed':continue
+        review=cape_reviews[job['key']]
+        targets=['/art/avatars/collections/v1/'+job['key']]+['/art/avatars/races/v2/'+key for key in job['defaultAliases']]
+        for path in targets:
+            rig=result[path]
+            if 'propPaths' in review:
+                old=rig['poseReview']['accessoryAreas']
+                rig['fixedAreas']=[area for area in rig['fixedAreas'] if area not in old]
+                new=[area+[.008] for area in review.get('propAreas',[])]
+                rig['fixedAreas'].extend(new)
+                rig['fixedPaths'].extend(review['propPaths'])
+                rig['poseReview']['accessoryAreas']=new
+            # A held arm used a broad rectangular guard before a banner existed
+            # behind it. Follow the actual limb so visible cape fabric stays free.
+            pose=rig['poseReview']
+            for (sx,sy),(hx,hy) in zip(pose['shoulders'],pose['hands']):
+                guard=[min(sx,hx)-.12,sy-.025,max(sx,hx)+.12,max(sy,hy)+.065,.015]
+                matches=[area for area in rig['fixedAreas'] if all(abs(a-b)<1e-8 for a,b in zip(area,guard))]
+                if matches:
+                    for area in matches:rig['fixedAreas'].remove(area)
+                    rig['fixedPaths'].append([sx,sy,hx,hy,.035])
+            rig['cloth'].extend(review['clothRegions'])
+            rig['clothStart']=min(rig['clothStart'],review.get('clothStart',.28))
+            ornament=review['ornament']+[.006]
+            rig['fixedAreas'].append(ornament)
+            rig['poseReview']['accessoryAreas'].append(ornament)
+            rig['capeReview']={'construction':'narrow hanging banner with rigid wing ornament',
+                               'ornament':review['ornament'],'reviewPoints':review['reviewPoints'],
+                               'sourceKey':job['key']}
 (folder/'pose-motion.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
 print('Compiled',len(result),'individual poses;',sum(len(r['arms']) for r in result.values()),'free arms;',len(props),'accessory protections')

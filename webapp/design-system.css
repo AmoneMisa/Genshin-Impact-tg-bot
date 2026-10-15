@@ -1333,3 +1333,10 @@ body .ui-button.ui-choice-row.compact{min-height:44px;padding:var(--space-2);fon
 .ui-tree-row>small{flex:none;white-space:nowrap}
 .ui-tree-row[aria-current="true"]{color:var(--gold-bright)}
 .ui-icon-missing{display:grid;place-items:center;border:1px solid var(--border-soft);color:var(--muted)}
+.costume-preview{display:flex;justify-content:center;align-items:center;padding:var(--space-2);max-width:100%;overflow:hidden}
+.costume-preview .avatar-costume-view{display:block;width:min(100%,192px);aspect-ratio:2/3}
+.costume-preview img{display:block;width:100%;height:100%;object-fit:contain}
+.costume-preview-panel{width:min(360px,calc(100vw - 24px))}
+.costume-preview-panel .avatar-costume-view{width:min(100%,256px)}
+.bonus-win:has(.costume-preview){display:block}
+.bonus-prize img{width:40px;height:40px;object-fit:contain}

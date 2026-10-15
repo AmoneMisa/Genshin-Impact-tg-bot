@@ -124,7 +124,7 @@ try {
     await page.waitForFunction(()=>!document.querySelector('[data-avatar-motion-active]'));
     await page.locator('dialog [data-dismiss]').click();
     await page.waitForFunction(()=>document.querySelector('[data-avatar-motion-active]'));
-    assert.equal(await page.locator('[data-gear-slot]').count(),18);
+    assert.equal(await page.locator('[data-gear-slot]').count(),19);
     assert.equal(await page.locator('.inventory-discard').isDisabled(),true);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await page.screenshot({path:`${output}/inventory-motion-${width}.png`});

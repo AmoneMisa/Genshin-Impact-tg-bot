@@ -7,6 +7,9 @@ import { worldArtUrl, worldIconHtml } from './art/world-art.js';
 // pick every chest goes dark and the session's rewards are summarised.
 
 import { createChest, openingDelay } from './chest-art.js';
+import {costumeIconHtml,costumeRewardHtml,openCostumePreview} from './costume-preview.js';
+import {installAvatarCostumeMotion} from './avatar-costume-view.js';
+import {itemGridHtml} from './item-grid.js';
 
 export const PRIZE_ICONS = Object.freeze({
   experience: '✦',
@@ -17,6 +20,7 @@ export const PRIZE_ICONS = Object.freeze({
   brokenSword: '🗡️',
   immuneToUpSword: '🛡️',
   buffPotion: '🧪',
+  costume:'✦',
 });
 
 function prizeIcon(type) {
@@ -34,6 +38,7 @@ export const POSSIBLE_REWARDS = Object.freeze([
   { type: 'immuneToUpSword', label: 'Иммунитет меча' },
   { type: 'brokenSword', label: 'Поломка меча' },
   { type: 'buffPotion', label: 'Зелье-бафф' },
+  { type:'costume',label:'Костюм · 24 ч.–7 дней · 5%' },
 ]);
 
 const PRIZE_TITLES = {
@@ -43,6 +48,7 @@ const PRIZE_TITLES = {
 
 
 export function rewardText(prize) {
+  if(prize.costumeId)return `На ${prize.days} дн.`;
   if (prize.type === 'nothing') return 'Пусто';
   if (prize.type === 'immuneToUpSword') return 'Иммунитет';
   const amount = Number(prize.amount) || 0;
@@ -67,7 +73,7 @@ export function possibleRewardsHtml() {
 export function rewardTilesHtml(prizes) {
   return prizes.map(prize => `
     <div class="chest-prize-tile ${prize.type === 'nothing' ? 'empty' : ''} ${prize.type}">
-      <span>${prizeIcon(prize.type)}</span>
+      <span>${prize.costumeId?costumeIconHtml(prize.costumeId):prizeIcon(prize.type)}</span>
       <strong>${escapeHtml(rewardText(prize))}</strong>
       <small>${escapeHtml(prize.label || '')}</small>
     </div>`).join('');
@@ -78,8 +84,8 @@ export function summaryRows(prizes) {
   const rows = new Map();
   for (const prize of prizes) {
     // Different buff potions are different rewards.
-    const key = prize.type === 'buffPotion' ? `${prize.type}:${prize.label}` : prize.type;
-    const row = rows.get(key) || { type: prize.type, label: prize.label, amount: 0, count: 0 };
+    const key = prize.costumeId ? prize.uid : prize.type === 'buffPotion' ? `${prize.type}:${prize.label}` : prize.type;
+    const row = rows.get(key) || { ...prize, type: prize.type, label: prize.label, amount: 0, count: 0 };
     row.amount += Number(prize.amount) || 0;
     row.count += 1;
     rows.set(key, row);
@@ -95,7 +101,7 @@ export function summaryHtml(prizes) {
     <h3>Награды</h3>
     <div class="chest-summary-list">${rows.length ? rows.map(row => `
       <div class="chest-summary-row ${row.type}">
-        <span>${prizeIcon(row.type)}</span>
+        <span>${row.costumeId?costumeIconHtml(row.costumeId):prizeIcon(row.type)}</span>
         <div><small>${PRIZE_TITLES[row.type] || escapeHtml(row.label)}</small><strong>${escapeHtml(row.type === 'immuneToUpSword' || row.type === 'nothing' ? rewardText(row) : `${rewardText(row)} ${row.label}`)}</strong></div>
         ${row.count > 1 ? `<em>×${row.count}</em>` : ''}
       </div>`).join('') : '<p class="chest-summary-empty">Сегодня награды уже получены.</p>'}</div>
@@ -104,6 +110,7 @@ export function summaryHtml(prizes) {
 }
 
 export async function openChestGame({ api, renderState, haptic, statusElement }) {
+  installAvatarCostumeMotion();
   const chestState = await api('/api/chest');
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay chest-overlay';
@@ -114,12 +121,14 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
       <div class="chest-grid" role="group" aria-label="Сундуки"></div>
       <div class="chest-counter"></div>
       ${possibleRewardsHtml()}
+      ${(chestState.costumes||[]).length?`<details class="ui-disclosure"><summary>Костюмы · 24 ч.–7 дней · 5%</summary>${itemGridHtml(chestState.costumes.map(c=>`<button type="button" class="item-grid-cell" data-costume-preview="${escapeHtml(c.id)}" title="${escapeHtml(c.name)}" aria-label="Превью: ${escapeHtml(c.name)}">${costumeIconHtml(c.id)}</button>`))}</details>`:''}
       <div class="chest-result" aria-live="polite"></div>
       <div class="chest-reveal" hidden></div>
       <div class="chest-summary-host" hidden></div>
     </div>`;
 
   const panel = overlay.querySelector('.chest-panel');
+  overlay.querySelectorAll('[data-costume-preview]').forEach(b=>b.onclick=()=>openCostumePreview(b.dataset.costumePreview,chestState.player));
   const grid = overlay.querySelector('.chest-grid');
   const counter = overlay.querySelector('.chest-counter');
   const result = overlay.querySelector('.chest-result');
@@ -168,6 +177,7 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
         <h3>${empty ? 'Сундук пуст' : 'Сундук открыт'}</h3>
         <div class="chest-reveal-stage ${empty ? 'empty' : ''} ${scene ? 'painted-scene' : ''}">${scene ? `<img class="chest-scene" src="${scene}" width="768" height="512" alt="" decoding="async">` : ''}<span class="chest-reveal-rays" aria-hidden="true"></span></div>
         <div class="chest-prize-row">${rewardTilesHtml([prize])}</div>
+        ${prize.costumeId?costumeRewardHtml(prize,chestState.player):''}
         <button type="button" class="chest-btn" data-chest-claim>${empty ? 'Дальше' : 'Получить'}</button>`;
       reveal.hidden = false;
       requestAnimationFrame(() => reveal.classList.add('visible'));
@@ -246,7 +256,7 @@ export async function openChestGame({ api, renderState, haptic, statusElement })
       } catch (error) {
         if (closed) return;
         button.classList.remove('opening');
-        result.textContent = error.message;
+        result.textContent = error.payload?.reason==='inventory_full'?'Освободи место в инвентаре. Сундук и попытка сохранены.':error.message;
         statusElement.textContent = `Сундуки: ${error.message}`;
         haptic('light');
       } finally {

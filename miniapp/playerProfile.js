@@ -1,4 +1,5 @@
 import classes from '../template/classStatsTemplate.js';
+import {reconcileCostumeSlot} from '../functions/game/equipment/costumeItems.js';
 import { RACE_TITLES, L2_CLASS_META, classIdOf, raceOf } from '../template/l2ClassMeta.js';
 import {getPlayerCombatStats, getPlayerResourceStats} from './playerCombatStats.js';
 import getClassStatsFromTemplate from '../functions/game/player/getters/getGameClassStatsFromTemplate.js';
@@ -159,6 +160,7 @@ export function changePlayerGenderForMiniApp(session, gender, now = Date.now()) 
   const balance=Math.max(0,number(session.game.inventory?.luckCoins));
   if(balance<GENDER_CHANGE_COL)return {ok:false,reason:'not_enough_luck_coins',cost:GENDER_CHANGE_COL,balance,profile:getPlayerProfileState(session,now)};
   session.gender = gender;
+  reconcileCostumeSlot(session);
   session.game.inventory.luckCoins=balance-GENDER_CHANGE_COL;
   return {
     ok: true,

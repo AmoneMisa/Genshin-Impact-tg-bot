@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {AVATAR_COSTUME_RIGS} from '../webapp/art/avatar-costume-rigs.js';
+import {AVATAR_COSTUME_VARIANTS} from '../webapp/art/avatar-costume-art.js';
 import {deformCostumePoint,rigidArmWeight,wingWeight} from '../webapp/avatar-costume-rig.js';
 
 for(const key of ['/art/avatars/races/v3/dwarf-female','/art/avatars/races/v2/elf-female']){
@@ -44,7 +45,7 @@ test('all costumes keep the fitted chest stable and have quiet breathing',()=>{
   }
 });
 
-test('all 39 Kamael wings rotate at the root and other races have no wing',()=>{
+test('all Kamael wings rotate at the root and other races have no wing',()=>{
   let count=0;
   for(const [key,rig]of Object.entries(AVATAR_COSTUME_RIGS)){
     assert.equal(Boolean(rig.wing),key.includes('kamael'),key);
@@ -52,7 +53,7 @@ test('all 39 Kamael wings rotate at the root and other races have no wing',()=>{
     count++;
     const wing=rig.wing,[px,py]=wing.pivot;
     assert.equal(wingWeight(px,py,wing),0);
-    const a=[.90,py+.17],b=[.92,py+.20];
+    const [a,b]=wing.reviewPoints||[[.90,py+.17],[.92,py+.20]];
     assert.equal(wingWeight(...a,wing),1);assert.equal(wingWeight(...b,wing),1);
     const first=deformCostumePoint(...a,rig,0),second=deformCostumePoint(...a,rig,wing.period/4);
     assert.ok(Math.hypot((first[0]-second[0])*320,(first[1]-second[1])*480)>1.5,key+' wing must visibly move');
@@ -60,7 +61,7 @@ test('all 39 Kamael wings rotate at the root and other races have no wing',()=>{
     const ra=deformCostumePoint(...a,rig,2),rb=deformCostumePoint(...b,rig,2);
     assert.ok(Math.abs(Math.hypot(ra[0]-rb[0],(ra[1]-rb[1])*1.5)-length)<1e-7,key+' wing should preserve shape');
   }
-  assert.equal(count,39);
+  assert.equal(count,AVATAR_COSTUME_VARIANTS.filter(v=>v.race==='kamael').length+2);
 });
 
 test('every painting has individual pose data, planted feet and rigid free forearms',()=>{
@@ -85,5 +86,6 @@ test('every painting has individual pose data, planted feet and rigid free forea
       for(const t of [0,1.5,3,4.5])assert.deepEqual(deformCostumePoint(...point,rig,t),point,key+' accessory');
     }
   }
-  assert.equal(count,234);assert.equal(arms,291);
+  assert.equal(count,AVATAR_COSTUME_VARIANTS.length+12);
+  assert.ok(arms>=291,'Existing articulated poses remain covered as the collection grows');
 });

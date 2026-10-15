@@ -1,4 +1,5 @@
 import {npcCraftRecipes,craftAtNpc} from '../functions/game/equipment/npcCraft.js';
+import {isCostumeItem,costumeGenderAllowed,reconcileCostumeSlot} from '../functions/game/equipment/costumeItems.js';
 import {unsealOptions,unsealArmor} from '../functions/game/equipment/unseal.js';
 import {migrateCurrencyWallet} from '../functions/game/player/currencyMigration.js';
 import {saInfo,saBonuses,installWeaponSa,removeWeaponSa,soulCrystalState} from '../functions/game/equipment/soulCrystals.js';
@@ -128,6 +129,8 @@ function sanitizeItem(session, item, index) {
     name: masterworkName(englishNamed(item)) || 'Unknown item',
     translatedName: item?.translatedName || item?.kind || 'Снаряжение',
     description: item?.description || '',
+    costumeId:item?.costumeId || null,
+    costumeGender:item?.costumeGender || null,
     grade: item?.grade || 'noGrade',
     rarity: item?.rarity || null,
     rarityTranslated: item?.rarityTranslated || item?.rarity || null,
@@ -135,7 +138,7 @@ function sanitizeItem(session, item, index) {
     category: item?.category || null,
     kind: item?.kind || null,
     classOwner: Array.isArray(item?.classOwner) ? [...item.classOwner] : [],
-    canUse: canClassUse(playerClassName(session), item),
+    canUse: canClassUse(playerClassName(session), item) && (!isCostumeItem(item)||costumeGenderAllowed(session,item)),
     slots: Array.isArray(item?.slots) ? [...item.slots] : [],
     minLevel,
     levelPenalty: level < minLevel,
@@ -152,7 +155,7 @@ function sanitizeItem(session, item, index) {
     epicWeapon:item?.epicWeapon || null,
     timed: isTimedItem(item),
     shadow:Boolean(item.shadow),
-    bound:Boolean(item.bound),
+    bound:Boolean(item.bound||item.timed||item.shadow),
     expiresAt: isTimedItem(item) ? Number(item.expiresAt) : null,
     daysLeft: isTimedItem(item) ? daysLeft(item) : null,
     collection:item?.collection || null,
@@ -228,6 +231,7 @@ export function getScrollShopState(session) {
 
 export function getEquipmentState(session) {
   expireTimedItems(session);
+  reconcileCostumeSlot(session);
   const items = getItems(session);
   const sanitized = items.map((item, index) => sanitizeItem(session, item, index));
   const equippedSlots = {};
@@ -242,6 +246,8 @@ export function getEquipmentState(session) {
       grade: equipped.grade || 'noGrade',
       mainType: equipped.mainType || 'equipment',
       kind: equipped.kind || null,
+      costumeId:equipped.costumeId || null,
+      costumeGender:equipped.costumeGender || null,
       forgeLevel: getEnchantLevel(equipped),
       enchant: getEnchantLevel(equipped),
     };
@@ -267,7 +273,7 @@ export function getEquipmentState(session) {
   };
 }
 
-const EQUIP_FAILURES = { 2: 'invalid_item', 3: 'wrong_class', 4:'cloak_slot_closed' };
+const EQUIP_FAILURES = { 2: 'invalid_item', 3: 'wrong_class', 4:'cloak_slot_closed',5:'costume_gender',6:'costume_expired' };
 
 export function performEquipmentAction(session, key, action, options = {}) {
   expireTimedItems(session);

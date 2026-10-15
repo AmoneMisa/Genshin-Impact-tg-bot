@@ -2,6 +2,7 @@ import unequipItem from "./unequipItem.js";
 import equipmentTemplate from "../../../template/equipmentTemplate.js";
 import { canClassUse } from "./catalog.js";
 import {cloakSlotOpen} from './itemBonuses.js';
+import {isCostumeItem,costumeGenderAllowed,costumeExpired} from './costumeItems.js';
 
 function overlapsSlots(left = [], right = []) {
     const rightSlots = new Set(right);
@@ -9,6 +10,8 @@ function overlapsSlots(left = [], right = []) {
 }
 
 export default function equipItem(session, item) {
+    if(item?.mainType==='costume'&&(!isCostumeItem(item)||!costumeGenderAllowed(session,item)))return 5;
+    if(isCostumeItem(item)&&costumeExpired(item))return 6;
     if (!item?.slots || !Array.isArray(item.slots) || item.slots.length === 0) {
         return 2; // повреждённый предмет
     }

@@ -15,7 +15,7 @@
 
 import { addMaterial, getMaterials, getMaterialCount, materialInfo } from '../functions/game/player/materials.js';
 import { describeItemStats } from '../functions/game/equipment/describeStats.js';
-import { isTimedItem } from '../functions/game/equipment/timedItems.js';
+import {equipmentTransferBlocked} from '../functions/game/equipment/tradeRestrictions.js';
 import { masterworkName } from '../functions/game/equipment/itemBonuses.js';
 import { memberName } from './social.js';
 import { hasInventoryRoom } from '../functions/game/builds/palaceCapacity.js';
@@ -41,7 +41,7 @@ const potionKey = potion => potion?.id || `${potion?.type}:${potion?.bottleType}
 export function sellableItems(session) {
   const inventory = inventoryOf(session);
   const equipment = (inventory?.equipment?.items || [])
-    .filter(item => item?.uid && !item.isUsed && !isTimedItem(item) && !item.pvp && !item.bound && !item.noTrade && item.tradeable !== false)
+    .filter(item => item?.uid && !item.isUsed && !equipmentTransferBlocked(item) && !item.pvp)
     .map(item => ({ kind: 'equipment', ref: item.uid, ...viewOfEquipment(item), count: 1 }));
   const potions = (inventory?.potions?.items || [])
     .filter(potion => number(potion.count) > 0 && !potion.bound && !potion.noTrade)
@@ -60,7 +60,8 @@ function viewOfEquipment(item) {
     grade: item.grade || 'noGrade',
     enchant: number(item.enchant),
     mainType: item.mainType || 'equipment',
-    artItem: {name: item.name, grade: item.grade, mainType: item.mainType, kind: item.kind, category: item.category},
+    artItem: {name: item.name, grade: item.grade, mainType: item.mainType, kind: item.kind, category: item.category,costumeId:item.costumeId},
+    costumeId:item.costumeId||null,costumeGender:item.costumeGender||null,expiresAt:item.timed?item.expiresAt:null,
     stats: describeItemStats(item).slice(0, 6).map(stat => stat.text),
   };
 }
@@ -141,6 +142,7 @@ function lotDto(lot, viewerId, now) {
     description: lot.view?.description || '',
     mainType: art.mainType,
     artItem: art.artItem,
+    costumeId:art.costumeId,costumeGender:art.costumeGender,costumeExpiresAt:art.expiresAt,
     artPotion: art.artPotion,
     materialKey: art.materialKey,
     count: lot.count,
@@ -255,6 +257,7 @@ export async function getAuctionState(session, store, { kind = 'all', sort = 'ne
   const viewerId = session.userId;
   const active = (await store.listActive()).filter(lot => lot.expiresAt > now);
   const lots = active
+    .filter(lot => lot.kind!=='equipment'||!equipmentTransferBlocked(lot.payload?.item)||String(lot.sellerId)===String(viewerId))
     .filter(lot => kind === 'all' || lot.kind === kind)
     .map(lot => lotDto(lot, viewerId, now))
     .sort(SORTS[sort] || SORTS.new);
@@ -291,7 +294,7 @@ export async function createLot(session, store, { kind, ref, count = 1, price },
     const item = items.find(entry => entry?.uid && entry.uid === ref);
     if (!item) return { ok: false, reason: 'item_not_found' };
     if (item.isUsed) return { ok: false, reason: 'item_equipped' };
-    if (isTimedItem(item)) return { ok: false, reason: 'timed_item' };
+    if (item.timed||item.shadow) return { ok: false, reason: 'timed_item' };
     if(item.bound||item.noTrade||item.tradeable===false||item.canTrade===false)return {ok:false,reason:'item_unavailable'};
     items.splice(items.indexOf(item), 1);
     payload = { item: structuredClone(item) };
@@ -337,6 +340,7 @@ export async function buyLot(session, store, lotId, now = Date.now()) {
   const lot = await store.findById(lotId);
   if (!lot || lot.status !== 'active') return { ok: false, reason: 'lot_gone' };
   if (lot.expiresAt <= now) return { ok: false, reason: 'lot_gone' };
+  if(lot.kind==='equipment'&&equipmentTransferBlocked(lot.payload?.item))return {ok:false,reason:'item_unavailable'};
   if (String(lot.sellerId) === String(session.userId)) return { ok: false, reason: 'own_lot' };
 
   const inventory = inventoryOf(session);

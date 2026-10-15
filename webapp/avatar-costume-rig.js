@@ -39,6 +39,12 @@ function visibleWingWeight(x,y,rig){
     const [px,py]=pose.shoulders[i],[hx,hy]=pose.hands[i];
     weight*=1-capsuleWeight(x,y,[px,py,hx,hy,pose.key.includes('dwarf-')||pose.key.includes('orc-')?.055:.035],false);
   }
+  // Explicitly traced foreground props can overlap the painted feather wing.
+  // Keep the swim ring/board rigid while the feathers behind it rotate.
+  for(const [x0,y0,x1,y1,feather] of rig.wing?.foregroundAreas||[]){
+    const distance=Math.hypot(Math.max(x0-x,0,x-x1),Math.max(y0-y,0,y-y1));
+    weight*=smooth(distance/feather);
+  }
   return weight;
 }
 function fixedWeight(x,y,rig){

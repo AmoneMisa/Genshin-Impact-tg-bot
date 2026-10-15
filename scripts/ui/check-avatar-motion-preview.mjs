@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
+import {AVATAR_COSTUME_RIGS} from '../../webapp/art/avatar-costume-rigs.js';
 const {chromium}=await import(pathToFileURL(process.env.ITEM_ART_PLAYWRIGHT).href);
 const browser=await chromium.launch({headless:true,executablePath:process.env.ITEM_ART_BROWSER});
 try {
@@ -18,7 +19,7 @@ try {
     assert.deepEqual(await page.locator('canvas').evaluateAll(nodes=>nodes.map(n=>n.toDataURL())),paused);
     await page.locator('#still').click();assert.equal(await page.locator('canvas:not([hidden])').count(),0);
     await page.locator('#still').click();await page.locator('#play').click();
-    assert.equal(await page.locator('#costume option').count(),234);
+    assert.equal(await page.locator('#costume option').count(),Object.keys(AVATAR_COSTUME_RIGS).length);
     await page.getByRole('combobox',{name:'Готовый образ'}).click();
     await page.getByRole('option',{name:'Звёздный картограф — Человек, женский',exact:true}).click();
     await page.waitForFunction(()=>document.querySelector('.preview-figure img').src.includes('celestial-cartographer-human-female')&&document.querySelectorAll('canvas').length===2);

@@ -1,0 +1,742 @@
+{
+  "costumes": 61,
+  "sizes": [
+    64,
+    128,
+    256
+  ],
+  "files": [
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-dawn-64.webp",
+      "bytes": 1752
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-dawn-128.webp",
+      "bytes": 5028
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-dawn-256.webp",
+      "bytes": 15866
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/amethyst-envoy-64.webp",
+      "bytes": 1618
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/amethyst-envoy-128.webp",
+      "bytes": 4796
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/amethyst-envoy-256.webp",
+      "bytes": 15740
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/azure-benediction-64.webp",
+      "bytes": 1992
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/azure-benediction-128.webp",
+      "bytes": 5802
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/azure-benediction-256.webp",
+      "bytes": 17818
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/dawn-emissary-64.webp",
+      "bytes": 1646
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/dawn-emissary-128.webp",
+      "bytes": 4708
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/dawn-emissary-256.webp",
+      "bytes": 14190
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/gilded-dragon-mantle-64.webp",
+      "bytes": 1844
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/gilded-dragon-mantle-128.webp",
+      "bytes": 5812
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/gilded-dragon-mantle-256.webp",
+      "bytes": 18414
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/malachite-warden-64.webp",
+      "bytes": 1800
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/malachite-warden-128.webp",
+      "bytes": 5548
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/malachite-warden-256.webp",
+      "bytes": 18202
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/veil-of-constellations-64.webp",
+      "bytes": 2112
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/veil-of-constellations-128.webp",
+      "bytes": 6404
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/veil-of-constellations-256.webp",
+      "bytes": 21676
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-courtier-64.webp",
+      "bytes": 1584
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-courtier-128.webp",
+      "bytes": 4812
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-courtier-256.webp",
+      "bytes": 15630
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/starfrost-court-64.webp",
+      "bytes": 1922
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/starfrost-court-128.webp",
+      "bytes": 5702
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/starfrost-court-256.webp",
+      "bytes": 18684
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/opal-tide-64.webp",
+      "bytes": 1748
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/opal-tide-128.webp",
+      "bytes": 5170
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/opal-tide-256.webp",
+      "bytes": 16042
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/dusk-velvet-ball-64.webp",
+      "bytes": 1638
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/dusk-velvet-ball-128.webp",
+      "bytes": 4838
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/dusk-velvet-ball-256.webp",
+      "bytes": 15062
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/celestial-cartographer-64.webp",
+      "bytes": 1742
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/celestial-cartographer-128.webp",
+      "bytes": 5302
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/celestial-cartographer-256.webp",
+      "bytes": 17270
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/ivory-vows-64.webp",
+      "bytes": 1688
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/ivory-vows-128.webp",
+      "bytes": 4730
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/ivory-vows-256.webp",
+      "bytes": 15420
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/gilded-veil-64.webp",
+      "bytes": 1722
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/gilded-veil-128.webp",
+      "bytes": 4964
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/gilded-veil-256.webp",
+      "bytes": 15894
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/rose-etiquette-64.webp",
+      "bytes": 1644
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/rose-etiquette-128.webp",
+      "bytes": 4580
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/rose-etiquette-256.webp",
+      "bytes": 14256
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/nocturne-protocol-64.webp",
+      "bytes": 1410
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/nocturne-protocol-128.webp",
+      "bytes": 4064
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/nocturne-protocol-256.webp",
+      "bytes": 12080
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/coalwood-warden-64.webp",
+      "bytes": 1518
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/coalwood-warden-128.webp",
+      "bytes": 5012
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/coalwood-warden-256.webp",
+      "bytes": 16088
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/emerald-griffin-64.webp",
+      "bytes": 1902
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/emerald-griffin-128.webp",
+      "bytes": 6048
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/emerald-griffin-256.webp",
+      "bytes": 19462
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/triune-crown-64.webp",
+      "bytes": 2016
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/triune-crown-128.webp",
+      "bytes": 6046
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/triune-crown-256.webp",
+      "bytes": 19936
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/astral-crown-knight-64.webp",
+      "bytes": 1968
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/astral-crown-knight-128.webp",
+      "bytes": 6048
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/astral-crown-knight-256.webp",
+      "bytes": 19244
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/golden-phoenix-64.webp",
+      "bytes": 2000
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/golden-phoenix-128.webp",
+      "bytes": 6282
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/golden-phoenix-256.webp",
+      "bytes": 20632
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-herald-64.webp",
+      "bytes": 1638
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-herald-128.webp",
+      "bytes": 5102
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-herald-256.webp",
+      "bytes": 17068
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/prismatic-archon-64.webp",
+      "bytes": 2290
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/prismatic-archon-128.webp",
+      "bytes": 6892
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/prismatic-archon-256.webp",
+      "bytes": 21946
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/scarlet-comet-64.webp",
+      "bytes": 1598
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/scarlet-comet-128.webp",
+      "bytes": 4894
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/scarlet-comet-256.webp",
+      "bytes": 15536
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/prism-dragon-64.webp",
+      "bytes": 1980
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/prism-dragon-128.webp",
+      "bytes": 5970
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/prism-dragon-256.webp",
+      "bytes": 19164
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/bloodfrost-rose-64.webp",
+      "bytes": 1822
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/bloodfrost-rose-128.webp",
+      "bytes": 5416
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/bloodfrost-rose-256.webp",
+      "bytes": 17088
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moon-velvet-64.webp",
+      "bytes": 1834
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moon-velvet-128.webp",
+      "bytes": 5790
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moon-velvet-256.webp",
+      "bytes": 20064
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/fuchsia-tempest-64.webp",
+      "bytes": 1566
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/fuchsia-tempest-128.webp",
+      "bytes": 4646
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/fuchsia-tempest-256.webp",
+      "bytes": 15936
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/sandglass-dawn-64.webp",
+      "bytes": 1810
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/sandglass-dawn-128.webp",
+      "bytes": 5408
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/sandglass-dawn-256.webp",
+      "bytes": 17520
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/starlit-reverie-64.webp",
+      "bytes": 1792
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/starlit-reverie-128.webp",
+      "bytes": 5458
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/starlit-reverie-256.webp",
+      "bytes": 18286
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/snow-seraph-64.webp",
+      "bytes": 1866
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/snow-seraph-128.webp",
+      "bytes": 5688
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/snow-seraph-256.webp",
+      "bytes": 17346
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-astronomer-64.webp",
+      "bytes": 1568
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-astronomer-128.webp",
+      "bytes": 4648
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-astronomer-256.webp",
+      "bytes": 16226
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/eclipse-mantle-64.webp",
+      "bytes": 1816
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/eclipse-mantle-128.webp",
+      "bytes": 5596
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/eclipse-mantle-256.webp",
+      "bytes": 18190
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/amethyst-sovereign-64.webp",
+      "bytes": 1696
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/amethyst-sovereign-128.webp",
+      "bytes": 5206
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/amethyst-sovereign-256.webp",
+      "bytes": 17140
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/midnight-gold-envoy-64.webp",
+      "bytes": 1422
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/midnight-gold-envoy-128.webp",
+      "bytes": 4080
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/midnight-gold-envoy-256.webp",
+      "bytes": 12906
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-nightblade-64.webp",
+      "bytes": 1636
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-nightblade-128.webp",
+      "bytes": 5148
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-nightblade-256.webp",
+      "bytes": 17002
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/plum-dragon-queen-64.webp",
+      "bytes": 1794
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/plum-dragon-queen-128.webp",
+      "bytes": 5644
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/plum-dragon-queen-256.webp",
+      "bytes": 17956
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/ashen-dragon-mantle-64.webp",
+      "bytes": 1772
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/ashen-dragon-mantle-128.webp",
+      "bytes": 5240
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/ashen-dragon-mantle-256.webp",
+      "bytes": 16512
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-peacock-64.webp",
+      "bytes": 2074
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-peacock-128.webp",
+      "bytes": 6352
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/crimson-peacock-256.webp",
+      "bytes": 19846
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-dusk-prince-64.webp",
+      "bytes": 1598
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-dusk-prince-128.webp",
+      "bytes": 4992
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/violet-dusk-prince-256.webp",
+      "bytes": 15984
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/sapphire-diadem-64.webp",
+      "bytes": 1848
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/sapphire-diadem-128.webp",
+      "bytes": 5612
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/sapphire-diadem-256.webp",
+      "bytes": 17326
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/void-pulse-64.webp",
+      "bytes": 1472
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/void-pulse-128.webp",
+      "bytes": 4436
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/void-pulse-256.webp",
+      "bytes": 14402
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/saltwind-corsair-64.webp",
+      "bytes": 1502
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/saltwind-corsair-128.webp",
+      "bytes": 4390
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/saltwind-corsair-256.webp",
+      "bytes": 14666
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/quiet-rooftop-64.webp",
+      "bytes": 1514
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/quiet-rooftop-128.webp",
+      "bytes": 4508
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/quiet-rooftop-256.webp",
+      "bytes": 14176
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/cobblestone-sunday-64.webp",
+      "bytes": 1614
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/cobblestone-sunday-128.webp",
+      "bytes": 4664
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/cobblestone-sunday-256.webp",
+      "bytes": 13950
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/seabreeze-holiday-64.webp",
+      "bytes": 1696
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/seabreeze-holiday-128.webp",
+      "bytes": 4618
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/seabreeze-holiday-256.webp",
+      "bytes": 12386
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/cozy-reef-64.webp",
+      "bytes": 1192
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/cozy-reef-128.webp",
+      "bytes": 3276
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/cozy-reef-256.webp",
+      "bytes": 8936
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/hearthside-purr-64.webp",
+      "bytes": 1616
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/hearthside-purr-128.webp",
+      "bytes": 4170
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/hearthside-purr-256.webp",
+      "bytes": 11310
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moonlit-mischief-64.webp",
+      "bytes": 1322
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moonlit-mischief-128.webp",
+      "bytes": 3624
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moonlit-mischief-256.webp",
+      "bytes": 10098
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/meadow-flutter-64.webp",
+      "bytes": 2056
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/meadow-flutter-128.webp",
+      "bytes": 6250
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/meadow-flutter-256.webp",
+      "bytes": 19880
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/coral-bay-breeze-64.webp",
+      "bytes": 1128
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/coral-bay-breeze-128.webp",
+      "bytes": 2946
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/coral-bay-breeze-256.webp",
+      "bytes": 8204
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/high-tide-rider-64.webp",
+      "bytes": 852
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/high-tide-rider-128.webp",
+      "bytes": 2336
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/high-tide-rider-256.webp",
+      "bytes": 6248
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/chrome-district-64.webp",
+      "bytes": 922
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/chrome-district-128.webp",
+      "bytes": 2696
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/chrome-district-256.webp",
+      "bytes": 8724
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/obsidian-gloss-64.webp",
+      "bytes": 1368
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/obsidian-gloss-128.webp",
+      "bytes": 4266
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/obsidian-gloss-256.webp",
+      "bytes": 13050
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/neon-afterglow-64.webp",
+      "bytes": 1764
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/neon-afterglow-128.webp",
+      "bytes": 4726
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/neon-afterglow-256.webp",
+      "bytes": 14352
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/brass-meridian-64.webp",
+      "bytes": 1264
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/brass-meridian-128.webp",
+      "bytes": 3954
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/brass-meridian-256.webp",
+      "bytes": 13364
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/off-duty-avenue-64.webp",
+      "bytes": 942
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/off-duty-avenue-128.webp",
+      "bytes": 2718
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/off-duty-avenue-256.webp",
+      "bytes": 7978
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/midnight-formal-64.webp",
+      "bytes": 1032
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/midnight-formal-128.webp",
+      "bytes": 2932
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/midnight-formal-256.webp",
+      "bytes": 8384
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/last-bell-reaper-64.webp",
+      "bytes": 1730
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/last-bell-reaper-128.webp",
+      "bytes": 5238
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/last-bell-reaper-256.webp",
+      "bytes": 17154
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/hollow-lantern-rider-64.webp",
+      "bytes": 1288
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/hollow-lantern-rider-128.webp",
+      "bytes": 4048
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/hollow-lantern-rider-256.webp",
+      "bytes": 13686
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moonveil-phantom-64.webp",
+      "bytes": 1980
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moonveil-phantom-128.webp",
+      "bytes": 5632
+    },
+    {
+      "path": "webapp/art/avatars/shop-icons/v1/moonveil-phantom-256.webp",
+      "bytes": 16746
+    }
+  ]
+}

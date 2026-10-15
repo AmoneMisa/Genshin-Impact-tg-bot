@@ -6,17 +6,7 @@ from PIL import Image, ImageOps, ImageDraw
 root = Path(__file__).resolve().parents[2]
 base = root / 'art-source/avatars/collections'
 jobs = json.loads((base/'jobs.json').read_text(encoding='utf-8-sig'))
-original = json.loads((root/'art-source/avatars/jobs.json').read_text(encoding='utf-8-sig'))
-names = {job['outfitId']:job['name'] for job in original}
-for job in jobs:
-    job['name'] = names.get(job['costumeId'], job['name'])
-for key, note in [('azure-benediction-dwarf-female','dwarf-azure-review.md'),
-                  ('veil-of-constellations-dwarf-female','dwarf-veil-review.md')]:
-    job = next(j for j in jobs if j['key']==key)
-    job['prompt'] = (base/note).read_text(encoding='utf-8').split('prompt:\n',1)[1].strip()
-    job['generationReferences'] = [job['identityReference']]
-    job['review'] = 'Accepted closed racial tailoring; complete compact silhouette, clean alpha, no text.'
-(base/'jobs.json').write_text(json.dumps(jobs,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+# Publication reads canonical names and provenance without rewriting the queue.
 reviewed = set(json.loads((base/'reviewed.json').read_text(encoding='utf-8-sig')))
 variants = []
 files = []
@@ -64,7 +54,25 @@ for costume in dict.fromkeys(j['costumeId'] for j in jobs):
 
 report = {'variants':len(variants),'files':files,'complete':len(variants)==len(jobs),
           'checks':['decoded WebP','three responsive sizes','preserved alpha','silhouette inset','size budgets'],
-          'defaultAppearanceChanged':False,'wardrobeSelectorImplemented':False}
+          'defaultAppearanceChanged':False,'wardrobeSelectorImplemented':False,
+          'costumeInventorySlotImplemented':True,'shopCategoryImplemented':True,
+          'shopCurrency':'luckCoins','shopPriceRange':[50,125],
+          'rewardSources':['chest','daily bonus'],'rewardCostumes':10,'rewardDurationHours':[24,168],
+          'rewardBound':True,'temporaryItemsTradeable':False}
+cape_queue=root/'art-source/avatars/kamael-capes/jobs.json'
+if cape_queue.exists():
+    capes=json.loads(cape_queue.read_text(encoding='utf-8'))
+    if all(j['status']=='reviewed' for j in capes):
+        report['defaultAppearanceChanged']=True
+        report['kamaelWingCapes']={'uniquePaintings':len(capes),'costumeTargets':len(capes),
+                                  'baseTargets':sum(len(j['defaultAliases']) for j in capes),
+                                  'construction':'rigid wing ornament with narrow hanging cloth banner'}
+all_review=root/'art-source/avatars/motion-review/all-costume-motion-review.json'
+if all_review.exists():
+    motion=json.loads(all_review.read_text(encoding='utf-8'))
+    if motion.get('costumes')==len(variants):report['allCostumeMotionReview']=motion
+cape_review=root/'art-source/avatars/motion-review/kamael-cape-motion-review.json'
+if cape_review.exists():report['kamaelCapeMotionReview']=json.loads(cape_review.read_text(encoding='utf-8'))
 if (base/'browser-review.json').exists():
     report['browserReview'] = json.loads((base/'browser-review.json').read_text(encoding='utf-8'))
 if (base/'motion-review.json').exists():
@@ -85,11 +93,11 @@ WebP: `webapp/art/avatars/collections/v1/`, widths 256/512/1024; allowlisted cat
 
 Prompts and source/reference paths: `jobs.json`. Dwarf azure and constellation variants use closed, short racial tailoring; their exact accepted prompts are in `dwarf-azure-review.md` and `dwarf-veil-review.md`. Rejected open-bodice azure attempts are not published.
 
-Preserved racial anatomy: elves lean, dark elves blue-gray, dwarves compact, Kamael one natural white wing; female Kamael high ponytail. No spiders, embedded text or gameplay changes. Costume props follow the user's accessory guidance. Temporary references untouched.
+Preserved racial anatomy: elves lean, dark elves blue-gray, dwarves compact, Kamael one natural white wing; female Kamael high ponytail. No spiders or embedded text. Costume props follow the user's accessory guidance. Temporary references untouched.
 
-{('The full-body costume generation matrix is complete.' if len(variants)==len(jobs) else f'Generation continues: {len(jobs)-len(variants)} variants remain in the saved queue.')} Current game racial default appearances remain unchanged. No new wardrobe selector or persistence has been introduced. Compact portrait variants for each costume are not part of this body catalogue.
+{('The full-body costume generation matrix is complete.' if len(variants)==len(jobs) else f'Generation continues: {len(jobs)-len(variants)} unrelated variants remain in the saved queue.')} {('Both base Kamael bodies also receive the user-requested wing-capes.' if report['defaultAppearanceChanged'] else 'Current game racial default appearances remain unchanged.')} Costumes are ordinary inventory items worn in the costume slot, with server gender validation. Permanent shop items cost 50–125 CoL and can be traded. Ten designs drop as character-bound 24h–7d items from chests and the daily wheel, 5% per source. Temporary and shadow items cannot be traded, auctioned or mailed. Compact portrait variants for each costume are not part of this body catalogue.
 
-Verification records: delivery.json and browser-review.json. Browser asset-gallery checks cover 320, 390 and 1100 px, decoding, horizontal overflow and broken URLs, using reduced motion. This verifies the asset catalogue, not a wardrobe UI which has not been introduced.
+Verification records: delivery.json and browser-review.json. Browser asset-gallery checks cover 320, 390 and 1100 px, decoding, horizontal overflow and broken URLs, using reduced motion. Functional shop, inventory slot and prize preview checks are in scripts/ui/check-costume-shop.mjs; screenshots and behavior notes are in docs/costume-shop/.
 ''',encoding='utf-8')
 doc = root/'docs/imagegen-prompts.md'
 marker = '## 17f. Every decorative costume on all six races'

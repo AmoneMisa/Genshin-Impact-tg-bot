@@ -25,7 +25,7 @@ def add(path, points, race, gender, key):
         x, y, distance, tilt = points
         face = [x / 300, y / 450]
         rx = .026 if dwarf and gender == 'female' else .020 if dwarf else .016
-        ry = .018 if dwarf and gender == 'female' else .0065
+        ry = poses[path].get('eyeRadiusY', .018 if dwarf and gender == 'female' else .0065)
         rx = min(rx, abs(calibrated[key][1][0]-calibrated[key][0][0])/3.5)
         eyes = [[ex,ey,rx,ry] for ex,ey in calibrated[key]]
         face = [sum(e[0] for e in eyes)/2, sum(e[1] for e in eyes)/2]

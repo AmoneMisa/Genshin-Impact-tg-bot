@@ -6,6 +6,7 @@ import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
 import {l2CategoryIcon} from './art/l2-icon-art.js';
 import {icon} from './icons.js';
+import {costumeIconHtml} from './costume-preview.js';
 
 // Аукцион чата: лоты других игроков, продажа своих вещей и список своих лотов.
 
@@ -44,6 +45,7 @@ export function auctionArt(entry) {
   if(entry.kind==='material')return entry.materialKey ? materialIcon(entry.materialKey) : l2CategoryIcon('material');
   if(entry.kind==='potion')return entry.artPotion ? flaskHtml(entry.artPotion) : l2CategoryIcon('consumable');
   const item=entry.artItem || {name:entry.title,grade:entry.grade,mainType:entry.mainType};
+  if(item.costumeId)return costumeIconHtml(item.costumeId);
   const art=itemArtSources(itemArtKey(normalizeLootKind(item),item));
   return `<img src="${art.src}" srcset="${art.srcset}" sizes="32px" width="32" height="32" alt="" loading="lazy" decoding="async">`;
 }

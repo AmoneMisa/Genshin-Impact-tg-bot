@@ -1,10 +1,12 @@
 import {migrateCharacterCurrency} from '../functions/game/player/currencyMigration.js';
 import crypto from 'crypto';
+import {grantRandomCostume,costumeRewardPool,costumePlayer} from './costumes.js';
 
 export const BONUS_PRIZES = [
-  { name: 'gold', label: 'адены', icon: '🪙', minAmount: 500, maxAmount: 2500, chance: 60 },
+  { name: 'gold', label: 'адены', icon: '🪙', minAmount: 500, maxAmount: 2500, chance: 55 },
   { name: 'moonDew', label: 'лунной росы', icon: '💧', minAmount: 3, maxAmount: 10, chance: 25 },
   { name: 'ironOre', label: 'железной руды', icon: '⛏️', minAmount: 3, maxAmount: 12, chance: 15 },
+  { name:'costume',label:'Костюм на 24 ч.–7 дней',icon:'✦',minAmount:24,maxAmount:168,chance:5 },
 ];
 
 function number(value, fallback = 0) {
@@ -29,6 +31,8 @@ export function getBonusState(session) {
   migrateCharacterCurrency(session);
   const inventory = session?.game?.inventory || {};
   return {
+    player:costumePlayer(session),
+    costumes:costumeRewardPool(session),
     chances: Math.max(0, Math.floor(number(session?.game?.bonusChances))),
     balances: {
       gold: Math.max(0, number(inventory.gold)),
@@ -59,6 +63,12 @@ export function claimBonus(session, options = {}) {
   }
 
   const prize = selectPrize(roll);
+  if(prize.name==='costume'){
+    const grant=grantRandomCostume(session,{now:options.now??Date.now(),random:options.costumeRandom,source:'bonus'});
+    if(!grant.ok)return {...grant,bonus:current};
+    session.game.bonusChances=current.chances-1;
+    return {ok:true,prize:{...grant,name:'costume',icon:'✦'},bonus:getBonusState(session)};
+  }
   const amount = randomInt(prize.minAmount, prize.maxAmount);
   if (!Number.isSafeInteger(amount) || amount < prize.minAmount || amount > prize.maxAmount) {
     throw new Error(`Bonus RNG returned invalid amount ${amount}`);

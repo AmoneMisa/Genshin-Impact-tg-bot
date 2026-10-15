@@ -14,3 +14,6 @@
 .bonus-prize b { color:var(--gold-bright); font-size:12px; }
 .bonus-win { display:flex; align-items:center; justify-content:center; gap:10px; color:var(--gold-bright); }
 .bonus-feedback { color:var(--muted); font-size:13px; }
+.bonus-prize-wheel{position:relative;width:min(100%,320px);aspect-ratio:1}
+.bonus-prize-wheel svg{display:block;width:100%;height:100%;transform-origin:50% 50%}
+.bonus-wheel-pointer{position:absolute;top:0;left:50%;translate:-50% 0;color:var(--gold-bright);font-size:24px;line-height:1}

@@ -4,12 +4,14 @@ import getValueByChance from '../functions/getters/getValueByChance.js';
 import setLevel from '../functions/game/player/setLevel.js';
 import buffPotions from '../template/buffPotions.js';
 import { addBuffPotion } from '../functions/game/player/potionBuffs.js';
+import {grantRandomCostume,costumeRewardPool,costumePlayer} from './costumes.js';
 
 const PRIZES = [
   { chance: 15, value: { name: 'experience', label: 'опыта', minAmount: 4970, maxAmount: 115850 } },
   { chance: 20, value: { name: 'gold', label: 'золота', minAmount: 7500, maxAmount: 128500 } },
   { chance: 10, value: { name: 'moonDew', label: 'лунной росы', minAmount: 50, maxAmount: 950 } },
-  { chance: 26, value: { name: 'nothing', label: 'ничего' } },
+  { chance: 21, value: { name: 'nothing', label: 'ничего' } },
+  { chance: 5, value: { name:'costume',label:'Временный костюм' } },
   { chance: 4, value: { name: 'buffPotion', label: 'зелье-бафф' } },
   { chance: 10, value: { name: 'sword', label: 'мм меча', minAmount: 1, maxAmount: 10 } },
   { chance: 5, value: { name: 'brokenSword', label: 'мм меча', minAmount: -10, maxAmount: -1 } },
@@ -79,6 +81,8 @@ function applyPrize(session, prize, extras = {}) {
 export function getChestState(session) {
   ensureChestState(session);
   return {
+    player:costumePlayer(session),
+    costumes:costumeRewardPool(session),
     available: session.chestTries > 0,
     tries: session.chestTries,
     opened: session.chosenChests.map(normalizeChosenChestId).filter(Boolean),
@@ -86,7 +90,7 @@ export function getChestState(session) {
   };
 }
 
-export function openChest(session, chatId, chestId) {
+export function openChest(session, chatId, chestId, options={}) {
   ensureChestState(session);
 
   const numericChestId = Number(chestId);
@@ -103,9 +107,14 @@ export function openChest(session, chatId, chestId) {
     return { ok: false, reason: 'already_opened', ...getChestState(session) };
   }
 
-  const prize = getValueByChance(getRandom(0, 99), PRIZES);
+  const prize = getValueByChance((options.randomInt||getRandom)(0, 99), PRIZES);
   const extras = {};
-  const amount = applyPrize(session, prize, extras);
+  let amount;
+  if(prize.name==='costume'){
+    const grant=grantRandomCostume(session,{now:options.now??Date.now(),random:options.costumeRandom,source:'chest'});
+    if(!grant.ok)return {...grant,...getChestState(session)};
+    Object.assign(extras,grant);amount=1;
+  }else amount=applyPrize(session, prize, extras);
 
   session.chestCounter += 1;
   session.chosenChests.push(key);
@@ -124,6 +133,7 @@ export function openChest(session, chatId, chestId) {
     ok: true,
     chestId: numericChestId,
     prize: {
+      ...extras,
       type: prize.name,
       label: extras.label ?? prize.label,
       amount,

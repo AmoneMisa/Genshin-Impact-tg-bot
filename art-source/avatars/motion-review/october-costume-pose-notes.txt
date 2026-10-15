@@ -1,0 +1,20 @@
+# Manual annotation: key | 16 portrait percentages | hairstyle held | face hint percentages | protected accessory rectangle(s).
+# Shoulder left/right/Y, hands leftXY/rightXY, waistY, feet leftXY/rightXY, cloth leftXY/rightXY.
+violet-dusk-prince-human-male | 39 61 25 29 39 70 50 39 40 91 61 86 22 72 80 72 | s L | 51 16 | 17 15 38 77
+violet-dusk-prince-elf-male | 43 63 25 28 42 74 49 40 43 89 65 91 22 72 80 73 | l L | 53 17 | 17 19 38 61
+violet-dusk-prince-darkElf-male | 43 62 24 27 42 77 51 40 40 92 63 88 20 72 80 73 | l L | 55 14 | 14 17 37 67
+violet-dusk-prince-orc-male | 40 62 23 27 52 79 44 41 42 92 63 90 20 73 80 72 | r R | 53 14 | 70 27 92 70
+violet-dusk-prince-dwarf-male | 33 71 34 32 54 82 46 51 43 86 69 88 20 70 78 71 | b R | 58 23 | 77 24 94 72
+violet-dusk-prince-kamael-male | 40 61 25 24 39 66 51 40 42 86 55 91 20 72 72 73 | s L | 52 16 | 15 14 33 56
+sapphire-diadem-human-female | 45 61 31 31 39 74 54 43 49 88 60 90 20 77 80 76 | l L | 49 24 | 17 11 45 89
+sapphire-diadem-elf-female | 43 61 29 33 39 75 49 42 44 91 58 87 20 76 80 75 | r L | 47 20 | 19 10 47 89
+sapphire-diadem-darkElf-female | 44 62 29 33 37 77 49 42 49 87 65 91 20 76 80 75 | l L | 51 21 | 22 11 48 89
+sapphire-diadem-orc-female | 43 61 27 28 39 76 50 41 48 88 61 91 20 75 80 75 | r L | 47 17 | 15 6 44 90
+sapphire-diadem-dwarf-female | 43 65 42 29 46 78 59 55 49 91 62 88 20 75 81 76 | t L | 55 31 | 12 7 43 91
+sapphire-diadem-kamael-female | 43 60 29 35 34 69 53 43 51 88 64 91 20 75 78 76 | l L | 47 21 | 19 8 44 91
+void-pulse-human-female | 42 61 25 26 47 72 52 40 48 89 66 88 20 73 80 74 | l - | 49 18 |
+void-pulse-elf-female | 43 62 24 26 47 69 52 39 45 92 58 87 20 74 80 74 | l - | 47 16 |
+void-pulse-darkElf-female | 41 60 23 28 50 73 50 38 49 88 64 92 20 73 80 73 | l - | 46 14 |
+void-pulse-orc-female | 39 60 24 31 49 72 49 40 43 91 60 91 20 73 80 73 | r - | 45 15 |
+void-pulse-dwarf-female | 41 64 40 30 61 80 54 53 42 91 65 89 20 73 80 73 | t - | 55 28 |
+void-pulse-kamael-female | 41 59 26 27 51 68 50 40 46 87 63 91 20 73 78 74 | l - | 45 18 |

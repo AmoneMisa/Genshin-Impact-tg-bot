@@ -1,0 +1,778 @@
+{
+  "uniquePaintings": 61,
+  "costumeTargets": 61,
+  "baseTargets": 2,
+  "newImageEdits": 49,
+  "integratedCostumeCapes": 11,
+  "previouslyAcceptedCape": 1,
+  "responsiveFiles": 189,
+  "allReviewed": true,
+  "manualPoseRecords": 61,
+  "checks": [
+    "decoded WebP",
+    "transparent alpha",
+    "three responsive widths",
+    "silhouette inset",
+    "size budgets",
+    "base aliases match selected costume painting"
+  ],
+  "motionReport": "../motion-review/kamael-cape-motion-review.json",
+  "files": [
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-dawn-kamael-female-256.webp",
+      "bytes": 36650
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-dawn-kamael-female-512.webp",
+      "bytes": 105502
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-dawn-kamael-female-1024.webp",
+      "bytes": 313684
+    },
+    {
+      "path": "webapp/art/avatars/races/v2/kamael-female-256.webp",
+      "bytes": 36650
+    },
+    {
+      "path": "webapp/art/avatars/races/v2/kamael-female-512.webp",
+      "bytes": 105502
+    },
+    {
+      "path": "webapp/art/avatars/races/v2/kamael-female-1024.webp",
+      "bytes": 313684
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/amethyst-envoy-kamael-male-256.webp",
+      "bytes": 33046
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/amethyst-envoy-kamael-male-512.webp",
+      "bytes": 97152
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/amethyst-envoy-kamael-male-1024.webp",
+      "bytes": 286002
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/azure-benediction-kamael-female-256.webp",
+      "bytes": 37508
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/azure-benediction-kamael-female-512.webp",
+      "bytes": 111292
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/azure-benediction-kamael-female-1024.webp",
+      "bytes": 339504
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/dawn-emissary-kamael-male-256.webp",
+      "bytes": 32160
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/dawn-emissary-kamael-male-512.webp",
+      "bytes": 89868
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/dawn-emissary-kamael-male-1024.webp",
+      "bytes": 259902
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male-256.webp",
+      "bytes": 39008
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male-512.webp",
+      "bytes": 114336
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male-1024.webp",
+      "bytes": 340816
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/malachite-warden-kamael-male-256.webp",
+      "bytes": 33386
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/malachite-warden-kamael-male-512.webp",
+      "bytes": 97532
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/malachite-warden-kamael-male-1024.webp",
+      "bytes": 292632
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/veil-of-constellations-kamael-female-256.webp",
+      "bytes": 33872
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/veil-of-constellations-kamael-female-512.webp",
+      "bytes": 103116
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/veil-of-constellations-kamael-female-1024.webp",
+      "bytes": 310248
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-courtier-kamael-male-256.webp",
+      "bytes": 33582
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-courtier-kamael-male-512.webp",
+      "bytes": 96966
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-courtier-kamael-male-1024.webp",
+      "bytes": 286528
+    },
+    {
+      "path": "webapp/art/avatars/races/v2/kamael-male-256.webp",
+      "bytes": 33582
+    },
+    {
+      "path": "webapp/art/avatars/races/v2/kamael-male-512.webp",
+      "bytes": 96966
+    },
+    {
+      "path": "webapp/art/avatars/races/v2/kamael-male-1024.webp",
+      "bytes": 286528
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/starfrost-court-kamael-male-256.webp",
+      "bytes": 32648
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/starfrost-court-kamael-male-512.webp",
+      "bytes": 94496
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/starfrost-court-kamael-male-1024.webp",
+      "bytes": 284246
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/opal-tide-kamael-female-256.webp",
+      "bytes": 30580
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/opal-tide-kamael-female-512.webp",
+      "bytes": 89090
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/opal-tide-kamael-female-1024.webp",
+      "bytes": 258470
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/dusk-velvet-ball-kamael-male-256.webp",
+      "bytes": 32654
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/dusk-velvet-ball-kamael-male-512.webp",
+      "bytes": 88930
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/dusk-velvet-ball-kamael-male-1024.webp",
+      "bytes": 251886
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/celestial-cartographer-kamael-female-256.webp",
+      "bytes": 33170
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/celestial-cartographer-kamael-female-512.webp",
+      "bytes": 96372
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/celestial-cartographer-kamael-female-1024.webp",
+      "bytes": 281238
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ivory-vows-kamael-male-256.webp",
+      "bytes": 30868
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ivory-vows-kamael-male-512.webp",
+      "bytes": 88760
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ivory-vows-kamael-male-1024.webp",
+      "bytes": 265194
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/gilded-veil-kamael-female-256.webp",
+      "bytes": 31046
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/gilded-veil-kamael-female-512.webp",
+      "bytes": 92544
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/gilded-veil-kamael-female-1024.webp",
+      "bytes": 273692
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/rose-etiquette-kamael-male-256.webp",
+      "bytes": 32722
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/rose-etiquette-kamael-male-512.webp",
+      "bytes": 92318
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/rose-etiquette-kamael-male-1024.webp",
+      "bytes": 268948
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/nocturne-protocol-kamael-male-256.webp",
+      "bytes": 28866
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/nocturne-protocol-kamael-male-512.webp",
+      "bytes": 80146
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/nocturne-protocol-kamael-male-1024.webp",
+      "bytes": 231218
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coalwood-warden-kamael-male-256.webp",
+      "bytes": 36912
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coalwood-warden-kamael-male-512.webp",
+      "bytes": 104108
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coalwood-warden-kamael-male-1024.webp",
+      "bytes": 310836
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/emerald-griffin-kamael-male-256.webp",
+      "bytes": 36912
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/emerald-griffin-kamael-male-512.webp",
+      "bytes": 111288
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/emerald-griffin-kamael-male-1024.webp",
+      "bytes": 335282
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/triune-crown-kamael-female-256.webp",
+      "bytes": 41326
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/triune-crown-kamael-female-512.webp",
+      "bytes": 122806
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/triune-crown-kamael-female-1024.webp",
+      "bytes": 370416
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/astral-crown-knight-kamael-male-256.webp",
+      "bytes": 38330
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/astral-crown-knight-kamael-male-512.webp",
+      "bytes": 114140
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/astral-crown-knight-kamael-male-1024.webp",
+      "bytes": 343708
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/golden-phoenix-kamael-male-256.webp",
+      "bytes": 38804
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/golden-phoenix-kamael-male-512.webp",
+      "bytes": 114542
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/golden-phoenix-kamael-male-1024.webp",
+      "bytes": 347462
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-herald-kamael-male-256.webp",
+      "bytes": 28996
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-herald-kamael-male-512.webp",
+      "bytes": 86054
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-herald-kamael-male-1024.webp",
+      "bytes": 258910
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/prismatic-archon-kamael-female-256.webp",
+      "bytes": 35022
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/prismatic-archon-kamael-female-512.webp",
+      "bytes": 105112
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/prismatic-archon-kamael-female-1024.webp",
+      "bytes": 322510
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/scarlet-comet-kamael-male-256.webp",
+      "bytes": 37822
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/scarlet-comet-kamael-male-512.webp",
+      "bytes": 110432
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/scarlet-comet-kamael-male-1024.webp",
+      "bytes": 325020
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/prism-dragon-kamael-female-256.webp",
+      "bytes": 36828
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/prism-dragon-kamael-female-512.webp",
+      "bytes": 105734
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/prism-dragon-kamael-female-1024.webp",
+      "bytes": 314878
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/bloodfrost-rose-kamael-female-256.webp",
+      "bytes": 37210
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/bloodfrost-rose-kamael-female-512.webp",
+      "bytes": 107780
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/bloodfrost-rose-kamael-female-1024.webp",
+      "bytes": 322056
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moon-velvet-kamael-female-256.webp",
+      "bytes": 32376
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moon-velvet-kamael-female-512.webp",
+      "bytes": 104034
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moon-velvet-kamael-female-1024.webp",
+      "bytes": 317348
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/fuchsia-tempest-kamael-female-256.webp",
+      "bytes": 31788
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/fuchsia-tempest-kamael-female-512.webp",
+      "bytes": 97528
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/fuchsia-tempest-kamael-female-1024.webp",
+      "bytes": 300376
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sandglass-dawn-kamael-male-256.webp",
+      "bytes": 34018
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sandglass-dawn-kamael-male-512.webp",
+      "bytes": 104262
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sandglass-dawn-kamael-male-1024.webp",
+      "bytes": 321000
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/starlit-reverie-kamael-female-256.webp",
+      "bytes": 32208
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/starlit-reverie-kamael-female-512.webp",
+      "bytes": 96738
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/starlit-reverie-kamael-female-1024.webp",
+      "bytes": 294016
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/snow-seraph-kamael-male-256.webp",
+      "bytes": 35380
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/snow-seraph-kamael-male-512.webp",
+      "bytes": 105334
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/snow-seraph-kamael-male-1024.webp",
+      "bytes": 313824
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-astronomer-kamael-female-256.webp",
+      "bytes": 29252
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-astronomer-kamael-female-512.webp",
+      "bytes": 90970
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-astronomer-kamael-female-1024.webp",
+      "bytes": 281276
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/eclipse-mantle-kamael-male-256.webp",
+      "bytes": 38692
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/eclipse-mantle-kamael-male-512.webp",
+      "bytes": 115592
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/eclipse-mantle-kamael-male-1024.webp",
+      "bytes": 351878
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/amethyst-sovereign-kamael-male-256.webp",
+      "bytes": 36082
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/amethyst-sovereign-kamael-male-512.webp",
+      "bytes": 109200
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/amethyst-sovereign-kamael-male-1024.webp",
+      "bytes": 326966
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-gold-envoy-kamael-male-256.webp",
+      "bytes": 30418
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-gold-envoy-kamael-male-512.webp",
+      "bytes": 84386
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-gold-envoy-kamael-male-1024.webp",
+      "bytes": 246842
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-nightblade-kamael-female-256.webp",
+      "bytes": 35188
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-nightblade-kamael-female-512.webp",
+      "bytes": 101686
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-nightblade-kamael-female-1024.webp",
+      "bytes": 300128
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/plum-dragon-queen-kamael-female-256.webp",
+      "bytes": 37454
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/plum-dragon-queen-kamael-female-512.webp",
+      "bytes": 112024
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/plum-dragon-queen-kamael-female-1024.webp",
+      "bytes": 335244
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female-256.webp",
+      "bytes": 31156
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female-512.webp",
+      "bytes": 92758
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female-1024.webp",
+      "bytes": 285480
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-kamael-female-256.webp",
+      "bytes": 36574
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-kamael-female-512.webp",
+      "bytes": 113726
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-kamael-female-1024.webp",
+      "bytes": 351672
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-kamael-male-256.webp",
+      "bytes": 41142
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-kamael-male-512.webp",
+      "bytes": 122340
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-kamael-male-1024.webp",
+      "bytes": 376766
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-kamael-female-256.webp",
+      "bytes": 35582
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-kamael-female-512.webp",
+      "bytes": 108332
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-kamael-female-1024.webp",
+      "bytes": 327552
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-kamael-female-256.webp",
+      "bytes": 35762
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-kamael-female-512.webp",
+      "bytes": 105242
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-kamael-female-1024.webp",
+      "bytes": 313486
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-kamael-male-256.webp",
+      "bytes": 30190
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-kamael-male-512.webp",
+      "bytes": 84574
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-kamael-male-1024.webp",
+      "bytes": 246386
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-kamael-male-256.webp",
+      "bytes": 32238
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-kamael-male-512.webp",
+      "bytes": 92002
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-kamael-male-1024.webp",
+      "bytes": 276712
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-kamael-female-256.webp",
+      "bytes": 26384
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-kamael-female-512.webp",
+      "bytes": 73254
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-kamael-female-1024.webp",
+      "bytes": 215300
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-kamael-female-256.webp",
+      "bytes": 26394
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-kamael-female-512.webp",
+      "bytes": 70606
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-kamael-female-1024.webp",
+      "bytes": 197760
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-kamael-male-256.webp",
+      "bytes": 24470
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-kamael-male-512.webp",
+      "bytes": 62742
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-kamael-male-1024.webp",
+      "bytes": 172564
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-kamael-female-256.webp",
+      "bytes": 26400
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-kamael-female-512.webp",
+      "bytes": 69238
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-kamael-female-1024.webp",
+      "bytes": 199294
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-kamael-male-256.webp",
+      "bytes": 25516
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-kamael-male-512.webp",
+      "bytes": 68062
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-kamael-male-1024.webp",
+      "bytes": 194904
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-kamael-female-256.webp",
+      "bytes": 26410
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-kamael-female-512.webp",
+      "bytes": 75598
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-kamael-female-1024.webp",
+      "bytes": 222078
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-kamael-female-256.webp",
+      "bytes": 25420
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-kamael-female-512.webp",
+      "bytes": 68816
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-kamael-female-1024.webp",
+      "bytes": 196796
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-kamael-male-256.webp",
+      "bytes": 31260
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-kamael-male-512.webp",
+      "bytes": 80434
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-kamael-male-1024.webp",
+      "bytes": 225136
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-kamael-female-256.webp",
+      "bytes": 25102
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-kamael-female-512.webp",
+      "bytes": 69180
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-kamael-female-1024.webp",
+      "bytes": 209438
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-kamael-female-256.webp",
+      "bytes": 23342
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-kamael-female-512.webp",
+      "bytes": 62630
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-kamael-female-1024.webp",
+      "bytes": 190668
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-kamael-female-256.webp",
+      "bytes": 27650
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-kamael-female-512.webp",
+      "bytes": 77450
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-kamael-female-1024.webp",
+      "bytes": 234246
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-kamael-male-256.webp",
+      "bytes": 30204
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-kamael-male-512.webp",
+      "bytes": 86820
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-kamael-male-1024.webp",
+      "bytes": 263292
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-kamael-male-256.webp",
+      "bytes": 24016
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-kamael-male-512.webp",
+      "bytes": 64648
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-kamael-male-1024.webp",
+      "bytes": 198900
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-kamael-male-256.webp",
+      "bytes": 24332
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-kamael-male-512.webp",
+      "bytes": 62308
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-kamael-male-1024.webp",
+      "bytes": 181894
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-kamael-male-256.webp",
+      "bytes": 38504
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-kamael-male-512.webp",
+      "bytes": 114976
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-kamael-male-1024.webp",
+      "bytes": 363100
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-kamael-male-256.webp",
+      "bytes": 29218
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-kamael-male-512.webp",
+      "bytes": 84462
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-kamael-male-1024.webp",
+      "bytes": 255898
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-kamael-female-256.webp",
+      "bytes": 35632
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-kamael-female-512.webp",
+      "bytes": 104588
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-kamael-female-1024.webp",
+      "bytes": 335738
+    }
+  ]
+}

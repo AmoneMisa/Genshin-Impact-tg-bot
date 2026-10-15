@@ -16,7 +16,7 @@ test('retired currency merges once in wallet, warehouse and mail; grade crystals
  assert.equal(clan.warehouse.moonDew,100);assert.equal(clan.investigations.active.progress.moonDew,4);
 });
 test('wheel routes all probability boundaries and credits only the chosen bounded reward',()=>{
- for(const [roll,name] of [[0,'gold'],[59,'gold'],[60,'moonDew'],[84,'moonDew'],[85,'ironOre'],[99,'ironOre']]){
+ for(const [roll,name] of [[0,'gold'],[54,'gold'],[55,'moonDew'],[79,'moonDew'],[80,'ironOre'],[94,'ironOre']]){
   const s={game:{bonusChances:1,inventory:{gold:0,moonDew:0,ironOre:0}}};
   const prize=getBonusState(s).prizes.find(p=>p.name===name);let first=true;
   const result=claimBonus(s,{randomInt:(min,max)=>{if(first){first=false;return roll;}return max;}});

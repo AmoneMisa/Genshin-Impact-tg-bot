@@ -1554,6 +1554,1014 @@ export const AVATAR_COSTUME_VARIANTS = Object.freeze([
     "name": "Сливовая драконица",
     "race": "kamael",
     "gender": "female"
+  },
+  {
+    "key": "ashen-dragon-mantle-human-female",
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Ashen Dragon Mantle",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "ashen-dragon-mantle-elf-female",
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Ashen Dragon Mantle",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "ashen-dragon-mantle-darkElf-female",
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Ashen Dragon Mantle",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "ashen-dragon-mantle-orc-female",
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Ashen Dragon Mantle",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "ashen-dragon-mantle-dwarf-female",
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Ashen Dragon Mantle",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "ashen-dragon-mantle-kamael-female",
+    "costumeId": "ashen-dragon-mantle",
+    "name": "Ashen Dragon Mantle",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "crimson-peacock-human-female",
+    "costumeId": "crimson-peacock",
+    "name": "Crimson Peacock",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "crimson-peacock-elf-female",
+    "costumeId": "crimson-peacock",
+    "name": "Crimson Peacock",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "crimson-peacock-darkElf-female",
+    "costumeId": "crimson-peacock",
+    "name": "Crimson Peacock",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "crimson-peacock-orc-female",
+    "costumeId": "crimson-peacock",
+    "name": "Crimson Peacock",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "crimson-peacock-dwarf-female",
+    "costumeId": "crimson-peacock",
+    "name": "Crimson Peacock",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "crimson-peacock-kamael-female",
+    "costumeId": "crimson-peacock",
+    "name": "Crimson Peacock",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "violet-dusk-prince-human-male",
+    "costumeId": "violet-dusk-prince",
+    "name": "Violet Dusk Prince",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "violet-dusk-prince-elf-male",
+    "costumeId": "violet-dusk-prince",
+    "name": "Violet Dusk Prince",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "violet-dusk-prince-darkElf-male",
+    "costumeId": "violet-dusk-prince",
+    "name": "Violet Dusk Prince",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "violet-dusk-prince-orc-male",
+    "costumeId": "violet-dusk-prince",
+    "name": "Violet Dusk Prince",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "violet-dusk-prince-dwarf-male",
+    "costumeId": "violet-dusk-prince",
+    "name": "Violet Dusk Prince",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "violet-dusk-prince-kamael-male",
+    "costumeId": "violet-dusk-prince",
+    "name": "Violet Dusk Prince",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "sapphire-diadem-human-female",
+    "costumeId": "sapphire-diadem",
+    "name": "Sapphire Diadem",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "sapphire-diadem-elf-female",
+    "costumeId": "sapphire-diadem",
+    "name": "Sapphire Diadem",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "sapphire-diadem-darkElf-female",
+    "costumeId": "sapphire-diadem",
+    "name": "Sapphire Diadem",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "sapphire-diadem-orc-female",
+    "costumeId": "sapphire-diadem",
+    "name": "Sapphire Diadem",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "sapphire-diadem-dwarf-female",
+    "costumeId": "sapphire-diadem",
+    "name": "Sapphire Diadem",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "sapphire-diadem-kamael-female",
+    "costumeId": "sapphire-diadem",
+    "name": "Sapphire Diadem",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "void-pulse-human-female",
+    "costumeId": "void-pulse",
+    "name": "Void Pulse",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "void-pulse-elf-female",
+    "costumeId": "void-pulse",
+    "name": "Void Pulse",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "void-pulse-darkElf-female",
+    "costumeId": "void-pulse",
+    "name": "Void Pulse",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "void-pulse-orc-female",
+    "costumeId": "void-pulse",
+    "name": "Void Pulse",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "void-pulse-dwarf-female",
+    "costumeId": "void-pulse",
+    "name": "Void Pulse",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "void-pulse-kamael-female",
+    "costumeId": "void-pulse",
+    "name": "Void Pulse",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "saltwind-corsair-human-male",
+    "costumeId": "saltwind-corsair",
+    "name": "Saltwind Corsair",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "saltwind-corsair-elf-male",
+    "costumeId": "saltwind-corsair",
+    "name": "Saltwind Corsair",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "saltwind-corsair-darkElf-male",
+    "costumeId": "saltwind-corsair",
+    "name": "Saltwind Corsair",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "saltwind-corsair-orc-male",
+    "costumeId": "saltwind-corsair",
+    "name": "Saltwind Corsair",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "saltwind-corsair-dwarf-male",
+    "costumeId": "saltwind-corsair",
+    "name": "Saltwind Corsair",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "saltwind-corsair-kamael-male",
+    "costumeId": "saltwind-corsair",
+    "name": "Saltwind Corsair",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "quiet-rooftop-human-male",
+    "costumeId": "quiet-rooftop",
+    "name": "Quiet Rooftop",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "quiet-rooftop-elf-male",
+    "costumeId": "quiet-rooftop",
+    "name": "Quiet Rooftop",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "quiet-rooftop-darkElf-male",
+    "costumeId": "quiet-rooftop",
+    "name": "Quiet Rooftop",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "quiet-rooftop-orc-male",
+    "costumeId": "quiet-rooftop",
+    "name": "Quiet Rooftop",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "quiet-rooftop-dwarf-male",
+    "costumeId": "quiet-rooftop",
+    "name": "Quiet Rooftop",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "quiet-rooftop-kamael-male",
+    "costumeId": "quiet-rooftop",
+    "name": "Quiet Rooftop",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "cobblestone-sunday-human-female",
+    "costumeId": "cobblestone-sunday",
+    "name": "Cobblestone Sunday",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "cobblestone-sunday-elf-female",
+    "costumeId": "cobblestone-sunday",
+    "name": "Cobblestone Sunday",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "cobblestone-sunday-darkElf-female",
+    "costumeId": "cobblestone-sunday",
+    "name": "Cobblestone Sunday",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "cobblestone-sunday-orc-female",
+    "costumeId": "cobblestone-sunday",
+    "name": "Cobblestone Sunday",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "cobblestone-sunday-dwarf-female",
+    "costumeId": "cobblestone-sunday",
+    "name": "Cobblestone Sunday",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "cobblestone-sunday-kamael-female",
+    "costumeId": "cobblestone-sunday",
+    "name": "Cobblestone Sunday",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "seabreeze-holiday-human-female",
+    "costumeId": "seabreeze-holiday",
+    "name": "Seabreeze Holiday",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "seabreeze-holiday-elf-female",
+    "costumeId": "seabreeze-holiday",
+    "name": "Seabreeze Holiday",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "seabreeze-holiday-darkElf-female",
+    "costumeId": "seabreeze-holiday",
+    "name": "Seabreeze Holiday",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "seabreeze-holiday-orc-female",
+    "costumeId": "seabreeze-holiday",
+    "name": "Seabreeze Holiday",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "seabreeze-holiday-dwarf-female",
+    "costumeId": "seabreeze-holiday",
+    "name": "Seabreeze Holiday",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "seabreeze-holiday-kamael-female",
+    "costumeId": "seabreeze-holiday",
+    "name": "Seabreeze Holiday",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "cozy-reef-human-male",
+    "costumeId": "cozy-reef",
+    "name": "Cozy Reef",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "cozy-reef-elf-male",
+    "costumeId": "cozy-reef",
+    "name": "Cozy Reef",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "cozy-reef-darkElf-male",
+    "costumeId": "cozy-reef",
+    "name": "Cozy Reef",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "cozy-reef-orc-male",
+    "costumeId": "cozy-reef",
+    "name": "Cozy Reef",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "cozy-reef-dwarf-male",
+    "costumeId": "cozy-reef",
+    "name": "Cozy Reef",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "cozy-reef-kamael-male",
+    "costumeId": "cozy-reef",
+    "name": "Cozy Reef",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "hearthside-purr-human-female",
+    "costumeId": "hearthside-purr",
+    "name": "Hearthside Purr",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "hearthside-purr-elf-female",
+    "costumeId": "hearthside-purr",
+    "name": "Hearthside Purr",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "hearthside-purr-darkElf-female",
+    "costumeId": "hearthside-purr",
+    "name": "Hearthside Purr",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "hearthside-purr-orc-female",
+    "costumeId": "hearthside-purr",
+    "name": "Hearthside Purr",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "hearthside-purr-dwarf-female",
+    "costumeId": "hearthside-purr",
+    "name": "Hearthside Purr",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "hearthside-purr-kamael-female",
+    "costumeId": "hearthside-purr",
+    "name": "Hearthside Purr",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "moonlit-mischief-human-male",
+    "costumeId": "moonlit-mischief",
+    "name": "Moonlit Mischief",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "moonlit-mischief-elf-male",
+    "costumeId": "moonlit-mischief",
+    "name": "Moonlit Mischief",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "moonlit-mischief-darkElf-male",
+    "costumeId": "moonlit-mischief",
+    "name": "Moonlit Mischief",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "moonlit-mischief-orc-male",
+    "costumeId": "moonlit-mischief",
+    "name": "Moonlit Mischief",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "moonlit-mischief-dwarf-male",
+    "costumeId": "moonlit-mischief",
+    "name": "Moonlit Mischief",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "moonlit-mischief-kamael-male",
+    "costumeId": "moonlit-mischief",
+    "name": "Moonlit Mischief",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "meadow-flutter-human-female",
+    "costumeId": "meadow-flutter",
+    "name": "Meadow Flutter",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "meadow-flutter-elf-female",
+    "costumeId": "meadow-flutter",
+    "name": "Meadow Flutter",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "meadow-flutter-darkElf-female",
+    "costumeId": "meadow-flutter",
+    "name": "Meadow Flutter",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "meadow-flutter-orc-female",
+    "costumeId": "meadow-flutter",
+    "name": "Meadow Flutter",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "meadow-flutter-dwarf-female",
+    "costumeId": "meadow-flutter",
+    "name": "Meadow Flutter",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "meadow-flutter-kamael-female",
+    "costumeId": "meadow-flutter",
+    "name": "Meadow Flutter",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "coral-bay-breeze-human-female",
+    "costumeId": "coral-bay-breeze",
+    "name": "Coral Bay Breeze",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "coral-bay-breeze-elf-female",
+    "costumeId": "coral-bay-breeze",
+    "name": "Coral Bay Breeze",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "coral-bay-breeze-darkElf-female",
+    "costumeId": "coral-bay-breeze",
+    "name": "Coral Bay Breeze",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "coral-bay-breeze-orc-female",
+    "costumeId": "coral-bay-breeze",
+    "name": "Coral Bay Breeze",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "coral-bay-breeze-dwarf-female",
+    "costumeId": "coral-bay-breeze",
+    "name": "Coral Bay Breeze",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "coral-bay-breeze-kamael-female",
+    "costumeId": "coral-bay-breeze",
+    "name": "Coral Bay Breeze",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "high-tide-rider-human-male",
+    "costumeId": "high-tide-rider",
+    "name": "High Tide Rider",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "high-tide-rider-elf-male",
+    "costumeId": "high-tide-rider",
+    "name": "High Tide Rider",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "high-tide-rider-darkElf-male",
+    "costumeId": "high-tide-rider",
+    "name": "High Tide Rider",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "high-tide-rider-orc-male",
+    "costumeId": "high-tide-rider",
+    "name": "High Tide Rider",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "high-tide-rider-dwarf-male",
+    "costumeId": "high-tide-rider",
+    "name": "High Tide Rider",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "high-tide-rider-kamael-male",
+    "costumeId": "high-tide-rider",
+    "name": "High Tide Rider",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "chrome-district-human-female",
+    "costumeId": "chrome-district",
+    "name": "Chrome District",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "chrome-district-elf-female",
+    "costumeId": "chrome-district",
+    "name": "Chrome District",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "chrome-district-darkElf-female",
+    "costumeId": "chrome-district",
+    "name": "Chrome District",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "chrome-district-orc-female",
+    "costumeId": "chrome-district",
+    "name": "Chrome District",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "chrome-district-dwarf-female",
+    "costumeId": "chrome-district",
+    "name": "Chrome District",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "chrome-district-kamael-female",
+    "costumeId": "chrome-district",
+    "name": "Chrome District",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "obsidian-gloss-human-female",
+    "costumeId": "obsidian-gloss",
+    "name": "Obsidian Gloss",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "obsidian-gloss-elf-female",
+    "costumeId": "obsidian-gloss",
+    "name": "Obsidian Gloss",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "obsidian-gloss-darkElf-female",
+    "costumeId": "obsidian-gloss",
+    "name": "Obsidian Gloss",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "obsidian-gloss-orc-female",
+    "costumeId": "obsidian-gloss",
+    "name": "Obsidian Gloss",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "obsidian-gloss-dwarf-female",
+    "costumeId": "obsidian-gloss",
+    "name": "Obsidian Gloss",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "obsidian-gloss-kamael-female",
+    "costumeId": "obsidian-gloss",
+    "name": "Obsidian Gloss",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "neon-afterglow-human-female",
+    "costumeId": "neon-afterglow",
+    "name": "Neon Afterglow",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "neon-afterglow-elf-female",
+    "costumeId": "neon-afterglow",
+    "name": "Neon Afterglow",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "neon-afterglow-darkElf-female",
+    "costumeId": "neon-afterglow",
+    "name": "Neon Afterglow",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "neon-afterglow-orc-female",
+    "costumeId": "neon-afterglow",
+    "name": "Neon Afterglow",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "neon-afterglow-dwarf-female",
+    "costumeId": "neon-afterglow",
+    "name": "Neon Afterglow",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "neon-afterglow-kamael-female",
+    "costumeId": "neon-afterglow",
+    "name": "Neon Afterglow",
+    "race": "kamael",
+    "gender": "female"
+  },
+  {
+    "key": "brass-meridian-human-male",
+    "costumeId": "brass-meridian",
+    "name": "Brass Meridian",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "brass-meridian-elf-male",
+    "costumeId": "brass-meridian",
+    "name": "Brass Meridian",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "brass-meridian-darkElf-male",
+    "costumeId": "brass-meridian",
+    "name": "Brass Meridian",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "brass-meridian-orc-male",
+    "costumeId": "brass-meridian",
+    "name": "Brass Meridian",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "brass-meridian-dwarf-male",
+    "costumeId": "brass-meridian",
+    "name": "Brass Meridian",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "brass-meridian-kamael-male",
+    "costumeId": "brass-meridian",
+    "name": "Brass Meridian",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "off-duty-avenue-human-male",
+    "costumeId": "off-duty-avenue",
+    "name": "Off-Duty Avenue",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "off-duty-avenue-elf-male",
+    "costumeId": "off-duty-avenue",
+    "name": "Off-Duty Avenue",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "off-duty-avenue-darkElf-male",
+    "costumeId": "off-duty-avenue",
+    "name": "Off-Duty Avenue",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "off-duty-avenue-orc-male",
+    "costumeId": "off-duty-avenue",
+    "name": "Off-Duty Avenue",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "off-duty-avenue-dwarf-male",
+    "costumeId": "off-duty-avenue",
+    "name": "Off-Duty Avenue",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "off-duty-avenue-kamael-male",
+    "costumeId": "off-duty-avenue",
+    "name": "Off-Duty Avenue",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "midnight-formal-human-male",
+    "costumeId": "midnight-formal",
+    "name": "Midnight Formal",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "midnight-formal-elf-male",
+    "costumeId": "midnight-formal",
+    "name": "Midnight Formal",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "midnight-formal-darkElf-male",
+    "costumeId": "midnight-formal",
+    "name": "Midnight Formal",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "midnight-formal-orc-male",
+    "costumeId": "midnight-formal",
+    "name": "Midnight Formal",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "midnight-formal-dwarf-male",
+    "costumeId": "midnight-formal",
+    "name": "Midnight Formal",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "midnight-formal-kamael-male",
+    "costumeId": "midnight-formal",
+    "name": "Midnight Formal",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "last-bell-reaper-human-male",
+    "costumeId": "last-bell-reaper",
+    "name": "Last Bell Reaper",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "last-bell-reaper-elf-male",
+    "costumeId": "last-bell-reaper",
+    "name": "Last Bell Reaper",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "last-bell-reaper-darkElf-male",
+    "costumeId": "last-bell-reaper",
+    "name": "Last Bell Reaper",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "last-bell-reaper-orc-male",
+    "costumeId": "last-bell-reaper",
+    "name": "Last Bell Reaper",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "last-bell-reaper-dwarf-male",
+    "costumeId": "last-bell-reaper",
+    "name": "Last Bell Reaper",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "last-bell-reaper-kamael-male",
+    "costumeId": "last-bell-reaper",
+    "name": "Last Bell Reaper",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "hollow-lantern-rider-human-male",
+    "costumeId": "hollow-lantern-rider",
+    "name": "Hollow Lantern Rider",
+    "race": "human",
+    "gender": "male"
+  },
+  {
+    "key": "moonveil-phantom-human-female",
+    "costumeId": "moonveil-phantom",
+    "name": "Moonveil Phantom",
+    "race": "human",
+    "gender": "female"
+  },
+  {
+    "key": "hollow-lantern-rider-elf-male",
+    "costumeId": "hollow-lantern-rider",
+    "name": "Hollow Lantern Rider",
+    "race": "elf",
+    "gender": "male"
+  },
+  {
+    "key": "hollow-lantern-rider-darkElf-male",
+    "costumeId": "hollow-lantern-rider",
+    "name": "Hollow Lantern Rider",
+    "race": "darkElf",
+    "gender": "male"
+  },
+  {
+    "key": "hollow-lantern-rider-orc-male",
+    "costumeId": "hollow-lantern-rider",
+    "name": "Hollow Lantern Rider",
+    "race": "orc",
+    "gender": "male"
+  },
+  {
+    "key": "hollow-lantern-rider-dwarf-male",
+    "costumeId": "hollow-lantern-rider",
+    "name": "Hollow Lantern Rider",
+    "race": "dwarf",
+    "gender": "male"
+  },
+  {
+    "key": "hollow-lantern-rider-kamael-male",
+    "costumeId": "hollow-lantern-rider",
+    "name": "Hollow Lantern Rider",
+    "race": "kamael",
+    "gender": "male"
+  },
+  {
+    "key": "moonveil-phantom-elf-female",
+    "costumeId": "moonveil-phantom",
+    "name": "Moonveil Phantom",
+    "race": "elf",
+    "gender": "female"
+  },
+  {
+    "key": "moonveil-phantom-darkElf-female",
+    "costumeId": "moonveil-phantom",
+    "name": "Moonveil Phantom",
+    "race": "darkElf",
+    "gender": "female"
+  },
+  {
+    "key": "moonveil-phantom-orc-female",
+    "costumeId": "moonveil-phantom",
+    "name": "Moonveil Phantom",
+    "race": "orc",
+    "gender": "female"
+  },
+  {
+    "key": "moonveil-phantom-dwarf-female",
+    "costumeId": "moonveil-phantom",
+    "name": "Moonveil Phantom",
+    "race": "dwarf",
+    "gender": "female"
+  },
+  {
+    "key": "moonveil-phantom-kamael-female",
+    "costumeId": "moonveil-phantom",
+    "name": "Moonveil Phantom",
+    "race": "kamael",
+    "gender": "female"
   }
 ].map(Object.freeze));
 export function avatarCostumeVariants(player = {}) {

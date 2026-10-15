@@ -1,8 +1,14 @@
 import { avatarArtUrl } from './avatar-art.js';
 import { REVIEWED_WORLD_ART } from './world-art-manifest.js';
 import { portraitFamily } from '../class-family.js';
+import {avatarCostumeArtUrl} from './avatar-costume-art.js';
 
 export function fullBodyHeroUrl(player = {}) {
+  const costume=player.costume;
+  if(costume&&(!costume.expiresAt||costume.expiresAt>Date.now())&&costume.gender===player.gender){
+    const src=avatarCostumeArtUrl(costume.id,player);
+    if(src)return src;
+  }
   const avatar = avatarArtUrl(player);
   if (avatar) return avatar;
   const family = portraitFamily(player.className);

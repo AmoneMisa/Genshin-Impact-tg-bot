@@ -241,7 +241,6 @@ export async function openCharacterPage(options,initialTab='stats') {
       if(button.dataset.skillTab){skillTab=button.dataset.skillTab;draw();haptic?.('light');return;}
       if(button.dataset.characterTab){selectTab(button.dataset.characterTab);return;}
       if(button.dataset.characterSlot){slot=button.dataset.characterSlot;draw();
-        if(slot==='costume')return await child(openPlayerProfile);
         const item=equippedItemForSlot(data.equipment,slot),label=[...LEFT,...RIGHT,...WEAPONS].find(s=>s[0]===slot)?.[1];
         showDetail(item?.name||label,item?itemDetails(item,slot):action('inventory','Выбрать предмет'));return;}
       if(button.dataset.effectId){effectId=button.dataset.effectId;const effect=data.effects.find(e=>e.id===effectId);if(effect)showDetail(effect.name,effectDetail(effect));return;}
@@ -283,6 +282,7 @@ export async function openCharacterPage(options,initialTab='stats') {
   const onVisible=()=>{syncTimer();if(!document.hidden&&!pending)refresh().catch(error=>{feedback.textContent=error.message;});};
   function tick(){
     if(closed || document.hidden)return;
+    if(data.player?.costume?.expiresAt&&data.player.costume.expiresAt<=Date.now()&&!pending){data.player.costume=null;draw();refresh().catch(error=>{feedback.textContent=error.message;});return;}
     const expired=(data.effects || []).some(effect=>effect.until && effect.until<=Date.now());
     if(expired&&!pending){data.effects=data.effects.filter(effect=>!effect.until || effect.until>Date.now());if(tab==='effects')draw();}
     panel.querySelectorAll('[data-effect-timer]').forEach(node=>{
@@ -290,7 +290,7 @@ export async function openCharacterPage(options,initialTab='stats') {
       if(effect)node.textContent=countdown(effect);
     });
   }
-  function syncTimer(){clearInterval(timer);timer=null;if(!closed&&!document.hidden&&!pending&&tab==='effects'&&(data.effects||[]).some(e=>e.until))timer=setInterval(tick,1000);}
+  function syncTimer(){clearInterval(timer);timer=null;if(!closed&&!document.hidden&&!pending&&((tab==='effects'&&(data.effects||[]).some(e=>e.until))||data.player?.costume?.expiresAt))timer=setInterval(tick,1000);}
   document.addEventListener('visibilitychange',onVisible);
   document.body.appendChild(overlay);installAvatarCostumeMotion();draw();requestAnimationFrame(()=>{overlay.classList.add('visible');overlay.querySelector('.overlay-close').focus();});
 }

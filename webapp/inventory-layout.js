@@ -6,6 +6,7 @@ import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
 import {materialIcon} from './material-icons.js';
 import {l2SlotBackground} from './l2-slot-background.js';
+import {costumeIconHtml} from './costume-preview.js';
 
 export const INVENTORY_LEFT = [
   ['head','Голова','icon-armor_circlet_i00'],
@@ -19,6 +20,7 @@ export const INVENTORY_LEFT = [
   ['rightHand','Правая рука','icon-weapon_arcana_mace_i00'],
 ];
 export const INVENTORY_RIGHT = [
+  ['costume','Костюм','costume'],
   ['hair','Головной аксессуар','hair'],['hair2','Второй аксессуар','hair'],
   ['leftEar','Левое ухо','icon-accessory_earring_of_antaras_i00'],
   ['rightEar','Правое ухо','icon-accessory_earring_of_antaras_i00'],
@@ -38,6 +40,7 @@ export function inventoryEquipped(state,slot) {
   return candidates.find(item=>item.name===snapshot.name&&item.grade===snapshot.grade) || candidates[0] || null;
 }
 export function inventoryItemArt(item) {
+  if(item.costumeId)return costumeIconHtml(item.costumeId);
   const art=itemArtSources(itemArtKey(normalizeLootKind(item),item));
   return `<img class="${item.shadow?'is-shadow-item':''}" src="${art.src}" srcset="${art.srcset}" sizes="44px" alt="" decoding="async">`;
 }

@@ -1,4 +1,5 @@
 import {penaltyRows} from '../functions/game/player/deathPenalties.js';
+import {activeCostume,reconcileCostumeSlot} from '../functions/game/equipment/costumeItems.js';
 import {playerRace} from '../functions/game/player/playerRace.js';
 import {playerLevelCap} from '../functions/game/player/classProgression.js';
 import { getVitalityState } from '../functions/game/player/vitality.js';
@@ -97,6 +98,7 @@ export function createMiniAppFeatures(context) {
 }
 
 export function createMiniAppState(session, context) {
+  reconcileCostumeSlot(session);
   const game = session?.game || {};
   const inventory = game.inventory || {};
   const stats = game.stats || {};
@@ -137,6 +139,7 @@ export function createMiniAppState(session, context) {
       className: gameClassStats.name || 'noClass',
       race: playerRace(session),
       gender: session?.gender === 'female' ? 'female' : 'male',
+      costume:activeCostume(session),
       classTitle: gameClassStats.translateName || gameClassStats.name || 'Без класса',
       dead:hp<=0,
       penalties:penaltyRows(session),

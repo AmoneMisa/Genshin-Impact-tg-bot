@@ -4,8 +4,9 @@ import {materialIcon} from './material-icons.js';
 import {escapeHtml} from './escape-html.js';
 import {icon} from './icons.js';
 export function stockArt(row){return row.kind==='currency'?(row.ref==='gold'?materialIcon('gold'):(row.ref==='moonDew'?materialIcon('moonDew'):icon('pickaxe'))):auctionArt(row);}
+const expiryLabel=row=>row.expiresAt?' · До '+new Date(row.expiresAt).toLocaleString('ru-RU'):'';
 export function stockGrid(rows,{select=false,selected=-1,min=30}={}){
- return itemGridHtml(rows.map((row,index)=>`<${select?'button':'div'} ${select?'type="button"':''} class="item-grid-cell stock-slot ${selected===index?'selected':''}" ${select?`data-stock-index="${index}"`:''} title="${escapeHtml(row.title)}${row.stats?.length?' — '+escapeHtml(row.stats.join(' · ')):''}" aria-label="${escapeHtml(row.title)} ×${row.count}">${stockArt(row)}<small>${row.count>1?new Intl.NumberFormat('ru-RU').format(row.count):''}</small></${select?'button':'div'}>`), {className: 'stock-grid', min, label: 'Предметы'});
+ return itemGridHtml(rows.map((row,index)=>`<${select?'button':'div'} ${select?'type="button"':''} class="item-grid-cell stock-slot ${selected===index?'selected':''}" ${select?`data-stock-index="${index}"`:''} title="${escapeHtml(row.title+expiryLabel(row))}${row.stats?.length?' — '+escapeHtml(row.stats.join(' · ')):''}" aria-label="${escapeHtml(row.title+expiryLabel(row))} ×${row.count}">${stockArt(row)}<small>${row.count>1?new Intl.NumberFormat('ru-RU').format(row.count):row.expiresAt?'⌛':''}</small></${select?'button':'div'}>`), {className: 'stock-grid', min, label: 'Предметы'});
 }
 // Gold committed to a table game cannot be moved by either trade participant.
 const GOLD_LOCK_TEXT='Адена занята в игре со ставкой. Заверши партию перед передачей.';

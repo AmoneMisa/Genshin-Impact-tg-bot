@@ -7,6 +7,9 @@ import argparse
 import hashlib
 import json
 import shutil
+import os
+import tempfile
+import time
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageOps
 
@@ -19,9 +22,16 @@ def read(name):
 
 def write(name, value):
     target = BASE / name
-    temporary = target.with_suffix('.pending.json')
+    temporary = target.with_name(target.stem+'.'+str(os.getpid())+'.pending.json')
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    temporary.replace(target)
+    # Windows readers and file scanning may briefly hold the destination open.
+    for attempt in range(20):
+        try:
+            temporary.replace(target)
+            break
+        except PermissionError:
+            if attempt==19:raise
+            time.sleep(.05)
 
 def update_progress(jobs):
     reviewed = [j['key'] for j in jobs if j['status'] in ('reviewed', 'reused')]
@@ -31,7 +41,7 @@ def update_progress(jobs):
         'generated': sum(j['status']=='reviewed' for j in jobs),
         'awaitingReview': sum(j['status']=='generated' for j in jobs),
         'pending': [j['key'] for j in jobs if j['status']=='pending'],
-        'allComplete': len(reviewed)==len(jobs), 'date':'2026-10-14'}
+        'allComplete': len(reviewed)==len(jobs), 'date':__import__('datetime').date.today().isoformat()}
     for key in ('delivered', 'webpFiles'):
         if key in old:
             progress[key] = old[key]
@@ -106,9 +116,13 @@ def record(key, generated):
     with Image.open(source) as im:
         assert im.mode=='RGBA' and im.getchannel('A').getextrema()[0]==0, 'Missing transparency'
     target = (ROOT / job['source']).resolve()
-    assert ROOT in target.parents and not target.exists(), 'Unexpected existing/outside source'
-    shutil.copyfile(source,target)
-    job.update(status='generated',generatedPath=str(source),generationReferences=[job['clothingReference'],job['identityReference']])
+    assert ROOT in target.parents, 'Unexpected outside source'
+    # Resume safely if a previous copy succeeded but its queue write was held.
+    if target.exists():
+        assert target.read_bytes()==source.read_bytes(), 'Refusing to replace a different source'
+    else:
+        shutil.copyfile(source,target)
+    job.update(status='generated',generatedPath=str(source),generationReferences=job.get('referenceImages',[job['clothingReference'],job['identityReference']]))
     write('jobs.json',jobs)
     update_progress(jobs)
 
@@ -162,9 +176,25 @@ parser.add_argument('key',nargs='?')
 parser.add_argument('generated',nargs='?')
 parser.add_argument('--prompt-file')
 args=parser.parse_args()
-if args.action=='init': init()
-elif args.action=='record': record(args.key,args.generated)
-elif args.action=='preview': preview(args.key)
-elif args.action=='accept': accept(args.key)
-elif args.action=='revise': revise(args.key,args.generated,args.prompt_file)
-else: update_progress(read('jobs.json'))
+# Multiple independent image generations may finish together. Serialize the
+# complete read/modify/write operation so no accepted painting gets lost.
+with open(Path(tempfile.gettempdir())/'genshin-costume-queue.lock','a+b') as lock:
+    if lock.tell()==0:lock.write(b'0');lock.flush()
+    lock.seek(0)
+    if os.name=='nt':
+        import msvcrt
+        msvcrt.locking(lock.fileno(),msvcrt.LK_LOCK,1)
+    else:
+        import fcntl
+        fcntl.flock(lock,fcntl.LOCK_EX)
+    try:
+        if args.action=='init': init()
+        elif args.action=='record': record(args.key,args.generated)
+        elif args.action=='preview': preview(args.key)
+        elif args.action=='accept': accept(args.key)
+        elif args.action=='revise': revise(args.key,args.generated,args.prompt_file)
+        else: update_progress(read('jobs.json'))
+    finally:
+        lock.seek(0)
+        if os.name=='nt':msvcrt.locking(lock.fileno(),msvcrt.LK_UNLCK,1)
+        else:fcntl.flock(lock,fcntl.LOCK_UN)

@@ -1,10 +1,10 @@
 {
-  "rigs": 234,
-  "paintingVariants": 222,
+  "rigs": 378,
+  "paintingVariants": 366,
   "defaultAvatars": 12,
   "feetAnchored": true,
   "blink": true,
   "continuousWarp": true,
-  "averageMs": 15.42500000037253,
-  "maxMs": 43.5
+  "averageMs": 10.005000000074507,
+  "maxMs": 31.5
 }

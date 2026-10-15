@@ -1,4 +1,6 @@
 import crypto from 'node:crypto';
+import {isCostumeItem,costumeExpired} from '../functions/game/equipment/costumeItems.js';
+import {equipmentTransferBlocked} from '../functions/game/equipment/tradeRestrictions.js';
 import mongoose from 'mongoose';
 import Chat from '../db/models/Chat.js';
 import {getMailbox,claimMail} from './promo.js';
@@ -12,6 +14,15 @@ const member=(chat,id)=>chat.members.find(m=>String(m.userId)===String(id));
 const inventory=m=>m?.game?.inventory||{};
 const fail=reason=>({ok:false,reason});
 function moveAll(source,target,options={}){
+  const bound=(source.equipment?.items||[]).filter(equipmentTransferBlocked);
+  if(bound.length&&!options.returnToSender)return fail('item_unavailable');
+  // Only internal returns to the original sender may move bound escrow items.
+  for(const item of bound){
+    if(target.equipment?.items?.some(i=>i.uid===item.uid))return fail('duplicate_item');
+    target.equipment||={items:[]};target.equipment.items||=[];
+    target.equipment.items.push({...structuredClone(item),bound:true,noTrade:true,tradeable:false,isUsed:false});
+    source.equipment.items.splice(source.equipment.items.indexOf(item),1);
+  }
   for(const row of stockRows(source)){const result=transferStock(source,target,row,options);if(!result.ok)return result;}
   return {ok:true};
 }
@@ -22,7 +33,7 @@ export function expirePlayerMail(chat,now=Date.now()){
     if(letter.status!=='pending'||letter.expiresAt>now)continue;
     const sender=member(chat,letter.from);if(!sender)continue;
     const target=structuredClone(inventory(sender)),source=structuredClone(letter.stock);
-    if(!moveAll(source,target).ok)continue;
+    if(!moveAll(source,target,{returnToSender:true}).ok)continue;
     sender.game.inventory=target;letter.stock=source;letter.status='returned';changed=true;
   }
   return changed;
@@ -77,6 +88,8 @@ export function actMail(chat,userId,body,now=Date.now()){
   if(body.action==='claim'){
     if(letter.to!==id)return fail('mail_not_found');
     if(letter.status!=='pending'||letter.expiresAt<=now)return fail('already_claimed');
+    if(letter.stock?.equipment?.items?.some(item=>isCostumeItem(item)&&costumeExpired(item,now)))return fail('costume_expired');
+    if(letter.stock?.equipment?.items?.some(equipmentTransferBlocked))return fail('item_unavailable');
     const sender=member(chat,letter.from);if(!sender)return fail('unknown_player');
     const target=structuredClone(inventory(me)),senderStock=structuredClone(inventory(sender)),source=structuredClone(letter.stock);
     if(letter.price){
@@ -96,7 +109,7 @@ export function actMail(chat,userId,body,now=Date.now()){
     if(letter.to===id&&letter.status==='pending'){
       const sender=member(chat,letter.from);if(!sender)return fail('unknown_player');
       const target=structuredClone(inventory(sender)),source=structuredClone(letter.stock);
-      const moved=moveAll(source,target);if(!moved.ok)return moved;
+      const moved=moveAll(source,target,{returnToSender:true});if(!moved.ok)return moved;
       sender.game.inventory=target;letter.stock=source;letter.status='returned';
       returned=true;
     }

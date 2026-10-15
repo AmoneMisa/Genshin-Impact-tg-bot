@@ -1,4 +1,5 @@
 import { itemArtKey, itemArtSources } from './art/items-art.js';
+import {avatarCostumeIconUrl} from './art/avatar-costume-icons.js';
 const GRADE_TONES = Object.freeze({
   noGrade: 'mist', D: 'mist', C: 'aqua', B: 'aqua', A: 'arcane', S: 'gold', S80: 'rose', S84: 'prismatic',
 });
@@ -29,6 +30,8 @@ export function swordShapeForLength(length){const mm=Math.max(0,Number(length)||
 function gradeToken(item){return cleanToken(item?.grade||'noGrade').toLowerCase()||'nograde';}
 
 export function renderLootArt(item={}, {reveal=false, animated=false}={}) {
+  const costume=avatarCostumeIconUrl(item.costumeId);
+  if(costume)return `<div class="loot-art loot-art-2d"><img class="loot-item-image" src="${costume}" alt="" loading="lazy" decoding="async"></div>`;
   const kind=normalizeLootKind(item), tone=lootTone(item), grade=gradeToken(item);
   const profile=lootVisualProfile(item), condition=lootConditionProfile(item);
   const artKey=itemArtKey(kind,item), art=itemArtSources(artKey,reveal||animated);

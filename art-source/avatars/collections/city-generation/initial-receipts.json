@@ -1,0 +1,168 @@
+[
+  {
+    "key": "chrome-district-human-female",
+    "source": "art-source/avatars/collections/chrome-district-human-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-9ee15409-d9f8-4db4-9d87-a13815934585.png",
+    "generationReferences": [
+      "art-source/avatars/collections/cobblestone-sunday-human-female.png"
+    ]
+  },
+  {
+    "key": "chrome-district-elf-female",
+    "source": "art-source/avatars/collections/chrome-district-elf-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-dcd6426e-777d-47fc-ad7d-aa241c075765.png",
+    "generationReferences": [
+      "art-source/avatars/collections/chrome-district-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-elf-female.png"
+    ]
+  },
+  {
+    "key": "chrome-district-darkElf-female",
+    "source": "art-source/avatars/collections/chrome-district-darkElf-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-042384e8-e0dc-48ec-9e3d-788fb7fd814c.png",
+    "generationReferences": [
+      "art-source/avatars/collections/chrome-district-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-darkElf-female.png"
+    ]
+  },
+  {
+    "key": "chrome-district-orc-female",
+    "source": "art-source/avatars/collections/chrome-district-orc-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-8f3ea373-c318-45b2-a8aa-153db22a6d77.png",
+    "generationReferences": [
+      "art-source/avatars/collections/chrome-district-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-orc-female.png"
+    ]
+  },
+  {
+    "key": "chrome-district-dwarf-female",
+    "source": "art-source/avatars/collections/chrome-district-dwarf-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-24e2d441-5277-4992-bb54-2fac9f69aff6.png",
+    "generationReferences": [
+      "art-source/avatars/collections/chrome-district-human-female.png",
+      "art-source/avatars/collections/coral-bay-breeze-dwarf-female-v2.png"
+    ]
+  },
+  {
+    "key": "chrome-district-kamael-female",
+    "source": "art-source/avatars/collections/chrome-district-kamael-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-d1022f39-8c73-4a9d-a63f-682eca7deb1f.png",
+    "generationReferences": [
+      "art-source/avatars/collections/chrome-district-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ]
+  },
+  {
+    "key": "obsidian-gloss-human-female",
+    "source": "art-source/avatars/collections/obsidian-gloss-human-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-797fa4eb-d43b-4fe4-885c-4a65774d7529.png",
+    "generationReferences": [
+      "art-source/avatars/collections/cobblestone-sunday-human-female.png"
+    ]
+  },
+  {
+    "key": "obsidian-gloss-elf-female",
+    "source": "art-source/avatars/collections/obsidian-gloss-elf-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-79e0618b-cbc2-432b-a653-9b7a9ab134df.png",
+    "generationReferences": [
+      "art-source/avatars/collections/obsidian-gloss-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-elf-female.png"
+    ]
+  },
+  {
+    "key": "obsidian-gloss-darkElf-female",
+    "source": "art-source/avatars/collections/obsidian-gloss-darkElf-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-457632f7-eaa7-44e8-9e66-b169859013d6.png",
+    "generationReferences": [
+      "art-source/avatars/collections/obsidian-gloss-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-darkElf-female.png"
+    ]
+  },
+  {
+    "key": "obsidian-gloss-orc-female",
+    "source": "art-source/avatars/collections/obsidian-gloss-orc-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-e373169d-22c0-4079-a235-55e04442c8c3.png",
+    "generationReferences": [
+      "art-source/avatars/collections/obsidian-gloss-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-orc-female.png"
+    ]
+  },
+  {
+    "key": "obsidian-gloss-dwarf-female",
+    "source": "art-source/avatars/collections/obsidian-gloss-dwarf-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-55340a14-627a-46d6-94c8-122c88834328.png",
+    "generationReferences": [
+      "art-source/avatars/collections/obsidian-gloss-human-female.png",
+      "art-source/avatars/collections/coral-bay-breeze-dwarf-female-v2.png"
+    ]
+  },
+  {
+    "key": "obsidian-gloss-kamael-female",
+    "source": "art-source/avatars/collections/obsidian-gloss-kamael-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-9f44cec5-7352-46e6-aad4-a90fe7331947.png",
+    "generationReferences": [
+      "art-source/avatars/collections/obsidian-gloss-human-female.png",
+      "art-source/avatars/collections/cobblestone-sunday-kamael-female.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-01.png",
+      "art-source/avatars/collections/user-references/kamael-wing-cape-structure-02.png"
+    ]
+  },
+  {
+    "key": "neon-afterglow-human-female",
+    "source": "art-source/avatars/collections/neon-afterglow-human-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-b2b98235-8311-405e-baef-4dd37d8c4181.png",
+    "generationReferences": [
+      "art-source/avatars/collections/cobblestone-sunday-human-female.png"
+    ]
+  },
+  {
+    "key": "brass-meridian-human-male",
+    "source": "art-source/avatars/collections/brass-meridian-human-male.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-f9ea1f1f-6922-4f22-863b-d9845901e5ac.png",
+    "generationReferences": [
+      "art-source/avatars/collections/saltwind-corsair-human-male.png"
+    ]
+  },
+  {
+    "key": "off-duty-avenue-human-male",
+    "source": "art-source/avatars/collections/off-duty-avenue-human-male.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-336eb8ff-35bb-45c2-84ff-f3fac460cf28.png",
+    "generationReferences": [
+      "art-source/avatars/collections/saltwind-corsair-human-male.png"
+    ]
+  },
+  {
+    "key": "midnight-formal-human-male",
+    "source": "art-source/avatars/collections/midnight-formal-human-male.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-0335f3ab-6ac9-4333-8eb7-c1f91dabfcaa.png",
+    "generationReferences": [
+      "art-source/avatars/collections/saltwind-corsair-human-male.png"
+    ]
+  },
+  {
+    "key": "last-bell-reaper-human-male",
+    "source": "art-source/avatars/collections/last-bell-reaper-human-male.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-072944c9-13c6-4b71-ba56-d90734acfa55.png",
+    "generationReferences": [
+      "art-source/avatars/collections/saltwind-corsair-human-male.png"
+    ]
+  },
+  {
+    "key": "hollow-lantern-rider-human-male",
+    "source": "art-source/avatars/collections/hollow-lantern-rider-human-male.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-8d385709-3cb5-400a-bfd1-d5ab881c5f49.png",
+    "generationReferences": [
+      "art-source/avatars/collections/saltwind-corsair-human-male.png"
+    ]
+  },
+  {
+    "key": "moonveil-phantom-human-female",
+    "source": "art-source/avatars/collections/moonveil-phantom-human-female.png",
+    "generatedPath": "C:\\Users\\kubai\\.codex\\generated_images\\01a136b6-9a0f-78f0-a333-6ea553bbf1ae\\exec-ccb9154c-b29e-4623-9247-78d73e96c901.png",
+    "generationReferences": [
+      "art-source/avatars/collections/cobblestone-sunday-human-female.png"
+    ]
+  }
+]

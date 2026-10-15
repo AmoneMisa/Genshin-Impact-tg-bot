@@ -1,5 +1,5 @@
 {
-  "variants": 222,
+  "variants": 366,
   "files": [
     {
       "path": "webapp/art/avatars/collections/v1/crimson-dawn-human-female-256.webp",
@@ -63,15 +63,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/crimson-dawn-kamael-female-256.webp",
-      "bytes": 33014
+      "bytes": 36650
     },
     {
       "path": "webapp/art/avatars/collections/v1/crimson-dawn-kamael-female-512.webp",
-      "bytes": 95126
+      "bytes": 105502
     },
     {
       "path": "webapp/art/avatars/collections/v1/crimson-dawn-kamael-female-1024.webp",
-      "bytes": 282448
+      "bytes": 313684
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-envoy-human-male-256.webp",
@@ -135,15 +135,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-envoy-kamael-male-256.webp",
-      "bytes": 31118
+      "bytes": 33046
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-envoy-kamael-male-512.webp",
-      "bytes": 90544
+      "bytes": 97152
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-envoy-kamael-male-1024.webp",
-      "bytes": 267350
+      "bytes": 286002
     },
     {
       "path": "webapp/art/avatars/collections/v1/azure-benediction-human-female-256.webp",
@@ -207,15 +207,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/azure-benediction-kamael-female-256.webp",
-      "bytes": 34226
+      "bytes": 37508
     },
     {
       "path": "webapp/art/avatars/collections/v1/azure-benediction-kamael-female-512.webp",
-      "bytes": 101210
+      "bytes": 111292
     },
     {
       "path": "webapp/art/avatars/collections/v1/azure-benediction-kamael-female-1024.webp",
-      "bytes": 307750
+      "bytes": 339504
     },
     {
       "path": "webapp/art/avatars/collections/v1/dawn-emissary-human-male-256.webp",
@@ -279,15 +279,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/dawn-emissary-kamael-male-256.webp",
-      "bytes": 29586
+      "bytes": 32160
     },
     {
       "path": "webapp/art/avatars/collections/v1/dawn-emissary-kamael-male-512.webp",
-      "bytes": 83796
+      "bytes": 89868
     },
     {
       "path": "webapp/art/avatars/collections/v1/dawn-emissary-kamael-male-1024.webp",
-      "bytes": 249328
+      "bytes": 259902
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-human-male-256.webp",
@@ -351,15 +351,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male-256.webp",
-      "bytes": 36870
+      "bytes": 39008
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male-512.webp",
-      "bytes": 110236
+      "bytes": 114336
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male-1024.webp",
-      "bytes": 333124
+      "bytes": 340816
     },
     {
       "path": "webapp/art/avatars/collections/v1/malachite-warden-human-male-256.webp",
@@ -423,15 +423,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/malachite-warden-kamael-male-256.webp",
-      "bytes": 30108
+      "bytes": 33386
     },
     {
       "path": "webapp/art/avatars/collections/v1/malachite-warden-kamael-male-512.webp",
-      "bytes": 87558
+      "bytes": 97532
     },
     {
       "path": "webapp/art/avatars/collections/v1/malachite-warden-kamael-male-1024.webp",
-      "bytes": 272916
+      "bytes": 292632
     },
     {
       "path": "webapp/art/avatars/collections/v1/veil-of-constellations-human-female-256.webp",
@@ -495,15 +495,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/veil-of-constellations-kamael-female-256.webp",
-      "bytes": 34234
+      "bytes": 33872
     },
     {
       "path": "webapp/art/avatars/collections/v1/veil-of-constellations-kamael-female-512.webp",
-      "bytes": 105764
+      "bytes": 103116
     },
     {
       "path": "webapp/art/avatars/collections/v1/veil-of-constellations-kamael-female-1024.webp",
-      "bytes": 324864
+      "bytes": 310248
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-courtier-human-male-256.webp",
@@ -567,15 +567,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-courtier-kamael-male-256.webp",
-      "bytes": 31642
+      "bytes": 33582
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-courtier-kamael-male-512.webp",
-      "bytes": 92098
+      "bytes": 96966
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-courtier-kamael-male-1024.webp",
-      "bytes": 291990
+      "bytes": 286528
     },
     {
       "path": "webapp/art/avatars/collections/v1/starfrost-court-human-male-256.webp",
@@ -639,15 +639,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/starfrost-court-kamael-male-256.webp",
-      "bytes": 32164
+      "bytes": 32648
     },
     {
       "path": "webapp/art/avatars/collections/v1/starfrost-court-kamael-male-512.webp",
-      "bytes": 93610
+      "bytes": 94496
     },
     {
       "path": "webapp/art/avatars/collections/v1/starfrost-court-kamael-male-1024.webp",
-      "bytes": 294456
+      "bytes": 284246
     },
     {
       "path": "webapp/art/avatars/collections/v1/opal-tide-human-female-256.webp",
@@ -711,15 +711,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/opal-tide-kamael-female-256.webp",
-      "bytes": 30072
+      "bytes": 30580
     },
     {
       "path": "webapp/art/avatars/collections/v1/opal-tide-kamael-female-512.webp",
-      "bytes": 86608
+      "bytes": 89090
     },
     {
       "path": "webapp/art/avatars/collections/v1/opal-tide-kamael-female-1024.webp",
-      "bytes": 269198
+      "bytes": 258470
     },
     {
       "path": "webapp/art/avatars/collections/v1/dusk-velvet-ball-human-male-256.webp",
@@ -783,15 +783,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/dusk-velvet-ball-kamael-male-256.webp",
-      "bytes": 31384
+      "bytes": 32654
     },
     {
       "path": "webapp/art/avatars/collections/v1/dusk-velvet-ball-kamael-male-512.webp",
-      "bytes": 84086
+      "bytes": 88930
     },
     {
       "path": "webapp/art/avatars/collections/v1/dusk-velvet-ball-kamael-male-1024.webp",
-      "bytes": 253516
+      "bytes": 251886
     },
     {
       "path": "webapp/art/avatars/collections/v1/celestial-cartographer-human-female-256.webp",
@@ -855,15 +855,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/celestial-cartographer-kamael-female-256.webp",
-      "bytes": 32644
+      "bytes": 33170
     },
     {
       "path": "webapp/art/avatars/collections/v1/celestial-cartographer-kamael-female-512.webp",
-      "bytes": 98226
+      "bytes": 96372
     },
     {
       "path": "webapp/art/avatars/collections/v1/celestial-cartographer-kamael-female-1024.webp",
-      "bytes": 308280
+      "bytes": 281238
     },
     {
       "path": "webapp/art/avatars/collections/v1/ivory-vows-human-male-256.webp",
@@ -927,15 +927,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/ivory-vows-kamael-male-256.webp",
-      "bytes": 31406
+      "bytes": 30868
     },
     {
       "path": "webapp/art/avatars/collections/v1/ivory-vows-kamael-male-512.webp",
-      "bytes": 94444
+      "bytes": 88760
     },
     {
       "path": "webapp/art/avatars/collections/v1/ivory-vows-kamael-male-1024.webp",
-      "bytes": 321206
+      "bytes": 265194
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-veil-human-female-256.webp",
@@ -999,15 +999,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-veil-kamael-female-256.webp",
-      "bytes": 28420
+      "bytes": 31046
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-veil-kamael-female-512.webp",
-      "bytes": 84804
+      "bytes": 92544
     },
     {
       "path": "webapp/art/avatars/collections/v1/gilded-veil-kamael-female-1024.webp",
-      "bytes": 248378
+      "bytes": 273692
     },
     {
       "path": "webapp/art/avatars/collections/v1/rose-etiquette-human-male-256.webp",
@@ -1071,15 +1071,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/rose-etiquette-kamael-male-256.webp",
-      "bytes": 31224
+      "bytes": 32722
     },
     {
       "path": "webapp/art/avatars/collections/v1/rose-etiquette-kamael-male-512.webp",
-      "bytes": 90384
+      "bytes": 92318
     },
     {
       "path": "webapp/art/avatars/collections/v1/rose-etiquette-kamael-male-1024.webp",
-      "bytes": 276726
+      "bytes": 268948
     },
     {
       "path": "webapp/art/avatars/collections/v1/nocturne-protocol-human-male-256.webp",
@@ -1143,15 +1143,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/nocturne-protocol-kamael-male-256.webp",
-      "bytes": 27614
+      "bytes": 28866
     },
     {
       "path": "webapp/art/avatars/collections/v1/nocturne-protocol-kamael-male-512.webp",
-      "bytes": 78860
+      "bytes": 80146
     },
     {
       "path": "webapp/art/avatars/collections/v1/nocturne-protocol-kamael-male-1024.webp",
-      "bytes": 241352
+      "bytes": 231218
     },
     {
       "path": "webapp/art/avatars/collections/v1/coalwood-warden-human-male-256.webp",
@@ -1215,15 +1215,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/coalwood-warden-kamael-male-256.webp",
-      "bytes": 37416
+      "bytes": 36912
     },
     {
       "path": "webapp/art/avatars/collections/v1/coalwood-warden-kamael-male-512.webp",
-      "bytes": 108750
+      "bytes": 104108
     },
     {
       "path": "webapp/art/avatars/collections/v1/coalwood-warden-kamael-male-1024.webp",
-      "bytes": 340910
+      "bytes": 310836
     },
     {
       "path": "webapp/art/avatars/collections/v1/emerald-griffin-human-male-256.webp",
@@ -1287,15 +1287,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/emerald-griffin-kamael-male-256.webp",
-      "bytes": 39176
+      "bytes": 36912
     },
     {
       "path": "webapp/art/avatars/collections/v1/emerald-griffin-kamael-male-512.webp",
-      "bytes": 119898
+      "bytes": 111288
     },
     {
       "path": "webapp/art/avatars/collections/v1/emerald-griffin-kamael-male-1024.webp",
-      "bytes": 384752
+      "bytes": 335282
     },
     {
       "path": "webapp/art/avatars/collections/v1/triune-crown-human-female-256.webp",
@@ -1359,15 +1359,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/triune-crown-kamael-female-256.webp",
-      "bytes": 44664
+      "bytes": 41326
     },
     {
       "path": "webapp/art/avatars/collections/v1/triune-crown-kamael-female-512.webp",
-      "bytes": 134872
+      "bytes": 122806
     },
     {
       "path": "webapp/art/avatars/collections/v1/triune-crown-kamael-female-1024.webp",
-      "bytes": 394294
+      "bytes": 370416
     },
     {
       "path": "webapp/art/avatars/collections/v1/astral-crown-knight-human-male-256.webp",
@@ -1431,15 +1431,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/astral-crown-knight-kamael-male-256.webp",
-      "bytes": 35866
+      "bytes": 38330
     },
     {
       "path": "webapp/art/avatars/collections/v1/astral-crown-knight-kamael-male-512.webp",
-      "bytes": 107448
+      "bytes": 114140
     },
     {
       "path": "webapp/art/avatars/collections/v1/astral-crown-knight-kamael-male-1024.webp",
-      "bytes": 338600
+      "bytes": 343708
     },
     {
       "path": "webapp/art/avatars/collections/v1/golden-phoenix-human-male-256.webp",
@@ -1503,15 +1503,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/golden-phoenix-kamael-male-256.webp",
-      "bytes": 38886
+      "bytes": 38804
     },
     {
       "path": "webapp/art/avatars/collections/v1/golden-phoenix-kamael-male-512.webp",
-      "bytes": 119124
+      "bytes": 114542
     },
     {
       "path": "webapp/art/avatars/collections/v1/golden-phoenix-kamael-male-1024.webp",
-      "bytes": 392376
+      "bytes": 347462
     },
     {
       "path": "webapp/art/avatars/collections/v1/crimson-herald-human-male-256.webp",
@@ -1575,15 +1575,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/crimson-herald-kamael-male-256.webp",
-      "bytes": 24508
+      "bytes": 28996
     },
     {
       "path": "webapp/art/avatars/collections/v1/crimson-herald-kamael-male-512.webp",
-      "bytes": 72892
+      "bytes": 86054
     },
     {
       "path": "webapp/art/avatars/collections/v1/crimson-herald-kamael-male-1024.webp",
-      "bytes": 232158
+      "bytes": 258910
     },
     {
       "path": "webapp/art/avatars/collections/v1/prismatic-archon-human-female-256.webp",
@@ -1647,15 +1647,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/prismatic-archon-kamael-female-256.webp",
-      "bytes": 36628
+      "bytes": 35022
     },
     {
       "path": "webapp/art/avatars/collections/v1/prismatic-archon-kamael-female-512.webp",
-      "bytes": 111952
+      "bytes": 105112
     },
     {
       "path": "webapp/art/avatars/collections/v1/prismatic-archon-kamael-female-1024.webp",
-      "bytes": 371218
+      "bytes": 322510
     },
     {
       "path": "webapp/art/avatars/collections/v1/scarlet-comet-human-male-256.webp",
@@ -1719,15 +1719,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/scarlet-comet-kamael-male-256.webp",
-      "bytes": 33876
+      "bytes": 37822
     },
     {
       "path": "webapp/art/avatars/collections/v1/scarlet-comet-kamael-male-512.webp",
-      "bytes": 99310
+      "bytes": 110432
     },
     {
       "path": "webapp/art/avatars/collections/v1/scarlet-comet-kamael-male-1024.webp",
-      "bytes": 303500
+      "bytes": 325020
     },
     {
       "path": "webapp/art/avatars/collections/v1/prism-dragon-human-female-256.webp",
@@ -1791,15 +1791,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/prism-dragon-kamael-female-256.webp",
-      "bytes": 36718
+      "bytes": 36828
     },
     {
       "path": "webapp/art/avatars/collections/v1/prism-dragon-kamael-female-512.webp",
-      "bytes": 109816
+      "bytes": 105734
     },
     {
       "path": "webapp/art/avatars/collections/v1/prism-dragon-kamael-female-1024.webp",
-      "bytes": 361034
+      "bytes": 314878
     },
     {
       "path": "webapp/art/avatars/collections/v1/bloodfrost-rose-human-female-256.webp",
@@ -1863,15 +1863,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/bloodfrost-rose-kamael-female-256.webp",
-      "bytes": 37732
+      "bytes": 37210
     },
     {
       "path": "webapp/art/avatars/collections/v1/bloodfrost-rose-kamael-female-512.webp",
-      "bytes": 109230
+      "bytes": 107780
     },
     {
       "path": "webapp/art/avatars/collections/v1/bloodfrost-rose-kamael-female-1024.webp",
-      "bytes": 338786
+      "bytes": 322056
     },
     {
       "path": "webapp/art/avatars/collections/v1/moon-velvet-human-female-256.webp",
@@ -1935,15 +1935,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/moon-velvet-kamael-female-256.webp",
-      "bytes": 34418
+      "bytes": 32376
     },
     {
       "path": "webapp/art/avatars/collections/v1/moon-velvet-kamael-female-512.webp",
-      "bytes": 111800
+      "bytes": 104034
     },
     {
       "path": "webapp/art/avatars/collections/v1/moon-velvet-kamael-female-1024.webp",
-      "bytes": 374746
+      "bytes": 317348
     },
     {
       "path": "webapp/art/avatars/collections/v1/fuchsia-tempest-human-female-256.webp",
@@ -2007,15 +2007,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/fuchsia-tempest-kamael-female-256.webp",
-      "bytes": 29442
+      "bytes": 31788
     },
     {
       "path": "webapp/art/avatars/collections/v1/fuchsia-tempest-kamael-female-512.webp",
-      "bytes": 88678
+      "bytes": 97528
     },
     {
       "path": "webapp/art/avatars/collections/v1/fuchsia-tempest-kamael-female-1024.webp",
-      "bytes": 287858
+      "bytes": 300376
     },
     {
       "path": "webapp/art/avatars/collections/v1/sandglass-dawn-human-male-256.webp",
@@ -2079,15 +2079,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/sandglass-dawn-kamael-male-256.webp",
-      "bytes": 30436
+      "bytes": 34018
     },
     {
       "path": "webapp/art/avatars/collections/v1/sandglass-dawn-kamael-male-512.webp",
-      "bytes": 94948
+      "bytes": 104262
     },
     {
       "path": "webapp/art/avatars/collections/v1/sandglass-dawn-kamael-male-1024.webp",
-      "bytes": 314286
+      "bytes": 321000
     },
     {
       "path": "webapp/art/avatars/collections/v1/starlit-reverie-human-female-256.webp",
@@ -2151,15 +2151,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/starlit-reverie-kamael-female-256.webp",
-      "bytes": 33290
+      "bytes": 32208
     },
     {
       "path": "webapp/art/avatars/collections/v1/starlit-reverie-kamael-female-512.webp",
-      "bytes": 101194
+      "bytes": 96738
     },
     {
       "path": "webapp/art/avatars/collections/v1/starlit-reverie-kamael-female-1024.webp",
-      "bytes": 327346
+      "bytes": 294016
     },
     {
       "path": "webapp/art/avatars/collections/v1/snow-seraph-human-male-256.webp",
@@ -2223,15 +2223,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/snow-seraph-kamael-male-256.webp",
-      "bytes": 30740
+      "bytes": 35380
     },
     {
       "path": "webapp/art/avatars/collections/v1/snow-seraph-kamael-male-512.webp",
-      "bytes": 92988
+      "bytes": 105334
     },
     {
       "path": "webapp/art/avatars/collections/v1/snow-seraph-kamael-male-1024.webp",
-      "bytes": 298290
+      "bytes": 313824
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-astronomer-human-female-256.webp",
@@ -2295,15 +2295,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-astronomer-kamael-female-256.webp",
-      "bytes": 30046
+      "bytes": 29252
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-astronomer-kamael-female-512.webp",
-      "bytes": 94882
+      "bytes": 90970
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-astronomer-kamael-female-1024.webp",
-      "bytes": 323674
+      "bytes": 281276
     },
     {
       "path": "webapp/art/avatars/collections/v1/eclipse-mantle-human-male-256.webp",
@@ -2367,15 +2367,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/eclipse-mantle-kamael-male-256.webp",
-      "bytes": 36774
+      "bytes": 38692
     },
     {
       "path": "webapp/art/avatars/collections/v1/eclipse-mantle-kamael-male-512.webp",
-      "bytes": 111986
+      "bytes": 115592
     },
     {
       "path": "webapp/art/avatars/collections/v1/eclipse-mantle-kamael-male-1024.webp",
-      "bytes": 356642
+      "bytes": 351878
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-sovereign-human-male-256.webp",
@@ -2439,15 +2439,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-sovereign-kamael-male-256.webp",
-      "bytes": 36754
+      "bytes": 36082
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-sovereign-kamael-male-512.webp",
-      "bytes": 112384
+      "bytes": 109200
     },
     {
       "path": "webapp/art/avatars/collections/v1/amethyst-sovereign-kamael-male-1024.webp",
-      "bytes": 359124
+      "bytes": 326966
     },
     {
       "path": "webapp/art/avatars/collections/v1/midnight-gold-envoy-human-male-256.webp",
@@ -2511,15 +2511,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/midnight-gold-envoy-kamael-male-256.webp",
-      "bytes": 26528
+      "bytes": 30418
     },
     {
       "path": "webapp/art/avatars/collections/v1/midnight-gold-envoy-kamael-male-512.webp",
-      "bytes": 73498
+      "bytes": 84386
     },
     {
       "path": "webapp/art/avatars/collections/v1/midnight-gold-envoy-kamael-male-1024.webp",
-      "bytes": 217946
+      "bytes": 246842
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-nightblade-human-female-256.webp",
@@ -2583,15 +2583,15 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-nightblade-kamael-female-256.webp",
-      "bytes": 36932
+      "bytes": 35188
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-nightblade-kamael-female-512.webp",
-      "bytes": 106594
+      "bytes": 101686
     },
     {
       "path": "webapp/art/avatars/collections/v1/violet-nightblade-kamael-female-1024.webp",
-      "bytes": 327424
+      "bytes": 300128
     },
     {
       "path": "webapp/art/avatars/collections/v1/plum-dragon-queen-human-female-256.webp",
@@ -2655,15 +2655,1743 @@
     },
     {
       "path": "webapp/art/avatars/collections/v1/plum-dragon-queen-kamael-female-256.webp",
-      "bytes": 34840
+      "bytes": 37454
     },
     {
       "path": "webapp/art/avatars/collections/v1/plum-dragon-queen-kamael-female-512.webp",
-      "bytes": 106710
+      "bytes": 112024
     },
     {
       "path": "webapp/art/avatars/collections/v1/plum-dragon-queen-kamael-female-1024.webp",
-      "bytes": 342426
+      "bytes": 335244
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-human-female-256.webp",
+      "bytes": 27858
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-human-female-512.webp",
+      "bytes": 84058
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-human-female-1024.webp",
+      "bytes": 278102
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-elf-female-256.webp",
+      "bytes": 27816
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-elf-female-512.webp",
+      "bytes": 83920
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-elf-female-1024.webp",
+      "bytes": 272002
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-darkElf-female-256.webp",
+      "bytes": 26756
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-darkElf-female-512.webp",
+      "bytes": 82910
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-darkElf-female-1024.webp",
+      "bytes": 277662
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-orc-female-256.webp",
+      "bytes": 29304
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-orc-female-512.webp",
+      "bytes": 90056
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-orc-female-1024.webp",
+      "bytes": 297198
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-dwarf-female-256.webp",
+      "bytes": 32318
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-dwarf-female-512.webp",
+      "bytes": 98752
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-dwarf-female-1024.webp",
+      "bytes": 315350
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female-256.webp",
+      "bytes": 31156
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female-512.webp",
+      "bytes": 92758
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female-1024.webp",
+      "bytes": 285480
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-human-female-256.webp",
+      "bytes": 35656
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-human-female-512.webp",
+      "bytes": 114222
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-human-female-1024.webp",
+      "bytes": 390198
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-elf-female-256.webp",
+      "bytes": 35940
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-elf-female-512.webp",
+      "bytes": 112524
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-elf-female-1024.webp",
+      "bytes": 382680
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-darkElf-female-256.webp",
+      "bytes": 35086
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-darkElf-female-512.webp",
+      "bytes": 111254
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-darkElf-female-1024.webp",
+      "bytes": 378398
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-orc-female-256.webp",
+      "bytes": 37168
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-orc-female-512.webp",
+      "bytes": 118722
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-orc-female-1024.webp",
+      "bytes": 408192
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-dwarf-female-256.webp",
+      "bytes": 35012
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-dwarf-female-512.webp",
+      "bytes": 112156
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-dwarf-female-1024.webp",
+      "bytes": 368030
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-kamael-female-256.webp",
+      "bytes": 36574
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-kamael-female-512.webp",
+      "bytes": 113726
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/crimson-peacock-kamael-female-1024.webp",
+      "bytes": 351672
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-human-male-256.webp",
+      "bytes": 30954
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-human-male-512.webp",
+      "bytes": 90566
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-human-male-1024.webp",
+      "bytes": 283062
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-elf-male-256.webp",
+      "bytes": 30890
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-elf-male-512.webp",
+      "bytes": 91588
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-elf-male-1024.webp",
+      "bytes": 289134
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-darkElf-male-256.webp",
+      "bytes": 34296
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-darkElf-male-512.webp",
+      "bytes": 103248
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-darkElf-male-1024.webp",
+      "bytes": 328910
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-orc-male-256.webp",
+      "bytes": 33558
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-orc-male-512.webp",
+      "bytes": 99436
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-orc-male-1024.webp",
+      "bytes": 308370
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-dwarf-male-256.webp",
+      "bytes": 31392
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-dwarf-male-512.webp",
+      "bytes": 94152
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-dwarf-male-1024.webp",
+      "bytes": 299728
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-kamael-male-256.webp",
+      "bytes": 41142
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-kamael-male-512.webp",
+      "bytes": 122340
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/violet-dusk-prince-kamael-male-1024.webp",
+      "bytes": 376766
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-human-female-256.webp",
+      "bytes": 31094
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-human-female-512.webp",
+      "bytes": 96828
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-human-female-1024.webp",
+      "bytes": 321118
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-elf-female-256.webp",
+      "bytes": 31744
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-elf-female-512.webp",
+      "bytes": 98510
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-elf-female-1024.webp",
+      "bytes": 322978
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-darkElf-female-256.webp",
+      "bytes": 32354
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-darkElf-female-512.webp",
+      "bytes": 101150
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-darkElf-female-1024.webp",
+      "bytes": 337856
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-orc-female-256.webp",
+      "bytes": 36128
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-orc-female-512.webp",
+      "bytes": 115292
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-orc-female-1024.webp",
+      "bytes": 400416
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-dwarf-female-256.webp",
+      "bytes": 38434
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-dwarf-female-512.webp",
+      "bytes": 121380
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-dwarf-female-1024.webp",
+      "bytes": 392762
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-kamael-female-256.webp",
+      "bytes": 35582
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-kamael-female-512.webp",
+      "bytes": 108332
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/sapphire-diadem-kamael-female-1024.webp",
+      "bytes": 327552
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-human-female-256.webp",
+      "bytes": 26120
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-human-female-512.webp",
+      "bytes": 76978
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-human-female-1024.webp",
+      "bytes": 248760
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-elf-female-256.webp",
+      "bytes": 27366
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-elf-female-512.webp",
+      "bytes": 82650
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-elf-female-1024.webp",
+      "bytes": 262480
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-darkElf-female-256.webp",
+      "bytes": 26480
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-darkElf-female-512.webp",
+      "bytes": 78412
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-darkElf-female-1024.webp",
+      "bytes": 255426
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-orc-female-256.webp",
+      "bytes": 25500
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-orc-female-512.webp",
+      "bytes": 75684
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-orc-female-1024.webp",
+      "bytes": 244444
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-dwarf-female-256.webp",
+      "bytes": 31598
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-dwarf-female-512.webp",
+      "bytes": 93900
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-dwarf-female-1024.webp",
+      "bytes": 295102
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-kamael-female-256.webp",
+      "bytes": 35762
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-kamael-female-512.webp",
+      "bytes": 105242
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/void-pulse-kamael-female-1024.webp",
+      "bytes": 313486
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-human-male-256.webp",
+      "bytes": 21352
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-human-male-512.webp",
+      "bytes": 58102
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-human-male-1024.webp",
+      "bytes": 180458
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-elf-male-256.webp",
+      "bytes": 22998
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-elf-male-512.webp",
+      "bytes": 64412
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-elf-male-1024.webp",
+      "bytes": 189808
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-darkElf-male-256.webp",
+      "bytes": 23290
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-darkElf-male-512.webp",
+      "bytes": 64818
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-darkElf-male-1024.webp",
+      "bytes": 193570
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-orc-male-256.webp",
+      "bytes": 24158
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-orc-male-512.webp",
+      "bytes": 66378
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-orc-male-1024.webp",
+      "bytes": 200040
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-dwarf-male-256.webp",
+      "bytes": 29970
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-dwarf-male-512.webp",
+      "bytes": 86504
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-dwarf-male-1024.webp",
+      "bytes": 275956
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-kamael-male-256.webp",
+      "bytes": 30190
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-kamael-male-512.webp",
+      "bytes": 84574
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/saltwind-corsair-kamael-male-1024.webp",
+      "bytes": 246386
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-human-male-256.webp",
+      "bytes": 23058
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-human-male-512.webp",
+      "bytes": 63008
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-human-male-1024.webp",
+      "bytes": 191700
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-elf-male-256.webp",
+      "bytes": 25768
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-elf-male-512.webp",
+      "bytes": 71338
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-elf-male-1024.webp",
+      "bytes": 217300
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-darkElf-male-256.webp",
+      "bytes": 25696
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-darkElf-male-512.webp",
+      "bytes": 71854
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-darkElf-male-1024.webp",
+      "bytes": 218596
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-orc-male-256.webp",
+      "bytes": 28172
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-orc-male-512.webp",
+      "bytes": 78362
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-orc-male-1024.webp",
+      "bytes": 238372
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-dwarf-male-256.webp",
+      "bytes": 27902
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-dwarf-male-512.webp",
+      "bytes": 82702
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-dwarf-male-1024.webp",
+      "bytes": 262434
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-kamael-male-256.webp",
+      "bytes": 32238
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-kamael-male-512.webp",
+      "bytes": 92002
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/quiet-rooftop-kamael-male-1024.webp",
+      "bytes": 276712
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-human-female-256.webp",
+      "bytes": 18684
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-human-female-512.webp",
+      "bytes": 53436
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-human-female-1024.webp",
+      "bytes": 163610
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-elf-female-256.webp",
+      "bytes": 20840
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-elf-female-512.webp",
+      "bytes": 58044
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-elf-female-1024.webp",
+      "bytes": 176182
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-darkElf-female-256.webp",
+      "bytes": 21428
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-darkElf-female-512.webp",
+      "bytes": 60388
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-darkElf-female-1024.webp",
+      "bytes": 188892
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-orc-female-256.webp",
+      "bytes": 21696
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-orc-female-512.webp",
+      "bytes": 62350
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-orc-female-1024.webp",
+      "bytes": 197554
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-dwarf-female-256.webp",
+      "bytes": 24048
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-dwarf-female-512.webp",
+      "bytes": 69594
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-dwarf-female-1024.webp",
+      "bytes": 220374
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-kamael-female-256.webp",
+      "bytes": 26384
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-kamael-female-512.webp",
+      "bytes": 73254
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cobblestone-sunday-kamael-female-1024.webp",
+      "bytes": 215300
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-human-female-256.webp",
+      "bytes": 16568
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-human-female-512.webp",
+      "bytes": 44428
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-human-female-1024.webp",
+      "bytes": 127530
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-elf-female-256.webp",
+      "bytes": 17120
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-elf-female-512.webp",
+      "bytes": 45692
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-elf-female-1024.webp",
+      "bytes": 131568
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-darkElf-female-256.webp",
+      "bytes": 17770
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-darkElf-female-512.webp",
+      "bytes": 47834
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-darkElf-female-1024.webp",
+      "bytes": 137202
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-orc-female-256.webp",
+      "bytes": 18652
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-orc-female-512.webp",
+      "bytes": 49782
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-orc-female-1024.webp",
+      "bytes": 141544
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-dwarf-female-256.webp",
+      "bytes": 22736
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-dwarf-female-512.webp",
+      "bytes": 63724
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-dwarf-female-1024.webp",
+      "bytes": 186942
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-kamael-female-256.webp",
+      "bytes": 26394
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-kamael-female-512.webp",
+      "bytes": 70606
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/seabreeze-holiday-kamael-female-1024.webp",
+      "bytes": 197760
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-human-male-256.webp",
+      "bytes": 13674
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-human-male-512.webp",
+      "bytes": 33210
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-human-male-1024.webp",
+      "bytes": 94396
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-elf-male-256.webp",
+      "bytes": 15712
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-elf-male-512.webp",
+      "bytes": 39836
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-elf-male-1024.webp",
+      "bytes": 114730
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-darkElf-male-256.webp",
+      "bytes": 15218
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-darkElf-male-512.webp",
+      "bytes": 37478
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-darkElf-male-1024.webp",
+      "bytes": 107646
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-orc-male-256.webp",
+      "bytes": 18724
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-orc-male-512.webp",
+      "bytes": 47496
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-orc-male-1024.webp",
+      "bytes": 137440
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-dwarf-male-256.webp",
+      "bytes": 19828
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-dwarf-male-512.webp",
+      "bytes": 49120
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-dwarf-male-1024.webp",
+      "bytes": 154774
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-kamael-male-256.webp",
+      "bytes": 24470
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-kamael-male-512.webp",
+      "bytes": 62742
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/cozy-reef-kamael-male-1024.webp",
+      "bytes": 172564
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-human-female-256.webp",
+      "bytes": 18144
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-human-female-512.webp",
+      "bytes": 46068
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-human-female-1024.webp",
+      "bytes": 137280
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-elf-female-256.webp",
+      "bytes": 19396
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-elf-female-512.webp",
+      "bytes": 51064
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-elf-female-1024.webp",
+      "bytes": 157760
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-darkElf-female-256.webp",
+      "bytes": 20780
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-darkElf-female-512.webp",
+      "bytes": 53174
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-darkElf-female-1024.webp",
+      "bytes": 161844
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-orc-female-256.webp",
+      "bytes": 20764
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-orc-female-512.webp",
+      "bytes": 53868
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-orc-female-1024.webp",
+      "bytes": 166166
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-dwarf-female-256.webp",
+      "bytes": 25408
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-dwarf-female-512.webp",
+      "bytes": 70592
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-dwarf-female-1024.webp",
+      "bytes": 222776
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-kamael-female-256.webp",
+      "bytes": 26400
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-kamael-female-512.webp",
+      "bytes": 69238
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hearthside-purr-kamael-female-1024.webp",
+      "bytes": 199294
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-human-male-256.webp",
+      "bytes": 15396
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-human-male-512.webp",
+      "bytes": 40288
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-human-male-1024.webp",
+      "bytes": 124466
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-elf-male-256.webp",
+      "bytes": 18570
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-elf-male-512.webp",
+      "bytes": 49680
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-elf-male-1024.webp",
+      "bytes": 151234
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-darkElf-male-256.webp",
+      "bytes": 17468
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-darkElf-male-512.webp",
+      "bytes": 46630
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-darkElf-male-1024.webp",
+      "bytes": 142676
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-orc-male-256.webp",
+      "bytes": 18172
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-orc-male-512.webp",
+      "bytes": 48442
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-orc-male-1024.webp",
+      "bytes": 149380
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-dwarf-male-256.webp",
+      "bytes": 20776
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-dwarf-male-512.webp",
+      "bytes": 58126
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-dwarf-male-1024.webp",
+      "bytes": 199304
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-kamael-male-256.webp",
+      "bytes": 25516
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-kamael-male-512.webp",
+      "bytes": 68062
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonlit-mischief-kamael-male-1024.webp",
+      "bytes": 194904
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-human-female-256.webp",
+      "bytes": 32410
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-human-female-512.webp",
+      "bytes": 95538
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-human-female-1024.webp",
+      "bytes": 286528
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-elf-female-256.webp",
+      "bytes": 31136
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-elf-female-512.webp",
+      "bytes": 93704
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-elf-female-1024.webp",
+      "bytes": 307066
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-darkElf-female-256.webp",
+      "bytes": 31446
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-darkElf-female-512.webp",
+      "bytes": 94432
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-darkElf-female-1024.webp",
+      "bytes": 295844
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-orc-female-256.webp",
+      "bytes": 33952
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-orc-female-512.webp",
+      "bytes": 102280
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-orc-female-1024.webp",
+      "bytes": 336412
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-dwarf-female-256.webp",
+      "bytes": 36118
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-dwarf-female-512.webp",
+      "bytes": 108234
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-dwarf-female-1024.webp",
+      "bytes": 350272
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-kamael-female-256.webp",
+      "bytes": 26410
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-kamael-female-512.webp",
+      "bytes": 75598
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/meadow-flutter-kamael-female-1024.webp",
+      "bytes": 222078
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-human-female-256.webp",
+      "bytes": 17786
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-human-female-512.webp",
+      "bytes": 45206
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-human-female-1024.webp",
+      "bytes": 122814
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-elf-female-256.webp",
+      "bytes": 18556
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-elf-female-512.webp",
+      "bytes": 47612
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-elf-female-1024.webp",
+      "bytes": 131030
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-darkElf-female-256.webp",
+      "bytes": 19108
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-darkElf-female-512.webp",
+      "bytes": 49798
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-darkElf-female-1024.webp",
+      "bytes": 139480
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-orc-female-256.webp",
+      "bytes": 19772
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-orc-female-512.webp",
+      "bytes": 51128
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-orc-female-1024.webp",
+      "bytes": 143378
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-dwarf-female-256.webp",
+      "bytes": 21636
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-dwarf-female-512.webp",
+      "bytes": 56070
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-dwarf-female-1024.webp",
+      "bytes": 153256
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-kamael-female-256.webp",
+      "bytes": 25420
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-kamael-female-512.webp",
+      "bytes": 68816
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/coral-bay-breeze-kamael-female-1024.webp",
+      "bytes": 196796
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-human-male-256.webp",
+      "bytes": 20758
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-human-male-512.webp",
+      "bytes": 51704
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-human-male-1024.webp",
+      "bytes": 148132
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-elf-male-256.webp",
+      "bytes": 22306
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-elf-male-512.webp",
+      "bytes": 57338
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-elf-male-1024.webp",
+      "bytes": 161714
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-darkElf-male-256.webp",
+      "bytes": 22462
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-darkElf-male-512.webp",
+      "bytes": 55360
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-darkElf-male-1024.webp",
+      "bytes": 159540
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-orc-male-256.webp",
+      "bytes": 22214
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-orc-male-512.webp",
+      "bytes": 55108
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-orc-male-1024.webp",
+      "bytes": 160598
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-dwarf-male-256.webp",
+      "bytes": 24506
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-dwarf-male-512.webp",
+      "bytes": 66636
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-dwarf-male-1024.webp",
+      "bytes": 206780
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-kamael-male-256.webp",
+      "bytes": 31260
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-kamael-male-512.webp",
+      "bytes": 80434
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/high-tide-rider-kamael-male-1024.webp",
+      "bytes": 225136
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-human-female-256.webp",
+      "bytes": 16164
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-human-female-512.webp",
+      "bytes": 43198
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-human-female-1024.webp",
+      "bytes": 129928
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-elf-female-256.webp",
+      "bytes": 16758
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-elf-female-512.webp",
+      "bytes": 44936
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-elf-female-1024.webp",
+      "bytes": 131718
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-darkElf-female-256.webp",
+      "bytes": 16252
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-darkElf-female-512.webp",
+      "bytes": 42790
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-darkElf-female-1024.webp",
+      "bytes": 126800
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-orc-female-256.webp",
+      "bytes": 17324
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-orc-female-512.webp",
+      "bytes": 46106
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-orc-female-1024.webp",
+      "bytes": 138020
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-dwarf-female-256.webp",
+      "bytes": 18846
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-dwarf-female-512.webp",
+      "bytes": 51944
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-dwarf-female-1024.webp",
+      "bytes": 156450
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-kamael-female-256.webp",
+      "bytes": 25102
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-kamael-female-512.webp",
+      "bytes": 69180
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/chrome-district-kamael-female-1024.webp",
+      "bytes": 209438
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-human-female-256.webp",
+      "bytes": 15970
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-human-female-512.webp",
+      "bytes": 38972
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-human-female-1024.webp",
+      "bytes": 120714
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-elf-female-256.webp",
+      "bytes": 16752
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-elf-female-512.webp",
+      "bytes": 41932
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-elf-female-1024.webp",
+      "bytes": 123192
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-darkElf-female-256.webp",
+      "bytes": 15900
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-darkElf-female-512.webp",
+      "bytes": 39198
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-darkElf-female-1024.webp",
+      "bytes": 112836
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-orc-female-256.webp",
+      "bytes": 17768
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-orc-female-512.webp",
+      "bytes": 43576
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-orc-female-1024.webp",
+      "bytes": 130180
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-dwarf-female-256.webp",
+      "bytes": 17648
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-dwarf-female-512.webp",
+      "bytes": 45848
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-dwarf-female-1024.webp",
+      "bytes": 135072
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-kamael-female-256.webp",
+      "bytes": 23342
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-kamael-female-512.webp",
+      "bytes": 62630
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/obsidian-gloss-kamael-female-1024.webp",
+      "bytes": 190668
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-human-female-256.webp",
+      "bytes": 23534
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-human-female-512.webp",
+      "bytes": 66054
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-human-female-1024.webp",
+      "bytes": 205280
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-elf-female-256.webp",
+      "bytes": 22988
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-elf-female-512.webp",
+      "bytes": 61450
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-elf-female-1024.webp",
+      "bytes": 180212
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-darkElf-female-256.webp",
+      "bytes": 25062
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-darkElf-female-512.webp",
+      "bytes": 67448
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-darkElf-female-1024.webp",
+      "bytes": 202056
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-orc-female-256.webp",
+      "bytes": 24134
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-orc-female-512.webp",
+      "bytes": 65384
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-orc-female-1024.webp",
+      "bytes": 190500
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-dwarf-female-256.webp",
+      "bytes": 24484
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-dwarf-female-512.webp",
+      "bytes": 67778
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-dwarf-female-1024.webp",
+      "bytes": 202322
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-kamael-female-256.webp",
+      "bytes": 27650
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-kamael-female-512.webp",
+      "bytes": 77450
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/neon-afterglow-kamael-female-1024.webp",
+      "bytes": 234246
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-human-male-256.webp",
+      "bytes": 20226
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-human-male-512.webp",
+      "bytes": 54900
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-human-male-1024.webp",
+      "bytes": 167770
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-elf-male-256.webp",
+      "bytes": 21792
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-elf-male-512.webp",
+      "bytes": 60716
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-elf-male-1024.webp",
+      "bytes": 177430
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-darkElf-male-256.webp",
+      "bytes": 20624
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-darkElf-male-512.webp",
+      "bytes": 57544
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-darkElf-male-1024.webp",
+      "bytes": 169952
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-orc-male-256.webp",
+      "bytes": 21222
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-orc-male-512.webp",
+      "bytes": 58194
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-orc-male-1024.webp",
+      "bytes": 171592
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-dwarf-male-256.webp",
+      "bytes": 25266
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-dwarf-male-512.webp",
+      "bytes": 72894
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-dwarf-male-1024.webp",
+      "bytes": 224434
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-kamael-male-256.webp",
+      "bytes": 30204
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-kamael-male-512.webp",
+      "bytes": 86820
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/brass-meridian-kamael-male-1024.webp",
+      "bytes": 263292
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-human-male-256.webp",
+      "bytes": 16034
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-human-male-512.webp",
+      "bytes": 42118
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-human-male-1024.webp",
+      "bytes": 131748
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-elf-male-256.webp",
+      "bytes": 18046
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-elf-male-512.webp",
+      "bytes": 47298
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-elf-male-1024.webp",
+      "bytes": 142122
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-darkElf-male-256.webp",
+      "bytes": 16590
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-darkElf-male-512.webp",
+      "bytes": 41892
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-darkElf-male-1024.webp",
+      "bytes": 125488
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-orc-male-256.webp",
+      "bytes": 18434
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-orc-male-512.webp",
+      "bytes": 47644
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-orc-male-1024.webp",
+      "bytes": 145652
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-dwarf-male-256.webp",
+      "bytes": 19542
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-dwarf-male-512.webp",
+      "bytes": 52608
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-dwarf-male-1024.webp",
+      "bytes": 165930
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-kamael-male-256.webp",
+      "bytes": 24016
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-kamael-male-512.webp",
+      "bytes": 64648
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/off-duty-avenue-kamael-male-1024.webp",
+      "bytes": 198900
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-human-male-256.webp",
+      "bytes": 14476
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-human-male-512.webp",
+      "bytes": 33546
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-human-male-1024.webp",
+      "bytes": 97274
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-elf-male-256.webp",
+      "bytes": 15908
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-elf-male-512.webp",
+      "bytes": 39304
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-elf-male-1024.webp",
+      "bytes": 110188
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-darkElf-male-256.webp",
+      "bytes": 15396
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-darkElf-male-512.webp",
+      "bytes": 36806
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-darkElf-male-1024.webp",
+      "bytes": 103274
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-orc-male-256.webp",
+      "bytes": 15750
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-orc-male-512.webp",
+      "bytes": 36410
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-orc-male-1024.webp",
+      "bytes": 102398
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-dwarf-male-256.webp",
+      "bytes": 15308
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-dwarf-male-512.webp",
+      "bytes": 38316
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-dwarf-male-1024.webp",
+      "bytes": 109906
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-kamael-male-256.webp",
+      "bytes": 24332
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-kamael-male-512.webp",
+      "bytes": 62308
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/midnight-formal-kamael-male-1024.webp",
+      "bytes": 181894
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-human-male-256.webp",
+      "bytes": 32176
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-human-male-512.webp",
+      "bytes": 92516
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-human-male-1024.webp",
+      "bytes": 294374
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-elf-male-256.webp",
+      "bytes": 34326
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-elf-male-512.webp",
+      "bytes": 99908
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-elf-male-1024.webp",
+      "bytes": 300670
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-darkElf-male-256.webp",
+      "bytes": 33156
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-darkElf-male-512.webp",
+      "bytes": 95318
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-darkElf-male-1024.webp",
+      "bytes": 290228
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-orc-male-256.webp",
+      "bytes": 34052
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-orc-male-512.webp",
+      "bytes": 98630
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-orc-male-1024.webp",
+      "bytes": 303870
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-dwarf-male-256.webp",
+      "bytes": 33106
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-dwarf-male-512.webp",
+      "bytes": 98168
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-dwarf-male-1024.webp",
+      "bytes": 306720
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-kamael-male-256.webp",
+      "bytes": 38504
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-kamael-male-512.webp",
+      "bytes": 114976
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/last-bell-reaper-kamael-male-1024.webp",
+      "bytes": 363100
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-human-male-256.webp",
+      "bytes": 23404
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-human-male-512.webp",
+      "bytes": 65962
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-human-male-1024.webp",
+      "bytes": 199598
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-human-female-256.webp",
+      "bytes": 30018
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-human-female-512.webp",
+      "bytes": 89088
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-human-female-1024.webp",
+      "bytes": 287868
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-elf-male-256.webp",
+      "bytes": 24712
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-elf-male-512.webp",
+      "bytes": 69868
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-elf-male-1024.webp",
+      "bytes": 212058
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-darkElf-male-256.webp",
+      "bytes": 24940
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-darkElf-male-512.webp",
+      "bytes": 70564
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-darkElf-male-1024.webp",
+      "bytes": 212338
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-orc-male-256.webp",
+      "bytes": 24762
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-orc-male-512.webp",
+      "bytes": 70656
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-orc-male-1024.webp",
+      "bytes": 209414
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-dwarf-male-256.webp",
+      "bytes": 28236
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-dwarf-male-512.webp",
+      "bytes": 80994
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-dwarf-male-1024.webp",
+      "bytes": 248388
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-kamael-male-256.webp",
+      "bytes": 29218
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-kamael-male-512.webp",
+      "bytes": 84462
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/hollow-lantern-rider-kamael-male-1024.webp",
+      "bytes": 255898
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-elf-female-256.webp",
+      "bytes": 27676
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-elf-female-512.webp",
+      "bytes": 79054
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-elf-female-1024.webp",
+      "bytes": 229198
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-darkElf-female-256.webp",
+      "bytes": 28996
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-darkElf-female-512.webp",
+      "bytes": 81942
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-darkElf-female-1024.webp",
+      "bytes": 243680
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-orc-female-256.webp",
+      "bytes": 31044
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-orc-female-512.webp",
+      "bytes": 90714
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-orc-female-1024.webp",
+      "bytes": 271990
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-dwarf-female-256.webp",
+      "bytes": 31190
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-dwarf-female-512.webp",
+      "bytes": 91302
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-dwarf-female-1024.webp",
+      "bytes": 285802
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-kamael-female-256.webp",
+      "bytes": 35632
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-kamael-female-512.webp",
+      "bytes": 104588
+    },
+    {
+      "path": "webapp/art/avatars/collections/v1/moonveil-phantom-kamael-female-1024.webp",
+      "bytes": 335738
     }
   ],
   "complete": false,
@@ -2674,26 +4402,3155 @@
     "silhouette inset",
     "size budgets"
   ],
-  "defaultAppearanceChanged": false,
+  "defaultAppearanceChanged": true,
   "wardrobeSelectorImplemented": false,
+  "costumeInventorySlotImplemented": true,
+  "shopCategoryImplemented": true,
+  "shopCurrency": "luckCoins",
+  "shopPriceRange": [
+    50,
+    125
+  ],
+  "rewardSources": [
+    "chest",
+    "daily bonus"
+  ],
+  "rewardCostumes": 10,
+  "rewardDurationHours": [
+    24,
+    168
+  ],
+  "kamaelWingCapes": {
+    "uniquePaintings": 61,
+    "costumeTargets": 61,
+    "baseTargets": 2,
+    "construction": "rigid wing ornament with narrow hanging cloth banner"
+  },
+  "allCostumeMotionReview": {
+    "rendered": 378,
+    "costumes": 366,
+    "defaults": 12,
+    "animatedWings": 63,
+    "allFramesChanged": true,
+    "errors": [],
+    "records": [
+      {
+        "src": "/art/avatars/collections/v1/crimson-dawn-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-dawn-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.7000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-dawn-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-dawn-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-dawn-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-dawn-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 5.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-envoy-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 4.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-envoy-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.400000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-envoy-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-envoy-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-envoy-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-envoy-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/azure-benediction-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/azure-benediction-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/azure-benediction-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/azure-benediction-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/azure-benediction-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/azure-benediction-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/dawn-emissary-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/dawn-emissary-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/dawn-emissary-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/dawn-emissary-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/dawn-emissary-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/dawn-emissary-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.2000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-dragon-mantle-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-dragon-mantle-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-dragon-mantle-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-dragon-mantle-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.400000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-dragon-mantle-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/malachite-warden-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/malachite-warden-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/malachite-warden-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/malachite-warden-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/malachite-warden-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/malachite-warden-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/veil-of-constellations-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/veil-of-constellations-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/veil-of-constellations-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/veil-of-constellations-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.2999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/veil-of-constellations-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/veil-of-constellations-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-courtier-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-courtier-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-courtier-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-courtier-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-courtier-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-courtier-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/starfrost-court-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/starfrost-court-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/starfrost-court-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/starfrost-court-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/starfrost-court-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/starfrost-court-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/opal-tide-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/opal-tide-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/opal-tide-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.599999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/opal-tide-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/opal-tide-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/opal-tide-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/dusk-velvet-ball-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/dusk-velvet-ball-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/dusk-velvet-ball-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/dusk-velvet-ball-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/dusk-velvet-ball-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 6.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/dusk-velvet-ball-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.2000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/celestial-cartographer-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 7.700000002980232
+      },
+      {
+        "src": "/art/avatars/collections/v1/celestial-cartographer-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/celestial-cartographer-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/celestial-cartographer-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 7.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/celestial-cartographer-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/celestial-cartographer-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/ivory-vows-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/ivory-vows-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/ivory-vows-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/ivory-vows-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/ivory-vows-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/ivory-vows-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-veil-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-veil-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-veil-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-veil-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-veil-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-veil-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/rose-etiquette-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/rose-etiquette-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/rose-etiquette-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/rose-etiquette-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/rose-etiquette-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/rose-etiquette-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.2000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/nocturne-protocol-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/nocturne-protocol-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/nocturne-protocol-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/nocturne-protocol-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/nocturne-protocol-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/nocturne-protocol-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/coalwood-warden-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/coalwood-warden-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/coalwood-warden-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/coalwood-warden-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/coalwood-warden-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/coalwood-warden-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/emerald-griffin-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/emerald-griffin-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/emerald-griffin-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.400000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/emerald-griffin-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/emerald-griffin-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/emerald-griffin-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/triune-crown-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/triune-crown-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/triune-crown-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/triune-crown-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/triune-crown-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/triune-crown-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/astral-crown-knight-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/astral-crown-knight-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/astral-crown-knight-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/astral-crown-knight-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/astral-crown-knight-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/astral-crown-knight-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/golden-phoenix-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/golden-phoenix-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/golden-phoenix-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/golden-phoenix-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/golden-phoenix-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/golden-phoenix-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-herald-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-herald-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-herald-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-herald-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-herald-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-herald-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/prismatic-archon-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/prismatic-archon-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/prismatic-archon-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/prismatic-archon-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/prismatic-archon-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/prismatic-archon-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/scarlet-comet-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/scarlet-comet-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/scarlet-comet-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/scarlet-comet-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/scarlet-comet-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/scarlet-comet-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/prism-dragon-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/prism-dragon-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/prism-dragon-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/prism-dragon-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/prism-dragon-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/prism-dragon-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/bloodfrost-rose-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/bloodfrost-rose-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/bloodfrost-rose-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/bloodfrost-rose-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/bloodfrost-rose-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/bloodfrost-rose-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/moon-velvet-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/moon-velvet-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/moon-velvet-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/moon-velvet-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.2999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/moon-velvet-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/moon-velvet-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.599999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/fuchsia-tempest-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/fuchsia-tempest-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/fuchsia-tempest-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/fuchsia-tempest-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/fuchsia-tempest-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/fuchsia-tempest-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/sandglass-dawn-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/sandglass-dawn-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/sandglass-dawn-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/sandglass-dawn-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/sandglass-dawn-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/sandglass-dawn-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/starlit-reverie-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/starlit-reverie-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/starlit-reverie-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/starlit-reverie-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/starlit-reverie-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/starlit-reverie-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/snow-seraph-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/snow-seraph-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/snow-seraph-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/snow-seraph-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/snow-seraph-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/snow-seraph-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-astronomer-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-astronomer-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-astronomer-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-astronomer-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-astronomer-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-astronomer-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/eclipse-mantle-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/eclipse-mantle-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/eclipse-mantle-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/eclipse-mantle-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/eclipse-mantle-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/eclipse-mantle-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-sovereign-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-sovereign-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-sovereign-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-sovereign-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-sovereign-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.599999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-sovereign-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-gold-envoy-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.400000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-gold-envoy-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-gold-envoy-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-gold-envoy-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-gold-envoy-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-gold-envoy-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-nightblade-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-nightblade-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-nightblade-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-nightblade-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-nightblade-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-nightblade-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/plum-dragon-queen-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/plum-dragon-queen-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/plum-dragon-queen-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/plum-dragon-queen-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/plum-dragon-queen-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/plum-dragon-queen-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/ashen-dragon-mantle-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/ashen-dragon-mantle-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/ashen-dragon-mantle-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/ashen-dragon-mantle-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/ashen-dragon-mantle-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 10.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-peacock-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 4
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-peacock-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-peacock-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-peacock-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-peacock-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-peacock-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-dusk-prince-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-dusk-prince-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-dusk-prince-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-dusk-prince-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.2999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-dusk-prince-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-dusk-prince-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/sapphire-diadem-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/sapphire-diadem-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/sapphire-diadem-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.400000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/sapphire-diadem-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/sapphire-diadem-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/sapphire-diadem-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/void-pulse-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/void-pulse-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/void-pulse-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/void-pulse-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/void-pulse-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.7000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/void-pulse-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.599999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/saltwind-corsair-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/saltwind-corsair-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/saltwind-corsair-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/saltwind-corsair-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/saltwind-corsair-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/saltwind-corsair-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/quiet-rooftop-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/quiet-rooftop-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/quiet-rooftop-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.2999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/quiet-rooftop-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/quiet-rooftop-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/quiet-rooftop-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/cobblestone-sunday-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/cobblestone-sunday-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/cobblestone-sunday-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/cobblestone-sunday-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/cobblestone-sunday-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/cobblestone-sunday-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/seabreeze-holiday-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/seabreeze-holiday-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/seabreeze-holiday-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/seabreeze-holiday-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/seabreeze-holiday-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/seabreeze-holiday-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/cozy-reef-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/cozy-reef-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/cozy-reef-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.3999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/cozy-reef-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/cozy-reef-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/cozy-reef-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/hearthside-purr-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/hearthside-purr-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/hearthside-purr-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/hearthside-purr-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/hearthside-purr-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/hearthside-purr-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonlit-mischief-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonlit-mischief-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonlit-mischief-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonlit-mischief-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonlit-mischief-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonlit-mischief-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/meadow-flutter-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/meadow-flutter-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/meadow-flutter-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/meadow-flutter-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/meadow-flutter-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/meadow-flutter-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/coral-bay-breeze-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/coral-bay-breeze-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/coral-bay-breeze-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/coral-bay-breeze-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/coral-bay-breeze-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/coral-bay-breeze-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/high-tide-rider-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/high-tide-rider-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.400000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/high-tide-rider-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/high-tide-rider-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/high-tide-rider-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/high-tide-rider-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/chrome-district-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.599999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/chrome-district-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/chrome-district-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/chrome-district-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/chrome-district-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.2999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/chrome-district-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/obsidian-gloss-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/obsidian-gloss-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/obsidian-gloss-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/obsidian-gloss-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/obsidian-gloss-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/obsidian-gloss-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/neon-afterglow-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/neon-afterglow-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/neon-afterglow-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/neon-afterglow-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/neon-afterglow-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/neon-afterglow-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/brass-meridian-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/brass-meridian-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/brass-meridian-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/brass-meridian-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/brass-meridian-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.5999999977648258
+      },
+      {
+        "src": "/art/avatars/collections/v1/brass-meridian-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/off-duty-avenue-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/off-duty-avenue-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/off-duty-avenue-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/off-duty-avenue-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/off-duty-avenue-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/off-duty-avenue-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-formal-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-formal-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-formal-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.6000000014901161
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-formal-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-formal-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-formal-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/last-bell-reaper-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 6.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/last-bell-reaper-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/last-bell-reaper-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/last-bell-reaper-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/last-bell-reaper-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/last-bell-reaper-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 5.799999997019768
+      },
+      {
+        "src": "/art/avatars/collections/v1/hollow-lantern-rider-human-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonveil-phantom-human-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/hollow-lantern-rider-elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/hollow-lantern-rider-darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/hollow-lantern-rider-orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/hollow-lantern-rider-dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.2000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/hollow-lantern-rider-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonveil-phantom-elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonveil-phantom-darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonveil-phantom-orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonveil-phantom-dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonveil-phantom-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/v1/rogue-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.2999999970197678
+      },
+      {
+        "src": "/art/avatars/v1/rogue-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/races/v2/elf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/races/v2/elf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 3.300000000745058
+      },
+      {
+        "src": "/art/avatars/races/v2/darkElf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/races/v2/darkElf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/races/v1/orc-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/races/v1/orc-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/races/v3/dwarf-male",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/races/v3/dwarf-female",
+        "moving": true,
+        "width": 160,
+        "wing": false,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/races/v2/kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/races/v2/kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.599999997764826
+      }
+    ]
+  },
+  "kamaelCapeMotionReview": {
+    "rendered": 63,
+    "costumes": 61,
+    "defaults": 2,
+    "animatedWings": 63,
+    "allFramesChanged": true,
+    "errors": [],
+    "records": [
+      {
+        "src": "/art/avatars/collections/v1/crimson-dawn-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 5.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-envoy-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 4.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/azure-benediction-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/dawn-emissary-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-dragon-mantle-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.2999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/malachite-warden-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/veil-of-constellations-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.2000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-courtier-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/starfrost-court-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/opal-tide-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/dusk-velvet-ball-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/celestial-cartographer-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 4.300000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/ivory-vows-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/gilded-veil-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.9000000022351742
+      },
+      {
+        "src": "/art/avatars/collections/v1/rose-etiquette-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/nocturne-protocol-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/coalwood-warden-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/emerald-griffin-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/triune-crown-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/astral-crown-knight-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/golden-phoenix-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-herald-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 4.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/prismatic-archon-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/scarlet-comet-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/prism-dragon-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.900000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/bloodfrost-rose-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/moon-velvet-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/fuchsia-tempest-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/sandglass-dawn-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/starlit-reverie-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 5.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/snow-seraph-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-astronomer-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/eclipse-mantle-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/amethyst-sovereign-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.599999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-gold-envoy-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-nightblade-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/plum-dragon-queen-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.400000002235174
+      },
+      {
+        "src": "/art/avatars/collections/v1/ashen-dragon-mantle-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 10.699999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/crimson-peacock-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/violet-dusk-prince-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3
+      },
+      {
+        "src": "/art/avatars/collections/v1/sapphire-diadem-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/void-pulse-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.399999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/saltwind-corsair-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/quiet-rooftop-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.599999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/cobblestone-sunday-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.5
+      },
+      {
+        "src": "/art/avatars/collections/v1/seabreeze-holiday-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.199999999254942
+      },
+      {
+        "src": "/art/avatars/collections/v1/cozy-reef-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 5.899999998509884
+      },
+      {
+        "src": "/art/avatars/collections/v1/hearthside-purr-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonlit-mischief-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.099999997764826
+      },
+      {
+        "src": "/art/avatars/collections/v1/meadow-flutter-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.2999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/coral-bay-breeze-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/high-tide-rider-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.8999999985098839
+      },
+      {
+        "src": "/art/avatars/collections/v1/chrome-district-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.7999999970197678
+      },
+      {
+        "src": "/art/avatars/collections/v1/obsidian-gloss-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/neon-afterglow-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.100000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/brass-meridian-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.600000001490116
+      },
+      {
+        "src": "/art/avatars/collections/v1/off-duty-avenue-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 1.800000000745058
+      },
+      {
+        "src": "/art/avatars/collections/v1/midnight-formal-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2
+      },
+      {
+        "src": "/art/avatars/collections/v1/last-bell-reaper-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 5.700000002980232
+      },
+      {
+        "src": "/art/avatars/collections/v1/hollow-lantern-rider-kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.2000000029802322
+      },
+      {
+        "src": "/art/avatars/collections/v1/moonveil-phantom-kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.300000000745058
+      },
+      {
+        "src": "/art/avatars/races/v2/kamael-male",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 3.199999999254942
+      },
+      {
+        "src": "/art/avatars/races/v2/kamael-female",
+        "moving": true,
+        "width": 160,
+        "wing": true,
+        "ms": 2.100000001490116
+      }
+    ]
+  },
   "browserReview": [
     {
       "width": 320,
-      "decoded": 222,
+      "decoded": 366,
       "overflow": false,
       "reducedMotion": true,
       "brokenUrls": 0
     },
     {
       "width": 390,
-      "decoded": 222,
+      "decoded": 366,
       "overflow": false,
       "reducedMotion": true,
       "brokenUrls": 0
     },
     {
       "width": 1100,
-      "decoded": 222,
+      "decoded": 366,
       "overflow": false,
       "reducedMotion": true,
       "brokenUrls": 0
@@ -2759,28 +7616,15 @@
     ]
   },
   "internalMotionReview": {
-    "rigs": 234,
-    "paintingVariants": 222,
+    "rigs": 378,
+    "paintingVariants": 366,
     "defaultAvatars": 12,
     "feetAnchored": true,
     "blink": true,
     "continuousWarp": true,
-    "averageMs": 15.42500000037253,
-    "maxMs": 43.5,
-    "rigidArmExamples": 2
+    "averageMs": 10.005000000074507,
+    "maxMs": 31.5
   },
-  "allCostumeMotionReview": {
-    "rendered": 234,
-    "costumes": 222,
-    "defaults": 12,
-    "animatedWings": 39,
-    "quietBreathing": true,
-    "allFramesChanged": true,
-    "report": "art-source/avatars/motion-review/all-costume-motion-review.json",
-    "individuallyReviewedPoses": 234,
-    "reviewedFramePairSheets": 30,
-    "freeRigidArms": 291,
-    "accessoryProtectedPaintings": 102,
-    "poseAwareWingOcclusion": true
-  }
+  "rewardBound": true,
+  "temporaryItemsTradeable": false
 }

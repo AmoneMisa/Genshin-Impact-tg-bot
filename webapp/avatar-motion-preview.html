@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Движения персонажей — исправленная пластика</title>
+<title>Новые костюмы — движения персонажей</title>
 <link rel="stylesheet" href="/avatar-costume-view.css">
 <style>
 body{margin:0;background:#121926;color:#eee;font:16px system-ui;padding:12px}
@@ -14,11 +14,11 @@ main{max-width:820px;margin:auto}h1{font-size:20px;margin:0 0 12px}
 p{line-height:1.5;margin:12px 0}#status{font-size:14px}
 </style>
 <link rel="stylesheet" href="/design-system.css">
-<main><h1>Спокойное дыхание и движение крыла</h1>
+<main><h1>Moonveil Phantom и Hollow Lantern Rider</h1>
 <div class="preview-controls"><button class="ui-button primary" id="play">Пауза</button><button class="ui-button" id="still" aria-pressed="false">Статичный рисунок</button><span id="status" role="status">Загрузка…</span></div>
 <div class="preview-choice"><label for="costume">Персонаж слева — выберите любой готовый образ</label><select id="costume" aria-label="Готовый образ"></select></div>
-<div class="preview-figures"><div class="preview-figure"><img src="/art/avatars/races/v2/kamael-female-512.webp" alt="Камаэль с движущимся крылом"></div><div class="preview-figure"><img src="/art/avatars/races/v2/elf-female-512.webp" alt="Эльфийка в лазурном платье"></div></div>
-<p>Все 222 костюма и 12 базовых образов настроены по своим позам. Свободные руки слегка поворачиваются от плеча; руки с предметами и скрещённые руки закреплены. Колышутся волосы и свободная ткань, у камаэлей — крыло. Грудь, талия и опорные ноги сохраняют форму.</p>
+<div class="preview-figures"><div class="preview-figure"><img src="/art/avatars/collections/v1/moonveil-phantom-human-female-512.webp" alt="Moonveil Phantom — рваное светящееся призрачное одеяние"></div><div class="preview-figure"><img src="/art/avatars/collections/v1/hollow-lantern-rider-kamael-male-512.webp" alt="Hollow Lantern Rider — тыквенная голова, крыло и плащ-баннер"></div></div>
+<p>Все готовые костюмы и базовые образы настроены по своим позам. Свободные руки слегка поворачиваются от плеча; руки с предметами и скрещённые руки закреплены. Колышутся волосы и свободная ткань, у камаэлей — крыло. Грудь, талия и опорные ноги сохраняют форму.</p>
 </main>
 <script type="module">
 import {createCostumeRig} from '/avatar-costume-rig.js';
@@ -34,7 +34,7 @@ const raceNames={human:'Человек',elf:'Эльф',darkElf:'Тёмный э�
 for(const [path,rig]of Object.entries(AVATAR_COSTUME_RIGS)){
   const key=rig.poseReview.key,parts=key.split('-'),gender=parts.pop(),race=parts.pop();
   const label=`${names.get(key)||'Базовый образ'} — ${raceNames[race]}, ${gender==='female'?'женский':'мужской'}`;
-  choice.add(new Option(label,path,false,path==='/art/avatars/races/v2/kamael-female'));
+  choice.add(new Option(label,path,false,path==='/art/avatars/collections/v1/moonveil-phantom-human-female'));
 }
 enhanceSelects(document.querySelector('.preview-choice'));
 let selection=0;
