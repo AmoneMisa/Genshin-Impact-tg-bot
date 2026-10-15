@@ -27,6 +27,7 @@
     "mongoose": "9.9.4",
     "node-cron": "4.6.0",
     "node-telegram-bot-api": "2.1.0",
+    "phaser": "3.90.0",
     "three": "0.170.0"
   }
 }

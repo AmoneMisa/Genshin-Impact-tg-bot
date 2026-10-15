@@ -76,6 +76,10 @@
   touch-action: pan-y;
 }
 .boss-stage[hidden] { display: none; }
+.boss-stage.boss-room-stage{height:360px;aspect-ratio:auto;border-radius:0;box-shadow:none;touch-action:pan-y}
+.boss-room-stage>.hunt-ground{width:100%;height:100%;background:transparent;overflow:hidden}
+.boss-room-stage .hunt-world{transform-origin:50% 50%}
+.boss-room-stage .hunt-iso-actor{pointer-events:none}
 .boss-stage-canvas, .boss-stage-still { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .boss-stage-still { object-fit: cover; }
 .boss-stage-still.l2-boss-still { object-fit: contain; background: #10151a; }

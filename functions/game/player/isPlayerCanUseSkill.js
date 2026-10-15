@@ -7,10 +7,10 @@ import {isSkillLearned} from './skillLearning.js';
 
 // 0 - can be used; 1 - not enough mp/hp; 2 - on cooldown; 3 - the player's level is too low or the skill is not learned
 // yet (skillLearning.js); 4 - no arrows / bolts.
-export default function (session, skill) {
-    if(l2ActionBlock(session,{magic:skillCombatType(skill,session?.game?.gameClass)==='magic',attack:Boolean(skill?.isDealDamage)}))return 5;
+export default function (session, skill, now=Date.now()) {
+    if(l2ActionBlock(session,{magic:skillCombatType(skill,session?.game?.gameClass)==='magic',attack:Boolean(skill?.isDealDamage)},now))return 5;
     // turned to stone by a raid boss (worldBosses.js): nothing can be done until it wears off
-    if ((Number(session?.game?.petrifiedUntil) || 0) > Date.now()) return 5;
+    if ((Number(session?.game?.petrifiedUntil) || 0) > now) return 5;
     if ((Number(skill?.needLvl) || 0) > (Number(session?.game?.stats?.lvl) || 1)) {
         return 3;
     }
@@ -24,7 +24,7 @@ export default function (session, skill) {
 
     let cooldown = getSkillCooldown(skill);
 
-    if (cooldown > new Date().getTime()) {
+    if (cooldown > now) {
         return 2;
     }
 

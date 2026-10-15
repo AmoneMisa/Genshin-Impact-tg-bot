@@ -4,6 +4,7 @@ export const AI_LABELS = {fighter: 'Воин', healer: 'Целитель', mage:
 import {isBossStunned} from '../boss/bossDebuffs.js';
 import {l2HasControl,l2MoveMultiplier} from '../player/l2Effects.js';
 import {findPath,advancePath} from '../world/navigation.js';
+import {clearLine} from './huntSpatial.js';
 
 export function huntDebuff(session, kind, now) {
     return (session.game.hunt?.playerDebuffs || []).find(e => e.kind === kind && e.until > now)?.amount || 0;
@@ -50,7 +51,8 @@ export function pursuePlayer(hunt, now) {
         if (step > 0) {
             if(hunt.field.walls?.length){
                 if(!mob.path?.length||Math.hypot((mob.destination?.x||0)-hunt.field.x,(mob.destination?.y||0)-hunt.field.y)>.08){mob.destination={x:hunt.field.x,y:hunt.field.y};mob.path=findPath(mob,mob.destination,hunt.field.walls)||[];mob.moveAt=now-seconds*1000;}
-                advancePath(mob,now,.09*2000*l2MoveMultiplier(mob,now));
+                mob.moveAt=now-seconds*1000;
+                advancePath(mob,now,seconds>0?step/seconds*2000:0);
             }else{mob.x += dx / distance * step; mob.y += dy / distance * step;}
             moved = true;
         }
@@ -72,7 +74,7 @@ export function mobAiTurn(session, mob, at, note) {
     if (at < (mob.nextAbilityAt || 0)) return false;
     const allies = session.game.hunt.field?.mobs || [mob];
     if (mob.ai === 'healer') {
-        const ally = allies.filter(m => m.currentHp > 0 && m.currentHp < m.hp * .75).sort((a, b) => a.currentHp / a.hp - b.currentHp / b.hp)[0];
+        const ally = allies.filter(m => m.currentHp > 0 && m.currentHp < m.hp * .75&&clearLine(mob,m,session.game.hunt.field?.walls)).sort((a, b) => a.currentHp / a.hp - b.currentHp / b.hp)[0];
         if (ally) {
             const heal = Math.min(ally.hp - ally.currentHp, Math.round(ally.hp * .12));
             ally.currentHp += heal;
@@ -81,7 +83,7 @@ export function mobAiTurn(session, mob, at, note) {
             return true;
         }
     }
-    if (mob.ai === 'mage' && mob.turn % 3 === 0) {
+    if (mob.ai === 'mage' && mob.turn % 3 === 0&&clearLine(mob,session.game.hunt.field||mob,session.game.hunt.field?.walls)) {
         const hunt = session.game.hunt;
         hunt.playerDebuffs = (hunt.playerDebuffs || []).filter(e => e.until > at && e.kind !== 'weaken');
         hunt.playerDebuffs.push({kind: 'weaken', amount: .15, until: at + 8000});

@@ -33,11 +33,11 @@ function restoreMana(session, share) {
 export default function castSkill(session, boss, skill, options = {}) {
     if(skill.isDealDamage||skill.debuff||skill.debuffs?.length)l2OnHostileAction(session,options.now??Date.now());
     const result = resolveSkill(session, boss, skill, options);
-    applySoulSpell(session,skill,options.now??Date.now());
+    if(!options.secondary)applySoulSpell(session,skill,options.now??Date.now());
     // Route bonuses that apply to any kind of skill.
     const route = getRouteBonus(skill);
     const now = options.now ?? Date.now();
-    if (route.guard > 0) {
+    if (route.guard > 0 && !options.secondary) {
         applySkillBuffs(session, {...skill, enchantLevel: 0, routeKind: undefined}, [{kind: 'guard', amount: route.guard * 100, seconds: route.guardSeconds}], now);
         result.guard = route.guard;
     }
@@ -83,7 +83,7 @@ function resolveSkill(session, boss, skill, options = {}) {
     }
 
     if (skill.isDealDamage) {
-        return {type: 'damage', ...userDealDamage(session, boss, skill, {targetId, now})};
+        return {type: 'damage', ...userDealDamage(session, boss, skill, {targetId, now, secondary:options.secondary,damageScale:options.damageScale})};
     }
 
     if (skill.isHeal) {

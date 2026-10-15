@@ -29,8 +29,10 @@ import { AI_ROLES, AI_LABELS, aggroNearby, provokeMob, mobBuff, mobAiTurn, pursu
 import {fieldPvpSkillBlock,reduceHuntKarma,fieldPvpEffect} from './fieldPvpState.js';
 import {tickL2Effects,l2ActionBlock,l2HasControl,l2RawStat,l2MoveMultiplier} from '../player/l2Effects.js';
 import {roomLayout, roomById, adjacent, slotPositions} from './huntRooms.js';
-import {findPath, advancePath} from '../world/navigation.js';
+import {findPath, advancePath,nearestOpenPoint} from '../world/navigation.js';
 import getSpeed from '../player/getters/getSpeed.js';
+import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
+import {skillCombatType} from '../player/combatType.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
 export const IDLE_MS = 2 * 60 * 1000;
@@ -50,12 +52,18 @@ export function ensureHunt(session) {
         field.visited = [field.room];
         field.respawns = [];
     }
+    if(field&&field.layoutVersion!==2){
+        const room=roomById(getZone(game.hunt.zone),field.room);
+        field.walls=room?.walls||[];field.layoutVersion=2;field.path=[];delete field.action;delete field.autoAttack;delete field.pendingRoom;
+        for(const actor of [field,...(field.mobs||[])]){Object.assign(actor,nearestOpenPoint(actor,field.walls));actor.path=[];}
+    }
     if (game.hunt.field) game.hunt.mob = game.hunt.field.mobs.find(m => m.instanceId === game.hunt.field.target) || null;
     return game.hunt;
 }
 
-function pushLog(hunt, icon, text, now) {
-    hunt.log = [{at: now, icon, text}, ...hunt.log].slice(0, HUNT.logSize);
+function pushLog(hunt, icon, text, now,extra={}) {
+    hunt.logSeq=(hunt.logSeq||0)+1;
+    hunt.log = [{id:hunt.logSeq,at: now, icon, text,...extra}, ...hunt.log].slice(0, HUNT.logSize);
 }
 
 /** castSkill() wants a boss: give the stored mob the one method it calls (not saved with it). */
@@ -106,9 +114,10 @@ function applyHit(session, dmg, now) {
 export function advanceHunt(session, now = Date.now(), random = Math.random) {
     tickL2Effects(session,now,{hp:getMaxHp(session)});
     const hunt = ensureHunt(session);
-    if(session.game.world&&isDead(session,now))return [];
+    if(isDead(session,now)){if(hunt.field)stopHuntAction(hunt.field,now);return [];}
     if (!hunt.field) return advanceSingleHunt(session, now, random);
     const field = hunt.field;
+    if((field.action||field.autoAttack)&&now-number(field.seenAt)>5000)stopHuntAction(field,now);
     if (l2ActionBlock(session,{move:true},now)) {field.path=[];delete field.pendingRoom;field.moveAt=now;}
     else advancePath(field,now,getSpeed(session)*l2MoveMultiplier(session,now));
     if (field.pendingRoom && !field.path?.length) {
@@ -140,7 +149,80 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
     // Re-select a surviving actor after a kill; selecting alone never provokes it.
     hunt.field.target = hunt.field.mobs.some(m => m.instanceId === selected) ? selected : hunt.field.mobs[0]?.instanceId || null;
     hunt.mob = hunt.field.mobs.find(m => m.instanceId === hunt.field.target) || null;
+    written.push(...advanceHuntAction(session,now,random));
     return written;
+}
+
+/** A movement command, target change, room transition or Stop cancels the current combat intention. */
+export function stopHuntAction(field,now=Date.now()) {
+    if(!field)return;
+    delete field.action;delete field.autoAttack;
+    delete field.pendingRoom;
+    field.path=[];field.moveAt=now;
+}
+
+function approachTarget(session,mob,geometry,now) {
+    const field=session.game.hunt.field;
+    if(l2ActionBlock(session,{move:true},now))return {ok:false,reason:'effect_blocked'};
+    const distance=spatialDistance(field,mob),share=Math.min(1,geometry.range*.85/Math.max(1,distance));
+    const destination={x:Math.max(.02,Math.min(.98,mob.x+(field.x-mob.x)*share)),y:Math.max(.02,Math.min(.98,mob.y+(field.y-mob.y)*share))};
+    const path=findPath(field,destination,field.walls||[]);
+    if(!path)return {ok:false,reason:'path_blocked'};
+    field.path=path;field.moveAt=now;
+    return {ok:true};
+}
+
+export function setHuntAttack(session,enabled,now=Date.now()) {
+    const hunt=ensureHunt(session),field=hunt.field;
+    if(!field)return {ok:false,reason:'no_mob'};
+    if(!enabled){stopHuntAction(field,now);return {ok:true};}
+    advanceHunt(session,now);
+    if(isDead(session,now))return {ok:false,reason:'dead'};
+    if(!hunt.mob)return {ok:false,reason:'no_mob'};
+    if(!weaponSpatial(session,now))return {ok:false,reason:'combat_data_missing'};
+    if(l2ActionBlock(session,{attack:true},now))return {ok:false,reason:'effect_blocked'};
+    delete field.pendingRoom;
+    delete field.action;field.path=[];
+    field.seenAt=now;hunt.lastActionAt=now;
+    field.autoAttack={targetId:hunt.mob.instanceId,nextAt:Math.max(now,number(field.nextAttackAt))};
+    if(session.game.world)session.game.world.channel=null;
+    advanceHuntAction(session,now);
+    return {ok:true};
+}
+
+function advanceHuntAction(session,now,random=Math.random) {
+    const hunt=session.game.hunt,field=hunt.field;
+    if(!field||(!field.action&&!field.autoAttack))return [];
+    const action=field.action||{kind:'attack',targetId:field.autoAttack.targetId};
+    const skill=action.kind==='attack'?{...BASIC_ATTACK,cost:weaponSpatial(session,now)?.costMp||0}:session.game.gameClass.skills[action.index];
+    const geometry=skill&&skillSpatial(session,skill,now);
+    const mob=field.mobs.find(m=>m.instanceId===action.targetId&&m.currentHp>0);
+    if(!geometry||(needsTarget(geometry)&&!mob)||isDead(session,now)){stopHuntAction(field,now);return [];}
+    if(mob)field.facing=Math.atan2(mob.y-field.y,mob.x-field.x);
+    if(!inSkillReach(field,mob,geometry)) {
+        if(action.phase==='cast'){delete field.action;return [];}
+        const move=approachTarget(session,mob,geometry,now);
+        if(!move.ok){stopHuntAction(field,now);pushLog(hunt,'⚑','Не удаётся подойти к цели.',now);}
+        return [];
+    }
+    field.path=[];
+    if(l2ActionBlock(session,{attack:hostileSkill(skill),magic:skillCombatType(skill,session.game.gameClass)==='magic'},now)){
+        if(field.action)delete field.action;
+        return [];
+    }
+    if(action.kind!=='attack'&&geometry.windup>0&&action.phase!=='cast'){
+        action.phase='cast';action.until=now+geometry.windup;field.action=action;return [];
+    }
+    if(action.phase==='cast'&&now<action.until)return [];
+    if(action.kind==='attack'&&now<field.autoAttack.nextAt)return [];
+    const done=performHuntCast(session,skill,mob,geometry,{now,random});
+    if(action.kind==='attack'){
+        field.nextAttackAt=now+weaponSpatial(session,now).interval;
+        field.autoAttack.nextAt=field.nextAttackAt;
+        if(!done.ok||!field.mobs.includes(mob))delete field.autoAttack;
+    }else delete field.action;
+    if(!done.ok)pushLog(hunt,'⚑',done.reason==='cooldown'?'Умение ещё восстанавливается.':'Действие прервано: проверь состояние персонажа и ресурсы.',now);
+    return [{action:action.kind,ok:done.ok}];
 }
 
 function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
@@ -169,6 +251,7 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
         if (isBossStunned(mob, at)) { note('💫', `${mob.name} оглушён и пропускает удар.`); continue; }
         if(mob.hunt?.magic&&(bossDebuffAmount(mob,'mute',at)>0||l2HasControl(mob,'Mute',at)))continue;
         if (bossDebuffAmount(mob, 'mute', at) <= 0 && mobAiTurn(session, mob, at, note)) continue;
+        if(hunt.field&&!clearLine(mob,hunt.field,hunt.field.walls))continue;
         if (!canMobReach(hunt, mob,session,at)) continue;
         if (random() < Math.min(.75,evadeChance(session, at)+bossDebuffAmount(mob,'accuracyDown',at))) { note('💨', `Ты уклонился от удара ${mob.name}.`); continue; }
         const raw = mobHit(session, mob, at, random);
@@ -199,7 +282,7 @@ function populateRoom(session, zone, room, {now, random, count = room.cap, prefi
         const mob = buildMob(zone, pool[(offset + index) % pool.length], {now, random, className: session.game.gameClass.stats.name});
         const legacy = count === 3;
         return {...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length], aggressive: legacy ? index !== 1 : index % 3 === 0,
-            aggro: false, x: slot.x, y: slot.y, buffs: []};
+            aggro: false, ...nearestOpenPoint(slot,room.walls), buffs: []};
     });
 }
 
@@ -221,6 +304,7 @@ function settleRespawns(session, hunt, now, random) {
         // a new monster appears somewhere in the upper part of the area
         fresh.x = .12 + random() * .76;
         fresh.y = .12 + random() * .43;
+        Object.assign(fresh,nearestOpenPoint(fresh,room.walls));
         fresh.aggressive = random() < .35;
         fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];
         bucket.push(fresh);
@@ -241,13 +325,15 @@ function enterRoom(session, hunt, roomIdValue, now, random) {
     delete field.rooms[to.id];
     field.seq = number(field.seq) + 1;
     field.mobs = stored ? stored.mobs : populateRoom(session, zone, to, {now, random, prefix: `${now}:${to.id}:e${field.seq}`});
-    field.mobs.push(...train.map(m => ({...m,x:.5,y:.85,lastMoveAt:now})));
+    field.mobs.push(...train.map(m => ({...m,x:to.col>from.col?.025:to.col<from.col?.975:.5,
+        y:to.row>from.row?.025:to.row<from.row?.975:.5,lastMoveAt:now,path:[]})));
     // monsters killed there while the hero was away that were due to return come in at once
-    for (const mob of field.mobs) { mob.lastMoveAt = now; }
+    for (const mob of field.mobs) { mob.lastMoveAt = now;Object.assign(mob,nearestOpenPoint(mob,to.walls));mob.path=[]; }
     field.room = to.id;
     field.walls=to.walls||[];
-    field.x = .5;
-    field.y = .95;
+    stopHuntAction(field,now);
+    field.x = to.col>from.col?.05:to.col<from.col?.95:.5;
+    field.y = to.row>from.row?.05:to.row<from.row?.95:.5;
     field.target = field.mobs[0]?.instanceId || null;
     field.visited = [...new Set([...(field.visited || []), to.id])];
     hunt.mob = field.mobs[0] || null;
@@ -295,7 +381,7 @@ export function enterHuntField(session, zoneId, {now = Date.now(), random = Math
         mobs[0]={...buildMob(zone,definition,{now,random,className:session.game.gameClass.stats.name}),instanceId:slot.instanceId,ai:slot.ai,aggressive:slot.aggressive,aggro:false,x:slot.x,y:slot.y,buffs:[]};
     }
     hunt.zone = zone.id;
-    hunt.field = {mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[], room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
+    hunt.field = {mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[],layoutVersion:2, room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
     hunt.mob = mobs[0] || null;
     hunt.playerDebuffs = [];
     hunt.lastActionAt = now;
@@ -305,7 +391,7 @@ export function enterHuntField(session, zoneId, {now = Date.now(), random = Math
 
 export function resetInstanceRoom(session,roomId,now=Date.now(),floor=1){
     const hunt=ensureHunt(session),zone=getZone(hunt.zone),room=roomById(zone,roomId);if(!room)return false;
-    const field=hunt.field;field.floor=floor;field.room=room.id;field.mobs=populateRoom(session,zone,room,{now,random:Math.random,count:zone.instance?.kind==='labyrinth'&&floor>=3?1:room.cap});field.target=field.mobs[0]?.instanceId||null;field.walls=room.walls||[];field.path=[];field.x=.5;field.y=.95;field.moveAt=now;delete field.pendingRoom;hunt.mob=field.mobs[0]||null;hunt.lastActionAt=now;return true;
+    const field=hunt.field;stopHuntAction(field,now);field.floor=floor;field.room=room.id;field.mobs=populateRoom(session,zone,room,{now,random:Math.random,count:zone.instance?.kind==='labyrinth'&&floor>=3?1:room.cap});field.target=field.mobs[0]?.instanceId||null;field.walls=room.walls||[];field.path=[];field.x=.5;field.y=.95;field.moveAt=now;delete field.pendingRoom;hunt.mob=field.mobs[0]||null;hunt.lastActionAt=now;return true;
 }
 export function selectHuntTarget(session, targetId, now = Date.now()) {
     const changed = advanceHunt(session, now).length > 0;
@@ -313,6 +399,7 @@ export function selectHuntTarget(session, targetId, now = Date.now()) {
     const target = hunt.field?.mobs.find(m => m.instanceId === targetId && m.currentHp > 0);
     if (!target) return {ok: false, reason: 'no_mob', changed};
     hunt.field.target = target.instanceId;
+    stopHuntAction(hunt.field,now);
     hunt.mob = target;
     hunt.lastActionAt = now;
     return {ok: true};
@@ -335,6 +422,9 @@ export function moveHuntField(session, direction, now = Date.now(), random = Mat
     else delete field.pendingRoom;
     const path=findPath(field,{x:Number(target.x),y:Number(target.y)},room.walls||[]);
     if(!path){delete field.pendingRoom;return {ok:false,reason:'path_blocked'};}
+    const pendingRoom=field.pendingRoom;
+    stopHuntAction(field,now);
+    if(pendingRoom)field.pendingRoom=pendingRoom;
     field.path=path;field.moveAt=now;
     if(session.game.world)session.game.world.channel=null;
     hunt.lastActionAt = now;
@@ -359,22 +449,49 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
     const swings = advanceHunt(session, now, random);
     if (isDead(session, now)) return {ok: false, reason: 'dead', log: swings, changed: swings.length > 0};
     const mob = hunt.mob;
-    if (!mob) return {ok: false, reason: 'no_mob', log: swings, changed: swings.length > 0};
-
     const index = Number(rawIndex);
     const skill = session.game.gameClass.skills?.[index];
     const fail = reason => ({ok: false, reason, log: swings, changed: swings.length > 0});
     if (!Number.isInteger(index) || !skill) return fail('invalid_skill');
+    const geometry=skillSpatial(session,skill,now);
+    if(hunt.field){
+        if(geometry?.weapon)return setHuntAttack(session,true,now);
+        if(!geometry)return fail('combat_data_missing');
+        if(needsTarget(geometry)&&!mob)return fail('no_mob');
+        const usable=isPlayerCanUseSkill(session,skill,now);
+        if(usable)return fail(['','not_enough_resource','cooldown','skill_locked','no_ammo','effect_blocked'][usable]);
+        const blocked=fieldPvpSkillBlock(session,skill,now);if(blocked)return fail(blocked);
+        delete hunt.field.pendingRoom;
+        hunt.field.action={kind:'skill',index,targetId:mob?.instanceId,phase:'approach'};
+        if(session.game.world)session.game.world.channel=null;
+        hunt.field.seenAt=now;hunt.lastActionAt=now;
+        if(!inSkillReach(hunt.field,mob,geometry)){
+            const move=approachTarget(session,mob,geometry,now);
+            if(!move.ok){delete hunt.field.action;return fail(move.reason);}
+            return {ok:true,queued:true,phase:'approach'};
+        }
+        hunt.field.path=[];
+        if(geometry.windup>0){hunt.field.action.phase='cast';hunt.field.action.until=now+geometry.windup;return {ok:true,queued:true,phase:'cast'};}
+        delete hunt.field.action;
+    }else if(!mob&&hostileSkill(skill))return fail('no_mob');
+    return {...performHuntCast(session,skill,mob,geometry,{now,random}),log:swings};
+}
+
+function performHuntCast(session,skill,mob,geometry,{now,random}) {
+    const hunt=ensureHunt(session),fail=reason=>({ok:false,reason});
+    if(isDead(session,now))return fail('dead');
     const pvpBlock = fieldPvpSkillBlock(session,skill,now);
     if (pvpBlock) return fail(pvpBlock);
-    const usable = isPlayerCanUseSkill(session, skill);
+    const usable = isPlayerCanUseSkill(session, skill,now);
     if (usable === 3) return {...fail('skill_locked'), needLevel: number(skill.needLvl)};
     if (usable === 1) return fail('not_enough_resource');
     if (usable === 2) return fail('cooldown');
     if (usable === 4) return fail('no_ammo');
     if (usable === 5) return fail('effect_blocked');
 
-    if (hunt.field && (skill.isDealDamage || skill.debuff || skill.debuffs?.length || skill.buffs?.some(b => b.kind === 'taunt'))) provokeMob(hunt, mob, now);
+    const targets=hostileSkill(skill)&&hunt.field?spatialTargets(hunt.field,mob,geometry,random):[mob];
+    if(hostileSkill(skill)&&!targets.length)return fail('no_mob');
+    if(hunt.field&&hostileSkill(skill))for(const target of targets)provokeMob(hunt,target,now);
 
     const {cost, costHp} = getEffectiveSkillCost(skill, getMaxHp(session, session.game.gameClass), session);
     skillUsagePayCost(session, costHp > 0 ? 'hp' : 'mp', costHp > 0 ? costHp : cost);
@@ -382,37 +499,64 @@ export function useHuntSkill(session, rawIndex, {now = Date.now(), random = Math
 
     const shots = armShots(session, skill);
     armAttackRune(session, now);
-    let result;
+    let result;const targetResults=[];
     try {
-        result = castSkill(session, asBoss(mob), skill, {now, l2Target: mob, random});
+        // Resolve secondary targets before consuming the caster's one-action buff charges.
+        for(const target of [...targets.slice(1),targets[0]]) {
+            if(isDead(session,now))break;
+            const ordinal=targets.indexOf(target);
+            const damageScale=geometry?.weapon&&geometry.radius&&ordinal>0?.85/Math.pow(1.15,ordinal-1):1;
+            const hit=castSkill(session,target?asBoss(target):null,skill,{now,l2Target:target,random,secondary:target!==targets[0],damageScale});
+            targetResults.push({targetId:target?.instanceId,...hit});
+            if(target===targets[0])result=hit;
+        }
+        result ||= targetResults[0];
     } finally {
         // never leave the one-cast boosts armed for the next fight if the cast throws
         clearShots(session);
         clearAttackRune(session);
     }
     if (shots) result.shots = shots;
-    setSkillCooldown(skill, session);
+    if(!geometry?.weapon)setSkillCooldown(skill, session,now);
     hunt.lastActionAt = now;
     const questGains = recordQuestEvent(session, {type: 'skill', skill}).gains;
 
     let killed = false;
-    let rewards = null;
-    if (skill.isDealDamage && mob.currentHp <= 0) {
+    let rewards = null;const rewardRows=[];
+    for(const mob of targets.filter(target=>target&&target.currentHp<=0))if (skill.isDealDamage) {
         killed = true;
         mob.currentHp = 0;
-        rewards = finishKill(session,hunt,mob,{random,now});
-        pushLog(hunt, '🏆', `${mob.name} повержен: +${rewards.exp} опыта, +${rewards.sp} SP${rewards.gold ? `, +${rewards.gold} золота` : ''}.${rewards.party?.length ? ' Группа получила свою долю.' : ''}`, now);
+        rewards = finishKill(session,hunt,mob,{random,now,deferLoot:true});
+        rewardRows.push(rewards);
         if (!hunt.field) hunt.mob = null;
     }
-    return {ok: true, result, killed, rewards, shots: shots || null, questGains, log: swings};
+    if(rewardRows.length)rewards=notifyLoot(hunt,rewardRows,now);
+    if(targetResults.length>1)result.targets=targetResults;
+    const affected=targetResults.filter(hit=>hit.type==='damage');
+    if(hunt.field)hunt.field.lastStrike={at:now,name:skill.name,kind:result?.type||'damage',magic:skillCombatType(skill,session.game.gameClass)==='magic',facing:mob?Math.atan2(mob.y-hunt.field.y,mob.x-hunt.field.x):hunt.field.facing||0,spatial:geometry,x:hunt.field.x,y:hunt.field.y,
+        targets:affected.map(hit=>{const target=targets.find(m=>m?.instanceId===hit.targetId);return {id:hit.targetId,x:target.x,y:target.y,damage:hit.dealt,critical:Boolean(hit.isHasCritical),missed:Boolean(hit.missed)};})};
+    if(affected.length)pushLog(hunt,'⚔️',`${skill.name}: ${affected.map(hit=>`${targets.find(m=>m?.instanceId===hit.targetId)?.name||''} −${hit.dealt}`).join(', ')}.`,now);
+    return {ok: true, result, killed, rewards, shots: shots || null, questGains};
 }
 
-function finishKill(session,hunt,mob,{random,now}){
+function notifyLoot(hunt,rows,now){
+    const items=new Map();
+    for(const row of rows)for(const item of row.items||[]){const key=item.item||item.name;const old=items.get(key);items.set(key,{...item,amount:(old?.amount||0)+item.amount});}
+    const sum=key=>rows.reduce((n,row)=>n+(Number(row[key])||0),0);
+    const rewards={...rows.at(-1),exp:sum('exp'),sp:sum('sp'),gold:sum('gold'),items:[...items.values()],leveledUp:rows.some(r=>r.leveledUp)};
+    const notice={at:now,exp:rewards.exp,sp:rewards.sp,gold:rewards.gold,items:rewards.items,leveledUp:rewards.leveledUp};
+    hunt.lastLoot=notice;
+    pushLog(hunt,'🏆',`Получено: ${rewards.exp} опыта, ${rewards.sp} SP${rewards.gold?`, ${rewards.gold} адены`:''}${rewards.items.map(i=>`, ${i.name} ×${i.amount}`).join('')}.${rewards.leveledUp?' Новый уровень!':''}${rows.some(r=>r.party?.length)?' Группа получила свою долю.':''}`,now,{loot:notice});
+    return rewards;
+}
+
+function finishKill(session,hunt,mob,{random,now,deferLoot=false}){
     if (mob.rewarded) return mob.rewarded;
     const rewards=grantKillRewards(session,mob,getMobDef(getZone(mob.zone),mob.mobId),{random,now});
     rewards.karmaReduced=reduceHuntKarma(session,rewards);
     mob.rewarded = rewards;
     hunt.kills=number(hunt.kills)+1;hunt.last={name:mob.name,level:mob.level,champion:mob.champion,...rewards};
+    if(!deferLoot)notifyLoot(hunt,[rewards],now);
     if (hunt.field) {
         const index=hunt.field.mobs.findIndex(m=>m.instanceId===mob.instanceId);
         if(index>=0)hunt.field.mobs.splice(index,1);

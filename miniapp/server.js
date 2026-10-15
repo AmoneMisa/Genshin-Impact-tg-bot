@@ -125,6 +125,7 @@ import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
 import { performRtaAction } from './clanRta.js';
 import { getBaseStatsState } from '../functions/game/player/baseStats.js';
 import { getZoneLoot, fleeHuntForMiniApp, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, setHotbarForMiniApp, useSpecialForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from './hunt.js';
+import {setHuntAttack} from '../functions/game/hunt/huntFight.js';
 import {worldState,worldAction,advanceWorld,ensureWorld,enterWorldInstance,bindWorldInstances} from '../functions/game/world/world.js';
 import {worldRequestState} from './world.js';
 import {loadWorldInstances,saveWorldInstances} from './worldInstances.js';
@@ -147,6 +148,7 @@ const GAME_ASSETS_DIR = path.resolve(__dirname, '../images');
 // browser runtime folders are exposed.
 const THREE_DIR = path.resolve(__dirname, '../node_modules/three');
 const THREE_PUBLIC_PREFIXES = ['build/', 'examples/jsm/'];
+const PHASER_DIR = path.resolve(__dirname, '../node_modules/phaser/dist');
 const feedbackCooldowns = new Map();
 const FEEDBACK_COOLDOWN_MS = 30_000;
 const ARCADE_GAMES = new Set(Object.keys(getArcadeConfig()));
@@ -2109,6 +2111,11 @@ const huntTarget = guarded('hunt target', async (req, res) => {
   const context = await authorize(req), body = await readJsonBody(req);
   return sendResult(res, await huntAnswer(context, session => targetHuntForMiniApp(session, body.targetId)), context);
 });
+const huntAttack = guarded('hunt attack',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  if(typeof body.enabled!=='boolean')throw httpError(400,'enabled must be boolean');
+  return sendResult(res,await huntAnswer(context,session=>setHuntAttack(session,body.enabled)),context);
+});
 
 const huntSkill = guarded('hunt skill', async (req, res) => {
   const context = await authorize(req);
@@ -2397,6 +2404,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/hunt/loot') return huntLoot(req, res);
     if (route === 'POST /api/hunt/move') return huntMove(req, res);
     if (route === 'POST /api/hunt/target') return huntTarget(req, res);
+    if (route === 'POST /api/hunt/attack') return huntAttack(req,res);
     if (route === 'POST /api/hunt/skill') return huntSkill(req, res);
     if (route === 'POST /api/hunt/hotbar') return huntHotbar(req, res);
     if (route === 'POST /api/hunt/special') return huntSpecial(req, res);
@@ -2431,6 +2439,10 @@ export default function startMiniAppServer() {
       return sendJson(res, 404, { error: 'Asset not found' });
     }
 
+    if (req.method === 'GET' && requestUrl.pathname === '/vendor/phaser/phaser.esm.min.js') {
+      if (await serveFile(res, PHASER_DIR, 'phaser.esm.min.js')) return;
+      return sendJson(res, 404, {error:'Asset not found'});
+    }
     if (req.method === 'GET' && servePage(res, requestUrl.pathname)) return;
     if (req.method === 'GET' && await serveFile(res, WEBAPP_DIR, requestUrl.pathname)) return;
     // A missing model must 404: the SPA fallback below would hand the glTF

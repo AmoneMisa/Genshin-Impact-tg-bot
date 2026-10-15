@@ -37,7 +37,9 @@ test('damaging skills provoke the target and helpers; state survives a JSON save
  const s=fixture(),h=s.game.hunt;
  h.field.mobs[1].x=.25;h.field.mobs[1].y=.3;
  const target=h.mob,old=target.currentHp;
+ h.field.x=target.x;h.field.y=target.y+.02;
  assert.equal(useHuntSkill(s,0,{now:NOW,random:()=>.5}).ok,true);
+ advanceHunt(s,NOW+4000,()=>.5);
  assert.ok(target.currentHp<old);assert.ok(target.aggro);assert.ok(h.field.mobs[1].aggro);
  const restored=JSON.parse(JSON.stringify(s));ensureHunt(restored);
  assert.equal(restored.game.hunt.mob,restored.game.hunt.field.mobs[0]);
@@ -71,8 +73,9 @@ test('mob buffs and player debuffs affect damage, expire, and stun skips the tur
 
 test('killed actors leave the battlefield and pay once; fleeing clears combat state',()=>{
  const s=fixture(),h=s.game.hunt;h.mob.currentHp=1;
+ h.field.x=h.mob.x;h.field.y=h.mob.y+.02;
  const killed=h.mob.instanceId;const result=useHuntSkill(s,0,{now:NOW,random:()=>.5});
- assert.ok(result.killed);assert.equal(h.kills,1);assert.equal(h.field.mobs.length,2);
+ assert.ok(result.queued);advanceHunt(s,NOW+4000,()=>.5);assert.equal(h.kills,1);assert.equal(h.field.mobs.length,2);
  assert.equal(h.field.mobs.some(m=>m.instanceId===killed),false);
  advanceHunt(s,NOW+100,()=>.5);assert.equal(h.kills,1);
  assert.equal(fleeHunt(s,NOW+100).ok,true);assert.equal(h.field,null);assert.deepEqual(h.playerDebuffs,[]);
@@ -107,7 +110,7 @@ test('aggressive actors pursue the player, stop at range, and cannot move during
  const before=distance();advanceHunt(s,NOW+1000,()=>.5);assert.ok(distance()<before);
  applyBossDebuff(mob,{kind:'stun',seconds:3},NOW+1000);
  const position=[mob.x,mob.y];advanceHunt(s,NOW+2000,()=>.5);assert.deepEqual([mob.x,mob.y],position);
- advanceHunt(s,NOW+10000,()=>.5);advanceHunt(s,NOW+14000,()=>.5);
+ advanceHunt(s,NOW+10000,()=>.5);advanceHunt(s,NOW+14000,()=>.5);advanceHunt(s,NOW+18000,()=>.5);advanceHunt(s,NOW+22000,()=>.5);
  assert.ok(distance()<=.201);assert.ok(distance()>=.199);
 });
 

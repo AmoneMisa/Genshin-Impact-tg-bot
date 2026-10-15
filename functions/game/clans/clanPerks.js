@@ -125,13 +125,15 @@ export function syncClanPerks(session, clan, now = Date.now()) {
         const level = clanSkillLevel(clan, entry.id);
         if (level) next[entry.id] = level;
     }
-    const changed = JSON.stringify(next) !== JSON.stringify(session.game.clanPerks || {});
+    const clanName=clan?.name||null;
+    const changed = JSON.stringify(next) !== JSON.stringify(session.game.clanPerks || {}) || session.game.clanName!==clanName;
     if (changed) session.game.clanPerks = next;
     session.game.clanPerksAt = now;
+    session.game.clanName=clanName;
     return changed;
 }
 
-export const clanPerksStale = (session, now = Date.now()) => now - number(session?.game?.clanPerksAt) > CLAN_PERK_REFRESH_MS;
+export const clanPerksStale = (session, now = Date.now()) => session?.game?.clanName===undefined || now - number(session?.game?.clanPerksAt) > CLAN_PERK_REFRESH_MS;
 
 const eggCount = (clan, key) => Math.max(0, number(clan?.warehouse?.[key]));
 

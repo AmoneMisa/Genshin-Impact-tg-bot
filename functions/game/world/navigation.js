@@ -1,6 +1,17 @@
 // Bounded A* on prepared collision rectangles. Coordinates are normalized per room.
 export const ROOM_SIZE = 2000;
 const N = 32;
+export const insideObstacle=(p,walls=[])=>walls.some(w=>p.x>=w.x&&p.x<=w.x+w.w&&p.y>=w.y&&p.y<=w.y+w.h);
+/** Only used when spawning or migrating a room layout, never to bypass movement. */
+export function nearestOpenPoint(point,walls=[]){
+    if(!insideObstacle(point,walls))return {x:point.x,y:point.y};
+    let best=null,dist=Infinity;
+    for(let x=1;x<N-1;x++)for(let y=1;y<N-1;y++){
+        const p={x:(x+.5)/N,y:(y+.5)/N},d=Math.hypot(p.x-point.x,p.y-point.y);
+        if(d<dist&&!insideObstacle(p,walls)){best=p;dist=d;}
+    }
+    return best||{x:.5,y:.95};
+}
 export function findPath(from, to, walls = []) {
     if (![from.x,from.y,to.x,to.y].every(Number.isFinite) || to.x < .02 || to.x > .98 || to.y < .02 || to.y > .98) return null;
     const cell = p => ({x: Math.min(N-1,Math.floor(p.x*N)), y: Math.min(N-1,Math.floor(p.y*N))});

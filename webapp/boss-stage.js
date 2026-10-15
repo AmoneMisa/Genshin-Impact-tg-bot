@@ -15,6 +15,7 @@
 import { familyOf } from './class-family.js';
 import { menuArtFor } from './menu-art.js';
 import L2_BOSS_ART from './l2-boss-art.js';
+import {createBossRoomStage} from './boss-room.js';
 
 export const BOSS_ART = Object.freeze({
   kivaha: { element: 1, tint: [0.55, 0.78, 1.0] },        // lightning turtle
@@ -371,7 +372,11 @@ function compile(gl, type, source) {
  * Returns { setHp, playSkill(kind, { crit }), bossAttack(), defeat(), destroy() }.
  * playSkill kind: 'damage' (animation chosen by class) | 'heal' | 'shield' | a SKILL_FX key.
  */
-export function createBossStage(host, { name, hpPercent = 100, player = null, autoAttack = true } = {}) {
+export function createBossStage(host, options = {}) {
+  return createBossRoomStage(host,{...options,bossUrl:bossArtUrl(options.name),playerUrl:options.player?classArtUrl(options.player.className,options.player.gender,options.player.race):null});
+}
+
+export function createPaintedBossStage(host, { name, hpPercent = 100, player = null, autoAttack = true } = {}) {
   const art = BOSS_ART[name];
   if (L2_BOSS_ART[name] || !art || typeof window === 'undefined' || reducedMotion()) return staticFallback(host, name, player);
 

@@ -98,7 +98,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement, in
       if (!stage || stage.name !== state.boss.name) {
         stage?.destroy();
         stageHost.hidden = false;
-        stage = createBossStage(stageHost, { name: state.boss.name, hpPercent: state.boss.hpPercent, player: state.player });
+        stage = createBossStage(stageHost, { name: state.boss.name,label:state.boss.nameCall, hpPercent: state.boss.hpPercent, player: state.player });
       } else {
         stage.setHp(state.boss.hpPercent);
       }

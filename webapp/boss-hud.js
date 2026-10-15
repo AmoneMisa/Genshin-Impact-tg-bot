@@ -1,5 +1,6 @@
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
+import {originalIcon} from './art/l2-gameplay-icons.js';
 import { escapeHtml } from './escape-html.js';
 export { escapeHtml };
 // MMO-style boss raid HUD (pure HTML builders, styled in boss.css):
@@ -142,9 +143,10 @@ function skillGlyph(skill,className='') {
  * name) and the description are the tooltip. `chosen` is the list of skill indexes the player put on the bar (all when
  * omitted). `data-skill-cooldown` nodes are refreshed by the screen's ticker.
  */
-export function hotbar(skills = [], {className = '', chosen = null} = {}) {
+export function hotbar(skills = [], {className = '', chosen = null,slotCount=0,attackAction=null} = {}) {
   const list = Array.isArray(chosen) ? chosen.map(index => skills.find(skill => skill.index === index)).filter(Boolean) : skills;
-  return `<div class="mmo-hotbar icons-only">${list.map(skill => hotbarButton(skill, className)).join('')}</div>`;
+  const empty=Array.from({length:Math.max(0,slotCount-list.length)},(_,index)=>`<span class="mmo-skill empty-slot" aria-label="Пустой слот ${list.length+index+1}"></span>`).join('');
+  return `<div class="mmo-hotbar icons-only"${slotCount?` data-slot-count="${slotCount}"`:''}>${list.map(skill => attackAction&&skill.name==='Attack'?`<button type="button" class="mmo-skill boss-skill" data-attack aria-label="Автоатака" title="Автоатака: повторное нажатие выключает" aria-pressed="${Boolean(attackAction.enabled)}" ${attackAction.canUse?'':'disabled'}><span class="mmo-skill-icon">${originalIcon('icon-action003')}</span></button>`:hotbarButton(skill, className)).join('')}${empty}</div>`;
 }
 
 // a health cost is long (13 876): thousands are shortened to fit the corner of a picture

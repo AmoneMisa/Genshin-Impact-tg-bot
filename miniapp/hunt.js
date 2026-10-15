@@ -25,6 +25,7 @@ import { castL2Buff } from './l2Buffs.js';
 import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
 import {reviveEntries} from '../functions/game/player/revival.js';
 import {markWorldDeath} from '../functions/game/world/death.js';
+import {skillSpatial,weaponSpatial} from '../functions/game/hunt/huntSpatial.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -65,7 +66,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
     return {
         // true when mob swings were applied: the session has to be saved
         changed: swings.length > 0,
-        now,world:{mode:game.world?.mode,channel:game.world?.channel,walkHome:game.world?.walkHome,death:game.world?.death||null},
+        now,lastLoot:hunt.lastLoot||null,world:{mode:game.world?.mode,channel:game.world?.channel,walkHome:game.world?.walkHome,death:game.world?.death||null},
         resurrections:reviveEntries(session,now).filter(s=>s.level>0),
         soulCrystals:soulCrystalState(session),
         zones: getZones().map(zone => zoneDto(zone, level)),
@@ -76,12 +77,13 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
         pvpLog: (game.worldPvp?.log || []).map(row=>({...row,agoMs:Math.max(0,now-row.at)})),
         kills: number(hunt.kills),
         last: hunt.last || null,
-        log: hunt.log.map(row => ({icon: row.icon, text: row.text, at: number(row.at), agoMs: Math.max(0, now - number(row.at))})),
+        log: hunt.log.map(row => ({id:row.id,icon: row.icon, text: row.text,loot:row.loot||null, at: number(row.at), agoMs: Math.max(0, now - number(row.at))})),
         champions: Object.values(CHAMPIONS).map(({id, label, chance, hp: hpMul, exp, drops}) => ({id, label, chance, hp: hpMul, exp, drops})),
         vitality: getVitalityState(session, now),
         shots: getShotsState(session),
         player: {
             name: memberName(session),
+            clanName:game.clanName||null,
             level,
             className: gameClass?.stats?.name || 'noClass',
             gender: session.gender === 'female' ? 'female' : 'male',
@@ -91,7 +93,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
             cp, maxCp, cpPercent: percent(cp, maxCp),
             effects: [...fieldPlayerDto(session,now).effects, ...playerEffectsDto([],respawnRemainMs,now), ...(hunt.playerDebuffs || []).filter(e => e.until > now).map(e => ({id: e.kind, label: 'Атаки ослаблены', value: e.amount, count: Math.ceil((e.until - now) / 1000)}))],
             respawnRemainMs,
-            skills: excludeToggleSkills((gameClass?.skills || []).map((skill, index) => {const dto=skillDto(session,skill,index,now);return {...dto,canUse:dto.canUse && !fieldPvpSkillBlock(session,skill,now)};}),special,session),
+            skills: excludeToggleSkills((gameClass?.skills || []).map((skill, index) => {const dto=skillDto(session,skill,index,now);const spatial=skillSpatial(session,skill,now);return {...dto,spatial,canUse:dto.canUse && Boolean(spatial) && !fieldPvpSkillBlock(session,skill,now)};}),special,session),
             potions: potionBarDto(session),
             hotbar: getHotbar(session),
             hotbarMax: HOTBAR_MAX,
@@ -111,7 +113,13 @@ function fieldDto(hunt, now, session) {
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
     return {
     x: field.x, y: field.y, runSpeed:getSpeed(session), walls:field.walls||[], path: field.path || [], moveAt: field.moveAt, floor: field.floor || 1, floors:zone?.floors||(zone?.id==='tower-of-insolence'?14:1), target: field.target,
-        title: zone?.title,
+        autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,
+        lastStrike:field.lastStrike&&now-field.lastStrike.at<900?field.lastStrike:null,
+        action:field.action?{...field.action,name:session.game.gameClass.skills[field.action.index]?.name,
+            spatial:skillSpatial(session,session.game.gameClass.skills[field.action.index],now)}:null,
+        exits:layout.map?layout.rooms.filter(r=>adjacent(current,r)).map(r=>({id:r.id,name:visited.has(r.id)?r.name:'Не исследовано',
+            side:r.col>current.col?'east':r.col<current.col?'west':r.row>current.row?'south':'north'})):[],
+        title: zone?.title,sceneKey:`${hunt.zone}:${current.id}`,environment:current.environment,layoutSource:current.layoutSource,
         room: {id: current.id, name: current.name, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
         map: layout.map ? {
             cols: layout.cols, rows: layout.rows,
@@ -138,7 +146,7 @@ export function fieldPlayerDto(session,now=Date.now()) {
     const effects=playerEffectsDto(session.game.effects,0,now);
     for(const e of fx.debuffs || []) if(e.until>now) effects.push({id:e.kind,label:e.kind,count:Math.ceil((e.until-now)/1000)});
     if(fx.stunUntil>now)effects.push({id:'stun',label:'Оглушён',count:Math.ceil((fx.stunUntil-now)/1000)});
-    return {userId:session.userId,name:memberName(session),level:session.game.stats.lvl,className:session.game.gameClass.stats.name,gender:session.gender || 'male',cp,hp,mp,maxCp,maxHp,maxMp,effects,pvp:fieldPvpStatus(session,now),x:session.game.hunt?.field?.x,y:session.game.hunt?.field?.y};
+    return {userId:session.userId,name:memberName(session),clanName:session.game.clanName||null,level:session.game.stats.lvl,className:session.game.gameClass.stats.name,gender:session.gender || 'male',cp,hp,mp,maxCp,maxHp,maxMp,effects,pvp:fieldPvpStatus(session,now),x:session.game.hunt?.field?.x,y:session.game.hunt?.field?.y};
 }
 
 export function startHuntForMiniApp(session, zoneId, now = Date.now()) {

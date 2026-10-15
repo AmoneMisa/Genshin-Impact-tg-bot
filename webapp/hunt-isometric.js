@@ -1,0 +1,59 @@
+import {combatTheme,colorHex} from './combat-environment.js';
+// One projection for terrain, actors, effects and inverse pointer picking. Game coordinates stay unchanged.
+export function isoMatrix(viewport) {
+  const width=Math.max(1,viewport.width),height=Math.max(1,viewport.height);
+  // A traversable room extends past a phone's edges; camera pan reveals its aisles.
+  const a=Math.max(280,Math.min(640,width*.85));
+  const b=a/Math.sqrt(3);
+  return {a,b,c:-a,d:b,e:width/2,f:height/2-b};
+}
+export function isoPoint(point,viewport,camera={}) {
+  const m=isoMatrix(viewport),zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
+  const x=m.a*point.x+m.c*point.y+m.e,y=m.b*point.x+m.d*point.y+m.f;
+  return {x:cx+(x-cx)*zoom+(camera.x||0),y:cy+(y-cy)*zoom+(camera.y||0)};
+}
+export function isoPick(point,viewport,camera={}) {
+  const m=isoMatrix(viewport),zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
+  const sx=(point.x-cx-(camera.x||0))/zoom+cx-m.e;
+  const sy=(point.y-cy-(camera.y||0))/zoom+cy-m.f;
+  return {x:(sx/m.a+sy/m.b)/2,y:(sy/m.b-sx/m.a)/2};
+}
+const points=list=>list.map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
+
+/** Move labels only; avatars and their hit areas stay at authoritative positions. */
+export function isoLabelOffsets(actors,viewport){
+  const offsets=new Map(),placed=[];
+  const overlap=(a,b)=>a.x<b.x+b.w+3&&a.x+a.w+3>b.x&&a.y<b.y+b.h+3&&a.y+a.h+3>b.y;
+  const bodies=actors.map(a=>{const p=isoPoint(a,viewport);return {id:a.id,x:p.x-24,y:p.y-50,w:48,h:48};});
+  for(const actor of actors){
+    const p=isoPoint(actor,viewport),w=108,h=actor.labelHeight||28;
+    let best=null;
+    for(const dy of [0,-16,-32,-48,-64])for(const dx of [0,-30,30,-60,60]){
+      const desired=p.x-w/2+dx;
+      const x=p.x>=0&&p.x<=viewport.width?Math.max(4,Math.min(viewport.width-w-4,desired)):desired,y=p.y-54-h+dy;
+      const rect={x,y,w,h};
+      const collisions=placed.filter(r=>overlap(rect,r)).length+bodies.filter(b=>b.id!==actor.id&&overlap(rect,b)).length;
+      const score=collisions*1000+Math.abs(dy)+Math.abs(dx)*.5+(y<4?200:0);
+      if(!best||score<best.score)best={rect,score,x:x-(p.x-w/2),y:dy};
+    }
+    placed.push(best.rect);offsets.set(actor.id,{x:best.x,y:best.y});
+  }
+  return offsets;
+}
+
+/** Static SVG terrain: no WebGL, image downloads, simulation loop or per-tile event listeners. */
+export function isoTerrain(field,viewport) {
+  const theme=combatTheme(field.environment);
+  const project=p=>isoPoint(p,viewport);
+  const prism=(x,y,w,h,height,kind='wall')=>{
+    const floor=[project({x,y}),project({x:x+w,y}),project({x:x+w,y:y+h}),project({x,y:y+h})];
+    const top=floor.map(p=>({x:p.x,y:p.y-height}));
+    return `<g class="hunt-iso-${kind}"><polygon class="iso-shadow" points="${points(floor.map(p=>({x:p.x+6,y:p.y+5})))}"/><polygon class="iso-side" style="fill:${colorHex(theme.side)}" points="${points([floor[1],floor[2],top[2],top[1]])}"/><polygon class="iso-front" style="fill:${colorHex(theme.front)}" points="${points([floor[2],floor[3],top[3],top[2]])}"/><polygon class="iso-top" style="fill:${colorHex(theme.top)}" points="${points(top)}"/></g>`;
+  };
+  const floor=[{x:0,y:0},{x:1,y:0},{x:1,y:1},{x:0,y:1}].map(project);
+  const tiles=[];
+  for(let x=0;x<8;x++)for(let y=0;y<8;y++)tiles.push(`<polygon class="iso-tile" style="fill:${colorHex((x*3+y*7)%5===0?theme.light:theme.floor)}" points="${points([{x:x/8,y:y/8},{x:(x+1)/8,y:y/8},{x:(x+1)/8,y:(y+1)/8},{x:x/8,y:(y+1)/8}].map(project))}"/>`);
+  // Low perimeter walls leave the actual doors open; raised obstacles use the server's collision rectangles.
+  const walls=(field.walls||[]).map(w=>prism(w.x,w.y,w.w,w.h,w.kind==='pillar'?76:w.kind==='wall'?58:28,w.kind==='pillar'?'pillar':'wall'));
+  return `<svg class="hunt-isometric-terrain" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true"><polygon class="iso-base" points="${points(floor.map(p=>({x:p.x,y:p.y+12})))}"/><polygon class="iso-floor" points="${points(floor)}"/>${tiles.join('')}${walls.join('')}</svg>`;
+}

@@ -2,6 +2,7 @@ import {recordDeath} from '../player/deathPenalties.js';
 import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2OnDamageDealt,l2PreventDeath,l2TransferDamage,l2RawStat} from '../player/l2Effects.js';
 // Live per-skill PvP in hunting locations. All participants must come from one freshly loaded Chat.
 import {advanceHunt} from './huntFight.js';
+import {clearLine} from './huntSpatial.js';
 import {HUNT} from './huntConfig.js';
 import {giveGloryCoins, PVP_GLORY_COINS} from '../clans/clanHall.js';
 import {ensureFieldPvp, fieldIsPresent, fieldPvpStatus, fieldPvpEffect, fieldPvpSkillBlock, fieldPvpLog, PVP_FLAG_MS} from './fieldPvpState.js';
@@ -132,6 +133,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
     const magic=skillCombatType(skill,attacker.game.gameClass)==='magic';
     const distance=Math.hypot(attacker.game.hunt.field.x-defender.game.hunt.field.x,attacker.game.hunt.field.y-defender.game.hunt.field.y);
     if(hostile && distance > (magic? .65 : .35))return fail('pvp_out_of_range');
+    if(!clearLine(attacker.game.hunt.field,defender.game.hunt.field,attacker.game.hunt.field.walls))return fail('pvp_line_of_sight');
     const victimStatus=fieldPvpStatus(defender,now).status;
     if(hostile && victimStatus==='neutral' && !force)return fail('pvp_force_required');
 

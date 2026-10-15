@@ -3,7 +3,7 @@ import {teleportPrice} from '../runes/labRunes.js';
 import {pointInPolygon, findPath, advancePath} from './navigation.js';
 import getSpeed from '../player/getters/getSpeed.js';
 import {l2MoveMultiplier,l2ActionBlock} from '../player/l2Effects.js';
-import {enterHuntField, advanceHunt, moveHuntField, resetInstanceRoom} from '../hunt/huntFight.js';
+import {enterHuntField, advanceHunt, moveHuntField, resetInstanceRoom,stopHuntAction} from '../hunt/huntFight.js';
 import {spendMaterials, addMaterial} from '../player/materials.js';
 import {getZone} from '../hunt/huntMobs.js';
 import holdings from '../../../template/worldHoldings.js';
@@ -137,7 +137,7 @@ export function worldAction(session,body,now=Date.now()){
         if(w.mode==='city')return {ok:false,reason:'already_in_city'};
         if(w.channel)return {ok:false,reason:'channel_busy'};
         if(!(session.game.inventory.materials?.scroll_escape>0))return {ok:false,reason:'no_escape_scroll'};
-        const field=session.game.hunt?.field;if(field){field.path=[];delete field.pendingRoom;}
+        const field=session.game.hunt?.field;if(field)stopHuntAction(field,now);
         w.path=[];w.pending=null;w.channel={until:now+15000,hp:Number(session.game.gameClass.stats.hp)};return {ok:true};
     }
     if(body.action==='holding_travel'){
@@ -171,7 +171,7 @@ export function worldAction(session,body,now=Date.now()){
         const stored=f.floors[floor];
         if(stored)Object.assign(f,stored);else {session.game.hunt.field=null;session.game.hunt.mob=null;const r=enterHuntField(session,w.location,{now});if(!r.ok){session.game.hunt.field=f;return r;}Object.assign(f,session.game.hunt.field);session.game.hunt.field=f;}
         if(!stored)resetInstanceRoom(session,f.room,now,floor);
-        f.floor=floor;f.x=.9;f.y=.1;f.path=[];delete f.pendingRoom;session.game.hunt.mob=f.mobs.find(m=>m.instanceId===f.target)||null;return {ok:true};
+        stopHuntAction(f,now);f.floor=floor;f.x=.9;f.y=.1;session.game.hunt.mob=f.mobs.find(m=>m.instanceId===f.target)||null;return {ok:true};
     }
     return {ok:false,reason:'invalid_action'};
 }

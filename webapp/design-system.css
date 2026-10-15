@@ -1340,3 +1340,21 @@ body .ui-button.ui-choice-row.compact{min-height:44px;padding:var(--space-2);fon
 .costume-preview-panel .avatar-costume-view{width:min(100%,256px)}
 .bonus-win:has(.costume-preview){display:block}
 .bonus-prize img{width:40px;height:40px;object-fit:contain}
+/* Compact controls retain the common surfaces, focus, disabled states and spacing. */
+body .game-overlay .ui-button.ui-compact{min-height:36px;padding:var(--space-2);font-size:12px;line-height:1.25;display:flex;align-items:center;justify-content:center;gap:var(--space-2)}
+body .game-overlay .ui-folder-tabs.ui-compact{gap:var(--space-1);padding:0}
+body .game-overlay .ui-folder-tabs.ui-compact button{min-height:32px;padding:var(--space-2);font-size:12px;line-height:1.2}
+/* Pressing a map marker must preserve its map anchor instead of moving the hit target. */
+body .game-dialog-panel button.ui-map-marker,body .game-dialog-panel button.ui-map-marker:is(:active,:hover,:focus-visible){transform:var(--map-marker-anchor,translate(-50%,-50%))}
+/* HUD surfaces share one scene instead of adding framed cards around each readout. */
+.ui-hud{background:var(--surface-glass);color:var(--text);border:0;box-shadow:none;border-radius:0}
+body .game-overlay .ui-hud-content{background:transparent;border:0;box-shadow:none;border-radius:0}
+body .game-overlay .ui-hud-content::before,body .game-overlay .ui-hud-content::after{display:none}
+.ui-hud.ui-hud-floating{background:var(--surface-dialog-solid);border:1px solid var(--border-soft);border-radius:var(--radius-sm)}
+.ui-pvp-neutral{--pvp-color:var(--text)}
+.ui-pvp-flagged{--pvp-color:#d397f2}
+.ui-pvp-pk{--pvp-color:#fa8a78}
+.ui-pvp-name{color:var(--pvp-color,var(--text));text-shadow:0 1px 2px var(--surface-page)}
+body .game-overlay .ui-player-presence{border-color:var(--pvp-color,var(--border-soft))}
+.mmo-skill[aria-pressed="true"]{outline:2px solid var(--gold-bright);outline-offset:-2px}
+.mmo-hotbar .empty-slot{border:1px solid var(--border-soft);background:var(--surface-input);box-shadow:none}

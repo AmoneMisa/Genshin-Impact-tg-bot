@@ -37,7 +37,7 @@ function creditDamage(boss, userId, dmg) {
  * Returns {isHasCritical, dmg, hits[], vampire, reflectDamage, target, ...}:
  * `dmg` is what the skill rolled in total, `dealt` what actually landed.
  */
-export default function (session, boss, skill, {targetId = null, now = Date.now()} = {}) {
+export default function (session, boss, skill, {targetId = null, now = Date.now(), secondary=false,damageScale=1} = {}) {
     l2OnHostileAction(session,now);
     if (!boss) {
         throw new Error("Босс не найден!");
@@ -57,7 +57,8 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
     let total = 0;
     let missedHits = 0;
     for (let i = 0; i < hitCount; i++) {
-        const {dmg, isHasCritical: crit, missed: hitMissed} = calcDamage(session, skill, boss, {consume: i === 0, defence, hpShare, now});
+        const {dmg:rawDamage, isHasCritical: crit, missed: hitMissed} = calcDamage(session, skill, boss, {consume: !secondary&&i === 0, defence, hpShare, now});
+        const dmg=Math.floor(rawDamage*damageScale);
         if (hitMissed) missedHits++;
         hits.push({dmg, crit});
         total += dmg;
@@ -65,10 +66,10 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
     }
 
     let playerStats = session.game.gameClass.stats;
-    const companionDamage=l2CompanionDamage(session,total,now);
+    const companionDamage=secondary?0:l2CompanionDamage(session,total,now);
     total+=companionDamage;
     // the cubics of the hero add a blow of their own to every hit
-    const cubic=cubicDamage(session,total,now);
+    const cubic=secondary?{damage:0}:cubicDamage(session,total,now);
     total+=cubic.damage;
     const userId = session.userChatData.user.id;
     const result = {isHasCritical, dmg: total, dealt: 0, missed: missedHits === hitCount, hits, companionDamage, cubicDamage: cubic.damage, vampire: 0, reflectDamage: 0, target: 'boss'};
@@ -116,7 +117,7 @@ export default function (session, boss, skill, {targetId = null, now = Date.now(
         const power = (1 + 0.05 * (skill.enchantLevel || 0)) * (1 + getRouteBonus(skill).debuff);
         result.debuffs = debuffs.map(debuff => applyBossDebuff(boss, debuff, now, power, getRouteBonus(skill).duration)).filter(Boolean);
     }
-    if (skill.buffs?.length) {
+    if (skill.buffs?.length && !secondary) {
         applySkillBuffs(session, skill, skill.buffs, now);
     }
 

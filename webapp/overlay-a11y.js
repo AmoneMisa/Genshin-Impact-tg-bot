@@ -65,6 +65,9 @@ export function installOverlayA11y() {
   document.addEventListener('keydown', event => {
     if (!top) return;
     if (event.key === 'Escape') {
+      const escape = new CustomEvent('overlay-escape', {cancelable:true,bubbles:true});
+      top.dispatchEvent(escape);
+      if (escape.defaultPrevented) {event.preventDefault();event.stopImmediatePropagation();return;}
       const close = top.querySelector('.overlay-close,[data-dismiss],[data-close],[data-chest-close]');
       if (close) { event.preventDefault();event.stopImmediatePropagation();close.click(); }
     } else if (event.key === 'Tab') {
