@@ -1,7 +1,7 @@
 import {materialIcon} from './material-icons.js';
 import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
-import { worldArtUrl, worldIconHtml } from './art/world-art.js';
+import { worldArtUrl, worldIconHtml } from './art/world-art-url.js';
 // Chest game: pick one of nine painted chests -> the chosen chest
 // bursts open in a close-up with its reward -> "Получить" -> after the third
 // pick every chest goes dark and the session's rewards are summarised.

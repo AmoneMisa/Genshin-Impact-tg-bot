@@ -1,5 +1,5 @@
 import {dropdown} from './auction.js';
-import {worldArtUrl} from './art/world-art.js';
+import {worldArtUrl} from './art/world-art-url.js';
 import {materialIcon} from './material-icons.js';
 import {escapeHtml} from './escape-html.js';
 const fmt=value=>new Intl.NumberFormat('ru-RU').format(Number(value)||0);

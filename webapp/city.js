@@ -5,7 +5,7 @@ export { escapeHtml };
 // change style, rename. Paintings follow the building's level (art/builds-art.js).
 
 import { buildingArtSources } from './art/world-buildings.js';
-import { worldArtUrl } from './art/world-art.js';
+import { worldArtUrl } from './art/world-art-url.js';
 import { icon } from './icons.js';
 import { luckCoinHtml } from './currency-icons.js';
 

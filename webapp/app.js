@@ -1,6 +1,7 @@
 import {updateDeathPopup} from './death-popup.js';
 import {bindFeatureLinks} from './feature-links.js';
 import {requestJson} from './request-json.js';
+import {takeEarly} from './early-data.js';
 import {observeSelects} from './design/select.js';
 import {ensureFeatureStyles} from './feature-styles.js';
 import { language } from './i18n/init.js';
@@ -105,6 +106,11 @@ async function api(path, options = {}) {
   const headers = { ...(options.headers || {}), 'x-telegram-init-data': tg.initData, 'x-app-lang': language };
   if (options.body && !headers['content-type']) headers['content-type'] = 'application/json';
 
+  // The first requests were already started by the page itself (see early-fetch.js).
+  const early = takeEarly(path, options, tg.initData, language);
+  if (early) {
+    try { return await early; } catch { /* repeat it as a normal request below */ }
+  }
   return requestJson(path, {...options,headers});
 }
 

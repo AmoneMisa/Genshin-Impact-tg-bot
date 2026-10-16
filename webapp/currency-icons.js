@@ -1,4 +1,4 @@
-import { worldIconHtml } from './art/world-art.js';
+import { worldIconHtml } from './art/world-art-url.js';
 import { icon } from './icons.js';
 
 /** The Coin of Luck icon (a reviewed painting); the clover emoji until the art is available. */

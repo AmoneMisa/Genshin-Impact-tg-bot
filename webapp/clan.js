@@ -5,7 +5,7 @@ import {clanHallView} from './clan-hall-view.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
-import { worldArtUrl } from './art/world-art.js';
+import { worldArtUrl } from './art/world-art-url.js';
 import { formatNumber } from './format.js';
 
 const REASONS = {

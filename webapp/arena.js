@@ -4,7 +4,7 @@ import { escapeHtml } from './escape-html.js';
 // intro and result, the season reward ladder and the leaderboard.
 
 import { menuArtFor } from './menu-art.js';
-import { worldArtUrl } from './art/world-art.js';
+import { worldArtUrl } from './art/world-art-url.js';
 import { formatNumber } from './format.js';
 
 const MODE_LABELS = {

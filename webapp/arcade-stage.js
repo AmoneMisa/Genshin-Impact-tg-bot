@@ -6,7 +6,7 @@
 // Outcomes are decided by the server value; this module only shows them.
 
 import { arcadeArtUrl, arcadeSpriteHtml, slotPaintingHtml } from './art/arcade-art.js';
-import { worldArtUrl } from './art/world-art.js';
+import { worldArtUrl } from './art/world-art-url.js';
 
 const SLOT_STRIP = ['😈', '❤️', '💋', '🤏', '🛫', '🚗', '💩', '👻', '👽', '☠️'];
 

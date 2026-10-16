@@ -3,6 +3,7 @@ import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { bundlePageAssets, optimizeScripts } from '../pageAssets.js';
+import { renderShell, inlineHeadScript } from '../ssrShell.js';
 import { COMPRESSIBLE, pickEncoding, etagMatches, sendCompressed } from './compression.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -90,7 +91,7 @@ function buildPage() {
   const html = fs.readFileSync(path.join(WEBAPP_DIR, 'index.html'), 'utf8');
   const readFile = file => fs.readFileSync(path.join(WEBAPP_DIR, file), 'utf8');
   const page = bundlePageAssets(html, readFile);
-  page.html = optimizeScripts(page.html, readFile);
+  page.html = renderShell(inlineHeadScript(optimizeScripts(page.html, readFile), readFile('/early-fetch.js')));
   page.htmlHash = crypto.createHash('sha1').update(page.html).digest('hex');
   return page;
 }

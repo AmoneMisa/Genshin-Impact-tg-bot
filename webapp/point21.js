@@ -4,7 +4,7 @@
 // actions. Results: every seat with its hand and payout. A stuck table can be
 // reset from here (anyone when it stalls, chat admins any time).
 
-import { worldArtUrl } from './art/world-art.js';
+import { worldArtUrl } from './art/world-art-url.js';
 import {dialogHeading} from './dialog-heading.js';
 import { icon } from './icons.js';
 import {
