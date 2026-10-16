@@ -35,12 +35,13 @@ function clampPercent(value) {
 export {bar} from './resource-bar.js';
 import {bar} from './resource-bar.js';
 
-export function statusIcons(list = []) {
+export function statusIcons(list = [], {strip=false,compact=false,kind='buff',interactive=false} = {}) {
   if (!list.length) return '<div class="mmo-statuses empty"></div>';
-  return `<div class="mmo-statuses">${list.map(status => `
-    <span class="mmo-status ${escapeHtml(status.id)}" title="${escapeHtml(status.label)}${status.description ? ` — ${escapeHtml(status.description)}` : ''}">
-      ${l2EffectIcon(status.iconKey || status.id) || l2SkillIcon(status.iconKey || status.potionId || status.id) || icon(STATUS_ICONS[status.id] || 'sparkle')}${status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
-    </span>`).join('')}</div>`;
+  const tag=interactive?'button':'span';
+  return `<div class="mmo-statuses${strip?' ui-effect-strip'+(kind==='debuff'?' ui-debuffs':''):''}${compact?' ui-effects-compact':''}">${list.map(status => `
+    <${tag} ${interactive?'type="button" data-status-info':''} data-effect-kind="${escapeHtml(status.kind||kind)}" class="${interactive?'ui-button ':''}mmo-status ${escapeHtml(status.id)}" title="${escapeHtml(status.label)}${status.description ? ` — ${escapeHtml(status.description)}` : ''}${compact&&status.count!=null?' · '+formatNumber(status.count):''}" ${interactive?`aria-label="${escapeHtml(status.label)}"`:''}>
+      ${l2EffectIcon(status.iconKey || status.id) || l2SkillIcon(status.iconKey || status.potionId || status.id) || icon(STATUS_ICONS[status.id] || 'sparkle')}${!compact&&status.count != null ? `<em>${formatNumber(status.count)}</em>` : ''}
+    </${tag}>`).join('')}</div>`;
 }
 
 /** The boss's own skill plus the states of this fight (enrage, minion shield, stun, debuffs). */
@@ -143,10 +144,10 @@ function skillGlyph(skill,className='') {
  * name) and the description are the tooltip. `chosen` is the list of skill indexes the player put on the bar (all when
  * omitted). `data-skill-cooldown` nodes are refreshed by the screen's ticker.
  */
-export function hotbar(skills = [], {className = '', chosen = null,slotCount=0,attackAction=null} = {}) {
-  const list = Array.isArray(chosen) ? chosen.map(index => skills.find(skill => skill.index === index)).filter(Boolean) : skills;
+export function hotbar(skills = [], {className = '', chosen = null,slotCount=0,attackAction=null,actions={}} = {}) {
+  const list = Array.isArray(chosen) ? chosen.map(index => actions[index] ? {action:index} : index==='action:attack'?skills.find(skill=>skill.name==='Attack'):skills.find(skill => skill.index === index)).filter(Boolean) : skills;
   const empty=Array.from({length:Math.max(0,slotCount-list.length)},(_,index)=>`<span class="mmo-skill empty-slot" aria-label="Пустой слот ${list.length+index+1}"></span>`).join('');
-  return `<div class="mmo-hotbar icons-only"${slotCount?` data-slot-count="${slotCount}"`:''}>${list.map(skill => attackAction&&skill.name==='Attack'?`<button type="button" class="mmo-skill boss-skill" data-attack aria-label="Автоатака" title="Автоатака: повторное нажатие выключает" aria-pressed="${Boolean(attackAction.enabled)}" ${attackAction.canUse?'':'disabled'}><span class="mmo-skill-icon">${originalIcon('icon-action003')}</span></button>`:hotbarButton(skill, className)).join('')}${empty}</div>`;
+  return `<div class="mmo-hotbar icons-only"${slotCount?` data-slot-count="${slotCount}"`:''}>${list.map(skill => skill.action?actions[skill.action]:attackAction&&skill.name==='Attack'?`<button type="button" class="mmo-skill boss-skill" data-attack aria-label="Автоатака" title="Автоатака: повторное нажатие выключает" aria-pressed="${Boolean(attackAction.enabled)}" ${attackAction.canUse?'':'disabled'}><span class="mmo-skill-icon">${originalIcon('icon-action003')}</span></button>`:hotbarButton(skill, className)).join('')}${empty}</div>`;
 }
 
 // a health cost is long (13 876): thousands are shortened to fit the corner of a picture

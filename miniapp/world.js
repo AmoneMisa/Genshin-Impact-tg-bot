@@ -1,4 +1,5 @@
 import WorldHolding from '../db/models/WorldHolding.js';
+import {memberName} from './social.js';
 import holdings from '../template/worldHoldings.js';
 import getClan from '../functions/game/clans/getClan.js';
 import {siegeAction,settleSiege,reconcileMilitaryOwnership} from '../functions/game/world/siege.js';
@@ -67,6 +68,6 @@ export async function worldRequestState(session,body,now=Date.now()){
     world.shop=worldShopState(session);
     world.resurrections=reviveEntries(session,now).filter(s=>s.level>0);
     const position=revivalPosition(session);
-    world.corpses=[...(chat.members||[]),...(chat.$locals?.guests||[])].filter(m=>m!==session&&!m.isHided&&!m.userChatData?.user?.is_bot&&m.game?.gameClass?.stats?.hp<=0&&position&&revivalPosition(m)?.space===position.space).map(m=>({userId:String(m.userId),name:m.userChatData?.user?.first_name||String(m.userId),...revivalPosition(m)}));
+    world.corpses=[...(chat.members||[]),...(chat.$locals?.guests||[])].filter(m=>m!==session&&!m.isHided&&!m.userChatData?.user?.is_bot&&m.game?.gameClass?.stats?.hp<=0&&position&&revivalPosition(m)?.space===position.space).map(m=>({userId:String(m.userId),name:memberName(m),...revivalPosition(m)}));
     return {...result,world};
 }

@@ -28,7 +28,7 @@ export const HUNT = Object.freeze({
     // Gold per adena of the real drop, and a multiplier on every real drop chance.
     goldScale: 0.25,
     dropRate: 3,
-    logSize: 8,
+    logSize: 150,
 });
 
 /** Champions (L2J ChampionMonsters.ini: hp x8, exp/sp x8, drop chance x8) in two strengths. */

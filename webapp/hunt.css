@@ -1,5 +1,5 @@
 /* Hunting fields: zone cards, the mob frame with the champion aura, shots, log. Builds on boss.css (mmo-*). */
-.hunt-panel { display: flex; flex-direction: column; gap: 10px; }
+.hunt-panel { display: flex; flex-direction: column; gap: var(--space-1); }
 .hunt-mob { position: relative; }
 .hunt-mob-icon { display: grid; place-items: center; font-size: 30px; }
 .hunt-mob .mmo-frame-title {display:grid;grid-template-columns:minmax(0,1fr);gap:4px;}
@@ -281,7 +281,7 @@ body:has(.loot-notice-overlay) .system-toasts{visibility:hidden}
 .hunt-soul{gap:12px;padding:16px}.hunt-soul strong{line-height:1.4}.hunt-soul .select-row{flex-wrap:wrap}.hunt-soul .ds-select{flex:1 1 180px;min-width:0}.hunt-seal-rates{line-height:1.6}.hunt-soul p{line-height:1.5}
 
 /* One spatial scene and its action bar. Utility panels remain optional. */
-.hunt-panel.game-dialog-panel{width:min(560px,calc(100vw - 16px));padding:var(--space-3);gap:var(--space-3);max-height:calc(100dvh - 16px);overflow-y:auto}
+.hunt-panel.game-dialog-panel{width:min(560px,calc(100vw - 16px));padding:var(--space-3);gap:calc(var(--space-3)/2);max-height:calc(100dvh - 16px);overflow-y:auto}
 .hunt-panel .game-dialog-heading{flex:none}
 .hunt-panel .game-dialog-heading h2{font-size:20px;line-height:1.2}
 .hunt-panel>[data-hunt-content]{gap:var(--space-2)}
@@ -337,7 +337,7 @@ body .hunt-panel .hunt-actor{width:44px;min-width:44px;min-height:44px;padding:v
 @media(prefers-reduced-motion:reduce){.hunt-panel *{animation:none!important;transition:none!important}}
 
 /* A single stage: target at the top, world in the middle, controls at the bottom. */
-.hunt-panel .hunt-scene{position:relative;display:flex;flex-direction:column;height:min(730px,calc(100dvh - 116px));min-height:440px;overflow:hidden;border-radius:var(--radius-sm);background:linear-gradient(#0b101533,#0b101566),var(--field-art) center/cover}
+.hunt-panel .hunt-scene{position:relative;display:flex;flex-direction:column;height:min(730px,calc(100dvh - 116px));min-height:440px;overflow:hidden;border-radius:var(--combat-radius);background:linear-gradient(#0b101533,#0b101566),var(--field-art) center/cover}
 .hunt-panel .hunt-scene-target{flex:none;min-height:64px;padding:var(--space-2);padding-right:76px}
 .hunt-panel .hunt-scene-target .hunt-mob{min-height:48px;padding:0}
 .hunt-panel .hunt-battlefield{display:flex;flex-direction:column;flex:1;min-height:140px;margin:0;border-radius:0;overflow:hidden}
@@ -351,11 +351,10 @@ body .hunt-panel .hunt-actor{width:44px;min-width:44px;min-height:44px;padding:v
 .hunt-panel .hunt-bar-tabs [data-bar-edit]{flex:0 0 36px;margin-left:auto;min-width:36px}
 .hunt-panel .hunt-bar-tabs [data-bar-edit] .ui-icon{width:16px;height:16px}
 .hunt-panel .hunt-bar-edit{max-height:230px;overflow-y:auto;display:grid;gap:var(--space-2)}
-.hunt-panel .hunt-scene-menu{position:absolute;right:var(--space-2);top:var(--space-2);z-index:8}
-.hunt-panel .hunt-scene-menu>summary{list-style:none;cursor:pointer;min-width:56px}
-.hunt-panel .hunt-scene-menu>summary::-webkit-details-marker{display:none}
-.hunt-scene-menu-body{position:absolute;right:0;top:calc(100% + var(--space-2));width:min(360px,calc(100vw - 64px));max-height:min(480px,calc(100dvh - 200px));overflow-y:auto;padding:var(--space-3);display:grid;gap:var(--space-3)}
-.hunt-panel .hunt-scene-menu-body .hunt-extra,.hunt-panel .hunt-scene-menu-body .hunt-target-drops{padding:0;border:0}
+.hunt-system-chat{position:absolute;top:0;right:0;z-index:70}
+.hunt-combat-settings{display:grid;gap:var(--space-3);min-width:0}
+.hunt-combat-settings[hidden]{display:none}
+.hunt-panel .hunt-combat-settings .hunt-extra,.hunt-panel .hunt-combat-settings .hunt-target-drops{padding:0;border:0}
 .hunt-panel .hunt-hero-marker{pointer-events:auto;min-width:36px;min-height:36px;padding:var(--space-1);background:none;border:0;box-shadow:none}
 @media(max-height:700px){.hunt-panel .hunt-scene{height:calc(100dvh - 98px);min-height:410px}.hunt-panel .hunt-scene-dock{gap:var(--space-1)}}
 .hunt-bar-header{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);min-width:0}
@@ -363,7 +362,7 @@ body .hunt-panel .hunt-actor{width:44px;min-width:44px;min-height:44px;padding:v
 .hunt-quick-actions{display:flex;align-items:center;gap:var(--space-1);flex:none}
 .hunt-panel .hunt-quick-actions .mmo-skill{width:36px;height:36px;min-height:36px;padding:var(--space-1)}
 .hunt-quick-actions img{width:28px;height:28px}
-.hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"]{grid-template-columns:repeat(8,minmax(0,1fr));gap:0}
+.hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"]{grid-template-columns:repeat(8,minmax(0,34px));justify-content:start;gap:0}
 .hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"]>.mmo-skill{aspect-ratio:1;height:auto;min-height:0;min-width:0;width:100%}
 .hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"] .mmo-skill-icon{width:100%;height:100%;max-width:36px;max-height:36px}
 .hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"] .mmo-skill-icon img{width:100%;height:100%;object-fit:contain}
@@ -453,3 +452,94 @@ body :is(.hunt-panel,.boss-panel) .hunt-isometric .hunt-iso-actor{width:52px;hei
 @keyframes hunt-projectile{from{stroke-dashoffset:90;opacity:.2}35%{opacity:1}to{stroke-dashoffset:0;opacity:0}}
 @keyframes hunt-impact{from{transform:scale(.3);opacity:0}30%{opacity:1}to{transform:scale(1.2);opacity:0}}
 @media(prefers-reduced-motion:reduce){.hunt-skill-fx path,.hunt-skill-fx circle,.hunt-skill-fx ellipse,.hunt-cast>i{animation:none!important;opacity:.7}}
+
+/* HUD stays fixed while the battlefield is dragged beneath it. */
+.hunt-panel .hunt-scene-dock{position:absolute;left:var(--space-2);right:var(--space-2);bottom:var(--space-2);z-index:70;max-height:55%;overflow-y:auto;padding:var(--space-2);pointer-events:none}
+.hunt-scene-dock :is(button,input,label,.hunt-action-list,.hunt-bar-edit,.empty-slot){pointer-events:auto}
+.hunt-top-hud{position:absolute;top:0;left:0;right:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:0;align-items:start;z-index:65;pointer-events:none}
+.hunt-panel .hunt-top-hud .hunt-vitals,.hunt-target-hud{min-width:0;padding:var(--space-1);display:grid;gap:var(--space-half)}
+.hunt-panel .hunt-top-hud .hunt-vitals{padding:var(--space-half);gap:0;font-family:Tahoma,Arial,sans-serif}
+.hunt-top-hud .mmo-bar{grid-template-columns:16px minmax(0,1fr);gap:var(--space-half)}
+.hunt-top-hud .mmo-bar-label{font-size:7px}.hunt-top-hud .mmo-bar-track{height:10px;min-height:10px}.hunt-top-hud .mmo-bar-track b{font-size:8px}
+.hunt-player-resources{display:grid;gap:0;min-width:0}
+.hunt-vitals .hunt-player-resources .mmo-bar{height:10px;min-height:10px}
+.hunt-vitals .hunt-player-progress .mmo-bar{display:block;height:9px;min-height:9px}
+.hunt-player-progress .mmo-bar-label{display:none}
+.hunt-top-hud .hunt-player-progress .mmo-bar-track{height:9px;min-height:9px}
+.hunt-vitals .hunt-player-vitality .mmo-bar,.hunt-top-hud .hunt-player-vitality .mmo-bar-track{height:2px;min-height:2px}
+.hunt-top-hud .hunt-target-hud{position:absolute;top:calc(100% + var(--space-2));left:50%;transform:translateX(-50%);width:min(148px,calc(100% / 3));padding:var(--space-half);gap:0}
+.hunt-target-hud .mmo-bar-track{height:8px;min-height:8px}
+.hunt-panel .hunt-top-hud .hunt-self-status{display:flex;align-items:center;gap:var(--space-half);margin:0;line-height:12px}
+.hunt-self-status .ui-pvp-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hunt-player-level{display:grid;place-items:center;flex:none;width:14px;height:14px;font-size:9px;line-height:1}
+.hunt-top-hud .hunt-self-status .ui-pvp-name{font-size:9px;line-height:14px}
+.hunt-status-side{display:grid;gap:0;min-width:0;align-content:start;padding-right:24px}
+.hunt-top-hud .hunt-self-status,.hunt-target-hud strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}
+.hunt-target-hud small{font-size:9px}.hunt-target-hud .mmo-statuses.empty{display:none}
+.hunt-effects-hud{display:grid;gap:0;min-width:0;pointer-events:none;--effect-size:16px}
+.hunt-effects-hud .mmo-statuses{display:flex;flex-wrap:wrap;align-items:center;justify-content:start;gap:0;margin:0}
+.hunt-effects-hud .mmo-status{cursor:pointer;pointer-events:auto;flex:none}
+.hunt-supplies{display:flex;justify-content:space-between;align-items:center;gap:var(--space-2);min-width:0}
+.hunt-shot-shortcuts,.hunt-potion-shortcuts{display:flex;align-items:center;gap:var(--space-1);min-width:0}
+.hunt-panel .hunt-bar-header{display:flex;align-items:center;gap:var(--space-half);justify-content:flex-start}.hunt-panel .hunt-bar-tabs{margin:0;gap:var(--space-half)}
+.hunt-panel .hunt-bar-header .hunt-bar-tabs{flex:none}
+.hunt-bar-tools{display:flex;align-items:center;gap:var(--space-half);min-width:0}
+.hunt-panel .hunt-bar-tools [data-bar-edit]{margin:0;flex:none}
+.hunt-panel .hunt-bar-tabs button{font-size:10px;min-width:0;padding:var(--space-1)}
+.hunt-action-list{display:grid;gap:var(--space-2);max-height:160px;overflow-y:auto}
+.hunt-action-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-2);align-items:center}
+.hunt-action-row>.ui-button:first-child{min-width:0;text-align:center}
+.hunt-action-row .mmo-skill-icon{flex:none;width:24px;height:24px}
+.hunt-action-row .mmo-skill-icon img,.hunt-action-row .mmo-skill-icon svg{width:24px;height:24px}
+.hunt-panel [data-acp-threshold]{width:64px}
+.hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"]>.mmo-skill{aspect-ratio:1;height:auto;min-height:30px}
+.hunt-panel .hunt-battlefield{min-height:0}
+.hunt-panel .hunt-ground.hunt-isometric{min-height:0}
+.hunt-panel .hunt-field-head{padding-right:72px}
+@media(max-width:360px){.hunt-effects-hud{--effect-size:14px}.hunt-top-hud .mmo-bar-track b{font-size:8px}}
+.hunt-mob-target-hp{width:75%}
+.hunt-target-title{display:flex;align-items:center;gap:var(--space-half);min-width:0}
+.hunt-target-title>strong{flex:0 1 auto;min-width:0}
+.hunt-target-hud [data-target-drop]{pointer-events:auto;flex:none}
+.hunt-shot-items{display:flex;align-items:center;gap:var(--space-1)}
+.hunt-shot-items[hidden]{display:none}
+.hunt-shot-shortcuts{gap:var(--space-2)}
+.hunt-shot-shortcuts [data-shots-collapse]{pointer-events:auto;flex:none}
+.hunt-target-hud .mmo-statuses.empty{display:none}
+.hunt-target-hud .ui-effect-strip{display:flex;flex-wrap:wrap;gap:0;max-height:40px;overflow:auto;margin:0}
+.hunt-effects-hud{max-height:168px;overflow-y:auto;scrollbar-width:thin}
+.hunt-supplies[hidden]{display:none}
+.hunt-supplies [data-shots-collapse]{pointer-events:auto;flex:none}
+.combat-social{position:absolute;inset:0;z-index:68;pointer-events:none;--party-top:190px;--social-bottom:190px}
+.combat-social :is(button,input,.combat-party-roster,.combat-chat-messages){pointer-events:auto}
+.combat-party{position:absolute;top:var(--party-top);left:0;width:calc(100%/3);max-height:calc(100% - var(--party-top) - var(--social-bottom));display:flex;flex-direction:column;min-height:0;padding:var(--space-half);gap:0}
+.combat-social [hidden]{display:none!important}
+.combat-social-heading{display:flex;align-items:center;gap:var(--space-1);min-width:0}
+.combat-party-heading [data-party-count]{flex:1;min-width:0;text-align:center}
+.combat-social-heading .ui-icon{width:14px;height:14px;flex:none}
+.combat-party-roster{display:grid;gap:0;overflow-y:auto;min-height:0;scrollbar-width:thin}
+.combat-party .combat-social-heading{flex:none}
+.combat-party .combat-social-heading>.ui-button:first-child{white-space:nowrap}
+.combat-chat{position:absolute;bottom:var(--social-bottom);left:var(--space-2);right:var(--space-2);width:auto;max-width:calc(100% - var(--space-4));padding:0}
+.combat-log{position:absolute;left:0;bottom:calc(100% + var(--space-2));width:min(260px,100%);max-height:56px;overflow:hidden;pointer-events:none}
+.combat-chat-panel{width:min(520px,100%);height:min(440px,calc(100dvh - 32px));display:flex;flex-direction:column;gap:var(--space-2);min-height:0}
+#combat-chat-body{display:flex;flex-direction:column;gap:var(--space-2);min-width:0;min-height:0;flex:1}
+.combat-chat-panel [hidden]{display:none!important}
+.combat-chat-messages{flex:1;min-height:40px;overflow-y:auto;overscroll-behavior:contain}
+.combat-chat-form{display:flex;align-items:center;gap:var(--space-2);min-width:0}
+.combat-chat-form input{flex:1;min-width:0;width:0;font-size:12px}
+.combat-chat-panel .ui-folder-tabs{margin:0}.combat-chat-panel .ui-folder-tabs button{font-size:11px}
+@media(max-width:600px){
+ .hunt-panel .hunt-scene-dock{left:var(--space-1);right:var(--space-1);bottom:var(--space-1);padding:var(--space-1)}
+ .hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"]>.mmo-skill{height:34px;min-height:34px;aspect-ratio:auto}
+ .hunt-panel .hunt-controls .mmo-hotbar[data-slot-count="16"] .mmo-skill-icon{width:32px;height:32px}
+}
+.ui-drop-group{min-width:0}
+.ui-drop-group>summary{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-2);font-size:12px}
+.ui-drop-items{display:grid;gap:var(--space-2);padding-block:var(--space-2)}
+.loot-notice-items .ui-content-row.ui-drop-item{display:grid;grid-template-columns:32px minmax(0,1fr);gap:var(--space-2);align-items:center}
+.ui-drop-art{display:flex;align-items:center;justify-content:center;width:32px;height:32px}
+.ui-drop-art img,.ui-drop-art svg{max-width:32px;max-height:32px}
+.ui-drop-copy{display:grid;gap:var(--space-1);min-width:0;overflow-wrap:anywhere;font-size:12px}
+.ui-drop-copy small{font-size:11px}
+.loot-notice-items .ui-drop-item>.ui-drop-chances{grid-column:2;display:flex;flex-wrap:wrap;gap:var(--space-2);white-space:normal;min-width:0}

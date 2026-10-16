@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {isoPoint,isoPick,isoTerrain} from '../webapp/hunt-isometric.js';
+import {isoPoint,isoPick,isoTerrain,isoSceneBounds} from '../webapp/hunt-isometric.js';
 import {syncClanPerks,clanPerksStale} from '../functions/game/clans/clanPerks.js';
 import {fieldPlayerDto} from '../miniapp/hunt.js';
 import changeClass from '../functions/game/player/changePlayerGameClass.js';
@@ -22,7 +22,22 @@ test('isometric movement picking preserves game coordinates after pan, zoom and 
 test('terrain is static SVG and collision obstacles retain their server geometry',()=>{
  const svg=isoTerrain({walls:[{x:.35,y:.6,w:.12,h:.12},{x:.27,y:.23,w:.065,h:.065,kind:'pillar'}]},{width:348,height:425});
  assert.match(svg,/hunt-iso-wall/);assert.match(svg,/hunt-iso-pillar/);assert.match(svg,/iso-front/);
- assert.doesNotMatch(svg,/<canvas|<image|<animate|<script/);
+ assert.match(svg,/<image href="\/art\/world\/room-props-v1.webp"/);
+ assert.match(svg,/viewBox="170 0 230 512"/,'pillar uses its source atlas region');
+ assert.doesNotMatch(svg,/<canvas|<animate|<script/);
+});
+
+test('full-scene paintings preserve isometric anchors outside the initial viewport',()=>{
+ for(const viewport of [{width:278,height:440},{width:348,height:425},{width:760,height:1000}]){
+  const b=isoSceneBounds(viewport);
+  for(const [world,pixel] of [[{x:0,y:0},[768,150]],[{x:1,y:0},[1408,520]],[{x:1,y:1},[768,890]],[{x:0,y:1},[128,520]]]){
+   const expected=isoPoint(world,viewport);
+   assert.ok(Math.abs(b.x+pixel[0]*b.width/1536-expected.x)<1);
+   assert.ok(Math.abs(b.y+pixel[1]*b.height/1024-expected.y)<1);
+  }
+  assert.ok(b.width>viewport.width);
+ }
+ assert.match(isoTerrain({environment:'volcanic'},{width:348,height:425}),/image href="\/art\/world\/scenes\/volcanic-mobile-v1.webp"/);
 });
 
 test('map clan label follows the synchronized real clan and clears on leaving',()=>{

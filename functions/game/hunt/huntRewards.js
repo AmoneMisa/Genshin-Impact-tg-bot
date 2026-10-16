@@ -1,4 +1,5 @@
 import {absorbHuntSoul} from '../equipment/soulCrystals.js';
+import {playerName} from '../player/playerName.js';
 // What a dead mob pays. The numbers are the Lineage II (High Five) rules on our scale:
 //  - experience only while the hero and the mob are less than 11 levels apart (and the high-level
 //    penalty table after level 84); it is the mob's real share of a level step, so x5 rate and
@@ -59,7 +60,7 @@ export function huntDropPreview(level, mobDef, champion = null, session = null) 
     if (!mobDef) return [];
     const tier = CHAMPIONS[champion];
     const rows = [];
-    const adenaMul = 1 + runeRate(session, 'adena');
+    const adenaMul = (1 + runeRate(session, 'adena')) * (session?greedOf(session):1);
     if (mobDef.gold) rows.push({key: 'gold', name: 'Адена', icon: '🪙', kind: 'gold', min: Math.max(1, Math.round(mobDef.gold.min * HUNT.goldScale * adenaMul)), max: Math.max(1, Math.round(mobDef.gold.max * HUNT.goldScale * adenaMul)), chance: Math.min(100, mobDef.gold.chance * dropGapFactor(level, mobDef.level, HUNT.adenaGap))});
     const rune=1+runeRate(session,'drop');
     const gap = dropGapFactor(level, mobDef.level, HUNT.itemGap) * (tier?.drops || 1);
@@ -67,7 +68,7 @@ export function huntDropPreview(level, mobDef, champion = null, session = null) 
         const info = materialInfo(drop.key);
         rows.push({key: drop.key, name: info.name || drop.name, icon: info.icon, kind: drop.kind, min: drop.min, max: drop.max, chance: drop.chance * rateOf(drop) * gap * (drop.kind==='seal'?rune:session?greedOf(session):1)});
     }
-    rows.push(...customPartRows(mobDef.level).map(row => ({...row, chance: row.share * customDropChance(mobDef.level) * HUNT.dropRate * gap * rune})));
+    rows.push(...customPartRows(mobDef.level,session?.game?.gameClass?.stats?.name).map(row => ({...row,rollGroup:'custom-parts',chance:row.share*Math.min(100,customDropChance(mobDef.level)*HUNT.dropRate*gap*rune)})));
     if (hellboundMobs.has(mobDef.id) && mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
         const chances = STONE_CHANCE[champion || 'normal'];
         for (const stone of ['stone', 'crystal', 'jewel']) if (chances[stone] > 0) {
@@ -94,7 +95,7 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
     // Members of the party that stand in the same hunting zone share the kill (the High Five party range).
     const inRange = member => member.game?.hunt?.zone === mob.zone && Boolean(member.game.hunt.field) && member.game.hunt.field.room===session.game.hunt?.field?.room && (member.game.hunt.field.floor||1)===(session.game.hunt?.field?.floor||1) && member.game.world?.instanceId===session.game.world?.instanceId;
     const distributor = lootDistributor(chat, session, random, inRange);
-    const nameOf = member => member.userChatData?.user?.first_name || member.userChatData?.user?.username || String(member.userId);
+    const nameOf = playerName;
 
     // experience and skill points: the real share of a level step, times the champion multiplier. A party gets the
     // reward of its highest level, times the party bonus, split by level squared (High Five).

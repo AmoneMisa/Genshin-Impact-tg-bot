@@ -3,6 +3,12 @@ import { needsPass } from '../template/epicPasses.js';
 import {getLoginRewardsState,claimLoginReward,redeemLoginItem} from '../functions/game/login/loginRewards.js';
 import {soulCrystalState,selectSoulCrystal,chargeSoulCrystal,exchangeSeals} from '../functions/game/equipment/soulCrystals.js';
 import {advanceHunt} from '../functions/game/hunt/huntFight.js';
+import {setHuntSupplies} from './huntSupplies.js';
+import {getHuntDropForMiniApp} from './hunt.js';
+import CombatChat from '../db/models/CombatChat.js';
+import {readCombatChat,sendCombatChat} from './combatChat.js';
+import Character from '../db/models/Character.js';
+import {validatePlayerNickname,setPlayerNickname} from '../functions/game/player/playerName.js';
 import {advanceFieldPvp,fieldPeers,useFieldPvpSkill} from '../functions/game/hunt/fieldPvp.js';
 import http from 'http';
 import fs from 'fs';
@@ -626,6 +632,22 @@ const playerProfileGender = guarded('player profile gender', async (req, res) =>
   });
 
   return sendResult(res, result, context);
+});
+
+const playerProfileNickname = guarded('player profile nickname',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  const checked=validatePlayerNickname(body?.nickname);
+  if(!checked.ok)return sendJson(res,409,checked);
+  const result=await withLock(`${context.chatId}:${context.userId}:inventory`,async()=>{
+    context.session=await getSession(context.chatId,context.userId);
+    const taken=await Character.findOne({'data.game.nicknameKey':checked.key,userId:{$ne:Number(context.userId)}},{_id:1}).lean();
+    if(taken)return {ok:false,reason:'nickname_taken'};
+    const game=context.session.game,previous={nickname:game.nickname,nicknameKey:game.nicknameKey};
+    const changed=setPlayerNickname(context.session,checked.nickname);
+    try{await saveSession(context.session);}catch(error){game.nickname=previous.nickname;game.nicknameKey=previous.nicknameKey;if(error.code===11000)return {ok:false,reason:'nickname_taken'};throw error;}
+    return changed;
+  });
+  return sendResult(res,result,context);
 });
 
 const playerProfileRace = guarded('player profile race', async (req,res)=>{
@@ -1966,6 +1988,22 @@ const huntState = guarded('hunt state', async (req, res) => {
   return sendJson(res, 200, result.hunt);
 });
 
+const combatChat = guarded('combat chat',async(req,res)=>{
+  const context=await authorize(req);
+  const body=req.method==='POST'?await readJsonBody(req):null;
+  const channel=body?.channel||parseRequestUrl(req).searchParams.get('channel')||'local';
+  const result=await withLock(huntLock(context),async()=>{
+    const session=await getSession(context.chatId,context.userId);
+    if(body){
+      const sent=await sendCombatChat(session,{...body,channel},CombatChat);
+      if(!sent.ok)return sent;
+      await saveSession(session);
+    }
+    return readCombatChat(session,channel,CombatChat);
+  });
+  return sendJson(res,result.ok?200:409,result);
+});
+
 const worldRequest = guarded('world map', async (req,res) => {
   const context=await authorize(req),body=req.method==='POST'?await readJsonBody(req):null;
   if(body?.action==='quick_travel')assertGoldUnlocked(context);
@@ -2128,6 +2166,15 @@ const huntSkill = guarded('hunt skill', async (req, res) => {
   return sendResult(res, result, context);
 });
 
+const huntSupplies = guarded('hunt supplies', async (req,res) => {
+  const context=await authorize(req),body=await readJsonBody(req);
+  return sendResult(res,await huntAnswer(context,session=>setHuntSupplies(session,body)),context);
+});
+const huntDrop = guarded('hunt drop preview',async(req,res)=>{
+  const context=await authorize(req),body=await readJsonBody(req);
+  if(typeof body.targetId!=='string')throw httpError(400,'targetId is required');
+  return sendResult(res,await huntAnswer(context,session=>getHuntDropForMiniApp(session,body.targetId)),context);
+});
 const huntHotbar = guarded('hunt hotbar', async (req, res) => {
   const context = await authorize(req), body = await readJsonBody(req);
   if (!Array.isArray(body.slots)) throw httpError(400, 'slots must be an array');
@@ -2179,7 +2226,7 @@ const huntFlee = guarded('hunt flee', async (req, res) => {
 const shotsAuto = guarded('shots auto', async (req, res) => {
   const context = await authorize(req);
   const body = await readJsonBody(req);
-  const result = await huntAnswer(context, session => setAutoShotsForMiniApp(session, body.enabled === true));
+  const result = await huntAnswer(context, session => setAutoShotsForMiniApp(session, body.enabled === true,body.kind??null));
   return sendResult(res, result, context);
 });
 
@@ -2306,6 +2353,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/alchemy/brew') return alchemyBrew(req, res);
     if (route === 'POST /api/profile/class') return playerProfileClass(req, res);
     if (route === 'POST /api/profile/gender') return playerProfileGender(req, res);
+    if (route === 'POST /api/profile/nickname') return playerProfileNickname(req,res);
     if (route === 'POST /api/profile/race') return playerProfileRace(req, res);
     if (route === 'POST /api/profile/subclass') return playerProfileSubclass(req, res);
     if (route === 'GET /api/skills') return playerSkillsState(req, res);
@@ -2390,6 +2438,7 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/arena/attack') return arenaAttack(req, res);
     if (route === 'GET /api/boss') return bossState(req, res, requestUrl);
     if (route === 'GET /api/hunt') return huntState(req, res);
+    if (route === 'GET /api/combat/chat' || route === 'POST /api/combat/chat') return combatChat(req,res);
     if (route === 'GET /api/world' || route === 'POST /api/world/action') return worldRequest(req,res);
     if (route === 'POST /api/hunt/start') return huntStart(req, res);
     if (route === 'POST /api/fishing') return fishingAction(req, res);
@@ -2407,6 +2456,8 @@ export default function startMiniAppServer() {
     if (route === 'POST /api/hunt/attack') return huntAttack(req,res);
     if (route === 'POST /api/hunt/skill') return huntSkill(req, res);
     if (route === 'POST /api/hunt/hotbar') return huntHotbar(req, res);
+    if (route === 'POST /api/hunt/drop') return huntDrop(req, res);
+    if (route === 'POST /api/hunt/supplies') return huntSupplies(req, res);
     if (route === 'POST /api/hunt/special') return huntSpecial(req, res);
     if (route === 'POST /api/hunt/flee') return huntFlee(req, res);
     if (route === 'POST /api/soul/select') return soulSelect(req, res);

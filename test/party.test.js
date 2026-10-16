@@ -8,7 +8,16 @@ import {
   PARTY_MAX, acceptInvite, createParty, declineInvite, disbandParty, invitePlayer, kickMember, leaveParty, partyMembers, partyState, partyTargets,transferPartyLeadership,
 } from '../functions/game/party/party.js';
 import {castClassBuff, buffManaCost, getClassBuffsState} from '../miniapp/buffs.js';
-import {getPartyState, performPartyAction} from '../miniapp/party.js';
+import {getPartyState, performPartyAction,getCombatParty} from '../miniapp/party.js';
+
+test('read-only combat party exposes all nine members and follows departures',()=>{
+ const {chat,at}=chatOf(9);assert.equal(getCombatParty(at(1)),null);
+ createParty(chat,at(1),NOW);
+ for(let id=2;id<=9;id++){invitePlayer(chat,at(1),id,NOW);acceptInvite(chat,at(id),at(1).game.party.id,NOW);}
+ const roster=getCombatParty(at(9));assert.equal(roster.members.length,9);assert.equal(roster.members.filter(m=>m.me).length,1);
+ assert.equal(roster.members.filter(m=>m.leader).length,1);assert.ok(roster.members.every(m=>m.maxHp>0&&m.maxMp>0&&m.maxCp>=1));
+ leaveParty(chat,at(9));assert.equal(getCombatParty(at(9)),null);assert.equal(getCombatParty(at(1)).members.length,8);
+});
 
 const NOW = Date.now();
 test('inviting from a player card creates a party and a failed invite leaves no new party',()=>{

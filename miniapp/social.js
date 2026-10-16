@@ -9,6 +9,7 @@
 
 
 import {ONLINE_WINDOW_MS,LAST_SEEN_STAMP_MS} from '../functions/game/player/onlinePresence.js';
+import {playerName} from '../functions/game/player/playerName.js';
 export {ONLINE_WINDOW_MS,LAST_SEEN_STAMP_MS};
 const MAX_FRIENDS = 50;
 
@@ -35,8 +36,7 @@ function isListed(member) {
 }
 
 export function memberName(member) {
-  const user = telegramUser(member);
-  return user.first_name || user.username || `Игрок ${member?.userId ?? ''}`.trim();
+  return playerName(member);
 }
 
 /** "В игре" within the online window, otherwise how long ago, or "Не в сети". */

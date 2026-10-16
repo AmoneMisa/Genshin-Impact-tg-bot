@@ -19,8 +19,16 @@ export function paintLocationDetails(ctx,environment,p,quad,theme,seed=0){
    const x=.04+random(i)*.9,y=.04+random(i+70)*.9,a=p(x,y),b=p(x+.035,y+.02),c=p(x+.01,y+.08);
    polygon([a,b,c],i%2?'rgba(175,224,239,.12)':'rgba(25,56,89,.22)');line([a,b,c],'rgba(187,233,249,.25)',.8);
   }
-  for(const [x,y] of [[.14,.16],[.86,.17],[.15,.85],[.83,.86]]){const a=p(x,y);for(let i=0;i<6;i++){const angle=i*Math.PI/3;line([a,{x:a.x+Math.cos(angle)*20,y:a.y+Math.sin(angle)*10}],'rgba(176,224,244,.38)');}}
+  for(const [x,y] of [[.12,.22],[.73,.14],[.24,.81]]){const a=p(x,y);for(let i=0;i<6;i++){const angle=i*Math.PI/3;line([a,{x:a.x+Math.cos(angle)*20,y:a.y+Math.sin(angle)*10}],'rgba(176,224,244,.38)');}}
  }else if(environment==='volcanic'){
+  // Scorched mud and irregular ember beds, all baked into the floor.
+  for(let i=0;i<14;i++){
+   const x=.05+random(i+40)*.85,y=.06+random(i+60)*.84,a=p(x,y);
+   const radius=12+random(i+80)*28,patch=ctx.createRadialGradient(a.x,a.y,2,a.x,a.y,radius);
+   patch.addColorStop(0,'rgba(8,12,10,.8)');patch.addColorStop(.7,'rgba(17,18,13,.45)');patch.addColorStop(1,'rgba(15,15,12,0)');
+   ctx.save();ctx.translate(a.x,a.y);ctx.scale(1,.5);ctx.fillStyle=patch;ctx.translate(-a.x,-a.y);ctx.fillRect(a.x-radius,a.y-radius,radius*2,radius*2);ctx.restore();
+   for(let j=0;j<5;j++){const b=p(x+random(i*7+j)*.07,y+random(i*5+j+4)*.045);ellipse(b,.6+random(i+j)*1.2,.6,'rgba(246,125,35,.65)');}
+  }
   for(let i=0;i<11;i++){
    const x=.08+random(i)*.8,y=.08+random(i+20)*.8,points=[p(x,y),p(x+.025,y+.045),p(x-.01,y+.08),p(x+.04,y+.13)];
    line(points,'rgba(223,75,24,.09)',10);line(points,'rgba(246,108,36,.45)',2);line(points,'rgba(255,187,77,.6)',.7);
@@ -50,12 +58,12 @@ export function paintLocationDetails(ctx,environment,p,quad,theme,seed=0){
   for(let i=0;i<17;i++){const x=.04+random(i)*.85,y=.04+random(i+90)*.85;line([p(x,y),p(x+.025,y+.01),p(x+.02,y+.06),p(x+.06,y+.07)],'rgba(6,13,21,.42)',1);}
   for(const [x,y] of [[.12,.2],[.85,.78]]){const a=p(x,y);for(let i=0;i<5;i++)polygon([{x:a.x+i*4-7,y:a.y},{x:a.x+i*4-5,y:a.y-6-i%3*3},{x:a.x+i*4-2,y:a.y-1}],'rgba(122,155,172,.45)');}
  }else if(environment==='necropolis'){
-  for(const [x,y] of [[.13,.24],[.85,.24],[.13,.7],[.85,.7]]){
+  for(const [x,y] of [[.15,.32],[.76,.15],[.3,.78]]){
    const a=p(x,y);ctx.strokeStyle='rgba(162,190,180,.35)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(a.x,a.y,16,8,0,0,Math.PI*2);ctx.stroke();line([{x:a.x-8,y:a.y},{x:a.x+8,y:a.y}],'rgba(162,190,180,.35)');
   }
  }else{
   // Small corner mosaics keep the central combat aisle readable.
-  for(const [x,y] of [[.13,.14],[.83,.14],[.13,.85],[.83,.85]]){polygon(quad(x,y,.04,.04),hex(theme.trim)+'50');polygon(quad(x+.01,y+.01,.02,.02),hex(theme.floor));}
+  for(const [x,y] of [[.14,.23],[.72,.13],[.25,.81]]){polygon(quad(x,y,.04,.04),hex(theme.trim)+'50');polygon(quad(x+.01,y+.01,.02,.02),hex(theme.floor));}
  }
  ctx.restore();
 }

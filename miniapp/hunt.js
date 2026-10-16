@@ -12,7 +12,8 @@ import {memberName} from './social.js';
 import { potionBarDto, skillDto } from './boss.js';
 import { playerEffectsDto } from './bossEffects.js';
 import { getShotsState, setAutoShots } from '../functions/game/shots/shots.js';
-import { getVitalityState } from '../functions/game/player/vitality.js';
+import { getVitalityState, levelNeed } from '../functions/game/player/vitality.js';
+import {playerLevelCap} from '../functions/game/player/classProgression.js';
 import getCurrentHp from '../functions/game/player/getters/getCurrentHp.js';
 import getCurrentMp from '../functions/game/player/getters/getCurrentMp.js';
 import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
@@ -26,6 +27,9 @@ import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
 import {reviveEntries} from '../functions/game/player/revival.js';
 import {markWorldDeath} from '../functions/game/world/death.js';
 import {skillSpatial,weaponSpatial} from '../functions/game/hunt/huntSpatial.js';
+import {advanceAutoSupplies,huntSuppliesDto} from './huntSupplies.js';
+import {huntDropGroups} from '../functions/game/hunt/dropGroups.js';
+import {getCombatParty} from './party.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -50,6 +54,7 @@ function zoneDto(zone, level) {
 export async function getHuntState(session, now = Date.now(), peers = []) {
     const swings = advanceHunt(session, now);
     const hunt = ensureHunt(session);
+    const suppliesChanged = advanceAutoSupplies(session,now);
     const game = session.game;
     const gameClass = game.gameClass;
     const special = battleSpecialDto(session,now);
@@ -65,7 +70,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
     if(hp<=0)markWorldDeath(session,now);
     return {
         // true when mob swings were applied: the session has to be saved
-        changed: swings.length > 0,
+        changed: swings.length > 0 || suppliesChanged,
         now,lastLoot:hunt.lastLoot||null,world:{mode:game.world?.mode,channel:game.world?.channel,walkHome:game.world?.walkHome,death:game.world?.death||null},
         resurrections:reviveEntries(session,now).filter(s=>s.level>0),
         soulCrystals:soulCrystalState(session),
@@ -74,28 +79,33 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
         mob: hunt.mob ? {...mobDto(hunt.mob, now), drops: huntDropPreview(level, getMobDef(getZone(hunt.mob.zone), hunt.mob.mobId), hunt.mob.champion,session)} : null,
         field: hunt.field ? fieldDto(hunt, now, session) : null,
         players: peers.map(peer => fieldPlayerDto(peer,now)),
+        party: getCombatParty(session),
         pvpLog: (game.worldPvp?.log || []).map(row=>({...row,agoMs:Math.max(0,now-row.at)})),
         kills: number(hunt.kills),
         last: hunt.last || null,
-        log: hunt.log.map(row => ({id:row.id,icon: row.icon, text: row.text,loot:row.loot||null, at: number(row.at), agoMs: Math.max(0, now - number(row.at))})),
+        log: hunt.log.map(row => ({id:row.id,icon: row.icon, text: row.text,combat:row.combat||null,loot:row.loot||null, at: number(row.at), agoMs: Math.max(0, now - number(row.at))})),
         champions: Object.values(CHAMPIONS).map(({id, label, chance, hp: hpMul, exp, drops}) => ({id, label, chance, hp: hpMul, exp, drops})),
         vitality: getVitalityState(session, now),
         shots: getShotsState(session),
+        supplies: huntSuppliesDto(session),
         player: {
             name: memberName(session),
             clanName:game.clanName||null,
             level,
+            currentExp: number(game.stats?.currentExp),
+            needExp: levelNeed(level),
+            maxLevel: playerLevelCap(session),
             className: gameClass?.stats?.name || 'noClass',
             gender: session.gender === 'female' ? 'female' : 'male',
             pvp:fieldPvpStatus(session,now),
             hp, maxHp, hpPercent: percent(hp, maxHp),
             mp, maxMp, mpPercent: percent(mp, maxMp),
             cp, maxCp, cpPercent: percent(cp, maxCp),
-            effects: [...fieldPlayerDto(session,now).effects, ...playerEffectsDto([],respawnRemainMs,now), ...(hunt.playerDebuffs || []).filter(e => e.until > now).map(e => ({id: e.kind, label: 'Атаки ослаблены', value: e.amount, count: Math.ceil((e.until - now) / 1000)}))],
+            effects: [...fieldPlayerDto(session,now).effects, ...playerEffectsDto([],respawnRemainMs,now), ...(hunt.playerDebuffs || []).filter(e => e.until > now).map(e => ({id: e.kind, kind:'debuff', label: 'Атаки ослаблены', value: e.amount, count: Math.ceil((e.until - now) / 1000)}))],
             respawnRemainMs,
             skills: excludeToggleSkills((gameClass?.skills || []).map((skill, index) => {const dto=skillDto(session,skill,index,now);const spatial=skillSpatial(session,skill,now);return {...dto,spatial,canUse:dto.canUse && Boolean(spatial) && !fieldPvpSkillBlock(session,skill,now)};}),special,session),
             potions: potionBarDto(session),
-            hotbar: getHotbar(session),
+            hotbar: [...new Set([...getHotbar(session).map(index=>gameClass?.skills?.[index]?.name==='Attack'?'action:attack':index),...(!game.hotbar&&getHotbar(session).length<HOTBAR_MAX?['action:next-target']:[])])],
             hotbarMax: HOTBAR_MAX,
             special,
         },
@@ -144,8 +154,8 @@ export function fieldPlayerDto(session,now=Date.now()) {
     const maxCp=getMaxCp(session),maxHp=getMaxHp(session),maxMp=getMaxMp(session);
     const fx=session.game.worldPvp?.effects || {};
     const effects=playerEffectsDto(session.game.effects,0,now);
-    for(const e of fx.debuffs || []) if(e.until>now) effects.push({id:e.kind,label:e.kind,count:Math.ceil((e.until-now)/1000)});
-    if(fx.stunUntil>now)effects.push({id:'stun',label:'Оглушён',count:Math.ceil((fx.stunUntil-now)/1000)});
+    for(const e of fx.debuffs || []) if(e.until>now) effects.push({id:e.kind,kind:'debuff',label:e.kind,count:Math.ceil((e.until-now)/1000)});
+    if(fx.stunUntil>now)effects.push({id:'stun',kind:'debuff',label:'Оглушён',count:Math.ceil((fx.stunUntil-now)/1000)});
     return {userId:session.userId,name:memberName(session),clanName:session.game.clanName||null,level:session.game.stats.lvl,className:session.game.gameClass.stats.name,gender:session.gender || 'male',cp,hp,mp,maxCp,maxHp,maxMp,effects,pvp:fieldPvpStatus(session,now),x:session.game.hunt?.field?.x,y:session.game.hunt?.field?.y};
 }
 
@@ -158,6 +168,14 @@ export const targetHuntForMiniApp = (session, targetId) => selectHuntTarget(sess
 
 export const useHuntSkillForMiniApp = (session, skillIndex, now = Date.now()) => useHuntSkill(session, skillIndex, {now});
 export const setHotbarForMiniApp = (session, slots) => setHotbar(session, slots);
+export function getHuntDropForMiniApp(session,targetId){
+    const mob=ensureHunt(session).field?.mobs?.find(m=>m.instanceId===targetId);
+    if(!mob)return {ok:false,reason:'no_mob'};
+    const definition=getMobDef(getZone(mob.zone),mob.mobId);
+    if(!definition)return {ok:false,reason:'combat_data_missing'};
+    const rows=huntDropPreview(session.game.stats.lvl,definition,mob.champion,session);
+    return {ok:true,dropPreview:{name:mob.name,targetId:mob.instanceId,groups:huntDropGroups(rows)}};
+}
 /** The second tab of the skill bar: a Life Stone skill (`ls`) or a toggle skill of the class (`l2:<id>`). */
 export function useSpecialForMiniApp(session, id, now = Date.now()) {
     if (String(id).startsWith('ls:')) {
@@ -168,7 +186,10 @@ export function useSpecialForMiniApp(session, id, now = Date.now()) {
     return {ok: false, reason: 'unknown_special'};
 }
 export const fleeHuntForMiniApp = (session, now = Date.now()) => fleeHunt(session, now);
-export const setAutoShotsForMiniApp = (session, enabled) => ({ok: true, enabled: setAutoShots(session, enabled), shots: getShotsState(session)});
+export const setAutoShotsForMiniApp = (session, enabled, kind=null) => {
+    if(kind!==null&&!['soulshot','blessed'].includes(kind))return {ok:false,reason:'invalid_shot_kind'};
+    return {ok:true,enabled:setAutoShots(session,enabled,kind),shots:getShotsState(session)};
+};
 
 /** The real drop tables of one zone, per monster, for the level of the viewer (heavy, so not part of the screen state). */
 export function getZoneLoot(session, zoneId) {

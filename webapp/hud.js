@@ -41,7 +41,7 @@ export function renderPlayerHud({ state, getElement, formatNumber }) {
   const player = state.player || {};
   const context = state.context || {};
   const user = context.user || {};
-  const firstName = user.firstName || user.username || 'Путешественник';
+  const firstName = player.name || Array.from(user.firstName || user.username || 'Путешественник').slice(0,16).join('');
 
   // Optional nodes (older layouts had a chat badge and arena counter) are skipped when absent.
   const setText = (id, value) => { const node = getElement(id); if (node) node.textContent = value; };

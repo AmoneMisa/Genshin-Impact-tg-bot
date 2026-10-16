@@ -68,6 +68,12 @@ export function getPartyState(session, now = Date.now()) {
   return state;
 }
 
+/** Read-only combat roster: no candidate lists or invitation mutations on the combat poll. */
+export function getCombatParty(session) {
+  const party=partyState(chatOf(session),session);
+  return party ? {id:party.id,leaderId:party.leaderId,members:party.members.map(member=>memberDto(member,session,party.leaderId))} : null;
+}
+
 /** Runs one party action; the members it changed are flagged so that saveSession writes them. */
 export function performPartyAction(session, action, body = {}, now = Date.now()) {
   const chat = chatOf(session);

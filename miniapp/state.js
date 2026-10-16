@@ -1,4 +1,5 @@
 import {penaltyRows} from '../functions/game/player/deathPenalties.js';
+import {playerName} from '../functions/game/player/playerName.js';
 import {activeCostume,reconcileCostumeSlot} from '../functions/game/equipment/costumeItems.js';
 import {playerRace} from '../functions/game/player/playerRace.js';
 import {playerLevelCap} from '../functions/game/player/classProgression.js';
@@ -131,6 +132,7 @@ export function createMiniAppState(session, context) {
       },
     },
     player: {
+      name:playerName(session,context.user),
       level: number(stats.lvl, 1),
       currentExp: number(stats.currentExp),
       needExp: Math.max(1, number(stats.needExp, 1)),

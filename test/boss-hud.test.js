@@ -5,11 +5,22 @@ import { bossStatusesDto, playerEffectsDto } from '../miniapp/bossEffects.js';
 
 const boss = { name: 'kivaha', nameCall: 'Киваху', level: 12, hp: 1000, currentHp: 250, aliveTime: Date.now() + 60000, remainMs: 60000, statuses: [{ id: 'reflect', label: 'Зеркало' }] };
 
+test('compact status strip keeps native artwork and moves counters into the tooltip',()=>{
+ const rows=[{id:'l2:1204',iconKey:'l2:1204',label:'Wind Walk',count:1200}];
+ const mini=statusIcons(rows,{strip:true,compact:true,interactive:true});
+ assert.match(mini,/ui-effects-compact/);assert.match(mini,/data-status-info/);assert.match(mini,/<img/);
+ assert.match(mini,/title="Wind Walk · 1\s200"/);assert.doesNotMatch(mini,/<em>/);
+ assert.match(statusIcons(rows),/<em>/,'the full-size effect component retains counters');
+});
+
 test('bars clamp and label their values', () => {
   assert.match(bar('hp', 250, 1000), /width:25%/);
   assert.match(bar('hp', 5000, 1000), /width:100%/);
   assert.match(bar('mp', 0, 0), /width:0%/);
   assert.match(bar('hp', 250, 1000), /250 \/ 1\s000/);
+  const classic=bar('hp',250,1000,{variant:'l2'});
+  assert.match(classic,/ui-resource-l2/);assert.match(classic,/width:25%/);
+  assert.doesNotMatch(bar('hp',250,1000),/ui-resource-l2/);
 });
 
 test('target frame shows the boss portrait, HP, timer and statuses, and toggles rewards', () => {

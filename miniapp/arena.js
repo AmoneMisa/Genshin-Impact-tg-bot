@@ -1,4 +1,6 @@
 import ensureClanPerks from '../functions/game/clans/ensureClanPerks.js';
+import {playerName as gamePlayerName,limitPlayerName} from '../functions/game/player/playerName.js';
+import Character from '../db/models/Character.js';
 import Chat from '../db/models/Chat.js';
 import User from '../db/models/User.js';
 import ArenaTempBot from '../db/models/ArenaTempBot.js';
@@ -45,8 +47,7 @@ function chanceField(mode) {
 }
 
 function playerName(session) {
-  const user = session?.userChatData?.user || {};
-  return user.first_name || user.username || `Игрок ${session?.userId || user.id || ''}`.trim();
+  return gamePlayerName(session);
 }
 
 function className(game) {
@@ -162,15 +163,15 @@ async function buildDefenderList(session, chatId, userId, mode, attackerRating) 
 }
 
 function memberName(member) {
-  const user = member?.userChatData?.user || {};
-  return user.first_name || user.username || null;
+  return member?gamePlayerName(member):null;
 }
 
 // Leaderboard names of the heroes in the table (the arena is shared by all chats); one lean lookup of the users.
 async function leaderboardNames(userIds = []) {
   try {
-    const users = await User.find({ userId: { $in: userIds.map(Number) } }, { userId: 1, userChatData: 1, name: 1 }).lean();
-    return new Map(users.map(user => [String(user.userId), user.userChatData?.user?.first_name || user.userChatData?.user?.username || user.name || null]));
+    const [users,characters] = await Promise.all([User.find({ userId: { $in: userIds.map(Number) } }, { userId: 1, userChatData: 1, name: 1 }).lean(),Character.find({userId:{$in:userIds.map(Number)}},{userId:1,'data.game.nickname':1}).lean()]);
+    const names=new Map(characters.filter(c=>c.data?.game?.nickname).map(c=>[String(c.userId),c.data.game.nickname]));
+    return new Map(users.map(user => [String(user.userId), limitPlayerName(names.get(String(user.userId))||gamePlayerName(user))]));
   } catch {
     return new Map();
   }
@@ -199,7 +200,7 @@ export async function getArenaState(session, chatId, userId, mode = 'common') {
       position: index + 1,
       userId: doc.userId,
       rating: number(doc.rating, 1000),
-      name: names.get(String(doc.userId)) || `Игрок ${doc.userId}`,
+      name: limitPlayerName(names.get(String(doc.userId)) || `Игрок ${doc.userId}`),
       isCurrentUser: String(doc.userId) === String(userId),
     })),
   };

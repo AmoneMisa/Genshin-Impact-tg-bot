@@ -1,4 +1,5 @@
 import {recordDeath} from '../player/deathPenalties.js';
+import {playerName} from '../player/playerName.js';
 import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2OnDamageDealt,l2PreventDeath,l2TransferDamage,l2RawStat} from '../player/l2Effects.js';
 // Live per-skill PvP in hunting locations. All participants must come from one freshly loaded Chat.
 import {advanceHunt} from './huntFight.js';
@@ -29,7 +30,7 @@ import {tickSoulDots} from '../equipment/soulCrystalCombat.js';
 const id = s => String(s.userId);
 const members=chat=>[...(chat.members||[]),...(chat.$locals?.guests||[])];
 const member = (chat,userId) => members(chat).find(s => id(s) === String(userId));
-const name = s => s.userChatData?.user?.first_name || s.userChatData?.user?.username || `Игрок ${s.userId}`;
+const name = playerName;
 
 export function fieldPeers(chat, session, now = Date.now()) {
     if (!fieldIsPresent(session,now)) return [];
@@ -144,9 +145,11 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
     const proxy=proxyFor(defender,now);
     const accuracy=1-fieldPvpEffect(attacker,'accuracyDown',now);
     const hitChance=magic?1:Math.max(.2,Math.min(.98,.88+(getAccuracy(attacker)*accuracy-getEvasion(defender))/100));
-    const missed=hostile && (random()>hitChance || random()<evadeChance(defender,now));
+    const accuracyMiss=hostile&&random()>hitChance;
+    const evaded=hostile&&!accuracyMiss&&random()<evadeChance(defender,now);
+    const missed=accuracyMiss||evaded;
     let result;
-    try {result=missed?{type:'damage',dmg:0,dealt:0,missed:true}:castSkill(attacker,proxy,skill,{now});}
+    try {result=missed?{type:'damage',dmg:0,dealt:0,missed:true,evaded}:castSkill(attacker,proxy,skill,{now});}
     finally {clearShots(attacker);}
     setSkillCooldown(skill,attacker);
     if(fieldPvpEffect(attacker,'slow',now)>0)skill.cooldownReceive+=skill.cooldown*1000*fieldPvpEffect(attacker,'slow',now);
@@ -160,8 +163,9 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
         if(skill.effect==='common_attack'&&result.dealt>0){const reflected=Math.ceil(result.dealt*Math.min(100,l2RawStat(defender,'reflectDam',false,now))/100);if(reflected>0)result.reflectDamage=takeDamage(chat,defender,attacker,reflected,now);}
         if(!hit.killed)saveEffects(defender,proxy);
         const loss=result.missed?'Промах':[[hit.cpLost,'CP'],[hit.hpLost,'HP']].filter(([amount])=>amount>0).map(([amount,resource])=>`−${amount} ${resource}`).join(' · ') || (result.type==='debuff'?'Враг ослаблен':'Урон поглощён');
-        fieldPvpLog(defender,`${name(attacker)} атакует: ${loss}.`,now);
-        fieldPvpLog(attacker,`${name(defender)}: ${loss}.`,now);
+        const combat={actor:name(attacker),target:name(defender),amount:hit.cpLost+hit.hpLost};
+        fieldPvpLog(defender,`${name(attacker)} атакует: ${loss}.`,now,result.type==='damage'?{combat:{...combat,kind:result.evaded?'evade':result.missed?'miss':'incoming'}}:{});
+        fieldPvpLog(attacker,`${name(defender)}: ${loss}.`,now,result.type==='damage'?{combat:{...combat,kind:result.evaded?'evade':result.missed?'miss':'outgoing'}}:{});
     }
     return {ok:true,result:{...result,...hit},...hit,shots:shots || null,changed:true};
 }

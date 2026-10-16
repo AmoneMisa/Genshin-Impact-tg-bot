@@ -1,4 +1,5 @@
 import { getPlayerProfileState } from './playerProfile.js';
+import {playerName} from '../functions/game/player/playerName.js';
 import { createMiniAppState } from './state.js';
 import { getEquipmentState } from './equipment.js';
 import { getSkillsState } from './skills.js';
@@ -50,7 +51,7 @@ export function getCharacterState(session, context = {}, now = Date.now()) {
   const state = createMiniAppState(session, context);
   return {
     profile:getPlayerProfileState(session, now), player:state.player,
-    name:context.user?.first_name || context.user?.firstName || context.user?.username || 'Путешественник',
+    name:playerName(session,context.user),
     clanName:context.clanName||null,
     social:{karma:num(session.game.worldPvp?.karma),pvp:num(session.game.worldPvp?.pvpKills),pk:num(session.game.worldPvp?.pkKills)},
     characteristics:getBaseStatsState(session),

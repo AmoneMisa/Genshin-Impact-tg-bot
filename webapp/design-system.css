@@ -7,6 +7,8 @@
  */
 :root {
   --space-1: 4px;
+  --space-pixel: 1px;
+  --space-half: 2px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
@@ -1358,3 +1360,96 @@ body .game-overlay .ui-hud-content::before,body .game-overlay .ui-hud-content::a
 body .game-overlay .ui-player-presence{border-color:var(--pvp-color,var(--border-soft))}
 .mmo-skill[aria-pressed="true"]{outline:2px solid var(--gold-bright);outline-offset:-2px}
 .mmo-hotbar .empty-slot{border:1px solid var(--border-soft);background:var(--surface-input);box-shadow:none}
+/* Shared translucent battle controls, with no blur or GPU effects. */
+.ui-combat-dock{background:var(--combat-surface);border:1px solid var(--border-soft);border-radius:var(--combat-radius)}
+.ui-combat-dock .mmo-hotbar .mmo-skill{background:rgba(12,14,20,.44);border:1px solid rgba(170,163,135,.5);border-radius:var(--radius-sm);box-shadow:inset 0 0 0 1px #0006;display:flex;align-items:center;justify-content:center;padding:var(--space-1)}
+.ui-combat-dock .mmo-hotbar .empty-slot{background:transparent}
+.ui-combat-dock .mmo-skill[aria-pressed=true]{background:rgba(111,92,38,.2)}
+body .game-overlay .ui-button.ui-combat-supply{position:relative;display:flex;align-items:center;justify-content:center;flex:none;width:21px;height:21px;min-width:21px;min-height:21px;padding:var(--space-half);border:0;border-radius:0;background:transparent;box-shadow:none}
+.ui-button.ui-combat-supply img,.ui-button.ui-combat-supply .painted-icon,.ui-button.ui-combat-supply .inv-potion-art{display:block;width:15.4px;height:15.4px;object-fit:contain}
+.ui-button.ui-combat-supply em{position:absolute;right:var(--space-pixel);bottom:var(--space-pixel);font:7px/1.2 system-ui;text-shadow:0 1px 2px #000;font-style:normal;pointer-events:none}
+.ui-button.ui-combat-supply[aria-pressed=true]::after{content:"";position:absolute;bottom:var(--space-pixel);left:var(--space-half);width:3px;height:3px;border-radius:50%;background:var(--gold-bright)}
+.ui-effect-strip .mmo-status{display:flex;align-items:center;justify-content:center;min-height:32px;min-width:32px;padding:var(--space-1);border:1px solid var(--border-soft);background:rgba(12,14,20,.7);border-radius:var(--radius-sm)}
+.ui-effect-strip .mmo-status em{right:var(--space-1);bottom:var(--space-1);padding:0}
+.ui-effect-strip.ui-debuffs .mmo-status{border-color:#ba6262}
+.ui-effect-strip .mmo-status:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+:root{--combat-surface:rgba(8,11,17,.59);--combat-radius:2px}
+body .game-overlay .overlay-panel .ui-button.ui-system-chat-toggle{width:22px;height:22px;min-width:22px;min-height:22px;padding:var(--space-half);border:1px solid var(--border-soft);border-radius:var(--combat-radius);background:var(--combat-surface);box-shadow:none}
+body .game-overlay .overlay-panel .ui-system-chat-toggle :is(img,svg){width:16px;height:16px}
+body .game-overlay .overlay-panel.game-dialog-panel.combat-dialog{border-radius:var(--combat-radius)}
+.ui-hud.ui-combat-readout{background:var(--combat-surface);border:1px solid var(--border-soft);border-radius:var(--combat-radius);box-shadow:inset 0 1px 0 #e8dcc31a,0 1px 3px #0006}
+.ui-resource-l2 .mmo-bar-track{border-radius:1px;border:1px solid #85785b;background:linear-gradient(#05070b,#1d1f28);box-shadow:inset 0 1px 3px #000,0 1px 0 #d2c4a32b,0 2px 4px #000b}
+.ui-resource-l2 .mmo-bar-track i{box-shadow:inset 0 1px 0 #ffffff70,inset 0 -2px 2px #0008}
+.ui-resource-l2.hp .mmo-bar-track i{background:linear-gradient(#a34545,#6f171c 45%,#94262b 65%,#521015)}
+.ui-resource-l2.mp .mmo-bar-track i{background:linear-gradient(#5278a6,#24436e 45%,#345b8a 65%,#172c51)}
+.ui-resource-l2.cp .mmo-bar-track i{background:linear-gradient(#d1b66e,#846321 45%,#aa853d 65%,#5c421b)}
+.ui-resource-l2.xp .mmo-bar-track i{background:linear-gradient(#9b9daf,#5c6078 45%,#7c8097 65%,#393c51)}
+.ui-resource-l2.vit .mmo-bar-track{border:0;border-radius:0;background:#11170f;box-shadow:none}
+.ui-resource-l2.vit .mmo-bar-track i{background:linear-gradient(#6f8951,#435d2d);box-shadow:none}
+.ui-resource-l2.vit .mmo-bar-track i::after{display:none}
+.ui-resource-l2 .mmo-bar-track b{padding-inline:var(--space-1);text-shadow:0 1px 1px #000,1px 0 1px #000,-1px 0 1px #000}
+.ui-resource-l2.ui-resource-label-inside{position:relative;display:block}
+.ui-resource-l2.ui-resource-label-inside .mmo-bar-label{position:absolute;inset:0 auto 0 var(--space-1);display:flex;align-items:center;z-index:1;pointer-events:none;color:#e2d8b6;font-family:Tahoma,Arial,sans-serif;font-weight:400;text-shadow:0 1px 1px #000}
+.ui-resource-l2.ui-resource-label-inside .mmo-bar-track b{padding-left:var(--space-4);font-family:Tahoma,Arial,sans-serif;font-weight:400}
+.hunt-player-level{color:#c8c5b6;background:linear-gradient(#ffffff0d,#0003);border:1px solid #9b90784d;box-shadow:inset 0 0 2px #0007}
+body .game-overlay .overlay-panel .ui-icon-button.ui-hud-icon{--control-icon-size:28px;display:flex;align-items:center;justify-content:center;width:28px;height:28px;min-width:28px;min-height:28px;padding:var(--space-1)}
+body .ui-icon-button.ui-hud-icon>img,body .ui-icon-button.ui-hud-icon>svg{width:18px;height:18px;flex:none}
+body .game-overlay .ui-folder-tabs.ui-icon-tabs button{display:flex;align-items:center;justify-content:center;min-height:var(--window-tab-height,32px);padding:var(--space-1)}
+.ui-icon-tabs button img{max-width:100%;max-height:100%}
+/* Classic con bands; shades retain contrast on the shared dark HUD. */
+.ui-con-blue{--con-color:#6a8dff}.ui-con-light-blue{--con-color:#79d7ff}.ui-con-green{--con-color:#8de080}.ui-con-white{--con-color:#f3efdf}.ui-con-yellow{--con-color:#ffe77a}.ui-con-pink{--con-color:#ff9bad}.ui-con-red{--con-color:#ff6767}
+.ui-target-name{color:var(--con-color,var(--text))}
+.ui-drop-group>summary{padding:var(--space-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:var(--surface-input);cursor:pointer}
+.ui-drop-group>summary:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.ui-drop-chances{font-size:10px;color:var(--muted)}
+/* Compact effects keep the same semantics and touch tooltips as the full strip. */
+body .l2-client-icon{filter:none}
+body .game-overlay .ui-effect-strip.ui-effects-compact .mmo-status{position:relative;width:var(--effect-size,16px);height:var(--effect-size,16px);min-width:var(--effect-size,16px);min-height:var(--effect-size,16px);padding:var(--space-pixel);border-radius:0;border:0;background:#101116;box-shadow:none}
+.ui-effect-strip.ui-effects-compact .mmo-status :is(img,svg){width:100%;height:100%;min-width:0;max-width:100%;max-height:100%;object-fit:contain}
+.ui-effect-strip.ui-effects-compact.ui-debuffs .mmo-status::after,.ui-effect-strip.ui-effects-compact .mmo-status[data-effect-kind=debuff]::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,#ed3b3633,#b80808a6);box-shadow:inset 0 0 0 1px #ed5c5c99}
+.ui-effect-strip.ui-effects-compact.ui-debuffs .mmo-status :is(img,svg),.ui-effect-strip.ui-effects-compact .mmo-status[data-effect-kind=debuff] :is(img,svg){filter:grayscale(1)}
+body .game-overlay .ui-button.ui-party-member{display:grid;grid-template-columns:minmax(0,1fr);justify-content:stretch;align-items:stretch;gap:var(--space-half);width:100%;min-width:0;min-height:34px;padding:var(--space-1);border:0;border-bottom:1px solid #776f5555;border-radius:0;background:transparent;box-shadow:none;text-align:start}
+body .game-overlay .is-mini .ui-button.ui-party-member{height:26px;min-height:26px;gap:0;padding:var(--space-half) var(--space-1)}
+body .game-overlay .ui-party-member[aria-pressed=true]{background:#ccb26b22;box-shadow:inset 2px 0 var(--gold-bright)}
+.ui-party-name{display:flex;align-items:center;gap:var(--space-half);min-width:0;font-size:10px;line-height:12px;text-shadow:0 1px 1px #000}
+.ui-party-name strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ui-party-name small{font-size:8px}.ui-party-name :is(img,svg){width:12px;height:12px;flex:none}
+.ui-party-vitals{display:grid;gap:var(--space-pixel);min-width:0;width:100%}
+.ui-party-vitals .mmo-bar{display:block;min-width:0}
+.ui-party-vitals :is(.mmo-bar-label,.mmo-bar-track b){display:none}
+.ui-party-vitals .mmo-bar-track{height:4px;min-height:4px;border-width:0;border-radius:0}
+.is-mini .ui-party-name{font-size:9px;line-height:11px}
+.is-mini .ui-party-vitals .mmo-bar-track{height:2px;min-height:2px}
+body .game-overlay .overlay-panel .ui-icon-button.ui-hud-mini{width:20px;height:20px;min-width:20px;min-height:20px;padding:var(--space-half);border-radius:0;border-color:transparent;background:transparent;box-shadow:none}
+body .game-overlay .overlay-panel .ui-icon-button.ui-hud-mini :is(img,svg){width:12px;height:12px}
+body .game-overlay .overlay-panel .ui-icon-button.ui-hud-mini{font:700 13px/1 Georgia,serif;color:var(--gold-bright);text-shadow:0 1px 2px #000}
+.combat-party-heading{border-bottom:1px solid var(--border-soft)}
+.combat-party-heading [data-party-count]{font-size:8px;color:var(--muted)}
+.combat-chat-messages{font-size:11px;line-height:1.4}
+.combat-chat-messages p{display:flex;gap:var(--space-2);align-items:baseline;margin:0;padding:var(--space-1) var(--space-2);overflow-wrap:anywhere}
+.combat-chat-messages strong{color:var(--gold-bright);flex:none;max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.combat-chat-messages span{min-width:0;white-space:pre-wrap}
+.combat-chat-error{font-size:11px;color:var(--text);padding:var(--space-1) var(--space-2);margin:0}
+.combat-chat-error:empty{display:none}
+body .game-overlay .overlay-panel .game-dialog-heading.is-compact{margin-bottom:0}
+body .game-overlay .overlay-panel .game-dialog-heading.is-compact h2{font-size:16px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body .game-overlay .overlay-panel .ui-icon-button.ui-hud-toolbar,body .game-overlay .ui-folder-tabs.ui-combat-tabs button{width:24px;height:24px;min-width:24px;min-height:24px;flex:0 0 24px;padding:var(--space-half)}
+body .game-overlay .ui-folder-tabs.ui-combat-tabs button :is(img,svg){width:20px;height:20px}
+body .game-overlay .overlay-panel .ui-hud-toolbar,body .game-overlay .ui-folder-tabs.ui-combat-tabs button{border:0;border-radius:0;background:transparent;box-shadow:none}
+body .game-overlay .overlay-panel .ui-hud-toolbar[aria-pressed=true],body .game-overlay .ui-folder-tabs.ui-combat-tabs button[aria-selected=true]{background:transparent;box-shadow:none;filter:brightness(1.25)}
+body .game-overlay .ui-button.ui-hud-menu{display:flex;align-items:center;justify-content:center;min-height:24px;padding:var(--space-1) var(--space-2);font-size:10px;line-height:1.2}
+body .game-overlay .ui-combat-dock .mmo-hotbar .mmo-skill{border:0;border-radius:0;background:transparent;box-shadow:none;padding:var(--space-pixel)}
+body .game-overlay .ui-combat-dock .mmo-skill[aria-pressed=true]{outline:0;filter:brightness(1.2)}
+body .game-overlay .ui-button.ui-chat-preview{display:block;width:100%;height:36px;min-height:36px;padding:var(--space-half) var(--space-1);text-align:left;background:var(--combat-surface);border:0;border-radius:var(--combat-radius);box-shadow:none}
+[data-chat-preview]{display:grid;grid-template-rows:14px 14px;align-content:center;gap:0;min-width:0;font-size:10px;line-height:14px;font-weight:400;color:var(--text);text-shadow:0 1px 2px #000}
+[data-chat-preview]>span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+[data-chat-preview] strong{color:var(--gold-bright)}
+.ui-combat-log-row{margin:0;font:10px/14px Arial,sans-serif;text-shadow:0 1px 2px #000,1px 0 2px #000;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ui-combat-log-row[data-combat-kind=incoming]{color:#ef8686}.ui-combat-log-row[data-combat-kind=outgoing]{color:#94d783}.ui-combat-log-row[data-combat-kind=heal]{color:#f1da7a}.ui-combat-log-row[data-combat-kind=miss]{color:#aaa9ac}.ui-combat-log-row[data-combat-kind=evade]{color:#c4a0ea}
+.combat-chat-messages .ui-combat-log-row{white-space:normal;overflow:visible;text-overflow:clip}
+body .game-overlay .overlay-panel.combat-dialog{padding:var(--space-2)}
+@media(max-width:600px){body .game-overlay .overlay-panel.combat-dialog{padding:var(--space-1)}}
+.character-nickname-form{display:grid;gap:var(--space-2)}
+.character-nickname-form label{display:grid;gap:var(--space-2)}
+.character-nickname-form p{font-size:12px;margin:0}
+.character-nickname-form [data-nickname-error]:empty{display:none}

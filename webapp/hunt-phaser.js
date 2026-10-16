@@ -1,5 +1,7 @@
 import {paintRoom} from './room-paint.js';
 import {combatTheme,colorHex} from './combat-environment.js';
+import {loadRoomPropArt} from './room-props-art.js';
+import {loadRoomScene,roomSceneUrl} from './room-scene-art.js';
 
 let runtime;
 const loadRuntime=()=>runtime??=import('/vendor/phaser/phaser.esm.min.js');
@@ -14,6 +16,15 @@ export function createHuntRenderer(){
   const actors=new Map(),textures=new Map();
   let terrainKey='',nextTexture=0;
   const terrain=[];let terrainTextures=[],terrainRevision=0,scenery=[];
+  let sceneArtKey='',sceneArtPending=Promise.resolve();
+  function prepareSceneArt(){
+    const options={compact:viewport.width<480,sceneKey:field.sceneKey},key=roomSceneUrl(field.environment,options);
+    if(key===sceneArtKey)return sceneArtPending;sceneArtKey=key;
+    sceneArtPending=loadRoomScene(field.environment,options).then(()=>{
+      if(scene&&!disposed&&!failed&&key===sceneArtKey){terrainKey='';sync();frame();}
+    });
+    return sceneArtPending;
+  }
   function release(){
     world?.classList.remove('hunt-phaser-ready');
     world?.querySelectorAll('.hunt-avatar-painted').forEach(n=>n.classList.remove('hunt-avatar-painted'));
@@ -96,7 +107,10 @@ export function createHuntRenderer(){
   async function start(){
     if(starting||disposed||failed)return;starting=true;
     try{
-      const Phaser=await loadRuntime();if(disposed)return;
+      const theme=combatTheme(field.environment);
+      const [Phaser]=await Promise.all([loadRuntime(),loadRoomPropArt({floor:theme.indoor&&field.environment!=='ship'}),prepareSceneArt()]);if(disposed)return;
+      // ResizeObserver can switch the image size while the runtime is loading.
+      await prepareSceneArt();if(disposed)return;
       // This embedded scene shares hunt's clock and visibility lifecycle. The default
       // Game.start installs page-wide visibility/focus handlers and a second RAF loop.
       class HuntGame extends Phaser.Game {
@@ -109,7 +123,7 @@ export function createHuntRenderer(){
           scene=this;
           host.dataset.renderer=this.game.renderer.type===Phaser.CANVAS?'canvas':'webgl';
           this.game.canvas.addEventListener('webglcontextlost',fail,{once:true});
-          sync();
+          prepareSceneArt().then(()=>{if(!disposed&&!failed){sync();frame();}});
         }}});
     }catch{fail();}
   }
@@ -118,7 +132,7 @@ export function createHuntRenderer(){
       world=nextWorld;field=nextField;viewport=nextViewport;
       if(disposed||failed||!world)return;
       const theme=combatTheme(field.environment);world.parentElement?.style.setProperty('--room-ambient',colorHex(theme.accent)+'12');
-      world.prepend(host);if(scene){sync();frame();}else start();
+      world.prepend(host);if(scene){prepareSceneArt();sync();frame();}else start();
     },
     moveSelf(){
       const row=actors.get('self');if(!row||!scene||disposed||failed)return;

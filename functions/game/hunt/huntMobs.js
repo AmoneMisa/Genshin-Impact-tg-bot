@@ -3,6 +3,11 @@ import fields from '../../../template/huntingTemplate.js';
 import catacombs from '../../../template/catacombsTemplate.js';
 import necropolises from '../../../template/necropolisesTemplate.js';
 import worldZones from '../../../template/worldZones.js';
+import npcAi from '../../../template/l2NpcAi.js';
+export function npcBehaviour(id){
+    const ai=npcAi[id];
+    return {aiSourceVersion:1,aiDataMissing:!ai,aggressive:Boolean(ai?.aggressive),aggroRange:ai?.aggroRange??null,clanHelpRange:ai?.clanHelpRange??null,socialClans:ai?.clans||[],socialIgnoredIds:ai?.ignoredIds||[]};
+}
 import {NPC_ATTRIBUTES,NPC_ATTRIBUTE_ATTACKS} from '../../../template/l2AttributeRules.js';
 const catIds=new Set(catacombs.map(z=>z.id));
 const zones=[...fields.filter(z=>!catIds.has(z.id)),...catacombs,...necropolises,...worldZones].sort((a,b)=>a.level-b.level);
@@ -88,6 +93,7 @@ export function buildMob(zone, mobDef, {now = Date.now(), random = Math.random, 
     return {
         zone: zone.id,
         mobId: mobDef.id,
+        ...npcBehaviour(mobDef.id),
         name: mobDef.name,
         level: mobDef.level,
         champion: champion || null,

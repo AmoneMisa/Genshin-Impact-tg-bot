@@ -6,6 +6,7 @@ import { uniqueEquipped } from '../equipment/itemBonuses.js';
 import { classEffectSkills, l2EffectRows, isL2PetSkill } from './l2Effects.js';
 
 export const HOTBAR_MAX = 16;
+export const HOTBAR_ACTIONS = Object.freeze(['action:attack','action:next-target','action:trade','action:party-invite','action:party-leave','action:party-transfer']);
 const n = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 
 const kit = session => (Array.isArray(session?.game?.gameClass?.skills) ? session.game.gameClass.skills : []);
@@ -16,7 +17,12 @@ function clean(session, slots) {
     const seen = new Set();
     const result = [];
     for (const raw of Array.isArray(slots) ? slots : []) {
-        const index = Number(raw);
+        const index = HOTBAR_ACTIONS.includes(raw) ? raw : Number(raw);
+        if (HOTBAR_ACTIONS.includes(index)) {
+            if (!seen.has(index)) { seen.add(index); result.push(index); }
+            if (result.length >= HOTBAR_MAX) break;
+            continue;
+        }
         if (!Number.isInteger(index) || index < 0 || index >= total || seen.has(index) || toggles.has(kit(session)[index]?.name)) continue;
         seen.add(index);
         result.push(index);
@@ -36,7 +42,7 @@ export function getHotbar(session) {
 export function setHotbar(session, slots) {
     const list = clean(session, slots);
     if (!list.length) return { ok: false, reason: 'empty_hotbar', hotbar: getHotbar(session) };
-    if (Array.isArray(slots) && new Set(slots.map(Number)).size > HOTBAR_MAX) return { ok: false, reason: 'too_many', hotbar: getHotbar(session), max: HOTBAR_MAX };
+    if (Array.isArray(slots) && new Set(slots.map(s=>HOTBAR_ACTIONS.includes(s)?s:Number(s))).size > HOTBAR_MAX) return { ok: false, reason: 'too_many', hotbar: getHotbar(session), max: HOTBAR_MAX };
     session.game.hotbar = list;
     return { ok: true, hotbar: list, max: HOTBAR_MAX };
 }

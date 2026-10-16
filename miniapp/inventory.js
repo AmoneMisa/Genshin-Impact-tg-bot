@@ -13,6 +13,7 @@ import getEquipStatByName from '../functions/game/player/getters/getEquipStatByN
 import potionsTemplate from '../template/potionsInInventoryTemplate.js';
 import potionRestore, { potionShare } from '../functions/game/player/potionRestore.js';
 import {queuePotionHealing,HP_POTION_SECONDS} from '../functions/game/player/potionHealing.js';
+import {CP_POTIONS,useCpPotion} from '../functions/game/player/cpPotions.js';
 import buffPotions from '../template/buffPotions.js';
 import {applyPotionBuff,activePotionBuffs} from '../functions/game/player/potionBuffs.js';
 import {getEquipmentState,performEquipmentAction} from './equipment.js';
@@ -127,6 +128,7 @@ export function discardInventoryItem(session, {kind,ref,count=1} = {}) {
 }
 
 export function useInventoryPotion(session, rawKey) {
+  if(CP_POTIONS.some(p=>p.id===rawKey))return {...useCpPotion(session,rawKey),inventory:getInventoryState(session)};
   if(/^l2_859[4-9]$/.test(String(rawKey))){const result=useRecoveryScroll(session,String(rawKey));return {...result,inventory:getInventoryState(session)};}
   const index = Number(rawKey);
   const items = session?.game?.inventory?.potions?.items;

@@ -1,9 +1,11 @@
 import {combatTheme,colorHex} from './combat-environment.js';
+import {roomSceneUrl} from './room-scene-art.js';
+import {roomPropSprite,roomPropHeight} from './room-props-art.js';
 // One projection for terrain, actors, effects and inverse pointer picking. Game coordinates stay unchanged.
 export function isoMatrix(viewport) {
   const width=Math.max(1,viewport.width),height=Math.max(1,viewport.height);
   // A traversable room extends past a phone's edges; camera pan reveals its aisles.
-  const a=Math.max(280,Math.min(640,width*.85));
+  const a=Math.max(280,Math.min(640,Math.max(width*.85,height*.64)));
   const b=a/Math.sqrt(3);
   return {a,b,c:-a,d:b,e:width/2,f:height/2-b};
 }
@@ -11,6 +13,12 @@ export function isoPoint(point,viewport,camera={}) {
   const m=isoMatrix(viewport),zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
   const x=m.a*point.x+m.c*point.y+m.e,y=m.b*point.x+m.d*point.y+m.f;
   return {x:cx+(x-cx)*zoom+(camera.x||0),y:cy+(y-cy)*zoom+(camera.y||0)};
+}
+// Art anchors: N(768,150), E(1408,520), S(768,890), W(128,520).
+// A uniform screen-space image retains the painted relief instead of flattening it.
+export function isoSceneBounds(viewport){
+ const m=isoMatrix(viewport),scale=m.a/640;
+ return {x:m.e-768*scale,y:viewport.height/2-520*scale,width:1536*scale,height:1024*scale};
 }
 export function isoPick(point,viewport,camera={}) {
   const m=isoMatrix(viewport),zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
@@ -41,7 +49,7 @@ export function isoLabelOffsets(actors,viewport){
   return offsets;
 }
 
-/** Static SVG terrain: no WebGL, image downloads, simulation loop or per-tile event listeners. */
+/** Static SVG terrain: no WebGL, simulation loop or per-tile event listeners. */
 export function isoTerrain(field,viewport) {
   const theme=combatTheme(field.environment);
   const project=p=>isoPoint(p,viewport);
@@ -54,6 +62,14 @@ export function isoTerrain(field,viewport) {
   const tiles=[];
   for(let x=0;x<8;x++)for(let y=0;y<8;y++)tiles.push(`<polygon class="iso-tile" style="fill:${colorHex((x*3+y*7)%5===0?theme.light:theme.floor)}" points="${points([{x:x/8,y:y/8},{x:(x+1)/8,y:y/8},{x:(x+1)/8,y:(y+1)/8},{x:x/8,y:(y+1)/8}].map(project))}"/>`);
   // Low perimeter walls leave the actual doors open; raised obstacles use the server's collision rectangles.
-  const walls=(field.walls||[]).map(w=>prism(w.x,w.y,w.w,w.h,w.kind==='pillar'?76:w.kind==='wall'?58:28,w.kind==='pillar'?'pillar':'wall'));
-  return `<svg class="hunt-isometric-terrain" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true"><polygon class="iso-base" points="${points(floor.map(p=>({x:p.x,y:p.y+12})))}"/><polygon class="iso-floor" points="${points(floor)}"/>${tiles.join('')}${walls.join('')}</svg>`;
+  const walls=(field.walls||[]).map((w,i)=>{
+    const art=roomPropSprite(w.kind,field.environment);
+    if(!art)return prism(w.x,w.y,w.w,w.h,58,'wall');
+    const foot=project({x:w.x+w.w/2,y:w.y+w.h/2}),height=roomPropHeight(w.kind,i),scale=height/art.height;
+    const base=[{x:w.x,y:w.y},{x:w.x+w.w,y:w.y},{x:w.x+w.w,y:w.y+w.h},{x:w.x,y:w.y+w.h}].map(project);
+    return `<g class="hunt-iso-prop hunt-iso-${w.kind}"><polygon points="${points(base)}" fill="${colorHex(theme.front)}" opacity=".5"/><svg x="${foot.x-art.anchorX*scale}" y="${foot.y-art.anchorY*scale}" width="${art.width*scale}" height="${height}" viewBox="${art.x} ${art.y} ${art.width} ${art.height}" overflow="hidden"><image href="${art.url}" width="1536" height="1024"/></svg></g>`;
+  });
+  const url=roomSceneUrl(field.environment,{compact:viewport.width<480,sceneKey:field.sceneKey}),bounds=isoSceneBounds(viewport);
+  const painting=url?`<image href="${url}" x="${bounds.x}" y="${bounds.y}" width="${bounds.width}" height="${bounds.height}" preserveAspectRatio="none"/>`:'';
+  return `<svg class="hunt-isometric-terrain" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true"><polygon class="iso-base" points="${points(floor.map(p=>({x:p.x,y:p.y+12})))}"/><polygon class="iso-floor" points="${points(floor)}"/>${tiles.join('')}${painting}${walls.join('')}</svg>`;
 }

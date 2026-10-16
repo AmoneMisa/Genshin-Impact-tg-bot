@@ -136,7 +136,7 @@
 @keyframes shop-bought { 0% { transform: scale(1); } 30% { transform: scale(1.03); border-color: #7fc97a; box-shadow: 0 0 22px rgba(127, 201, 122, .5); } 100% { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .shop-item, .shop-icon::after, .shop-price.confirming { animation: none !important; } }
 .merchant-banner {display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:8px;margin:8px 0 12px;border:1px solid rgba(202,170,98,.35);box-sizing:border-box;}
-.l2-client-icon {image-rendering:pixelated;filter:none!important;object-fit:contain;vertical-align:middle;}
+.l2-client-icon {image-rendering:pixelated;object-fit:contain;vertical-align:middle;}
 .merchants-panel > * {min-width:0;max-width:100%;}
 .merchants-panel .shop-categories {width:100%;box-sizing:border-box;}
 .merchants-panel .shop-head {grid-template-columns:36px minmax(0,1fr);}

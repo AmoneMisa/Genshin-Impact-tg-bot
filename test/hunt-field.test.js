@@ -22,6 +22,7 @@ function fixture(){
 
 test('selection is peaceful, approach provokes only nearby aggressive actors',()=>{
  const s=fixture(),h=s.game.hunt,hp=s.game.gameClass.stats.hp;
+ h.field.mobs[0].aggressive=true;h.field.mobs[0].aggroRange=660;
  assert.equal(h.field.mobs.length,3);
  const id=h.field.mobs[2].instanceId;
  assert.equal(selectHuntTarget(s,id,NOW).ok,true);
@@ -37,6 +38,8 @@ test('damaging skills provoke the target and helpers; state survives a JSON save
  const s=fixture(),h=s.game.hunt;
  h.field.mobs[1].x=.25;h.field.mobs[1].y=.3;
  const target=h.mob,old=target.currentHp;
+ h.field.mobs[1].socialIgnoredIds=[];
+ h.field.mobs[1].socialClans=[...target.socialClans];
  h.field.x=target.x;h.field.y=target.y+.02;
  assert.equal(useHuntSkill(s,0,{now:NOW,random:()=>.5}).ok,true);
  advanceHunt(s,NOW+4000,()=>.5);

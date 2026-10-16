@@ -33,9 +33,10 @@ export function fieldIsPresent(session, now) {
         session.game.gameClass?.stats?.hp > 0 && !(session.game.respawnTime > now));
 }
 
-export function fieldPvpLog(session, text, now) {
+export function fieldPvpLog(session, text, now,extra={}) {
     const state = ensureFieldPvp(session);
-    state.log = [{at:now,text}, ...(state.log || [])].slice(0,8);
+    state.logSeq=(state.logSeq||0)+1;
+    state.log = [{id:state.logSeq,at:now,text,...extra}, ...(state.log || [])].slice(0,150);
 }
 
 /** Only a rewarded PvE kill can reduce karma; PK count is permanent here. */

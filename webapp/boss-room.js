@@ -9,8 +9,8 @@ export function createBossRoomStage(host,{name,label=name,bossUrl,playerUrl,play
   const renderer=createHuntRenderer();
   let disposed=false,hp=hpPercent,viewport={width:320,height:360},animation=null;
   const environment=environments[name]||'catacomb',indoor=['catacomb','necropolis','ship','ice'].includes(environment);
-  const walls=indoor?[[.22,.22],[.73,.22],[.22,.7],[.73,.7]].map(([x,y])=>({x,y,w:.06,h:.06,kind:'pillar'})):
-    [[.12,.4],[.8,.65]].map(([x,y])=>({x,y,w:.09,h:.09,kind:'rock'}));
+  const walls=indoor?[[.17,.25],[.74,.42],[.25,.79]].map(([x,y])=>({x,y,w:.06,h:.06,kind:'pillar'})):
+    [[.12,.34],[.77,.67],[.64,.12]].map(([x,y])=>({x,y,w:.09,h:.09,kind:'rock'}));
   const field={environment,sceneKey:name,walls,layoutSource:'adapted',exits:[]};
   host.classList.add('boss-room-stage');
   function marker(id,point,url,label,self=false){

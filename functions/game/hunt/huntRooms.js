@@ -35,8 +35,8 @@ export function roomEnvironment(zone){
     if(/forge|gods|volcan|blazing/.test(id))return 'volcanic';
     if(/hot-springs/.test(id))return 'springs';
     if(/swamp|marsh|spores/.test(id))return 'marsh';
-    if(/hellbound|desert|varka/.test(id))return 'desert';
-    if(/wall-of-argos|devils|cave|antharas/.test(id))return 'cavern';
+    if(/hellbound|desert|varka|wall-of-argos/.test(id))return 'desert';
+    if(/devils|cave|antharas/.test(id))return 'cavern';
     if(zone?.kind==='catacomb'||/tower|temple|monastery/.test(id))return 'catacomb';
     return 'woodland';
 }
@@ -65,18 +65,23 @@ export function roomLayout(zone) {
             const big = bigIds.has(roomId(row, col));
             const cap = start ? START_CAP : big ? 11 + Math.floor(random() * 2) : 3 + Math.floor(random() * 3);
             const name = start ? (key.startsWith('necropolis')?'Вход в некрополь':'Вход в катакомбы') : big ? `${HALL_NAMES[hall++ % HALL_NAMES.length]}` : `${CHAMBER_NAMES[chamber++ % CHAMBER_NAMES.length]}`;
-            return {id: roomId(row, col), row, col, big, cap, name, walls: big ? [{x:.35,y:.6,w:.12,h:.12},{x:.65,y:.6,w:.12,h:.12}] : []};
+            return {id: roomId(row, col), row, col, big, cap, name, walls: big ? [{x:.38,y:.12,w:.13,h:.08},{x:.83,y:.53,w:.08,h:.12}] : []};
         });
         layout = {cols: GRID_COLS, rows: GRID_ROWS, startId: roomId(0, 0), map: true, rooms};
     }
     const environment=roomEnvironment(zone),indoor=['catacomb','necropolis'].includes(environment);
     for(const room of layout.rooms){
         room.environment=environment;room.layoutSource='adapted';
-        const features=indoor?[[.27,.23],[.68,.23],[.27,.72],[.68,.72]].map(([x,y])=>({x,y,w:.065,h:.065,kind:'pillar'})):
-            [[.12,.5],[.78,.65],[.7,.1]].map(([x,y])=>({x,y,w:.07,h:.07,kind:['woodland','marsh'].includes(environment)?'tree':'rock'}));
-        const edges=indoor?[{x:0,y:0,w:.035,h:.36,kind:'wall'},{x:0,y:.64,w:.035,h:.36,kind:'wall'},{x:0,y:0,w:.36,h:.035,kind:'wall'},{x:.64,y:0,w:.36,h:.035,kind:'wall'}]:[];
-        room.walls=[...(room.walls||[]).map(w=>({...w,kind:w.kind||'stone'})),...edges,...features];
-        if(environment==='necropolis')room.walls.push({x:.12,y:.43,w:.07,h:.13,kind:'sarcophagus'},{x:.81,y:.43,w:.07,h:.13,kind:'sarcophagus'});
+        // Stable per-room variation, with clear central aisles and cardinal doorways.
+        const random=seeded(`scenery:${key}:${room.id}`);
+        const features=(indoor?[[.26,.17],[.7,.37],[.17,.76]]:[[.12,.39],[.77,.64],[.65,.1],[.23,.77]])
+            .map(([x,y])=>({x:x+(random()-.5)*.06,y:y+(random()-.5)*.06,
+                w:indoor?.065:.055+random()*.03,h:indoor?.065:.055+random()*.03,
+                kind:indoor?'pillar':['woodland','marsh'].includes(environment)?'tree':'rock'}));
+        // World bounds already contain actors. Painted perimeter architecture needs
+        // no additional wall strips protruding into otherwise traversable entrances.
+        room.walls=[...(room.walls||[]).map(w=>({...w,kind:w.kind||'stone'})),...features];
+        if(environment==='necropolis')room.walls.push({x:.1,y:.54,w:.07,h:.13,kind:'sarcophagus'},{x:.8,y:.18,w:.1,h:.07,kind:'sarcophagus'});
     }
     layouts.set(key, layout);
     return layout;

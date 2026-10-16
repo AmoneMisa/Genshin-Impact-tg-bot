@@ -4,6 +4,7 @@ import {itemGridHtml} from './item-grid.js';
 import {inventoryItemArt} from './inventory-layout.js';
 import {installOverlayA11y} from './overlay-a11y.js';
 import {dialogHeading} from './dialog-heading.js';
+import {l2NavigationIcon} from './art/l2-navigation-art.js';
 import {materialIcon} from './material-icons.js';
 import {l2SlotBackground} from './l2-slot-background.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
@@ -25,8 +26,7 @@ import {openWarehouseGame} from './warehouse.js';
 import {openTradeGame} from './trade.js';
 
 export const CHARACTER_TABS = [['stats','Статы'],['equipment','Эквип'],['skills','Навыки'],['effects','Эффекты']];
-const TAB_TEXTURES={stats:'Icon_DF_MenuWnd_Character',equipment:'Icon_DF_MenuWnd_Inventory',skills:'Icon_DF_MenuWnd_Skill'};
-function tabIcon(id){return id==='effects'?l2SkillIcon('1040'):'<img src="/art/l2ui/navigation/'+TAB_TEXTURES[id]+'-icon.webp" alt="" aria-hidden="true" width="24" height="24" decoding="async">';}
+function tabIcon(id){return id==='effects'?l2SkillIcon('1040'):l2NavigationIcon(({stats:'character',equipment:'inventory',skills:'skills'})[id]);}
 const LEFT = [['head','Голова'],['up','Верх'],['down','Низ'],['hands','Руки'],['legs','Ноги'],['cloak','Плащ'],['shirt','Майка'],['belt','Пояс']];
 const RIGHT = [['costume','Костюм'],['leftEar','Левая серьга'],['rightEar','Правая серьга'],['necklace','Ожерелье'],['leftRing','Левое кольцо'],['rightRing','Правое кольцо']];
 const WEAPONS = [['rightHand','Оружие'],['leftHand','Вторая рука']];
@@ -181,7 +181,7 @@ export async function openCharacterPage(options,initialTab='stats') {
   }
   function draw() {
     const scroll=panel.scrollTop;
-    overlay.querySelector('[data-character-identity]').innerHTML='<div class="character-identity">'+classEmblemHtml(data.player)+'<div class="character-name"><strong>'+esc(data.name)+'</strong><small>Ур. '+fmt(data.player.level)+'</small></div></div>';
+    overlay.querySelector('[data-character-identity]').innerHTML='<div class="character-identity">'+classEmblemHtml(data.player)+'<div class="character-name"><strong>'+esc(data.name)+'</strong><small>Ур. '+fmt(data.player.level)+'</small></div><button type="button" class="ui-button ui-compact" data-character-nickname aria-label="Изменить игровой ник" title="Изменить игровой ник">Ник</button></div>';
     tabs.innerHTML=CHARACTER_TABS.map(([id,label])=>'<button type="button" role="tab" id="character-tab-'+id+'" aria-label="'+esc(label)+'" title="'+esc(label)+'" aria-controls="character-content" aria-selected="'+(id===tab)+'" tabindex="'+(id===tab?0:-1)+'" data-character-tab="'+id+'">'+tabIcon(id)+'</button>').join('');
     panel.setAttribute('aria-labelledby','character-tab-'+tab);
     panel.innerHTML=renderCharacterTab(data,tab,{slot,effectId,skillTab});panel.scrollTop=scroll;
@@ -230,6 +230,15 @@ export async function openCharacterPage(options,initialTab='stats') {
     const button=event.target.closest('button');
     if(!button || pending || closed)return;
     try {
+      if(button.hasAttribute('data-character-nickname')){
+        showDetail('Игровой ник','<form class="ui-field character-nickname-form"><label>Ник персонажа<input type="text" name="nickname" required maxlength="32" autocomplete="off" value="'+esc(data.profile?.nickname||data.name||'')+'" aria-describedby="nickname-help"></label><p id="nickname-help">1–16 символов: буквы, цифры, _ и -.</p><p data-nickname-error role="status"></p><button type="submit" class="ui-button primary">Сохранить</button></form>');
+        const form=detail.querySelector('form'),input=form.querySelector('input'),submit=form.querySelector('[type=submit]'),error=form.querySelector('[data-nickname-error]'),dialog=detail;
+        const validate=()=>{submit.disabled=!input.value.trim()||Array.from(input.value.trim()).length>16;};input.addEventListener('input',validate);validate();input.focus();input.select();
+        form.addEventListener('submit',async event=>{event.preventDefault();if(submit.disabled)return;submit.disabled=true;error.textContent='';
+          try{const result=await api('/api/profile/nickname',{method:'POST',body:JSON.stringify({nickname:input.value})});if(result.ok===false)throw {payload:result};if(result.state)renderState?.(result.state);await refresh();dialog.close();dialog.remove();feedback.textContent='Игровой ник сохранён.';}
+          catch(err){error.textContent=({invalid_nickname:'Используй от 1 до 16 символов: буквы, цифры, _ и -.',nickname_taken:'Этот ник уже занят.'})[err.payload?.reason]||err.message||'Не удалось сохранить ник.';}finally{validate();}
+        });return;
+      }
       if(button.hasAttribute('data-character-refresh')){pending=true;draw();try{await refresh();}finally{pending=false;draw();}return;}
       if(button.dataset.skillId){
         const s=data.skills?.book?.find(s=>Number(s.id)===Number(button.dataset.skillId));if(!s)return;

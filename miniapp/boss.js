@@ -33,6 +33,7 @@ import getMaxMp from '../functions/game/player/getters/getMaxMp.js';
 import getCurrentCp from '../functions/game/player/getters/getCurrentCp.js';
 import getMaxCp from '../functions/game/player/getters/getMaxCp.js';
 import getUserName from '../functions/getters/getUserName.js';
+import {playerName,limitPlayerName} from '../functions/game/player/playerName.js';
 import saveSession from '../functions/getters/saveSession.js';
 import { getEffectiveSkillCost } from '../functions/game/player/skillEnchant.js';
 import { bossStatusesDto, playerEffectsDto } from './bossEffects.js';
@@ -169,7 +170,7 @@ async function participantsDto(boss, chatId, viewerId) {
     } catch { hpPercent = null; }
     result.push({
       userId: row.id,
-      name: await getUserName(row.id, 'name') || `Игрок ${row.id}`,
+      name: member?playerName(member):limitPlayerName(await getUserName(row.id, 'name') || `Игрок ${row.id}`),
       damage: number(row.damage),
       share: Math.round((number(row.damage) / total) * 1000) / 10,
       className: gameClass?.stats?.name || 'noClass',
@@ -288,7 +289,7 @@ export async function getBossState(session, chatId, now = Date.now()) {
   const respawnRemainMs = Math.max(0, number(session?.game?.respawnTime) - now);
   const special = battleSpecialDto(session,now);
   const player = {
-    name: session?.userId ? (await getUserName(session.userId, 'name') || 'Игрок') : 'Игрок',
+    name: playerName(session),
     level: number(session?.game?.stats?.lvl, 1),
     cp: currentCp,
     maxCp,

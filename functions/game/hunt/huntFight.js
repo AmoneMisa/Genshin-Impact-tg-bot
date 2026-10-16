@@ -1,4 +1,5 @@
 import {recordDeath} from '../player/deathPenalties.js';
+import {playerName} from '../player/playerName.js';
 import {armAttackRune, clearAttackRune, defenseRuneFactor} from '../runes/labRunes.js';
 import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Effects.js';
 // A real-time fight with one mob of a hunting zone. The mob lives in session.game.hunt.mob and swings
@@ -52,9 +53,9 @@ export function ensureHunt(session) {
         field.visited = [field.room];
         field.respawns = [];
     }
-    if(field&&field.layoutVersion!==2){
+    if(field&&field.layoutVersion!==4){
         const room=roomById(getZone(game.hunt.zone),field.room);
-        field.walls=room?.walls||[];field.layoutVersion=2;field.path=[];delete field.action;delete field.autoAttack;delete field.pendingRoom;
+        field.walls=room?.walls||[];field.layoutVersion=4;field.path=[];delete field.action;delete field.autoAttack;delete field.pendingRoom;
         for(const actor of [field,...(field.mobs||[])]){Object.assign(actor,nearestOpenPoint(actor,field.walls));actor.path=[];}
     }
     if (game.hunt.field) game.hunt.mob = game.hunt.field.mobs.find(m => m.instanceId === game.hunt.field.target) || null;
@@ -231,7 +232,7 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
     if (!mob) return [];
     tickL2Effects(mob,now);
     const written = [];
-    const note = (icon, text) => { pushLog(hunt, icon, text, now); written.push({icon, text}); };
+    const note = (icon, text,extra={}) => { pushLog(hunt, icon, text, now,extra); written.push({icon, text,...extra}); };
 
     if (now - Math.max(number(hunt.lastActionAt), number(mob.spawnedAt)) > IDLE_MS) {
         hunt.mob = null;
@@ -240,7 +241,7 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
     }
     if (isDead(session, now)) return written;
     const dotDamage=tickSoulDots(mob,now);
-    if(dotDamage)note('🩸',`Эффект SA: −${dotDamage} HP у ${mob.name}.`);
+    if(dotDamage)note('🩸',`Эффект SA: −${dotDamage} HP у ${mob.name}.`,{combat:{kind:'outgoing',actor:playerName(session),target:mob.name,amount:dotDamage}});
     if(mob.currentHp<=0){finishKill(session,hunt,mob,{random,now});note('🏆',`${mob.name} повержен боевым эффектом.`);return written;}
 
     let swings = 0;
@@ -253,12 +254,12 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
         if (bossDebuffAmount(mob, 'mute', at) <= 0 && mobAiTurn(session, mob, at, note)) continue;
         if(hunt.field&&!clearLine(mob,hunt.field,hunt.field.walls))continue;
         if (!canMobReach(hunt, mob,session,at)) continue;
-        if (random() < Math.min(.75,evadeChance(session, at)+bossDebuffAmount(mob,'accuracyDown',at))) { note('💨', `Ты уклонился от удара ${mob.name}.`); continue; }
+        if (random() < Math.min(.75,evadeChance(session, at)+bossDebuffAmount(mob,'accuracyDown',at))) { note('💨', `Ты уклонился от удара ${mob.name}.`,{combat:{kind:'evade',actor:playerName(session),evader:playerName(session),target:mob.name}}); continue; }
         const raw = mobHit(session, mob, at, random);
         const dmg = Math.max(1, Math.round(raw * (1 - guardReduction(session, at))));
         const hit = applyHit(session, dmg, at);
         if(!mob.hunt?.magic&&hit.lost>0){mob.currentHp=Math.max(0,mob.currentHp-Math.ceil(hit.lost*Math.min(100,l2RawStat(session,'reflectDam',false,at))/100));}
-        note('⚔️', `${mob.name} бьёт: −${hit.lost + hit.absorbed}${hit.absorbed ? ` (щит ${hit.absorbed})` : ''}`);
+        note('⚔️', `${mob.name} бьёт: −${hit.lost + hit.absorbed}${hit.absorbed ? ` (щит ${hit.absorbed})` : ''}`,{combat:{kind:'incoming',actor:mob.name,target:playerName(session),amount:hit.lost+hit.absorbed}});
         if (hit.killed) {
             hunt.mob = null;
             note('💀', `${mob.name} победил тебя. Ты воскреснешь через минуту.`);
@@ -272,7 +273,7 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
 }
 
 
-/** Builds every monster of a room at its slots: roles cycle fighter / healer / mage, a third of them start aggressive. */
+/** Builds room actors with original NPC aggression and social clans. */
 function populateRoom(session, zone, room, {now, random, count = room.cap, prefix = `${now}:${room.id}`}) {
     const stage=zone.instance?.stages?.[(session.game.hunt?.field?.floor||1)-1];
     const definitions=zone.mobs.filter(m=>(stage||room.mobIds||zone.mobs.map(m=>m.id)).includes(m.id));
@@ -280,8 +281,7 @@ function populateRoom(session, zone, room, {now, random, count = room.cap, prefi
     const offset = Math.min(pool.length - 1, Math.floor(random() * pool.length));
     return slotPositions(count).map((slot, index) => {
         const mob = buildMob(zone, pool[(offset + index) % pool.length], {now, random, className: session.game.gameClass.stats.name});
-        const legacy = count === 3;
-        return {...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length], aggressive: legacy ? index !== 1 : index % 3 === 0,
+        return {...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length],
             aggro: false, ...nearestOpenPoint(slot,room.walls), buffs: []};
     });
 }
@@ -305,7 +305,6 @@ function settleRespawns(session, hunt, now, random) {
         fresh.x = .12 + random() * .76;
         fresh.y = .12 + random() * .43;
         Object.assign(fresh,nearestOpenPoint(fresh,room.walls));
-        fresh.aggressive = random() < .35;
         fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];
         bucket.push(fresh);
     }
@@ -381,7 +380,7 @@ export function enterHuntField(session, zoneId, {now = Date.now(), random = Math
         mobs[0]={...buildMob(zone,definition,{now,random,className:session.game.gameClass.stats.name}),instanceId:slot.instanceId,ai:slot.ai,aggressive:slot.aggressive,aggro:false,x:slot.x,y:slot.y,buffs:[]};
     }
     hunt.zone = zone.id;
-    hunt.field = {mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[],layoutVersion:2, room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
+    hunt.field = {mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[],layoutVersion:4, room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
     hunt.mob = mobs[0] || null;
     hunt.playerDebuffs = [];
     hunt.lastActionAt = now;
@@ -535,7 +534,8 @@ function performHuntCast(session,skill,mob,geometry,{now,random}) {
     const affected=targetResults.filter(hit=>hit.type==='damage');
     if(hunt.field)hunt.field.lastStrike={at:now,name:skill.name,kind:result?.type||'damage',magic:skillCombatType(skill,session.game.gameClass)==='magic',facing:mob?Math.atan2(mob.y-hunt.field.y,mob.x-hunt.field.x):hunt.field.facing||0,spatial:geometry,x:hunt.field.x,y:hunt.field.y,
         targets:affected.map(hit=>{const target=targets.find(m=>m?.instanceId===hit.targetId);return {id:hit.targetId,x:target.x,y:target.y,damage:hit.dealt,critical:Boolean(hit.isHasCritical),missed:Boolean(hit.missed)};})};
-    if(affected.length)pushLog(hunt,'⚔️',`${skill.name}: ${affected.map(hit=>`${targets.find(m=>m?.instanceId===hit.targetId)?.name||''} −${hit.dealt}`).join(', ')}.`,now);
+    for(const hit of affected)pushLog(hunt,'⚔️',`${skill.name}: ${targets.find(m=>m?.instanceId===hit.targetId)?.name||''} −${hit.dealt}.`,now,{combat:{kind:hit.evaded?'evade':hit.missed?'miss':'outgoing',actor:playerName(session),target:targets.find(m=>m?.instanceId===hit.targetId)?.name||'',amount:Number(hit.dealt)||0}});
+    for(const hit of targetResults.filter(hit=>hit.type==='heal'))pushLog(hunt,'✚',`${playerName(session)} восстанавливает ${Number(hit.heal)||0} HP.`,now,{combat:{kind:'heal',actor:playerName(session),target:playerName(session),amount:Number(hit.heal)||0}});
     return {ok: true, result, killed, rewards, shots: shots || null, questGains};
 }
 

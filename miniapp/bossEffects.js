@@ -30,6 +30,7 @@ export function playerEffectsDto(effects, respawnRemainMs = 0, now = Date.now())
       ...(effect?.potionId ? {iconKey: effect.potionId} : {}),
       label: known.label,
       value: number(effect?.value ?? effect?.amount, 0) || null,
+      kind: effect?.isDebuff || effect?.kind === 'debuff' ? 'debuff' : 'buff',
       // Charge-based effects count attacks, timed ones count seconds left.
       count: Number.isFinite(Number(effect?.count)) ? number(effect.count) : effect?.until ? Math.ceil((number(effect.until) - now) / 1000) : null,
     };

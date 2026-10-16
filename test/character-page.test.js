@@ -25,7 +25,7 @@ function session() {
 }
 test('character snapshot exposes six base stats, six defenses and real clan bonuses',()=>{
   const dto=getCharacterState(session(),{user:{first_name:'Полное длинное имя'}});
-  assert.equal(dto.name,'Полное длинное имя');
+  assert.equal(dto.name,'Полное длинное и');
   assert.equal(dto.player.sp,2147483647);
   assert.deepEqual(dto.characteristics.map(stat=>stat.id),['STR','DEX','CON','INT','WIT','MEN']);
   assert.equal(dto.attributes.resist.length,6);

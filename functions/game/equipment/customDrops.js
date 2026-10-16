@@ -50,9 +50,10 @@ export function pickCustomPart(mobLevel, className, random = Math.random) {
  * What a custom drop of a monster of this level can be, for the drop table: one row per armor type (heavy, light,
  * robe) named after the set of the grade, with the share of the custom roll that type takes.
  */
-export function customPartRows(mobLevel) {
+export function customPartRows(mobLevel, className=null) {
     const grade = gradeOfLevel(mobLevel).name;
     const pool = getCatalog().filter(item => item.custom && item.grade === grade);
+    const usable=className?pool.filter(item=>canClassUse(className,item)):[];
     const byType = new Map();
     for (const item of pool) {
         const entry = byType.get(item.kind) || byType.set(item.kind, {count: 0, item}).get(item.kind);
@@ -65,7 +66,7 @@ export function customPartRows(mobLevel) {
         kind: 'full',
         min: 1,
         max: 1,
-        share: count / pool.length,
+        share: usable.length?CLASS_FIT_CHANCE*usable.filter(i=>i.kind===type).length/usable.length+(1-CLASS_FIT_CHANCE)*count/pool.length:count/pool.length,
         grade,
         armorType: type
     }));

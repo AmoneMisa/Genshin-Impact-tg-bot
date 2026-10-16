@@ -31,10 +31,26 @@ test('a displayed pillar blocks clicks and line of sight; paths go around its fo
  let at=from;for(const point of path){assert.equal(clearLine(at,point,f.walls),true);at=point;}
 });
 
+test('asymmetric rooms retain walkable approaches to all four doorways',()=>{
+ const doors=[{x:.5,y:.05},{x:.95,y:.5},{x:.5,y:.95},{x:.05,y:.5}];
+ for(const id of ['catacomb-forbidden-path','necropolis-disciples','blazing-swamp']){
+  const rooms=roomLayout(getZone(id)).rooms;
+  for(const room of rooms){
+   const props=room.walls.filter(w=>['pillar','rock','tree'].includes(w.kind));
+   assert.ok(props.some(a=>!props.some(b=>Math.abs(a.x+a.w/2+b.x+b.w/2-1)<.025&&Math.abs(a.y+a.h/2+b.y+b.h/2-1)<.025)));
+   for(const door of doors){
+    assert.equal(insideObstacle(door,room.walls),false);
+    assert.ok(findPath({x:.5,y:.5},door,room.walls)?.length,`${id}/${room.id}: doorway remains reachable`);
+   }
+  }
+  if(rooms.length>1)assert.notDeepEqual(rooms[0].walls,rooms[1].walls);
+ }
+});
+
 test('old saved rooms migrate once, clear stale actions and move trapped actors outside columns',()=>{
  const s=fixture(),f=s.game.hunt.field,p=f.walls.find(w=>w.kind==='pillar');
- Object.assign(f,{x:p.x+.01,y:p.y+.01,path:[{x:.8,y:.8}],pendingRoom:'r0c1',autoAttack:{},action:{},walls:[],layoutVersion:1});
- ensureHunt(s);assert.equal(f.layoutVersion,2);assert.equal(insideObstacle(f,f.walls),false);assert.equal(f.pendingRoom,undefined);assert.equal(f.action,undefined);assert.deepEqual(f.path,[]);
+ Object.assign(f,{x:p.x+.01,y:p.y+.01,path:[{x:.8,y:.8}],pendingRoom:'r0c1',autoAttack:{},action:{},walls:[],layoutVersion:3});
+ ensureHunt(s);assert.equal(f.layoutVersion,4);assert.equal(insideObstacle(f,f.walls),false);assert.equal(f.pendingRoom,undefined);assert.equal(f.action,undefined);assert.deepEqual(f.path,[]);
  const walls=f.walls;ensureHunt(s);assert.equal(f.walls,walls);
 });
 
@@ -50,6 +66,7 @@ test('queued area kills publish one complete loot event and distinct same-time l
  assert.equal(f.lastStrike.spatial.radius,200);assert.equal(f.lastStrike.targets.length,2);
  const dto=await getHuntState(s,NOW+722);const event=dto.log.find(l=>l.loot);
  assert.ok(event.id);assert.deepEqual(event.loot.items,h.lastLoot.items);assert.deepEqual(dto.lastLoot,h.lastLoot);
+ const damage=dto.log.filter(row=>row.combat?.kind==='outgoing');assert.equal(damage.length,2);assert.ok(damage.every(row=>row.combat.amount>0&&row.combat.actor));
 });
 
 test('PvP cannot cast through a column, with no MP cost or PvP flag on rejection',()=>{

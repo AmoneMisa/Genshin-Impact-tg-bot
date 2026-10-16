@@ -11,7 +11,7 @@ import fight from '../functions/game/arena/playerDamagePlayer.js';
 import {getBossAttacks} from '../template/bossAttacksTemplate.js';
 import scaleClassStats from '../functions/game/player/scaleClassStats.js';
 import {fieldPvpSkillBlock} from '../functions/game/hunt/fieldPvpState.js';
-import {armShots,clearShots} from '../functions/game/shots/shots.js';
+import {armShots,clearShots,setAutoShots} from '../functions/game/shots/shots.js';
 import {shotKey} from '../template/shotsData.js';
 
 function player(name='mage') {
@@ -69,9 +69,13 @@ test('silence and shots follow the skill channel even for a mixed caster',()=>{
     assert.equal(fieldPvpSkillBlock(s,physical,now),null);
     assert.equal(fieldPvpSkillBlock(s,magic,now),'pvp_silenced');
     s.game.autoShots=true;s.game.equipmentStats={weapon:{mainType:'weapon',isFilled:true,type:'test_staff',grade:'D'}};
-    s.game.inventory.materials={[shotKey('soulshot','D')]:100,[shotKey('spiritshot','D')]:100};
+    s.game.inventory.materials={[shotKey('soulshot','D')]:100,[shotKey('blessed','D')]:100};
+    setAutoShots(s,true,'soulshot');
     assert.equal(armShots(s,physical)?.kind,'soulshot');clearShots(s);
-    assert.equal(armShots(s,magic)?.kind,'spiritshot');clearShots(s);
+    assert.equal(armShots(s,magic),null,'physical shot mode cannot also arm magical shots');
+    setAutoShots(s,true,'blessed');
+    assert.equal(armShots(s,physical),null,'magical shot mode cannot also arm soulshots');
+    assert.equal(armShots(s,magic)?.kind,'blessed');clearShots(s);
 });
 
 test('skill metadata overrides the class family and native skills supply their damage type',()=>{

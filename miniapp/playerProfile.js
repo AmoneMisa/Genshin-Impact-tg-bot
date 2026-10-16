@@ -1,4 +1,5 @@
 import classes from '../template/classStatsTemplate.js';
+import {playerName,PLAYER_NAME_MAX} from '../functions/game/player/playerName.js';
 import {reconcileCostumeSlot} from '../functions/game/equipment/costumeItems.js';
 import { RACE_TITLES, L2_CLASS_META, classIdOf, raceOf } from '../template/l2ClassMeta.js';
 import {getPlayerCombatStats, getPlayerResourceStats} from './playerCombatStats.js';
@@ -90,6 +91,7 @@ export function getPlayerProfileState(session, now = Date.now()) {
 
   return {
     level,
+    nickname:game.nickname||null,name:playerName(session),nicknameMax:PLAYER_NAME_MAX,
     gender: GENDERS.has(session?.gender) ? session.gender : 'male',
     currentClass: {
       name: currentName,

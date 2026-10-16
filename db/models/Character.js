@@ -14,5 +14,6 @@ const characterSchema = new mongoose.Schema({
 }, { timestamps: true, minimize: false });
 
 characterSchema.index({ "data.game.party.id": 1 });
+characterSchema.index({"data.game.nicknameKey":1},{unique:true,partialFilterExpression:{"data.game.nicknameKey":{$type:'string'}}});
 
 export default mongoose.model("Character", characterSchema);

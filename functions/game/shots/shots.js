@@ -22,7 +22,8 @@ export function weaponGrade(session) {
 const className = session => session?.game?.gameClass?.stats?.name || 'noClass';
 
 /** Shot kinds this character may burn, best first. */
-export const shotKindsFor = session => (isMagicClass(className(session)) ? ['blessed', 'spiritshot'] : ['soulshot']);
+export const shotKindsFor = () => ['soulshot','blessed'];
+const selectedKind = session => ['soulshot','blessed'].includes(session.game.autoShotKind)?session.game.autoShotKind:isMagicClass(className(session))?'blessed':'soulshot';
 
 /** For the screen: the grade, per-cast cost, and how many charges of each fitting kind are owned. */
 export function getShotsState(session) {
@@ -30,7 +31,8 @@ export function getShotsState(session) {
     const perCast = grade ? SHOTS_PER_CAST[chargeGrade(grade)] || 1 : 0;
     return {
         enabled: Boolean(session?.game?.autoShots),
-        grade,
+        selected: selectedKind(session),
+        grade: grade?chargeGrade(grade):null,
         perCast,
         kinds: grade ? shotKindsFor(session).map(id => ({
             id, label: kindInfo(id).label, icon: kindInfo(id).icon, boost: kindInfo(id).boost,
@@ -39,7 +41,9 @@ export function getShotsState(session) {
     };
 }
 
-export function setAutoShots(session, enabled) {
+export function setAutoShots(session, enabled, kind=null) {
+    if(kind!==null&&!['soulshot','blessed'].includes(kind))return false;
+    if(kind!==null)session.game.autoShotKind=kind;
     session.game.autoShots = Boolean(enabled);
     return session.game.autoShots;
 }
@@ -54,7 +58,9 @@ export function armShots(session, skill) {
     const grade = weaponGrade(session);
     if (!grade) return null;
     const need = soulShotCost(session,SHOTS_PER_CAST[chargeGrade(grade)] || 1);
-    const kinds = skillCombatType(skill, session.game.gameClass) === 'magic' ? ['blessed', 'spiritshot'] : ['soulshot'];
+    const kind=selectedKind(session),magic=skillCombatType(skill, session.game.gameClass)==='magic';
+    if((kind==='blessed')!==magic)return null;
+    const kinds = [kind];
     for (const id of kinds) {
         const key = shotKey(id, grade);
         if (getMaterialCount(session, key) < need) continue;
