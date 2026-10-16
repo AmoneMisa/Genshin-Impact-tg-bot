@@ -1,6 +1,6 @@
 import {EPIC_JEWELRY} from './l2EpicJewelry.js';
 // Lineage 2 (High Five) equipment. Grades are the Lineage 2 ones (no-grade, D, C, B, A, S, S80, S84): a grade
-// is the level band an item is meant for (wearing it below the band is penalised, see isHasPenalty.js).
+// is the level band an item is meant for (wearing it below the band is penalised, see hasTooHighLevelEquipment).
 // Items are fixed named catalog entries (functions/game/equipment/catalog.js) built from `lineage`: real
 // P.Atk / M.Atk, P.Def and M.Def of High Five items converted to game stats. There are no random rolls.
 //   cost        base sell price in gold

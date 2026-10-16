@@ -17,6 +17,7 @@ import {enhanceSelects} from './design/select.js';
 import {openSealExchange} from './seal-exchange.js';
 import {costumeIconHtml,costumePreviewHtml} from './costume-preview.js';
 import {installAvatarCostumeMotion} from './avatar-costume-view.js';
+import { formatNumber } from './format.js';
 
 // Keep the category window underneath the goods: closing a child returns here.
 export async function openShopGame(options) {
@@ -124,9 +125,7 @@ const REASONS = {
   delivery_failed: 'Не удалось выдать товар. Монеты не списаны.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 
 function remain(until) {

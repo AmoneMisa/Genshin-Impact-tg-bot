@@ -1,6 +1,7 @@
 import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
 import { ensureFeatureStyles } from './feature-styles.js';
+import { formatNumber } from './format.js';
 
 const REASONS = {
   unknown_quest: 'Такой профессии нет.',
@@ -28,9 +29,7 @@ const STATUS_LABEL = {
 
 const TIER_LABEL = { 2: '1-я профессия', 3: '2-я профессия', 4: '3-я профессия' };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 function rewardText(reward = {}) {
   const parts = [];

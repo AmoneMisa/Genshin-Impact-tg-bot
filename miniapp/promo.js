@@ -272,7 +272,7 @@ export async function redeemPromo(session, userId, rawCode, now = Date.now()) {
       redeemedBy: { $ne: Number(userId) },
     },
     { $addToSet: { redeemedBy: Number(userId) } },
-    { new: true },
+    { returnDocument: 'after' },
   ).lean();
 
   if (!taken) {
@@ -326,7 +326,7 @@ export async function listNotices() {
 export async function saveNotice(id, notice, createdBy) {
   if (id) {
     if (!/^[a-f0-9]{24}$/i.test(String(id))) return { ok: false, reason: 'not_found' };
-    const updated = await HelloNotice.findByIdAndUpdate(id, { $set: notice }, { new: true }).lean();
+    const updated = await HelloNotice.findByIdAndUpdate(id, { $set: notice }, { returnDocument: 'after' }).lean();
     return updated ? { ok: true } : { ok: false, reason: 'not_found' };
   }
   if (await HelloNotice.countDocuments({}) >= MAX_NOTICES) return { ok: false, reason: 'too_many' };

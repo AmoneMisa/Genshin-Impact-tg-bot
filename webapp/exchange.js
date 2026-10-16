@@ -2,6 +2,7 @@ import { icon } from './icons.js';
 import { escapeHtml } from './escape-html.js';
 import { createGamePopup } from './game-popup.js';
 import { luckCoinHtml } from './currency-icons.js';
+import { formatNumber } from './format.js';
 
 const REASONS = {
   inventory_missing: 'Инвентарь персонажа недоступен.',
@@ -10,9 +11,7 @@ const REASONS = {
   unknown_pack: 'Такого набора больше нет.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 /** Whole units within [1, max]; empty when nothing is affordable. */
 export function clampAmount(value, max) {

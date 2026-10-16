@@ -18,7 +18,7 @@ export function storeForSession(session) { return {
     },
     async update(userId, expectedRev, data, hash) {
         if (!Number.isInteger(expectedRev) || expectedRev < 1) throw new Error('Character revision is required');
-        return Character.findOneAndUpdate({userId, rev: expectedRev}, {$set: {data, hash}, $inc: {rev: 1}}, {new: true, session}).lean();
+        return Character.findOneAndUpdate({userId, rev: expectedRev}, {$set: {data, hash}, $inc: {rev: 1}}, {returnDocument: 'after', session}).lean();
     },
 }; }
 export const characterStore = storeForSession();

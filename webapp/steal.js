@@ -1,5 +1,6 @@
 import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
+import { formatNumber } from './format.js';
 
 const REASONS = {
   attacker_not_found: 'Не удалось найти твоего персонажа в этом чате.',
@@ -11,9 +12,7 @@ const REASONS = {
   target_in_table_game: 'Игрок сейчас в игре со ставкой — ограбить его нельзя, пока партия не закончится.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 function formatDuration(ms) {
   const totalMinutes = Math.max(0, Math.ceil((Number(ms) || 0) / 60000));

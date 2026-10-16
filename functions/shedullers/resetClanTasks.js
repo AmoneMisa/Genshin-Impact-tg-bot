@@ -5,18 +5,13 @@ import Clan from "../../db/models/Clan.js";
  *
  * For every clan, wipes yesterday's per-member progress/claims and stamps the
  * reset time. Run once a day from evenDay.js, mirroring resetClanQuizzes.js.
- * The clan.tasks sub-path is Mixed, so the Clan pre-save hook persists it.
+ * Written with a single updateMany, so the Clan pre-save hook is not involved.
  */
 export default async function () {
-    const clans = await Clan.find({});
-
-    for (const clan of clans) {
-        clan.tasks = {
-            lastResetAt: Date.now(),
-            progress: {},
-            claimed: {}
-        };
-
-        await clan.save();
-    }
+    // One update instead of loading and saving every clan; the per-clan values are identical.
+    await Clan.updateMany({}, {
+        $set: {
+            tasks: { lastResetAt: Date.now(), progress: {}, claimed: {} }
+        }
+    });
 }

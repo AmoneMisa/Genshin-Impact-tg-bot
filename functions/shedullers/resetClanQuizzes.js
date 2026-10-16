@@ -6,16 +6,17 @@ import clanQuiz from "../../dictionaries/clanQuiz.js";
  *
  * For every clan it picks a fresh question from the pool, wipes yesterday's
  * participants and stamps the reset time. Run once a day from evenDay.js.
- * The clan.quiz sub-path is Mixed, so the Clan pre-save hook persists it.
+ * Written with one bulkWrite, so the Clan pre-save hook is not involved.
  */
 export default async function () {
     if (!clanQuiz.length) {
         return;
     }
 
-    const clans = await Clan.find({});
+    const clans = await Clan.find({}, { _id: 1, 'quiz.questionIndex': 1 }).lean();
+    const now = Date.now();
 
-    for (const clan of clans) {
+    const operations = clans.map(clan => {
         const previousIndex = clan.quiz?.questionIndex ?? -1;
 
         // Pick a different question than yesterday when more than one exists.
@@ -24,12 +25,13 @@ export default async function () {
             nextIndex = (nextIndex + 1) % clanQuiz.length;
         }
 
-        clan.quiz = {
-            lastResetAt: Date.now(),
-            questionIndex: nextIndex,
-            participants: {}
+        return {
+            updateOne: {
+                filter: { _id: clan._id },
+                update: { $set: { quiz: { lastResetAt: now, questionIndex: nextIndex, participants: {} } } }
+            }
         };
+    });
 
-        await clan.save();
-    }
+    if (operations.length) await Clan.bulkWrite(operations, { ordered: false });
 }

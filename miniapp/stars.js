@@ -200,7 +200,7 @@ export async function mongoStarStore() {
       return Boolean(await StarPurchase.exists({ chatId: purchase.chatId, userId: purchase.userId, _id: { $ne: purchase._id }, status: { $in: ['paid', 'refunded'] } }));
     },
     async markPaid(id, { chargeId, providerChargeId, now }) {
-      return plain(await StarPurchase.findOneAndUpdate({ _id: id, status: 'pending' }, { $set: { status: 'paid', chargeId, providerChargeId, paidAt: new Date(now) } }, { new: true }).lean());
+      return plain(await StarPurchase.findOneAndUpdate({ _id: id, status: 'pending' }, { $set: { status: 'paid', chargeId, providerChargeId, paidAt: new Date(now) } }, { returnDocument: 'after' }).lean());
     },
     async setBonus(id, bonus, currency = 'crystals') {
       await StarPurchase.updateOne({ _id: id }, { $set: currency === LUCK_COINS ? { bonusCoins: bonus } : { bonusCrystals: bonus } });

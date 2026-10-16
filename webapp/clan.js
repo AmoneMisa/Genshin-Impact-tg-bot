@@ -6,6 +6,8 @@ import {l2SkillIcon} from './art/l2-extra-art.js';
 import {materialIcon} from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
 import { worldArtUrl } from './art/world-art.js';
+import { formatNumber } from './format.js';
+
 const REASONS = {
   unknown_hall_skill: 'Этот навык пока недоступен.',
   invalid_hall_setting: 'Неизвестная настройка зала.',
@@ -102,9 +104,7 @@ const REASONS = {
 };
 
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 function formatDuration(ms) {
   const totalSeconds = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));

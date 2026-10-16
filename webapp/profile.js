@@ -5,6 +5,7 @@ import {confirmDialog} from './confirm-dialog.js';
 import {classEmblemHtml} from './class-emblem.js';
 import {installOverlayA11y} from './overlay-a11y.js';
 import {enhanceSelects} from './design/select.js';
+import { formatNumber } from './format.js';
 
 const REASONS = {
   unknown_class: 'Такого класса нет.',
@@ -38,9 +39,7 @@ const REASONS = {
   same_profession_slot:'Эта профессия уже активна.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 function stat(label, value) {
   return `<div class="ui-stat-row"><span>${escapeHtml(label)}</span><strong>${formatNumber(value)}</strong></div>`;

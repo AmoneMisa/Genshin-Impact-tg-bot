@@ -6,11 +6,7 @@ export { escapeHtml };
 // markup and actions; this module only renders and binds the common parts.
 
 import { menuArtFor } from './menu-art.js';
-
-
-export function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+import { formatNumber } from './format.js';
 
 export function formatSeconds(ms) {
   const seconds = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));
@@ -126,3 +122,5 @@ export function resetBanner(state, armed = false) {
       <button type="button" class="table-btn ${armed ? 'red' : 'ghost'}" data-table-action="reset">${armed ? 'Точно сбросить' : 'Сбросить стол'}</button>
     </section>`;
 }
+
+export { formatNumber };

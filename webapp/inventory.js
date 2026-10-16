@@ -13,6 +13,8 @@ import { escapeHtml } from './escape-html.js';
 import {openLoginRewards} from './login-rewards.js';
 import {SPECIAL_ITEM_ART} from './art/special-item-art.js';
 import {L2_MATERIAL_ART,l2IconUrl} from './art/l2-icon-art.js';
+import { formatNumber } from './format.js';
+
 const REASONS = {
   costume_gender:'Этот костюм предназначен для другого пола персонажа.',
   costume_expired:'Срок действия костюма закончился.',
@@ -34,9 +36,7 @@ const REASONS = {
   not_enchantable: 'Этот предмет нельзя кристаллизовать.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 
 function percent(value, max) {

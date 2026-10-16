@@ -5,6 +5,7 @@ import { escapeHtml } from './escape-html.js';
 
 import { menuArtFor } from './menu-art.js';
 import { worldArtUrl } from './art/world-art.js';
+import { formatNumber } from './format.js';
 
 const MODE_LABELS = {
   common: { tab: 'Обычная', subtitle: 'Соперники из текущего игрового чата' },
@@ -17,9 +18,7 @@ const REASONS = {
   self_attack: 'Нельзя атаковать самого себя.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 
 /** Metal tier and division pips of a rank name ("Серебро III" -> silver, 3). */

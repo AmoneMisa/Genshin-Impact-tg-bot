@@ -9,11 +9,13 @@ import ciFixes from './uz-ci-fixes.js';
 import worldFixes from './uz-world-fixes.js';
 import gameUi from './uz-game-ui.js';
 import itemAdmin from './uz-item-admin.js';
+import exploration from './uz-exploration.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
   ...itemAdmin,
   ...gameUi,
+  ...exploration,
   '· от': '· kamida',
   '{0} опыта + бонус энергии': '{0} tajriba + energiya bonusi',
   'Боевые расходники': 'Jang sarf buyumlari',

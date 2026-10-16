@@ -83,7 +83,7 @@ test('three.js is pinned and served locally through an import map', () => {
   const importMap = index.indexOf('type="importmap"');
   assert.ok(importMap > 0 && importMap < index.indexOf('type="module"'), 'import map must precede module scripts');
   assert.ok(index.includes('"three":"/vendor/three/build/three.module.min.js"'));
-  const server = fs.readFileSync(path.join(root, 'miniapp/server.js'), 'utf8');
+  const server = ['miniapp/server.js', 'miniapp/http/static.js'].map(file => fs.readFileSync(path.join(root, file), 'utf8')).join('\n');
   assert.ok(server.includes("THREE_PUBLIC_PREFIXES = ['build/', 'examples/jsm/']"));
   assert.ok(server.includes("'.glb': 'model/gltf-binary'"));
   assert.ok(server.includes("requestUrl.pathname.startsWith('/models/')"), 'missing models must 404, not fall back to index.html');

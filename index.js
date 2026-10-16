@@ -15,7 +15,6 @@ import { registerStarPayments } from './functions/payments/starsHandlers.js';
 
 import evenSecond from './functions/shedullers/evenSecond.js';
 import evenTwoMinutes from './functions/shedullers/evenTwoMinutes.js';
-import evenFiveMinutes from './functions/shedullers/evenFiveMinutes.js';
 import evenHour from './functions/shedullers/evenHour.js';
 import evenDay from './functions/shedullers/evenDay.js';
 import evenWeek from './functions/shedullers/evenWeek.js';
@@ -82,7 +81,6 @@ bot.on("callback_query", async (callback) => {
 
 evenSecond();
 evenTwoMinutes();
-evenFiveMinutes();
 evenHour();
 evenDay();
 evenWeek();

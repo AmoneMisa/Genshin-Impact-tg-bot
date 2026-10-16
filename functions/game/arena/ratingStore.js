@@ -90,7 +90,7 @@ export async function adjustArenaRating(userId, mode, chatId, delta) {
     const updated = await ArenaRating.findByIdAndUpdate(
         doc._id,
         { $inc: { rating: Number(delta) || 0 } },
-        { new: true }
+        { returnDocument: 'after' }
     );
     return Number(updated?.rating) || START_RATING;
 }

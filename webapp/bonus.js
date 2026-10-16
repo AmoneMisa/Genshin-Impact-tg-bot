@@ -5,12 +5,12 @@ import {installAvatarCostumeMotion} from './avatar-costume-view.js';
 import {escapeHtml} from './escape-html.js';
 import {itemGridHtml} from './item-grid.js';
 import {avatarCostumeIconUrl} from './art/avatar-costume-icons.js';
+import { formatNumber } from './format.js';
+
 // Daily bonus as a prize wheel: segments in proportion to each prize's chance,
 // interleaved; the wheel spins to a segment of the prize the server picked.
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 const SEGMENT_COLORS = { gold: ['#6a4f1f', '#4a3614'], moonDew: ['#243a6a', '#182848'], ironOre: ['#3a3440', '#26222c'] };
 

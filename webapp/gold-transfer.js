@@ -1,5 +1,6 @@
 import { escapeHtml } from './escape-html.js';
 import { menuArtFor } from './menu-art.js';
+import { formatNumber } from './format.js';
 
 const REASONS = {
   invalid_amount: 'Введи целое положительное количество золота.',
@@ -10,9 +11,7 @@ const REASONS = {
   chat_not_found: 'Игровой чат не найден.',
 };
 
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU').format(Number(value) || 0);
-}
+
 
 
 function initials(name) {

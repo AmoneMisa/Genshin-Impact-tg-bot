@@ -34,4 +34,7 @@ const bossSchema = new mongoose.Schema({
     eventLog: { type: Array, default: [] }
 }, { timestamps: true });
 
+// Boss lookups are always per chat (or per instance scope).
+bossSchema.index({ chatId: 1 });
+
 export default mongoose.model("Boss", bossSchema);

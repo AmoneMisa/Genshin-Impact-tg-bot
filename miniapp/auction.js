@@ -111,14 +111,14 @@ export async function mongoAuctionStore() {
     async listUnpaid(sellerId) { return (await AuctionLot.find({ sellerId, status: 'sold', paidOut: false }).lean()).map(plain); },
     async listAllUnpaid(limit = 200) { return (await AuctionLot.find({ status: 'sold', paidOut: false }).limit(limit).lean()).map(plain); },
     async claimPayout(id) {
-      return validId(id) ? plain(await AuctionLot.findOneAndUpdate({ _id: id, status: 'sold', paidOut: false }, { $set: { paidOut: true } }, { new: true }).lean()) : null;
+      return validId(id) ? plain(await AuctionLot.findOneAndUpdate({ _id: id, status: 'sold', paidOut: false }, { $set: { paidOut: true } }, { returnDocument: 'after' }).lean()) : null;
     },
     async unclaimPayout(id) { if (validId(id)) await AuctionLot.updateOne({ _id: id, status: 'sold' }, { $set: { paidOut: false } }); },
     async listExpired(sellerId, now) { return (await AuctionLot.find({ sellerId, status: 'active', expiresAt: { $lte: now } }).lean()).map(plain); },
     async listAllExpired(now, limit = 200) { return (await AuctionLot.find({ status: 'active', expiresAt: { $lte: now } }).limit(limit).lean()).map(plain); },
     /** Atomic status change; returns the lot when this call made the change, otherwise null. */
     async claim(id, from, to, extra = {}) {
-      return validId(id) ? plain(await AuctionLot.findOneAndUpdate({ _id: id, status: from }, { $set: { status: to, ...extra } }, { new: true }).lean()) : null;
+      return validId(id) ? plain(await AuctionLot.findOneAndUpdate({ _id: id, status: from }, { $set: { status: to, ...extra } }, { returnDocument: 'after' }).lean()) : null;
     },
     async restore(id, status) { await AuctionLot.updateOne({ _id: id }, { $set: { status }, $unset: { buyerId: '', soldAt: '', payout: '', paidOut: '', buyerChatId: '' } }); },
   };

@@ -81,6 +81,9 @@ for (const operation of ["find", "findOne", "findOneAndUpdate"]) {
     });
 }
 
+// Finds the chats a player belongs to (miniapp bootstrap, friends, trades) without scanning every chat.
+chatSchema.index({ "members.userId": 1 });
+
 const Chat = mongoose.model("Chat", chatSchema);
 const originalSave = Chat.prototype.save;
 // Chat and every shared hero it changes commit together. An existing transaction (trade,
