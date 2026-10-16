@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {loadRoomScene,paintedRoomScene,roomSceneUrl,ROOM_SCENES} from '../webapp/room-scene-art.js';
 
-test('Blazing Swamp uses its location study without changing the Valakas arena',()=>{
+test('Blazing Swamp and Valakas use independent location studies',()=>{
  assert.equal(roomSceneUrl('volcanic',{sceneKey:'blazing-swamp:r0c0'}),'/art/world/scenes/blazing-swamp-v2.webp');
  assert.equal(roomSceneUrl('volcanic',{sceneKey:'blazing-swamp:r2c1',compact:true}),'/art/world/scenes/blazing-swamp-mobile-v2.webp');
- assert.equal(roomSceneUrl('volcanic',{sceneKey:'valakas'}),'/art/world/scenes/volcanic-v1.webp');
+ assert.equal(roomSceneUrl('volcanic',{sceneKey:'valakas'}),'/art/world/scenes/epic-valakas-v1.webp');
  assert.equal(roomSceneUrl('volcanic',{sceneKey:'forge-of-gods:r0c0'}),'/art/world/scenes/volcanic-v1.webp');
 });
 

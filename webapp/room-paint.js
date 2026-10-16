@@ -1,5 +1,5 @@
 import {isoPoint,isoMatrix,isoSceneBounds} from './hunt-isometric.js';
-import {paintedRoomScene} from './room-scene-art.js';
+import {paintedRoomScene,roomArtField} from './room-scene-art.js';
 import {combatTheme,colorHex} from './combat-environment.js';
 import {paintLocationDetails} from './room-details.js';
 import {paintedProp,paintedStoneFloor,roomPropHeight} from './room-props-art.js';
@@ -19,6 +19,7 @@ function stoneGrain(){
  * Padding retains offscreen scenery when the HTML world is panned or zoomed.
  */
 export function paintRoom(field,viewport){
+ field=roomArtField(field);
  const theme=combatTheme(field.environment),m=isoMatrix(viewport);
  const padX=Math.ceil(Math.max(0,m.a-viewport.width/2)+80),padY=Math.ceil(Math.max(0,m.b+120-viewport.height/2)+64);
  const bounds={x:-padX,y:-padY,width:Math.ceil(viewport.width+padX*2),height:Math.ceil(viewport.height+padY*2)};

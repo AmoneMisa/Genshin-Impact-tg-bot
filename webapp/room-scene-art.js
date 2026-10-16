@@ -1,4 +1,5 @@
 // Original environment paintings, not client geodata or item art.
+import {sceneStudy,sceneStudyUrl} from './scene-catalog.js';
 export const ROOM_SCENES=['catacomb','necropolis','woodland','marsh','springs','volcanic','desert','cavern','ship','ice'];
 // Original-location studies override the broad theme without changing other zones.
 const locationScenes={
@@ -9,10 +10,18 @@ const locationScenes={
 };
 export function roomSceneUrl(environment,{compact=false,sceneKey=''}={}){
  if(!ROOM_SCENES.includes(environment))return null;
+ const study=sceneStudyUrl(String(sceneKey).split(':')[0],{compact});
+ if(study)return study;
  const scene=locationScenes[String(sceneKey).split(':')[0]]||{name:environment,version:1};
  return `/art/world/scenes/${scene.name}${compact?'-mobile':''}-v${scene.version}.webp`;
 }
 const cache=new Map();
+/** Presentation only: keep collision footprints and the authoritative field untouched. */
+export function roomArtField(field){
+ const study=sceneStudy(String(field.sceneKey||'').split(':')[0]);if(!study)return field;
+ const environment=study.environment,indoor=['catacomb','necropolis','ship','ice'].includes(environment);
+ return {...field,environment,walls:(field.walls||[]).map(w=>w.kind==='tree'&&environment!=='woodland'&&environment!=='marsh'?{...w,kind:indoor?'pillar':'rock'}:w)};
+}
 // Keep only two decoded backgrounds. Each room uploads a bounded static canvas once.
 export function loadRoomScene(environment,options={}){
  const url=roomSceneUrl(environment,options);if(!url)return Promise.resolve(null);

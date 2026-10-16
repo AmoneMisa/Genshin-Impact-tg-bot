@@ -20,6 +20,10 @@
 .atlas-popup>.game-dialog-heading{margin:0}
 .atlas-popup p{margin:0;line-height:1.5;overflow-wrap:anywhere}
 .atlas-popup>button{width:100%}
+.location-scene-preview{display:grid;gap:var(--space-2);margin:0;min-width:0}
+.location-scene-preview picture,.location-scene-preview img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+.location-scene-preview figcaption{font-size:12px;line-height:1.4}
+.location-scene-gallery{display:grid;gap:var(--space-3);min-width:0}
 .atlas-popup.atlas-movement-panel{top:0;bottom:0;width:min(520px,100%);max-height:100%;}
 .atlas-movement-content{display:flex;flex-direction:column;gap:var(--space-3);min-height:0;flex:1}
 .movement-tabs{--tab-height:44px}
@@ -28,3 +32,4 @@
 .quick-travel-list{overflow:auto;max-height:40dvh;flex-shrink:1;min-height:0}
 .atlas-travel-confirm{display:grid;gap:var(--space-3);margin-top:auto;padding-top:var(--space-3)}
 @media(max-width:520px){.atlas-panel{height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}.atlas-tabs{width:100%;}.atlas-map-filter>.ds-select{width:160px}.atlas-map-filter{gap:0}.atlas-popup{width:100%;}}
+.atlas-navigation [data-city-view][hidden]{display:none}

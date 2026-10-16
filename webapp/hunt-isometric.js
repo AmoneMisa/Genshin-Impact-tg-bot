@@ -1,5 +1,5 @@
 import {combatTheme,colorHex} from './combat-environment.js';
-import {roomSceneUrl} from './room-scene-art.js';
+import {roomSceneUrl,roomArtField} from './room-scene-art.js';
 import {roomPropSprite,roomPropHeight} from './room-props-art.js';
 // One projection for terrain, actors, effects and inverse pointer picking. Game coordinates stay unchanged.
 export function isoMatrix(viewport) {
@@ -51,6 +51,7 @@ export function isoLabelOffsets(actors,viewport){
 
 /** Static SVG terrain: no WebGL, simulation loop or per-tile event listeners. */
 export function isoTerrain(field,viewport) {
+  field=roomArtField(field);
   const theme=combatTheme(field.environment);
   const project=p=>isoPoint(p,viewport);
   const prism=(x,y,w,h,height,kind='wall')=>{

@@ -6,6 +6,9 @@ import changeClass from '../../functions/game/player/changePlayerGameClass.js';
 import updateStats from '../../functions/game/player/updatePlayerStats.js';
 import {enterHuntField,useHuntSkill,advanceHunt} from '../../functions/game/hunt/huntFight.js';
 import {getHuntState} from '../../miniapp/hunt.js';
+import {SCENE_STUDIES} from '../../webapp/scene-catalog.js';
+const expansion=process.env.COMBAT_EXPANSION==='1';
+const epicEnvironments=Object.fromEntries(SCENE_STUDIES.filter(s=>s.category==='epic').map(s=>[s.id,s.environment]));
 const require=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json');
 const {chromium}=require('playwright'),root=path.resolve('webapp');
 const styles=[...fs.readFileSync(path.join(root,'index.html'),'utf8').matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>`<link rel="stylesheet" href="${m[1]}">`).join('');
@@ -41,12 +44,12 @@ try{for(const width of [320,390,1100].filter(w=>!process.env.COMBAT_WIDTH||w===N
   return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
  });
  await page.goto('http://127.0.0.1:4321/fixture.html');
- for(const [zone,environment] of [['catacomb-forbidden-path','catacomb'],['necropolis-disciples','necropolis'],['hot-springs','springs'],['outlaw-forest','woodland'],['blazing-swamp','volcanic'],['swamp-of-screams','marsh'],['hellbound','desert'],['giants-cave','cavern'],['wall-of-argos','desert']].filter(([,env])=>!process.env.COMBAT_ENV||env===process.env.COMBAT_ENV)){
-  prepare(zone);await page.evaluate(()=>{document.querySelector('.system-toasts')?.remove();return openRoom();});await page.waitForSelector('.hunt-phaser-ready canvas');
+ for(const [zone,artEnvironment] of (expansion?SCENE_STUDIES.filter(s=>s.category==='hunting').map(s=>[s.id,s.environment]):[['catacomb-forbidden-path','catacomb'],['necropolis-disciples','necropolis'],['hot-springs','springs'],['outlaw-forest','woodland'],['blazing-swamp','volcanic'],['swamp-of-screams','marsh'],['hellbound','desert'],['giants-cave','cavern'],['wall-of-argos','desert']]).filter(([,env])=>!process.env.COMBAT_ENV||env===process.env.COMBAT_ENV)){
+  prepare(zone);const environment=(await getHuntState(s,now)).field.environment;await page.evaluate(()=>{document.querySelector('.system-toasts')?.remove();return openRoom();});await page.waitForSelector('.hunt-phaser-ready canvas');
   assert.ok(await page.evaluate(async environment=>{
    const {paintedProp,paintedStoneFloor}=await import('/room-props-art.js');
    return Boolean(paintedProp('rock',environment)&&(!['catacomb','necropolis','ice'].includes(environment)||paintedStoneFloor()));
-  },environment),'painted assets load rather than silently using the fallback');
+  },artEnvironment),'painted assets load rather than silently using the fallback');
   assert.equal((await getHuntState(s,now)).field.environment,environment);
   assert.ok(await page.evaluate(async ({environment,zone})=>{
    const {paintedRoomScene}=await import('/room-scene-art.js');const compact=document.querySelector('.hunt-ground').clientWidth<480,image=paintedRoomScene(environment,{compact,sceneKey:zone});
@@ -74,7 +77,7 @@ try{for(const width of [320,390,1100].filter(w=>!process.env.COMBAT_WIDTH||w===N
   assert.ok(paint.alpha>0&&paint.padded,'offscreen ground remains painted when panning');assert.ok(paint.pixels<1600000,'room texture stays bounded on wide screens');
   assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false);
   if(width===390){
-   await page.screenshot({path:`docs/combat-${zone==='wall-of-argos'?'wall-of-argos':environment}-390.png`});
+   await page.screenshot({path:`docs/combat-${expansion?'expansion-'+zone:zone==='wall-of-argos'?'wall-of-argos':environment}-390.png`});
    const overview=await page.evaluate(async field=>{
     const {paintRoom}=await import('/room-paint.js');const {loadRoomScene}=await import('/room-scene-art.js');
     await loadRoomScene(field.environment,{sceneKey:field.sceneKey});const r=paintRoom(field,{width:760,height:1000});
@@ -83,7 +86,7 @@ try{for(const width of [320,390,1100].filter(w=>!process.env.COMBAT_WIDTH||w===N
     for(const prop of r.props.sort((a,b)=>a.depth-b.depth))c.drawImage(prop.canvas,prop.x-r.bounds.x,prop.y-r.bounds.y);
     return output.toDataURL('image/png').split(',')[1];
    },{environment,walls:s.game.hunt.field.walls,sceneKey:zone});
-   fs.writeFileSync(`docs/location-${zone==='wall-of-argos'?'wall-of-argos':environment}-full.png`,Buffer.from(overview,'base64'));
+   fs.writeFileSync(`docs/location-${expansion?'expansion-'+zone:zone==='wall-of-argos'?'wall-of-argos':environment}-full.png`,Buffer.from(overview,'base64'));
   }
   if(zone==='catacomb-forbidden-path'){
    await page.evaluate(()=>fetch('/cast'));await page.waitForSelector('.hunt-skill-fx.physical .hunt-fx-impact');
@@ -103,13 +106,13 @@ try{for(const width of [320,390,1100].filter(w=>!process.env.COMBAT_WIDTH||w===N
   }
   await page.locator('[data-dismiss]').click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
  }
- for(const name of ['antharas','valakas','baium','zaken','freya'].filter(name=>!process.env.COMBAT_ENV||({antharas:'cavern',valakas:'volcanic',baium:'catacomb',zaken:'ship',freya:'ice'})[name]===process.env.COMBAT_ENV)){
+ for(const name of (expansion?Object.keys(epicEnvironments):['antharas','valakas','baium','zaken','freya']).filter(name=>!process.env.COMBAT_ENV||epicEnvironments[name]===process.env.COMBAT_ENV)){
   await page.evaluate(name=>showBoss(name),name);await page.waitForSelector('.boss-room-stage .hunt-phaser-ready canvas');
   await page.waitForFunction(()=>document.querySelectorAll('.boss-room-stage .hunt-avatar-painted').length===2);
-  assert.ok(await page.evaluate(async name=>{
+  assert.ok(await page.evaluate(async ({name,environment})=>{
    const {paintedRoomScene}=await import('/room-scene-art.js');
-   return Boolean(paintedRoomScene(({antharas:'cavern',valakas:'volcanic',baium:'catacomb',zaken:'ship',freya:'ice'})[name],{compact:document.querySelector('.hunt-ground').clientWidth<480}));
-  },name),'boss arenas use the corresponding full scene');
+   return Boolean(paintedRoomScene(environment,{sceneKey:name,compact:document.querySelector('.hunt-ground').clientWidth<480}));
+  },{name,environment:epicEnvironments[name]}),'boss arenas use the corresponding full scene');
   assert.equal(await page.locator('[data-room-boss-hp]').textContent(),'88%');
   await page.evaluate(()=>bossEffect());assert.equal(await page.locator('[data-room-effect] .hunt-fx-impact').count(),1);
   if(width===390&&name==='antharas'){
@@ -125,7 +128,7 @@ try{for(const width of [320,390,1100].filter(w=>!process.env.COMBAT_WIDTH||w===N
  }
  assert.equal(assetReads.get('/art/world/room-props-v1.webp'),1,'one shared prop atlas across hunting and boss rooms');
  if(!process.env.COMBAT_ENV||['catacomb','necropolis','ice'].includes(process.env.COMBAT_ENV))assert.equal(assetReads.get('/art/world/crypt-floor-v1.webp'),1,'stone texture is loaded once');
- if(width===390&&!process.env.COMBAT_ENV){
+ if(width===390&&!process.env.COMBAT_ENV&&!expansion){
   const gallery=await page.evaluate(async()=>{
    const rows=[['volcanic','Blazing Swamp'],['catacomb','Катакомбы'],['necropolis','Некрополь'],['woodland','Лес'],['marsh','Болото'],['springs','Горячие источники'],['desert','Пустыня'],['cavern','Пещера'],['ship','Корабль'],['ice','Ледяной дворец'],['argos','Стена Аргоса']];
    const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=2640;const c=canvas.getContext('2d');
