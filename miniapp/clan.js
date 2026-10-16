@@ -159,7 +159,9 @@ export async function getClanDashboard(userId, playerSession = null) {
 
   const available = await Clan.find({ 'entryConditions.entryType': { $ne: -1 } })
     .sort({ level: -1, createdAt: 1 })
-    .limit(20);
+    .limit(20)
+    .select('name level members.userId applications entryConditions')
+    .lean();
 
   return {
     clan: null,

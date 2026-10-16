@@ -253,6 +253,6 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   renderAll();
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
-  pollTimer = window.setInterval(refresh, 1500);
-  tickTimer = window.setInterval(() => tickTimers(content), 250);
+  pollTimer = window.setInterval(() => { if (!document.hidden) refresh(); }, 1500);
+  tickTimer = window.setInterval(() => { if (!document.hidden) tickTimers(content); }, 250);
 }

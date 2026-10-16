@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
-import { bundlePageAssets } from '../pageAssets.js';
-import { COMPRESSIBLE, acceptsGzip, etagMatches, sendGzip } from './compression.js';
+import { bundlePageAssets, optimizeScripts } from '../pageAssets.js';
+import { COMPRESSIBLE, pickEncoding, etagMatches, sendCompressed } from './compression.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const WEBAPP_DIR = path.resolve(__dirname, '../../webapp');
@@ -71,8 +71,9 @@ export async function serveFile(res, root, urlPath) {
     res.end();
     return true;
   }
-  if (COMPRESSIBLE.has(ext) && acceptsGzip(res.req)) {
-    sendGzip(res, headers, `${filePath}|${headers.etag}`, () => fs.promises.readFile(filePath));
+  const encoding = COMPRESSIBLE.has(ext) ? pickEncoding(res.req) : null;
+  if (encoding) {
+    sendCompressed(res, headers, encoding, `${filePath}|${headers.etag}`, () => fs.promises.readFile(filePath));
     return true;
   }
   res.writeHead(200, headers);
@@ -87,7 +88,11 @@ let pageCache = null;
 
 function buildPage() {
   const html = fs.readFileSync(path.join(WEBAPP_DIR, 'index.html'), 'utf8');
-  return bundlePageAssets(html, file => fs.readFileSync(path.join(WEBAPP_DIR, file), 'utf8'));
+  const readFile = file => fs.readFileSync(path.join(WEBAPP_DIR, file), 'utf8');
+  const page = bundlePageAssets(html, readFile);
+  page.html = optimizeScripts(page.html, readFile);
+  page.htmlHash = crypto.createHash('sha1').update(page.html).digest('hex');
+  return page;
 }
 
 function getPage() {
@@ -105,7 +110,8 @@ export function servePage(res, urlPath) {
         'cache-control': 'public, max-age=31536000, immutable',
         'x-content-type-options': 'nosniff',
       };
-      if (acceptsGzip(res.req)) sendGzip(res, headers, `css|${bundle.path}`, () => bundle.css);
+      const encoding = pickEncoding(res.req);
+      if (encoding) sendCompressed(res, headers, encoding, `css|${bundle.path}`, () => bundle.css);
       else {
         res.writeHead(200, headers);
         res.end(bundle.css);
@@ -119,7 +125,8 @@ export function servePage(res, urlPath) {
         'x-content-type-options': 'nosniff',
         'referrer-policy': 'no-referrer',
       };
-      if (acceptsGzip(res.req)) sendGzip(res, headers, `html|${crypto.createHash('sha1').update(page.html).digest('hex')}`, () => page.html);
+      const encoding = pickEncoding(res.req);
+      if (encoding) sendCompressed(res, headers, encoding, `html|${page.htmlHash}`, () => page.html);
       else {
         res.writeHead(200, headers);
         res.end(page.html);

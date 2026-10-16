@@ -273,7 +273,7 @@ async function warState(clan, userId, now) {
   if (!clan.guildWar) {
     let targets = [];
     if (String(clan.owner) === String(userId)) {
-      const candidates = await Clan.find({ _id: { $ne: clan._id }, guildWar: null }).limit(20);
+      const candidates = await Clan.find({ _id: { $ne: clan._id }, guildWar: null }).limit(20).select('name level members.userId').lean();
       targets = candidates
         .filter(candidate => (candidate.members?.length || 0) > 0)
         .map(candidate => ({

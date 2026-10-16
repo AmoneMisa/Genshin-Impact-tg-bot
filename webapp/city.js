@@ -370,6 +370,7 @@ export async function mountCity(container, { api, haptic = () => {}, onState = (
 
   // Live timers; when an upgrade finishes, pull fresh state from the server.
   const timer = window.setInterval(async () => {
+    if (document.hidden) return;
     const now = Date.now();
     let finished = false;
     for (const bar of document.querySelectorAll('.city-progress[data-progress-end]')) {

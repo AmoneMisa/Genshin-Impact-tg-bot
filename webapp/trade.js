@@ -43,7 +43,7 @@ export async function openTradeGame({api,renderState,haptic,targetId=null,onClos
  render();document.body.append(overlay);requestAnimationFrame(()=>overlay.classList.add('visible'));
  if(targetId&&!state.trade)await act('request',{targetId:String(targetId)});
  if(closed)return;
- timer=setInterval(async()=>{if(pending||closed)return;const version=epoch;
+ timer=setInterval(async()=>{if(pending||closed||document.hidden)return;const version=epoch;
   try{const fresh=await api('/api/trade');if(closed||pending||version!==epoch)return;
    if(JSON.stringify(fresh.trade)!==JSON.stringify(state.trade)){const previous=state.trade;state=fresh;selected=-1;render();if(previous&&!fresh.trade)feedback.textContent='Обмен завершён, отменён или истёк. Проверь инвентарь.';}
   }catch(error){if(!closed)feedback.textContent=error.message;}

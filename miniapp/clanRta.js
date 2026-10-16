@@ -125,12 +125,12 @@ export async function getRtaState(clan, userId, now = Date.now()) {
     if (!clan) return null;
     const rta = ensureRta(clan);
     const fighters = await fightersOf(clan);
-    const rivals = await Clan.find({_id: {$ne: clan._id}, 'rta.squad.2': {$exists: true}}).sort({'rta.rating': -1}).limit(60);
+    const rivals = await Clan.find({_id: {$ne: clan._id}, 'rta.squad.2': {$exists: true}}).sort({'rta.rating': -1}).limit(60).select('name rta').lean();
     const near = rivals
         .filter(rival => Math.abs(number(rival.rta?.rating, RTA_START_RATING) - rta.rating) <= RTA_MAX_RATING_GAP)
         .sort((x, y) => Math.abs(x.rta.rating - rta.rating) - Math.abs(y.rta.rating - rta.rating))
         .slice(0, 8);
-    const top = await Clan.find({'rta.rating': {$exists: true}}).sort({'rta.rating': -1}).limit(10);
+    const top = await Clan.find({'rta.rating': {$exists: true}}).sort({'rta.rating': -1}).limit(10).select('name rta').lean();
     return {
         rating: rta.rating, wins: rta.wins, losses: rta.losses, draws: rta.draws,
         squadSize: RTA_SQUAD_SIZE, minSquad: RTA_MIN_SQUAD, maxGap: RTA_MAX_RATING_GAP,
