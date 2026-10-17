@@ -60,3 +60,33 @@ test('search, row, ability, inclusion and hero filters compose without mutating 
   assert.ok(!filterCards(config, { included: true }).some(([card]) => card.id === 'geralt'));
   assert.equal(filterCards(config, { search: 'нет такой карты' }).length, 0);
 });
+
+test('card limits follow the original deck builder (copies per card, 38 Northern Realms units, 3 of every shared special)', async () => {
+  const { GWENT_DECKS, NEUTRAL, SHARED_SPECIALS } = await import('../webapp/gwent-decks.js');
+  const limit = (faction, id) => GWENT_DECKS[faction].cards.find(([card]) => card.id === id)[1];
+  const northernUnits = GWENT_DECKS['northern-realms'].cards.filter(([card]) => card.type === 'unit' && !NEUTRAL.some(([neutral]) => neutral.id === card.id));
+  assert.equal(northernUnits.reduce((sum, [, copies]) => sum + copies, 0), 38);
+  assert.deepEqual(['poor-infantry', 'kaedweni-expert', 'ballista', 'blue-stripes', 'crinfrid'].map(id => limit('northern-realms', id)), [4, 3, 2, 3, 3]);
+  assert.deepEqual(['berserker', 'young-berserker', 'light-longship', 'brokvar-archer'].map(id => limit('skellige', id)), [1, 3, 3, 2]);
+  assert.deepEqual(['bruxa', 'arachas', 'crone-brewess'].map(id => limit('monsters', id)), [1, 3, 1]);
+  assert.deepEqual(['impera', 'nausicaa', 'black-archer'].map(id => limit('nilfgaard', id)), [4, 3, 2]);
+  assert.deepEqual(['mahakaman', 'dwarf-skirmisher', 'dol-scout'].map(id => limit('scoiatael', id)), [5, 3, 3]);
+  assert.ok(SHARED_SPECIALS.every(([, copies]) => copies === 3));
+});
+
+test('a deck saved under older limits is cut to the current ones and stays playable', async () => {
+  const { repairLoadout, inspectLoadout, defaultLoadout } = await import('../webapp/gwent-builder.js');
+  const old = defaultLoadout('monsters');
+  old.counts.bruxa = 2; old.counts['crone-brewess'] = 2; old.counts.ghost = 3;
+  assert.equal(inspectLoadout(old).valid, false, 'the strict check refuses it');
+  const fixed = repairLoadout(old);
+  assert.equal(fixed.counts.bruxa, 1);
+  assert.equal(fixed.counts['crone-brewess'], 1);
+  assert.equal('ghost' in fixed.counts, false);
+  assert.equal(inspectLoadout(fixed).valid, true);
+  // Too many special cards are cut to the maximum of ten.
+  const heavy = defaultLoadout('skellige');
+  for (const id of ['decoy', 'commanders-horn', 'scorch', 'biting-frost', 'impenetrable-fog', 'torrential-rain', 'clear-weather', 'mardroeme', 'storm-skellige']) heavy.counts[id] = 3;
+  assert.equal(inspectLoadout(repairLoadout(heavy)).specials, 10);
+  assert.equal(inspectLoadout(repairLoadout(heavy)).valid, true);
+});

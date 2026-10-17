@@ -6,7 +6,7 @@ import saveSession from '../../functions/getters/saveSession.js';
 import Character from '../../db/models/Character.js';
 import GwentLobby from '../../db/models/GwentLobby.js';
 import { playerName, validatePlayerNickname } from '../../functions/game/player/playerName.js';
-import { inspectLoadout } from '../../webapp/gwent-builder.js';
+import { inspectLoadout, repairLoadout } from '../../webapp/gwent-builder.js';
 import { runGwent, emptyLobby, LOBBY_KEY } from '../gwentLobby.js';
 import { getRating, applyRatingUpdates, leaderboard } from '../gwentRatings.js';
 import { gwentAppBase, addGwentLinks, pushGwentInvite, pushGwentPlay } from '../gwent-sharing.js';
@@ -60,7 +60,8 @@ async function withLobby(work) {
 function savedLoadouts(session) {
   const stored = session.game?.gwentLoadouts;
   if (!stored || typeof stored !== 'object') return {};
-  return Object.fromEntries(Object.entries(stored).filter(([faction, config]) => config?.faction === faction && inspectLoadout(config).valid));
+  // Decks saved under older copy limits are cut to today's limits and kept when they are still valid.
+  return Object.fromEntries(Object.entries(stored).map(([faction, config]) => [faction, repairLoadout(config)]).filter(([faction, config]) => config?.faction === faction && inspectLoadout(config).valid));
 }
 
 async function handle(req, res, mutation) {

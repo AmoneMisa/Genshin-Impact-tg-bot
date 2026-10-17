@@ -6,7 +6,7 @@ import { enhanceSelects } from './design/select.js';
 import { GWENT_DECKS, ROWS, ROW_LABELS } from './gwent-decks.js';
 import { GWENT_ART, GWENT_PRINTED_CARDS } from './gwent-art.js';
 import { cardArtOptions, cardArtSource } from './gwent-art-options.js';
-import { buildDeck, aiLoadout, defaultLoadout, inspectLoadout, filterCards, cardTraits, leaderDescription } from './gwent-builder.js';
+import { buildDeck, aiLoadout, defaultLoadout, inspectLoadout, repairLoadout, filterCards, cardTraits, leaderDescription } from './gwent-builder.js';
 import { createMatch, legalPlays, playCard, passRound, resolveChoice, rowValuesFor, scores } from './gwent-engine.js';
 import { chooseAiAction, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
@@ -44,7 +44,8 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   let loadouts = Object.fromEntries(FACTIONS.map(id => [id, defaultLoadout(id)]));
   if (!api) {
     try { for (const [id, config] of Object.entries(JSON.parse(localStorage.getItem('gwent-loadouts-v1') || '{}'))) {
-      if (config?.faction === id && inspectLoadout(config).valid) loadouts[id] = config;
+      const repaired = repairLoadout(config);
+      if (repaired?.faction === id && inspectLoadout(repaired).valid) loadouts[id] = repaired;
     } } catch { /* Private browsing and damaged storage must not prevent play. */ }
   }
   let faction = 'northern-realms', enemyFaction = 'nilfgaard', screen = 'decks', mode = 'ai', level = DEFAULT_AI_LEVEL;
@@ -139,6 +140,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const s = inspectLoadout(draft);
     return `<div class="gwent-deck-stats" aria-live="polite"><span class="ui-inset-row" data-valid="${s.units >= 22}"><span>Отряды</span><strong>${s.units} / 22 мин.</strong></span>
       <span class="ui-inset-row" data-valid="${s.specials <= 10}"><span>Особые</span><strong>${s.specials} / 10 макс.</strong></span>
+      <span class="ui-inset-row"><span>Герои</span><strong>${s.heroes}</strong></span>
       <span class="ui-inset-row"><span>Всего карт</span><strong>${s.total}</strong></span><span class="ui-inset-row"><span>Суммарная сила</span><strong>${s.strength}</strong></span></div>
       ${s.valid ? `<p class="gwent-deck-valid" role="status">${controlIcon('check')}<span>Колода готова к игре</span></p>` : `<p class="gwent-deck-invalid" role="status">${s.errors.map(esc).join('<br>')}</p>`}`;
   }

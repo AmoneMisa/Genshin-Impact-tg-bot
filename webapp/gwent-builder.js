@@ -11,11 +11,29 @@ export function defaultLoadout(faction = 'northern-realms') {
   if (!deck) throw new Error('Неизвестная фракция');
   let remaining = MAX_SPECIALS;
   const counts = Object.fromEntries(deck.cards.map(([card, limit]) => {
-    const count = card.type === 'unit' ? limit : Math.min(remaining, limit);
+    // Every unit at its full limit; one copy of each special card (the deck holds at most ten).
+    const count = card.type === 'unit' ? limit : Math.min(remaining, 1);
     if (card.type !== 'unit') remaining -= count;
     return [card.id, count];
   }));
   return { faction, leaderId: deck.leaders[0].id, counts, arts: {} };
+}
+
+/**
+ * A saved deck made under older copy limits, brought within today's limits: unknown cards dropped, counts
+ * cut to the limit, special cards cut to the maximum. The result may still be invalid (too few units).
+ */
+export function repairLoadout(loadout) {
+  const deck = loadout && Object.hasOwn(GWENT_DECKS, loadout.faction) ? GWENT_DECKS[loadout.faction] : null;
+  if (!deck || !loadout.counts || typeof loadout.counts !== 'object' || Array.isArray(loadout.counts)) return loadout;
+  const counts = {};
+  let specials = 0;
+  for (const [card, limit] of deck.cards) {
+    let count = Number.isInteger(loadout.counts[card.id]) ? Math.max(0, Math.min(limit, loadout.counts[card.id])) : 0;
+    if (card.type !== 'unit') { count = Math.min(count, MAX_SPECIALS - specials); specials += count; }
+    counts[card.id] = count;
+  }
+  return { ...loadout, counts };
 }
 
 export function inspectLoadout(loadout) {
