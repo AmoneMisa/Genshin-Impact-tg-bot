@@ -4,6 +4,8 @@
 // Leaders and deck composition are selected in gwent-builder.js; choices during play are interactive.
 
 /** Row keys used by the engine. The order is the order on the board. */
+/** The most copies of one card a deck may hold. */
+export const MAX_COPIES = 3;
 export const ROWS = Object.freeze(['close', 'ranged', 'siege']);
 export const ROW_LABELS = Object.freeze({ close: 'Ближний бой', ranged: 'Дальний бой', siege: 'Осада' });
 
@@ -77,7 +79,8 @@ export const NEUTRAL = Object.freeze([
 
 /** `tieWins`: the faction wins a drawn round (Nilfgaard, per the playground.ru guide). */
 function deck(id, title, factionUnits, { leaders = [], extra = [], tieWins = false } = {}) {
-  const cards = [...NEUTRAL, ...factionUnits, ...SHARED_SPECIALS, ...extra];
+  // A deck never holds more than three copies of one card, whatever the collection has.
+  const cards = [...NEUTRAL, ...factionUnits, ...SHARED_SPECIALS, ...extra].map(([card, copies]) => [card, Math.min(copies, MAX_COPIES)]);
   return Object.freeze({ id, title, tieWins, leaders: Object.freeze(leaders), cards: Object.freeze(cards) });
 }
 
