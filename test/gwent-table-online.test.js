@@ -177,3 +177,23 @@ test('a room is cancelled by its host, and a guest can leave it', () => {
   assert.equal(act(w, 1, { action: 'cancel_invite', inviteId: room.id }).result.ok, true);
   assert.equal(read(w, 3, NOW).result.room, undefined);
 });
+
+test('a two-against-two room seats the first two people as teammates and shows teammates their hands', () => {
+  const w = world();
+  const created = act(w, 1, { action: 'invite', table: 4, teams: true, loadout: decks[1] }).result;
+  assert.equal(created.ok, true, created.reason);
+  const room = created.invitation;
+  assert.equal(room.table.teams, true);
+  assert.equal(join(w, 2, room).ok, true);
+  assert.equal(act(w, 1, { action: 'start_table', inviteId: room.id }).result.ok, true);
+  const match = w.lobby.gwent.matches[0];
+  assert.deepEqual(match.players.map(id => id.startsWith('bot:')), [false, true, false, true], 'the people are teammates at seats 1 and 3');
+  assert.deepEqual(match.state.teams, { player: 'A', ai: 'B', ai2: 'A', ai3: 'B' });
+  const host = read(w, 1, NOW).result.match, mate = read(w, 2, NOW).result.match;
+  assert.equal(host.state.sides.ai2.hand.length, 10, 'the teammate sits two seats on and the host sees the hand');
+  assert.equal(host.state.sides.ai.hand.length, 0, 'opponents stay hidden');
+  assert.equal(mate.state.sides.ai2.hand.length, 10);
+  assert.deepEqual(mate.state.teams, { player: 'A', ai: 'B', ai2: 'A', ai3: 'B' });
+  assert.equal(host.seatNames.ai2, 'Борис');
+  assert.equal(act(w, 3, { action: 'invite', table: 3, teams: true, loadout: decks[3] }).result.invitation.table.teams, false, 'teams need four seats');
+});

@@ -214,3 +214,70 @@ test('a duel is still a duel: two seats, wins decide, nothing of the table rules
   assert.equal(duel.sides.player.faction, 'skellige');
   assert.equal(legalPlays(duel, duel.turn).every(play => play.seat === undefined), true, 'no seat named at a duel');
 });
+
+// Two against two: seats 1 and 3 against seats 2 and 4; the team sums decide a round, two rounds win the match.
+function teams(factions = FACTIONS) {
+  const seats = TABLE_SEATS.slice(0, 4);
+  const state = createTable({ decks: factions.map(id => GWENT_DECKS[id]), seats, rng: seededRandom(4), setup: false, teams: true });
+  for (const seat of seats) Object.assign(state.sides[seat], { deck: [], hand: [], graveyard: [], leader: null, rows: rows() });
+  state.turn = state.starter = seats[0];
+  return state;
+}
+
+test('teams are fixed by seat and attacks may only name the other team', () => {
+  const state = teams();
+  assert.deepEqual(state.teams, { player: 'A', ai: 'B', ai2: 'A', ai3: 'B' });
+  const spy = make('re-informant');
+  state.sides.player.hand = [spy, make('re-informant')];
+  for (const seat of ['ai', 'ai2', 'ai3']) state.sides[seat].hand = [make('re-informant')];
+  const seatsHit = legalPlays(state, 'player').filter(play => play.uid === spy.uid).map(play => play.seat);
+  assert.deepEqual(new Set(seatsHit), new Set(['ai', 'ai3']), 'never the teammate');
+  const refused = playCard(state, 'player', spy.uid, { row: 'close', seat: 'ai2' });
+  assert.ok(!refused.error && refused.state.sides.ai.rows.close.length === 1, 'a teammate named as a target falls back to the first opponent');
+});
+
+test('a round goes to the team with the higher sum and every member wins it', () => {
+  const state = teams();
+  const unit = strength => ({ id: 'u' + strength, uid: nextUid++, type: 'unit', name: 'Отряд', rows: ['close'], strength });
+  state.sides.player.rows.close = [unit(5)]; state.sides.ai2.rows.close = [unit(6)]; // team A: 11
+  state.sides.ai.rows.close = [unit(9)]; state.sides.ai3.rows.close = [unit(1)];     // team B: 10
+  for (const seat of TABLE_SEATS) state.sides[seat].hand = [unit(1)];
+  for (const seat of TABLE_SEATS) { const r = passRound(state, state.turn); Object.assign(state, r.state); }
+  assert.equal(state.round, 2);
+  assert.deepEqual([state.wins.player, state.wins.ai2, state.wins.ai, state.wins.ai3], [1, 1, 0, 0]);
+  assert.deepEqual(state.lastRound.teamScores, { A: 11, B: 10 });
+  assert.equal(state.starter, 'player', 'the winning team starts');
+});
+
+test('the second round won ends a team match and names both members', () => {
+  const state = teams();
+  state.wins = { player: 0, ai: 1, ai2: 0, ai3: 1 };
+  state.round = 2;
+  const unit = strength => ({ id: 'u' + strength, uid: nextUid++, type: 'unit', name: 'Отряд', rows: ['close'], strength });
+  state.sides.ai.rows.close = [unit(5)]; state.sides.ai3.rows.close = [unit(5)];
+  state.sides.player.rows.close = [unit(2)];
+  for (const seat of TABLE_SEATS) state.sides[seat].hand = [unit(1)];
+  for (let i = 0; i < 4; i += 1) { const r = passRound(state, state.turn); Object.assign(state, r.state); }
+  assert.equal(state.phase, 'matchOver');
+  assert.deepEqual(state.winners.sort(), ['ai', 'ai3']);
+  assert.equal(state.wins.ai, 2);
+});
+
+test('the AI plays a whole two-against-two match and a team wins it', () => {
+  for (const seed of [1, 2, 3]) {
+    const seats = TABLE_SEATS.slice(0, 4);
+    const rng = seededRandom(seed);
+    let state = createTable({ decks: ['redania', 'velen', 'toussaint', 'witchers'].map(id => buildDeck(defaultLoadout(id, 'extended'))), seats, rng, teams: true });
+    for (let guard = 0; guard < 2500 && state.phase === 'playing'; guard += 1) {
+      const seat = state.pending ? state.pending.side : state.turn;
+      const action = chooseTableAction(state, seat, { level: 'medium', rng });
+      assert.ok(action, `the seat to move has an action (${seat})`);
+      const result = action.type === 'choice' ? resolveChoice(state, seat, action.id) : action.type === 'pass' ? passRound(state, seat) : playCard(state, seat, action.uid, action);
+      assert.ok(!result.error, result.error);
+      state = result.state;
+    }
+    assert.equal(state.phase, 'matchOver', `match ${seed} ends`);
+    assert.ok(state.winners.length === 2 || state.winner === 'draw');
+    if (state.winners.length) assert.equal(new Set(state.winners.map(seat => state.teams[seat])).size, 1, 'the winners are one team');
+  }
+});

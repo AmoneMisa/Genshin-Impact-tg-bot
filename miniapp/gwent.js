@@ -69,7 +69,7 @@ function nameOf(chat, id, saved) {
 function inviteView(chat, invite) {
   return { id: invite.id, from: invite.from, to: invite.to, fromName: nameOf(chat, invite.from, invite.fromName),
     toName: invite.to ? nameOf(chat, invite.to, invite.toName) : null, faction: invite.loadout.faction, ruleset: invite.ruleset || 'classic', open: !!invite.open,
-    table: invite.table ? { size: invite.table.size, players: invite.table.players.map(person => ({ userId: person.userId, name: person.name, faction: person.loadout.faction })) } : null,
+    table: invite.table ? { size: invite.table.size, teams: !!invite.table.teams, players: invite.table.players.map(person => ({ userId: person.userId, name: person.name, faction: person.loadout.faction })) } : null,
     status: invite.status, expiresAt: invite.expiresAt, matchId: invite.matchId || null,
     canPushAt: (invite.lastPushedAt || 0) + INVITE_PUSH_COOLDOWN };
 }
@@ -178,7 +178,7 @@ export function gwentState(chat, userId, now = Date.now(), { watch = null, invit
 
 /** The room becomes a match: empty seats are played by the AI. Everyone seated is released from the room. */
 function launchTable(chat, data, room, now, rng, actorId) {
-  const match = startTable(room.table.players, room.table.size, now, { rng, turnTtl: TURN_TTL });
+  const match = startTable(room.table.players, room.table.size, now, { rng, turnTtl: TURN_TTL, teams: !!room.table.teams });
   data.matches.push(match);
   room.status = 'accepted'; room.matchId = match.id;
   const seated = new Set(room.table.players.map(person => person.userId));
@@ -219,12 +219,13 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     if (!stats.valid) return fail(stats.errors.join('. '));
     const tableSize = body.table == null ? 0 : Number(body.table);
     if (tableSize && !TABLE_SIZES.includes(tableSize)) return fail('Стол рассчитан на трёх или четырёх игроков');
+    const teamTable = tableSize === 4 && body.teams === true;
     const inviteRuleset = tableSize ? 'extended' : normalizeRuleset(body.ruleset);
     if (!rulesetAllows(inviteRuleset, body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== inviteRuleset) return fail('Эта колода не подходит для выбранных правил');
     const target = tableSize || body.targetId == null ? null : String(body.targetId);
     if (tableSize) {
       const room = { id: randomUUID(), from: id, to: null, createdAt: now, expiresAt: now + INVITE_TTL, status: 'pending', loadout: clone(body.loadout), ruleset: 'extended',
-        fromName: nameOf(chat, id), toName: null, open: true, table: { size: tableSize, players: [{ userId: id, name: nameOf(chat, id), loadout: clone(body.loadout) }] } };
+        fromName: nameOf(chat, id), toName: null, open: true, table: { size: tableSize, teams: teamTable, players: [{ userId: id, name: nameOf(chat, id), loadout: clone(body.loadout) }] } };
       data.invites.push(room);
       return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, room) };
     }

@@ -61,11 +61,24 @@ export const OPPONENT = Object.freeze({ player: 'ai', ai: 'player' });
 // place) and the match lasts three rounds. The player with the most points wins; ties go to the higher score of round three.
 export const TABLE_SEATS = Object.freeze(['player', 'ai', 'ai2', 'ai3']);
 const seatsOf = state => state.seats || SIDES;
-const foesOf = (state, side) => seatsOf(state).filter(seat => seat !== side);
-/** The opponent an effect aims at: the named seat when it is one, otherwise the first opponent. */
-const foeOf = (state, side, seat) => (seat && seat !== side && seatsOf(state).includes(seat) ? seat : foesOf(state, side)[0]);
+// Two against two (extended rules, four seats): seats 1 and 3 play against seats 2 and 4, so teammates sit across the
+// table. A round is won by the team with the higher sum of its two scores, the match by two rounds, as in a duel.
+// Opponents are the seats of the other team; a teammate's cards are never a target of attacks.
+export const TEAM_OF = Object.freeze({ player: 'A', ai: 'B', ai2: 'A', ai3: 'B' });
+const foesOf = (state, side) => seatsOf(state).filter(seat => seat !== side && (!state.teams || state.teams[seat] !== state.teams[side]));
+export const alliesOf = (state, side) => (state.teams ? seatsOf(state).filter(seat => seat !== side && state.teams[seat] === state.teams[side]) : []);
+/** The opponent an effect aims at: the named seat when it is one of the opponents, otherwise the first opponent. */
+const foeOf = (state, side, seat) => (seat && foesOf(state, side).includes(seat) ? seat : foesOf(state, side)[0]);
 const mapSeats = (state, value) => Object.fromEntries(seatsOf(state).map(seat => [seat, typeof value === 'function' ? value(seat) : value]));
 const isTable = state => seatsOf(state).length > 2;
+/** Tables scored by place (a free-for-all); teams are scored as a duel between the two teams. */
+const byPlace = state => isTable(state) && !state.teams;
+/** The sum of the scores of each team of a two-against-two match. */
+export function teamScores(state) {
+  const totals = scores(state), sums = { A: 0, B: 0 };
+  for (const seat of seatsOf(state)) if (state.teams?.[seat]) sums[state.teams[seat]] += totals[seat];
+  return sums;
+}
 /** Round points by place at a table of `count` seats. */
 const PLACE_POINTS = { 3: [2, 1, 0], 4: [3, 2, 1, 0] };
 export const HAND_SIZE = 10;
@@ -124,10 +137,11 @@ export function createMatch({ playerDeck, aiDeck, rng = Math.random, setup = tru
  * Creates a match for two to four seats: `decks[i]` plays at `seats[i]`. Two seats make a duel; more make a table
  * (extended rules only).
  */
-export function createTable({ decks, seats = TABLE_SEATS.slice(0, decks.length), rng = Math.random, setup = true }) {
+export function createTable({ decks, seats = TABLE_SEATS.slice(0, decks.length), rng = Math.random, setup = true, teams = false }) {
   const state = {
     round: 1,
     seats: [...seats],
+    teams: teams && seats.length === 4 ? Object.fromEntries(seats.map((seat, i) => [seat, i % 2 ? 'B' : 'A'])) : null, // two against two: the team of each seat
     starter: seats[0],
     turn: seats[0],
     passed: Object.fromEntries(seats.map(seat => [seat, false])),
@@ -857,13 +871,24 @@ function endRound(state) {
   let winner = 'draw';
   let roundPoints = null;
   let losers = [];
-  if (isTable(state)) {
+  let sums = null;
+  if (byPlace(state)) {
     roundPoints = placePoints(state, totals);
     const order = standings(state, totals);
     const best = Math.max(...Object.values(roundPoints));
     const top = order.filter(seat => roundPoints[seat] === best);
     winner = top.length === 1 ? top[0] : 'draw';
     losers = order.filter(seat => roundPoints[seat] === Math.min(...Object.values(roundPoints)));
+  } else if (state.teams) {
+    sums = teamScores(state);
+    let team = sums.A > sums.B ? 'A' : sums.B > sums.A ? 'B' : null;
+    // A team with a tie-winning faction (Nilfgaard) takes a drawn round when only one team has one.
+    if (!team) {
+      const tieTeams = ['A', 'B'].filter(name => seatsOf(state).some(seat => state.teams[seat] === name && state.tieWins[seat]));
+      if (tieTeams.length === 1) team = tieTeams[0];
+    }
+    winner = team ? seatsOf(state).find(seat => state.teams[seat] === team) : 'draw';
+    losers = team ? seatsOf(state).filter(seat => state.teams[seat] !== team) : [];
   } else {
     if (totals.player > totals.ai) winner = 'player';
     else if (totals.ai > totals.player) winner = 'ai';
@@ -897,19 +922,32 @@ function endRound(state) {
   state.weather = noWeather();
   state.reveals = mapSeats(state, () => []);
 
-  if (isTable(state)) {
+  if (byPlace(state)) {
     for (const seat of seatsOf(state)) state.points[seat] = (state.points[seat] || 0) + roundPoints[seat];
     if (winner !== 'draw') state.wins[winner] += 1;
+  } else if (state.teams) {
+    // Every member of the winning team wins the round; a drawn round counts for both teams.
+    for (const seat of seatsOf(state)) if (winner === 'draw' || state.teams[seat] === state.teams[winner]) state.wins[seat] += 1;
   } else if (winner === 'draw') {
     state.wins.player += 1;
     state.wins.ai += 1;
   } else {
     state.wins[winner] += 1;
   }
-  state.lastRound = { round: state.round, scores: totals, winner, ...(roundPoints ? { points: roundPoints } : {}) };
+  state.lastRound = { round: state.round, scores: totals, winner, ...(roundPoints ? { points: roundPoints } : {}), ...(sums ? { teamScores: sums } : {}) };
   state.rounds = [...(state.rounds || []), { ...state.lastRound }];
 
-  if (isTable(state)) {
+  if (state.teams) {
+    const [first, second] = ['A', 'B'].map(name => seatsOf(state).find(seat => state.teams[seat] === name));
+    const firstDone = state.wins[first] >= ROUNDS_TO_WIN, secondDone = state.wins[second] >= ROUNDS_TO_WIN;
+    if (firstDone || secondDone) {
+      state.phase = 'matchOver';
+      const champion = firstDone && secondDone ? null : firstDone ? first : second;
+      state.winner = champion || 'draw';
+      state.winners = champion ? seatsOf(state).filter(seat => state.teams[seat] === state.teams[champion]) : [];
+      return;
+    }
+  } else if (byPlace(state)) {
     if (state.round >= 3) {
       // The most points win; a tie goes to the higher score of the last round, and what is still tied is shared.
       const best = Math.max(...Object.values(state.points));
@@ -934,7 +972,11 @@ function endRound(state) {
   }
 
   state.round += 1;
-  if (isTable(state)) {
+  if (state.teams) {
+    // The winning team starts the next round; after a drawn round the seat after the previous starter does.
+    const seats = seatsOf(state);
+    state.starter = winner === 'draw' ? seats[(seats.indexOf(state.starter) + 1) % seats.length] : winner;
+  } else if (byPlace(state)) {
     // The seat with the lowest score starts the next round (the earlier seat on a tie).
     state.starter = [...seatsOf(state)].sort((a, b) => totals[a] - totals[b] || seatsOf(state).indexOf(a) - seatsOf(state).indexOf(b))[0];
   } else {
@@ -945,7 +987,7 @@ function endRound(state) {
   state.passed = mapSeats(state, false);
   for (const side of seatsOf(state)) {
     // Northern Realms draw a card for winning the round.
-    if (winner === side && state.sides[side].faction === 'northern-realms') drawCards(state.sides[side], 1);
+    if ((state.teams ? winner !== 'draw' && state.teams[side] === state.teams[winner] : winner === side) && state.sides[side].faction === 'northern-realms') drawCards(state.sides[side], 1);
     // Velen draw a card at the start of round 3 (the swamp provides).
     if (state.round === 3 && state.sides[side].faction === 'velen') drawCards(state.sides[side], 1);
     // Wild Hunt draw a card for a lost first round.

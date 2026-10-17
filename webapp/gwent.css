@@ -136,3 +136,5 @@ body .ui-card-table-window .ui-button.gwent-opponent{display:flex;flex-direction
 
 .gwent-search-field{display:grid;gap:var(--space-2);text-align:left}
 .gwent-lobby-actions .gwent-search-field{flex:1 1 100%}
+.gwent-ally-hand{display:flex;flex-wrap:wrap;gap:var(--space-2);padding:var(--space-2);border-top:1px solid var(--border-soft)}
+.gwent-side .gwent-ally-hand{grid-column:1/-1;max-height:calc(var(--space-5)*6);overflow:auto}

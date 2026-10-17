@@ -153,7 +153,7 @@ try {
     const {page,shot,fits,errors}=await fixture(width);
     await page.locator('input[name=gwent-ruleset][value=extended]').check();
     await page.locator('[data-mode]').click();
-    assert.equal(await page.locator('input[name=gwent-table-size]').count(),3,'two, three or four at the table');
+    assert.equal(await page.locator('input[name=gwent-table-size]').count(),4,'two, three, four or two against two');
     await page.locator('input[name=gwent-table-size][value="4"]').check();
     await shot('table-mode');
     await page.locator('[data-start]').click();
@@ -180,6 +180,32 @@ try {
     await shot('table-result');await fits();
     assert.deepEqual(errors,[]);await page.close();
     console.log(`PASS Gwent table ${width}: four seats, summaries of opponents, three rounds scored by place, result table`);
+  }
+  // Two against two with the AI: the teammate is shown with a hand, the status counts the teams, the result lists the team sums.
+  for (const width of [390,1100]) {
+    const {page,shot,fits,errors}=await fixture(width);
+    await page.locator('input[name=gwent-ruleset][value=extended]').check();
+    await page.locator('[data-mode]').click();
+    await page.locator('input[name=gwent-table-size][value="teams"]').check();
+    await page.locator('[data-start]').click();
+    for (let i = 0; i < 40 && await page.locator('[data-pass]:not([disabled])').count() === 0; i += 1) {
+      const choice = page.locator('[data-choice-id="done"]');if (await choice.count()) await choice.click();await page.waitForTimeout(500);
+    }
+    assert.match(await page.locator('.gwent-status').innerText(),/Счёт команд/,'the status counts the teams');
+    assert.equal(await page.locator('.gwent-opponent, .gwent-side:not(.player)').count(),3,'teammate and two opponents');
+    const ally=page.locator('.gwent-opponent',{hasText:'Союзник'});await ally.click();
+    assert.ok(await page.locator('.gwent-ally-hand .gwent-card, .gwent-ally-hand [data-card-id], .gwent-ally-hand > *').count()>0,'the teammate hand is shown');
+    await shot('teams-board');await fits();
+    for (let i = 0; i < 600 && !(await page.locator('[aria-label="Счёт команд по раундам"]').count()); i += 1) {
+      const pending = page.locator('[data-choice-id]');
+      if (await pending.count()) await pending.first().click();
+      else { const pass = page.locator('[data-pass]:not([disabled])'); if (await pass.count()) await pass.click(); }
+      await page.waitForTimeout(400);
+    }
+    assert.equal(await page.locator('[aria-label="Счёт команд по раундам"]').count(),1,'the result lists the team sums');
+    await shot('teams-result');await fits();
+    assert.deepEqual(errors,[]);await page.close();
+    console.log(`PASS Gwent teams ${width}: two against two, teammate hand, team sums, result`);
   }
   const a=await fixture(390,1), b=await fixture(1100,2);
   // Both online players keep their hands; the server then fixes the first player by coin toss or Scoia'tael choice.
@@ -276,7 +302,8 @@ try {
     const host=await fixture(width,1),guest=await fixture(390,2);
     await host.page.locator('[data-dismiss]').click();await host.page.evaluate(()=>window.openGwent(true));await host.page.waitForTimeout(700);await host.page.locator('input[name=gwent-ruleset][value=extended]').check();await host.page.locator('[data-mode]').click();
     await host.page.locator('[data-friends]').click();
-    await host.page.locator('[data-create-table="3"]').click();
+    const teamsRoom=width===1100;
+    await host.page.locator(`[data-create-table="${teamsRoom?'teams':'3'}"]`).click();
     await host.page.locator('.gwent-room').waitFor();
     assert.equal(await host.page.locator('[data-start-table]').isDisabled(),true,'a table needs a second person');
     await host.shot('table-room');
@@ -288,7 +315,8 @@ try {
     await host.page.locator('[data-start-table]').click();
     await host.page.locator('.gwent-opponent').first().waitFor({timeout:10000});
     await guest.page.locator('.gwent-opponent').first().waitFor({timeout:10000});
-    for(const item of [host,guest])assert.equal(await item.page.locator('.gwent-opponent, .gwent-side.ai').count(),2,'two opponents at a table of three, one of them opened');
+    for(const item of [host,guest])assert.equal(await item.page.locator('.gwent-opponent, .gwent-side.ai').count(),teamsRoom?3:2,'the other seats of the table, one of them opened');
+    if(teamsRoom)assert.match(await host.page.locator('.gwent-status').innerText(),/Счёт команд/,'online teams show the team score');
     await settle([host,guest]);
     await host.page.waitForTimeout(500);await host.shot('table-online');await guest.shot('table-online');
     const names=await host.page.locator('.gwent-panel').innerText();

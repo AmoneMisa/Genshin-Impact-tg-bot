@@ -482,7 +482,7 @@ export function chooseAiAction(state, { level = DEFAULT_AI_LEVEL, rng = Math.ran
 /** The seat a table AI plays against: the best-scoring opponent that has not passed, otherwise the best-scoring one. */
 function strongestFoe(state, seat) {
   const total = scores(state);
-  const foes = state.seats.filter(other => other !== seat);
+  const foes = state.seats.filter(other => other !== seat && (!state.teams || state.teams[other] !== state.teams[seat]));
   const active = foes.filter(other => !state.passed[other]);
   return (active.length ? active : foes).sort((a, b) => total[b] - total[a])[0];
 }
@@ -500,6 +500,21 @@ function projectDuel(state, me, foe) {
   // Whoever laid an ambush, in the duel it was the other side.
   for (const [side, other] of [['player', 'ai'], ['ai', 'player']]) for (const row of Object.keys(duel.sides[side].traps || {})) {
     if (duel.sides[side].traps[row]) duel.sides[side].traps[row].by = other;
+  }
+  duel.teams = null;
+  if (state.teams) {
+    // Two against two: a team is judged by the sum of its seats. The teammate and the other opponent become a hero
+    // of their total strength (it is not changed by weather, horns or attacks), so passing means "ahead as a team".
+    const total = scores(state);
+    const stand = (side, seats) => {
+      const sum = seats.reduce((all, seat) => all + total[seat], 0);
+      if (sum > 0) duel.sides[side].rows.siege = [...duel.sides[side].rows.siege, { id: 'team-total', uid: side === 'ai' ? -1 : -2, type: 'unit', name: 'Команда', hero: true, rows: ['siege'], strength: sum }];
+    };
+    const allies = state.seats.filter(other => other !== me && state.teams[other] === state.teams[me]);
+    const others = state.seats.filter(other => other !== foe && state.teams[other] !== state.teams[me]);
+    stand('ai', allies); stand('player', others);
+    const foes = state.seats.filter(other => state.teams[other] !== state.teams[me]);
+    duel.passed.player = foes.every(other => state.passed[other]);
   }
   duel.turn = state.turn === me ? 'ai' : state.turn === foe ? 'player' : 'ai';
   duel.starter = 'ai';

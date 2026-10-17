@@ -26,21 +26,29 @@ export function absoluteSeat(match, viewerIndex, label) {
   return relative < 0 || relative >= match.players.length ? undefined : TABLE_SEATS[(relative + viewerIndex) % match.players.length];
 }
 
-/** The table's match record. `seated` are `{ userId, name, loadout }`, in seat order. */
-export function startTable(seated, size, now, { rng = Math.random, turnTtl, id = randomUUID() } = {}) {
+/**
+ * The table's match record. `seated` are `{ userId, name, loadout }`. In a team match (two against two) the people take
+ * the seats of the teams in turn: the first two people are teammates, the rest play against them.
+ */
+export function startTable(seated, size, now, { rng = Math.random, turnTtl, id = randomUUID(), teams = false } = {}) {
   const humans = seated.slice(0, size);
   const taken = new Set(humans.map(person => person.loadout.faction));
   const pool = RULESETS.extended.factions.filter(faction => !taken.has(faction));
-  const players = humans.map(person => String(person.userId)), names = humans.map(person => person.name);
-  const loadouts = humans.map(person => clone(person.loadout));
-  for (let bot = 1; players.length < size; bot += 1) {
+  const order = teams && size === 4 ? [0, 2, 1, 3] : [0, 1, 2, 3];
+  const slots = Array.from({ length: size }, () => null);
+  humans.forEach((person, i) => { slots[order[i]] = person; });
+  const players = [], names = [], loadouts = [];
+  let bot = 0;
+  for (const person of slots) {
+    if (person) { players.push(String(person.userId)); names.push(person.name); loadouts.push(clone(person.loadout)); continue; }
+    bot += 1;
     const faction = pool.splice(Math.floor(rng() * pool.length), 1)[0] || RULESETS.extended.factions[0];
     players.push(`bot:${bot}`); names.push(`Бот ${bot}`);
     loadouts.push(aiLoadout(faction, BOT_LEVEL, rng, 'extended'));
   }
   const match = { id, table: true, ruleset: 'extended', rated: null, players, names, factions: loadouts.map(loadout => loadout.faction), loadouts,
     dismissed: [], rematch: [], revision: 0, pushedAt: {}, deadline: now + turnTtl,
-    state: createTable({ decks: loadouts.map(loadout => buildDeck(loadout)), seats: TABLE_SEATS.slice(0, size), rng }) };
+    state: createTable({ decks: loadouts.map(loadout => buildDeck(loadout)), seats: TABLE_SEATS.slice(0, size), rng, teams: teams && size === 4 }) };
   runBots(match, rng);
   return match;
 }
@@ -92,10 +100,11 @@ export function tableMatchView(match, userId, { spectator = false, endReason = '
   for (const seat of abs) {
     const side = state.sides[seat];
     side.deckCount = side.deck.length; side.handCount = side.hand.length; side.deck = [];
-    if (spectator || seat !== mine) side.hand = [];
+    // Teammates see each other's hands.
+    if (spectator || (seat !== mine && !(state.teams && state.teams[seat] === state.teams[mine]))) side.hand = [];
     for (const row of Object.keys(side.traps || {})) {
       const trap = side.traps[row];
-      side.traps[row] = trap && !spectator && trap.by === mine && seat !== mine ? { ...trap, by: toRel(trap.by) } : null;
+      side.traps[row] = trap && !spectator && (trap.by === mine || (state.teams && state.teams[trap.by] === state.teams[mine])) && seat !== mine && !(state.teams && state.teams[seat] === state.teams[mine]) ? { ...trap, by: toRel(trap.by) } : null;
     }
   }
   const reveals = byRel(state.reveals);
@@ -107,6 +116,7 @@ export function tableMatchView(match, userId, { spectator = false, endReason = '
   }
   state.sides = byRel(state.sides);
   for (const field of ['passed', 'tieWins', 'wins', 'points']) state[field] = byRel(state[field]);
+  if (state.teams) state.teams = byRel(state.teams);
   state.seats = abs.slice();
   state.turn = toRel(state.turn); state.starter = toRel(state.starter); state.winner = toRel(state.winner);
   state.winners = (state.winners || []).map(toRel);
