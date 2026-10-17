@@ -90,7 +90,7 @@ export default function (session) {
         gacha: [],
         gameClass: {
             stats: {...classStatsTemplate[0]},
-            skills: {...classSkillsTemplate.noClass}
+            skills: classSkillsTemplate.noClass.map(skill => ({...skill}))
         },
         inventory: {
             arena: {
@@ -149,6 +149,12 @@ export default function (session) {
                 session.game.builds[key] = defaultBuild;
             }
         }
+    }
+
+    // Older defaults spread the skill list into an object; saved heroes get their list back.
+    const kit = session.game.gameClass?.skills;
+    if (kit && typeof kit === "object" && !Array.isArray(kit)) {
+        session.game.gameClass.skills = Object.keys(kit).sort((x, y) => x - y).map(key => kit[key]);
     }
 
     migrateCharacterCurrency(session);
