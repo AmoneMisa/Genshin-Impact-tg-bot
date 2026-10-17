@@ -27,6 +27,7 @@ function unit(id, name, rowCode, strength, flags = '', copies = 1) {
   if (tokens.includes('D')) card.medic = true;
   if (tokens.includes('R')) card.horn = true;
   if (tokens.includes('X')) card.swap = true;
+  if (tokens.includes('G')) card.mage = true;
   if (value('b:')) card.bond = value('b:');
   if (value('m:')) card.muster = value('m:');
   if (value('t:')) card.transformsTo = value('t:');
@@ -81,7 +82,7 @@ export const NEUTRAL = Object.freeze([
 ]);
 
 /** `tieWins`: the faction wins a drawn round (Nilfgaard, per the playground.ru guide). */
-const NEW_FACTION_IDS = ['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses'];
+const NEW_FACTION_IDS = ['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses', 'eternal-fire'];
 function deck(id, title, factionUnits, { leaders = [], extra = [], tieWins = false } = {}) {
   // A deck never holds more than three copies of one card, whatever the collection has.
   // The faction's own special cards come before the shared ones, so a starting deck takes them first.
@@ -287,6 +288,14 @@ const ELEMENTS = [
   [special('el-earth', 'Стихия земли', 'weather', { weather: ['close', 'siege'] }), 1],
   [special('el-water', 'Стихия воды', 'weather', { weather: ['ranged', 'siege'] }), 1],
 ];
+/** Neutral action cards of the extended rules: a boost, a strike and a field medic for light units. */
+const NEUTRAL_ACTIONS = [
+  [special('ex-prep', 'Осадная подготовка', 'boost', { amount: 5 }), 1],
+  [special('ex-trap', 'Ловушка', 'strike', { amount: 4 }), 1],
+  [special('ex-medic', 'Военный лекарь', 'recall', { maxBase: 5 }), 1],
+];
+/** What every extended deck may take besides its own special cards. */
+const EXTENDED_SHARED = [...ELEMENTS, ...NEUTRAL_ACTIONS];
 /** A spell: a special card the Sorceresses can bring back from the graveyard. */
 const spell = (id, name, kind, copies, extra = {}) => [special(id, name, kind, { spell: true, ...extra }), copies];
 
@@ -297,7 +306,7 @@ export const WILD_HUNT_DECK = deck('wild-hunt', 'Дикая Охота', [
   unit('wh-banner', 'Знаменосец Охоты', 'c', 2, 'M'),
   unit('wh-scout', 'Лазутчик Охоты', 'c', 3, 'S'),
   unit('wh-aen-elle-archer', 'Лучник Aen Elle', 'r', 4, '', 2),
-  unit('wh-portal-mage', 'Чародей порталов', 'r', 5, 'X', 2),
+  unit('wh-portal-mage', 'Чародей порталов', 'r', 5, 'X G', 2),
   unit('wh-navigator', 'Навигатор', 'r', 3, 'D'),
   ability(unit('wh-winter-witch', 'Зимняя ведунья', 'r', 6), { onPlay: { type: 'scorchRow', target: 'ranged', cond: 'ranged', threshold: 10 } }),
   unit('wh-frost-hound', 'Ледяная гончая', 'cr', 4, 'm:wh-hound', 3),
@@ -306,7 +315,7 @@ export const WILD_HUNT_DECK = deck('wild-hunt', 'Дикая Охота', [
   unit('wh-caranthir', 'Карантир', 'r', 10, 'H'),
   unit('wh-eredin-guard', 'Страж Эредина', 'c', 10, 'H'),
 ], {
-  extra: [...ELEMENTS],
+  extra: [...EXTENDED_SHARED],
   leaders: [
     leader('wh-leader-lord', 'Эредин: Владыка Охоты', { type: 'double', row: 'close' }),
     leader('wh-leader-portals', 'Эредин: Хранитель порталов', { type: 'moveAny' }),
@@ -341,7 +350,7 @@ export const WITCHERS_DECK = deck('witchers', 'Ведьмаки', [
     [special('wi-thunderbolt', 'Зелье «Гром»', 'blessing', { amount: 3 }), 1],
     [special('wi-cat', 'Зелье «Кошка»', 'teleport'), 1],
     [special('wi-oriole', 'Зелье «Иволга»', 'weather', { weather: 'clear' }), 1],
-    ...ELEMENTS,
+    ...EXTENDED_SHARED,
   ],
   leaders: [
     leader('wi-leader-teacher', 'Весемир: Наставник школ', { type: 'reviveAny' }),
@@ -362,12 +371,12 @@ export const TOUSSAINT_DECK = deck('toussaint', 'Туссент', [
   unit('to-lady', 'Прекрасная дама', 'r', 8),
   unit('to-war-horse', 'Боевой конь', 'cr', 5, '', 2),
   unit('to-ballista', 'Баллиста Туссента', 's', 7, '', 2),
-  unit('to-trebuchet', 'Требушет Туссента', 's', 8),
+  unit('to-trebuchet', 'Требушет Туссента', 's', 9),
   unit('to-palmerin', 'Пальмерин де Лаунфорд', 'c', 10, 'H'),
   unit('to-anna', 'Анна Генриетта', 'r', 10, 'H'),
   unit('to-syanna', 'Сианна', 'r', 10, 'H'),
 ], {
-  extra: [...ELEMENTS],
+  extra: [...EXTENDED_SHARED],
   leaders: [
     leader('to-leader-duchess', 'Анна Генриетта: Герцогиня', { type: 'double', row: 'ranged' }),
     leader('to-leader-feast', 'Анна Генриетта: Хозяйка пиров', { type: 'takeEnemyGraveyard' }),
@@ -376,21 +385,50 @@ export const TOUSSAINT_DECK = deck('toussaint', 'Туссент', [
   ],
 });
 
+export const ETERNAL_FIRE_DECK = deck('eternal-fire', 'Вечный Огонь', [
+  unit('ef-templar', 'Храмовник', 'c', 5, 'b:ef-templar', 3),
+  unit('ef-flagellant', 'Флагеллант', 'c', 3, 'M', 2),
+  ability(unit('ef-witch-hunter', 'Охотник на ведьм', 'c', 5), { onPlay: { type: 'selfBoost', amount: 2, ifEnemy: 'mage' } }),
+  unit('ef-zealot', 'Фанатик', 'cr', 4, '', 2),
+  unit('ef-crossbowman', 'Арбалетчик Вечного Огня', 'r', 5, '', 2),
+  unit('ef-inquisitor', 'Инквизитор', 'r', 4, 'S'),
+  unit('ef-confessor', 'Исповедник', 'r', 3, 'D'),
+  ability(unit('ef-purifier', 'Очиститель', 'c', 6), { onPlay: { type: 'scorchRow', target: 'ranged', cond: 'ranged', threshold: 10 } }),
+  unit('ef-pyre-master', 'Мастер костров', 's', 6, '', 2),
+  unit('ef-ram', 'Таран Храма', 's', 7, '', 2),
+  unit('ef-caleb', 'Калеб Менге', 'c', 10, 'H'),
+  unit('ef-high-priest', 'Верховный жрец', 'c', 10, 'H'),
+  unit('ef-prophet', 'Безумный пророк', 'r', 10, 'H'),
+], {
+  extra: [
+    [special('ef-purge', 'Очищение огнём', 'strike', { amount: 4, mageBonus: 1 }), 2],
+    [special('ef-interrogation', 'Допрос с пристрастием', 'strike', { amount: 3 }), 1],
+    [special('ef-bonfire', 'Костёр', 'fireball'), 1],
+    ...EXTENDED_SHARED,
+  ],
+  leaders: [
+    leader('ef-leader-inquisitor', 'Калеб Менге: Великий инквизитор', { type: 'scorchRow', target: 'ranged', cond: 'ranged', threshold: 10 }),
+    leader('ef-leader-flame', 'Калеб Менге: Хранитель огня', { type: 'weather', weather: ['close', 'ranged'] }),
+    leader('ef-leader-judge', 'Калеб Менге: Судья', { type: 'cancelEnemyLeader' }),
+    leader('ef-leader-accuser', 'Калеб Менге: Обличитель', { type: 'takeEnemyGraveyard' }),
+  ],
+});
+
 export const SORCERESSES_DECK = deck('sorceresses', 'Чародейки', [
-  unit('so-apprentice', 'Ученица Аретузы', 'r', 2, 'm:so-apprentice', 3),
-  unit('so-adept', 'Адептка Ложи', 'r', 4, 'b:so-adept', 3),
-  unit('so-healer', 'Целительница', 'r', 3, 'D'),
-  unit('so-seer', 'Провидица', 'r', 4, 'S'),
-  unit('so-war-mage', 'Боевой маг', 'r', 5, '', 2),
-  unit('so-illusionist', 'Иллюзионистка', 'c', 3, 'X', 2),
+  unit('so-apprentice', 'Ученица Аретузы', 'r', 2, 'm:so-apprentice G', 3),
+  unit('so-adept', 'Адептка Ложи', 'r', 4, 'b:so-adept G', 3),
+  unit('so-healer', 'Целительница', 'r', 3, 'D G'),
+  unit('so-seer', 'Провидица', 'r', 4, 'S G'),
+  unit('so-war-mage', 'Боевой маг', 'r', 5, 'G', 2),
+  unit('so-illusionist', 'Иллюзионистка', 'c', 3, 'X G', 2),
   unit('so-knight', 'Рыцарь Ложи', 'c', 6, '', 2),
   unit('so-guard', 'Страж Ложи', 'c', 5, '', 2),
   unit('so-golem', 'Голем', 's', 6, '', 2),
   unit('so-elemental', 'Вызванный элементаль', 's', 5, 'M'),
   unit('so-portal-keeper', 'Хранительница порталов', 'cr', 4, '', 2),
-  unit('so-margarita', 'Маргарита Лаукс-Антиль', 'r', 10, 'H'),
-  unit('so-sheala', 'Шеала де Тансарвиль', 'r', 10, 'H'),
-  unit('so-tissaia', 'Тиссая де Врис', 'c', 10, 'H'),
+  unit('so-margarita', 'Маргарита Лаукс-Антиль', 'r', 10, 'H G'),
+  unit('so-sheala', 'Шеала де Тансарвиль', 'r', 10, 'H G'),
+  unit('so-tissaia', 'Тиссая де Врис', 'c', 10, 'H G'),
 ], {
   extra: [
     spell('so-fireball', 'Огненный шар', 'fireball', 2),
@@ -398,7 +436,7 @@ export const SORCERESSES_DECK = deck('sorceresses', 'Чародейки', [
     spell('so-heal', 'Исцеление', 'recall', 2),
     spell('so-blessing', 'Благословение магии', 'blessing', 2),
     spell('so-curse', 'Проклятие', 'curse', 2),
-    ...ELEMENTS,
+    ...EXTENDED_SHARED,
   ],
   leaders: [
     leader('so-leader-head', 'Филиппа Эйльхарт: Глава Ложи', { type: 'double', row: 'ranged' }),
@@ -409,20 +447,20 @@ export const SORCERESSES_DECK = deck('sorceresses', 'Чародейки', [
 });
 
 export const VELEN_DECK = deck('velen', 'Велен', [
-  unit('ve-drowner', 'Утопец', 'c', 2, 'm:ve-drowner', 3),
-  unit('ve-bog-witch', 'Болотная ведьма', 'c', 5, 'b:ve-witch', 3),
-  unit('ve-militia', 'Ополчение Велена', 'c', 4, 'b:ve-militia', 3),
-  unit('ve-bandit', 'Разбойник', 'c', 5, '', 2),
-  unit('ve-water-hag', 'Водяная баба', 'r', 5, '', 2),
+  unit('ve-drowner', 'Утопец', 'c', 3, 'm:ve-drowner', 3),
+  unit('ve-bog-witch', 'Болотная ведьма', 'c', 5, 'b:ve-witch G', 3),
+  unit('ve-militia', 'Ополчение Велена', 'c', 5, 'b:ve-militia', 3),
+  unit('ve-bandit', 'Разбойник', 'c', 6, '', 2),
+  unit('ve-water-hag', 'Водяная баба', 'r', 6, '', 2),
   unit('ve-herbalist', 'Знахарка', 'r', 6, 'D'),
-  unit('ve-deserter', 'Дезертир', 'r', 3, 'S'),
+  unit('ve-deserter', 'Дезертир', 'r', 4, 'S'),
   unit('ve-forest-spirit', 'Лесной дух', 'c', 7, 'X'),
   unit('ve-ghost', 'Призрак замка', 's', 3, 'M'),
   unit('ve-trophy-catapult', 'Трофейная катапульта', 's', 8, '', 2),
   unit('ve-baron', 'Кровавый Барон', 'c', 10, 'H'),
   unit('ve-mistress', 'Хозяйка болот', 'r', 10, 'H'),
 ], {
-  extra: [[AMBUSH, 2], ...ELEMENTS],
+  extra: [[AMBUSH, 2], ...EXTENDED_SHARED],
   leaders: [
     leader('ve-leader-fog', 'Туман Велена', { type: 'weather', weather: 'ranged' }),
     leader('ve-leader-swamp', 'Трясина', { type: 'weather', weather: ['close', 'ranged'] }),
@@ -438,14 +476,14 @@ export const REDANIA_DECK = deck('redania', 'Редания', [
   unit('re-saboteur', 'Диверсант', 'c', 3, 'X', 2),
   unit('re-captain', 'Капитан гвардии', 'c', 6),
   unit('re-crossbowman', 'Редарский арбалетчик', 'r', 5, '', 2),
-  unit('re-court-mage', 'Придворный маг', 'r', 4, 'D'),
+  unit('re-court-mage', 'Придворный маг', 'r', 4, 'D G'),
   unit('re-sapper', 'Сапёр', 's', 5, '', 2),
   unit('re-siege-master', 'Осадный мастер', 's', 7, '', 2),
   unit('re-radovid', 'Радовид Свирепый', 'c', 10, 'H'),
   unit('re-grand-master', 'Великий магистр ордена', 'c', 10, 'H'),
   unit('re-counselor', 'Тайный советник', 'r', 10, 'H'),
 ], {
-  extra: [[AMBUSH, 3], ...ELEMENTS],
+  extra: [[AMBUSH, 3], [special('re-traitor-hunt', 'Охота на изменников', 'strike', { amount: 4, mageBonus: 1 }), 1], ...EXTENDED_SHARED],
   leaders: [
     leader('re-leader-hunter', 'Радовид: Охотник на магов', { type: 'cancelEnemyLeader' }),
     leader('re-leader-spymaster', 'Радовид: Хозяин шпионов', { type: 'discardDraw' }),
@@ -470,8 +508,7 @@ function variant(base, { modify = {}, add = [], extra = [], leaders = [] } = {})
 
 const SKELLIGE_EXTENDED = variant(SKELLIGE_DECK, {
   modify: {
-    birna: { strength: 3 }, 'heymaey-skald': { morale: true }, 'young-berserker': { strength: 3 },
-    'light-longship': { strength: 5 }, 'draig-bon-dhu': { strength: 3 },
+    birna: { strength: 3 }, 'heymaey-skald': { morale: true }, 'draig-bon-dhu': { strength: 3 },
   },
   add: [
     unit('sk-axeman', 'Секироносец клана Туирсех', 'c', 4, 'b:sk-axe', 3),
@@ -479,7 +516,7 @@ const SKELLIGE_EXTENDED = variant(SKELLIGE_DECK, {
     unit('sk-shipwright', 'Корабельный мастер', 's', 4, 'D'),
     unit('sk-captain', 'Капитан драккара', 'r', 6, 'X'),
   ],
-  extra: [[AMBUSH, 1], ...ELEMENTS],
+  extra: [[AMBUSH, 1], ...EXTENDED_SHARED],
   leaders: [
     leader('sk-leader-jarl', 'Крах ан Крайт: Ярл островов', { type: 'reviveAny' }),
     leader('sk-leader-fury', 'Король Бран: Свирепый король', { type: 'double', row: 'close' }),
@@ -487,21 +524,21 @@ const SKELLIGE_EXTENDED = variant(SKELLIGE_DECK, {
 });
 const NORTHERN_EXTENDED = variant(NORTHERN_REALMS_DECK, {
   add: [unit('nr-scout', 'Лазутчик Темерии', 'c', 3, 'X')],
-  extra: [[AMBUSH, 1], ...ELEMENTS],
+  extra: [[AMBUSH, 1], ...EXTENDED_SHARED],
 });
 const NILFGAARD_EXTENDED = variant(NILFGAARD_DECK, {
-  add: [unit('nf-double-agent', 'Двойной агент', 'c', 4, 'X')],
-  extra: [[AMBUSH, 1], ...ELEMENTS],
+  add: [unit('nf-double-agent', 'Двойной агент', 'c', 5, 'X')],
+  extra: [[AMBUSH, 1], ...EXTENDED_SHARED],
 });
 const MONSTERS_EXTENDED = variant(MONSTERS_DECK, {
   modify: { 'ice-giant': { strength: 6 } },
-  add: [unit('mo-stalker', 'Лесной хищник', 'c', 6, 'X')],
-  extra: [[AMBUSH, 2], ...ELEMENTS],
+  add: [unit('mo-stalker', 'Лесной хищник', 'c', 7, 'X')],
+  extra: [[AMBUSH, 2], ...EXTENDED_SHARED],
 });
 const SCOIATAEL_EXTENDED = variant(SCOIATAEL_DECK, {
   modify: { 'vrihedd-cadet': { strength: 5, swap: true } },
   add: [unit('sc-ranger', 'Лесной стрелок', 'r', 6, 'X')],
-  extra: [[AMBUSH, 2], ...ELEMENTS],
+  extra: [[AMBUSH, 2], ...EXTENDED_SHARED],
 });
 
 /** The decks of the extended rules: tuned versions of the original factions and the five new ones. */
@@ -509,7 +546,7 @@ export const EXTENDED_DECKS = Object.freeze({
   skellige: SKELLIGE_EXTENDED, 'northern-realms': NORTHERN_EXTENDED, nilfgaard: NILFGAARD_EXTENDED,
   monsters: MONSTERS_EXTENDED, scoiatael: SCOIATAEL_EXTENDED,
   'wild-hunt': WILD_HUNT_DECK, witchers: WITCHERS_DECK, toussaint: TOUSSAINT_DECK, velen: VELEN_DECK, redania: REDANIA_DECK,
-  sorceresses: SORCERESSES_DECK,
+  sorceresses: SORCERESSES_DECK, 'eternal-fire': ETERNAL_FIRE_DECK,
 });
 
 export const GWENT_DECKS = Object.freeze({
@@ -524,12 +561,13 @@ export const GWENT_DECKS = Object.freeze({
   [VELEN_DECK.id]: VELEN_DECK,
   [REDANIA_DECK.id]: REDANIA_DECK,
   [SORCERESSES_DECK.id]: SORCERESSES_DECK,
+  [ETERNAL_FIRE_DECK.id]: ETERNAL_FIRE_DECK,
 });
 
 /** The five factions of the original game. */
 export const DECK_IDS = Object.freeze(['skellige', 'northern-realms', 'nilfgaard', 'monsters', 'scoiatael']);
 /** The factions made for the extended rules. */
-export const EXTENDED_FACTIONS = Object.freeze(['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses']);
+export const EXTENDED_FACTIONS = Object.freeze(['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses', 'eternal-fire']);
 
 /** Rule sets: `classic` is the original game (rated), `extended` adds the new factions and rules. */
 export const RULESETS = Object.freeze({

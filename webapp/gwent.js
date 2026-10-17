@@ -11,7 +11,7 @@ import { createMatch, legalPlays, playCard, passRound, resolveChoice, rowValuesF
 import { chooseAiAction, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
 const FACTIONS = RULESETS.extended.factions; // every faction; a rule set allows some of them
-const kitOf = id => /^(wh|wi|to|ve|re|so)-/.exec(id)?.[1] || '';
+const kitOf = id => /^(wh|wi|to|ve|re|so|ef|ex)-/.exec(id)?.[1] || '';
 const RULES = 'У каждой стороны три ряда: ближний бой, дальний бой и осада. Игроки ходят по очереди. Пас завершает ваши ходы в раунде. '
   + 'После паса обоих побеждает сторона с большей силой. В конце раунда все карты стола уходят в отбой, включая героев. '
   + 'Для победы в матче нужно выиграть два раунда. Нильфгаард выигрывает ничью, если эта фракция только у одной стороны; иначе ничья засчитывается обоим. '
@@ -85,6 +85,8 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `<div class="gwent-mode-options gwent-rules" role="radiogroup" aria-label="Правила">${[['classic', 'Оригинал', 'Игра из Ведьмака 3, рейтинг'], ['extended', 'Расширенный', 'Пять новых фракций, подмена и засады']].map(([value, title, subtitle]) => `<label class="ui-button ui-illustrated-choice gwent-mode" data-selected="${ruleset === value}">
       <span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-ruleset" value="${value}" ${ruleset === value ? 'checked' : ''}></label>`).join('')}</div>`;
   }
+  /** What the player is asked to pick for cards that name a unit. */
+  const promptFor = special => ({ teleport: 'Выберите свой отряд для перемещения', boost: 'Выберите свой отряд для усиления', strike: 'Выберите отряд противника для удара' })[special];
   function deckScreen() {
     return `${rulesetHtml()}<div class="gwent-factions" role="group" aria-label="Фракция">${factionsNow().map(id => `<button type="button" class="ui-button ui-illustrated-choice gwent-faction" data-faction="${id}" data-select-faction="${id}" aria-pressed="${id === faction}" style="--choice-art:url('${GWENT_ART['banner:' + id]}')">
       ${image('shield:' + id, 'gwent-crest')}<span>${esc(GWENT_DECKS[id].title)}</span><span class="ui-selection-mark" aria-hidden="true">${id === faction ? controlIcon('check') : ''}</span></button>`).join('')}</div>
@@ -254,7 +256,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       <div class="gwent-turn" role="status">${turn}</div>${handHtml()}
       ${pick ? `<div class="ui-inset-row gwent-picker"><span>${esc(pick.card.name)}<small>${esc(cardTraits(pick.card))}${({ ambush: ' · выберите ряд противника', fireball: ' · выберите ряд противника', curse: ' · выберите ряд противника', blessing: ' · выберите свой ряд' })[pick.card.special] || ''}</small></span>${pick.plays.length === 1
         ? button('Сыграть', 'data-play-selected', true) : [...new Set(pick.plays.map(play => play.row))].map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('')}${pick.swapPlays.length ? button('С подменой', 'data-swap-selected') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
-      ${decoy ? `<div class="ui-inset-row gwent-picker"><span>${decoy.chosen ? 'Выберите ряд' : decoy.rowChoices !== undefined || state.sides.player.hand.find(card => card.uid === decoy.uid)?.special === 'teleport' ? 'Выберите свой отряд для перемещения' : decoy.row ? 'Выберите свой отряд, который вернётся в руку' : 'Выберите свой обычный отряд на поле для замены чучелом'}</span>${decoy.chosen ? decoy.rowChoices.map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
+      ${decoy ? `<div class="ui-inset-row gwent-picker"><span>${decoy.chosen ? 'Выберите ряд' : promptFor(state.sides.player.hand.find(card => card.uid === decoy.uid)?.special) ?? (decoy.row ? 'Выберите свой отряд, который вернётся в руку' : 'Выберите свой обычный отряд на поле для замены чучелом')}</span>${decoy.chosen ? decoy.rowChoices.map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
       <div class="gwent-actions">${actions}</div>`;
   }
   /** Round by round result, the winner, and the rematch offer. Shown as a popup when a match ends. */

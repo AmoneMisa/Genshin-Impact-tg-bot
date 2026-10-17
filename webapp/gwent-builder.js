@@ -83,10 +83,10 @@ export function buildDeck(loadout) {
 }
 
 export function cardTraits(card) {
-  if (card.type === 'special') return ({ decoy: 'Чучело', horn: 'Командирский рог', scorch: 'Казнь', weather: 'Погода', mardroeme: 'Мардрём', ambush: 'Засада', fireball: 'Уничтожение', curse: 'Проклятие', blessing: 'Усиление ряда', teleport: 'Телепортация', recall: 'Возврат из отбоя' })[card.special] || '';
+  if (card.type === 'special') return ({ decoy: 'Чучело', horn: 'Командирский рог', scorch: 'Казнь', weather: 'Погода', mardroeme: 'Мардрём', ambush: 'Засада', fireball: 'Уничтожение', boost: 'Усиление', strike: 'Удар', curse: 'Проклятие', blessing: 'Усиление ряда', teleport: 'Телепортация', recall: 'Возврат из отбоя' })[card.special] || '';
   return [[card.hero, 'Герой'], [card.spy, 'Шпион'], [card.medic, 'Медик'], [card.bond, 'Связь'],
     [card.morale, 'Прилив сил'], [card.horn, 'Командирский рог'], [card.muster, 'Призыв'],
-    [card.agile, 'Проворство'], [card.swap, 'Подмена'], [card.transformsTo, 'Берсерк'], [card.onPlay?.type === 'scorchRow', 'Казнь'],
+    [card.agile, 'Проворство'], [card.swap, 'Подмена'], [card.mage, 'Маг'], [card.transformsTo, 'Берсерк'], [card.onPlay?.type === 'scorchRow', 'Казнь'],
     [card.onDestroy, 'Возмездие']].filter(([value]) => value).map(([, label]) => label).join(' · ');
 }
 
@@ -143,19 +143,22 @@ export function aiLoadout(faction, level = 'medium', rng = Math.random, ruleset 
     counts[card.id] = take; total += take;
   }
   for (const [card, limit] of units) if (total < MIN_UNITS && !counts[card.id]) { counts[card.id] = Math.min(limit, MIN_UNITS - total); total += counts[card.id]; }
-  const wanted = ['horn', 'scorch', 'decoy', 'weather', 'mardroeme'];
-  const sharedIds = new Set(SHARED_SPECIALS.map(([card]) => card.id));
+  const sharedIds = new Set([...SHARED_SPECIALS.map(([card]) => card.id), 'el-fire', 'el-earth', 'el-water', 'ex-prep', 'ex-trap', 'ex-medic']);
+  const cardOf = id => deck.cards.find(([card]) => card.id === id);
   let specials = 0;
-  const take = (card, limit, wish) => {
-    const count = Math.min(limit, wish, 9 - specials);
-    if (count > 0) { counts[card.id] = count; specials += count; }
+  const take = (entry, wish) => {
+    if (!entry || counts[entry[0].id]) return;
+    const count = Math.min(entry[1], wish, 9 - specials);
+    if (count > 0) { counts[entry[0].id] = count; specials += count; }
   };
-  // The faction's own spells, signs and ambushes first (one copy each), then the usual special cards.
-  for (const [card, limit] of deck.cards) if (card.type !== 'unit' && !sharedIds.has(card.id) && card.special !== 'weather' && card.special !== 'mardroeme') take(card, limit, 1);
-  for (const special of wanted) for (const [card, limit] of deck.cards) {
-    if (card.type === 'unit' || card.special !== special || counts[card.id]) continue;
-    take(card, limit, special === 'weather' || special === 'mardroeme' ? 1 : 2);
-  }
+  // The faction's own spells, signs and ambushes first (one copy each, five at most) ...
+  let own = 0;
+  for (const entry of deck.cards) if (entry[0].type !== 'unit' && !sharedIds.has(entry[0].id) && entry[0].special !== 'weather' && entry[0].special !== 'mardroeme' && own < 5) { take(entry, 1); own += 1; }
+  // ... then horn, scorch, decoy and Skellige's mardroeme, two weather cards, and a strike and a boost.
+  for (const id of ['commanders-horn', 'scorch', 'decoy']) take(cardOf(id), 2);
+  take(cardOf('mardroeme'), 1);
+  for (const id of ['biting-frost', 'clear-weather', 'storm-skellige']) take(cardOf(id), 1);
+  for (const id of ['ex-trap', 'ex-prep', 'impenetrable-fog']) take(cardOf(id), 1);
   for (const [card] of deck.cards) counts[card.id] ||= 0;
   return { ...base, counts };
 }

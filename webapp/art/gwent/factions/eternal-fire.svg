@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 152" role="img" aria-label="eternal-fire">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c2561a"/><stop offset="1" stop-color="#3a1204"/></linearGradient></defs>
+<path d="M10 10 H110 V78 C110 114 82 134 60 142 C38 134 10 114 10 78 Z" fill="url(#g)" stroke="#d8b36a" stroke-width="4" stroke-linejoin="round"/>
+<path d="M18 18 H102 V77 C102 108 78 125 60 132 C42 125 18 108 18 77 Z" fill="none" stroke="#ffe7c4" stroke-opacity=".55" stroke-width="2"/>
+<g fill="none" stroke="#ffe7c4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M60 30 C74 52 88 62 84 84 C82 100 70 110 60 112 C50 110 38 100 36 84 C34 66 48 62 52 48 C54 56 58 58 60 54 C62 46 60 38 60 30 Z"/><path d="M60 112 C54 100 56 90 60 82 C64 90 66 100 60 112 Z" stroke-width="3"/></g>
+</svg>

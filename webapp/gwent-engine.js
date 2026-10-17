@@ -32,6 +32,10 @@
 // one of the player's units to another row; recall returns a unit from the graveyard to the hand. An ambush may
 // release another token than the squirrel (`trapToken`).
 //
+// Boost and strike (extended rules, special cards): a boost gives one ordinary unit of the player's +`amount` strength
+// until the round ends (at most +6 in all); a strike takes `amount` from one ordinary enemy unit (`mageBonus` more
+// from a mage) and destroys it when nothing is left. In the extended rules an ordinary unit never counts for more than 15.
+//
 // Extended rules (cards of the new factions only):
 // - A unit with `swap` returns one of its owner's units from the board to the hand when it is played.
 // - Ambush (special card) is laid hidden in a row of the opponent. When the opponent plays a unit into that
@@ -196,18 +200,19 @@ export function rowValues(row, weatherActive = false, opts = {}) {
     if (card.hero) return card.strength;
     let base = weatherActive ? Math.min(card.strength, opts.weatherBase ?? 1) : card.strength;
     if (opts.rowMod && card.strength > 0) base = Math.max(1, base + opts.rowMod); // curse and blessing
+    if (card.bonus) base = Math.max(1, base + card.bonus); // boost and strike
     let value = base + morales - (card.morale ? 1 : 0);
     if (card.bond) value *= bondCounts[card.bond];
     if (horn || opts.doubled) value *= 2;
     if (opts.halve && weatherActive) value = Math.floor(value / 2);
-    return value;
+    return opts.cap ? Math.min(value, opts.cap) : value;
   });
 }
 
 /** Row values with the side's leader and passive effects applied. */
 export function rowValuesFor(state, side, row) {
   const mine = state.sides[side];
-  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran, weatherBase: mine.faction === 'velen' ? 3 : 1, rowMod: mine.mods?.[row] || 0 });
+  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran, weatherBase: mine.faction === 'velen' ? 3 : 1, rowMod: mine.mods?.[row] || 0, cap: state.ruleset === 'extended' ? 15 : 0 });
 }
 
 /** Total strength of one side. Spies count for the side whose row they stand in. */
@@ -240,6 +245,12 @@ export function legalPlays(state, side) {
         // A swap unit may also send one of the player's units back to the hand.
         if (card.swap) for (const target of ownUnits) plays.push({ uid: card.uid, row, targetUid: target.uid });
       }
+    } else if (card.special === 'boost') {
+      for (const target of ownUnits) plays.push({ uid: card.uid, targetUid: target.uid });
+    } else if (card.special === 'strike') {
+      for (const row of ROWS) for (const target of state.sides[OPPONENT[side]].rows[row]) {
+        if (target.type === 'unit' && !target.hero) plays.push({ uid: card.uid, targetUid: target.uid });
+      }
     } else if (card.special === 'fireball' || card.special === 'curse') {
       for (const row of ROWS) if (state.sides[OPPONENT[side]].rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push({ uid: card.uid, row });
     } else if (card.special === 'blessing') {
@@ -250,7 +261,7 @@ export function legalPlays(state, side) {
         for (const row of ROWS) if (row !== from) plays.push({ uid: card.uid, row, targetUid: unit.uid });
       }
     } else if (card.special === 'recall') {
-      if (me.graveyard.some(item => item.type === 'unit' && !item.hero)) plays.push({ uid: card.uid });
+      if (me.graveyard.some(item => item.type === 'unit' && !item.hero && item.strength <= (card.maxBase ?? Infinity))) plays.push({ uid: card.uid });
     } else if (card.special === 'ambush') {
       for (const row of ROWS) if (!state.sides[OPPONENT[side]].traps?.[row]) plays.push({ uid: card.uid, row });
     } else if (card.special === 'horn' || card.special === 'mardroeme') {
@@ -487,6 +498,7 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
         const swapped = spot && mine.rows[spot.row][spot.index];
         if (!swapped || swapped.uid === card.uid || swapped.type !== 'unit' || swapped.hero) return { error: 'Подмена возвращает только свой обычный отряд.' };
         mine.rows[spot.row].splice(spot.index, 1);
+        delete swapped.bonus;
         mine.hand.push(swapped);
       }
       if (card.muster) musterInto(next, side, card, target);
@@ -502,6 +514,22 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
       owner.mods[row] += (card.special === 'curse' ? -1 : 1) * (card.amount || 2);
     }
     mine.graveyard.push(card);
+  } else if (card.special === 'boost') {
+    const spot = findOnBoard(next, side, targetUid);
+    const unit = spot && mine.rows[spot.row][spot.index];
+    if (!unit || unit.type !== 'unit' || unit.hero) return { error: 'Усиливать можно только свой обычный отряд.' };
+    unit.bonus = Math.min(6, (unit.bonus || 0) + card.amount);
+    mine.graveyard.push(card);
+  } else if (card.special === 'strike') {
+    const foeSide = OPPONENT[side];
+    const spot = findOnBoard(next, foeSide, targetUid);
+    const unit = spot && next.sides[foeSide].rows[spot.row][spot.index];
+    if (!unit || unit.type !== 'unit' || unit.hero) return { error: 'Удар наносится только обычному вражескому отряду.' };
+    // Fanatics of the Eternal Fire strike one point harder.
+    const damage = card.amount + (unit.mage ? card.mageBonus || 0 : 0) + (mine.faction === 'eternal-fire' ? 1 : 0);
+    unit.bonus = (unit.bonus || 0) - damage;
+    if (unit.strength + unit.bonus <= 0) removeFromBoard(next, foeSide, spot.row, unit.uid);
+    mine.graveyard.push(card);
   } else if (card.special === 'teleport') {
     const spot = findOnBoard(next, side, targetUid);
     const unit = spot && mine.rows[spot.row][spot.index];
@@ -512,8 +540,8 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
     mine.graveyard.push(card);
   } else if (card.special === 'recall') {
     mine.graveyard.push(card);
-    const options = mine.graveyard.filter(item => item.type === 'unit' && !item.hero).map(item => ({ id: item.uid, card: item }));
-    if (options.length === 0) return { error: 'В отбое нет отрядов.' };
+    const options = mine.graveyard.filter(item => item.type === 'unit' && !item.hero && item.strength <= (card.maxBase ?? Infinity)).map(item => ({ id: item.uid, card: item }));
+    if (options.length === 0) return { error: 'В отбое нет подходящих отрядов.' };
     askChoice(next, side, 'returnGrave', options);
   } else if (card.special === 'ambush') {
     const foe = next.sides[OPPONENT[side]];
@@ -533,6 +561,7 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
     const target = spot && mine.rows[spot.row][spot.index];
     if (!target || target.type !== 'unit' || target.hero) return { error: 'Чучело заменяет только свой обычный отряд.' };
     mine.rows[spot.row][spot.index] = card;
+    delete target.bonus;
     mine.hand.push(target); // the target returns to hand with its uid
   } else if (card.special === 'scorch') {
     scorchAll(next);
@@ -575,6 +604,8 @@ function runUnitOnPlay(state, side, card, row) {
   if (effect.type === 'mardroeme') transformBerserkers(state, side, row);
   else if (effect.type === 'scorchRow') scorchEnemy(state, side, effect);
   else if (effect.type === 'musterHand') musterFromHand(state, side, effect.group, row);
+  // A unit that is stronger while the enemy has a unit of some kind on the board (witch hunters against mages).
+  else if (effect.type === 'selfBoost' && ROWS.some(r => state.sides[OPPONENT[side]].rows[r].some(other => other[effect.ifEnemy]))) card.bonus = (card.bonus || 0) + effect.amount;
 }
 
 function runLeader(state, side, effect) {
@@ -668,6 +699,7 @@ function removeFromBoard(state, side, row, uid) {
   const index = cards.findIndex(card => card.uid === uid);
   if (index < 0) return;
   const [card] = cards.splice(index, 1);
+  delete card.bonus;
   state.sides[side].graveyard.push(card);
   if (card.onDestroy?.type === 'summon') state.sides[side].rows[row].push(makeToken(state, card.onDestroy.token));
 }
@@ -728,10 +760,10 @@ function advance(state, justActed) {
   state.turn = next;
 }
 
-function reviveRandom(state, side, count) {
+function reviveRandom(state, side, count, maxStrength = Infinity) {
   const mine = state.sides[side];
   for (let i = 0; i < count; i += 1) {
-    const pool = mine.graveyard.filter(card => card.type === 'unit' && !card.hero && !card.spy);
+    const pool = mine.graveyard.filter(card => card.type === 'unit' && !card.hero && !card.spy && card.strength <= maxStrength);
     if (pool.length === 0) return;
     const card = pool[Math.floor(random(state) * pool.length)];
     takeFrom(mine.graveyard, card.uid);
@@ -766,6 +798,8 @@ function endRound(state) {
     }
     state.sides[side].doubled = noDoubles();
     state.sides[side].mods = noMods();
+    for (const card of state.sides[side].graveyard) delete card.bonus;
+    if (kept) delete kept.card.bonus;
   }
   state.weather = noWeather();
   state.reveals = { player: [], ai: [] };
@@ -798,8 +832,8 @@ function endRound(state) {
     // Wild Hunt draw a card for a lost round.
     if (winner === OPPONENT[side] && state.sides[side].faction === 'wild-hunt') drawCards(state.sides[side], 1);
     // Skellige: two random non-hero units come back from the graveyard at the start of round 3.
-    // Under the extended rules Skellige also get one unit back at the start of round 2.
-    if (state.sides[side].faction === 'skellige' && (state.round === 3 || (state.round === 2 && state.ruleset === 'extended'))) reviveRandom(state, side, state.round === 3 ? 2 : 1);
+    // Under the extended rules Skellige also get one light unit (3 strength at most) back at the start of round 2.
+    if (state.sides[side].faction === 'skellige' && (state.round === 3 || (state.round === 2 && state.ruleset === 'extended'))) reviveRandom(state, side, state.round === 3 ? 2 : 1, state.round === 3 ? Infinity : 3);
     // Sorceresses: a random spell from the graveyard returns to the hand at the start of rounds 2 and 3.
     if (state.sides[side].faction === 'sorceresses') {
       const spells = state.sides[side].graveyard.filter(card => card.spell);

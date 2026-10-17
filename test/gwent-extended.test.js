@@ -22,9 +22,9 @@ function scene(faction = 'wild-hunt', foe = 'redania') {
   return state;
 }
 
-test('the rule sets: classic is the five original factions, extended adds six more', () => {
+test('the rule sets: classic is the five original factions, extended adds seven more', () => {
   assert.deepEqual(RULESETS.classic.factions, DECK_IDS);
-  assert.equal(RULESETS.extended.factions.length, 11);
+  assert.equal(RULESETS.extended.factions.length, 12);
   assert.deepEqual(EXTENDED_FACTIONS.filter(id => rulesetAllows('classic', id)), []);
   assert.ok(RULESETS.extended.factions.every(id => rulesetAllows('extended', id)));
   assert.equal(normalizeRuleset('anything'), 'classic');
@@ -365,4 +365,78 @@ test('Sorceresses get a spell back from the graveyard at the start of rounds 2 a
   const spells = next.sides.player.hand.filter(card => card.spell);
   assert.equal(spells.length, 1, 'one spell comes back');
   assert.equal(next.sides.player.graveyard.some(card => card.id === 'so-golem'), true, 'units are not spells');
+});
+
+// ---- boost, strike, mages, the strength cap and the Eternal Fire ------------------------------
+
+test('boost gives one ordinary unit of yours up to +6 until the round ends; the bonus is lost when it leaves the board', () => {
+  const state = scene('wild-hunt', 'redania');
+  const prep = make('ex-prep'), unit = make('wh-ice-warrior'), hero = make('wh-caranthir');
+  state.sides.player.rows = rows([unit, hero]);
+  state.sides.player.hand = [prep, make('ex-prep'), make('wh-ice-warrior')];
+  state.sides.ai.hand = [make('re-captain')];
+  const targets = legalPlays(state, 'player').filter(play => play.uid === prep.uid).map(play => play.targetUid);
+  assert.deepEqual(targets, [unit.uid], 'no hero');
+  let next = playCard(state, 'player', prep.uid, { targetUid: unit.uid }).state;
+  assert.equal(scores(next).player, 4 + 5 + 10);
+  next.turn = 'player';
+  next = playCard(next, 'player', next.sides.player.hand[0].uid, { targetUid: unit.uid }).state;
+  assert.equal(scores(next).player, 4 + 6 + 10, 'at most +6 in all');
+  assert.ok(playCard(state, 'player', prep.uid, { targetUid: hero.uid }).error);
+  next.turn = 'player'; next.passed.ai = true;
+  const ended = passRound(next, 'player').state;
+  assert.equal(ended.sides.player.graveyard.every(card => card.bonus === undefined), true, 'bonuses end with the round');
+});
+
+test('strike takes strength from one ordinary enemy unit, more from a mage, and destroys what is left with nothing', () => {
+  const state = scene('eternal-fire', 'sorceresses');
+  const purge = make('ef-purge'), mage = make('so-adept'), soldier = make('so-guard'), hero = make('so-tissaia');
+  state.sides.ai.rows = rows([soldier, hero], [mage]);
+  state.sides.player.hand = [purge, make('ef-purge'), make('ef-templar')];
+  state.sides.ai.hand = [make('so-guard')];
+  const targets = legalPlays(state, 'player').filter(play => play.uid === purge.uid).map(play => play.targetUid).sort();
+  assert.deepEqual(targets, [soldier.uid, mage.uid].sort(), 'no hero');
+  const struck = playCard(state, 'player', purge.uid, { targetUid: soldier.uid }).state;
+  assert.equal(scores(struck).ai, 10 + 4, 'the guard (5) takes 4 + 1 and is gone; the hero and the adept are untouched');
+  assert.equal(struck.sides.ai.rows.close.find(card => card.uid === soldier.uid), undefined, 'a unit with nothing left is destroyed');
+  const burned = playCard(state, 'player', purge.uid, { targetUid: mage.uid }).state;
+  assert.equal(burned.sides.ai.rows.ranged.length, 0, 'a mage takes 4 + 1 (mage) + 1 (Eternal Fire) and is destroyed');
+  assert.ok(playCard(state, 'player', purge.uid, { targetUid: hero.uid }).error);
+  assert.equal(burned.sides.player.graveyard.some(card => card.id === 'ef-purge'), true);
+});
+
+test('a witch hunter is stronger when the enemy has a mage on the board; other factions strike for the printed amount', () => {
+  const state = scene('eternal-fire', 'sorceresses');
+  const hunter = make('ef-witch-hunter');
+  state.sides.player.hand = [hunter, make('ef-templar')];
+  state.sides.ai.hand = [make('so-guard')];
+  assert.equal(scores(playCard(state, 'player', hunter.uid, { row: 'close' }).state).player, 5, 'no mage: plain strength');
+  state.sides.ai.rows = rows([], [make('so-adept')]);
+  assert.equal(scores(playCard(state, 'player', hunter.uid, { row: 'close' }).state).player, 7, 'a mage on the board: +2');
+  const redania = scene('redania', 'sorceresses');
+  const hunt = make('re-traitor-hunt'), target = make('so-guard');
+  redania.sides.ai.rows = rows([target]);
+  redania.sides.player.hand = [hunt, make('re-captain')];
+  redania.sides.ai.hand = [make('so-guard')];
+  const hit = playCard(redania, 'player', hunt.uid, { targetUid: target.uid }).state;
+  assert.equal(hit.sides.ai.rows.close.find(card => card.uid === target.uid).bonus, -4, 'Redania strike for 4 only');
+});
+
+test('field medic recalls only light units; in the extended rules an ordinary unit never counts for more than 15', () => {
+  const state = scene('wild-hunt', 'redania');
+  const medic = make('ex-medic');
+  state.sides.player.graveyard = [make('wh-caranthir'), make('wh-ghost-ship')];
+  state.sides.player.hand = [medic];
+  assert.equal(legalPlays(state, 'player').length, 0, 'the only unit left is too strong (6)');
+  state.sides.player.graveyard.push(make('wh-ice-warrior'));
+  assert.equal(legalPlays(state, 'player').length, 1);
+  assert.deepEqual(playCard(state, 'player', medic.uid).state.pending.options.map(option => option.card.id), ['wh-ice-warrior']);
+
+  const riders = [make('wh-red-rider'), make('wh-red-rider'), make('wh-red-rider'), make('commanders-horn')];
+  const capped = scene('wild-hunt', 'redania');
+  capped.sides.player.rows = rows(riders);
+  assert.equal(scores(capped).player, 15 * 3, 'bond 3 x 5 doubled by the horn would be 30 each');
+  const original = createMatch({ playerDeck: GWENT_DECKS.skellige, aiDeck: GWENT_DECKS.nilfgaard, rng: seededRandom(2), setup: false });
+  original.sides.player.rows = rows([make('craite'), make('craite'), make('craite')]);
+  assert.equal(scores(original).player, 6 * 3 * 3, 'the original rules have no cap');
 });
