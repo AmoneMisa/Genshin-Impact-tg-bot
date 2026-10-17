@@ -7,8 +7,8 @@ import { RULESETS, normalizeRuleset, rulesetAllows, deckFor, loadoutKey, GWENT_D
 import { GWENT_ART, GWENT_PRINTED_CARDS } from './gwent-art.js';
 import { cardArtOptions, cardArtSource } from './gwent-art-options.js';
 import { buildDeck, aiLoadout, defaultLoadout, inspectLoadout, repairLoadout, filterCards, cardTraits, leaderDescription } from './gwent-builder.js';
-import { createMatch, legalPlays, playCard, passRound, resolveChoice, rowValuesFor, scores } from './gwent-engine.js';
-import { chooseAiAction, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
+import { createMatch, createTable, TABLE_SEATS, legalPlays, playCard, passRound, resolveChoice, rowValuesFor, scores } from './gwent-engine.js';
+import { decideAi, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
 const FACTIONS = RULESETS.extended.factions; // every faction; a rule set allows some of them
 const kitOf = id => /^(wh|wi|to|ve|re|so|ef|ex)-/.exec(id)?.[1] || '';
@@ -54,6 +54,12 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   let faction = 'northern-realms', enemyFaction = 'nilfgaard', screen = 'decks', mode = 'ai', level = DEFAULT_AI_LEVEL, ruleset = 'classic';
   try { ruleset = normalizeRuleset(localStorage.getItem('gwent-ruleset')); } catch { /* storage is optional */ }
   const factionsNow = () => RULESETS[ruleset].factions;
+  // Tables of three or four (extended rules, against the AI): how many play, and which opponent is shown in full.
+  let tableSize = 2, focusSeat = 'ai';
+  try { tableSize = [2, 3, 4].includes(Number(localStorage.getItem('gwent-table-size'))) ? Number(localStorage.getItem('gwent-table-size')) : 2; } catch { /* optional */ }
+  const isTableState = () => (state?.seats?.length || 2) > 2;
+  const seatName = seat => (seat === 'player' ? remote?.playerName || 'Вы' : isTableState() ? `Противник ${state.seats.indexOf(seat)}` : remote?.opponent || 'Противник');
+  const pickPlays = () => (pick ? pick.plays.filter(play => !pick.seat || play.seat === pick.seat) : []);
   const keyOf = (id = faction) => loadoutKey(ruleset, id);
   const deckNow = id => deckFor(ruleset, id);
   /** The deck for an invitation under its own rules: the current faction when allowed, else the first allowed one. */
@@ -93,6 +99,11 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       ${deckSummary(loadouts[keyOf()])}<div class="gwent-lobby-actions">${button('Состав колоды и лидер ' + controlIcon('chevron-right'), 'data-editor')}
       ${button('Выбрать колоду', 'data-mode', true)}</div>`;
   }
+  /** How many play at the table: two (a duel) or, under the extended rules, three or four against the AI. */
+  function tableHtml() {
+    return `<h3 class="gwent-question">За столом</h3><div class="gwent-mode-options gwent-table-size" role="radiogroup" aria-label="Игроков за столом">${[[2, 'Двое', 'Дуэль'], [3, 'Трое', 'Каждый за себя'], [4, 'Четверо', 'Каждый за себя']].map(([value, title, subtitle]) => `<label class="ui-button ui-illustrated-choice gwent-mode" data-selected="${tableSize === value}">
+      <span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-table-size" value="${value}" ${tableSize === value ? 'checked' : ''}></label>`).join('')}</div>`;
+  }
   function levelHtml() {
     return `<h3 class="gwent-question">Сложность ИИ</h3><div class="gwent-mode-options gwent-levels" role="radiogroup" aria-label="Сложность ИИ">${[['easy', 'Простой', 'Для новичков'], ['medium', 'Средний', 'Играет разумно, но без планов'], ['hard', 'Сильный', 'Считает ходы вперёд. Трудно обыграть']].map(([value, title, subtitle]) => `<label class="ui-button ui-illustrated-choice gwent-mode" data-selected="${level === value}">
       <span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-level" value="${value}" ${level === value ? 'checked' : ''}></label>`).join('')}</div>`;
@@ -102,7 +113,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       ${[['online', 'Против игрока', api ? 'Найти соперника среди всех игроков' : 'Онлайн доступен при входе через Telegram', 'back:nilfgaard'],
         ['ai', 'Против ИИ', 'Матч с компьютерным соперником', 'back:northern-realms']].map(([value, title, subtitle, key]) => `<label class="ui-button ui-illustrated-choice gwent-mode" aria-disabled="${value === 'online' && !api}" data-selected="${mode === value}">
         ${image(key, 'gwent-mode-art')}<span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-mode" value="${value}" ${mode === value ? 'checked' : ''} ${value === 'online' && !api ? 'disabled' : ''}></label>`).join('')}</div>
-      ${mode === 'ai' ? levelHtml() : ''}
+      ${mode === 'ai' && ruleset === 'extended' ? tableHtml() : ''}${mode === 'ai' ? levelHtml() : ''}
       <p class="gwent-hint">${mode === 'online' ? 'На ход — 5 минут. Если не сделать ход, матч завершится поражением.' : 'Колода соперника выбирается случайно.'}</p>
       ${onlineError ? `<p class="gwent-hint">${esc(onlineError)}</p>${button('Проверить подключение', 'data-reconnect')}` : ''}
       ${api && mode === 'online' && ruleset === 'extended' ? '<p class="gwent-hint">Расширенные правила: рейтинг не меняется.</p>' : ''}
@@ -210,24 +221,40 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const horn = cards.some(card => card.special === 'horn'), innate = cards.some(card => card.horn), doubled = state.sides[side].doubled[row];
     const targetUids = new Set(decoy?.plays.map(play => play.targetUid));
     const canTarget = side === 'player' && pick?.card.special === 'horn' && pick.plays.some(play => play.row === row);
-    const trap = side === 'ai' && state.sides.ai.traps?.[row];
+    // Ambushes the player laid in an opponent's row (the opponents' own ambushes are never shown).
+    const laid = side !== 'player' && state.sides[side].traps?.[row];
+    const trap = laid && (laid.by ?? 'player') === 'player';
     return `<div class="gwent-row${state.weather[row] ? ' weather' : ''}" data-side="${side}" data-row="${row}"${trap ? ' data-trap="true"' : ''}>
       <span class="gwent-row-label" title="${ROW_LABELS[row]}">${image('icon:card_row_' + row)}<span>${ROW_LABELS[row]}</span>${trap ? `<span class="gwent-trap" role="img" aria-label="Ваша засада в этом ряду" title="Ваша засада">${icon('sparkle')}</span>` : ''}</span>
       <div class="gwent-row-cards" aria-label="${remote?.spectator ? esc(side === 'player' ? remote.playerName : remote.opponent) : side === 'player' ? 'Ваш ряд' : 'Ряд противника'}: ${ROW_LABELS[row]}">${cards.map((card, i) => card.special === 'horn' ? '' : gwentCardHtml(card, values[i], { compact: true, target: targetUids.has(card.uid), action: targetUids.has(card.uid) ? '' : `data-board-card="${card.uid}"` })).join('')}</div>
       <button type="button" class="ui-button gwent-horn${horn ? ' active' : ''}${canTarget ? ' target' : ''}" ${canTarget ? `data-pick-row="${row}"` : `data-horn-side="${side}" data-horn-row="${row}"`} aria-label="${ROW_LABELS[row]}: ${horn ? 'Командирский рог активен' : innate ? 'Рог от способности отряда' : doubled ? 'Удвоение от лидера' : 'Ячейка командирского рога пуста'}">${image('icon:card_ability_horn')}${horn || innate || doubled ? '<small>×2</small>' : ''}</button>
       <strong class="gwent-row-score">${values.reduce((a, b) => a + b, 0)}</strong></div>`;
   }
+  /** The score marker of a seat: gems for the rounds won at a duel, points by place at a table. */
+  function markerHtml(side) {
+    if (isTableState()) return `<span class="gwent-points" aria-label="Очков за раунды: ${state.points[side]}">${state.points[side]} оч.</span>`;
+    return `<span class="gwent-gems" aria-label="Побед в раундах: ${state.wins[side]}">${[0, 1].map(i => image('icon:icon_gem_' + (state.wins[side] > i ? 'on' : 'off'))).join('')}</span>`;
+  }
+  /** An opponent at a table: a one-line summary that opens into the full board when tapped. */
+  function opponentHtml(side) {
+    if (decoy || focusSeat === side) return sideHtml(side);
+    const s = state.sides[side], f = s.faction, total = scores(state)[side];
+    const totals = ROWS.map(row => rowValuesFor(state, side, row).reduce((a, b) => a + b, 0));
+    return `<button type="button" class="ui-button gwent-opponent" data-focus-seat="${side}" data-faction="${f}" aria-label="${esc(seatName(side))}: показать ряды">
+      <span class="gwent-opponent-head">${image('shield:' + f, 'gwent-crest')}<span>${esc(seatName(side))} · ${esc(GWENT_DECKS[f].title)}${state.passed[side] ? ' · Пас' : ''}</span>${markerHtml(side)}<strong>${total}</strong></span>
+      <small>${ROWS.map((row, i) => `${ROW_LABELS[row]} ${totals[i]}`).join(' · ')} · В руке ${s.handCount ?? s.hand.length}</small></button>`;
+  }
   function sideHtml(side) {
-    const f = side === 'player' ? faction : enemyFaction, s = state.sides[side], total = scores(state)[side];
-    const leader = s.leader;
-    return `<section class="gwent-side ${side}" data-faction="${f}" aria-label="${esc(side === 'player' ? remote?.playerName || 'Вы' : remote?.opponent || 'Противник')}">
-      <div class="gwent-side-head">${image('shield:' + f, 'gwent-crest')}<span>${esc(side === 'player' ? remote?.playerName || 'Вы' : remote?.opponent || 'Противник')} · ${esc(GWENT_DECKS[f].title)}${state.passed[side] ? ' · Пас' : ''}</span>
-      <span class="gwent-gems" aria-label="Побед в раундах: ${state.wins[side]}">${[0, 1].map(i => image('icon:icon_gem_' + (state.wins[side] > i ? 'on' : 'off'))).join('')}</span><strong>${total}</strong></div>
+    const s = state.sides[side], f = s.faction, total = scores(state)[side];
+    const leader = s.leader, name = seatName(side);
+    return `<section class="gwent-side ${side}" data-faction="${f}" aria-label="${esc(name)}">
+      <div class="gwent-side-head">${image('shield:' + f, 'gwent-crest')}<span>${esc(name)} · ${esc(GWENT_DECKS[f].title)}${state.passed[side] ? ' · Пас' : ''}</span>
+      ${markerHtml(side)}<strong>${total}</strong>${isTableState() && side !== 'player' ? button('Свернуть', `data-focus-seat="${side}" data-collapse`) : ''}</div>
       <aside class="gwent-side-meta">${leader ? `<button class="ui-button ui-card-art gwent-leader-portrait" type="button" data-preview-leader="${side}" aria-label="${esc(leader.name)}">${image(leader.id, '', '', cardArtSource(leader.id, leader.artIndex))}${GWENT_PRINTED_CARDS.has(leader.id) ? '' : `<span>${esc(leader.name)}</span>`}</button>` : ''}
         <div class="gwent-piles">${button(`${image('back:' + f)}<b>${s.deckCount ?? s.deck.length}</b>`, `data-pile="${side}:deck" ${aria(`Карт в колоде: ${s.deckCount ?? s.deck.length}`)} title="${esc('Колода')}"`, false, 'ui-card-art gwent-pile')}
         ${button(`${image('icon:discard')}<b>${s.graveyard.length}</b>`, `data-pile="${side}:graveyard" ${aria(`Карт в отбое: ${s.graveyard.length}`)} title="${esc('Отбой')}"`, false, 'ui-card-art gwent-pile')}
         </div><small>В руке: ${s.handCount ?? s.hand.length}</small></aside>
-      <div class="gwent-rows">${(side === 'ai' ? [...ROWS].reverse() : ROWS).map(row => rowHtml(side, row)).join('')}</div></section>`;
+      <div class="gwent-rows">${(side !== 'player' ? [...ROWS].reverse() : ROWS).map(row => rowHtml(side, row)).join('')}</div></section>`;
   }
   function handHtml() {
     if (remote?.spectator) return '<p class="gwent-hint">Режим зрителя · Карты в руках скрыты</p>';
@@ -240,27 +267,57 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       selectable: playable.has(card.uid), selected: (pick?.uid || decoy?.uid) === card.uid, action: playable.has(card.uid) ? '' : `data-preview-id="${card.id}"`,
     })).join('') || '<span class="gwent-hint">В руке нет карт</span>'}</div>`;
   }
+  /** What a selected card still needs: an opponent (at a table), then a row, or just a button to play it. */
+  function pickerHtml() {
+    const hint = ({ ambush: ' · выберите ряд противника', fireball: ' · выберите ряд противника', curse: ' · выберите ряд противника', blessing: ' · выберите свой ряд' })[pick.card.special] || '';
+    const plays = pickPlays();
+    const seats = [...new Set(pick.plays.map(play => play.seat).filter(Boolean))];
+    let choice;
+    if (seats.length > 1 && !pick.seat) choice = seats.map(seat => button(`${esc(seatName(seat))}`, `data-pick-seat="${seat}"`)).join('');
+    else if (plays.length === 1) choice = button('Сыграть', 'data-play-selected', true);
+    else choice = [...new Set(plays.map(play => play.row))].map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('');
+    return `<div class="ui-inset-row gwent-picker"><span>${esc(pick.card.name)}<small>${esc(cardTraits(pick.card))}${hint}${seats.length > 1 && !pick.seat ? ' · выберите соперника' : ''}</small></span>${choice}${pick.swapPlays.length ? button('С подменой', 'data-swap-selected') : ''}${button('Отмена', 'data-cancel-card')}</div>`;
+  }
+  /** The winner line at a table: who has the most points. */
+  function tableWinnerText() {
+    if (state.winner === 'draw') return `Ничья: ${state.winners.map(seatName).join(', ')}`;
+    return state.winner === 'player' ? 'Вы победили!' : `Победил ${seatName(state.winner)}`;
+  }
   function matchScreen() {
-    const turn = remote?.spectator ? (state.phase === 'matchOver' ? 'Матч окончен' : `Ход: ${state.turn === 'player' ? remote.playerName : remote.opponent}`) : state.phase === 'matchOver' ? 'Матч окончен' : state.pending?.side === 'player' ? 'Ваш выбор' : state.turn === 'player' ? 'Ваш ход' : 'Ход противника';
+    const turn = remote?.spectator ? (state.phase === 'matchOver' ? 'Матч окончен' : `Ход: ${state.turn === 'player' ? remote.playerName : remote.opponent}`) : state.phase === 'matchOver' ? 'Матч окончен' : state.pending?.side === 'player' ? 'Ваш выбор' : state.turn === 'player' ? 'Ваш ход' : isTableState() ? `Ходит ${seatName(state.pending ? state.pending.side : state.turn)}` : 'Ход противника';
     const weather = ROWS.filter(row => state.weather[row]).map(row => WEATHER[row]).join(' · ') || 'Ясно';
     const leader = state.sides.player.leader, passive = leader?.effect.type.startsWith('passive-');
     const ready = leader && myPlays().some(play => play.uid === leader.uid);
     let actions = '';
     if (remote?.spectator) actions = `${state.phase === 'matchOver' ? `<strong>${state.winner === 'draw' ? 'Ничья' : esc(state.winner === 'player' ? remote.playerName : remote.opponent)}</strong>` : ''}${button('К списку игр', 'data-leave-watch')}`;
-    else if (state.phase === 'matchOver') actions = `<strong class="gwent-result">${state.winner === 'player' ? 'Вы победили!' : state.winner === 'ai' ? 'Победил противник' : 'Ничья'}</strong>${button('Итоги', 'data-open-summary')}${rematchHtml()}${button('Новая игра', 'data-finish', !rematchHtml())}`;
+    else if (state.phase === 'matchOver') actions = `<strong class="gwent-result">${isTableState() ? tableWinnerText() : state.winner === 'player' ? 'Вы победили!' : state.winner === 'ai' ? 'Победил противник' : 'Ничья'}</strong>${button('Итоги', 'data-open-summary')}${rematchHtml()}${button('Новая игра', 'data-finish', !rematchHtml())}`;
     else actions = `${leader ? button(passive ? 'Лидер · постоянно' : state.sides.player.leaderUsed ? 'Лидер использован' : state.sides.player.leaderCancelled ? 'Лидер отменён' : 'Лидер', `data-leader ${ready ? '' : 'disabled'} title="${esc(leader.name)}"`) : ''}
       ${button('Пас', `data-pass ${state.pending || state.turn !== 'player' || state.passed.player || busy ? 'disabled' : ''}`, true)}<details class="gwent-more"><summary aria-label="Другие действия">${controlIcon('more')}</summary><div>${button('Завершить матч', 'data-end-match')}</div></details>`;
-    return `<div class="gwent-status"><span>Раунд ${state.round} <span aria-hidden="true">│</span> Победы ${state.wins.player} : ${state.wins.ai}</span>${remote && state.phase === 'playing' ? `<small data-gwent-clock>До хода: ${Math.max(0, Math.ceil((remote.deadline - (Date.now() + serverOffset)) / 60000))} мин.</small>` : ''}</div>
-      ${sideHtml('ai')}<div class="gwent-weather">${esc(weather)}</div>${sideHtml('player')}
+    const standing = isTableState() ? `Очки: ${state.seats.map(seat => `${seat === 'player' ? 'Вы' : seatName(seat)} ${state.points[seat]}`).join(' · ')}` : `Победы ${state.wins.player} : ${state.wins.ai}`;
+    return `<div class="gwent-status"><span>Раунд ${state.round} <span aria-hidden="true">│</span> ${standing}</span>${remote && state.phase === 'playing' ? `<small data-gwent-clock>До хода: ${Math.max(0, Math.ceil((remote.deadline - (Date.now() + serverOffset)) / 60000))} мин.</small>` : ''}</div>
+      ${state.seats?.length > 2 ? state.seats.filter(seat => seat !== 'player').map(opponentHtml).join('') : sideHtml('ai')}<div class="gwent-weather">${esc(weather)}</div>${sideHtml('player')}
       ${state.reveals.player.length ? `<div class="ui-inset-row gwent-reveal">Открыты: ${state.reveals.player.map(card => esc(card.name)).join(', ')}</div>` : ''}
       <div class="gwent-turn" role="status">${turn}</div>${handHtml()}
-      ${pick ? `<div class="ui-inset-row gwent-picker"><span>${esc(pick.card.name)}<small>${esc(cardTraits(pick.card))}${({ ambush: ' · выберите ряд противника', fireball: ' · выберите ряд противника', curse: ' · выберите ряд противника', blessing: ' · выберите свой ряд' })[pick.card.special] || ''}</small></span>${pick.plays.length === 1
-        ? button('Сыграть', 'data-play-selected', true) : [...new Set(pick.plays.map(play => play.row))].map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('')}${pick.swapPlays.length ? button('С подменой', 'data-swap-selected') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
+      ${pick ? pickerHtml() : ''}
       ${decoy ? `<div class="ui-inset-row gwent-picker"><span>${decoy.chosen ? 'Выберите ряд' : promptFor(state.sides.player.hand.find(card => card.uid === decoy.uid)?.special) ?? (decoy.row ? 'Выберите свой отряд, который вернётся в руку' : 'Выберите свой обычный отряд на поле для замены чучелом')}</span>${decoy.chosen ? decoy.rowChoices.map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
       <div class="gwent-actions">${actions}</div>`;
   }
   /** Round by round result, the winner, and the rematch offer. Shown as a popup when a match ends. */
+  function tableSummaryHtml() {
+    const rounds = state.rounds || [];
+    const seats = state.seats;
+    const place = seat => 1 + seats.filter(other => state.points[other] > state.points[seat]).length;
+    return `<div class="gwent-result-view"><p class="gwent-result-winner" role="status"><strong>${esc(tableWinnerText())}</strong></p>
+      <p class="gwent-hint">Очки за места в раундах: 1-е место — ${seats.length === 4 ? 3 : 2}, последнее — 0. Расширенные правила: рейтинг не меняется.</p>
+      <div class="gwent-result-table gwent-table-result" role="table" aria-label="Очки по раундам" style="--seats:${seats.length}">
+        <div class="gwent-result-row gwent-result-head" role="row"><span role="columnheader">Раунд</span>${seats.map(seat => `<span role="columnheader">${esc(seatName(seat))}</span>`).join('')}</div>
+        ${rounds.map(round => `<div class="gwent-result-row" role="row"><span role="cell">${round.round}</span>${seats.map(seat => `<span role="cell" data-won="${(round.points?.[seat] ?? 0) === Math.max(...Object.values(round.points || {}))}">${round.points?.[seat] ?? 0} <small>(${round.scores[seat]})</small></span>`).join('')}</div>`).join('')}
+        <div class="gwent-result-row gwent-result-total" role="row"><span role="cell">Итого</span>${seats.map(seat => `<span role="cell" data-won="${state.winners.includes(seat)}"><strong>${state.points[seat]}</strong> <small>${place(seat)}-е</small></span>`).join('')}</div>
+      </div>
+      <div class="gwent-actions">${button('К полю', 'data-close-summary')}${button('Реванш', 'data-rematch', true)}${button('Новая игра', 'data-finish')}</div></div>`;
+  }
   function summaryHtml() {
+    if (isTableState()) return tableSummaryHtml();
     const you = remote?.spectator ? remote.playerName : 'Вы';
     const them = remote?.opponent || 'Противник';
     const winner = state.winner === 'draw' ? 'Ничья'
@@ -405,6 +462,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const last = state.lastRound;
     if (!last || last.round === announcedRound) return;
     announcedRound = last.round;
+    if (isTableState()) { note(`Раунд ${last.round}: ваши очки — ${last.points?.player ?? 0}, счёт ${last.scores.player}`); return; }
     note(`${last.winner === 'draw' ? 'Ничья' : last.winner === 'player' ? 'Раунд за вами' : 'Раунд за противником'}: ${last.scores.player} : ${last.scores.ai}`);
   }
   function apply(result) {
@@ -419,30 +477,31 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   }
   function scheduleAi() {
     clearTimeout(aiTimer);
-    if (closed || remote || screen !== 'match' || document.hidden || state?.phase !== 'playing' || aiThinking === state || !(state.pending?.side === 'ai' || state.turn === 'ai')) return;
+    const mover = state?.pending ? state.pending.side : state?.turn;
+    if (closed || remote || screen !== 'match' || document.hidden || state?.phase !== 'playing' || aiThinking === state || !mover || mover === 'player') return;
     aiTimer = setTimeout(async () => {
-      const snapshot = state;
+      const snapshot = state, seat = mover;
       aiThinking = snapshot;
-      const action = await thinkAi(snapshot, matchLevel);
+      const action = await thinkAi(snapshot, matchLevel, seat);
       aiThinking = null;
       // The match may have been closed, restarted or moved on while the AI was thinking.
       if (!action || closed || state !== snapshot) return;
-      apply(action.type === 'choice' ? resolveChoice(state, 'ai', action.id) : action.type === 'pass' ? passRound(state, 'ai') : playCard(state, 'ai', action.uid, action));
+      apply(action.type === 'choice' ? resolveChoice(state, seat, action.id) : action.type === 'pass' ? passRound(state, seat) : playCard(state, seat, action.uid, action));
     }, 650);
   }
   /** The strong AI searches in a Web Worker; any worker failure falls back to the main thread. */
-  function thinkAi(snapshot, aiLevel) {
+  function thinkAi(snapshot, aiLevel, seat = 'ai') {
     const options = { level: aiLevel };
-    if (aiLevel !== 'hard' || aiWorker === false) return Promise.resolve(chooseAiAction(snapshot, options));
+    if (aiLevel !== 'hard' || aiWorker === false) return Promise.resolve(decideAi(snapshot, seat, options));
     try { aiWorker ||= new Worker(new URL('./gwent-ai-worker.js', import.meta.url), { type: 'module' }); } catch { aiWorker = false; }
-    if (!aiWorker) return Promise.resolve(chooseAiAction(snapshot, options));
+    if (!aiWorker) return Promise.resolve(decideAi(snapshot, seat, options));
     const worker = aiWorker, id = ++aiCall;
     return new Promise(resolve => {
       const finish = value => { worker.removeEventListener('message', onMessage); worker.removeEventListener('error', onError); resolve(value); };
-      const onMessage = ({ data }) => { if (data.id !== id) return; if (data.action === undefined) { aiWorker = false; finish(chooseAiAction(snapshot, options)); } else finish(data.action); };
-      const onError = () => { aiWorker = false; finish(chooseAiAction(snapshot, options)); };
+      const onMessage = ({ data }) => { if (data.id !== id) return; if (data.action === undefined) { aiWorker = false; finish(decideAi(snapshot, seat, options)); } else finish(data.action); };
+      const onError = () => { aiWorker = false; finish(decideAi(snapshot, seat, options)); };
       worker.addEventListener('message', onMessage); worker.addEventListener('error', onError);
-      worker.postMessage({ id, state: snapshot, options });
+      worker.postMessage({ id, state: snapshot, seat, options });
     });
   }
   function startAi(keepEnemy = false) {
@@ -450,6 +509,16 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     if (!keepEnemy || !rulesetAllows(ruleset, enemyFaction)) enemyFaction = factionsNow()[Math.floor(Math.random() * factionsNow().length)];
     matchLevel = level;
     remote = null; watchId = null; focusedInvite = null; pick = null; decoy = null; announcedRound = null;
+    const size = ruleset === 'extended' ? tableSize : 2;
+    if (size > 2) {
+      // Every opponent plays a different faction of the rules when there are enough of them.
+      const pool = factionsNow().filter(id => id !== faction).sort(() => Math.random() - 0.5);
+      const decks = [buildDeck(loadouts[keyOf()]), ...pool.slice(0, size - 1).map(id => buildDeck(aiLoadout(id, level, undefined, ruleset)))];
+      focusSeat = 'ai';
+      state = createTable({ decks, seats: TABLE_SEATS.slice(0, size) });
+      go('match');
+      return;
+    }
     const aiDeck = buildDeck(aiLoadout(enemyFaction, level, undefined, ruleset));
     state = createMatch({ playerDeck: buildDeck(loadouts[keyOf()]), aiDeck }); go('match');
   }
@@ -501,6 +570,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       if (!rulesetAllows(ruleset, faction)) faction = factionsNow()[0];
       render();
     }
+    else if (el.name === 'gwent-table-size') { tableSize = [2, 3, 4].includes(Number(el.value)) ? Number(el.value) : 2; try { localStorage.setItem('gwent-table-size', String(tableSize)); } catch { /* optional */ } render(); }
     else if (el.name === 'gwent-level') { level = normalizeAiLevel(el.value); try { localStorage.setItem('gwent-ai-level', level); } catch { /* optional */ } render(); }
   });
   panel.addEventListener('click', async event => {
@@ -569,10 +639,12 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       const uid = Number(d.cardUid), plays = myPlays().filter(play => play.uid === uid); if (!plays.length) return;
       const card = state.sides.player.hand.find(card => card.uid === uid); pick = null; decoy = null;
       // A decoy always names a target; a swap unit may be played plainly or with a unit to take back.
-      if (plays[0].targetUid !== undefined) decoy = { uid, plays }; else pick = { uid, plays: plays.filter(play => play.targetUid === undefined), swapPlays: plays.filter(play => play.targetUid !== undefined), card }; note(); render();
+      if (plays[0].targetUid !== undefined) decoy = { uid, plays }; else pick = { uid, plays: plays.filter(play => play.targetUid === undefined), swapPlays: plays.filter(play => play.targetUid !== undefined), card, seat: undefined }; note(); render();
     } else if ('cancelCard' in d) { pick = null; decoy = null; render(); }
-    else if ('playSelected' in d && pick) await play(pick.uid, pick.plays[0]);
-    else if (d.pickRow && pick) await play(pick.uid, { row: d.pickRow });
+    else if ('playSelected' in d && pick) await play(pick.uid, pickPlays()[0]);
+    else if (d.pickSeat && pick) { pick = { ...pick, seat: d.pickSeat }; render(); }
+    else if (d.pickRow && pick) await play(pick.uid, { row: d.pickRow, seat: pick.seat });
+    else if (d.focusSeat) { focusSeat = 'collapse' in d ? null : d.focusSeat; render(); }
     else if ('swapSelected' in d && pick?.swapPlays.length) { decoy = { uid: pick.uid, plays: pick.swapPlays, row: pick.swapPlays[0].row }; pick = null; render(); }
     else if (d.targetUid && decoy) {
       // A decoy or swap names one unit; a teleport then asks for the row it moves to.

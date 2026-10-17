@@ -148,6 +148,39 @@ try {
     assert.deepEqual(errors,[]);await page.close();
     console.log(`PASS Gwent extended ${width}: ruleset switch, ten factions, drawn crests, tinted cards, match against the AI`);
   }
+  // A table of four against the AI: summaries of the three opponents, one opened, play to the end by passing.
+  for (const width of [390,1100]) {
+    const {page,shot,fits,errors}=await fixture(width);
+    await page.locator('input[name=gwent-ruleset][value=extended]').check();
+    await page.locator('[data-mode]').click();
+    assert.equal(await page.locator('input[name=gwent-table-size]').count(),3,'two, three or four at the table');
+    await page.locator('input[name=gwent-table-size][value="4"]').check();
+    await shot('table-mode');
+    await page.locator('[data-start]').click();
+    for (let i = 0; i < 40 && !(await page.locator('.gwent-opponent, .gwent-side.ai').count()); i += 1) {
+      const choice = page.locator('[data-choice-id="done"]');if (await choice.count()) await choice.click();await page.waitForTimeout(400);
+    }
+    for (let i = 0; i < 30 && await page.locator('[data-pass]:not([disabled])').count() === 0; i += 1) {
+      const choice = page.locator('[data-choice-id="done"]');if (await choice.count()) await choice.click();await page.waitForTimeout(500);
+    }
+    assert.equal(await page.locator('.gwent-opponent').count(),2,'two opponents collapsed, one opened');
+    assert.equal(await page.locator('.gwent-side:not(.player)').count(),1);
+    await shot('table-board');await fits();
+    await page.locator('.gwent-opponent').first().click();
+    assert.equal(await page.locator('.gwent-side:not(.player)').count(),1,'one opponent open at a time');
+    assert.equal(await page.locator('.gwent-opponent').count(),2,'the one opened before is a summary now');
+    for (let i = 0; i < 400 && !(await page.locator('.gwent-table-result').count()); i += 1) {
+      const pending = page.locator('[data-choice-id]');
+      if (await pending.count()) await pending.first().click();
+      else { const pass = page.locator('[data-pass]:not([disabled])'); if (await pass.count()) await pass.click(); }
+      await page.waitForTimeout(500);
+    }
+    assert.equal(await page.locator('.gwent-table-result').count(),1,'the result popup shows the points of every seat');
+    assert.equal(await page.locator('.gwent-table-result .gwent-result-row').count(),5,'head, three rounds, total');
+    await shot('table-result');await fits();
+    assert.deepEqual(errors,[]);await page.close();
+    console.log(`PASS Gwent table ${width}: four seats, summaries of opponents, three rounds scored by place, result table`);
+  }
   const a=await fixture(390,1), b=await fixture(1100,2);
   // Both online players keep their hands; the server then fixes the first player by coin toss or Scoia'tael choice.
   var settle=async items=>{const match=()=>chat.game.gwent.matches.at(-1).state;

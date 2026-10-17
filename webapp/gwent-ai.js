@@ -473,3 +473,57 @@ export function chooseAiAction(state, { level = DEFAULT_AI_LEVEL, rng = Math.ran
   if (mode === 'hard') return hardAction(state, rng, budgetMs);
   return mediumAction(state, rng);
 }
+
+// ---- tables of three or four seats --------------------------------------------------------------------
+// A seat at a table thinks like a duellist against its most dangerous opponent: the table is projected onto a
+// duel between this seat and the opponent with the highest score, the duel AI chooses, and the answer is
+// mapped back with that opponent as the target. Passing therefore means "ahead of the strongest opponent".
+
+/** The seat a table AI plays against: the best-scoring opponent that has not passed, otherwise the best-scoring one. */
+function strongestFoe(state, seat) {
+  const total = scores(state);
+  const foes = state.seats.filter(other => other !== seat);
+  const active = foes.filter(other => !state.passed[other]);
+  return (active.length ? active : foes).sort((a, b) => total[b] - total[a])[0];
+}
+
+/** The duel between `me` and `foe` as the duel AI sees it: the foe is 'player', this seat is 'ai'. */
+function projectDuel(state, me, foe) {
+  const duel = structuredClone(state);
+  const pick = (map, fallback) => ({ player: map?.[foe] ?? fallback, ai: map?.[me] ?? fallback });
+  duel.seats = ['player', 'ai'];
+  duel.sides = { player: duel.sides[foe], ai: duel.sides[me] };
+  duel.passed = pick(state.passed, false);
+  duel.wins = pick(state.wins, 0);
+  duel.tieWins = pick(state.tieWins, false);
+  duel.reveals = { player: [], ai: [] };
+  // Whoever laid an ambush, in the duel it was the other side.
+  for (const [side, other] of [['player', 'ai'], ['ai', 'player']]) for (const row of Object.keys(duel.sides[side].traps || {})) {
+    if (duel.sides[side].traps[row]) duel.sides[side].traps[row].by = other;
+  }
+  duel.turn = state.turn === me ? 'ai' : state.turn === foe ? 'player' : 'ai';
+  duel.starter = 'ai';
+  duel.winner = null;
+  if (state.pending) {
+    const options = state.pending.options.filter(option => !option.from || option.from === foe).map(option => (option.from ? { ...option, from: 'player' } : option));
+    duel.pending = state.pending.side === me ? { ...state.pending, side: 'ai', options } : null;
+  }
+  return duel;
+}
+
+/** The next action for the AI at `seat`, at a duel or at a table. */
+export function decideAi(state, seat, options = {}) {
+  return state.seats && state.seats.length > 2 ? chooseTableAction(state, seat, options) : chooseAiAction(state, options);
+}
+
+/**
+ * The next action of the AI at `seat` of a table (see chooseAiAction for the shapes). Plays that attack an
+ * opponent carry `seat`, the opponent they aim at.
+ */
+export function chooseTableAction(state, seat, options = {}) {
+  const mover = state.pending ? state.pending.side : state.turn;
+  if (mover !== seat || state.phase !== 'playing') return null;
+  const foe = strongestFoe(state, seat);
+  const action = chooseAiAction(projectDuel(state, seat, foe), { ...options, side: 'ai' });
+  return action && action.type === 'play' ? { ...action, seat: foe } : action;
+}

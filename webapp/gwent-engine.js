@@ -54,6 +54,20 @@ import { ROWS, ROW_LABELS, expandDeck, TOKENS } from './gwent-decks.js';
 
 export const SIDES = Object.freeze(['player', 'ai']);
 export const OPPONENT = Object.freeze({ player: 'ai', ai: 'player' });
+// Tables of three or four players (extended rules): `state.seats` lists the seats in turn order. A duel has the
+// two seats above and is played exactly as before. At a table every player plays against all the others: effects
+// that hit "the enemy" name a seat (`seat` in a play; when it is left out, the first opponent), a round is scored by
+// place (3/2/1/0 points at four seats, 2/1/0 at three; ties share the points, a tie-winning faction takes the better
+// place) and the match lasts three rounds. The player with the most points wins; ties go to the higher score of round three.
+export const TABLE_SEATS = Object.freeze(['player', 'ai', 'ai2', 'ai3']);
+const seatsOf = state => state.seats || SIDES;
+const foesOf = (state, side) => seatsOf(state).filter(seat => seat !== side);
+/** The opponent an effect aims at: the named seat when it is one, otherwise the first opponent. */
+const foeOf = (state, side, seat) => (seat && seat !== side && seatsOf(state).includes(seat) ? seat : foesOf(state, side)[0]);
+const mapSeats = (state, value) => Object.fromEntries(seatsOf(state).map(seat => [seat, typeof value === 'function' ? value(seat) : value]));
+const isTable = state => seatsOf(state).length > 2;
+/** Round points by place at a table of `count` seats. */
+const PLACE_POINTS = { 3: [2, 1, 0], 4: [3, 2, 1, 0] };
 export const HAND_SIZE = 10;
 export const ROUNDS_TO_WIN = 2;
 
@@ -101,31 +115,42 @@ function applyWeather(state, weather) {
   for (const row of Array.isArray(weather) ? weather : [weather]) state.weather[row] = true;
 }
 
-/** Creates a match. `playerDeck` and `aiDeck` are deck definitions from gwent-decks.js. */
+/** Creates a duel. `playerDeck` and `aiDeck` are deck definitions from gwent-decks.js. */
 export function createMatch({ playerDeck, aiDeck, rng = Math.random, setup = true }) {
+  return createTable({ decks: [playerDeck, aiDeck], seats: SIDES, rng, setup });
+}
+
+/**
+ * Creates a match for two to four seats: `decks[i]` plays at `seats[i]`. Two seats make a duel; more make a table
+ * (extended rules only).
+ */
+export function createTable({ decks, seats = TABLE_SEATS.slice(0, decks.length), rng = Math.random, setup = true }) {
   const state = {
     round: 1,
-    starter: 'player',
-    turn: 'player',
-    passed: { player: false, ai: false },
+    seats: [...seats],
+    starter: seats[0],
+    turn: seats[0],
+    passed: Object.fromEntries(seats.map(seat => [seat, false])),
     sides: {},
     weather: noWeather(),
-    reveals: { player: [], ai: [] },
+    reveals: Object.fromEntries(seats.map(seat => [seat, []])),
     pending: null,    // { side, kind, options, ... } while a player must choose a card or a row
     reviveAny: false,
-    tieWins: { player: Boolean(playerDeck.tieWins), ai: Boolean(aiDeck.tieWins) },
+    tieWins: Object.fromEntries(seats.map((seat, i) => [seat, Boolean(decks[i].tieWins)])),
     rngState: Math.floor(rng() * 2147483645) + 1,
     nextUid: 1,
-    wins: { player: 0, ai: 0 },
+    wins: Object.fromEntries(seats.map(seat => [seat, 0])),
+    points: Object.fromEntries(seats.map(seat => [seat, 0])), // table matches: points by place over the rounds
     phase: 'playing', // 'playing' | 'matchOver'
-    winner: null,     // 'player' | 'ai' | 'draw' once matchOver
+    winner: null,     // a seat | 'draw' once matchOver
+    winners: [],      // table matches: every seat that shares the best result
     lastRound: null,  // { round, scores, winner } of the last finished round
     rounds: [],       // every finished round, for the result screen
     setup: null,      // pending start-of-match steps: mulligans and the first-turn choice
-    ruleset: playerDeck.ruleset === 'extended' || aiDeck.ruleset === 'extended' ? 'extended' : 'classic',
+    ruleset: decks.some(deck => deck.ruleset === 'extended') ? 'extended' : 'classic',
   };
-  for (const side of SIDES) {
-    const def = side === 'player' ? playerDeck : aiDeck;
+  for (const [seatIndex, side] of seats.entries()) {
+    const def = decks[seatIndex];
     const deckCards = expandDeck(def).map(card => ({ ...card, uid: newUid(state) }));
     const pool = def.leaders || [];
     const pick = pool.length ? pool[Math.floor(rng() * pool.length)] : null;
@@ -146,12 +171,12 @@ export function createMatch({ playerDeck, aiDeck, rng = Math.random, setup = tru
       extraDraw: leader?.effect.type === 'passive-extra-draw',
     };
   }
-  for (const side of SIDES) drawCards(state.sides[side], HAND_SIZE);
-  for (const side of SIDES) if (state.sides[side].extraDraw) drawCards(state.sides[side], 1);
-  state.starter = random(state) < 0.5 ? 'player' : 'ai';
+  for (const side of seats) drawCards(state.sides[side], HAND_SIZE);
+  for (const side of seats) if (state.sides[side].extraDraw) drawCards(state.sides[side], 1);
+  state.starter = seats[Math.floor(random(state) * seats.length)];
   state.turn = state.starter;
   if (setup) {
-    state.setup = ['mulligan:player', 'mulligan:ai', 'first'];
+    state.setup = [...seats.map(seat => `mulligan:${seat}`), 'first'];
     stepSetup(state);
   } else {
     advance(state, null);
@@ -167,8 +192,8 @@ function stepSetup(state) {
       const side = step.slice(9);
       if (offerMulligan(state, side, state.sides[side].faction === 'toussaint' ? 3 : 2)) return;
     } else if (step === 'first') {
-      const scoia = SIDES.filter(side => state.sides[side].faction === 'scoiatael');
-      if (scoia.length === 1) {
+      const scoia = seatsOf(state).filter(side => state.sides[side].faction === 'scoiatael');
+      if (scoia.length === 1 && !isTable(state)) {
         askChoice(state, scoia[0], 'first', [{ id: 'self', label: 'Я хожу первым' }, { id: 'enemy', label: 'Первым ходит соперник' }]);
         return;
       }
@@ -221,11 +246,11 @@ export function sideScore(state, side) {
 }
 
 export function scores(state) {
-  return { player: sideScore(state, 'player'), ai: sideScore(state, 'ai') };
+  return mapSeats(state, seat => sideScore(state, seat));
 }
 
 function boardValues(state) {
-  return SIDES.flatMap(side => ROWS.flatMap(row => {
+  return seatsOf(state).flatMap(side => ROWS.flatMap(row => {
     const values = rowValuesFor(state, side, row);
     return state.sides[side].rows[row].map((card, index) => ({ side, row, card, value: values[index] }));
   }));
@@ -241,18 +266,21 @@ export function legalPlays(state, side) {
   for (const card of me.hand) {
     if (card.type === 'unit') {
       for (const row of card.agile ? card.rows : [card.rows[0]]) {
-        plays.push({ uid: card.uid, row });
+        // A spy goes to the board of an opponent, at a table to the one the player names.
+        for (const foe of card.spy ? foesOf(state, side) : [null]) {
+          plays.push(foe ? aimed({ uid: card.uid, row }, foe, state) : { uid: card.uid, row });
+        }
         // A swap unit may also send one of the player's units back to the hand.
         if (card.swap) for (const target of ownUnits) plays.push({ uid: card.uid, row, targetUid: target.uid });
       }
     } else if (card.special === 'boost') {
       for (const target of ownUnits) plays.push({ uid: card.uid, targetUid: target.uid });
     } else if (card.special === 'strike') {
-      for (const row of ROWS) for (const target of state.sides[OPPONENT[side]].rows[row]) {
+      for (const foe of foesOf(state, side)) for (const row of ROWS) for (const target of state.sides[foe].rows[row]) {
         if (target.type === 'unit' && !target.hero) plays.push({ uid: card.uid, targetUid: target.uid });
       }
     } else if (card.special === 'fireball' || card.special === 'curse') {
-      for (const row of ROWS) if (state.sides[OPPONENT[side]].rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push({ uid: card.uid, row });
+      for (const foe of foesOf(state, side)) for (const row of ROWS) if (state.sides[foe].rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push(aimed({ uid: card.uid, row }, foe, state));
     } else if (card.special === 'blessing') {
       for (const row of ROWS) if (me.rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push({ uid: card.uid, row });
     } else if (card.special === 'teleport') {
@@ -263,7 +291,7 @@ export function legalPlays(state, side) {
     } else if (card.special === 'recall') {
       if (me.graveyard.some(item => item.type === 'unit' && !item.hero && item.strength <= (card.maxBase ?? Infinity))) plays.push({ uid: card.uid });
     } else if (card.special === 'ambush') {
-      for (const row of ROWS) if (!state.sides[OPPONENT[side]].traps?.[row]) plays.push({ uid: card.uid, row });
+      for (const foe of foesOf(state, side)) for (const row of ROWS) if (!state.sides[foe].traps?.[row]) plays.push(aimed({ uid: card.uid, row }, foe, state));
     } else if (card.special === 'horn' || card.special === 'mardroeme') {
       for (const row of ROWS) plays.push({ uid: card.uid, row });
     } else if (card.special === 'decoy') {
@@ -273,6 +301,20 @@ export function legalPlays(state, side) {
     }
   }
   return plays;
+}
+
+/** A play against an opponent names the seat when the table has more than one. */
+function aimed(play, foe, state) {
+  return isTable(state) ? { ...play, seat: foe } : play;
+}
+
+/** The board of any opponent that holds the card, as { seat, row, index }. */
+function findOnFoe(state, side, uid) {
+  for (const seat of foesOf(state, side)) {
+    const spot = findOnBoard(state, seat, uid);
+    if (spot) return { seat, ...spot };
+  }
+  return null;
 }
 
 function findOnBoard(state, side, uid) {
@@ -329,7 +371,6 @@ function askAgile(state, side, queue) {
 /** Applies the player's choice. A discard continues with a second pick and then a draw. */
 function applyChoice(state, side, pending, option) {
   const mine = state.sides[side];
-  const enemy = state.sides[OPPONENT[side]];
   switch (pending.kind) {
     case 'revive': {
       const card = takeFrom(mine.graveyard, option.id);
@@ -337,7 +378,7 @@ function applyChoice(state, side, pending, option) {
       break;
     }
     case 'takeGrave': {
-      const card = takeFrom(enemy.graveyard, option.id);
+      const card = takeFrom(state.sides[option.from || foeOf(state, side)].graveyard, option.id);
       if (card) mine.hand.push(card);
       break;
     }
@@ -382,7 +423,7 @@ function applyChoice(state, side, pending, option) {
       break;
     }
     case 'first': {
-      state.starter = option.id === 'self' ? side : OPPONENT[side];
+      state.starter = option.id === 'self' ? side : foeOf(state, side);
       state.turn = state.starter;
       break;
     }
@@ -458,7 +499,7 @@ export function aiChoiceId(state) {
 }
 
 /** Plays a card from hand or the leader. Options: row (agile units and horns), targetUid (decoy). */
-export function playCard(state, side, uid, { row, targetUid } = {}) {
+export function playCard(state, side, uid, { row, targetUid, seat } = {}) {
   if (state.pending) return { error: 'Сначала сделай выбор.' };
   if (state.phase !== 'playing') return { error: 'Раунд уже завершён.' };
   if (state.turn !== side || state.passed[side]) return { error: 'Сейчас не твой ход.' };
@@ -488,7 +529,7 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
       scorchAll(next);
       mine.graveyard.push(card);
     } else if (card.spy) {
-      next.sides[OPPONENT[side]].rows[target].push(card);
+      next.sides[foeOf(next, side, seat)].rows[target].push(card);
       drawCards(mine, mine.faction === 'redania' ? 3 : 2);
     } else {
       mine.rows[target].push(card);
@@ -507,9 +548,9 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
     }
   } else if (card.special === 'fireball' || card.special === 'curse' || card.special === 'blessing') {
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для заклинания.' };
-    if (card.special === 'fireball') scorchEnemy(next, side, { target: row, cond: row, threshold: 0 });
+    if (card.special === 'fireball') scorchEnemy(next, side, { target: row, cond: row, threshold: 0 }, foeOf(next, side, seat));
     else {
-      const owner = next.sides[card.special === 'curse' ? OPPONENT[side] : side];
+      const owner = next.sides[card.special === 'curse' ? foeOf(next, side, seat) : side];
       owner.mods ||= noMods();
       owner.mods[row] += (card.special === 'curse' ? -1 : 1) * (card.amount || 1);
     }
@@ -521,9 +562,10 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
     unit.bonus = Math.min(6, (unit.bonus || 0) + card.amount);
     mine.graveyard.push(card);
   } else if (card.special === 'strike') {
-    const foeSide = OPPONENT[side];
-    const spot = findOnBoard(next, foeSide, targetUid);
-    const unit = spot && next.sides[foeSide].rows[spot.row][spot.index];
+    const hit = findOnFoe(next, side, targetUid);
+    const foeSide = hit?.seat;
+    const spot = hit;
+    const unit = hit && next.sides[foeSide].rows[spot.row][spot.index];
     if (!unit || unit.type !== 'unit' || unit.hero) return { error: 'Удар наносится только обычному вражескому отряду.' };
     // Fanatics of the Eternal Fire strike one point harder.
     const damage = card.amount + (unit.mage ? card.mageBonus || 0 : 0) + (mine.faction === 'eternal-fire' ? 1 : 0);
@@ -544,10 +586,11 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
     if (options.length === 0) return { error: 'В отбое нет подходящих отрядов.' };
     askChoice(next, side, 'returnGrave', options);
   } else if (card.special === 'ambush') {
-    const foe = next.sides[OPPONENT[side]];
+    const foe = next.sides[foeOf(next, side, seat)];
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для засады.' };
     foe.traps ||= noTraps();
     if (foe.traps[row]) return { error: 'В этом ряду уже есть засада.' };
+    card.by = side; // who laid it, for the squirrels
     foe.traps[row] = card;
   } else if (card.special === 'horn') {
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для рога.' };
@@ -593,7 +636,7 @@ function springAmbush(state, side, row) {
   const trap = traps[row];
   if (!trap) return;
   traps[row] = null;
-  const owner = state.sides[OPPONENT[side]];
+  const owner = state.sides[trap.by || foeOf(state, side)];
   owner.graveyard.push(trap);
   for (let i = 0; i < 2; i += 1) owner.rows[row].push(makeToken(state, trap.trapToken || 'squirrel'));
 }
@@ -605,12 +648,13 @@ function runUnitOnPlay(state, side, card, row) {
   else if (effect.type === 'scorchRow') scorchEnemy(state, side, effect);
   else if (effect.type === 'musterHand') musterFromHand(state, side, effect.group, row);
   // A unit that is stronger while the enemy has a unit of some kind on the board (witch hunters against mages).
-  else if (effect.type === 'selfBoost' && ROWS.some(r => state.sides[OPPONENT[side]].rows[r].some(other => other[effect.ifEnemy]))) card.bonus = (card.bonus || 0) + effect.amount;
+  else if (effect.type === 'selfBoost' && foesOf(state, side).some(foe => ROWS.some(r => state.sides[foe].rows[r].some(other => other[effect.ifEnemy])))) card.bonus = (card.bonus || 0) + effect.amount;
 }
 
 function runLeader(state, side, effect) {
   const mine = state.sides[side];
-  const enemy = OPPONENT[side];
+  // At a table a leader's attack falls on the opponent that suits it best, otherwise on the only opponent.
+  const enemy = foeOf(state, side);
   switch (effect.type) {
     case 'weather':
       applyWeather(state, effect.weather);
@@ -630,17 +674,23 @@ function runLeader(state, side, effect) {
       scorchEnemy(state, side, effect);
       break;
     case 'reveal': {
-      const hand = shuffle(state, [...state.sides[enemy].hand]);
+      const target = foesOf(state, side).reduce((best, seat) => (state.sides[seat].hand.length > state.sides[best].hand.length ? seat : best), enemy);
+      const hand = shuffle(state, [...state.sides[target].hand]);
       state.reveals[side] = hand.slice(0, 3);
       break;
     }
-    case 'cancelEnemyLeader':
-      state.sides[enemy].leaderCancelled = true;
+    case 'cancelEnemyLeader': {
+      // The opponent with the highest score whose leader can still act.
+      const totals = scores(state);
+      const victim = foesOf(state, side).filter(seat => state.sides[seat].leader && !state.sides[seat].leaderUsed && !state.sides[seat].leaderCancelled)
+        .sort((a, b) => totals[b] - totals[a])[0] || enemy;
+      state.sides[victim].leaderCancelled = true;
       break;
+    }
     case 'takeEnemyGraveyard':
-      askChoice(state, side, 'takeGrave', state.sides[enemy].graveyard
+      askChoice(state, side, 'takeGrave', foesOf(state, side).flatMap(seat => state.sides[seat].graveyard
         .filter(card => card.type === 'unit' && !card.hero)
-        .map(card => ({ id: card.uid, card })));
+        .map(card => ({ id: card.uid, card, from: seat }))));
       break;
     case 'reviveAny':
       state.reviveAny = true;
@@ -661,7 +711,7 @@ function runLeader(state, side, effect) {
         .map(card => ({ id: card.uid, card })));
       break;
     case 'shuffleGraveyards':
-      for (const s of SIDES) {
+      for (const s of seatsOf(state)) {
         const pool = state.sides[s];
         pool.deck.push(...pool.graveyard.splice(0));
         shuffle(state, pool.deck);
@@ -672,9 +722,14 @@ function runLeader(state, side, effect) {
   }
 }
 
-function scorchEnemy(state, side, { target, cond, threshold = 10 }) {
-  const enemy = OPPONENT[side];
-  const condTotal = rowValuesFor(state, enemy, cond).reduce((a, b) => a + b, 0);
+/**
+ * Destroys the strongest ordinary units of `target` in an opponent's row once the opponent's `cond` row totals the
+ * threshold. `aimedAt` names the opponent; otherwise it is the one with the highest `cond` row (at a duel the only one).
+ */
+function scorchEnemy(state, side, { target, cond, threshold = 10 }, aimedAt = null) {
+  const rowTotal = (seat, row) => rowValuesFor(state, seat, row).reduce((a, b) => a + b, 0);
+  const enemy = aimedAt || foesOf(state, side).sort((a, b) => rowTotal(b, cond) - rowTotal(a, cond))[0];
+  const condTotal = rowTotal(enemy, cond);
   if (condTotal < threshold) return;
   const values = rowValuesFor(state, enemy, target);
   const cards = state.sides[enemy].rows[target];
@@ -748,16 +803,20 @@ function hasPlay(state, side) {
  * side that just acted, or null when a round starts.
  */
 function advance(state, justActed) {
-  for (const s of SIDES) {
+  const seats = seatsOf(state);
+  for (const s of seats) {
     if (!state.passed[s] && !hasPlay(state, s)) state.passed[s] = true;
   }
-  if (state.passed.player && state.passed.ai) {
+  if (seats.every(seat => state.passed[seat])) {
     endRound(state);
     return;
   }
-  let next = justActed ? OPPONENT[justActed] : state.turn;
-  if (state.passed[next]) next = OPPONENT[next];
-  state.turn = next;
+  // The next seat in turn order that has not passed (the seat to move itself when a round starts).
+  let index = justActed ? seats.indexOf(justActed) + 1 : seats.indexOf(state.turn);
+  for (let tries = 0; tries < seats.length; tries += 1, index += 1) {
+    const seat = seats[index % seats.length];
+    if (!state.passed[seat]) { state.turn = seat; return; }
+  }
 }
 
 function reviveRandom(state, side, count, maxStrength = Infinity) {
@@ -771,18 +830,52 @@ function reviveRandom(state, side, count, maxStrength = Infinity) {
   }
 }
 
+/** The seats of a table in order of place, best first; a tie-winning faction takes the better place of a tie. */
+function standings(state, totals) {
+  return [...seatsOf(state)].sort((a, b) => totals[b] - totals[a]
+    || Number(Boolean(state.tieWins[b])) - Number(Boolean(state.tieWins[a])) || seatsOf(state).indexOf(a) - seatsOf(state).indexOf(b));
+}
+
+/** Points each seat of a table gets for a round; seats that tie for places share their points evenly. */
+function placePoints(state, totals) {
+  const table = PLACE_POINTS[seatsOf(state).length];
+  const order = standings(state, totals);
+  const points = {};
+  for (let i = 0; i < order.length;) {
+    let j = i;
+    // Equal scores form a group, unless a faction that wins ties stands alone at the head of it.
+    while (j + 1 < order.length && totals[order[j + 1]] === totals[order[i]] && !(state.tieWins[order[i]] && !state.tieWins[order[j + 1]])) j += 1;
+    const share = table.slice(i, j + 1).reduce((x, y) => x + y, 0) / (j - i + 1);
+    for (let k = i; k <= j; k += 1) points[order[k]] = share;
+    i = j + 1;
+  }
+  return points;
+}
+
 function endRound(state) {
   const totals = scores(state);
   let winner = 'draw';
-  if (totals.player > totals.ai) winner = 'player';
-  else if (totals.ai > totals.player) winner = 'ai';
-  // A faction that wins ties (Nilfgaard) takes the round when it is drawn, if only one side has it.
-  const tieSides = SIDES.filter(side => state.tieWins[side]);
-  if (winner === 'draw' && tieSides.length === 1) winner = tieSides[0];
+  let roundPoints = null;
+  let losers = [];
+  if (isTable(state)) {
+    roundPoints = placePoints(state, totals);
+    const order = standings(state, totals);
+    const best = Math.max(...Object.values(roundPoints));
+    const top = order.filter(seat => roundPoints[seat] === best);
+    winner = top.length === 1 ? top[0] : 'draw';
+    losers = order.filter(seat => roundPoints[seat] === Math.min(...Object.values(roundPoints)));
+  } else {
+    if (totals.player > totals.ai) winner = 'player';
+    else if (totals.ai > totals.player) winner = 'ai';
+    // A faction that wins ties (Nilfgaard) takes the round when it is drawn, if only one side has it.
+    const tieSides = SIDES.filter(side => state.tieWins[side]);
+    if (winner === 'draw' && tieSides.length === 1) winner = tieSides[0];
+    losers = winner === 'draw' ? [] : [OPPONENT[winner]];
+  }
 
   // Every card on the board goes to the graveyard, heroes included. Weather and leader doubles end with the round.
   // Monsters keep one random non-hero unit on the board.
-  for (const side of SIDES) {
+  for (const side of seatsOf(state)) {
     let kept = null;
     // Monsters keep a random non-hero unit on the board.
     if (state.sides[side].faction === 'monsters') {
@@ -792,7 +885,7 @@ function endRound(state) {
     for (const row of ROWS) {
       // An ambush that was never sprung goes back to the graveyard of whoever laid it.
       const trap = state.sides[side].traps?.[row];
-      if (trap) { state.sides[OPPONENT[side]].graveyard.push(trap); state.sides[side].traps[row] = null; }
+      if (trap) { state.sides[trap.by || foeOf(state, side)].graveyard.push(trap); state.sides[side].traps[row] = null; }
       for (const card of state.sides[side].rows[row]) if (card !== kept?.card) state.sides[side].graveyard.push(card);
       state.sides[side].rows[row] = kept && kept.row === row ? [kept.card] : [];
     }
@@ -802,37 +895,61 @@ function endRound(state) {
     if (kept) delete kept.card.bonus;
   }
   state.weather = noWeather();
-  state.reveals = { player: [], ai: [] };
+  state.reveals = mapSeats(state, () => []);
 
-  if (winner === 'draw') {
+  if (isTable(state)) {
+    for (const seat of seatsOf(state)) state.points[seat] = (state.points[seat] || 0) + roundPoints[seat];
+    if (winner !== 'draw') state.wins[winner] += 1;
+  } else if (winner === 'draw') {
     state.wins.player += 1;
     state.wins.ai += 1;
   } else {
     state.wins[winner] += 1;
   }
-  state.lastRound = { round: state.round, scores: totals, winner };
+  state.lastRound = { round: state.round, scores: totals, winner, ...(roundPoints ? { points: roundPoints } : {}) };
   state.rounds = [...(state.rounds || []), { ...state.lastRound }];
 
-  const playerDone = state.wins.player >= ROUNDS_TO_WIN;
-  const aiDone = state.wins.ai >= ROUNDS_TO_WIN;
-  if (playerDone || aiDone) {
-    state.phase = 'matchOver';
-    state.winner = playerDone && aiDone ? 'draw' : playerDone ? 'player' : 'ai';
-    return;
+  if (isTable(state)) {
+    if (state.round >= 3) {
+      // The most points win; a tie goes to the higher score of the last round, and what is still tied is shared.
+      const best = Math.max(...Object.values(state.points));
+      let leaders = seatsOf(state).filter(seat => state.points[seat] === best);
+      if (leaders.length > 1) {
+        const top = Math.max(...leaders.map(seat => totals[seat]));
+        leaders = leaders.filter(seat => totals[seat] === top);
+      }
+      state.phase = 'matchOver';
+      state.winners = leaders;
+      state.winner = leaders.length === 1 ? leaders[0] : 'draw';
+      return;
+    }
+  } else {
+    const playerDone = state.wins.player >= ROUNDS_TO_WIN;
+    const aiDone = state.wins.ai >= ROUNDS_TO_WIN;
+    if (playerDone || aiDone) {
+      state.phase = 'matchOver';
+      state.winner = playerDone && aiDone ? 'draw' : playerDone ? 'player' : 'ai';
+      return;
+    }
   }
 
   state.round += 1;
-  // The winner starts the next round; after a drawn round the side that did not start this one does.
-  state.starter = winner === 'draw' ? OPPONENT[state.starter] : winner;
+  if (isTable(state)) {
+    // The seat with the lowest score starts the next round (the earlier seat on a tie).
+    state.starter = [...seatsOf(state)].sort((a, b) => totals[a] - totals[b] || seatsOf(state).indexOf(a) - seatsOf(state).indexOf(b))[0];
+  } else {
+    // The winner starts the next round; after a drawn round the side that did not start this one does.
+    state.starter = winner === 'draw' ? OPPONENT[state.starter] : winner;
+  }
   state.turn = state.starter;
-  state.passed = { player: false, ai: false };
-  for (const side of SIDES) {
+  state.passed = mapSeats(state, false);
+  for (const side of seatsOf(state)) {
     // Northern Realms draw a card for winning the round.
     if (winner === side && state.sides[side].faction === 'northern-realms') drawCards(state.sides[side], 1);
     // Velen draw a card at the start of round 3 (the swamp provides).
     if (state.round === 3 && state.sides[side].faction === 'velen') drawCards(state.sides[side], 1);
     // Wild Hunt draw a card for a lost first round.
-    if (winner === OPPONENT[side] && state.sides[side].faction === 'wild-hunt' && state.round === 2) drawCards(state.sides[side], 1);
+    if (losers.includes(side) && state.sides[side].faction === 'wild-hunt' && state.round === 2) drawCards(state.sides[side], 1);
     // Skellige: two random non-hero units come back from the graveyard at the start of round 3.
     // Under the extended rules Skellige also get one light unit (2 strength at most) back at the start of round 2.
     if (state.sides[side].faction === 'skellige' && (state.round === 3 || (state.round === 2 && state.ruleset === 'extended'))) reviveRandom(state, side, state.round === 3 ? 2 : 1, state.round === 3 ? Infinity : 2);

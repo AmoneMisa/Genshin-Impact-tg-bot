@@ -116,3 +116,12 @@ body .game-overlay>.gwent-board-panel{max-height:calc(100dvh - 16px - env(safe-a
 
 .gwent-trap{display:inline-flex;align-items:center;margin-left:var(--space-1);color:var(--gold-bright)}.gwent-trap svg{width:14px;height:14px}
 .gwent-row[data-trap="true"] .gwent-row-label{color:var(--gold-bright)}
+
+/* Tables of three and four: opponents are one-line summaries that open into the full board. */
+.gwent-opponent{display:grid;grid-template-columns:minmax(0,1fr);justify-items:stretch;align-items:start;gap:var(--space-1);width:100%;text-align:left;padding:var(--space-2);font:inherit}
+.gwent-opponent-head{display:flex;align-items:center;gap:var(--space-2);min-width:0;width:100%}.gwent-opponent-head>.gwent-crest{width:24px;height:30px}.gwent-opponent-head>span:first-of-type{flex:1 1 auto;min-width:0;overflow-wrap:anywhere;text-align:left;font:600 14px/1.25 var(--serif)}.gwent-opponent-head>strong{font:600 20px/1 var(--serif)}.gwent-opponent small{opacity:.85;line-height:1.4}
+.gwent-points{font-size:13px;white-space:nowrap}
+.gwent-table-result .gwent-result-row{grid-template-columns:minmax(40px,auto) repeat(var(--seats),minmax(0,1fr))}
+.gwent-table-result .gwent-result-row>span:last-child{text-align:center}.gwent-table-result .gwent-result-row>span:not(:first-child){text-align:center}
+.gwent-result-total{font-weight:700}
+body .ui-card-table-window .ui-button.gwent-opponent{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:left}
