@@ -55,6 +55,8 @@ export const SKILL_FX = Object.freeze({
 
 const CLASS_SKILL = Object.freeze({ warrior: 'slash', archer: 'arrow', mage: 'orb', priest: 'beam', rogue: 'slash', berserk: 'punch', noClass: 'punch' });
 
+export const CAST_SOUND = Object.freeze({ slash: 'hit', arrow: 'wind', orb: 'fire', beam: 'lightning', punch: 'hit' });
+
 /** Damage-skill animation for a class (unknown classes punch). */
 export function skillFxForClass(className) {
   return CLASS_SKILL[familyOf(className)] || 'punch';

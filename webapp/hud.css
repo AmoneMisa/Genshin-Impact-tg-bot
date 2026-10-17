@@ -474,3 +474,8 @@
   .is-city-compact .th-name strong { font-size: 12px; }
   .is-city-compact .top-res strong { font-size: 10px; }
 }
+
+/* Sound button: the waves show while the sound is on, the cross while it is muted. */
+.sound-icon .sound-off { display: none; }
+.sound-muted .sound-icon .sound-wave { display: none; }
+.sound-muted .sound-icon .sound-off { display: block; }

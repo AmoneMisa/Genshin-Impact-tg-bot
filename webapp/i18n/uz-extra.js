@@ -1341,4 +1341,7 @@ export default {
   "Аукцион: лот не продан": "Auksion: lot sotilmadi",
   "Аукцион: лот продан": "Auksion: lot sotildi",
   "Срок лота «{0}» вышел, предмет возвращён.": "«{0}» lotining muddati tugadi, buyum qaytarildi.",
+  "Звук": "Ovoz",
+  "Включить звук": "Ovozni yoqish",
+  "Выключить звук": "Ovozni o‘chirish",
 };

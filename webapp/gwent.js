@@ -8,6 +8,7 @@ import { GWENT_ART, GWENT_PRINTED_CARDS } from './gwent-art.js';
 import { cardArtOptions, cardArtSource } from './gwent-art-options.js';
 import { buildDeck, aiLoadout, defaultLoadout, inspectLoadout, repairLoadout, filterCards, cardTraits, leaderDescription } from './gwent-builder.js';
 import { createMatch, createTable, TABLE_SEATS, legalPlays, playCard, passRound, resolveChoice, rowValuesFor, scores, teamScores } from './gwent-engine.js';
+import { sfx, withMusic, GWENT_TRACKS } from './audio.js';
 import { decideAi, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
 const FACTIONS = RULESETS.extended.factions; // every faction; a rule set allows some of them
@@ -51,6 +52,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       if (repaired && loadoutKey(repaired.ruleset, repaired.faction) === id && inspectLoadout(repaired).valid) loadouts[id] = repaired;
     } } catch { /* Private browsing and damaged storage must not prevent play. */ }
   }
+  const releaseMusic = withMusic(GWENT_TRACKS[Math.floor(Math.random() * GWENT_TRACKS.length)]);
   let faction = 'northern-realms', enemyFaction = 'nilfgaard', screen = 'decks', mode = 'ai', level = DEFAULT_AI_LEVEL, ruleset = 'classic';
   try { ruleset = normalizeRuleset(localStorage.getItem('gwent-ruleset')); } catch { /* storage is optional */ }
   const factionsNow = () => RULESETS[ruleset].factions;
@@ -464,7 +466,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       else if (summaryFor !== remote.id) { summaryFor = remote.id; summary = true; }
       if (remote.rematch?.offered && !wasOffered) summary = true;
       wasOffered = !!remote.rematch?.offered;
-      if (changed) { pick = null; decoy = null; preview = null; pile = null; announceRound(); }
+      if (changed) { if (heardId !== remote.id) { heard = null; heardId = remote.id; } hear(state); pick = null; decoy = null; preview = null; pile = null; announceRound(); }
       if (changed && summary) { preview = null; pile = null; }
       screen = 'match';
       if (changed || panel.dataset.screen !== 'match') render();
@@ -498,6 +500,18 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       schedulePoll();
     }, screen === 'match' ? 2500 : 4000);
   }
+  // Sound follows what changed between two states: a played card, a pass, the weather, a round or the match.
+  let heard = null, heardId = null;
+  function hear(next) {
+    const prev = heard; heard = next;
+    if (!prev || !next || prev === next) return;
+    if (next.phase === 'matchOver' && prev.phase !== 'matchOver') { sfx(next.winner === 'player' ? 'matchWin' : next.winner === 'ai' ? 'matchLose' : 'draw'); return; }
+    const round = next.lastRound;
+    if (round && round.round !== prev.lastRound?.round) { sfx(round.winner === 'draw' ? 'draw' : round.winner === 'player' ? 'roundWin' : 'roundLose'); return; }
+    if (JSON.stringify(next.passed) !== JSON.stringify(prev.passed)) { sfx('pass'); return; }
+    if (JSON.stringify(next.weather) !== JSON.stringify(prev.weather)) { sfx(Object.values(next.weather || {}).some(Boolean) ? 'weather' : 'clear'); return; }
+    sfx('cardPlay');
+  }
   function announceRound() {
     if (remote?.spectator) return;
     const last = state.lastRound;
@@ -509,7 +523,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   }
   function apply(result) {
     if (result.error) { note(result.error, 'bad'); render(); return; }
-    state = result.state; pick = null; decoy = null; announceRound(); haptic('light');
+    state = result.state; pick = null; decoy = null; hear(state); announceRound(); haptic('light');
     if (state.phase === 'matchOver' && summaryFor !== 'local' + localMatch) { summaryFor = 'local' + localMatch; summary = true; }
     render(); scheduleAi();
   }
@@ -557,12 +571,12 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       const pool = factionsNow().filter(id => id !== faction).sort(() => Math.random() - 0.5);
       const decks = [buildDeck(loadouts[keyOf()]), ...pool.slice(0, size - 1).map(id => buildDeck(aiLoadout(id, level, undefined, ruleset)))];
       focusSeat = 'ai';
-      state = createTable({ decks, seats: TABLE_SEATS.slice(0, size), teams: tableSize === 'teams' && ruleset === 'extended' });
+      heard = null; state = createTable({ decks, seats: TABLE_SEATS.slice(0, size), teams: tableSize === 'teams' && ruleset === 'extended' });
       go('match');
       return;
     }
     const aiDeck = buildDeck(aiLoadout(enemyFaction, level, undefined, ruleset));
-    state = createMatch({ playerDeck: buildDeck(loadouts[keyOf()]), aiDeck }); go('match');
+    heard = null; state = createMatch({ playerDeck: buildDeck(loadouts[keyOf()]), aiDeck }); sfx('deal'); go('match');
   }
   async function cancelSearch(ai = false) {
     const data = await online({ action: 'cancel' });
@@ -585,7 +599,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   async function close() {
     if (closed) return;
     const searching = screen === 'search'; closed = true; requestId++; if (aiWorker) aiWorker.terminate();
-    clearTimeout(aiTimer); clearTimeout(pollTimer); document.removeEventListener('visibilitychange', onVisibility);
+    releaseMusic(); clearTimeout(aiTimer); clearTimeout(pollTimer); document.removeEventListener('visibilitychange', onVisibility);
     if (searching && api) post({ action: 'cancel' }).catch(() => {});
     overlay.remove();
   }

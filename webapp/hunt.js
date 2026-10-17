@@ -1,4 +1,5 @@
 import {enhanceSelects} from './design/select.js';
+import { castSkill } from './audio.js';
 import {createPoller} from './polling.js';
 import {materialIcon} from './material-icons.js';
 import {updateDeathPopup} from './death-popup.js';
@@ -193,6 +194,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   async function skill(index, ctrlKey=false) {
     const payload = await run('/api/hunt/skill', { skillIndex: Number(index), ...(playerTarget?{targetUserId:playerTarget,force:forceAttack || ctrlKey}:{}) }, { heavy: true });
     if (payload) {
+      castSkill(state.player?.skills?.[Number(index)]?.l2Id,payload.result?.type==='heal'?'heal':payload.result?.type==='shield'?'buff':'hit');
       if(playerTarget && payload.result?.type==='damage')say(payload.killed?(payload.pk?'Убийство мирного игрока: PK и карма':'Игрок повержен'):'');
       else if(!state.field)say(describeResult(payload));
       if (payload.killed && payload.rewards?.champion) haptic('heavy');

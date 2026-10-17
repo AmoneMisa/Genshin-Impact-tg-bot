@@ -91,6 +91,7 @@ export function skillDto(session, skill, index, now = Date.now()) {
   const real = l2SkillAt(skill?.l2Id, number(session?.game?.stats?.lvl, 1));
 
   return {
+    l2Id: skill?.l2Id ?? null,
     l2Power: real && real.power >= 1 ? Math.round(real.power) : null,
     l2Level: real ? real.level : null,
     l2MaxLevel: real ? real.maxLevel : null,

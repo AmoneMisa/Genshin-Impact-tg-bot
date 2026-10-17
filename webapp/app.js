@@ -63,6 +63,7 @@ const openFriendsGame = (...args) => Promise.all([ensureFeatureStyles(),import('
 const openPlayerCard = (...args) => Promise.all([ensureFeatureStyles(),import('./friends.js')]).then(([,module]) => module.openPlayerCard(...args));
 import { createLoader } from './loading.js';
 import { watchGlyphs } from './glyph-center.js';
+import { installAudio, playMusic, audioPrefs, setAudio, onAudioChange } from './audio.js';
 import { badgeHtml, featureIconHtml, featuresForTab, navHtml, NAV_TABS } from './nav.js';
 import { startEmojiIcons } from './icons.js';
 
@@ -363,6 +364,13 @@ async function boot() {
   document.querySelectorAll('[data-nav-jump]').forEach(button => {
     button.addEventListener('click', () => switchTab(button.dataset.navJump));
   });
+
+  // Sound: starts after the first touch; the button mutes and unmutes everything.
+  installAudio(); playMusic('ambient');
+  const soundButton = $('sound-toggle');
+  const showSound = prefs => { soundButton.setAttribute('aria-pressed', String(!prefs.muted)); soundButton.setAttribute('aria-label', prefs.muted ? 'Включить звук' : 'Выключить звук'); soundButton.classList.toggle('sound-muted', Boolean(prefs.muted)); };
+  showSound(audioPrefs()); onAudioChange(showSound);
+  soundButton.addEventListener('click', () => { haptic(); setAudio({ muted: !audioPrefs().muted }); });
 
   $('fullscreen').addEventListener('click', () => {
     haptic();

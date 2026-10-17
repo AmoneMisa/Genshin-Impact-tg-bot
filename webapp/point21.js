@@ -4,6 +4,7 @@
 // actions. Results: every seat with its hand and payout. A stuck table can be
 // reset from here (anyone when it stalls, chat admins any time).
 
+import { sfx } from './audio.js';
 import { worldArtUrl } from './art/world-art-url.js';
 import {dialogHeading} from './dialog-heading.js';
 import { icon } from './icons.js';
@@ -60,6 +61,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
   let pollTimer = null;
   let tickTimer = null;
   let resetArmed = false;
+  let freshCards = false, heardPhase = state.phase;
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay point21-overlay';
@@ -89,6 +91,7 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
     const known = seen.get(id) || 0;
     const html = cards.map((card, index) => cardHtml(card, { fresh: index >= known, delay: Math.max(0, index - known) * 140 })).join('')
       + Array.from({ length: hidden }, (_, index) => cardBackHtml((cards.length - known + index) * 140)).join('');
+    if (cards.length > known) freshCards = true;
     seen.set(id, cards.length);
     return `<div class="point-hand ${mini ? 'mini' : ''}">${html || '<em class="point-hand-empty">Карты ещё не розданы</em>'}</div>`;
   }
@@ -193,6 +196,12 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
         : state.phase === 'finished' ? resultView()
           : idleView();
     content.innerHTML = `${resetBanner(state, resetArmed)}${view}`;
+    if (state.phase !== heardPhase) {
+      const mine = state.phase === 'finished' ? (state.result?.players || []).find(player => player.id === state.me?.id) : null;
+      if (mine) sfx(mine.exact21 && mine.won ? 'twentyOne' : mine.points > 21 ? 'bust' : mine.won ? 'win' : 'lose');
+      heardPhase = state.phase;
+    } else if (freshCards) sfx('deal');
+    freshCards = false;
     if (draft !== null) {
       const input = content.querySelector('[data-table-bet]');
       if (input) { input.value = draft; input.focus(); }
@@ -231,10 +240,12 @@ export async function openPoint21({ api, renderState, haptic, statusElement }) {
     overlay.classList.add('busy');
     feedback.textContent = '';
     haptic(name === 'card' ? 'heavy' : 'medium');
+    if (name === 'pass') sfx('stand'); else if (name === 'join') sfx('chip');
     try {
       const payload = await api('/api/point21/action', { method: 'POST', body: JSON.stringify(body) });
       state = payload.point21;
       if (payload.state) renderState(payload.state);
+      if (name === 'bet' && Number(body.bet) > 0) sfx('chip');
       feedback.textContent = name === 'card' && payload.card ? `Выпала карта ${payload.card}.`
         : name === 'reset' ? 'Стол сброшен.' : name === 'bet' ? (Number(body.bet) > 0 ? `Ставка ${formatNumber(body.bet)} 🪙 принята.` : 'Играешь без ставки.') : '';
       statusElement.textContent = `21 очко: ${state.phase === 'finished' ? 'партия завершена' : 'стол обновлён'}.`;

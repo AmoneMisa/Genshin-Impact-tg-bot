@@ -1,8 +1,9 @@
 import {createPoller} from './polling.js';
-import { createBossStage, SKILL_FX, skillFxForClass } from './boss-stage.js';
+import { createBossStage, SKILL_FX, skillFxForClass, CAST_SOUND } from './boss-stage.js';
 import {
   damageMeter, encounterPanel, escapeHtml, formatDuration, formatNumber, hotbar, hotbarChoice, partyStrip, playerFrame, rewardsPanel, targetFrame, bossAttacksPanel, potionBar } from './boss-hud.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
+import {castSkill} from './audio.js';
 import {updateDeathPopup} from './death-popup.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
 
@@ -391,6 +392,7 @@ export async function openBossGame({ api, renderState, haptic, statusElement, in
       state = payload.boss;
       if (payload.state) renderState(payload.state);
       const result = payload.result || {};
+      castSkill(state.player?.skills?.[Number(index)]?.l2Id, result.type === 'heal' ? 'heal' : result.type === 'shield' ? 'buff' : CAST_SOUND[skillFxForClass(state.player?.className)] || 'hit');
       if (result.type === 'damage') {
         stage?.playSkill('damage', { crit: Boolean(result.isHasCritical) });
         // The number lands with the class animation's impact.
