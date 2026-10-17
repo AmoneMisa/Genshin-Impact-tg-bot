@@ -76,6 +76,7 @@ export function personalBadges(session) {
 export function getBadges(chat, userId, clan = null, { session = null, bossAlive = false, mail = 0 } = {}) {
   const social = getSocialState(chat, userId);
   const friends = (social.incoming || []).length;
+  const gwent = (chat?.game?.gwent?.invites || []).filter(invite=>invite.status==='pending'&&invite.to===String(userId)&&invite.expiresAt>Date.now()).length;
 
   let clanCount = 0;
   if (clan) {
@@ -95,6 +96,6 @@ export function getBadges(chat, userId, clan = null, { session = null, bossAlive
   const academy=availableAcademyQuestCount(session);
   personal.classQuests=classQuests;personal.city=academy;
   const boss = bossAlive ? 1 : 0;
-  const total = friends + clanCount + boss + mail + Object.values(personal).reduce((sum, value) => sum + value, 0);
-  return { friends, clan: clanCount, boss, mail, ...personal, total };
+  const total = friends + gwent + clanCount + boss + mail + Object.values(personal).reduce((sum, value) => sum + value, 0);
+  return { friends, gwent, clan: clanCount, boss, mail, ...personal, total };
 }

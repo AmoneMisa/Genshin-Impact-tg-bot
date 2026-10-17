@@ -10,12 +10,24 @@ import worldFixes from './uz-world-fixes.js';
 import gameUi from './uz-game-ui.js';
 import itemAdmin from './uz-item-admin.js';
 import exploration from './uz-exploration.js';
+import gwent from './uz-gwent.js';
+import gwentDecks from './uz-gwent-decks.js';
+import gwentCards from './uz-gwent-cards.js';
+import gwentMore from './uz-gwent-more.js';
+import gwentChoice from './uz-gwent-choice.js';
+import gwentLobby from './uz-gwent-lobby.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
   ...itemAdmin,
   ...gameUi,
   ...exploration,
+  ...gwent,
+  ...gwentDecks,
+  ...gwentCards,
+  ...gwentMore,
+  ...gwentChoice,
+  ...gwentLobby,
   '· от': '· kamida',
   '{0} опыта + бонус энергии': '{0} tajriba + energiya bonusi',
   'Боевые расходники': 'Jang sarf buyumlari',

@@ -1,3 +1,4 @@
+import { parseGwentEntry } from './gwent-links.js';
 import {updateDeathPopup} from './death-popup.js';
 import {bindFeatureLinks} from './feature-links.js';
 import {requestJson} from './request-json.js';
@@ -31,6 +32,7 @@ const openSwordGame = (...args) => Promise.all([ensureFeatureStyles(),import('./
 const openArcadeGame = (...args) => Promise.all([ensureFeatureStyles(),import('./arcade.js')]).then(([,module]) => module.openArcadeGame(...args));
 const openGoldTransfer = (...args) => Promise.all([ensureFeatureStyles(),import('./gold-transfer.js')]).then(([,module]) => module.openGoldTransfer(...args));
 const openPoint21 = (...args) => Promise.all([ensureFeatureStyles(),import('./point21.js')]).then(([,module]) => module.openPoint21(...args));
+const openGwentGame = (...args) => Promise.all([ensureFeatureStyles(),import('./gwent.js')]).then(([,module]) => module.openGwentGame(...args));
 const openElementsGame = (...args) => Promise.all([ensureFeatureStyles(),import('./elements.js')]).then(([,module]) => module.openElementsGame(...args));
 const openBonusGame = (...args) => Promise.all([ensureFeatureStyles(),import('./bonus.js')]).then(([,module]) => module.openBonusGame(...args));
 const openLoginRewards = (...args) => Promise.all([ensureFeatureStyles(),import('./login-rewards.js')]).then(([,module]) => module.openLoginRewards(...args));
@@ -139,6 +141,7 @@ const launchers = {
   shop: openShopGame,
   transfer: openGoldTransfer,
   point21: openPoint21,
+  gwent: openGwentGame,
   elements: openElementsGame,
   friends: openFriendsGame,
   clan: openClanGame,
@@ -191,6 +194,7 @@ async function launchFeature(feature, render, navigation = {}) {
       context: currentState?.context || null,
       player: currentState?.player || null,
       initialView: navigation.view,
+      initialInvite: navigation.initialInvite, initialWatch: navigation.initialWatch,
       ...(feature.id === 'gacha' ? { playerLevel: currentState?.player?.level || 1 } : {}),
     }));
     status.textContent = '';
@@ -375,6 +379,8 @@ async function boot() {
       if(currentState?.context?.isAdmin===true)await launchFeature({id:'admin',title:'Админка',status:'webgl'},render);
       else status.textContent='Доступ к админке есть только у владельца бота.';
     }
+    const gwentEntry = parseGwentEntry(tg?.initDataUnsafe?.start_param);
+    if (gwentEntry) await launchFeature({id:'gwent',title:'Гвинт'},render,{initialInvite:gwentEntry.kind==='invite'?gwentEntry.token:null,initialWatch:gwentEntry.kind==='watch'?gwentEntry.token:null});
     showHelloNotices({ api, haptic }).catch(error => console.warn('[notices]', error));
   } catch (error) {
     console.error(error);

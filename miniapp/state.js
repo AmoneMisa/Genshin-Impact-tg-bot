@@ -59,6 +59,7 @@ const FEATURE_CATALOG = Object.freeze([
   { id: 'shop', title: 'Магазин', subtitle: 'Покупки и усиления', icon: '🛒', status: 'webgl' },
   { id: 'transfer', title: 'Переводы', subtitle: 'Передать золото игроку', icon: '🪙', status: 'webgl' },
   { id: 'point21', title: '21 очко', subtitle: 'Общий карточный стол', icon: '🃏', status: 'webgl' },
+  { id: 'gwent', title: 'Гвинт', subtitle: 'Карточная битва со Скеллиге', icon: '🌊', status: 'webgl' },
   { id: 'elements', title: 'Стихии', subtitle: 'Реакции и комбинации', icon: '✦', status: 'webgl' },
   { id: 'clan', title: 'Кланы', subtitle: 'Гильдия и активности', icon: '🏰', status: 'webgl' },
   { id: 'friends', title: 'Друзья', subtitle: 'Друзья и соклановцы', icon: '🤝', status: 'webgl' },

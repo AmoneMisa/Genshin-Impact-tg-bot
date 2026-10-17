@@ -1343,7 +1343,7 @@ body .ui-button.ui-choice-row.compact{min-height:44px;padding:var(--space-2);fon
 .bonus-win:has(.costume-preview){display:block}
 .bonus-prize img{width:40px;height:40px;object-fit:contain}
 /* Compact controls retain the common surfaces, focus, disabled states and spacing. */
-body .game-overlay .ui-button.ui-compact{min-height:36px;padding:var(--space-2);font-size:12px;line-height:1.25;display:flex;align-items:center;justify-content:center;gap:var(--space-2)}
+body .game-overlay .ui-button.ui-compact,body .game-overlay .overlay-panel .ui-button.ui-compact{min-height:var(--compact-control-height,36px);padding:var(--compact-control-padding,var(--space-2));font-size:12px;line-height:1.25;display:flex;align-items:center;justify-content:center;gap:var(--space-2)}
 body .game-overlay .ui-folder-tabs.ui-compact{gap:var(--space-1);padding:0}
 body .game-overlay .ui-folder-tabs.ui-compact button{min-height:32px;padding:var(--space-2);font-size:12px;line-height:1.2}
 /* Pressing a map marker must preserve its map anchor instead of moving the hit target. */
@@ -1453,3 +1453,64 @@ body .game-overlay .overlay-panel.combat-dialog{padding:var(--space-2)}
 .character-nickname-form label{display:grid;gap:var(--space-2)}
 .character-nickname-form p{font-size:12px;margin:0}
 .character-nickname-form [data-nickname-error]:empty{display:none}
+
+/* Card-table window and illustrated choice variant: shared control semantics, quiet gold on wood. */
+body .game-overlay>.ui-card-table-window{background:linear-gradient(110deg,#191713e8,#0e1011f5),repeating-linear-gradient(0deg,#1a1713 0 2px,#11120f 2px 5px);border:1px solid var(--gold-dim);border-radius:var(--radius-control);padding:var(--dialog-padding);box-shadow:inset 0 0 0 3px #0a0b0b,inset 0 0 0 4px #d8b36a24,var(--shadow-panel);backdrop-filter:none}
+.ui-card-table-window>.game-dialog-heading{border-bottom:1px solid var(--border-strong);padding:var(--space-2) var(--space-1) var(--space-3)}
+.ui-card-table-window>.game-dialog-heading h2{font:600 25px/1.2 var(--serif)}
+body .game-overlay .overlay-panel .ui-button.ui-illustrated-choice{display:flex;align-items:center;justify-content:center;gap:var(--space-3);width:100%;padding:var(--space-3);border:1px solid var(--border-strong);border-radius:var(--radius-control);background:linear-gradient(90deg,#0b0d1020,#0b0d10ed 70%),var(--choice-art,linear-gradient(#161719,#101112)) center 30%/cover;box-shadow:none;text-align:center;color:var(--text)}
+.ui-illustrated-choice>span:not(.ui-selection-mark){min-width:0;flex:1;overflow-wrap:anywhere;font:600 18px/1.3 var(--serif)}
+.ui-illustrated-choice small{display:block;margin-top:var(--space-2);font:13px/1.4 Arial,sans-serif;color:var(--muted)}
+body .game-overlay .overlay-panel .ui-illustrated-choice:is([aria-pressed=true],[data-selected=true]){border-color:var(--gold);box-shadow:inset 0 0 0 1px #d8b36a33}
+body .game-overlay .overlay-panel .ui-illustrated-choice:hover{border-color:var(--gold)}
+.ui-selection-mark{display:grid;place-items:center;flex:none;width:24px;height:24px;border:1px solid var(--gold-dim);border-radius:50%;font:18px/1 Arial,sans-serif;color:var(--gold-bright)}
+[aria-pressed=true]>.ui-selection-mark{border-color:var(--gold)}
+.ui-illustrated-choice[aria-disabled=true]{opacity:.5;cursor:default}
+.ui-card-table-window .ui-selection-summary{border-radius:var(--radius-control);background:linear-gradient(110deg,#1524339c,#080b10);text-align:left}
+body .game-overlay .ui-card-table-window .ui-button.primary{background:linear-gradient(#d5ab55,#a57a2c);border-color:#e0bc70;color:#171209;text-shadow:none}
+.ui-card-table-window :is(.gwent-hint,.gwent-leader-description,.gwent-builder-card>small,.gwent-side-meta>small){color:var(--muted)}
+.gwent-deck-valid{color:var(--success)}.gwent-deck-invalid,.gwent-feedback[data-tone=bad]{color:var(--danger)}
+.gwent-builder-card{border:0;background:transparent;border-radius:0}
+.gwent-deck-stats [data-valid=false]{border-color:var(--danger)}
+.gwent-side{border:1px solid var(--border-soft);background:#100f0c80}
+.gwent-side-head{border-bottom:1px solid var(--border-strong);background:linear-gradient(90deg,#25374e8c,#111315)}
+.gwent-side[data-faction=nilfgaard]>.gwent-side-head{background:linear-gradient(90deg,#471e218c,#141111)}
+.gwent-side[data-faction=monsters]>.gwent-side-head{background:linear-gradient(90deg,#4f241c99,#141111)}
+.gwent-side[data-faction=scoiatael]>.gwent-side-head{background:linear-gradient(90deg,#24392399,#101410)}
+.gwent-side[data-faction=skellige]>.gwent-side-head{background:linear-gradient(90deg,#3c2a4b99,#141116)}
+.gwent-side-head>strong,.gwent-status,.gwent-weather,.gwent-turn,.gwent-row-score{color:var(--gold-bright)}
+.gwent-side-meta{border-right:1px solid var(--border-soft)}
+.gwent-row+.gwent-row{border-top:1px solid var(--border-soft)}
+.gwent-row.weather{background:#63829624}.gwent-row-label{color:var(--muted)}
+.gwent-card,body .ui-card-table-window .ui-button.gwent-card{display:grid;align-content:end;align-items:end;justify-content:stretch;gap:0;min-height:0;padding:var(--space-half);border:0;border-radius:0;background:transparent;box-shadow:none;text-align:center;color:var(--text)}
+.gwent-card-power{background:#10100de8;color:var(--text);border:1px solid #a78a49;border-radius:var(--radius-control);z-index:1}
+.gwent-card-name{background:#e8d9b8;color:#231b0e;padding:var(--space-1);border-radius:2px}
+.gwent-card-trait{background:#10100de8;color:var(--text-soft);padding:var(--space-1)}
+.gwent-card-trait:empty{display:none}
+.gwent-card.printed,body .ui-card-table-window .ui-button.gwent-card.printed{padding:var(--space-half);background:transparent}
+.gwent-card.hero{border-color:var(--gold)}.gwent-card.hero .gwent-card-power{background:#624317e8;border-color:var(--gold)}
+body .ui-card-table-window .gwent-card:is(.selected,.target){outline:0;box-shadow:none}
+.gwent-card:is(.selected,.target)>.gwent-card-art{filter:brightness(1.18)}
+body .ui-card-table-window .gwent-card:hover{border-color:var(--gold-bright)}
+body .ui-card-table-window .gwent-horn{display:grid;min-height:44px;padding:var(--space-1);border-color:var(--border-soft);background:#080a0a80;border-radius:var(--radius-control)}
+.gwent-horn img{opacity:.32}.gwent-horn:is(.active,:has(small)) img{opacity:1}
+body .ui-card-table-window .gwent-horn.active{border-color:var(--gold);color:var(--gold-bright)}
+body .ui-card-table-window .gwent-horn.target{outline:2px solid var(--gold);outline-offset:-2px}
+.gwent-weather{border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft);background:linear-gradient(90deg,transparent,#71614224,transparent)}
+.gwent-hand{border:1px solid var(--border-soft);background:#08090980;border-radius:var(--radius-control)}
+.gwent-leader-portrait>span{background:#0b0b0de0;color:var(--text)}
+.gwent-piles b{color:var(--text);background:#0b0b0de0;border-radius:0}
+.gwent-more summary{border:1px solid var(--border-soft);border-radius:var(--radius-control);list-style:none}
+.gwent-more summary::-webkit-details-marker{display:none}.gwent-more[open]>div{border:1px solid var(--border-strong);background:var(--surface-dialog-solid);border-radius:var(--radius-control)}
+.gwent-panel :is(summary,button,input):focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+@media(max-width:650px){.ui-card-table-window>.game-dialog-heading h2{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.gwent-overlay *{animation:none;transition:none}}
+
+/* Full card artwork already includes its frame. Reuse this for cards, leaders and piles. */
+body .game-overlay .overlay-panel .ui-button.ui-card-art{border:0;border-radius:0;background:transparent;box-shadow:none;min-height:0;padding:var(--space-half)}
+body .game-overlay .overlay-panel .ui-button.ui-card-art:hover{border:0;background:transparent;box-shadow:none}
+body .game-overlay .overlay-panel .ui-button.ui-card-art:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.ui-disclosure-summary{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);list-style:none}
+.ui-disclosure-summary::-webkit-details-marker{display:none}
+.ui-disclosure-summary>svg{width:16px;height:16px;flex:none}
+details[open]>.ui-disclosure-summary>svg{rotate:180deg}

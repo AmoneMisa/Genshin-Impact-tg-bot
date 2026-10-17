@@ -54,3 +54,11 @@ test('rejects expired Telegram initData', () => {
 
   assert.throws(() => validateTelegramInitData(raw, token, 60), /expired/);
 });
+
+
+test('signed Gwent invitation selects chat, while altered chat invalidates signature',()=>{
+ const token='123:test-token',start='gwent_-100123_i_12345678-1234-1234-1234-123456789abc';
+ const raw=signedInitData(token,{auth_date:Math.floor(Date.now()/1000),user:{id:42},start_param:start});
+ assert.equal(resolveGameChatId(validateTelegramInitData(raw,token)),-100123);
+ assert.throws(()=>validateTelegramInitData(raw.replace('-100123','-100456'),token),/signature is invalid/);
+});

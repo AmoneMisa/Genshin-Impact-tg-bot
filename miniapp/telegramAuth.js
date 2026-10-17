@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { parseGwentEntry } from '../webapp/gwent-links.js';
 
 const MAX_AUTH_AGE_SECONDS = 60 * 60 * 24;
 
@@ -75,6 +76,8 @@ export function resolveGameChatId(initData) {
   const startParam = initData.startParam || '';
   const match = /^(?:admin_)?chat_(-?\d+)$/.exec(startParam);
   if (match) return Number(match[1]);
+  const gwent = parseGwentEntry(startParam);
+  if (gwent) return gwent.chatId;
   if (initData.chat?.id) return Number(initData.chat.id);
   if (initData.user?.id) return Number(initData.user.id);
   throw authError('Unable to resolve game chat');

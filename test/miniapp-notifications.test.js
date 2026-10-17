@@ -75,3 +75,10 @@ test('boss spawn recipients are recently seen humans except the summoner', () =>
   const c = { members: [seen(1), seen(2), seen(3, { at: 0 }), seen(4, { bot: true }), seen(5, { isHided: true }), seen(6)] };
   assert.deepEqual(bossSpawnRecipients(c, 1, now), ['2', '6']);
 });
+
+
+test('Gwent badge counts only active invitations addressed to this player',()=>{
+ const c=chat(),now=Date.now();
+ c.game={gwent:{invites:[{to:'2',status:'pending',expiresAt:now+60000},{to:'2',status:'pending',expiresAt:now-1},{to:'2',status:'accepted',expiresAt:now+60000},{to:null,status:'pending',expiresAt:now+60000}]}};
+ assert.equal(getBadges(c,2,null).gwent,1);assert.equal(getBadges(c,1,null).gwent,0);
+});

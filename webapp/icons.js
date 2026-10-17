@@ -11,6 +11,8 @@ const templates = new Map();
 
 /** Shared control glyphs; gameplay items continue to use their original client artwork. */
 export function controlIcon(name){
+ if(name==='more')return '<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>';
+ if(name==='plus'||name==='minus')return `<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14${name==='plus'?'M12 5v14':''}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
  if(name==='system-chat')return '<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Zm4 4h8M8 12h6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
  if(name==='minimize')return '<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h6V3M21 15h-6v6M9 9 3 3m12 12 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
  const paths={check:'M4 12l5 5L20 5','chevron-left':'M15 5l-7 7 7 7','chevron-right':'M9 5l7 7-7 7','chevron-up':'M5 15l7-7 7 7','chevron-down':'M5 9l7 7 7-7','arrow-up':'M12 20V4M5 11l7-7 7 7','arrow-left-right':'M4 7h16m-5-5 5 5-5 5M20 17H4m5-5-5 5 5 5',anvil:'M3 7h18l-5 5h-3v5h4v3H7v-3h4v-5H7L3 7Z'};

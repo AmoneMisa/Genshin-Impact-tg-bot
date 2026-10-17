@@ -1,0 +1,100 @@
+/* Layout only; shared skins and interaction states finish in design-system.css. */
+.gwent-overlay{--dialog-padding:var(--space-3);--compact-control-height:32px;--compact-control-padding:var(--space-1) var(--space-2)}
+.gwent-panel{display:grid;gap:var(--space-3);min-width:0}
+body .game-overlay>.gwent-panel{width:min(100%,520px);max-width:520px}
+body .game-overlay>.gwent-panel[data-screen=editor],body .game-overlay>.gwent-board-panel{width:min(100%,1120px);max-width:1120px}
+body .game-overlay>.gwent-board-panel{max-height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+.gwent-board-panel .gwent-content{gap:var(--space-2)}
+.gwent-panel .game-dialog-heading{margin:0;align-items:center}
+.gwent-content{display:grid;gap:var(--space-3);min-width:0;width:100%;box-sizing:border-box}.gwent-content>*{min-width:0}
+.gwent-factions,.gwent-mode-options,.gwent-leader-list,.gwent-lobby-actions{display:grid;gap:var(--space-2)}
+.gwent-lobby-actions{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:var(--space-3)}
+.gwent-panel .ui-control-glyph{width:16px;height:16px;flex:none}.gwent-panel .ui-selection-mark>svg{width:16px;height:16px}
+.gwent-deck-valid{display:flex;align-items:center;gap:var(--space-2)}
+.gwent-faction{min-height:56px}.gwent-crest{display:block;width:36px;height:46px;object-fit:contain;flex:none}
+.gwent-summary{position:relative;min-height:112px;justify-content:flex-start;overflow:hidden}
+.gwent-summary>span{flex:1;position:relative;z-index:1}.gwent-summary strong{display:block;font:600 18px/1.3 var(--serif)}
+.gwent-summary .ui-button{position:relative;z-index:1}.gwent-summary-leader{width:76px;height:108px;object-fit:cover;object-position:top;flex:none}
+.gwent-mode{min-height:92px}.gwent-mode-art{width:40px;height:64px;object-fit:contain;flex:none}.gwent-mode>span{flex:1;min-width:0}.gwent-mode input{flex:none}
+.gwent-question{text-align:center;margin:var(--space-3) 0}.gwent-hint,.gwent-leader-description{margin:0;text-align:center;font-size:13px;line-height:1.5}
+.gwent-or{display:flex;align-items:center;justify-content:center;padding:var(--space-2)}
+.gwent-search-art{display:flex;align-items:center;justify-content:center;gap:var(--space-3);padding:var(--space-5);min-height:220px}
+.gwent-search-art img{width:84px;height:140px;object-fit:cover}.gwent-leader-choice{min-height:136px}
+.gwent-leader-art{width:70px;height:102px;object-fit:cover;object-position:top;flex:none}
+.gwent-editor-top,.gwent-pagination,.gwent-catalog-heading{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);flex-wrap:wrap}
+.gwent-deck-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2)}
+.gwent-deck-stats>span{gap:var(--space-2);flex-wrap:wrap}.gwent-deck-stats strong{white-space:nowrap}
+.gwent-deck-valid,.gwent-deck-invalid{margin:var(--space-2) 0 0;line-height:1.5;font-size:13px}
+.gwent-filter-bar{display:flex;align-items:end;gap:var(--space-2);flex-wrap:wrap}
+.gwent-filter-bar label{display:grid;gap:var(--space-2);flex:1;min-width:120px;font-size:13px}
+.gwent-filter-bar .gwent-search-field{flex:2;min-width:min(100%,200px)}
+.gwent-filter-bar :is(input,select,.ds-select){width:100%;min-width:0;box-sizing:border-box}
+.gwent-extra-filters{width:100%}.gwent-extra-filters summary,.gwent-more summary{padding:var(--space-2);min-height:28px;cursor:pointer}
+.gwent-extra-filters[open]>.gwent-filter-bar{margin-top:var(--space-2)}
+.gwent-filter-bar .gwent-check{display:flex;align-items:center;align-self:center;gap:var(--space-2)}.gwent-check input{width:auto}
+.gwent-catalog{display:grid;gap:var(--space-3)}.gwent-builder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:var(--space-3)}
+.gwent-builder-card{display:grid;align-content:start;gap:var(--space-2);padding:var(--space-2);min-width:0}
+.gwent-builder-card>.gwent-card{width:100%;height:176px}.gwent-builder-card>small{font-size:11px;min-height:28px;line-height:1.3}
+.gwent-builder-card>.gwent-card.printed{height:240px}
+.gwent-copy-controls{display:flex;align-items:center;justify-content:space-between;gap:var(--space-1);font-size:12px}
+.gwent-copy-controls .ui-button{width:32px;flex:none}.gwent-leader-description{text-align:left}
+.gwent-card-detail{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2)}.gwent-card-detail>div{min-width:0}
+.gwent-detail-art{width:40%;max-width:180px;object-fit:contain}.gwent-pile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:var(--space-2)}.gwent-pile-grid .gwent-card{width:100%}
+.gwent-status{display:flex;align-items:center;justify-content:center;gap:var(--space-3);flex-wrap:wrap;font-size:13px;padding:var(--space-2)}
+.gwent-side{display:grid;grid-template-columns:132px minmax(0,1fr);grid-template-rows:auto 1fr;min-width:0}
+.gwent-side-head{grid-column:1/-1;display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2);min-width:0}
+.gwent-side-head>.gwent-crest{width:24px;height:30px}.gwent-side-head>span:first-of-type{flex:1;min-width:0;overflow-wrap:anywhere;font:600 14px/1.25 var(--serif)}
+.gwent-side-head>strong{padding:var(--space-1);font:600 25px/1 var(--serif)}.gwent-gems{display:flex;align-items:center;gap:var(--space-1);flex:none}.gwent-gems img{width:17px;height:21px;object-fit:contain}
+.gwent-side-meta{grid-column:1;grid-row:2;display:grid;align-content:center;justify-items:center;gap:var(--space-2);padding:var(--space-2);min-width:0}.gwent-side-meta>small{font-size:11px}
+.gwent-leader-portrait{position:relative;width:64px;height:121px;overflow:hidden}.gwent-leader-portrait>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.gwent-leader-portrait>span{position:absolute;inset:auto 0 0;padding:var(--space-1);font:10px/1.2 var(--serif)}
+.gwent-piles{display:flex;align-items:center;gap:var(--space-2)}body .game-overlay .overlay-panel .gwent-piles .ui-button{position:relative;display:grid;align-content:end;width:32px;height:44px;font-size:10px;overflow:hidden}
+.gwent-piles img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.gwent-piles img.ui-icon{inset:var(--space-1);width:24px;height:24px}.gwent-piles b{position:relative;display:block;padding:var(--space-half) var(--space-1)}.gwent-rows{display:grid;grid-template-rows:repeat(3,1fr);min-width:0}
+.gwent-row{display:grid;grid-template-columns:100px minmax(0,1fr) 44px 38px;align-items:center;gap:var(--space-2);padding:var(--space-1) var(--space-2);min-width:0}
+.gwent-row-label{display:flex;align-items:center;gap:var(--space-2);min-width:0;font-size:11px}.gwent-row-label img{width:24px;height:28px;object-fit:contain;flex:none}
+.gwent-row-cards{display:flex;align-items:center;gap:var(--space-1);overflow-x:auto;min-width:0;min-height:48px;padding:var(--space-1);scrollbar-width:thin}
+.gwent-card{position:relative;display:grid;align-content:end;flex:0 0 84px;width:84px;height:124px;min-width:0;overflow:hidden;box-sizing:border-box}
+.gwent-card-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.gwent-card-power{position:absolute;top:var(--space-1);left:var(--space-1);display:grid;place-items:center;min-width:20px;padding:var(--space-1);font:700 16px/1 var(--serif)}
+.gwent-card-name,.gwent-card-trait{position:relative;display:block;min-width:0;overflow-wrap:anywhere}.gwent-card-name{font:600 11px/1.2 var(--serif)}.gwent-card-trait{font-size:9px;line-height:1.2}
+.gwent-card.compact{flex-basis:34px;width:34px;height:48px}.gwent-card.compact .gwent-card-name{display:none}.gwent-card.compact .gwent-card-power{font-size:12px;min-width:12px;padding:var(--space-half)}
+.gwent-horn{position:relative;display:grid;place-items:center;width:44px;height:48px}.gwent-horn img{width:27px;height:27px;object-fit:contain}.gwent-horn small{position:absolute;bottom:var(--space-half);right:var(--space-1);font-size:11px}
+.gwent-row-score{text-align:center;font:600 22px/1 var(--serif);padding:var(--space-1)}
+.gwent-weather,.gwent-turn{text-align:center;padding:var(--space-1) var(--space-2);font:600 15px/1.2 var(--serif)}
+.gwent-hand{display:flex;align-items:stretch;gap:var(--space-2);overflow-x:auto;padding:var(--space-2);min-width:0;scrollbar-width:thin}
+.gwent-hand>.gwent-card{height:104px}
+.gwent-hand>.gwent-card.printed{flex-basis:64px;width:64px;height:121px}
+.gwent-actions{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-2);flex-wrap:wrap}
+.gwent-more{position:relative}.gwent-more summary{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:32px;height:32px;min-height:0;padding:var(--space-1)}.gwent-more[open]>div{position:absolute;bottom:100%;right:0;padding:var(--space-2);z-index:2;width:180px}
+.gwent-picker{flex-wrap:wrap}.gwent-picker>span{flex:1;min-width:120px}.gwent-picker small{display:block}.gwent-feedback{font-size:13px;padding:var(--space-2);line-height:1.5}.gwent-reveal{overflow-wrap:anywhere}
+.gwent-card.printed .gwent-card-art,.gwent-leader-portrait>img,.gwent-summary-leader{object-fit:contain}
+.gwent-leader-art{height:132px;object-fit:contain}
+.gwent-leader-entry{display:grid;justify-items:end;gap:var(--space-2)}
+.gwent-art-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:var(--space-3)}
+.gwent-art-options>.gwent-card{width:100%;height:260px}
+@media(max-width:650px){
+ .gwent-overlay{--dialog-padding:var(--space-2)}.gwent-side{grid-template-columns:72px minmax(0,1fr)}
+ .gwent-side-meta{grid-column:1;grid-row:2;display:grid;align-content:center;justify-items:center;padding:var(--space-1);gap:var(--space-1)}.gwent-side.ai .gwent-side-meta{display:grid}
+ .gwent-side-meta .gwent-leader-portrait{width:60px;height:113px;flex:none}.gwent-leader-portrait>span{display:none}
+ body .game-overlay .overlay-panel .gwent-piles .ui-button{width:28px;height:38px}
+ .gwent-side-head>span:first-of-type{font-size:12px}.gwent-side-head>strong{font-size:22px}.gwent-side-head>.gwent-crest{width:20px;height:24px}
+ .gwent-row{grid-template-columns:24px minmax(0,1fr) 36px 28px;gap:var(--space-1);padding:var(--space-1) var(--space-2)}.gwent-row-label>span{display:none}.gwent-row-label img{width:20px;height:24px}
+ .gwent-row-cards{min-height:44px}.gwent-card.compact{flex-basis:32px;width:32px;height:44px}.gwent-card.compact .gwent-card-power{font-size:10px}
+ .gwent-horn{width:36px;height:44px}.gwent-horn img{width:24px;height:24px}.gwent-row-score{font-size:18px}.gwent-content{gap:var(--space-2)}
+ .gwent-hand>.gwent-card{flex-basis:66px;width:66px;height:100px}.gwent-status{padding:var(--space-1);font-size:12px}.gwent-weather,.gwent-turn{padding:var(--space-1) var(--space-2)}
+ .gwent-hand>.gwent-card.printed{flex-basis:64px;width:64px;height:121px}
+ .gwent-builder-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2)}.gwent-summary-leader{width:50px;height:80px}.gwent-summary{padding:var(--space-2);gap:var(--space-2)}
+ .gwent-summary strong{font-size:15px}.gwent-summary small{font-size:11px}.gwent-summary:has(.ui-button) .gwent-summary-leader{display:none}.gwent-leader-choice{padding:var(--space-2);gap:var(--space-2)}.gwent-deck-stats .ui-inset-row{padding:var(--space-2);font-size:12px}
+}
+
+.gwent-social-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
+.gwent-social-row>div:first-child{flex:1;min-width:120px;overflow-wrap:anywhere}
+.gwent-social-row strong,.gwent-social-row small{display:block}
+.gwent-share-link{width:100%;min-width:0;box-sizing:border-box}
+.gwent-result-view{display:grid;gap:var(--space-3);min-width:0;width:100%;box-sizing:border-box}
+.gwent-result-winner{margin:0;text-align:center;font:600 22px/1.3 var(--serif);overflow-wrap:anywhere}
+.gwent-result-table{display:grid;gap:0;min-width:0}
+.gwent-result-row{display:grid;grid-template-columns:minmax(44px,auto) minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);align-items:center;gap:var(--space-2);padding:var(--space-2);text-align:center;overflow-wrap:anywhere}
+.gwent-result-row>span{min-width:0}.gwent-result-head{font-size:12px;opacity:.85}
+.gwent-result-row [data-won="true"]{font-weight:700;color:var(--gold,#e0b85a)}
+.gwent-result-offer{margin:0;text-align:center}
