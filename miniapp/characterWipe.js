@@ -55,7 +55,8 @@ export async function wipeCharacter(chatId,userId) {
   await RtaFighter.deleteMany({userId:id},{session});
   await Chat.updateMany({'game.trades':{$elemMatch:{$or:[{from:String(id)},{to:String(id)}],status:{$in:['invited','active']}}}},
    {$set:{'game.trades.$[trade].status':'cancelled','game.trades.$[trade].accepted':{}},$inc:{__v:1}},
-   {session,arrayFilters:[{$or:[{'trade.from':String(id)},{'trade.to':String(id)}],'trade.status':{$in:['invited','active']}}]});
+   // Mongoose casts every key of a filter that starts with $or as an array, so each operator stands alone under $and.
+   {session,arrayFilters:[{$and:[{$or:[{'trade.from':String(id)},{'trade.to':String(id)}]},{'trade.status':{$in:['invited','active']}}]}]});
   await Chat.updateMany({'members.userId':id},{$set:{'members.$[player].timerSwordCallback':0,
    'members.$[player].timerTitleCallback':0,'members.$[player].chestButtons':[]},$inc:{__v:1}},
    {session,arrayFilters:[{'player.userId':id}]});
