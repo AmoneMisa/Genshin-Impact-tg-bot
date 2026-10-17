@@ -126,7 +126,10 @@ body .game-overlay>.gwent-board-panel{max-height:calc(100dvh - 16px - env(safe-a
 .gwent-result-total{font-weight:700}
 body .ui-card-table-window .ui-button.gwent-opponent{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:left}
 
-.gwent-room{flex-direction:column;align-items:stretch}
-.gwent-room>*{min-width:0}
-.gwent-room-seats{margin:0;padding:0 0 0 var(--space-4);display:grid;gap:var(--space-2);overflow-wrap:anywhere}
+.gwent-room{display:grid;grid-template-columns:minmax(0,1fr);justify-content:stretch;align-items:start;gap:var(--space-3);padding:var(--space-3);text-align:left}
+.gwent-room>*{min-width:0;width:100%;box-sizing:border-box;margin:0}
+.gwent-room>small{text-align:center}
+.gwent-room-seats{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-2);overflow-wrap:anywhere}
+.gwent-room-seats li{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);border:1px solid var(--border-soft);border-radius:var(--radius-sm)}
 .gwent-room-seats small{display:inline}
+.gwent-room .gwent-lobby-actions{margin-top:0}

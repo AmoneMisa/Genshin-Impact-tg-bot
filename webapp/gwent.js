@@ -145,7 +145,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const seats = Array.from({ length: room.table.size }, (_, i) => room.table.players[i]);
     return `<article class="ui-inset-row gwent-social-row gwent-room" aria-label="Стол">
       <div><strong>Стол на ${room.table.size}</strong><small>${Math.max(0, Math.ceil((room.expiresAt - Date.now() - serverOffset) / 60000))} мин. · Расширенные правила, без рейтинга</small></div>
-      <ol class="gwent-room-seats">${seats.map(person => `<li>${person ? `<strong>${esc(person.name)}</strong> <small>${esc(GWENT_DECKS[person.faction]?.title || '')}</small>` : '<small>Свободное место — займёт ИИ</small>'}</li>`).join('')}</ol>
+      <ul class="gwent-room-seats">${seats.map((person, i) => `<li><span aria-hidden="true">${i + 1}.</span>${person ? `<strong>${esc(person.name)}</strong> <small>${esc(GWENT_DECKS[person.faction]?.title || '')}</small>` : '<small>Свободное место — займёт ИИ</small>'}</li>`).join('')}</ul>
       ${host ? `${room.url ? `<input class="gwent-share-link" aria-label="Ссылка на стол" readonly value="${esc(room.url)}">` : ''}
         <div class="gwent-lobby-actions">${room.url ? button('Копировать ссылку', `data-copy-invite="${room.id}"`) : ''}${button('Начать игру', `data-start-table="${room.id}" ${room.table.players.length < 2 ? 'disabled' : ''}`, true)}${button('Закрыть стол', `data-cancel-invite="${room.id}"`)}</div>
         <small>${room.table.players.length < 2 ? 'Для начала нужен ещё хотя бы один человек.' : 'Можно начать сейчас — пустые места займёт ИИ.'}</small>`
