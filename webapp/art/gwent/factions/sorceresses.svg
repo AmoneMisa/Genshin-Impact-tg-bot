@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 152" role="img" aria-label="sorceresses">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a3a8f"/><stop offset="1" stop-color="#241033"/></linearGradient></defs>
+<path d="M10 10 H110 V78 C110 114 82 134 60 142 C38 134 10 114 10 78 Z" fill="url(#g)" stroke="#d8b36a" stroke-width="4" stroke-linejoin="round"/>
+<path d="M18 18 H102 V77 C102 108 78 125 60 132 C42 125 18 108 18 77 Z" fill="none" stroke="#f0d9ff" stroke-opacity=".55" stroke-width="2"/>
+<g fill="none" stroke="#f0d9ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M60 34 L68 62 L96 62 L74 79 L82 106 L60 90 L38 106 L46 79 L24 62 L52 62 Z" stroke-width="3.5"/><circle cx="60" cy="74" r="6"/></g>
+</svg>

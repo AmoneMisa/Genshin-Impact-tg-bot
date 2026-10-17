@@ -22,9 +22,9 @@ function scene(faction = 'wild-hunt', foe = 'redania') {
   return state;
 }
 
-test('the rule sets: classic is the five original factions, extended adds five more', () => {
+test('the rule sets: classic is the five original factions, extended adds six more', () => {
   assert.deepEqual(RULESETS.classic.factions, DECK_IDS);
-  assert.equal(RULESETS.extended.factions.length, 10);
+  assert.equal(RULESETS.extended.factions.length, 11);
   assert.deepEqual(EXTENDED_FACTIONS.filter(id => rulesetAllows('classic', id)), []);
   assert.ok(RULESETS.extended.factions.every(id => rulesetAllows('extended', id)));
   assert.equal(normalizeRuleset('anything'), 'classic');
@@ -35,7 +35,7 @@ test('every extended faction has a valid starting deck, at most three copies of 
   const seen = new Map();
   for (const id of EXTENDED_FACTIONS) {
     const deck = GWENT_DECKS[id];
-    const stats = inspectLoadout(defaultLoadout(id));
+    const stats = inspectLoadout(defaultLoadout(id, 'extended'));
     assert.ok(stats.valid, `${id}: ${stats.errors.join('; ')}`);
     assert.ok(stats.units >= 30, `${id} offers a choice of cards`);
     assert.ok(deck.leaders.length >= 3, `${id} has leaders`);
@@ -175,13 +175,13 @@ test('Witchers get a hero back from the graveyard at the start of round 3, Wild 
 });
 
 test('every extended faction plays a whole match against others, with every level of AI', () => {
-  const pairs = [['wild-hunt', 'witchers'], ['toussaint', 'velen'], ['redania', 'wild-hunt'], ['velen', 'skellige'], ['witchers', 'monsters'], ['redania', 'nilfgaard'], ['toussaint', 'northern-realms'], ['velen', 'scoiatael']];
-  for (const [i, [a, b]] of pairs.entries()) for (const level of ['easy', 'medium']) {
+  const pairs = [['sorceresses', 'witchers'], ['witchers', 'sorceresses'], ['sorceresses', 'redania'], ['wild-hunt', 'witchers'], ['toussaint', 'velen'], ['redania', 'wild-hunt'], ['velen', 'skellige'], ['witchers', 'monsters'], ['redania', 'nilfgaard'], ['toussaint', 'northern-realms'], ['velen', 'scoiatael']];
+  for (const [i, [a, b]] of pairs.entries()) for (const level of ['easy', 'medium', 'hard']) {
     const rng = seededRandom(40 + i);
-    let state = createMatch({ playerDeck: buildDeck(defaultLoadout(a)), aiDeck: buildDeck(defaultLoadout(b)), rng });
+    let state = createMatch({ playerDeck: buildDeck(defaultLoadout(a, 'extended')), aiDeck: buildDeck(defaultLoadout(b, 'extended')), rng });
     for (let steps = 0; steps < 800 && state.phase === 'playing'; steps += 1) {
       const side = state.pending ? state.pending.side : state.turn;
-      const action = chooseAiAction(state, { level, side, rng, budgetMs: 10 });
+      const action = chooseAiAction(state, { level, side, rng, budgetMs: 6 });
       assert.ok(action, `${a} v ${b}: no action for ${side}`);
       const result = action.type === 'choice' ? resolveChoice(state, side, action.id)
         : action.type === 'pass' ? passRound(state, side) : playCard(state, side, action.uid, action);
@@ -199,14 +199,14 @@ import { runGwent, emptyLobby } from '../miniapp/gwentLobby.js';
 const NOW = 7_000_000;
 const people = Object.fromEntries([1, 2, 3, 4].map(id => [String(id), { name: `Игрок ${id}`, friends: [1, 2, 3, 4].filter(other => other !== id).map(String) }]));
 const ask = (lobby, user, mutation, body, now = NOW, extra = {}) => runGwent({ lobby, userId: user, name: `Игрок ${user}`, people, mutation, body, now, rng: () => 0.4, ...extra });
-const join = (lobby, user, faction, ruleset, now = NOW) => ask(lobby, user, true, { action: 'join', ruleset, loadout: defaultLoadout(faction) }, now, { rating: { rating: 1000, games: 0 } });
+const join = (lobby, user, faction, ruleset, now = NOW) => ask(lobby, user, true, { action: 'join', ruleset, loadout: defaultLoadout(faction, ruleset ?? 'classic') }, now, { rating: { rating: 1000, games: 0 } });
 
 test('a deck is only accepted under rules that allow its faction', () => {
   const lobby = emptyLobby();
   assert.equal(join(lobby, 1, 'velen', 'classic').result.ok, false, 'a new faction cannot play by the original rules');
   assert.equal(join(lobby, 1, 'velen', undefined).result.ok, false, 'the original rules are the default');
   assert.equal(join(lobby, 1, 'velen', 'extended').result.searching, true);
-  assert.equal(ask(lobby, 2, true, { action: 'invite', targetId: '3', ruleset: 'classic', loadout: defaultLoadout('redania') }).result.ok, false);
+  assert.equal(ask(lobby, 2, true, { action: 'invite', targetId: '3', ruleset: 'classic', loadout: defaultLoadout('redania', 'classic') }).result.ok, false);
 });
 
 test('players are paired only under the same rules, and only original-rules games are rated', () => {
@@ -225,13 +225,13 @@ test('players are paired only under the same rules, and only original-rules game
 
 test('an invitation carries its rules and is accepted only with a deck those rules allow', () => {
   const lobby = emptyLobby();
-  const sent = ask(lobby, 1, true, { action: 'invite', targetId: '2', ruleset: 'extended', loadout: defaultLoadout('wild-hunt') });
+  const sent = ask(lobby, 1, true, { action: 'invite', targetId: '2', ruleset: 'extended', loadout: defaultLoadout('wild-hunt', 'extended') });
   assert.equal(sent.result.invitation.ruleset, 'extended');
-  const accepted = ask(lobby, 2, true, { action: 'accept_invite', inviteId: sent.result.invitation.id, loadout: defaultLoadout('nilfgaard') }, NOW + 100);
+  const accepted = ask(lobby, 2, true, { action: 'accept_invite', inviteId: sent.result.invitation.id, loadout: defaultLoadout('nilfgaard', 'extended') }, NOW + 100);
   assert.equal(accepted.result.match.ruleset, 'extended');
   assert.equal(accepted.result.match.rated, null);
-  const classic = ask(lobby, 3, true, { action: 'invite', targetId: '4', ruleset: 'classic', loadout: defaultLoadout('monsters') }, NOW + 200);
-  assert.equal(ask(lobby, 4, true, { action: 'accept_invite', inviteId: classic.result.invitation.id, loadout: defaultLoadout('toussaint') }, NOW + 300).result.ok, false, 'the original rules do not allow a Toussaint deck');
+  const classic = ask(lobby, 3, true, { action: 'invite', targetId: '4', ruleset: 'classic', loadout: defaultLoadout('monsters', 'classic') }, NOW + 200);
+  assert.equal(ask(lobby, 4, true, { action: 'accept_invite', inviteId: classic.result.invitation.id, loadout: defaultLoadout('toussaint', 'extended') }, NOW + 300).result.ok, false, 'the original rules do not allow a Toussaint deck');
 });
 
 test('ambushes stay hidden: the player sees only the ones laid in enemy rows, spectators see none', () => {
@@ -248,4 +248,121 @@ test('ambushes stay hidden: the player sees only the ones laid in enemy rows, sp
   assert.equal(theirs.sides.player.traps.close, null);
   const watched = ask(lobby, 3, false, null, NOW + 200, { watch: match.id }).result.spectating.state;
   assert.deepEqual([watched.sides.player.traps, watched.sides.ai.traps], [{ close: null, ranged: null, siege: null }, { close: null, ranged: null, siege: null }]);
+});
+
+// ---- spells, signs, potions, elements and the Sorceresses -------------------------------------
+
+import { deckFor } from '../webapp/gwent-decks.js';
+
+test('every faction has four leaders under the extended rules', () => {
+  for (const id of RULESETS.extended.factions) assert.ok(deckFor('extended', id).leaders.length >= 4, id);
+  assert.equal(GWENT_DECKS.skellige.leaders.length, 2, 'the original Skellige keep theirs');
+  assert.equal(deckFor('extended', 'skellige').leaders.length, 4);
+  assert.equal(deckFor('classic', 'skellige').leaders.length, 2);
+});
+
+test('fireball destroys the strongest ordinary units of the chosen enemy row, never a hero', () => {
+  const state = scene('sorceresses', 'redania');
+  const fireball = make('so-fireball');
+  state.sides.player.hand = [fireball, make('so-guard')]; // spare cards keep the round going
+  state.sides.ai.hand = [make('re-captain')];
+  state.sides.ai.rows = rows([make('re-radovid'), make('re-captain'), make('re-royal-guard')]);
+  const places = legalPlays(state, 'player').filter(play => play.uid === fireball.uid).map(play => play.row);
+  assert.deepEqual(places, ['close'], 'only rows with ordinary enemy units');
+  const next = playCard(state, 'player', fireball.uid, { row: 'close' }).state;
+  assert.deepEqual(next.sides.ai.rows.close.map(card => card.id), ['re-radovid', 're-royal-guard']);
+  assert.equal(next.sides.player.graveyard.some(card => card.id === 'so-fireball'), true);
+});
+
+test('curse and blessing change a whole row until the round ends', () => {
+  const state = scene('sorceresses', 'redania');
+  const curse = make('so-curse'), blessing = make('so-blessing');
+  state.sides.player.hand = [curse, blessing, make('so-guard')];
+  state.sides.ai.hand = [make('re-captain')];
+  state.sides.player.rows = rows([make('so-guard'), make('so-knight')]);
+  state.sides.ai.rows = rows([make('re-captain'), make('re-radovid')]);
+  let next = playCard(state, 'player', curse.uid, { row: 'close' }).state;
+  assert.equal(scores(next).ai, 4 + 10, 'the captain (6) loses 2, the hero nothing');
+  next.turn = 'player';
+  next = playCard(next, 'player', blessing.uid, { row: 'close' }).state;
+  assert.equal(scores(next).player, 7 + 8, 'both units gain 2');
+  next.turn = 'player'; next.passed.ai = true;
+  const ended = passRound(next, 'player').state;
+  assert.deepEqual(ended.sides.player.mods, { close: 0, ranged: 0, siege: 0 }, 'the effects end with the round');
+  assert.deepEqual(ended.sides.ai.mods, { close: 0, ranged: 0, siege: 0 });
+  // A curse never takes a unit below 1.
+  const weak = scene('sorceresses', 'redania');
+  weak.sides.ai.rows = rows([make('re-informant')]);
+  weak.sides.ai.mods = { close: -5, ranged: 0, siege: 0 };
+  assert.equal(scores(weak).ai, 1);
+});
+
+test('teleport moves one of your ordinary units to another row; the potion Thunderbolt blesses by three', () => {
+  const state = scene('sorceresses', 'redania');
+  const teleport = make('so-teleport'), unit = make('so-guard'), hero = make('so-tissaia');
+  state.sides.player.rows = rows([unit, hero]);
+  state.sides.player.hand = [teleport, make('so-guard')];
+  state.sides.ai.hand = [make('re-captain')];
+  const plays = legalPlays(state, 'player').filter(play => play.uid === teleport.uid);
+  assert.ok(plays.every(play => play.targetUid === unit.uid && play.row !== 'close'), 'no hero, no staying in the row');
+  assert.equal(plays.length, 2);
+  const moved = playCard(state, 'player', teleport.uid, { row: 'siege', targetUid: unit.uid }).state;
+  assert.deepEqual(moved.sides.player.rows.siege.map(card => card.uid), [unit.uid]);
+  assert.ok(playCard(state, 'player', teleport.uid, { row: 'close', targetUid: unit.uid }).error, 'the same row is refused');
+  const witchers = scene('witchers', 'redania');
+  const thunder = make('wi-thunderbolt');
+  witchers.sides.player.rows = rows([make('wi-bear-brute')]);
+  witchers.sides.player.hand = [thunder, make('wi-bear-brute')];
+  witchers.sides.ai.hand = [make('re-captain')];
+  assert.equal(scores(playCard(witchers, 'player', thunder.uid, { row: 'close' }).state).player, 6 + 3);
+});
+
+test('recall brings a unit back from the graveyard into the hand, by choice', () => {
+  const state = scene('sorceresses', 'redania');
+  const heal = make('so-heal'), unit = make('so-golem'), hero = make('so-margarita');
+  state.sides.player.graveyard = [unit, hero];
+  state.sides.player.hand = [heal];
+  assert.equal(legalPlays({ ...state, sides: { ...state.sides, player: { ...state.sides.player, graveyard: [hero] } } }, 'player').length, 0, 'nothing to recall but a hero');
+  const asked = playCard(state, 'player', heal.uid).state;
+  assert.equal(asked.pending.kind, 'returnGrave');
+  assert.deepEqual(asked.pending.options.map(option => option.id), [unit.uid]);
+  const back = resolveChoice(asked, 'player', unit.uid).state;
+  assert.ok(back.sides.player.hand.some(card => card.uid === unit.uid));
+});
+
+test('the sign Yrden is an ambush that releases will-o-wisps; elements cover two rows and are cleared by clear weather', () => {
+  const state = scene('witchers', 'redania');
+  const yrden = make('wi-yrden');
+  state.sides.player.hand = [yrden, make('wi-bear-brute')];
+  state.sides.ai.hand = [make('re-captain'), make('re-captain')];
+  const laid = playCard(state, 'player', yrden.uid, { row: 'close' }).state;
+  const sprung = playCard(laid, 'ai', laid.sides.ai.hand[0].uid, { row: 'close' }).state;
+  assert.deepEqual(sprung.sides.player.rows.close.map(card => card.id), ['wisp', 'wisp']);
+
+  const weather = scene('wild-hunt', 'redania');
+  const fire = make('el-fire'), earth = make('el-earth'), water = make('el-water'), clear = make('wi-oriole');
+  assert.deepEqual([fire, earth, water].map(card => card.weather), [['close', 'ranged'], ['close', 'siege'], ['ranged', 'siege']]);
+  weather.sides.player.hand = [earth, clear, make('wh-ice-warrior')];
+  weather.sides.ai.hand = [make('re-captain')];
+  weather.sides.ai.rows = rows([make('re-captain')], [make('re-crossbowman')], [make('re-sapper')]);
+  const burned = playCard(weather, 'player', earth.uid).state;
+  assert.deepEqual(burned.weather, { close: true, ranged: false, siege: true });
+  assert.equal(scores(burned).ai, 1 + 5 + 1);
+  burned.turn = 'player';
+  assert.deepEqual(playCard(burned, 'player', clear.uid).state.weather, { close: false, ranged: false, siege: false });
+});
+
+test('Sorceresses get a spell back from the graveyard at the start of rounds 2 and 3', () => {
+  const state = scene('sorceresses', 'redania');
+  state.sides.player.graveyard = [make('so-fireball'), make('so-curse'), make('so-golem')];
+  state.sides.player.rows = rows([make('so-guard')]);
+  state.sides.player.hand = [make('so-knight')];
+  state.sides.ai.hand = [make('re-captain')];
+  state.sides.ai.rows = rows([make('re-captain')]);
+  state.passed.ai = true;
+  const next = passRound(state, 'player').state;
+  assert.equal(next.round, 2);
+  const spells = next.sides.player.hand.filter(card => card.spell);
+  assert.equal(spells.length, 1, 'one spell comes back');
+  assert.equal(next.sides.player.graveyard.some(card => card.id === 'so-golem'), true, 'units are not spells');
 });

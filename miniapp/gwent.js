@@ -180,7 +180,7 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     const stats = inspectLoadout(body.loadout);
     if (!stats.valid) return fail(stats.errors.join('. '));
     const ruleset = normalizeRuleset(body.ruleset);
-    if (!rulesetAllows(ruleset, body.loadout.faction)) return fail('Эта колода не подходит для выбранных правил');
+    if (!rulesetAllows(ruleset, body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== ruleset) return fail('Эта колода не подходит для выбранных правил');
     if (data.queue.some(entry => entry.userId === id)) return { ok: true, ...gwentState(chat, id, now) };
     const name = memberName(member(chat, id)).slice(0, 60);
     // Only games under the original rules are rated; other rules pair at once by the time spent waiting.
@@ -193,7 +193,7 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     const stats = inspectLoadout(body.loadout);
     if (!stats.valid) return fail(stats.errors.join('. '));
     const inviteRuleset = normalizeRuleset(body.ruleset);
-    if (!rulesetAllows(inviteRuleset, body.loadout.faction)) return fail('Эта колода не подходит для выбранных правил');
+    if (!rulesetAllows(inviteRuleset, body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== inviteRuleset) return fail('Эта колода не подходит для выбранных правил');
     const target = body.targetId == null ? null : String(body.targetId);
     const stranger = target !== null && (options.strangers || []).map(String).includes(target) && !!member(chat, target);
     if (target !== null && (target === id || !(stranger || friends(chat,id,target)))) return fail('Выберите друга или игрока по нику');
@@ -226,7 +226,7 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
       if (invitation.to && !invitation.open && !friends(chat,invitation.from,id)) return fail('Приглашение доступно только друзьям');
       if (match || current(data,invitation.from) || data.queue.some(e => [id,invitation.from].includes(e.userId))) return fail('Один из игроков уже занят');
       const stats = inspectLoadout(body.loadout); if (!stats.valid) return fail(stats.errors.join('. '));
-      if (!rulesetAllows(invitation.ruleset || 'classic', body.loadout.faction)) return fail('Для этих правил нужна колода другой фракции');
+      if (!rulesetAllows(invitation.ruleset || 'classic', body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== normalizeRuleset(invitation.ruleset)) return fail('Для этих правил нужна колода другой фракции');
       invitation.status = 'accepted'; invitation.to = id;
       const created = startMatch(data,{userId:invitation.from,name:memberName(member(chat,invitation.from)),loadout:invitation.loadout},
         {userId:id,name:memberName(member(chat,id)),loadout:body.loadout},now,rng,{ruleset:invitation.ruleset});

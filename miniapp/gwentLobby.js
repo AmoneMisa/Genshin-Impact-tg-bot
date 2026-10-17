@@ -1,6 +1,7 @@
 import { gwentState, gwentAction, gwentFingerprint } from './gwent.js';
 import { inspectLoadout } from '../webapp/gwent-builder.js';
 import { collectRatingUpdates } from './gwentRating.js';
+import { loadoutKey } from '../webapp/gwent-decks.js';
 
 // Gwent for the whole app. A player has one hero in every chat, so the search queue, invitations and
 // matches live in one shared record (the lobby) and are not tied to a game chat.
@@ -84,7 +85,7 @@ export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, save
     if (!stats.valid) result = fail(stats.errors.join('. '));
     else {
       saveLoadout?.(body.loadout);
-      loadouts = { ...loadouts, [body.loadout.faction]: body.loadout };
+      loadouts = { ...loadouts, [loadoutKey(body.loadout.ruleset, body.loadout.faction)]: body.loadout };
       result = { ok: true, ...gwentState(shared, id, now) };
     }
   } else {

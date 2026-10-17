@@ -74,7 +74,7 @@ test('AI decks are valid for every faction and level', () => {
     const loadout = aiLoadout(id, level, seededRandom(4));
     const stats = inspectLoadout(loadout);
     assert.ok(stats.valid, `${id}/${level}: ${stats.errors.join('; ')}`);
-    if (level === 'hard') assert.ok(stats.units <= 26 && stats.specials <= 8, `${id} hard deck is tight`);
+    if (level === 'hard') assert.ok(stats.units <= 26 && stats.specials <= 9, `${id} hard deck is tight`);
   }
 });
 

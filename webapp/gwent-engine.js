@@ -27,6 +27,11 @@
 // - Each player has one leader per match with a one-shot effect; the spent leader card goes to the
 //   graveyard. Some leaders are passive.
 //
+// Spells (extended rules, special cards): fireball destroys the strongest non-hero units in an enemy row; curse and
+// blessing lower or raise every non-hero unit of a row by `amount` (2 by default) until the round ends; teleport moves
+// one of the player's units to another row; recall returns a unit from the graveyard to the hand. An ambush may
+// release another token than the squirrel (`trapToken`).
+//
 // Extended rules (cards of the new factions only):
 // - A unit with `swap` returns one of its owner's units from the board to the hand when it is played.
 // - Ambush (special card) is laid hidden in a row of the opponent. When the opponent plays a unit into that
@@ -52,6 +57,7 @@ const clone = value => structuredClone(value);
 const noWeather = () => ({ close: false, ranged: false, siege: false });
 const noDoubles = () => ({ close: false, ranged: false, siege: false });
 const noTraps = () => ({ close: null, ranged: null, siege: null });
+const noMods = () => ({ close: 0, ranged: 0, siege: 0 });
 const isPassiveLeader = leader => leader.effect.type.startsWith('passive-');
 
 /** Deterministic random numbers kept in the state, so a saved match replays the same way. */
@@ -112,6 +118,7 @@ export function createMatch({ playerDeck, aiDeck, rng = Math.random, setup = tru
     lastRound: null,  // { round, scores, winner } of the last finished round
     rounds: [],       // every finished round, for the result screen
     setup: null,      // pending start-of-match steps: mulligans and the first-turn choice
+    ruleset: playerDeck.ruleset === 'extended' || aiDeck.ruleset === 'extended' ? 'extended' : 'classic',
   };
   for (const side of SIDES) {
     const def = side === 'player' ? playerDeck : aiDeck;
@@ -130,6 +137,7 @@ export function createMatch({ playerDeck, aiDeck, rng = Math.random, setup = tru
       faction: def.id,
       doubled: noDoubles(),
       traps: noTraps(), // ambushes the opponent laid in this side's rows (hidden from this side)
+      mods: noMods(),   // strength added to (blessing) or taken from (curse) every non-hero unit of a row this round
       kingBran: leader?.effect.type === 'passive-bran',
       extraDraw: leader?.effect.type === 'passive-extra-draw',
     };
@@ -186,7 +194,9 @@ export function rowValues(row, weatherActive = false, opts = {}) {
   return row.map(card => {
     if (card.type !== 'unit') return 0;
     if (card.hero) return card.strength;
-    let value = (weatherActive ? Math.min(card.strength, opts.weatherBase ?? 1) : card.strength) + morales - (card.morale ? 1 : 0);
+    let base = weatherActive ? Math.min(card.strength, opts.weatherBase ?? 1) : card.strength;
+    if (opts.rowMod && card.strength > 0) base = Math.max(1, base + opts.rowMod); // curse and blessing
+    let value = base + morales - (card.morale ? 1 : 0);
     if (card.bond) value *= bondCounts[card.bond];
     if (horn || opts.doubled) value *= 2;
     if (opts.halve && weatherActive) value = Math.floor(value / 2);
@@ -197,7 +207,7 @@ export function rowValues(row, weatherActive = false, opts = {}) {
 /** Row values with the side's leader and passive effects applied. */
 export function rowValuesFor(state, side, row) {
   const mine = state.sides[side];
-  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran, weatherBase: mine.faction === 'velen' ? 3 : 1 });
+  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran, weatherBase: mine.faction === 'velen' ? 3 : 1, rowMod: mine.mods?.[row] || 0 });
 }
 
 /** Total strength of one side. Spies count for the side whose row they stand in. */
@@ -230,6 +240,17 @@ export function legalPlays(state, side) {
         // A swap unit may also send one of the player's units back to the hand.
         if (card.swap) for (const target of ownUnits) plays.push({ uid: card.uid, row, targetUid: target.uid });
       }
+    } else if (card.special === 'fireball' || card.special === 'curse') {
+      for (const row of ROWS) if (state.sides[OPPONENT[side]].rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push({ uid: card.uid, row });
+    } else if (card.special === 'blessing') {
+      for (const row of ROWS) if (me.rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push({ uid: card.uid, row });
+    } else if (card.special === 'teleport') {
+      for (const from of ROWS) for (const unit of me.rows[from]) {
+        if (unit.type !== 'unit' || unit.hero) continue;
+        for (const row of ROWS) if (row !== from) plays.push({ uid: card.uid, row, targetUid: unit.uid });
+      }
+    } else if (card.special === 'recall') {
+      if (me.graveyard.some(item => item.type === 'unit' && !item.hero)) plays.push({ uid: card.uid });
     } else if (card.special === 'ambush') {
       for (const row of ROWS) if (!state.sides[OPPONENT[side]].traps?.[row]) plays.push({ uid: card.uid, row });
     } else if (card.special === 'horn' || card.special === 'mardroeme') {
@@ -472,6 +493,28 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
       if (card.onPlay) runUnitOnPlay(next, side, card, target);
       if (card.medic) offerRevive(next, side, target);
     }
+  } else if (card.special === 'fireball' || card.special === 'curse' || card.special === 'blessing') {
+    if (!ROWS.includes(row)) return { error: 'Выбери ряд для заклинания.' };
+    if (card.special === 'fireball') scorchEnemy(next, side, { target: row, cond: row, threshold: 0 });
+    else {
+      const owner = next.sides[card.special === 'curse' ? OPPONENT[side] : side];
+      owner.mods ||= noMods();
+      owner.mods[row] += (card.special === 'curse' ? -1 : 1) * (card.amount || 2);
+    }
+    mine.graveyard.push(card);
+  } else if (card.special === 'teleport') {
+    const spot = findOnBoard(next, side, targetUid);
+    const unit = spot && mine.rows[spot.row][spot.index];
+    if (!unit || unit.type !== 'unit' || unit.hero) return { error: 'Телепортация переносит только свой обычный отряд.' };
+    if (!ROWS.includes(row) || row === spot.row) return { error: 'Выбери другой ряд.' };
+    mine.rows[spot.row].splice(spot.index, 1);
+    mine.rows[row].push(unit);
+    mine.graveyard.push(card);
+  } else if (card.special === 'recall') {
+    mine.graveyard.push(card);
+    const options = mine.graveyard.filter(item => item.type === 'unit' && !item.hero).map(item => ({ id: item.uid, card: item }));
+    if (options.length === 0) return { error: 'В отбое нет отрядов.' };
+    askChoice(next, side, 'returnGrave', options);
   } else if (card.special === 'ambush') {
     const foe = next.sides[OPPONENT[side]];
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для засады.' };
@@ -523,7 +566,7 @@ function springAmbush(state, side, row) {
   traps[row] = null;
   const owner = state.sides[OPPONENT[side]];
   owner.graveyard.push(trap);
-  for (let i = 0; i < 2; i += 1) owner.rows[row].push(makeToken(state, 'squirrel'));
+  for (let i = 0; i < 2; i += 1) owner.rows[row].push(makeToken(state, trap.trapToken || 'squirrel'));
 }
 
 /** Effects a unit triggers when it is placed on the board. */
@@ -722,6 +765,7 @@ function endRound(state) {
       state.sides[side].rows[row] = kept && kept.row === row ? [kept.card] : [];
     }
     state.sides[side].doubled = noDoubles();
+    state.sides[side].mods = noMods();
   }
   state.weather = noWeather();
   state.reveals = { player: [], ai: [] };
@@ -754,7 +798,13 @@ function endRound(state) {
     // Wild Hunt draw a card for a lost round.
     if (winner === OPPONENT[side] && state.sides[side].faction === 'wild-hunt') drawCards(state.sides[side], 1);
     // Skellige: two random non-hero units come back from the graveyard at the start of round 3.
-    if (state.round === 3 && state.sides[side].faction === 'skellige') reviveRandom(state, side, 2);
+    // Under the extended rules Skellige also get one unit back at the start of round 2.
+    if (state.sides[side].faction === 'skellige' && (state.round === 3 || (state.round === 2 && state.ruleset === 'extended'))) reviveRandom(state, side, state.round === 3 ? 2 : 1);
+    // Sorceresses: a random spell from the graveyard returns to the hand at the start of rounds 2 and 3.
+    if (state.sides[side].faction === 'sorceresses') {
+      const spells = state.sides[side].graveyard.filter(card => card.spell);
+      if (spells.length > 0) state.sides[side].hand.push(takeFrom(state.sides[side].graveyard, spells[Math.floor(random(state) * spells.length)].uid));
+    }
     // Witchers: a random hero from the graveyard returns to the hand at the start of round 3.
     if (state.round === 3 && state.sides[side].faction === 'witchers') {
       const heroes = state.sides[side].graveyard.filter(card => card.type === 'unit' && card.hero);

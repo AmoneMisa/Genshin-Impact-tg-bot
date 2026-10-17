@@ -3,7 +3,7 @@ import { installOverlayA11y } from './overlay-a11y.js';
 import { escapeHtml as esc } from './escape-html.js';
 import { controlIcon, icon } from './icons.js';
 import { enhanceSelects } from './design/select.js';
-import { RULESETS, normalizeRuleset, rulesetAllows, GWENT_DECKS, ROWS, ROW_LABELS } from './gwent-decks.js';
+import { RULESETS, normalizeRuleset, rulesetAllows, deckFor, loadoutKey, GWENT_DECKS, ROWS, ROW_LABELS } from './gwent-decks.js';
 import { GWENT_ART, GWENT_PRINTED_CARDS } from './gwent-art.js';
 import { cardArtOptions, cardArtSource } from './gwent-art-options.js';
 import { buildDeck, aiLoadout, defaultLoadout, inspectLoadout, repairLoadout, filterCards, cardTraits, leaderDescription } from './gwent-builder.js';
@@ -11,7 +11,7 @@ import { createMatch, legalPlays, playCard, passRound, resolveChoice, rowValuesF
 import { chooseAiAction, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
 const FACTIONS = RULESETS.extended.factions; // every faction; a rule set allows some of them
-const kitOf = id => /^(wh|wi|to|ve|re)-/.exec(id)?.[1] || '';
+const kitOf = id => /^(wh|wi|to|ve|re|so)-/.exec(id)?.[1] || '';
 const RULES = 'У каждой стороны три ряда: ближний бой, дальний бой и осада. Игроки ходят по очереди. Пас завершает ваши ходы в раунде. '
   + 'После паса обоих побеждает сторона с большей силой. В конце раунда все карты стола уходят в отбой, включая героев. '
   + 'Для победы в матче нужно выиграть два раунда. Нильфгаард выигрывает ничью, если эта фракция только у одной стороны; иначе ничья засчитывается обоим. '
@@ -43,16 +43,21 @@ export function gwentCardHtml(card, value = card.strength, { selectable = false,
 export async function openGwentGame({ api = null, haptic = () => {}, initialInvite = null, initialWatch = null } = {}) {
   if (document.querySelector('.gwent-overlay')) return;
   installOverlayA11y();
-  let loadouts = Object.fromEntries(FACTIONS.map(id => [id, defaultLoadout(id)]));
+  // Saved decks: the original rules under the faction id, the extended rules under `x:` + faction id.
+  let loadouts = Object.fromEntries(['classic', 'extended'].flatMap(rules => RULESETS[rules].factions.map(id => [loadoutKey(rules, id), defaultLoadout(id, rules)])));
   if (!api) {
     try { for (const [id, config] of Object.entries(JSON.parse(localStorage.getItem('gwent-loadouts-v1') || '{}'))) {
       const repaired = repairLoadout(config);
-      if (repaired?.faction === id && inspectLoadout(repaired).valid) loadouts[id] = repaired;
+      if (repaired && loadoutKey(repaired.ruleset, repaired.faction) === id && inspectLoadout(repaired).valid) loadouts[id] = repaired;
     } } catch { /* Private browsing and damaged storage must not prevent play. */ }
   }
   let faction = 'northern-realms', enemyFaction = 'nilfgaard', screen = 'decks', mode = 'ai', level = DEFAULT_AI_LEVEL, ruleset = 'classic';
   try { ruleset = normalizeRuleset(localStorage.getItem('gwent-ruleset')); } catch { /* storage is optional */ }
   const factionsNow = () => RULESETS[ruleset].factions;
+  const keyOf = (id = faction) => loadoutKey(ruleset, id);
+  const deckNow = id => deckFor(ruleset, id);
+  /** The deck for an invitation under its own rules: the current faction when allowed, else the first allowed one. */
+  const loadoutFor = rules => loadouts[loadoutKey(rules, rulesetAllows(rules, faction) ? faction : RULESETS[normalizeRuleset(rules)].factions[0])];
   try { level = normalizeAiLevel(localStorage.getItem('gwent-ai-level')); } catch { /* storage is optional */ }
   let draft = null, filters = {}, page = 0, leaderReturn = 'editor', draftReturn = 'decks', deckReturn = 'mode';
   let state = null, remote = null, pick = null, decoy = null, preview = null, pile = null, artCard = null;
@@ -70,7 +75,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
 
   function note(text = '', kind = '') { notice = text; tone = kind; }
   function deckSummary(config, edit = false) {
-    const deck = GWENT_DECKS[config.faction], leader = deck.leaders.find(item => item.id === config.leaderId);
+    const deck = deckFor(config.ruleset, config.faction), leader = deck.leaders.find(item => item.id === config.leaderId);
     return `<div class="ui-selection-summary gwent-summary" data-faction="${deck.id}">${image('shield:' + deck.id, 'gwent-crest')}
       <span><small>Ваша колода</small><strong>${esc(deck.title)}</strong>${GWENT_PRINTED_CARDS.has(leader?.id) ? '' : `<small>${esc(leader?.name || 'Выберите лидера')}</small>`}</span>
       ${image(leader?.id, 'gwent-summary-leader', '', cardArtSource(leader?.id, config.arts?.[leader?.id]))}${edit ? button('Изменить', 'data-open-decks') : ''}</div>`;
@@ -83,7 +88,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   function deckScreen() {
     return `${rulesetHtml()}<div class="gwent-factions" role="group" aria-label="Фракция">${factionsNow().map(id => `<button type="button" class="ui-button ui-illustrated-choice gwent-faction" data-faction="${id}" data-select-faction="${id}" aria-pressed="${id === faction}" style="--choice-art:url('${GWENT_ART['banner:' + id]}')">
       ${image('shield:' + id, 'gwent-crest')}<span>${esc(GWENT_DECKS[id].title)}</span><span class="ui-selection-mark" aria-hidden="true">${id === faction ? controlIcon('check') : ''}</span></button>`).join('')}</div>
-      ${deckSummary(loadouts[faction])}<div class="gwent-lobby-actions">${button('Состав колоды и лидер ' + controlIcon('chevron-right'), 'data-editor')}
+      ${deckSummary(loadouts[keyOf()])}<div class="gwent-lobby-actions">${button('Состав колоды и лидер ' + controlIcon('chevron-right'), 'data-editor')}
       ${button('Выбрать колоду', 'data-mode', true)}</div>`;
   }
   function levelHtml() {
@@ -91,7 +96,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       <span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-level" value="${value}" ${level === value ? 'checked' : ''}></label>`).join('')}</div>`;
   }
   function modeScreen() {
-    return `${deckSummary(loadouts[faction], true)}<h3 class="gwent-question">С кем сыграть?</h3><div class="gwent-mode-options" role="group" aria-label="Соперник">
+    return `${deckSummary(loadouts[keyOf()], true)}<h3 class="gwent-question">С кем сыграть?</h3><div class="gwent-mode-options" role="group" aria-label="Соперник">
       ${[['online', 'Против игрока', api ? 'Найти соперника среди всех игроков' : 'Онлайн доступен при входе через Telegram', 'back:nilfgaard'],
         ['ai', 'Против ИИ', 'Матч с компьютерным соперником', 'back:northern-realms']].map(([value, title, subtitle, key]) => `<label class="ui-button ui-illustrated-choice gwent-mode" aria-disabled="${value === 'online' && !api}" data-selected="${mode === value}">
         ${image(key, 'gwent-mode-art')}<span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-mode" value="${value}" ${mode === value ? 'checked' : ''} ${value === 'online' && !api ? 'disabled' : ''}></label>`).join('')}</div>
@@ -105,18 +110,18 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   }
   function searchScreen() {
     return `<div class="gwent-search-art" aria-hidden="true">${image('back:' + faction)}${image('back:nilfgaard')}</div>
-      <h3 class="gwent-question" role="status">Ищем соперника…</h3><p class="gwent-hint">Подбираем игрока вашего уровня${myRating ? ` (рейтинг ${myRating.rating})` : ''}: чем дольше ожидание, тем шире подбор. Можно отменить поиск в любой момент.</p>${deckSummary(loadouts[faction])}
+      <h3 class="gwent-question" role="status">Ищем соперника…</h3><p class="gwent-hint">Подбираем игрока вашего уровня${myRating ? ` (рейтинг ${myRating.rating})` : ''}: чем дольше ожидание, тем шире подбор. Можно отменить поиск в любой момент.</p>${deckSummary(loadouts[keyOf()])}
       <div class="gwent-lobby-actions">${button('Отменить поиск', 'data-cancel-search')}<span class="gwent-or">или</span>${button('Играть с ИИ', 'data-search-ai', true)}</div>`;
   }
   function invitationHtml(item, outgoing = false) {
-    return `<article class="ui-inset-row gwent-social-row"><div><strong>${esc(outgoing ? item.toName || 'Приглашение по ссылке' : item.fromName)}</strong><small>${esc(GWENT_DECKS[item.faction].title)} · ${Math.max(0, Math.ceil((item.expiresAt-Date.now()-serverOffset)/60000))} мин.</small></div>
+    return `<article class="ui-inset-row gwent-social-row"><div><strong>${esc(outgoing ? item.toName || 'Приглашение по ссылке' : item.fromName)}</strong><small>${esc(GWENT_DECKS[item.faction].title)}${item.ruleset === 'extended' ? ' · Расширенные правила' : ''} · ${Math.max(0, Math.ceil((item.expiresAt-Date.now()-serverOffset)/60000))} мин.</small></div>
       <div class="gwent-lobby-actions">${outgoing ? `${item.url ? button('Копировать ссылку', `data-copy-invite="${item.id}"`) : '<span>Ссылка пока недоступна</span>'}${item.to ? button('Отправить уведомление', `data-push-invite="${item.id}" ${item.canPushAt>Date.now()+serverOffset ? 'disabled' : ''}`) : ''}${button('Отменить', `data-cancel-invite="${item.id}"`)}` : `${button('Принять', `data-accept-invite="${item.id}"`, true)}${item.to ? button('Отклонить', `data-decline-invite="${item.id}"`) : ''}`}</div>
       ${outgoing && item.url ? `<input class="gwent-share-link" aria-label="Ссылка приглашения" readonly value="${esc(item.url)}">` : ''}</article>`;
   }
   function friendsScreen() {
     const incoming = [...lobby.incoming];
     if (invitation?.status === 'pending' && !lobby.outgoing.some(i=>i.id===invitation.id) && !incoming.some(i=>i.id===invitation.id)) incoming.unshift(invitation);
-    return `${deckSummary(loadouts[faction],true)}<p class="gwent-hint">Приглашение действует 15 минут. Друзья и игроки — из любых чатов.</p>
+    return `${deckSummary(loadouts[keyOf()],true)}<p class="gwent-hint">Приглашение действует 15 минут. Друзья и игроки — из любых чатов.</p>
       ${invitation && invitation.status !== 'pending' ? '<p role="status">Приглашение уже закрыто или истекло</p>' : ''}
       ${incoming.length ? `<h3>Входящие приглашения</h3>${incoming.map(i=>invitationHtml(i)).join('')}` : ''}
       <div class="gwent-lobby-actions">${button('Создать ссылку приглашения','data-create-invite')}</div>
@@ -158,7 +163,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `<label>${title}<select data-filter="${key}" aria-label="${title}">${options.map(([value, label]) => `<option value="${value}" ${filters[key] === value ? 'selected' : ''}>${label}</option>`).join('')}</select></label>`;
   }
   function editorScreen() {
-    const leader = GWENT_DECKS[faction].leaders.find(item => item.id === draft.leaderId);
+    const leader = deckNow(faction).leaders.find(item => item.id === draft.leaderId);
     return `${deckSummary(draft)}<div class="gwent-editor-top">${button('Выбрать лидера', 'data-leaders')}${button('Очистить состав', 'data-clear-deck')}${button('Исходный состав', 'data-reset-deck')}</div>
       <p class="gwent-leader-description">${esc(leaderDescription(leader))}</p><div data-deck-stats>${statsHtml()}</div>
       <div class="gwent-filter-bar"><label class="gwent-search-field">Поиск карты<input type="search" data-search placeholder="Название или способность" value="${esc(filters.search || '')}" maxlength="100"></label>
@@ -186,7 +191,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       <nav class="gwent-pagination" aria-label="Страницы карт">${button('Назад', `data-page="-1" ${page ? '' : 'disabled'}`)}<span>${page + 1} / ${maxPage + 1}</span>${button('Далее', `data-page="1" ${page < maxPage ? '' : 'disabled'}`)}</nav>`;
   }
   function leaderScreen() {
-    return `<p class="gwent-hint">Один лидер на матч. Выберите его способность.</p><div class="gwent-leader-list">${GWENT_DECKS[faction].leaders.map(leader => `<div class="gwent-leader-entry"><button type="button" class="ui-button ui-illustrated-choice gwent-leader-choice" data-select-leader="${leader.id}" aria-label="${esc(leader.name)}" aria-pressed="${draft.leaderId === leader.id}">
+    return `<p class="gwent-hint">Один лидер на матч. Выберите его способность.</p><div class="gwent-leader-list">${deckNow(faction).leaders.map(leader => `<div class="gwent-leader-entry"><button type="button" class="ui-button ui-illustrated-choice gwent-leader-choice" data-select-leader="${leader.id}" aria-label="${esc(leader.name)}" aria-pressed="${draft.leaderId === leader.id}">
       ${image(leader.id, 'gwent-leader-art', '', cardArtSource(leader.id, draft.arts?.[leader.id]))}<span>${GWENT_PRINTED_CARDS.has(leader.id) ? '' : `<strong>${esc(leader.name)}</strong>`}<small>${esc(leaderDescription(leader))}</small></span><span class="ui-selection-mark" aria-hidden="true">${draft.leaderId === leader.id ? controlIcon('check') : ''}</span></button>
       ${cardArtOptions(leader.id).length > 1 ? button('Выбрать арт', `data-art-card="${leader.id}"`) : ''}</div>`).join('')}</div>`;
   }
@@ -247,9 +252,9 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       ${sideHtml('ai')}<div class="gwent-weather">${esc(weather)}</div>${sideHtml('player')}
       ${state.reveals.player.length ? `<div class="ui-inset-row gwent-reveal">Открыты: ${state.reveals.player.map(card => esc(card.name)).join(', ')}</div>` : ''}
       <div class="gwent-turn" role="status">${turn}</div>${handHtml()}
-      ${pick ? `<div class="ui-inset-row gwent-picker"><span>${esc(pick.card.name)}<small>${esc(cardTraits(pick.card))}${pick.card.special === 'ambush' ? ' · выберите ряд противника' : ''}</small></span>${pick.plays.length === 1
+      ${pick ? `<div class="ui-inset-row gwent-picker"><span>${esc(pick.card.name)}<small>${esc(cardTraits(pick.card))}${({ ambush: ' · выберите ряд противника', fireball: ' · выберите ряд противника', curse: ' · выберите ряд противника', blessing: ' · выберите свой ряд' })[pick.card.special] || ''}</small></span>${pick.plays.length === 1
         ? button('Сыграть', 'data-play-selected', true) : [...new Set(pick.plays.map(play => play.row))].map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('')}${pick.swapPlays.length ? button('С подменой', 'data-swap-selected') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
-      ${decoy ? `<div class="ui-inset-row gwent-picker"><span>${decoy.row ? 'Выберите свой отряд, который вернётся в руку' : 'Выберите свой обычный отряд на поле для замены чучелом'}</span>${button('Отмена', 'data-cancel-card')}</div>` : ''}
+      ${decoy ? `<div class="ui-inset-row gwent-picker"><span>${decoy.chosen ? 'Выберите ряд' : decoy.rowChoices !== undefined || state.sides.player.hand.find(card => card.uid === decoy.uid)?.special === 'teleport' ? 'Выберите свой отряд для перемещения' : decoy.row ? 'Выберите свой отряд, который вернётся в руку' : 'Выберите свой обычный отряд на поле для замены чучелом'}</span>${decoy.chosen ? decoy.rowChoices.map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
       <div class="gwent-actions">${actions}</div>`;
   }
   /** Round by round result, the winner, and the rematch offer. Shown as a popup when a match ends. */
@@ -345,7 +350,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   async function post(body) { return api('/api/gwent/action', { method: 'POST', body: JSON.stringify(body) }); }
   function accept(data) {
     serverOffset = (data.serverNow || Date.now()) - Date.now();
-    for (const [id, config] of Object.entries(data.loadouts || {})) if (inspectLoadout(config).valid && config.faction === id) loadouts[id] = config;
+    for (const [id, config] of Object.entries(data.loadouts || {})) if (inspectLoadout(config).valid && loadoutKey(config.ruleset, config.faction) === id) loadouts[id] = config;
     lobby = {friends:data.friends || [],incoming:data.incoming || [],outgoing:data.outgoing || [],games:data.games || []};
     if (data.rating) myRating = data.rating;
     if (data.leaderboard) board = data.leaderboard;
@@ -443,8 +448,8 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     if (!keepEnemy || !rulesetAllows(ruleset, enemyFaction)) enemyFaction = factionsNow()[Math.floor(Math.random() * factionsNow().length)];
     matchLevel = level;
     remote = null; watchId = null; focusedInvite = null; pick = null; decoy = null; announcedRound = null;
-    const aiDeck = buildDeck(aiLoadout(enemyFaction, level));
-    state = createMatch({ playerDeck: buildDeck(loadouts[faction]), aiDeck }); go('match');
+    const aiDeck = buildDeck(aiLoadout(enemyFaction, level, undefined, ruleset));
+    state = createMatch({ playerDeck: buildDeck(loadouts[keyOf()]), aiDeck }); go('match');
   }
   async function cancelSearch(ai = false) {
     const data = await online({ action: 'cancel' });
@@ -455,14 +460,14 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   async function saveDeck() {
     if (!inspectLoadout(draft).valid) return;
     if (api) { const result = await online({ action: 'save', loadout: draft }); if (!result) return; }
-    loadouts[faction] = structuredClone(draft);
+    loadouts[keyOf()] = structuredClone(draft);
     if (!api) { try { localStorage.setItem('gwent-loadouts-v1', JSON.stringify(loadouts)); } catch { note('Не удалось сохранить колоду на устройстве', 'bad'); render(); return; } }
     draft = null; go(draftReturn);
   }
-  function editDeck() { draftReturn = screen; draft = structuredClone(loadouts[faction]); filters = { sort: 'name' }; page = 0; go('editor'); }
+  function editDeck() { draftReturn = screen; draft = structuredClone(loadouts[keyOf()]); filters = { sort: 'name' }; page = 0; go('editor'); }
   function cardById(id) {
-    const card = GWENT_DECKS[faction].cards.find(([card]) => card.id === id)?.[0];
-    return card ? { ...card, artIndex: (draft || loadouts[faction]).arts?.[id] ?? 0 } : null;
+    const card = deckNow(faction).cards.find(([card]) => card.id === id)?.[0];
+    return card ? { ...card, artIndex: (draft || loadouts[keyOf()]).arts?.[id] ?? 0 } : null;
   }
   async function close() {
     if (closed) return;
@@ -506,17 +511,17 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     else if ('inviteNickGo' in d) {
       const nickname = panel.querySelector('[data-invite-nick]')?.value.trim() || '';
       if (!nickname) { note('Введите ник игрока', 'bad'); render(); return; }
-      await online({ action: 'invite', ruleset, targetNickname: nickname, loadout: loadouts[faction] });
+      await online({ action: 'invite', ruleset, targetNickname: nickname, loadout: loadouts[keyOf()] });
     }
-    else if ('createInvite' in d || d.inviteFriend) await online({action:'invite',ruleset,targetId:d.inviteFriend || null,loadout:loadouts[faction]});
-    else if (d.acceptInvite) { focusedInvite = null; invitation = null; await online({action:'accept_invite',inviteId:d.acceptInvite,loadout:loadouts[faction]}); }
+    else if ('createInvite' in d || d.inviteFriend) await online({action:'invite',ruleset,targetId:d.inviteFriend || null,loadout:loadouts[keyOf()]});
+    else if (d.acceptInvite) { focusedInvite = null; invitation = null; const inviteRules = [...lobby.incoming, invitation].find(item => item?.id === d.acceptInvite)?.ruleset || 'classic'; await online({action:'accept_invite',inviteId:d.acceptInvite,loadout:loadoutFor(inviteRules)}); }
     else if (d.cancelInvite || d.declineInvite) { focusedInvite = null; invitation = null; await online({action:d.cancelInvite ? 'cancel_invite':'decline_invite',inviteId:d.cancelInvite || d.declineInvite}); }
     else if (d.pushInvite) { const result = await online({action:'push_invite',inviteId:d.pushInvite}); if(result) {note(result.notificationSent ? 'Уведомление отправлено' : 'Не удалось доставить уведомление. Отправьте другу ссылку.');render();} }
     else if (d.copyInvite) { const item=lobby.outgoing.find(i=>i.id===d.copyInvite); if(item?.url) {try {await navigator.clipboard.writeText(item.url);note('Ссылка скопирована');} catch {note('Скопируйте выделенную ссылку');render();panel.querySelector(`[data-copy-invite="${d.copyInvite}"]`)?.closest('article').querySelector('input')?.select();return;} render();} }
     else if (d.watch) { focusedInvite = null; watchId = lobby.games.find(g=>g.id===d.watch)?.participant ? null : d.watch; await reconnect(); }
     else if ('leaveWatch' in d) { requestId++;watchId=null;remote=null;state=null;go('games');await reconnect(); }
     else if (d.artCard && draft) {
-      artCard = GWENT_DECKS[faction].leaders.find(leader => leader.id === d.artCard) || cardById(d.artCard);
+      artCard = deckNow(faction).leaders.find(leader => leader.id === d.artCard) || cardById(d.artCard);
       panel.scrollTop = 0; render();
     } else if ('selectArt' in d && artCard && draft) {
       const index = Number(d.selectArt);
@@ -534,7 +539,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     else if ('resetDeck' in d) { const { leaderId, arts } = draft; draft = defaultLoadout(faction); draft.leaderId = leaderId; draft.arts = arts || {}; render(); }
     else if ('saveDeck' in d) await saveDeck();
     else if (d.adjust) {
-      const [card, limit] = GWENT_DECKS[faction].cards.find(([card]) => card.id === d.adjust);
+      const [card, limit] = deckNow(faction).cards.find(([card]) => card.id === d.adjust);
       const next = (draft.counts[card.id] || 0) + Number(d.delta);
       if (next >= 0 && next <= limit && !(Number(d.delta) > 0 && card.type === 'special' && inspectLoadout(draft).specials >= 10)) draft.counts[card.id] = next;
       updateCatalog();
@@ -542,7 +547,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     else if ('page' in d) { page += Number(d.page); updateCatalog(); panel.querySelector('[data-catalog]').scrollIntoView({ block: 'start' }); }
     else if ('start' in d) {
       if (mode === 'ai') startAi();
-      else { await online({ action: 'join', ruleset, loadout: loadouts[faction] }); }
+      else { await online({ action: 'join', ruleset, loadout: loadouts[keyOf()] }); }
     } else if ('reconnect' in d) await reconnect();
     else if ('cancelSearch' in d) await cancelSearch();
     else if ('searchAi' in d) await cancelSearch(true);
@@ -567,7 +572,13 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     else if ('playSelected' in d && pick) await play(pick.uid, pick.plays[0]);
     else if (d.pickRow && pick) await play(pick.uid, { row: d.pickRow });
     else if ('swapSelected' in d && pick?.swapPlays.length) { decoy = { uid: pick.uid, plays: pick.swapPlays, row: pick.swapPlays[0].row }; pick = null; render(); }
-    else if (d.targetUid && decoy) await play(decoy.uid, { row: decoy.row, targetUid: Number(d.targetUid) });
+    else if (d.targetUid && decoy) {
+      // A decoy or swap names one unit; a teleport then asks for the row it moves to.
+      const uid = Number(d.targetUid), options = decoy.plays.filter(play => play.targetUid === uid), rowChoices = [...new Set(options.map(play => play.row))];
+      if (decoy.row !== undefined || rowChoices.length <= 1) await play(decoy.uid, { row: decoy.row ?? options[0]?.row, targetUid: uid });
+      else { decoy = { ...decoy, chosen: uid, rowChoices }; render(); }
+    }
+    else if (d.pickRow && decoy?.chosen) await play(decoy.uid, { row: d.pickRow, targetUid: decoy.chosen });
     else if ('pass' in d) { if (remote) await online({ action: 'pass', matchId: remote.id, revision: remote.revision }); else apply(passRound(state, 'player')); }
     else if ('leader' in d) await play(state.sides.player.leader.uid);
     else if (d.choiceId) { const id = state.pending.options.find(o => String(o.id) === d.choiceId)?.id; if (id === undefined) return;

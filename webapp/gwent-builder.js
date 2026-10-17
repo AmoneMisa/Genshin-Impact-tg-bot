@@ -1,13 +1,15 @@
 // Shared by the browser editor and the authoritative multiplayer endpoint.
-import { GWENT_DECKS, NEUTRAL } from './gwent-decks.js';
+import { GWENT_DECKS, NEUTRAL, SHARED_SPECIALS, deckFor, normalizeRuleset, rulesetAllows } from './gwent-decks.js';
 import { cardArtOptions } from './gwent-art-options.js';
 
 export const MIN_UNITS = 22;
 export const MAX_SPECIALS = 10;
 const neutralIds = new Set(NEUTRAL.map(([card]) => card.id));
+/** The deck definition a loadout is built from: its faction under its rules (original rules when it names none). */
+const deckOf = loadout => (loadout && Object.hasOwn(GWENT_DECKS, loadout.faction) ? deckFor(loadout.ruleset, loadout.faction) : null);
 
-export function defaultLoadout(faction = 'northern-realms') {
-  const deck = Object.hasOwn(GWENT_DECKS, faction) ? GWENT_DECKS[faction] : null;
+export function defaultLoadout(faction = 'northern-realms', ruleset = 'classic') {
+  const deck = Object.hasOwn(GWENT_DECKS, faction) ? deckFor(ruleset, faction) : null;
   if (!deck) throw new Error('Неизвестная фракция');
   let remaining = MAX_SPECIALS;
   const counts = Object.fromEntries(deck.cards.map(([card, limit]) => {
@@ -16,7 +18,7 @@ export function defaultLoadout(faction = 'northern-realms') {
     if (card.type !== 'unit') remaining -= count;
     return [card.id, count];
   }));
-  return { faction, leaderId: deck.leaders[0].id, counts, arts: {} };
+  return { faction, ruleset: normalizeRuleset(ruleset), leaderId: deck.leaders[0].id, counts, arts: {} };
 }
 
 /**
@@ -24,7 +26,7 @@ export function defaultLoadout(faction = 'northern-realms') {
  * cut to the limit, special cards cut to the maximum. The result may still be invalid (too few units).
  */
 export function repairLoadout(loadout) {
-  const deck = loadout && Object.hasOwn(GWENT_DECKS, loadout.faction) ? GWENT_DECKS[loadout.faction] : null;
+  const deck = deckOf(loadout);
   if (!deck || !loadout.counts || typeof loadout.counts !== 'object' || Array.isArray(loadout.counts)) return loadout;
   const counts = {};
   let specials = 0;
@@ -37,10 +39,11 @@ export function repairLoadout(loadout) {
 }
 
 export function inspectLoadout(loadout) {
-  const deck = loadout && Object.hasOwn(GWENT_DECKS, loadout.faction) ? GWENT_DECKS[loadout.faction] : null;
+  const deck = deckOf(loadout);
   const errors = [];
   let units = 0, specials = 0, heroes = 0, strength = 0;
   if (!deck) return { valid: false, errors: ['Выберите фракцию'], units, specials, heroes, strength, total: 0 };
+  if (!rulesetAllows(loadout.ruleset, loadout.faction)) errors.push('Эта колода не подходит для выбранных правил');
   if (!deck.leaders.some(leader => leader.id === loadout.leaderId)) errors.push('Выберите одного лидера своей фракции');
   if (loadout.arts !== undefined) {
     const arts = loadout.arts;
@@ -73,14 +76,14 @@ export function inspectLoadout(loadout) {
 export function buildDeck(loadout) {
   const stats = inspectLoadout(loadout);
   if (!stats.valid) throw new Error(stats.errors.join('. '));
-  const base = GWENT_DECKS[loadout.faction];
+  const base = deckOf(loadout);
   const withArt = card => ({ ...card, artIndex: loadout.arts?.[card.id] ?? 0 });
   return { ...base, leaders: base.leaders.filter(leader => leader.id === loadout.leaderId).map(withArt),
     cards: base.cards.filter(([card]) => loadout.counts[card.id] > 0).map(([card]) => [withArt(card), loadout.counts[card.id]]) };
 }
 
 export function cardTraits(card) {
-  if (card.type === 'special') return ({ decoy: 'Чучело', horn: 'Командирский рог', scorch: 'Казнь', weather: 'Погода', mardroeme: 'Мардрём', ambush: 'Засада' })[card.special] || '';
+  if (card.type === 'special') return ({ decoy: 'Чучело', horn: 'Командирский рог', scorch: 'Казнь', weather: 'Погода', mardroeme: 'Мардрём', ambush: 'Засада', fireball: 'Уничтожение', curse: 'Проклятие', blessing: 'Усиление ряда', teleport: 'Телепортация', recall: 'Возврат из отбоя' })[card.special] || '';
   return [[card.hero, 'Герой'], [card.spy, 'Шпион'], [card.medic, 'Медик'], [card.bond, 'Связь'],
     [card.morale, 'Прилив сил'], [card.horn, 'Командирский рог'], [card.muster, 'Призыв'],
     [card.agile, 'Проворство'], [card.swap, 'Подмена'], [card.transformsTo, 'Берсерк'], [card.onPlay?.type === 'scorchRow', 'Казнь'],
@@ -89,7 +92,7 @@ export function cardTraits(card) {
 
 export function filterCards(loadout, { search = '', row = '', type = '', ability = '', origin = '', included = false, sort = 'name' } = {}) {
   const query = search.trim().toLocaleLowerCase('ru');
-  const cards = (GWENT_DECKS[loadout.faction]?.cards || []).filter(([card]) => {
+  const cards = (deckOf(loadout)?.cards || []).filter(([card]) => {
     if (query && !`${card.name} ${cardTraits(card)}`.toLocaleLowerCase('ru').includes(query)) return false;
     if (row && !card.rows?.includes(row)) return false;
     if (type === 'hero' ? !card.hero : type && card.type !== type) return false;
@@ -121,9 +124,9 @@ const LEADER_PREFERENCE = ['double', 'scorchRow', 'reviveAny', 'takeEnemyGraveya
  * leader. Hard builds a tight deck of the strongest cards (24 units at most, whole bond and muster
  * groups) and a leader with a strong active effect.
  */
-export function aiLoadout(faction, level = 'medium', rng = Math.random) {
-  const deck = GWENT_DECKS[faction];
-  const base = defaultLoadout(faction);
+export function aiLoadout(faction, level = 'medium', rng = Math.random, ruleset = 'classic') {
+  const deck = deckFor(ruleset, faction);
+  const base = defaultLoadout(faction, ruleset);
   const pool = deck.leaders;
   base.leaderId = pool[Math.floor(rng() * pool.length)].id;
   if (level !== 'hard') return base;
@@ -141,10 +144,17 @@ export function aiLoadout(faction, level = 'medium', rng = Math.random) {
   }
   for (const [card, limit] of units) if (total < MIN_UNITS && !counts[card.id]) { counts[card.id] = Math.min(limit, MIN_UNITS - total); total += counts[card.id]; }
   const wanted = ['horn', 'scorch', 'decoy', 'weather', 'mardroeme'];
+  const sharedIds = new Set(SHARED_SPECIALS.map(([card]) => card.id));
   let specials = 0;
+  const take = (card, limit, wish) => {
+    const count = Math.min(limit, wish, 9 - specials);
+    if (count > 0) { counts[card.id] = count; specials += count; }
+  };
+  // The faction's own spells, signs and ambushes first (one copy each), then the usual special cards.
+  for (const [card, limit] of deck.cards) if (card.type !== 'unit' && !sharedIds.has(card.id) && card.special !== 'weather' && card.special !== 'mardroeme') take(card, limit, 1);
   for (const special of wanted) for (const [card, limit] of deck.cards) {
-    if (card.type === 'unit' || card.special !== special || specials >= 8) continue;
-    counts[card.id] = Math.min(limit, special === 'weather' || special === 'mardroeme' ? 1 : 2, 8 - specials); specials += counts[card.id];
+    if (card.type === 'unit' || card.special !== special || counts[card.id]) continue;
+    take(card, limit, special === 'weather' || special === 'mardroeme' ? 1 : 2);
   }
   for (const [card] of deck.cards) counts[card.id] ||= 0;
   return { ...base, counts };

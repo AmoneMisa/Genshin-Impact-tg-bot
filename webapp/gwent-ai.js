@@ -7,7 +7,7 @@
 // - hard:   the same knowledge plus a determinized Monte-Carlo search. Every candidate is tried against
 //           many random deals of the cards it cannot see (counted from the opponent's faction minus
 //           everything already played), with both sides playing a fast heuristic to the end of the round.
-import { ROWS, GWENT_DECKS, expandDeck } from './gwent-decks.js';
+import { ROWS, deckFor, expandDeck } from './gwent-decks.js';
 import { OPPONENT, legalPlays, playCard, passRound, resolveChoice, aiChoiceId, scores, rowValuesFor } from './gwent-engine.js';
 
 export const AI_LEVELS = Object.freeze(['easy', 'medium', 'hard']);
@@ -33,7 +33,7 @@ export function seededRandom(seed) {
 /** Rough worth of a card, used to decide what to spend first. */
 function worth(card) {
   if (!card) return 4; // the leader card
-  if (card.type !== 'unit') return ({ horn: 9, scorch: 7, weather: 5, mardroeme: 4, decoy: 2, ambush: 5 })[card.special] ?? 4;
+  if (card.type !== 'unit') return ({ horn: 9, scorch: 7, weather: 5, mardroeme: 4, decoy: 2, ambush: 5, fireball: 6, blessing: 6, curse: 5, teleport: 3, recall: 4 })[card.special] ?? 4;
   return card.strength + (card.hero ? 3 : 0) + (card.bond ? 3 : 0) + (card.muster ? 3 : 0) + (card.medic ? 3 : 0)
     + (card.morale || card.horn ? 3 : 0) + (card.spy ? 2 : 0);
 }
@@ -140,6 +140,8 @@ function bonusOf(state, side, play) {
   }
   // An ambush costs a card and pays when the opponent plays into the row; likely where units already stand.
   if (card.special === 'ambush') return foe.rows[play.row]?.length ? 3 : 1;
+  // A recall puts a unit from the graveyard back into the hand: worth about half its strength.
+  if (card.special === 'recall') return Math.min(4, bestRevive(state, side) / 2);
   if (card.spy) return 3 * Math.min(2, mine.deck.length); // cards drawn
   if (card.special === 'decoy' || (card.swap && play.targetUid !== undefined)) {
     const target = ROWS.flatMap(row => mine.rows[row]).find(unit => unit.uid === play.targetUid);
@@ -263,7 +265,7 @@ function mediumAction(state, rng, level = 'medium') {
  */
 export function unseenCards(state, side) {
   const faction = state.sides[side].faction;
-  const deck = GWENT_DECKS[faction];
+  const deck = deckFor(state.ruleset, faction);
   if (!deck) return null;
   const remaining = new Map();
   for (const card of expandDeck(deck)) remaining.set(card.id, [...(remaining.get(card.id) || []), card]);
@@ -348,11 +350,14 @@ function quickAction(state, side) {
   const chosen = ahead > 0 ? byWorth[0] : byWorth[byWorth.length - 1];
   // Horns and row buffs go where they help most.
   const card = handCard(state, side, chosen.uid);
-  if (card?.special === 'horn' || card?.special === 'mardroeme') {
+  const rowCards = ['horn', 'mardroeme', 'blessing', 'fireball', 'curse'];
+  if (rowCards.includes(card?.special)) {
     let bestRow = chosen;
     let bestSum = -1;
+    // Buffs go where the own strength is, attacks where the enemy's is.
+    const onEnemy = card.special === 'fireball' || card.special === 'curse';
     for (const play of plays.filter(item => item.uid === chosen.uid)) {
-      const sum = mine.rows[play.row].reduce((total, unit) => total + (unit.type === 'unit' && !unit.hero ? unit.strength : 0), 0);
+      const sum = state.sides[onEnemy ? foe : side].rows[play.row].reduce((total, unit) => total + (unit.type === 'unit' && !unit.hero ? unit.strength : 0), 0);
       if (sum > bestSum) { bestSum = sum; bestRow = play; }
     }
     return { type: 'play', ...bestRow };

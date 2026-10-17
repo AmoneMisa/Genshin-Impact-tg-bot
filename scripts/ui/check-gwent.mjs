@@ -133,7 +133,7 @@ try {
   for (const width of [320,1100]) {
     const {page,shot,fits,errors}=await fixture(width);
     await page.locator('input[name=gwent-ruleset][value=extended]').check();
-    assert.equal(await page.locator('[data-select-faction]').count(),10,'extended offers all ten factions');
+    assert.equal(await page.locator('[data-select-faction]').count(),11,'extended offers all eleven factions');
     await page.locator('[data-select-faction=redania]').click();assert.equal(await page.locator('[data-select-faction=redania] img').count(),1,'drawn crest');
     await shot('extended-decks');await fits();
     await page.locator('[data-editor]').click();
