@@ -125,8 +125,8 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `${mine ? `<p class="gwent-rating-line" role="status">Ваше место: <strong>${mine.rank}</strong> · рейтинг ${mine.rating} · побед ${mine.wins}, поражений ${mine.losses}, ничьих ${mine.draws}</p>` : '<p class="gwent-hint">Сыграйте в рейтинговой игре («Найти соперника»), чтобы попасть в таблицу.</p>'}
       ${button('Обновить', 'data-reconnect')}
       <div class="gwent-board" role="table" aria-label="Таблица лидеров">
-        <div class="gwent-board-row ui-inset-row gwent-board-head" role="row"><span role="columnheader">№</span><span role="columnheader">Игрок</span><span role="columnheader">Рейтинг</span><span role="columnheader">В / Н / П</span></div>
-        ${rows.map(row => `<div class="gwent-board-row ui-inset-row" role="row" data-me="${row.me}"><span role="cell">${row.rank}</span><span role="cell">${esc(row.name || 'Игрок')}</span><span role="cell"><strong>${row.rating}</strong></span><span role="cell">${row.wins} / ${row.draws} / ${row.losses}</span></div>`).join('') || '<p class="gwent-hint">Пока нет рейтинговых игр</p>'}
+        <div class="gwent-board-row gwent-board-head" role="row"><span role="columnheader">№</span><span role="columnheader">Игрок</span><span role="columnheader">Рейтинг</span><span role="columnheader">В / Н / П</span></div>
+        ${rows.map(row => `<div class="gwent-board-row" role="row" data-me="${row.me}" data-rank="${row.rank}"><span role="cell">${row.rank}</span><span role="cell">${esc(row.name || 'Игрок')}</span><span role="cell"><strong>${row.rating}</strong></span><span role="cell">${row.wins} / ${row.draws} / ${row.losses}</span></div>`).join('') || '<p class="gwent-hint">Пока нет рейтинговых игр</p>'}
       </div><p class="gwent-hint">Рейтинг меняется только в играх, найденных через поиск соперника. Игры с друзьями и реванши в рейтинге не учитываются.</p>`;
   }
   function gamesScreen() {
@@ -252,8 +252,8 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `<div class="gwent-result-view"><p class="gwent-result-winner" role="status"><strong>${esc(winner)}</strong></p>
       <p class="gwent-hint">Выиграно раундов: ${state.wins.player} : ${state.wins.ai}</p>${ratingChangeHtml()}${remote?.endReason ? `<p class="gwent-hint">${esc(remote.endReason)}</p>` : ''}
       <div class="gwent-result-table" role="table" aria-label="Очки по раундам">
-        <div class="gwent-result-row ui-inset-row gwent-result-head" role="row"><span role="columnheader">Раунд</span><span role="columnheader">${esc(you)}</span><span role="columnheader">${esc(them)}</span><span role="columnheader">Победа</span></div>
-        ${rounds.map(round => `<div class="gwent-result-row ui-inset-row" role="row"><span role="cell">${round.round}</span><span role="cell" data-won="${round.winner === 'player' || round.winner === 'draw'}">${round.scores.player}</span><span role="cell" data-won="${round.winner === 'ai' || round.winner === 'draw'}">${round.scores.ai}</span><span role="cell">${esc(who(round))}</span></div>`).join('') || '<p class="gwent-hint">Ни один раунд не был завершён</p>'}
+        <div class="gwent-result-row gwent-result-head" role="row"><span role="columnheader">Раунд</span><span role="columnheader">${esc(you)}</span><span role="columnheader">${esc(them)}</span><span role="columnheader">Победа</span></div>
+        ${rounds.map(round => `<div class="gwent-result-row" role="row"><span role="cell">${round.round}</span><span role="cell" data-won="${round.winner === 'player' || round.winner === 'draw'}">${round.scores.player}</span><span role="cell" data-won="${round.winner === 'ai' || round.winner === 'draw'}">${round.scores.ai}</span><span role="cell">${esc(who(round))}</span></div>`).join('') || '<p class="gwent-hint">Ни один раунд не был завершён</p>'}
       </div>${rematch}
       <div class="gwent-actions">${button('К полю', 'data-close-summary')}${remote?.spectator ? button('К списку игр', 'data-leave-watch', true) : button('Новая игра', 'data-finish', !rematch)}</div></div>`;
   }
