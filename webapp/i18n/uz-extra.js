@@ -10,6 +10,7 @@ import worldFixes from './uz-world-fixes.js';
 import gameUi from './uz-game-ui.js';
 import itemAdmin from './uz-item-admin.js';
 import exploration from './uz-exploration.js';
+import clanHalls from './uz-clan-halls.js';
 import gwent from './uz-gwent.js';
 import gwentDecks from './uz-gwent-decks.js';
 import gwentCards from './uz-gwent-cards.js';
@@ -22,6 +23,7 @@ export default {
   ...itemAdmin,
   ...gameUi,
   ...exploration,
+  ...clanHalls,
   ...gwent,
   ...gwentDecks,
   ...gwentCards,

@@ -73,13 +73,13 @@ export const TEMPLATES = Object.freeze([
     {key: 'fishingData', source: fishingData, version: 1},
     {key: 'hennaData', source: hennaData, version: 1},
     {key: 'hunting', source: hunting, version: 1},
-    {key: 'l2Items', source: l2Items, version: 1},
-    {key: 'l2Loot', source: l2Loot, version: 1},
+    {key: 'l2Items', source: l2Items, version: 2},
+    {key: 'l2Loot', source: l2Loot, version: 2},
     {key: 'l2Recipes', source: l2Recipes, version: 1},
     {key: 'merchantData', source: merchantData, version: 1},
     {key: 'saPrices', source: saPrices, version: 1},
     {key: 'worldBossMap', source: worldBossMap, version: 1},
-    {key: 'worldHoldings', source: worldHoldings, version: 1},
+    {key: 'worldHoldings', source: worldHoldings, version: 2},
     {key: 'worldZones', source: worldZones, version: 1},
 ]);
 
