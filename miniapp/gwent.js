@@ -4,6 +4,8 @@ import { createMatch, playCard, passRound, resolveChoice, scores } from '../weba
 import { memberName, presence } from './social.js';
 import { DEFAULT_RATING, pairQueue } from './gwentRating.js';
 import { normalizeRuleset, rulesetAllows } from '../webapp/gwent-decks.js';
+import { TABLE_SEATS } from '../webapp/gwent-engine.js';
+import { TABLE_SIZES, absoluteSeat, humansOf, isBot, replaceSeat, runBots, seatOf, startTable, tableMatchView } from './gwentTable.js';
 
 export const QUEUE_TTL = 35_000;
 export const TURN_TTL = 5 * 60_000;
@@ -33,12 +35,17 @@ function finish(match, loser, now, reason) {
 function sweep(data, now) {
   data.queue = data.queue.filter(entry => entry.seenAt > now - QUEUE_TTL);
   for (const match of data.matches) {
-    if (match.state.phase === 'playing' && now >= match.deadline) finish(match, match.state.pending?.side || match.state.turn, now, 'timeout');
+    if (match.state.phase === 'playing' && now >= match.deadline) {
+      if (match.table) replaceSeat(match, TABLE_SEATS.indexOf(match.state.pending?.side || match.state.turn), now, { turnTtl: TURN_TTL });
+      else finish(match, match.state.pending?.side || match.state.turn, now, 'timeout');
+    }
   }
   data.matches = data.matches.filter(match => !match.endedAt || now - match.endedAt < DONE_TTL);
   for (const invite of data.invites) if (invite.status === 'pending' && invite.expiresAt <= now) invite.status = 'expired';
   data.invites = data.invites.filter(invite => now - invite.createdAt < DONE_TTL);
 }
+/** The pending table invitation the player sits in (as host or guest), if any. */
+function roomOf(data, id) { return data.invites.find(invite => invite.status === 'pending' && invite.table?.players.some(person => person.userId === String(id))); }
 function member(chat, id) { return chat.members?.find(member => String(member.userId) === String(id)); }
 function friends(chat, one, two) {
   const a = member(chat, one), b = member(chat, two);
@@ -62,6 +69,7 @@ function nameOf(chat, id, saved) {
 function inviteView(chat, invite) {
   return { id: invite.id, from: invite.from, to: invite.to, fromName: nameOf(chat, invite.from, invite.fromName),
     toName: invite.to ? nameOf(chat, invite.to, invite.toName) : null, faction: invite.loadout.faction, ruleset: invite.ruleset || 'classic', open: !!invite.open,
+    table: invite.table ? { size: invite.table.size, players: invite.table.players.map(person => ({ userId: person.userId, name: person.name, faction: person.loadout.faction })) } : null,
     status: invite.status, expiresAt: invite.expiresAt, matchId: invite.matchId || null,
     canPushAt: (invite.lastPushedAt || 0) + INVITE_PUSH_COOLDOWN };
 }
@@ -78,6 +86,7 @@ function endText(match, own) {
 
 /** Redact first, then orient the public snapshot so the authenticated user is always `player`. */
 export function gwentMatchView(match, userId) {
+  if (match.table) return tableMatchView(match, userId, { endReason: match.endKind === 'abandoned' ? 'Все игроки покинули стол' : '' });
   const index = match.players.indexOf(String(userId));
   if (index < 0) return null;
   const own = index === 0 ? 'player' : 'ai', enemy = opposite(own), raw = match.state;
@@ -109,6 +118,7 @@ export function gwentMatchView(match, userId) {
 }
 
 export function gwentSpectatorView(match) {
+  if (match.table) return tableMatchView(match, match.players[0], { spectator: true, endReason: match.endKind === 'abandoned' ? 'Все игроки покинули стол' : '' });
   const view = gwentMatchView(match, match.players[0]);
   view.spectator = true; view.playerName = match.names[0]; view.rematch = null; view.rated = match.rated ? { before: match.rated.ratings[0], opponent: match.rated.ratings[1], change: null } : null; view.endReason = endText(match, null);
   view.state.sides.player.hand = [];
@@ -122,9 +132,9 @@ export function gwentSpectatorView(match) {
 function gameList(chat, data, id, now) {
   const rows = data.matches
     .filter(m => m.state.phase === 'playing' || (m.endedAt && now - m.endedAt < RECENT_TTL))
-    .map(m => ({ id: m.id, ruleset: m.ruleset || 'classic', names: m.names, factions: m.factions, round: m.state.round, scores: scores(m.state), wins: m.state.wins,
+    .map(m => ({ id: m.id, table: m.table ? m.players.length : 0, ruleset: m.ruleset || 'classic', names: m.names, factions: m.factions, round: m.state.round, scores: scores(m.state), wins: m.state.wins, points: m.table ? m.state.points : null,
       participant: m.players.includes(id) && !m.dismissed.includes(id), finished: m.state.phase !== 'playing',
-      winnerName: m.state.winner === 'player' ? m.names[0] : m.state.winner === 'ai' ? m.names[1] : null,
+      winnerName: m.table ? (m.state.winners || []).map(seat => m.names[TABLE_SEATS.indexOf(seat)]).join(', ') || null : m.state.winner === 'player' ? m.names[0] : m.state.winner === 'ai' ? m.names[1] : null,
       friend: m.players.some(player => player !== id && friends(chat, id, player)), endedAt: m.endedAt || 0, startedOrder: 0 }));
   const open = rows.filter(row => !row.finished).slice(-30);
   const recent = rows.filter(row => row.finished).sort((a, b) => b.endedAt - a.endedAt).slice(0, 10);
@@ -151,6 +161,8 @@ export function gwentState(chat, userId, now = Date.now(), { watch = null, invit
     friends: friendRows, incoming: data.invites.filter(i => i.status === 'pending' && i.to === id).map(i => inviteView(chat,i)),
     outgoing: data.invites.filter(i => i.status === 'pending' && i.from === id).map(i => inviteView(chat,i)),
     games: gameList(chat, data, id, now) };
+  const room = roomOf(data, id);
+  if (room) result.room = { ...inviteView(chat, room), host: room.from === id };
   if (watch) {
     const watched = data.matches.find(m => m.id === watch);
     if (!watched) return fail('Игра недоступна для просмотра');
@@ -162,6 +174,18 @@ export function gwentState(chat, userId, now = Date.now(), { watch = null, invit
     result.invitation = inviteView(chat, found);
   }
   return result;
+}
+
+/** The room becomes a match: empty seats are played by the AI. Everyone seated is released from the room. */
+function launchTable(chat, data, room, now, rng, actorId) {
+  const match = startTable(room.table.players, room.table.size, now, { rng, turnTtl: TURN_TTL });
+  data.matches.push(match);
+  room.status = 'accepted'; room.matchId = match.id;
+  const seated = new Set(room.table.players.map(person => person.userId));
+  data.queue = data.queue.filter(entry => !seated.has(entry.userId));
+  for (const invite of data.invites) if (invite.status === 'pending' && !invite.table && seated.has(invite.from)) invite.status = 'cancelled';
+  const other = humansOf(match).find(userId => userId !== actorId) || null;
+  return other ? pushNotice(chat, match, actorId, other, 'start', now) : null;
 }
 
 /** `options.strangers`: ids the server has looked up by nickname, who may be invited without being friends. */
@@ -177,6 +201,7 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     data.loadouts[id] ||= {}; data.loadouts[id][body.loadout.faction] = clone(body.loadout);
   } else if (body.action === 'join') {
     if (match) return fail('Сначала завершите текущий матч');
+    if (roomOf(data, id)) return fail('Сначала покиньте стол');
     const stats = inspectLoadout(body.loadout);
     if (!stats.valid) return fail(stats.errors.join('. '));
     const ruleset = normalizeRuleset(body.ruleset);
@@ -189,12 +214,20 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     // Players with a similar rating are paired at once; the gap widens while they wait.
     pairQueue(data, now, (a, b) => startMatch(data, a, b, now, rng, { rated: (a.ruleset || 'classic') === 'classic', ruleset: a.ruleset }));
   } else if (body.action === 'invite') {
-    if (match || data.queue.some(e => e.userId === id)) return fail('Сначала завершите матч или отмените поиск');
+    if (match || data.queue.some(e => e.userId === id) || roomOf(data, id)) return fail('Сначала завершите матч, отмените поиск или покиньте стол');
     const stats = inspectLoadout(body.loadout);
     if (!stats.valid) return fail(stats.errors.join('. '));
-    const inviteRuleset = normalizeRuleset(body.ruleset);
+    const tableSize = body.table == null ? 0 : Number(body.table);
+    if (tableSize && !TABLE_SIZES.includes(tableSize)) return fail('Стол рассчитан на трёх или четырёх игроков');
+    const inviteRuleset = tableSize ? 'extended' : normalizeRuleset(body.ruleset);
     if (!rulesetAllows(inviteRuleset, body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== inviteRuleset) return fail('Эта колода не подходит для выбранных правил');
-    const target = body.targetId == null ? null : String(body.targetId);
+    const target = tableSize || body.targetId == null ? null : String(body.targetId);
+    if (tableSize) {
+      const room = { id: randomUUID(), from: id, to: null, createdAt: now, expiresAt: now + INVITE_TTL, status: 'pending', loadout: clone(body.loadout), ruleset: 'extended',
+        fromName: nameOf(chat, id), toName: null, open: true, table: { size: tableSize, players: [{ userId: id, name: nameOf(chat, id), loadout: clone(body.loadout) }] } };
+      data.invites.push(room);
+      return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, room) };
+    }
     const stranger = target !== null && (options.strangers || []).map(String).includes(target) && !!member(chat, target);
     if (target !== null && (target === id || !(stranger || friends(chat,id,target)))) return fail('Выберите друга или игрока по нику');
     if (target && (current(data,target) || data.queue.some(entry => entry.userId === target))) return fail('Игрок уже занят');
@@ -206,11 +239,40 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
       data.invites.push(created);
     }
     return {ok:true,...gwentState(chat,id,now), invitation:inviteView(chat,created)};
+  } else if (['start_table', 'leave_table', 'table_invite'].includes(body.action)) {
+    const room = data.invites.find(i => i.id === body.inviteId && i.status === 'pending' && i.table);
+    if (!room) return fail('Стол уже закрыт или начался');
+    if (body.action === 'leave_table') {
+      if (room.from === id || !room.table.players.some(person => person.userId === id)) return fail('Вы не сидите за этим столом');
+      room.table.players = room.table.players.filter(person => person.userId !== id);
+    } else if (room.from !== id) return fail('Это стол другого игрока');
+    else if (body.action === 'table_invite') {
+      const target = String(body.targetId);
+      if (!friends(chat, id, target)) return fail('Пригласить можно только друга');
+      if (current(data, target) || roomOf(data, target)) return fail('Игрок уже занят');
+      if (room.lastPushedAt && now - room.lastPushedAt < INVITE_PUSH_COOLDOWN) return fail('Уведомление уже отправлено. Подождите минуту');
+      room.lastPushedAt = now;
+      return { ok: true, ...gwentState(chat, id, now), notifyInvite: { id: room.id, userId: target, fromName: memberName(member(chat, id)) } };
+    } else {
+      if (room.table.players.length < 2) return fail('Для игры нужен хотя бы ещё один человек. Пригласите друга или играйте против ИИ');
+      notice = launchTable(chat, data, room, now, rng, id);
+    }
   } else if (['accept_invite','decline_invite','cancel_invite','push_invite'].includes(body.action)) {
     const invitation = data.invites.find(i => i.id === body.inviteId);
     if (!invitation || invitation.status !== 'pending') return fail('Приглашение уже закрыто или истекло');
     const mine = invitation.from === id, recipient = invitation.to === id || invitation.to === null && !mine;
-    if (body.action === 'cancel_invite') {
+    if (invitation.table && body.action === 'accept_invite') {
+      const seated = invitation.table.players;
+      if (seated.some(person => person.userId === id)) return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, invitation) };
+      if (mine || match || roomOf(data, id) || data.queue.some(e => e.userId === id)) return fail('Сначала завершите матч, поиск или покиньте другой стол');
+      if (seated.length >= invitation.table.size) return fail('За столом нет свободных мест');
+      const stats = inspectLoadout(body.loadout); if (!stats.valid) return fail(stats.errors.join('. '));
+      if (!rulesetAllows('extended', body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== 'extended') return fail('Для стола нужна колода расширенных правил');
+      seated.push({ userId: id, name: nameOf(chat, id), loadout: clone(body.loadout) });
+      if (seated.length === invitation.table.size) notice = launchTable(chat, data, invitation, now, rng, id);
+      else return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, invitation) };
+    } else if (invitation.table && ['decline_invite', 'push_invite'].includes(body.action)) return fail('Это приглашение за стол');
+    else if (body.action === 'cancel_invite') {
       if (!mine) return fail('Это приглашение другого игрока');
       invitation.status = 'cancelled';
     } else if (body.action === 'decline_invite') {
@@ -238,6 +300,7 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     data.queue = data.queue.filter(entry => entry.userId !== id);
   } else if (body.action === 'rematch') {
     if (!match || match.id !== body.matchId || match.state.phase !== 'matchOver') return fail('Реванш доступен после окончания матча');
+    if (match.table) return fail('За столом реванш не предусмотрен. Соберите новый стол');
     const other = match.players.find(player => player !== id);
     if (match.dismissed.includes(other)) return fail('Соперник уже вышел из матча');
     if ((match.declined || []).includes(other)) return fail('Соперник отказался от реванша');
@@ -261,20 +324,25 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
   } else if (['play', 'pass', 'choice', 'surrender'].includes(body.action)) {
     if (!match || match.id !== body.matchId) return fail('Матч не найден');
     if (match.state.phase !== 'playing') return fail('Матч завершён');
-    if (body.revision !== match.revision) return fail('Состояние изменилось. Повторите ход');
-    const side = match.players[0] === id ? 'player' : 'ai';
-    if (body.action === 'surrender') finish(match, side, now, 'surrender');
-    else {
+    // Leaving is always allowed, even when the table moved on since the player last looked.
+    if (body.action !== 'surrender' && body.revision !== match.revision) return fail('Состояние изменилось. Повторите ход');
+    const seatIndex = match.table ? seatOf(match, id) : -1;
+    const side = match.table ? TABLE_SEATS[seatIndex] : match.players[0] === id ? 'player' : 'ai';
+    if (body.action === 'surrender') {
+      if (match.table) replaceSeat(match, seatIndex, now, { turnTtl: TURN_TTL, rng });
+      else finish(match, side, now, 'surrender');
+    } else {
       const result = body.action === 'choice' ? resolveChoice(match.state, side, body.choiceId)
         : body.action === 'pass' ? passRound(match.state, side)
-          : playCard(match.state, side, body.uid, { row: body.row, targetUid: body.targetUid });
+          : playCard(match.state, side, body.uid, { row: body.row, targetUid: body.targetUid, ...(match.table ? { seat: absoluteSeat(match, seatIndex, body.seat) } : {}) });
       if (result.error) return fail(result.error);
       match.state = result.state; match.revision++; match.deadline = now + TURN_TTL;
+      if (match.table) runBots(match, rng);
       if (match.state.phase === 'matchOver') match.endedAt = now;
       else {
         const mover = match.state.pending ? match.state.pending.side : match.state.turn;
-        const moverId = match.players[mover === 'player' ? 0 : 1];
-        if (moverId !== id) notice = pushNotice(chat, match, id, moverId, 'turn', now);
+        const moverId = match.players[match.table ? TABLE_SEATS.indexOf(mover) : mover === 'player' ? 0 : 1];
+        if (moverId !== id && !isBot(moverId)) notice = pushNotice(chat, match, id, moverId, 'turn', now);
       }
     }
   } else return fail('Неизвестное действие');
@@ -306,7 +374,7 @@ export function gwentFingerprint(chat) {
   return JSON.stringify([
     (data.queue || []).map(entry => [entry.userId, entry.seenAt]),
     (data.matches || []).map(match => [match.id, match.revision, match.endedAt || 0, match.dismissed.length, (match.rematch || []).length, (match.declined || []).length, Object.values(match.pushedAt || {}).join()]),
-    (data.invites || []).map(invite => [invite.id, invite.status, invite.lastPushedAt || 0]),
+    (data.invites || []).map(invite => [invite.id, invite.status, invite.lastPushedAt || 0, invite.table?.players.length || 0]),
     Object.keys(data.loadouts || {}).length,
   ]);
 }

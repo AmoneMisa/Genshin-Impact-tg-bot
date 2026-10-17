@@ -58,7 +58,8 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   let tableSize = 2, focusSeat = 'ai';
   try { tableSize = [2, 3, 4].includes(Number(localStorage.getItem('gwent-table-size'))) ? Number(localStorage.getItem('gwent-table-size')) : 2; } catch { /* optional */ }
   const isTableState = () => (state?.seats?.length || 2) > 2;
-  const seatName = seat => (seat === 'player' ? remote?.playerName || 'Вы' : isTableState() ? `Противник ${state.seats.indexOf(seat)}` : remote?.opponent || 'Противник');
+  const seatName = seat => (remote?.seatNames?.[seat] ? (seat === 'player' && !remote.spectator ? 'Вы' : remote.seatNames[seat]) : seat === 'player' ? remote?.playerName || 'Вы' : isTableState() ? `Противник ${state.seats.indexOf(seat)}` : remote?.opponent || 'Противник');
+  const watchName = seat => (isTableState() ? remote.seatNames[seat] : seat === 'player' ? remote.playerName : remote.opponent);
   const pickPlays = () => (pick ? pick.plays.filter(play => !pick.seat || play.seat === pick.seat) : []);
   const keyOf = (id = faction) => loadoutKey(ruleset, id);
   const deckNow = id => deckFor(ruleset, id);
@@ -69,7 +70,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   let state = null, remote = null, pick = null, decoy = null, preview = null, pile = null, artCard = null;
   let myRating = null, board = null, summary = false, summaryFor = null, wasOffered = false, localMatch = 0, aiThinking = null, aiWorker = null, aiCall = 0, matchLevel = level, busy = false, closed = false, aiTimer = null, pollTimer = null, requestId = 0, announcedRound = null;
   let notice = '', tone = '', onlineError = '', serverOffset = 0;
-  let lobby = {friends:[],incoming:[],outgoing:[],games:[]}, focusedInvite = initialInvite, invitation = null, watchId = initialWatch, renderedLobbyKey = '';
+  let lobby = {friends:[],incoming:[],outgoing:[],games:[],room:null}, focusedInvite = initialInvite, invitation = null, watchId = initialWatch, renderedLobbyKey = '';
   const lobbyKey = () => JSON.stringify(lobby) + JSON.stringify([...lobby.incoming,...lobby.outgoing,...invitation ? [invitation] : []].map(i=>[Math.max(0,Math.ceil((i.expiresAt-Date.now()-serverOffset)/60000)),i.canPushAt>Date.now()+serverOffset]));
   if (initialInvite) screen = 'friends';
   const readUrl = () => { const query = new URLSearchParams({...watchId ? {watch:watchId} : {}, ...focusedInvite ? {invite:focusedInvite} : {}, ...screen === 'board' ? {board:'1'} : {}}).toString(); return '/api/gwent' + (query ? '?' + query : ''); };
@@ -127,24 +128,45 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       <div class="gwent-lobby-actions">${button('Отменить поиск', 'data-cancel-search')}<span class="gwent-or">или</span>${button('Играть с ИИ', 'data-search-ai', true)}</div>`;
   }
   function invitationHtml(item, outgoing = false) {
-    return `<article class="ui-inset-row gwent-social-row"><div><strong>${esc(outgoing ? item.toName || 'Приглашение по ссылке' : item.fromName)}</strong><small>${esc(GWENT_DECKS[item.faction].title)}${item.ruleset === 'extended' ? ' · Расширенные правила' : ''} · ${Math.max(0, Math.ceil((item.expiresAt-Date.now()-serverOffset)/60000))} мин.</small></div>
+    return `<article class="ui-inset-row gwent-social-row"><div><strong>${esc(outgoing ? item.toName || 'Приглашение по ссылке' : item.fromName)}</strong>${item.table ? `<small>Стол на ${item.table.size} · за столом ${item.table.players.length}</small>` : ''}<small>${esc(GWENT_DECKS[item.faction].title)}${item.ruleset === 'extended' ? ' · Расширенные правила' : ''} · ${Math.max(0, Math.ceil((item.expiresAt-Date.now()-serverOffset)/60000))} мин.</small></div>
       <div class="gwent-lobby-actions">${outgoing ? `${item.url ? button('Копировать ссылку', `data-copy-invite="${item.id}"`) : '<span>Ссылка пока недоступна</span>'}${item.to ? button('Отправить уведомление', `data-push-invite="${item.id}" ${item.canPushAt>Date.now()+serverOffset ? 'disabled' : ''}`) : ''}${button('Отменить', `data-cancel-invite="${item.id}"`)}` : `${button('Принять', `data-accept-invite="${item.id}"`, true)}${item.to ? button('Отклонить', `data-decline-invite="${item.id}"`) : ''}`}</div>
       ${outgoing && item.url ? `<input class="gwent-share-link" aria-label="Ссылка приглашения" readonly value="${esc(item.url)}">` : ''}</article>`;
   }
+  /** Tables of three or four are played under the extended rules, so a table is opened from that deck. */
+  function tableCreateHtml() {
+    return `<h3>Стол на троих или четверых</h3>
+      <p class="gwent-hint">Каждый играет за себя, очки начисляются за место в раунде.</p>
+      <p class="gwent-hint">${ruleset === 'extended' ? 'Пустые места займёт ИИ.' : 'Нужна колода расширенных правил: переключите правила на экране выбора.'}</p>
+      <div class="gwent-lobby-actions">${[3, 4].map(size => button(`Стол на ${size}`, `data-create-table="${size}" ${ruleset === 'extended' ? '' : 'disabled'}`)).join('')}</div>`;
+  }
+  /** The table the player sits at before it starts: seats, the link, friends to call, and the start button. */
+  function roomHtml(room) {
+    const host = room.host;
+    const seats = Array.from({ length: room.table.size }, (_, i) => room.table.players[i]);
+    return `<article class="ui-inset-row gwent-social-row gwent-room" aria-label="Стол">
+      <div><strong>Стол на ${room.table.size}</strong><small>${Math.max(0, Math.ceil((room.expiresAt - Date.now() - serverOffset) / 60000))} мин. · Расширенные правила, без рейтинга</small></div>
+      <ol class="gwent-room-seats">${seats.map(person => `<li>${person ? `<strong>${esc(person.name)}</strong> <small>${esc(GWENT_DECKS[person.faction]?.title || '')}</small>` : '<small>Свободное место — займёт ИИ</small>'}</li>`).join('')}</ol>
+      ${host ? `${room.url ? `<input class="gwent-share-link" aria-label="Ссылка на стол" readonly value="${esc(room.url)}">` : ''}
+        <div class="gwent-lobby-actions">${room.url ? button('Копировать ссылку', `data-copy-invite="${room.id}"`) : ''}${button('Начать игру', `data-start-table="${room.id}" ${room.table.players.length < 2 ? 'disabled' : ''}`, true)}${button('Закрыть стол', `data-cancel-invite="${room.id}"`)}</div>
+        <small>${room.table.players.length < 2 ? 'Для начала нужен ещё хотя бы один человек.' : 'Можно начать сейчас — пустые места займёт ИИ.'}</small>`
+        : `<div class="gwent-lobby-actions">${button('Покинуть стол', `data-leave-table="${room.id}"`)}</div><small>Ждём, пока хозяин начнёт игру.</small>`}
+    </article>`;
+  }
   function friendsScreen() {
-    const incoming = [...lobby.incoming];
+    const incoming = lobby.incoming.filter(i => !(lobby.room && i.id === lobby.room.id));
     if (invitation?.status === 'pending' && !lobby.outgoing.some(i=>i.id===invitation.id) && !incoming.some(i=>i.id===invitation.id)) incoming.unshift(invitation);
     return `${deckSummary(loadouts[keyOf()],true)}<p class="gwent-hint">Приглашение действует 15 минут. Друзья и игроки — из любых чатов.</p>
       ${invitation && invitation.status !== 'pending' ? '<p role="status">Приглашение уже закрыто или истекло</p>' : ''}
       ${incoming.length ? `<h3>Входящие приглашения</h3>${incoming.map(i=>invitationHtml(i)).join('')}` : ''}
-      <div class="gwent-lobby-actions">${button('Создать ссылку приглашения','data-create-invite')}</div>
-      ${lobby.outgoing.map(i=>invitationHtml(i,true)).join('')}
+      ${lobby.room ? roomHtml(lobby.room) : `<div class="gwent-lobby-actions">${button('Создать ссылку приглашения','data-create-invite')}</div>
+      ${tableCreateHtml()}`}
+      ${lobby.outgoing.filter(i=>!i.table).map(i=>invitationHtml(i,true)).join('')}
       <h3>Пригласить по нику</h3><div class="gwent-lobby-actions"><label class="gwent-search-field">Ник игрока<input type="text" data-invite-nick maxlength="16" autocomplete="off" placeholder="Ник в игре"></label>${button('Пригласить', 'data-invite-nick-go')}</div>
       <p class="gwent-hint">Игрок может быть из любого чата. Сообщение в Telegram получают только друзья; остальные увидят приглашение, когда откроют гвинт.</p>
-      <h3>Друзья</h3>${lobby.friends.map(friend=>`<div class="ui-inset-row gwent-social-row"><div><strong>${esc(friend.name)}</strong><small>${esc(friend.busy ? 'В игре' : friend.text)}</small></div>${friend.watchId ? button('Смотреть', `data-watch="${esc(friend.watchId)}"`) : ''}${button('Пригласить',`data-invite-friend="${esc(friend.userId)}" ${friend.busy ? 'disabled' : ''}`)}</div>`).join('') || '<p class="gwent-hint">Добавьте друга в разделе друзей, чтобы пригласить его лично.</p>'}`;
+      <h3>Друзья</h3>${lobby.friends.map(friend=>`<div class="ui-inset-row gwent-social-row"><div><strong>${esc(friend.name)}</strong><small>${esc(friend.busy ? 'В игре' : friend.text)}</small></div>${friend.watchId ? button('Смотреть', `data-watch="${esc(friend.watchId)}"`) : ''}${lobby.room?.host ? button('Позвать за стол',`data-table-invite="${esc(friend.userId)}" ${friend.busy || lobby.room.canPushAt > Date.now() + serverOffset ? 'disabled' : ''}`) : lobby.room ? '' : button('Пригласить',`data-invite-friend="${esc(friend.userId)}" ${friend.busy ? 'disabled' : ''}`)}</div>`).join('') || '<p class="gwent-hint">Добавьте друга в разделе друзей, чтобы пригласить его лично.</p>'}`;
   }
   function gameRow(game) {
-    const result = game.finished ? `<small>${game.winnerName ? `Завершён · победил ${esc(game.winnerName)}` : 'Завершён · ничья'}</small>` : `<small>Раунд ${game.round} · ${game.scores.player} : ${game.scores.ai}</small>`;
+    const result = game.finished ? `<small>${game.winnerName ? `Завершён · победил ${esc(game.winnerName)}` : 'Завершён · ничья'}</small>` : `<small>Раунд ${game.round} · ${game.table ? `стол на ${game.table}` : `${game.scores.player} : ${game.scores.ai}`}</small>`;
     return `<article class="ui-inset-row gwent-social-row"><div><strong>${game.names.map(esc).join(' · ')}</strong>${game.friend ? '<small>Играет ваш друг</small>' : ''}<small>${game.factions.map(id=>esc(GWENT_DECKS[id].title)).join(' · ')}${game.ruleset === 'extended' ? ' · Расширенные правила' : ''}</small>${result}</div>${button(game.participant ? 'Вернуться к матчу' : game.finished ? 'Посмотреть итог' : 'Смотреть', `data-watch="${game.id}"`)}</article>`;
   }
   function boardScreen() {
@@ -281,19 +303,19 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   /** The winner line at a table: who has the most points. */
   function tableWinnerText() {
     if (state.winner === 'draw') return `Ничья: ${state.winners.map(seatName).join(', ')}`;
-    return state.winner === 'player' ? 'Вы победили!' : `Победил ${seatName(state.winner)}`;
+    return state.winner === 'player' && !remote?.spectator ? 'Вы победили!' : `Победил ${seatName(state.winner)}`;
   }
   function matchScreen() {
-    const turn = remote?.spectator ? (state.phase === 'matchOver' ? 'Матч окончен' : `Ход: ${state.turn === 'player' ? remote.playerName : remote.opponent}`) : state.phase === 'matchOver' ? 'Матч окончен' : state.pending?.side === 'player' ? 'Ваш выбор' : state.turn === 'player' ? 'Ваш ход' : isTableState() ? `Ходит ${seatName(state.pending ? state.pending.side : state.turn)}` : 'Ход противника';
+    const turn = remote?.spectator ? (state.phase === 'matchOver' ? 'Матч окончен' : `Ход: ${watchName(state.pending ? state.pending.side : state.turn)}`) : state.phase === 'matchOver' ? 'Матч окончен' : state.pending?.side === 'player' ? 'Ваш выбор' : state.turn === 'player' ? 'Ваш ход' : isTableState() ? `Ходит ${seatName(state.pending ? state.pending.side : state.turn)}` : 'Ход противника';
     const weather = ROWS.filter(row => state.weather[row]).map(row => WEATHER[row]).join(' · ') || 'Ясно';
     const leader = state.sides.player.leader, passive = leader?.effect.type.startsWith('passive-');
     const ready = leader && myPlays().some(play => play.uid === leader.uid);
     let actions = '';
-    if (remote?.spectator) actions = `${state.phase === 'matchOver' ? `<strong>${state.winner === 'draw' ? 'Ничья' : esc(state.winner === 'player' ? remote.playerName : remote.opponent)}</strong>` : ''}${button('К списку игр', 'data-leave-watch')}`;
+    if (remote?.spectator) actions = `${state.phase === 'matchOver' ? `<strong>${state.winner === 'draw' ? 'Ничья' : esc(isTableState() ? tableWinnerText() : watchName(state.winner))}</strong>` : ''}${button('К списку игр', 'data-leave-watch')}`;
     else if (state.phase === 'matchOver') actions = `<strong class="gwent-result">${isTableState() ? tableWinnerText() : state.winner === 'player' ? 'Вы победили!' : state.winner === 'ai' ? 'Победил противник' : 'Ничья'}</strong>${button('Итоги', 'data-open-summary')}${rematchHtml()}${button('Новая игра', 'data-finish', !rematchHtml())}`;
     else actions = `${leader ? button(passive ? 'Лидер · постоянно' : state.sides.player.leaderUsed ? 'Лидер использован' : state.sides.player.leaderCancelled ? 'Лидер отменён' : 'Лидер', `data-leader ${ready ? '' : 'disabled'} title="${esc(leader.name)}"`) : ''}
       ${button('Пас', `data-pass ${state.pending || state.turn !== 'player' || state.passed.player || busy ? 'disabled' : ''}`, true)}<details class="gwent-more"><summary aria-label="Другие действия">${controlIcon('more')}</summary><div>${button('Завершить матч', 'data-end-match')}</div></details>`;
-    const standing = isTableState() ? `Очки: ${state.seats.map(seat => `${seat === 'player' ? 'Вы' : seatName(seat)} ${state.points[seat]}`).join(' · ')}` : `Победы ${state.wins.player} : ${state.wins.ai}`;
+    const standing = isTableState() ? `Очки: ${state.seats.map(seat => `${seatName(seat)} ${state.points[seat]}`).join(' · ')}` : `Победы ${state.wins.player} : ${state.wins.ai}`;
     return `<div class="gwent-status"><span>Раунд ${state.round} <span aria-hidden="true">│</span> ${standing}</span>${remote && state.phase === 'playing' ? `<small data-gwent-clock>До хода: ${Math.max(0, Math.ceil((remote.deadline - (Date.now() + serverOffset)) / 60000))} мин.</small>` : ''}</div>
       ${state.seats?.length > 2 ? state.seats.filter(seat => seat !== 'player').map(opponentHtml).join('') : sideHtml('ai')}<div class="gwent-weather">${esc(weather)}</div>${sideHtml('player')}
       ${state.reveals.player.length ? `<div class="ui-inset-row gwent-reveal">Открыты: ${state.reveals.player.map(card => esc(card.name)).join(', ')}</div>` : ''}
@@ -314,7 +336,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
         ${rounds.map(round => `<div class="gwent-result-row" role="row"><span role="cell">${round.round}</span>${seats.map(seat => `<span role="cell" data-won="${(round.points?.[seat] ?? 0) === Math.max(...Object.values(round.points || {}))}">${round.points?.[seat] ?? 0} <small>(${round.scores[seat]})</small></span>`).join('')}</div>`).join('')}
         <div class="gwent-result-row gwent-result-total" role="row"><span role="cell">Итого</span>${seats.map(seat => `<span role="cell" data-won="${state.winners.includes(seat)}"><strong>${state.points[seat]}</strong> <small>${place(seat)}-е</small></span>`).join('')}</div>
       </div>
-      <div class="gwent-actions">${button('К полю', 'data-close-summary')}${button('Реванш', 'data-rematch', true)}${button('Новая игра', 'data-finish')}</div></div>`;
+      <div class="gwent-actions">${button('К полю', 'data-close-summary')}${remote?.spectator ? button('К списку игр', 'data-leave-watch', true) : `${remote ? '' : button('Реванш', 'data-rematch', true)}${button('Новая игра', 'data-finish', Boolean(remote))}`}</div></div>`;
   }
   function summaryHtml() {
     if (isTableState()) return tableSummaryHtml();
@@ -410,7 +432,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   function accept(data) {
     serverOffset = (data.serverNow || Date.now()) - Date.now();
     for (const [id, config] of Object.entries(data.loadouts || {})) if (inspectLoadout(config).valid && loadoutKey(config.ruleset, config.faction) === id) loadouts[id] = config;
-    lobby = {friends:data.friends || [],incoming:data.incoming || [],outgoing:data.outgoing || [],games:data.games || []};
+    lobby = {friends:data.friends || [],incoming:data.incoming || [],outgoing:data.outgoing || [],games:data.games || [],room:data.room || null};
     if (data.rating) myRating = data.rating;
     if (data.leaderboard) board = data.leaderboard;
     if (data.invitation) { invitation = data.invitation; focusedInvite = invitation.id; }
@@ -580,16 +602,20 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const d = el.dataset;
     if ('back' in d || 'discardDraft' in d) return back();
     if ('friends' in d || 'games' in d || 'board' in d) { focusedInvite = null; invitation = null; go('friends' in d ? 'friends' : 'games' in d ? 'games' : 'board'); await reconnect(); }
+    else if (d.createTable) await online({ action: 'invite', table: Number(d.createTable), loadout: loadouts[keyOf()] });
+    else if (d.startTable) await online({ action: 'start_table', inviteId: d.startTable });
+    else if (d.leaveTable) await online({ action: 'leave_table', inviteId: d.leaveTable });
+    else if (d.tableInvite) { const result = await online({ action: 'table_invite', inviteId: lobby.room?.id, targetId: d.tableInvite }); if (result) { note(result.notificationSent ? 'Друг получил приглашение за стол' : 'Не удалось доставить уведомление. Отправьте другу ссылку.'); render(); } }
     else if ('inviteNickGo' in d) {
       const nickname = panel.querySelector('[data-invite-nick]')?.value.trim() || '';
       if (!nickname) { note('Введите ник игрока', 'bad'); render(); return; }
       await online({ action: 'invite', ruleset, targetNickname: nickname, loadout: loadouts[keyOf()] });
     }
     else if ('createInvite' in d || d.inviteFriend) await online({action:'invite',ruleset,targetId:d.inviteFriend || null,loadout:loadouts[keyOf()]});
-    else if (d.acceptInvite) { focusedInvite = null; invitation = null; const inviteRules = [...lobby.incoming, invitation].find(item => item?.id === d.acceptInvite)?.ruleset || 'classic'; await online({action:'accept_invite',inviteId:d.acceptInvite,loadout:loadoutFor(inviteRules)}); }
+    else if (d.acceptInvite) { const inviteRules = [...lobby.incoming, invitation].find(item => item?.id === d.acceptInvite)?.ruleset || 'classic'; focusedInvite = null; invitation = null; await online({action:'accept_invite',inviteId:d.acceptInvite,loadout:loadoutFor(inviteRules)}); }
     else if (d.cancelInvite || d.declineInvite) { focusedInvite = null; invitation = null; await online({action:d.cancelInvite ? 'cancel_invite':'decline_invite',inviteId:d.cancelInvite || d.declineInvite}); }
     else if (d.pushInvite) { const result = await online({action:'push_invite',inviteId:d.pushInvite}); if(result) {note(result.notificationSent ? 'Уведомление отправлено' : 'Не удалось доставить уведомление. Отправьте другу ссылку.');render();} }
-    else if (d.copyInvite) { const item=lobby.outgoing.find(i=>i.id===d.copyInvite); if(item?.url) {try {await navigator.clipboard.writeText(item.url);note('Ссылка скопирована');} catch {note('Скопируйте выделенную ссылку');render();panel.querySelector(`[data-copy-invite="${d.copyInvite}"]`)?.closest('article').querySelector('input')?.select();return;} render();} }
+    else if (d.copyInvite) { const item=[...lobby.outgoing,lobby.room].find(i=>i?.id===d.copyInvite); if(item?.url) {try {await navigator.clipboard.writeText(item.url);note('Ссылка скопирована');} catch {note('Скопируйте выделенную ссылку');render();panel.querySelector(`[data-copy-invite="${d.copyInvite}"]`)?.closest('article').querySelector('input')?.select();return;} render();} }
     else if (d.watch) { focusedInvite = null; watchId = lobby.games.find(g=>g.id===d.watch)?.participant ? null : d.watch; await reconnect(); }
     else if ('leaveWatch' in d) { requestId++;watchId=null;remote=null;state=null;go('games');await reconnect(); }
     else if (d.artCard && draft) {

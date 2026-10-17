@@ -28,7 +28,7 @@ async function fixture(width, userId = 1) {
       // The route adds the player's rating and, on request, the leaderboard; here they are fixed samples.
       if(result.ok!==false){result.rating={rating:1000,peak:1000,games:3,wins:2,losses:1,draws:0};
         if(url.searchParams.get('board'))result.leaderboard={rows:[{rank:1,userId:'2',name:'Игрок 2',rating:1100,games:5,wins:4,losses:1,draws:0,me:false},{rank:2,userId:String(userId),name:'Игрок '+userId,rating:1000,games:3,wins:2,losses:1,draws:0,me:true}],me:{rank:2,rating:1000,games:3,wins:2,losses:1,draws:0}};}
-      for(const item of [...result.outgoing||[],...result.incoming||[],...result.invitation?[result.invitation]:[]])item.url='https://t.me/test_bot/game?startapp=gwent_-100_i_'+item.id;
+      for(const item of [...result.outgoing||[],...result.incoming||[],...result.invitation?[result.invitation]:[],...result.room?[result.room]:[]])item.url='https://t.me/test_bot/game?startapp=gwent_-100_i_'+item.id;
       if(result.notifyInvite){delete result.notifyInvite;result.notificationSent=true;}
       return route.fulfill({status:result.ok===false?409:200,json:result});
     }
@@ -270,5 +270,32 @@ try {
     for(const item of [host,guest])await item.page.locator('[data-finish]').click();
     for(const item of [host,guest,viewer]) {await item.fits();await item.page.locator('[data-dismiss]').click();await item.page.close();}
     console.log(`PASS invitations and live spectator ${width}: targeted friend, link, mock push, accept, hidden hands, synchronized pass, safe exit`);
+  }
+  // An online table: the host opens a room under the extended rules, a guest joins by the link, the host starts with the AI in the empty seats.
+  for (const width of [390,1100]) {
+    const host=await fixture(width,1),guest=await fixture(390,2);
+    await host.page.locator('[data-dismiss]').click();await host.page.evaluate(()=>window.openGwent(true));await host.page.waitForTimeout(700);await host.page.locator('input[name=gwent-ruleset][value=extended]').check();await host.page.locator('[data-mode]').click();
+    await host.page.locator('[data-friends]').click();
+    await host.page.locator('[data-create-table="3"]').click();
+    await host.page.locator('.gwent-room').waitFor();
+    assert.equal(await host.page.locator('[data-start-table]').isDisabled(),true,'a table needs a second person');
+    await host.shot('table-room');
+    const token=chat.game.gwent.invites.at(-1).id;
+    await guest.page.locator('[data-dismiss]').click();await guest.page.evaluate(token=>window.openGwent(true,{initialInvite:token}),token);
+    await guest.page.locator('[data-accept-invite]').click();
+    await guest.page.locator('[data-leave-table]').waitFor();await guest.shot('table-guest');
+    await host.page.waitForFunction(()=>!document.querySelector('[data-start-table]')?.disabled,{},{timeout:10000});
+    await host.page.locator('[data-start-table]').click();
+    await host.page.locator('.gwent-opponent').first().waitFor({timeout:10000});
+    await guest.page.locator('.gwent-opponent').first().waitFor({timeout:10000});
+    for(const item of [host,guest])assert.equal(await item.page.locator('.gwent-opponent, .gwent-side.ai').count(),2,'two opponents at a table of three, one of them opened');
+    await settle([host,guest]);
+    await host.page.waitForTimeout(500);await host.shot('table-online');await guest.shot('table-online');
+    const names=await host.page.locator('.gwent-panel').innerText();
+    assert.ok(names.includes('Игрок 2'),'the guest is named at the host table');
+    assert.ok(names.includes('Бот 1'),'the empty seat is played by the AI');
+    for(const item of [host,guest]){await item.page.locator('.gwent-more summary').click();await item.page.locator('[data-end-match]').click();await item.page.waitForTimeout(500);}
+    for(const item of [host,guest]){await item.fits();await item.page.close();}
+    console.log(`PASS online table ${width}: room, link, join, start with the AI, seats seen from each player, leaving`);
   }
 } finally {await browser.close();}

@@ -23,6 +23,7 @@ export async function gwentAppBase() {
 export function addGwentLinks(data, base, chatId = null) {
   const decorate = invitation => ({...invitation,url:gwentAppLink(base,chatId,'invite',invitation.id)});
   if (data.invitation) data.invitation=decorate(data.invitation);
+  if (data.room) data.room=decorate(data.room);
   if (data.incoming) data.incoming=data.incoming.map(decorate);
   if (data.outgoing) data.outgoing=data.outgoing.map(decorate);
   return data;
