@@ -10,9 +10,11 @@ const locationScenes={
 };
 export function roomSceneUrl(environment,{compact=false,sceneKey=''}={}){
  if(!ROOM_SCENES.includes(environment))return null;
+ const [id,,area]=String(sceneKey).split(':'),variant=/^area-([12])$/.exec(area||'');
+ if(variant&&(Object.hasOwn(locationScenes,id)||sceneStudy(id)?.category==='hunting'))return `/art/world/scenes/${id}-area-${variant[1]}${compact?'-mobile':''}-v${id==='plains-of-dion'&&variant[1]==='1'?2:1}.webp`;
  const study=sceneStudyUrl(String(sceneKey).split(':')[0],{compact});
  if(study)return study;
- const scene=locationScenes[String(sceneKey).split(':')[0]]||{name:environment,version:1};
+ const scene=Object.hasOwn(locationScenes,id)?locationScenes[id]:{name:environment,version:1};
  return `/art/world/scenes/${scene.name}${compact?'-mobile':''}-v${scene.version}.webp`;
 }
 const cache=new Map();

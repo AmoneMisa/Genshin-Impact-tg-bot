@@ -3,6 +3,7 @@ import fields from '../../../template/huntingTemplate.js';
 import catacombs from '../../../template/catacombsTemplate.js';
 import necropolises from '../../../template/necropolisesTemplate.js';
 import worldZones from '../../../template/worldZones.js';
+import {HUNTING_EXPANSION} from '../../../template/huntingExpansion.js';
 import npcAi from '../../../template/l2NpcAi.js';
 export function npcBehaviour(id){
     const ai=npcAi[id];
@@ -10,7 +11,8 @@ export function npcBehaviour(id){
 }
 import {NPC_ATTRIBUTES,NPC_ATTRIBUTE_ATTACKS} from '../../../template/l2AttributeRules.js';
 const catIds=new Set(catacombs.map(z=>z.id));
-const zones=[...fields.filter(z=>!catIds.has(z.id)),...catacombs,...necropolises,...worldZones].sort((a,b)=>a.level-b.level);
+const expansionIds=new Set(HUNTING_EXPANSION.map(z=>z.id));
+const zones=[...fields.filter(z=>!catIds.has(z.id)&&!expansionIds.has(z.id)),...catacombs,...necropolises,...worldZones,...HUNTING_EXPANSION].sort((a,b)=>a.level-b.level);
 for(const z of zones)for(const m of z.mobs)m.resist ||= NPC_ATTRIBUTES[m.id] || {};
 import getClassStats from '../player/getters/getGameClassStatsFromTemplate.js';
 import { CHAMPIONS, CHAMPION_MIN_LEVEL, HUNT } from './huntConfig.js';

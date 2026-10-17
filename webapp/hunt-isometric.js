@@ -20,6 +20,15 @@ export function isoSceneBounds(viewport){
  const m=isoMatrix(viewport),scale=m.a/640;
  return {x:m.e-768*scale,y:viewport.height/2-520*scale,width:1536*scale,height:1024*scale};
 }
+/** Keep panning inside the painted extent; an explicitly zoomed-out room stays centred. */
+export function clampRoomCamera(camera,viewport){
+ const bounds=isoSceneBounds(viewport),zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
+ const axis=(value,start,size,center,extent)=>{
+  const lower=extent-(center+(start+size-center)*zoom),upper=-(center+(start-center)*zoom);
+  return lower>upper?(lower+upper)/2:Math.max(lower,Math.min(upper,value||0));
+ };
+ return {zoom,x:axis(camera.x,bounds.x,bounds.width,cx,viewport.width),y:axis(camera.y,bounds.y,bounds.height,cy,viewport.height)};
+}
 export function isoPick(point,viewport,camera={}) {
   const m=isoMatrix(viewport),zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
   const sx=(point.x-cx-(camera.x||0))/zoom+cx-m.e;

@@ -312,7 +312,7 @@ function settleRespawns(session, hunt, now, random) {
     hunt.mob = field.mobs.find(m => m.instanceId === field.target) || null;
 }
 
-/** Walks into a neighbouring room of a catacomb. A hero in a fight with a monster cannot walk away. */
+/** Walks into a neighbouring room; pursuing monsters follow through the same exit. */
 function enterRoom(session, hunt, roomIdValue, now, random) {
     const zone = getZone(hunt.zone);
     const field = hunt.field;

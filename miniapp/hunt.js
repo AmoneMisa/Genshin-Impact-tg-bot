@@ -129,10 +129,10 @@ function fieldDto(hunt, now, session) {
             spatial:skillSpatial(session,session.game.gameClass.skills[field.action.index],now)}:null,
         exits:layout.map?layout.rooms.filter(r=>adjacent(current,r)).map(r=>({id:r.id,name:visited.has(r.id)?r.name:'Не исследовано',
             side:r.col>current.col?'east':r.col<current.col?'west':r.row>current.row?'south':'north'})):[],
-        title: zone?.title,sceneKey:`${hunt.zone}:${current.id}`,environment:current.environment,layoutSource:current.layoutSource,
-        room: {id: current.id, name: current.name, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
+        title: zone?.title,sceneKey:`${hunt.zone}:${current.id}${current.sceneVariant?':area-'+current.sceneVariant:''}`,environment:current.environment,layoutSource:current.layoutSource,
+        room: {id: current.id, name: current.name, landmark:current.landmark||null, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
         map: layout.map ? {
-            cols: layout.cols, rows: layout.rows,
+            cols: layout.cols, rows: layout.rows,exploration:Boolean(layout.exploration),
             rooms: layout.rooms.map(room => ({
                 id: room.id, row: room.row, col: room.col, big: room.big, cap: room.cap,
                 current: room.id === current.id,

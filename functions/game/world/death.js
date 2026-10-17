@@ -5,6 +5,7 @@ import {restoreRevivalVitals} from '../player/revivalVitals.js';
 import getMaxHp from '../player/getters/getMaxHp.js';
 import getMaxMp from '../player/getters/getMaxMp.js';
 import getMaxCp from '../player/getters/getMaxCp.js';
+import {CITIES} from '../../../template/worldMap.js';
 
 export function markWorldDeath(session,now=Date.now()){
  const w=session.game.world;if(!w||session.game.gameClass?.stats?.hp>0)return;
@@ -30,7 +31,7 @@ export function respawnWorld(session,destination,clan,records=[],now=Date.now())
  const w=session.game.world,h=holdings.find(h=>h.id===destination),stats=session.game.gameClass.stats;
  const spawnY=h?(h.kind==='hall'?0.9:0.95):0.5;
  Object.assign(w,{mode:h?(h.kind==='hall'?'hall':'stronghold'):'city',city:h?.region||w.city,location:null,holding:h?.id||null,instanceId:null,x:.5,y:spawnY,path:[],moveAt:now,pending:null,channel:null,readyHolding:null});
- delete w.death;delete w.died;delete w.walkHome;
+ delete w.death;delete w.died;delete w.walkHome;delete w.holdingReturn;delete w.entryOrigin;
  if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;session.game.hunt.playerDebuffs=[];}
  if(destination==='city')restoreRevivalVitals(session,{town:true});
  else {stats.hp=Math.max(1,Math.floor(getMaxHp(session)*.5));stats.mp=Math.max(0,Math.floor(getMaxMp(session)*.5));stats.cp=Math.max(0,Math.floor(getMaxCp(session)*.5));}
@@ -44,12 +45,12 @@ export function revivalPosition(member){
  const w=member.game?.world,f=member.game?.hunt?.field;
  if(!w)return null;
  if(w.mode==='location'&&f)return {space:`${w.location}:${w.instanceId||''}:${f.floor||1}:${f.room}`,x:f.x,y:f.y};
- if(['city','hall','stronghold','siege'].includes(w.mode))return {space:`${w.mode}:${w.city}:${w.holding||''}`,x:w.x,y:w.y};
+ if(['city','entrance','hall','stronghold','siege'].includes(w.mode))return {space:`${w.mode}:${w.city}:${w.holding||''}`,x:w.x,y:w.y};
  return null;
 }
 export function nearbyCorpse(caster,target){
  if(!caster.game?.world&&!target.game?.world)return true;
  const a=revivalPosition(caster),b=revivalPosition(target);
- const size=caster.game?.world?.mode==='city'?14000:2000;
+ const size=caster.game?.world?.mode==='city'?(CITIES.find(c=>c.id===caster.game.world.city)?.size||14000):2000;
  return Boolean(a&&b&&a.space===b.space&&Math.hypot(a.x-b.x,a.y-b.y)*size<=600);
 }

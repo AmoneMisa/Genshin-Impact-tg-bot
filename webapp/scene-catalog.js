@@ -237,7 +237,110 @@ export const SCENE_STUDIES = Object.freeze([
     "category": "gracia",
     "environment": "woodland",
     "asset": "gracia-annihilation"
-  }
+  },
+  {
+    "id": "dark-elven-village",
+    "title": "Деревня Тёмных Эльфов",
+    "category": "city",
+    "environment": "woodland",
+    "asset": "city-dark-elven-village"
+  },
+  {
+    "id": "dwarven-village",
+    "title": "Деревня Гномов",
+    "category": "city",
+    "environment": "ice",
+    "asset": "city-dwarven-village"
+  },
+  {
+    "id": "elven-village",
+    "title": "Эльфийская деревня",
+    "category": "city",
+    "environment": "woodland",
+    "asset": "city-elven-village"
+  },
+  {
+    "id": "floran",
+    "title": "Флоран",
+    "category": "city",
+    "environment": "woodland",
+    "asset": "city-floran"
+  },
+  {
+    "id": "hunters",
+    "title": "Деревня Охотников",
+    "category": "city",
+    "environment": "woodland",
+    "asset": "city-hunters"
+  },
+  {
+    "id": "kamael-village",
+    "title": "Деревня Камаэль",
+    "category": "city",
+    "environment": "woodland",
+    "asset": "city-kamael-village"
+  },
+  {
+    "id": "orc-village",
+    "title": "Деревня Орков",
+    "category": "city",
+    "environment": "woodland",
+    "asset": "city-orc-village"
+  },
+  {
+    "id": "talking-island-village",
+    "title": "Деревня Говорящего Острова",
+    "category": "city",
+    "environment": "woodland",
+    "asset": "city-talking-island-village"
+  },
+  {
+    "id": "interior-castle",
+    "title": "Замок",
+    "category": "interior",
+    "environment": "catacomb",
+    "asset": "interior-castle"
+  },
+  {
+    "id": "interior-fort",
+    "title": "Форт",
+    "category": "interior",
+    "environment": "woodland",
+    "asset": "interior-fort"
+  },
+  {
+    "id": "interior-hall",
+    "title": "Клан-холл",
+    "category": "interior",
+    "environment": "catacomb",
+    "asset": "interior-hall"
+  },
+  {
+    "id": "ketra-outpost",
+    "title": "Застава орков Кетра",
+    "category": "hunting",
+    "environment": "desert",
+    "asset": "ketra-outpost"
+  },
+  {
+    "id": "monastery-of-silence",
+    "title": "Монастырь Безмолвия",
+    "category": "hunting",
+    "environment": "catacomb",
+    "asset": "monastery-of-silence"
+  },
+  {
+    "id": "varka-outpost",
+    "title": "Лагерь силеносов Варка",
+    "category": "hunting",
+    "environment": "desert",
+    "asset": "varka-outpost"
+  },
+  {"id":"talking-island","title":"Окрестности Острова Говорящих","category":"hunting","environment":"woodland","asset":"talking-island"},
+  {"id":"elven-fields","title":"Эльфийские луга","category":"hunting","environment":"woodland","asset":"elven-fields"},
+  {"id":"marsh-zombies","title":"Топи зомби","category":"hunting","environment":"marsh","asset":"marsh-zombies"},
+  {"id":"dark-forest","title":"Тёмный лес","category":"hunting","environment":"woodland","asset":"dark-forest"},
+  {"id":"turek-orcs","title":"Лагерь орков Турек","category":"hunting","environment":"woodland","asset":"turek-orcs"},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;

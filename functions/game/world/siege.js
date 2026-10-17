@@ -3,6 +3,8 @@ import {findPath,advancePath} from './navigation.js';
 import getSpeed from '../player/getters/getSpeed.js';
 import {l2ActionBlock,l2MoveMultiplier} from '../player/l2Effects.js';
 import holdings from '../../../template/worldHoldings.js';
+import {enterHolding} from './holdingEntry.js';
+import {hallScenario,hallConquestAction,advanceHallContest} from './hallConquest.js';
 const memberId=s=>String(s.userId),clanId=c=>String(c?._id||'');
 export const SIEGE_RULES={fort:{minClanLevel:4,waitMs:3600000,durationMs:3600000,channelMs:60000},castle:{minClanLevel:5,waitMs:86400000,durationMs:7200000,channelMs:180000},hall:{minClanLevel:4,waitMs:86400000,durationMs:3600000,channelMs:60000}};
 const objectives=kind=>[{id:'gate',name:'Ворота',x:.5,y:.8,hp:5000,maxHp:5000},...['captain','commander','mage'].map((id,i)=>({id,name:['Капитан гарнизона','Командир','Маг гарнизона'][i],x:.25+i*.25,y:.5,hp:2500,maxHp:2500,reward:kind==='fort'?25:0})),{id:'artifact',name:kind==='castle'?'Священный артефакт':'Командный флаг',x:.5,y:.12,hp:1,maxHp:1}];
@@ -11,6 +13,8 @@ export function reconcileMilitaryOwnership(records){
     for(const rows of groups.values())if(new Set(rows.map(r=>r.kind)).size>1){rows.sort((a,b)=>(Number(b.record.owner.capturedAt)||0)-(Number(a.record.owner.capturedAt)||0)||Number(b.kind==='castle')-Number(a.kind==='castle'));const keep=rows[0].kind;for(const r of rows)if(r.kind!==keep){r.record.owner=null;r.record.markModified?.('owner');}}
 }
 export function settleSiege(record,now=Date.now(),records=[]){
+    const hall=holdings.find(h=>h.id===record._id&&hallScenario(h));
+    if(hall){advanceHallContest(record,hall,now,records);return;}
     const s=record.siege;if(!s)return;
     if(s.channel){const p=s.players[s.channel.userId];const valid=p&&p.seenAt>=now-10000&&Math.hypot(p.x-.5,p.y-.12)<.08&&p.hp>=s.channel.hp&&p.clanId===s.channel.clan.clanId&&p.leader;if(!valid)s.channel=null;else if(now>=s.channel.until){s.winner=s.channel.clan;s.channel=null;}}
     if((now>=s.endsAt||(s.winner&&s.kind!=='castle'))&&!s.settled){if(s.winner){
@@ -20,6 +24,7 @@ export function settleSiege(record,now=Date.now(),records=[]){
     }s.settled=true;record.markModified?.('siege');}
 }
 export function siegeAction(record,holding,session,clan,body,now=Date.now(),records=[]){
+    if(hallScenario(holding))return hallConquestAction(record,holding,session,clan,body,now,records);
     const rule=SIEGE_RULES[holding.kind],cid=clanId(clan),uid=memberId(session);
     if(!clan||!cid)return {ok:false,reason:'not_in_clan'};
     if(body.action==='siege_register'||body.action==='siege_enter')settleSiege(record,now,records);
@@ -36,10 +41,8 @@ export function siegeAction(record,holding,session,clan,body,now=Date.now(),reco
     if(!s.registrations[cid])return {ok:false,reason:'siege_not_registered'};
     const world=session.game.world;
     if(body.action==='siege_enter'){
-        if(world?.mode!=='city'||world.city!==holding.region||world.readyHolding!==holding.id)return {ok:false,reason:'holding_region_required'};
         if(!(session.game.gameClass.stats.hp>0))return {ok:false,reason:'dead'};
-        world.mode='siege';world.holding=holding.id;world.x=.5;world.y=.95;world.path=[];world.pending=null;world.channel=null;
-        world.readyHolding=null;
+        const entered=enterHolding(session,holding,'siege',now);if(!entered.ok)return entered;
         s.players[uid]={x:.5,y:.95,path:[],moveAt:now,seenAt:now,hp:session.game.gameClass.stats.hp,clanId:cid};return {ok:true};
     }
     const p=s.players[uid];

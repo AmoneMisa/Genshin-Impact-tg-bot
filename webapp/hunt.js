@@ -14,7 +14,7 @@ import {classArtUrl} from './boss-stage.js';
 import {dialogHeading} from './dialog-heading.js';
 import {installOverlayA11y} from './overlay-a11y.js';
 import {installGameRules} from './game-rules.js';
-import {isoMatrix,isoPoint,isoPick,isoTerrain,isoLabelOffsets} from './hunt-isometric.js';
+import {isoMatrix,isoPoint,isoPick,isoTerrain,isoLabelOffsets,clampRoomCamera} from './hunt-isometric.js';
 import {createHuntRenderer} from './hunt-phaser.js';
 import {showLootDetails,showDropPreview} from './loot-notice.js';
 import {shortMobName,targetCon} from './combat-target.js';
@@ -72,6 +72,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   let forceAttack = false;
   let previewSkill=null,closed=false,lastFrame=0;
   let viewport={width:320,height:400},camera={zoom:1,x:0,y:0},labelOffsets=new Map(),drag=null,ignoreMapClick=false;
+  let displayedRoom=state.field?.sceneKey||null;
   const fieldRenderer=createHuntRenderer();
   const mapObserver=new ResizeObserver(entries=>{const box=entries[0]?.contentRect;if(box&&Math.abs(box.width-viewport.width)+Math.abs(box.height-viewport.height)>2){viewport={width:box.width,height:box.height};render();}});
   const detailsOpen=new Set();
@@ -311,7 +312,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       const label=r.visited?escapeHtml(r.name):'Не исследовано';
       const count=r.mobs===null?'?':r.mobs+'/'+r.cap;
       const cls='hunt-room'+(r.current?' current':'')+(r.big?' big':'')+(r.visited?' visited':'')+(r.adjacent?' near':'');
-      return '<button type="button" class="'+cls+'" '+(r.adjacent?'data-room="'+escapeHtml(r.id)+'"':'disabled')+' style="grid-column:'+(r.col+1)+';grid-row:'+(r.row+1)+'" title="'+label+' · '+(r.big?'большая':'малая')+' комната" aria-label="'+label+(r.current?' (ты здесь)':'')+'"><b>'+(r.current?icon('flag'):r.big?'▣':'▫')+'</b><small>'+count+'</small></button>';
+      return '<button type="button" class="'+cls+'" '+(r.adjacent?'data-room="'+escapeHtml(r.id)+'"':'disabled')+' style="grid-column:'+(r.col+1)+';grid-row:'+(r.row+1)+'" title="'+label+(map.exploration?'':' · '+(r.big?'большая':'малая')+' комната')+'" aria-label="'+label+(r.current?' (ты здесь)':'')+'"><b>'+(r.current?icon('flag'):r.big?'▣':'▫')+'</b><small>'+count+'</small></button>';
     }).join('');
     return '<div class="hunt-map" style="grid-template-columns:repeat('+map.cols+',1fr)">'+cells+'</div>';
   }
@@ -470,8 +471,15 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const focused=document.activeElement;
     const focusKey=focused&&content.contains(focused)?['data-skill','data-attack','data-next-target','data-hunt-halt','data-target','data-room','data-bar-tab','data-supply','data-target-drop','data-shots-collapse','data-shots','data-acp','data-acp-threshold','data-combat-action','data-pin-action','data-hunt-open','data-system-chat'].find(key=>focused.hasAttribute(key)):null;
     const focusValue=focusKey?focused.getAttribute(focusKey):null;
-    overlay.querySelector('#hunt-heading').textContent=state.field?.title||'Бой';
-    overlay.querySelector('#hunt-heading').title=state.field?.title||'Бой';
+    const locationTitle=[state.field?.title,state.field?.room?.landmark].filter(Boolean).join(' · ')||'Бой';
+    if(state.field&&displayedRoom!==state.field.sceneKey){
+      const entry=isoPoint(state.field,viewport);
+      camera={zoom:camera.zoom,x:(viewport.width/2-entry.x)*camera.zoom,y:(viewport.height/2-entry.y)*camera.zoom};
+      displayedRoom=state.field.sceneKey;drag=null;
+    }
+    camera=clampRoomCamera(camera,viewport);
+    overlay.querySelector('#hunt-heading').textContent=locationTitle;
+    overlay.querySelector('#hunt-heading').title=locationTitle;
     if (state.mob || state.field) {
       body.push('<section class="hunt-scene" aria-label="Бой в локации">',fieldHtml(),'<div class="hunt-top-hud">',playerVitals(player),targetHud(),'<div class="hunt-status-side">',effectsHud(),'</div></div><div class="hunt-scene-dock ui-combat-dock">');
       if (dead&&!state.world?.mode) body.push(`<div class="boss-dead">Воскрешение · ${formatDuration(player.respawnRemainMs)}</div>`);
@@ -484,7 +492,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       body.push(supplyBar(),skillBarHtml(player));
       body.push(`</section></div><button type="button" class="ui-button ui-icon-button ui-system-chat-toggle hunt-system-chat" data-system-chat title="Системный чат" aria-label="Открыть системный чат" aria-haspopup="dialog" aria-controls="combat-chat-body">${controlIcon('system-chat')}</button><div class="hunt-combat-settings" ${editBar?'':'hidden'}>`);
       body.push(`<p>${escapeHtml(state.field?.room?.name||state.field?.title||'')}</p>`);
-      if(state.field?.map)body.push(`<details data-combat-details="rooms"><summary>Комнаты · ${escapeHtml(state.field.room.name)}</summary>${mapHtml(state.field)}</details>`);
+      if(state.field?.map)body.push(`<details data-combat-details="rooms"><summary>${state.field.map.exploration?'Участки':'Комнаты'} · ${escapeHtml(state.field.room.name)}</summary>${mapHtml(state.field)}</details>`);
       body.push('<details class="hunt-extra" data-combat-details="travel"><summary>Перемещение и припасы</summary><div class="hunt-utility">');
       body.push('<button type="button" class="ui-button ui-compact" data-world-exit>Пешком к городу</button><button type="button" class="ui-button ui-compact" data-flee>Свиток возвращения</button>');
       if(state.field?.floors>1)body.push(`<div class="hunt-field-actions"><button type="button" class="ui-button ui-compact" data-world-stairs="-1" ${state.field.floor<=1?'disabled':''}>Этаж ниже</button><span>Этаж ${state.field.floor}/${state.field.floors}</span><button type="button" class="ui-button ui-compact" data-world-stairs="1" ${state.field.floor>=state.field.floors?'disabled':''}>Этаж выше</button></div>`);
@@ -709,7 +717,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     }
   }
 
-  function applyCamera(){const world=content.querySelector('.hunt-world');if(world)world.style.transform=`translate(${camera.x}px,${camera.y}px) scale(${camera.zoom})`;}
+  function applyCamera(){camera=clampRoomCamera(camera,viewport);const world=content.querySelector('.hunt-world');if(world)world.style.transform=`translate(${camera.x}px,${camera.y}px) scale(${camera.zoom})`;}
   function drawRange(){const world=content.querySelector('.hunt-world');if(!world)return;world.querySelector('.hunt-range')?.remove();world.insertAdjacentHTML('beforeend',areaHtml());}
   async function stop(){await run('/api/hunt/attack',{enabled:false});render();}
   async function choosePeer(id){

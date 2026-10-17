@@ -32,4 +32,4 @@
 .quick-travel-list{overflow:auto;max-height:40dvh;flex-shrink:1;min-height:0}
 .atlas-travel-confirm{display:grid;gap:var(--space-3);margin-top:auto;padding-top:var(--space-3)}
 @media(max-width:520px){.atlas-panel{height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}.atlas-tabs{width:100%;}.atlas-map-filter>.ds-select{width:160px}.atlas-map-filter{gap:0}.atlas-popup{width:100%;}}
-.atlas-navigation [data-city-view][hidden]{display:none}
+.atlas-navigation :is([data-city-view],[data-interior-objects])[hidden]{display:none}

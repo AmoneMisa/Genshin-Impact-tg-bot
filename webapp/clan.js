@@ -681,6 +681,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-rta-battle]').forEach(button => button.addEventListener('click', () => activity({ action: 'rta_battle', opponentId: button.dataset.clanRtaBattle })));
     content.querySelectorAll('[data-clan-skill]').forEach(button => button.addEventListener('click', () => activity({ action: 'skill_learn', id: button.dataset.clanSkill })));
     content.querySelector('[data-hall-deposit]')?.addEventListener('click', () => activity({ action: 'hall_deposit' }));
+    content.querySelector('[data-hall-atlas]')?.addEventListener('click',async()=>{const {openWorldMap}=await import('./world-map.js');await openWorldMap({api,renderState,haptic,statusElement,initialLayer:'clanhalls'});});
     content.querySelector('[data-hall-upgrade]')?.addEventListener('click', () => activity({ action: 'hall_upgrade' }));
     content.querySelectorAll('[data-hall-section]').forEach(button=>button.addEventListener('click',()=>{hallSection=button.dataset.hallSection;render();}));
     content.querySelectorAll('[data-hall-level]').forEach(button=>button.addEventListener('click',()=>{hallLevel=Number(button.dataset.hallLevel);render();}));

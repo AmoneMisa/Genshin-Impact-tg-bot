@@ -1,7 +1,7 @@
-import {worldArtUrl} from './art/world-art-url.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {materialIcon} from './material-icons.js';
 import {escapeHtml} from './escape-html.js';
+import {hallSceneUrl} from './hall-location.js';
 
 const number=value=>new Intl.NumberFormat('ru-RU').format(Number(value)||0);
 // Custom Hall perks use original L2 icons matching their effect family.
@@ -28,11 +28,11 @@ export function clanHallView(hall,{section='skills',level=null,pending=false}={}
  const development=`<section class="hall-development"><h4>Развитие зала</h4><p class="hall-note">Уровень зала открывает навыки, телепорты и бонусы для клана.</p><div class="hall-requirements">${requirements}</div><div class="clan-actions-row"><button type="button" class="clan-play" data-hall-deposit ${hall.coins>0&&!pending?'':'disabled'}>Передать славу · ${number(hall.coins)}</button>${next&&hall.canManage?`<button type="button" class="clan-play" data-hall-upgrade ${next.canUpgrade&&!pending?'':'disabled'}>Развить до ${next.level} ур.</button>`:''}</div></section>`;
  const teleports=`<section class="hall-development"><h4>Телепорты зала</h4><p class="hall-note">Направления, открытые уровнем зала.</p><ul class="hall-destinations">${hall.teleports.map(t=>`<li>${escapeHtml(t)}</li>`).join('')}</ul></section>`;
  return `<section class="clan-section clan-hall-settings">
-   <img class="clan-hall-art" src="${worldArtUrl('clan/clan-hall',512)}" alt="Зал клана" width="512" height="341" loading="lazy">
+   <img class="clan-hall-art" src="${hallSceneUrl(null,{level:hall.level,compact:true})}" alt="Зал клана · ${hall.level} ур." width="768" height="512" loading="lazy">
    <div class="hall-management">
     <aside class="hall-sidebar"><div class="hall-emblem"><strong>Зал клана</strong><span>Уровень ${hall.level} / ${hall.maxLevel}</span></div>
       <nav class="hall-menu" aria-label="Настройки зала">${[['skills','Навыки зала'],['development','Развитие'],['teleports','Телепорты']].map(([key,label])=>`<button type="button" data-hall-section="${key}" aria-pressed="${section===key}">${label}</button>`).join('')}
-      <button type="button" data-clan-tab="warehouse">Хранилище</button>${hall.canManage?'<button type="button" data-clan-tab="management">Управление</button>':''}</nav>
+      <button type="button" class="ui-button" data-hall-atlas>Клан-холлы в Атласе</button><button type="button" data-clan-tab="warehouse">Хранилище</button>${hall.canManage?'<button type="button" data-clan-tab="management">Управление</button>':''}</nav>
       <dl class="hall-summary"><div><dt>Слава</dt><dd>${number(hall.glory)}</dd></div><div><dt>Фарм / час</dt><dd>+${number(hall.farmGloryPerHour)}</dd></div><div><dt>Заточка</dt><dd>+${Math.round(hall.enchantBonus*100)}%</dd></div><div><dt>Магазин</dt><dd>${hall.shopLevel} ур.</dd></div></dl>
       ${hall.estate?`<p class="hall-note">${escapeHtml(hall.estate.name)} · до ${new Date(hall.estate.until).toLocaleDateString('ru-RU')}</p>`:''}
     </aside>

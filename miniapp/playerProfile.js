@@ -137,7 +137,7 @@ export function changePlayerClassForMiniApp(session, className, now = Date.now()
   const cost=currentName==='noClass'?0:CLASS_CHANGE_COL;
   const balance=Math.max(0,number(session.game.inventory?.luckCoins));
   if(balance<cost)return {ok:false,reason:'not_enough_luck_coins',cost,balance,profile:getPlayerProfileState(session,now)};
-  changePlayerClass(session, target);
+  changePlayerClass(session, target,{now});
   // A running profession quest belongs to the old class line; earned ones are kept.
   if (session.game?.classQuest) session.game.classQuest.active = null;
   updatePlayerStats(session);

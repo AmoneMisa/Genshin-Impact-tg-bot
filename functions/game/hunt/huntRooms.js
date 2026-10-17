@@ -1,6 +1,7 @@
-// Rooms of a catacomb. A catacomb is a grid of rooms (columns x rows, like a dungeon map): the hero walks between
+import {explorationZone,explorationSection} from '../../../template/huntExploration.js';
+// Rooms of a zone. A catacomb is a grid of rooms (columns x rows, like a dungeon map): the hero walks between
 // neighbouring rooms, every room holds its own monsters and they come back some time after they were killed.
-// A big hall holds 11-12 monsters, a small chamber 3-5. An open field is one wide area of FIELD_CAP monsters.
+// A big hall holds 11-12 monsters, a small chamber 3-5. Each open-field section holds FIELD_CAP monsters.
 // The layout is derived from the zone id, so it is the same for every hero and needs no storage.
 
 export const GRID_COLS = 4;
@@ -41,7 +42,7 @@ export function roomEnvironment(zone){
     return 'woodland';
 }
 
-/** {cols, rows, startId, rooms: [{id, row, col, big, cap, name}]} of a zone; an open field is a single room. */
+/** {cols, rows, startId, rooms: [{id, row, col, big, cap, name}]} of a zone; reviewed fields have a local fork. */
 export function roomLayout(zone) {
     const key = zone?.id || 'none';
     if (layouts.has(key)) return layouts.get(key);
@@ -49,6 +50,12 @@ export function roomLayout(zone) {
     if(zone?.instance?.kind==='rift'){const rooms=(zone.riftRooms||[]).map((r,i)=>({...r,row:Math.floor(i/3),col:i%3,big:r.cap>=10,name:'Комната Разлома '+(i+1),walls:[{x:.35,y:.45,w:.3,h:.08}]}));layout={cols:3,rows:Math.ceil(rooms.length/3),startId:rooms[0].id,map:false,rooms};}
     else if (zone?.instance && zone.instance.kind !== 'rift') {
         layout={cols:1,rows:1,startId:roomId(0,0),map:false,rooms:[{id:roomId(0,0),row:0,col:0,big:true,cap:zone.instance.kind==='labyrinth'?8:1,name:zone.title,walls:zone.instance.kind==='labyrinth'?[{x:.35,y:.4,w:.3,h:.08}]:[]}]};
+    } else if (explorationZone(key) && zone?.kind !== 'catacomb') {
+        // A local fork, not an invented extension of the authoritative world map.
+        const cells=[{row:0,col:0},{row:0,col:1},{row:1,col:0}];
+        layout={cols:2,rows:2,startId:roomId(0,0),map:true,exploration:true,rooms:cells.map(({row,col})=>({
+            id:roomId(row,col),row,col,big:false,cap:FIELD_CAP,name:explorationSection(key,roomId(row,col)).name
+        }))};
     } else if (zone?.kind !== 'catacomb') {
         layout = {cols: 1, rows: 1, startId: roomId(0, 0), map: false,
             rooms: [{id: roomId(0, 0), row: 0, col: 0, big: false, cap: FIELD_CAP, name: zone?.title || 'Поле'}]};
@@ -72,6 +79,8 @@ export function roomLayout(zone) {
     const environment=roomEnvironment(zone),indoor=['catacomb','necropolis'].includes(environment);
     for(const room of layout.rooms){
         room.environment=environment;room.layoutSource='adapted';
+        const section=explorationSection(key,room.id);
+        if(section){room.landmark=section.name;room.sceneVariant=section.index;}
         // Stable per-room variation, with clear central aisles and cardinal doorways.
         const random=seeded(`scenery:${key}:${room.id}`);
         const features=(indoor?[[.26,.17],[.7,.37],[.17,.76]]:[[.12,.39],[.77,.64],[.65,.1],[.23,.77]])

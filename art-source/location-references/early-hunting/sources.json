@@ -1,0 +1,37 @@
+[
+  {
+    "id": "elven-fields",
+    "page": "https://linedia.ru/wiki/Elven_Forest",
+    "url": "https://linedia.ru/w/images/9/94/Elven_Forest%2C_Screenshot.jpg",
+    "file": "art-source/location-references/early-hunting/elven-fields.jpg",
+    "build": "Exact capture build not identified; environment reference only, not verified High Five capture."
+  },
+  {
+    "id": "marsh-zombies",
+    "page": "https://linedia.ru/wiki/Swampland",
+    "url": "https://linedia.ru/w/images/0/0e/Swampland%2C_Screenshot.jpg",
+    "file": "art-source/location-references/early-hunting/marsh-zombies.jpg",
+    "build": "Exact capture build not identified; environment reference only, not verified High Five capture."
+  },
+  {
+    "id": "dark-forest",
+    "page": "https://linedia.ru/wiki/The_Dark_Forest",
+    "url": "https://linedia.ru/w/images/7/7a/The_Dark_Forest%2C_Screenshot.jpg",
+    "file": "art-source/location-references/early-hunting/dark-forest.jpg",
+    "build": "Exact capture build not identified; environment reference only, not verified High Five capture."
+  },
+  {
+    "id": "turek-orcs",
+    "page": "https://linedia.ru/wiki/Orc_Barracks",
+    "url": "https://linedia.ru/w/images/a/a3/Orc_Barracks%2C_Screenshot.jpg",
+    "file": "art-source/location-references/early-hunting/turek-orcs.jpg",
+    "build": "Exact capture build not identified; environment reference only, not verified High Five capture."
+  },
+  {
+    "id": "talking-island",
+    "page": "https://linedia.ru/wiki/Talking_Island,_Eastern_Territory",
+    "url": "https://linedia.ru/w/images/1/1e/Talking_Island%2C_Eastern_Territory%2C_Screenshot.jpg",
+    "file": "art-source/location-references/early-hunting/talking-island.jpg",
+    "build": "Exact capture build not identified; environment reference only, not verified High Five capture."
+  }
+]

@@ -175,7 +175,7 @@ export const combatChat = guarded('combat chat',async(req,res)=>{
 
 export const worldRequest = guarded('world map', async (req,res) => {
   const context=await authorize(req),body=req.method==='POST'?await readJsonBody(req):null;
-  if(body?.action==='quick_travel')assertGoldUnlocked(context);
+  if(['quick_travel','siege_register'].includes(body?.action))assertGoldUnlocked(context);
   const result=await withLock('clan:world',()=>withLock(huntLock(context),async()=>{
     context.session=await getSession(context.chatId,context.userId);
     const outcome=await worldRequestState(context.session,body);
@@ -184,7 +184,7 @@ export const worldRequest = guarded('world map', async (req,res) => {
     await saveSession(context.session);
     return {...outcome,hunt};
   }));
-  if(req.method==='GET'&&new URL(req.url,'http://local').searchParams.get('live')==='1'){for(const key of ['cities','regions','locations','npcs','shop'])delete result.world[key];result.world.holdings=result.world.holdings.map(({id,owner,siege})=>({id,owner,siege}));}
+  if(req.method==='GET'&&new URL(req.url,'http://local').searchParams.get('live')==='1'){for(const key of ['cities','regions','locations','npcs','shop'])delete result.world[key];result.world.holdings=result.world.holdings.map(({id,owner,siege,contest,canEnter})=>({id,owner,siege,contest,canEnter}));}
   return sendResult(res,result,context);
 });
 
