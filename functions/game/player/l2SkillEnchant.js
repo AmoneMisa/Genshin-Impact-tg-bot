@@ -80,7 +80,7 @@ export function enchantL2Skill(session,id,options={}){
  syncKitEnchants(session);session.needsSave=true;
  return {ok:true,success,level,route:level?offer.route:0,mode:offer.mode,chance:offer.chance,cost:offer.cost,refundSp:offer.refundSp};
 }
-export function syncKitEnchants(session){for(const skill of session.game.gameClass?.skills||[]){if(!skill.l2Id)continue;const rec=enchantRecord(session,skill.l2Id);skill.enchantLevel=rec.level;skill.l2EnchantRoute=rec.route;delete skill.routeKind;delete skill.routeLevel;}}
+export function syncKitEnchants(session){const kit=session.game.gameClass?.skills;for(const skill of Array.isArray(kit)?kit:[]){if(!skill.l2Id)continue;const rec=enchantRecord(session,skill.l2Id);skill.enchantLevel=rec.level;skill.l2EnchantRoute=rec.route;delete skill.routeKind;delete skill.routeLevel;}}
 export function skillEnchantBook(session){return classSkillRows(session).filter(s=>DATA.skills[s.id]).map(skill=>{
  const info=DATA.skills[skill.id],record=enchantRecord(session,skill.id);
  return {id:skill.id,name:skill.name,...record,baseLevel:info.baseLevel,routes:Object.entries(info.routes).map(([route,r])=>({id:Number(route),name:routeName(r),max:r.steps.length,offers:Object.fromEntries(Object.keys(ENCHANT_BOOKS).map(mode=>[mode,enchantOffer(session,skill.id,{mode,route:Number(route)})]))})),offer:enchantOffer(session,skill.id)};
