@@ -1,5 +1,6 @@
 import { gwentState, gwentAction, gwentFingerprint } from './gwent.js';
 import { inspectLoadout } from '../webapp/gwent-builder.js';
+import { collectRatingUpdates } from './gwentRating.js';
 
 // Gwent for the whole app. A player has one hero in every chat, so the search queue, invitations and
 // matches live in one shared record (the lobby) and are not tied to a game chat.
@@ -68,7 +69,7 @@ function pruneProfiles(lobby, now) {
  * saved decks from their hero and `saveLoadout(loadout)` stores one back there.
  * Returns the answer and whether the lobby must be saved.
  */
-export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, saveLoadout = null, strangers = [], mutation, body = null, watch = null, invite = null, now = Date.now(), rng = Math.random }) {
+export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, saveLoadout = null, strangers = [], rating = null, mutation, body = null, watch = null, invite = null, now = Date.now(), rng = Math.random }) {
   const id = String(userId);
   const before = lobbyFingerprint(lobby);
   // Only players who use the lobby are remembered; a visitor who just looks at the list is not stored.
@@ -76,7 +77,7 @@ export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, save
   const shared = lobbyChat(lobby, { ...people, [id]: { ...people[id], name } });
   let result;
   if (!mutation) {
-    result = gwentState(shared, id, now, { watch, invite });
+    result = gwentState(shared, id, now, { watch, invite, rng });
     if (result.ok !== false) result.ok = true;
   } else if (body?.action === 'save') {
     const stats = inspectLoadout(body.loadout);
@@ -87,9 +88,16 @@ export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, save
       result = { ok: true, ...gwentState(shared, id, now) };
     }
   } else {
-    result = gwentAction(shared, id, body, now, rng, { strangers });
+    result = gwentAction(shared, id, body, now, rng, { strangers, rating });
+  }
+  // Finished rated games change ratings once; the caller stores the changes.
+  const ratingUpdates = collectRatingUpdates(lobby);
+  if (ratingUpdates.length && result.ok !== false && result.match !== undefined) {
+    // The answer was built before the games were counted; show the change on the result screen.
+    const fresh = gwentState(shared, id, now, { rng });
+    result = { ...result, match: fresh.match, games: fresh.games };
   }
   if (result.ok !== false) result.loadouts = structuredClone(loadouts);
   pruneProfiles(lobby, now);
-  return { result, lobbyChanged: lobbyFingerprint(lobby) !== before };
+  return { result, ratingUpdates, lobbyChanged: lobbyFingerprint(lobby) !== before };
 }

@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { buildDeck, inspectLoadout } from '../webapp/gwent-builder.js';
 import { createMatch, playCard, passRound, resolveChoice, scores } from '../webapp/gwent-engine.js';
 import { memberName, presence } from './social.js';
+import { DEFAULT_RATING, pairQueue } from './gwentRating.js';
 
 export const QUEUE_TTL = 35_000;
 export const TURN_TTL = 5 * 60_000;
@@ -43,8 +44,8 @@ function friends(chat, one, two) {
   return !!a && !!b && !a.isHided && !b.isHided && !b.userChatData?.user?.is_bot
     && (a.game?.friends || []).map(String).includes(String(two)) && (b.game?.friends || []).map(String).includes(String(one));
 }
-function startMatch(data, first, second, now, rng) {
-  const match = { id: randomUUID(), players: [first.userId, second.userId], names: [first.name, second.name],
+function startMatch(data, first, second, now, rng, { rated = false } = {}) {
+  const match = { id: randomUUID(), rated: rated ? { ratings: [first.rating ?? DEFAULT_RATING, second.rating ?? DEFAULT_RATING], games: [first.games ?? 0, second.games ?? 0] } : null, players: [first.userId, second.userId], names: [first.name, second.name],
     factions: [first.loadout.faction, second.loadout.faction], loadouts: [clone(first.loadout), clone(second.loadout)], dismissed: [], rematch: [], revision: 0, pushedAt: {}, deadline: now + TURN_TTL,
     state: createMatch({ playerDeck: buildDeck(first.loadout), aiDeck: buildDeck(second.loadout), rng }) };
   data.matches.push(match);
@@ -99,13 +100,14 @@ export function gwentMatchView(match, userId) {
   const other = match.players[1 - index];
   const rematch = state.phase === 'matchOver'
     ? { requested: (match.rematch || []).includes(String(userId)), offered: (match.rematch || []).includes(other), closed: match.dismissed.includes(other), declined: (match.declined || []).includes(other) } : null;
-  return { id: match.id, revision: match.revision, deadline: match.deadline, endReason: endText(match, own), rematch,
+  const rating = match.rated ? { before: match.rated.ratings[index], opponent: match.rated.ratings[1 - index], change: match.ratingResult ? { delta: match.ratingResult.delta[index], after: match.ratingResult.after[index] } : null } : null;
+  return { id: match.id, revision: match.revision, deadline: match.deadline, endReason: endText(match, own), rematch, rated: rating,
     opponent: match.names[1 - index], faction: match.factions[index], enemyFaction: match.factions[1 - index], state };
 }
 
 export function gwentSpectatorView(match) {
   const view = gwentMatchView(match, match.players[0]);
-  view.spectator = true; view.playerName = match.names[0]; view.rematch = null; view.endReason = endText(match, null);
+  view.spectator = true; view.playerName = match.names[0]; view.rematch = null; view.rated = match.rated ? { before: match.rated.ratings[0], opponent: match.rated.ratings[1], change: null } : null; view.endReason = endText(match, null);
   view.state.sides.player.hand = [];
   view.state.reveals = { player: [], ai: [] };
   if (view.state.pending) view.state.pending = { side: view.state.pending.side, kind: 'waiting', options: [] };
@@ -125,12 +127,14 @@ function gameList(chat, data, id, now) {
   return [...open, ...recent].sort((a, b) => Number(a.finished) - Number(b.finished) || Number(b.friend) - Number(a.friend));
 }
 
-export function gwentState(chat, userId, now = Date.now(), { watch = null, invite = null } = {}) {
+export function gwentState(chat, userId, now = Date.now(), { watch = null, invite = null, rng = Math.random } = {}) {
   if (!member(chat,userId)) return fail('Игрок не найден в игровом чате');
   const data = store(chat); sweep(data, now);
   const entry = data.queue.find(entry => entry.userId === String(userId));
   // The queue heartbeat is stored at most every 10 s (it expires after 35 s), so polling does not rewrite the chat.
   if (entry && now - entry.seenAt >= HEARTBEAT_EVERY) entry.seenAt = now;
+  // The accepted rating gap grows while players wait, so a waiting player's poll can complete a pairing.
+  if (entry) pairQueue(data, now, (a, b) => startMatch(data, a, b, now, rng, { rated: true }));
   const match = current(data, userId);
   const id = String(userId), me = member(chat, id);
   const friendRows = (me?.game?.friends || []).filter(friend => friends(chat, id, friend)).map(friend => {
@@ -173,11 +177,10 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     if (!stats.valid) return fail(stats.errors.join('. '));
     if (data.queue.some(entry => entry.userId === id)) return { ok: true, ...gwentState(chat, id, now) };
     const name = memberName(member(chat, id)).slice(0, 60);
-    const opponent = data.queue.shift();
-    if (!opponent) data.queue.push({ userId: id, name, loadout: clone(body.loadout), seenAt: now });
-    else {
-      startMatch(data, opponent, {userId:id,name,loadout:body.loadout}, now, rng);
-    }
+    const rating = options.rating || {};
+    data.queue.push({ userId: id, name, loadout: clone(body.loadout), seenAt: now, joinedAt: now, rating: rating.rating ?? DEFAULT_RATING, games: rating.games ?? 0 });
+    // Players with a similar rating are paired at once; the gap widens while they wait.
+    pairQueue(data, now, (a, b) => startMatch(data, a, b, now, rng, { rated: true }));
   } else if (body.action === 'invite') {
     if (match || data.queue.some(e => e.userId === id)) return fail('Сначала завершите матч или отмените поиск');
     const stats = inspectLoadout(body.loadout);

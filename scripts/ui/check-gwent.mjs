@@ -25,6 +25,9 @@ async function fixture(width, userId = 1) {
       const body = route.request().method() === 'POST' ? route.request().postDataJSON() : null;
       const result = runGwent({lobby,userId,name:`Игрок ${userId}`,people:peopleOf(),loadouts:savedDecks[userId]||{},saveLoadout:loadout=>{(savedDecks[userId]||={})[loadout.faction]=loadout;},
         mutation:!!body,body,watch:url.searchParams.get('watch'),invite:url.searchParams.get('invite')}).result;
+      // The route adds the player's rating and, on request, the leaderboard; here they are fixed samples.
+      if(result.ok!==false){result.rating={rating:1000,peak:1000,games:3,wins:2,losses:1,draws:0};
+        if(url.searchParams.get('board'))result.leaderboard={rows:[{rank:1,userId:'2',name:'Игрок 2',rating:1100,games:5,wins:4,losses:1,draws:0,me:false},{rank:2,userId:String(userId),name:'Игрок '+userId,rating:1000,games:3,wins:2,losses:1,draws:0,me:true}],me:{rank:2,rating:1000,games:3,wins:2,losses:1,draws:0}};}
       for(const item of [...result.outgoing||[],...result.incoming||[],...result.invitation?[result.invitation]:[]])item.url='https://t.me/test_bot/game?startapp=gwent_-100_i_'+item.id;
       if(result.notifyInvite){delete result.notifyInvite;result.notificationSent=true;}
       return route.fulfill({status:result.ok===false?409:200,json:result});
@@ -188,6 +191,11 @@ try {
     } else await guest.page.locator('[data-friends]').click();
     await guest.page.locator('[data-accept-invite]').click();
     await host.page.locator('.gwent-row').first().waitFor({timeout:10000});
+    await viewer.page.locator('input[value=online]').check();
+    assert.match(await viewer.page.locator('.gwent-rating-line').first().innerText(),/1000/,'the rating is shown');
+    await viewer.page.locator('[data-board]').click();await viewer.page.locator('.gwent-board-row').nth(2).waitFor();
+    assert.equal(await viewer.page.locator('.gwent-board-row[data-me="true"]').count(),1,'the player is marked in the table');
+    await viewer.shot('leaderboard');await viewer.fits();await viewer.page.locator('[data-back]').click();
     await viewer.page.locator('[data-games]').click();await viewer.shot('games');
     assert.ok(await viewer.page.locator('[data-watch]').count()>=2,'finished games stay listed');await viewer.page.locator('[data-watch]').first().click();await viewer.shot('spectator');
     assert.equal(await viewer.page.locator('.gwent-hand').count(),0);

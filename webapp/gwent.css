@@ -98,3 +98,10 @@ body .game-overlay>.gwent-board-panel{max-height:calc(100dvh - 16px - env(safe-a
 .gwent-result-row>span{min-width:0}.gwent-result-head{font-size:12px;opacity:.85}
 .gwent-result-row [data-won="true"]{font-weight:700;color:var(--gold,#e0b85a)}
 .gwent-result-offer{margin:0;text-align:center}
+
+.gwent-rating-line{margin:0;text-align:center;font-size:14px;line-height:1.5}
+.gwent-rating-line[data-delta="up"] strong{color:var(--green,#7fc97f)}.gwent-rating-line[data-delta="down"] strong{color:var(--red,#e07a7a)}
+.gwent-board{display:grid;min-width:0}
+.gwent-board-row{display:grid;grid-template-columns:minmax(32px,auto) minmax(0,1fr) minmax(52px,auto) minmax(72px,auto);align-items:center;gap:var(--space-2);padding:var(--space-2);overflow-wrap:anywhere}
+.gwent-board-row>span:nth-child(3),.gwent-board-row>span:nth-child(4){text-align:right}.gwent-board-head{font-size:12px;opacity:.85}
+.gwent-board-row[data-me="true"]{outline:1px solid var(--gold)}

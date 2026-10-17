@@ -8,6 +8,7 @@ import GwentLobby from '../../db/models/GwentLobby.js';
 import { playerName, validatePlayerNickname } from '../../functions/game/player/playerName.js';
 import { inspectLoadout } from '../../webapp/gwent-builder.js';
 import { runGwent, emptyLobby, LOBBY_KEY } from '../gwentLobby.js';
+import { getRating, applyRatingUpdates, leaderboard } from '../gwentRatings.js';
 import { gwentAppBase, addGwentLinks, pushGwentInvite, pushGwentPlay } from '../gwent-sharing.js';
 import { gwentAppLink } from '../../webapp/gwent-links.js';
 
@@ -79,11 +80,19 @@ async function handle(req, res, mutation) {
       body.targetId = found.id; strangers = [found.id];
     }
     let saved = null;
+    let rating = await getRating(context.userId);
     const run = await withLobby(async lobby => {
       const out = runGwent({ lobby, userId: context.userId, name: people[String(context.userId)].name, people, loadouts: savedLoadouts(context.session),
-        saveLoadout: loadout => { saved = loadout; }, strangers, mutation, body, watch: params.get('watch'), invite: params.get('invite'), now });
+        saveLoadout: loadout => { saved = loadout; }, strangers, rating, mutation, body, watch: params.get('watch'), invite: params.get('invite'), now });
+      // Finished rated games change ratings. If the database refuses, the lobby is not saved and the games stay uncounted.
+      await applyRatingUpdates(out.ratingUpdates, now);
+      if (out.ratingUpdates.some(update => String(update.userId) === String(context.userId))) rating = await getRating(context.userId);
       return { value: out.result, changed: out.lobbyChanged };
     });
+    if (run.ok !== false) {
+      run.rating = rating;
+      if (!mutation && params.get('board')) run.leaderboard = await leaderboard(context.userId, now);
+    }
     if (saved) {
       const game = context.session.game ||= {};
       game.gwentLoadouts = { ...(game.gwentLoadouts || {}), [saved.faction]: saved };
