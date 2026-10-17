@@ -135,3 +135,4 @@ body .ui-card-table-window .ui-button.gwent-opponent{display:flex;flex-direction
 .gwent-room .gwent-lobby-actions{margin-top:0}
 
 .gwent-search-field{display:grid;gap:var(--space-2);text-align:left}
+.gwent-lobby-actions .gwent-search-field{flex:1 1 100%}
