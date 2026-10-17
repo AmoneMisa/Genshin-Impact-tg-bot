@@ -1,5 +1,5 @@
 import { sendJson, sendApiError } from './http/response.js';
-import { serveFile, servePage, WEBAPP_DIR, GAME_ASSETS_DIR, THREE_DIR, THREE_PUBLIC_PREFIXES, PHASER_DIR } from './http/static.js';
+import { serveFile, servePage, getPage, WEBAPP_DIR, GAME_ASSETS_DIR, THREE_DIR, THREE_PUBLIC_PREFIXES, PHASER_DIR } from './http/static.js';
 import http from 'http';
 import { requestUrl as parseRequestUrl, requestBoundary } from './requestBoundary.js';
 import { academyAction, academyState, badges, bootstrap, buildsAction, buildsState, characterState, classBuffsCast, classBuffsState, classQuestsAction, classQuestsState, feedbackSubmit, formsSave, formsState, noticesState, passivesLearn, passivesState, playerCard, playerProfileClass, playerProfileGender, playerProfileNickname, playerProfileRace, playerProfileState, playerProfileSubclass, playerSkillsEnchant, playerSkillsLearn, playerSkillsRoute, playerSkillsState, titlesAssign, titlesState, updatesSettings, updatesState } from './routes/profile.js';

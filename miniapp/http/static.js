@@ -96,7 +96,7 @@ function buildPage() {
   return page;
 }
 
-function getPage() {
+export function getPage() {
   pageCache ||= buildPage();
   return pageCache;
 }
