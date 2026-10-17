@@ -267,4 +267,6 @@ export default {
   "Счёт команд {2} : {3}": "Jamoalar hisobi {2} : {3}",
   "{0} · за столом {1}": "{0} · stolda {1}",
   "Команда {0}": "{0}-jamoa",
+  "· выберите игрока": "· o‘yinchini tanlang",
+  "· свой ряд или ряд союзника": "· o‘zingizning yoki ittifoqchi qatori",
 };

@@ -197,3 +197,22 @@ test('a two-against-two room seats the first two people as teammates and shows t
   assert.equal(host.seatNames.ai2, 'Борис');
   assert.equal(act(w, 3, { action: 'invite', table: 3, teams: true, loadout: decks[3] }).result.invitation.table.teams, false, 'teams need four seats');
 });
+
+test('a blessing named for the teammate lands on the teammate row, whichever seat the sender has', () => {
+  const w = world();
+  const room = act(w, 1, { action: 'invite', table: 4, teams: true, loadout: decks[1] }).result.invitation;
+  join(w, 2, room);
+  act(w, 1, { action: 'start_table', inviteId: room.id });
+  const match = w.lobby.gwent.matches[0];
+  match.state.pending = null; match.state.setup = null;
+  // The second person sits at seat 3 (`ai2` for the host, `ai2` for them as well: teammates are two seats apart).
+  const unit = (uid, strength) => ({ id: 'u' + uid, uid, type: 'unit', name: 'Отряд', rows: ['close'], strength });
+  match.state.sides.ai2.rows.close = [unit(88001, 4)];
+  match.state.sides.player.hand.push({ id: 'b', uid: 88002, type: 'special', special: 'blessing', name: 'Благословение', amount: 2 });
+  for (const seat of ['ai', 'ai3']) match.state.sides[seat].hand.push(unit(88100 + seat.length, 1));
+  match.state.turn = 'player'; match.state.passed = { player: false, ai: false, ai2: false, ai3: false };
+  const result = act(w, 1, { action: 'play', matchId: match.id, revision: match.revision, uid: 88002, row: 'close', seat: 'ai2' }).result;
+  assert.equal(result.ok, true, result.reason);
+  assert.equal(match.state.sides.ai2.mods.close, 2, 'the mate row got the blessing');
+  assert.equal(match.state.sides.player.mods.close, 0);
+});

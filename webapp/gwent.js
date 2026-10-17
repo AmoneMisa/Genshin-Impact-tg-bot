@@ -242,7 +242,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const cards = state.sides[side].rows[row], values = rowValuesFor(state, side, row);
     const horn = cards.some(card => card.special === 'horn'), innate = cards.some(card => card.horn), doubled = state.sides[side].doubled[row];
     const targetUids = new Set(decoy?.plays.map(play => play.targetUid));
-    const canTarget = side === 'player' && pick?.card.special === 'horn' && pick.plays.some(play => play.row === row);
+    const canTarget = side === 'player' && pick?.card.special === 'horn' && (!pick.seat || pick.seat === 'player') && pick.plays.some(play => play.row === row && (!play.seat || play.seat === 'player'));
     // Ambushes the player laid in an opponent's row (the opponents' own ambushes are never shown).
     const laid = side !== 'player' && state.sides[side].traps?.[row];
     const trap = laid && (laid.by ?? 'player') === 'player';
@@ -292,14 +292,14 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   }
   /** What a selected card still needs: an opponent (at a table), then a row, or just a button to play it. */
   function pickerHtml() {
-    const hint = ({ ambush: ' · выберите ряд противника', fireball: ' · выберите ряд противника', curse: ' · выберите ряд противника', blessing: ' · выберите свой ряд' })[pick.card.special] || '';
+    const hint = ({ ambush: ' · выберите ряд противника', fireball: ' · выберите ряд противника', curse: ' · выберите ряд противника', blessing: state.teams ? ' · свой ряд или ряд союзника' : ' · выберите свой ряд', horn: state.teams ? ' · свой ряд или ряд союзника' : '' })[pick.card.special] || '';
     const plays = pickPlays();
     const seats = [...new Set(pick.plays.map(play => play.seat).filter(Boolean))];
     let choice;
     if (seats.length > 1 && !pick.seat) choice = seats.map(seat => button(`${esc(seatName(seat))}`, `data-pick-seat="${seat}"`)).join('');
     else if (plays.length === 1) choice = button('Сыграть', 'data-play-selected', true);
     else choice = [...new Set(plays.map(play => play.row))].map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('');
-    return `<div class="ui-inset-row gwent-picker"><span>${esc(pick.card.name)}<small>${esc(cardTraits(pick.card))}${hint}${seats.length > 1 && !pick.seat ? ' · выберите соперника' : ''}</small></span>${choice}${pick.swapPlays.length ? button('С подменой', 'data-swap-selected') : ''}${button('Отмена', 'data-cancel-card')}</div>`;
+    return `<div class="ui-inset-row gwent-picker"><span>${esc(pick.card.name)}<small>${esc(cardTraits(pick.card))}${hint}${seats.length > 1 && !pick.seat ? (['blessing', 'horn'].includes(pick.card.special) ? ' · выберите игрока' : ' · выберите соперника') : ''}</small></span>${choice}${pick.swapPlays.length ? button('С подменой', 'data-swap-selected') : ''}${button('Отмена', 'data-cancel-card')}</div>`;
   }
   /** The winner line at a table: who has the most points. */
   function tableWinnerText() {

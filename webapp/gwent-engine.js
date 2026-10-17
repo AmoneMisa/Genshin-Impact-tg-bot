@@ -288,7 +288,8 @@ export function legalPlays(state, side) {
         if (card.swap) for (const target of ownUnits) plays.push({ uid: card.uid, row, targetUid: target.uid });
       }
     } else if (card.special === 'boost') {
-      for (const target of ownUnits) plays.push({ uid: card.uid, targetUid: target.uid });
+      // Two against two: a teammate's unit may be strengthened too.
+      for (const target of [...ownUnits, ...alliesOf(state, side).flatMap(ally => ROWS.flatMap(row => state.sides[ally].rows[row].filter(card => card.type === 'unit' && !card.hero)))]) plays.push({ uid: card.uid, targetUid: target.uid });
     } else if (card.special === 'strike') {
       for (const foe of foesOf(state, side)) for (const row of ROWS) for (const target of state.sides[foe].rows[row]) {
         if (target.type === 'unit' && !target.hero) plays.push({ uid: card.uid, targetUid: target.uid });
@@ -296,7 +297,9 @@ export function legalPlays(state, side) {
     } else if (card.special === 'fireball' || card.special === 'curse') {
       for (const foe of foesOf(state, side)) for (const row of ROWS) if (state.sides[foe].rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push(aimed({ uid: card.uid, row }, foe, state));
     } else if (card.special === 'blessing') {
-      for (const row of ROWS) if (me.rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push({ uid: card.uid, row });
+      for (const owner of [side, ...alliesOf(state, side)]) {
+        for (const row of ROWS) if (state.sides[owner].rows[row].some(unit => unit.type === 'unit' && !unit.hero)) plays.push(owner === side && !state.teams ? { uid: card.uid, row } : { uid: card.uid, row, seat: owner });
+      }
     } else if (card.special === 'teleport') {
       for (const from of ROWS) for (const unit of me.rows[from]) {
         if (unit.type !== 'unit' || unit.hero) continue;
@@ -307,7 +310,9 @@ export function legalPlays(state, side) {
     } else if (card.special === 'ambush') {
       for (const foe of foesOf(state, side)) for (const row of ROWS) if (!state.sides[foe].traps?.[row]) plays.push(aimed({ uid: card.uid, row }, foe, state));
     } else if (card.special === 'horn' || card.special === 'mardroeme') {
-      for (const row of ROWS) plays.push({ uid: card.uid, row });
+      for (const row of ROWS) plays.push(card.special === 'horn' && state.teams ? { uid: card.uid, row, seat: side } : { uid: card.uid, row });
+      // A horn may also stand in a teammate's row.
+      if (card.special === 'horn') for (const ally of alliesOf(state, side)) for (const row of ROWS) plays.push({ uid: card.uid, row, seat: ally });
     } else if (card.special === 'decoy') {
       for (const target of ownUnits) plays.push({ uid: card.uid, targetUid: target.uid });
     } else if (card.special === 'scorch' || card.special === 'weather') {
@@ -564,14 +569,15 @@ export function playCard(state, side, uid, { row, targetUid, seat } = {}) {
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для заклинания.' };
     if (card.special === 'fireball') scorchEnemy(next, side, { target: row, cond: row, threshold: 0 }, foeOf(next, side, seat));
     else {
-      const owner = next.sides[card.special === 'curse' ? foeOf(next, side, seat) : side];
+      const owner = next.sides[card.special === 'curse' ? foeOf(next, side, seat) : alliesOf(next, side).includes(seat) ? seat : side];
       owner.mods ||= noMods();
       owner.mods[row] += (card.special === 'curse' ? -1 : 1) * (card.amount || 1);
     }
     mine.graveyard.push(card);
   } else if (card.special === 'boost') {
-    const spot = findOnBoard(next, side, targetUid);
-    const unit = spot && mine.rows[spot.row][spot.index];
+    const owner = [side, ...alliesOf(next, side)].find(holder => findOnBoard(next, holder, targetUid)) || side;
+    const spot = findOnBoard(next, owner, targetUid);
+    const unit = spot && next.sides[owner].rows[spot.row][spot.index];
     if (!unit || unit.type !== 'unit' || unit.hero) return { error: 'Усиливать можно только свой обычный отряд.' };
     unit.bonus = Math.min(6, (unit.bonus || 0) + card.amount);
     mine.graveyard.push(card);
@@ -608,7 +614,7 @@ export function playCard(state, side, uid, { row, targetUid, seat } = {}) {
     foe.traps[row] = card;
   } else if (card.special === 'horn') {
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для рога.' };
-    mine.rows[row].push(card);
+    (alliesOf(next, side).includes(seat) ? next.sides[seat] : mine).rows[row].push(card);
   } else if (card.special === 'mardroeme') {
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для мардрём.' };
     mine.rows[row].push(card);

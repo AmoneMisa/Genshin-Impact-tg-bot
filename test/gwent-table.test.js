@@ -281,3 +281,29 @@ test('the AI plays a whole two-against-two match and a team wins it', () => {
     if (state.winners.length) assert.equal(new Set(state.winners.map(seat => state.teams[seat])).size, 1, 'the winners are one team');
   }
 });
+
+test('in two against two a teammate may be blessed, boosted or given a horn; opponents and teammates are never mixed up', () => {
+  const state = teams();
+  const unit = (strength, rowName = 'close') => ({ id: 'u' + strength, uid: nextUid++, type: 'unit', name: 'Отряд', rows: [rowName], strength });
+  const mate = unit(5), own = unit(3), foe = unit(4);
+  state.sides.ai2.rows.close = [mate]; state.sides.player.rows.close = [own]; state.sides.ai.rows.close = [foe];
+  const blessing = { id: 'b', uid: nextUid++, type: 'special', special: 'blessing', name: 'Благословение', amount: 2 };
+  const boost = { id: 'x', uid: nextUid++, type: 'special', special: 'boost', name: 'Усиление', amount: 3 };
+  const horn = { id: 'h', uid: nextUid++, type: 'special', special: 'horn', name: 'Рог' };
+  state.sides.player.hand = [blessing, boost, horn];
+  for (const seat of ['ai', 'ai2', 'ai3']) state.sides[seat].hand = [unit(1)];
+  const plays = legalPlays(state, 'player');
+  assert.ok(plays.some(play => play.uid === blessing.uid && play.seat === 'ai2' && play.row === 'close'), 'a blessing may go to the teammate row');
+  assert.ok(!plays.some(play => play.uid === blessing.uid && play.seat === 'ai'), 'never to an opponent row');
+  assert.ok(plays.some(play => play.uid === boost.uid && play.targetUid === mate.uid), 'a boost may target a teammate unit');
+  assert.ok(!plays.some(play => play.uid === boost.uid && play.targetUid === foe.uid));
+  assert.ok(plays.some(play => play.uid === horn.uid && play.seat === 'ai2'));
+  let next = playCard(state, 'player', blessing.uid, { row: 'close', seat: 'ai2' }).state;
+  assert.equal(scores(next).ai2, 7, 'the teammate unit is blessed by two');
+  assert.equal(scores(next).player, 3, 'the own row is not');
+  next = playCard(state, 'player', boost.uid, { targetUid: mate.uid }).state;
+  assert.equal(scores(next).ai2, 8);
+  next = playCard(state, 'player', horn.uid, { row: 'close', seat: 'ai2' }).state;
+  assert.equal(scores(next).ai2, 10, 'the horn doubles the teammate row');
+  assert.ok(next.sides.ai2.rows.close.some(card => card.uid === horn.uid));
+});

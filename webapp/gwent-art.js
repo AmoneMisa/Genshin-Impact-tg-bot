@@ -209,8 +209,11 @@ const BASE_GWENT_ART = Object.freeze({
 });
 // The extended factions have no printed artwork: their crests are drawn for this game.
 const EXTENDED_ART = Object.fromEntries(['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses', 'eternal-fire']
-  .flatMap(id => ['shield', 'banner', 'back'].map(kind => [`${kind}:${id}`, `/art/gwent/factions/${id}.svg`])));
-export const GWENT_ART = Object.freeze({ ...BASE_GWENT_ART, ...LOCAL_GWENT_ART, ...EXTENDED_ART,
+  .flatMap(id => ['shield', 'banner'].map(kind => [`${kind}:${id}`, `/art/gwent/factions/${id}.svg`])));
+// Deck backs of the extended factions are full printed card backs.
+const EXTENDED_BACKS = Object.fromEntries(['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses', 'eternal-fire']
+  .map(id => [`back:${id}`, `/art/gwent/printed/back-${id}.webp`]));
+export const GWENT_ART = Object.freeze({ ...BASE_GWENT_ART, ...LOCAL_GWENT_ART, ...EXTENDED_ART, ...EXTENDED_BACKS,
   'icon:discard': '/art/gwent/icons/discard.svg',
   // Decorative faction banners keep the unlabelled illustration; never crop a printed card here.
   'banner:northern-realms': BASE_GWENT_ART.vernon, 'banner:nilfgaard': BASE_GWENT_ART.letho,
