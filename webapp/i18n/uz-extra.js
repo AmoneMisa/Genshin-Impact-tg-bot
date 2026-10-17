@@ -1344,4 +1344,8 @@ export default {
   "Звук": "Ovoz",
   "Включить звук": "Ovozni yoqish",
   "Выключить звук": "Ovozni o‘chirish",
+  "{0} думает": "{0} o‘ylamoqda",
+  "{0} пасует": "{0} pas qiladi",
+  "Вы пасуете": "Siz pas qildingiz",
+  "Соперник": "Raqib",
 };

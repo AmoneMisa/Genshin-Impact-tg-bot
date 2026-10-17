@@ -289,7 +289,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       : button(esc(option.label), `data-choice-id="${option.id}"`)).join('')}</div>`;
     const playable = new Set(myPlays().map(play => play.uid));
     return `<div class="gwent-hand" aria-label="Карты в руке">${state.sides.player.hand.map(card => gwentCardHtml(card, card.strength, {
-      selectable: playable.has(card.uid), selected: (pick?.uid || decoy?.uid) === card.uid, action: playable.has(card.uid) ? '' : `data-preview-id="${card.id}"`,
+      selectable: playable.has(card.uid), selected: (pick?.uid || decoy?.uid) === card.uid, action: playable.has(card.uid) ? '' : `data-preview-id="${card.id}" data-hand-uid="${card.uid}"`,
     })).join('') || '<span class="gwent-hint">В руке нет карт</span>'}</div>`;
   }
   /** What a selected card still needs: an opponent (at a table), then a row, or just a button to play it. */
@@ -437,6 +437,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     panel.scrollTop = scroll;
     const hand = panel.querySelector('.gwent-hand'); if (hand) hand.scrollLeft = handScroll;
     if (key) [...panel.querySelectorAll(`[${key.name}]`)].find(node => node.getAttribute(key.name) === key.value)?.focus({ preventScroll: true });
+    animateBoard(); markThinking();
   }
   function updateCatalog() {
     const active = document.activeElement, id = active?.dataset.adjust, delta = active?.dataset.delta;
@@ -466,7 +467,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       else if (summaryFor !== remote.id) { summaryFor = remote.id; summary = true; }
       if (remote.rematch?.offered && !wasOffered) summary = true;
       wasOffered = !!remote.rematch?.offered;
-      if (changed) { if (heardId !== remote.id) { heard = null; heardId = remote.id; } hear(state); pick = null; decoy = null; preview = null; pile = null; announceRound(); }
+      if (changed) { if (heardId !== remote.id) { heard = null; motionSeen = null; heardId = remote.id; } hear(state); pick = null; decoy = null; preview = null; pile = null; announceRound(); }
       if (changed && summary) { preview = null; pile = null; }
       screen = 'match';
       if (changed || panel.dataset.screen !== 'match') render();
@@ -508,18 +509,78 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     if (next.phase === 'matchOver' && prev.phase !== 'matchOver') { sfx(next.winner === 'player' ? 'matchWin' : next.winner === 'ai' ? 'matchLose' : 'draw'); return; }
     const round = next.lastRound;
     if (round && round.round !== prev.lastRound?.round) { sfx(round.winner === 'draw' ? 'draw' : round.winner === 'player' ? 'roundWin' : 'roundLose'); return; }
-    if (JSON.stringify(next.passed) !== JSON.stringify(prev.passed)) { sfx('pass'); return; }
+    if (JSON.stringify(next.passed) !== JSON.stringify(prev.passed)) {
+      sfx('pass');
+      const passer = Object.keys(next.passed || {}).find(seat => next.passed[seat] && !prev.passed?.[seat]);
+      if (passer) banner(passer === 'player' && !remote?.spectator ? 'Вы пасуете' : `${passer === 'ai' && !isTableState() ? 'Соперник' : seatName(passer)} пасует`);
+      return;
+    }
     if (JSON.stringify(next.weather) !== JSON.stringify(prev.weather)) { sfx(Object.values(next.weather || {}).some(Boolean) ? 'weather' : 'clear'); return; }
     sfx('cardPlay');
   }
+  // ---- Motion: new cards land, scores pulse, the AI visibly thinks and lays its card before it is played. ----
+  const calm = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; } };
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  let motionSeen = null, thinkingSeat = null, floating = new Set();
+  function float(html, className, ms) {
+    const node = document.createElement('div'); node.className = className; node.setAttribute('role', 'presentation'); node.innerHTML = html;
+    document.body.append(node); floating.add(node);
+    setTimeout(() => { node.remove(); floating.delete(node); }, ms);
+  }
+  /** A short message over the table: the pass of a seat, the result of a round. */
+  function banner(text, tone = '') { if (text && screen === 'match') float(`<span>${esc(text)}</span>`, 'gwent-banner' + (tone ? ' ' + tone : ''), 1800); }
+  const scoreKey = (node, i) => i + ':' + (node.closest('[data-side]')?.dataset.side || node.closest('.gwent-side')?.className || '') + (node.closest('[data-row]')?.dataset.row || '');
+  /** After a render: cards that were not on the table before land, drawn cards slide in, changed scores pulse. */
+  function animateBoard() {
+    if (screen !== 'match' || !state || preview || pile || summary) return;
+    const seen = { cards: new Set(), hand: new Set(), scores: new Map() };
+    panel.querySelectorAll('.gwent-row-cards [data-board-card], .gwent-row-cards [data-target-uid]').forEach(node => seen.cards.add(node.dataset.boardCard || node.dataset.targetUid));
+    panel.querySelectorAll('.gwent-hand [data-card-uid], .gwent-hand [data-hand-uid]').forEach(node => seen.hand.add(node.dataset.cardUid || node.dataset.handUid));
+    const scoreNodes = [...panel.querySelectorAll('.gwent-row-score, .gwent-side-head > strong, .gwent-opponent-head > strong')];
+    scoreNodes.forEach((node, i) => seen.scores.set(scoreKey(node, i), node.textContent));
+    const before = motionSeen; motionSeen = seen;
+    if (!before || calm()) return;
+    const finish = node => node.addEventListener('animationend', () => node.classList.remove('gwent-enter', 'gwent-draw', 'gwent-bump'), { once: true });
+    panel.querySelectorAll('.gwent-row-cards [data-board-card], .gwent-row-cards [data-target-uid]').forEach(node => { if (!before.cards.has(node.dataset.boardCard || node.dataset.targetUid)) { node.classList.add('gwent-enter'); finish(node); } });
+    panel.querySelectorAll('.gwent-hand [data-card-uid], .gwent-hand [data-hand-uid]').forEach(node => { if (!before.hand.has(node.dataset.cardUid || node.dataset.handUid)) { node.classList.add('gwent-draw'); finish(node); } });
+    scoreNodes.forEach((node, i) => {
+      const key = scoreKey(node, i);
+      if (before.scores.has(key) && before.scores.get(key) !== node.textContent) { node.classList.add('gwent-bump'); finish(node); }
+    });
+  }
+  /** Marks the seat that is thinking: its crest pulses and the turn line says so. */
+  function markThinking() {
+    if (!thinkingSeat || screen !== 'match') return;
+    panel.querySelectorAll('.thinking').forEach(node => node.classList.remove('thinking'));
+    panel.querySelector(`.gwent-side.${thinkingSeat}, [data-focus-seat="${thinkingSeat}"]`)?.classList.add('thinking');
+    const line = panel.querySelector('.gwent-turn');
+    if (line) line.innerHTML = `${esc(thinkingSeat === 'ai' && !isTableState() ? 'Соперник' : seatName(thinkingSeat))} думает<span class="gwent-dots" aria-hidden="true"><i></i><i></i><i></i></span>`;
+  }
+  function setThinking(seat) { thinkingSeat = seat; if (seat) markThinking(); else panel.querySelectorAll('.thinking').forEach(node => node.classList.remove('thinking')); }
+  /** How long the opponent seems to deliberate: longer with more cards in hand and on the strong level, never long enough to bore. */
+  function thinkTime(snapshot, seat, action) {
+    if (calm()) return 300;
+    const hand = snapshot.sides[seat]?.hand?.length || 0;
+    const base = 800 + Math.random() * 700 + Math.min(500, hand * 50) + (matchLevel === 'hard' ? 400 : 0);
+    return Math.min(2400, action.type === 'choice' ? base * 0.5 : action.type === 'pass' ? base * 0.8 : base);
+  }
+  /** The card the AI chose is shown face up for a moment before it lands on the table. */
+  async function showAiCard(snapshot, seat, action) {
+    if (calm() || action.type !== 'play') return;
+    const card = snapshot.sides[seat]?.hand?.find(item => item.uid === action.uid);
+    if (!card) return;
+    float(gwentCardHtml(card, card.strength), 'gwent-ai-card', 800);
+    await sleep(700);
+  }
+  function roundNote(text) { note(text); banner(text, 'round'); }
   function announceRound() {
     if (remote?.spectator) return;
     const last = state.lastRound;
     if (!last || last.round === announcedRound) return;
     announcedRound = last.round;
-    if (last.teamScores) { const mine = state.teams.player; note(`Раунд ${last.round}: ${last.winner === 'draw' ? 'ничья' : state.teams[last.winner] === mine ? 'за вашей командой' : 'за соперниками'}, ${last.teamScores[mine]} : ${last.teamScores[mine === 'A' ? 'B' : 'A']}`); return; }
-    if (isTableState()) { note(`Раунд ${last.round}: ваши очки — ${last.points?.player ?? 0}, счёт ${last.scores.player}`); return; }
-    note(`${last.winner === 'draw' ? 'Ничья' : last.winner === 'player' ? 'Раунд за вами' : 'Раунд за противником'}: ${last.scores.player} : ${last.scores.ai}`);
+    if (last.teamScores) { const mine = state.teams.player; roundNote(`Раунд ${last.round}: ${last.winner === 'draw' ? 'ничья' : state.teams[last.winner] === mine ? 'за вашей командой' : 'за соперниками'}, ${last.teamScores[mine]} : ${last.teamScores[mine === 'A' ? 'B' : 'A']}`); return; }
+    if (isTableState()) { roundNote(`Раунд ${last.round}: ваши очки — ${last.points?.player ?? 0}, счёт ${last.scores.player}`); return; }
+    roundNote(`${last.winner === 'draw' ? 'Ничья' : last.winner === 'player' ? 'Раунд за вами' : 'Раунд за противником'}: ${last.scores.player} : ${last.scores.ai}`);
   }
   function apply(result) {
     if (result.error) { note(result.error, 'bad'); render(); return; }
@@ -537,13 +598,20 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     if (closed || remote || screen !== 'match' || document.hidden || state?.phase !== 'playing' || aiThinking === state || !mover || mover === 'player') return;
     aiTimer = setTimeout(async () => {
       const snapshot = state, seat = mover;
-      aiThinking = snapshot;
+      aiThinking = snapshot; setThinking(seat);
+      const started = Date.now();
       const action = await thinkAi(snapshot, matchLevel, seat);
+      // The opponent deliberates for a believable time, then shows the card it chose.
+      if (action && !closed && state === snapshot) {
+        await sleep(Math.max(0, thinkTime(snapshot, seat, action) - (Date.now() - started)));
+        if (!closed && state === snapshot) await showAiCard(snapshot, seat, action);
+      }
       aiThinking = null;
       // The match may have been closed, restarted or moved on while the AI was thinking.
-      if (!action || closed || state !== snapshot) return;
+      if (!action || closed || state !== snapshot) { if (!closed && thinkingSeat === seat) setThinking(null); return; }
+      setThinking(null);
       apply(action.type === 'choice' ? resolveChoice(state, seat, action.id) : action.type === 'pass' ? passRound(state, seat) : playCard(state, seat, action.uid, action));
-    }, 650);
+    }, 250);
   }
   /** The strong AI searches in a Web Worker; any worker failure falls back to the main thread. */
   function thinkAi(snapshot, aiLevel, seat = 'ai') {
@@ -571,12 +639,12 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       const pool = factionsNow().filter(id => id !== faction).sort(() => Math.random() - 0.5);
       const decks = [buildDeck(loadouts[keyOf()]), ...pool.slice(0, size - 1).map(id => buildDeck(aiLoadout(id, level, undefined, ruleset)))];
       focusSeat = 'ai';
-      heard = null; state = createTable({ decks, seats: TABLE_SEATS.slice(0, size), teams: tableSize === 'teams' && ruleset === 'extended' });
+      heard = null; motionSeen = null; state = createTable({ decks, seats: TABLE_SEATS.slice(0, size), teams: tableSize === 'teams' && ruleset === 'extended' });
       go('match');
       return;
     }
     const aiDeck = buildDeck(aiLoadout(enemyFaction, level, undefined, ruleset));
-    heard = null; state = createMatch({ playerDeck: buildDeck(loadouts[keyOf()]), aiDeck }); sfx('deal'); go('match');
+    heard = null; motionSeen = null; state = createMatch({ playerDeck: buildDeck(loadouts[keyOf()]), aiDeck }); sfx('deal'); go('match');
   }
   async function cancelSearch(ai = false) {
     const data = await online({ action: 'cancel' });
@@ -599,7 +667,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   async function close() {
     if (closed) return;
     const searching = screen === 'search'; closed = true; requestId++; if (aiWorker) aiWorker.terminate();
-    releaseMusic(); clearTimeout(aiTimer); clearTimeout(pollTimer); document.removeEventListener('visibilitychange', onVisibility);
+    releaseMusic(); floating.forEach(node => node.remove()); floating.clear(); clearTimeout(aiTimer); clearTimeout(pollTimer); document.removeEventListener('visibilitychange', onVisibility);
     if (searching && api) post({ action: 'cancel' }).catch(() => {});
     overlay.remove();
   }
