@@ -42,7 +42,7 @@
 //   row, the ambush is sprung: two squirrels appear in the same row on the side that laid it.
 // - A leader with `moveAny` moves up to three non-hero units to other rows.
 // - Faction passives: Velen units keep up to 3 strength in weather, Redania spies draw three cards, Toussaint may swap
-//   three cards at the start, Witchers get a random hero back from the graveyard into the hand at the start of round 3, Wild Hunt draw a card after a lost round.
+//   three cards at the start, Witchers get a random ordinary unit back from the graveyard into the hand at the start of round 3, Wild Hunt draw a card after a lost round.
 //
 // Assumptions not confirmed by a source: a drawn round gives both players a round win, after a drawn
 // round the side that did not start it starts, Scoiatael decide only the first turn of the match, weather sets the base strength
@@ -511,7 +511,7 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
     else {
       const owner = next.sides[card.special === 'curse' ? OPPONENT[side] : side];
       owner.mods ||= noMods();
-      owner.mods[row] += (card.special === 'curse' ? -1 : 1) * (card.amount || 2);
+      owner.mods[row] += (card.special === 'curse' ? -1 : 1) * (card.amount || 1);
     }
     mine.graveyard.push(card);
   } else if (card.special === 'boost') {
@@ -829,20 +829,22 @@ function endRound(state) {
   for (const side of SIDES) {
     // Northern Realms draw a card for winning the round.
     if (winner === side && state.sides[side].faction === 'northern-realms') drawCards(state.sides[side], 1);
-    // Wild Hunt draw a card for a lost round.
-    if (winner === OPPONENT[side] && state.sides[side].faction === 'wild-hunt') drawCards(state.sides[side], 1);
+    // Velen draw a card at the start of round 3 (the swamp provides).
+    if (state.round === 3 && state.sides[side].faction === 'velen') drawCards(state.sides[side], 1);
+    // Wild Hunt draw a card for a lost first round.
+    if (winner === OPPONENT[side] && state.sides[side].faction === 'wild-hunt' && state.round === 2) drawCards(state.sides[side], 1);
     // Skellige: two random non-hero units come back from the graveyard at the start of round 3.
-    // Under the extended rules Skellige also get one light unit (3 strength at most) back at the start of round 2.
-    if (state.sides[side].faction === 'skellige' && (state.round === 3 || (state.round === 2 && state.ruleset === 'extended'))) reviveRandom(state, side, state.round === 3 ? 2 : 1, state.round === 3 ? Infinity : 3);
-    // Sorceresses: a random spell from the graveyard returns to the hand at the start of rounds 2 and 3.
-    if (state.sides[side].faction === 'sorceresses') {
+    // Under the extended rules Skellige also get one light unit (2 strength at most) back at the start of round 2.
+    if (state.sides[side].faction === 'skellige' && (state.round === 3 || (state.round === 2 && state.ruleset === 'extended'))) reviveRandom(state, side, state.round === 3 ? 2 : 1, state.round === 3 ? Infinity : 2);
+    // Sorceresses: a random spell from the graveyard returns to the hand at the start of round 3.
+    if (state.sides[side].faction === 'sorceresses' && state.round === 3) {
       const spells = state.sides[side].graveyard.filter(card => card.spell);
       if (spells.length > 0) state.sides[side].hand.push(takeFrom(state.sides[side].graveyard, spells[Math.floor(random(state) * spells.length)].uid));
     }
-    // Witchers: a random hero from the graveyard returns to the hand at the start of round 3.
+    // Witchers: a random ordinary unit from the graveyard returns to the hand at the start of round 3.
     if (state.round === 3 && state.sides[side].faction === 'witchers') {
-      const heroes = state.sides[side].graveyard.filter(card => card.type === 'unit' && card.hero);
-      if (heroes.length > 0) state.sides[side].hand.push(takeFrom(state.sides[side].graveyard, heroes[Math.floor(random(state) * heroes.length)].uid));
+      const units = state.sides[side].graveyard.filter(card => card.type === 'unit' && !card.hero && !card.spy);
+      if (units.length > 0) state.sides[side].hand.push(takeFrom(state.sides[side].graveyard, units[Math.floor(random(state) * units.length)].uid));
     }
   }
   advance(state, null);

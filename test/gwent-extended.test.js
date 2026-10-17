@@ -147,7 +147,7 @@ test('faction passives: Velen keep up to 3 strength in weather, Redania spies dr
   assert.equal(match.pending.remaining, 3);
 });
 
-test('Witchers get a hero back from the graveyard at the start of round 3, Wild Hunt draw a card for a lost round', () => {
+test('Witchers get an ordinary unit back from the graveyard at the start of round 3, Wild Hunt draw a card for a lost first round', () => {
   const witchers = scene('witchers', 'redania');
   witchers.round = 2; witchers.wins = { player: 1, ai: 0 };
   witchers.sides.player.rows = rows([make('wi-wolf-novice')]);
@@ -158,9 +158,9 @@ test('Witchers get a hero back from the graveyard at the start of round 3, Wild 
   witchers.passed.ai = true;
   const third = passRound(witchers, 'player').state;
   assert.equal(third.round, 3);
-  const back = third.sides.player.hand.filter(card => card.hero);
-  assert.equal(back.length, 1, 'one hero comes back into the hand');
-  assert.equal(third.sides.player.graveyard.filter(card => card.hero).length, 1);
+  const back = third.sides.player.hand.filter(card => card.id === 'wi-bear-brute' || card.id === 'wi-wolf-novice');
+  assert.equal(back.length, 1, 'one ordinary unit comes back into the hand, never a hero');
+  assert.equal(third.sides.player.graveyard.filter(card => card.hero).length, 2);
 
   const hunt = scene('wild-hunt', 'redania');
   hunt.sides.player.rows = rows([make('wh-spectre')]);
@@ -282,10 +282,10 @@ test('curse and blessing change a whole row until the round ends', () => {
   state.sides.player.rows = rows([make('so-guard'), make('so-knight')]);
   state.sides.ai.rows = rows([make('re-captain'), make('re-radovid')]);
   let next = playCard(state, 'player', curse.uid, { row: 'close' }).state;
-  assert.equal(scores(next).ai, 4 + 10, 'the captain (6) loses 2, the hero nothing');
+  assert.equal(scores(next).ai, 7 + 10, 'the captain (8) loses 1, the hero nothing');
   next.turn = 'player';
   next = playCard(next, 'player', blessing.uid, { row: 'close' }).state;
-  assert.equal(scores(next).player, 7 + 8, 'both units gain 2');
+  assert.equal(scores(next).player, 6 + 7, 'both units gain 1');
   next.turn = 'player'; next.passed.ai = true;
   const ended = passRound(next, 'player').state;
   assert.deepEqual(ended.sides.player.mods, { close: 0, ranged: 0, siege: 0 }, 'the effects end with the round');
@@ -297,7 +297,7 @@ test('curse and blessing change a whole row until the round ends', () => {
   assert.equal(scores(weak).ai, 1);
 });
 
-test('teleport moves one of your ordinary units to another row; the potion Thunderbolt blesses by three', () => {
+test('teleport moves one of your ordinary units to another row; the potion Thunderbolt blesses by two', () => {
   const state = scene('sorceresses', 'redania');
   const teleport = make('so-teleport'), unit = make('so-guard'), hero = make('so-tissaia');
   state.sides.player.rows = rows([unit, hero]);
@@ -314,7 +314,7 @@ test('teleport moves one of your ordinary units to another row; the potion Thund
   witchers.sides.player.rows = rows([make('wi-bear-brute')]);
   witchers.sides.player.hand = [thunder, make('wi-bear-brute')];
   witchers.sides.ai.hand = [make('re-captain')];
-  assert.equal(scores(playCard(witchers, 'player', thunder.uid, { row: 'close' }).state).player, 6 + 3);
+  assert.equal(scores(playCard(witchers, 'player', thunder.uid, { row: 'close' }).state).player, 5 + 2);
 });
 
 test('recall brings a unit back from the graveyard into the hand, by choice', () => {
@@ -347,12 +347,12 @@ test('the sign Yrden is an ambush that releases will-o-wisps; elements cover two
   weather.sides.ai.rows = rows([make('re-captain')], [make('re-crossbowman')], [make('re-sapper')]);
   const burned = playCard(weather, 'player', earth.uid).state;
   assert.deepEqual(burned.weather, { close: true, ranged: false, siege: true });
-  assert.equal(scores(burned).ai, 1 + 5 + 1);
+  assert.equal(scores(burned).ai, 1 + 6 + 1);
   burned.turn = 'player';
   assert.deepEqual(playCard(burned, 'player', clear.uid).state.weather, { close: false, ranged: false, siege: false });
 });
 
-test('Sorceresses get a spell back from the graveyard at the start of rounds 2 and 3', () => {
+test('Sorceresses get a spell back from the graveyard at the start of round 3, not before', () => {
   const state = scene('sorceresses', 'redania');
   state.sides.player.graveyard = [make('so-fireball'), make('so-curse'), make('so-golem')];
   state.sides.player.rows = rows([make('so-guard')]);
@@ -360,8 +360,12 @@ test('Sorceresses get a spell back from the graveyard at the start of rounds 2 a
   state.sides.ai.hand = [make('re-captain')];
   state.sides.ai.rows = rows([make('re-captain')]);
   state.passed.ai = true;
+  const second = passRound(structuredClone(state), 'player').state;
+  assert.equal(second.round, 2);
+  assert.equal(second.sides.player.hand.filter(card => card.spell).length, 0, 'nothing comes back at the start of round 2');
+  state.round = 2; state.wins = { player: 1, ai: 0 };
   const next = passRound(state, 'player').state;
-  assert.equal(next.round, 2);
+  assert.equal(next.round, 3);
   const spells = next.sides.player.hand.filter(card => card.spell);
   assert.equal(spells.length, 1, 'one spell comes back');
   assert.equal(next.sides.player.graveyard.some(card => card.id === 'so-golem'), true, 'units are not spells');
@@ -439,4 +443,30 @@ test('field medic recalls only light units; in the extended rules an ordinary un
   const original = createMatch({ playerDeck: GWENT_DECKS.skellige, aiDeck: GWENT_DECKS.nilfgaard, rng: seededRandom(2), setup: false });
   original.sides.player.rows = rows([make('craite'), make('craite'), make('craite')]);
   assert.equal(scores(original).player, 6 * 3 * 3, 'the original rules have no cap');
+});
+
+test('Velen draw a card at the start of round 3; Wild Hunt draw only for a lost first round', () => {
+  const velen = scene('velen', 'redania');
+  velen.round = 2; velen.wins = { player: 1, ai: 0 };
+  velen.sides.player.deck = [make('ve-bandit'), make('ve-bandit')];
+  velen.sides.player.rows = rows([make('ve-bandit')]);
+  velen.sides.player.hand = [make('ve-bandit')];
+  velen.sides.ai.rows = rows([make('re-captain')]);
+  velen.sides.ai.hand = [make('re-captain')];
+  velen.passed.ai = true;
+  const third = passRound(velen, 'player').state;
+  assert.equal(third.round, 3);
+  assert.equal(third.sides.player.hand.length, 1 + 1, 'one card drawn');
+
+  const hunt = scene('wild-hunt', 'redania');
+  hunt.round = 2; hunt.wins = { player: 1, ai: 0 };
+  hunt.sides.player.deck = [make('wh-ice-warrior'), make('wh-ice-warrior')];
+  hunt.sides.player.rows = rows([make('wh-spectre')]);
+  hunt.sides.player.hand = [make('wh-spectre')];
+  hunt.sides.ai.rows = rows([make('re-radovid')]);
+  hunt.sides.ai.hand = [make('re-captain')];
+  hunt.passed.ai = true;
+  const ended = passRound(hunt, 'player').state;
+  assert.equal(ended.round, 3);
+  assert.equal(ended.sides.player.hand.length, 1, 'a lost second round brings no card');
 });

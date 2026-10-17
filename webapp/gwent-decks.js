@@ -326,14 +326,14 @@ export const WILD_HUNT_DECK = deck('wild-hunt', 'Дикая Охота', [
 
 export const WITCHERS_DECK = deck('witchers', 'Ведьмаки', [
   unit('wi-wolf-novice', 'Ученик школы Волка', 'c', 4, 'b:wi-wolf', 3),
-  unit('wi-bear-brute', 'Громила школы Медведя', 'c', 6, '', 2),
+  unit('wi-bear-brute', 'Громила школы Медведя', 'c', 5, '', 2),
   unit('wi-cat-assassin', 'Убийца школы Кота', 'cr', 5, '', 2),
   ability(unit('wi-monster-hunter', 'Охотник на чудовищ', 'c', 6), { onPlay: { type: 'scorchRow', target: 'close', cond: 'close', threshold: 10 } }),
   unit('wi-griffin-sage', 'Знаток школы Грифона', 'r', 5, 'D'),
   unit('wi-viper-crossbow', 'Арбалетчик школы Змеи', 'r', 5, '', 2),
   unit('wi-alchemist', 'Алхимик', 'r', 4, 'M'),
   unit('wi-signs', 'Знаки ведьмака', 'r', 3, 'X', 2),
-  unit('wi-keep-guard', 'Страж Каэр Морхена', 's', 6, '', 2),
+  unit('wi-keep-guard', 'Страж Каэр Морхена', 's', 5, '', 2),
   unit('wi-siege-engineer', 'Мастер осадных машин', 's', 4, 'b:wi-engineer', 2),
   unit('wi-lambert', 'Ламберт', 'c', 10, 'H'),
   unit('wi-eskel', 'Эскель', 'c', 10, 'H'),
@@ -341,13 +341,13 @@ export const WITCHERS_DECK = deck('witchers', 'Ведьмаки', [
 ], {
   extra: [
     // Signs
-    [special('wi-igni', 'Знак Игни', 'fireball'), 2],
-    [special('wi-aard', 'Знак Аард', 'curse', { amount: 2 }), 2],
+    [special('wi-igni', 'Знак Игни', 'strike', { amount: 4 }), 2],
+    [special('wi-aard', 'Знак Аард', 'curse', { amount: 1 }), 2],
     [special('wi-yrden', 'Знак Ирден', 'ambush', { trapToken: 'wisp' }), 1],
-    [special('wi-quen', 'Знак Квен', 'blessing', { amount: 2 }), 2],
+    [special('wi-quen', 'Знак Квен', 'blessing', { amount: 1 }), 2],
     // Potions
     [special('wi-swallow', 'Зелье «Ласточка»', 'recall'), 1],
-    [special('wi-thunderbolt', 'Зелье «Гром»', 'blessing', { amount: 3 }), 1],
+    [special('wi-thunderbolt', 'Зелье «Гром»', 'blessing', { amount: 2 }), 1],
     [special('wi-cat', 'Зелье «Кошка»', 'teleport'), 1],
     [special('wi-oriole', 'Зелье «Иволга»', 'weather', { weather: 'clear' }), 1],
     ...EXTENDED_SHARED,
@@ -368,7 +368,7 @@ export const TOUSSAINT_DECK = deck('toussaint', 'Туссент', [
   unit('to-crossbowman', 'Арбалетчик Туссента', 'r', 6, '', 2),
   unit('to-herald', 'Глашатай', 'r', 2, 'R'),
   unit('to-physician', 'Придворный лекарь', 'r', 3, 'D'),
-  unit('to-lady', 'Прекрасная дама', 'r', 8),
+  unit('to-lady', 'Прекрасная дама', 'r', 9),
   unit('to-war-horse', 'Боевой конь', 'cr', 5, '', 2),
   unit('to-ballista', 'Баллиста Туссента', 's', 7, '', 2),
   unit('to-trebuchet', 'Требушет Туссента', 's', 9),
@@ -472,13 +472,13 @@ export const VELEN_DECK = deck('velen', 'Велен', [
 export const REDANIA_DECK = deck('redania', 'Редания', [
   unit('re-royal-guard', 'Королевская гвардия', 'c', 5, 'b:re-guard', 3),
   unit('re-informant', 'Осведомитель', 'c', 2, 'S'),
-  unit('re-agent', 'Агент короны', 'c', 5),
+  unit('re-agent', 'Агент короны', 'c', 6),
   unit('re-saboteur', 'Диверсант', 'c', 3, 'X', 2),
-  unit('re-captain', 'Капитан гвардии', 'c', 6),
-  unit('re-crossbowman', 'Редарский арбалетчик', 'r', 5, '', 2),
+  unit('re-captain', 'Капитан гвардии', 'c', 8),
+  unit('re-crossbowman', 'Редарский арбалетчик', 'r', 6, '', 2),
   unit('re-court-mage', 'Придворный маг', 'r', 4, 'D G'),
-  unit('re-sapper', 'Сапёр', 's', 5, '', 2),
-  unit('re-siege-master', 'Осадный мастер', 's', 7, '', 2),
+  unit('re-sapper', 'Сапёр', 's', 6, '', 2),
+  unit('re-siege-master', 'Осадный мастер', 's', 8, '', 2),
   unit('re-radovid', 'Радовид Свирепый', 'c', 10, 'H'),
   unit('re-grand-master', 'Великий магистр ордена', 'c', 10, 'H'),
   unit('re-counselor', 'Тайный советник', 'r', 10, 'H'),
@@ -537,7 +537,7 @@ const MONSTERS_EXTENDED = variant(MONSTERS_DECK, {
 });
 const SCOIATAEL_EXTENDED = variant(SCOIATAEL_DECK, {
   modify: { 'vrihedd-cadet': { strength: 5, swap: true } },
-  add: [unit('sc-ranger', 'Лесной стрелок', 'r', 6, 'X')],
+  add: [unit('sc-ranger', 'Лесной стрелок', 'r', 7, 'X')],
   extra: [[AMBUSH, 2], ...EXTENDED_SHARED],
 });
 
