@@ -52,9 +52,14 @@ function startMatch(data, first, second, now, rng) {
   for (const invite of data.invites) if (invite.status === 'pending' && match.players.includes(invite.from)) invite.status = 'cancelled';
   return match;
 }
+/** Names come from the member when the chat knows them, otherwise from what the invitation saved. */
+function nameOf(chat, id, saved) {
+  const person = member(chat, id);
+  return person ? memberName(person) : saved || 'Игрок';
+}
 function inviteView(chat, invite) {
-  return { id: invite.id, from: invite.from, to: invite.to, fromName: memberName(member(chat, invite.from)),
-    toName: invite.to ? memberName(member(chat, invite.to)) : null, faction: invite.loadout.faction,
+  return { id: invite.id, from: invite.from, to: invite.to, fromName: nameOf(chat, invite.from, invite.fromName),
+    toName: invite.to ? nameOf(chat, invite.to, invite.toName) : null, faction: invite.loadout.faction, open: !!invite.open,
     status: invite.status, expiresAt: invite.expiresAt, matchId: invite.matchId || null,
     canPushAt: (invite.lastPushedAt || 0) + INVITE_PUSH_COOLDOWN };
 }
@@ -151,7 +156,8 @@ export function gwentState(chat, userId, now = Date.now(), { watch = null, invit
   return result;
 }
 
-export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.random) {
+/** `options.strangers`: ids the server has looked up by nickname, who may be invited without being friends. */
+export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.random, options = {}) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) return fail('Неизвестное действие');
   if (!member(chat,userId)) return fail('Игрок не найден в игровом чате');
   const data = store(chat); sweep(data, now);
@@ -177,12 +183,14 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     const stats = inspectLoadout(body.loadout);
     if (!stats.valid) return fail(stats.errors.join('. '));
     const target = body.targetId == null ? null : String(body.targetId);
-    if (target !== null && (target === id || !friends(chat,id,target))) return fail('Выберите друга из игрового чата');
-    if (target && current(data,target)) return fail('Друг уже играет');
+    const stranger = target !== null && (options.strangers || []).map(String).includes(target) && !!member(chat, target);
+    if (target !== null && (target === id || !(stranger || friends(chat,id,target)))) return fail('Выберите друга или игрока по нику');
+    if (target && (current(data,target) || data.queue.some(entry => entry.userId === target))) return fail('Игрок уже занят');
     let created = data.invites.find(i => i.from === id && i.to === target && i.status === 'pending');
     if (!created) {
       if (data.invites.filter(i => i.from === id && i.status === 'pending').length >= 5) return fail('Можно создать не больше пяти приглашений одновременно');
-      created = { id:randomUUID(), from:id, to:target, createdAt:now, expiresAt:now+INVITE_TTL, status:'pending', loadout:clone(body.loadout) };
+      created = { id:randomUUID(), from:id, to:target, createdAt:now, expiresAt:now+INVITE_TTL, status:'pending', loadout:clone(body.loadout),
+        fromName:nameOf(chat,id), toName:target ? nameOf(chat,target) : null, open:stranger && !friends(chat,id,target) };
       data.invites.push(created);
     }
     return {ok:true,...gwentState(chat,id,now), invitation:inviteView(chat,created)};
@@ -203,7 +211,7 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
       return {ok:true,...gwentState(chat,id,now), notifyInvite:{id:invitation.id,userId:invitation.to,fromName:memberName(member(chat,id))}};
     } else {
       if (!recipient) return fail('Это приглашение другому игроку');
-      if (invitation.to && !friends(chat,invitation.from,id)) return fail('Приглашение доступно только друзьям');
+      if (invitation.to && !invitation.open && !friends(chat,invitation.from,id)) return fail('Приглашение доступно только друзьям');
       if (match || current(data,invitation.from) || data.queue.some(e => [id,invitation.from].includes(e.userId))) return fail('Один из игроков уже занят');
       const stats = inspectLoadout(body.loadout); if (!stats.valid) return fail(stats.errors.join('. '));
       invitation.status = 'accepted'; invitation.to = id;

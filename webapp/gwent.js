@@ -82,7 +82,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   }
   function modeScreen() {
     return `${deckSummary(loadouts[faction], true)}<h3 class="gwent-question">С кем сыграть?</h3><div class="gwent-mode-options" role="group" aria-label="Соперник">
-      ${[['online', 'Против игрока', api ? 'Найти соперника в игровом чате' : 'Онлайн доступен при входе через Telegram', 'back:nilfgaard'],
+      ${[['online', 'Против игрока', api ? 'Найти соперника среди всех игроков' : 'Онлайн доступен при входе через Telegram', 'back:nilfgaard'],
         ['ai', 'Против ИИ', 'Матч с компьютерным соперником', 'back:northern-realms']].map(([value, title, subtitle, key]) => `<label class="ui-button ui-illustrated-choice gwent-mode" aria-disabled="${value === 'online' && !api}" data-selected="${mode === value}">
         ${image(key, 'gwent-mode-art')}<span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-mode" value="${value}" ${mode === value ? 'checked' : ''} ${value === 'online' && !api ? 'disabled' : ''}></label>`).join('')}</div>
       ${mode === 'ai' ? levelHtml() : ''}
@@ -104,11 +104,13 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   function friendsScreen() {
     const incoming = [...lobby.incoming];
     if (invitation?.status === 'pending' && !lobby.outgoing.some(i=>i.id===invitation.id) && !incoming.some(i=>i.id===invitation.id)) incoming.unshift(invitation);
-    return `${deckSummary(loadouts[faction],true)}<p class="gwent-hint">Приглашение действует 15 минут. Друзья и матчи — из этого игрового чата.</p>
+    return `${deckSummary(loadouts[faction],true)}<p class="gwent-hint">Приглашение действует 15 минут. Друзья и игроки — из любых чатов.</p>
       ${invitation && invitation.status !== 'pending' ? '<p role="status">Приглашение уже закрыто или истекло</p>' : ''}
       ${incoming.length ? `<h3>Входящие приглашения</h3>${incoming.map(i=>invitationHtml(i)).join('')}` : ''}
       <div class="gwent-lobby-actions">${button('Создать ссылку приглашения','data-create-invite')}</div>
       ${lobby.outgoing.map(i=>invitationHtml(i,true)).join('')}
+      <h3>Пригласить по нику</h3><div class="gwent-lobby-actions"><label class="gwent-search-field">Ник игрока<input type="text" data-invite-nick maxlength="16" autocomplete="off" placeholder="Ник в игре"></label>${button('Пригласить', 'data-invite-nick-go')}</div>
+      <p class="gwent-hint">Игрок может быть из любого чата. Сообщение в Telegram получают только друзья; остальные увидят приглашение, когда откроют гвинт.</p>
       <h3>Друзья</h3>${lobby.friends.map(friend=>`<div class="ui-inset-row gwent-social-row"><div><strong>${esc(friend.name)}</strong><small>${esc(friend.busy ? 'В игре' : friend.text)}</small></div>${friend.watchId ? button('Смотреть', `data-watch="${esc(friend.watchId)}"`) : ''}${button('Пригласить',`data-invite-friend="${esc(friend.userId)}" ${friend.busy ? 'disabled' : ''}`)}</div>`).join('') || '<p class="gwent-hint">Добавьте друга в разделе друзей, чтобы пригласить его лично.</p>'}`;
   }
   function gameRow(game) {
@@ -459,6 +461,11 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const d = el.dataset;
     if ('back' in d || 'discardDraft' in d) return back();
     if ('friends' in d || 'games' in d) { focusedInvite = null; invitation = null; go('friends' in d ? 'friends' : 'games'); await reconnect(); }
+    else if ('inviteNickGo' in d) {
+      const nickname = panel.querySelector('[data-invite-nick]')?.value.trim() || '';
+      if (!nickname) { note('Введите ник игрока', 'bad'); render(); return; }
+      await online({ action: 'invite', targetNickname: nickname, loadout: loadouts[faction] });
+    }
     else if ('createInvite' in d || d.inviteFriend) await online({action:'invite',targetId:d.inviteFriend || null,loadout:loadouts[faction]});
     else if (d.acceptInvite) { focusedInvite = null; invitation = null; await online({action:'accept_invite',inviteId:d.acceptInvite,loadout:loadouts[faction]}); }
     else if (d.cancelInvite || d.declineInvite) { focusedInvite = null; invitation = null; await online({action:d.cancelInvite ? 'cancel_invite':'decline_invite',inviteId:d.cancelInvite || d.declineInvite}); }

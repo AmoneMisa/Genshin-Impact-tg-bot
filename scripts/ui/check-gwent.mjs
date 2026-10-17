@@ -3,13 +3,16 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { bundlePageAssets } from '../../miniapp/pageAssets.js';
-import { gwentAction, gwentState } from '../../miniapp/gwent.js';
+import { runGwent, emptyLobby } from '../../miniapp/gwentLobby.js';
 const { chromium } = createRequire(process.env.PLAYWRIGHT_PACKAGE || 'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root = path.resolve('webapp'), out = path.resolve('.tmp/gwent-ui'); fs.mkdirSync(out, {recursive:true});
 const assets = bundlePageAssets(fs.readFileSync(path.join(root, 'index.html'), 'utf8'), f => fs.readFileSync(path.join(root, f.slice(1)), 'utf8'));
 const styles = [...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m => m[0]).join('');
 const browser = await chromium.launch({headless:true, executablePath:process.env.DESIGN_BROWSER || 'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
-const chat = {game:{}, members:[1,2,3].map(userId=>({userId,game:{friends:[1,2,3].filter(i=>i!==userId).map(String)}}))};
+// The shared lobby, as the server keeps it: players 1-3 are friends, each known only by user id.
+const lobby = emptyLobby(), savedDecks = {};
+const chat = {game:{gwent:lobby.gwent}};
+const peopleOf = () => Object.fromEntries([1,2,3].map(id => [String(id), {name:`Игрок ${id}`, friends:[1,2,3].filter(i=>i!==id).map(String), lastSeenAt:0}]));
 async function fixture(width, userId = 1) {
   const page = await browser.newPage({viewport:{width,height:950},hasTouch:width<500,reducedMotion:'reduce'}), errors = [];
   let requests = 0;
@@ -20,7 +23,8 @@ async function fixture(width, userId = 1) {
     if (url.pathname.startsWith('/api/gwent')) {
       requests++;
       const body = route.request().method() === 'POST' ? route.request().postDataJSON() : null;
-      const result = body ? gwentAction(chat,userId,body) : gwentState(chat,userId,Date.now(),{watch:url.searchParams.get('watch'),invite:url.searchParams.get('invite')});
+      const result = runGwent({lobby,userId,name:`Игрок ${userId}`,people:peopleOf(),loadouts:savedDecks[userId]||{},saveLoadout:loadout=>{(savedDecks[userId]||={})[loadout.faction]=loadout;},
+        mutation:!!body,body,watch:url.searchParams.get('watch'),invite:url.searchParams.get('invite')}).result;
       for(const item of [...result.outgoing||[],...result.incoming||[],...result.invitation?[result.invitation]:[]])item.url='https://t.me/test_bot/game?startapp=gwent_-100_i_'+item.id;
       if(result.notifyInvite){delete result.notifyInvite;result.notificationSent=true;}
       return route.fulfill({status:result.ok===false?409:200,json:result});
@@ -169,6 +173,7 @@ try {
     const host=await fixture(width,1),guest=await fixture(390,2),viewer=await fixture(width,3);
     for(const item of [host,guest,viewer]) {await item.page.locator('[data-dismiss]').click();await item.page.evaluate(()=>window.openGwent(true));await item.page.locator('[data-mode]').click();}
     await host.page.locator('[data-friends]').click();
+    assert.equal(await host.page.locator('[data-invite-nick]').count(),1,'invite by nickname is offered');
     await host.page.locator('[data-invite-friend="2"]').click();
     await host.page.locator('[data-copy-invite]').waitFor();
     assert.equal(await host.page.locator('[data-copy-invite]').count(),1);

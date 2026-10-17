@@ -1,12 +1,15 @@
 // Shared format. Only signed Telegram start_param selects the server's chat context.
-const entryPattern = /^gwent_(-?\d+)_(i|w|p)_([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})$/;
+// `g` marks a link that belongs to no chat: the shared lobby identifies the game or invitation by its token.
+const entryPattern = /^gwent_(-?\d+|g)_(i|w|p)_([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})$/;
 export function parseGwentEntry(value) {
   const match = entryPattern.exec(String(value || ''));
-  if (!match || !Number.isSafeInteger(Number(match[1])) || Number(match[1]) === 0) return null;
-  return { chatId: Number(match[1]), kind: match[2] === 'i' ? 'invite' : match[2] === 'p' ? 'play' : 'watch', token: match[3] };
+  if (!match) return null;
+  const global = match[1] === 'g';
+  if (!global && (!Number.isSafeInteger(Number(match[1])) || Number(match[1]) === 0)) return null;
+  return { chatId: global ? null : Number(match[1]), kind: match[2] === 'i' ? 'invite' : match[2] === 'p' ? 'play' : 'watch', token: match[3] };
 }
 export function gwentEntry(chatId, kind, token) {
-  const value = `gwent_${chatId}_${kind === 'invite' ? 'i' : kind === 'play' ? 'p' : 'w'}_${token}`;
+  const value = `gwent_${chatId == null || chatId === 'g' ? 'g' : chatId}_${kind === 'invite' ? 'i' : kind === 'play' ? 'p' : 'w'}_${token}`;
   return ['invite','watch','play'].includes(kind) && parseGwentEntry(value) ? value : null;
 }
 export function gwentAppLink(base, chatId, kind, token) {

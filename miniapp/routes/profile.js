@@ -1,3 +1,4 @@
+import { pendingGwentInvites } from '../gwentInbox.js';
 import { sendJson, httpError, guarded } from '../http/response.js';
 import { readJsonBody, withLock } from '../http/request.js';
 import { authorize, stateFor, sendResult, assertGoldUnlocked, refreshContextSession } from '../http/auth.js';
@@ -402,7 +403,7 @@ export const badges = guarded('badges', async (req, res) => {
   if (clan) {
     try { bossAlive = Boolean(await getAliveBoss(clanScopeId(clan))); } catch { bossAlive = false; }
   }
-  return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive, mail: pendingMailCount(context.session) + playerMailPending(chat, context.userId) }));
+  return sendJson(res, 200, getBadges(chat, context.userId, clan, { session: context.session, bossAlive, mail: pendingMailCount(context.session) + playerMailPending(chat, context.userId), gwentInvites: await pendingGwentInvites(context.userId) }));
 });
 
 export const playerCard = guarded('player card', async (req, res, requestUrl) => {

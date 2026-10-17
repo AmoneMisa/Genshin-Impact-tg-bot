@@ -73,10 +73,11 @@ export function personalBadges(session) {
  * Counts behind the red dots, keyed by feature id. `bossAlive` is resolved by
  * the caller because it needs the database.
  */
-export function getBadges(chat, userId, clan = null, { session = null, bossAlive = false, mail = 0 } = {}) {
+export function getBadges(chat, userId, clan = null, { session = null, bossAlive = false, mail = 0, gwentInvites = null } = {}) {
   const social = getSocialState(chat, userId);
   const friends = (social.incoming || []).length;
-  const gwent = (chat?.game?.gwent?.invites || []).filter(invite=>invite.status==='pending'&&invite.to===String(userId)&&invite.expiresAt>Date.now()).length;
+  // Invitations live in the shared Gwent lobby; the caller passes their count, the chat record is the older location.
+  const gwent = gwentInvites ?? (chat?.game?.gwent?.invites || []).filter(invite=>invite.status==='pending'&&invite.to===String(userId)&&invite.expiresAt>Date.now()).length;
 
   let clanCount = 0;
   if (clan) {

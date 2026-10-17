@@ -77,7 +77,7 @@ export function resolveGameChatId(initData) {
   const match = /^(?:admin_)?chat_(-?\d+)$/.exec(startParam);
   if (match) return Number(match[1]);
   const gwent = parseGwentEntry(startParam);
-  if (gwent) return gwent.chatId;
+  if (gwent?.chatId) return gwent.chatId;
   if (initData.chat?.id) return Number(initData.chat.id);
   if (initData.user?.id) return Number(initData.user.id);
   throw authError('Unable to resolve game chat');
