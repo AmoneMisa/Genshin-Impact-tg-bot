@@ -11,6 +11,7 @@ import gameUi from './uz-game-ui.js';
 import itemAdmin from './uz-item-admin.js';
 import exploration from './uz-exploration.js';
 import clanHalls from './uz-clan-halls.js';
+import gwentExtended from './uz-gwent-extended.js';
 import gwent from './uz-gwent.js';
 import gwentDecks from './uz-gwent-decks.js';
 import gwentCards from './uz-gwent-cards.js';
@@ -24,6 +25,7 @@ export default {
   ...gameUi,
   ...exploration,
   ...clanHalls,
+  ...gwentExtended,
   ...gwent,
   ...gwentDecks,
   ...gwentCards,

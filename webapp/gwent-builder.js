@@ -80,10 +80,10 @@ export function buildDeck(loadout) {
 }
 
 export function cardTraits(card) {
-  if (card.type === 'special') return ({ decoy: 'Чучело', horn: 'Командирский рог', scorch: 'Казнь', weather: 'Погода', mardroeme: 'Мардрём' })[card.special] || '';
+  if (card.type === 'special') return ({ decoy: 'Чучело', horn: 'Командирский рог', scorch: 'Казнь', weather: 'Погода', mardroeme: 'Мардрём', ambush: 'Засада' })[card.special] || '';
   return [[card.hero, 'Герой'], [card.spy, 'Шпион'], [card.medic, 'Медик'], [card.bond, 'Связь'],
     [card.morale, 'Прилив сил'], [card.horn, 'Командирский рог'], [card.muster, 'Призыв'],
-    [card.agile, 'Проворство'], [card.transformsTo, 'Берсерк'], [card.onPlay?.type === 'scorchRow', 'Казнь'],
+    [card.agile, 'Проворство'], [card.swap, 'Подмена'], [card.transformsTo, 'Берсерк'], [card.onPlay?.type === 'scorchRow', 'Казнь'],
     [card.onDestroy, 'Возмездие']].filter(([value]) => value).map(([, label]) => label).join(' · ');
 }
 
@@ -110,7 +110,7 @@ export function leaderDescription(leader) {
     shuffleGraveyards: 'Возвращает карты из отбоя обеих сторон в колоды.', reveal: 'Показывает три карты из руки противника.',
     cancelEnemyLeader: 'Отменяет способность лидера противника.', takeEnemyGraveyard: 'Позволяет выбрать обычный отряд из отбоя противника.',
     returnFromGraveyard: 'Позволяет вернуть карту из своего отбоя.', discardDraw: 'Сбросьте две карты и выберите карту из колоды.',
-    weatherBest: 'Позволяет выбрать погодную карту из колоды.', moveAgile: 'Позволяет выбрать ряды для проворных отрядов.',
+    weatherBest: 'Позволяет выбрать погодную карту из колоды.', moveAgile: 'Позволяет выбрать ряды для проворных отрядов.', moveAny: 'Переносит до трёх ваших обычных отрядов в другие ряды по вашему выбору.',
     reviveAny: 'Позволяет медикам обеих сторон возвращать героев.' })[e.type] || 'Особая способность лидера.';
 }
 

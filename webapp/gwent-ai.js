@@ -33,7 +33,7 @@ export function seededRandom(seed) {
 /** Rough worth of a card, used to decide what to spend first. */
 function worth(card) {
   if (!card) return 4; // the leader card
-  if (card.type !== 'unit') return ({ horn: 9, scorch: 7, weather: 5, mardroeme: 4, decoy: 2 })[card.special] ?? 4;
+  if (card.type !== 'unit') return ({ horn: 9, scorch: 7, weather: 5, mardroeme: 4, decoy: 2, ambush: 5 })[card.special] ?? 4;
   return card.strength + (card.hero ? 3 : 0) + (card.bond ? 3 : 0) + (card.muster ? 3 : 0) + (card.medic ? 3 : 0)
     + (card.morale || card.horn ? 3 : 0) + (card.spy ? 2 : 0);
 }
@@ -138,8 +138,10 @@ function bonusOf(state, side, play) {
       default: return 0;
     }
   }
-  if (card.spy) return 3 * Math.min(2, mine.deck.length); // two cards drawn
-  if (card.special === 'decoy') {
+  // An ambush costs a card and pays when the opponent plays into the row; likely where units already stand.
+  if (card.special === 'ambush') return foe.rows[play.row]?.length ? 3 : 1;
+  if (card.spy) return 3 * Math.min(2, mine.deck.length); // cards drawn
+  if (card.special === 'decoy' || (card.swap && play.targetUid !== undefined)) {
     const target = ROWS.flatMap(row => mine.rows[row]).find(unit => unit.uid === play.targetUid);
     if (!target) return 0;
     // Take back the opponent's spy that stands on this side: played again it draws two cards. It then
@@ -285,6 +287,8 @@ function determinize(state, me, rng) {
     }
   };
   mix(next.sides[me].deck);
+  // Ambushes the opponent laid in the AI's rows are hidden from it.
+  next.sides[me].traps = { close: null, ranged: null, siege: null };
   const foe = next.sides[OPPONENT[me]];
   const handSize = foe.hand.length;
   const deckSize = foe.deck.length;
@@ -318,7 +322,8 @@ function cheapestOvertake(state, side, plays) {
 function quickAction(state, side) {
   const foe = OPPONENT[side];
   const mine = state.sides[side];
-  const plays = legalPlays(state, side).filter(play => !isLeaderPlay(state, side, play) && handCard(state, side, play.uid)?.special !== 'decoy');
+  // Plays that pick a unit to take back (decoy, swap) are left to the full evaluation, not the fast policy.
+  const plays = legalPlays(state, side).filter(play => !isLeaderPlay(state, side, play) && play.targetUid === undefined);
   if (plays.length === 0) return PASS;
   const ahead = lead(state, side);
   if (state.passed[foe]) {

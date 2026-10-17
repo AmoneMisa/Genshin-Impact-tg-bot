@@ -39,7 +39,7 @@ export function pairQueue(data, now, start) {
     for (let i = 0; i < data.queue.length; i += 1) {
       for (let j = i + 1; j < data.queue.length; j += 1) {
         const a = data.queue[i], b = data.queue[j];
-        if (a.userId === b.userId) continue;
+        if (a.userId === b.userId || (a.ruleset || 'classic') !== (b.ruleset || 'classic')) continue;
         const diff = Math.abs((a.rating ?? DEFAULT_RATING) - (b.rating ?? DEFAULT_RATING));
         const gap = Math.max(pairingGap(now - (a.joinedAt ?? a.seenAt)), pairingGap(now - (b.joinedAt ?? b.seenAt)));
         if (diff <= gap && (!best || diff < best.diff)) best = { a, b, diff };

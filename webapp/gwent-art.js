@@ -207,7 +207,10 @@ const BASE_GWENT_ART = Object.freeze({
   "icon:icon_gem_on": "/art/gwent/icons/icon_gem_on.png",
   "icon:icon_gem_off": "/art/gwent/icons/icon_gem_off.png"
 });
-export const GWENT_ART = Object.freeze({ ...BASE_GWENT_ART, ...LOCAL_GWENT_ART,
+// The extended factions have no printed artwork: their crests are drawn for this game.
+const EXTENDED_ART = Object.fromEntries(['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania']
+  .flatMap(id => ['shield', 'banner', 'back'].map(kind => [`${kind}:${id}`, `/art/gwent/factions/${id}.svg`])));
+export const GWENT_ART = Object.freeze({ ...BASE_GWENT_ART, ...LOCAL_GWENT_ART, ...EXTENDED_ART,
   'icon:discard': '/art/gwent/icons/discard.svg',
   // Decorative faction banners keep the unlabelled illustration; never crop a printed card here.
   'banner:northern-realms': BASE_GWENT_ART.vernon, 'banner:nilfgaard': BASE_GWENT_ART.letho,

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 152" role="img" aria-label="wild-hunt">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d4a78"/><stop offset="1" stop-color="#0a1c33"/></linearGradient></defs>
+<path d="M10 10 H110 V78 C110 114 82 134 60 142 C38 134 10 114 10 78 Z" fill="url(#g)" stroke="#d8b36a" stroke-width="4" stroke-linejoin="round"/>
+<path d="M18 18 H102 V77 C102 108 78 125 60 132 C42 125 18 108 18 77 Z" fill="none" stroke="#cfe9ff" stroke-opacity=".55" stroke-width="2"/>
+<g fill="none" stroke="#cfe9ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="60" cy="72" r="30"/><circle cx="60" cy="72" r="19" stroke-opacity=".8"/><circle cx="60" cy="72" r="8" stroke-opacity=".6"/><path d="M60 30 V42 M60 102 V114 M18 72 H30 M90 72 H102" stroke-width="3"/></g>
+</svg>

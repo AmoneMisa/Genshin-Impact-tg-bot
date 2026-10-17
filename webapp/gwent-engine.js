@@ -27,6 +27,14 @@
 // - Each player has one leader per match with a one-shot effect; the spent leader card goes to the
 //   graveyard. Some leaders are passive.
 //
+// Extended rules (cards of the new factions only):
+// - A unit with `swap` returns one of its owner's units from the board to the hand when it is played.
+// - Ambush (special card) is laid hidden in a row of the opponent. When the opponent plays a unit into that
+//   row, the ambush is sprung: two squirrels appear in the same row on the side that laid it.
+// - A leader with `moveAny` moves up to three non-hero units to other rows.
+// - Faction passives: Velen units keep up to 3 strength in weather, Redania spies draw three cards, Toussaint may swap
+//   three cards at the start, Witchers get a random hero back from the graveyard into the hand at the start of round 3, Wild Hunt draw a card after a lost round.
+//
 // Assumptions not confirmed by a source: a drawn round gives both players a round win, after a drawn
 // round the side that did not start it starts, Scoiatael decide only the first turn of the match, weather sets the base strength
 // to 1 before bond, morale and horn, King Bran halves strength in weather, and a leader's doubling
@@ -43,6 +51,7 @@ export const ROUNDS_TO_WIN = 2;
 const clone = value => structuredClone(value);
 const noWeather = () => ({ close: false, ranged: false, siege: false });
 const noDoubles = () => ({ close: false, ranged: false, siege: false });
+const noTraps = () => ({ close: null, ranged: null, siege: null });
 const isPassiveLeader = leader => leader.effect.type.startsWith('passive-');
 
 /** Deterministic random numbers kept in the state, so a saved match replays the same way. */
@@ -120,6 +129,7 @@ export function createMatch({ playerDeck, aiDeck, rng = Math.random, setup = tru
       leaderCancelled: false,
       faction: def.id,
       doubled: noDoubles(),
+      traps: noTraps(), // ambushes the opponent laid in this side's rows (hidden from this side)
       kingBran: leader?.effect.type === 'passive-bran',
       extraDraw: leader?.effect.type === 'passive-extra-draw',
     };
@@ -143,7 +153,7 @@ function stepSetup(state) {
     const step = state.setup.shift();
     if (step.startsWith('mulligan:')) {
       const side = step.slice(9);
-      if (offerMulligan(state, side, 2)) return;
+      if (offerMulligan(state, side, state.sides[side].faction === 'toussaint' ? 3 : 2)) return;
     } else if (step === 'first') {
       const scoia = SIDES.filter(side => state.sides[side].faction === 'scoiatael');
       if (scoia.length === 1) {
@@ -176,7 +186,7 @@ export function rowValues(row, weatherActive = false, opts = {}) {
   return row.map(card => {
     if (card.type !== 'unit') return 0;
     if (card.hero) return card.strength;
-    let value = (weatherActive ? 1 : card.strength) + morales - (card.morale ? 1 : 0);
+    let value = (weatherActive ? Math.min(card.strength, opts.weatherBase ?? 1) : card.strength) + morales - (card.morale ? 1 : 0);
     if (card.bond) value *= bondCounts[card.bond];
     if (horn || opts.doubled) value *= 2;
     if (opts.halve && weatherActive) value = Math.floor(value / 2);
@@ -187,7 +197,7 @@ export function rowValues(row, weatherActive = false, opts = {}) {
 /** Row values with the side's leader and passive effects applied. */
 export function rowValuesFor(state, side, row) {
   const mine = state.sides[side];
-  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran });
+  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran, weatherBase: mine.faction === 'velen' ? 3 : 1 });
 }
 
 /** Total strength of one side. Spies count for the side whose row they stand in. */
@@ -215,7 +225,13 @@ export function legalPlays(state, side) {
   if (me.leader && !me.leaderUsed && !me.leaderCancelled && !isPassiveLeader(me.leader)) plays.push({ uid: me.leader.uid });
   for (const card of me.hand) {
     if (card.type === 'unit') {
-      for (const row of card.agile ? card.rows : [card.rows[0]]) plays.push({ uid: card.uid, row });
+      for (const row of card.agile ? card.rows : [card.rows[0]]) {
+        plays.push({ uid: card.uid, row });
+        // A swap unit may also send one of the player's units back to the hand.
+        if (card.swap) for (const target of ownUnits) plays.push({ uid: card.uid, row, targetUid: target.uid });
+      }
+    } else if (card.special === 'ambush') {
+      for (const row of ROWS) if (!state.sides[OPPONENT[side]].traps?.[row]) plays.push({ uid: card.uid, row });
     } else if (card.special === 'horn' || card.special === 'mardroeme') {
       for (const row of ROWS) plays.push({ uid: card.uid, row });
     } else if (card.special === 'decoy') {
@@ -253,6 +269,13 @@ function offerRevive(state, side, row) {
     .filter(card => card.type === 'unit' && (state.reviveAny || !card.hero))
     .map(card => ({ id: card.uid, card }));
   askChoice(state, side, 'revive', options, { row });
+}
+
+/** The leader Hope of the Aen Seidhe, extended: up to `remaining` non-hero units move to rows of the player's choice. */
+function askMoveAny(state, side, remaining) {
+  const options = ROWS.flatMap(row => state.sides[side].rows[row].filter(card => card.type === 'unit' && !card.hero).map(card => ({ id: card.uid, card })));
+  if (options.length === 0) return;
+  askChoice(state, side, 'moveFrom', [...options, { id: 'done', label: 'Готово' }], { remaining });
 }
 
 /** Agile units are placed one by one: the player picks the row for each. */
@@ -331,6 +354,22 @@ function applyChoice(state, side, pending, option) {
       state.turn = state.starter;
       break;
     }
+    case 'moveFrom': {
+      if (option.id === 'done') break;
+      const from = findOnBoard(state, side, option.id);
+      if (!from) break;
+      askChoice(state, side, 'moveTo', ROWS.filter(row => row !== from.row).map(row => ({ id: row, label: ROW_LABELS[row] })), { uid: option.id, remaining: pending.remaining });
+      break;
+    }
+    case 'moveTo': {
+      const from = findOnBoard(state, side, pending.uid);
+      if (from) {
+        const [card] = mine.rows[from.row].splice(from.index, 1);
+        mine.rows[option.id].push(card);
+      }
+      if (pending.remaining > 1) askMoveAny(state, side, pending.remaining - 1);
+      break;
+    }
     case 'agile': {
       const from = findOnBoard(state, side, pending.uid);
       if (from) {
@@ -368,6 +407,12 @@ export function aiChoiceId(state) {
   if (!pending) return null;
   if (pending.kind === 'agile') return pending.options[0].id;
   if (pending.kind === 'first') return 'self';
+  if (pending.kind === 'moveFrom') {
+    // Take a unit out of a row under weather; nothing to rescue means nothing to move.
+    const trapped = pending.options.find(option => option.card && ROWS.some(row => state.weather[row] && state.sides[pending.side].rows[row].some(card => card.uid === option.id)));
+    return trapped ? trapped.id : 'done';
+  }
+  if (pending.kind === 'moveTo') return (pending.options.find(option => !state.weather[option.id]) || pending.options[0]).id;
   if (pending.kind === 'mulligan') {
     const weak = pending.options.find(option => option.card?.type === 'unit' && !option.card.hero
       && option.card.strength <= 2 && !option.card.bond && !option.card.muster && !option.card.spy && !option.card.medic && !option.card.morale);
@@ -412,13 +457,27 @@ export function playCard(state, side, uid, { row, targetUid } = {}) {
       mine.graveyard.push(card);
     } else if (card.spy) {
       next.sides[OPPONENT[side]].rows[target].push(card);
-      drawCards(mine, 2);
+      drawCards(mine, mine.faction === 'redania' ? 3 : 2);
     } else {
       mine.rows[target].push(card);
+      springAmbush(next, side, target);
+      if (card.swap && targetUid !== undefined) {
+        const spot = findOnBoard(next, side, targetUid);
+        const swapped = spot && mine.rows[spot.row][spot.index];
+        if (!swapped || swapped.uid === card.uid || swapped.type !== 'unit' || swapped.hero) return { error: 'Подмена возвращает только свой обычный отряд.' };
+        mine.rows[spot.row].splice(spot.index, 1);
+        mine.hand.push(swapped);
+      }
       if (card.muster) musterInto(next, side, card, target);
       if (card.onPlay) runUnitOnPlay(next, side, card, target);
       if (card.medic) offerRevive(next, side, target);
     }
+  } else if (card.special === 'ambush') {
+    const foe = next.sides[OPPONENT[side]];
+    if (!ROWS.includes(row)) return { error: 'Выбери ряд для засады.' };
+    foe.traps ||= noTraps();
+    if (foe.traps[row]) return { error: 'В этом ряду уже есть засада.' };
+    foe.traps[row] = card;
   } else if (card.special === 'horn') {
     if (!ROWS.includes(row)) return { error: 'Выбери ряд для рога.' };
     mine.rows[row].push(card);
@@ -456,6 +515,17 @@ export function passRound(state, side) {
   return { state: next };
 }
 
+/** The opponent's ambush in this row, if any, goes off: two squirrels appear for whoever laid it. */
+function springAmbush(state, side, row) {
+  const traps = state.sides[side].traps ||= noTraps(); // matches saved before ambushes existed
+  const trap = traps[row];
+  if (!trap) return;
+  traps[row] = null;
+  const owner = state.sides[OPPONENT[side]];
+  owner.graveyard.push(trap);
+  for (let i = 0; i < 2; i += 1) owner.rows[row].push(makeToken(state, 'squirrel'));
+}
+
 /** Effects a unit triggers when it is placed on the board. */
 function runUnitOnPlay(state, side, card, row) {
   const effect = card.onPlay;
@@ -478,6 +548,9 @@ function runLeader(state, side, effect) {
       break;
     case 'double':
       mine.doubled[effect.row] = true;
+      break;
+    case 'moveAny':
+      askMoveAny(state, side, 3);
       break;
     case 'scorchRow':
       scorchEnemy(state, side, effect);
@@ -636,11 +709,15 @@ function endRound(state) {
   // Monsters keep one random non-hero unit on the board.
   for (const side of SIDES) {
     let kept = null;
+    // Monsters keep a random non-hero unit on the board.
     if (state.sides[side].faction === 'monsters') {
       const units = ROWS.flatMap(row => state.sides[side].rows[row].filter(card => card.type === 'unit' && !card.hero).map(card => ({ row, card })));
       if (units.length > 0) kept = units[Math.floor(random(state) * units.length)];
     }
     for (const row of ROWS) {
+      // An ambush that was never sprung goes back to the graveyard of whoever laid it.
+      const trap = state.sides[side].traps?.[row];
+      if (trap) { state.sides[OPPONENT[side]].graveyard.push(trap); state.sides[side].traps[row] = null; }
       for (const card of state.sides[side].rows[row]) if (card !== kept?.card) state.sides[side].graveyard.push(card);
       state.sides[side].rows[row] = kept && kept.row === row ? [kept.card] : [];
     }
@@ -674,8 +751,15 @@ function endRound(state) {
   for (const side of SIDES) {
     // Northern Realms draw a card for winning the round.
     if (winner === side && state.sides[side].faction === 'northern-realms') drawCards(state.sides[side], 1);
+    // Wild Hunt draw a card for a lost round.
+    if (winner === OPPONENT[side] && state.sides[side].faction === 'wild-hunt') drawCards(state.sides[side], 1);
     // Skellige: two random non-hero units come back from the graveyard at the start of round 3.
     if (state.round === 3 && state.sides[side].faction === 'skellige') reviveRandom(state, side, 2);
+    // Witchers: a random hero from the graveyard returns to the hand at the start of round 3.
+    if (state.round === 3 && state.sides[side].faction === 'witchers') {
+      const heroes = state.sides[side].graveyard.filter(card => card.type === 'unit' && card.hero);
+      if (heroes.length > 0) state.sides[side].hand.push(takeFrom(state.sides[side].graveyard, heroes[Math.floor(random(state) * heroes.length)].uid));
+    }
   }
   advance(state, null);
 }

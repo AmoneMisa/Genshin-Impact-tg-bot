@@ -2,14 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { GWENT_ART, GWENT_PRINTED_CARDS, GWENT_CARD_VARIANTS } from '../webapp/gwent-art.js';
-import { GWENT_DECKS, TOKENS } from '../webapp/gwent-decks.js';
+import { DECK_IDS, GWENT_DECKS, TOKENS } from '../webapp/gwent-decks.js';
 import { gwentCardHtml } from '../webapp/gwent.js';
 import { cardArtOptions } from '../webapp/gwent-art-options.js';
 import { defaultLoadout, buildDeck, inspectLoadout } from '../webapp/gwent-builder.js';
 import { createMatch } from '../webapp/gwent-engine.js';
 
 test('every playable card, token and leader uses a complete supplied card; backs match factions', () => {
-  const cards = [...Object.values(GWENT_DECKS).flatMap(deck => [...deck.cards.map(([card]) => card), ...deck.leaders]), ...Object.values(TOKENS)];
+  // The five original factions use the supplied card images; the extended factions and their squirrel token are drawn by the interface.
+  const cards = [...DECK_IDS.flatMap(id => [...GWENT_DECKS[id].cards.map(([card]) => card), ...GWENT_DECKS[id].leaders]), ...Object.values(TOKENS).filter(token => token.id !== 'squirrel')];
   for (const card of cards) {
     assert.ok(GWENT_PRINTED_CARDS.has(card.id), card.id);
     assert.match(GWENT_ART[card.id], /^\/art\/gwent\/printed\//);

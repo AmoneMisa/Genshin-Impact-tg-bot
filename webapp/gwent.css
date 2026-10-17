@@ -113,3 +113,6 @@ body .game-overlay>.gwent-board-panel{max-height:calc(100dvh - 16px - env(safe-a
 .gwent-board-row[data-rank="2"]>span:first-child{color:#cfd4dc;font-weight:700}
 .gwent-board-row[data-rank="3"]>span:first-child{color:#d39a6a;font-weight:700}
 .gwent-board-row:not(.gwent-board-head)>span:nth-child(3){font-size:16px}
+
+.gwent-trap{display:inline-flex;align-items:center;margin-left:var(--space-1);color:var(--gold-bright)}.gwent-trap svg{width:14px;height:14px}
+.gwent-row[data-trap="true"] .gwent-row-label{color:var(--gold-bright)}

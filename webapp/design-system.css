@@ -1488,6 +1488,10 @@ body .game-overlay .ui-card-table-window .ui-button.primary{background:linear-gr
 .gwent-card-trait{background:#10100de8;color:var(--text-soft);padding:var(--space-1)}
 .gwent-card-trait:empty{display:none}
 .gwent-card.printed,body .ui-card-table-window .ui-button.gwent-card.printed{padding:var(--space-half);background:transparent}
+/* Cards of the extended factions have no printed picture: a tinted tile with the name stands in. */
+.gwent-card[data-kit="wh"]{--kit-a:#1d4a78;--kit-b:#0a1c33}.gwent-card[data-kit="wi"]{--kit-a:#5a5f66;--kit-b:#1f2226}
+.gwent-card[data-kit="to"]{--kit-a:#b9892b;--kit-b:#5b3e0e}.gwent-card[data-kit="ve"]{--kit-a:#35553f;--kit-b:#101c14}.gwent-card[data-kit="re"]{--kit-a:#8f1f2a;--kit-b:#35090d}
+.gwent-card[data-kit]:not([data-kit=""]),body .ui-card-table-window .ui-button.gwent-card[data-kit]:not([data-kit=""]){background:linear-gradient(160deg,var(--kit-a),var(--kit-b))}
 .gwent-card.hero{border-color:var(--gold)}.gwent-card.hero .gwent-card-power{background:#624317e8;border-color:var(--gold)}
 body .ui-card-table-window .gwent-card:is(.selected,.target){outline:0;box-shadow:none}
 .gwent-card:is(.selected,.target)>.gwent-card-art{filter:brightness(1.18)}

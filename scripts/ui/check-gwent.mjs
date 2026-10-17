@@ -129,6 +129,25 @@ try {
     await page.locator('[data-dismiss]').click();
     assert.deepEqual(errors,[]);await page.close();console.log(`PASS Gwent ${width}: editor, limits, saved leader after reopening, filters, AI move, horn, rules, focus, no overflow / WebGL`);
   }
+  // Extended rules: all ten factions, tinted tiles for cards without printed art, a match against the AI.
+  for (const width of [320,1100]) {
+    const {page,shot,fits,errors}=await fixture(width);
+    await page.locator('input[name=gwent-ruleset][value=extended]').check();
+    assert.equal(await page.locator('[data-select-faction]').count(),10,'extended offers all ten factions');
+    await page.locator('[data-select-faction=redania]').click();assert.equal(await page.locator('[data-select-faction=redania] img').count(),1,'drawn crest');
+    await shot('extended-decks');await fits();
+    await page.locator('[data-editor]').click();
+    await page.locator('[data-search]').fill('Засада');assert.equal(await page.locator('.gwent-builder-card').count(),1);
+    await page.locator('[data-search]').fill('Диверсант');assert.equal(await page.locator('.gwent-builder-card .gwent-card[data-kit="re"]').count(),1,'tinted tile for a card without art');
+    await page.locator('[data-search]').fill('');await shot('extended-editor');await fits();
+    await page.locator('[data-save-deck]').click();await page.locator('[data-mode]').click();
+    await page.locator('[data-start]').click();
+    for (let i = 0; i < 2; i += 1) for (const id of ['done','self']) if (await page.locator(`[data-choice-id="${id}"]`).count()) {await page.locator(`[data-choice-id="${id}"]`).click();await page.waitForTimeout(300);}
+    await page.waitForSelector('[data-pass]:not([disabled])',{timeout:10000});
+    assert.equal(await page.locator('.gwent-row').count(),6);await shot('extended-board');await fits();
+    assert.deepEqual(errors,[]);await page.close();
+    console.log(`PASS Gwent extended ${width}: ruleset switch, ten factions, drawn crests, tinted cards, match against the AI`);
+  }
   const a=await fixture(390,1), b=await fixture(1100,2);
   // Both online players keep their hands; the server then fixes the first player by coin toss or Scoia'tael choice.
   var settle=async items=>{const match=()=>chat.game.gwent.matches.at(-1).state;
