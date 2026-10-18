@@ -1,0 +1,258 @@
+[
+  {
+    "key": "to-knight-errant",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Странствующий рыцарь",
+    "changed": false,
+    "file": "illustrations/to-knight-errant.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A Toussaint knight errant in gleaming engraved plate with a plumed helm, long lance, sunlit road between vineyards, white horse behind him, chivalric and noble. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Дорога длинна, пока на ней ещё есть кому помочь.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-ducal-guard",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Герцогская гвардия",
+    "changed": false,
+    "file": "illustrations/to-ducal-guard.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A Toussaint ducal guard in polished steel with a gold-and-azure tabard and a halberd at the gate of a pastel Beauclair palace, golden light. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "За этими воротами даже беда обязана представиться.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-vintner",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Винодел",
+    "changed": false,
+    "file": "illustrations/to-vintner.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A cheerful Toussaint vintner in a straw hat and leather apron lifting a heavy wine barrel in a sun-soaked vineyard, grapes and a stone cellar arch behind. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Солнце у нас в каждой бочке. Только не торопи его.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-courtier",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Придворный шпион",
+    "changed": false,
+    "file": "illustrations/to-courtier.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A suave court spy in a velvet doublet whispering to a noblewoman behind a pillar in a sumptuous palace ballroom, hidden dagger glinting. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "При дворе громче всего звучит сказанное шёпотом.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-crossbowman",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Арбалетчик Туссента",
+    "changed": false,
+    "file": "illustrations/to-crossbowman.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A Toussaint crossbowman in blue and gold livery behind a stone battlement aiming across vineyard hills, warm late-afternoon light. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "С холма виноградники виднее. И чужие знамёна тоже.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-herald",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Глашатай",
+    "changed": false,
+    "file": "illustrations/to-herald.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A Toussaint herald in azure and gold finery blowing a long trumpet with a fluttering banner, vineyard castle and bright clouds, ceremonial. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Сначала я объявляю имя. Остальное решает ристалище.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-physician",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Придворный лекарь",
+    "changed": false,
+    "file": "illustrations/to-physician.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A refined Toussaint court physician in a long dark coat tending a wounded knight in a vaulted infirmary, glass flasks and herbs, warm light. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Славу оставьте за дверью. Здесь мне нужен ваш пульс.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-lady",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Прекрасная дама",
+    "changed": false,
+    "file": "illustrations/to-lady.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A radiant Toussaint noble lady in a rich burgundy gown with a rapier at her hip, standing on a palace terrace overlooking vineyards, confident gaze. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Он поклялся ради меня победить. Я просила лишь вернуться.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-war-horse",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Боевой конь",
+    "changed": false,
+    "file": "illustrations/to-war-horse.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A massive caparisoned Toussaint destrier in heraldic blue-and-gold barding rearing on a sunlit parade ground, no rider, dust and banners. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Когда трубы смолкают, он всё ещё слышит дорогу домой.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-ballista",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Баллиста Туссента",
+    "changed": false,
+    "file": "illustrations/to-ballista.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A large Toussaint field ballista with polished bronze fittings on a vineyard hill, crew loading a bolt, battlements of Beauclair in the golden haze. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Рыцарь ищет слабое место. Мастер делает его сам.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-trebuchet",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Требушет Туссента",
+    "changed": false,
+    "file": "illustrations/to-trebuchet.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: A huge trebuchet of fine carpentry with blue-and-gold pennants loosing a boulder over a vineyard valley, crew in livery, dramatic arc of dust. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Даже у самой гордой башни есть последний рассвет.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-palmerin",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Пальмерин де Лаунфорд",
+    "changed": false,
+    "file": "illustrations/to-palmerin.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Palmerin de Launfal from Blood and Wine, a mature bald clean-shaven knight with a broad stern face, in lavish engraved golden plate armor with fleur-de-lis and winged reliefs, deep blue accents. Bare head fully visible, sword held at rest, sunlit vineyards and Beauclair behind him. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Данное слово не становится легче, когда его трудно сдержать.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-anna",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Анна Генриетта",
+    "changed": false,
+    "file": "illustrations/to-anna.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Anna Henrietta from The Witcher 3 Blood and Wine: auburn-red hair in an elaborate braided updo with small gold ornaments, fair face, expressive eyes, regal bearing, richly embroidered burgundy wine-red velvet gown with gold details and pearls. The same woman consistently across all her portraits. Standing in a warm sunlit palace gallery, one hand on a marble balustrade, proud three-quarter portrait. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "Мой народ заслуживает большего, чем красивые обещания.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-syanna",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Сианна",
+    "changed": false,
+    "file": "illustrations/to-syanna.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Syanna from Blood and Wine, fair-skinned woman with dark brown hair swept into a coiled updo, loose curls around her face, plum velvet gown with a tall folded collar and burgundy sleeves. She stands quietly at a dim stone window, calculating melancholy expression, a closed storybook in hand. No magical spell effects; she is a noblewoman. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render.",
+    "quote": "В сказках прощают слишком легко. Я помню, чем они кончаются.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-leader-duchess",
+    "faction": "toussaint",
+    "kind": "leader",
+    "name": "Анна Генриетта: Герцогиня",
+    "changed": false,
+    "file": "illustrations/to-leader-duchess.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Anna Henrietta from The Witcher 3 Blood and Wine: auburn-red hair in an elaborate braided updo with small gold ornaments, fair face, expressive eyes, regal bearing, richly embroidered burgundy wine-red velvet gown with gold details and pearls. The same woman consistently across all her portraits. Duchess Anna Henrietta seated on a carved throne in the audience hall of Beauclair Palace, gold and azure drapes, serene regal authority. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render. Input reference 1 is the approved identity guide within this new deck: preserve this exact woman's facial features, auburn braided hair, age and burgundy-and-gold clothing, but paint the new scene and pose described above. Input reference 2 is ONLY the original Gwent painting style guide. Make a new independent portrait illustration, not a collage; no text or UI.",
+    "quote": "Корона тяжела ровно настолько, сколько людей тебе доверилось.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/to-anna.png",
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-leader-feast",
+    "faction": "toussaint",
+    "kind": "leader",
+    "name": "Анна Генриетта: Хозяйка пиров",
+    "changed": false,
+    "file": "illustrations/to-leader-feast.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Anna Henrietta from The Witcher 3 Blood and Wine: auburn-red hair in an elaborate braided updo with small gold ornaments, fair face, expressive eyes, regal bearing, richly embroidered burgundy wine-red velvet gown with gold details and pearls. The same woman consistently across all her portraits. Duchess Anna Henrietta raising a wine goblet at a long banquet table laden with Toussaint wine, fruit and candles, laughing guests blurred behind. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render. Input reference 1 is the approved identity guide within this new deck: preserve this exact woman's facial features, auburn braided hair, age and burgundy-and-gold clothing, but paint the new scene and pose described above. Input reference 2 is ONLY the original Gwent painting style guide. Make a new independent portrait illustration, not a collage; no text or UI.",
+    "quote": "Сегодня пусть говорят музыканты. Завтра снова заговорит двор.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/to-anna.png",
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-leader-knights",
+    "faction": "toussaint",
+    "kind": "leader",
+    "name": "Анна Генриетта: Покровительница рыцарей",
+    "changed": false,
+    "file": "illustrations/to-leader-knights.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Anna Henrietta from The Witcher 3 Blood and Wine: auburn-red hair in an elaborate braided updo with small gold ornaments, fair face, expressive eyes, regal bearing, richly embroidered burgundy wine-red velvet gown with gold details and pearls. The same woman consistently across all her portraits. Duchess Anna Henrietta handing a sword to a kneeling knight in an ornate palace hall, banners and soldiers watching, ceremonial light. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render. Input reference 1 is the approved identity guide within this new deck: preserve this exact woman's facial features, auburn braided hair, age and burgundy-and-gold clothing, but paint the new scene and pose described above. Input reference 2 is ONLY the original Gwent painting style guide. Make a new independent portrait illustration, not a collage; no text or UI.",
+    "quote": "Поднимитесь, сир. Честь носят в поступках, а не на коленях.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/to-anna.png",
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  },
+  {
+    "key": "to-leader-defender",
+    "faction": "toussaint",
+    "kind": "leader",
+    "name": "Анна Генриетта: Защитница Туссента",
+    "changed": false,
+    "file": "illustrations/to-leader-defender.png",
+    "prompt": "Use case: stylized-concept. Create ONE standalone illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Anna Henrietta from The Witcher 3 Blood and Wine: auburn-red hair in an elaborate braided updo with small gold ornaments, fair face, expressive eyes, regal bearing, richly embroidered burgundy wine-red velvet gown with gold details and pearls. The same woman consistently across all her portraits. Duchess Anna Henrietta in light armour over a gown on a palace wall at sunset, one hand on a rapier, defending Toussaint, determined, banner behind. Match the supplied original Gwent painting reference in grounded fantasy painted realism, subtle brushwork, weathered real materials and natural proportions. Toussaint palette: warm golden sunlight, vineyard green, burgundy, polished steel and restrained gold. Portrait 5:7 full-bleed scene. Main subject at x55%, face in upper middle, leave leftmost 23% quiet for later ribbon overlay. Complete head visible, strong readable silhouette at small size. No card border, UI, ribbon, parchment, letters, numbers, captions or watermark. Illustration only: all names, literary quotes and gameplay symbols are separate fixed layers. The reference establishes painting style only, not character identity. No anime, no modern glossy TCG render. Input reference 1 is the approved identity guide within this new deck: preserve this exact woman's facial features, auburn braided hair, age and burgundy-and-gold clothing, but paint the new scene and pose described above. Input reference 2 is ONLY the original Gwent painting style guide. Make a new independent portrait illustration, not a collage; no text or UI.",
+    "quote": "Пока я здесь, Боклер не склонит головы.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/to-anna.png",
+      "../../../webapp/art/gwent/sm/nilfgaard_morteisen.jpg"
+    ]
+  }
+]

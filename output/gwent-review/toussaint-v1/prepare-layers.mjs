@@ -1,0 +1,3 @@
+import{prepareLayers}from'../shared/prepare-layers.mjs';
+import{fileURLToPath}from'node:url';
+await prepareLayers(fileURLToPath(new URL('.',import.meta.url)),'toussaint');

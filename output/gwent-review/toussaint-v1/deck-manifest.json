@@ -1,0 +1,1307 @@
+{
+  "faction": "toussaint",
+  "title": "Туссент",
+  "approval": "approved",
+  "integrated": false,
+  "pushed": false,
+  "templateSize": {
+    "width": 310,
+    "height": 585
+  },
+  "font": "Roboto Condensed",
+  "fontMatch": "Review candidate; original game typeface not independently verified.",
+  "quotes": {
+    "generated": "Original fan-written lines, not quotations from Witcher 3.",
+    "existing": "Preserved inside user-supplied original card images."
+  },
+  "back": {
+    "file": "back.webp",
+    "source": "/art/gwent/printed/back-toussaint.webp",
+    "reusedUnchanged": true
+  },
+  "customIcons": [
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall"
+  ],
+  "cards": [
+    {
+      "summoned": false,
+      "id": "to-leader-duchess",
+      "name": "Анна Генриетта: Герцогиня",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/to-leader-duchess.png",
+      "webp": "cards/to-leader-duchess.webp",
+      "quote": "Корона тяжела ровно настолько, сколько людей тебе доверилось.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-leader-feast",
+      "name": "Анна Генриетта: Хозяйка пиров",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/to-leader-feast.png",
+      "webp": "cards/to-leader-feast.webp",
+      "quote": "Сегодня пусть говорят музыканты. Завтра снова заговорит двор.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-leader-knights",
+      "name": "Анна Генриетта: Покровительница рыцарей",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/to-leader-knights.png",
+      "webp": "cards/to-leader-knights.webp",
+      "quote": "Поднимитесь, сир. Честь носят в поступках, а не на коленях.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-leader-defender",
+      "name": "Анна Генриетта: Защитница Туссента",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/to-leader-defender.png",
+      "webp": "cards/to-leader-defender.webp",
+      "quote": "Пока я здесь, Боклер не склонит головы.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/avallach.png",
+      "webp": "cards/avallach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/yennefer.png",
+      "webp": "cards/yennefer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/triss.png",
+      "webp": "cards/triss.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/geralt.png",
+      "webp": "cards/geralt.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cirilla",
+      "name": "Цирилла",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/cirilla.png",
+      "webp": "cards/cirilla.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dandelion",
+      "name": "Лютик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dandelion.png",
+      "webp": "cards/dandelion.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/zoltan.png",
+      "webp": "cards/zoltan.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/emiel.png",
+      "webp": "cards/emiel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vesemir",
+      "name": "Весемир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vesemir.png",
+      "webp": "cards/vesemir.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olgierd.png",
+      "webp": "cards/olgierd.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/gaunter-darkness.png",
+      "webp": "cards/gaunter-darkness.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/gaunter.png",
+      "webp": "cards/gaunter.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cow",
+      "name": "Корова",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/cow.png",
+      "webp": "cards/cow.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/villentretemerth.png",
+      "webp": "cards/villentretemerth.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-knight-errant",
+      "name": "Странствующий рыцарь",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/to-knight-errant.png",
+      "webp": "cards/to-knight-errant.webp",
+      "quote": "Дорога длинна, пока на ней ещё есть кому помочь.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "to-ducal-guard",
+      "name": "Герцогская гвардия",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/to-ducal-guard.png",
+      "webp": "cards/to-ducal-guard.webp",
+      "quote": "За этими воротами даже беда обязана представиться.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "morale"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "to-vintner",
+      "name": "Винодел",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/to-vintner.png",
+      "webp": "cards/to-vintner.webp",
+      "quote": "Солнце у нас в каждой бочке. Только не торопи его.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-courtier",
+      "name": "Придворный шпион",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/to-courtier.png",
+      "webp": "cards/to-courtier.webp",
+      "quote": "При дворе громче всего звучит сказанное шёпотом.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "spy"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "to-crossbowman",
+      "name": "Арбалетчик Туссента",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/to-crossbowman.png",
+      "webp": "cards/to-crossbowman.webp",
+      "quote": "С холма виноградники виднее. И чужие знамёна тоже.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-herald",
+      "name": "Глашатай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/to-herald.png",
+      "webp": "cards/to-herald.webp",
+      "quote": "Сначала я объявляю имя. Остальное решает ристалище.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "horn"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "to-physician",
+      "name": "Придворный лекарь",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/to-physician.png",
+      "webp": "cards/to-physician.webp",
+      "quote": "Славу оставьте за дверью. Здесь мне нужен ваш пульс.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "medic"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "to-lady",
+      "name": "Прекрасная дама",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 9,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/to-lady.png",
+      "webp": "cards/to-lady.webp",
+      "quote": "Он поклялся ради меня победить. Я просила лишь вернуться.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-war-horse",
+      "name": "Боевой конь",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/to-war-horse.png",
+      "webp": "cards/to-war-horse.webp",
+      "quote": "Когда трубы смолкают, он всё ещё слышит дорогу домой.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-ballista",
+      "name": "Баллиста Туссента",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 7,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/to-ballista.png",
+      "webp": "cards/to-ballista.webp",
+      "quote": "Рыцарь ищет слабое место. Мастер делает его сам.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-trebuchet",
+      "name": "Требушет Туссента",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 9,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/to-trebuchet.png",
+      "webp": "cards/to-trebuchet.webp",
+      "quote": "Даже у самой гордой башни есть последний рассвет.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-palmerin",
+      "name": "Пальмерин де Лаунфорд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/to-palmerin.png",
+      "webp": "cards/to-palmerin.webp",
+      "quote": "Данное слово не становится легче, когда его трудно сдержать.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-anna",
+      "name": "Анна Генриетта",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/to-anna.png",
+      "webp": "cards/to-anna.webp",
+      "quote": "Мой народ заслуживает большего, чем красивые обещания.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "to-syanna",
+      "name": "Сианна",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/to-syanna.png",
+      "webp": "cards/to-syanna.webp",
+      "quote": "В сказках прощают слишком легко. Я помню, чем они кончаются.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-fire.png",
+      "webp": "cards/el-fire.webp",
+      "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "fire"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-earth.png",
+      "webp": "cards/el-earth.webp",
+      "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "earth"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-water.png",
+      "webp": "cards/el-water.webp",
+      "quote": "Тихая вода первой забирается под доспех.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "water"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-prep.png",
+      "webp": "cards/ex-prep.webp",
+      "quote": "Стену ещё не видно, а приговор уже отлит.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "prep"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-trap.png",
+      "webp": "cards/ex-trap.webp",
+      "quote": "На этой тропе слишком удобно идти одному.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "trap"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-medic.png",
+      "webp": "cards/ex-medic.webp",
+      "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "recall"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "summoned": false,
+      "id": "decoy",
+      "name": "Чучело",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/decoy.png",
+      "webp": "cards/decoy.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/commanders-horn.png",
+      "webp": "cards/commanders-horn.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "scorch",
+      "name": "Казнь",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/scorch.png",
+      "webp": "cards/scorch.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "biting-frost",
+      "name": "Мороз",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/biting-frost.png",
+      "webp": "cards/biting-frost.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/impenetrable-fog.png",
+      "webp": "cards/impenetrable-fog.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/torrential-rain.png",
+      "webp": "cards/torrential-rain.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/clear-weather.png",
+      "webp": "cards/clear-weather.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    }
+  ],
+  "missing": [],
+  "textMetrics": [
+    {
+      "id": "to-leader-duchess",
+      "title": {
+        "text": "Анна Генриетта: Герцогиня",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Корона тяжела ровно настолько, сколько людей тебе доверилось.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-leader-feast",
+      "title": {
+        "text": "Анна Генриетта: Хозяйка пиров",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Сегодня пусть говорят музыканты. Завтра снова заговорит двор.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-leader-knights",
+      "title": {
+        "text": "Анна Генриетта: Покровительница рыцарей",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Поднимитесь, сир. Честь носят в поступках, а не на коленях.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-leader-defender",
+      "title": {
+        "text": "Анна Генриетта: Защитница Туссента",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Пока я здесь, Боклер не склонит головы.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-knight-errant",
+      "title": {
+        "text": "Странствующий рыцарь",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Дорога длинна, пока на ней ещё есть кому помочь.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-ducal-guard",
+      "title": {
+        "text": "Герцогская гвардия",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "За этими воротами даже беда обязана представиться.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-vintner",
+      "title": {
+        "text": "Винодел",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Солнце у нас в каждой бочке. Только не торопи его.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-courtier",
+      "title": {
+        "text": "Придворный шпион",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "При дворе громче всего звучит сказанное шёпотом.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-crossbowman",
+      "title": {
+        "text": "Арбалетчик Туссента",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "С холма виноградники виднее. И чужие знамёна тоже.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-herald",
+      "title": {
+        "text": "Глашатай",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Сначала я объявляю имя. Остальное решает ристалище.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-physician",
+      "title": {
+        "text": "Придворный лекарь",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Славу оставьте за дверью. Здесь мне нужен ваш пульс.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-lady",
+      "title": {
+        "text": "Прекрасная дама",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Он поклялся ради меня победить. Я просила лишь вернуться.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-war-horse",
+      "title": {
+        "text": "Боевой конь",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Когда трубы смолкают, он всё ещё слышит дорогу домой.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-ballista",
+      "title": {
+        "text": "Баллиста Туссента",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Рыцарь ищет слабое место. Мастер делает его сам.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-trebuchet",
+      "title": {
+        "text": "Требушет Туссента",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Даже у самой гордой башни есть последний рассвет.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-palmerin",
+      "title": {
+        "text": "Пальмерин де Лаунфорд",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Данное слово не становится легче, когда его трудно сдержать.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-anna",
+      "title": {
+        "text": "Анна Генриетта",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Мой народ заслуживает большего, чем красивые обещания.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "to-syanna",
+      "title": {
+        "text": "Сианна",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "В сказках прощают слишком легко. Я помню, чем они кончаются.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    }
+  ],
+  "loadout": {
+    "config": {
+      "faction": "toussaint",
+      "ruleset": "extended",
+      "leaderId": "to-leader-duchess",
+      "counts": {
+        "avallach": 1,
+        "yennefer": 1,
+        "triss": 1,
+        "geralt": 1,
+        "cirilla": 1,
+        "dandelion": 1,
+        "zoltan": 1,
+        "emiel": 1,
+        "vesemir": 1,
+        "olgierd": 1,
+        "gaunter-darkness": 3,
+        "gaunter": 1,
+        "cow": 1,
+        "villentretemerth": 1,
+        "to-knight-errant": 3,
+        "to-ducal-guard": 2,
+        "to-vintner": 2,
+        "to-courtier": 2,
+        "to-crossbowman": 2,
+        "to-herald": 1,
+        "to-physician": 1,
+        "to-lady": 1,
+        "to-war-horse": 2,
+        "to-ballista": 2,
+        "to-trebuchet": 1,
+        "to-palmerin": 1,
+        "to-anna": 1,
+        "to-syanna": 1,
+        "el-fire": 1,
+        "el-earth": 1,
+        "el-water": 1,
+        "ex-prep": 1,
+        "ex-trap": 1,
+        "ex-medic": 1,
+        "decoy": 1,
+        "commanders-horn": 1,
+        "scorch": 1,
+        "biting-frost": 1,
+        "impenetrable-fog": 0,
+        "torrential-rain": 0,
+        "clear-weather": 0
+      },
+      "arts": {}
+    },
+    "stats": {
+      "valid": true,
+      "errors": [],
+      "units": 38,
+      "specials": 10,
+      "heroes": 8,
+      "strength": 215,
+      "total": 48
+    }
+  },
+  "complete": true
+}

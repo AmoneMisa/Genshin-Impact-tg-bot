@@ -1,0 +1,154 @@
+{
+  "images": [
+    {
+      "key": "to-knight-errant",
+      "file": "illustrations/to-knight-errant.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-ducal-guard",
+      "file": "illustrations/to-ducal-guard.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-retries.json",
+      "selectedVersion": 2
+    },
+    {
+      "key": "to-vintner",
+      "file": "illustrations/to-vintner.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-courtier",
+      "file": "illustrations/to-courtier.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-retries.json",
+      "selectedVersion": 2
+    },
+    {
+      "key": "to-crossbowman",
+      "file": "illustrations/to-crossbowman.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-retries.json",
+      "selectedVersion": 2
+    },
+    {
+      "key": "to-herald",
+      "file": "illustrations/to-herald.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-retries.json",
+      "selectedVersion": 2
+    },
+    {
+      "key": "to-physician",
+      "file": "illustrations/to-physician.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-retries.json",
+      "selectedVersion": 2
+    },
+    {
+      "key": "to-lady",
+      "file": "illustrations/to-lady.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-war-horse",
+      "file": "illustrations/to-war-horse.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-ballista",
+      "file": "illustrations/to-ballista.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-trebuchet",
+      "file": "illustrations/to-trebuchet.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-palmerin",
+      "file": "illustrations/to-palmerin.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-anna",
+      "file": "illustrations/to-anna.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-syanna",
+      "file": "illustrations/to-syanna.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-leader-duchess",
+      "file": "illustrations/to-leader-duchess.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-leader-feast",
+      "file": "illustrations/to-leader-feast.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-leader-knights",
+      "file": "illustrations/to-leader-knights.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    },
+    {
+      "key": "to-leader-defender",
+      "file": "illustrations/to-leader-defender.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "selectedVersion": 1
+    }
+  ],
+  "generatedBacks": 0,
+  "backSource": "webapp/art/gwent/printed/back-toussaint.webp",
+  "reusedSharedCards": 6,
+  "generatedFaces": 18,
+  "collectionFaces": 45,
+  "approval": "approved"
+}

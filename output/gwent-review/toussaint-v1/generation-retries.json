@@ -1,0 +1,67 @@
+[
+  {
+    "key": "to-ducal-guard",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Герцогская гвардия",
+    "changed": false,
+    "file": "illustrations/to-ducal-guard.png",
+    "prompt": "Use case: stylized-concept. One independent portrait illustration for a custom Witcher 3 Gwent card. Subject: A broad square-faced adult man aged 32 with close-cropped blond hair and a full short blond beard, sturdy athletic build. A Toussaint ducal guard wearing polished plate, azure and gold fleur-de-lis tabard, holding a halberd vertically at the palace gate. Face visible and distinctive. Grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent illustrations: matte oil-painted surface, subtle visible brushwork, natural human anatomy, detailed weathered cloth, warm gold light and mild atmospheric haze. Warm golden sunlight, vineyard greens, blue and burgundy fabrics, stone Beauclair palace, refined medieval Renaissance Toussaint setting. Portrait 5:7 full bleed; face upper middle at x55%, leftmost23% quiet for later ribbon. Complete head visible and strong readable silhouette. Illustration only, no border or parchment or card ribbon, no letters, numbers, words or watermarks. No glossy 3D render or anime. Everyone depicted is an adult.",
+    "quote": "За этими воротами даже беда обязана представиться.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [],
+    "reason": "Differentiate incidental faces from the male painting reference."
+  },
+  {
+    "key": "to-courtier",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Придворный шпион",
+    "changed": false,
+    "file": "illustrations/to-courtier.png",
+    "prompt": "Use case: stylized-concept. One independent portrait illustration for a custom Witcher 3 Gwent card. Subject: A slender adult court spy aged 40 with a long narrow clean-shaven face, a pronounced aquiline nose and sleek straight black hair to the ears, no beard or moustache. Wearing a burgundy velvet doublet, leaning behind a marble pillar to whisper to a noblewoman in a golden gown. Hands relaxed, discreet sly expression, no combat. Grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent illustrations: matte oil-painted surface, subtle visible brushwork, natural human anatomy, detailed weathered cloth, warm gold light and mild atmospheric haze. Warm golden sunlight, vineyard greens, blue and burgundy fabrics, stone Beauclair palace, refined medieval Renaissance Toussaint setting. Portrait 5:7 full bleed; face upper middle at x55%, leftmost23% quiet for later ribbon. Complete head visible and strong readable silhouette. Illustration only, no border or parchment or card ribbon, no letters, numbers, words or watermarks. No glossy 3D render or anime. Everyone depicted is an adult.",
+    "quote": "При дворе громче всего звучит сказанное шёпотом.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [],
+    "reason": "Differentiate incidental faces from the male painting reference."
+  },
+  {
+    "key": "to-crossbowman",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Арбалетчик Туссента",
+    "changed": false,
+    "file": "illustrations/to-crossbowman.png",
+    "prompt": "Use case: stylized-concept. One independent portrait illustration for a custom Witcher 3 Gwent card. Subject: A lean weather-beaten adult man aged 55 with cropped grey hair, grey stubble and a long thin face, deep wrinkles around his eyes. A Toussaint crossbowman in blue and gold livery aiming a mechanically plausible wooden crossbow from a stone battlement above vineyards. Clearly distinct face, calm concentration. Grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent illustrations: matte oil-painted surface, subtle visible brushwork, natural human anatomy, detailed weathered cloth, warm gold light and mild atmospheric haze. Warm golden sunlight, vineyard greens, blue and burgundy fabrics, stone Beauclair palace, refined medieval Renaissance Toussaint setting. Portrait 5:7 full bleed; face upper middle at x55%, leftmost23% quiet for later ribbon. Complete head visible and strong readable silhouette. Illustration only, no border or parchment or card ribbon, no letters, numbers, words or watermarks. No glossy 3D render or anime. Everyone depicted is an adult.",
+    "quote": "С холма виноградники виднее. И чужие знамёна тоже.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [],
+    "reason": "Differentiate incidental faces from the male painting reference."
+  },
+  {
+    "key": "to-herald",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Глашатай",
+    "changed": false,
+    "file": "illustrations/to-herald.png",
+    "prompt": "Use case: stylized-concept. One independent portrait illustration for a custom Witcher 3 Gwent card. Subject: An adult male herald aged 25, with curly light brown hair, round clean-shaven face and a small upturned nose, slender build, no moustache. Wearing azure and gold finery, blowing a long medieval herald trumpet with a fleur-de-lis banner, bright Beauclair tournament ground and castles beyond. Grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent illustrations: matte oil-painted surface, subtle visible brushwork, natural human anatomy, detailed weathered cloth, warm gold light and mild atmospheric haze. Warm golden sunlight, vineyard greens, blue and burgundy fabrics, stone Beauclair palace, refined medieval Renaissance Toussaint setting. Portrait 5:7 full bleed; face upper middle at x55%, leftmost23% quiet for later ribbon. Complete head visible and strong readable silhouette. Illustration only, no border or parchment or card ribbon, no letters, numbers, words or watermarks. No glossy 3D render or anime. Everyone depicted is an adult.",
+    "quote": "Сначала я объявляю имя. Остальное решает ристалище.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [],
+    "reason": "Differentiate incidental faces from the male painting reference."
+  },
+  {
+    "key": "to-physician",
+    "faction": "toussaint",
+    "kind": "unit",
+    "name": "Придворный лекарь",
+    "changed": false,
+    "file": "illustrations/to-physician.png",
+    "prompt": "Use case: stylized-concept. One independent portrait illustration for a custom Witcher 3 Gwent card. Subject: An elderly adult physician aged 65, with long white hair, a full neat white beard and round small spectacles, a kindly deeply lined face. Wearing a simple long dark physician robe, carefully checking the pulse of a resting knight in a vaulted palace infirmary. Brass bowls, clean cloth and bundles of herbs. Quiet care, no blood or surgery. Grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent illustrations: matte oil-painted surface, subtle visible brushwork, natural human anatomy, detailed weathered cloth, warm gold light and mild atmospheric haze. Warm golden sunlight, vineyard greens, blue and burgundy fabrics, stone Beauclair palace, refined medieval Renaissance Toussaint setting. Portrait 5:7 full bleed; face upper middle at x55%, leftmost23% quiet for later ribbon. Complete head visible and strong readable silhouette. Illustration only, no border or parchment or card ribbon, no letters, numbers, words or watermarks. No glossy 3D render or anime. Everyone depicted is an adult.",
+    "quote": "Славу оставьте за дверью. Здесь мне нужен ваш пульс.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [],
+    "reason": "Differentiate incidental faces from the male painting reference."
+  }
+]

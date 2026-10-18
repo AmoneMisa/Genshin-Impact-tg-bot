@@ -1,0 +1,27 @@
+{
+  "sharedSource": "../wild-hunt-v1/layers",
+  "sourceCommit": "7f08b270",
+  "customIcons": {},
+  "frame": {
+    "source": "../templates-v1/unit.png",
+    "cloth": "wine burgundy; existing stitching and parchment preserved"
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-toussaint.webp",
+    "crop": {
+      "left": 26,
+      "top": 22,
+      "width": 51,
+      "height": 58
+    },
+    "extraction": "Complete gold fleur-de-lis from the ready back; silhouette mask excludes surrounding frame",
+    "canvas": [
+      38,
+      39
+    ]
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-toussaint.webp",
+    "reusedUnchanged": true
+  }
+}

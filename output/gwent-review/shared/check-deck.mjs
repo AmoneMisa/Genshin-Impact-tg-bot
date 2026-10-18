@@ -15,6 +15,27 @@ const report=JSON.parse(fs.readFileSync(path.join(out,'deck-manifest.json'))),qu
 assert.equal(report.complete,true);assert.equal(report.cards.length,expected);assert.deepEqual(report.missing,[]);
 assert.equal(report.cards.filter(c=>c.kind==='leader').length,4);assert.equal(report.textMetrics.length,report.cards.filter(c=>c.quoteOrigin==='fan-written'&&!c.reuse).length);assert.equal(report.loadout.stats.valid,true);
 const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');assert.equal(hash(path.join(out,'back.webp')),hash('webapp/art/gwent/printed/back-'+WILD_HUNT_DECK.id+'.webp'));
+if(spec.frames?.unit){
+ const base=await sharp(path.resolve(out,'../templates-v1/unit.png')).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+ const frame=await sharp(path.resolve(out,spec.frames.unit)).ensureAlpha().raw().toBuffer();
+ assert.equal(frame.length,base.data.length);
+ let changed=0;
+ for(let y=0;y<base.info.height;y++)for(let x=0;x<base.info.width;x++){
+  const at=(y*base.info.width+x)*4;
+  assert.equal(frame[at+3],base.data[at+3],'faction cloth changed frame transparency');
+  for(let c=0;c<3;c++)if(frame[at+c]!==base.data[at+c]){
+   changed++;assert.ok(x>=16&&x<73&&y<515,'faction cloth changed art window, parchment or text area');
+  }
+ }
+ assert.ok(changed>1000,'faction ribbon still uses the Northern Realms palette');
+ const emblem=await sharp(path.join(out,'layers/faction-emblem.png')).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+ assert.equal(emblem.info.width,spec.emblemSlot.w);assert.equal(emblem.info.height,spec.emblemSlot.h);
+ let minX=Infinity,maxX=-1,minY=Infinity,maxY=-1;
+ for(let y=0;y<emblem.info.height;y++)for(let x=0;x<emblem.info.width;x++)if(emblem.data[(y*emblem.info.width+x)*4+3]>128){minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);}
+ assert.ok(maxX-minX>=20&&maxY-minY>=20,'faction emblem is too small or missing');
+ assert.ok(Math.abs(spec.emblemSlot.x+(minX+maxX)/2-44)<2,'faction emblem is not centered on the ribbon');
+ assert.ok(spec.emblemSlot.y+maxY<490,'faction emblem overlaps the ribbon tail');
+}
 // The hero medallion is one opaque object, never a set of gold-colored fragments.
 const {data:medallion,info:medalInfo}=await sharp(path.join(out,'layers/power-hero-10-clean-v2.png')).ensureAlpha().raw().toBuffer({resolveWithObject:true});
 const seen=new Uint8Array(medalInfo.width*medalInfo.height);let components=0;

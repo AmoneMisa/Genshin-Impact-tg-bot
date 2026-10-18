@@ -1,0 +1,36 @@
+{
+  "faction": "toussaint",
+  "prefix": "to-",
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1"
+  },
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "emblemSlot": {
+    "x": 25,
+    "y": 447,
+    "w": 38,
+    "h": 39
+  },
+  "previewIds": [
+    "to-knight-errant",
+    "to-vintner",
+    "to-palmerin",
+    "to-syanna",
+    "to-leader-duchess"
+  ],
+  "customIcons": [
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall"
+  ]
+}
