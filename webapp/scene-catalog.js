@@ -391,6 +391,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"labyrinth-83","title":"Лабиринт Бездны · 83","category":"hunting","environment":"catacomb","asset":"labyrinth-83","sections":1},
   {"id":"rift-1","title":"Разлом Измерений · 1","category":"hunting","environment":"catacomb","asset":"rift-1","sections":1},
   {"id":"rift-2","title":"Разлом Измерений · 2","category":"hunting","environment":"catacomb","asset":"rift-2","sections":1},
+  {"id":"rift-3","title":"Разлом Измерений · 3","category":"hunting","environment":"catacomb","asset":"rift-3","sections":1},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
