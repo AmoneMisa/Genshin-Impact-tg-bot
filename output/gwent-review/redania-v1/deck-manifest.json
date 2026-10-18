@@ -2,7 +2,7 @@
   "faction": "redania",
   "title": "Редания",
   "approval": "approved",
-  "integrated": false,
+  "integrated": true,
   "pushed": false,
   "templateSize": {
     "width": 310,
@@ -1281,5 +1281,6 @@
       "total": 44
     }
   },
-  "complete": true
+  "complete": true,
+  "publication": "Runtime artwork integrated; Git history records publication."
 }

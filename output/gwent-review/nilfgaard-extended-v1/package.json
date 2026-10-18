@@ -1,0 +1,54 @@
+{
+  "faction": "nilfgaard",
+  "ruleset": "extended",
+  "prefix": "nf-",
+  "factionCardIds": [
+    "tibor",
+    "letho",
+    "morvran",
+    "menno",
+    "black-archer",
+    "heavy-scorpion",
+    "zerrikanian-scorpion",
+    "combat-engineer",
+    "siege-support",
+    "rotten-mangonel",
+    "archer-support",
+    "albrich",
+    "sweers",
+    "puttkammer",
+    "vanhemar",
+    "cynthia",
+    "renuald",
+    "assire",
+    "fringilla",
+    "vreemde",
+    "nausicaa",
+    "impera",
+    "morteisen",
+    "vattier",
+    "rainfarn",
+    "young-emissary",
+    "cahir",
+    "shilard",
+    "stefan"
+  ],
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1",
+    "ambush": "../velen-v1"
+  },
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "nativeRibbonSource": "vreemde",
+  "nativePatches": {},
+  "previewIds": [
+    "nf-double-agent"
+  ],
+  "detailId": "nf-double-agent"
+}

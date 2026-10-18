@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { GWENT_ART, GWENT_PRINTED_CARDS, GWENT_CARD_VARIANTS } from '../webapp/gwent-art.js';
-import { DECK_IDS, GWENT_DECKS, TOKENS } from '../webapp/gwent-decks.js';
+import { DECK_IDS, GWENT_DECKS, TOKENS, RULESETS, deckFor } from '../webapp/gwent-decks.js';
 import { gwentCardHtml } from '../webapp/gwent.js';
-import { cardArtOptions } from '../webapp/gwent-art-options.js';
+import { cardArtOptions, cardArtSource } from '../webapp/gwent-art-options.js';
+import { EXTENDED_GWENT_ART } from '../webapp/gwent-expansion-art.js';
 import { defaultLoadout, buildDeck, inspectLoadout } from '../webapp/gwent-builder.js';
 import { createMatch } from '../webapp/gwent-engine.js';
 
@@ -20,6 +21,37 @@ test('every playable card, token and leader uses a complete supplied card; backs
   assert.match(GWENT_ART['back:skellige'], /deck_back_skellige\.jpg$/);
   assert.equal(GWENT_ART.geralt, '/art/gwent/printed/neit_h5.webp');
   assert.equal(GWENT_ART['eredin-commander'], '/art/gwent/printed/lid_m4.webp');
+});
+
+test('all rulesets, expansion leaders and summoned tokens have deployable printed faces', () => {
+  for (const [ruleset, rules] of Object.entries(RULESETS)) for (const faction of rules.factions) {
+    const deck = deckFor(ruleset, faction);
+    for (const card of [...deck.cards.map(([c]) => c), ...deck.leaders]) {
+      assert.ok(GWENT_PRINTED_CARDS.has(card.id), card.id);
+      for (const source of cardArtOptions(card.id, ruleset)) assert.ok(fs.existsSync('webapp' + source), source);
+      assert.ok(cardArtSource(card.id, 0, ruleset), card.id);
+      assert.doesNotMatch(gwentCardHtml(card, card.strength, { ruleset }), /class="gwent-card-(name|trait|power)"/, card.id);
+    }
+  }
+  for (const token of Object.values(TOKENS)) {
+    assert.ok(GWENT_PRINTED_CARDS.has(token.id), token.id);
+    assert.ok(fs.existsSync('webapp' + cardArtSource(token.id)), token.id);
+  }
+});
+
+test('extended badge updates are selected by ruleset and never become cosmetic variants', () => {
+  assert.equal(Object.keys(EXTENDED_GWENT_ART).length, 5);
+  for (const [id, extended] of Object.entries(EXTENDED_GWENT_ART)) {
+    const classic = cardArtSource(id);
+    assert.notEqual(classic, extended, id);
+    assert.equal(cardArtSource(id, 0, 'extended'), extended);
+    assert.equal(cardArtOptions(id, 'extended').length, 1);
+    assert.match(classic, /\/printed\//);
+    assert.ok(fs.existsSync('webapp' + extended));
+    const card = Object.values(GWENT_DECKS).flatMap(d => d.cards.map(([c]) => c)).find(c => c.id === id);
+    assert.ok(gwentCardHtml(card, card.strength, { ruleset: 'extended' }).includes(extended));
+    assert.ok(gwentCardHtml(card).includes(classic));
+  }
 });
 
 test('printed cards keep accessible names, without duplicate visible names/icons or base strength', () => {

@@ -1,0 +1,579 @@
+{
+  "ruleset": "extended",
+  "faction": "skellige",
+  "leaders": [
+    {
+      "id": "king-bran",
+      "name": "Король Бран",
+      "effect": {
+        "type": "passive-bran"
+      }
+    },
+    {
+      "id": "crach",
+      "name": "Крах ан Крайт",
+      "effect": {
+        "type": "shuffleGraveyards"
+      }
+    },
+    {
+      "id": "sk-leader-jarl",
+      "name": "Крах ан Крайт: Ярл островов",
+      "effect": {
+        "type": "reviveAny"
+      }
+    },
+    {
+      "id": "sk-leader-fury",
+      "name": "Король Бран: Свирепый король",
+      "effect": {
+        "type": "double",
+        "row": "close"
+      }
+    }
+  ],
+  "back": "/art/gwent/icons/deck_back_skellige.jpg",
+  "cards": [
+    {
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "cirilla",
+      "name": "Цирилла",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "dandelion",
+      "name": "Лютик",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "vesemir",
+      "name": "Весемир",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "cow",
+      "name": "Корова",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "drummond",
+      "name": "Воительница клана Друммонд",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "craite",
+      "name": "Воин клана ан Крайт",
+      "copies": 3,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "donar",
+      "name": "Донар ан Хиндар",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "blacksmith",
+      "name": "Кузнец клана Тордаррох",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "svanrige",
+      "name": "Сванриге",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "heymaey-skald",
+      "name": "Скальд клана Хеймэй",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print with badge-only patch"
+    },
+    {
+      "id": "udalryk",
+      "name": "Удальрик",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "lugos-mad",
+      "name": "Лугос Безумный",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "lugos-blue",
+      "name": "Лугос Синий",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "hjalmar",
+      "name": "Хьялмар",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "birna",
+      "name": "Бирна Бран",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print with badge-only patch"
+    },
+    {
+      "id": "holger-blackhand",
+      "name": "Хольгер Чернорукий",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "siege"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "draig-bon-dhu",
+      "name": "Драйк Бон-Дху",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "siege"
+      ],
+      "source": "supplied print with badge-only patch"
+    },
+    {
+      "id": "war-longship",
+      "name": "Военный драккар",
+      "copies": 3,
+      "strength": 6,
+      "rows": [
+        "siege"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "light-longship",
+      "name": "Легкий драккар",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "brokvar-archer",
+      "name": "Лучник клана Броквар",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "olaf",
+      "name": "Олаф",
+      "copies": 1,
+      "strength": 12,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "berserker",
+      "name": "Берсерк",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "young-berserker",
+      "name": "Молодой берсерк",
+      "copies": 3,
+      "strength": 2,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "myshovur",
+      "name": "Мышовур",
+      "copies": 1,
+      "strength": 8,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "keris",
+      "name": "Керис",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "kambi",
+      "name": "Камби",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "pirate",
+      "name": "Пират клана Димун",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "mardroeme",
+      "name": "Мардрём",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "storm-skellige",
+      "name": "Шторм со Скеллиге",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "decoy",
+      "name": "Чучело",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "scorch",
+      "name": "Казнь",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "biting-frost",
+      "name": "Мороз",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "sk-axeman",
+      "name": "Секироносец клана Туирсех",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "source": "new illustration"
+    },
+    {
+      "id": "sk-sea-wolf",
+      "name": "Морской волк",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "source": "new illustration"
+    },
+    {
+      "id": "sk-shipwright",
+      "name": "Корабельный мастер",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "siege"
+      ],
+      "source": "new illustration"
+    },
+    {
+      "id": "sk-captain",
+      "name": "Капитан драккара",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "source": "new illustration"
+    },
+    {
+      "id": "ambush",
+      "name": "Засада",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "source": "approved shared face"
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "source": "approved shared face"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "source": "approved shared face"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "source": "approved shared face"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "source": "approved shared face"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "source": "approved shared face"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "source": "approved shared face"
+    }
+  ]
+}

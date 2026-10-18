@@ -2,7 +2,7 @@
   "faction": "eternal-fire",
   "title": "Вечный Огонь",
   "approval": "approved",
-  "integrated": false,
+  "integrated": true,
   "pushed": false,
   "templateSize": {
     "width": 310,
@@ -1392,5 +1392,6 @@
       "total": 46
     }
   },
-  "complete": true
+  "complete": true,
+  "publication": "Runtime artwork integrated; Git history records publication."
 }

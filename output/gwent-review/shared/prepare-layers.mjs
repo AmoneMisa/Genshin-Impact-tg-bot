@@ -1,11 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createRequire}from 'node:module';
+import {cleanSpecialIcon,specialIconCircle} from './special-icon.mjs';
 import {GWENT_ART}from '../../../webapp/gwent-art.js';
 const require=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/package.json');
 const sharp=require('sharp');
 
-export async function prepareLayers(directory,faction,glyphs={}){
+export async function prepareLayers(directory,faction,glyphs={},options={}){
  const out=path.resolve(directory),approved=path.resolve(out,'../wild-hunt-v1');
  fs.mkdirSync(path.join(out,'layers'),{recursive:true});fs.mkdirSync(path.join(out,'fonts'),{recursive:true});
  for(const file of fs.readdirSync(path.join(approved,'layers'))){
@@ -41,14 +42,20 @@ export async function prepareLayers(directory,faction,glyphs={}){
   const clean=await sharp(target).ensureAlpha().composite([{input:mask,blend:'dest-in'}]).png().toBuffer();
   fs.writeFileSync(target,clean);
  }
+ // The agile crop additionally contains green source cloth under the medal.
+ const agile=path.join(out,'layers/row-agile.png');
+ const agileMask=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="81" height="81"><circle cx="44" cy="38" r="36.5" fill="white"/></svg>');
+ const cleanAgile=await sharp(agile).ensureAlpha().composite([{input:agileMask,blend:'dest-in'}]).png().toBuffer();
+ fs.writeFileSync(agile,await sharp(cleanAgile).trim().resize(92,92,{fit:'contain',background:'#00000000'}).png().toBuffer());
+ provenance.agileMask={center:[44,38],radius:36.5,output:[92,92],purpose:'Remove green source ribbon and normalize the roundel to the other row icons'};
  provenance.abilityMask={center:[44,38],radius:36.5,canvas:[81,81],purpose:'Remove source-card cloth and portrait outside the original medal; no added border'};
- const back='webapp'+GWENT_ART['back:'+faction];fs.copyFileSync(back,path.join(out,'back.webp'));
- if(['witchers','toussaint','velen','redania','sorceresses','eternal-fire'].includes(faction)){
+ const back='webapp'+GWENT_ART['back:'+faction];fs.copyFileSync(back,path.join(out,options.backFile||'back.webp'));
+ if(['witchers','toussaint','velen','redania','sorceresses','eternal-fire','skellige'].includes(faction)){
   const tintCloth=(pixels,i)=>{
    const r=pixels[i],g=pixels[i+1],b=pixels[i+2];
    if(b>r*1.15&&b>g*1.05){
     const light=.2126*r+.7152*g+.0722*b;
-    const colors={witchers:[12+light*.48,15+light*.52,19+light*.57],toussaint:[35+light*.85,8+light*.22,18+light*.38],velen:[14+light*.42,20+light*.48,10+light*.25],redania:[28+light*.88,4+light*.12,7+light*.17],sorceresses:[22+light*.4,10+light*.16,39+light*.8],'eternal-fire':[40+light*.95,17+light*.48,7+light*.16]};
+    const colors={skellige:[21+light*.39,8+light*.16,35+light*.62],witchers:[12+light*.48,15+light*.52,19+light*.57],toussaint:[35+light*.85,8+light*.22,18+light*.38],velen:[14+light*.42,20+light*.48,10+light*.25],redania:[28+light*.88,4+light*.12,7+light*.17],sorceresses:[22+light*.4,10+light*.16,39+light*.8],'eternal-fire':[40+light*.95,17+light*.48,7+light*.16]};
     const color=colors[faction];
     color.forEach((v,c)=>pixels[i+c]=Math.round(Math.min(255,v)));
    }
@@ -66,8 +73,20 @@ export async function prepareLayers(directory,faction,glyphs={}){
    for(let i=0;i<raw.data.length;i+=4)tintCloth(raw.data,i);
    const png=await sharp(raw.data,{raw:raw.info}).png().toBuffer();fs.writeFileSync(target,png);
   }
-  provenance.frame={source:'../templates-v1/unit.png',cloth:({witchers:'graphite and steel',toussaint:'wine burgundy',velen:'swamp olive',redania:'dark crimson',sorceresses:'deep plum violet','eternal-fire':'charred copper and ember ochre'}[faction])+'; existing stitching and parchment preserved'};
-  if(faction==='witchers'){
+  provenance.frame={source:'../templates-v1/unit.png',cloth:({skellige:'original Skellige violet',witchers:'graphite and steel',toussaint:'wine burgundy',velen:'swamp olive',redania:'dark crimson',sorceresses:'deep plum violet','eternal-fire':'charred copper and ember ochre'}[faction])+'; existing stitching and parchment preserved'};
+  if(faction==='skellige'){
+   // Isolate the original silver longship from the center of the supplied ready back.
+   const contour='170,190 179,190 180,207 205,208 207,254 183,249 179,265 200,265 207,279 237,309 232,318 205,291 137,291 113,317 105,312 128,282 114,283 103,274 103,254 111,233 119,220 112,217 112,210 118,203 126,204 132,212 129,222 119,243 118,262 125,270 136,272 141,263 143,263 141,208 167,207 168,193 170,190';
+   const right='217,200 230,202 241,211 239,220 231,221 231,214 226,213 230,237 239,256 241,271 233,282 220,285 210,276 220,271 225,260 224,244 220,230 217,218 212,216 212,207';
+   const mask=Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="340" height="510"><polygon points="${contour}" fill="white"/><polygon points="${right}" fill="white"/></svg>`);
+   const source=await sharp(back).resize(340,510).ensureAlpha().composite([{input:mask,blend:'dest-in'}]).raw().toBuffer({resolveWithObject:true});
+   for(let y=0;y<510;y++)for(let x=0;x<340;x++){
+    const i=(y*340+x)*4,r=source.data[i],g=source.data[i+1],b=source.data[i+2];
+    if(b>g*1.24)source.data[i+3]=0;
+   }
+   await sharp(source.data,{raw:source.info}).trim().resize(34,36,{fit:'contain',background:'#00000000'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
+   provenance.emblem={source:back,extraction:'Original silver Skellige longship from central roundel; violet cloth removed',canvas:[34,36]};
+  }else if(faction==='witchers'){
   // Trace the whole silver medallion, excluding the surrounding belt. Keep dark facial details opaque.
   const points='106,166 128,186 140,176 151,184 169,181 185,184 200,176 210,185 234,164 229,198 244,209 230,220 257,239 223,245 250,282 214,270 214,300 191,280 183,319 157,319 151,280 126,303 130,269 89,282 119,249 84,240 114,220 94,210 115,202';
   const mask=Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="340" height="510"><polygon points="${points}" fill="white"/></svg>`);
@@ -127,6 +146,8 @@ export async function prepareLayers(directory,faction,glyphs={}){
  await sharp(data,{raw:info}).trim().resize(34,47,{fit:'inside'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
  provenance.emblem={source:back,crop};
  }
+ for(const file of fs.readdirSync(path.join(out,'layers')).filter(n=>/^effect-.*\.png$/.test(n))){const target=path.join(out,'layers',file);fs.writeFileSync(target,await cleanSpecialIcon(target));}
+ provenance.specialIconMask={...specialIconCircle,purpose:'Remove source scenery outside gold roundels'};
  provenance.back={source:back,reusedUnchanged:true};
  fs.writeFileSync(path.join(out,'layers/provenance.json'),JSON.stringify(provenance,null,2));
  console.log('Shared layers, custom glyphs and existing back prepared: '+faction);

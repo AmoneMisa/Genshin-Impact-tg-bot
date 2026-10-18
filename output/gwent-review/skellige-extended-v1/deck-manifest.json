@@ -1,0 +1,1308 @@
+{
+  "faction": "skellige",
+  "title": "Скеллиге",
+  "approval": "approved",
+  "integrated": true,
+  "pushed": false,
+  "ruleset": "extended",
+  "templateSize": {
+    "width": 310,
+    "height": 585
+  },
+  "font": "Roboto Condensed",
+  "fontMatch": "Review candidate; original game typeface not independently verified.",
+  "quotes": {
+    "generated": "Original fan-written lines, not quotations from Witcher 3.",
+    "existing": "Preserved inside user-supplied original card images."
+  },
+  "back": {
+    "file": "back.jpg",
+    "source": "/art/gwent/icons/deck_back_skellige.jpg",
+    "reusedUnchanged": true
+  },
+  "customIcons": [
+    "swap",
+    "mage",
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall"
+  ],
+  "cards": [
+    {
+      "summoned": false,
+      "id": "king-bran",
+      "name": "Король Бран",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/king-bran.png",
+      "webp": "cards/king-bran.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "crach",
+      "name": "Крах ан Крайт",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/crach.png",
+      "webp": "cards/crach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "sk-leader-jarl",
+      "name": "Крах ан Крайт: Ярл островов",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/sk-leader-jarl.png",
+      "webp": "cards/sk-leader-jarl.webp",
+      "quote": "Пока в Каэр Трольде горит очаг, острова не преклонят колен.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "sk-leader-fury",
+      "name": "Король Бран: Свирепый король",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/sk-leader-fury.png",
+      "webp": "cards/sk-leader-fury.webp",
+      "quote": "Пусть море заберёт моё тело. Мою славу оно не утопит.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/avallach.png",
+      "webp": "cards/avallach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/yennefer.png",
+      "webp": "cards/yennefer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/triss.png",
+      "webp": "cards/triss.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/geralt.png",
+      "webp": "cards/geralt.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cirilla",
+      "name": "Цирилла",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/cirilla.png",
+      "webp": "cards/cirilla.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dandelion",
+      "name": "Лютик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dandelion.png",
+      "webp": "cards/dandelion.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/zoltan.png",
+      "webp": "cards/zoltan.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/emiel.png",
+      "webp": "cards/emiel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vesemir",
+      "name": "Весемир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vesemir.png",
+      "webp": "cards/vesemir.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olgierd.png",
+      "webp": "cards/olgierd.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/gaunter-darkness.png",
+      "webp": "cards/gaunter-darkness.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/gaunter.png",
+      "webp": "cards/gaunter.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cow",
+      "name": "Корова",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/cow.png",
+      "webp": "cards/cow.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/villentretemerth.png",
+      "webp": "cards/villentretemerth.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "drummond",
+      "name": "Воительница клана Друммонд",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/drummond.png",
+      "webp": "cards/drummond.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "craite",
+      "name": "Воин клана ан Крайт",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/craite.png",
+      "webp": "cards/craite.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "donar",
+      "name": "Донар ан Хиндар",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/donar.png",
+      "webp": "cards/donar.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "blacksmith",
+      "name": "Кузнец клана Тордаррох",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/blacksmith.png",
+      "webp": "cards/blacksmith.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "svanrige",
+      "name": "Сванриге",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/svanrige.png",
+      "webp": "cards/svanrige.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "heymaey-skald",
+      "name": "Скальд клана Хеймэй",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/heymaey-skald.png",
+      "webp": "cards/heymaey-skald.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "Supplied printed card; only extended-rule power/ability patched",
+      "abilities": [
+        "morale"
+      ],
+      "nativePatch": {
+        "ability": "morale"
+      }
+    },
+    {
+      "summoned": false,
+      "id": "udalryk",
+      "name": "Удальрик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/udalryk.png",
+      "webp": "cards/udalryk.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "lugos-mad",
+      "name": "Лугос Безумный",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/lugos-mad.png",
+      "webp": "cards/lugos-mad.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "lugos-blue",
+      "name": "Лугос Синий",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/lugos-blue.png",
+      "webp": "cards/lugos-blue.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "hjalmar",
+      "name": "Хьялмар",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/hjalmar.png",
+      "webp": "cards/hjalmar.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "birna",
+      "name": "Бирна Бран",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/birna.png",
+      "webp": "cards/birna.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "Supplied printed card; only extended-rule power/ability patched",
+      "abilities": [
+        "medic"
+      ],
+      "nativePatch": {
+        "strength": 3
+      }
+    },
+    {
+      "summoned": false,
+      "id": "holger-blackhand",
+      "name": "Хольгер Чернорукий",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/holger-blackhand.png",
+      "webp": "cards/holger-blackhand.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "draig-bon-dhu",
+      "name": "Драйк Бон-Дху",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/draig-bon-dhu.png",
+      "webp": "cards/draig-bon-dhu.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "Supplied printed card; only extended-rule power/ability patched",
+      "abilities": [
+        "horn"
+      ],
+      "nativePatch": {
+        "strength": 3
+      }
+    },
+    {
+      "summoned": false,
+      "id": "war-longship",
+      "name": "Военный драккар",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 6,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/war-longship.png",
+      "webp": "cards/war-longship.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "light-longship",
+      "name": "Легкий драккар",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/light-longship.png",
+      "webp": "cards/light-longship.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "brokvar-archer",
+      "name": "Лучник клана Броквар",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/brokvar-archer.png",
+      "webp": "cards/brokvar-archer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olaf",
+      "name": "Олаф",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 12,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olaf.png",
+      "webp": "cards/olaf.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "berserker",
+      "name": "Берсерк",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/berserker.png",
+      "webp": "cards/berserker.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "young-berserker",
+      "name": "Молодой берсерк",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 2,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/young-berserker.png",
+      "webp": "cards/young-berserker.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "myshovur",
+      "name": "Мышовур",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 8,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/myshovur.png",
+      "webp": "cards/myshovur.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "keris",
+      "name": "Керис",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/keris.png",
+      "webp": "cards/keris.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "kambi",
+      "name": "Камби",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/kambi.png",
+      "webp": "cards/kambi.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "pirate",
+      "name": "Пират клана Димун",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/pirate.png",
+      "webp": "cards/pirate.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "mardroeme",
+      "name": "Мардрём",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/mardroeme.png",
+      "webp": "cards/mardroeme.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "storm-skellige",
+      "name": "Шторм со Скеллиге",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/storm-skellige.png",
+      "webp": "cards/storm-skellige.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "decoy",
+      "name": "Чучело",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/decoy.png",
+      "webp": "cards/decoy.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/commanders-horn.png",
+      "webp": "cards/commanders-horn.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "scorch",
+      "name": "Казнь",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/scorch.png",
+      "webp": "cards/scorch.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "biting-frost",
+      "name": "Мороз",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/biting-frost.png",
+      "webp": "cards/biting-frost.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/impenetrable-fog.png",
+      "webp": "cards/impenetrable-fog.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/torrential-rain.png",
+      "webp": "cards/torrential-rain.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/clear-weather.png",
+      "webp": "cards/clear-weather.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "sk-axeman",
+      "name": "Секироносец клана Туирсех",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/sk-axeman.png",
+      "webp": "cards/sk-axeman.webp",
+      "quote": "Клятву дают перед богами. Держат — перед братьями.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "sk-sea-wolf",
+      "name": "Морской волк",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/sk-sea-wolf.png",
+      "webp": "cards/sk-sea-wolf.webp",
+      "quote": "Море знает моё имя. Берег узнает его на рассвете.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "sk-shipwright",
+      "name": "Корабельный мастер",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/sk-shipwright.png",
+      "webp": "cards/sk-shipwright.webp",
+      "quote": "Хороший корабль переживёт ярла. Плохой — не переживёт зиму.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "medic"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "sk-captain",
+      "name": "Капитан драккара",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/sk-captain.png",
+      "webp": "cards/sk-captain.webp",
+      "quote": "Гребите. О страхе поговорим на другом берегу.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "swap"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ambush",
+      "name": "Засада",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ambush.png",
+      "webp": "cards/ambush.webp",
+      "quote": "Они слишком долго смотрели на дорогу. По сторонам было тихо.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "ambush"
+      ],
+      "reuse": "../velen-v1"
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-fire.png",
+      "webp": "cards/el-fire.webp",
+      "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "fire"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-earth.png",
+      "webp": "cards/el-earth.webp",
+      "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "earth"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-water.png",
+      "webp": "cards/el-water.webp",
+      "quote": "Тихая вода первой забирается под доспех.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "water"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-prep.png",
+      "webp": "cards/ex-prep.webp",
+      "quote": "Стену ещё не видно, а приговор уже отлит.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "prep"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-trap.png",
+      "webp": "cards/ex-trap.webp",
+      "quote": "На этой тропе слишком удобно идти одному.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "trap"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-medic.png",
+      "webp": "cards/ex-medic.webp",
+      "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "recall"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    }
+  ],
+  "missing": [],
+  "textMetrics": [
+    {
+      "id": "sk-leader-jarl",
+      "title": {
+        "text": "Крах ан Крайт: Ярл островов",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Пока в Каэр Трольде горит очаг, острова не преклонят колен.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "sk-leader-fury",
+      "title": {
+        "text": "Король Бран: Свирепый король",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Пусть море заберёт моё тело. Мою славу оно не утопит.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "sk-axeman",
+      "title": {
+        "text": "Секироносец клана Туирсех",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Клятву дают перед богами. Держат — перед братьями.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "sk-sea-wolf",
+      "title": {
+        "text": "Морской волк",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Море знает моё имя. Берег узнает его на рассвете.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "sk-shipwright",
+      "title": {
+        "text": "Корабельный мастер",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Хороший корабль переживёт ярла. Плохой — не переживёт зиму.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "sk-captain",
+      "title": {
+        "text": "Капитан драккара",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Гребите. О страхе поговорим на другом берегу.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    }
+  ],
+  "loadout": {
+    "config": {
+      "faction": "skellige",
+      "ruleset": "extended",
+      "leaderId": "king-bran",
+      "counts": {
+        "avallach": 1,
+        "yennefer": 1,
+        "triss": 1,
+        "geralt": 1,
+        "cirilla": 1,
+        "dandelion": 1,
+        "zoltan": 1,
+        "emiel": 1,
+        "vesemir": 1,
+        "olgierd": 1,
+        "gaunter-darkness": 3,
+        "gaunter": 1,
+        "cow": 1,
+        "villentretemerth": 1,
+        "drummond": 3,
+        "craite": 3,
+        "donar": 1,
+        "blacksmith": 1,
+        "svanrige": 1,
+        "heymaey-skald": 1,
+        "udalryk": 1,
+        "lugos-mad": 1,
+        "lugos-blue": 1,
+        "hjalmar": 1,
+        "birna": 1,
+        "holger-blackhand": 1,
+        "draig-bon-dhu": 1,
+        "war-longship": 3,
+        "light-longship": 3,
+        "brokvar-archer": 2,
+        "olaf": 1,
+        "berserker": 1,
+        "young-berserker": 3,
+        "myshovur": 1,
+        "keris": 1,
+        "kambi": 1,
+        "pirate": 1,
+        "mardroeme": 1,
+        "storm-skellige": 1,
+        "decoy": 1,
+        "commanders-horn": 1,
+        "scorch": 1,
+        "biting-frost": 1,
+        "impenetrable-fog": 1,
+        "torrential-rain": 1,
+        "clear-weather": 1,
+        "sk-axeman": 3,
+        "sk-sea-wolf": 1,
+        "sk-shipwright": 1,
+        "sk-captain": 1,
+        "ambush": 1,
+        "el-fire": 0,
+        "el-earth": 0,
+        "el-water": 0,
+        "ex-prep": 0,
+        "ex-trap": 0,
+        "ex-medic": 0
+      },
+      "arts": {}
+    },
+    "stats": {
+      "valid": true,
+      "errors": [],
+      "units": 56,
+      "specials": 10,
+      "heroes": 8,
+      "strength": 286,
+      "total": 66
+    }
+  },
+  "complete": true,
+  "publication": "Runtime artwork integrated; Git history records publication."
+}

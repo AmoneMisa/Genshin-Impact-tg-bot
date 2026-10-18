@@ -62,5 +62,12 @@
   "back": {
     "source": "webapp/art/gwent/printed/back-wild-hunt.webp",
     "status": "Existing finished back reused unchanged"
+  },
+  "specialIconMask": {
+    "x": 44.5,
+    "y": 44.5,
+    "radius": 44.5,
+    "size": 90,
+    "purpose": "Remove source scenery outside gold roundels"
   }
 }

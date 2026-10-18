@@ -1,0 +1,34 @@
+[
+  {
+    "faction": "northern-realms",
+    "id": "nr-scout",
+    "quote": "Костры выдают больше тайн, чем пленные.",
+    "subject": "A Temerian scout in a green-brown hooded jerkin with a small royal blue cloth accent, crouching on a wooded ridge, shortbow ready, watching distant enemy fires in a valley at dusk. Quiet alert expression, muddy boots, believable medieval Witcher world. Royal blue, steel, muted gold and forest shadow.",
+    "prompt": "Create ONE standalone portrait 5:7 illustration for a custom Witcher 3 Gwent card. Match grounded 2015 Gwent painted art: dark fantasy painterly realism, subtle visible brushwork, weathered wool, leather and iron, muted cinematic natural lighting, anatomically convincing figures. Full bleed, major subject at x55% y45%, leftmost 23% visually quiet for a separately composited ribbon. Full head visible, upper-middle face. NO letters, numbers, names, text, icons, frames, borders, ribbons, parchment, watermarks. Illustration only. No anime or glossy 3D. A Temerian scout in a green-brown hooded jerkin with a small royal blue cloth accent, crouching on a wooded ridge, shortbow ready, watching distant enemy fires in a valley at dusk. Quiet alert expression, muddy boots, believable medieval Witcher world. Royal blue, steel, muted gold and forest shadow.",
+    "generatedSource": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-1592e1b9-0f23-450a-b731-546dabe5245d.png"
+  },
+  {
+    "faction": "nilfgaard",
+    "id": "nf-double-agent",
+    "quote": "За верность платят один раз. За сомнения — с обеих сторон.",
+    "subject": "A Nilfgaardian double agent in a plain dark merchant coat, a partially concealed black-and-gold sun brooch, lit by a single candle in a shadowed medieval tavern. Two sealed unmarked folded messages in his hands, ambiguous half smile, shrewd middle-aged face, black, imperial gold, deep sun-yellow and warm candlelight.",
+    "prompt": "Create ONE standalone portrait 5:7 illustration for a custom Witcher 3 Gwent card. Match grounded 2015 Gwent painted art: dark fantasy painterly realism, subtle visible brushwork, weathered wool, leather and iron, muted cinematic natural lighting, anatomically convincing figures. Full bleed, major subject at x55% y45%, leftmost 23% visually quiet for a separately composited ribbon. Full head visible, upper-middle face. NO letters, numbers, names, text, icons, frames, borders, ribbons, parchment, watermarks. Illustration only. No anime or glossy 3D. A Nilfgaardian double agent in a plain dark merchant coat, a partially concealed black-and-gold sun brooch, lit by a single candle in a shadowed medieval tavern. Two sealed unmarked folded messages in his hands, ambiguous half smile, shrewd middle-aged face, black, imperial gold, deep sun-yellow and warm candlelight.",
+    "generatedSource": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-8158196d-2154-42fe-b380-1ffe83142870.png"
+  },
+  {
+    "faction": "monsters",
+    "id": "mo-stalker",
+    "quote": "В этих лесах даже тишина выходит на охоту.",
+    "subject": "A lean forest predator MONSTER, distinctly nonhuman, with long pale sinewy limbs and bark-like mottled hide, stalking low between dark pines. Small animal-like head with glowing amber eyes, menacing readable silhouette, four coherent limbs, forest mist and fallen leaves. Sickly greens, bruised violet and rust; grounded Witcher monster, no antler-crowned leshen copy.",
+    "prompt": "Create ONE standalone portrait 5:7 illustration for a custom Witcher 3 Gwent card. Match grounded 2015 Gwent painted art: dark fantasy painterly realism, subtle visible brushwork, weathered wool, leather and iron, muted cinematic natural lighting, anatomically convincing figures. Full bleed, major subject at x55% y45%, leftmost 23% visually quiet for a separately composited ribbon. Full head visible, upper-middle face. NO letters, numbers, names, text, icons, frames, borders, ribbons, parchment, watermarks. Illustration only. No anime or glossy 3D. A lean forest predator MONSTER, distinctly nonhuman, with long pale sinewy limbs and bark-like mottled hide, stalking low between dark pines. Small animal-like head with glowing amber eyes, menacing readable silhouette, four coherent limbs, forest mist and fallen leaves. Sickly greens, bruised violet and rust; grounded Witcher monster, no antler-crowned leshen copy.",
+    "generatedSource": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-f2b7974c-0bfe-4d12-ab59-c304f655dcc8.png"
+  },
+  {
+    "faction": "scoiatael",
+    "id": "sc-ranger",
+    "quote": "Лес укроет следы. Стрела укажет дорогу.",
+    "subject": "A hooded Scoia'tael ELVEN ranger with clearly visible pointed ear and angular mature face, kneeling on a mossy ridge, longbow drawn naturally, one nocked arrow, green-fletched quiver on his back. Correct coherent hands and bowstring. Sunlight through ancient oak canopy, forest green, warm bark brown, sunlit gold; weathered irregular woodland guerrilla clothing, Witcher world.",
+    "prompt": "Create ONE standalone portrait 5:7 illustration for a custom Witcher 3 Gwent card. Match grounded 2015 Gwent painted art: dark fantasy painterly realism, subtle visible brushwork, weathered wool, leather and iron, muted cinematic natural lighting, anatomically convincing figures. Full bleed, major subject at x55% y45%, leftmost 23% visually quiet for a separately composited ribbon. Full head visible, upper-middle face. NO letters, numbers, names, text, icons, frames, borders, ribbons, parchment, watermarks. Illustration only. No anime or glossy 3D. A hooded Scoia'tael ELVEN ranger with clearly visible pointed ear and angular mature face, kneeling on a mossy ridge, longbow drawn naturally, one nocked arrow, green-fletched quiver on his back. Correct coherent hands and bowstring. Sunlight through ancient oak canopy, forest green, warm bark brown, sunlit gold; weathered irregular woodland guerrilla clothing, Witcher world.",
+    "generatedSource": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-aa0e693e-88f4-4531-bb41-b516baffa5a2.png"
+  }
+]

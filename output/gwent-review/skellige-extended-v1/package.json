@@ -1,0 +1,70 @@
+{
+  "faction": "skellige",
+  "ruleset": "extended",
+  "prefix": "sk-",
+  "factionCardIds": [
+    "drummond",
+    "craite",
+    "donar",
+    "blacksmith",
+    "svanrige",
+    "heymaey-skald",
+    "udalryk",
+    "lugos-mad",
+    "lugos-blue",
+    "hjalmar",
+    "birna",
+    "holger-blackhand",
+    "draig-bon-dhu",
+    "war-longship",
+    "light-longship",
+    "brokvar-archer",
+    "olaf",
+    "berserker",
+    "young-berserker",
+    "myshovur",
+    "keris",
+    "kambi",
+    "pirate",
+    "mardroeme",
+    "storm-skellige"
+  ],
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1",
+    "ambush": "../velen-v1"
+  },
+  "backFile": "back.jpg",
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "emblemSlot": {
+    "x": 24,
+    "y": 438,
+    "w": 34,
+    "h": 36
+  },
+  "emblemAxisX": 41,
+  "nativePatches": {
+    "heymaey-skald": {
+      "ability": "morale"
+    },
+    "birna": {
+      "strength": 3
+    },
+    "draig-bon-dhu": {
+      "strength": 3
+    }
+  },
+  "previewIds": [
+    "sk-axeman",
+    "sk-sea-wolf",
+    "sk-shipwright",
+    "sk-leader-jarl",
+    "sk-leader-fury"
+  ]
+}

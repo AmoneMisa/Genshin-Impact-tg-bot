@@ -1,0 +1,1127 @@
+{
+  "faction": "northern-realms",
+  "title": "Северные Королевства",
+  "approval": "approved",
+  "integrated": true,
+  "pushed": false,
+  "ruleset": "extended",
+  "templateSize": {
+    "width": 310,
+    "height": 585
+  },
+  "font": "Roboto Condensed",
+  "fontMatch": "Review candidate; original game typeface not independently verified.",
+  "quotes": {
+    "generated": "Original fan-written lines, not quotations from Witcher 3.",
+    "existing": "Preserved inside user-supplied original card images."
+  },
+  "back": {
+    "file": "back.webp",
+    "source": "/art/gwent/printed/back-northern-realms-1.webp",
+    "reusedUnchanged": true
+  },
+  "customIcons": [
+    "swap",
+    "mage",
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall"
+  ],
+  "cards": [
+    {
+      "summoned": false,
+      "id": "foltest-temeria",
+      "name": "Фольтест: Король Темерии",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/foltest-temeria.png",
+      "webp": "cards/foltest-temeria.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "foltest-lord",
+      "name": "Фольтест: Предводитель Севера",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/foltest-lord.png",
+      "webp": "cards/foltest-lord.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "foltest-siegemaster",
+      "name": "Фольтест: Завоеватель",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/foltest-siegemaster.png",
+      "webp": "cards/foltest-siegemaster.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "foltest-steel",
+      "name": "Фольтест: Железный Владыка",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/foltest-steel.png",
+      "webp": "cards/foltest-steel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "foltest-medell",
+      "name": "Фольтест: Сын Меделла",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/foltest-medell.png",
+      "webp": "cards/foltest-medell.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/avallach.png",
+      "webp": "cards/avallach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/yennefer.png",
+      "webp": "cards/yennefer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/triss.png",
+      "webp": "cards/triss.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/geralt.png",
+      "webp": "cards/geralt.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cirilla",
+      "name": "Цирилла",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/cirilla.png",
+      "webp": "cards/cirilla.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dandelion",
+      "name": "Лютик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dandelion.png",
+      "webp": "cards/dandelion.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/zoltan.png",
+      "webp": "cards/zoltan.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/emiel.png",
+      "webp": "cards/emiel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vesemir",
+      "name": "Весемир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vesemir.png",
+      "webp": "cards/vesemir.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olgierd.png",
+      "webp": "cards/olgierd.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/gaunter-darkness.png",
+      "webp": "cards/gaunter-darkness.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/gaunter.png",
+      "webp": "cards/gaunter.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cow",
+      "name": "Корова",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/cow.png",
+      "webp": "cards/cow.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/villentretemerth.png",
+      "webp": "cards/villentretemerth.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "poor-infantry",
+      "name": "Гребаная пехтура",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 1,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/poor-infantry.png",
+      "webp": "cards/poor-infantry.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "redanian-foot",
+      "name": "Реданский пехотинец",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 1,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/redanian-foot.png",
+      "webp": "cards/redanian-foot.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yarpen",
+      "name": "Ярпен Зигрин",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/yarpen.png",
+      "webp": "cards/yarpen.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "blue-stripes",
+      "name": "Боец Синих Полосок",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/blue-stripes.png",
+      "webp": "cards/blue-stripes.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dijkstra",
+      "name": "Сигизмунд Дийкстра",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dijkstra.png",
+      "webp": "cards/dijkstra.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "stennis",
+      "name": "Принц Стеннис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/stennis.png",
+      "webp": "cards/stennis.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ves",
+      "name": "Бьянка",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/ves.png",
+      "webp": "cards/ves.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "siegfried",
+      "name": "Зигфрид из Денесле",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/siegfried.png",
+      "webp": "cards/siegfried.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "esterad",
+      "name": "Эстерад Тиссен",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/esterad.png",
+      "webp": "cards/esterad.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "john-natalis",
+      "name": "Ян Наталис",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/john-natalis.png",
+      "webp": "cards/john-natalis.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vernon",
+      "name": "Вернон Роше",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vernon.png",
+      "webp": "cards/vernon.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "sabrina",
+      "name": "Сабрина Глевиссиг",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/sabrina.png",
+      "webp": "cards/sabrina.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "sheldon",
+      "name": "Шелдон Скаггс",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/sheldon.png",
+      "webp": "cards/sheldon.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "keira",
+      "name": "Кейра Мец",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/keira.png",
+      "webp": "cards/keira.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "sile",
+      "name": "Шеала де Тансервилль",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/sile.png",
+      "webp": "cards/sile.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dethmold",
+      "name": "Детмольд",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/dethmold.png",
+      "webp": "cards/dethmold.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "crinfrid",
+      "name": "Рубайлы из Кринфрида",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 5,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/crinfrid.png",
+      "webp": "cards/crinfrid.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "philippa",
+      "name": "Филиппа Эйльхарт",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/philippa.png",
+      "webp": "cards/philippa.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "kaedweni-expert",
+      "name": "Каэдвенский осадный мастер",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 1,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/kaedweni-expert.png",
+      "webp": "cards/kaedweni-expert.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "thaler",
+      "name": "Талер",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 1,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/thaler.png",
+      "webp": "cards/thaler.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dun-banner-medic",
+      "name": "Лекарь Бурой Хоругви",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/dun-banner-medic.png",
+      "webp": "cards/dun-banner-medic.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ballista",
+      "name": "Баллиста",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/ballista.png",
+      "webp": "cards/ballista.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "siege-tower",
+      "name": "Осадная башня",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/siege-tower.png",
+      "webp": "cards/siege-tower.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "trebuchet",
+      "name": "Требушет",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/trebuchet.png",
+      "webp": "cards/trebuchet.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "catapult",
+      "name": "Катапульта",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 8,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/catapult.png",
+      "webp": "cards/catapult.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "decoy",
+      "name": "Чучело",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/decoy.png",
+      "webp": "cards/decoy.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/commanders-horn.png",
+      "webp": "cards/commanders-horn.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "scorch",
+      "name": "Казнь",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/scorch.png",
+      "webp": "cards/scorch.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "biting-frost",
+      "name": "Мороз",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/biting-frost.png",
+      "webp": "cards/biting-frost.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/impenetrable-fog.png",
+      "webp": "cards/impenetrable-fog.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/torrential-rain.png",
+      "webp": "cards/torrential-rain.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/clear-weather.png",
+      "webp": "cards/clear-weather.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "nr-scout",
+      "name": "Лазутчик Темерии",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/nr-scout.png",
+      "webp": "cards/nr-scout.webp",
+      "quote": "Костры выдают больше тайн, чем пленные.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "swap"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ambush",
+      "name": "Засада",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ambush.png",
+      "webp": "cards/ambush.webp",
+      "quote": "Они слишком долго смотрели на дорогу. По сторонам было тихо.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "ambush"
+      ],
+      "reuse": "../velen-v1"
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-fire.png",
+      "webp": "cards/el-fire.webp",
+      "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "fire"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-earth.png",
+      "webp": "cards/el-earth.webp",
+      "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "earth"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-water.png",
+      "webp": "cards/el-water.webp",
+      "quote": "Тихая вода первой забирается под доспех.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "water"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-prep.png",
+      "webp": "cards/ex-prep.webp",
+      "quote": "Стену ещё не видно, а приговор уже отлит.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "prep"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-trap.png",
+      "webp": "cards/ex-trap.webp",
+      "quote": "На этой тропе слишком удобно идти одному.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "trap"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-medic.png",
+      "webp": "cards/ex-medic.webp",
+      "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "recall"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    }
+  ],
+  "missing": [],
+  "textMetrics": [
+    {
+      "id": "nr-scout",
+      "title": {
+        "text": "Лазутчик Темерии",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Костры выдают больше тайн, чем пленные.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    }
+  ],
+  "loadout": {
+    "config": {
+      "faction": "northern-realms",
+      "ruleset": "extended",
+      "leaderId": "foltest-temeria",
+      "counts": {
+        "avallach": 1,
+        "yennefer": 1,
+        "triss": 1,
+        "geralt": 1,
+        "cirilla": 1,
+        "dandelion": 1,
+        "zoltan": 1,
+        "emiel": 1,
+        "vesemir": 1,
+        "olgierd": 1,
+        "gaunter-darkness": 3,
+        "gaunter": 1,
+        "cow": 1,
+        "villentretemerth": 1,
+        "poor-infantry": 3,
+        "redanian-foot": 2,
+        "yarpen": 1,
+        "blue-stripes": 3,
+        "dijkstra": 1,
+        "stennis": 1,
+        "ves": 1,
+        "siegfried": 1,
+        "esterad": 1,
+        "john-natalis": 1,
+        "vernon": 1,
+        "sabrina": 1,
+        "sheldon": 1,
+        "keira": 1,
+        "sile": 1,
+        "dethmold": 1,
+        "crinfrid": 3,
+        "philippa": 1,
+        "kaedweni-expert": 3,
+        "thaler": 1,
+        "dun-banner-medic": 1,
+        "ballista": 2,
+        "siege-tower": 1,
+        "trebuchet": 2,
+        "catapult": 2,
+        "decoy": 1,
+        "commanders-horn": 1,
+        "scorch": 1,
+        "biting-frost": 1,
+        "impenetrable-fog": 1,
+        "torrential-rain": 1,
+        "clear-weather": 1,
+        "nr-scout": 1,
+        "ambush": 1,
+        "el-fire": 1,
+        "el-earth": 1,
+        "el-water": 0,
+        "ex-prep": 0,
+        "ex-trap": 0,
+        "ex-medic": 0
+      },
+      "arts": {}
+    },
+    "stats": {
+      "valid": true,
+      "errors": [],
+      "units": 54,
+      "specials": 10,
+      "heroes": 9,
+      "strength": 264,
+      "total": 64
+    }
+  },
+  "complete": true,
+  "publication": "Runtime artwork integrated; Git history records publication."
+}

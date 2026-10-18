@@ -1,0 +1,50 @@
+{
+  "faction": "northern-realms",
+  "ruleset": "extended",
+  "prefix": "nr-",
+  "factionCardIds": [
+    "poor-infantry",
+    "redanian-foot",
+    "yarpen",
+    "blue-stripes",
+    "dijkstra",
+    "stennis",
+    "ves",
+    "siegfried",
+    "esterad",
+    "john-natalis",
+    "vernon",
+    "sabrina",
+    "sheldon",
+    "keira",
+    "sile",
+    "dethmold",
+    "crinfrid",
+    "philippa",
+    "kaedweni-expert",
+    "thaler",
+    "dun-banner-medic",
+    "ballista",
+    "siege-tower",
+    "trebuchet",
+    "catapult"
+  ],
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1",
+    "ambush": "../velen-v1"
+  },
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "nativeRibbonSource": "redanian-foot",
+  "nativePatches": {},
+  "previewIds": [
+    "nr-scout"
+  ],
+  "detailId": "nr-scout"
+}

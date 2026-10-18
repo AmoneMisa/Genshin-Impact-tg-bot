@@ -3,5 +3,7 @@
   "date": "2026-10-18",
   "scope": "Complete Velen collection with intact skull emblem aligned to the ribbon axis at x41",
   "integration": "not connected to game asset map",
-  "push": "not requested"
+  "push": "not requested",
+  "integrated": true,
+  "note": "User authorized committing reviewed cards, integration into the game, and push."
 }

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "sc-ranger",
+    "file": "illustrations/sc-ranger.png",
+    "source": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-aa0e693e-88f4-4531-bb41-b516baffa5a2.png",
+    "tool": "built-in image_gen"
+  },
+  {
+    "id": "squirrel",
+    "file": "illustrations/squirrel.png",
+    "source": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-a77fd6df-1913-4e3a-a82c-0840a4925b95.png",
+    "tool": "built-in image_gen"
+  }
+]

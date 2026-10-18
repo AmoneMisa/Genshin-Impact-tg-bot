@@ -49,7 +49,7 @@ export function inspectLoadout(loadout) {
     const arts = loadout.arts;
     const allowed = new Set([...deck.cards.map(([card]) => card.id), ...deck.leaders.map(card => card.id)]);
     if (!arts || typeof arts !== 'object' || Array.isArray(arts) || Object.entries(arts).some(([id, index]) => !allowed.has(id)
-      || !Number.isInteger(index) || index < 0 || index >= cardArtOptions(id).length)) errors.push('Недопустимый вариант изображения карты');
+      || !Number.isInteger(index) || index < 0 || index >= cardArtOptions(id, loadout.ruleset).length)) errors.push('Недопустимый вариант изображения карты');
   }
   const counts = loadout.counts;
   if (!counts || typeof counts !== 'object' || Array.isArray(counts)) {

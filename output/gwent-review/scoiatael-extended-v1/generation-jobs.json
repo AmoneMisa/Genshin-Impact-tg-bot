@@ -1,0 +1,17 @@
+[
+  {
+    "faction": "scoiatael",
+    "id": "sc-ranger",
+    "quote": "Лес укроет следы. Стрела укажет дорогу.",
+    "subject": "A hooded Scoia'tael ELVEN ranger with clearly visible pointed ear and angular mature face, kneeling on a mossy ridge, longbow drawn naturally, one nocked arrow, green-fletched quiver on his back. Correct coherent hands and bowstring. Sunlight through ancient oak canopy, forest green, warm bark brown, sunlit gold; weathered irregular woodland guerrilla clothing, Witcher world.",
+    "prompt": "Create ONE standalone portrait 5:7 illustration for a custom Witcher 3 Gwent card. Match grounded 2015 Gwent painted art: dark fantasy painterly realism, subtle visible brushwork, weathered wool, leather and iron, muted cinematic natural lighting, anatomically convincing figures. Full bleed, major subject at x55% y45%, leftmost 23% visually quiet for a separately composited ribbon. Full head visible, upper-middle face. NO letters, numbers, names, text, icons, frames, borders, ribbons, parchment, watermarks. Illustration only. No anime or glossy 3D. A hooded Scoia'tael ELVEN ranger with clearly visible pointed ear and angular mature face, kneeling on a mossy ridge, longbow drawn naturally, one nocked arrow, green-fletched quiver on his back. Correct coherent hands and bowstring. Sunlight through ancient oak canopy, forest green, warm bark brown, sunlit gold; weathered irregular woodland guerrilla clothing, Witcher world.",
+    "generatedSource": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-aa0e693e-88f4-4531-bb41-b516baffa5a2.png"
+  },
+  {
+    "faction": "scoiatael",
+    "generatedSource": "C:\\Users\\kubai\\.codex\\generated_images\\01a14ef0-a179-7c70-96e5-f475797d4fc6\\exec-a77fd6df-1913-4e3a-a82c-0840a4925b95.png",
+    "id": "squirrel",
+    "quote": "Маленькая. Рыжая. Совершенно непредсказуемая.",
+    "prompt": "Create ONE standalone 5:7 portrait illustration for a fan-made Witcher 3 Gwent expansion. Grounded 2015 Gwent painterly realism, visible matte brushwork, earthy forest green and russet, natural dramatic light. A bold plump RED SQUIRREL carrying a tiny bundle with one short lit fuse across a muddy medieval military camp. Funny but grounded Witcher-world painting, anatomically recognizable squirrel, fluffy upright tail, clear small paws, unaware soldiers softly blurred in background. Subject right of center in upper middle, leftmost 23 percent quiet for later UI. NO words, numbers, letters, icons, frame, border, ribbon, parchment, no captions, no glossy 3D. Illustration only."
+  }
+]

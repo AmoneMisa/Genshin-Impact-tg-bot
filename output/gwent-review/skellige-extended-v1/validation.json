@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "faces": 61,
+  "leaders": 4,
+  "newIllustrations": 6,
+  "nativePatches": 3,
+  "viewports": [
+    390,
+    1280
+  ],
+  "checks": [
+    "extended roster complete",
+    "loadout valid",
+    "original back SHA-256 unchanged",
+    "seven shared faces byte-identical",
+    "supplied art and quotes unchanged outside badge masks",
+    "detail image and quote",
+    "Escape closes and restores focus",
+    "no horizontal overflow or browser errors"
+  ],
+  "approval": "approved",
+  "integrated": true
+}

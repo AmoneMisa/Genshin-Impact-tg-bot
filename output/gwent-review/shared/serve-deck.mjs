@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 export function serveDeck(directory,port){
  const root=path.resolve(directory),workspace=path.resolve(root,'../../..'),prefix='/output/gwent-review/'+path.basename(root)+'/';
- const types={'.html':'text/html; charset=utf-8','.png':'image/png','.webp':'image/webp','.json':'application/json; charset=utf-8','.css':'text/css','.md':'text/plain; charset=utf-8','.ttf':'font/ttf','.txt':'text/plain'};
+ const types={'.html':'text/html; charset=utf-8','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.json':'application/json; charset=utf-8','.css':'text/css','.md':'text/plain; charset=utf-8','.ttf':'font/ttf','.txt':'text/plain'};
  http.createServer((req,res)=>{
   try{
    const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);

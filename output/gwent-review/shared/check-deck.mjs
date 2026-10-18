@@ -4,17 +4,25 @@ import {fileURLToPath}from 'node:url';
 import{createRequire}from 'node:module';
 import assert from'node:assert/strict';
 import crypto from'node:crypto';
-import{GWENT_DECKS}from '../../../webapp/gwent-decks.js';
+import{GWENT_DECKS,deckFor}from '../../../webapp/gwent-decks.js';
+import{cleanSpecialIcon}from './special-icon.mjs';
+import{GWENT_ART}from '../../../webapp/gwent-art.js';
 const require=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json');
 
 export async function checkDeck(directory,spec={}) {
 const{chromium}=require('playwright'),sharp=require('sharp'),out=path.resolve(directory);
-const WILD_HUNT_DECK=GWENT_DECKS[spec.faction||'wild-hunt'];
+const WILD_HUNT_DECK=deckFor(spec.ruleset||'classic',spec.faction||'wild-hunt');
 const packageName=path.basename(out),expected=WILD_HUNT_DECK.cards.length+WILD_HUNT_DECK.leaders.length+(spec.tokens||[]).length;
 const report=JSON.parse(fs.readFileSync(path.join(out,'deck-manifest.json'))),quotes=JSON.parse(fs.readFileSync(path.join(out,'quotes.json')));
 assert.equal(report.complete,true);assert.equal(report.cards.length,expected);assert.deepEqual(report.missing,[]);
-assert.equal(report.cards.filter(c=>c.kind==='leader').length,4);assert.equal(report.textMetrics.length,report.cards.filter(c=>c.quoteOrigin==='fan-written'&&!c.reuse).length);assert.equal(report.loadout.stats.valid,true);
-const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');assert.equal(hash(path.join(out,'back.webp')),hash('webapp/art/gwent/printed/back-'+WILD_HUNT_DECK.id+'.webp'));
+assert.equal(report.cards.filter(c=>c.kind==='leader').length,WILD_HUNT_DECK.leaders.length);assert.equal(report.textMetrics.length,report.cards.filter(c=>c.quoteOrigin==='fan-written'&&!c.reuse).length);assert.equal(report.loadout.stats.valid,true);
+for(const file of fs.readdirSync(path.join(out,'layers')).filter(n=>/^effect-.*\.png$/.test(n))){
+ const target=path.join(out,'layers',file),icon=await sharp(target).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+ for(const[x,y]of [[0,0],[89,0],[0,89],[89,89]])assert.equal(icon.data[(y*icon.info.width+x)*4+3],0,'opaque square outside special roundel: '+file);
+ assert.equal(icon.data[(45*90+45)*4+3],255,'transparent hole in special roundel: '+file);
+ const once=await cleanSpecialIcon(target);assert.ok(once.equals(await cleanSpecialIcon(once)),'repeated special icon cleanup changes the edge');
+}
+const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');assert.equal(hash(path.join(out,report.back.file)),hash('webapp'+GWENT_ART['back:'+WILD_HUNT_DECK.id]));
 if(spec.frames?.unit){
  const base=await sharp(path.resolve(out,'../templates-v1/unit.png')).ensureAlpha().raw().toBuffer({resolveWithObject:true});
  const frame=await sharp(path.resolve(out,spec.frames.unit)).ensureAlpha().raw().toBuffer();
@@ -28,6 +36,7 @@ if(spec.frames?.unit){
   }
  }
  assert.ok(changed>1000,'faction ribbon still uses the Northern Realms palette');
+ if(!spec.nativeRibbonSource){
  const emblem=await sharp(path.join(out,'layers/faction-emblem.png')).ensureAlpha().raw().toBuffer({resolveWithObject:true});
  assert.equal(emblem.info.width,spec.emblemSlot.w);assert.equal(emblem.info.height,spec.emblemSlot.h);
  let minX=Infinity,maxX=-1,minY=Infinity,maxY=-1;
@@ -35,6 +44,13 @@ if(spec.frames?.unit){
  assert.ok(maxX-minX>=20&&maxY-minY>=20,'faction emblem is too small or missing');
  assert.ok(Math.abs(spec.emblemSlot.x+(minX+maxX)/2-(spec.emblemAxisX??44))<2,'faction emblem is not centered on the ribbon');
  assert.ok(spec.emblemSlot.y+maxY<490,'faction emblem overlaps the ribbon tail');
+ }else{
+  const source=await sharp(path.resolve('webapp'+GWENT_ART[spec.nativeRibbonSource])).ensureAlpha().raw().toBuffer();
+  for(let y=435;y<490;y++)for(let x=20;x<65;x++){
+   const at=(y*310+x)*4;
+   for(let c=0;c<3;c++)assert.equal(frame[at+c],source[at+c],'native faction emblem changed');
+  }
+ }
 }
 // The hero medallion is one opaque object, never a set of gold-colored fragments.
 const {data:medallion,info:medalInfo}=await sharp(path.join(out,'layers/power-hero-10-clean-v2.png')).ensureAlpha().raw().toBuffer({resolveWithObject:true});
@@ -55,7 +71,23 @@ for(let y=0;y<medalInfo.height;y++)for(let x=0;x<medalInfo.width;x++){
 assert.equal(components,1,'detached fragments around hero medallion');
 for(const card of report.cards){
  for(const k of ['file','webp']){const m=await sharp(path.join(out,card[k])).metadata();assert.equal(m.width,310);assert.equal(m.height,585);}
- if(card.quoteOrigin==='fan-written'){assert.equal(card.quote,quotes[card.id]);assert.ok(card.quote);}
+ if(card.quoteOrigin==='fan-written'){
+  const sourceQuotes=card.reuse?JSON.parse(fs.readFileSync(path.resolve(out,card.reuse,'quotes.json'))):quotes;
+  assert.equal(card.quote,sourceQuotes[card.id]);assert.ok(card.quote);
+ }
+}
+for(const card of report.cards.filter(c=>c.source==='existing supplied card')){
+ const a=await sharp('webapp'+GWENT_ART[card.id]).ensureAlpha().raw().toBuffer(),b=await sharp(path.join(out,card.file)).ensureAlpha().raw().toBuffer();
+ assert.ok(a.equals(b),'supplied portrait, frame or printed quote changed: '+card.id);
+}
+for(const card of report.cards.filter(c=>c.nativePatch)){
+ const original=await sharp('webapp'+GWENT_ART[card.id]).ensureAlpha().raw().toBuffer({resolveWithObject:true}),patched=await sharp(path.join(out,card.file)).ensureAlpha().raw().toBuffer();
+ let changed=0;
+ for(let y=0;y<585;y++)for(let x=0;x<310;x++){
+ const at=(y*310+x)*4,allowed=(card.nativePatch.strength&&Math.hypot(x-44,y-44)<=31)||(card.nativePatch.ability&&x<81&&y>=253&&y<334);
+ for(let c=0;c<4;c++)if(original.data[at+c]!==patched[at+c]){changed++;assert.ok(allowed,'native patch changed art, name or quote outside badge');}
+ }
+ assert.ok(changed>100,'native patch made no change');const data=WILD_HUNT_DECK.cards.find(([c])=>c.id===card.id)[0];assert.equal(card.strength,data.strength);
 }
 for(const card of report.cards.filter(c=>c.reuse)){const dir=path.resolve(out,card.reuse);assert.equal(hash(path.join(out,card.file)),hash(path.join(dir,card.file)));assert.equal(hash(path.join(out,card.webp)),hash(path.join(dir,card.webp)));}
 const browser=await chromium.launch({headless:true,executablePath:'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
@@ -67,9 +99,9 @@ try{
    const url=new URL(route.request().url()),prefix='/output/gwent-review/'+packageName+'/';let file;
    if(url.pathname==='/')file=path.join(out,'index.html');
    else if(url.pathname.startsWith(prefix))file=path.join(out,url.pathname.slice(prefix.length));
-   else if(url.pathname==='/webapp/design-system.css')file=path.resolve('webapp/design-system.css');
+   else if(/^\/webapp\/[\w-]+\.(js|css)$/.test(url.pathname))file=path.resolve('.'+url.pathname);
    else file=path.join(out,url.pathname.slice(1));
-   try{await route.fulfill({contentType:({'.html':'text/html; charset=utf-8','.png':'image/png','.webp':'image/webp','.css':'text/css','.json':'application/json'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});}catch{await route.fulfill({status:404});}
+   try{await route.fulfill({contentType:({'.html':'text/html; charset=utf-8','.js':'text/javascript','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.css':'text/css','.json':'application/json'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});}catch{await route.fulfill({status:404});}
   });
   await page.goto('http://gwent-review.local/output/gwent-review/'+packageName+'/index.html');
   assert.equal(await page.locator('[data-face]').count(),expected);

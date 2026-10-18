@@ -15,3 +15,5 @@ Selected revisions for five incidental characters: generation-retries.json. Orig
 Faction cloth: wine burgundy, derived from the common frame without changing transparency, parchment or layout. Fleur-de-lis extracted from the existing Toussaint back and centered on a fixed transparent canvas. Shared verification checks preserve the parchment and art window, emblem alignment, asset reuse and the unchanged back.
 
 Validation: 45 complete PNG/WebP faces, 4 leaders; default loadout valid at 38 units and 10 specials. Browser checks passed at 390 and 1280 px with reduced motion, card detail, quote, Escape/focus and no horizontal overflow.
+
+Runtime integration: reviewed faces are now exported to webapp/art/gwent/expansion by scripts/ui/import-gwent-expansion.mjs. Extended-only badge variants are selected by ruleset; classic faces and existing cosmetic choices are retained. User approved integration and push.

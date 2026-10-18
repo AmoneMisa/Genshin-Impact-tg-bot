@@ -3,5 +3,7 @@
   "date": "2026-10-18",
   "scope": "Complete Redania collection with centered white eagle and corrected mage/swap ability glyphs",
   "integration": "not connected to game asset map",
-  "push": "not requested"
+  "push": "not requested",
+  "integrated": true,
+  "note": "User authorized committing reviewed cards, integration into the game, and push."
 }

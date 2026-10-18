@@ -1,0 +1,58 @@
+{
+  "faction": "scoiatael",
+  "ruleset": "extended",
+  "prefix": "sc-",
+  "factionCardIds": [
+    "havekar-healer",
+    "riordain",
+    "toruviel",
+    "elven-skirmisher",
+    "dwarf-skirmisher",
+    "ciaran",
+    "vrihedd-cadet",
+    "dol-archer",
+    "hav-support",
+    "mahakaman",
+    "vrihedd-brigade",
+    "dennis",
+    "filavandrel",
+    "yaevinn",
+    "barclay",
+    "dol-scout",
+    "ida",
+    "milva",
+    "isengrim",
+    "iorveth",
+    "saesenthessis",
+    "eithne",
+    "schirru"
+  ],
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1",
+    "ambush": "../velen-v1"
+  },
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "nativeRibbonSource": "riordain",
+  "nativePatches": {
+    "vrihedd-cadet": {
+      "strength": 5,
+      "ability": "swap"
+    }
+  },
+  "previewIds": [
+    "sc-ranger",
+    "vrihedd-cadet",
+    "squirrel"
+  ],
+  "detailId": "sc-ranger",
+  "tokens": [
+    "squirrel"
+  ]
+}

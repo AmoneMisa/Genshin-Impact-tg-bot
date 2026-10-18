@@ -1,0 +1,85 @@
+{
+  "sharedSource": "../wild-hunt-v1/layers",
+  "sourceCommit": "7f08b270",
+  "customIcons": {
+    "ability-mage.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    },
+    "ability-swap.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    }
+  },
+  "agileMask": {
+    "center": [
+      44,
+      38
+    ],
+    "radius": 36.5,
+    "output": [
+      92,
+      92
+    ],
+    "purpose": "Remove green source ribbon and normalize the roundel to the other row icons"
+  },
+  "abilityMask": {
+    "center": [
+      44,
+      38
+    ],
+    "radius": 36.5,
+    "canvas": [
+      81,
+      81
+    ],
+    "purpose": "Remove source-card cloth and portrait outside the original medal; no added border"
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-nilfgaard-1.webp",
+    "crop": {
+      "left": 77,
+      "top": 173,
+      "width": 121,
+      "height": 173
+    }
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-nilfgaard-1.webp",
+    "reusedUnchanged": true
+  },
+  "frame": {
+    "source": "/art/gwent/printed/nilf_4.webp",
+    "region": {
+      "x": 16,
+      "y": 0,
+      "width": 57,
+      "height": 515
+    },
+    "alpha": "Shared template alpha preserved",
+    "emblem": "Original printed emblem retained in original coordinates; no second emblem overlay"
+  },
+  "specialIconMask": {
+    "x": 44.5,
+    "y": 44.5,
+    "radius": 44.5,
+    "size": 90,
+    "purpose": "Remove source scenery outside gold roundels"
+  }
+}

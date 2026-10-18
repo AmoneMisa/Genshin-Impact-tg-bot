@@ -129,16 +129,25 @@ try {
     await page.locator('[data-dismiss]').click();
     assert.deepEqual(errors,[]);await page.close();console.log(`PASS Gwent ${width}: editor, limits, saved leader after reopening, filters, AI move, horn, rules, focus, no overflow / WebGL`);
   }
-  // Extended rules: all ten factions, tinted tiles for cards without printed art, a match against the AI.
+  // Extended rules: reviewed printed art, ruleset-specific badges and a match against the AI.
   for (const width of [320,1100]) {
     const {page,shot,fits,errors}=await fixture(width);
     await page.locator('input[name=gwent-ruleset][value=extended]').check();
     assert.equal(await page.locator('[data-select-faction]').count(),12,'extended offers all twelve factions');
+    await page.locator('[data-select-faction=skellige]').click();await page.locator('[data-editor]').click();
+    await page.locator('[data-search]').fill('Бирна');
+    assert.match(await page.locator('.gwent-builder-card img').getAttribute('src'),/expansion\/extended-birna\.webp$/);
+    await page.locator('.gwent-builder-card img').evaluate(n=>n.decode());
+    assert.equal(await page.locator('.gwent-builder-card .gwent-card-name, .gwent-builder-card .gwent-card-power').count(),0);
+    await page.locator('[data-save-deck]').click();
     await page.locator('[data-select-faction=redania]').click();assert.equal(await page.locator('[data-select-faction=redania] img').count(),1,'drawn crest');
     await shot('extended-decks');await fits();
     await page.locator('[data-editor]').click();
     await page.locator('[data-search]').fill('Засада');assert.equal(await page.locator('.gwent-builder-card').count(),1);
-    await page.locator('[data-search]').fill('Диверсант');assert.equal(await page.locator('.gwent-builder-card .gwent-card[data-kit="re"]').count(),1,'tinted tile for a card without art');
+    await page.locator('[data-search]').fill('Диверсант');assert.equal(await page.locator('.gwent-builder-card .gwent-card[data-kit="re"]').count(),1,'one printed face for the canonical card');
+    assert.match(await page.locator('.gwent-builder-card img').getAttribute('src'),/expansion\/re-saboteur\.webp$/);
+    await page.locator('.gwent-builder-card img').evaluate(n=>n.decode());
+    assert.equal(await page.locator('.gwent-builder-card .gwent-card-name, .gwent-builder-card .gwent-card-trait, .gwent-builder-card .gwent-card-power').count(),0);
     await page.locator('[data-search]').fill('');await shot('extended-editor');await fits();
     await page.locator('[data-save-deck]').click();await page.locator('[data-mode]').click();
     await page.locator('[data-start]').click();
@@ -146,7 +155,7 @@ try {
     await page.waitForSelector('[data-pass]:not([disabled])',{timeout:10000});
     assert.equal(await page.locator('.gwent-row').count(),6);await shot('extended-board');await fits();
     assert.deepEqual(errors,[]);await page.close();
-    console.log(`PASS Gwent extended ${width}: ruleset switch, ten factions, drawn crests, tinted cards, match against the AI`);
+    console.log(`PASS Gwent extended ${width}: ruleset switch, twelve factions, printed art, ruleset-specific badges, match against the AI`);
   }
   // A table of four against the AI: summaries of the three opponents, one opened, play to the end by passing.
   for (const width of [390,1100]) {

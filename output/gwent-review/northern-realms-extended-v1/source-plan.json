@@ -1,0 +1,674 @@
+{
+  "ruleset": "extended",
+  "faction": "northern-realms",
+  "leaders": [
+    {
+      "id": "foltest-temeria",
+      "name": "Фольтест: Король Темерии",
+      "effect": {
+        "type": "weather",
+        "weather": "ranged"
+      }
+    },
+    {
+      "id": "foltest-lord",
+      "name": "Фольтест: Предводитель Севера",
+      "effect": {
+        "type": "weather",
+        "weather": "clear"
+      }
+    },
+    {
+      "id": "foltest-siegemaster",
+      "name": "Фольтест: Завоеватель",
+      "effect": {
+        "type": "double",
+        "row": "siege"
+      }
+    },
+    {
+      "id": "foltest-steel",
+      "name": "Фольтест: Железный Владыка",
+      "effect": {
+        "type": "scorchRow",
+        "target": "siege",
+        "cond": "siege",
+        "threshold": 10
+      }
+    },
+    {
+      "id": "foltest-medell",
+      "name": "Фольтест: Сын Меделла",
+      "effect": {
+        "type": "scorchRow",
+        "target": "ranged",
+        "cond": "ranged",
+        "threshold": 10
+      }
+    }
+  ],
+  "cards": [
+    {
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 0,
+      "hero": true,
+      "spy": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 7,
+      "hero": true,
+      "medic": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 7,
+      "hero": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 15,
+      "hero": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "cirilla",
+      "name": "Цирилла",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 15,
+      "hero": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "dandelion",
+      "name": "Лютик",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 2,
+      "horn": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 5,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 5,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "vesemir",
+      "name": "Весемир",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 6,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "type": "unit",
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "strength": 6,
+      "agile": true,
+      "morale": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 4,
+      "muster": "gaunter-darkness",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 2,
+      "muster": "gaunter",
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "cow",
+      "name": "Корова",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 0,
+      "onDestroy": {
+        "type": "summon",
+        "token": "cow-army"
+      },
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 7,
+      "onPlay": {
+        "type": "scorchRow",
+        "target": "close",
+        "cond": "close",
+        "threshold": 10
+      },
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "poor-infantry",
+      "name": "Гребаная пехтура",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 1,
+      "bond": "poor-infantry",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "redanian-foot",
+      "name": "Реданский пехотинец",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 1,
+      "copies": 2,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "yarpen",
+      "name": "Ярпен Зигрин",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 2,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "blue-stripes",
+      "name": "Боец Синих Полосок",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 4,
+      "bond": "blue-stripes",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "dijkstra",
+      "name": "Сигизмунд Дийкстра",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 4,
+      "spy": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "stennis",
+      "name": "Принц Стеннис",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 5,
+      "spy": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "ves",
+      "name": "Бьянка",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 5,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "siegfried",
+      "name": "Зигфрид из Денесле",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 5,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "esterad",
+      "name": "Эстерад Тиссен",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 10,
+      "hero": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "john-natalis",
+      "name": "Ян Наталис",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 10,
+      "hero": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "vernon",
+      "name": "Вернон Роше",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 10,
+      "hero": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "sabrina",
+      "name": "Сабрина Глевиссиг",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 4,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "sheldon",
+      "name": "Шелдон Скаггс",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 4,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "keira",
+      "name": "Кейра Мец",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 5,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "sile",
+      "name": "Шеала де Тансервилль",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 5,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "dethmold",
+      "name": "Детмольд",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 6,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "crinfrid",
+      "name": "Рубайлы из Кринфрида",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 5,
+      "bond": "crinfrid",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "philippa",
+      "name": "Филиппа Эйльхарт",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 10,
+      "hero": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "kaedweni-expert",
+      "name": "Каэдвенский осадный мастер",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 1,
+      "morale": true,
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "thaler",
+      "name": "Талер",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 1,
+      "spy": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "dun-banner-medic",
+      "name": "Лекарь Бурой Хоругви",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 5,
+      "medic": true,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "ballista",
+      "name": "Баллиста",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 6,
+      "copies": 2,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "siege-tower",
+      "name": "Осадная башня",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 6,
+      "copies": 1,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "trebuchet",
+      "name": "Требушет",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 6,
+      "copies": 2,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "catapult",
+      "name": "Катапульта",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 8,
+      "bond": "catapult",
+      "copies": 2,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "decoy",
+      "name": "Чучело",
+      "type": "special",
+      "special": "decoy",
+      "strength": 0,
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "type": "special",
+      "special": "horn",
+      "strength": 0,
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "scorch",
+      "name": "Казнь",
+      "type": "special",
+      "special": "scorch",
+      "strength": 0,
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "biting-frost",
+      "name": "Мороз",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": "close",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": "ranged",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": "siege",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": "clear",
+      "copies": 3,
+      "source": "supplied print unchanged"
+    },
+    {
+      "id": "nr-scout",
+      "name": "Лазутчик Темерии",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 3,
+      "swap": true,
+      "copies": 1,
+      "source": "new illustration"
+    },
+    {
+      "id": "ambush",
+      "name": "Засада",
+      "type": "special",
+      "special": "ambush",
+      "strength": 0,
+      "copies": 1,
+      "source": "shared face"
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": [
+        "close",
+        "ranged"
+      ],
+      "copies": 1,
+      "source": "shared face"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": [
+        "close",
+        "siege"
+      ],
+      "copies": 1,
+      "source": "shared face"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": [
+        "ranged",
+        "siege"
+      ],
+      "copies": 1,
+      "source": "shared face"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "type": "special",
+      "special": "boost",
+      "strength": 0,
+      "amount": 5,
+      "copies": 1,
+      "source": "shared face"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "type": "special",
+      "special": "strike",
+      "strength": 0,
+      "amount": 4,
+      "copies": 1,
+      "source": "shared face"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "type": "special",
+      "special": "recall",
+      "strength": 0,
+      "maxBase": 5,
+      "copies": 1,
+      "source": "shared face"
+    }
+  ]
+}

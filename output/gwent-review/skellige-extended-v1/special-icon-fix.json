@@ -1,0 +1,289 @@
+{
+  "mask": {
+    "x": 44.5,
+    "y": 44.5,
+    "radius": 44.5,
+    "size": 90
+  },
+  "cards": [
+    {
+      "package": "eternal-fire-v1",
+      "id": "ef-purge",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "eternal-fire-v1",
+      "id": "ef-interrogation",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "eternal-fire-v1",
+      "id": "ef-bonfire",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "redania-v1",
+      "id": "re-traitor-hunt",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "sorceresses-v1",
+      "id": "so-fireball",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "sorceresses-v1",
+      "id": "so-teleport",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "sorceresses-v1",
+      "id": "so-heal",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "sorceresses-v1",
+      "id": "so-blessing",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "sorceresses-v1",
+      "id": "so-curse",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "velen-v1",
+      "id": "ambush",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "el-fire",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "el-earth",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "el-water",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "ex-prep",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "ex-trap",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "ex-medic",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-igni",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-aard",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-yrden",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-quen",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-swallow",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-thunderbolt",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-cat",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "witchers-v1",
+      "id": "wi-oriole",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    }
+  ],
+  "packages": [
+    "eternal-fire-v1",
+    "redania-v1",
+    "sorceresses-v1",
+    "velen-v1",
+    "wild-hunt-v1",
+    "witchers-v1",
+    "monsters-extended-v1",
+    "nilfgaard-extended-v1",
+    "northern-realms-extended-v1",
+    "scoiatael-extended-v1",
+    "skellige-extended-v1",
+    "toussaint-v1"
+  ],
+  "sharedCopiesIdentical": true
+}

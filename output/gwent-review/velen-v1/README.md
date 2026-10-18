@@ -11,3 +11,5 @@ Deterministic layout: templates-v1; raster ability icons, original power digits 
 No game asset mapping was changed; local commit approved; no push. Every PNG is 310×585 with a WebP counterpart.
 
 Emblem horizontal correction: shifted 3 px left to x24, aligned to the ribbon axis x41. The previous x44 check target did not match the ribbon notch. Full collection rebuilt and 390/1280 gallery checks passed.
+
+Runtime integration: reviewed faces are now exported to webapp/art/gwent/expansion by scripts/ui/import-gwent-expansion.mjs. Extended-only badge variants are selected by ruleset; classic faces and existing cosmetic choices are retained. User approved integration and push.

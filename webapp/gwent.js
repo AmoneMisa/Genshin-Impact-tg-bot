@@ -27,13 +27,13 @@ const button = (label, attrs = '', primary = false, variant = '') => `<button ty
 const aria = label => `aria-label="${esc(label)}"`;
 
 /** One card component used on the battlefield, in the hand and in the deck editor. */
-export function gwentCardHtml(card, value = card.strength, { selectable = false, selected = false, target = false, action = '', compact = false, artIndex = card.artIndex ?? 0, label = null } = {}) {
+export function gwentCardHtml(card, value = card.strength, { selectable = false, selected = false, target = false, action = '', compact = false, artIndex = card.artIndex ?? 0, label = null, ruleset = card.ruleset || 'classic' } = {}) {
   const interactive = selectable || target || action;
   const data = action || (target ? `data-target-uid="${card.uid}"` : `data-card-uid="${card.uid}"`);
   const title = label || `${card.name}${card.type === 'unit' ? ` · Сила ${value}` : ''}${cardTraits(card) ? ' · ' + cardTraits(card) : ''}`;
   const tag = interactive ? 'button' : 'div';
   const printed = GWENT_PRINTED_CARDS.has(card.id);
-  const source = cardArtSource(card.id, artIndex) || GWENT_ART[card.id];
+  const source = cardArtSource(card.id, artIndex, ruleset) || GWENT_ART[card.id];
   const power = !printed || card.type === 'unit' && value !== card.strength;
   return `<${tag} data-kit="${kitOf(card.id)}" class="${interactive ? 'ui-button ui-card-art ' : ''}gwent-card${printed ? ' printed' : ''}${card.hero ? ' hero' : ''}${card.type === 'special' ? ' special' : ''}${selected ? ' selected' : ''}${target ? ' target' : ''}${compact ? ' compact' : ''}" ${interactive ? `type="button" ${data} aria-label="${esc(title)}"${selectable ? ` aria-pressed="${selected}"` : ''}` : `aria-label="${esc(title)}"`} title="${esc(title)}">
     ${image(card.id, 'gwent-card-art', '', source)}${power ? `<span class="gwent-card-power">${card.type === 'unit' ? value : icon('sparkle')}</span>` : ''}
@@ -71,6 +71,9 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   let draft = null, filters = {}, page = 0, leaderReturn = 'editor', draftReturn = 'decks', deckReturn = 'mode';
   let state = null, remote = null, pick = null, decoy = null, preview = null, pile = null, artCard = null;
   let myRating = null, board = null, summary = false, summaryFor = null, wasOffered = false, localMatch = 0, aiThinking = null, aiWorker = null, aiCall = 0, matchLevel = level, busy = false, closed = false, aiTimer = null, pollTimer = null, requestId = 0, announcedRound = null;
+  const artRuleset = () => screen === 'match' ? remote?.ruleset || state?.ruleset || ruleset : ruleset;
+  const cardHtml = (card, value = card.strength, options = {}) => gwentCardHtml(card, value, { ruleset: artRuleset(), ...options });
+  const artSource = (id, index, rules = artRuleset()) => cardArtSource(id, index, rules);
   let notice = '', tone = '', onlineError = '', serverOffset = 0;
   let lobby = {friends:[],incoming:[],outgoing:[],games:[],room:null}, focusedInvite = initialInvite, invitation = null, watchId = initialWatch, renderedLobbyKey = '';
   const lobbyKey = () => JSON.stringify(lobby) + JSON.stringify([...lobby.incoming,...lobby.outgoing,...invitation ? [invitation] : []].map(i=>[Math.max(0,Math.ceil((i.expiresAt-Date.now()-serverOffset)/60000)),i.canPushAt>Date.now()+serverOffset]));
@@ -87,11 +90,11 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const deck = deckFor(config.ruleset, config.faction), leader = deck.leaders.find(item => item.id === config.leaderId);
     return `<div class="ui-selection-summary gwent-summary" data-faction="${deck.id}">${image('shield:' + deck.id, 'gwent-crest')}
       <span><small>Ваша колода</small><strong>${esc(deck.title)}</strong>${GWENT_PRINTED_CARDS.has(leader?.id) ? '' : `<small>${esc(leader?.name || 'Выберите лидера')}</small>`}</span>
-      ${image(leader?.id, 'gwent-summary-leader', '', cardArtSource(leader?.id, config.arts?.[leader?.id]))}${edit ? button('Изменить', 'data-open-decks') : ''}</div>`;
+      ${image(leader?.id, 'gwent-summary-leader', '', artSource(leader?.id, config.arts?.[leader?.id], config.ruleset))}${edit ? button('Изменить', 'data-open-decks') : ''}</div>`;
   }
   /** The rules: the original game or the extended one (new factions, swap and ambush cards). */
   function rulesetHtml() {
-    return `<div class="gwent-mode-options gwent-rules" role="radiogroup" aria-label="Правила">${[['classic', 'Оригинал', 'Игра из Ведьмака 3, рейтинг'], ['extended', 'Расширенный', 'Пять новых фракций, подмена и засады']].map(([value, title, subtitle]) => `<label class="ui-button ui-illustrated-choice gwent-mode" data-selected="${ruleset === value}">
+    return `<div class="gwent-mode-options gwent-rules" role="radiogroup" aria-label="Правила">${[['classic', 'Оригинал', 'Игра из Ведьмака 3, рейтинг'], ['extended', 'Расширенный', 'Семь новых фракций, подмена и засады']].map(([value, title, subtitle]) => `<label class="ui-button ui-illustrated-choice gwent-mode" data-selected="${ruleset === value}">
       <span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-ruleset" value="${value}" ${ruleset === value ? 'checked' : ''}></label>`).join('')}</div>`;
   }
   /** What the player is asked to pick for cards that name a unit. */
@@ -219,23 +222,23 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `<div class="gwent-catalog-heading"><span role="status">Найдено карт: ${all.length}</span>${button('Сбросить фильтры', 'data-reset-filters')}</div>
       <div class="gwent-builder-grid">${all.slice(page * 18, page * 18 + 18).map(([card, limit]) => {
         const count = draft.counts[card.id] || 0, capped = count >= limit || card.type === 'special' && inspectLoadout(draft).specials >= 10;
-        return `<article class="gwent-builder-card">${gwentCardHtml(card, card.strength, { action: `data-preview-id="${card.id}"`, artIndex: draft.arts?.[card.id] ?? 0 })}
+        return `<article class="gwent-builder-card">${cardHtml(card, card.strength, { action: `data-preview-id="${card.id}"`, artIndex: draft.arts?.[card.id] ?? 0 })}
           <small>${card.rows?.map(row => ROW_LABELS[row]).join(' / ') || 'Особая карта'}</small>
           <div class="gwent-copy-controls">${button(controlIcon('minus'), `data-adjust="${card.id}" data-delta="-1" ${aria(`Убрать: ${card.name}`)} ${count ? '' : 'disabled'}`)}
           <span aria-label="${count} из ${limit} копий">${count} / ${limit}</span>${button(controlIcon('plus'), `data-adjust="${card.id}" data-delta="1" ${aria(`Добавить: ${card.name}`)} ${capped ? 'disabled' : ''}`)}</div>
-          ${cardArtOptions(card.id).length > 1 ? button('Выбрать арт', `data-art-card="${card.id}"`) : ''}</article>`;
+          ${cardArtOptions(card.id, ruleset).length > 1 ? button('Выбрать арт', `data-art-card="${card.id}"`) : ''}</article>`;
       }).join('') || '<p class="gwent-hint">Карты не найдены. Измените фильтры.</p>'}</div>
       <nav class="gwent-pagination" aria-label="Страницы карт">${button('Назад', `data-page="-1" ${page ? '' : 'disabled'}`)}<span>${page + 1} / ${maxPage + 1}</span>${button('Далее', `data-page="1" ${page < maxPage ? '' : 'disabled'}`)}</nav>`;
   }
   function leaderScreen() {
     return `<p class="gwent-hint">Один лидер на матч. Выберите его способность.</p><div class="gwent-leader-list">${deckNow(faction).leaders.map(leader => `<div class="gwent-leader-entry"><button type="button" class="ui-button ui-illustrated-choice gwent-leader-choice" data-select-leader="${leader.id}" aria-label="${esc(leader.name)}" aria-pressed="${draft.leaderId === leader.id}">
-      ${image(leader.id, 'gwent-leader-art', '', cardArtSource(leader.id, draft.arts?.[leader.id]))}<span>${GWENT_PRINTED_CARDS.has(leader.id) ? '' : `<strong>${esc(leader.name)}</strong>`}<small>${esc(leaderDescription(leader))}</small></span><span class="ui-selection-mark" aria-hidden="true">${draft.leaderId === leader.id ? controlIcon('check') : ''}</span></button>
-      ${cardArtOptions(leader.id).length > 1 ? button('Выбрать арт', `data-art-card="${leader.id}"`) : ''}</div>`).join('')}</div>`;
+      ${image(leader.id, 'gwent-leader-art', '', artSource(leader.id, draft.arts?.[leader.id]))}<span>${GWENT_PRINTED_CARDS.has(leader.id) ? '' : `<strong>${esc(leader.name)}</strong>`}<small>${esc(leaderDescription(leader))}</small></span><span class="ui-selection-mark" aria-hidden="true">${draft.leaderId === leader.id ? controlIcon('check') : ''}</span></button>
+      ${cardArtOptions(leader.id, ruleset).length > 1 ? button('Выбрать арт', `data-art-card="${leader.id}"`) : ''}</div>`).join('')}</div>`;
   }
   function artPickerHtml() {
-    const options = cardArtOptions(artCard.id), chosen = draft.arts?.[artCard.id] ?? 0;
+    const options = cardArtOptions(artCard.id, ruleset), chosen = draft.arts?.[artCard.id] ?? 0;
     return `<p class="gwent-hint">Одна карта — разные иллюстрации. Сила, способности и лимит копий не меняются.</p>
-      <div class="gwent-art-options" role="group" aria-label="Варианты изображения">${options.map((_, index) => gwentCardHtml(artCard, artCard.strength, {
+      <div class="gwent-art-options" role="group" aria-label="Варианты изображения">${options.map((_, index) => cardHtml(artCard, artCard.strength, {
         action: `data-select-art="${index}"`, selectable: true, artIndex: index, selected: index === chosen, label: `${artCard.name} · ${index + 1}`,
       })).join('')}</div>${button('Назад', 'data-close-art')}`;
   }
@@ -250,7 +253,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const trap = laid && (laid.by ?? 'player') === 'player';
     return `<div class="gwent-row${state.weather[row] ? ' weather' : ''}" data-side="${side}" data-row="${row}"${trap ? ' data-trap="true"' : ''}>
       <span class="gwent-row-label" title="${ROW_LABELS[row]}">${image('icon:card_row_' + row)}<span>${ROW_LABELS[row]}</span>${trap ? `<span class="gwent-trap" role="img" aria-label="Ваша засада в этом ряду" title="Ваша засада">${icon('sparkle')}</span>` : ''}</span>
-      <div class="gwent-row-cards" aria-label="${remote?.spectator ? esc(side === 'player' ? remote.playerName : remote.opponent) : side === 'player' ? 'Ваш ряд' : 'Ряд противника'}: ${ROW_LABELS[row]}">${cards.map((card, i) => card.special === 'horn' ? '' : gwentCardHtml(card, values[i], { compact: true, target: targetUids.has(card.uid), action: targetUids.has(card.uid) ? '' : `data-board-card="${card.uid}"` })).join('')}</div>
+      <div class="gwent-row-cards" aria-label="${remote?.spectator ? esc(side === 'player' ? remote.playerName : remote.opponent) : side === 'player' ? 'Ваш ряд' : 'Ряд противника'}: ${ROW_LABELS[row]}">${cards.map((card, i) => card.special === 'horn' ? '' : cardHtml(card, values[i], { compact: true, target: targetUids.has(card.uid), action: targetUids.has(card.uid) ? '' : `data-board-card="${card.uid}"` })).join('')}</div>
       <button type="button" class="ui-button gwent-horn${horn ? ' active' : ''}${canTarget ? ' target' : ''}" ${canTarget ? `data-pick-row="${row}"` : `data-horn-side="${side}" data-horn-row="${row}"`} aria-label="${ROW_LABELS[row]}: ${horn ? 'Командирский рог активен' : innate ? 'Рог от способности отряда' : doubled ? 'Удвоение от лидера' : 'Ячейка командирского рога пуста'}">${image('icon:card_ability_horn')}${horn || innate || doubled ? '<small>×2</small>' : ''}</button>
       <strong class="gwent-row-score">${values.reduce((a, b) => a + b, 0)}</strong></div>`;
   }
@@ -274,21 +277,21 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `<section class="gwent-side ${side}" data-faction="${f}" aria-label="${esc(name)}">
       <div class="gwent-side-head">${image('shield:' + f, 'gwent-crest')}<span>${esc(name)} · ${esc(GWENT_DECKS[f].title)}${state.passed[side] ? ' · Пас' : ''}</span>
       ${markerHtml(side)}<strong>${total}</strong>${isTableState() && side !== 'player' ? button('Свернуть', `data-focus-seat="${side}" data-collapse`) : ''}</div>
-      <aside class="gwent-side-meta">${leader ? `<button class="ui-button ui-card-art gwent-leader-portrait" type="button" data-preview-leader="${side}" aria-label="${esc(leader.name)}">${image(leader.id, '', '', cardArtSource(leader.id, leader.artIndex))}${GWENT_PRINTED_CARDS.has(leader.id) ? '' : `<span>${esc(leader.name)}</span>`}</button>` : ''}
+      <aside class="gwent-side-meta">${leader ? `<button class="ui-button ui-card-art gwent-leader-portrait" type="button" data-preview-leader="${side}" aria-label="${esc(leader.name)}">${image(leader.id, '', '', artSource(leader.id, leader.artIndex))}${GWENT_PRINTED_CARDS.has(leader.id) ? '' : `<span>${esc(leader.name)}</span>`}</button>` : ''}
         <div class="gwent-piles">${button(`${image('back:' + f)}<b>${s.deckCount ?? s.deck.length}</b>`, `data-pile="${side}:deck" ${aria(`Карт в колоде: ${s.deckCount ?? s.deck.length}`)} title="${esc('Колода')}"`, false, 'ui-card-art gwent-pile')}
         ${button(`${image('icon:discard')}<b>${s.graveyard.length}</b>`, `data-pile="${side}:graveyard" ${aria(`Карт в отбое: ${s.graveyard.length}`)} title="${esc('Отбой')}"`, false, 'ui-card-art gwent-pile')}
         </div><small>В руке: ${s.handCount ?? s.hand.length}</small></aside>
       <div class="gwent-rows">${(side !== 'player' ? [...ROWS].reverse() : ROWS).map(row => rowHtml(side, row)).join('')}</div>
-      ${state.teams && side !== 'player' && state.teams[side] === state.teams.player && s.hand.length ? `<div class="gwent-ally-hand" role="group" aria-label="Карты союзника">${s.hand.map(card => gwentCardHtml(card, card.strength, { compact: true })).join('')}</div>` : ''}</section>`;
+      ${state.teams && side !== 'player' && state.teams[side] === state.teams.player && s.hand.length ? `<div class="gwent-ally-hand" role="group" aria-label="Карты союзника">${s.hand.map(card => cardHtml(card, card.strength, { compact: true })).join('')}</div>` : ''}</section>`;
   }
   function handHtml() {
     if (remote?.spectator) return '<p class="gwent-hint">Режим зрителя · Карты в руках скрыты</p>';
     const pending = state.pending;
     if (pending?.side === 'player') return `<div class="gwent-choice-title">${CHOICES[pending.kind] || 'Выберите карту'}${pending.remaining ? ` · осталось ${pending.remaining}` : ''}</div><div class="gwent-hand">${pending.options.map(option => option.card
-      ? gwentCardHtml(option.card, option.card.strength, { action: `data-choice-id="${option.id}"` })
+      ? cardHtml(option.card, option.card.strength, { action: `data-choice-id="${option.id}"` })
       : button(esc(option.label), `data-choice-id="${option.id}"`)).join('')}</div>`;
     const playable = new Set(myPlays().map(play => play.uid));
-    return `<div class="gwent-hand" aria-label="Карты в руке">${state.sides.player.hand.map(card => gwentCardHtml(card, card.strength, {
+    return `<div class="gwent-hand" aria-label="Карты в руке">${state.sides.player.hand.map(card => cardHtml(card, card.strength, {
       selectable: playable.has(card.uid), selected: (pick?.uid || decoy?.uid) === card.uid, action: playable.has(card.uid) ? '' : `data-preview-id="${card.id}" data-hand-uid="${card.uid}"`,
     })).join('') || '<span class="gwent-hint">В руке нет карт</span>'}</div>`;
   }
@@ -410,10 +413,10 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   function previewHtml() {
     if (pile) {
       const [side, kind] = pile.split(':'), cards = kind === 'graveyard' ? state.sides[side].graveyard : [];
-      return `<p class="gwent-hint">${kind === 'deck' ? 'Порядок карт в колоде скрыт от игроков.' : 'Карты в отбое'}</p><div class="gwent-pile-grid">${cards.map(card => gwentCardHtml(card, card.strength)).join('') || (kind === 'graveyard' ? '<p>Отбой пуст</p>' : '')}</div>${button('Вернуться к матчу', 'data-close-preview')}`;
+      return `<p class="gwent-hint">${kind === 'deck' ? 'Порядок карт в колоде скрыт от игроков.' : 'Карты в отбое'}</p><div class="gwent-pile-grid">${cards.map(card => cardHtml(card, card.strength)).join('') || (kind === 'graveyard' ? '<p>Отбой пуст</p>' : '')}</div>${button('Вернуться к матчу', 'data-close-preview')}`;
     }
     if (!preview) return '';
-    return `<div class="gwent-card-detail">${image(preview.id, 'gwent-detail-art', '', cardArtSource(preview.id, preview.artIndex))}<div>${GWENT_PRINTED_CARDS.has(preview.id) ? '' : `<h3>${esc(preview.name)}</h3>`}<p>${preview.type === 'leader' ? esc(leaderDescription(preview)) : esc(cardTraits(preview) || 'Обычный отряд')}</p>
+    return `<div class="gwent-card-detail">${image(preview.id, 'gwent-detail-art', '', artSource(preview.id, preview.artIndex))}<div>${GWENT_PRINTED_CARDS.has(preview.id) ? '' : `<h3>${esc(preview.name)}</h3>`}<p>${preview.type === 'leader' ? esc(leaderDescription(preview)) : esc(cardTraits(preview) || 'Обычный отряд')}</p>
       ${preview.type === 'unit' ? `<p>Базовая сила: ${preview.strength}</p><p>${preview.rows.map(row => ROW_LABELS[row]).join(' / ')}</p>` : ''}</div></div>${button('Назад', 'data-close-preview')}`;
   }
 
@@ -424,6 +427,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const key = active && [...active.attributes].find(a => a.name.startsWith('data-'));
     const scroll = panel.scrollTop, handScroll = panel.querySelector('.gwent-hand')?.scrollLeft || 0;
     const expanded = panel.querySelector('.gwent-extra-filters')?.open;
+    const moreOpen = panel.querySelector('.gwent-more')?.open;
     const title = summary ? 'Итоги матча' : artCard ? 'Выбор арта' : preview || pile ? preview?.name || 'Карты' : ({ decks: 'Выбор колоды', mode: 'Начать игру', editor: 'Состав колоды', leaders: 'Выбор лидера', search: 'Поиск соперника', match: 'Гвинт', friends: 'Игра с другом', games: 'Текущие игры', board: 'Таблица лидеров' })[screen];
     panel.dataset.screen = screen; panel.classList.toggle('gwent-board-panel', screen === 'match' && !preview && !pile && !summary);
     panel.innerHTML = `${dialogHeading(title, { id: 'gwent-title', back: screen !== 'decks' && screen !== 'match' || !!preview || !!pile || !!artCard || summary, rules: RULES })}<div class="gwent-content" data-gwent-content>
@@ -434,6 +438,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     if (busy) panel.querySelectorAll('button:not([data-dismiss])').forEach(b => { b.disabled = true; });
     enhanceSelects(panel);
     if (expanded && panel.querySelector('.gwent-extra-filters')) panel.querySelector('.gwent-extra-filters').open = true;
+    if (moreOpen && panel.querySelector('.gwent-more')) panel.querySelector('.gwent-more').open = true;
     panel.scrollTop = scroll;
     const hand = panel.querySelector('.gwent-hand'); if (hand) hand.scrollLeft = handScroll;
     if (key) [...panel.querySelectorAll(`[${key.name}]`)].find(node => node.getAttribute(key.name) === key.value)?.focus({ preventScroll: true });
@@ -569,7 +574,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     if (calm() || action.type !== 'play') return;
     const card = snapshot.sides[seat]?.hand?.find(item => item.uid === action.uid);
     if (!card) return;
-    float(gwentCardHtml(card, card.strength), 'gwent-ai-card', 800);
+    float(cardHtml(card, card.strength), 'gwent-ai-card', 800);
     await sleep(700);
   }
   function roundNote(text) { note(text); banner(text, 'round'); }
@@ -725,7 +730,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       panel.scrollTop = 0; render();
     } else if ('selectArt' in d && artCard && draft) {
       const index = Number(d.selectArt);
-      if (Number.isInteger(index) && index >= 0 && index < cardArtOptions(artCard.id).length) {
+      if (Number.isInteger(index) && index >= 0 && index < cardArtOptions(artCard.id, ruleset).length) {
         draft.arts ||= {}; draft.arts[artCard.id] = index; artCard = null; render();
       }
     } else if ('closeArt' in d) { artCard = null; render(); }

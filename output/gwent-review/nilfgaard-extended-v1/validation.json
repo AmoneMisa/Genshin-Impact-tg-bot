@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "faces": 63,
+  "leaders": 5,
+  "viewports": [
+    390,
+    1280
+  ],
+  "data": "../verification.json",
+  "paintedText": "../painted-text-verification.json",
+  "approval": "approved",
+  "integrated": true,
+  "pushed": false
+}

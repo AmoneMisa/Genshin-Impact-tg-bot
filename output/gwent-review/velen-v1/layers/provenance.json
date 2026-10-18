@@ -28,5 +28,12 @@
   "back": {
     "source": "webapp/art/gwent/printed/back-velen.webp",
     "reusedUnchanged": true
+  },
+  "specialIconMask": {
+    "x": 44.5,
+    "y": 44.5,
+    "radius": 44.5,
+    "size": 90,
+    "purpose": "Remove source scenery outside gold roundels"
   }
 }

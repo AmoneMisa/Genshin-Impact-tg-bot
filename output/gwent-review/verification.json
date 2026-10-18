@@ -1,0 +1,141 @@
+{
+  "status": "passed",
+  "source": "webapp/gwent-decks.js and webapp/gwent-art.js",
+  "packages": [
+    {
+      "folder": "eternal-fire-v1",
+      "faction": "eternal-fire",
+      "faces": 47,
+      "leaders": 4,
+      "newIllustrations": 20,
+      "patched": 0,
+      "reused": 6,
+      "badgePixelsChecked": 133121,
+      "status": "passed"
+    },
+    {
+      "folder": "monsters-extended-v1",
+      "faction": "monsters",
+      "faces": 68,
+      "leaders": 4,
+      "newIllustrations": 1,
+      "patched": 1,
+      "reused": 7,
+      "badgePixelsChecked": 12158,
+      "status": "passed"
+    },
+    {
+      "folder": "nilfgaard-extended-v1",
+      "faction": "nilfgaard",
+      "faces": 63,
+      "leaders": 5,
+      "newIllustrations": 1,
+      "patched": 0,
+      "reused": 7,
+      "badgePixelsChecked": 10217,
+      "status": "passed"
+    },
+    {
+      "folder": "northern-realms-extended-v1",
+      "faction": "northern-realms",
+      "faces": 59,
+      "leaders": 5,
+      "newIllustrations": 1,
+      "patched": 0,
+      "reused": 7,
+      "badgePixelsChecked": 10217,
+      "status": "passed"
+    },
+    {
+      "folder": "redania-v1",
+      "faction": "redania",
+      "faces": 45,
+      "leaders": 4,
+      "newIllustrations": 17,
+      "patched": 0,
+      "reused": 7,
+      "badgePixelsChecked": 119675,
+      "status": "passed"
+    },
+    {
+      "folder": "scoiatael-extended-v1",
+      "faction": "scoiatael",
+      "faces": 58,
+      "leaders": 5,
+      "newIllustrations": 2,
+      "patched": 1,
+      "reused": 7,
+      "badgePixelsChecked": 20780,
+      "status": "passed"
+    },
+    {
+      "folder": "skellige-extended-v1",
+      "faction": "skellige",
+      "faces": 61,
+      "leaders": 4,
+      "newIllustrations": 6,
+      "patched": 3,
+      "reused": 7,
+      "badgePixelsChecked": 43155,
+      "status": "passed"
+    },
+    {
+      "folder": "sorceresses-v1",
+      "faction": "sorceresses",
+      "faces": 50,
+      "leaders": 4,
+      "newIllustrations": 23,
+      "patched": 0,
+      "reused": 6,
+      "badgePixelsChecked": 191772,
+      "status": "passed"
+    },
+    {
+      "folder": "toussaint-v1",
+      "faction": "toussaint",
+      "faces": 45,
+      "leaders": 4,
+      "newIllustrations": 18,
+      "patched": 0,
+      "reused": 6,
+      "badgePixelsChecked": 126002,
+      "status": "passed"
+    },
+    {
+      "folder": "velen-v1",
+      "faction": "velen",
+      "faces": 44,
+      "leaders": 4,
+      "newIllustrations": 17,
+      "patched": 0,
+      "reused": 6,
+      "badgePixelsChecked": 129801,
+      "status": "passed"
+    },
+    {
+      "folder": "wild-hunt-v1",
+      "faction": "wild-hunt",
+      "faces": 45,
+      "leaders": 4,
+      "newIllustrations": 24,
+      "patched": 0,
+      "reused": 0,
+      "badgePixelsChecked": 182236,
+      "status": "passed"
+    },
+    {
+      "folder": "witchers-v1",
+      "faction": "witchers",
+      "faces": 53,
+      "leaders": 4,
+      "newIllustrations": 26,
+      "patched": 0,
+      "reused": 6,
+      "badgePixelsChecked": 179151,
+      "status": "passed"
+    }
+  ],
+  "issues": [],
+  "totalFaces": 638,
+  "remainingArtJobs": []
+}

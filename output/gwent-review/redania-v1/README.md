@@ -11,3 +11,5 @@ Deterministic layout: templates-v1; raster ability icons, original power digits 
 No game asset mapping was changed; local commit approved; no push. Every PNG is 310×585 with a WebP counterpart.
 
 Unit glyph correction: custom mage and swap glyphs are regenerated against the original ability medal center (44,38). The complete previous heart is cleared inside the plate; border and outer alpha are preserved. All 45 faces rebuilt and gallery checks passed at 390/1280 px. Collection approved for local commit; no push.
+
+Runtime integration: reviewed faces are now exported to webapp/art/gwent/expansion by scripts/ui/import-gwent-expansion.mjs. Extended-only badge variants are selected by ruleset; classic faces and existing cosmetic choices are retained. User approved integration and push.

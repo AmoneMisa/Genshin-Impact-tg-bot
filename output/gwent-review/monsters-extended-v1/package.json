@@ -1,0 +1,65 @@
+{
+  "faction": "monsters",
+  "ruleset": "extended",
+  "prefix": "mo-",
+  "factionCardIds": [
+    "ghoul",
+    "nekker",
+    "wyvern",
+    "cockatrice",
+    "gargoyle",
+    "endrega",
+    "harpy",
+    "celaeno-harpy",
+    "foglet",
+    "botchling",
+    "bruxa",
+    "garkain",
+    "fleder",
+    "ekimmara",
+    "katakan",
+    "arachas",
+    "arachas-behemoth",
+    "forktail",
+    "werewolf",
+    "griffin",
+    "plague-maiden",
+    "frightener",
+    "ice-giant",
+    "grave-hag",
+    "fiend",
+    "crone-brewess",
+    "crone-weavess",
+    "crone-whispess",
+    "earth-elemental",
+    "fire-elemental",
+    "kayran",
+    "draug",
+    "imlerith",
+    "leshen",
+    "toad"
+  ],
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1",
+    "ambush": "../velen-v1"
+  },
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "nativeRibbonSource": "foglet",
+  "nativePatches": {
+    "ice-giant": {
+      "strength": 6
+    }
+  },
+  "previewIds": [
+    "mo-stalker",
+    "ice-giant"
+  ],
+  "detailId": "mo-stalker"
+}

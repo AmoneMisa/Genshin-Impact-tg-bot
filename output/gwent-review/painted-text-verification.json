@@ -1,0 +1,77 @@
+{
+  "status": "passed",
+  "packages": [
+    {
+      "folder": "eternal-fire-v1",
+      "titles": 20,
+      "rows": 13,
+      "status": "passed"
+    },
+    {
+      "folder": "monsters-extended-v1",
+      "titles": 1,
+      "rows": 1,
+      "status": "passed"
+    },
+    {
+      "folder": "nilfgaard-extended-v1",
+      "titles": 1,
+      "rows": 1,
+      "status": "passed"
+    },
+    {
+      "folder": "northern-realms-extended-v1",
+      "titles": 1,
+      "rows": 1,
+      "status": "passed"
+    },
+    {
+      "folder": "redania-v1",
+      "titles": 17,
+      "rows": 12,
+      "status": "passed"
+    },
+    {
+      "folder": "scoiatael-extended-v1",
+      "titles": 2,
+      "rows": 2,
+      "status": "passed"
+    },
+    {
+      "folder": "skellige-extended-v1",
+      "titles": 6,
+      "rows": 4,
+      "status": "passed"
+    },
+    {
+      "folder": "sorceresses-v1",
+      "titles": 23,
+      "rows": 14,
+      "status": "passed"
+    },
+    {
+      "folder": "toussaint-v1",
+      "titles": 18,
+      "rows": 14,
+      "status": "passed"
+    },
+    {
+      "folder": "velen-v1",
+      "titles": 17,
+      "rows": 12,
+      "status": "passed"
+    },
+    {
+      "folder": "wild-hunt-v1",
+      "titles": 24,
+      "rows": 14,
+      "status": "passed"
+    },
+    {
+      "folder": "witchers-v1",
+      "titles": 26,
+      "rows": 14,
+      "status": "passed"
+    }
+  ]
+}
