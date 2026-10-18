@@ -363,6 +363,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"catacomb-forbidden-path","title":"Катакомбы Запретного Пути","category":"hunting","environment":"catacomb","asset":"catacomb-forbidden-path"},
   {"id":"necropolis-sacrifice","title":"Некрополь Жертвоприношений","category":"hunting","environment":"necropolis","asset":"necropolis-sacrifice"},
   {"id":"necropolis-pilgrims","title":"Некрополь Пилигримов","category":"hunting","environment":"necropolis","asset":"necropolis-pilgrims"},
+  {"id":"necropolis-worship","title":"Некрополь Поклонения","category":"hunting","environment":"necropolis","asset":"necropolis-worship"},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
