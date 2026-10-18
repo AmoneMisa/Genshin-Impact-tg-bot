@@ -8,9 +8,9 @@ import {roomSceneUrl,roomArtField} from '../webapp/room-scene-art.js';
 import {scenePreviewHtml,graciaOverviewHtml} from '../webapp/location-art.js';
 import {atlasObjects} from '../webapp/atlas-objects.js';
 
-test('scene expansion covers twenty-nine hunting studies, ten epics and every atlas city',()=>{
- assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,64);
- for(const [category,count] of Object.entries({hunting:29,epic:10,city:18,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
+test('scene expansion covers thirty-two hunting studies, ten epics and every atlas city',()=>{
+ assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,67);
+ for(const [category,count] of Object.entries({hunting:32,epic:10,city:18,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
  const zones=new Set(getZones().map(z=>z.id));
  for(const scene of SCENE_STUDIES.filter(s=>s.category==='hunting'))assert.ok(zones.has(scene.id));
  assert.deepEqual(SCENE_STUDIES.filter(s=>s.category==='city').map(s=>s.id).sort(),CITIES.map(c=>c.id).sort());

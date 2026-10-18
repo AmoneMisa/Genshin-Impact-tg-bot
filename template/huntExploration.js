@@ -152,6 +152,9 @@ export const HUNT_EXPLORATION = Object.freeze([
   {"id":"ivory-tower","names":["Дно кратера","У опор башни","Каменистая низина"]},
   {"id":"devils-isle","names":["Сырой грот","У каменных выступов","Дальний пещерный зал"]},
   {"id":"pagan-temple","names":["Зал у изваяния","Галерея резных колонн","Боковой храмовый зал"]},
+  {"id":"giants-cave","names":["Зал древней кладки","У бирюзовых плит","Каменная галерея"]},
+  {"id":"sel-mahums","names":["Тренировочная поляна","У учебного помоста","Лагерная опушка"]},
+  {"id":"field-of-whispers","names":["Тропа в сухих камышах","У каменных ликов","Золотистая поляна"]},
 ]);
 const zones=new Map(HUNT_EXPLORATION.map(zone=>[zone.id,zone]));
 export const explorationZone=id=>zones.get(id)||null;
