@@ -9,8 +9,8 @@ import {scenePreviewHtml,graciaOverviewHtml} from '../webapp/location-art.js';
 import {atlasObjects} from '../webapp/atlas-objects.js';
 
 test('scene expansion covers individual hunting studies, ten epics and every atlas city',()=>{
- assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,106);
- for(const [category,count] of Object.entries({hunting:71,epic:10,city:18,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
+ assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,107);
+ for(const [category,count] of Object.entries({hunting:72,epic:10,city:18,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
  const zones=new Set(getZones().map(z=>z.id));
  for(const scene of SCENE_STUDIES.filter(s=>s.category==='hunting'))assert.ok(zones.has(scene.id));
  assert.deepEqual(SCENE_STUDIES.filter(s=>s.category==='city').map(s=>s.id).sort(),CITIES.map(c=>c.id).sort());
