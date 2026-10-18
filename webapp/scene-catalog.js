@@ -360,6 +360,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"catacomb-apostate","title":"Катакомбы Отступников","category":"hunting","environment":"catacomb","asset":"catacomb-apostate"},
   {"id":"catacomb-witch","title":"Катакомбы Ведьм","category":"hunting","environment":"catacomb","asset":"catacomb-witch"},
   {"id":"catacomb-dark-omens","title":"Катакомбы Тёмных Знамений","category":"hunting","environment":"catacomb","asset":"catacomb-dark-omens"},
+  {"id":"catacomb-forbidden-path","title":"Катакомбы Запретного Пути","category":"hunting","environment":"catacomb","asset":"catacomb-forbidden-path"},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
