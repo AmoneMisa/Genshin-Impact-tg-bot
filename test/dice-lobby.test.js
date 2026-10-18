@@ -54,13 +54,13 @@ test('three rounds win the match and the whole pot goes to the winner', () => {
   }
   assert.equal(match.state.phase, 'matchOver');
   const winner = match.state.winner === 'player' ? 1 : 2;
-  assert.equal(owed(data, winner), 10);
+  assert.equal(owed(data, winner), 9, 'a pot of 10 pays 90%');
   assert.equal(owed(data, 3 - winner), 0);
   const view = diceState(data, winner, 2000, { people }).match;
   assert.equal(view.winner, 'me');
-  assert.deepEqual(view.stake.result, { kind: 'won', payout: 10, delta: 5 });
+  assert.deepEqual(view.stake.result, { kind: 'won', payout: 9, delta: 4 });
   diceState(data, winner, 3000, { people });
-  assert.equal(owed(data, winner), 10, 'paid once');
+  assert.equal(owed(data, winner), 9, 'paid once');
 });
 
 test('the throw follows its own rules: two re-throws, kept dice stay, stale requests are refused', () => {
@@ -98,7 +98,7 @@ test('two empty rounds in a row abandon the match and return the stakes', () => 
 test('surrender gives the pot to the other player; a closed or expired invitation returns the stake once', () => {
   const { data, match } = started({ currency: 'gold', amount: 200 });
   act(data, 1, { action: 'surrender', matchId: match.id });
-  assert.equal(owed(data, 2), 400);
+  assert.equal(owed(data, 2), 360, 'the winner gets 1.8 stakes');
   assert.equal(owed(data, 1), 0);
   assert.equal(diceState(data, 1, 2000, { people }).match.endReason, 'Вы сдались');
 

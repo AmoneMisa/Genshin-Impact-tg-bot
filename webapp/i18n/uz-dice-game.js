@@ -67,7 +67,7 @@ export default {
   "Точно сдаться?": "Rostdan taslim bo‘lasizmi?",
   "скрыта": "yashirin",
   "Сначала завершите текущую игру": "Avval joriy o‘yinni tugating",
-  "Ставка списывается, когда вы отправляете приглашение или принимаете чужое. Победитель забирает всё. Ничья, отказ и истёкшее приглашение возвращают ставку; сдача — поражение.": "Stavka siz taklif yuborganingizda yoki birovning taklifini qabul qilganingizda yechiladi. G‘olib hammasini oladi. Durang, rad etish va muddati o‘tgan taklif stavkani qaytaradi; taslim bo‘lish — mag‘lubiyat.",
+  "Ставка списывается, когда вы отправляете приглашение или принимаете чужое. Победитель получает 1,8 ставки: 10% банка уходит из игры. Ничья, отказ и истёкшее приглашение возвращают ставку; сдача — поражение.": "Stavka siz taklif yuborganingizda yoki birovning taklifini qabul qilganingizda yechiladi. G‘olib stavkaning 1,8 baravarini oladi: bankning 10% foizi o‘yindan chiqib ketadi. Durang, rad etish va muddati o‘tgan taklif stavkani qaytaradi; taslim bo‘lish — mag‘lubiyat.",
   "Считаем результат…": "Natija hisoblanmoqda…",
   "Считает, какие кости лучше оставить. Обыграть его трудно.": "Qaysi zarlarni qoldirish yaxshiroq ekanini hisoblaydi. Uni yutish qiyin.",
   ": ставка {0}": ": stavka {0}",

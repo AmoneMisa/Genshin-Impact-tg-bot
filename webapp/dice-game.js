@@ -87,7 +87,7 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     return `${linked ? `<h3>Приглашение по ссылке</h3>${invite(linked, false)}` : ''}${net.incoming.length ? `<h3>Вас приглашают</h3>${net.incoming.map(item => invite(item, false)).join('')}` : ''}
       <h3>Ставка</h3><label class="dice-field">На что играем<select name="dice-stake">${STAKE_CHOICES.map(([value, label]) => `<option value="${value}" ${value === stakeChoice ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
       ${wallet ? `<p class="dice-hint">У вас: ${stakeText({ currency: 'gold', amount: wallet.gold })} · ${stakeText({ currency: 'luckCoins', amount: wallet.luckCoins })}.</p>` : ''}
-      <p class="dice-hint">Ставка списывается, когда вы отправляете приглашение или принимаете чужое. Победитель забирает всё. Ничья, отказ и истёкшее приглашение возвращают ставку; сдача — поражение.</p>
+      <p class="dice-hint">Ставка списывается, когда вы отправляете приглашение или принимаете чужое. Победитель получает 1,8 ставки: 10% банка уходит из игры. Ничья, отказ и истёкшее приглашение возвращают ставку; сдача — поражение.</p>
       ${net.outgoing.length ? `<h3>Вы пригласили</h3>${net.outgoing.map(item => invite(item, true)).join('')}` : ''}
       <h3>Друзья</h3>${rows || '<p class="dice-hint">Добавьте друга в разделе друзей, чтобы пригласить его.</p>'}
       <h3>Пригласить по ссылке</h3><div class="dice-actions">${button('Создать ссылку', 'data-create-link')}</div>
@@ -99,7 +99,7 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
       const { kind, payout } = stake.result;
       return `<p class="dice-stake" role="status" data-outcome="${kind}">${kind === 'won' ? `Выигрыш: ${stakeText({ ...stake, amount: payout })}` : kind === 'refund' ? `Ставка возвращена: ${stakeText(stake)}` : `Проигрыш: ${stakeText(stake)}`}</p>`;
     }
-    return `<p class="dice-stake">Банк: ${stakeText({ ...stake, amount: stake.pot })}</p>`;
+    return `<p class="dice-stake">Приз: ${stakeText({ ...stake, amount: stake.prize })}</p>`;
   }
   function onlineMatchScreen() {
     const view = net.match;

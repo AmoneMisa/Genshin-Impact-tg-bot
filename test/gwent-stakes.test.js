@@ -38,14 +38,14 @@ test('a staked duel charges both players, pays the winner the whole pot and noth
   assert.equal(accepted.match.stake.pot, 10);
   const match = chat.game.gwent.matches[0];
   act(chat, 1, { action: 'surrender', matchId: match.id, revision: 0 });
-  assert.equal(sum(owed(chat, 2)), 10);
+  assert.equal(sum(owed(chat, 2)), 9);
   assert.equal(owed(chat, 1).length, 0);
   const view = gwentState(chat, 2, 100_001).match.stake;
-  assert.deepEqual(view.result, { kind: 'won', payout: 10, delta: 5 });
+  assert.deepEqual(view.result, { kind: 'won', payout: 9, delta: 4 });
   assert.equal(gwentState(chat, 1, 100_001).match.stake.result.kind, 'lost');
   act(chat, 2, { action: 'dismiss', matchId: match.id });
   gwentState(chat, 2, 100_002);
-  assert.equal(sum(owed(chat, 2)), 10, 'the pot is paid once');
+  assert.equal(sum(owed(chat, 2)), 9, 'the pot is paid once');
 });
 
 test('a draw gives both stakes back, a timeout loses the stake', () => {
@@ -63,7 +63,7 @@ test('a draw gives both stakes back, a timeout loses the stake', () => {
   act(late, 2, { action: 'accept_invite', inviteId: lateId, loadout: classic });
   gwentState(late, 1, 100_000 + 6 * 60_000);
   // the first player to move ran out of time and lost
-  assert.equal(sum(owed(late, 1)) + sum(owed(late, 2)), 600);
+  assert.equal(sum(owed(late, 1)) + sum(owed(late, 2)), 540);
   assert.equal(owed(late, 1).length + owed(late, 2).length, 1);
 });
 
@@ -115,7 +115,7 @@ test('a table collects every seat\'s stake and the winners share the pot; leaver
   match.players[1] = 'bot:left1';
   match.state.phase = 'matchOver'; match.state.winners = ['player']; match.state.winner = 'player'; match.endedAt = 100_001;
   gwentState(chat, 1, 100_002);
-  assert.equal(sum(owed(chat, 1)), 200);
+  assert.equal(sum(owed(chat, 1)), 180);
   assert.equal(owed(chat, 2).length, 0);
 });
 
@@ -127,7 +127,7 @@ test('table pots split evenly (the remainder to the first winner); nobody left m
   const match = chat.game.gwent.matches[0];
   match.state.phase = 'matchOver'; match.state.winners = ['player', 'ai']; match.endedAt = 100_001;
   gwentState(chat, 1, 100_002);
-  assert.deepEqual([sum(owed(chat, 1)), sum(owed(chat, 2)), sum(owed(chat, 3))], [152, 151, 0]);
+  assert.deepEqual([sum(owed(chat, 1)), sum(owed(chat, 2)), sum(owed(chat, 3))], [137, 136, 0]);
 
   const gone = setup();
   const room = act(gone, 1, { action: 'invite', table: 3, loadout: extended, stake: gold(50) }).invitation.id;
@@ -185,4 +185,22 @@ test('the hero is paid what the lobby owes once, and a stake is taken only when 
   assert.equal(takeStake(session, gold(50)), true);
   assert.equal(session.game.inventory.gold, 0);
   assert.equal(walletOf({ game: { inventory: { gold: 5.9, luckCoins: -3 } } }).luckCoins, 0);
+});
+
+test('the winner of a duel gets 1.8 stakes, a refund is never reduced, and the prize is shown up front', () => {
+  const chat = setup();
+  const id = act(chat, 1, { action: 'invite', targetId: 2, loadout: classic, stake: gold(100) }).invitation.id;
+  const accepted = act(chat, 2, { action: 'accept_invite', inviteId: id, loadout: classic });
+  assert.equal(accepted.match.stake.pot, 200);
+  assert.equal(accepted.match.stake.prize, 180);
+  act(chat, 1, { action: 'surrender', matchId: chat.game.gwent.matches[0].id, revision: 0 });
+  assert.equal(sum(owed(chat, 2)), 180);
+  assert.equal(sum(owed(chat, 1)), 0);
+  const draw = setup();
+  const drawId = act(draw, 1, { action: 'invite', targetId: 2, loadout: classic, stake: gold(100) }).invitation.id;
+  act(draw, 2, { action: 'accept_invite', inviteId: drawId, loadout: classic });
+  const match = draw.game.gwent.matches[0];
+  match.state.phase = 'matchOver'; match.state.winner = 'draw'; match.endedAt = 100_000;
+  gwentState(draw, 1, 100_001);
+  assert.deepEqual([sum(owed(draw, 1)), sum(owed(draw, 2))], [100, 100]);
 });

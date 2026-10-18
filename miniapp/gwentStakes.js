@@ -2,7 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { TABLE_SEATS } from '../webapp/gwent-engine.js';
 
 // Stakes in friendly Gwent games (invitations and tables). Only players stake, never a house: every stake
-// comes from a player and the whole pot goes back to players, so no currency is created. Rated queue games
+// comes from a player and the winners get 90% of the pot (1.8 stakes in a duel), so no currency is created and
+// shuffling money between one's own accounts always loses some. Rated queue games
 // and rematches are played without stakes.
 //
 // Money lives in each hero's own record, while the lobby is shared. So a player pays their stake from their
@@ -13,6 +14,8 @@ export const STAKE_CURRENCIES = Object.freeze({
   gold: { label: 'адена', max: 10_000_000 },
   luckCoins: { label: 'CoL', max: 1_000 },
 });
+/** The winners share this part of the pot; the rest leaves the game, so moving money between one's own accounts always costs. */
+export const WIN_SHARE = 0.9;
 const CREDIT_TTL = 90 * 24 * 60 * 60_000;
 const fail = error => ({ ok: false, error });
 
@@ -62,7 +65,7 @@ function split(pot, ids) {
 
 /** Who gets the pot of a finished staked match. */
 function payoutsOf(match) {
-  const { amount, holders } = match.stake, pot = amount * holders.length;
+  const { amount, holders } = match.stake, pot = Math.round(amount * holders.length * WIN_SHARE);
   const refund = () => ({ kind: 'refund', payouts: Object.fromEntries(holders.map(id => [id, amount])) });
   if (!match.table) {
     const winner = match.state.winner;
@@ -91,7 +94,7 @@ export function settleStakes(data, now) {
 export function stakeView(match, userId) {
   const stake = match.stake;
   if (!stake) return null;
-  const view = { currency: stake.currency, amount: stake.amount, pot: stake.amount * stake.holders.length, settled: !!stake.settled };
+  const view = { currency: stake.currency, amount: stake.amount, pot: stake.amount * stake.holders.length, prize: Math.round(stake.amount * stake.holders.length * WIN_SHARE), settled: !!stake.settled };
   if (userId != null && stake.holders.includes(String(userId))) {
     view.you = true;
     if (stake.result) {
