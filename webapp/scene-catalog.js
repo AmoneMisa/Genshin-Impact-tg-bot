@@ -355,6 +355,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"giants-cave","title":"Пещера Гигантов","category":"hunting","environment":"cavern","asset":"giants-cave"},
   {"id":"sel-mahums","title":"Лагерь Сел Махум","category":"hunting","environment":"woodland","asset":"sel-mahums"},
   {"id":"field-of-whispers","title":"Поле Шёпота","category":"hunting","environment":"desert","asset":"field-of-whispers"},
+  {"id":"catacomb-heretic","title":"Катакомбы Еретиков","category":"hunting","environment":"catacomb","asset":"catacomb-heretic"},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;

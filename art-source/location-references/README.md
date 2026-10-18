@@ -1,5 +1,11 @@
 # Lineage II location references
 
+## Seven Signs dungeon continuation
+
+Inspected 2026-10-18: existing archived `catacomb-reference.jpg` and `catacomb-hall-reference.jpg`. Both carry an L2Dom watermark. Related location overview: [Catacombs and Necropolises](https://l2dom.ru/lokacii/catacomb-necropolis.php). Exact image download URLs, client builds and individual dungeon identities are not recorded in the archive and remain unverified.
+
+Visible shared motifs: blue-grey carved stone columns on stepped square bases, recessed wall panels, muted teal floor details and worn grey-brown paving. The ten continuation locations use these shared visual references with adapted peripheral architecture and unobstructed floors. Individual compositions and descriptive section names are artistic adaptations; they do not establish unique original landmarks, room layouts, geodata, or High Five mechanics. Never reproduce screenshot actors, text, interface or watermarks. Prompts and generation receipts are stored per location in `webapp/art/world/scenes/<id>.source.js`.
+
 ## Hot Springs and Outlaw Forest
 
 Inspected 2026-10-16. Local reference screenshots: `springs-reference.jpg`, `woodland-reference.jpg`, `woodland-path-reference.jpg`. Matching location galleries: [Hot Springs](https://l2vika.ru/lokacii/hot-springs.html), [Outlaw Forest](https://l2vika.ru/lokacii/outlaw-forest.html). Exact client builds are not identified; these must not be described as verified High Five captures.

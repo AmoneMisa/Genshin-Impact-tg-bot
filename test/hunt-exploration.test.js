@@ -23,8 +23,8 @@ function walk(s,id,now){
  assert.notEqual(s.game.hunt.field.room,id,'room transitions require walking to the exit');
  advanceHunt(s,now+20000,()=>.5);assert.equal(s.game.hunt.field.room,id);
 }
-test('thirty-six painted zones have reachable adapted sections and preserve dungeon networks',()=>{
- assert.equal(HUNT_EXPLORATION.length,36);
+test('painted zones have reachable adapted sections and preserve dungeon networks',()=>{
+ assert.equal(HUNT_EXPLORATION.length,37);
  for(const {id} of HUNT_EXPLORATION){
   const zone=getZone(id),layout=roomLayout(zone);assert.ok(zone);assert.ok(layout.map);
   assert.equal(layout.rooms.length,zone.kind==='catacomb'?12:3);
