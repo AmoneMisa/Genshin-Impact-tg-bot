@@ -32,6 +32,7 @@ const openSwordGame = (...args) => Promise.all([ensureFeatureStyles(),import('./
 const openArcadeGame = (...args) => Promise.all([ensureFeatureStyles(),import('./arcade.js')]).then(([,module]) => module.openArcadeGame(...args));
 const openGoldTransfer = (...args) => Promise.all([ensureFeatureStyles(),import('./gold-transfer.js')]).then(([,module]) => module.openGoldTransfer(...args));
 const openPoint21 = (...args) => Promise.all([ensureFeatureStyles(),import('./point21.js')]).then(([,module]) => module.openPoint21(...args));
+const openDiceGame = (...args) => Promise.all([ensureFeatureStyles(),import('./dice-game.js')]).then(([,module]) => module.openDiceGame(...args));
 const openGwentGame = (...args) => Promise.all([ensureFeatureStyles(),import('./gwent.js')]).then(([,module]) => module.openGwentGame(...args));
 const openElementsGame = (...args) => Promise.all([ensureFeatureStyles(),import('./elements.js')]).then(([,module]) => module.openElementsGame(...args));
 const openBonusGame = (...args) => Promise.all([ensureFeatureStyles(),import('./bonus.js')]).then(([,module]) => module.openBonusGame(...args));
@@ -143,6 +144,7 @@ const launchers = {
   transfer: openGoldTransfer,
   point21: openPoint21,
   gwent: openGwentGame,
+  dicePoker: openDiceGame,
   elements: openElementsGame,
   friends: openFriendsGame,
   clan: openClanGame,

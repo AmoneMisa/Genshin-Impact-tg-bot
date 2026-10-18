@@ -1,0 +1,26 @@
+/* Layout only; shared skins and interaction states finish in design-system.css. */
+.dice-overlay{--dialog-padding:var(--space-3)}
+body .game-overlay>.dice-panel{width:min(100%,460px);max-width:460px}
+.dice-panel{display:grid;gap:var(--space-3);min-width:0}
+.dice-panel .game-dialog-heading{margin:0;align-items:center}
+.dice-content{display:grid;gap:var(--space-3);min-width:0}.dice-content>*{min-width:0}
+.dice-content h3{margin:0}
+.dice-lead,.dice-hint,.dice-hand,.dice-verdict{margin:0}
+.dice-hint,.dice-hand{text-align:center;font-size:13px}
+.dice-hand{font-weight:700;font-size:15px}
+.dice-levels,.dice-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-2)}
+.dice-score{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-2)}
+.dice-score strong{font-size:22px}
+.dice-side{display:grid;gap:var(--space-2);justify-items:center}
+.dice-row{display:flex;justify-content:center;gap:var(--space-2)}
+.dice-die{box-sizing:border-box;display:inline-grid;place-items:center;flex:none;width:52px;height:52px;min-height:0;padding:var(--space-1);font-size:20px;font-weight:700;line-height:1}
+.dice-panel .dice-die{font-size:20px}
+.dice-die.is-static{pointer-events:none}
+.dice-die.kept{outline:2px solid var(--gold,#d6b25e);outline-offset:2px;transform:translateY(-6px)}
+.dice-die.rolling{animation:dice-roll .45s ease-out}
+@keyframes dice-roll{0%{transform:rotate(-24deg) translateY(-10px);opacity:.4}60%{transform:rotate(14deg)}100%{transform:none;opacity:1}}
+.dice-verdict{text-align:center;font-weight:700;font-size:16px}
+.dice-combination-list{display:grid;gap:var(--space-2);margin:var(--space-2) 0 0;padding:0;list-style:none}
+.dice-combination-list .ui-inset-row{flex-direction:column;align-items:flex-start;gap:var(--space-1);padding:var(--space-2)}
+@media (max-width:360px){.dice-die{width:46px;height:46px}.dice-row{gap:var(--space-1)}}
+@media (prefers-reduced-motion:reduce){.dice-die.rolling{animation:none}.dice-die.kept{transform:none}}
