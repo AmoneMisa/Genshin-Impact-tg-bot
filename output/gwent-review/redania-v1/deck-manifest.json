@@ -1,0 +1,1285 @@
+{
+  "faction": "redania",
+  "title": "Редания",
+  "approval": "approved",
+  "integrated": false,
+  "pushed": false,
+  "templateSize": {
+    "width": 310,
+    "height": 585
+  },
+  "font": "Roboto Condensed",
+  "fontMatch": "Review candidate; original game typeface not independently verified.",
+  "quotes": {
+    "generated": "Original fan-written lines, not quotations from Witcher 3.",
+    "existing": "Preserved inside user-supplied original card images."
+  },
+  "back": {
+    "file": "back.webp",
+    "source": "/art/gwent/printed/back-redania.webp",
+    "reusedUnchanged": true
+  },
+  "customIcons": [
+    "swap",
+    "mage",
+    "traitor-hunt",
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall",
+    "ambush"
+  ],
+  "cards": [
+    {
+      "summoned": false,
+      "id": "re-leader-hunter",
+      "name": "Радовид: Охотник на магов",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/re-leader-hunter.png",
+      "webp": "cards/re-leader-hunter.webp",
+      "quote": "Пусть прячут свои тайны. Мне достаточно знать, где.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-leader-spymaster",
+      "name": "Радовид: Хозяин шпионов",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/re-leader-spymaster.png",
+      "webp": "cards/re-leader-spymaster.webp",
+      "quote": "На доске важна не фигура. Важно, кому она мешает.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-leader-king",
+      "name": "Радовид: Король Редании",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/re-leader-king.png",
+      "webp": "cards/re-leader-king.webp",
+      "quote": "Редания не склонит знамён, пока я держу корону.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-leader-inquisitor",
+      "name": "Радовид: Великий инквизитор",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/re-leader-inquisitor.png",
+      "webp": "cards/re-leader-inquisitor.webp",
+      "quote": "Сомнение — роскошь тех, кто не отдаёт приказов.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/avallach.png",
+      "webp": "cards/avallach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/yennefer.png",
+      "webp": "cards/yennefer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/triss.png",
+      "webp": "cards/triss.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/geralt.png",
+      "webp": "cards/geralt.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cirilla",
+      "name": "Цирилла",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/cirilla.png",
+      "webp": "cards/cirilla.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dandelion",
+      "name": "Лютик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dandelion.png",
+      "webp": "cards/dandelion.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/zoltan.png",
+      "webp": "cards/zoltan.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/emiel.png",
+      "webp": "cards/emiel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vesemir",
+      "name": "Весемир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vesemir.png",
+      "webp": "cards/vesemir.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olgierd.png",
+      "webp": "cards/olgierd.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/gaunter-darkness.png",
+      "webp": "cards/gaunter-darkness.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/gaunter.png",
+      "webp": "cards/gaunter.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cow",
+      "name": "Корова",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/cow.png",
+      "webp": "cards/cow.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/villentretemerth.png",
+      "webp": "cards/villentretemerth.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-royal-guard",
+      "name": "Королевская гвардия",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/re-royal-guard.png",
+      "webp": "cards/re-royal-guard.webp",
+      "quote": "Клятву слышал король. Нарушить её не даст строй.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "re-informant",
+      "name": "Осведомитель",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/re-informant.png",
+      "webp": "cards/re-informant.webp",
+      "quote": "Я ничего не видел. Но могу вспомнить за монету.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "spy"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "re-agent",
+      "name": "Агент короны",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/re-agent.png",
+      "webp": "cards/re-agent.webp",
+      "quote": "У короны длинная память. И короткие приказы.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-saboteur",
+      "name": "Диверсант",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/re-saboteur.png",
+      "webp": "cards/re-saboteur.webp",
+      "quote": "Утром они спросят, кто стоял на страже.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "swap"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "re-captain",
+      "name": "Капитан гвардии",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 8,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/re-captain.png",
+      "webp": "cards/re-captain.webp",
+      "quote": "Щиты выше. Страх они должны увидеть у себя, а не у нас.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-crossbowman",
+      "name": "Редарский арбалетчик",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/re-crossbowman.png",
+      "webp": "cards/re-crossbowman.webp",
+      "quote": "На таком ветру промахиваются только один раз.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-court-mage",
+      "name": "Придворный маг",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/re-court-mage.png",
+      "webp": "cards/re-court-mage.webp",
+      "quote": "При дворе безопаснее молчать. Даже когда знаешь ответ.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "medic",
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "re-sapper",
+      "name": "Сапёр",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/re-sapper.png",
+      "webp": "cards/re-sapper.webp",
+      "quote": "Крепость начинается со стены. И заканчивается под ней.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-siege-master",
+      "name": "Осадный мастер",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 8,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/re-siege-master.png",
+      "webp": "cards/re-siege-master.webp",
+      "quote": "Они строили её сто лет. Посмотрим, сколько продержатся ворота.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-radovid",
+      "name": "Радовид Свирепый",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/re-radovid.png",
+      "webp": "cards/re-radovid.webp",
+      "quote": "Король, которому лгут без страха, уже потерял корону.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-grand-master",
+      "name": "Великий магистр ордена",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/re-grand-master.png",
+      "webp": "cards/re-grand-master.webp",
+      "quote": "Приказ забудут. Пример останется.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "re-counselor",
+      "name": "Тайный советник",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/re-counselor.png",
+      "webp": "cards/re-counselor.webp",
+      "quote": "Ваше величество, у каждой верности есть свидетели.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ambush",
+      "name": "Засада",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ambush.png",
+      "webp": "cards/ambush.webp",
+      "quote": "Они слишком долго смотрели на дорогу. По сторонам было тихо.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "ambush"
+      ],
+      "reuse": "../velen-v1"
+    },
+    {
+      "summoned": false,
+      "id": "re-traitor-hunt",
+      "name": "Охота на изменников",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/re-traitor-hunt.png",
+      "webp": "cards/re-traitor-hunt.webp",
+      "quote": "К рассвету город выучил, какие двери лучше не открывать.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "traitor-hunt"
+      ]
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-fire.png",
+      "webp": "cards/el-fire.webp",
+      "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "fire"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-earth.png",
+      "webp": "cards/el-earth.webp",
+      "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "earth"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-water.png",
+      "webp": "cards/el-water.webp",
+      "quote": "Тихая вода первой забирается под доспех.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "water"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-prep.png",
+      "webp": "cards/ex-prep.webp",
+      "quote": "Стену ещё не видно, а приговор уже отлит.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "prep"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-trap.png",
+      "webp": "cards/ex-trap.webp",
+      "quote": "На этой тропе слишком удобно идти одному.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "trap"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-medic.png",
+      "webp": "cards/ex-medic.webp",
+      "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "recall"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "summoned": false,
+      "id": "decoy",
+      "name": "Чучело",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/decoy.png",
+      "webp": "cards/decoy.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/commanders-horn.png",
+      "webp": "cards/commanders-horn.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "scorch",
+      "name": "Казнь",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/scorch.png",
+      "webp": "cards/scorch.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "biting-frost",
+      "name": "Мороз",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/biting-frost.png",
+      "webp": "cards/biting-frost.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/impenetrable-fog.png",
+      "webp": "cards/impenetrable-fog.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/torrential-rain.png",
+      "webp": "cards/torrential-rain.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/clear-weather.png",
+      "webp": "cards/clear-weather.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    }
+  ],
+  "missing": [],
+  "textMetrics": [
+    {
+      "id": "re-leader-hunter",
+      "title": {
+        "text": "Радовид: Охотник на магов",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Пусть прячут свои тайны. Мне достаточно знать, где.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-leader-spymaster",
+      "title": {
+        "text": "Радовид: Хозяин шпионов",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "На доске важна не фигура. Важно, кому она мешает.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-leader-king",
+      "title": {
+        "text": "Радовид: Король Редании",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Редания не склонит знамён, пока я держу корону.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-leader-inquisitor",
+      "title": {
+        "text": "Радовид: Великий инквизитор",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Сомнение — роскошь тех, кто не отдаёт приказов.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-royal-guard",
+      "title": {
+        "text": "Королевская гвардия",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Клятву слышал король. Нарушить её не даст строй.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-informant",
+      "title": {
+        "text": "Осведомитель",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Я ничего не видел. Но могу вспомнить за монету.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-agent",
+      "title": {
+        "text": "Агент короны",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "У короны длинная память. И короткие приказы.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-saboteur",
+      "title": {
+        "text": "Диверсант",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Утром они спросят, кто стоял на страже.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-captain",
+      "title": {
+        "text": "Капитан гвардии",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Щиты выше. Страх они должны увидеть у себя, а не у нас.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-crossbowman",
+      "title": {
+        "text": "Редарский арбалетчик",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "На таком ветру промахиваются только один раз.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-court-mage",
+      "title": {
+        "text": "Придворный маг",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "При дворе безопаснее молчать. Даже когда знаешь ответ.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-sapper",
+      "title": {
+        "text": "Сапёр",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Крепость начинается со стены. И заканчивается под ней.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-siege-master",
+      "title": {
+        "text": "Осадный мастер",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Они строили её сто лет. Посмотрим, сколько продержатся ворота.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-radovid",
+      "title": {
+        "text": "Радовид Свирепый",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Король, которому лгут без страха, уже потерял корону.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-grand-master",
+      "title": {
+        "text": "Великий магистр ордена",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Приказ забудут. Пример останется.",
+        "fontSize": 18,
+        "lines": 1,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-counselor",
+      "title": {
+        "text": "Тайный советник",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Ваше величество, у каждой верности есть свидетели.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "re-traitor-hunt",
+      "title": {
+        "text": "Охота на изменников",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "К рассвету город выучил, какие двери лучше не открывать.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    }
+  ],
+  "loadout": {
+    "config": {
+      "faction": "redania",
+      "ruleset": "extended",
+      "leaderId": "re-leader-hunter",
+      "counts": {
+        "avallach": 1,
+        "yennefer": 1,
+        "triss": 1,
+        "geralt": 1,
+        "cirilla": 1,
+        "dandelion": 1,
+        "zoltan": 1,
+        "emiel": 1,
+        "vesemir": 1,
+        "olgierd": 1,
+        "gaunter-darkness": 3,
+        "gaunter": 1,
+        "cow": 1,
+        "villentretemerth": 1,
+        "re-royal-guard": 3,
+        "re-informant": 1,
+        "re-agent": 1,
+        "re-saboteur": 2,
+        "re-captain": 1,
+        "re-crossbowman": 2,
+        "re-court-mage": 1,
+        "re-sapper": 2,
+        "re-siege-master": 2,
+        "re-radovid": 1,
+        "re-grand-master": 1,
+        "re-counselor": 1,
+        "ambush": 1,
+        "re-traitor-hunt": 1,
+        "el-fire": 1,
+        "el-earth": 1,
+        "el-water": 1,
+        "ex-prep": 1,
+        "ex-trap": 1,
+        "ex-medic": 1,
+        "decoy": 1,
+        "commanders-horn": 1,
+        "scorch": 0,
+        "biting-frost": 0,
+        "impenetrable-fog": 0,
+        "torrential-rain": 0,
+        "clear-weather": 0
+      },
+      "arts": {}
+    },
+    "stats": {
+      "valid": true,
+      "errors": [],
+      "units": 34,
+      "specials": 10,
+      "heroes": 8,
+      "strength": 200,
+      "total": 44
+    }
+  },
+  "complete": true
+}

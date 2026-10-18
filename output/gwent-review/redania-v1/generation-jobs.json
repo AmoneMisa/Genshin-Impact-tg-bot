@@ -1,0 +1,214 @@
+[
+  {
+    "key": "re-royal-guard",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Королевская гвардия",
+    "changed": false,
+    "file": "illustrations/re-royal-guard.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult Redanian royal guard aged 30, broad square face and a short sandy beard, steel helmet with face fully visible, dark steel plate and crimson eagle tabard, holding a halberd vertically in the cold stone hall of Tretogor castle. Torchlit silver edges and crimson cloth, stern alert posture. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Клятву слышал король. Нарушить её не даст строй.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-informant",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Осведомитель",
+    "changed": false,
+    "file": "illustrations/re-informant.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult thin nervous male informant aged 40 with a long clean-shaven face, pointed nose and messy black hair under a grey hood, sliding a small folded unmarked paper across a tavern table. Dark candlelit corner in Novigrad, glance toward the door, worn wool cloak. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Я ничего не видел. Но могу вспомнить за монету.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-agent",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Агент короны",
+    "changed": false,
+    "file": "illustrations/re-agent.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult female Redanian crown agent aged 35, angular face, dark hair tightly tied back, long weathered black leather coat and crimson eagle gorget, walking through a narrow snowy city alley. One gloved hand rests on a sheathed steel sword, cold watchful eyes, no combat. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "У короны длинная память. И короткие приказы.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-saboteur",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Диверсант",
+    "changed": false,
+    "file": "illustrations/re-saboteur.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult lean male saboteur aged 28 with cropped brown hair and dark stubble, kneeling beside the timber wheels of an unattended siege tower at night. Dark wool clothing, rope coil, leather tool roll and a small closed cask among supplies. Quiet clandestine atmosphere, no diagrams, no visible explosive mechanism or active blast. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Утром они спросят, кто стоял на страже.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-captain",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Капитан гвардии",
+    "changed": false,
+    "file": "illustrations/re-captain.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult Redanian captain aged 50 with a thick greying moustache, deeply lined broad face and a close steel helmet with a crimson plume. Polished dark plate, red cloak, holding a sword upright while giving orders before a snow-dusted keep, distant guard formation behind. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Щиты выше. Страх они должны увидеть у себя, а не у нас.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-crossbowman",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Редарский арбалетчик",
+    "changed": false,
+    "file": "illustrations/re-crossbowman.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult Redanian crossbowman aged 25, clean-shaven narrow face and wavy chestnut hair, red-and-grey wool surcoat over chainmail, aiming a mechanically convincing heavy wooden crossbow from a stone parapet over a snowy city. Visible cold breath, pale winter light. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "На таком ветру промахиваются только один раз.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-court-mage",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Придворный маг",
+    "changed": false,
+    "file": "illustrations/re-court-mage.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult gaunt court mage aged 55 with shoulder-length silver hair and a trimmed pointed grey beard, severe thoughtful face, dark red robes, iron staff at rest. Small restrained amber magical light above his fingertips in a cold stone hall with tall narrow windows. Scholar, no combat. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "При дворе безопаснее молчать. Даже когда знаешь ответ.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-sapper",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Сапёр",
+    "changed": false,
+    "file": "illustrations/re-sapper.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult stocky Redanian sapper aged 45 with a shaved head under a leather cap and a short dark beard, carrying a closed supply barrel along a muddy trench, shovel on his back and leather gloves. Red banners and a grey fortified wall, overcast cold daylight, no active explosion or technical diagram. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Крепость начинается со стены. И заканчивается под ней.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-siege-master",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Осадный мастер",
+    "changed": false,
+    "file": "illustrations/re-siege-master.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult Redanian siege engineer aged 60 with a full white beard, weathered face and a fur-lined cap, wearing a dark steel cuirass over wool, directing adult workers beside a huge iron-banded trebuchet in a snowy camp. Measuring rod in hand, readable machine silhouette, red banners. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Они строили её сто лет. Посмотрим, сколько продержатся ворота.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-radovid",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Радовид Свирепый",
+    "changed": false,
+    "file": "illustrations/re-radovid.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: Recognizable King Radovid V the Stern from The Witcher 3 game: an adult young-to-middle-aged pale bald man with a closely shaved head, short neat reddish-brown beard and moustache, narrow cold eyes, prominent forehead and a hard calculating expression. A simple low golden royal circlet on his bald head, heavy crimson embroidered robes with a white Redanian eagle on the chest, dark sleeves and leather bracers. No long hair, no elaborate spiked fantasy crown. The same face and age across all his portraits. A three-quarter standing royal portrait in a cold shadowy throne hall, hand resting on the pommel of a sheathed sword, pale winter light on the face and crimson drapes behind. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Король, которому лгут без страха, уже потерял корону.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-grand-master",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Великий магистр ордена",
+    "changed": false,
+    "file": "illustrations/re-grand-master.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult elderly grand master of a Redanian knightly order, long white beard, strong lined face, close-cropped white hair, black and crimson ceremonial armor and a heavy sword held vertically at rest. Standing beneath a stone arch with a white eagle banner, solemn authority. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Приказ забудут. Пример останется.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-counselor",
+    "faction": "redania",
+    "kind": "unit",
+    "name": "Тайный советник",
+    "changed": false,
+    "file": "illustrations/re-counselor.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: An adult secret royal counselor aged 65, very thin clean-shaven face, high forehead and receding grey hair, black fur-collared coat, a large seal ring and a ring of keys. Standing in a shadowy study by unmarked folded correspondence and a single lamp, wary intelligent eyes. No readable writing. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "Ваше величество, у каждой верности есть свидетели.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-traitor-hunt",
+    "faction": "redania",
+    "kind": "special",
+    "name": "Охота на изменников",
+    "changed": false,
+    "file": "illustrations/re-traitor-hunt.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: A rain-soaked Redanian city street at night, adult guards with search dogs and low torches checking an abandoned gate and a row of closed doors. Crimson eagle banners and misty stone towers, tense atmosphere of a city under royal scrutiny. No fighting, victims, pyre or injuries. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults.",
+    "quote": "К рассвету город выучил, какие двери лучше не открывать.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "re-leader-hunter",
+    "faction": "redania",
+    "kind": "leader",
+    "name": "Радовид: Охотник на магов",
+    "changed": false,
+    "file": "illustrations/re-leader-hunter.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: Recognizable King Radovid V the Stern from The Witcher 3 game: an adult young-to-middle-aged pale bald man with a closely shaved head, short neat reddish-brown beard and moustache, narrow cold eyes, prominent forehead and a hard calculating expression. A simple low golden royal circlet on his bald head, heavy crimson embroidered robes with a white Redanian eagle on the chest, dark sleeves and leather bracers. No long hair, no elaborate spiked fantasy crown. The same face and age across all his portraits. Walking in dark armor under his crimson cloak through a deserted wet Novigrad street with torch-bearing adult royal guards behind him. Smoke, cold breath and closed doors, relentless watchful expression. No victims, injuries or execution. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults. Input image is the Radovid hero portrait for this same deck. Preserve this exact man: same bald head, facial proportions, short reddish beard, age, circlet and crimson eagle robe. Create the separate scene and pose described above, with a clear readable face. Keep the same grounded matte painted Gwent style. This is an identity reference, not a request to copy the standing pose.",
+    "quote": "Пусть прячут свои тайны. Мне достаточно знать, где.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/re-radovid.png"
+    ]
+  },
+  {
+    "key": "re-leader-spymaster",
+    "faction": "redania",
+    "kind": "leader",
+    "name": "Радовид: Хозяин шпионов",
+    "changed": false,
+    "file": "illustrations/re-leader-spymaster.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: Recognizable King Radovid V the Stern from The Witcher 3 game: an adult young-to-middle-aged pale bald man with a closely shaved head, short neat reddish-brown beard and moustache, narrow cold eyes, prominent forehead and a hard calculating expression. A simple low golden royal circlet on his bald head, heavy crimson embroidered robes with a white Redanian eagle on the chest, dark sleeves and leather bracers. No long hair, no elaborate spiked fantasy crown. The same face and age across all his portraits. Seated at a table in a shadowy candlelit chamber, studying a carved chess board, sealed unmarked letters and a folded map without readable markings. Two adult intelligence agents in the distant shadows, calculating gaze. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults. Input image is the Radovid hero portrait for this same deck. Preserve this exact man: same bald head, facial proportions, short reddish beard, age, circlet and crimson eagle robe. Create the separate scene and pose described above, with a clear readable face. Keep the same grounded matte painted Gwent style. This is an identity reference, not a request to copy the standing pose.",
+    "quote": "На доске важна не фигура. Важно, кому она мешает.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/re-radovid.png"
+    ]
+  },
+  {
+    "key": "re-leader-king",
+    "faction": "redania",
+    "kind": "leader",
+    "name": "Радовид: Король Редании",
+    "changed": false,
+    "file": "illustrations/re-leader-king.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: Recognizable King Radovid V the Stern from The Witcher 3 game: an adult young-to-middle-aged pale bald man with a closely shaved head, short neat reddish-brown beard and moustache, narrow cold eyes, prominent forehead and a hard calculating expression. A simple low golden royal circlet on his bald head, heavy crimson embroidered robes with a white Redanian eagle on the chest, dark sleeves and leather bracers. No long hair, no elaborate spiked fantasy crown. The same face and age across all his portraits. Seated upright on the royal throne of Tretogor castle, crimson drapes and broad white eagle banners, one hand on the armrest, severe frontal three-quarter portrait, long cold court shadows. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults. Input image is the Radovid hero portrait for this same deck. Preserve this exact man: same bald head, facial proportions, short reddish beard, age, circlet and crimson eagle robe. Create the separate scene and pose described above, with a clear readable face. Keep the same grounded matte painted Gwent style. This is an identity reference, not a request to copy the standing pose.",
+    "quote": "Редания не склонит знамён, пока я держу корону.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/re-radovid.png"
+    ]
+  },
+  {
+    "key": "re-leader-inquisitor",
+    "faction": "redania",
+    "kind": "leader",
+    "name": "Радовид: Великий инквизитор",
+    "changed": false,
+    "file": "illustrations/re-leader-inquisitor.png",
+    "prompt": "Use case: stylized-concept. One independent painted illustration for a custom Witcher 3 Gwent card. Subject: Recognizable King Radovid V the Stern from The Witcher 3 game: an adult young-to-middle-aged pale bald man with a closely shaved head, short neat reddish-brown beard and moustache, narrow cold eyes, prominent forehead and a hard calculating expression. A simple low golden royal circlet on his bald head, heavy crimson embroidered robes with a white Redanian eagle on the chest, dark sleeves and leather bracers. No long hair, no elaborate spiked fantasy crown. The same face and age across all his portraits. Standing at a tall stone window overlooking the Novigrad square at night. Black mantle over crimson robes, stern face lit by a brass brazier nearby, adult torch-bearing guards small in the square below. Ominous royal resolve, no executions, no victims or injuries. Closely match the grounded painterly fantasy realism of the original 2015 Witcher 3 Gwent art: subtle visible brushwork, matte painted surface, weathered cloth and iron, natural human anatomy, strong readable silhouette and restrained cinematic light. Redania palette: dark crimson, cold stone grey, black iron, pale winter light and muted brass. Portrait 5:7 full bleed. Main face at x55% in upper middle, head fully visible; leave leftmost 23% visually quiet for later ribbon and icon overlays. Illustration only. NO card border, UI, ribbon, parchment, letters, numbers, words, captions or watermark. Exact Cyrillic names and literary quotes, numbers and gameplay icons are separate layers. No anime or glossy modern TCG render. All people are adults. Input image is the Radovid hero portrait for this same deck. Preserve this exact man: same bald head, facial proportions, short reddish beard, age, circlet and crimson eagle robe. Create the separate scene and pose described above, with a clear readable face. Keep the same grounded matte painted Gwent style. This is an identity reference, not a request to copy the standing pose.",
+    "quote": "Сомнение — роскошь тех, кто не отдаёт приказов.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/re-radovid.png"
+    ]
+  }
+]

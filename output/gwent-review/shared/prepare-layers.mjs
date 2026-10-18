@@ -14,6 +14,18 @@ export async function prepareLayers(directory,faction,glyphs={}){
  }
  for(const file of fs.readdirSync(path.join(approved,'fonts')))fs.copyFileSync(path.join(approved,'fonts',file),path.join(out,'fonts',file));
  const provenance={sharedSource:'../wild-hunt-v1/layers',sourceCommit:'7f08b270',customIcons:{}};
+ // The original ability crop is asymmetric: its medal is centered at (44,38), not (40.5,40.5).
+ // Clear the complete old heart silhouette, then center each 64-unit glyph on the medal itself.
+ const unitGlyphs={
+  mage:'<circle cx="32" cy="32" r="12"/><path d="M32 12v6m0 28v6M12 32h6m28 0h6M17 17l5 5m20 20 5 5M17 47l5-5m20-20 5-5"/>',
+  swap:'<path d="M17 22h26l-6-6m6 6-6 6M47 42H21l6 6m-6-6 6-6"/><path d="M17 31v9h9M47 33v-9h-9"/>'
+ };
+ for(const [name,shape]of Object.entries(unitGlyphs)){
+  const background=path.join(out,'layers/ability-medic.png');
+  const overlay=Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="81" height="81"><circle cx="44" cy="38" r="30.5" fill="#eeeee3"/><g transform="translate(12 6)" fill="none" stroke="#161816" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${shape}</g></svg>`);
+  await sharp(background).composite([{input:overlay}]).png().toFile(path.join(out,`layers/ability-${name}.png`));
+  provenance.customIcons[`ability-${name}.png`]={origin:'Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon',frameSource:'../templates-v1/layers/ability-medic.png',medalCenter:[44,38],glyphCenter:[44,38]};
+ }
  for(const [name,shape]of Object.entries(glyphs)){
   const background=await sharp('webapp'+GWENT_ART['biting-frost']).extract({left:0,top:0,width:90,height:90}).png().toBuffer();
   const overlay=Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 81 81"><circle cx="40.5" cy="40.5" r="29.5" fill="#eeeee3"/><g transform="translate(8.5 8.5)" fill="none" stroke="#161816" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${shape}</g></svg>`);
@@ -22,12 +34,12 @@ export async function prepareLayers(directory,faction,glyphs={}){
   provenance.customIcons[file]={origin:'Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.',frameSource:GWENT_ART['biting-frost']};
  }
  const back='webapp'+GWENT_ART['back:'+faction];fs.copyFileSync(back,path.join(out,'back.webp'));
- if(['witchers','toussaint','velen'].includes(faction)){
+ if(['witchers','toussaint','velen','redania'].includes(faction)){
   const tintCloth=(pixels,i)=>{
    const r=pixels[i],g=pixels[i+1],b=pixels[i+2];
    if(b>r*1.15&&b>g*1.05){
     const light=.2126*r+.7152*g+.0722*b;
-    const colors={witchers:[12+light*.48,15+light*.52,19+light*.57],toussaint:[35+light*.85,8+light*.22,18+light*.38],velen:[14+light*.42,20+light*.48,10+light*.25]};
+    const colors={witchers:[12+light*.48,15+light*.52,19+light*.57],toussaint:[35+light*.85,8+light*.22,18+light*.38],velen:[14+light*.42,20+light*.48,10+light*.25],redania:[28+light*.88,4+light*.12,7+light*.17]};
     const color=colors[faction];
     color.forEach((v,c)=>pixels[i+c]=Math.round(Math.min(255,v)));
    }
@@ -45,7 +57,7 @@ export async function prepareLayers(directory,faction,glyphs={}){
    for(let i=0;i<raw.data.length;i+=4)tintCloth(raw.data,i);
    const png=await sharp(raw.data,{raw:raw.info}).png().toBuffer();fs.writeFileSync(target,png);
   }
-  provenance.frame={source:'../templates-v1/unit.png',cloth:({witchers:'graphite and steel',toussaint:'wine burgundy',velen:'swamp olive'}[faction])+'; existing stitching and parchment preserved'};
+  provenance.frame={source:'../templates-v1/unit.png',cloth:({witchers:'graphite and steel',toussaint:'wine burgundy',velen:'swamp olive',redania:'dark crimson'}[faction])+'; existing stitching and parchment preserved'};
   if(faction==='witchers'){
   // Trace the whole silver medallion, excluding the surrounding belt. Keep dark facial details opaque.
   const points='106,166 128,186 140,176 151,184 169,181 185,184 200,176 210,185 234,164 229,198 244,209 230,220 257,239 223,245 250,282 214,270 214,300 191,280 183,319 157,319 151,280 126,303 130,269 89,282 119,249 84,240 114,220 94,210 115,202';
@@ -64,7 +76,7 @@ export async function prepareLayers(directory,faction,glyphs={}){
    }
    await sharp(pixels,{raw:meta}).trim().resize(38,39,{fit:'contain',background:'#00000000'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
    provenance.emblem={source:back,crop,extraction:'Complete gold fleur-de-lis from the ready back; silhouette mask excludes surrounding frame',canvas:[38,39]};
-  }else{
+  }else if(faction==='velen'){
    const crop={left:83,top:153,width:175,height:176};
    const {data:pixels,info:meta}=await sharp(back).extract(crop).ensureAlpha().raw().toBuffer({resolveWithObject:true});
    // Geometric silhouette keeps the original dark face and jaw opaque instead of deleting them by brightness.
@@ -73,6 +85,16 @@ export async function prepareLayers(directory,faction,glyphs={}){
    const silhouette=await sharp(pixels,{raw:meta}).composite([{input:mask,blend:'dest-in'}]).png().toBuffer();
    await sharp(silhouette).trim().resize(34,36,{fit:'contain',background:'#00000000'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
    provenance.emblem={source:back,crop,extraction:'Complete antlered skull silhouette; original face, jaw and internal shading kept opaque, no brightness threshold',canvas:[34,36]};
+  }else{
+   const crop={left:82,top:153,width:176,height:177};
+   const {data:pixels,info:meta}=await sharp(back).extract(crop).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+   for(let y=0;y<meta.height;y++)for(let x=0;x<meta.width;x++){
+    const i=(y*meta.width+x)*4,r=pixels[i],g=pixels[i+1],b=pixels[i+2];
+    // Chroma isolates red cloth; unlike a brightness mask it preserves the eagle's dark facial details.
+    if(Math.hypot(x+crop.left-170,y+crop.top-245)>99||(r>g*1.7&&r>b*1.8))pixels[i+3]=0;
+   }
+   await sharp(pixels,{raw:meta}).trim().resize(34,36,{fit:'contain',background:'#00000000'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
+   provenance.emblem={source:back,crop,extraction:'White crowned eagle and gold feet from the ready back; red-cloth chroma removed, dark details retained',canvas:[34,36]};
   }
  }else{
  const m=await sharp(back).metadata(),crop={left:Math.round(m.width*.28),top:Math.round(m.height*.34),width:Math.round(m.width*.44),height:Math.round(m.height*.34)};

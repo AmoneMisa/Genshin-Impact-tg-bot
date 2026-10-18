@@ -1,0 +1,56 @@
+{
+  "sharedSource": "../wild-hunt-v1/layers",
+  "sourceCommit": "7f08b270",
+  "customIcons": {
+    "ability-mage.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    },
+    "ability-swap.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    },
+    "effect-traitor-hunt.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    }
+  },
+  "frame": {
+    "source": "../templates-v1/unit.png",
+    "cloth": "dark crimson; existing stitching and parchment preserved"
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-redania.webp",
+    "crop": {
+      "left": 82,
+      "top": 153,
+      "width": 176,
+      "height": 177
+    },
+    "extraction": "White crowned eagle and gold feet from the ready back; red-cloth chroma removed, dark details retained",
+    "canvas": [
+      34,
+      36
+    ]
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-redania.webp",
+    "reusedUnchanged": true
+  }
+}

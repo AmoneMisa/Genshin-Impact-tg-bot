@@ -1,0 +1,45 @@
+{
+  "faction": "redania",
+  "prefix": "re-",
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1",
+    "ambush": "../velen-v1"
+  },
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "emblemSlot": {
+    "x": 24,
+    "y": 438,
+    "w": 34,
+    "h": 36
+  },
+  "emblemAxisX": 41,
+  "previewIds": [
+    "re-royal-guard",
+    "re-agent",
+    "re-radovid",
+    "re-court-mage",
+    "re-leader-spymaster"
+  ],
+  "effects": {
+    "re-traitor-hunt": "traitor-hunt"
+  },
+  "customIcons": [
+    "swap",
+    "mage",
+    "traitor-hunt",
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall",
+    "ambush"
+  ]
+}

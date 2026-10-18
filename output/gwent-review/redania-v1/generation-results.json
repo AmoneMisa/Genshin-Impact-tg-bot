@@ -1,0 +1,154 @@
+{
+  "images": [
+    {
+      "key": "re-royal-guard",
+      "file": "illustrations/re-royal-guard.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-informant",
+      "file": "illustrations/re-informant.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-agent",
+      "file": "illustrations/re-agent.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-saboteur",
+      "file": "illustrations/re-saboteur.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-captain",
+      "file": "illustrations/re-captain.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-crossbowman",
+      "file": "illustrations/re-crossbowman.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-court-mage",
+      "file": "illustrations/re-court-mage.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-sapper",
+      "file": "illustrations/re-sapper.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-siege-master",
+      "file": "illustrations/re-siege-master.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-radovid",
+      "file": "illustrations/re-radovid.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-grand-master",
+      "file": "illustrations/re-grand-master.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-counselor",
+      "file": "illustrations/re-counselor.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-traitor-hunt",
+      "file": "illustrations/re-traitor-hunt.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "re-leader-hunter",
+      "file": "illustrations/re-leader-hunter.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/re-radovid.png"
+      ]
+    },
+    {
+      "key": "re-leader-spymaster",
+      "file": "illustrations/re-leader-spymaster.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/re-radovid.png"
+      ]
+    },
+    {
+      "key": "re-leader-king",
+      "file": "illustrations/re-leader-king.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/re-radovid.png"
+      ]
+    },
+    {
+      "key": "re-leader-inquisitor",
+      "file": "illustrations/re-leader-inquisitor.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/re-radovid.png"
+      ]
+    }
+  ],
+  "generatedBacks": 0,
+  "backSource": "webapp/art/gwent/printed/back-redania.webp",
+  "reusedSharedCards": 7,
+  "generatedFaces": 17,
+  "collectionFaces": 45,
+  "approval": "approved"
+}
