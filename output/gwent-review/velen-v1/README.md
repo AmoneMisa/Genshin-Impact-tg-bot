@@ -1,0 +1,13 @@
+# Велен — одобренная коллекция
+
+44/44 faces. Complete: true. Existing back reused unchanged.
+
+New illustration generation: built-in image_gen, one independent illustration per missing card. Exact prompts: generation-jobs.json; all jobs whose kind is back are explicitly excluded because backs are already finished.
+
+New quotations are original fan-written lines, not sourced dialogue from the game. They are separate from card mechanics. Original supplied cards retain their printed quotations.
+
+Deterministic layout: templates-v1; raster ability icons, original power digits and separate Cyrillic text. New expansion glyphs have explicit provenance in layers/provenance.json. Font is open-license Roboto Condensed, a review candidate, not a verified original game font. This draft is not asserted to be pixel-perfect.
+
+No game asset mapping was changed; local commit approved; no push. Every PNG is 310×585 with a WebP counterpart.
+
+Emblem horizontal correction: shifted 3 px left to x24, aligned to the ribbon axis x41. The previous x44 check target did not match the ribbon notch. Full collection rebuilt and 390/1280 gallery checks passed.

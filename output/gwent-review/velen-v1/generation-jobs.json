@@ -1,0 +1,210 @@
+[
+  {
+    "key": "ve-drowner",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Утопец",
+    "changed": false,
+    "file": "illustrations/ve-drowner.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A recognizable Witcher 3 drowner: wiry amphibious humanoid monster with blue-grey skin, dark red patches on its bald scalp, webbed long fingers and hunched shoulders, crawling from a murky reed-lined pond at dusk. Menacing but no gore, fully nonsexual creature depiction. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Река не возвращает долги. Иногда она присылает за новыми.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-bog-witch",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Болотная ведьма",
+    "changed": false,
+    "file": "illustrations/ve-bog-witch.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: An adult aged swamp witch in layered closed ragged brown robes and a deep hood, bent back, long hooked nose, wizened sharp face, bone charms and wicker baskets; stirring a small iron cauldron beside a crooked bog hut. A crow perched nearby, dim amber fire against grey-green mist. No nudity. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "В болоте всё найдётся, милый. Даже то, чего ты не терял.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-militia",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Ополчение Велена",
+    "changed": false,
+    "file": "illustrations/ve-militia.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: Three adult Velen peasants in patched leather and muddy wool, the foreground man broad-faced with a scruffy sandy beard and a flat cloth cap, holding an old spear; a thin dark-haired clean-shaven farmer and older grey-bearded man with pitchforks behind. They stand in a muddy village lane in grey drizzle, frightened but determined. No combat or injuries. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "У нас нет лат. Зато отступать больше некуда.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-bandit",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Разбойник",
+    "changed": false,
+    "file": "illustrations/ve-bandit.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A lean adult woodland bandit aged 35 with shoulder-length dark hair, narrow clean-shaven face and a crooked nose, layered dirty brown leather and a torn hood, crouching behind a fallen tree, short knife held low. Misty old forest, wary alert expression, no attack in progress. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Кошель оставь на дороге. Сам можешь идти дальше.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-water-hag",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Водяная баба",
+    "changed": false,
+    "file": "illustrations/ve-water-hag.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A monstrous Witcher 3 water hag with mossy grey-green skin, bent back, long thin arms and clawlike fingers, lank wet hair, wrapped in opaque layers of soaked ragged fabric and algae. She rises to waist height from a black reed pond near rotten planks. Uncanny quiet, no gore or nudity. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Она помнит берег там, где давно уже только вода.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-herbalist",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Знахарка",
+    "changed": false,
+    "file": "illustrations/ve-herbalist.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: An elderly adult Velen herbalist aged 65 with a round kindly face, silver hair under a faded grey headscarf, thick woollen shawl and a patched long brown dress, gathering small herbs into a wicker basket by a misty marsh. Her cottage and crooked wooden fence behind her. Warm tiny window light, natural deeply lined face. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Пока можешь различить запах полыни, рано прощаться.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-deserter",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Дезертир",
+    "changed": false,
+    "file": "illustrations/ve-deserter.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A weary gaunt adult ex-soldier aged 28 with a shaved head, short dark stubble and a long angular face. Torn black-and-gold Nilfgaardian armor under a grey cloak, sitting at a dying fire inside a ruined windmill, dented helmet beside his boots. Rain beyond the doorway, ashamed exhausted expression, no combat. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Я бросил знамя. Война меня всё равно не отпустила.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-forest-spirit",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Лесной дух",
+    "changed": false,
+    "file": "illustrations/ve-forest-spirit.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A towering forest spirit made of twisted roots, antlers and moss standing silent among ancient trees, glowing eyes, faint ochre light through mist. Skeletal stag-skull head and branching antlers, long bark arms and moss cloak, natural ominous forest, avoid excessive neon glow. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Топор замолк. Лес ещё долго слушал.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/monsters_leshen.jpg"
+    ]
+  },
+  {
+    "key": "ve-ghost",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Призрак замка",
+    "changed": false,
+    "file": "illustrations/ve-ghost.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A translucent spectral adult noblewoman in a modest torn old dress with long closed sleeves, pale face and loose dark hair, floating silently beside the crumbling battlements of an abandoned Velen castle. Old ivy and rainy dusk, subtle ghostly pale green light, melancholy not erotic, no gore. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Её окна давно пусты. Но каждый вечер в них кто-то ждёт.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-trophy-catapult",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Трофейная катапульта",
+    "changed": false,
+    "file": "illustrations/ve-trophy-catapult.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A complete rough working medieval catapult built from salvaged dark timber on a muddy Velen hill, heavy throwing arm and ropes clearly visible, rusty captured shields hanging from its sides. Two adult peasant crew seen small for scale. War-ravaged wooden palisade and grey rainy sky, no remains or corpses. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Вчера она брала наш частокол. Сегодня послужит нам.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-baron",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Кровавый Барон",
+    "changed": false,
+    "file": "illustrations/ve-baron.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Phillip Strenger, the Bloody Baron from Witcher 3: a burly overweight middle-aged man, ruddy broad face, short reddish-brown full beard, closely cropped brown hair, heavy brow, tired haunted eyes. Wears a weathered russet-red quilted doublet with dark chainmail, leather belt and a dark fur collar. Not a young slim man, no long hair. Three-quarter standing portrait inside the dim timber hall at Crows Perch, a closed doorway and a wooden table behind him. One hand on his belt, heavy shoulders and a troubled expression. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Из чужой войны я вернулся. Из собственной всё никак.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-mistress",
+    "faction": "velen",
+    "kind": "unit",
+    "name": "Хозяйка болот",
+    "changed": false,
+    "file": "illustrations/ve-mistress.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: Three uncanny adult Crones, the Ladies of the Wood in their monstrous elderly forms: one heavy-set woman with a closed patched apron and a woven basket-like hood, one tall gaunt hag in dark layered rags and bone ornaments, one bent sharp-faced old woman wrapped in a mossy hood and feathers. All fully clothed in opaque garments. Standing together beneath twisted ancient trees at Crookback Bog beside a small steaming cauldron. Oppressive green-grey mist, subtle firelight, no gore, no nudity. Distinct silhouettes, not three young beautiful sorceresses. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Лес кормит своих детей. А дети кормят лес.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-leader-fog",
+    "faction": "velen",
+    "kind": "leader",
+    "name": "Туман Велена",
+    "changed": false,
+    "file": "illustrations/ve-leader-fog.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A thick bank of Velen fog swallowing a muddy road and an abandoned cart, black trees and a faint lantern light, no creature visible, oppressive quiet. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Когда пропадает дорога, не всякий голос ведёт домой.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-leader-swamp",
+    "faction": "velen",
+    "kind": "leader",
+    "name": "Трясина",
+    "changed": false,
+    "file": "illustrations/ve-leader-swamp.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A treacherous Velen swamp at dusk with bubbling black water, a half-sunk wagon and crooked willows, glowing wisps, no characters. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Земля под ногами кончилась раньше, чем путь.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-leader-silence",
+    "faction": "velen",
+    "kind": "leader",
+    "name": "Тишина болот",
+    "changed": false,
+    "file": "illustrations/ve-leader-silence.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A still dead marsh under a leaden sky, a lone heron on a stump and drifting mist over black water, eerie silence, no characters. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Птицы умолкли первыми. Люди поняли последними.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ve-leader-baron",
+    "faction": "velen",
+    "kind": "leader",
+    "name": "Кровавый Барон: Хозяин Хмырёвки",
+    "changed": false,
+    "file": "illustrations/ve-leader-baron.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Phillip Strenger, the Bloody Baron from Witcher 3: a burly overweight middle-aged man, ruddy broad face, short reddish-brown full beard, closely cropped brown hair, heavy brow, tired haunted eyes. Wears a weathered russet-red quilted doublet with dark chainmail, leather belt and a dark fur collar. Not a young slim man, no long hair. Seated alone at a heavy table in Crows Perch with a pewter tankard, looking toward an empty chair. Dim hall, antlers on the timber wall, grief and exhausted authority, fully visible head. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults. Input image is the new Baron unit portrait from this same deck. Preserve this exact man: same broad face, beard, age, short hair, heavy build, russet quilted doublet and chainmail. Paint the separate seated scene described above, with a tankard and an empty chair, not a duplicate of the standing portrait. Identity reference only; retain the coherent painted Velen style.",
+    "quote": "Крепкие стены не помогают, когда дом пуст.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/ve-baron.png"
+    ]
+  },
+  {
+    "key": "ambush",
+    "faction": "neutral",
+    "kind": "special",
+    "name": "Засада",
+    "changed": false,
+    "file": "illustrations/ambush.png",
+    "prompt": "Use case: stylized-concept. One independent illustration for a custom Witcher 3 Gwent card. Subject: A quiet forest road crossing Velen marshland, concealed adult archers in dark cloaks partly visible behind reeds and a fallen trunk, a distant supply wagon emerging through mist. Bows ready but no fighting, no injuries. Tense waiting moment, wide environmental scene adapted to a portrait crop. Match the original 2015 Witcher 3 Gwent painted realism: subtle visible brushwork, matte oil-painted textures, weathered natural materials, convincing anatomy, cinematic restrained light. Velen palette: swamp olive, wet earth brown, leaden grey fog, dim amber and desaturated green. Portrait 5:7 full bleed. Major subject at x55%, defining face or focal point in upper middle, leftmost 23% quiet for later ribbon overlay. Keep entire head visible. Landscape leader cards are environmental scenes as described, not portraits of unrelated people. No card frame, UI, ribbons, parchment, letters, numbers, text, captions or watermark. Illustration only; exact Cyrillic, literary quotations, power and gameplay icons are composited later. No anime or glossy 3D TCG rendering. All human figures are adults.",
+    "quote": "Они слишком долго смотрели на дорогу. По сторонам было тихо.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  }
+]

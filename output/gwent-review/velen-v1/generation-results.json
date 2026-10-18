@@ -1,0 +1,150 @@
+{
+  "images": [
+    {
+      "key": "ve-drowner",
+      "file": "illustrations/ve-drowner.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-bog-witch",
+      "file": "illustrations/ve-bog-witch.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-militia",
+      "file": "illustrations/ve-militia.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-bandit",
+      "file": "illustrations/ve-bandit.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-water-hag",
+      "file": "illustrations/ve-water-hag.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-herbalist",
+      "file": "illustrations/ve-herbalist.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-deserter",
+      "file": "illustrations/ve-deserter.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-forest-spirit",
+      "file": "illustrations/ve-forest-spirit.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "../../../webapp/art/gwent/sm/monsters_leshen.jpg"
+      ]
+    },
+    {
+      "key": "ve-ghost",
+      "file": "illustrations/ve-ghost.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-trophy-catapult",
+      "file": "illustrations/ve-trophy-catapult.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-baron",
+      "file": "illustrations/ve-baron.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-mistress",
+      "file": "illustrations/ve-mistress.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-leader-fog",
+      "file": "illustrations/ve-leader-fog.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-leader-swamp",
+      "file": "illustrations/ve-leader-swamp.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-leader-silence",
+      "file": "illustrations/ve-leader-silence.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ve-leader-baron",
+      "file": "illustrations/ve-leader-baron.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/ve-baron.png"
+      ]
+    },
+    {
+      "key": "ambush",
+      "file": "illustrations/ambush.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    }
+  ],
+  "generatedBacks": 0,
+  "backSource": "webapp/art/gwent/printed/back-velen.webp",
+  "reusedSharedCards": 6,
+  "generatedFaces": 17,
+  "collectionFaces": 44,
+  "approval": "approved"
+}

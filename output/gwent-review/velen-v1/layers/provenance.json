@@ -1,0 +1,32 @@
+{
+  "sharedSource": "../wild-hunt-v1/layers",
+  "sourceCommit": "7f08b270",
+  "customIcons": {
+    "effect-ambush.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    }
+  },
+  "frame": {
+    "source": "../templates-v1/unit.png",
+    "cloth": "swamp olive; existing stitching and parchment preserved"
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-velen.webp",
+    "crop": {
+      "left": 83,
+      "top": 153,
+      "width": 175,
+      "height": 176
+    },
+    "extraction": "Complete antlered skull silhouette; original face, jaw and internal shading kept opaque, no brightness threshold",
+    "canvas": [
+      34,
+      36
+    ]
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-velen.webp",
+    "reusedUnchanged": true
+  }
+}

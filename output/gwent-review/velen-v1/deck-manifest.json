@@ -1,0 +1,1271 @@
+{
+  "faction": "velen",
+  "title": "Велен",
+  "approval": "approved",
+  "integrated": false,
+  "pushed": false,
+  "templateSize": {
+    "width": 310,
+    "height": 585
+  },
+  "font": "Roboto Condensed",
+  "fontMatch": "Review candidate; original game typeface not independently verified.",
+  "quotes": {
+    "generated": "Original fan-written lines, not quotations from Witcher 3.",
+    "existing": "Preserved inside user-supplied original card images."
+  },
+  "back": {
+    "file": "back.webp",
+    "source": "/art/gwent/printed/back-velen.webp",
+    "reusedUnchanged": true
+  },
+  "customIcons": [
+    "swap",
+    "mage",
+    "ambush",
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall"
+  ],
+  "cards": [
+    {
+      "summoned": false,
+      "id": "ve-leader-fog",
+      "name": "Туман Велена",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/ve-leader-fog.png",
+      "webp": "cards/ve-leader-fog.webp",
+      "quote": "Когда пропадает дорога, не всякий голос ведёт домой.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-leader-swamp",
+      "name": "Трясина",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/ve-leader-swamp.png",
+      "webp": "cards/ve-leader-swamp.webp",
+      "quote": "Земля под ногами кончилась раньше, чем путь.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-leader-silence",
+      "name": "Тишина болот",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/ve-leader-silence.png",
+      "webp": "cards/ve-leader-silence.webp",
+      "quote": "Птицы умолкли первыми. Люди поняли последними.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-leader-baron",
+      "name": "Кровавый Барон: Хозяин Хмырёвки",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/ve-leader-baron.png",
+      "webp": "cards/ve-leader-baron.webp",
+      "quote": "Крепкие стены не помогают, когда дом пуст.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/avallach.png",
+      "webp": "cards/avallach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/yennefer.png",
+      "webp": "cards/yennefer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/triss.png",
+      "webp": "cards/triss.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/geralt.png",
+      "webp": "cards/geralt.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cirilla",
+      "name": "Цирилла",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/cirilla.png",
+      "webp": "cards/cirilla.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dandelion",
+      "name": "Лютик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dandelion.png",
+      "webp": "cards/dandelion.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/zoltan.png",
+      "webp": "cards/zoltan.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/emiel.png",
+      "webp": "cards/emiel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vesemir",
+      "name": "Весемир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vesemir.png",
+      "webp": "cards/vesemir.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olgierd.png",
+      "webp": "cards/olgierd.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/gaunter-darkness.png",
+      "webp": "cards/gaunter-darkness.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/gaunter.png",
+      "webp": "cards/gaunter.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cow",
+      "name": "Корова",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/cow.png",
+      "webp": "cards/cow.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/villentretemerth.png",
+      "webp": "cards/villentretemerth.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-drowner",
+      "name": "Утопец",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/ve-drowner.png",
+      "webp": "cards/ve-drowner.webp",
+      "quote": "Река не возвращает долги. Иногда она присылает за новыми.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "muster"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ve-bog-witch",
+      "name": "Болотная ведьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/ve-bog-witch.png",
+      "webp": "cards/ve-bog-witch.webp",
+      "quote": "В болоте всё найдётся, милый. Даже то, чего ты не терял.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond",
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ve-militia",
+      "name": "Ополчение Велена",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/ve-militia.png",
+      "webp": "cards/ve-militia.webp",
+      "quote": "У нас нет лат. Зато отступать больше некуда.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ve-bandit",
+      "name": "Разбойник",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/ve-bandit.png",
+      "webp": "cards/ve-bandit.webp",
+      "quote": "Кошель оставь на дороге. Сам можешь идти дальше.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-water-hag",
+      "name": "Водяная баба",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/ve-water-hag.png",
+      "webp": "cards/ve-water-hag.webp",
+      "quote": "Она помнит берег там, где давно уже только вода.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-herbalist",
+      "name": "Знахарка",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/ve-herbalist.png",
+      "webp": "cards/ve-herbalist.webp",
+      "quote": "Пока можешь различить запах полыни, рано прощаться.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "medic"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ve-deserter",
+      "name": "Дезертир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/ve-deserter.png",
+      "webp": "cards/ve-deserter.webp",
+      "quote": "Я бросил знамя. Война меня всё равно не отпустила.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "spy"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ve-forest-spirit",
+      "name": "Лесной дух",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/ve-forest-spirit.png",
+      "webp": "cards/ve-forest-spirit.webp",
+      "quote": "Топор замолк. Лес ещё долго слушал.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "swap"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ve-ghost",
+      "name": "Призрак замка",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/ve-ghost.png",
+      "webp": "cards/ve-ghost.webp",
+      "quote": "Её окна давно пусты. Но каждый вечер в них кто-то ждёт.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "morale"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "ve-trophy-catapult",
+      "name": "Трофейная катапульта",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 8,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/ve-trophy-catapult.png",
+      "webp": "cards/ve-trophy-catapult.webp",
+      "quote": "Вчера она брала наш частокол. Сегодня послужит нам.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-baron",
+      "name": "Кровавый Барон",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/ve-baron.png",
+      "webp": "cards/ve-baron.webp",
+      "quote": "Из чужой войны я вернулся. Из собственной всё никак.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ve-mistress",
+      "name": "Хозяйка болот",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/ve-mistress.png",
+      "webp": "cards/ve-mistress.webp",
+      "quote": "Лес кормит своих детей. А дети кормят лес.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "ambush",
+      "name": "Засада",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ambush.png",
+      "webp": "cards/ambush.webp",
+      "quote": "Они слишком долго смотрели на дорогу. По сторонам было тихо.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "ambush"
+      ]
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-fire.png",
+      "webp": "cards/el-fire.webp",
+      "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "fire"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-earth.png",
+      "webp": "cards/el-earth.webp",
+      "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "earth"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-water.png",
+      "webp": "cards/el-water.webp",
+      "quote": "Тихая вода первой забирается под доспех.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "water"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-prep.png",
+      "webp": "cards/ex-prep.webp",
+      "quote": "Стену ещё не видно, а приговор уже отлит.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "prep"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-trap.png",
+      "webp": "cards/ex-trap.webp",
+      "quote": "На этой тропе слишком удобно идти одному.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "trap"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-medic.png",
+      "webp": "cards/ex-medic.webp",
+      "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "recall"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "summoned": false,
+      "id": "decoy",
+      "name": "Чучело",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/decoy.png",
+      "webp": "cards/decoy.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/commanders-horn.png",
+      "webp": "cards/commanders-horn.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "scorch",
+      "name": "Казнь",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/scorch.png",
+      "webp": "cards/scorch.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "biting-frost",
+      "name": "Мороз",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/biting-frost.png",
+      "webp": "cards/biting-frost.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/impenetrable-fog.png",
+      "webp": "cards/impenetrable-fog.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/torrential-rain.png",
+      "webp": "cards/torrential-rain.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/clear-weather.png",
+      "webp": "cards/clear-weather.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    }
+  ],
+  "missing": [],
+  "textMetrics": [
+    {
+      "id": "ve-leader-fog",
+      "title": {
+        "text": "Туман Велена",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Когда пропадает дорога, не всякий голос ведёт домой.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-leader-swamp",
+      "title": {
+        "text": "Трясина",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Земля под ногами кончилась раньше, чем путь.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-leader-silence",
+      "title": {
+        "text": "Тишина болот",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Птицы умолкли первыми. Люди поняли последними.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-leader-baron",
+      "title": {
+        "text": "Кровавый Барон: Хозяин Хмырёвки",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Крепкие стены не помогают, когда дом пуст.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-drowner",
+      "title": {
+        "text": "Утопец",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Река не возвращает долги. Иногда она присылает за новыми.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-bog-witch",
+      "title": {
+        "text": "Болотная ведьма",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "В болоте всё найдётся, милый. Даже то, чего ты не терял.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-militia",
+      "title": {
+        "text": "Ополчение Велена",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "У нас нет лат. Зато отступать больше некуда.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-bandit",
+      "title": {
+        "text": "Разбойник",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Кошель оставь на дороге. Сам можешь идти дальше.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-water-hag",
+      "title": {
+        "text": "Водяная баба",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Она помнит берег там, где давно уже только вода.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-herbalist",
+      "title": {
+        "text": "Знахарка",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Пока можешь различить запах полыни, рано прощаться.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-deserter",
+      "title": {
+        "text": "Дезертир",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Я бросил знамя. Война меня всё равно не отпустила.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-forest-spirit",
+      "title": {
+        "text": "Лесной дух",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Топор замолк. Лес ещё долго слушал.",
+        "fontSize": 18,
+        "lines": 1,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-ghost",
+      "title": {
+        "text": "Призрак замка",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Её окна давно пусты. Но каждый вечер в них кто-то ждёт.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-trophy-catapult",
+      "title": {
+        "text": "Трофейная катапульта",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Вчера она брала наш частокол. Сегодня послужит нам.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-baron",
+      "title": {
+        "text": "Кровавый Барон",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Из чужой войны я вернулся. Из собственной всё никак.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ve-mistress",
+      "title": {
+        "text": "Хозяйка болот",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Лес кормит своих детей. А дети кормят лес.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "ambush",
+      "title": {
+        "text": "Засада",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Они слишком долго смотрели на дорогу. По сторонам было тихо.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    }
+  ],
+  "loadout": {
+    "config": {
+      "faction": "velen",
+      "ruleset": "extended",
+      "leaderId": "ve-leader-fog",
+      "counts": {
+        "avallach": 1,
+        "yennefer": 1,
+        "triss": 1,
+        "geralt": 1,
+        "cirilla": 1,
+        "dandelion": 1,
+        "zoltan": 1,
+        "emiel": 1,
+        "vesemir": 1,
+        "olgierd": 1,
+        "gaunter-darkness": 3,
+        "gaunter": 1,
+        "cow": 1,
+        "villentretemerth": 1,
+        "ve-drowner": 3,
+        "ve-bog-witch": 3,
+        "ve-militia": 3,
+        "ve-bandit": 2,
+        "ve-water-hag": 2,
+        "ve-herbalist": 1,
+        "ve-deserter": 1,
+        "ve-forest-spirit": 1,
+        "ve-ghost": 1,
+        "ve-trophy-catapult": 2,
+        "ve-baron": 1,
+        "ve-mistress": 1,
+        "ambush": 1,
+        "el-fire": 1,
+        "el-earth": 1,
+        "el-water": 1,
+        "ex-prep": 1,
+        "ex-trap": 1,
+        "ex-medic": 1,
+        "decoy": 1,
+        "commanders-horn": 1,
+        "scorch": 1,
+        "biting-frost": 0,
+        "impenetrable-fog": 0,
+        "torrential-rain": 0,
+        "clear-weather": 0
+      },
+      "arts": {}
+    },
+    "stats": {
+      "valid": true,
+      "errors": [],
+      "units": 37,
+      "specials": 10,
+      "heroes": 7,
+      "strength": 208,
+      "total": 47
+    }
+  },
+  "complete": true
+}

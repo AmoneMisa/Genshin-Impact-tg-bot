@@ -33,7 +33,7 @@ if(spec.frames?.unit){
  let minX=Infinity,maxX=-1,minY=Infinity,maxY=-1;
  for(let y=0;y<emblem.info.height;y++)for(let x=0;x<emblem.info.width;x++)if(emblem.data[(y*emblem.info.width+x)*4+3]>128){minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);}
  assert.ok(maxX-minX>=20&&maxY-minY>=20,'faction emblem is too small or missing');
- assert.ok(Math.abs(spec.emblemSlot.x+(minX+maxX)/2-44)<2,'faction emblem is not centered on the ribbon');
+ assert.ok(Math.abs(spec.emblemSlot.x+(minX+maxX)/2-(spec.emblemAxisX??44))<2,'faction emblem is not centered on the ribbon');
  assert.ok(spec.emblemSlot.y+maxY<490,'faction emblem overlaps the ribbon tail');
 }
 // The hero medallion is one opaque object, never a set of gold-colored fragments.
