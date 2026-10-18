@@ -20,7 +20,7 @@ const PROFILE_TTL = 2 * 24 * 60 * 60_000;
 const fail = reason => ({ ok: false, reason, error: reason });
 
 export function emptyLobby() {
-  return { gwent: { queue: [], matches: [], loadouts: {}, invites: [] }, profiles: {} };
+  return { gwent: { queue: [], matches: [], loadouts: {}, invites: [], credits: [] }, profiles: {} };
 }
 
 /** The public profile of a player who uses the lobby: the in-game name and the last activity. */
@@ -70,7 +70,7 @@ function pruneProfiles(lobby, now) {
  * saved decks from their hero and `saveLoadout(loadout)` stores one back there.
  * Returns the answer and whether the lobby must be saved.
  */
-export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, saveLoadout = null, strangers = [], rating = null, mutation, body = null, watch = null, invite = null, now = Date.now(), rng = Math.random }) {
+export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, saveLoadout = null, strangers = [], rating = null, wallet = null, mutation, body = null, watch = null, invite = null, now = Date.now(), rng = Math.random }) {
   const id = String(userId);
   const before = lobbyFingerprint(lobby);
   // Only players who use the lobby are remembered; a visitor who just looks at the list is not stored.
@@ -89,7 +89,7 @@ export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, save
       result = { ok: true, ...gwentState(shared, id, now) };
     }
   } else {
-    result = gwentAction(shared, id, body, now, rng, { strangers, rating });
+    result = gwentAction(shared, id, body, now, rng, { strangers, rating, wallet });
   }
   // Finished rated games change ratings once; the caller stores the changes.
   const ratingUpdates = collectRatingUpdates(lobby);

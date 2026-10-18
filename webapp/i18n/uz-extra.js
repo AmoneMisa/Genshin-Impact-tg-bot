@@ -14,6 +14,7 @@ import clanHalls from './uz-clan-halls.js';
 import gwentExtended from './uz-gwent-extended.js';
 import gwent from './uz-gwent.js';
 import gwentAbilities from './uz-gwent-abilities.js';
+import gwentStakes from './uz-gwent-stakes.js';
 import gwentDecks from './uz-gwent-decks.js';
 import gwentCards from './uz-gwent-cards.js';
 import gwentMore from './uz-gwent-more.js';
@@ -29,6 +30,7 @@ export default {
   ...gwentExtended,
   ...gwent,
   ...gwentAbilities,
+  ...gwentStakes,
   ...gwentDecks,
   ...gwentCards,
   ...gwentMore,

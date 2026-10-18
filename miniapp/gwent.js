@@ -5,6 +5,7 @@ import { memberName, presence } from './social.js';
 import { DEFAULT_RATING, pairQueue } from './gwentRating.js';
 import { normalizeRuleset, rulesetAllows } from '../webapp/gwent-decks.js';
 import { TABLE_SEATS } from '../webapp/gwent-engine.js';
+import { cannotPay, closeInvite, credit, parseStake, sameStake, settleStakes, stakeFingerprint, stakeView } from './gwentStakes.js';
 import { TABLE_SIZES, absoluteSeat, humansOf, isBot, replaceSeat, runBots, seatOf, startTable, tableMatchView } from './gwentTable.js';
 
 export const QUEUE_TTL = 35_000;
@@ -41,8 +42,9 @@ function sweep(data, now) {
     }
   }
   data.matches = data.matches.filter(match => !match.endedAt || now - match.endedAt < DONE_TTL);
-  for (const invite of data.invites) if (invite.status === 'pending' && invite.expiresAt <= now) invite.status = 'expired';
+  for (const invite of data.invites) if (invite.status === 'pending' && invite.expiresAt <= now) closeInvite(data, invite, 'expired', now);
   data.invites = data.invites.filter(invite => now - invite.createdAt < DONE_TTL);
+  settleStakes(data, now);
 }
 /** The pending table invitation the player sits in (as host or guest), if any. */
 function roomOf(data, id) { return data.invites.find(invite => invite.status === 'pending' && invite.table?.players.some(person => person.userId === String(id))); }
@@ -52,13 +54,13 @@ function friends(chat, one, two) {
   return !!a && !!b && !a.isHided && !b.isHided && !b.userChatData?.user?.is_bot
     && (a.game?.friends || []).map(String).includes(String(two)) && (b.game?.friends || []).map(String).includes(String(one));
 }
-function startMatch(data, first, second, now, rng, { rated = false, ruleset = 'classic' } = {}) {
-  const match = { id: randomUUID(), ruleset: normalizeRuleset(ruleset), rated: rated ? { ratings: [first.rating ?? DEFAULT_RATING, second.rating ?? DEFAULT_RATING], games: [first.games ?? 0, second.games ?? 0] } : null, players: [first.userId, second.userId], names: [first.name, second.name],
+function startMatch(data, first, second, now, rng, { rated = false, ruleset = 'classic', stake = null } = {}) {
+  const match = { id: randomUUID(), stake: stake ? { ...stake, holders: [first.userId, second.userId], settled: false } : null, ruleset: normalizeRuleset(ruleset), rated: rated ? { ratings: [first.rating ?? DEFAULT_RATING, second.rating ?? DEFAULT_RATING], games: [first.games ?? 0, second.games ?? 0] } : null, players: [first.userId, second.userId], names: [first.name, second.name],
     factions: [first.loadout.faction, second.loadout.faction], loadouts: [clone(first.loadout), clone(second.loadout)], dismissed: [], rematch: [], revision: 0, pushedAt: {}, deadline: now + TURN_TTL,
     state: createMatch({ playerDeck: buildDeck(first.loadout), aiDeck: buildDeck(second.loadout), rng }) };
   data.matches.push(match);
   data.queue = data.queue.filter(entry => !match.players.includes(entry.userId));
-  for (const invite of data.invites) if (invite.status === 'pending' && match.players.includes(invite.from)) invite.status = 'cancelled';
+  for (const invite of data.invites) if (invite.status === 'pending' && match.players.includes(invite.from)) closeInvite(data, invite, 'cancelled', now);
   return match;
 }
 /** Names come from the member when the chat knows them, otherwise from what the invitation saved. */
@@ -68,7 +70,7 @@ function nameOf(chat, id, saved) {
 }
 function inviteView(chat, invite) {
   return { id: invite.id, from: invite.from, to: invite.to, fromName: nameOf(chat, invite.from, invite.fromName),
-    toName: invite.to ? nameOf(chat, invite.to, invite.toName) : null, faction: invite.loadout.faction, ruleset: invite.ruleset || 'classic', open: !!invite.open,
+    toName: invite.to ? nameOf(chat, invite.to, invite.toName) : null, stake: invite.stake || null, faction: invite.loadout.faction, ruleset: invite.ruleset || 'classic', open: !!invite.open,
     table: invite.table ? { size: invite.table.size, teams: !!invite.table.teams, players: invite.table.players.map(person => ({ userId: person.userId, name: person.name, faction: person.loadout.faction })) } : null,
     status: invite.status, expiresAt: invite.expiresAt, matchId: invite.matchId || null,
     canPushAt: (invite.lastPushedAt || 0) + INVITE_PUSH_COOLDOWN };
@@ -86,6 +88,11 @@ function endText(match, own) {
 
 /** Redact first, then orient the public snapshot so the authenticated user is always `player`. */
 export function gwentMatchView(match, userId) {
+  const view = matchView(match, userId);
+  if (view && match.stake) view.stake = stakeView(match, userId);
+  return view;
+}
+function matchView(match, userId) {
   if (match.table) return tableMatchView(match, userId, { endReason: match.endKind === 'abandoned' ? 'Все игроки покинули стол' : '' });
   const index = match.players.indexOf(String(userId));
   if (index < 0) return null;
@@ -118,8 +125,13 @@ export function gwentMatchView(match, userId) {
 }
 
 export function gwentSpectatorView(match) {
+  const view = spectatorView(match);
+  if (match.stake) view.stake = stakeView(match, null);
+  return view;
+}
+function spectatorView(match) {
   if (match.table) return tableMatchView(match, match.players[0], { spectator: true, endReason: match.endKind === 'abandoned' ? 'Все игроки покинули стол' : '' });
-  const view = gwentMatchView(match, match.players[0]);
+  const view = matchView(match, match.players[0]);
   view.spectator = true; view.playerName = match.names[0]; view.rematch = null; view.rated = match.rated ? { before: match.rated.ratings[0], opponent: match.rated.ratings[1], change: null } : null; view.endReason = endText(match, null);
   view.state.sides.player.hand = [];
   for (const side of ['player', 'ai']) if (view.state.sides[side].traps) view.state.sides[side].traps = { close: null, ranged: null, siege: null };
@@ -132,7 +144,7 @@ export function gwentSpectatorView(match) {
 function gameList(chat, data, id, now) {
   const rows = data.matches
     .filter(m => m.state.phase === 'playing' || (m.endedAt && now - m.endedAt < RECENT_TTL))
-    .map(m => ({ id: m.id, table: m.table ? m.players.length : 0, ruleset: m.ruleset || 'classic', names: m.names, factions: m.factions, round: m.state.round, scores: scores(m.state), wins: m.state.wins, points: m.table ? m.state.points : null,
+    .map(m => ({ id: m.id, stake: m.stake ? { currency: m.stake.currency, amount: m.stake.amount } : null, table: m.table ? m.players.length : 0, ruleset: m.ruleset || 'classic', names: m.names, factions: m.factions, round: m.state.round, scores: scores(m.state), wins: m.state.wins, points: m.table ? m.state.points : null,
       participant: m.players.includes(id) && !m.dismissed.includes(id), finished: m.state.phase !== 'playing',
       winnerName: m.table ? (m.state.winners || []).map(seat => m.names[TABLE_SEATS.indexOf(seat)]).join(', ') || null : m.state.winner === 'player' ? m.names[0] : m.state.winner === 'ai' ? m.names[1] : null,
       friend: m.players.some(player => player !== id && friends(chat, id, player)), endedAt: m.endedAt || 0, startedOrder: 0 }));
@@ -179,11 +191,12 @@ export function gwentState(chat, userId, now = Date.now(), { watch = null, invit
 /** The room becomes a match: empty seats are played by the AI. Everyone seated is released from the room. */
 function launchTable(chat, data, room, now, rng, actorId) {
   const match = startTable(room.table.players, room.table.size, now, { rng, turnTtl: TURN_TTL, teams: !!room.table.teams });
+  if (room.stake) match.stake = { ...room.stake, holders: humansOf(match), settled: false };
   data.matches.push(match);
   room.status = 'accepted'; room.matchId = match.id;
   const seated = new Set(room.table.players.map(person => person.userId));
   data.queue = data.queue.filter(entry => !seated.has(entry.userId));
-  for (const invite of data.invites) if (invite.status === 'pending' && !invite.table && seated.has(invite.from)) invite.status = 'cancelled';
+  for (const invite of data.invites) if (invite.status === 'pending' && !invite.table && seated.has(invite.from)) closeInvite(data, invite, 'cancelled', now);
   const other = humansOf(match).find(userId => userId !== actorId) || null;
   return other ? pushNotice(chat, match, actorId, other, 'start', now) : null;
 }
@@ -195,6 +208,8 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
   const data = store(chat); sweep(data, now);
   const id = String(userId), match = current(data, id);
   let notice = null;
+  // What the player pays now from their own hero; the route takes it in the same request.
+  let charge = null;
   if (body.action === 'save') {
     const stats = inspectLoadout(body.loadout);
     if (!stats.valid) return fail(stats.errors.join('. '));
@@ -223,29 +238,38 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
     const inviteRuleset = tableSize ? 'extended' : normalizeRuleset(body.ruleset);
     if (!rulesetAllows(inviteRuleset, body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== inviteRuleset) return fail('Эта колода не подходит для выбранных правил');
     const target = tableSize || body.targetId == null ? null : String(body.targetId);
+    const parsedStake = parseStake(body.stake);
+    if (!parsedStake.ok) return fail(parsedStake.error);
+    const stake = parsedStake.stake;
     if (tableSize) {
-      const room = { id: randomUUID(), from: id, to: null, createdAt: now, expiresAt: now + INVITE_TTL, status: 'pending', loadout: clone(body.loadout), ruleset: 'extended',
+      const broke = cannotPay(stake, options.wallet);
+      if (broke) return fail(broke);
+      const room = { id: randomUUID(), from: id, to: null, createdAt: now, expiresAt: now + INVITE_TTL, status: 'pending', loadout: clone(body.loadout), ruleset: 'extended', ...(stake ? { stake } : {}),
         fromName: nameOf(chat, id), toName: null, open: true, table: { size: tableSize, teams: teamTable, players: [{ userId: id, name: nameOf(chat, id), loadout: clone(body.loadout) }] } };
       data.invites.push(room);
-      return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, room) };
+      return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, room), ...(stake ? { charge: stake } : {}) };
     }
     const stranger = target !== null && (options.strangers || []).map(String).includes(target) && !!member(chat, target);
     if (target !== null && (target === id || !(stranger || friends(chat,id,target)))) return fail('Выберите друга или игрока по нику');
     if (target && (current(data,target) || data.queue.some(entry => entry.userId === target))) return fail('Игрок уже занят');
-    let created = data.invites.find(i => i.from === id && i.to === target && i.status === 'pending' && (i.ruleset || 'classic') === inviteRuleset);
+    let created = data.invites.find(i => i.from === id && i.to === target && i.status === 'pending' && (i.ruleset || 'classic') === inviteRuleset && sameStake(i.stake, stake));
     if (!created) {
       if (data.invites.filter(i => i.from === id && i.status === 'pending').length >= 5) return fail('Можно создать не больше пяти приглашений одновременно');
-      created = { id:randomUUID(), from:id, to:target, createdAt:now, expiresAt:now+INVITE_TTL, status:'pending', loadout:clone(body.loadout), ruleset:inviteRuleset,
+      const broke = cannotPay(stake, options.wallet);
+      if (broke) return fail(broke);
+      created = { id:randomUUID(), from:id, to:target, createdAt:now, expiresAt:now+INVITE_TTL, status:'pending', loadout:clone(body.loadout), ruleset:inviteRuleset, ...(stake ? { stake } : {}),
         fromName:nameOf(chat,id), toName:target ? nameOf(chat,target) : null, open:stranger && !friends(chat,id,target) };
       data.invites.push(created);
+      if (stake) charge = stake;
     }
-    return {ok:true,...gwentState(chat,id,now), invitation:inviteView(chat,created)};
+    return {ok:true,...gwentState(chat,id,now), invitation:inviteView(chat,created), ...(charge ? { charge } : {})};
   } else if (['start_table', 'leave_table', 'table_invite'].includes(body.action)) {
     const room = data.invites.find(i => i.id === body.inviteId && i.status === 'pending' && i.table);
     if (!room) return fail('Стол уже закрыт или начался');
     if (body.action === 'leave_table') {
       if (room.from === id || !room.table.players.some(person => person.userId === id)) return fail('Вы не сидите за этим столом');
       room.table.players = room.table.players.filter(person => person.userId !== id);
+      if (room.stake) credit(data, id, room.stake, 'refund', now);
     } else if (room.from !== id) return fail('Это стол другого игрока');
     else if (body.action === 'table_invite') {
       const target = String(body.targetId);
@@ -269,16 +293,19 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
       if (seated.length >= invitation.table.size) return fail('За столом нет свободных мест');
       const stats = inspectLoadout(body.loadout); if (!stats.valid) return fail(stats.errors.join('. '));
       if (!rulesetAllows('extended', body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== 'extended') return fail('Для стола нужна колода расширенных правил');
+      const broke = cannotPay(invitation.stake, options.wallet);
+      if (broke) return fail(broke);
       seated.push({ userId: id, name: nameOf(chat, id), loadout: clone(body.loadout) });
+      charge = invitation.stake || null;
       if (seated.length === invitation.table.size) notice = launchTable(chat, data, invitation, now, rng, id);
-      else return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, invitation) };
+      else return { ok: true, ...gwentState(chat, id, now), invitation: inviteView(chat, invitation), ...(charge ? { charge } : {}) };
     } else if (invitation.table && ['decline_invite', 'push_invite'].includes(body.action)) return fail('Это приглашение за стол');
     else if (body.action === 'cancel_invite') {
       if (!mine) return fail('Это приглашение другого игрока');
-      invitation.status = 'cancelled';
+      closeInvite(data, invitation, 'cancelled', now);
     } else if (body.action === 'decline_invite') {
       if (!recipient || invitation.to === null) return fail('Это приглашение другому игроку');
-      invitation.status = 'declined';
+      closeInvite(data, invitation, 'declined', now);
     } else if (body.action === 'push_invite') {
       if (!mine || !invitation.to || !friends(chat,id,invitation.to)) return fail('Уведомление можно отправить только приглашённому другу');
       if (invitation.lastPushedAt && now-invitation.lastPushedAt < INVITE_PUSH_COOLDOWN) return fail('Уведомление уже отправлено. Подождите минуту');
@@ -290,9 +317,12 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
       if (match || current(data,invitation.from) || data.queue.some(e => [id,invitation.from].includes(e.userId))) return fail('Один из игроков уже занят');
       const stats = inspectLoadout(body.loadout); if (!stats.valid) return fail(stats.errors.join('. '));
       if (!rulesetAllows(invitation.ruleset || 'classic', body.loadout.faction) || normalizeRuleset(body.loadout.ruleset) !== normalizeRuleset(invitation.ruleset)) return fail('Для этих правил нужна колода другой фракции');
+      const broke = cannotPay(invitation.stake, options.wallet);
+      if (broke) return fail(broke);
       invitation.status = 'accepted'; invitation.to = id;
+      charge = invitation.stake || null;
       const created = startMatch(data,{userId:invitation.from,name:memberName(member(chat,invitation.from)),loadout:invitation.loadout},
-        {userId:id,name:memberName(member(chat,id)),loadout:body.loadout},now,rng,{ruleset:invitation.ruleset});
+        {userId:id,name:memberName(member(chat,id)),loadout:body.loadout},now,rng,{ruleset:invitation.ruleset,stake:invitation.stake});
       invitation.matchId = created.id;
       notice = pushNotice(chat, created, id, invitation.from, 'start', now);
     }
@@ -347,7 +377,7 @@ export function gwentAction(chat, userId, body, now = Date.now(), rng = Math.ran
       }
     }
   } else return fail('Неизвестное действие');
-  return { ok: true, ...gwentState(chat, id, now), ...(notice ? { notifyPlay: notice } : {}) };
+  return { ok: true, ...gwentState(chat, id, now), ...(notice ? { notifyPlay: notice } : {}), ...(charge ? { charge } : {}) };
 }
 
 /**
@@ -371,11 +401,12 @@ function pushNotice(chat, match, fromId, toId, kind, now) {
  */
 export function gwentFingerprint(chat) {
   const data = chat?.game?.gwent;
-  if (!data || !(data.queue?.length || data.matches?.length || data.invites?.length || Object.keys(data.loadouts || {}).length)) return '';
+  if (!data || !(data.queue?.length || data.matches?.length || data.invites?.length || data.credits?.length || Object.keys(data.loadouts || {}).length)) return '';
   return JSON.stringify([
     (data.queue || []).map(entry => [entry.userId, entry.seenAt]),
     (data.matches || []).map(match => [match.id, match.revision, match.endedAt || 0, match.dismissed.length, (match.rematch || []).length, (match.declined || []).length, Object.values(match.pushedAt || {}).join()]),
     (data.invites || []).map(invite => [invite.id, invite.status, invite.lastPushedAt || 0, invite.table?.players.length || 0]),
+    stakeFingerprint(data),
     Object.keys(data.loadouts || {}).length,
   ]);
 }

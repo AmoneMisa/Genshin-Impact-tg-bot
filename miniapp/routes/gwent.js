@@ -9,6 +9,7 @@ import { playerName, validatePlayerNickname } from '../../functions/game/player/
 import { inspectLoadout, repairLoadout } from '../../webapp/gwent-builder.js';
 import { loadoutKey } from '../../webapp/gwent-decks.js';
 import { runGwent, emptyLobby, LOBBY_KEY } from '../gwentLobby.js';
+import { collectCredits, returnStake, takeStake, walletOf } from '../gwentWallet.js';
 import { getRating, applyRatingUpdates, leaderboard } from '../gwentRatings.js';
 import { gwentAppBase, addGwentLinks, pushGwentInvite, pushGwentPlay } from '../gwent-sharing.js';
 import { gwentAppLink } from '../../webapp/gwent-links.js';
@@ -83,16 +84,36 @@ async function handle(req, res, mutation) {
     }
     let saved = null;
     let rating = await getRating(context.userId);
-    const run = await withLobby(async lobby => {
-      const out = runGwent({ lobby, userId: context.userId, name: people[String(context.userId)].name, people, loadouts: savedLoadouts(context.session),
-        saveLoadout: loadout => { saved = loadout; }, strangers, rating, mutation, body, watch: params.get('watch'), invite: params.get('invite'), now });
-      // Finished rated games change ratings. If the database refuses, the lobby is not saved and the games stay uncounted.
-      await applyRatingUpdates(out.ratingUpdates, now);
-      if (out.ratingUpdates.some(update => String(update.userId) === String(context.userId))) rating = await getRating(context.userId);
-      return { value: out.result, changed: out.lobbyChanged };
-    });
+    let charged = null, credited = [];
+    let run;
+    try {
+      run = await withLobby(async lobby => {
+        // What the lobby owes this player is paid first, so the stake can use it.
+        const early = collectCredits(lobby, context.session);
+        const out = runGwent({ lobby, userId: context.userId, name: people[String(context.userId)].name, people, loadouts: savedLoadouts(context.session),
+          saveLoadout: loadout => { saved = loadout; }, strangers, rating, wallet: walletOf(context.session), mutation, body, watch: params.get('watch'), invite: params.get('invite'), now });
+        // Finished rated games change ratings. If the database refuses, the lobby is not saved and the games stay uncounted.
+        await applyRatingUpdates(out.ratingUpdates, now);
+        if (out.ratingUpdates.some(update => String(update.userId) === String(context.userId))) rating = await getRating(context.userId);
+        const stake = out.result.charge;
+        delete out.result.charge;
+        credited = [...early, ...collectCredits(lobby, context.session)];
+        if (stake) {
+          if (!takeStake(context.session, stake)) throw new Error('Недостаточно средств для ставки');
+          charged = stake;
+        }
+        // The hero is saved before the lobby: money is never lost without a trace, and the credit ledger prevents paying twice.
+        if (credited.length || charged) await saveSession(context.session);
+        return { value: out.result, changed: out.lobbyChanged || credited.length > 0 };
+      });
+    } catch (error) {
+      if (charged) { try { returnStake(context.session, charged); await saveSession(context.session); } catch { /* the stake stays taken; the error below is reported */ } }
+      throw error;
+    }
     if (run.ok !== false) {
       run.rating = rating;
+      run.wallet = walletOf(context.session);
+      if (credited.length) run.credited = credited;
       if (!mutation && params.get('board')) run.leaderboard = await leaderboard(context.userId, now);
     }
     if (saved) {
