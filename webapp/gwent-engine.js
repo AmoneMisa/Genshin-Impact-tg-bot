@@ -64,7 +64,6 @@ const seatsOf = state => state.seats || SIDES;
 // Two against two (extended rules, four seats): seats 1 and 3 play against seats 2 and 4, so teammates sit across the
 // table. A round is won by the team with the higher sum of its two scores, the match by two rounds, as in a duel.
 // Opponents are the seats of the other team; a teammate's cards are never a target of attacks.
-export const TEAM_OF = Object.freeze({ player: 'A', ai: 'B', ai2: 'A', ai3: 'B' });
 const foesOf = (state, side) => seatsOf(state).filter(seat => seat !== side && (!state.teams || state.teams[seat] !== state.teams[side]));
 export const alliesOf = (state, side) => (state.teams ? seatsOf(state).filter(seat => seat !== side && state.teams[seat] === state.teams[side]) : []);
 /** The opponent an effect aims at: the named seat when it is one of the opponents, otherwise the first opponent. */

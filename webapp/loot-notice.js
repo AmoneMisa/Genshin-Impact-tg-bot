@@ -1,4 +1,3 @@
-import {systemToast} from './system-toasts.js';
 import {escapeHtml} from './escape-html.js';
 import {dialogHeading} from './dialog-heading.js';
 import {installOverlayA11y} from './overlay-a11y.js';
@@ -25,8 +24,4 @@ export function dropPreviewHtml(preview){
 }
 export function showDropPreview(preview,{onClose}={}){
   if(preview)openLootDialog('Дроп · '+preview.name,dropPreviewHtml(preview),{preview:true,onClose});
-}
-export function lootToast(loot){
-  const items=loot.items||[],preview=items.slice(0,2).map(i=>`${i.name} ×${number(i.amount)}`).join(', ');
-  systemToast(`Получено: ${number(loot.exp)} опыта, ${number(loot.sp)} SP${loot.gold?`, ${number(loot.gold)} адены`:''}${preview?'. '+preview:''}${items.length>2?` · ещё ${items.length-2} поз.`:''}`, '', {action:{label:'Добыча',onClick:()=>showLootDetails(loot)}});
 }

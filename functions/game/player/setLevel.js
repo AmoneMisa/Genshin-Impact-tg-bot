@@ -2,9 +2,6 @@ import levelsTemplate from '../../../template/levelsTemplate.js';
 import updatePlayerStats from './updatePlayerStats.js';
 import {playerLevelCap} from './classProgression.js';
 
-// High Five awards SP for kills and quests, not for crossing a level boundary.
-export function spForLevelUp() { return 0; }
-
 /** Characters above the level cap (it used to be 99) drop to it. */
 export function clampLevel(session) {
     const stats = session?.game?.stats;

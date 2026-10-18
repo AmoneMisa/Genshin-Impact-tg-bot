@@ -67,11 +67,6 @@ export function updateHoroscopeSettings(session, patch = {}) {
   return { ok: true, horoscope: getHoroscopeState(session) };
 }
 
-export function resetHoroscopeSettings(session) {
-  session.horoscope = { sign: 'aries', style: 'cheeky' };
-  return { ok: true, horoscope: getHoroscopeState(session) };
-}
-
 export async function generateHoroscopeForMiniApp(session, { generate = generateShortHoroText, now = Date.now() } = {}) {
   const settings = ensureSettings(session);
   const text = await generate(session);

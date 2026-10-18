@@ -262,11 +262,6 @@ export function advancePassQuest(session, name) {
     return {ok: true};
 }
 
-/** Claims the pass directly when the quest is complete (the last step is a dialog, see talkPassQuest). */
-export function claimPass(session, name) {
-    return talkPassQuest(session, name);
-}
-
 export const passCount = (session, name) => number(ensureAcademy(session).passes[name]);
 export const hasEpicPass = (session, name) => passCount(session, name) > 0;
 

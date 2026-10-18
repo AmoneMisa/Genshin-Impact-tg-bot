@@ -51,8 +51,6 @@ export function partyTargets(chat, session) {
     return list.length ? list : [session];
 }
 
-export const partyCostFactor = count => 1 + PARTY_COST_STEP * Math.max(0, count - 1);
-
 export function partyState(chat, session) {
     const list = partyMembers(chat, session);
     return list.length ? {id: session.game.party.id, leaderId: id(session.game.party.leaderId), members: list} : null;

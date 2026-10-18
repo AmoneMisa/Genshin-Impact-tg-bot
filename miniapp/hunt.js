@@ -3,7 +3,7 @@ import {soulCrystalState} from '../functions/game/equipment/soulCrystals.js';
 // the Blue / Red champions. The fight itself is functions/game/hunt/; this module is the Mini App face.
 import { CHAMPIONS, HUNT } from '../functions/game/hunt/huntConfig.js';
 import { getZones } from '../functions/game/hunt/huntMobs.js';
-import { advanceHunt, ensureHunt, fleeHunt, mobDto, enterHuntField, moveHuntField, selectHuntTarget, useHuntSkill } from '../functions/game/hunt/huntFight.js';
+import { advanceHunt, ensureHunt, mobDto, enterHuntField, moveHuntField, selectHuntTarget, useHuntSkill } from '../functions/game/hunt/huntFight.js';
 import { huntDropPreview, LOOT_KINDS } from '../functions/game/hunt/huntRewards.js';
 import { getZone, getMobDef } from '../functions/game/hunt/huntMobs.js';
 import { roomLayout, roomById, adjacent, groundHeight } from '../functions/game/hunt/huntRooms.js';
@@ -185,7 +185,6 @@ export function useSpecialForMiniApp(session, id, now = Date.now()) {
     if (String(id).startsWith('l2:')) return castL2Buff(session, id, null, {now});
     return {ok: false, reason: 'unknown_special'};
 }
-export const fleeHuntForMiniApp = (session, now = Date.now()) => fleeHunt(session, now);
 export const setAutoShotsForMiniApp = (session, enabled, kind=null) => {
     if(kind!==null&&!['soulshot','blessed'].includes(kind))return {ok:false,reason:'invalid_shot_kind'};
     return {ok:true,enabled:setAutoShots(session,enabled,kind),shots:getShotsState(session)};

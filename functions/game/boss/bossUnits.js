@@ -69,14 +69,6 @@ export function armorShield(boss, template = bossTemplateFor(boss)) {
  * The boss's hp after taking damage, with the "required units" lock: it stays
  * at 1 hp while a head or a twin is still alive. Returns whether the lock held.
  */
-export function lockBossHp(boss) {
-    if (boss.currentHp <= 0 && aliveRequiredUnits(boss).length) {
-        boss.currentHp = 1;
-        return true;
-    }
-    return false;
-}
-
 /**
  * Hurts one unit. Returns {killed, unit, reaction} where `reaction` is what the
  * boss does about a fallen partner (enrage / heal), already applied to `boss`.
