@@ -1,0 +1,54 @@
+{
+  "sharedSource": "../wild-hunt-v1/layers",
+  "sourceCommit": "7f08b270",
+  "customIcons": {
+    "effect-igni.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-aard.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-yrden.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-quen.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-swallow.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-thunderbolt.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-cat.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-oriole.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    }
+  },
+  "frame": {
+    "source": "../templates-v1/unit.png",
+    "cloth": "graphite and steel; existing stitching and parchment preserved"
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-witchers.webp",
+    "extraction": "Complete central wolf silhouette; transparent fixed-size canvas",
+    "canvas": [
+      38,
+      39
+    ]
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-witchers.webp",
+    "reusedUnchanged": true
+  }
+}

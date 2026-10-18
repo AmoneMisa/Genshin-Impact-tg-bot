@@ -1,0 +1,1655 @@
+{
+  "faction": "witchers",
+  "title": "Ведьмаки",
+  "approval": "approved",
+  "integrated": false,
+  "pushed": false,
+  "templateSize": {
+    "width": 310,
+    "height": 585
+  },
+  "font": "Roboto Condensed",
+  "fontMatch": "Review candidate; original game typeface not independently verified.",
+  "quotes": {
+    "generated": "Original fan-written lines, not quotations from Witcher 3.",
+    "existing": "Preserved inside user-supplied original card images."
+  },
+  "back": {
+    "file": "back.webp",
+    "source": "/art/gwent/printed/back-witchers.webp",
+    "reusedUnchanged": true
+  },
+  "customIcons": [
+    "swap",
+    "igni",
+    "aard",
+    "yrden",
+    "quen",
+    "swallow",
+    "thunderbolt",
+    "cat",
+    "oriole"
+  ],
+  "cards": [
+    {
+      "summoned": false,
+      "id": "wi-leader-teacher",
+      "name": "Весемир: Наставник школ",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/wi-leader-teacher.png",
+      "webp": "cards/wi-leader-teacher.webp",
+      "quote": "Ещё раз. Чудовище не станет ждать, пока ты вспомнишь.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-leader-hunter",
+      "name": "Весемир: Охотник на чудовищ",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/wi-leader-hunter.png",
+      "webp": "cards/wi-leader-hunter.webp",
+      "quote": "Старый ведьмак знает: следы говорят раньше людей.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-leader-keeper",
+      "name": "Весемир: Хранитель Каэр Морхена",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/wi-leader-keeper.png",
+      "webp": "cards/wi-leader-keeper.webp",
+      "quote": "Камни можно сложить заново. С людьми всё труднее.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-leader-wolf",
+      "name": "Весемир: Старый Волк",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/wi-leader-wolf.png",
+      "webp": "cards/wi-leader-wolf.webp",
+      "quote": "Самое трудное — дождаться, пока они вернутся.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/avallach.png",
+      "webp": "cards/avallach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/yennefer.png",
+      "webp": "cards/yennefer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/triss.png",
+      "webp": "cards/triss.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/geralt.png",
+      "webp": "cards/geralt.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cirilla",
+      "name": "Цирилла",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/cirilla.png",
+      "webp": "cards/cirilla.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dandelion",
+      "name": "Лютик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dandelion.png",
+      "webp": "cards/dandelion.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/zoltan.png",
+      "webp": "cards/zoltan.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/emiel.png",
+      "webp": "cards/emiel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vesemir",
+      "name": "Весемир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vesemir.png",
+      "webp": "cards/vesemir.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olgierd.png",
+      "webp": "cards/olgierd.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/gaunter-darkness.png",
+      "webp": "cards/gaunter-darkness.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/gaunter.png",
+      "webp": "cards/gaunter.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cow",
+      "name": "Корова",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/cow.png",
+      "webp": "cards/cow.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/villentretemerth.png",
+      "webp": "cards/villentretemerth.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-wolf-novice",
+      "name": "Ученик школы Волка",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/wi-wolf-novice.png",
+      "webp": "cards/wi-wolf-novice.webp",
+      "quote": "Меч тяжёлый? Привыкнешь. Если доживёшь.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-bear-brute",
+      "name": "Громила школы Медведя",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/wi-bear-brute.png",
+      "webp": "cards/wi-bear-brute.webp",
+      "quote": "Медведь не спешит. Ему хватает одного удара.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-cat-assassin",
+      "name": "Убийца школы Кота",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/wi-cat-assassin.png",
+      "webp": "cards/wi-cat-assassin.webp",
+      "quote": "Ты услышал шаги? Значит, он пришёл не за тобой.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-monster-hunter",
+      "name": "Охотник на чудовищ",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/wi-monster-hunter.png",
+      "webp": "cards/wi-monster-hunter.webp",
+      "quote": "Сначала узнай, что убиваешь. Потом назначай цену.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "scorch"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-griffin-sage",
+      "name": "Знаток школы Грифона",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/wi-griffin-sage.png",
+      "webp": "cards/wi-griffin-sage.webp",
+      "quote": "Чудовища не читают книг. Нам это даёт преимущество.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "medic"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-viper-crossbow",
+      "name": "Арбалетчик школы Змеи",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/wi-viper-crossbow.png",
+      "webp": "cards/wi-viper-crossbow.webp",
+      "quote": "Яд не спрашивает, насколько крепки твои доспехи.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-alchemist",
+      "name": "Алхимик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/wi-alchemist.png",
+      "webp": "cards/wi-alchemist.webp",
+      "quote": "Плохое зелье убивает быстрее хорошего чудовища.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "morale"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-signs",
+      "name": "Знаки ведьмака",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 3,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/wi-signs.png",
+      "webp": "cards/wi-signs.webp",
+      "quote": "Одной ладони иногда хватает, чтобы вернуться живым.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "swap"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-keep-guard",
+      "name": "Страж Каэр Морхена",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/wi-keep-guard.png",
+      "webp": "cards/wi-keep-guard.webp",
+      "quote": "За этими стенами нас учили не бояться темноты.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-siege-engineer",
+      "name": "Мастер осадных машин",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 4,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/wi-siege-engineer.png",
+      "webp": "cards/wi-siege-engineer.webp",
+      "quote": "Воротам безразлично, кто их штурмует. Пока они целы.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-lambert",
+      "name": "Ламберт",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/wi-lambert.png",
+      "webp": "cards/wi-lambert.webp",
+      "quote": "Хочешь доброго слова — найди барда.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-eskel",
+      "name": "Эскель",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/wi-eskel.png",
+      "webp": "cards/wi-eskel.webp",
+      "quote": "Не всякая рана учит. Некоторые просто остаются.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-coen",
+      "name": "Койон",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/wi-coen.png",
+      "webp": "cards/wi-coen.webp",
+      "quote": "Школы у нас разные. Работа — одна.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "wi-igni",
+      "name": "Знак Игни",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-igni.png",
+      "webp": "cards/wi-igni.webp",
+      "quote": "Огонь не отличает чудовище от человека.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "igni"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-aard",
+      "name": "Знак Аард",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-aard.png",
+      "webp": "cards/wi-aard.webp",
+      "quote": "Если дверь не открывается, не спеши искать ключ.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "aard"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-yrden",
+      "name": "Знак Ирден",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-yrden.png",
+      "webp": "cards/wi-yrden.webp",
+      "quote": "Пусть мёртвые вспомнят, каково это — стоять на земле.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "yrden"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-quen",
+      "name": "Знак Квен",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-quen.png",
+      "webp": "cards/wi-quen.webp",
+      "quote": "Защита нужна не тому, кто собирается отступать.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "quen"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-swallow",
+      "name": "Зелье «Ласточка»",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-swallow.png",
+      "webp": "cards/wi-swallow.webp",
+      "quote": "Пока она горчит, сердце ещё бьётся.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "swallow"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-thunderbolt",
+      "name": "Зелье «Гром»",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-thunderbolt.png",
+      "webp": "cards/wi-thunderbolt.webp",
+      "quote": "Силы хватит. Вопрос в том, выдержит ли рука.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "thunderbolt"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-cat",
+      "name": "Зелье «Кошка»",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-cat.png",
+      "webp": "cards/wi-cat.webp",
+      "quote": "В темноте страшно только тому, кто ничего не видит.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "cat"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "wi-oriole",
+      "name": "Зелье «Иволга»",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/wi-oriole.png",
+      "webp": "cards/wi-oriole.webp",
+      "quote": "Яд уже в крови. Но на этот раз не он здесь хозяин.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "oriole"
+      ]
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-fire.png",
+      "webp": "cards/el-fire.webp",
+      "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "fire"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-earth.png",
+      "webp": "cards/el-earth.webp",
+      "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "earth"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-water.png",
+      "webp": "cards/el-water.webp",
+      "quote": "Тихая вода первой забирается под доспех.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "water"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-prep.png",
+      "webp": "cards/ex-prep.webp",
+      "quote": "Стену ещё не видно, а приговор уже отлит.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "prep"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-trap.png",
+      "webp": "cards/ex-trap.webp",
+      "quote": "На этой тропе слишком удобно идти одному.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "trap"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-medic.png",
+      "webp": "cards/ex-medic.webp",
+      "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "recall"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "summoned": false,
+      "id": "decoy",
+      "name": "Чучело",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/decoy.png",
+      "webp": "cards/decoy.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/commanders-horn.png",
+      "webp": "cards/commanders-horn.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "scorch",
+      "name": "Казнь",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/scorch.png",
+      "webp": "cards/scorch.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "biting-frost",
+      "name": "Мороз",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/biting-frost.png",
+      "webp": "cards/biting-frost.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/impenetrable-fog.png",
+      "webp": "cards/impenetrable-fog.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/torrential-rain.png",
+      "webp": "cards/torrential-rain.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/clear-weather.png",
+      "webp": "cards/clear-weather.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": true,
+      "id": "wisp",
+      "name": "Призрачный огонёк",
+      "kind": "unit",
+      "copies": 0,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/wisp.png",
+      "webp": "cards/wisp.webp",
+      "quote": "Он светит там, где не должно быть дороги.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    }
+  ],
+  "missing": [],
+  "textMetrics": [
+    {
+      "id": "wi-leader-teacher",
+      "title": {
+        "text": "Весемир: Наставник школ",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Ещё раз. Чудовище не станет ждать, пока ты вспомнишь.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-leader-hunter",
+      "title": {
+        "text": "Весемир: Охотник на чудовищ",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Старый ведьмак знает: следы говорят раньше людей.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-leader-keeper",
+      "title": {
+        "text": "Весемир: Хранитель Каэр Морхена",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Камни можно сложить заново. С людьми всё труднее.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-leader-wolf",
+      "title": {
+        "text": "Весемир: Старый Волк",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Самое трудное — дождаться, пока они вернутся.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-wolf-novice",
+      "title": {
+        "text": "Ученик школы Волка",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Меч тяжёлый? Привыкнешь. Если доживёшь.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-bear-brute",
+      "title": {
+        "text": "Громила школы Медведя",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Медведь не спешит. Ему хватает одного удара.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-cat-assassin",
+      "title": {
+        "text": "Убийца школы Кота",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Ты услышал шаги? Значит, он пришёл не за тобой.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-monster-hunter",
+      "title": {
+        "text": "Охотник на чудовищ",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Сначала узнай, что убиваешь. Потом назначай цену.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-griffin-sage",
+      "title": {
+        "text": "Знаток школы Грифона",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Чудовища не читают книг. Нам это даёт преимущество.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-viper-crossbow",
+      "title": {
+        "text": "Арбалетчик школы Змеи",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Яд не спрашивает, насколько крепки твои доспехи.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-alchemist",
+      "title": {
+        "text": "Алхимик",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Плохое зелье убивает быстрее хорошего чудовища.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-signs",
+      "title": {
+        "text": "Знаки ведьмака",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Одной ладони иногда хватает, чтобы вернуться живым.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-keep-guard",
+      "title": {
+        "text": "Страж Каэр Морхена",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "За этими стенами нас учили не бояться темноты.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-siege-engineer",
+      "title": {
+        "text": "Мастер осадных машин",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Воротам безразлично, кто их штурмует. Пока они целы.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-lambert",
+      "title": {
+        "text": "Ламберт",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Хочешь доброго слова — найди барда.",
+        "fontSize": 18,
+        "lines": 1,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-eskel",
+      "title": {
+        "text": "Эскель",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Не всякая рана учит. Некоторые просто остаются.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-coen",
+      "title": {
+        "text": "Койон",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Школы у нас разные. Работа — одна.",
+        "fontSize": 18,
+        "lines": 1,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-igni",
+      "title": {
+        "text": "Знак Игни",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Огонь не отличает чудовище от человека.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-aard",
+      "title": {
+        "text": "Знак Аард",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Если дверь не открывается, не спеши искать ключ.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-yrden",
+      "title": {
+        "text": "Знак Ирден",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Пусть мёртвые вспомнят, каково это — стоять на земле.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-quen",
+      "title": {
+        "text": "Знак Квен",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Защита нужна не тому, кто собирается отступать.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-swallow",
+      "title": {
+        "text": "Зелье «Ласточка»",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Пока она горчит, сердце ещё бьётся.",
+        "fontSize": 18,
+        "lines": 1,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-thunderbolt",
+      "title": {
+        "text": "Зелье «Гром»",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Силы хватит. Вопрос в том, выдержит ли рука.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-cat",
+      "title": {
+        "text": "Зелье «Кошка»",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "В темноте страшно только тому, кто ничего не видит.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wi-oriole",
+      "title": {
+        "text": "Зелье «Иволга»",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Яд уже в крови. Но на этот раз не он здесь хозяин.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "wisp",
+      "title": {
+        "text": "Призрачный огонёк",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Он светит там, где не должно быть дороги.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    }
+  ],
+  "loadout": {
+    "config": {
+      "faction": "witchers",
+      "ruleset": "extended",
+      "leaderId": "wi-leader-teacher",
+      "counts": {
+        "avallach": 1,
+        "yennefer": 1,
+        "triss": 1,
+        "geralt": 1,
+        "cirilla": 1,
+        "dandelion": 1,
+        "zoltan": 1,
+        "emiel": 1,
+        "vesemir": 1,
+        "olgierd": 1,
+        "gaunter-darkness": 3,
+        "gaunter": 1,
+        "cow": 1,
+        "villentretemerth": 1,
+        "wi-wolf-novice": 3,
+        "wi-bear-brute": 2,
+        "wi-cat-assassin": 2,
+        "wi-monster-hunter": 1,
+        "wi-griffin-sage": 1,
+        "wi-viper-crossbow": 2,
+        "wi-alchemist": 1,
+        "wi-signs": 2,
+        "wi-keep-guard": 2,
+        "wi-siege-engineer": 2,
+        "wi-lambert": 1,
+        "wi-eskel": 1,
+        "wi-coen": 1,
+        "wi-igni": 1,
+        "wi-aard": 1,
+        "wi-yrden": 1,
+        "wi-quen": 1,
+        "wi-swallow": 1,
+        "wi-thunderbolt": 1,
+        "wi-cat": 1,
+        "wi-oriole": 1,
+        "el-fire": 1,
+        "el-earth": 1,
+        "el-water": 0,
+        "ex-prep": 0,
+        "ex-trap": 0,
+        "ex-medic": 0,
+        "decoy": 0,
+        "commanders-horn": 0,
+        "scorch": 0,
+        "biting-frost": 0,
+        "impenetrable-fog": 0,
+        "torrential-rain": 0,
+        "clear-weather": 0
+      },
+      "arts": {}
+    },
+    "stats": {
+      "valid": true,
+      "errors": [],
+      "units": 37,
+      "specials": 10,
+      "heroes": 8,
+      "strength": 200,
+      "total": 47
+    }
+  },
+  "complete": true
+}

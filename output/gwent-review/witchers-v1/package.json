@@ -1,0 +1,45 @@
+{
+  "faction": "witchers",
+  "prefix": "wi-",
+  "frames": {"unit": "layers/unit-frame.png"},
+  "emblemSlot": {"x": 25, "y": 447, "w": 38, "h": 39},
+  "tokens": [
+    "wisp"
+  ],
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1"
+  },
+  "previewIds": [
+    "wi-wolf-novice",
+    "wi-lambert",
+    "wi-eskel",
+    "wi-igni",
+    "wi-leader-wolf"
+  ],
+  "effects": {
+    "wi-igni": "igni",
+    "wi-aard": "aard",
+    "wi-yrden": "yrden",
+    "wi-quen": "quen",
+    "wi-swallow": "swallow",
+    "wi-thunderbolt": "thunderbolt",
+    "wi-cat": "cat",
+    "wi-oriole": "oriole"
+  },
+  "customIcons": [
+    "swap",
+    "igni",
+    "aard",
+    "yrden",
+    "quen",
+    "swallow",
+    "thunderbolt",
+    "cat",
+    "oriole"
+  ]
+}

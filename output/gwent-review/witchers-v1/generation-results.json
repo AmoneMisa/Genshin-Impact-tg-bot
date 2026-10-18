@@ -1,0 +1,164 @@
+{
+  "images": [
+    {
+      "key": "wi-wolf-novice",
+      "file": "illustrations/wi-wolf-novice.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-bear-brute",
+      "file": "illustrations/wi-bear-brute.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-cat-assassin",
+      "file": "illustrations/wi-cat-assassin.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-monster-hunter",
+      "file": "illustrations/wi-monster-hunter.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-griffin-sage",
+      "file": "illustrations/wi-griffin-sage.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-viper-crossbow",
+      "file": "illustrations/wi-viper-crossbow.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-alchemist",
+      "file": "illustrations/wi-alchemist.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-signs",
+      "file": "illustrations/wi-signs.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-keep-guard",
+      "file": "illustrations/wi-keep-guard.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-siege-engineer",
+      "file": "illustrations/wi-siege-engineer.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-lambert",
+      "file": "illustrations/wi-lambert.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-eskel",
+      "file": "illustrations/wi-eskel.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-coen",
+      "file": "illustrations/wi-coen.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-igni",
+      "file": "illustrations/wi-igni.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-aard",
+      "file": "illustrations/wi-aard.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-yrden",
+      "file": "illustrations/wi-yrden.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-quen",
+      "file": "illustrations/wi-quen.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-swallow",
+      "file": "illustrations/wi-swallow.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-thunderbolt",
+      "file": "illustrations/wi-thunderbolt.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-cat",
+      "file": "illustrations/wi-cat.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-oriole",
+      "file": "illustrations/wi-oriole.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-leader-teacher",
+      "file": "illustrations/wi-leader-teacher.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-leader-hunter",
+      "file": "illustrations/wi-leader-hunter.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-leader-keeper",
+      "file": "illustrations/wi-leader-keeper.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wi-leader-wolf",
+      "file": "illustrations/wi-leader-wolf.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    },
+    {
+      "key": "wisp",
+      "file": "illustrations/wisp.png",
+      "complete": true,
+      "tool": "built-in image_gen"
+    }
+  ],
+  "generatedBacks": 0,
+  "backSource": "webapp/art/gwent/printed/back-witchers.webp",
+  "reusedSharedCards": 6,
+  "retryPrompts": "generation-retries.json"
+}
