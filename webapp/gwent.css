@@ -163,3 +163,4 @@ body .ui-card-table-window .ui-button.gwent-opponent{display:flex;flex-direction
  .gwent-card.gwent-enter,.gwent-hand .gwent-card.gwent-draw,.gwent-bump,.gwent-side.thinking .gwent-crest,.gwent-opponent.thinking .gwent-crest,.gwent-dots i{animation:none}
  .gwent-ai-card,.gwent-banner{animation:none}
 }
+.gwent-abilities{display:grid;gap:var(--space-2);margin:0 0 var(--space-3)}.gwent-ability{display:grid;gap:var(--space-1);padding:var(--space-2)}.gwent-ability dt{font-weight:700}.gwent-ability dd{margin:0;font-size:13px;line-height:1.5}

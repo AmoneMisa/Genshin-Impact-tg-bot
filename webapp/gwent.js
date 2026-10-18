@@ -9,6 +9,7 @@ import { cardArtOptions, cardArtSource } from './gwent-art-options.js';
 import { buildDeck, aiLoadout, defaultLoadout, inspectLoadout, repairLoadout, filterCards, cardTraits, leaderDescription } from './gwent-builder.js';
 import { createMatch, createTable, TABLE_SEATS, legalPlays, playCard, passRound, resolveChoice, rowValuesFor, scores, teamScores } from './gwent-engine.js';
 import { sfx, withMusic, GWENT_TRACKS } from './audio.js';
+import { abilitiesHtml } from './gwent-abilities.js';
 import { decideAi, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
 const FACTIONS = RULESETS.extended.factions; // every faction; a rule set allows some of them
@@ -69,7 +70,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   const loadoutFor = rules => loadouts[loadoutKey(rules, rulesetAllows(rules, faction) ? faction : RULESETS[normalizeRuleset(rules)].factions[0])];
   try { level = normalizeAiLevel(localStorage.getItem('gwent-ai-level')); } catch { /* storage is optional */ }
   let draft = null, filters = {}, page = 0, leaderReturn = 'editor', draftReturn = 'decks', deckReturn = 'mode';
-  let state = null, remote = null, pick = null, decoy = null, preview = null, pile = null, artCard = null;
+  let state = null, remote = null, pick = null, decoy = null, preview = null, pile = null, artCard = null, abilities = false;
   let myRating = null, board = null, summary = false, summaryFor = null, wasOffered = false, localMatch = 0, aiThinking = null, aiWorker = null, aiCall = 0, matchLevel = level, busy = false, closed = false, aiTimer = null, pollTimer = null, requestId = 0, announcedRound = null;
   const artRuleset = () => screen === 'match' ? remote?.ruleset || state?.ruleset || ruleset : ruleset;
   const cardHtml = (card, value = card.strength, options = {}) => gwentCardHtml(card, value, { ruleset: artRuleset(), ...options });
@@ -94,7 +95,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   }
   /** The rules: the original game or the extended one (new factions, swap and ambush cards). */
   function rulesetHtml() {
-    return `<div class="gwent-mode-options gwent-rules" role="radiogroup" aria-label="Правила">${[['classic', 'Оригинал', 'Игра из Ведьмака 3, рейтинг'], ['extended', 'Расширенный', 'Семь новых фракций, подмена и засады']].map(([value, title, subtitle]) => `<label class="ui-button ui-illustrated-choice gwent-mode" data-selected="${ruleset === value}">
+    return `<div class="gwent-mode-options gwent-rules" role="radiogroup" aria-label="Правила">${[['classic', 'Оригинал', 'Игра из Ведьмака 3, рейтинг'], ['extended', 'Расширенный', 'Новые фракции, подмена и засады']].map(([value, title, subtitle]) => `<label class="ui-button ui-illustrated-choice gwent-mode" data-selected="${ruleset === value}">
       <span><strong>${title}</strong><small>${subtitle}</small></span><input type="radio" name="gwent-ruleset" value="${value}" ${ruleset === value ? 'checked' : ''}></label>`).join('')}</div>`;
   }
   /** What the player is asked to pick for cards that name a unit. */
@@ -103,7 +104,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `${rulesetHtml()}<div class="gwent-factions" role="group" aria-label="Фракция">${factionsNow().map(id => `<button type="button" class="ui-button ui-illustrated-choice gwent-faction" data-faction="${id}" data-select-faction="${id}" aria-pressed="${id === faction}" style="--choice-art:url('${GWENT_ART['banner:' + id]}')">
       ${image('shield:' + id, 'gwent-crest')}<span>${esc(GWENT_DECKS[id].title)}</span><span class="ui-selection-mark" aria-hidden="true">${id === faction ? controlIcon('check') : ''}</span></button>`).join('')}</div>
       ${deckSummary(loadouts[keyOf()])}<div class="gwent-lobby-actions">${button('Состав колоды и лидер ' + controlIcon('chevron-right'), 'data-editor')}
-      ${button('Выбрать колоду', 'data-mode', true)}</div>`;
+      ${button('Выбрать колоду', 'data-mode', true)}</div><div class="gwent-lobby-actions">${button('Способности карт', 'data-open-abilities')}</div>`;
   }
   /** How many play at the table: two (a duel) or, under the extended rules, three or four against the AI. */
   function tableHtml() {
@@ -325,7 +326,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     if (remote?.spectator) actions = `${state.phase === 'matchOver' ? `<strong>${state.winner === 'draw' ? 'Ничья' : esc(isTableState() ? tableWinnerText() : watchName(state.winner))}</strong>` : ''}${button('К списку игр', 'data-leave-watch')}`;
     else if (state.phase === 'matchOver') actions = `<strong class="gwent-result">${isTableState() ? tableWinnerText() : state.winner === 'player' ? 'Вы победили!' : state.winner === 'ai' ? 'Победил противник' : 'Ничья'}</strong>${button('Итоги', 'data-open-summary')}${rematchHtml()}${button('Новая игра', 'data-finish', !rematchHtml())}`;
     else actions = `${leader ? button(passive ? 'Лидер · постоянно' : state.sides.player.leaderUsed ? 'Лидер использован' : state.sides.player.leaderCancelled ? 'Лидер отменён' : 'Лидер', `data-leader ${ready ? '' : 'disabled'} title="${esc(leader.name)}"`) : ''}
-      ${button('Пас', `data-pass ${state.pending || state.turn !== 'player' || state.passed.player || busy ? 'disabled' : ''}`, true)}<details class="gwent-more"><summary aria-label="Другие действия">${controlIcon('more')}</summary><div>${button('Завершить матч', 'data-end-match')}</div></details>`;
+      ${button('Пас', `data-pass ${state.pending || state.turn !== 'player' || state.passed.player || busy ? 'disabled' : ''}`, true)}<details class="gwent-more"><summary aria-label="Другие действия">${controlIcon('more')}</summary><div>${button('Способности карт', 'data-open-abilities')}${button('Завершить матч', 'data-end-match')}</div></details>`;
     const teamSums = state.teams ? teamScores(state) : null;
     const standing = state.teams ? `Победы ${state.wins.player} : ${state.wins.ai} <span aria-hidden="true">│</span> Счёт команд ${teamSums[state.teams.player]} : ${teamSums[state.teams.player === 'A' ? 'B' : 'A']}` : isTableState() ? `Очки: ${state.seats.map(seat => `${seatName(seat)} ${state.points[seat]}`).join(' · ')}` : `Победы ${state.wins.player} : ${state.wins.ai}`;
     return `<div class="gwent-status"><span>Раунд ${state.round} <span aria-hidden="true">│</span> ${standing}</span>${remote && state.phase === 'playing' ? `<small data-gwent-clock>До хода: ${Math.max(0, Math.ceil((remote.deadline - (Date.now() + serverOffset)) / 60000))} мин.</small>` : ''}</div>
@@ -411,6 +412,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return button('Реванш', 'data-rematch', true);
   }
   function previewHtml() {
+    if (abilities) return `${abilitiesHtml()}${button('Назад', 'data-close-preview')}`;
     if (pile) {
       const [side, kind] = pile.split(':'), cards = kind === 'graveyard' ? state.sides[side].graveyard : [];
       return `<p class="gwent-hint">${kind === 'deck' ? 'Порядок карт в колоде скрыт от игроков.' : 'Карты в отбое'}</p><div class="gwent-pile-grid">${cards.map(card => cardHtml(card, card.strength)).join('') || (kind === 'graveyard' ? '<p>Отбой пуст</p>' : '')}</div>${button('Вернуться к матчу', 'data-close-preview')}`;
@@ -428,10 +430,10 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const scroll = panel.scrollTop, handScroll = panel.querySelector('.gwent-hand')?.scrollLeft || 0;
     const expanded = panel.querySelector('.gwent-extra-filters')?.open;
     const moreOpen = panel.querySelector('.gwent-more')?.open;
-    const title = summary ? 'Итоги матча' : artCard ? 'Выбор арта' : preview || pile ? preview?.name || 'Карты' : ({ decks: 'Выбор колоды', mode: 'Начать игру', editor: 'Состав колоды', leaders: 'Выбор лидера', search: 'Поиск соперника', match: 'Гвинт', friends: 'Игра с другом', games: 'Текущие игры', board: 'Таблица лидеров' })[screen];
+    const title = summary ? 'Итоги матча' : artCard ? 'Выбор арта' : abilities ? 'Способности карт' : preview || pile ? preview?.name || 'Карты' : ({ decks: 'Выбор колоды', mode: 'Начать игру', editor: 'Состав колоды', leaders: 'Выбор лидера', search: 'Поиск соперника', match: 'Гвинт', friends: 'Игра с другом', games: 'Текущие игры', board: 'Таблица лидеров' })[screen];
     panel.dataset.screen = screen; panel.classList.toggle('gwent-board-panel', screen === 'match' && !preview && !pile && !summary);
-    panel.innerHTML = `${dialogHeading(title, { id: 'gwent-title', back: screen !== 'decks' && screen !== 'match' || !!preview || !!pile || !!artCard || summary, rules: RULES })}<div class="gwent-content" data-gwent-content>
-      ${summary ? summaryHtml() : artCard ? artPickerHtml() : preview || pile ? previewHtml() : ({ decks: deckScreen, mode: modeScreen, editor: editorScreen, leaders: leaderScreen, search: searchScreen, match: matchScreen, friends: friendsScreen, games: gamesScreen, board: boardScreen })[screen]()}</div>
+    panel.innerHTML = `${dialogHeading(title, { id: 'gwent-title', back: screen !== 'decks' && screen !== 'match' || !!preview || !!pile || !!artCard || abilities || summary, rules: RULES })}<div class="gwent-content" data-gwent-content>
+      ${summary ? summaryHtml() : artCard ? artPickerHtml() : abilities || preview || pile ? previewHtml() : ({ decks: deckScreen, mode: modeScreen, editor: editorScreen, leaders: leaderScreen, search: searchScreen, match: matchScreen, friends: friendsScreen, games: gamesScreen, board: boardScreen })[screen]()}</div>
       <div class="gwent-feedback" data-tone="${tone}" role="status" aria-live="polite" ${notice && !summary ? '' : 'hidden'}>${esc(notice)}</div>`;
     renderedLobbyKey = lobbyKey();
     panel.setAttribute('aria-busy', String(busy));
@@ -454,7 +456,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       (same || [...panel.querySelectorAll('[data-adjust]')].find(n => n.dataset.adjust === id && !n.disabled))?.focus({preventScroll:true});
     }
   }
-  function go(next) { preview = null; pile = null; artCard = null; note(); screen = next; panel.scrollTop = 0; render(); schedulePoll(); }
+  function go(next) { preview = null; pile = null; abilities = false; artCard = null; note(); screen = next; panel.scrollTop = 0; render(); schedulePoll(); }
   async function post(body) { return api('/api/gwent/action', { method: 'POST', body: JSON.stringify(body) }); }
   function accept(data) {
     serverOffset = (data.serverNow || Date.now()) - Date.now();
@@ -537,7 +539,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   const scoreKey = (node, i) => i + ':' + (node.closest('[data-side]')?.dataset.side || node.closest('.gwent-side')?.className || '') + (node.closest('[data-row]')?.dataset.row || '');
   /** After a render: cards that were not on the table before land, drawn cards slide in, changed scores pulse. */
   function animateBoard() {
-    if (screen !== 'match' || !state || preview || pile || summary) return;
+    if (screen !== 'match' || !state || preview || pile || abilities || summary) return;
     const seen = { cards: new Set(), hand: new Set(), scores: new Map() };
     panel.querySelectorAll('.gwent-row-cards [data-board-card], .gwent-row-cards [data-target-uid]').forEach(node => seen.cards.add(node.dataset.boardCard || node.dataset.targetUid));
     panel.querySelectorAll('.gwent-hand [data-card-uid], .gwent-hand [data-hand-uid]').forEach(node => seen.hand.add(node.dataset.cardUid || node.dataset.handUid));
@@ -679,7 +681,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   function back() {
     if (artCard) { artCard = null; render(); return; }
     if (summary) { summary = false; render(); return; }
-    if (preview || pile) { preview = null; pile = null; render(); return; }
+    if (preview || pile || abilities) { preview = null; pile = null; abilities = false; render(); return; }
     if (screen === 'search') return cancelSearch();
     if (screen === 'leaders') return go(leaderReturn);
     if (screen === 'editor') { draft = null; return go(draftReturn); }
@@ -762,7 +764,8 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     else if ('rematch' in d) { if (remote) await online({ action: 'rematch', matchId: remote.id }); else startAi(true); }
     else if ('finish' in d) { if (remote) { const result = await online({ action: 'dismiss', matchId: remote.id }); if (!result) return; } remote = null; state = null; go('mode'); }
     else if ('endMatch' in d) { if (remote) await online({ action: 'surrender', matchId: remote.id, revision: remote.revision }); else { clearTimeout(aiTimer); state = null; go('mode'); } }
-    else if ('closePreview' in d) { preview = null; pile = null; render(); scheduleAi(); }
+    else if ('openAbilities' in d) { abilities = true; render(); }
+    else if ('closePreview' in d) { preview = null; pile = null; abilities = false; render(); scheduleAi(); }
     else if (d.previewId) { preview = cardById(d.previewId); render(); }
     else if (d.previewLeader) { preview = state.sides[d.previewLeader].leader; render(); }
     else if (d.boardCard) { preview = Object.values(state.sides).flatMap(s => ROWS.flatMap(row => s.rows[row])).find(card => card.uid === Number(d.boardCard)); render(); }
@@ -792,7 +795,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       if (remote) await online({ action: 'choice', matchId: remote.id, revision: remote.revision, choiceId: id }); else apply(resolveChoice(state, 'player', id)); }
   });
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-  overlay.addEventListener('overlay-escape', event => { if (preview || pile || artCard || screen === 'leaders') { event.preventDefault(); back(); } });
+  overlay.addEventListener('overlay-escape', event => { if (preview || pile || abilities || artCard || screen === 'leaders') { event.preventDefault(); back(); } });
   function onVisibility() { if (document.hidden) { clearTimeout(aiTimer); clearTimeout(pollTimer); } else { scheduleAi(); schedulePoll(); } }
   document.addEventListener('visibilitychange', onVisibility);
   async function reconnect() {
