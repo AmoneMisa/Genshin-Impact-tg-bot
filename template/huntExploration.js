@@ -156,6 +156,7 @@ export const HUNT_EXPLORATION = Object.freeze([
   {"id":"sel-mahums","names":["Тренировочная поляна","У учебного помоста","Лагерная опушка"]},
   {"id":"field-of-whispers","names":["Тропа в сухих камышах","У каменных ликов","Золотистая поляна"]},
   {"id":"catacomb-heretic","names":["У резных опор","Тёмная галерея","Зал каменных ниш"]},
+  {"id":"catacomb-branded","names":["Синий каменный зал","У арочного проёма","Галерея рельефов"]},
 ]);
 const zones=new Map(HUNT_EXPLORATION.map(zone=>[zone.id,zone]));
 export const explorationZone=id=>zones.get(id)||null;
