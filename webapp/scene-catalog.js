@@ -382,6 +382,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"kamaloka-66","title":"Камалока · 66","category":"hunting","environment":"catacomb","asset":"kamaloka-66","sections":1},
   {"id":"kamaloka-73","title":"Камалока · 73","category":"hunting","environment":"catacomb","asset":"kamaloka-73","sections":1},
   {"id":"labyrinth-29","title":"Лабиринт Бездны · 29","category":"hunting","environment":"catacomb","asset":"labyrinth-29","sections":1},
+  {"id":"labyrinth-39","title":"Лабиринт Бездны · 39","category":"hunting","environment":"catacomb","asset":"labyrinth-39","sections":1},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
