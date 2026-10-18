@@ -1,0 +1,42 @@
+[
+  {
+    "id": "brekas-stronghold",
+    "page": "https://linedia.ru/wiki/Breka%27s_Stronghold",
+    "url": "https://linedia.ru/w/images/0/05/Breka%27s_Stronghold%2C_Screenshot.jpg",
+    "file": "art-source/location-references/hunting-continuation/brekas-stronghold.jpg",
+    "build": "Exact capture build unidentified; environment reference only, not verified High Five capture.",
+    "scope": "Environment reference; adapted camera and traversable composition."
+  },
+  {
+    "id": "bee-hive",
+    "page": "https://linedia.ru/wiki/Beehive",
+    "url": "https://linedia.ru/w/images/c/c6/Beehive%2C_Screenshot.jpg",
+    "file": "art-source/location-references/hunting-continuation/bee-hive.jpg",
+    "build": "Exact capture build unidentified; environment reference only, not verified High Five capture.",
+    "scope": "Environment reference; adapted camera and traversable composition."
+  },
+  {
+    "id": "alligator-beach",
+    "page": "https://linedia.ru/wiki/Alligator_Island",
+    "url": "https://linedia.ru/w/images/e/ed/Alligator_Island%2C_Screenshot.jpg",
+    "file": "art-source/location-references/hunting-continuation/alligator-beach.jpg",
+    "build": "Exact capture build unidentified; environment reference only, not verified High Five capture.",
+    "scope": "Environment reference; adapted camera and traversable composition."
+  },
+  {
+    "id": "timak-outpost",
+    "page": "https://linedia.ru/wiki/Timak_Outpost",
+    "url": "https://linedia.ru/w/images/8/88/Timak_Outpost%2C_Screenshot.jpg",
+    "file": "art-source/location-references/hunting-continuation/timak-outpost.jpg",
+    "build": "Exact capture build unidentified; environment reference only, not verified High Five capture.",
+    "scope": "Environment reference; adapted camera and traversable composition."
+  },
+  {
+    "id": "vuku-lands",
+    "page": "https://linedia.ru/wiki/Neutral_Zone",
+    "url": "https://linedia.ru/w/images/6/62/Neutral_Zone%2C_Screenshot.jpg",
+    "file": "art-source/location-references/hunting-continuation/vuku-lands.jpg",
+    "build": "Exact capture build unidentified; environment reference only, not verified High Five capture.",
+    "scope": "Palette, ground and vegetation of Neutral Zone; project zone name is not an independently verified original location."
+  }
+]

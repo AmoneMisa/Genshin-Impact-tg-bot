@@ -102,3 +102,55 @@ test('captured halls have a courtyard, a walkable interior and server-checked pe
  assert.ok(hallContestHtml({...hallContestState(f.r,f.h,p,c,NOW),phase:'registration'}).includes('data-conquest-defender'));
  assert.ok(hallObjectiveHtml({name:'Yeti',role:'yeti',hp:1,maxHp:1},{bag:{},items:[]}).includes('siege_exchange'));
 });
+
+test('all four Rainbow arenas remain reachable and replenish exactly four chests without accumulating dead ones',()=>{
+ const f=setup(62),teams=Array.from({length:4},(_,i)=>{const c=clan('team'+i,1+i*10),members=party(c,f.h,1+i*10);members[0].game.inventory.materials.l2_8034=20-i;assert.equal(action(f,members[0],c,{action:'siege_register'}).ok,true);return {c,members};});
+ const time=start(f);
+ for(const {c,members} of teams)assert.equal(action(f,members[0],c,{action:'siege_enter'},time).ok,true);
+ advanceHallContest(f.r,f.h,time+5000,f.records,()=>.999);
+ const valid=n=>Number.isFinite(n.x)&&n.x>=0&&n.x<=1&&Number.isFinite(n.y)&&n.y>=0&&n.y<=1;
+ assert.ok(f.s.objectives.every(valid));assert.ok(Object.values(f.s.players).every(valid));
+ for(let i=0;i<4;i++)assert.equal(f.s.objectives.filter(n=>n.role==='chest'&&n.arena===i).length,4);
+ const dead=f.s.objectives.find(n=>n.role==='chest');dead.hp=0;
+ advanceHallContest(f.r,f.h,time+10000,f.records,()=>0);
+ assert.equal(f.s.objectives.filter(n=>n.role==='chest').length,16);assert.ok(f.s.objectives.every(valid));
+ assert.equal(new Set(f.s.objectives.map(n=>n.id)).size,f.s.objectives.length);
+});
+
+test('Rainbow letters conserve quantity and sulfur reaches opponents once without extending its expiry',()=>{
+ const f=setup(62),ca=clan(),cb=clan('b',10),aa=party(ca,f.h,1),bb=party(cb,f.h,10),a=aa[0],b=bb[0];
+ for(const [p,c] of [[a,ca],[b,cb]]){p.game.inventory.materials.l2_8034=10;assert.equal(action(f,p,c,{action:'siege_register'}).ok,true);}
+ const time=start(f);for(const [p,c] of [[a,ca],[b,cb]])assert.equal(action(f,p,c,{action:'siege_enter'},time).ok,true);
+ const letter=Object.values(HALL_SCENARIOS[f.h.id].letterIds)[0];f.s.bags['1']={[letter]:3,8033:1};
+ assert.equal(action(f,a,ca,{action:'siege_trade_letter',userId:2,item:letter,amount:2},time).ok,true);
+ assert.equal(f.s.bags['1'][letter],1);assert.equal(f.s.bags['2'][letter],2);
+ for(const userId of [1,10])assert.equal(action(f,a,ca,{action:'siege_trade_letter',userId,item:letter,amount:1},time).reason,'hall_trade_invalid');
+ f.s.players['2'].hp=0;assert.equal(action(f,a,ca,{action:'siege_trade_letter',userId:2,item:letter,amount:1},time).reason,'hall_trade_invalid');
+ const yeti=f.s.objectives.find(n=>n.role==='yeti'&&n.clanId==='a');stand(f,a,yeti);
+ assert.equal(action(f,a,ca,{action:'siege_use_item',item:8033},time).ok,true);
+ assert.ok(bb.every(p=>f.s.players[String(p.userId)].pendingEffects?.length===1));assert.ok(aa.every(p=>!f.s.players[String(p.userId)].pendingEffects));
+ assert.equal(action(f,b,cb,{action:'siege_tick'},time+1000).ok,true);
+ assert.equal(b.game.effects.find(e=>e.l2SkillId===4991)?.until,time+5000);
+ action(f,b,cb,{action:'siege_tick'},time+2000);assert.equal(b.game.effects.filter(e=>e.l2SkillId===4991).length,1);
+ action(f,bb[1],cb,{action:'siege_tick'},time+6000);assert.ok(!bb[1].game.effects.some(e=>e.l2SkillId===4991));
+ assert.equal(action(f,a,ca,{action:'siege_interrupt',userId:10},time+2000).reason,'hall_peace_arena');
+});
+
+test('siege PvP checks reach and friendly targets, then consumes CP before HP exactly once',()=>{
+ const f=setup(21),a=hero(),b=hero(2),ca=clan(),cb=clan('b',2);at(a,f.h);at(b,f.h);const time=start(f);
+ for(const [p,c] of [[a,ca],[b,cb]])assert.equal(action(f,p,c,{action:'siege_enter'},time).ok,true);
+ f.s.objectives=[];action(f,b,cb,{action:'siege_tick'},time);
+ stand(f,a,{x:.1,y:.1});stand(f,b,{x:.9,y:.9});assert.equal(action(f,a,ca,{action:'siege_interrupt',userId:2},time).reason,'target_too_far');
+ assert.equal(action(f,a,ca,{action:'siege_interrupt',userId:1},time).reason,'pvp_invalid_target');
+ stand(f,b,{x:.1,y:.1});const hit=action(f,a,ca,{action:'siege_interrupt',userId:2},time);assert.equal(hit.ok,true);assert.ok(hit.damage>0);
+ b.game.gameClass.stats.cp=1;const hp=b.game.gameClass.stats.hp;
+ action(f,b,cb,{action:'siege_tick'},time+1);assert.equal(b.game.gameClass.stats.cp,0);assert.equal(b.game.gameClass.stats.hp,hp-(hit.damage-1));
+ action(f,b,cb,{action:'siege_tick'},time+2);assert.equal(b.game.gameClass.stats.hp,hp-(hit.damage-1));
+});
+
+test('Lidia waits for game night using the source midnight clock',()=>{
+ const day=new Date(NOW);day.setHours(2,0,0,0);assert.equal(gameHour(day.getTime()),12);
+ const f=setup(64),p=hero(),c=clan();at(p,f.h);assert.equal(action(f,p,c,{action:'siege_register'}).ok,true);
+ const time=day.getTime();start(f,time);assert.equal(f.s.phase,'preparation');assert.ok(f.s.startsAt>time);
+ assert.equal(gameHour(f.s.startsAt),0);advanceHallContest(f.r,f.h,f.s.startsAt,f.records);assert.equal(f.s.phase,'battle');
+});

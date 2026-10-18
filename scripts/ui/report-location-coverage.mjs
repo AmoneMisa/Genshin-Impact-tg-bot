@@ -20,7 +20,8 @@ const lines=[
  '## Остаётся индивидуально оформить', '',
  ...shared.map(zone=>`- ${label(zone)} (${zone.id})`), '',
  'Отчёт обновляется командой `node scripts/ui/report-location-coverage.mjs`.', '',
- 'Последняя серия: пять зон начальной охоты — Остров Говорящих, Эльфийские луга, Топи зомби, Тёмный лес и лагерь Турек. По три рисунка на зону, desktop 1536×1024 и mobile 768×512. Превью: `early-hunting-locations.jpg`; полные промпты и происхождение: `webapp/art/world/scenes/early-hunting.source.js`; игровые референсы: `art-source/location-references/early-hunting/sources.json`.', '',
+ 'Последняя серия: земли Вуку, крепость Брека, Улей, Берег Аллигаторов и застава Тимак. По три связанных исследуемых участка на зону, desktop 1536×1024 и mobile 768×512. Превью: [пять охотничьих локаций](hunting-continuation.jpg); полные промпты и происхождение: `webapp/art/world/scenes/hunting-continuation.source.js`; игровые референсы: `art-source/location-references/hunting-continuation/sources.json`.', '',
+ '«Земли орков Вуку» — существующее название зоны проекта, а не подтверждённое отдельное имя оригинальной локации. Для рисунков использован референс почвы и растительности Нейтральной зоны; исходные координаты Атласа не менялись. Брека изображена открытой холмистой местностью без выдуманной крепости, Улей — лугами с небольшим домом под соломенной крышей. Точная хроника исходных скриншотов не установлена; они используются только как художественные референсы.', '',
 ];
 fs.writeFileSync('docs/location-coverage.md',lines.join('\n'));
 console.log(`${individual.length}/${zones.length} individual hunting environments; ${shared.length} shared`);

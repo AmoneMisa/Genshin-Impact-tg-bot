@@ -39,7 +39,7 @@ export function ensureHallContest(record,h,now=Date.now()){
  record.markModified?.('siege');return record.siege;
 }
 function projection(rule,h){
- const points=rule.spawns.length?rule.spawns:rule.flagPositions||rule.arenas;
+ const points=rule.kind==='rainbow'?[...rule.arenas,...rule.yetis_spawn,...rule.arenas.map(p=>({...p,x:p.x+150,y:p.y+150})),...rule.chests_spawn.flatMap(p=>[-400,400].flatMap(dx=>[-400,400].map(dy=>({...p,x:p.x+dx,y:p.y+dy}))))]:rule.spawns.length?rule.spawns:rule.flagPositions;
  const xs=points.map(p=>p.x),ys=points.map(p=>p.y),minX=Math.min(...xs),minY=Math.min(...ys),maxX=Math.max(...xs),maxY=Math.max(...ys);
  return p=>({x:.08+.84*(p.x-minX)/Math.max(1,maxX-minX),y:.08+.76*(p.y-minY)/Math.max(1,maxY-minY),original:{x:p.x,y:p.y,z:p.z}});
 }
@@ -118,7 +118,12 @@ export function advanceHallContest(record,h,now=Date.now(),records=[],random=Mat
   if(rule.kind==='defenders')advanceDefenderNpcs(record,h,s,now,records);
   if(rule.kind==='rainbow'){
    if(now>=s.nextWordAt){s.wordIndex=Math.min(rule.words.length-1,Math.floor(random()*rule.words.length));s.nextWordAt=now+rule.wordIntervalMs;}
-   if(now>=s.nextChestAt){const project=projection(rule,h);s.objectives=s.objectives.filter(n=>n.role!=='chest'||n.hp>0);s.accepted.forEach((id,i)=>{const alive=s.objectives.filter(n=>n.role==='chest'&&n.arena===i&&n.hp>0);if(alive.length<4)s.objectives.push(unit(rule.chestId,`chest:${i}:${now}`,project(rule.chests_spawn[i]),{arena:i,clanId:id,role:'chest'}));});s.nextChestAt=now+rule.chestIntervalMs;}
+   if(now>=s.nextChestAt){
+    const project=projection(rule,h);s.objectives=s.objectives.filter(n=>n.role!=='chest'||n.hp>0);
+    s.accepted.forEach((id,i)=>{const alive=s.objectives.filter(n=>n.role==='chest'&&n.arena===i&&n.hp>0);
+     for(let count=alive.length;count<4;count++){const origin=rule.chests_spawn[i],point={...origin,x:origin.x+Math.min(800,Math.floor(random()*801))-400,y:origin.y+Math.min(800,Math.floor(random()*801))-400};s.objectives.push(unit(rule.chestId,`chest:${i}:${now}:${count}`,project(point),{arena:i,clanId:id,role:'chest'}));}
+    });s.nextChestAt=now+rule.chestIntervalMs;
+   }
   }
   for(const n of s.objectives)if(n.hp<=0&&n.respawnAt&&now>=n.respawnAt){n.hp=n.maxHp;n.respawnAt=null;}
   if(now>=s.endsAt)finish(record,h,s,null,now,records);
@@ -158,6 +163,11 @@ function registration(record,h,session,clan,body,now,records){
 function updatePlayer(s,session,clan,now){
  const p=s.players[uid(session)];if(!p)return null;
  const stats=session.game.gameClass.stats;
+ for(const effect of p.pendingEffects||[])if(effect.until>now){
+  const applied=applyL2Effect(session,session,effect.id,1,{now,guaranteed:true});
+  if(applied.applied){const record=session.game.effects.find(e=>e.l2SkillId===effect.id);if(record)record.until=Math.min(record.until,effect.until);}
+ }
+ delete p.pendingEffects;
  if(p.pendingDamage){const cp=Math.min(Math.max(0,stats.cp||0),p.pendingDamage);stats.cp=Math.max(0,(stats.cp||0)-cp);stats.hp=Math.max(0,stats.hp-Math.max(0,p.pendingDamage-cp));l2OnDamageReceived(session,null,p.pendingDamage,now);p.pendingDamage=0;if(!stats.hp)l2PreventDeath(session,now);}
  const block=l2ActionBlock(session,{move:true},now);if(block)p.path=[];
  advancePath(p,now,block?0:getSpeed(session)*l2MoveMultiplier(session,now));
@@ -292,7 +302,7 @@ function rainbowAction(record,h,session,clan,body,now,records,random){
  }
  if(body.action==='siege_trade_letter'){
   const other=s.players[String(body.userId)],item=Number(body.item),amount=Number(body.amount);
-  if(!Object.values(rule.letterIds).includes(item)||!Number.isSafeInteger(amount)||amount<1||!other||other.clanId!==cid(clan)||other.seenAt<now-10000||!near(p,other)||(bag[item]||0)<amount)return fail('hall_trade_invalid');
+  if(!Object.values(rule.letterIds).includes(item)||!Number.isSafeInteger(amount)||amount<1||!other||String(body.userId)===uid(session)||other.hp<=0||other.clanId!==cid(clan)||other.seenAt<now-10000||!near(p,other)||(bag[item]||0)<amount)return fail('hall_trade_invalid');
   bag[item]-=amount;const target=s.bags[String(body.userId)]||={};target[item]=(target[item]||0)+amount;return {ok:true};
  }
  if(body.action==='siege_use_item'){
@@ -304,7 +314,7 @@ function rainbowAction(record,h,session,clan,body,now,records,random){
   if(item===8030){gourd.hp=Math.max(0,gourd.hp-1000);if(random()<.1)s.objectives.push(unit(rule.enragedYetiId,'enraged:'+now,{x:p.x+.005,y:p.y+.005},{arena:index,aggro:uid(session)}));if(gourd.hp===0)finish(record,h,s,s.registrations[cid(clan)],now,records);}
   if(item===8031)gourd.hp=Math.min(gourd.maxHp,gourd.hp+1000);
   if(item===8032){const own=s.objectives.find(n=>n.role==='gourd'&&n.arena===index);[own.x,gourd.x]=[gourd.x,own.x];[own.y,gourd.y]=[gourd.y,own.y];}
-  if(item===8033)for(const peer of partyMembers(session.ownerDocument?.(),session))if(s.players[uid(peer)]?.clanId===s.arenas[enemy].clanId)applyL2Effect(session,peer,4991,1,{now,guaranteed:true});
+  if(item===8033)for(const peer of Object.values(s.players))if(peer.hp>0&&peer.clanId===s.arenas[enemy].clanId)peer.pendingEffects=[{id:4991,until:now+5000}];
   return {ok:true,item};
  }
  return {ok:true};

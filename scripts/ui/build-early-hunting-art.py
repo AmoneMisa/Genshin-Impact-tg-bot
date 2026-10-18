@@ -1,12 +1,20 @@
-"""Encode reviewed early hunting paintings; never calls an image API."""
+"""Encode reviewed hunting paintings and series galleries; never calls an image API."""
 import json
-import sys
+import argparse
+import re
 from datetime import date
 from pathlib import Path
 from PIL import Image, ImageDraw
 
 root = Path(__file__).resolve().parents[2]
-rows = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('manifest')
+parser.add_argument('--name', default='early-hunting')
+parser.add_argument('--gallery', default='early-hunting-locations.jpg')
+args = parser.parse_args()
+if not re.fullmatch(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*', args.name) or Path(args.gallery).name != args.gallery:
+    parser.error('Use a simple series name and gallery filename')
+rows = json.loads(Path(args.manifest).read_text(encoding='utf-8'))
 out = root / 'webapp/art/world/scenes'
 metadata = []
 for row in rows:
@@ -24,8 +32,8 @@ for row in rows:
                      'generator': 'OpenAI imagegen, built-in tool',
                      'created': date.today().isoformat(),
                      'notOriginalL2ClientArt': True, 'notOriginalGeodata': True})
-(out / 'early-hunting.source.js').write_text(
-    '// Environment adaptations, not original client textures or geodata.\nexport const EARLY_HUNTING_ART = '
+(out / (args.name + '.source.js')).write_text(
+    '// Environment adaptations, not original client textures or geodata.\nexport const ' + args.name.upper().replace('-', '_') + '_ART = '
     + json.dumps(metadata, ensure_ascii=False, indent=2) + ';\n', encoding='utf-8')
 ids = list(dict.fromkeys(r['id'] for r in rows))
 sheet = Image.new('RGB', (1200, 300 * len(ids)), '#111018')
@@ -36,5 +44,5 @@ for y, id in enumerate(ids):
         with Image.open(out / (row['asset'] + '-mobile-v1.webp')) as image:
             sheet.paste(image.resize((392, 261), Image.Resampling.LANCZOS), (x + 4, y * 300 + 4))
         draw.text((x + 8, y * 300 + 274), row['asset'], fill='#ead7a6')
-sheet.save(root / 'docs/early-hunting-locations.jpg', quality=90)
+sheet.save(root / 'docs' / args.gallery, quality=90)
 print(f'Prepared {len(rows)} scenes with mobile variants and provenance')

@@ -141,6 +141,11 @@ export const HUNT_EXPLORATION = Object.freeze([
   {"id":"marsh-zombies","names":["Тропа среди топей","У мшистого ствола","Кромка стоячей воды"]},
   {"id":"dark-forest","names":["Сумрачная тропа","У переплетённых корней","Каменная низина"]},
   {"id":"turek-orcs","names":["Подступы к лагерю","У деревянных тотемов","За частоколом"]},
+  {"id":"vuku-lands","names":["Земляная тропа","У тёмных камней","Опушка низины"]},
+  {"id":"brekas-stronghold","names":["Тропа среди холмов","У старых деревьев","Каменистый склон"]},
+  {"id":"bee-hive","names":["Тропа у пасеки","У каменной ограды","Луговая поляна"]},
+  {"id":"alligator-beach","names":["Илистый берег","У камышовой заводи","Пальмовая отмель"]},
+  {"id":"timak-outpost","names":["Подступы к заставе","У дерева с тотемами","За деревянной оградой"]},
 ]);
 const zones=new Map(HUNT_EXPLORATION.map(zone=>[zone.id,zone]));
 export const explorationZone=id=>zones.get(id)||null;

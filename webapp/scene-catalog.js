@@ -341,6 +341,11 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"marsh-zombies","title":"Топи зомби","category":"hunting","environment":"marsh","asset":"marsh-zombies"},
   {"id":"dark-forest","title":"Тёмный лес","category":"hunting","environment":"woodland","asset":"dark-forest"},
   {"id":"turek-orcs","title":"Лагерь орков Турек","category":"hunting","environment":"woodland","asset":"turek-orcs"},
+  {"id":"vuku-lands","title":"Земли орков Вуку","category":"hunting","environment":"woodland","asset":"vuku-lands"},
+  {"id":"brekas-stronghold","title":"Крепость Брека","category":"hunting","environment":"woodland","asset":"brekas-stronghold"},
+  {"id":"bee-hive","title":"Улей","category":"hunting","environment":"woodland","asset":"bee-hive"},
+  {"id":"alligator-beach","title":"Берег Аллигаторов","category":"hunting","environment":"marsh","asset":"alligator-beach"},
+  {"id":"timak-outpost","title":"Застава Тимак","category":"hunting","environment":"woodland","asset":"timak-outpost"},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
